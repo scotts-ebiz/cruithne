@@ -39,8 +39,8 @@ notifications:
 before_install:
 - export DEBIAN_FRONTEND=noninteractive
 - sudo apt-get -y update
-- DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
-- DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" dist-upgrade
+- sudo DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
+- sudo DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" dist-upgrade
 - sudo apt-get -y update
 - sudo apt-get -y install apache2
 # Enable aliases for non-interactive shell.
@@ -56,8 +56,8 @@ before_install:
 - git config --global user.email "noreply@travis-ci.org"
 
 # MySQL Configuration
-- debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password password dfDF34#$'
-- debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password_again password dfDF34#$'
+- sudo debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password password dfDF34#$'
+- sudo debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password_again password dfDF34#$'
 - sudo apt-get install mysql-server-5.7 -y
 - sudo apt-get install mysql-client-5.7 -y
 - mysql -u root -pdfDF34#$ -e "create database cruithne;"
