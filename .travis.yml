@@ -1,65 +1,125 @@
 sudo: required
-dist: trusty
-group: edge
-addons:
-  apt:
-    packages:
-    - mysql-server-5.6
-    - mysql-client-core-5.6
-    - mysql-client-5.6
-    - postfix
-  firefox: "46.0"
-  hosts:
-      - magento2.travis
-services:
-  - rabbitmq
-  - elasticsearch
+dist: xenial
 language: php
-php:
-  - 7.1
-  - 7.2
+
 env:
+  #global environmental variables control magento instal parameters
+  #see also hosts in addons.
   global:
-    - COMPOSER_BIN_DIR=~/bin
-    - INTEGRATION_SETS=3
-    - NODE_JS_VERSION=8
-    - MAGENTO_HOST_NAME="magento2.travis"
-  matrix:
-    - TEST_SUITE=unit
-    - TEST_SUITE=static
-    - TEST_SUITE=js GRUNT_COMMAND=spec
-    - TEST_SUITE=js GRUNT_COMMAND=static
-    - TEST_SUITE=integration INTEGRATION_INDEX=1
-    - TEST_SUITE=integration INTEGRATION_INDEX=2
-    - TEST_SUITE=integration INTEGRATION_INDEX=3
-    - TEST_SUITE=functional
+  - LOCAL_URL=https://store.cruithne.test
+  - ADMIN_EMAIL=nicholas.spencer@scotts.com
+  - ADMIN_FIRST=Chase
+  - ADMIN_LAST=Spencer
+  - ADMIN_USERNAME=admin
+  - ADMIN_PASSWORD=password
+  - DB_NAME=cruithne
+
+php:
+- 7.1
+
 matrix:
-  exclude:
-    - php: 7.1
-      env: TEST_SUITE=static
-    - php: 7.1
-      env: TEST_SUITE=js GRUNT_COMMAND=spec
-    - php: 7.1
-      env: TEST_SUITE=js GRUNT_COMMAND=static
-    - php: 7.1
-      env: TEST_SUITE=functional
+  fast_finish: true
+
 cache:
   apt: true
   directories:
-    - $HOME/.composer/cache
-    - $HOME/.nvm
-    - $HOME/node_modules
-    - $HOME/yarn.lock
-before_install:
-  - curl -O https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/2.3.0/elasticsearch-2.3.0.deb && sudo dpkg -i --force-confnew elasticsearch-2.3.0.deb && sudo service elasticsearch restart
-  - ./dev/travis/before_install.sh
-install: composer install --no-interaction
-before_script: ./dev/travis/before_script.sh
-script:
-  # Set arguments for variants of phpunit based tests; '|| true' prevents failing script when leading test fails
-  - test $TEST_SUITE = "functional" && TEST_FILTER='dev/tests/functional/testsuites/Magento/Mtf/TestSuite/InjectableTests.php' || true
+  - $HOME/.composer/cache
+  - $HOME/.nvm
+  - $HOME/node_modules
+  - $HOME/yarn.lock
+  - "vendor"
 
-  # The scripts for grunt/phpunit type tests
-  - if [ $TEST_SUITE == "functional" ]; then dev/tests/functional/vendor/phpunit/phpunit/phpunit -c dev/tests/$TEST_SUITE $TEST_FILTER; fi
-  - if [ $TEST_SUITE != "functional" ] && [ $TEST_SUITE != "js" ]; then phpunit -c dev/tests/$TEST_SUITE $TEST_FILTER; fi
-  - if [ $TEST_SUITE == "js" ]; then grunt $GRUNT_COMMAND; fi
+addons:
+  hosts:
+      - store.cruithne.test
+
+notifications:
+  slack: smg-developers:vcBHeIcYxtoP1Pnv7nuT6ZGv
+
+before_install:
+- export DEBIAN_FRONTEND=noninteractive
+- apt-get -y update
+- DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
+- DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" dist-upgrade
+- apt-get -y update
+- apt-get -y install apache2
+# Enable aliases for non-interactive shell.
+- shopt -s expand_aliases
+- composer selfupdate
+# Disable xdebug.
+- phpenv config-rm xdebug.ini
+# Enable $_ENV variables in PHP.
+- echo 'variables_order = "EGPCS"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+# Ensure that always_populate_raw_post_data PHP setting: Not set to -1 does not happen.
+- echo "always_populate_raw_post_data = -1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+- git config --global user.name "Travis-CI"
+- git config --global user.email "noreply@travis-ci.org"
+
+# MySQL Configuration
+- debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password password dfDF34#$'
+- debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password_again password dfDF34#$'
+- apt-get install mysql-server-5.7 -y
+- apt-get install mysql-client-5.7 -y
+- mysql -u root -pdfDF34#$ -e "create database cruithne;"
+- mysql -u root -pdfDF34#$ -e "grant all on cruithne.* to 'varien'@'%' identified by 'j7K9u3Lm2wA6';"
+- sed  '/skip-external-locking/a wait_timeout=30000' /etc/mysql/my.cnf
+
+# PHP configuration.
+# disable xdebug for perf
+- add-apt-repository ppa:ondrej/php
+- apt-get -y update
+- apt-get -y install php7.1 libapache2-mod-php7.1 php7.1-common php7.1-gd php7.1-mysql php7.1-curl php7.1-intl php7.1-xsl php7.1-mbstring php7.1-zip php7.1-bcmath php7.1-iconv php7.1-soap php7.1-mcrypt
+- sed -i "s/;date\.timezone =$/date\.timezone = 'America\/New_York'/" /etc/php/7.1/cli/php.ini
+- sed -i "s/;date\.timezone =$/date\.timezone = 'America\/New_York'/" /etc/php/7.1/apache2/php.ini
+- sed -i 's/;opcache\.save_comments/opcache\.save_comments/' /etc/php/7.1/cli/php.ini
+- sed -i 's/;opcache\.save_comments/opcache\.save_comments/' /etc/php/7.1/apache2/php.ini
+- sed -i 's/short_open_tag = Off/short_open_tag = On/' /etc/php/7.1/cli/php.ini
+- sed -i 's/short_open_tag = Off/short_open_tag = On/' /etc/php/7.1/apache2/php.ini
+- sed -i 's/memory_limit = [0-9]+M/memory_limit = 1G/' /etc/php/7.1/apache2/php.ini
+- phpenmod mcrypt
+- echo '' > ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
+- phpenv config-add config/ci/travis.php.ini
+- phpenv rehash
+
+# get latest composer
+- composer selfupdate
+
+# Clone repo
+- git clone git@github.com:scotts-ebiz/cruithne.git /var/www/
+
+# Configure Apache
+- rm /etc/apache2/sites-available/000-default.conf
+- cp $TRAVIS_BUILD_DIR/environment/config/000-default.conf /etc/apache2/sites-available/000-default.conf
+- sudo service apache2 restart
+
+install:
+# Install composer dependencies
+- composer install
+
+before_script:
+# run installation command using evn variables set above
+- php bin/magento setup:install --admin-email "$ADMIN_EMAIL" --admin-firstname "$ADMIN_FIRST" --admin-lastname "$ADMIN_LAST" --admin-password "$ADMIN_PASSWORD" --admin-user "$ADMIN_USERNAME" --backend-frontname admin --base-url "$LOCAL_URL" --db-host 127.0.0.1 --db-name "$DB_NAME" --db-user root --session-save files --use-rewrites 1 --use-secure 0 -vvv
+
+#script:
+## the ci:build takes about 20 mins with db triggering the 10 minute travis inactivity timeout - use travis_wait to avoid error.
+#- travis_wait 30 blt -Dbehat.run-server=true -Dcreate_alias=false -Dbehat.launch-phantom=true ci:build:validate:test -Dblt.verbose=true
+
+#deploy:
+#- provider: script
+#  script: blt deploy -Ddeploy.commitMsg="Automated commit by Travis CI for Build ${TRAVIS_BUILD_ID}" -Ddeploy.branch="${TRAVIS_BRANCH}-build"
+#  skip_cleanup: true
+#  on:
+#    branch: develop
+#    php: 7.1
+#- provider: script
+#  script: blt deploy -Ddeploy.commitMsg="Automated commit by Travis CI for Build ${TRAVIS_BUILD_ID}" -Ddeploy.branch="${TRAVIS_BRANCH}-build"
+#  skip_cleanup: true
+#  on:
+#    branch: test
+#    php: 7.1
+#- provider: script
+#  script: blt deploy -Ddeploy.commitMsg="Automated commit by Travis CI for Build ${TRAVIS_BUILD_ID}" -Ddeploy.branch="${TRAVIS_BRANCH}-build"
+#  skip_cleanup: true
+#  on:
+#    branch: master
+#    php: 7.1
