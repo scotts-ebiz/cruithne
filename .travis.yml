@@ -56,12 +56,10 @@ before_install:
 - sudo git config --global user.email "noreply@travis-ci.org"
 
 # MySQL Configuration
-- sudo debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password password dfDF34#$'
-- sudo debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password_again password dfDF34#$'
 - sudo apt-get install mysql-server-5.7 -y
 - sudo apt-get install mysql-client-5.7 -y
-- mysql -u root -pdfDF34#$ -e "create database cruithne;"
-- mysql -u root -pdfDF34#$ -e "grant all on cruithne.* to 'varien'@'%' identified by 'j7K9u3Lm2wA6';"
+- mysql -u root -e "create database cruithne;"
+- mysql -u root -e "grant all on cruithne.* to 'varien'@'%' identified by 'j7K9u3Lm2wA6';"
 - sed  '/skip-external-locking/a wait_timeout=30000' /etc/mysql/my.cnf
 
 # PHP configuration.
