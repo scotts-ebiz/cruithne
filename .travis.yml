@@ -38,11 +38,11 @@ notifications:
 
 before_install:
 - export DEBIAN_FRONTEND=noninteractive
-- apt-get -y update
+- sudo apt-get -y update
 - DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
 - DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" dist-upgrade
-- apt-get -y update
-- apt-get -y install apache2
+- sudo apt-get -y update
+- sudo apt-get -y install apache2
 # Enable aliases for non-interactive shell.
 - shopt -s expand_aliases
 - composer selfupdate
@@ -58,8 +58,8 @@ before_install:
 # MySQL Configuration
 - debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password password dfDF34#$'
 - debconf-set-selections <<< 'mysql-server-5.7 mysql-server/root_password_again password dfDF34#$'
-- apt-get install mysql-server-5.7 -y
-- apt-get install mysql-client-5.7 -y
+- sudo apt-get install mysql-server-5.7 -y
+- sudo apt-get install mysql-client-5.7 -y
 - mysql -u root -pdfDF34#$ -e "create database cruithne;"
 - mysql -u root -pdfDF34#$ -e "grant all on cruithne.* to 'varien'@'%' identified by 'j7K9u3Lm2wA6';"
 - sed  '/skip-external-locking/a wait_timeout=30000' /etc/mysql/my.cnf
@@ -67,8 +67,8 @@ before_install:
 # PHP configuration.
 # disable xdebug for perf
 - add-apt-repository ppa:ondrej/php
-- apt-get -y update
-- apt-get -y install php7.1 libapache2-mod-php7.1 php7.1-common php7.1-gd php7.1-mysql php7.1-curl php7.1-intl php7.1-xsl php7.1-mbstring php7.1-zip php7.1-bcmath php7.1-iconv php7.1-soap php7.1-mcrypt
+- sudo apt-get -y update
+- sudo apt-get -y install php7.1 libapache2-mod-php7.1 php7.1-common php7.1-gd php7.1-mysql php7.1-curl php7.1-intl php7.1-xsl php7.1-mbstring php7.1-zip php7.1-bcmath php7.1-iconv php7.1-soap php7.1-mcrypt
 - sed -i "s/;date\.timezone =$/date\.timezone = 'America\/New_York'/" /etc/php/7.1/cli/php.ini
 - sed -i "s/;date\.timezone =$/date\.timezone = 'America\/New_York'/" /etc/php/7.1/apache2/php.ini
 - sed -i 's/;opcache\.save_comments/opcache\.save_comments/' /etc/php/7.1/cli/php.ini
