@@ -55,8 +55,8 @@ before_install:
   -in ecommerce-platform-09cafe6cc096.json.enc -out ecommerce-platform-09cafe6cc096.json
   -d
 - sudo apt-get -y install apache2
-- a2enmod ssl
-- a2ensite default-ssl
+- sudo a2enmod ssl
+- sudo a2ensite default-ssl
 - shopt -s expand_aliases
 - composer selfupdate
 - gem install travis
@@ -81,6 +81,8 @@ before_install:
 - sudo openssl x509 -req -days 365 -in "$SSL_DIR/cruithne.csr" -signkey "$SSL_DIR/cruithne.key" -out "$SSL_DIR/cruithne.crt"
 - sudo cp -f $TRAVIS_BUILD_DIR/environment/config/travis-ci/000-default.conf /etc/apache2/sites-available/000-default.conf
 - sudo cp -f $TRAVIS_BUILD_DIR/environment/config/travis-ci/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
+- chmod 644 /etc/apache2/sites-available/000-default.conf
+- chmod 644 /etc/apache2/sites-available/default-ssl.conf
 - sudo service apache2 restart
 install:
 - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGENTO_USER}\",\"password\":\"${MAGENTO_PASSWORD}\"}}}"
