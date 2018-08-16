@@ -51,9 +51,9 @@ notifications:
 before_install:
 - export DEBIAN_FRONTEND=noninteractive
 - sudo apt-get -y update
-#- sudo DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
-#- sudo DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" dist-upgrade
-#- sudo apt-get -y update
+- sudo DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
+- sudo DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" dist-upgrade
+- sudo apt-get -y update
 - sudo apt-get -y install apache2
 # Enable aliases for non-interactive shell.
 - shopt -s expand_aliases
@@ -79,7 +79,7 @@ before_install:
 
 # PHP configuration.
 # disable xdebug for perf
-- sudo apt-get -y install php7.1 libapache2-mod-php7.1 php7.1-common php7.1-gd php7.1-mysql php7.1-curl php7.1-intl php7.1-xsl php7.1-mbstring php7.1-zip php7.1-bcmath php7.1-iconv php7.1-soap php7.1-mcrypt
+- php -m
 - sed -i "s/;date\.timezone =$/date\.timezone = 'America\/New_York'/" /etc/php/7.1/cli/php.ini
 - sed -i "s/;date\.timezone =$/date\.timezone = 'America\/New_York'/" /etc/php/7.1/apache2/php.ini
 - sed -i 's/;opcache\.save_comments/opcache\.save_comments/' /etc/php/7.1/cli/php.ini
