@@ -79,8 +79,6 @@ before_install:
 
 # PHP configuration.
 # disable xdebug for perf
-- sudo add-apt-repository ppa:ondrej/php
-- sudo apt-get -y update
 - sudo apt-get -y install php7.1 libapache2-mod-php7.1 php7.1-common php7.1-gd php7.1-mysql php7.1-curl php7.1-intl php7.1-xsl php7.1-mbstring php7.1-zip php7.1-bcmath php7.1-iconv php7.1-soap php7.1-mcrypt
 - sed -i "s/;date\.timezone =$/date\.timezone = 'America\/New_York'/" /etc/php/7.1/cli/php.ini
 - sed -i "s/;date\.timezone =$/date\.timezone = 'America\/New_York'/" /etc/php/7.1/apache2/php.ini
@@ -93,12 +91,6 @@ before_install:
 - echo '' > ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
 - phpenv config-add config/ci/travis.php.ini
 - phpenv rehash
-
-# get latest composer
-- composer selfupdate
-
-# Clone repo
-- git clone git@github.com:scotts-ebiz/cruithne.git /var/www/
 
 # Configure Apache
 - rm /etc/apache2/sites-available/000-default.conf
