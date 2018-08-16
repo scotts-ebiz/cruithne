@@ -15,16 +15,16 @@ env:
   - DB_ROOT_PASSWORD=password
   - DB_APP_USER=varien
   - DB_APP_PASSWORD=j7K9u3Lm2wA6
-  - $SSL_DIR="/etc/ssl"
-  - $COMMON="store.cruithne.test"
-  - $PASSPHRASE=""
-  - $COUNTRY="US"
-  - $STATE="Ohio"
-  - $ORGANIZATION="The Scotts Miracle-Gro Company"
-  - $CITY="Marysville"
-  - $ORGNAME="eCommerce"
-  - $EMAIL="smgwebsupport@scotts.com"
-  - $SUBJ="C=$COUNTRY
+  - SSL_DIR="/etc/ssl"
+  - COMMON="store.cruithne.test"
+  - PASSPHRASE=""
+  - COUNTRY="US"
+  - STATE="Ohio"
+  - ORGANIZATION="The Scotts Miracle-Gro Company"
+  - CITY="Marysville"
+  - ORGNAME="eCommerce"
+  - EMAIL="smgwebsupport@scotts.com"
+  - SUBJ="C=$COUNTRY
   ST=$STATE
   O=$ORGANIZATION
   localityName=$CITY
