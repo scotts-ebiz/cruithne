@@ -114,6 +114,7 @@ script:
   --base-url="$LOCAL_URL" --db-host="localhost" --db-name="$DB_NAME" --db-user="$DB_APP_USER"
   --db-password="$DB_APP_PASSWORD" --currency="USD" --timezone="America/New_York" --use-rewrites="1"
   --use-secure="0"
+
 #deploy:
 #  provider: gae
 #  keyfile: ecommerce-platform-09cafe6cc096.json
