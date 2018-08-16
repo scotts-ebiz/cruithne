@@ -2,10 +2,7 @@ sudo: required
 dist: xenial
 language: php
 group: edge
-
 env:
-  #global environmental variables control magento instal parameters
-  #see also hosts in addons.
   global:
   - LOCAL_URL=https://store.cruithne.test
   - ADMIN_EMAIL=nicholas.spencer@scotts.com
@@ -18,94 +15,57 @@ env:
   - DB_ROOT_PASSWORD=password
   - DB_APP_USER=varien
   - DB_APP_USER=j7K9u3Lm2wA6
-
+  - secure: 1buG9UEWgLrrQmgiCMyz9s5B5rvI4wtI/41VXkZEF02cUKQueFRFTSSEV8bqLR6KOkZcSHsyG6PHn1aIYFlOnsVCxhEYiYpbTdbJtLJqIK9SWaIZJKtWrUiO5uW0W1E5ElYzXG/utnYInfXBzrX8lMbXE+vzk4cBzn2SnxM2sQwwLVG6c3tq7/DpfLunHawgMycmkw6YU2DYiRcAA/GRkiO1Zz7h26te7QD5W4ntFr0+Brup8gh/dPEDkfI9JtmUjPpBcSMkDBoLDD22cNAZ00BrTZwUXZwDWkVE1M7TfnssXdUJEfXZJ4tRZVLtkA8wixEIlzCBsIYdpK0lOy36mT5APKH7NVzWgVZ5MkqvP78x/YhBZT44cs/8eddooiikXRhD+mkpR+VGGQ3P4DzsbDa3pQSYPvGt/pEI+UW5ujQy/jg3eKv5MItgbdZpotVxXu8yqbfOnYh3WkLFXAq0Bq04uQTlvBGPNVhyxEg+9YIjPnlzwAxhUDJGH7ocK82BNsGck1lzjQ9MLlMtvmPXUtQwu/CoPBCZpyZ2vT2YBzW7kia+iFKTjsxvbuAy/MHvT7NP/M8F3XrV1hFO2W9cx/LSMmVQfgUsnhZuhJXxF5CQ6aAJUfL/cfVUU0kOx0l+TWk/UZgdBM8MHRP4m+VItEilcnV6QLDZIoaXyLD3d44=
+  - secure: EPEVWgFDI8pQ4rqEEtz4F5hCIwGzxpBtrSehHTEAiXj4n32ZtthZPbi4x9NRRZK3rHDTbIPKQcCCbgZ8BY4rmrt/ljZH19wNpka7yyzizcnTAci/QQGi5Sx3X9Q+7MzhIxdG/H0bJz9g99BsPo2gh9JddiaaqLMbJsYIeNJW8oGCqPrJND7MWoYXOjg27/XfUsh6LBdwR9tUDut4slE0BqLieSf6LCz0mY1mhdXmaMXy63hcHb5E5SWs+wKAdQjULYH+8OLwyjCSafTCYcPgoyEWzxACHNoB75QbTFyXNsSzGQ8saunwo7dIZkRBs+mRRNtIn5BeRflKIPVZTjh1mONJygQg85YCR9G1VjNmDpWAE/7fSczOLnNU5TO+QC/O6bcfU4p1AwaHLqo8DG1TJ5LbhSPreDJLcVbKHTJAF6/I2Vjreoyqd+Tj2ozDKI1ufpVbz2FauBifjsaK2Q5Avb79oGF9od3FAL30Yrvw73MX20TIM5uzPj9+ZRSTB4Wxb16Danbmh0/dykxYxNoXZLv4k8tSYatr9hXnq1lyydyVnjOiaurMqyft5vWl+KK53HK3L5cweX9IJUVZ8fZ/cMPMrHe9HP2WciID6BiGyuTKq3wJWmpDuqQyczCGsTjJKPZAbZAHbkZVAlTLPHvQMjWHPguyV6Z3/BSLC9wV0B4=
 php:
 - 7.1
-
 addons:
   apt:
     packages:
     - mysql-server
     - mysql-client
   hosts:
-    - store.cruithne.test
-
+  - store.cruithne.test
 services:
-  - mysql
-
+- mysql
 matrix:
   fast_finish: true
-
 cache:
   apt: true
   directories:
-  - $HOME/.composer/cache
-  - $HOME/.nvm
-  - $HOME/node_modules
-  - $HOME/yarn.lock
-  - "vendor"
-
+  - "$HOME/.composer/cache"
+  - "$HOME/.nvm"
+  - "$HOME/node_modules"
+  - "$HOME/yarn.lock"
+  - vendor
 notifications:
   slack: smg-developers:vcBHeIcYxtoP1Pnv7nuT6ZGv
-
 before_install:
 - sudo apt-get -y install apache2
-# Enable aliases for non-interactive shell.
 - shopt -s expand_aliases
 - composer selfupdate
-# Disable xdebug.
+- gem install travis
 - phpenv config-rm xdebug.ini
-# Enable $_ENV variables in PHP.
 - echo 'variables_order = "EGPCS"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-# Ensure that always_populate_raw_post_data PHP setting: Not set to -1 does not happen.
 - echo "always_populate_raw_post_data = -1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
 - sudo git config --global user.name "Travis-CI"
 - sudo git config --global user.email "noreply@travis-ci.org"
-
-# MySQL Configuration
-- sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('$DB_ROOT_PASSWORD') where User='$DB_ROOT_USER'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
+- sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('$DB_ROOT_PASSWORD')
+  where User='$DB_ROOT_USER'; update user set plugin='mysql_native_password';FLUSH
+  PRIVILEGES;"
 - sudo service mysql restart
 - mysql -u "$DB_ROOT_USER" -p$DB_ROOT_PASSWORD -e "create database cruithne;"
-- mysql -u "$DB_ROOT_USER" -p$DB_ROOT_PASSWORD -e "grant all on cruithne.* to 'varien'@'%' identified by 'j7K9u3Lm2wA6';"
+- mysql -u "$DB_ROOT_USER" -p$DB_ROOT_PASSWORD -e "grant all on cruithne.* to 'varien'@'%'
+  identified by 'j7K9u3Lm2wA6';"
 - sed  '/skip-external-locking/a wait_timeout=30000' /etc/mysql/my.cnf
-
-# PHP configuration.
 - php -m
-# disable xdebug for perf
 - echo '' > ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
 - phpenv rehash
-
-# Configure Apache
-- sudo service apache2 restart
-
 install:
-# Install composer dependencies
+- echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGENTO_USER}\",\"password\":\"${MAGENTO_PASSWORD}\"}}}" > auth.json
 - composer install
-
 before_script:
-# run installation command using evn variables set above
-- php bin/magento setup:install --admin-email "$ADMIN_EMAIL" --admin-firstname "$ADMIN_FIRST" --admin-lastname "$ADMIN_LAST" --admin-password "$ADMIN_PASSWORD" --admin-user "$ADMIN_USERNAME" --backend-frontname admin --base-url "$LOCAL_URL" --db-host 127.0.0.1 --db-name "$DB_NAME" --db-user root --session-save files --use-rewrites 1 --use-secure 0 -vvv
-
-#script:
-## the ci:build takes about 20 mins with db triggering the 10 minute travis inactivity timeout - use travis_wait to avoid error.
-#- travis_wait 30 blt -Dbehat.run-server=true -Dcreate_alias=false -Dbehat.launch-phantom=true ci:build:validate:test -Dblt.verbose=true
-
-#deploy:
-#- provider: script
-#  script: blt deploy -Ddeploy.commitMsg="Automated commit by Travis CI for Build ${TRAVIS_BUILD_ID}" -Ddeploy.branch="${TRAVIS_BRANCH}-build"
-#  skip_cleanup: true
-#  on:
-#    branch: develop
-#    php: 7.1
-#- provider: script
-#  script: blt deploy -Ddeploy.commitMsg="Automated commit by Travis CI for Build ${TRAVIS_BUILD_ID}" -Ddeploy.branch="${TRAVIS_BRANCH}-build"
-#  skip_cleanup: true
-#  on:
-#    branch: test
-#    php: 7.1
-#- provider: script
-#  script: blt deploy -Ddeploy.commitMsg="Automated commit by Travis CI for Build ${TRAVIS_BUILD_ID}" -Ddeploy.branch="${TRAVIS_BRANCH}-build"
-#  skip_cleanup: true
-#  on:
-#    branch: master
-#    php: 7.1
+- php bin/magento setup:install --admin-email "$ADMIN_EMAIL" --admin-firstname "$ADMIN_FIRST"
+  --admin-lastname "$ADMIN_LAST" --admin-password "$ADMIN_PASSWORD" --admin-user "$ADMIN_USERNAME"
+  --backend-frontname admin --base-url "$LOCAL_URL" --db-host 127.0.0.1 --db-name
+  "$DB_NAME" --db-user root --session-save files --use-rewrites 1 --use-secure 0 -vvv
