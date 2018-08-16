@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "13d14bc37283c6c27c082c36135ef98c",
+    "content-hash": "e2870fe5c94379f5ee42ed6404fcf498",
     "packages": [
         {
             "name": "braintree/braintree_php",
@@ -587,6 +587,41 @@
                 "search"
             ],
             "time": "2017-11-08T17:04:47+00:00"
+        },
+        {
+            "name": "gene/bluefoot",
+            "version": "1.0.31",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/gene/bluefoot/gene-bluefoot-1.0.31.0.zip",
+                "reference": null,
+                "shasum": "8cd8c9de63c8b567e0378ffb2820d21982539804"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Gene\\BlueFoot\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Dave Macaulay",
+                    "homepage": "http://gene.co.uk/",
+                    "role": "Senior Developer"
+                },
+                {
+                    "name": "Hob Adams",
+                    "homepage": "http://gene.co.uk/",
+                    "role": "Senior Developer"
+                }
+            ],
+            "description": "BlueFoot CMS & PageBuilder for Magento 2"
         },
         {
             "name": "guzzlehttp/ringphp",
@@ -18056,8 +18091,8 @@
     "aliases": [],
     "minimum-stability": "alpha",
     "stability-flags": {
-        "magento/product-enterprise-edition": 15,
         "composer/composer": 15,
+        "magento/product-enterprise-edition": 15,
         "phpmd/phpmd": 0
     },
     "prefer-stable": true,
