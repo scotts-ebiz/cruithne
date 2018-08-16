@@ -89,12 +89,6 @@ before_install:
   identified by 'j7K9u3Lm2wA6';"
 - sed  '/skip-external-locking/a wait_timeout=30000' /etc/mysql/my.cnf
 
-# Permissions
-- sudo chown -R www-data:www-data $TRAVIS_BUILD_DIR
-- sudo chmod -R 666 $TRAVIS_BUILD_DIR
-- sudo find $TRAVIS_BUILD_DIR -type f -exec chmod ug+rw {} \;
-- sudo find $TRAVIS_BUILD_DIR -type d -exec chmod ug+rwxs {} \;
-
 # PHP
 - php -m
 install:
@@ -102,6 +96,12 @@ install:
 - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGENTO_USER}\",\"password\":\"${MAGENTO_PASSWORD}\"}}}"
   > auth.json
 - composer install --prefer-dist
+
+# Permissions
+- sudo chown -R www-data:www-data $TRAVIS_BUILD_DIR
+- sudo chmod -R 666 $TRAVIS_BUILD_DIR
+- sudo find $TRAVIS_BUILD_DIR -type f -exec chmod ug+rw {} \;
+- sudo find $TRAVIS_BUILD_DIR -type d -exec chmod ug+rwxs {} \;
 before_script:
 - echo 'date.timezone = "America/New_York"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 - echo '' > ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
