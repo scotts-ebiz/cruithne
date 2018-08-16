@@ -26,6 +26,9 @@ addons:
   hosts:
     - store.cruithne.test
 
+services:
+  - mysql
+
 matrix:
   fast_finish: true
 
