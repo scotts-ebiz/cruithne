@@ -117,7 +117,7 @@ before_script:
   --use-secure="1"
 
 # Copy repo to /var/www
-- cp -r $TRAVIS_BUILD_DIR /var/www/
+- sudo cp -r $TRAVIS_BUILD_DIR /var/www/
 
 script:
 #  Move permissions to before script once unit tests are set.
