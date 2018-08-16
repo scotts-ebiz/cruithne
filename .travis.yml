@@ -67,14 +67,12 @@ before_install:
 - sudo service mysql restart
 - mysql -u "$DB_ROOT_USER" -p$DB_ROOT_PASSWORD -e "create database cruithne;"
 - mysql -u "$DB_ROOT_USER" -p$DB_ROOT_PASSWORD -e "grant all on cruithne.* to 'varien'@'%' identified by 'j7K9u3Lm2wA6';"
-#- mysql -u "$DB_ROOT_USER" -p "$DB_ROOT_PASSWORD" -e "CREATE DATABASE cruithne; CREATE USER 'varien'@'localhost' IDENTIFIED BY 'j7K9u3Lm2wA6'; GRANT ALL ON cruithne.* TO 'varien'@'localhost';"
 - sed  '/skip-external-locking/a wait_timeout=30000' /etc/mysql/my.cnf
 
 # PHP configuration.
 - php -m
 # disable xdebug for perf
 - echo '' > ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
-- phpenv config-add config/ci/travis.php.ini
 - phpenv rehash
 
 # Configure Apache
