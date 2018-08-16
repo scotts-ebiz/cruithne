@@ -17,6 +17,16 @@ env:
 php:
 - 7.1
 
+addons:
+  apt:
+    sources:
+    - mysql-5.7-xenial
+    packages:
+    - mysql-server
+    - mysql-client
+  hosts:
+    - store.cruithne.test
+
 matrix:
   fast_finish: true
 
@@ -28,10 +38,6 @@ cache:
   - $HOME/node_modules
   - $HOME/yarn.lock
   - "vendor"
-
-addons:
-  hosts:
-      - store.cruithne.test
 
 notifications:
   slack: smg-developers:vcBHeIcYxtoP1Pnv7nuT6ZGv
@@ -58,8 +64,8 @@ before_install:
 # MySQL Configuration
 #- sudo apt-get install mysql-server-5.7 -y
 #- sudo apt-get install mysql-client-5.7 -y
-- sudo mysql -u root -e "create database cruithne;"
-- sudo mysql -u root -e "grant all on cruithne.* to 'varien'@'%' identified by 'j7K9u3Lm2wA6';"
+- mysql -u root -e "create database cruithne;"
+- mysql -u root -e "grant all on cruithne.* to 'varien'@'%' identified by 'j7K9u3Lm2wA6';"
 - sed  '/skip-external-locking/a wait_timeout=30000' /etc/mysql/my.cnf
 
 # PHP configuration.
