@@ -24,7 +24,13 @@ env:
   - $CITY="Marysville"
   - $ORGNAME="eCommerce"
   - $EMAIL="smgwebsupport@scotts.com"
-  - $SUBJ="C=$COUNTRY ST=$STATE O=$ORGANIZATION localityName=$CITY commonName=$COMMON organizationalUnitName=$ORGNAME emailAddress=$EMAIL"
+  - $SUBJ="C=$COUNTRY
+  ST=$STATE
+  O=$ORGANIZATION
+  localityName=$CITY
+  commonName=$COMMON
+  organizationalUnitName=$ORGNAME
+  emailAddress=$EMAIL"
   - secure: 1buG9UEWgLrrQmgiCMyz9s5B5rvI4wtI/41VXkZEF02cUKQueFRFTSSEV8bqLR6KOkZcSHsyG6PHn1aIYFlOnsVCxhEYiYpbTdbJtLJqIK9SWaIZJKtWrUiO5uW0W1E5ElYzXG/utnYInfXBzrX8lMbXE+vzk4cBzn2SnxM2sQwwLVG6c3tq7/DpfLunHawgMycmkw6YU2DYiRcAA/GRkiO1Zz7h26te7QD5W4ntFr0+Brup8gh/dPEDkfI9JtmUjPpBcSMkDBoLDD22cNAZ00BrTZwUXZwDWkVE1M7TfnssXdUJEfXZJ4tRZVLtkA8wixEIlzCBsIYdpK0lOy36mT5APKH7NVzWgVZ5MkqvP78x/YhBZT44cs/8eddooiikXRhD+mkpR+VGGQ3P4DzsbDa3pQSYPvGt/pEI+UW5ujQy/jg3eKv5MItgbdZpotVxXu8yqbfOnYh3WkLFXAq0Bq04uQTlvBGPNVhyxEg+9YIjPnlzwAxhUDJGH7ocK82BNsGck1lzjQ9MLlMtvmPXUtQwu/CoPBCZpyZ2vT2YBzW7kia+iFKTjsxvbuAy/MHvT7NP/M8F3XrV1hFO2W9cx/LSMmVQfgUsnhZuhJXxF5CQ6aAJUfL/cfVUU0kOx0l+TWk/UZgdBM8MHRP4m+VItEilcnV6QLDZIoaXyLD3d44=
   - secure: EPEVWgFDI8pQ4rqEEtz4F5hCIwGzxpBtrSehHTEAiXj4n32ZtthZPbi4x9NRRZK3rHDTbIPKQcCCbgZ8BY4rmrt/ljZH19wNpka7yyzizcnTAci/QQGi5Sx3X9Q+7MzhIxdG/H0bJz9g99BsPo2gh9JddiaaqLMbJsYIeNJW8oGCqPrJND7MWoYXOjg27/XfUsh6LBdwR9tUDut4slE0BqLieSf6LCz0mY1mhdXmaMXy63hcHb5E5SWs+wKAdQjULYH+8OLwyjCSafTCYcPgoyEWzxACHNoB75QbTFyXNsSzGQ8saunwo7dIZkRBs+mRRNtIn5BeRflKIPVZTjh1mONJygQg85YCR9G1VjNmDpWAE/7fSczOLnNU5TO+QC/O6bcfU4p1AwaHLqo8DG1TJ5LbhSPreDJLcVbKHTJAF6/I2Vjreoyqd+Tj2ozDKI1ufpVbz2FauBifjsaK2Q5Avb79oGF9od3FAL30Yrvw73MX20TIM5uzPj9+ZRSTB4Wxb16Danbmh0/dykxYxNoXZLv4k8tSYatr9hXnq1lyydyVnjOiaurMqyft5vWl+KK53HK3L5cweX9IJUVZ8fZ/cMPMrHe9HP2WciID6BiGyuTKq3wJWmpDuqQyczCGsTjJKPZAbZAHbkZVAlTLPHvQMjWHPguyV6Z3/BSLC9wV0B4=
 php:
@@ -51,30 +57,14 @@ cache:
 notifications:
   slack: smg-developers:vcBHeIcYxtoP1Pnv7nuT6ZGv
 before_install:
+# Encryption
 - openssl aes-256-cbc -K $encrypted_8919753b6e88_key -iv $encrypted_8919753b6e88_iv
   -in ecommerce-platform-09cafe6cc096.json.enc -out ecommerce-platform-09cafe6cc096.json
   -d
+# Apache
 - sudo apt-get -y install apache2
 - sudo a2enmod ssl
 - sudo a2ensite default-ssl
-- shopt -s expand_aliases
-- composer selfupdate
-- gem install travis
-- phpenv config-rm xdebug.ini
-- echo 'variables_order = "EGPCS"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
-- echo "always_populate_raw_post_data = -1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
-- sudo git config --global user.name "Travis-CI"
-- sudo git config --global user.email "noreply@travis-ci.org"
-- sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('$DB_ROOT_PASSWORD')
-  where User='$DB_ROOT_USER'; update user set plugin='mysql_native_password';FLUSH
-  PRIVILEGES;"
-- sudo service mysql restart
-- mysql -u "$DB_ROOT_USER" -p$DB_ROOT_PASSWORD -e "create database cruithne;"
-- mysql -u "$DB_ROOT_USER" -p$DB_ROOT_PASSWORD -e "grant all on cruithne.* to 'varien'@'%'
-  identified by 'j7K9u3Lm2wA6';"
-- sed  '/skip-external-locking/a wait_timeout=30000' /etc/mysql/my.cnf
-- php -m
-
 - sudo mkdir -p "$SSL_DIR"
 - sudo openssl genrsa -out "$SSL_DIR/cruithne.key" 2048
 - sudo openssl req -new -subj "$(echo -n "$SUBJ" | tr "\n" "/")" -key "$SSL_DIR/cruithne.key" -out "$SSL_DIR/cruithne.csr" -passin pass:$PASSPHRASE
@@ -84,7 +74,31 @@ before_install:
 - chmod 644 /etc/apache2/sites-available/000-default.conf
 - chmod 644 /etc/apache2/sites-available/default-ssl.conf
 - sudo service apache2 restart
+
+# Travis Env
+- shopt -s expand_aliases
+- composer selfupdate
+- gem install travis
+- phpenv config-rm xdebug.ini
+- echo 'variables_order = "EGPCS"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
+- echo "always_populate_raw_post_data = -1" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+- sudo git config --global user.name "Travis-CI"
+- sudo git config --global user.email "noreply@travis-ci.org"
+
+#MySQL
+- sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('$DB_ROOT_PASSWORD')
+  where User='$DB_ROOT_USER'; update user set plugin='mysql_native_password';FLUSH
+  PRIVILEGES;"
+- sudo service mysql restart
+- mysql -u "$DB_ROOT_USER" -p$DB_ROOT_PASSWORD -e "create database cruithne;"
+- mysql -u "$DB_ROOT_USER" -p$DB_ROOT_PASSWORD -e "grant all on cruithne.* to 'varien'@'%'
+  identified by 'j7K9u3Lm2wA6';"
+- sed  '/skip-external-locking/a wait_timeout=30000' /etc/mysql/my.cnf
+
+# PHP
+- php -m
 install:
+# Set Magento Enterprise Creds
 - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGENTO_USER}\",\"password\":\"${MAGENTO_PASSWORD}\"}}}"
   > auth.json
 - composer install --prefer-dist
