@@ -49,11 +49,6 @@ notifications:
   slack: smg-developers:vcBHeIcYxtoP1Pnv7nuT6ZGv
 
 before_install:
-- export DEBIAN_FRONTEND=noninteractive
-- sudo apt-get -y update
-- sudo DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" upgrade
-- sudo DEBIAN_FRONTEND=noninteractive DEBIAN_PRIORITY=critical apt-get -q -y -o "Dpkg::Options::=--force-confdef" -o "Dpkg::Options::=--force-confold" dist-upgrade
-- sudo apt-get -y update
 - sudo apt-get -y install apache2
 # Enable aliases for non-interactive shell.
 - shopt -s expand_aliases
@@ -68,8 +63,6 @@ before_install:
 - sudo git config --global user.email "noreply@travis-ci.org"
 
 # MySQL Configuration
-#- sudo apt-get install mysql-server-5.7 -y
-#- sudo apt-get install mysql-client-5.7 -y
 - sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('$DB_ROOT_PASSWORD') where User='$DB_ROOT_USER'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
 - sudo service mysql restart
 - mysql -u "$DB_ROOT_USER" -p$DB_ROOT_PASSWORD -e "create database cruithne;"
