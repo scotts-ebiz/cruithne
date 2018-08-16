@@ -65,7 +65,7 @@ install:
   > auth.json
 - composer install --prefer-dist
 before_script:
-- phpenv config-rm xdebug.ini
+- echo '' > ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
 - phpenv rehash
 script:
 #  Move the magento installation to before_script once unit tests are setup
