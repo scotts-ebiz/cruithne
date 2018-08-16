@@ -5,9 +5,9 @@ group: edge
 env:
   global:
   - LOCAL_URL=https://store.cruithne.test
-  - ADMIN_EMAIL=nicholas.spencer@scotts.com
-  - ADMIN_FIRST=Chase
-  - ADMIN_LAST=Spencer
+  - ADMIN_EMAIL=smgwebsupport@scotts.com
+  - ADMIN_FIRST=SMG
+  - ADMIN_LAST=Developer
   - ADMIN_USERNAME=admin
   - ADMIN_PASSWORD=password
   - DB_NAME=cruithne
@@ -68,4 +68,4 @@ before_script:
 - php bin/magento setup:install --admin-email "$ADMIN_EMAIL" --admin-firstname "$ADMIN_FIRST"
   --admin-lastname "$ADMIN_LAST" --admin-password "$ADMIN_PASSWORD" --admin-user "$ADMIN_USERNAME"
   --backend-frontname admin --base-url "$LOCAL_URL" --db-host 127.0.0.1 --db-name
-  "$DB_NAME" --db-user root --session-save files --use-rewrites 1 --use-secure 0 -vvv
+  "$DB_NAME" --db-user $DB_APP_USER --db-password $DB_APP_PASSWORD --session-save files --use-rewrites 1 --use-secure 0 -vvv
