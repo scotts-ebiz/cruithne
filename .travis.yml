@@ -1,6 +1,7 @@
 sudo: required
 dist: xenial
 language: php
+group: edge
 
 env:
   #global environmental variables control magento instal parameters
@@ -20,8 +21,9 @@ php:
 addons:
   apt:
     packages:
-    - mysql-server
-    - mysql-client
+    - mysql-server-5.7
+    - mysql-client-core-5.7
+    - mysql-client-5.7
   hosts:
     - store.cruithne.test
 
