@@ -14,6 +14,10 @@ env:
   - ADMIN_USERNAME=admin
   - ADMIN_PASSWORD=password
   - DB_NAME=cruithne
+  - DB_ROOT_USER=root
+  - DB_ROOT_PASSWORD=password
+  - DB_APP_USER=varien
+  - DB_APP_USER=j7K9u3Lm2wA6
 
 php:
 - 7.1
@@ -68,7 +72,10 @@ before_install:
 #- sudo apt-get install mysql-client-5.7 -y
 #- mysql -h 127.0.0.1 -e "create database cruithne;"
 #- mysql -h 127.0.0.1 -e "grant all on cruithne.* to 'varien'@'%' identified by 'j7K9u3Lm2wA6';"
-- mysql -u root -e "CREATE DATABASE cruithne; CREATE USER 'varien'@'localhost' IDENTIFIED BY 'j7K9u3Lm2wA6'; GRANT ALL ON cruithne.* TO 'varien'@'localhost';"
+- sudo mysql -e "use mysql; update user set authentication_string=PASSWORD('$DB_ROOT_PASSWORD') where User='$DB_ROOT_USER'; update user set plugin='mysql_native_password';FLUSH PRIVILEGES;"
+- sudo mysql_upgrade
+- sudo service mysql restart
+- mysql -u "$DB_ROOT_USER" -p "$DB_ROOT_PASSWORD" -e "CREATE DATABASE cruithne; CREATE USER 'varien'@'localhost' IDENTIFIED BY 'j7K9u3Lm2wA6'; GRANT ALL ON cruithne.* TO 'varien'@'localhost';"
 - sed  '/skip-external-locking/a wait_timeout=30000' /etc/mysql/my.cnf
 
 # PHP configuration.
