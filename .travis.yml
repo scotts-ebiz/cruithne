@@ -63,8 +63,8 @@ before_install:
 - sudo openssl genrsa -out "$SSL_DIR/cruithne.key" 2048
 - sudo openssl req -new -subj "$(echo -n "$SUBJ" | tr "\n" "/")" -key "$SSL_DIR/cruithne.key" -out "$SSL_DIR/cruithne.csr" -passin pass:$PASSPHRASE
 - sudo openssl x509 -req -days 365 -in "$SSL_DIR/cruithne.csr" -signkey "$SSL_DIR/cruithne.key" -out "$SSL_DIR/cruithne.crt"
-- sudo cp -f $TRAVIS_BUILD_DIR/environment/config/travis-ci/000-default.conf /etc/apache2/sites-available/000-default.conf
-- sudo cp -f $TRAVIS_BUILD_DIR/environment/config/travis-ci/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
+- sudo cp -f $TRAVIS_BUILD_DIR/environment/config/000-default.conf /etc/apache2/sites-available/000-default.conf
+- sudo cp -f $TRAVIS_BUILD_DIR/environment/config/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
 - sudo chmod 644 /etc/apache2/sites-available/000-default.conf
 - sudo chmod 644 /etc/apache2/sites-available/default-ssl.conf
 - sudo service apache2 restart
@@ -101,19 +101,25 @@ before_script:
 - echo '' > ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
 - phpenv rehash
 
-# Permissions
-- sudo chown -R www-data:www-data $TRAVIS_BUILD_DIR
-- sudo chmod -R 666 $TRAVIS_BUILD_DIR
-- sudo find $TRAVIS_BUILD_DIR -type f -exec chmod ug+rw {} \;
-- sudo find $TRAVIS_BUILD_DIR -type d -exec chmod ug+rwxs {} \;
-script:
-#  Move the magento installation to before_script once unit tests are setup
+# Magento 2 installation
 - php bin/magento setup:install --base-url="$LOCAL_URL" --admin-email="$ADMIN_EMAIL"
   --admin-firstname="$ADMIN_FIRST" --admin-lastname="$ADMIN_LAST" --admin-user="$ADMIN_USERNAME"
   --admin-password="$ADMIN_PASSWORD" --language="en_US" --backend-frontname="admin"
   --base-url="$LOCAL_URL" --db-host="localhost" --db-name="$DB_NAME" --db-user="$DB_APP_USER"
   --db-password="$DB_APP_PASSWORD" --currency="USD" --timezone="America/New_York" --use-rewrites="1"
   --use-secure="1"
+
+# Copy repo to /var/www
+- mkdir -p /var/www/cruithne
+- cp -f $TRAVIS_BUILD_DIR /var/www/
+
+script:
+#  Move permissions to before script once unit tests are set.
+# Permissions
+- sudo chown -R www-data:www-data /var/www/
+- sudo chmod -R 666 /var/www/
+- sudo find /var/www/ -type f -exec chmod ug+rw {} \;
+- sudo find /var/www/ -type d -exec chmod ug+rwxs {} \;
 
 #deploy:
 #  provider: gae
