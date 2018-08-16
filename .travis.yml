@@ -76,8 +76,6 @@ before_install:
 - phpenv rehash
 
 # Configure Apache
-- rm /etc/apache2/sites-available/000-default.conf
-- cp $TRAVIS_BUILD_DIR/environment/config/000-default.conf /etc/apache2/sites-available/000-default.conf
 - sudo service apache2 restart
 
 install:
