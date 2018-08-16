@@ -94,7 +94,6 @@ before_install:
 - sudo chmod -R 666 $TRAVIS_BUILD_DIR
 - sudo find $TRAVIS_BUILD_DIR -type f -exec chmod ug+rw {} \;
 - sudo find $TRAVIS_BUILD_DIR -type d -exec chmod ug+rwxs {} \;
-- sudo usermod -a -G www-data `who am i | awk '{print $1}'`
 
 # PHP
 - php -m
