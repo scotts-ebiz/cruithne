@@ -65,8 +65,8 @@ install:
 - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGENTO_USER}\",\"password\":\"${MAGENTO_PASSWORD}\"}}}" > auth.json
 - composer install --prefer-dist
 before_script:
-- php bin/magento setup:install --base-url=$LOCAL_URL --admin-email "$ADMIN_EMAIL" --admin-firstname "$ADMIN_FIRST"
-  --admin-lastname "$ADMIN_LAST" --admin-user "$ADMIN_USERNAME" --admin-password "$ADMIN_PASSWORD"
-  --language=en_US --backend-frontname admin --base-url "$LOCAL_URL" --db-host localhost --db-name "$DB_NAME"
-  --db-user $DB_APP_USER --db-password $DB_APP_PASSWORD --session-save files --currency=USD --timezone=America/Chicago
-  --use-rewrites=1 --use-secure 0 -vvv
+- php bin/magento setup:install --base-url="$LOCAL_URL" --admin-email="$ADMIN_EMAIL" --admin-firstname="$ADMIN_FIRST"
+  --admin-lastname="$ADMIN_LAST" --admin-user="$ADMIN_USERNAME" --admin-password="$ADMIN_PASSWORD"
+  --language="en_US" --backend-frontname="admin" --base-url="$LOCAL_URL" --db-host="localhost" --db-name="$DB_NAME"
+  --db-user="$DB_APP_USER" --db-password="$DB_APP_PASSWORD" --currency="USD" --timezone="America/New York"
+  --use-rewrites="1" --use-secure="0"
