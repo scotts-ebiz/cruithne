@@ -103,7 +103,6 @@ install:
 - sudo find $TRAVIS_BUILD_DIR -type f -exec chmod ug+rw {} \;
 - sudo find $TRAVIS_BUILD_DIR -type d -exec chmod ug+rwxs {} \;
 before_script:
-- echo 'date.timezone = "America/New_York"' >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini
 - echo '' > ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
 - phpenv rehash
 script:
