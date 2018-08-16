@@ -71,16 +71,8 @@ before_install:
 - sed  '/skip-external-locking/a wait_timeout=30000' /etc/mysql/my.cnf
 
 # PHP configuration.
-# disable xdebug for perf
 - php -m
-- sed -i "s/;date\.timezone =$/date\.timezone = 'America\/New_York'/" /etc/php/7.1/cli/php.ini
-- sed -i "s/;date\.timezone =$/date\.timezone = 'America\/New_York'/" /etc/php/7.1/apache2/php.ini
-- sed -i 's/;opcache\.save_comments/opcache\.save_comments/' /etc/php/7.1/cli/php.ini
-- sed -i 's/;opcache\.save_comments/opcache\.save_comments/' /etc/php/7.1/apache2/php.ini
-- sed -i 's/short_open_tag = Off/short_open_tag = On/' /etc/php/7.1/cli/php.ini
-- sed -i 's/short_open_tag = Off/short_open_tag = On/' /etc/php/7.1/apache2/php.ini
-- sed -i 's/memory_limit = [0-9]+M/memory_limit = 1G/' /etc/php/7.1/apache2/php.ini
-- phpenmod mcrypt
+# disable xdebug for perf
 - echo '' > ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini
 - phpenv config-add config/ci/travis.php.ini
 - phpenv rehash
