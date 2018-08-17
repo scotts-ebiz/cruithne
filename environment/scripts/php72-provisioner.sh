@@ -31,7 +31,7 @@ echo ">>> docroot directory created!"
 echo ">>> Restarting apache..."
 service apache2 restart
 
-echo ">>> Installing and configuring php 7.1..."
+echo ">>> Installing and configuring php 7.2..."
 add-apt-repository ppa:ondrej/php
 apt-get -y update
 apt-get -y install php7.2 libapache2-mod-php7.2 php7.2-common php7.2-gd php7.2-mysql php7.2-curl php7.2-intl php7.2-xsl php7.2-mbstring php7.2-zip php7.2-bcmath php7.2-iconv php7.2-soap php7.2-mcrypt
@@ -43,11 +43,11 @@ sed -i 's/short_open_tag = Off/short_open_tag = On/' /etc/php/7.2/cli/php.ini
 sed -i 's/short_open_tag = Off/short_open_tag = On/' /etc/php/7.2/cli/php.ini
 sed -i 's/memory_limit = [0-9]+M/memory_limit = 1G/' /etc/php/7.2/cli/php.ini
 phpenmod mcrypt
-echo ">>> php 7.1 installed and configured!"
+echo ">>> php 7.2 installed and configured!"
 
 echo ">>> Installing and configuring xdebug..."
-# For PHP 7.1 it looks like there is not xdebug 7.1 specific package.
-# START XDEBUG - PHP 7.1 SPECIFIC BUILDING FROM SOURCE
+# For PHP 7.2 it looks like there is not xdebug 7.2 specific package.
+# START XDEBUG - PHP 7.2 SPECIFIC BUILDING FROM SOURCE
 
 # Download stable release of xdebug from https://xdebug.org/download.php
 apt-get -y install php7.2-dev
@@ -60,7 +60,7 @@ phpize
 ./configure
 make && make install
 ln -sf /etc/php/7.2/mods-available/xdebug.ini /etc/php/7.2/cli/conf.d/20-xdebug.ini
-# END XDEBUG - PHP 7.1 SPECIFIC BUILDING FROM SOURCE
+# END XDEBUG - PHP 7.2 SPECIFIC BUILDING FROM SOURCE
 
 echo "[xdebug]" | sudo tee -a /etc/php/7.2/cli/php.ini
 echo "zend_extension=xdebug.so" > /etc/php/7.2/mods-available/xdebug.ini
