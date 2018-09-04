@@ -1,0 +1,14 @@
+{
+  "blank": {
+    "src": "app/code/Snowdog/theme-blank-sass",
+    "dest": "pub/static/frontend/Snowdog/blank",
+    "locale": ["en_US"],
+    "ignore": [".test"]
+  },
+  "default": {
+    "src": "app/design/frontend/Scottsbase/default",
+    "dest": "pub/static/frontend/Scottsbase/default",
+    "locale": ["en_US"],
+    "parent": "blank"
+  }
+}
