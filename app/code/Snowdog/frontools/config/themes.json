@@ -10,5 +10,17 @@
     "dest": "pub/static/frontend/Scottsbase/default",
     "locale": ["en_US"],
     "parent": "blank"
+  },
+  "scottsprogram": {
+    "src": "app/design/frontend/Scottsbase/scottsprogram",
+    "dest": "pub/static/frontend/Scottsbase/scottsprogram",
+    "locale": ["en_US"],
+    "parent": "default"
+  },
+  "mygro": {
+    "src": "app/design/frontend/Scottsbase/mygro",
+    "dest": "pub/static/frontend/Scottsbase/mygro",
+    "locale": ["en_US"],
+    "parent": "default"
   }
 }
