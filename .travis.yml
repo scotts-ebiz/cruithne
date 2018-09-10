@@ -100,7 +100,7 @@ before_install:
 install:
 # Set Magento Enterprise Creds
 - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGENTO_USER}\",\"password\":\"${MAGENTO_PASSWORD}\"}}}"
-  > auth.json
+    > auth.json
 - composer install --prefer-dist
 
 before_script:

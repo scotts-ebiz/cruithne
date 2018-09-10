@@ -1,0 +1,29 @@
+{
+  "blank": {
+    "src": "app/code/Snowdog/theme-blank-sass",
+    "dest": "pub/static/frontend/Snowdog/blank",
+    "locale": ["en_US"],
+    "ignore": [".test"]
+  },
+  "default": {
+    "src": "app/design/frontend/Scottsbase/default",
+    "dest": "pub/static/frontend/Scottsbase/default",
+    "stylesDir": "web/css",
+    "locale": ["en_US"],
+    "parent": "blank"
+  },
+  "scottsprogram": {
+    "src": "app/design/frontend/Scottsbase/scottsprogram",
+    "dest": "pub/static/frontend/Scottsbase/scottsprogram",
+    "stylesDir": "web/css",
+    "locale": ["en_US"],
+    "parent": "default"
+  },
+  "mygro": {
+    "src": "app/design/frontend/Scottsbase/mygro",
+    "dest": "pub/static/frontend/Scottsbase/mygro",
+    "stylesDir": "web/css",
+    "locale": ["en_US"],
+    "parent": "default"
+  }
+}
