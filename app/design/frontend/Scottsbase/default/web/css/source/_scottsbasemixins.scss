@@ -1,0 +1,49 @@
+// Mixins
+
+// General //
+@mixin input-placeholder {
+    &.placeholder { @content; }
+    &:-moz-placeholder { @content; }
+    &::-moz-placeholder { @content; }
+    &:-ms-input-placeholder { @content; }
+    &::-webkit-input-placeholder { @content; }
+}
+
+@mixin pseudo($display: block, $pos: absolute, $content: '') {
+    content: $content;
+    display: $display;
+    position: $pos;
+}
+
+// Fonts //
+@mixin font-lato($size: false, $colour: false, $weight: false,  $lh: false) {
+    font-family: $lato;
+    @if $size { font-size: $size; }
+    @if $colour { color: $colour; }
+    @if $weight { font-weight: $weight; }
+    @if $lh { line-height: $lh; }
+}
+
+@mixin font-open-sans($size: false, $colour: false, $weight: false,  $lh: false) {
+    font-family: $opensans;
+    @if $size { font-size: $size; }
+    @if $colour { color: $colour; }
+    @if $weight { font-weight: $weight; }
+    @if $lh { line-height: $lh; }
+}
+
+@mixin font-oswald($size: false, $colour: false, $weight: false,  $lh: false) {
+    font-family: $oswald;
+    @if $size { font-size: $size; }
+    @if $colour { color: $colour; }
+    @if $weight { font-weight: $weight; }
+    @if $lh { line-height: $lh; }
+}
+
+@mixin font-rokkitt($size: false, $colour: false, $weight: false,  $lh: false) {
+    font-family: $rokkitt;
+    @if $size { font-size: $size; }
+    @if $colour { color: $colour; }
+    @if $weight { font-weight: $weight; }
+    @if $lh { line-height: $lh; }
+}
