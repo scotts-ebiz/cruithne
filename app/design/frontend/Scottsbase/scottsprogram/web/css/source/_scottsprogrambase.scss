@@ -1,1 +1,18 @@
 // Scotts Program Base
+.page-wrapper {
+    .page-header {
+        background: $primary-green;
+        height: 3.25rem;
+        .logo {
+            position: absolute;
+            top: 1rem;
+        }
+        .shipping-message {
+            text-align: center;
+            color: white;
+            font-size: 0.9rem;
+            padding: 1rem 0;
+        }
+    }
+}
+
