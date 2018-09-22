@@ -16,13 +16,16 @@
             <parameter name="heroheadline" sort_order="20" visible="true" xsi:type="text">
                 <label>Hero Headline</label>
             </parameter>
-            <parameter name="herotext" sort_order="20" visible="true" xsi:type="text">
+            <parameter name="herotext" sort_order="20" visible="true" xsi:type="block">
                 <label>Hero Text</label>
+                <block class="SMG\HeroZip\Block\Widget\TextField"/>
             </parameter>
             <parameter name="buttontext" sort_order="20" visible="true" xsi:type="text">
                 <label>Button Text</label>
             </parameter>
+            <parameter name="validzipcodes" sort_order="20" visible="true" xsi:type="text">
+                <label>Valid Zip Codes</label>
+            </parameter>
         </parameters>
-
     </widget>
 </widgets>
