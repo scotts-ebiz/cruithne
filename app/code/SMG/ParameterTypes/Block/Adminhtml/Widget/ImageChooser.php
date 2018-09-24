@@ -34,15 +34,17 @@ class ImageChooser extends Template {
      * @return Element
      */
     public function prepareElementHtml(Element $element) {
-        $config = $this->_getData('config');
-        $sourceUrl = $this->getUrl('cms/wysiwyg_images/index',
-            ['target_element_id' => $element->getId(), 'type' => 'file']);
+        //$config = $this->_getData('config');
+        $prefix = $element->getForm()->getHtmlIdPrefix();
+        $elementId = $prefix . $element->getId();
+
+        $sourceUrl = $this->getUrl('cms/wysiwyg_images/index', ['target_element_id' => $elementId, 'type' => 'file']);
 
         /** @var \Magento\Backend\Block\Widget\Button $chooser */
-        $chooser = $this->getLayout()->createBlock('Magento\Backend\Block\Widget\Button')
+        $chooser = $this->getLayout()->createBlock(\Magento\Backend\Block\Widget\Button::class)
             ->setType('button')
             ->setClass('btn-chooser')
-            /*->setLabel($config['button']['open'])*/
+            ->setLabel(__('Choose Image'))
             ->setOnClick('MediabrowserUtility.openDialog(\''. $sourceUrl .'\')')
             ->setDisabled($element->getReadonly());
 
@@ -51,6 +53,7 @@ class ImageChooser extends Template {
         $input->setId($element->getId());
         $input->setForm($element->getForm());
         $input->setClass("widget-option input-text admin__control-text");
+
         if ($element->getRequired()) {
             $input->addClass('required-entry');
         }
