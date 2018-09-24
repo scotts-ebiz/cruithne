@@ -6,6 +6,8 @@
         <parameters>
             <parameter name="heroimage" sort_order="10" visible="true" xsi:type="text">
                 <label>Hero Image</label>
+                <description translate="true">Contact photo</description>
+
             </parameter>
             <parameter name="heroimagemobile" sort_order="20" visible="true" xsi:type="text">
                 <label>Hero Image (Mobile)</label>
