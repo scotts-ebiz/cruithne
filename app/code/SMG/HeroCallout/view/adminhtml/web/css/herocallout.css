@@ -13,15 +13,12 @@
     margin-left: 15px;
 }
 
-.admin__field-control .control-value {
-    display: none;
-}
-
 .admin__field-note {
     display: none;
 }
 
 .btn-chooser,
+.btn-delete,
 .action-default.scalable.action-add,
 .action-default.scalable.action-delete {
     margin-top: 5px;
