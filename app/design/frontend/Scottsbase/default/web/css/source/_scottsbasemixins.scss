@@ -16,34 +16,34 @@
 }
 
 // Fonts //
-@mixin font-lato($size: false, $colour: false, $weight: false,  $lh: false) {
+@mixin font-lato($size: false, $color: false, $weight: false,  $lh: false) {
     font-family: $lato;
     @if $size { font-size: $size; }
-    @if $colour { color: $colour; }
+    @if $color { color: $color; }
     @if $weight { font-weight: $weight; }
     @if $lh { line-height: $lh; }
 }
 
-@mixin font-open-sans($size: false, $colour: false, $weight: false,  $lh: false) {
+@mixin font-open-sans($size: false, $color: false, $weight: false,  $lh: false) {
     font-family: $opensans;
     @if $size { font-size: $size; }
-    @if $colour { color: $colour; }
+    @if $color { color: $color; }
     @if $weight { font-weight: $weight; }
     @if $lh { line-height: $lh; }
 }
 
-@mixin font-oswald($size: false, $colour: false, $weight: false,  $lh: false) {
+@mixin font-oswald($size: false, $color: false, $weight: false,  $lh: false) {
     font-family: $oswald;
     @if $size { font-size: $size; }
-    @if $colour { color: $colour; }
+    @if $color { color: $color; }
     @if $weight { font-weight: $weight; }
     @if $lh { line-height: $lh; }
 }
 
-@mixin font-rokkitt($size: false, $colour: false, $weight: false,  $lh: false) {
+@mixin font-rokkitt($size: false, $color: false, $weight: false,  $lh: false) {
     font-family: $rokkitt;
     @if $size { font-size: $size; }
-    @if $colour { color: $colour; }
+    @if $color { color: $color; }
     @if $weight { font-weight: $weight; }
     @if $lh { line-height: $lh; }
 }
