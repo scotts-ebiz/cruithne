@@ -109,15 +109,32 @@
             <container name="page.bottom" label="Before Page Footer" htmlTag="div" htmlClass="content"/>
         </referenceContainer>
         <referenceContainer name="footer-container">
-            <container name="footer" as="footer" label="Page Footer" htmlTag="div" htmlClass="footer content">
+            <container name="footer" as="footer" label="Page Footer" htmlTag="div" htmlClass="footer content section group">
                 <block class="Magento\Store\Block\Switcher" name="store_switcher" as="store_switcher" template="Magento_Store::switch/stores.phtml"/>
-                <block class="Magento\Framework\View\Element\Html\Links" name="footer_links">
-                    <arguments>
-                        <argument name="css_class" xsi:type="string">footer links</argument>
-                    </arguments>
-                </block>
-                <block class="Magento\Theme\Block\Html\Footer" name="copyright" template="Magento_Theme::html/copyright.phtml"/>
-                <block class="Magento\Framework\View\Element\Template" name="report.bugs" template="Magento_Theme::html/bugreport.phtml" />
+                <container name="div.social-links.block" htmlTag="div" htmlClass="social-links col span_4_of_12">
+                    <block class="Magento\Cms\Block\Block" name="sp-footer-social-links">
+                        <arguments>
+                            <argument name="block_id" xsi:type="string">sp-footer-social-links</argument>
+                            <argument name="css_class" xsi:type="string">social-links col span_4_of_12</argument>
+                        </arguments>
+                    </block>
+                </container>
+                <container name="div.contact-info.block" htmlTag="div" htmlClass="contact-info col span_4_of_12">
+                    <block class="Magento\Cms\Block\Block" name="sp-footer-contact">
+                        <arguments>
+                            <argument name="block_id" xsi:type="string">sp-footer-contact</argument>
+                            <argument name="css_class" xsi:type="string">contact-info</argument>
+                        </arguments>
+                    </block>
+                </container>
+                <container name="div.company-links.block" htmlTag="div" htmlClass="company-links col span_4_of_12">
+                    <block class="Magento\Cms\Block\Block" name="sp-footer-company-links">
+                        <arguments>
+                            <argument name="block_id" xsi:type="string">sp-footer-company-links</argument>
+                            <argument name="css_class" xsi:type="string">company-links col span_4_of_12</argument>
+                        </arguments>
+                    </block>
+                </container>
             </container>
         </referenceContainer>
         <referenceContainer name="before.body.end">
