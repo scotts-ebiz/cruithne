@@ -6,9 +6,9 @@
 @import 'vendor/magento-ui/lib'; // Magento UI
 
 // Scotts Program Defaults
-@import 'source/scottsprogramvars';
-@import 'source/scottsprogrammixins';
-@import 'source/scottsprogrambase';
+@import 'source/mygrovars';
+@import 'source/mygromixins';
+@import 'source/mygrobase';
 
 // Override Block Styles
 @import 'blocks/layout';
