@@ -1,0 +1,98 @@
+<?xml version="1.0" ?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget class="Scotts\LandingPage\Block\Widget\Landingpageoptions" id="scotts_landingpage_landingpageoptions">
+        <label>Landing Page Options</label>
+        <description>Landing page custom fields.</description>
+        <parameters>
+            <parameter name="requireszipcodelookup" xsi:type="multiselect" visible="true" required="false">
+                <label>Requires Zip Code Lookup</label>
+                <options>
+                    <option name="require_zip_no" value="0">
+                        <label translate="true">No</label>
+                    </option>
+                    <option name="require_zip_yes" value="1">
+                        <label translate="true">No</label>
+                    </option>
+                </options>
+            </parameter>
+            <parameter xsi:type="block" name="heroimage" visible="true">
+                <label translate="true">Background Image</label>
+                <block class="Scotts\WidgetParameters\Block\Adminhtml\Widget\Type\ImageChooser">
+                    <data>
+                        <item name="button" xsi:type="array">
+                            <item name="open" xsi:type="string">Choose Image...</item>
+                        </item>
+                    </data>
+                </block>
+            </parameter>
+            <parameter name="herosupportingheadline" xsi:type="text" visible="true" required="false">
+                <label>Hero Supporting Headline</label>
+                <value>Scotts® Turf Builder® Annual Program</value>
+            </parameter>
+            <parameter name="heroheadline" xsi:type="text" visible="true" required="false">
+                <label>Hero Headline</label>
+                <value>All Your Lawn Care Needs, Right At Your Doorstep</value>
+            </parameter>
+            <parameter name="herodescription" xsi:type="block" visible="true" required="false">
+                <label>Hero Description</label>
+                <block class="Scotts\WidgetParameters\Block\Adminhtml\Widget\Type\Textarea" />
+            </parameter>
+            <parameter name="smallyardbundle" xsi:type="block" visible="true" required="false">
+                <label translate="true">Small Yard Bundle</label>
+                <block class="Magento\Catalog\Block\Adminhtml\Product\Widget\Chooser">
+                    <data>
+                        <item name="button" xsi:type="array">
+                            <item name="open" xsi:type="string" translate="true">Select Product...</item>
+                        </item>
+                    </data>
+                </block>
+            </parameter>
+            <parameter name="largeyardbundle" xsi:type="block" visible="true" required="false">
+                <label translate="true">Large Yard Bundle</label>
+                <block class="Magento\Catalog\Block\Adminhtml\Product\Widget\Chooser">
+                    <data>
+                        <item name="button" xsi:type="array">
+                            <item name="open" xsi:type="string" translate="true">Select Product...</item>
+                        </item>
+                    </data>
+                </block>
+            </parameter>
+            <parameter name="smallyardtext" xsi:type="text" visible="true" required="false">
+                <label>Small Yard Button Text</label>
+                <value>Buy Small Yard Program</value>
+            </parameter>
+            <parameter name="smallyardcoverage" xsi:type="text" visible="true" required="false">
+                <label>Small Yard Coverage</label>
+                <value>A small lawn is up to 4,000 sq. feet or just under 1/10 an acre.</value>
+            </parameter>
+            <parameter name="largeyardtext" xsi:type="text" visible="true" required="false">
+                <label>Large Yard Text</label>
+                <value>Buy Large Yard Program</value>
+            </parameter>
+            <parameter name="largeyardcoverage" xsi:type="text" visible="true" required="false">
+                <label>Large Yard Coverage</label>
+                <value>A large lawn is up to 12,000 sq. feet or just over 1/4 an acre.</value>
+            </parameter>
+            <parameter name="freeshippingmessage" xsi:type="text" visible="true" required="false">
+                <label>Free Shipping Message</label>
+                <value>Free Shipping On All Orders!</value>
+            </parameter>
+            <parameter name="disclaimertext" xsi:type="block" visible="true" required="false">
+                <label translate="true">Disclaimer Text</label>
+                <block class="Scotts\WidgetParameters\Block\Adminhtml\Widget\Type\Textarea" />
+            </parameter>
+            <parameter name="howitworksdescriptionone" xsi:type="block" visible="true" required="false">
+                <label>How It Works Text #1</label>
+                <block class="Scotts\WidgetParameters\Block\Adminhtml\Widget\Type\Textarea" />
+            </parameter>
+            <parameter name="howitworksdescriptiontwo" xsi:type="block" visible="true" required="false">
+                <label>How It Works Text #2</label>
+                <block class="Scotts\WidgetParameters\Block\Adminhtml\Widget\Type\Textarea" />
+            </parameter>
+            <parameter name="howitworksdescriptionthree" xsi:type="block" visible="true" required="false">
+                <label>How It Works Text #3</label>
+                <block class="Scotts\WidgetParameters\Block\Adminhtml\Widget\Type\Textarea" />
+            </parameter>
+        </parameters>
+    </widget>
+</widgets>
