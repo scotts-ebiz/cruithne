@@ -2,7 +2,6 @@
     "name": "magento/project-enterprise-edition",
     "description": "eCommerce Platform for Growth (Enterprise Edition)",
     "type": "project",
-    "version": "2.3.0-beta9",
     "license": [
         "proprietary"
     ],
@@ -11,7 +10,7 @@
         "sort-packages": true
     },
     "require": {
-        "magento/product-enterprise-edition": "2.3.0-beta9",
+        "magento/product-enterprise-edition": "2.3.0-beta12",
         "composer/composer": "@alpha"
     },
     "require-dev": {
@@ -56,6 +55,8 @@
         }
     },
     "prefer-stable": true,
+    "version": "2.3.0-beta12",
+    "minimum-stability": "alpha",
     "repositories": [
         {
             "type": "composer",
