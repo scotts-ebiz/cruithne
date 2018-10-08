@@ -18,7 +18,7 @@ class AssertProductsAddBySkuOnBackendProductQtyIsNotEnough extends AbstractConst
     /**
      * Error message pattern.
      */
-    const ERROR_MESSAGE = 'We don\'t have as many "%s" as you requested.';
+    const ERROR_MESSAGE = 'The requested qty is not available';
 
     /**
      * Assert that after adding products by sku to order on backend,

@@ -63,7 +63,7 @@ class Curl extends AbstractCurl implements GiftCardAccountInterface
         $generateCode = $_ENV['app_backend_url'] . $this->generate;
         $curl = new BackendDecorator(new CurlTransport(), $this->_configuration);
         $curl->addOption(CURLOPT_HEADER, 1);
-        $curl->write($generateCode, [], CurlInterface::GET);
+        $curl->write($generateCode, [], CurlInterface::POST, ['X-Requested-With' => 'XMLHttpRequest']);
         $curl->read();
         $curl->write($url, $data);
         $content = $curl->read();
