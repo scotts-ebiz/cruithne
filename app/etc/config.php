@@ -252,5 +252,7 @@ return [
         'Magento_InventoryCache' => 0,
         'Magento_InventoryBundleProductAdminUi' => 0,
         'Magento_InventoryBundleProduct' => 0
+        'SMG_HeroCallout' => 1,
+        'SMG_ParameterTypes' => 1
     ]
 ];
