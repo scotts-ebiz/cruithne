@@ -1,0 +1,44 @@
+.admin__control-textarea {
+    height: 15em;
+}
+.admin__fieldset > .admin__field {
+    margin-bottom: 0;
+}
+
+.admin__fieldset > .admin__field > .admin__field-control {
+    width: calc((100%) * 0.73 - 30px);
+}
+
+.admin__fieldset > .admin__field > .admin__field-label {
+    margin-left: 15px;
+}
+
+.admin__field-note {
+    display: none;
+}
+
+.btn-chooser,
+.btn-delete,
+.action-default.scalable.action-add,
+.action-default.scalable.action-delete {
+    margin-top: 5px;
+    padding: 1px 7px 2px 7px;
+}
+
+.data-table select {
+    font-size: 12px;
+    margin-right: 15px;
+}
+
+.fieldset-wrapper .page_group_select.select {
+    margin-left: 15px;
+    margin-top: 5px;
+}
+
+.pages.group_container .data-table th {
+    text-align: left;
+    font-size: 12px;
+}
+.widget-layout-updates {
+    margin: -10px 10px 10px 10px;
+}
