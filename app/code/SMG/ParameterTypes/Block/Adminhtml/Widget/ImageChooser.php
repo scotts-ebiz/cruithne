@@ -18,11 +18,7 @@ class ImageChooser extends Template {
      * @param FormElementFactory $elementFactory
      * @param array $data
      */
-    public function __construct (
-        TemplateContext $context,
-        FormElementFactory $elementFactory,
-        $data = []
-    ) {
+    public function __construct (TemplateContext $context, FormElementFactory $elementFactory, $data = []) {
         $this->elementFactory = $elementFactory;
         parent::__construct($context, $data);
     }
@@ -32,8 +28,11 @@ class ImageChooser extends Template {
      *
      * @param Element $element
      * @return Element
+     * @throws
      */
     public function prepareElementHtml(Element $element) {
+        $config = $this->_getData('config');
+
         // this will get the desired preview html if the image
         // already exists
         $previewHtml = $this->getPreviewHtml($element);
@@ -71,6 +70,9 @@ class ImageChooser extends Template {
             ->setOnclick('document.getElementById(\''. $elementId .'\').value=\'\';if(document.getElementById(\''. $elementId .'_image\'))document.getElementById(\''. $elementId .'_image\').parentNode.remove()')
             ->setDisabled($element->getReadonly());
 
+        // hide the element so there isn't a duplicate field
+        $element->setData("value", '');
+
         // add to the after html element
         $element->setData('after_element_html', '<div class="img_chooser_control">' . $input->getElementHtml() . $previewHtml . $chooser->toHtml() . $removeButton->toHtml() . "</div>");
 
@@ -90,10 +92,6 @@ class ImageChooser extends Template {
         if ($element->getEscapedValue()) {
             // Add image preview.
             $url = $element->getEscapedValue();
-
-            if( !preg_match("/^http\:\/\/|https\:\/\//", $url) ) {
-                $url = Mage::getBaseUrl('media') . $url;
-            }
 
             $previewHtml = '<a href="' . $url . '"'
                 . ' onclick="imagePreview(\'' . $element->getHtmlId() . '_image\'); return false;">'
