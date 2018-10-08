@@ -33,23 +33,25 @@
         <referenceContainer name="header.container">
             <container name="header.panel.wrapper" htmlClass="panel wrapper" htmlTag="div" before="-">
                 <container name="header.panel" label="Page Header Panel" htmlTag="div" htmlClass="panel header">
-                    <block class="Magento\Store\Block\Switcher" name="store_language" as="store_language" template="Magento_Store::switch/languages.phtml"/>
-                    <block class="Magento\Customer\Block\Account\Navigation" name="top.links">
+                    <block class="Magento\Framework\View\Element\Template" name="skip_to_content" template="Magento_Theme::html/skip.phtml">
                         <arguments>
-                            <argument name="css_class" xsi:type="string">header links</argument>
+                            <argument name="target" xsi:type="string">contentarea</argument>
+                            <argument name="label" translate="true" xsi:type="string">Skip to Content</argument>
                         </arguments>
                     </block>
+                    <block class="Magento\Store\Block\Switcher" name="store_language" as="store_language" template="Magento_Store::switch/languages.phtml"/>
                 </container>
             </container>
+            <referenceBlock name="top.search" remove="true" />
             <container name="header-wrapper" label="Page Header" as="header-wrapper" htmlTag="div" htmlClass="header content">
-                <block class="Magento\Theme\Block\Html\Header\Logo" name="logo" before="navigation.sections">
+                <block class="Magento\Theme\Block\Html\Header\Logo" name="logo">
                     <arguments>
                         <argument name="logo_file" xsi:type="string">images/gro_scotts_lockup_resize.png</argument>
-                        <argument name="logo_img_width" xsi:type="number">108</argument>
+                        <argument name="logo_img_width" xsi:type="number">105</argument>
                         <argument name="logo_img_height" xsi:type="number">35</argument>
                     </arguments>
                 </block>
-                <block class="Magento\Framework\View\Element\Template" name="navigation.sections" before="-" template="Magento_Theme::html/sections.phtml">
+                <block class="Magento\Framework\View\Element\Template" name="navigation.sections" after="-" template="Magento_Theme::html/sections.phtml">
                     <arguments>
                         <argument name="group_name" xsi:type="string">navigation-sections</argument>
                         <argument name="group_css" xsi:type="string">nav-sections</argument>
@@ -106,16 +108,6 @@
             <container name="page.bottom" label="Before Page Footer" htmlTag="div" htmlClass="content"/>
         </referenceContainer>
         <referenceContainer name="footer-container">
-            <container name="footer" as="footer" label="Page Footer" htmlTag="div" htmlClass="footer content">
-                <block class="Magento\Store\Block\Switcher" name="store_switcher" as="store_switcher" template="Magento_Store::switch/stores.phtml"/>
-                <block class="Magento\Framework\View\Element\Html\Links" name="footer_links">
-                    <arguments>
-                        <argument name="css_class" xsi:type="string">footer links</argument>
-                    </arguments>
-                </block>
-                <block class="Magento\Theme\Block\Html\Footer" name="copyright" template="Magento_Theme::html/copyright.phtml"/>
-                <block class="Magento\Framework\View\Element\Template" name="report.bugs" template="Magento_Theme::html/bugreport.phtml" />
-            </container>
         </referenceContainer>
         <referenceContainer name="before.body.end">
             <block class="Magento\Theme\Block\Html\Footer" name="absolute_footer" template="Magento_Theme::html/absolute_footer.phtml" />

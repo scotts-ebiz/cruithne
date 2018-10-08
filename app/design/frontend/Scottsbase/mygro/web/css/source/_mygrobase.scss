@@ -1,13 +1,80 @@
 // MyGro Base
+body {
+    @include font-hellix-regular();
+}
 .page-wrapper {
     .page-header {
+        border-bottom: 1px solid #dcdcdc;
+        box-sizing: border-box;
+        padding: 1.1rem 0 0.8rem;
+        position: relative;
+        text-align: center;
+        .panel.wrapper {
+            display: none;
+        }
         .header.content {
             .logo {
                 display: inline-block;
+                float: left;
+                padding: 0.25rem 0;
+            }
+            .minicart-wrapper {
+                float: right;
+                margin-top: 0.4rem;
+                .showcart {
+                    color: $mygro-green;
+                    font-size: 1.6rem;
+                    margin: 5px 25px 0 0;
+                    text-decoration: none;
+                    .icon-bag {
+                        font-family: 'gro';
+                        speak: none;
+                        font-style: normal;
+                        font-weight: normal;
+                        font-variant: normal;
+                        text-transform: none;
+                        line-height: 1;
+                        -webkit-font-smoothing: antialiased;
+                        &:before {
+                            content: '\e902';
+                        }
+                    }
+                }
             }
             .sections.nav-sections {
+                background: transparent;
                 display: inline-block;
+                margin-bottom: 0;
+                transform: translateX(-11%);
+                .nav-sections-item-content {
+                    @include font-hellix-regular(0.875rem, $mygro-black, false, false, 1px);
+                    text-transform: uppercase;
+                    .navigation {
+                        background: transparent;
+                        ul {
+                            .first {
+                                .level-top {
+                                    span {
+                                        @include font-hellix-heavy(false, $mygro-green);
+                                    }
+                                }
+                            }
+                            .category-item {
+                                span {
+                                    color: $mygro-black;
+                                    &:hover {
+                                        color: $mygro-green;
+                                        transition: color 0.2s linear;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
             }
         }
+    }
+    .page-main {
+        margin-top: 1rem;
     }
 }
