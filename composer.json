@@ -55,7 +55,7 @@
         }
     },
     "prefer-stable": true,
-    "version": "2.3.0-alpha60",
+    "version": "2.3.0",
     "minimum-stability": "alpha",
     "repositories": [
         {
