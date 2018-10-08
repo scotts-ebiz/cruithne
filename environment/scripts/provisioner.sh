@@ -113,6 +113,11 @@ openssl req -new -subj "$(echo -n "$SUBJ" | tr "\n" "/")" -key "$SSL_DIR/cruithn
 openssl x509 -req -days 365 -in "$SSL_DIR/cruithne.csr" -signkey "$SSL_DIR/cruithne.key" -out "$SSL_DIR/cruithne.crt"
 echo ">>> Self-signed certificate created!"
 
+sudo openssl genrsa -out "$SSL_DIR/mygro.key" 2048
+sudo openssl req -new -subj "$(echo -n "$SUBJ" | tr "\n" "/")" -key "$SSL_DIR/mygro.key" -out "$SSL_DIR/mygro.csr" -passin pass:$PASSPHRASE
+sudo openssl x509 -req -days 365 -in "$SSL_DIR/mygro.csr" -signkey "$SSL_DIR/mygro.key" -out "$SSL_DIR/mygro.crt"
+echo ">>> MyGro Certificate Created!"
+
 echo ">>> Setting up HTTPS configuration..."
 cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf.bak
 rm /etc/apache2/sites-available/000-default.conf
