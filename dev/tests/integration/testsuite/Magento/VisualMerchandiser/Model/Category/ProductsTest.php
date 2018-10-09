@@ -9,6 +9,7 @@ namespace Magento\VisualMerchandiser\Model\Category;
 
 /**
  * @magentoAppArea adminhtml
+ * @magentoDbIsolation disabled
  */
 class ProductsTest extends \PHPUnit\Framework\TestCase
 {
@@ -22,6 +23,9 @@ class ProductsTest extends \PHPUnit\Framework\TestCase
      */
     private $positionCacheKey;
 
+    /**
+     * Set up
+     */
     protected function setUp()
     {
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
