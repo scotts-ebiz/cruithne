@@ -216,6 +216,7 @@ return [
         'Magento_ProductVideoStaging' => 1,
         'Magento_WishlistAnalytics' => 1,
         'Magento_Worldpay' => 1,
+        'SMG_FeaturesList' => 1,
         'SMG_HeroCallout' => 1,
         'SMG_ParameterTypes' => 1
     ]

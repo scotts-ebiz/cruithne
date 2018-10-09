@@ -1,0 +1,26 @@
+<?php
+    $bg_class = '';
+
+    if($block->getData('bgimage') != ''):
+        $bg_class = 'image-bg';
+    endif;
+?>
+
+<section class="product-info-container <?php echo $block->getData('textalignclass') . ' ' . $bg_class; ?>" style="background-color: '<?php echo $block->getData('bgcolor'); ?>'; padding-top: '<?php echo $block->getData('paddingtop'); ?>px'; padding-bottom: '<?php echo $block->getData('paddingbottom'); ?>px';">
+    <?php if($this->getData('bgimage') != ''): ?>
+    <img class="full-width" src="<?php echo $block->getData('bgimage'); ?>" />
+    <?php endif; ?>
+
+    <div class="product-info grid col-2">
+        <?php if($this->getData('bannerimage') != ''): ?>
+        <div class="image-container">
+		    <img src="<?php echo $block->getData('bannerimage'); ?>">
+        </div>
+        <?php endif; ?>
+
+        <div class="content">
+		    <h2><?php echo $block->getData('bannerheadline'); ?></h2>
+			<p><?php echo $block->getData('bannertext'); ?></p>
+        </div>
+    </div>
+</section>
