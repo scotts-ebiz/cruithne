@@ -1,18 +1,20 @@
 // Scotts Program Mixins
 
 // Fonts //
-@mixin font-roboto($size: false, $color: false, $weight: false,  $lh: false) {
+@mixin font-roboto($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
     font-family: $roboto;
     @if $size { font-size: $size; }
     @if $color { color: $color; }
     @if $weight { font-weight: $weight; }
     @if $lh { line-height: $lh; }
+    @if $ls { letter-spacing: $ls; }
 }
 
-@mixin font-roboto-condensed($size: false, $color: false, $weight: false,  $lh: false) {
+@mixin font-roboto-condensed($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
     font-family: $roboto-condensed;
     @if $size { font-size: $size; }
     @if $color { color: $color; }
     @if $weight { font-weight: $weight; }
     @if $lh { line-height: $lh; }
+    @if $ls { letter-spacing: $ls; }
 }

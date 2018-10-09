@@ -76,6 +76,9 @@ before_install:
 - sudo openssl x509 -req -days 365 -in "$SSL_DIR/mygro.csr" -signkey "$SSL_DIR/mygro.key" -out "$SSL_DIR/mygro.crt"
 - sudo cp -f $TRAVIS_BUILD_DIR/environment/config/000-default.conf /etc/apache2/sites-available/000-default.conf
 - sudo cp -f $TRAVIS_BUILD_DIR/environment/config/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
+- sudo openssl genrsa -out "$SSL_DIR/mygro.key" 2048
+- sudo openssl req -new -subj "$(echo -n "$MYGRO_SUBJ" | tr "\n" "/")" -key "$SSL_DIR/mygro.key" -out "$SSL_DIR/mygro.csr" -passin pass:$PASSPHRASE
+- sudo openssl x509 -req -days 365 -in "$SSL_DIR/mygro.csr" -signkey "$SSL_DIR/mygro.key" -out "$SSL_DIR/mygro.crt"
 - sudo chmod 644 /etc/apache2/sites-available/000-default.conf
 - sudo chmod 644 /etc/apache2/sites-available/default-ssl.conf
 - sudo apachectl configtest

@@ -1,0 +1,27 @@
+<section class="connect-home col-2">
+    <div class="content">
+        <h2><?php echo $block->getData('bannerheadline'); ?></h2>
+        <p><?php echo $block->getData('bannertext'); ?></p>
+        <p class="highlight"><?php echo $block->getData('bannertexthighlight'); ?></p>
+
+        <?php if($block->getData('buttontext')): ?>
+        <a class="button" href="<?php echo $block->getData('buttonlink'); ?>"><?php echo $block->getData('buttontext'); ?></a>
+        <?php endif; ?>
+    </div>
+</section>
+
+<style type="text/css">
+    <?php if($this->getData('bannerimagemobile') != ''): ?>
+    .connect-home {
+        background-image: url('<?php echo $block->getData('bannerimagemobile'); ?>');
+    }
+    <?php endif; ?>
+
+    <?php if($this->getData('bannerimage') != ''): ?>
+    @media screen and (min-width: 1024px) {
+        .connect-home {
+            background-image: url('<?php echo $block->getData('bannerimage'); ?>');
+        }
+    }
+    <?php endif; ?>
+</style>
