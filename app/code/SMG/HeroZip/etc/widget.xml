@@ -7,7 +7,6 @@
             <parameter name="heroimage" sort_order="10" visible="true" xsi:type="text">
                 <label>Hero Image</label>
                 <description translate="true">Contact photo</description>
-
             </parameter>
             <parameter name="heroimagemobile" sort_order="20" visible="true" xsi:type="text">
                 <label>Hero Image (Mobile)</label>
@@ -19,15 +18,15 @@
                 <label>Hero Headline</label>
             </parameter>
             <parameter name="herotext" sort_order="20" visible="true" xsi:type="block">
-                <label>Hero Text</label>
-                <!--<block class="SMG\HeroZip\Block\Widget\TextField"/>-->
+                <label>Hero Text</labe
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
             </parameter>
             <parameter name="buttontext" sort_order="20" visible="true" xsi:type="text">
                 <label>Button Text</label>
             </parameter>
-            <parameter name="validzipcodes" sort_order="20" visible="true" xsi:type="text">
+            <parameter name="validzipcodes" sort_order="20" visible="true" xsi:type="block">
                 <label>Valid Zip Codes</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
             </parameter>
         </parameters>
     </widget>
