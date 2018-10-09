@@ -1,4 +1,14 @@
-// MyGro Defaults
+// Mixins
+@import "mixins/media-queries";
+
+// Vendor libs
+@import 'vendor/normalize/lib'; // Normalize.css
+@import 'vendor/magento-ui/lib'; // Magento UI
+
+// Scotts Program Defaults
 @import 'source/mygrovars';
 @import 'source/mygromixins';
 @import 'source/mygrobase';
+
+// Override Block Styles
+@import 'blocks/layout';
