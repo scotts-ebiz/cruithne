@@ -1,0 +1,29 @@
+<?php
+    $headlines = array('featureoneheadline', 'featuretwoheadline', 'featurethreeheadline', 'featurefourheadline', 'featurefiveheadline');
+    $text = array('featureonetext', 'featuretwotext', 'featurethreetext', 'featurefourtext', 'featurefivetext');
+    $images = array('featureoneimage', 'featuretwoimage', 'featurethreeimage', 'featurefourimage', 'featurefiveimage');
+
+    $html = '';
+
+    $i = 0;
+    $cols = 0;
+    foreach($headlines as $headline):
+        if($this->getData($headline) != ''):
+            $html .= '<div class="item">
+                <div class="image-container">
+                    <img src="' . $block->getData($images[$i]) . '" />
+                </div>
+                <h3>' . $block->getData($headline) . '</h3>
+                <p>' . $block->getData($text[$i]) . '</p>
+            </div>';
+
+            $cols++;
+        endif;
+
+        $i++;
+    endforeach;
+?>
+<section class="<?php echo 'feature-list grid col-' . $cols; ?>">
+    <h2><?php echo $block->getData('headline'); ?></h2>
+    <?php echo $html; ?>
+</section>

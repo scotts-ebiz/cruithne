@@ -37,7 +37,12 @@ Class TextAreaField extends Template {
             $input->addClass('required-entry');
         }
 
+        // hide the element so there isn't a duplicate field
+        $element->setData("value", '');
+
         $element->setData('after_element_html', $input->getElementHtml());
+
+        // return
         return $element;
     }
 }

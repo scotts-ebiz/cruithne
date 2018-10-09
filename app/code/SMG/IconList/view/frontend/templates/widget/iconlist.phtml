@@ -1,0 +1,30 @@
+<?php
+    $items = array("itemone", "itemtwo", "itemthree", "itemfour", "itemfive", "itemsix", "itemseven", "itemeight", "itemnine", "itemten");
+    $item_icons = array("itemiconone", "itemicontwo", "itemiconthree", "itemiconfour", "itemiconfive", "itemiconsix", "itemiconseven", "itemiconeight", "itemiconnine", "itemiconten");
+
+    $html = '';
+
+    $i = 0;
+    foreach($items as $item):
+        if($this->getData($item) != ''):
+            $html .= '<li><strong>' . $block->getData($item) . '</strong>';
+
+            if($this->getData($item_icons[$i]) != ''):
+                $html .= '<img src="' . $block->getData($item_icons[$i]) . '" />';
+            endif;
+
+            $html .= '</li>';
+        endif;
+
+        $i++;
+    endforeach;
+?>
+<section class="product-info-container align-top">
+    <div class="product-info grid col-2">
+        <h2><?php echo $block->getData('headline'); ?></h2>
+        <ul class="list-icon">
+            <?php echo $html; ?>
+        </ul>
+    </div>
+</section>
+

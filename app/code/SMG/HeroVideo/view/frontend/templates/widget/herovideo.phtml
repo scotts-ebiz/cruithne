@@ -1,0 +1,11 @@
+<section class="hero-video" style="background-image: url('<?php echo $block->getData('heroimage'); ?>');">
+    <img class="mobile-tablet" src="<?php echo $block->getData('heroimage'); ?>" />
+    <div class="content">
+        <h2><?php echo $block->getData('heroheadline'); ?></h2>
+        <p><?php echo $block->getData('herotext'); ?></p>
+
+        <?php if($this->getData('videoembedcode') != ''): ?>
+        <a class="watch-video video-link" href="#"><i class="icon-play"></i> <span><?php echo $block->getData('buttontext'); ?></span> <span class="embed-code"><?php echo $block->getData('videoembedcode'); ?></a>
+        <?php endif; ?>
+    </div>
+</section>
