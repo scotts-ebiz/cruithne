@@ -39,8 +39,8 @@ class AssertProductsAddBySkuOnBackendIsOutOfStockFailMessage extends AbstractCon
             }
         }
         \PHPUnit\Framework\Assert::assertEquals(
-            $orderCreateIndex->getItemsOrderedMessagesBlock()->getErrorMessage(),
             self::ERROR_MESSAGE,
+            $orderCreateIndex->getItemsOrderedMessagesBlock()->getErrorMessage(),
             'Wrong error message is displayed.'
         );
     }
