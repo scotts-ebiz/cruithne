@@ -1,0 +1,22 @@
+<section class="product-info-container align-top">
+    <div class="product-info grid col-2">
+        <h2 class="video-headline"><?php echo $block->getData('headline'); ?></h2>
+        <hgroup class="mobile-only">
+            <h2><?php echo $block->getData('videoheadline'); ?></h2>
+            <p><?php echo $block->getData('videotext'); ?></p>
+        </hgroup>
+        <div class="video">
+            <img src="<?php echo $block->getData('calloutimage'); ?>">
+            <hgroup class="tablet-desktop">
+                <h2><?php echo $block->getData('videoheadline'); ?></h2>
+                <p><?php echo $block->getData('videotext'); ?></p>
+            </hgroup>
+            <?php if($this->getData('videoembedcode') != ''): ?>
+            <a class="play video-link" href="#">
+                <i class="icon-play"></i>
+                <span class="embed-code"><?php echo $block->getData('videoembedcode'); ?></span>
+            </a>
+            <?php endif; ?>
+        </div>
+    </div>
+</section>
