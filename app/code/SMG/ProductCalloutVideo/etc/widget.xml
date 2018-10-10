@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget class="SMG\ProductCalloutVideo\Block\Widget\Productcalloutvideo" id="smg_productcalloutvideo_productcalloutvideo">
+        <label>Product Callout Video</label>
+        <description>Display product video and text.</description>
+        <parameters>
+            <parameter name="headline" visible="true" xsi:type="text" required="true">
+                <label>Callout Headline</label>
+            </parameter>
+            <parameter name="calloutimage" visible="true" xsi:type="block">
+                <label>Callout Image</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+            <parameter name="videoheadline" visible="true" xsi:type="text">
+                <label>Video Headline</label>
+            </parameter>
+            <parameter name="videotext" visible="true" xsi:type="block">
+                <label>Video Text</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+            </parameter>
+            <parameter name="videoembedcode" visible="true" xsi:type="block">
+                <label>Video Embed Code</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+            </parameter>
+        </parameters>
+    </widget>
+</widgets>

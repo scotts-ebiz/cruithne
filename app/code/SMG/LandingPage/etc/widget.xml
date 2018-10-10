@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget class="SMG\LandingPage\Block\Widget\Landingpage" id="smg_landingpage_landingpage">
+        <label>Landing Page Options</label>
+        <description>Landing page custom fields.</description>
+        <parameters>
+            <parameter name="requireszipcodelookup" visible="true" xsi:type="select">
+                <label>Requires Zip Code Lookup</label>
+                <options>
+                    <option value="0">
+                        <label>No</label>
+                    </option>
+                    <option value="1">
+                        <label>Yes</label>
+                    </option>
+                </options>
+            </parameter>
+            <parameter name="heroimage" visible="true" xsi:type="block">
+                <label>Hero Image</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+                <value>/pub/media/hero-section.jpg</value>
+            </parameter>
+            <parameter name="herosupportingheadline" visible="true" xsi:type="text">
+                <label>Hero Supporting Headline</label>
+                <value>Scotts® Turf Builder® Annual Program</value>
+            </parameter>
+            <parameter name="heroheadline" visible="true" xsi:type="text">
+                <label>Hero Headline</label>
+                <value>All Your Lawn Care Needs, Right At Your Doorstep</value>
+            </parameter>
+            <parameter name="herodescription" visible="true" xsi:type="block">
+                <label>Hero Description</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+                <value>Without proper care, your yard can quickly become a battleground of grass vs. weeds. Fortunately, there's no need for a turf war, thanks to our new Scotts® Turf Builder® Seasonal Program. We save you time and eliminate guesswork by sending exactly what you need to care for your lawn for the rest of the year.</value>
+            </parameter>
+            <parameter name="smallyardbundle" visible="true" xsi:type="block">
+                <label>Small Yard Bundle</label>
+                <block class="Magento\Catalog\Block\Adminhtml\Product\Widget\Chooser" />
+            </parameter>
+            <parameter name="largeyardbundle" visible="true" xsi:type="block">
+                <label>Large Yard Bundle</label>
+                <block class="Magento\Catalog\Block\Adminhtml\Product\Widget\Chooser" />
+            </parameter>
+            <parameter name="smallyardtext" visible="true" xsi:type="text">
+                <label>Small Yard Button Text</label>
+                <value>Buy Small Yard Program</value>
+            </parameter>
+            <parameter name="smallyardcoverage" visible="true" xsi:type="text">
+                <label>Small Yard Coverage</label>
+                <value>A small lawn is up to 4,000 sq. feet or just under 1/10 an acre.</value>
+            </parameter>
+            <parameter name="largeyardtext" visible="true" xsi:type="text">
+                <label>Large Yard Text</label>
+                <value>Buy Large Yard Program</value>
+            </parameter>
+            <parameter name="largeyardcoverage" visible="true" xsi:type="text">
+                <label>Large Yard Coverage</label>
+                <value>A large lawn is up to 12,000 sq. feet or just over 1/4 an acre.</value>
+            </parameter>
+            <parameter name="freeshippingicon" visible="true" xsi:type="block">
+                <label>Free Shipping Icon</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+                <value>/pub/media/free-shipping-icon.png</value>
+            </parameter>
+            <parameter name="freeshippingmessage" visible="true" xsi:type="text">
+                <label>Free Shipping Message</label>
+                <value>Free Shipping On All Orders!</value>
+            </parameter>
+            <parameter name="disclaimertext" visible="true" xsi:type="block">
+                <label>Disclaimer Text</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+                <value>Only available in: OR, WA.</value>
+            </parameter>
+            <parameter name="howitworksdescriptionone" visible="true" xsi:type="block">
+                <label>How It Works Text #1</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+                <value>We'll send you email notifications when it's time to apply each product.</value>
+            </parameter>
+            <parameter name="howitworksdescriptiontwo" visible="true" xsi:type="block">
+                <label>How It Works Text #2</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+                <value>We'll send you all bags at once, so you'll have every product in your plan.</value>
+            </parameter>
+            <parameter name="howitworksdescriptionthree" visible="true" xsi:type="block">
+                <label>How It Works Text #3</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+                <value>We'll send you email notifications when it's time to apply each product.</value>
+            </parameter>
+        </parameters>
+    </widget>
+</widgets>
