@@ -19,107 +19,108 @@
 						</div>
 
 						<div class="section__hero--select">
-                            <?php if(!$this->getData('requireszipcodelookup')): ?>
-            $html .= '<h4 class="section__hero--sectiontitle">Select your program:</h4>';
-            if($small_bundle_id):
-                $small_bundle_product = Mage::getModel('catalog/product')->load($small_bundle_id);
-                $small_bundle_url = Mage::helper('checkout/cart')->getAddUrl($small_bundle_product);
-                $small_bundle_price = 0;
+                            <?php if(!$block->getData('requireszipcodelookup')): ?>
+                            <h4 class="section__hero--sectiontitle">Select your program:</h4>';
+                            <?php if($small_bundle_id):
+                                    $small_bundle_product = Mage::getModel('catalog/product')->load($small_bundle_id);
+                                    $small_bundle_url = Mage::helper('checkout/cart')->getAddUrl($small_bundle_product);
+                                    $small_bundle_price = 0;
 
-                $selection_ids = array();
-                $tab_ids = array();
-                $options_html = '';
+                                    $selection_ids = array();
+                                    $tab_ids = array();
+                                    $options_html = '';
 
-                $optionCollection = $small_bundle_product->getTypeInstance()->getOptionsCollection();
-                $selectionCollection = $small_bundle_product->getTypeInstance()->getSelectionsCollection($small_bundle_product->getTypeInstance()->getOptionsIds());
-                $options = $optionCollection->appendSelections($selectionCollection);
-                foreach($options as $option):
-                    $option_id = $option->getOptionId();
-                    $tab_titles[] = $option->getData('default_title');
-                    $_selections = $option->getSelections();
-                    foreach($_selections as $selection):
-                        $selection_price = $selection->getSelectionPriceValue();
-                        $selection_qty = $selection->getSelectionQty();
-                        $small_bundle_price = $small_bundle_price + ($selection_price * $selection_qty);
-                        $selection_ids[] = $selection->getSelectionId();
-                        $tab_ids[] = $selection->getProductId();
-                        $options_html .= '<input type="hidden" name="bundle_option_qty[' . $option_id . ']" value="1">';
-                    endforeach;
-                endforeach;
+                                    $optionCollection = $small_bundle_product->getTypeInstance()->getOptionsCollection();
+                                    $selectionCollection = $small_bundle_product->getTypeInstance()->getSelectionsCollection($small_bundle_product->getTypeInstance()->getOptionsIds());
+                                    $options = $optionCollection->appendSelections($selectionCollection);
+                                    foreach($options as $option):
+                                        $option_id = $option->getOptionId();
+                                        $tab_titles[] = $option->getData('default_title');
+                                        $_selections = $option->getSelections();
+                                        foreach($_selections as $selection):
+                                            $selection_price = $selection->getSelectionPriceValue();
+                                            $selection_qty = $selection->getSelectionQty();
+                                            $small_bundle_price = $small_bundle_price + ($selection_price * $selection_qty);
+                                            $selection_ids[] = $selection->getSelectionId();
+                                            $tab_ids[] = $selection->getProductId();
+                                            $options_html .= '<input type="hidden" name="bundle_option_qty[' . $option_id . ']" value="1" />';
+                                        endforeach;
+                                    endforeach;
+                            ?>
+                            <div class="section__hero--option">
+				                <form action="<?php echo $small_bundle_url; ?>" method="post" id="product_addtocart_form">
+	                                <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+                                    <input type="hidden" name="product" value="<?php echo $small_bundle_id; ?>" />
+                                    <input type="hidden" name="related_product" id="related-products-field" value="" />
+                                    <?php echo $options_html; ?>
+					                <button type="submit" class="section__hero--link"><?php echo $block->getData('smallyardtext'); ?><span class="link-price">$<?php echo number_format($small_bundle_price, 2); ?></span></button>
+					                <small class="section__hero--linkinfo"><?php echo $block->getData('smallyardcoverage'); ?></small>
+				                </form>
+				            </div>
+                            <?php endif; ?>
 
-                $html .= '<div class="section__hero--option">
-				<form action="' . $small_bundle_url . '" method="post" id="product_addtocart_form">
-	            <input name="form_key" type="hidden" value="' . Mage::getSingleton('core/session')->getFormKey() . '">
-	            <input type="hidden" name="product" value="' . $small_bundle_id . '">
-	            <input type="hidden" name="related_product" id="related-products-field" value="">' .
-                    $options_html . '
-					<button type="submit" class="section__hero--link">' . $this->getData('smallyardtext') . '<span class="link-price">$' . number_format($small_bundle_price, 2) . '</span></button>
-					<small class="section__hero--linkinfo">' . $this->getData('smallyardcoverage') . '</small>
-				</form>
-				</div>';
-            endif;
+                            <?php if($large_bundle_id):
+                                $large_bundle_product = Mage::getModel('catalog/product')->load($large_bundle_id);
+                                $large_bundle_url = Mage::helper('checkout/cart')->getAddUrl($large_bundle_product);
+                                $large_bundle_price = 0;
 
-            if($large_bundle_id):
-                $large_bundle_product = Mage::getModel('catalog/product')->load($large_bundle_id);
-                $large_bundle_url = Mage::helper('checkout/cart')->getAddUrl($large_bundle_product);
-                $large_bundle_price = 0;
+                                $selection_ids = array();
+                                $options_html = '';
 
-                $selection_ids = array();
-                $options_html = '';
-
-                $optionCollection = $large_bundle_product->getTypeInstance()->getOptionsCollection();
-                $selectionCollection = $large_bundle_product->getTypeInstance()->getSelectionsCollection($large_bundle_product->getTypeInstance()->getOptionsIds());
-                $options = $optionCollection->appendSelections($selectionCollection);
-                foreach($options as $option):
-                    $option_id = $option->getOptionId();
-                    $_selections = $option->getSelections();
-                    foreach($_selections as $selection):
-                        $selection_price = $selection->getSelectionPriceValue();
-                        $selection_qty = $selection->getSelectionQty();
-                        $large_bundle_price = $large_bundle_price + ($selection_price * $selection_qty);
-                        $selection_ids[] = $selection->getSelectionId();
-                        $options_html .= '<input type="hidden" name="bundle_option_qty[' . $option_id . ']" value="1">';
-                    endforeach;
-                endforeach;
-
-                $html .= '<div class="section__hero--option">
-				<form action="' . $large_bundle_url . '" method="post" id="product_addtocart_form">
-	            <input name="form_key" type="hidden" value="' . Mage::getSingleton('core/session')->getFormKey() . '">
-	            <input type="hidden" name="product" value="' . $large_bundle_id . '">
-	            <input type="hidden" name="related_product" id="related-products-field" value="">' .
-                    $options_html . '
-					<button type="submit" class="section__hero--link">' . $this->getData('largeyardtext') . '<span class="link-price">$' . number_format($large_bundle_price, 2) . '</span></button>
-					<small class="section__hero--linkinfo">' . $this->getData('largeyardcoverage') . '</small>
-				</form>
-				</div>';
-            endif;
-        else:
-            $show_error_class = (isset($_GET['no_zip_results'])) ? 'show-errors' : '';
-            $zip_value = (isset($_GET['zip'])) ? intval($_GET['zip']) : '';
-            $zip_input_type = ($zip_value) ? 'hidden' : 'text';
-            $zip_instructions = ($zip_value) ? 'Now Select Your Grass Type' : 'Enter Your Zip Code To Get Started';
-            $zip_code_action = Mage::getUrl('zip');
-            $html .= '<h4>' . $zip_instructions . '</h4>
-			<form action="' . $zip_code_action . '" method="get" class="' . $show_error_class . '">
-				<input type="' . $zip_input_type . '" name="zip" pattern="[0-9]{5}" value="' . $zip_value . '" required title="Enter first five digits of your zip code" />';
-            if($zip_value):
-                $html .= '<select name="grass_type">
-					<option value=""></option>
-					<option value="Bahia">Bahia</option>
-					<option value="Bermuda">Bermuda</option>
-					<option value="Bluegrass / Rye / Fescue">Bluegrass / Rye / Fescue</option>
-					<option value="Bluegrass (Kentucky Bluegrass)">Bluegrass (Kentucky Bluegrass)</option>
-					<option value="Fescue">Fescue</option>
-					<option value="Ryegrass">Ryegrass</option>
-					<option value="Carpetgrass">Carpetgrass</option>
-					<option value="Centipede">Centipede</option>
-					<option value="St. Augustine">St. Augustine</option>
-					<option value="Zoysia">Zoysia</option>
-				</select>';
-            endif;
-            $html .= '<p class="error-msg">We are having difficulties with that zip code. Please call us at 1-888-295-6902 so we can help.</p>
-				<button type="submit">Submit</button>
-			</form>';
+                                $optionCollection = $large_bundle_product->getTypeInstance()->getOptionsCollection();
+                                $selectionCollection = $large_bundle_product->getTypeInstance()->getSelectionsCollection($large_bundle_product->getTypeInstance()->getOptionsIds());
+                                $options = $optionCollection->appendSelections($selectionCollection);
+                                foreach($options as $option):
+                                    $option_id = $option->getOptionId();
+                                    $_selections = $option->getSelections();
+                                    foreach($_selections as $selection):
+                                        $selection_price = $selection->getSelectionPriceValue();
+                                        $selection_qty = $selection->getSelectionQty();
+                                        $large_bundle_price = $large_bundle_price + ($selection_price * $selection_qty);
+                                        $selection_ids[] = $selection->getSelectionId();
+                                        $options_html .= '<input type="hidden" name="bundle_option_qty[' . $option_id . ']" value="1" />';
+                                    endforeach;
+                                endforeach;
+                            ?>
+                            <div class="section__hero--option">
+                                <form action="<?php echo $large_bundle_url; ?>" method="post" id="product_addtocart_form">
+                                    <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+                                    <input type="hidden" name="product" value="<?php echo $large_bundle_id; ?>" />
+                                    <input type="hidden" name="related_product" id="related-products-field" value="" />
+                                    <?php echo $options_html; ?>
+                                    <button type="submit" class="section__hero--link"><?php echo $block->getData('largeyardtext'); ?><span class="link-price">$<?php echo number_format($large_bundle_price, 2); ?></span></button>
+                                    <small class="section__hero--linkinfo"><?php echo $block->getData('largeyardcoverage'); ?></small>
+                                </form>
+                            </div>
+                            <?php endif;
+                            else:
+                                $show_error_class = (isset($_GET['no_zip_results'])) ? 'show-errors' : '';
+                                $zip_value = (isset($_GET['zip'])) ? intval($_GET['zip']) : '';
+                                $zip_input_type = ($zip_value) ? 'hidden' : 'text';
+                                $zip_instructions = ($zip_value) ? 'Now Select Your Grass Type' : 'Enter Your Zip Code To Get Started';
+                                $zip_code_action = Mage::getUrl('zip');
+                            ?>
+                            <h4><?php echo $zip_instructions; ?></h4>
+                            <form action="<?php echo $zip_code_action; ?>" method="get" class="<?php echo $show_error_class; ?>">
+                                <input type="<?php echo $zip_input_type; ?>" name="zip" pattern="[0-9]{5}" value="<?php echo $zip_value; ?>" required title="Enter first five digits of your zip code" />';
+                                <? if($zip_value): ?>
+                                    <select name="grass_type">
+                                        <option value=""></option>
+                                        <option value="Bahia">Bahia</option>
+                                        <option value="Bermuda">Bermuda</option>
+                                        <option value="Bluegrass / Rye / Fescue">Bluegrass / Rye / Fescue</option>
+                                        <option value="Bluegrass (Kentucky Bluegrass)">Bluegrass (Kentucky Bluegrass)</option>
+                                        <option value="Fescue">Fescue</option>
+                                        <option value="Ryegrass">Ryegrass</option>
+                                        <option value="Carpetgrass">Carpetgrass</option>
+                                        <option value="Centipede">Centipede</option>
+                                        <option value="St. Augustine">St. Augustine</option>
+                                        <option value="Zoysia">Zoysia</option>
+                                    </select>
+                                <?php endif; ?>
+                                <p class="error-msg">We are having difficulties with that zip code. Please call us at 1-888-295-6902 so we can help.</p>
+				                <button type="submit">Submit</button>
+			                </form>
                             <?php endif; ?>
                         </div>
 
@@ -312,7 +313,7 @@
                                 $i++;
                             endforeach;
                         ?>
-                        <?php echo $html ?>
+                        <?php echo $html; ?>
                     </div>
 
                     <div class="section__tabs--tabcontainer">
@@ -325,28 +326,31 @@
                                     $checked = ($i == 1) ? 'checked="checked"' : '';
 
                                     $html .= '<input ' . $checked . ' class="tabs__radio" id="toggle__tab' . $i . '" name="tabs__tabnav" type="radio">
-								<div class="tabpanel" data-panel="toggle__tab' . $i . '" id="tabcontent__' . $i . '">
-									<div class="tabpanel__wrapper">
-										<div class="tabpanel__image">
-											<span><img alt="Scotts&reg; Turf Builder&reg; SummerGuard&reg; Lawn Food with Insect Control" src="' . $tab_image[$key] . '"></span>
-										</div>
-										<div class="tabpanel__text">
-											<h2 class="turfbuilder--headline">' . $headline . '</h2>
-											<p class="text-desc">' . $tab_description[$key] . '</p>
-											' . $tab_content[$key] . '
-										</div>
-									</div>
-								</div>';
+								        <div class="tabpanel" data-panel="toggle__tab' . $i . '" id="tabcontent__' . $i . '">
+									        <div class="tabpanel__wrapper">
+										        <div class="tabpanel__image">
+											        <span><img alt="Scotts&reg; Turf Builder&reg; SummerGuard&reg; Lawn Food with Insect Control" src="' . $tab_image[$key] . '"></span>
+										        </div>
+										        <div class="tabpanel__text">
+											        <h2 class="turfbuilder--headline">' . $headline . '</h2>
+											        <p class="text-desc">' . $tab_description[$key] . '</p>
+											        ' . $tab_content[$key] . '
+										        </div>
+									        </div>
+								    </div>';
 
-                $i++;
-            endforeach;
-            $html .= '</div>
-						</div>
-						<p style="margin: 0 100px; font-size: 0.875rem;">Safety Data Sheets can be found at <a href="http://www.scottsmsds.com" target="_blank">scottsmsds.com</a></p>
-					</div><!-- .section__tabs==wrapper -->
-				</section>
-			</div>';
-        endif;
+                                    $i++;
+                                endforeach;
+                            ?>
+                            <?php echo $html; ?>
+                        </div>
+                    </div>
+
+					<p style="margin: 0 100px; font-size: 0.875rem;">Safety Data Sheets can be found at <a href="http://www.scottsmsds.com" target="_blank">scottsmsds.com</a></p>
+				</div><!-- .section__tabs==wrapper -->
+            </section>
+        </div>
+        <?php endif; ?>
 
         <div class="widget widget-static-block">
 			<style>

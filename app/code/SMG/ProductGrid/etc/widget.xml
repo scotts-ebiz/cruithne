@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 <widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
     <widget class="SMG\ProductGrid\Block\Widget\Productgrid" id="smg_productgrid_productgrid">
-        <label>Features List</label>
-        <description>Display list of features.</description>
+        <label>Product Grid</label>
+        <description>Display products in grid.</description>
         <parameters>
             <parameter name="prodlabelone" visible="true" xsi:type="label">
                 <label>Product #1</label>
