@@ -1,0 +1,21 @@
+<section class="section__hero" style="background-image: url('<?php echo $block->getData('heroimage'); ?>');">
+    <div class="section__hero--wrapper info-right">
+        <div class="section__hero--purchase">
+            <div class="section__hero--text">
+                <h1 class="section__hero--headline"><?php echo $block->getData('herosupportingheadline'); ?></h1>
+                <h2 class="section__hero--subhead"><?php echo $block->getData('heroheadline'); ?></h2>
+                <div class="section__hero--select">
+                    <form action="/ziplookup/" method="get" class="">
+                        <input type="text" name="zip" pattern="[0-9]{5}" value="" placeholder="Enter Your Zip Code" required="" title="Zip code must be 5 numbers">';
+                        <?php if(isset($_GET['no_zip_results'])): ?>
+                        <p class="error-msg">Scotts Big Bag Home Delivery is currently not available in your area.</p>
+                        <?php endif; ?>
+                        <button type="submit"><?php echo $block->getData('buttontext'); ?></button>
+                    </form>
+                </div>
+
+                <p class="section__hero--description"><?php echo nl2br($block->getData('herotext')); ?></p>
+            </div>
+        </div>
+    </div>
+</section>

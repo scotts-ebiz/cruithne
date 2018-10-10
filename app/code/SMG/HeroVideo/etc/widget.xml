@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget class="SMG\HeroVideo\Block\Widget\Herovideo" id="smg_herovideo_herovideo">
+        <label>Hero Video</label>
+        <description>Display hero video and text.</description>
+        <parameters>
+            <parameter name="heroheadline" visible="true" xsi:type="text" required="true">
+                <label>Hero Headline</label>
+            </parameter>
+            <parameter name="herotext" visible="true" xsi:type="block">
+                <label>Hero Text</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+            </parameter>
+            <parameter name="heroimage" visible="true" xsi:type="block">
+                <label>Hero Image</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+            <parameter name="buttontext" visible="true" xsi:type="text">
+                <label>Video Text</label>
+            </parameter>
+            <parameter name="videoembedcode" visible="true" xsi:type="block">
+                <label>Video Embed Code</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+            </parameter>
+        </parameters>
+    </widget>
+</widgets>
