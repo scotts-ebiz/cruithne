@@ -7,8 +7,9 @@
             <parameter name="headline" visible="true" xsi:type="text" required="true">
                 <label>Features List Headline</label>
             </parameter>
-            <parameter name="featureone" visible="true" xsi:type="label">
+            <parameter name="featureone" visible="true" xsi:type="block">
                 <label>Feature #1</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="featureoneimage" visible="true" xsi:type="block">
                 <label>Feature #1 Image</label>
@@ -21,8 +22,9 @@
                 <label>Feature #1 Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
             </parameter>
-            <parameter name="featuretwo" visible="true" xsi:type="label">
+            <parameter name="featuretwo" visible="true" xsi:type="block">
                 <label>Feature #2</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="featuretwoimage" visible="true" xsi:type="block">
                 <label>Feature #2 Image</label>
@@ -35,8 +37,9 @@
                 <label>Feature #2 Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
             </parameter>
-            <parameter name="featurethree" visible="true" xsi:type="label">
+            <parameter name="featurethree" visible="true" xsi:type="block">
                 <label>Feature #3</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="featurethreeimage" visible="true" xsi:type="block">
                 <label>Feature #3 Image</label>
@@ -49,8 +52,9 @@
                 <label>Feature #3 Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
             </parameter>
-            <parameter name="featurefour" visible="true" xsi:type="label">
+            <parameter name="featurefour" visible="true" xsi:type="block">
                 <label>Feature #4</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="featurefourimage" visible="true" xsi:type="block">
                 <label>Feature #4 Image</label>
@@ -63,8 +67,9 @@
                 <label>Feature #4 Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
             </parameter>
-            <parameter name="featurefive" visible="true" xsi:type="label">
+            <parameter name="featurefive" visible="true" xsi:type="block">
                 <label>Feature #5</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="featurefiveimage" visible="true" xsi:type="block">
                 <label>Feature #5 Image</label>

@@ -4,8 +4,9 @@
         <label>Product Grid</label>
         <description>Display products in grid.</description>
         <parameters>
-            <parameter name="prodlabelone" visible="true" xsi:type="label">
+            <parameter name="prodlabelone" visible="true" xsi:type="block">
                 <label>Product #1</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="prodnameone" visible="true" xsi:type="text" required="true">
                 <label>Product #1 Name</label>
@@ -33,9 +34,10 @@
             </parameter>
             <parameter name="prodbuttonlinkone" visible="true" xsi:type="text">
                 <label>Product #1 Button Link</label>
-]           </parameter>
-            <parameter name="prodlabeltwo" visible="true" xsi:type="label">
+            </parameter>
+            <parameter name="prodlabeltwo" visible="true" xsi:type="block">
                 <label>Product #2</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="prodnametwo" visible="true" xsi:type="text">
                 <label>Product #2 Name</label>
@@ -64,8 +66,9 @@
             <parameter name="prodbuttonlinktwo" visible="true" xsi:type="text">
                 <label>Product #2 Button Link</label>
             </parameter>
-            <parameter name="prodlabelthree" visible="true" xsi:type="label">
+            <parameter name="prodlabelthree" visible="true" xsi:type="block">
                 <label>Product #3</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="prodnamethree" visible="true" xsi:type="text">
                 <label>Product #3 Name</label>
