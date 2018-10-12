@@ -31,16 +31,8 @@
                 <label>Padding Bottom (in px)</label>
                 <value>60</value>
             </parameter>
-            <parameter name="textalignclass" visible="true" xsi:type="select">
+            <parameter name="textalignclass" visible="true" xsi:type="select" source_model="SMG\ProductCallout\Model\Source\TextAlignSelect">
                 <label>Text Alignment</label>
-                <options>
-                    <option value="text-left">
-                        <label>Left aligned</label>
-                    </option>
-                    <option value="text-right">
-                        <label>Right aligned</label>
-                    </option>
-                </options>
             </parameter>
         </parameters>
     </widget>
