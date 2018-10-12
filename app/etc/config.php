@@ -268,9 +268,14 @@ return [
         'SMG_FeaturesList' => 1,
         'SMG_HeroCallout' => 1,
         'SMG_HeroVideo' => 1,
+        'SMG_HeroZip' => 1,
+        'SMG_IconList' => 1,
         'SMG_ParameterTypes' => 1,
         'SMG_ProductCallout' => 1,
+        'SMG_ProductCalloutText' => 1,
+        'SMG_ProductCalloutVideo' => 1,
         'SMG_ProductGrid' => 1,
+        'SMG_SpecsList' => 1,
         'Temando_Shipping' => 1,
         'Vertex_Tax' => 1
     ]
