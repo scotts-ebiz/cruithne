@@ -2,12 +2,25 @@
 body {
     @include font-hellix-regular();
 }
+[class^="icon-"],
+[class*=" icon-"] {
+    font-family: 'gro';
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
 .page-wrapper {
     .page-header {
         border-bottom: 1px solid #dcdcdc;
         box-sizing: border-box;
         padding: 1.1rem 0 0.8rem;
         position: relative;
+        overflow: auto;
         text-align: center;
         .panel.wrapper {
             display: none;
@@ -17,25 +30,31 @@ body {
                 display: inline-block;
                 float: left;
                 padding: 0.25rem 0;
+                @include max-screen($screen__l) {
+                    float: none;
+                    padding: 0;
+                    max-width: 6rem;
+                }
             }
             .minicart-wrapper {
                 float: right;
+                @include max-screen($screen__l) {
+                    display: block;
+                    float: right;
+                    position: absolute;
+                    right: 15px;
+                    top: 1rem;
+                }
                 .showcart {
                     color: $mygro-green;
                     float: left;
                     font-size: 1.2rem;
                     margin: 0.8rem 1rem 0 0;
                     text-decoration: none;
+                    @include max-screen($screen__l) {
+                        margin: 0.8rem 0.5rem 0 0;
+                    }
                     .icon-bag {
-                        display: inline-block;
-                        font-family: 'gro';
-                        speak: none;
-                        font-style: normal;
-                        font-weight: normal;
-                        font-variant: normal;
-                        text-transform: none;
-                        line-height: 1;
-                        -webkit-font-smoothing: antialiased;
                         &:before {
                             content: '\e902';
                         }
@@ -60,15 +79,47 @@ body {
                 }
             }
             .sections.nav-sections {
-                background: transparent;
+                background: $white;
                 display: inline-block;
                 margin-bottom: 0;
                 transform: translateX(-1vw);
+                @include max-screen($screen__l) {
+                    max-width: 250px;
+                    text-align: left;
+                    transform: none;
+                }
+                .icon-close {
+                    display: none;
+                    @include max-screen($screen__l) {
+                        color: $mygro-green;
+                        display: block;
+                        padding: 1rem;
+                        font-size: 2.2rem;
+                        text-align: right;
+                        text-decoration: none;
+                        &:before {
+                            content: "\e95f";
+                        }
+                        &:hover {
+                            color: $mygro-green;
+                        }
+                    }
+                }
                 .nav-sections-item-content {
                     @include font-hellix-regular(0.875rem, $mygro-black, false, false, 1px);
                     text-transform: uppercase;
+                    @include max-screen($screen__l) {
+                        margin-top: 0;
+                        padding: 0;
+                    }
                     .navigation {
                         background: transparent;
+                        .level0 {
+                            @include max-screen($screen__l) {
+                                border: none;
+                                font-size: 0.875rem;
+                            }
+                        }
                         ul {
                             .first {
                                 .level-top {
@@ -101,6 +152,9 @@ body {
             overflow: auto;
             padding: 0 10rem;
             text-align: center;
+            @include max-screen($screen__l) {
+                padding: 0;
+            }
             h3 {
                 @include font-hellix-heavy(1.2rem, $mygro-black-alt, false, 34px, 0.5px);
             }
