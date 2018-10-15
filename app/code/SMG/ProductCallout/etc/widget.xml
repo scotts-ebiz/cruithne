@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget class="SMG\ProductCallout\Block\Widget\Productcallout" id="smg_productcallout_productcallout">
+        <label>Product Callout</label>
+        <description>Display product banner and text.</description>
+        <parameters>
+            <parameter name="bannerheadline" visible="true" xsi:type="text" required="true">
+                <label>Banner Headline</label>
+            </parameter>
+            <parameter name="bannertext" visible="true" xsi:type="block">
+                <label>Banner Text</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+            </parameter>
+            <parameter name="bannerimage" visible="true" xsi:type="block">
+                <label>Banner Image</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+            <parameter name="bgcolor" visible="true" xsi:type="text">
+                <label>Background Color</label>
+                <value>#ffffff</value>
+            </parameter>
+            <parameter name="bgimage" visible="true" xsi:type="block">
+                <label>Background Image (Optional)</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+            <parameter name="paddingtop" visible="true" xsi:type="text">
+                <label>Padding Top (in px)</label>
+                <value>60</value>
+            </parameter>
+            <parameter name="paddingbottom" visible="true" xsi:type="text">
+                <label>Padding Bottom (in px)</label>
+                <value>60</value>
+            </parameter>
+            <parameter name="textalignclass" visible="true" xsi:type="select" source_model="SMG\ProductCallout\Model\Source\TextAlignSelect">
+                <label>Text Alignment</label>
+            </parameter>
+        </parameters>
+    </widget>
+</widgets>

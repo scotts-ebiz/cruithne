@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget class="SMG\SpecsList\Block\Widget\Specslist" id="smg_specslist_specslist">
+        <label>Specs List</label>
+        <description>Two-column list with headline.</description>
+        <parameters>
+            <parameter name="headline" visible="true" xsi:type="text" required="true">
+                <label>Callout Headline</label>
+            </parameter>
+            <parameter name="listheaders" visible="true" xsi:type="block">
+                <label>List Headers (Separated by ||)</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+                <value>Header 1 || Header 2 || Header 3</value>
+            </parameter>
+            <parameter name="listvalues" visible="true" xsi:type="block">
+                <label>List Values (Separated by ||)</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+                <value>Value 1 || Value 2 || Value 3</value>
+            </parameter>
+        </parameters>
+    </widget>
+</widgets>
