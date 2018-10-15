@@ -108,6 +108,40 @@
             <container name="page.bottom" label="Before Page Footer" htmlTag="div" htmlClass="content"/>
         </referenceContainer>
         <referenceContainer name="footer-container">
+            <container name="custom.inner-footer-container.container" htmlTag="div" htmlClass="inner-footer-container">
+                <container name="div.mygro-footer-support.block" htmlTag="div" htmlClass="mygro-footer-support col span_4_of_12">
+                    <block class="Magento\Cms\Block\Block" name="mygro-footer-support">
+                        <arguments>
+                            <argument name="block_id" xsi:type="string">mygro-footer-support</argument>
+                            <argument name="css_class" xsi:type="string">mygro-footer-support col span_4_of_12</argument>
+                        </arguments>
+                    </block>
+                </container>
+                <container name="div.mygro-footer-tc.block" htmlTag="div" htmlClass="mygro-footer-tc col span_4_of_12">
+                    <block class="Magento\Cms\Block\Block" name="mygro-footer-tc">
+                        <arguments>
+                            <argument name="block_id" xsi:type="string">mygro-footer-tc</argument>
+                            <argument name="css_class" xsi:type="string">mygro-footer-tc col span_4_of_12</argument>
+                        </arguments>
+                    </block>
+                </container>
+                <container name="div.mygro-footer-contact.block" htmlTag="div" htmlClass="mygro-footer-contact col span_4_of_12">
+                    <block class="Magento\Cms\Block\Block" name="mygro-footer-contact">
+                        <arguments>
+                            <argument name="block_id" xsi:type="string">mygro-footer-contact</argument>
+                            <argument name="css_class" xsi:type="string">mygro-footer-contact col span_4_of_12</argument>
+                        </arguments>
+                    </block>
+                </container>
+                <container name="div.mygro-footer-copyright.block" htmlTag="div" htmlClass="mygro-footer-copyright">
+                    <block class="Magento\Cms\Block\Block" name="mygro-footer-copyright">
+                        <arguments>
+                            <argument name="block_id" xsi:type="string">mygro-footer-copyright</argument>
+                            <argument name="css_class" xsi:type="string">mygro-footer-copyright</argument>
+                        </arguments>
+                    </block>
+                </container>
+            </container>
         </referenceContainer>
         <referenceContainer name="before.body.end">
             <block class="Magento\Theme\Block\Html\Footer" name="absolute_footer" template="Magento_Theme::html/absolute_footer.phtml" />

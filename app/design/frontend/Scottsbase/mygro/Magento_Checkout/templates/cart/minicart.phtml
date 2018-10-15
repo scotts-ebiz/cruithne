@@ -13,15 +13,11 @@
     <a class="action showcart" href="<?= /* @escapeNotVerified */ $block->getShoppingCartUrl() ?>"
        data-bind="scope: 'minicart_content'">
         <i class="icon-bag"></i>
-        <span class="counter qty empty"
-              data-bind="css: { empty: !!getCartParam('summary_count') == false }, blockLoader: isLoading">
-            <span class="counter-number"><!-- ko text: getCartParam('summary_count') --><!-- /ko --></span>
-            <span class="counter-label">
-            <!-- ko if: getCartParam('summary_count') -->
-                <!-- ko text: getCartParam('summary_count') --><!-- /ko -->
-                <!-- ko i18n: 'items' --><!-- /ko -->
-            <!-- /ko -->
-            </span>
+    </a>
+    <a href="<?= /* @escapeNotVerified */ $block->getShoppingCartUrl() ?>">
+        <span class="cart-total-container" data-bind="scope: 'minicart_content'">
+            <span class="cart-total-title">Total</span>
+            <span class="total-amt" data-bind="html: getCartParam('subtotal')"></span>
         </span>
     </a>
     <?php if ($block->getIsNeedToDisplaySideBar()): ?>
@@ -56,5 +52,4 @@
     }
     </script>
 </div>
-
 
