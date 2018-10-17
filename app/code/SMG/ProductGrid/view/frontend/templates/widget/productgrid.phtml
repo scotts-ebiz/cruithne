@@ -7,9 +7,7 @@
     endif;
 ?>
 
-<?php echo '<div>I am here</div>'; ?>
-
-<section class="products grid col-'<?php echo $cols; ?>">
+<section class="products grid col-<?php echo $cols; ?>">
     <?php if($block->getData('prodnameone') != ''): ?>
     <div class="item" style="background-image: url('<?php echo $block->getData('prodbgimageone'); ?>');">
         <h2><a href="<?php echo $block->getData('prodbuttonlinkone'); ?>"><?php echo $block->getData('prodnameone'); ?></a></h2>
