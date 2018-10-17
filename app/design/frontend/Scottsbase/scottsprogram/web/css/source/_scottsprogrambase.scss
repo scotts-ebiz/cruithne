@@ -91,15 +91,17 @@
                     margin: 1rem 0;
                     text-transform: uppercase;
                 }
-                .contact-item-container {
+                ul {
+                    list-style-type: none;
                     margin-bottom: 1rem;
-                    .contact-item {
+                    padding: 0;
+                    li {
                         @include font-roboto(0.85rem, #515356, 400, 1.2rem);
                         margin: 0;
                     }
                 }
             }
-            .company-links {
+            ul {
                 border-left: 1px solid #ededee;
                 box-sizing: border-box;
                 padding: 2rem;
@@ -109,9 +111,10 @@
                     border-top: 1px solid #ededee;
                     text-align: center;
                 }
-                .link-container {
+                li {
+                    list-style-type: none;
                     margin-bottom: 0.25rem;
-                    .company-link {
+                    a {
                         @include font-roboto(0.85rem, #515356, 400);
                         -webkit-transition: color 0.2s ease-in-out;
                         transition: color 0.2s ease-in-out;
