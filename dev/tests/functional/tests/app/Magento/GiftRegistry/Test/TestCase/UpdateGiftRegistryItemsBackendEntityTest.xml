@@ -28,8 +28,6 @@
             <constraint name="Magento\GiftRegistry\Test\Constraint\AssertGiftRegistryManageItemsTab" />
         </variation>
         <variation name="UpdateGiftRegistryItemsBackendEntityTestVariation3">
-            <data name="tag" xsi:type="string">stable:no</data>
-            <data name="issue" xsi:type="string">MAGETWO-88627</data>
             <data name="tag" xsi:type="string">severity:S2</data>
             <data name="description" xsi:type="string">update few products in giftRegistry Items grid</data>
             <data name="giftRegistry/dataset" xsi:type="string">baby_registry</data>

@@ -10,12 +10,10 @@
             <parameter name="listheaders" visible="true" xsi:type="block">
                 <label>List Headers (Separated by ||)</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
-                <value>Header 1 || Header 2 || Header 3</value>
             </parameter>
             <parameter name="listvalues" visible="true" xsi:type="block">
                 <label>List Values (Separated by ||)</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
-                <value>Value 1 || Value 2 || Value 3</value>
             </parameter>
         </parameters>
     </widget>

@@ -73,6 +73,7 @@ before_install:
 - sudo cp -f $TRAVIS_BUILD_DIR/environment/config/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
 - sudo chmod 644 /etc/apache2/sites-available/000-default.conf
 - sudo chmod 644 /etc/apache2/sites-available/default-ssl.conf
+- sudo apachectl configtest
 - sudo service apache2 restart
 
 # Travis Env

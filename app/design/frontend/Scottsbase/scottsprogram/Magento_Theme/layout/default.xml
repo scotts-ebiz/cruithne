@@ -54,7 +54,7 @@
                 </container>
             </container>
         </referenceContainer>
-        <referenceContainer name="page.top">
+        <referenceContainer name="page.top" remove="true">
             <block class="Magento\Framework\View\Element\Template" name="navigation.sections" before="-" template="Magento_Theme::html/sections.phtml">
                 <arguments>
                     <argument name="group_name" xsi:type="string">navigation-sections</argument>
