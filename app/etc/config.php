@@ -276,6 +276,7 @@ return [
         'SMG_ProductCalloutVideo' => 1,
         'SMG_ProductGrid' => 1,
         'SMG_SpecsList' => 1,
+        'SMG_ZipCodeList' => 1,
         'Temando_Shipping' => 1,
         'Vertex_Tax' => 1
     ]
