@@ -38,7 +38,7 @@ body {
             position: relative;
             box-sizing: border-box;
             padding: 0 22px 0 22px;
-            max-width: $layout__wide-max-width;
+            max-width: 1440px;
             width: 100%;
             margin: 0 auto;
 
@@ -175,7 +175,7 @@ body {
 
         .column.main {
               .connect-home {
-                  max-width: $layout__wide-max-width;
+                  max-width: 1440px;
                   background-size: 100% auto;
                   background-repeat: no-repeat;
                   height: 640px;
@@ -215,7 +215,7 @@ body {
 
         body > section,
         .column.main > section {
-            max-width: $layout__wide-max-width;
+            max-width: 1440px;
             width: 100%;
             margin: 0 auto;
         }
