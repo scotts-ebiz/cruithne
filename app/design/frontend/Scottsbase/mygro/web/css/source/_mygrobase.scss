@@ -78,6 +78,10 @@ body {
                     @include max-screen($screen__l) {
                         margin: 0.8rem 0.5rem 0 0;
                     }
+                    &:before {
+                        display: none;
+                        visibility: hidden;
+                    }
                     .icon-bag {
                         &:before {
                             content: '\e902';
@@ -442,3 +446,4 @@ body {
         }
     }
 }
+

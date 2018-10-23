@@ -61,7 +61,7 @@ node_modules/
 /pub/static/*
 !/pub/static/.htaccess
 .vagrant
-vendor
+/vendor/
 /var/*
 !/var/.htaccess
 /vendor/*
