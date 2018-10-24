@@ -18,6 +18,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+// Base Page Styles
 .page-wrapper {
     .page-header {
         padding: 12px 0 12px;
@@ -174,6 +175,7 @@ body {
 
     .page-main {
         color: $mygro-gray;
+        font-size: 1rem;
         margin-top: 6rem;
 
         a:active,
@@ -446,4 +448,78 @@ body {
         }
     }
 }
+// Checkout Styles
+.checkout-cart-index {
+    .page-main {
+        .page-title-wrapper {
+            .page-title {
+                @include font-hellix-heavy(1.2rem, $mygro-gray-alt, false, false, 0.5px);
+            }
+        }
+        .columns {
+            .column {
+                .cart-container {
+                    .form-cart {
+                        .cart.table {
+                            thead {
+                                tr {
+                                    .col {
+                                        margin: 0;
+                                        padding: 0;
+                                        width: 25%;
+                                    }
+                                }
+                            }
+                            .cart.item {
+                                .item-info {
+                                    .col {
+                                        margin: 0;
+                                        padding: 1rem 0;
+                                        width: 25%;
+                                    }
+                                    .price-including-tax,
+                                    .price-excluding-tax {
+                                        font-size: 1.4rem;
+                                    }
+                                }
+                                .item-actions {
+                                    td {
+                                        padding: 0;
+                                    }
+                                    .actions-toolbar {
+                                        height: 3rem;
+                                        .action-edit {
+                                            display: none;
+                                            visibility: hidden;
+                                        }
+                                        .action-delete {
+                                            -webkit-transition: background 0.2s;
+                                            -moz-transition: background 0.2s;
+                                            -ms-transition: background 0.2s;
+                                            -o-transition: background 0.2s;
+                                            transition: background 0.2s;
+                                            background: $mygro-gray-alt;
+                                            color: $white;
+                                            padding: 1rem;
+                                            border-radius: 5px;
+                                            &:hover {
+                                                -webkit-transition: background 0.2s;
+                                                -moz-transition: background 0.2s;
+                                                -ms-transition: background 0.2s;
+                                                -o-transition: background 0.2s;
+                                                transition: background 0.2s;
+                                                background: #505050;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
 
