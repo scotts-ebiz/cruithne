@@ -8,7 +8,7 @@
 				<label>Zip Codes</label>
 				<block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
 			</parameter>
-			<parameter name="zipcodesegment" visible="true" xsi:type="select" required="true" source_model="SMG\ZipCodeList\Model\Source\TextAlignSelect">
+			<parameter name="zipcodesegment" visible="true" xsi:type="select" required="true" source_model="SMG\ZipCodeList\Model\Source\ZipCodeSegmentSelect">
 				<label>Zip Code Segment</label>
 			</parameter>
 		</parameters>

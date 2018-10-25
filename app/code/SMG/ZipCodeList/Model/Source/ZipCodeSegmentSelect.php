@@ -2,7 +2,7 @@
 
 namespace SMG\ZipCodeList\Model\Source;
 
-class TextAlignSelect implements \Magento\Framework\Option\ArrayInterface
+class ZipCodeSegmentSelect implements \Magento\Framework\Option\ArrayInterface
 {
     public function toOptionArray()
     {
