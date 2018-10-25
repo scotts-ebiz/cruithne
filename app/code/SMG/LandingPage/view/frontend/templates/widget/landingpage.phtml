@@ -4,6 +4,9 @@
 
     $large_bundle_parts = explode("/", $this->getData('largeyardbundle'));
     $large_bundle_id = (isset($large_bundle_parts[1])) ? intval($large_bundle_parts[1]) : 0;
+
+    // Create the Checkout Cart Helper For Later Use
+    $cart_helper = $this->helper('\Magento\Checkout\Helper\Cart');
 ?>
 
 <div class="turfbuilder__wrap">
@@ -22,8 +25,8 @@
                             <?php if(!$block->getData('requireszipcodelookup')): ?>
                             <h4 class="section__hero--sectiontitle">Select your program:</h4>';
                             <?php if($small_bundle_id):
-                                    $small_bundle_product = Mage::getModel('catalog/product')->load($small_bundle_id);
-                                    $small_bundle_url = Mage::helper('checkout/cart')->getAddUrl($small_bundle_product);
+                                    $small_bundle_product = $block->getLoadProduct($small_bundle_id);
+                                    $small_bundle_url = $cart_helper->getAddUrl($small_bundle_product);
                                     $small_bundle_price = 0;
 
                                     $selection_ids = array();
@@ -49,7 +52,7 @@
                             ?>
                             <div class="section__hero--option">
 				                <form action="<?php echo $small_bundle_url; ?>" method="post" id="product_addtocart_form">
-	                                <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+	                                <input name="form_key" type="hidden" value="<?php echo $block->getFormKey(); ?>" />
                                     <input type="hidden" name="product" value="<?php echo $small_bundle_id; ?>" />
                                     <input type="hidden" name="related_product" id="related-products-field" value="" />
                                     <?php echo $options_html; ?>
@@ -60,8 +63,8 @@
                             <?php endif; ?>
 
                             <?php if($large_bundle_id):
-                                $large_bundle_product = Mage::getModel('catalog/product')->load($large_bundle_id);
-                                $large_bundle_url = Mage::helper('checkout/cart')->getAddUrl($large_bundle_product);
+                                $large_bundle_product = $block->getLoadProduct($large_bundle_id);
+                                $large_bundle_url = $cart_helper->getAddUrl($large_bundle_product);
                                 $large_bundle_price = 0;
 
                                 $selection_ids = array();
@@ -84,7 +87,7 @@
                             ?>
                             <div class="section__hero--option">
                                 <form action="<?php echo $large_bundle_url; ?>" method="post" id="product_addtocart_form">
-                                    <input name="form_key" type="hidden" value="<?php echo Mage::getSingleton('core/session')->getFormKey(); ?>" />
+                                    <input name="form_key" type="hidden" value="<?php echo $block->getFormKey(); ?>" />
                                     <input type="hidden" name="product" value="<?php echo $large_bundle_id; ?>" />
                                     <input type="hidden" name="related_product" id="related-products-field" value="" />
                                     <?php echo $options_html; ?>
@@ -98,7 +101,7 @@
                                 $zip_value = (isset($_GET['zip'])) ? intval($_GET['zip']) : '';
                                 $zip_input_type = ($zip_value) ? 'hidden' : 'text';
                                 $zip_instructions = ($zip_value) ? 'Now Select Your Grass Type' : 'Enter Your Zip Code To Get Started';
-                                $zip_code_action = Mage::getUrl('zip');
+                                $zip_code_action = $block->getUrl('zip/zip');
                             ?>
                             <h4><?php echo $zip_instructions; ?></h4>
                             <form action="<?php echo $zip_code_action; ?>" method="get" class="<?php echo $show_error_class; ?>">
@@ -295,11 +298,11 @@
                     <div class="section__tabs--tabnav">
                         <?php
                             foreach($tab_ids as $tab_id):
-                                $tab_product = Mage::getModel('catalog/product')->load($tab_id);
+                                $tab_product = $block->getLoadProduct($tab_id);
                                 $tab_headline[] = $tab_product->getData('name');
                                 $tab_description[] = $tab_product->getData('description');
                                 $tab_content[] = $tab_product->getData('short_description');
-                                $tab_image[] = Mage::getModel('catalog/product_media_config')->getMediaUrl($tab_product->getImage());
+                                $tab_image[] = $block->getMediaBaseUrl($tab_product->getImage());
                             endforeach;
 
                             $html = '';
