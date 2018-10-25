@@ -89,7 +89,7 @@ echo ">>> mysql installed and configured!"
 
 echo ">>> Generating a self-signed certificate for Cruithne..."
 SSL_DIR="/etc/ssl"
-COMMON="store.cruithne.test"
+COMMON="cruithne.scottsprogram.local"
 PASSPHRASE=""
 COUNTRY="US"
 STATE="Ohio"
@@ -114,7 +114,7 @@ openssl x509 -req -days 365 -in "$SSL_DIR/cruithne.csr" -signkey "$SSL_DIR/cruit
 echo ">>> Self-signed certificate created!"
 
 echo ">>> Generating a self-signed certificate for MyGro..."
-COMMON="www.mygro.test"
+COMMON="cruithne.mygro.local"
 SUBJ="
 C=$COUNTRY
 ST=$STATE
