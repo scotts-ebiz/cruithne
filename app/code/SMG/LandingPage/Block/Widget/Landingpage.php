@@ -2,12 +2,18 @@
 
 namespace SMG\LandingPage\Block\Widget;
 
+use Magento\Catalog\Api\ProductRepositoryInterface;
+
+use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\View\Element\Template;
 use Magento\Framework\View\Element\Template\Context;
-use Magento\Widget\Block\BlockInterface;
-use Magento\Catalog\Api\ProductRepositoryInterface;
+
 use Magento\Store\Model\StoreManagerInterface;
-use Magento\Framework\Data\Form\FormKey;
+
+use Magento\Widget\Block\BlockInterface;
+
+
+
 
 class Landingpage extends Template implements BlockInterface
 {
@@ -45,7 +51,7 @@ class Landingpage extends Template implements BlockInterface
      */
     public function getMediaBaseUrl($image)
     {
-        return $this->_baseUrl . 'pub/media/catalog/product/' . $image;
+        return parse_url($this->getUrl(), PHP_URL_SCHEME) . '://' . parse_url($this->getUrl(), PHP_URL_HOST) . '/pub/media/catalog/product' . $image;
     }
 
     /**
@@ -55,6 +61,6 @@ class Landingpage extends Template implements BlockInterface
      */
     public function getFormKey()
     {
-        return $this->formKey->getFormKey();
+        return $this->_formKey->getFormKey();
     }
 }

@@ -23,36 +23,38 @@
 
 						<div class="section__hero--select">
                             <?php if(!$block->getData('requireszipcodelookup')): ?>
-                            <h4 class="section__hero--sectiontitle">Select your program:</h4>';
+                            <h4 class="section__hero--sectiontitle">Select your program:</h4>
                             <?php if($small_bundle_id):
-                                    $small_bundle_product = $block->getLoadProduct($small_bundle_id);
-                                    $small_bundle_url = $cart_helper->getAddUrl($small_bundle_product);
-                                    $small_bundle_price = 0;
+                                // Get small bundle product, URL, and initialize bundle price to 0
+                                $small_bundle_product = $block->getLoadProduct($small_bundle_id);
+                                $small_bundle_url = $cart_helper->getAddUrl($small_bundle_product);
+                                $small_bundle_price = 0;
 
-                                    $selection_ids = array();
-                                    $tab_ids = array();
-                                    $options_html = '';
+                                $selection_ids = array();
+                                $tab_ids = array();
+                                $options_html = '';
 
-                                    $optionCollection = $small_bundle_product->getTypeInstance()->getOptionsCollection();
-                                    $selectionCollection = $small_bundle_product->getTypeInstance()->getSelectionsCollection($small_bundle_product->getTypeInstance()->getOptionsIds());
-                                    $options = $optionCollection->appendSelections($selectionCollection);
-                                    foreach($options as $option):
-                                        $option_id = $option->getOptionId();
-                                        $tab_titles[] = $option->getData('default_title');
-                                        $_selections = $option->getSelections();
-                                        foreach($_selections as $selection):
-                                            $selection_price = $selection->getSelectionPriceValue();
-                                            $selection_qty = $selection->getSelectionQty();
-                                            $small_bundle_price = $small_bundle_price + ($selection_price * $selection_qty);
-                                            $selection_ids[] = $selection->getSelectionId();
-                                            $tab_ids[] = $selection->getProductId();
-                                            $options_html .= '<input type="hidden" name="bundle_option_qty[' . $option_id . ']" value="1" />';
-                                        endforeach;
+                                $optionCollection = $small_bundle_product->getTypeInstance()->getOptionsCollection($small_bundle_product);
+                                $selectionCollection = $small_bundle_product->getTypeInstance()->getSelectionsCollection($small_bundle_product->getTypeInstance()->getOptionsIds($small_bundle_product), $small_bundle_product);
+                                $options = $optionCollection->appendSelections($selectionCollection);
+                                foreach($options as $option):
+                                    $option_id = $option->getOptionId();
+                                    $tab_titles[] = $option->getData('default_title');
+
+                                    $_selections = $option->getSelections();
+                                    foreach($_selections as $selection):
+                                        $selection_price = $selection->getSelectionPriceValue();
+                                        $selection_qty = $selection->getSelectionQty();
+                                        $small_bundle_price = $small_bundle_price + ($selection_price * $selection_qty);
+                                        $selection_ids[] = $selection->getSelectionId();
+                                        $tab_ids[] = $selection->getProductId();
+                                        $options_html .= '<input type="hidden" name="bundle_option_qty[' . $option_id . ']" value="1" />';
                                     endforeach;
+                                endforeach;
                             ?>
                             <div class="section__hero--option">
 				                <form action="<?php echo $small_bundle_url; ?>" method="post" id="product_addtocart_form">
-	                                <input name="form_key" type="hidden" value="<?php echo $block->getFormKey(); ?>" />
+	                                <!--input name="form_key" type="hidden" value="<?php echo $block->getFormKey(); ?>" /-->
                                     <input type="hidden" name="product" value="<?php echo $small_bundle_id; ?>" />
                                     <input type="hidden" name="related_product" id="related-products-field" value="" />
                                     <?php echo $options_html; ?>
@@ -70,8 +72,8 @@
                                 $selection_ids = array();
                                 $options_html = '';
 
-                                $optionCollection = $large_bundle_product->getTypeInstance()->getOptionsCollection();
-                                $selectionCollection = $large_bundle_product->getTypeInstance()->getSelectionsCollection($large_bundle_product->getTypeInstance()->getOptionsIds());
+                                $optionCollection = $large_bundle_product->getTypeInstance()->getOptionsCollection($large_bundle_product);
+                                $selectionCollection = $large_bundle_product->getTypeInstance()->getSelectionsCollection($large_bundle_product->getTypeInstance()->getOptionsIds($large_bundle_product), $large_bundle_product);
                                 $options = $optionCollection->appendSelections($selectionCollection);
                                 foreach($options as $option):
                                     $option_id = $option->getOptionId();
@@ -87,7 +89,7 @@
                             ?>
                             <div class="section__hero--option">
                                 <form action="<?php echo $large_bundle_url; ?>" method="post" id="product_addtocart_form">
-                                    <input name="form_key" type="hidden" value="<?php echo $block->getFormKey(); ?>" />
+                                    <!--input name="form_key" type="hidden" value="<?php echo $block->getFormKey(); ?>" /-->
                                     <input type="hidden" name="product" value="<?php echo $large_bundle_id; ?>" />
                                     <input type="hidden" name="related_product" id="related-products-field" value="" />
                                     <?php echo $options_html; ?>
@@ -305,47 +307,42 @@
                                 $tab_image[] = $block->getMediaBaseUrl($tab_product->getImage());
                             endforeach;
 
-                            $html = '';
-
                             $i = 1;
                             foreach($tab_titles as $title):
                                 $active = ($i == 1) ? ' active' : '';
-
-                                $html .= '<label class="tabnav-label' . $active . '" for="toggle__tab' . $i . '" id="tablabel__' . $i . '"><span>' . $title . '</span></label>';
-
+                        ?>
+                        <label class="tabnav-label<?php echo $active; ?>" for="toggle__tab<?php echo $i; ?>" id="tablabel__<?php echo $i; ?>"><span><?php echo $title ?></span></label>
+                        <?php
                                 $i++;
                             endforeach;
                         ?>
-                        <?php echo $html; ?>
                     </div>
 
                     <div class="section__tabs--tabcontainer">
-					    <div class="section__tabs--tabtrack">';
+					    <div class="section__tabs--tabtrack">
                             <?php
-                                $html = '';
-
                                 $i = 1;
                                 foreach($tab_headline as $key => $headline):
                                     $checked = ($i == 1) ? 'checked="checked"' : '';
+                            ?>
+                            <input <?php echo $checked; ?> class="tabs__radio" id="toggle__tab<?php echo $i ?>" name="tabs__tabnav" type="radio" />
+							<div class="tabpanel" data-panel="toggle__tab<?php echo $i ?>" id="tabcontent__<?php echo $i ?>">
+							    <div class="tabpanel__wrapper">
+								    <div class="tabpanel__image">
+									    <span><img alt="Scotts&reg; Turf Builder&reg; SummerGuard&reg; Lawn Food with Insect Control" src="<?php echo $tab_image[$key]; ?>"></span>
+									</div>
 
-                                    $html .= '<input ' . $checked . ' class="tabs__radio" id="toggle__tab' . $i . '" name="tabs__tabnav" type="radio">
-								        <div class="tabpanel" data-panel="toggle__tab' . $i . '" id="tabcontent__' . $i . '">
-									        <div class="tabpanel__wrapper">
-										        <div class="tabpanel__image">
-											        <span><img alt="Scotts&reg; Turf Builder&reg; SummerGuard&reg; Lawn Food with Insect Control" src="' . $tab_image[$key] . '"></span>
-										        </div>
-										        <div class="tabpanel__text">
-											        <h2 class="turfbuilder--headline">' . $headline . '</h2>
-											        <p class="text-desc">' . $tab_description[$key] . '</p>
-											        ' . $tab_content[$key] . '
-										        </div>
-									        </div>
-								    </div>';
-
+									<div class="tabpanel__text">
+									    <h2 class="turfbuilder--headline"><?php echo $headline; ?></h2>
+										<p class="text-desc"><?php echo $tab_description[$key]; ?></p>
+										<?php echo $tab_content[$key]; ?>
+									</div>
+								</div>
+							</div>
+                            <?php
                                     $i++;
                                 endforeach;
                             ?>
-                            <?php echo $html; ?>
                         </div>
                     </div>
 
@@ -371,10 +368,10 @@
 						<p>Create your custom lawn care plan in five simple steps. Discover custom lawn care tips based on your grass type, location, lawn size, seed, feed, weed, and weather conditions.</p>
 						<div class="section__app--links">
 							<div class="widget widget-static-block">
-								<a class="link--badge" href="https://itunes.apple.com/app/id372269879" target="_blank" title="Download iOS app"><img alt="Download on the App Store" src="/media/wysiwyg/badge--appstore.png"></a>
+								<a class="link--badge" href="https://itunes.apple.com/app/id372269879" target="_blank" title="Download iOS app"><img alt="Download on the App Store" src="/pub/media/badge--appstore.png"></a>
 							</div>
 							<div class="widget widget-static-block">
-								<a class="link--badge" href="https://play.google.com/store/apps/details?id=com.scotts.lawnapp" target="_blank" title="Download Android app"><img alt="Get It On Google Play" src="/media/wysiwyg/badge--googleplay.png"></a>
+								<a class="link--badge" href="https://play.google.com/store/apps/details?id=com.scotts.lawnapp" target="_blank" title="Download Android app"><img alt="Get It On Google Play" src="/pub/media/badge--googleplay.png"></a>
 							</div>
 						</div>
 					</div><!-- .section__app==text -->
