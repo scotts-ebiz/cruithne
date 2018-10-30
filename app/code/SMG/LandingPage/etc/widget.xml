@@ -4,21 +4,12 @@
         <label>Landing Page Options</label>
         <description>Landing page custom fields.</description>
         <parameters>
-            <parameter name="requireszipcodelookup" visible="true" xsi:type="select">
+            <parameter name="requireszipcodelookup" visible="true" xsi:type="select" source_model="SMG\ParameterTypes\Model\Source\YesNoSelect">
                 <label>Requires Zip Code Lookup</label>
-                <options>
-                    <option value="0">
-                        <label>No</label>
-                    </option>
-                    <option value="1">
-                        <label>Yes</label>
-                    </option>
-                </options>
             </parameter>
             <parameter name="heroimage" visible="true" xsi:type="block">
                 <label>Hero Image</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
-                <value>/pub/media/hero-section.jpg</value>
             </parameter>
             <parameter name="herosupportingheadline" visible="true" xsi:type="text">
                 <label>Hero Supporting Headline</label>
@@ -31,7 +22,6 @@
             <parameter name="herodescription" visible="true" xsi:type="block">
                 <label>Hero Description</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
-                <value>Without proper care, your yard can quickly become a battleground of grass vs. weeds. Fortunately, there's no need for a turf war, thanks to our new Scotts® Turf Builder® Seasonal Program. We save you time and eliminate guesswork by sending exactly what you need to care for your lawn for the rest of the year.</value>
             </parameter>
             <parameter name="smallyardbundle" visible="true" xsi:type="block">
                 <label>Small Yard Bundle</label>
@@ -60,7 +50,6 @@
             <parameter name="freeshippingicon" visible="true" xsi:type="block">
                 <label>Free Shipping Icon</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
-                <value>/pub/media/free-shipping-icon.png</value>
             </parameter>
             <parameter name="freeshippingmessage" visible="true" xsi:type="text">
                 <label>Free Shipping Message</label>
@@ -69,22 +58,18 @@
             <parameter name="disclaimertext" visible="true" xsi:type="block">
                 <label>Disclaimer Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
-                <value>Only available in: OR, WA.</value>
             </parameter>
             <parameter name="howitworksdescriptionone" visible="true" xsi:type="block">
                 <label>How It Works Text #1</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
-                <value>We'll send you email notifications when it's time to apply each product.</value>
             </parameter>
             <parameter name="howitworksdescriptiontwo" visible="true" xsi:type="block">
                 <label>How It Works Text #2</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
-                <value>We'll send you all bags at once, so you'll have every product in your plan.</value>
             </parameter>
             <parameter name="howitworksdescriptionthree" visible="true" xsi:type="block">
                 <label>How It Works Text #3</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
-                <value>We'll send you email notifications when it's time to apply each product.</value>
             </parameter>
         </parameters>
     </widget>
