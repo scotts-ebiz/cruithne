@@ -4,6 +4,7 @@ namespace SMG\Zip\Controller\Zip;
 
 use Magento\Framework\App\Action\Action;
 use \Magento\Widget\Model\Widget\Instance;
+use \Magento\Cms\Model\Page;
 
 class Index extends Action
 {
@@ -37,20 +38,16 @@ class Index extends Action
             $zip_code = preg_replace( '/[^0-9]/', '', $_REQUEST['zip']);
             $zip_code = substr($zip_code, 0, 5);
 
-            // Get the widget title from the table
-            $query = 'SELECT * FROM widget_instance WHERE widget_parameters LIKE "%' . $zip_code . '%" limit 1';
-            $results = $this->getData($query);
-
-            $page_title = '';
-            if ($results):
-                $page_title = $results[0]['title'];
-            endif;
-
+            // Get the widget title from the created widgets
+            $page_title = $this->getPageTitle($zip_code);
 			if($page_title == '3 - SOMIX'):
 				$redirect = $current_page_url . '?select_grass&zip=' . $zip_code;
 			else:
                 // Get the redirect page url
                 $pageUrl = $this->getRedirectPageUrl($page_title);
+
+			    // if the pageUrl has been set then change the redirect URL to the pageURL
+                // otherwise leave the redirect URL as the default
                 if ($pageUrl):
                     $redirect = $pageUrl;
                 endif;
@@ -86,7 +83,8 @@ class Index extends Action
     }
 
     /**
-     * Retrieves the page URL from the Page Helper
+     * Retrieves the page URL from the Page Helper.
+     * If the pageUrl can not be found then it returns an empty string
      *
      * @param $page_title
      * @return mixed
@@ -94,6 +92,7 @@ class Index extends Action
     private function getRedirectPageUrl($page_title)
     {
         $pageUrl = '';
+
         if($page_title):
             // Get the page id from the table
             $query = 'SELECT * FROM cms_page WHERE title LIKE "' . $page_title . '" LIMIT 1';
@@ -114,5 +113,42 @@ class Index extends Action
 
         // Return the redirect URL
         return $pageUrl;
+    }
+
+    /**
+     * Get the page title from the created zip code list widgets.
+     * If the page title can not be found then it returns an empty string
+     *
+     * @param $zip_code
+     * @return string
+     */
+    private function getPageTitle($zip_code)
+    {
+        $page_title = '';
+
+        if ($zip_code):
+            // get an instance of the widget model
+            $widgetFactory = $this->_objectManager->create('\Magento\Widget\Model\Widget\Instance');
+
+            // get a collection of widgets that have been collected and filter out the one we want
+            $collection_of_widgets = $widgetFactory->getCollection();
+            $collection_of_widgets->addFieldToFilter('widget_parameters', array(
+                array('like'=> '%' . $zip_code . '%')
+            ));
+
+            // loop through the collection to get the zip code segment (aka page title)
+            foreach($collection_of_widgets as $widget):
+                $widget_params = $widget->getWidgetParameters();
+                if(!isset($widget_params['zipcodesegment'])):
+                    continue;
+                endif;
+
+                // if we made it here then we found the page title
+                $page_title = $widget_params['zipcodesegment'];
+            endforeach;
+        endif;
+
+        // return the page title
+        return $page_title;
     }
 }
