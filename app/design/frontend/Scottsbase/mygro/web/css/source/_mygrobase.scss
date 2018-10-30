@@ -163,6 +163,10 @@ body {
     .page-main {
         margin-top: 1rem;
 
+        .page-title-wrapper {
+            display: none;
+        }
+
         a:active,
         .alink:active {
             text-decoration: none;
@@ -174,41 +178,64 @@ body {
         }
 
         .column.main {
-              .connect-home {
-                  max-width: 1440px;
-                  background-size: 100% auto;
-                  background-repeat: no-repeat;
-                  height: 640px;
-                  position: relative;
-                  margin: 120px auto 20px;
+            .connect-home {
+                max-width: 1440px;
+                background-size: 100% auto;
+                background-repeat: no-repeat;
+                height: 655px;
+                position: relative;
+                display: inline-block;
+                margin: 65px 0 0 0;
+                @media (max-width: 1200px) {
+                    height: 550px;
+                }
 
-                  .content {
-                      max-width: 575px;
-                      padding-left: 115px;
-                      position: absolute;
-                      top: 50%;
-                      transform: translateY(-50%);
+                @include max-screen($screen__l) {
+                    height: auto;
+                    background-position: top;
+                    background-size: 95%;
+                    margin: 40px 0 0 0;
+                }
+
+                .content {
+                    max-width: 500px;
+                    padding-left: 50px;
+                    position: relative;
+                    display: inline-block;
+                    margin: 5% 0 18% 0;
+                    @include max-screen($screen__l) {
+                        top: 0;
+                        padding: 0;
+                        text-align: left;
+                        margin: 52% 0 0 2%;
+                    }
                   }
 
-                  @media screen and (max-width: 1399px) and (min-width: 1024px) {
-                      .content {
-                          width: 35%;
-                          padding-left: 40px;
+                @media screen and (max-width: 1399px) and (min-width: 1024px) {
+                    .content {
+                        width: 34%;
+                        padding-left: 40px;
                       }
                   }
 
-                  h2 {
-                      font-size: 48px;
-                      line-height: 56px;
-                      margin-bottom: 25px;
-                      color: $mygro-green;
+                h2 {
+                    font-size: 48px;
+                    line-height: 56px;
+                    margin-bottom: 25px;
+                    color: $mygro-green;
+                    width: 75%;
+                    @include max-screen($screen__l) {
+                        width: 100%;
+                        font-size: 35px;
+                        line-height: 35px;
+                        margin-bottom: 0;
+                    }
                   }
 
-                  p {
-                      font-size: 16px;
-                      line-height: 28px;
-                      color: $mygro-gray;
-                      margin-bottom: 20px;
+                p {
+                    font-size: 16px;
+                    line-height: 28px;
+                    color: $mygro-gray;
                   }
               }
         }
@@ -220,6 +247,14 @@ body {
             margin: 0 auto;
         }
 
+        .column.main > section.hero-video {
+            @include max-screen($screen__l) {
+                margin: 0 16px 0 16px;
+                width: auto;
+                height: 350px;
+            }
+        }
+
         .col-2 {
             p {
                 margin: 0 0 1em;
@@ -227,9 +262,6 @@ body {
         }
 
         .products {
-            padding-bottom: 24px;
-            position: relative;
-
             .button {
                 margin-bottom: 20px;
             }
@@ -237,6 +269,9 @@ body {
             h2 {
                 font-size: 40px;
                 margin: 0 -20px 15px;
+                @include max-screen($screen__l) {
+                    font-size: 35px;
+                }
 
                 a {
                     color: $white;
@@ -250,6 +285,12 @@ body {
                 padding: 35px 40px;
                 box-sizing: border-box;
                 position: relative;
+                @include max-screen($screen__l) {
+                    margin: 0 16px 16px;
+                    img {
+                        max-height: 320px;
+                    }
+                }
             }
         }
 
@@ -262,9 +303,9 @@ body {
             flex-wrap: wrap;
             justify-content: space-evenly;
 
-            .item {
+            /*.item {
                 width: calc(100% - 32px);
-            }
+            }*/
         }
 
         .grid:after {
@@ -275,12 +316,6 @@ body {
 
         .grid > h2 {
             width: 100%;
-        }
-
-        .col-3 {
-            .item {
-                width: calc(33.33% - 28px);
-            }
         }
 
         .button {
@@ -296,8 +331,8 @@ body {
             box-sizing: border-box;
             width: 100%;
             max-width: 200px;
-            transition: background .2s linear;
-            letter-spacing: .5px;
+            transition: background 0.2s linear;
+            letter-spacing: 0.5px;
         }
 
         .button:hover {
@@ -313,6 +348,11 @@ body {
             background-size: cover;
             height: 720px;
             position: relative;
+            margin: 16px 16px;
+            @include max-screen($screen__l) {
+                background: url(/pub/media/gro/120417_RW_A_0122edit-2.png) 50% 0% no-repeat;
+                background-size: cover;
+            }
 
             .mobile-tablet,
             .mobile-only {
@@ -327,12 +367,20 @@ body {
                 top: 50%;
                 transform: translateY(-50%);
                 color: $white;
+                @include max-screen($screen__l) {
+                    width: auto;
+                    padding: 0 25px;
+                }
             }
 
             h2 {
                 font-size: 48px;
                 line-height: 56px;
                 margin-bottom: 25px;
+                @include max-screen($screen__l) {
+                    font-size: 35px;
+                    line-height: 40px;
+                }
             }
 
             p {
@@ -340,6 +388,9 @@ body {
                 line-height: 28px;
                 margin-bottom: 25px;
                 padding-right: 25px;
+                @include max-screen($screen__l) {
+                    display: none;
+                }
             }
         }
 
@@ -361,7 +412,7 @@ body {
                 color: $white;
                 font-size: 16px;
                 font-family: "Hellix-Heavy";
-                letter-spacing: .5px;
+                letter-spacing: 0.5px;
                 border-bottom: 2px solid $mygro-green;
                 padding-bottom: 3px;
                 position: relative;
@@ -380,6 +431,9 @@ body {
         .feature-list {
             padding: 90px 0;
             text-align: center;
+            @include max-screen($screen__l) {
+                padding: 50px 0;
+            }
 
             img {
                 height: 60px;
@@ -391,11 +445,14 @@ body {
                 color: $mygro-black-alt;
                 margin-bottom: 75px;
                 margin-top: 0;
+                @include max-screen($screen__l) {
+                    margin-bottom: 0;
+                }
             }
 
             h3 {
                 font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
-                letter-spacing: .5px;
+                letter-spacing: 0.5px;
                 font-size: 28px;
                 color: $black;
                 margin-bottom: 15px;
@@ -416,18 +473,18 @@ body {
                 border-radius: 50%;
                 color: $mygro-green;
                 font-size: 60px;
-                box-shadow: 0px 6px 24px 0 rgba(0, 0, 0, 0.04);
+                box-shadow: 0 6px 24px 0 rgba(0, 0, 0, 0.04);
                 display: block;
                 margin: 0 auto;
                 text-align: center;
             }
         }
 
-        .col-4 {
+        /*.col-4 {
             .item {
                 width: 25%;
             }
-        }
+        }*/
     }
 
     .page-footer {
