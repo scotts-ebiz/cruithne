@@ -448,19 +448,74 @@ body {
         }
     }
 }
-// Checkout Styles
+// Cart Styles
 .checkout-cart-index {
     .page-main {
         .page-title-wrapper {
             .page-title {
-                @include font-hellix-heavy(1.2rem, $mygro-gray-alt, false, false, 0.5px);
+                @include font-hellix-heavy(2.2rem, $mygro-black, false, false, 0.5px);
             }
         }
         .columns {
             .column {
                 .cart-container {
+                    .cart-summary {
+                        .summary.title {
+                            @include font-hellix-heavy(1.6rem, $mygro-gray-alt);
+                        }
+                        .block.shipping {
+                            .title {
+                                #block-shipping-heading {
+                                    @include font-hellix-regular(1.2rem, $mygro-gray-alt);
+                                }
+                            }
+                        }
+                        .block.discount {
+                            .title {
+                                #block-discount-heading {
+                                    @include font-hellix-regular(1.2rem, $mygro-gray-alt);
+                                }
+                            }
+                        }
+                        .block.giftcard {
+                            .title {
+                                #block-giftcard-heading {
+                                    @include font-hellix-regular(1.2rem, $mygro-gray-alt);
+                                }
+                            }
+                        }
+                        .checkout-methods-items {
+                            .item {
+                                .action.checkout {
+                                    @include font-hellix-regular(1.4rem, $white);
+                                    -webkit-transition: background 0.2s;
+                                    -moz-transition: background 0.2s;
+                                    -ms-transition: background 0.2s;
+                                    -o-transition: background 0.2s;
+                                    transition: background 0.2s;
+                                    background: $mygro-green;
+                                    border: none;
+                                    &:hover {
+                                        -webkit-transition: background 0.2s;
+                                        -moz-transition: background 0.2s;
+                                        -ms-transition: background 0.2s;
+                                        -o-transition: background 0.2s;
+                                        transition: background 0.2s;
+                                        background: #005d49;
+                                    }
+                                }
+                                .action.multicheckout {
+                                    color: $mygro-green;
+                                    text-decoration: underline;
+                                    &:hover {
+                                        text-decoration: none;
+                                    }
+                                }
+                            }
+                        }
+                    }
                     .form-cart {
-                        .cart.table {
+                        .cart.table-wrapper {
                             thead {
                                 tr {
                                     .col {
@@ -477,8 +532,25 @@ body {
                                         padding: 1rem 0;
                                         width: 25%;
                                     }
+                                    .item {
+                                        .product-item-details {
+                                            .product-item-name {
+                                                a {
+                                                    color: $mygro-black;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .qty {
+                                        .control.qty {
+                                            .qty {
+                                                border: 1px solid $mygro-black;
+                                            }
+                                        }
+                                    }
                                     .price-including-tax,
                                     .price-excluding-tax {
+                                        color: $mygro-black;
                                         font-size: 1.4rem;
                                     }
                                 }
@@ -509,6 +581,87 @@ body {
                                                 -o-transition: background 0.2s;
                                                 transition: background 0.2s;
                                                 background: #505050;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .cart.actions {
+                            .action.continue,
+                            .action.clear,
+                            .action.update {
+                                @include font-hellix-regular(1rem, $mygro-black, 400);
+                            }
+                            .action.continue {
+                                &:before {
+                                    line-height: 1.4rem;
+                                }
+                            }
+                        }
+                    }
+                    #gift-options-cart {
+                        .cart-gift-item {
+                            .gift-item-block {
+                                .title {
+                                    @include font-hellix-regular(1rem, $mygro-black, 400);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+// Checkout Styles
+.checkout-index-index {
+    .page-wrapper {
+        .page-main {
+            .columns {
+                .column.main {
+                    .checkout-container {
+                        .opc-progress-bar {
+                            .opc-progress-bar-item {
+                                span {
+                                    font-size: 1.4rem;
+                                    &:after {
+                                        font-size: 1.4rem;
+                                    }
+                                }
+                            }
+                        }
+                        .opc-wrapper {
+                            .opc {
+                                #opc-shipping_method {
+                                    .checkout-shipping-method {
+                                        .step-title {
+                                            font-size: 2rem;
+                                        }
+                                        .step-content {
+                                            .methods-shipping {
+                                                .actions-toolbar {
+                                                    .primary {
+                                                        .action.primary {
+                                                            @include font-hellix-heavy(1.2rem, $white, 400);
+                                                            line-height: 0;
+                                                            padding: 1rem 2rem;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .opc-sidebar {
+                            .modal-inner-wrap {
+                                .modal-content {
+                                    #opc-sidebar {
+                                        .opc-block-summary {
+                                            .title {
+                                                font-size: 2rem;
                                             }
                                         }
                                     }
