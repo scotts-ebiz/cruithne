@@ -7,7 +7,7 @@
 -->
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../../vendor/magento/mtf/Magento/Mtf/Repository/etc/repository.xsd">
     <repository class="Magento\Widget\Test\Repository\Widget\Parameters">
-        <dataset name="bannerRotator">
+        <dataset name="dynamicBlocksRotator">
             <field name="display_mode" xsi:type="string">Specified Dynamic Blocks</field>
             <field name="rotate" xsi:type="string">Display all instead of rotating</field>
             <field name="entities" xsi:type="array">
@@ -15,7 +15,7 @@
             </field>
         </dataset>
 
-        <dataset name="bannerRotatorShoppingCartRules">
+        <dataset name="dynamicBlocksRotatorShoppingCartRules">
             <field name="display_mode" xsi:type="string">Specified Dynamic Blocks</field>
             <field name="rotate" xsi:type="string">Display all instead of rotating</field>
             <field name="entities" xsi:type="array">
@@ -23,7 +23,7 @@
             </field>
         </dataset>
 
-        <dataset name="bannerRotatorCatalogRules">
+        <dataset name="dynamicBlocksRotatorCatalogRules">
             <field name="display_mode" xsi:type="string">Specified Dynamic Blocks</field>
             <field name="rotate" xsi:type="string">Display all instead of rotating</field>
             <field name="entities" xsi:type="array">
@@ -31,7 +31,7 @@
             </field>
         </dataset>
 
-        <dataset name="bannerRotatorFixed">
+        <dataset name="dynamicBlocksRotatorFixed">
             <field name="display_mode" xsi:type="string">Specified Dynamic Blocks</field>
             <field name="rotate" xsi:type="string">One at the time, Series</field>
             <field name="types" xsi:type="array">
