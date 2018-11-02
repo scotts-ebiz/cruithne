@@ -178,6 +178,10 @@ body {
         font-size: 1rem;
         margin-top: 6rem;
 
+        .page-title-wrapper {
+            display: none;
+        }
+
         a:active,
         .alink:active {
             text-decoration: none;
@@ -193,19 +197,38 @@ body {
                 max-width: 1440px;
                 background-size: 100% auto;
                 background-repeat: no-repeat;
-                height: 640px;
+                height: 655px;
                 position: relative;
-                margin: 120px auto 20px;
-                .content {
-                    max-width: 575px;
-                    padding-left: 115px;
-                    position: absolute;
-                    top: 50%;
-                    transform: translateY(-50%);
+                display: inline-block;
+                margin: 65px 0 0 0;
+                @media (max-width: 1200px) {
+                    height: 550px;
                 }
+
+                @include max-screen($screen__l) {
+                    height: auto;
+                    background-position: top;
+                    background-size: 95%;
+                    margin: 40px 0 0 0;
+                }
+
+                .content {
+                    max-width: 500px;
+                    padding-left: 50px;
+                    position: relative;
+                    display: inline-block;
+                    margin: 5% 0 18% 0;
+                    @include max-screen($screen__l) {
+                        top: 0;
+                        padding: 0;
+                        text-align: left;
+                        margin: 52% 0 0 2%;
+                    }
+                }
+
                 @media screen and (max-width: 1399px) and (min-width: 1024px) {
                     .content {
-                        width: 35%;
+                        width: 34%;
                         padding-left: 40px;
                     }
                 }
@@ -214,6 +237,13 @@ body {
                     line-height: 56px;
                     margin-bottom: 25px;
                     color: $mygro-green;
+                    width: 75%;
+                    @include max-screen($screen__l) {
+                        width: 100%;
+                        font-size: 35px;
+                        line-height: 35px;
+                        margin-bottom: 0;
+                    }
                 }
 
                 p {
@@ -236,6 +266,13 @@ body {
             width: 100%;
             margin: 0 auto;
         }
+        .column.main > section.hero-video {
+            @include max-screen($screen__l) {
+                margin: 0 16px 0 16px;
+                width: auto;
+                height: 350px;
+            }
+        }
         .col-2 {
             p {
                 margin: 0 0 1em;
@@ -250,6 +287,9 @@ body {
             h2 {
                 font-size: 40px;
                 margin: 0 -20px 15px;
+                @include max-screen($screen__l) {
+                    font-size: 35px;
+                }
                 a {
                     color: $white;
                 }
@@ -261,6 +301,12 @@ body {
                 padding: 35px 40px;
                 box-sizing: border-box;
                 position: relative;
+                @include max-screen($screen__l) {
+                    margin: 0 16px 16px;
+                    img {
+                        max-height: 320px;
+                    }
+                }
             }
         }
         .products.grid:after {
@@ -270,9 +316,6 @@ body {
             display: flex;
             flex-wrap: wrap;
             justify-content: space-evenly;
-            .item {
-                width: calc(100% - 32px);
-            }
         }
         .grid:after {
             content: '';
@@ -314,6 +357,11 @@ body {
             background-size: cover;
             height: 720px;
             position: relative;
+            margin: 16px 16px;
+            @include max-screen($screen__l) {
+                background: url(/pub/media/gro/120417_RW_A_0122edit-2.png) 50% 0% no-repeat;
+                background-size: cover;
+            }
             .mobile-tablet,
             .mobile-only {
                 display: none;
@@ -326,17 +374,28 @@ body {
                 top: 50%;
                 transform: translateY(-50%);
                 color: $white;
+                @include max-screen($screen__l) {
+                    width: auto;
+                    padding: 0 25px;
+                }
             }
             h2 {
                 font-size: 48px;
                 line-height: 56px;
                 margin-bottom: 25px;
+                @include max-screen($screen__l) {
+                    font-size: 35px;
+                    line-height: 40px;
+                }
             }
             p {
                 font-size: 16px;
                 line-height: 28px;
                 margin-bottom: 25px;
                 padding-right: 25px;
+                @include max-screen($screen__l) {
+                    display: none;
+                }
             }
         }
         .watch-video {
@@ -372,6 +431,9 @@ body {
         .feature-list {
             padding: 90px 0;
             text-align: center;
+            @include max-screen($screen__l) {
+                padding: 50px 0;
+            }
             img {
                 height: 60px;
                 display: inline-block;
@@ -381,6 +443,9 @@ body {
                 color: $mygro-black-alt;
                 margin-bottom: 75px;
                 margin-top: 0;
+                @include max-screen($screen__l) {
+                    margin-bottom: 0;
+                }
             }
             h3 {
                 font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
@@ -407,11 +472,6 @@ body {
                 display: block;
                 margin: 0 auto;
                 text-align: center;
-            }
-        }
-        .col-4 {
-            .item {
-                width: 25%;
             }
         }
     }
