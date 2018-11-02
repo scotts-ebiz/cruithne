@@ -11,7 +11,7 @@
     <img class="full-width" src="<?php echo $block->getData('bgimage'); ?>" />
     <?php endif; ?>
 
-    <div class="product-info grid col-2">
+    <div class="product-info grid col-2 <?php echo $block->getData('textalignclass') ?>">
         <?php if($this->getData('bannerimage') != ''): ?>
         <div class="image-container">
 		    <img src="<?php echo $block->getData('bannerimage'); ?>">
