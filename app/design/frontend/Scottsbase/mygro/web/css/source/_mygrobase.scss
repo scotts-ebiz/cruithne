@@ -66,9 +66,9 @@ body {
                 @include max-screen($screen__l) {
                     display: block;
                     float: right;
+                    margin-top: 0;
                     position: relative;
                     right: 0;
-                    top: 0.25rem;
                 }
                 .showcart {
                     color: $mygro-green;
@@ -98,12 +98,20 @@ body {
                         font-size: 0.7rem;
                         margin-right: 0.5rem;
                         text-transform: uppercase;
+                        @include max-screen($screen__s) {
+                            margin-right: 0;
+                        }
                     }
                     .total-amt {
                         display: block;
                         font-size: 1.2rem;
                         line-height: 0;
                         margin-top: 0.5rem;
+                        @include max-screen($screen__s) {
+                            font-size: 0.8rem;
+                            font-weight: 700;
+                            margin-top: 0.3rem;
+                        }
                     }
                 }
             }
@@ -582,6 +590,9 @@ body {
                                         margin: 0;
                                         padding: 0;
                                         width: 25%;
+                                        @include max-screen($screen__m) {
+                                            padding: 0.5rem;
+                                        }
                                     }
                                 }
                             }
@@ -593,7 +604,17 @@ body {
                                         width: 25%;
                                     }
                                     .item {
+                                        .product-item-photo {
+                                            @include max-screen($screen__m) {
+                                                max-width: none;
+                                                position: static;
+                                                text-align: center;
+                                            }
+                                        }
                                         .product-item-details {
+                                            @include max-screen($screen__m) {
+                                                text-align: center;
+                                            }
                                             .product-item-name {
                                                 a {
                                                     color: $mygro-black;
