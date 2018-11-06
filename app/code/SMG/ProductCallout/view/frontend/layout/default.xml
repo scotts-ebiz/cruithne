@@ -5,6 +5,6 @@
     <update handle="editor"/>
 
     <head>
-        <css src="SMG_ProductCallout::css/productcallout.css" />
+        <css src="productcallout.css" />
     </head>
 </page>
