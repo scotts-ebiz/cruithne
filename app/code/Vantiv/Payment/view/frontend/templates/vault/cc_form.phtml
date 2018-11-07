@@ -1,0 +1,55 @@
+<?php
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+/** @var Vantiv\Payment\Block\Vault\CcForm $block */
+?>
+<form
+    class="form-edit"
+    action="<?php echo $block->escapeHtml($block->getSaveUrl()); ?>"
+    method="post"
+    id="vantiv-cc-form"
+>
+    <fieldset class="fieldset">
+        <legend class="legend">
+            <span><?php echo $block->escapeHtml(__('Credit Card Data')); ?></span>
+        </legend>
+        <br />
+
+        <?php echo $block->getBlockHtml('formkey'); ?>
+
+        <div id="payframe"></div>
+
+        <input type="hidden" id="vantiv-public-hash" name="public_hash" value="<?php echo $block->escapeHtml($block->getPublicHash()); ?>" />
+        <input type="hidden" id="vantiv-paypage-registration-id" name="paypage_registration_id" />
+        <input type="hidden" id="vantiv-cc-type" name="cc_type" />
+        <input type="hidden" id="vantiv-cc-last-four" name="last_four" />
+        <input type="hidden" id="vantiv-cc-exp-month" name="exp_month" />
+        <input type="hidden" id="vantiv-cc-exp-year" name="exp_year" />
+
+        <div class="actions-toolbar">
+            <div class="primary">
+                <button
+                    type="submit"
+                    class="action save primary"
+                    data-action="save-card"
+                    title="<?php echo $block->escapeHtml(__('Save Card')); ?>"
+                >
+                    <span><?php echo $block->escapeHtml(__('Save Card')); ?></span>
+                </button>
+            </div>
+            <div class="secondary">
+                <a class="action back" href="<?php echo $block->escapeHtml($block->getBackUrl()); ?>">
+                    <span><?php echo $block->escapeHtml(__('Go back')); ?></span>
+                </a>
+            </div>
+        </div>
+    </fieldset>
+</form>
+<script type="text/x-magento-init">
+    {
+        "#payframe": <?php /* @noEscape */ echo $block->getMageInitJson(); ?>
+    }
+</script>

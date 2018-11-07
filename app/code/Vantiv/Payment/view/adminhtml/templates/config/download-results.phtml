@@ -1,0 +1,20 @@
+<?php
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+/**
+ * @var Vantiv\Payment\Block\Adminhtml\System\Config\DownloadResults $block
+ */
+?>
+<button class="scalable" type="button" id="<?php echo $block->getDownloadButtonId(); ?>">
+    <span><span><span><?php echo $block->escapeHtml(__('Download Test Results')); ?></span></span></span>
+</button>
+<br />
+<p class="nm"><small></small></p>
+<br />
+
+<script type="text/x-magento-init"><?php echo $block->getMageInitJson();?></script>

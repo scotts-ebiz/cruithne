@@ -1,0 +1,89 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Checkout\Model\CompositeConfigProvider">
+        <arguments>
+            <argument name="configProviders" xsi:type="array">
+                <item name="vantiv_cc_config_provider" xsi:type="object">Vantiv\Payment\Model\Ui\CcConfigProvider</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Magento\Vault\Model\Ui\TokensConfigProvider">
+        <arguments>
+            <argument name="tokenUiComponentProviders" xsi:type="array">
+                <item name="vantiv_cc" xsi:type="object">Vantiv\Payment\Model\Ui\CcTokenComponentProvider</item>
+                <item name="vantiv_echeck" xsi:type="object">Vantiv\Payment\Model\Ui\EcheckTokenComponentProvider</item>
+                <item name="vantiv_androidpay" xsi:type="object">Vantiv\Payment\Model\Ui\AndroidpayTokenComponentProvider</item>
+                <item name="vantiv_applepay" xsi:type="object">Vantiv\Payment\Model\Ui\ApplepayTokenComponentProvider</item>
+            </argument>
+        </arguments>
+    </type>
+    <!-- PayPal DI settings -->
+    <virtualType name="Vantiv\Payment\Model\Paypal\Session\Storage" type="Magento\Framework\Session\Storage">
+        <arguments>
+            <argument name="namespace" xsi:type="string">paypal</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Vantiv\Payment\Model\Paypal\Session" type="Magento\Framework\Session\Generic">
+        <arguments>
+            <argument name="storage" xsi:type="object">Vantiv\Payment\Model\Paypal\Session\Storage</argument>
+        </arguments>
+    </virtualType>
+    <type name="Vantiv\Payment\Model\Paypal\Express">
+        <arguments>
+            <argument name="paypalSession" xsi:type="object">Vantiv\Payment\Model\Paypal\Session</argument>
+        </arguments>
+    </type>
+    <type name="Vantiv\Payment\Controller\Paypal\Express\AbstractExpress">
+        <arguments>
+            <argument name="paypalSession" xsi:type="object">Vantiv\Payment\Model\Paypal\Session</argument>
+        </arguments>
+    </type>
+    <type name="Vantiv\Payment\Controller\Paypal\Express\GetToken">
+        <arguments>
+            <argument name="paypalSession" xsi:type="object">Vantiv\Payment\Model\Paypal\Session</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Framework\Url\SecurityInfo">
+        <arguments>
+            <argument name="secureUrlList" xsi:type="array">
+                <item name="vantiv_paypal_ipn" xsi:type="string">/vantiv/paypal/ipn/</item>
+                <item name="vantiv_paypal_express" xsi:type="string">/vantiv/paypal/express/</item>
+                <item name="vantiv_recurring" xsi:type="string">/vantiv/recurring/</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Vantiv\Payment\Controller\Paypal\Transparent\RequestSecureToken">
+        <arguments>
+            <argument name="sessionManager" xsi:type="object">Magento\Checkout\Model\Session</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Checkout\Model\CompositeConfigProvider">
+        <arguments>
+            <argument name="configProviders" xsi:type="array">
+                <item name="vantiv_paypal_express_config_provider" xsi:type="object">Vantiv\Payment\Model\Paypal\ExpressConfigProvider</item>
+            </argument>
+        </arguments>
+    </type>
+    <type name="Vantiv\Payment\Block\Paypal\Logo">
+        <arguments>
+            <argument name="paypalConfig" xsi:type="object">\Vantiv\Payment\Model\Paypal\Config</argument>
+        </arguments>
+    </type>
+
+    <!-- Vantiv Subscription Settings -->
+    <type name="Magento\Checkout\Model\CompositeConfigProvider">
+        <plugin name="vantiv_recurring" type="Vantiv\Payment\Model\Checkout\CompositeConfigProviderPlugin" sortOrder="100"/>
+    </type>
+    <type name="Magento\Checkout\Controller\Cart\Index">
+        <plugin name="vantiv_recurring" type="Vantiv\Payment\Plugin\Checkout\Controller\Cart\Index" sortOrder="100"/>
+    </type>
+    <type name="Magento\Checkout\Block\Onepage">
+        <plugin name="vantiv_recurring" type="Vantiv\Payment\Plugin\Checkout\Block\Onepage" sortOrder="100"/>
+    </type>
+</config>

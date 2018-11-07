@@ -280,6 +280,7 @@ return [
         'SMG_Zip' => 1,
         'SMG_ZipCodeList' => 1,
         'Temando_Shipping' => 1,
+        'Vantiv_Payment' => 1,
         'Vertex_Tax' => 1
     ]
 ];

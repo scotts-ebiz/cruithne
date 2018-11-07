@@ -1,0 +1,15 @@
+<?php
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+/** @var Vantiv\Payment\Block\Fraud\ThreatMetrix $block */
+?>
+<script type="text/javascript" src="<?php echo $block->escapeHtml($block->getScriptUrl()); ?>"></script>
+<noscript>
+<iframe
+    style="width: 100px; height: 100px; border: 0; position: absolute; top: -5000px;"
+    src="<?php echo $block->escapeHtml($block->getNoscriptUrl()); ?>"
+></iframe>
+</noscript>
