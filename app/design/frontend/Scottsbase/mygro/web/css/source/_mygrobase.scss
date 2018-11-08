@@ -320,11 +320,6 @@ body {
         .products.grid:after {
             display: none;
         }
-        .grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-evenly;
-        }
         .grid:after {
             content: '';
             display: table;
@@ -752,7 +747,32 @@ body {
                                 padding: 1rem;
                             }
                             .opc {
-                                #opc-shipping_method {
+                                .checkout-shipping-address {
+                                    .step-content {
+                                        .form-login {
+                                            border-bottom: 1px solid #c2c2c2;
+                                            padding-bottom: 1rem;
+                                        }
+                                        .form-login,
+                                        .form-shipping-address {
+                                            .fieldset {
+                                                .label {
+                                                    width: auto;
+                                                }
+                                                .control {
+                                                    float: none;
+                                                    width: auto;
+                                                }
+                                            }
+                                            .hidden-fields {
+                                                .actions-toolbar {
+                                                    margin-left: 0;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                .checkout-shipping-method {
                                     .checkout-shipping-method {
                                         .step-title {
                                             font-size: 2rem;
