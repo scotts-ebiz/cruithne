@@ -1,6 +1,7 @@
 // MyGro Base
 body {
     @include font-hellix-regular();
+    font-size: 1.2rem;
 
     h2 {
         font-weight: bold;
@@ -73,9 +74,12 @@ body {
                 .showcart {
                     color: $mygro-green;
                     float: left;
-                    font-size: 1.2rem;
-                    margin: 0.8rem 1rem 0 0;
+                    font-size: 1rem;
+                    margin: 0.5rem 0 0 0;
+                    position: relative;
                     text-decoration: none;
+                    text-align: right;
+                    width: 80px;
                     @include max-screen($screen__l) {
                         margin: 0.8rem 0.5rem 0 0;
                     }
@@ -84,33 +88,69 @@ body {
                         visibility: hidden;
                     }
                     .icon-bag {
+                        position: absolute;
+                        top: 12px;
+                        left: 0;
                         &:before {
                             content: '\e902';
                         }
-                    }
-                }
-                .cart-total-container {
-                    color: $mygro-black;
-                    display: inline-block;
-                    position: relative;
-                    bottom: 0.5rem;
-                    .cart-total-title {
-                        font-size: 0.7rem;
-                        margin-right: 0.5rem;
-                        text-transform: uppercase;
                         @include max-screen($screen__s) {
-                            margin-right: 0;
+                            display: none;
+                            visibility: hidden;
                         }
                     }
-                    .total-amt {
-                        display: block;
-                        font-size: 1.2rem;
-                        line-height: 0;
-                        margin-top: 0.5rem;
-                        @include max-screen($screen__s) {
-                            font-size: 0.8rem;
-                            font-weight: 700;
-                            margin-top: 0.3rem;
+                    .cart-total-container {
+                        color: $mygro-black;
+                        display: inline-block;
+                        position: relative;
+                        bottom: 0.5rem;
+                        .cart-total-title {
+                            font-size: 0.7rem;
+                            text-transform: uppercase;
+                            @include max-screen($screen__s) {
+                                margin-right: 0;
+                            }
+                        }
+                        .total-amt {
+                            display: block;
+                            font-size: 1.2rem;
+                            line-height: 0;
+                            margin-top: 0.5rem;
+                            @include max-screen($screen__s) {
+                                font-size: 1rem;
+                                font-weight: 700;
+                            }
+                        }
+                    }
+                }
+                .ui-dialog {
+                    .block-minicart {
+                        font-size: 1rem;
+                        text-align: left;
+                        #minicart-content-wrapper {
+                            .block-content {
+                                .actions {
+                                    .primary {
+                                        font-size: 1.2rem;
+                                        padding: 0;
+                                    }
+                                }
+                                .minicart-items-wrapper {
+                                    .minicart-items {
+                                        .product-item {
+                                            .product {
+                                                .product-item-pricing {
+                                                    .details-qty {
+                                                        .label {
+                                                            width: auto;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -526,24 +566,14 @@ body {
                         .summary.title {
                             @include font-hellix-heavy(1.6rem, $mygro-gray-alt);
                         }
-                        .block.shipping {
-                            .title {
-                                #block-shipping-heading {
-                                    @include font-hellix-regular(1.2rem, $mygro-gray-alt);
-                                }
-                            }
-                        }
-                        .block.discount {
-                            .title {
-                                #block-discount-heading {
-                                    @include font-hellix-regular(1.2rem, $mygro-gray-alt);
-                                }
-                            }
-                        }
+                        .block.shipping,
+                        .block.discount,
                         .block.giftcard {
                             .title {
+                                #block-shipping-heading,
+                                #block-discount-heading,
                                 #block-giftcard-heading {
-                                    @include font-hellix-regular(1.2rem, $mygro-gray-alt);
+                                    @include font-hellix-regular(1rem, $mygro-gray-alt);
                                 }
                             }
                         }
@@ -1004,5 +1034,6 @@ body {
         }
     }
 }
+
 
 
