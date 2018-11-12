@@ -10,7 +10,7 @@
         "sort-packages": true
     },
     "require": {
-        "magento/product-enterprise-edition": "2.3.*@beta",
+        "magento/product-enterprise-edition": ">=2.3.0",
         "composer/composer": "@alpha"
     },
     "require-dev": {
