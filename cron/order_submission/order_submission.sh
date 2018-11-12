@@ -14,7 +14,7 @@ database="cruithne";
 # directories
 lastrunfile="lastrun.txt";
 outputfile="sales-orders-${today}.csv";
-backupfile=/databak
+backupfile=databak/
 
 # sql file
 sqlfile="orders.sql";
