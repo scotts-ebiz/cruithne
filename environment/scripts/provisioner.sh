@@ -89,7 +89,7 @@ echo ">>> mysql installed and configured!"
 
 echo ">>> Generating a self-signed certificate for Cruithne..."
 SSL_DIR="/etc/ssl"
-COMMON="store.cruithne.test"
+COMMON="cruithne.scottsprogram.local"
 PASSPHRASE=""
 COUNTRY="US"
 STATE="Ohio"
@@ -113,10 +113,22 @@ openssl req -new -subj "$(echo -n "$SUBJ" | tr "\n" "/")" -key "$SSL_DIR/cruithn
 openssl x509 -req -days 365 -in "$SSL_DIR/cruithne.csr" -signkey "$SSL_DIR/cruithne.key" -out "$SSL_DIR/cruithne.crt"
 echo ">>> Self-signed certificate created!"
 
-sudo openssl genrsa -out "$SSL_DIR/mygro.key" 2048
-sudo openssl req -new -subj "$(echo -n "$SUBJ" | tr "\n" "/")" -key "$SSL_DIR/mygro.key" -out "$SSL_DIR/mygro.csr" -passin pass:$PASSPHRASE
-sudo openssl x509 -req -days 365 -in "$SSL_DIR/mygro.csr" -signkey "$SSL_DIR/mygro.key" -out "$SSL_DIR/mygro.crt"
-echo ">>> MyGro Certificate Created!"
+echo ">>> Generating a self-signed certificate for MyGro..."
+COMMON="cruithne.mygro.local"
+SUBJ="
+C=$COUNTRY
+ST=$STATE
+O=$ORGANIZATION
+localityName=$CITY
+commonName=$COMMON
+organizationalUnitName=$ORGNAME
+emailAddress=$EMAIL
+"
+
+openssl genrsa -out "$SSL_DIR/mygro.key" 2048
+openssl req -new -subj "$(echo -n "$SUBJ" | tr "\n" "/")" -key "$SSL_DIR/mygro.key" -out "$SSL_DIR/mygro.csr" -passin pass:$PASSPHRASE
+openssl x509 -req -days 365 -in "$SSL_DIR/mygro.csr" -signkey "$SSL_DIR/mygro.key" -out "$SSL_DIR/mygro.crt"
+echo ">>> Self-signed certificate created!"
 
 echo ">>> Setting up HTTPS configuration..."
 cp /etc/apache2/sites-available/000-default.conf /etc/apache2/sites-available/000-default.conf.bak

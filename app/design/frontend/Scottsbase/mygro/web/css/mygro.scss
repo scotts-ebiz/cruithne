@@ -5,12 +5,19 @@
 @import 'vendor/normalize/lib'; // Normalize.css
 @import 'vendor/magento-ui/lib'; // Magento UI
 
-// Scotts Program Defaults
+// Theme variables
+@import 'variables';
+
+// Override Block Styles
+@import 'blocks/extends';
+@import 'blocks/layout';
+@import 'blocks/navigation';
+@import 'blocks/typography';
+
+// Override Module Styles
+@import '../../Magento_Checkout/styles/module';
+
+// Mygro Defaults
 @import 'source/mygrovars';
 @import 'source/mygromixins';
 @import 'source/mygrobase';
-
-// Override Block Styles
-@import 'blocks/layout';
-@import 'blocks/typography';
-

@@ -1,0 +1,22 @@
+<?php
+    $list_headers = $block->getData('listheaders');
+    $list_values = $block->getData('listvalues');
+    $list_headers = explode("||", $list_headers);
+    $list_values = explode("||", $list_values);
+
+    $html = '';
+
+    $i = 0;
+    foreach($list_headers as $header):
+        $html .= '<li><strong>' . trim($header) . '</strong> ' . trim($list_values[$i]) . '</li>';
+        $i++;
+    endforeach;
+?>
+<section class="product-info-container align-top">
+    <div class="product-info grid col-2">
+        <h2><?php echo $block->getData('headline'); ?></h2>
+        <ul class="list-info">
+            <?php echo $html; ?>
+        </ul>
+    </div>
+</section>

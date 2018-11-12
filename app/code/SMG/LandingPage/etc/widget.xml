@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget class="SMG\LandingPage\Block\Widget\Landingpage" id="smg_landingpage_landingpage">
+        <label>Landing Page Options</label>
+        <description>Landing page custom fields.</description>
+        <parameters>
+            <parameter name="requireszipcodelookup" visible="true" xsi:type="select" source_model="SMG\ParameterTypes\Model\Source\YesNoSelect">
+                <label>Requires Zip Code Lookup</label>
+            </parameter>
+            <parameter name="heroimage" visible="true" xsi:type="block">
+                <label>Hero Image</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+            <parameter name="herosupportingheadline" visible="true" xsi:type="text">
+                <label>Hero Supporting Headline</label>
+                <value>Scotts® Turf Builder® Annual Program</value>
+            </parameter>
+            <parameter name="heroheadline" visible="true" xsi:type="text">
+                <label>Hero Headline</label>
+                <value>All Your Lawn Care Needs, Right At Your Doorstep</value>
+            </parameter>
+            <parameter name="herodescription" visible="true" xsi:type="block">
+                <label>Hero Description</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+            </parameter>
+            <parameter name="smallyardbundle" visible="true" xsi:type="block">
+                <label>Small Yard Bundle</label>
+                <block class="Magento\Catalog\Block\Adminhtml\Product\Widget\Chooser" />
+            </parameter>
+            <parameter name="largeyardbundle" visible="true" xsi:type="block">
+                <label>Large Yard Bundle</label>
+                <block class="Magento\Catalog\Block\Adminhtml\Product\Widget\Chooser" />
+            </parameter>
+            <parameter name="smallyardtext" visible="true" xsi:type="text">
+                <label>Small Yard Button Text</label>
+                <value>Buy Small Yard Program</value>
+            </parameter>
+            <parameter name="smallyardcoverage" visible="true" xsi:type="text">
+                <label>Small Yard Coverage</label>
+                <value>A small lawn is up to 4,000 sq. feet or just under 1/10 an acre.</value>
+            </parameter>
+            <parameter name="largeyardtext" visible="true" xsi:type="text">
+                <label>Large Yard Text</label>
+                <value>Buy Large Yard Program</value>
+            </parameter>
+            <parameter name="largeyardcoverage" visible="true" xsi:type="text">
+                <label>Large Yard Coverage</label>
+                <value>A large lawn is up to 12,000 sq. feet or just over 1/4 an acre.</value>
+            </parameter>
+            <parameter name="freeshippingicon" visible="true" xsi:type="block">
+                <label>Free Shipping Icon</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+            <parameter name="freeshippingmessage" visible="true" xsi:type="text">
+                <label>Free Shipping Message</label>
+                <value>Free Shipping On All Orders!</value>
+            </parameter>
+            <parameter name="disclaimertext" visible="true" xsi:type="block">
+                <label>Disclaimer Text</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+            </parameter>
+            <parameter name="howitworksdescriptionone" visible="true" xsi:type="block">
+                <label>How It Works Text #1</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+            </parameter>
+            <parameter name="howitworksdescriptiontwo" visible="true" xsi:type="block">
+                <label>How It Works Text #2</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+            </parameter>
+            <parameter name="howitworksdescriptionthree" visible="true" xsi:type="block">
+                <label>How It Works Text #3</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+            </parameter>
+        </parameters>
+    </widget>
+</widgets>

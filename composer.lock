@@ -21199,6 +21199,7 @@
     "aliases": [],
     "minimum-stability": "alpha",
     "stability-flags": {
+        "magento/product-enterprise-edition": 10,
         "composer/composer": 15,
         "phpmd/phpmd": 0
     },

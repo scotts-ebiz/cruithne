@@ -1,0 +1,122 @@
+<?xml version="1.0"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget class="SMG\IconList\Block\Widget\Iconlist" id="smg_iconlist_iconlist">
+        <label>Icon List</label>
+        <description>Two-column icon list with headline.</description>
+        <parameters>
+            <parameter name="headline" visible="true" xsi:type="text" required="true">
+                <label>Headline</label>
+            </parameter>
+            <parameter name="itemlabelone" visible="true" xsi:type="block">
+                <label>Item #1</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="itemone" visible="true" xsi:type="text">
+                <label>Item Text #1</label>
+            </parameter>
+            <parameter name="itemiconone" visible="true" xsi:type="block">
+                <label>Item Icon #1</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+            <parameter name="itemlabeltwo" visible="true" xsi:type="block">
+                <label>Item #2</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="itemtwo" visible="true" xsi:type="text">
+                <label>Item Text #2</label>
+            </parameter>
+            <parameter name="itemicontwo" visible="true" xsi:type="block">
+                <label>Item Icon #2</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+            <parameter name="itemlabelthree" visible="true" xsi:type="block">
+                <label>Item #3</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="itemthree" visible="true" xsi:type="text">
+                <label>Item Text #3</label>
+            </parameter>
+            <parameter name="itemiconthree" visible="true" xsi:type="block">
+                <label>Item Icon #3</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+            <parameter name="itemlabelfour" visible="true" xsi:type="block">
+                <label>Item #4</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="itemfour" visible="true" xsi:type="text">
+                <label>Item Text #4</label>
+            </parameter>
+            <parameter name="itemiconfour" visible="true" xsi:type="block">
+                <label>Item Icon #4</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+            <parameter name="itemlabelfive" visible="true" xsi:type="block">
+                <label>Item #5</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="itemfive" visible="true" xsi:type="text">
+                <label>Item Text #5</label>
+            </parameter>
+            <parameter name="itemiconfive" visible="true" xsi:type="block">
+                <label>Item Icon #5</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+            <parameter name="itemlabelsix" visible="true" xsi:type="block">
+                <label>Item #6</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="itemsix" visible="true" xsi:type="text">
+                <label>Item Text #6</label>
+            </parameter>
+            <parameter name="itemiconsix" visible="true" xsi:type="block">
+                <label>Item Icon #6</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+            <parameter name="itemlabelseven" visible="true" xsi:type="block">
+                <label>Item #7</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="itemseven" visible="true" xsi:type="text">
+                <label>Item Text #7</label>
+            </parameter>
+            <parameter name="itemiconseven" visible="true" xsi:type="block">
+                <label>Item Icon #7</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+            <parameter name="itemlabeleight" visible="true" xsi:type="block">
+                <label>Item #8</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="itemeight" visible="true" xsi:type="text">
+                <label>Item Text #8</label>
+            </parameter>
+            <parameter name="itemiconeight" visible="true" xsi:type="block">
+                <label>Item Icon #8</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+            <parameter name="itemlabelnine" visible="true" xsi:type="block">
+                <label>Item #9</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="itemnine" visible="true" xsi:type="text">
+                <label>Item Text #9</label>
+            </parameter>
+            <parameter name="itemiconnine" visible="true" xsi:type="block">
+                <label>Item Icon #9</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+            <parameter name="itemlabelten" visible="true" xsi:type="block">
+                <label>Item #10</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="itemten" visible="true" xsi:type="text">
+                <label>Item Text #10</label>
+            </parameter>
+            <parameter name="itemiconten" visible="true" xsi:type="block">
+                <label>Item Icon #10</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+        </parameters>
+    </widget>
+</widgets>
