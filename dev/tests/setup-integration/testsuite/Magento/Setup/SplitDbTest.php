@@ -49,20 +49,21 @@ class SplitDbTest extends SetupTestCase
     }
 
     /**
+     * @moduleName Magento_TestSetupDeclarationModule9OverrideSplit
      * @moduleName Magento_TestSetupDeclarationModule2
      * @dataProviderFromFile Magento/TestSetupDeclarationModule2/fixture/shards.php
      */
     public function testSplitDbInstallation()
     {
         $this->cliCommand->install(
-            ['Magento_ScalableCheckout', 'Magento_ScalableOms']
+            ['Magento_ScalableCheckout', 'Magento_ScalableOms', 'Magento_TestSetupDeclarationModule9OverrideSplit']
         );
         $this->cliCommand->splitQuote();
         $this->cliCommand->splitSales();
-        $this->deploymentConfig->resetData();
         $this->cliCommand->install(
             ['Magento_TestSetupDeclarationModule2']
         );
+        $this->deploymentConfig->resetData();
 
         $default = $this->describeTable->describeShard('default');
         $sales = $this->describeTable->describeShard('sales');
@@ -75,13 +76,19 @@ class SplitDbTest extends SetupTestCase
     }
 
     /**
+     * @moduleName Magento_TestSetupDeclarationModule9OverrideSplit
      * @moduleName Magento_TestSetupDeclarationModule2
      * @dataProviderFromFile Magento/TestSetupDeclarationModule2/fixture/shards.php
      */
     public function testUpgradeWithSplitDb()
     {
         $this->cliCommand->install(
-            ['Magento_TestSetupDeclarationModule2', 'Magento_ScalableCheckout', 'Magento_ScalableOms']
+            [
+                'Magento_TestSetupDeclarationModule9OverrideSplit',
+                'Magento_TestSetupDeclarationModule2',
+                'Magento_ScalableCheckout',
+                'Magento_ScalableOms'
+            ]
         );
         $this->cliCommand->splitQuote();
         $this->cliCommand->splitSales();
@@ -99,12 +106,18 @@ class SplitDbTest extends SetupTestCase
     }
 
     /**
+     * @moduleName Magento_TestSetupDeclarationModule9OverrideSplit
      * @moduleName Magento_TestSetupDeclarationModule2
      */
     public function testBICColumns()
     {
         $this->cliCommand->install(
-            ['Magento_TestSetupDeclarationModule2', 'Magento_ScalableCheckout', 'Magento_ScalableOms']
+            [
+                'Magento_TestSetupDeclarationModule9OverrideSplit',
+                'Magento_TestSetupDeclarationModule2',
+                'Magento_ScalableCheckout',
+                'Magento_ScalableOms'
+            ]
         );
         $this->cliCommand->splitQuote();
         $this->cliCommand->splitSales();
@@ -128,12 +141,18 @@ class SplitDbTest extends SetupTestCase
     }
 
     /**
+     * @moduleName Magento_TestSetupDeclarationModule9OverrideSplit
      * @moduleName Magento_TestSetupDeclarationModule2
      */
     public function testTableRecreationWithData()
     {
         $this->cliCommand->install(
-            ['Magento_TestSetupDeclarationModule2', 'Magento_ScalableCheckout', 'Magento_ScalableOms']
+            [
+                'Magento_TestSetupDeclarationModule9OverrideSplit',
+                'Magento_TestSetupDeclarationModule2',
+                'Magento_ScalableCheckout',
+                'Magento_ScalableOms'
+            ]
         );
         $this->cliCommand->splitQuote();
         $this->cliCommand->splitSales();
