@@ -1,0 +1,26 @@
+/* Widget Start */
+
+.product-callout-widget.product-info-container {
+    .product-info.text-right {
+        margin: 0 0 0 5px;
+        .content {
+            h2,
+            p {
+                padding: 15px;
+            }
+        }
+    }
+
+    .product-info.text-left {
+        flex-direction: row-reverse;
+        .content {
+            h2,
+            p {
+                padding: 15px;
+            }
+        }
+    }
+}
+
+
+
