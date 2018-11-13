@@ -1,0 +1,14 @@
+// Mixins
+@import "mixins/media-queries";
+
+// Vendor libs
+@import 'vendor/normalize/lib'; // Normalize.css
+@import 'vendor/magento-ui/lib'; // Magento UI
+
+// Scotts Program Defaults
+@import 'source/scottsprogramvars';
+@import 'source/scottsprogrammixins';
+@import 'source/scottsprogrambase';
+
+// Override Block Styles
+@import 'blocks/layout';
