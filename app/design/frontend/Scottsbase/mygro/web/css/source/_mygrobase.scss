@@ -1,12 +1,12 @@
 // MyGro Base
 body {
     @include font-hellix-regular();
+    font-size: 1.2rem;
 
     h2 {
         font-weight: bold;
     }
 }
-
 [class^="icon-"],
 [class*=" icon-"] {
     font-family: 'gro';
@@ -19,6 +19,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+// Base Page Styles
 .page-wrapper {
     .page-header {
         padding: 12px 0 12px;
@@ -29,19 +30,25 @@ body {
         left: 0;
         width: 100%;
         background: #fff;
-
+        text-align: center;
         .panel.wrapper {
             display: none;
         }
-
         .header.content {
+            @include max-screen($screen__l) {
+                .nav-toggle {
+                    float: left;
+                    position: relative;
+                    left: 0;
+                    top: 0.5rem;
+                }
+            }
             position: relative;
             box-sizing: border-box;
             padding: 0 22px 0 22px;
             max-width: 1440px;
             width: 100%;
             margin: 0 auto;
-
             .logo {
                 display: inline-block;
                 float: left;
@@ -50,6 +57,9 @@ body {
                     float: none;
                     padding: 0;
                     max-width: 6rem;
+                    position: relative;
+                    left: 1.25rem;
+                    top: 0.5rem;
                 }
             }
             .minicart-wrapper {
@@ -57,40 +67,91 @@ body {
                 @include max-screen($screen__l) {
                     display: block;
                     float: right;
-                    position: absolute;
-                    right: 15px;
-                    top: 1rem;
+                    margin-top: 0;
+                    position: relative;
+                    right: 0;
                 }
                 .showcart {
                     color: $mygro-green;
                     float: left;
-                    font-size: 1.2rem;
-                    margin: 0.8rem 1rem 0 0;
+                    font-size: 1rem;
+                    margin: 0.5rem 0 0 0;
+                    position: relative;
                     text-decoration: none;
+                    text-align: right;
+                    width: 80px;
                     @include max-screen($screen__l) {
                         margin: 0.8rem 0.5rem 0 0;
                     }
+                    &:before {
+                        display: none;
+                        visibility: hidden;
+                    }
                     .icon-bag {
+                        position: absolute;
+                        top: 12px;
+                        left: 0;
                         &:before {
                             content: '\e902';
                         }
+                        @include max-screen($screen__s) {
+                            display: none;
+                            visibility: hidden;
+                        }
+                    }
+                    .cart-total-container {
+                        color: $mygro-black;
+                        display: inline-block;
+                        position: relative;
+                        bottom: 0.5rem;
+                        .cart-total-title {
+                            font-size: 0.7rem;
+                            text-transform: uppercase;
+                            @include max-screen($screen__s) {
+                                margin-right: 0;
+                            }
+                        }
+                        .total-amt {
+                            display: block;
+                            font-size: 1.2rem;
+                            line-height: 0;
+                            margin-top: 0.5rem;
+                            @include max-screen($screen__s) {
+                                font-size: 1rem;
+                                font-weight: 700;
+                            }
+                        }
                     }
                 }
-                .cart-total-container {
-                    color: $mygro-black;
-                    display: inline-block;
-                    position: relative;
-                    bottom: 0.5rem;
-                    .cart-total-title {
-                        font-size: 0.7rem;
-                        margin-right: 0.5rem;
-                        text-transform: uppercase;
-                    }
-                    .total-amt {
-                        display: block;
-                        font-size: 1.2rem;
-                        line-height: 0;
-                        margin-top: 0.5rem;
+                .ui-dialog {
+                    .block-minicart {
+                        font-size: 1rem;
+                        text-align: left;
+                        #minicart-content-wrapper {
+                            .block-content {
+                                .actions {
+                                    .primary {
+                                        font-size: 1.2rem;
+                                        padding: 0;
+                                    }
+                                }
+                                .minicart-items-wrapper {
+                                    .minicart-items {
+                                        .product-item {
+                                            .product {
+                                                .product-item-pricing {
+                                                    .details-qty {
+                                                        .label {
+                                                            width: auto;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -161,7 +222,9 @@ body {
     }
 
     .page-main {
-        margin-top: 1rem;
+        color: $mygro-gray;
+        font-size: 1rem;
+        margin-top: 6rem;
 
         .page-title-wrapper {
             display: none;
@@ -209,15 +272,14 @@ body {
                         text-align: left;
                         margin: 52% 0 0 2%;
                     }
-                  }
+                }
 
                 @media screen and (max-width: 1399px) and (min-width: 1024px) {
                     .content {
                         width: 34%;
                         padding-left: 40px;
-                      }
-                  }
-
+                    }
+                }
                 h2 {
                     font-size: 48px;
                     line-height: 56px;
@@ -230,23 +292,28 @@ body {
                         line-height: 35px;
                         margin-bottom: 0;
                     }
-                  }
+                }
 
                 p {
                     font-size: 16px;
                     line-height: 28px;
                     color: $mygro-gray;
-                  }
-              }
+                    margin-bottom: 20px;
+                }
+            }
+            .cart-empty {
+                font-size: 1rem;
+                a {
+                    color: $mygro-green;
+                }
+            }
         }
-
         body > section,
         .column.main > section {
             max-width: 1440px;
             width: 100%;
             margin: 0 auto;
         }
-
         .column.main > section.hero-video {
             @include max-screen($screen__l) {
                 margin: 0 16px 0 16px;
@@ -254,30 +321,27 @@ body {
                 height: 350px;
             }
         }
-
         .col-2 {
             p {
                 margin: 0 0 1em;
             }
         }
-
         .products {
+            padding-bottom: 24px;
+            position: relative;
             .button {
                 margin-bottom: 20px;
             }
-
             h2 {
                 font-size: 40px;
                 margin: 0 -20px 15px;
                 @include max-screen($screen__l) {
                     font-size: 35px;
                 }
-
                 a {
                     color: $white;
                 }
             }
-
             .item {
                 background-size: cover;
                 text-align: center;
@@ -293,31 +357,22 @@ body {
                 }
             }
         }
-
         .products.grid:after {
             display: none;
         }
-
-        .grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-evenly;
-
-            /*.item {
-                width: calc(100% - 32px);
-            }*/
-        }
-
         .grid:after {
             content: '';
             display: table;
             clear: both;
         }
-
         .grid > h2 {
             width: 100%;
         }
-
+        .col-3 {
+            .item {
+                width: calc(33.33% - 28px);
+            }
+        }
         .button {
             background: $mygro-green;
             border-radius: 4px;
@@ -334,15 +389,12 @@ body {
             transition: background 0.2s linear;
             letter-spacing: 0.5px;
         }
-
         .button:hover {
             background: $mygro-dark-green;
         }
-
         .button:active {
             background: $mygro-light-green;
         }
-
         .hero-video {
             background: url(../images/bg-hero.jpg) 50% 0% no-repeat;
             background-size: cover;
@@ -353,12 +405,10 @@ body {
                 background: url(/pub/media/gro/120417_RW_A_0122edit-2.png) 50% 0% no-repeat;
                 background-size: cover;
             }
-
             .mobile-tablet,
             .mobile-only {
                 display: none;
             }
-
             .content {
                 width: 50%;
                 max-width: 605px;
@@ -372,7 +422,6 @@ body {
                     padding: 0 25px;
                 }
             }
-
             h2 {
                 font-size: 48px;
                 line-height: 56px;
@@ -382,7 +431,6 @@ body {
                     line-height: 40px;
                 }
             }
-
             p {
                 font-size: 16px;
                 line-height: 28px;
@@ -393,7 +441,6 @@ body {
                 }
             }
         }
-
         .watch-video {
             i {
                 height: 36px;
@@ -406,7 +453,6 @@ body {
                 display: inline-block;
                 margin-right: 15px;
             }
-
             span {
                 display: inline-block;
                 color: $white;
@@ -419,27 +465,22 @@ body {
                 top: -3px;
             }
         }
-
         .embed-code {
-            display: none !important;
+            display: none;
         }
-
         .icon-play:before {
             content: "\e901";
         }
-
         .feature-list {
             padding: 90px 0;
             text-align: center;
             @include max-screen($screen__l) {
                 padding: 50px 0;
             }
-
             img {
                 height: 60px;
                 display: inline-block;
             }
-
             h2 {
                 font-size: 48px;
                 color: $mygro-black-alt;
@@ -449,7 +490,6 @@ body {
                     margin-bottom: 0;
                 }
             }
-
             h3 {
                 font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
                 letter-spacing: 0.5px;
@@ -457,14 +497,12 @@ body {
                 color: $black;
                 margin-bottom: 15px;
             }
-
             p {
                 color: $mygro-gray;
                 font-size: 16px;
                 line-height: 26px;
                 padding: 0 50px;
             }
-
             .image-container {
                 height: 110px;
                 width: 140px;
@@ -479,12 +517,6 @@ body {
                 text-align: center;
             }
         }
-
-        /*.col-4 {
-            .item {
-                width: 25%;
-            }
-        }*/
     }
 
     .page-footer {
@@ -519,3 +551,489 @@ body {
         }
     }
 }
+// Cart Styles
+.checkout-cart-index {
+    .page-main {
+        .page-title-wrapper {
+            .page-title {
+                @include font-hellix-heavy(2.2rem, $mygro-black, false, false, 0.5px);
+            }
+        }
+        .columns {
+            .column {
+                .cart-container {
+                    .cart-summary {
+                        .summary.title {
+                            @include font-hellix-heavy(1.6rem, $mygro-gray-alt);
+                        }
+                        .block.shipping,
+                        .block.discount,
+                        .block.giftcard {
+                            .title {
+                                #block-shipping-heading,
+                                #block-discount-heading,
+                                #block-giftcard-heading {
+                                    @include font-hellix-regular(1rem, $mygro-gray-alt);
+                                }
+                            }
+                        }
+                        .checkout-methods-items {
+                            .item {
+                                .action.checkout {
+                                    @include font-hellix-regular(1.4rem, $white);
+                                    -webkit-transition: background 0.2s;
+                                    -moz-transition: background 0.2s;
+                                    -ms-transition: background 0.2s;
+                                    -o-transition: background 0.2s;
+                                    transition: background 0.2s;
+                                    background: $mygro-green;
+                                    border: none;
+                                    &:hover {
+                                        -webkit-transition: background 0.2s;
+                                        -moz-transition: background 0.2s;
+                                        -ms-transition: background 0.2s;
+                                        -o-transition: background 0.2s;
+                                        transition: background 0.2s;
+                                        background: #005d49;
+                                    }
+                                }
+                                .action.multicheckout {
+                                    color: $mygro-green;
+                                    text-decoration: underline;
+                                    &:hover {
+                                        text-decoration: none;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .form-cart {
+                        .cart.table-wrapper {
+                            thead {
+                                tr {
+                                    .col {
+                                        margin: 0;
+                                        padding: 0;
+                                        width: 25%;
+                                        @include max-screen($screen__m) {
+                                            padding: 0.5rem;
+                                        }
+                                    }
+                                }
+                            }
+                            .cart.item {
+                                .item-info {
+                                    .col {
+                                        margin: 0;
+                                        padding: 1rem 0;
+                                        width: 25%;
+                                    }
+                                    .item {
+                                        .product-item-photo {
+                                            @include max-screen($screen__m) {
+                                                max-width: none;
+                                                position: static;
+                                                text-align: center;
+                                            }
+                                        }
+                                        .product-item-details {
+                                            @include max-screen($screen__m) {
+                                                text-align: center;
+                                            }
+                                            .product-item-name {
+                                                a {
+                                                    color: $mygro-black;
+                                                }
+                                                @include max-screen($screen__m) {
+                                                    font-size: 0.75rem;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .qty {
+                                        .control.qty {
+                                            .qty {
+                                                border: 1px solid $mygro-black;
+                                            }
+                                        }
+                                    }
+                                    .price-including-tax,
+                                    .price-excluding-tax {
+                                        color: $mygro-black;
+                                        font-size: 1.4rem;
+                                        @include max-screen($screen__m) {
+                                            font-size: 1rem;
+                                        }
+                                    }
+                                }
+                                .item-actions {
+                                    td {
+                                        padding: 0;
+                                    }
+                                    .actions-toolbar {
+                                        height: 3rem;
+                                        .action-edit {
+                                            display: none;
+                                            visibility: hidden;
+                                        }
+                                        .action-delete {
+                                            -webkit-transition: background 0.2s;
+                                            -moz-transition: background 0.2s;
+                                            -ms-transition: background 0.2s;
+                                            -o-transition: background 0.2s;
+                                            transition: background 0.2s;
+                                            background: $mygro-gray-alt;
+                                            color: $white;
+                                            padding: 1rem;
+                                            border-radius: 5px;
+                                            &:hover {
+                                                -webkit-transition: background 0.2s;
+                                                -moz-transition: background 0.2s;
+                                                -ms-transition: background 0.2s;
+                                                -o-transition: background 0.2s;
+                                                transition: background 0.2s;
+                                                background: #505050;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .cart.actions {
+                            .action.continue,
+                            .action.clear,
+                            .action.update {
+                                @include font-hellix-regular(1rem, $mygro-black, 400);
+                            }
+                            .action.continue {
+                                &:before {
+                                    line-height: 1.4rem;
+                                }
+                            }
+                        }
+                    }
+                    #gift-options-cart {
+                        .cart-gift-item {
+                            .gift-item-block {
+                                .title {
+                                    @include font-hellix-regular(1rem, $mygro-black, 400);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+// Checkout Styles
+.checkout-index-index {
+    .page-wrapper {
+        .page-header {
+            .header.content {
+                .logo {
+                    @include max-screen($screen__m) {
+                        // Specific Style for logo when menu isn't present
+                        left: 0;
+                    }
+                }
+            }
+        }
+        .page-main {
+            .columns {
+                .column.main {
+                    .checkout-container {
+                        .opc-progress-bar {
+                            .opc-progress-bar-item {
+                                &._active {
+                                    &:before {
+                                        background: $mygro-green;
+                                    }
+                                    span {
+                                        &:before {
+                                            background: $mygro-green;
+                                        }
+                                    }
+                                }
+                                span {
+                                    font-size: 1.4rem;
+                                    &:after {
+                                        font-size: 1.4rem;
+                                    }
+                                }
+                            }
+                        }
+                        .opc-estimated-wrapper {
+                            .minicart-wrapper {
+                                .action.showcart {
+                                    .counter.qty {
+                                        background: $mygro-green;
+                                    }
+                                }
+                            }
+                        }
+                        .opc-wrapper {
+                            @include max-screen($screen__m) {
+                                padding: 1rem;
+                            }
+                            .opc {
+                                .checkout-shipping-address {
+                                    .step-content {
+                                        .form-login {
+                                            border-bottom: 1px solid #c2c2c2;
+                                            padding-bottom: 1rem;
+                                        }
+                                        .form-login,
+                                        .form-shipping-address {
+                                            .fieldset {
+                                                .label {
+                                                    width: auto;
+                                                }
+                                                .control {
+                                                    float: none;
+                                                    width: auto;
+                                                }
+                                            }
+                                            .hidden-fields {
+                                                .actions-toolbar {
+                                                    margin-left: 0;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                .checkout-shipping-method {
+                                    .checkout-shipping-method {
+                                        .step-title {
+                                            font-size: 2rem;
+                                        }
+                                        .step-content {
+                                            .methods-shipping {
+                                                .actions-toolbar {
+                                                    .primary {
+                                                        .action.primary {
+                                                            @include font-hellix-heavy(1.2rem, $white, 400);
+                                                            line-height: 0;
+                                                            padding: 1rem 2rem;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                .checkout-payment-method {
+                                    .step-content {
+                                        .form.payments {
+                                            .fieldset {
+                                                .opc-payment {
+                                                    .items.payment-methods {
+                                                        .payment-group {
+                                                            .payment-method._active {
+                                                                .payment-method-content {
+                                                                    .actions-toolbar {
+                                                                        .primary {
+                                                                            .action.primary.checkout {
+                                                                                @include font-hellix-regular(1.4rem, $white);
+                                                                                -webkit-transition: background 0.2s;
+                                                                                -moz-transition: background 0.2s;
+                                                                                -ms-transition: background 0.2s;
+                                                                                -o-transition: background 0.2s;
+                                                                                transition: background 0.2s;
+                                                                                background: $mygro-green;
+                                                                                border: none;
+                                                                                &:hover {
+                                                                                    -webkit-transition: background 0.2s;
+                                                                                    -moz-transition: background 0.2s;
+                                                                                    -ms-transition: background 0.2s;
+                                                                                    -o-transition: background 0.2s;
+                                                                                    transition: background 0.2s;
+                                                                                    background: #005d49;
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            .opc-payment-additional {
+                                                .payment-option-title {
+                                                    .action-toggle {
+                                                        color: $mygro-green;
+                                                    }
+                                                }
+                                                .payment-option-content {
+                                                    .form-discount {
+                                                        .actions-toolbar {
+                                                            .primary {
+                                                                button {
+                                                                    @include font-hellix-regular(1rem, $white);
+                                                                    -webkit-transition: background 0.2s;
+                                                                    -moz-transition: background 0.2s;
+                                                                    -ms-transition: background 0.2s;
+                                                                    -o-transition: background 0.2s;
+                                                                    transition: background 0.2s;
+                                                                    background: $mygro-dark-gray;
+                                                                    border: none;
+                                                                    &:hover {
+                                                                        -webkit-transition: background 0.2s;
+                                                                        -moz-transition: background 0.2s;
+                                                                        -ms-transition: background 0.2s;
+                                                                        -o-transition: background 0.2s;
+                                                                        transition: background 0.2s;
+                                                                        background: $mygro-black-alt;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    .form-giftcard-account {
+                                                        .actions-toolbar {
+                                                            .primary {
+                                                                margin-left: 1rem;
+                                                                .action-add.primary {
+                                                                    @include font-hellix-regular(1rem, $white);
+                                                                    -webkit-transition: background 0.2s;
+                                                                    -moz-transition: background 0.2s;
+                                                                    -ms-transition: background 0.2s;
+                                                                    -o-transition: background 0.2s;
+                                                                    transition: background 0.2s;
+                                                                    background: $mygro-dark-gray;
+                                                                    border: none;
+                                                                    &:hover {
+                                                                        -webkit-transition: background 0.2s;
+                                                                        -moz-transition: background 0.2s;
+                                                                        -ms-transition: background 0.2s;
+                                                                        -o-transition: background 0.2s;
+                                                                        transition: background 0.2s;
+                                                                        background: $mygro-black-alt;
+                                                                    }
+                                                                }
+                                                            }
+                                                            .secondary {
+                                                                .action-check {
+                                                                    @include font-hellix-regular(1rem, $white);
+                                                                    -webkit-transition: background 0.2s;
+                                                                    -moz-transition: background 0.2s;
+                                                                    -ms-transition: background 0.2s;
+                                                                    -o-transition: background 0.2s;
+                                                                    transition: background 0.2s;
+                                                                    background: $mygro-dark-gray;
+                                                                    border: none;
+                                                                    &:hover {
+                                                                        -webkit-transition: background 0.2s;
+                                                                        -moz-transition: background 0.2s;
+                                                                        -ms-transition: background 0.2s;
+                                                                        -o-transition: background 0.2s;
+                                                                        transition: background 0.2s;
+                                                                        background: $mygro-black-alt;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .opc-sidebar.custom-slide {
+                            left: 0;
+                            .modal-inner-wrap {
+                                .modal-content {
+                                    #opc-sidebar {
+                                        .opc-block-summary {
+                                            .title {
+                                                font-size: 2rem;
+                                            }
+                                            .table-totals {
+                                                tbody {
+                                                    .totals.discount {
+                                                        .mark {
+                                                            .title {
+                                                                font-size: 1rem;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            .items-in-cart {
+                                                .minicart-items {
+                                                    margin-top: 0.5rem;
+                                                    @include max-screen($screen__m) {
+                                                        margin-top: 0.5rem;
+                                                    }
+                                                    .product-item {
+                                                        .product {
+                                                            .product-item-details {
+                                                                .product-item-name-block {
+                                                                    .product-item-name {
+                                                                        margin: 0;
+                                                                        @include max-screen($screen__m) {
+                                                                            margin: 0;
+                                                                        }
+                                                                    }
+                                                                    .details-qty {
+                                                                        margin: 0;
+                                                                        @include max-screen($screen__m) {
+                                                                            margin: 0;
+                                                                        }
+                                                                    }
+                                                                }
+                                                                .subtotal {
+                                                                    .price-excluding-tax,
+                                                                    .price-including-tax {
+                                                                        .cart-price {
+                                                                            .price {
+                                                                                font-size: 1.2rem;
+                                                                                font-weight: 700;
+                                                                                @include max-screen($screen__m) {
+                                                                                    font-size: 1.2rem;
+                                                                                    font-weight: 700;
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        .opc-block-shipping-information {
+                                            .shipping-information {
+                                                .ship-to {
+                                                    .shipping-information-title {
+                                                        span {
+                                                            font-size: 2rem;
+                                                        }
+                                                    }
+                                                }
+                                                .ship-via {
+                                                    .shipping-information-title {
+                                                        span {
+                                                            font-size: 2rem;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+

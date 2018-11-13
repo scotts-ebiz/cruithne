@@ -48,20 +48,6 @@ class Curl extends AbstractCurl implements BannerInterface
     protected $url = 'admin/banner/save/back/edit/active_tab/content_section/';
 
     /**
-     * Catalog rules.
-     *
-     * @var string
-     */
-    protected $catalogRules = '';
-
-    /**
-     * Sales rules.
-     *
-     * @var string
-     */
-    protected $salesRules = '';
-
-    /**
      * Post request for creating banner.
      *
      * @param FixtureInterface|null $fixture [optional]
@@ -73,21 +59,17 @@ class Curl extends AbstractCurl implements BannerInterface
         $url = $_ENV['app_backend_url'] . $this->url;
         $data = $this->replaceMappingData($fixture->getData());
         if (isset($data['banner_catalog_rules'])) {
+            $catalogRules = [];
             foreach ($data['banner_catalog_rules'] as $key => $catalogRule) {
-                $this->catalogRules = $catalogRule;
-                if ($key > 0) {
-                    $this->catalogRules .= '&';
-                }
+                $catalogRules[] = ['rule_id' => $catalogRule];
             }
-            $data['banner_catalog_rules'] = $this->catalogRules;
+            $data['banner_catalog_rules'] = $catalogRules;
         } elseif (isset($data['banner_sales_rules'])) {
+            $salesRules = [];
             foreach ($data['banner_sales_rules'] as $key => $salesRule) {
-                $this->salesRules = $salesRule;
-                if ($key > 0) {
-                    $this->salesRules .= '&';
-                }
+                $salesRules[] = ['rule_id' => $salesRule];
             }
-            $data['banner_sales_rules'] = $this->salesRules;
+            $data['banner_sales_rules'] = $salesRules;
         }
         $curl = new BackendDecorator(new CurlTransport(), $this->_configuration);
         $curl->write($url, $data);

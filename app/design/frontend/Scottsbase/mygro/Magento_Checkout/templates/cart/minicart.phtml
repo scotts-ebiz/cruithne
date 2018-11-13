@@ -13,8 +13,6 @@
     <a class="action showcart" href="<?= /* @escapeNotVerified */ $block->getShoppingCartUrl() ?>"
        data-bind="scope: 'minicart_content'">
         <i class="icon-bag"></i>
-    </a>
-    <a href="<?= /* @escapeNotVerified */ $block->getShoppingCartUrl() ?>">
         <span class="cart-total-container" data-bind="scope: 'minicart_content'">
             <span class="cart-total-title">Total</span>
             <span class="total-amt" data-bind="html: getCartParam('subtotal')"></span>
@@ -52,4 +50,3 @@
     }
     </script>
 </div>
-
