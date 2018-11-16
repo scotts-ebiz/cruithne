@@ -2,22 +2,23 @@
 
 .product-callout-widget.product-info-container {
     .product-info.text-right {
-        margin: 0 0 0 5px;
+        display: flex;
         .content {
             h2,
             p {
-                padding: 15px;
+                padding: 0 0 0 20px;
             }
         }
     }
-
     .product-info.text-left {
+        display: flex;
         flex-direction: row-reverse;
         .content {
             h2,
             p {
-                padding: 15px;
+                padding: 0 20px 0 0;
             }
         }
     }
 }
+
