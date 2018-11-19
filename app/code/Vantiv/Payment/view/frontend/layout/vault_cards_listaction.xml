@@ -1,0 +1,51 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block
+                class="Vantiv\Payment\Block\Vault\EcheckList"
+                name="vault.vantiv_echeck.list"
+                cacheable="false"
+                template="Vantiv_Payment::vault/echeck_list.phtml"
+            />
+
+            <block
+                class="Vantiv\Payment\Block\Vault\Buttons"
+                name="vantiv.payment.block.vault.buttons"
+                cacheable="false"
+                template="Vantiv_Payment::vault/buttons.phtml"
+            />
+
+            <referenceBlock name="vault.cards.list">
+                <block
+                    class="Vantiv\Payment\Block\Vault\CcRenderer"
+                    name="vantiv.payment.block.vault.ccrenderer"
+                    template="Vantiv_Payment::vault/cc_renderer.phtml"
+                />
+                <block
+                    class="Vantiv\Payment\Block\Vault\ApplepayRenderer"
+                    name="vantiv.payment.block.vault.applepayrenderer"
+                    template="Vantiv_Payment::vault/applepay_renderer.phtml"
+                />
+                <block
+                    class="Vantiv\Payment\Block\Vault\AndroidpayRenderer"
+                    name="vantiv.payment.block.vault.androidpayrenderer"
+                    template="Vantiv_Payment::vault/androidpay_renderer.phtml"
+                />
+            </referenceBlock>
+            <referenceBlock name="vault.vantiv_echeck.list">
+                <block
+                    class="Vantiv\Payment\Block\Vault\EcheckRenderer"
+                    name="vantiv.payment.block.vault.echeckrenderer"
+                    template="Vantiv_Payment::vault/echeck_renderer.phtml"
+                />
+            </referenceBlock>
+        </referenceContainer>
+    </body>
+</page>
