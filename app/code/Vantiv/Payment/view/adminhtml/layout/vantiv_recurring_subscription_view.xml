@@ -1,0 +1,52 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="admin-2columns-left"
+      xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="Vantiv_Payment::styles.css"/>
+    </head>
+    <body>
+        <referenceContainer name="admin.scope.col.wrap" htmlClass="admin__old"/>
+        <referenceContainer name="content">
+            <block class="Vantiv\Payment\Block\Adminhtml\Recurring\Subscription\View" name="vantiv_recurring_subscription_view"/>
+        </referenceContainer>
+        <referenceContainer name="left">
+            <block class="Vantiv\Payment\Block\Adminhtml\Recurring\Subscription\View\Tabs" name="vantiv_recurring_subscription_view_tabs">
+                <block class="Vantiv\Payment\Block\Adminhtml\Recurring\Subscription\View\Tab\Info" name="subscription_tab_info" template="recurring/subscription/view/tab/info.phtml"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">subscription_info</argument>
+                    <argument name="block" xsi:type="string">subscription_tab_info</argument>
+                </action>
+                <block class="Vantiv\Payment\Block\Adminhtml\Recurring\Subscription\View\Tab\Orders" name="subscription_orders.grid.container"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">subscription_orders</argument>
+                    <argument name="block" xsi:type="string">subscription_orders.grid.container</argument>
+                </action>
+                <block class="Vantiv\Payment\Block\Adminhtml\Recurring\Subscription\View\Tab\Discounts" name="subscription_discounts.grid.container"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">subscription_discounts</argument>
+                    <argument name="block" xsi:type="string">subscription_discounts.grid.container</argument>
+                </action>
+                <block class="Vantiv\Payment\Block\Adminhtml\Recurring\Subscription\View\Tab\Addons" name="subscription_addons.grid.container"/>
+                <action method="addTab">
+                    <argument name="name" xsi:type="string">subscription_addons</argument>
+                    <argument name="block" xsi:type="string">subscription_addons.grid.container</argument>
+                </action>
+            </block>
+        </referenceContainer>
+        <referenceBlock name="subscription_orders.grid.container">
+            <uiComponent name="vantiv_subscription_view_order_grid"/>
+        </referenceBlock>
+        <referenceBlock name="subscription_discounts.grid.container">
+            <uiComponent name="vantiv_subscription_view_discount_grid"/>
+        </referenceBlock>
+        <referenceBlock name="subscription_addons.grid.container">
+            <uiComponent name="vantiv_subscription_view_addon_grid"/>
+        </referenceBlock>
+    </body>
+</page>

@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+    <template id="vantiv_subscription_cron_error_email_template" label="Vantiv Recurring Engine Data Import Error Warning" file="subscription_cron_error.html" type="text" module="Vantiv_Payment" area="adminhtml"/>
+</config>

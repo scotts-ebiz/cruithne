@@ -1,0 +1,54 @@
+<?php
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+use Magento\Vault\Api\Data\PaymentTokenInterface;
+
+/** @var \Vantiv\Payment\Block\Vault\ApplepayRenderer $block */
+?>
+<tr>
+    <td data-th="<?php echo $block->escapeHtml(__('Card Number')); ?>" class="col card-number">
+        <span><?php echo $block->escapeHtml(__('ending')); ?></span>
+        <?php echo $block->escapeHtml($block->getNumberLast4Digits()); ?>
+    </td>
+    <td data-th="<?php echo $block->escapeHtml(__('Expiration Date')); ?>" class="col card-expire">
+        <?php echo $block->escapeHtml($block->getExpDate()); ?>
+    </td>
+    <td data-th="<?php echo $block->escapeHtml(__('Type')) ?>" class="col card-type">
+        <img src="<?php echo $block->escapeHtml($block->getIconUrl()); ?>"
+             width="<?php echo $block->escapeHtml($block->getIconWidth()); ?>"
+             height="<?php echo $block->escapeHtml($block->getIconHeight()); ?>"
+        >
+    </td>
+    <td data-th="<?php echo $block->escapeHtml(__('Actions')); ?>" class="col actions">
+        <form
+            class="form"
+            style="display: inline;"
+            action="<?php echo $block->escapeUrl($block->getUrl('vault/cards/deleteaction')); ?>"
+            method="post"
+        >
+            <?php echo $block->getBlockHtml('formkey')?>
+            <input
+                name="<?php echo $block->escapeHtml(PaymentTokenInterface::PUBLIC_HASH); ?>"
+                value="<?php echo $block->escapeHtml($block->getToken()->getPublicHash()); ?>"
+                type="hidden"
+            />
+            <button
+                type="submit"
+                class="action delete"
+                data-mage-init='{
+                    "Magento_Vault/js/customer_account/deleteWidget":{
+                        "type": "popup",
+                        "modalClass": "my-credit-cards-popup",
+                        "toggleEvent": "click",
+                        "title": "<?php echo $block->escapeHtml(__('Delete')); ?>",
+                        "content": "Are you sure you want to delete this card: <?php echo $block->escapeHtml($block->getNumberLast4Digits()); ?>?"
+                    }
+                }'
+            >
+                <span><?php echo $block->escapeHtml(__('Delete')); ?></span>
+            </button>
+        </form>
+    </td>
+</tr>

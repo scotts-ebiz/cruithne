@@ -1,0 +1,43 @@
+<?php
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+/** @var Vantiv\Payment\Block\Catalog\Product\SubscriptionPlans $block */
+?>
+<div class="field vantiv-subscriptions">
+    <label class="label"><span><?php echo $block->escapeHtml(__('Buy one time or select a Payment Plan')) ?></span></label>
+    <div>
+        <input type="checkbox" id="vantiv-add-plan" name="vantiv_add_plan">
+        <label for="vantiv-add-plan"><span><?php echo $block->escapeHtml(__('Add a Payment Plan')) ?></span></label>
+    </div>
+    <div class="control" id="vantiv-subscription-plans-list" style="display: none;" data-mage-init='{"vantivPriceSubscription":{
+             "addPlanElement":"#vantiv-add-plan",
+             "planElement":"input:radio[value]",
+             "startDateContainerElement":"#product-options-wrapper .vantiv-subscriptions-start-date-container",
+             "config":<?php /* @noEscape */ echo $block->getJsonConfig() ?>}}'>
+        <?php foreach ($this->getPlans() as $plan): ?>
+            <div class="field choice">
+                <input type="radio"
+                       name="vantiv_subscription_plan"
+                       id="vantiv_subscription_plan_<?php echo $block->escapeHtml($plan->getId()) ?>"
+                       value="<?php echo $block->escapeHtml($plan->getId()) ?>" <?php if ($block->isPlanSelected($plan)): ?>checked<?php endif; ?>/>
+                <label class="label" for="vantiv_subscription_plan_<?php echo $block->escapeHtml($plan->getId()) ?>">
+                    <span><?php /* @noEscape */ echo $block->getPlanTitle($plan); ?></span>
+                </label>
+            </div>
+        <?php endforeach; ?>
+    </div>
+</div>
+<?php if ($block->getProduct()->getVantivRecurringAllowStart()): ?>
+    <div class="field date vantiv-subscriptions-start-date-container" style="display: none;">
+        <legend class="label">
+            <span><?php echo $block->escapeHtml(__('Subscription Start Date')) ?></span>
+        </legend>
+        <div class="control">
+            <?php echo $block->getStartDateHtml() ?>
+        </div>
+    </div>
+<?php endif; ?>

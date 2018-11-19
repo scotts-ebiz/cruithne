@@ -1,0 +1,70 @@
+<?php
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+/** @var Vantiv\Payment\Block\Vault\EcheckForm $block */
+?>
+<form class="form-edit" action="<?php echo $block->escapeHtml($block->getSaveUrl()); ?>" method="post"
+      id="vantiv-echeck-form" data-mage-init='{"validation": {}}'>
+    <fieldset class="fieldset">
+        <legend class="legend">
+            <span><?php echo $block->escapeHtml(__('Bank Account Data')); ?></span>
+        </legend>
+        <br/>
+
+        <?php echo $block->getBlockHtml('formkey'); ?>
+
+        <div class="field field-number required">
+            <label for="vantiv_echeck_account_type" class="label">
+                <span><?php echo $block->escapeHtml(__('Account Type')); ?></span>
+            </label>
+            <div class="control">
+                <select id="vantiv_echeck_account_type" name="echeck_account_type" class="select" data-validate="{required:true}">
+                    <?php foreach ($block->getEcheckAccountTypeOptions() as $value => $label): ?>
+                        <option value="<?php echo $block->escapeHtml($value); ?>">
+                            <?php echo $block->escapeHtml($label); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </div>
+        </div>
+
+        <div class="field field-number required">
+            <label for="vantiv_echeck_account_number" class="label">
+                <span><?php echo $block->escapeHtml(__('Account Number')); ?></span>
+            </label>
+            <div class="control">
+                <input type="text" id="vantiv_echeck_account_number" name="echeck_account_name"
+                       data-validate="{required: true, number: true, minlength: 4, maxlength: 17}"
+                       class="input-text"/>
+            </div>
+        </div>
+
+        <div class="field field-number required">
+            <label for="vantiv_echeck_routing_number" class="label">
+                <span><?php echo $block->escapeHtml(__('Routing Number')); ?></span>
+            </label>
+            <div class="control">
+                <input type="text" id="vantiv_echeck_routing_number" name="echeck_routing_number"
+                       data-validate="{required: true, number: true, minlength: 9, maxlength: 9}"
+                       class="input-text"/>
+            </div>
+        </div>
+
+        <div class="actions-toolbar">
+            <div class="primary">
+                <button type="submit" class="action save primary" data-action="save-account"
+                        title="<?php echo $block->escapeHtml(__('Save Account')); ?>">
+                    <span><?php echo $block->escapeHtml(__('Save Account')); ?></span>
+                </button>
+            </div>
+            <div class="secondary">
+                <a class="action back" href="<?php echo $block->escapeHtml($block->getBackUrl()); ?>">
+                    <span><?php echo $block->escapeHtml(__('Go back')); ?></span>
+                </a>
+            </div>
+        </div>
+    </fieldset>
+</form>
