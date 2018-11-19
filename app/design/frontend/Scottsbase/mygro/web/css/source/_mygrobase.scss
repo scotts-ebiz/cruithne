@@ -1,6 +1,7 @@
 // MyGro Base
 body {
     @include font-hellix-regular();
+    font-size: 1.2rem;
 
     h2 {
         font-weight: bold;
@@ -73,9 +74,12 @@ body {
                 .showcart {
                     color: $mygro-green;
                     float: left;
-                    font-size: 1.2rem;
-                    margin: 0.8rem 1rem 0 0;
+                    font-size: 1rem;
+                    margin: 0.5rem 0 0 0;
+                    position: relative;
                     text-decoration: none;
+                    text-align: right;
+                    width: 80px;
                     @include max-screen($screen__l) {
                         margin: 0.8rem 0.5rem 0 0;
                     }
@@ -84,33 +88,69 @@ body {
                         visibility: hidden;
                     }
                     .icon-bag {
+                        position: absolute;
+                        top: 12px;
+                        left: 0;
                         &:before {
                             content: '\e902';
                         }
-                    }
-                }
-                .cart-total-container {
-                    color: $mygro-black;
-                    display: inline-block;
-                    position: relative;
-                    bottom: 0.5rem;
-                    .cart-total-title {
-                        font-size: 0.7rem;
-                        margin-right: 0.5rem;
-                        text-transform: uppercase;
                         @include max-screen($screen__s) {
-                            margin-right: 0;
+                            display: none;
+                            visibility: hidden;
                         }
                     }
-                    .total-amt {
-                        display: block;
-                        font-size: 1.2rem;
-                        line-height: 0;
-                        margin-top: 0.5rem;
-                        @include max-screen($screen__s) {
-                            font-size: 0.8rem;
-                            font-weight: 700;
-                            margin-top: 0.3rem;
+                    .cart-total-container {
+                        color: $mygro-black;
+                        display: inline-block;
+                        position: relative;
+                        bottom: 0.5rem;
+                        .cart-total-title {
+                            font-size: 0.7rem;
+                            text-transform: uppercase;
+                            @include max-screen($screen__s) {
+                                margin-right: 0;
+                            }
+                        }
+                        .total-amt {
+                            display: block;
+                            font-size: 1.2rem;
+                            line-height: 0;
+                            margin-top: 0.5rem;
+                            @include max-screen($screen__s) {
+                                font-size: 1rem;
+                                font-weight: 700;
+                            }
+                        }
+                    }
+                }
+                .ui-dialog {
+                    .block-minicart {
+                        font-size: 1rem;
+                        text-align: left;
+                        #minicart-content-wrapper {
+                            .block-content {
+                                .actions {
+                                    .primary {
+                                        font-size: 1.2rem;
+                                        padding: 0;
+                                    }
+                                }
+                                .minicart-items-wrapper {
+                                    .minicart-items {
+                                        .product-item {
+                                            .product {
+                                                .product-item-pricing {
+                                                    .details-qty {
+                                                        .label {
+                                                            width: auto;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -320,11 +360,6 @@ body {
         .products.grid:after {
             display: none;
         }
-        .grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: space-evenly;
-        }
         .grid:after {
             content: '';
             display: table;
@@ -531,24 +566,14 @@ body {
                         .summary.title {
                             @include font-hellix-heavy(1.6rem, $mygro-gray-alt);
                         }
-                        .block.shipping {
-                            .title {
-                                #block-shipping-heading {
-                                    @include font-hellix-regular(1.2rem, $mygro-gray-alt);
-                                }
-                            }
-                        }
-                        .block.discount {
-                            .title {
-                                #block-discount-heading {
-                                    @include font-hellix-regular(1.2rem, $mygro-gray-alt);
-                                }
-                            }
-                        }
+                        .block.shipping,
+                        .block.discount,
                         .block.giftcard {
                             .title {
+                                #block-shipping-heading,
+                                #block-discount-heading,
                                 #block-giftcard-heading {
-                                    @include font-hellix-regular(1.2rem, $mygro-gray-alt);
+                                    @include font-hellix-regular(1rem, $mygro-gray-alt);
                                 }
                             }
                         }
@@ -619,6 +644,9 @@ body {
                                                 a {
                                                     color: $mygro-black;
                                                 }
+                                                @include max-screen($screen__m) {
+                                                    font-size: 0.75rem;
+                                                }
                                             }
                                         }
                                     }
@@ -633,6 +661,9 @@ body {
                                     .price-excluding-tax {
                                         color: $mygro-black;
                                         font-size: 1.4rem;
+                                        @include max-screen($screen__m) {
+                                            font-size: 1rem;
+                                        }
                                     }
                                 }
                                 .item-actions {
@@ -698,12 +729,32 @@ body {
 // Checkout Styles
 .checkout-index-index {
     .page-wrapper {
+        .page-header {
+            .header.content {
+                .logo {
+                    @include max-screen($screen__m) {
+                        // Specific Style for logo when menu isn't present
+                        left: 0;
+                    }
+                }
+            }
+        }
         .page-main {
             .columns {
                 .column.main {
                     .checkout-container {
                         .opc-progress-bar {
                             .opc-progress-bar-item {
+                                &._active {
+                                    &:before {
+                                        background: $mygro-green;
+                                    }
+                                    span {
+                                        &:before {
+                                            background: $mygro-green;
+                                        }
+                                    }
+                                }
                                 span {
                                     font-size: 1.4rem;
                                     &:after {
@@ -712,9 +763,46 @@ body {
                                 }
                             }
                         }
+                        .opc-estimated-wrapper {
+                            .minicart-wrapper {
+                                .action.showcart {
+                                    .counter.qty {
+                                        background: $mygro-green;
+                                    }
+                                }
+                            }
+                        }
                         .opc-wrapper {
+                            @include max-screen($screen__m) {
+                                padding: 1rem;
+                            }
                             .opc {
-                                #opc-shipping_method {
+                                .checkout-shipping-address {
+                                    .step-content {
+                                        .form-login {
+                                            border-bottom: 1px solid #c2c2c2;
+                                            padding-bottom: 1rem;
+                                        }
+                                        .form-login,
+                                        .form-shipping-address {
+                                            .fieldset {
+                                                .label {
+                                                    width: auto;
+                                                }
+                                                .control {
+                                                    float: none;
+                                                    width: auto;
+                                                }
+                                            }
+                                            .hidden-fields {
+                                                .actions-toolbar {
+                                                    margin-left: 0;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                .checkout-shipping-method {
                                     .checkout-shipping-method {
                                         .step-title {
                                             font-size: 2rem;
@@ -734,15 +822,206 @@ body {
                                         }
                                     }
                                 }
+                                .checkout-payment-method {
+                                    .step-content {
+                                        .form.payments {
+                                            .fieldset {
+                                                .opc-payment {
+                                                    .items.payment-methods {
+                                                        .payment-group {
+                                                            .payment-method._active {
+                                                                .payment-method-content {
+                                                                    .actions-toolbar {
+                                                                        .primary {
+                                                                            .action.primary.checkout {
+                                                                                @include font-hellix-regular(1.4rem, $white);
+                                                                                -webkit-transition: background 0.2s;
+                                                                                -moz-transition: background 0.2s;
+                                                                                -ms-transition: background 0.2s;
+                                                                                -o-transition: background 0.2s;
+                                                                                transition: background 0.2s;
+                                                                                background: $mygro-green;
+                                                                                border: none;
+                                                                                &:hover {
+                                                                                    -webkit-transition: background 0.2s;
+                                                                                    -moz-transition: background 0.2s;
+                                                                                    -ms-transition: background 0.2s;
+                                                                                    -o-transition: background 0.2s;
+                                                                                    transition: background 0.2s;
+                                                                                    background: #005d49;
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            .opc-payment-additional {
+                                                .payment-option-title {
+                                                    .action-toggle {
+                                                        color: $mygro-green;
+                                                    }
+                                                }
+                                                .payment-option-content {
+                                                    .form-discount {
+                                                        .actions-toolbar {
+                                                            .primary {
+                                                                button {
+                                                                    @include font-hellix-regular(1rem, $white);
+                                                                    -webkit-transition: background 0.2s;
+                                                                    -moz-transition: background 0.2s;
+                                                                    -ms-transition: background 0.2s;
+                                                                    -o-transition: background 0.2s;
+                                                                    transition: background 0.2s;
+                                                                    background: $mygro-dark-gray;
+                                                                    border: none;
+                                                                    &:hover {
+                                                                        -webkit-transition: background 0.2s;
+                                                                        -moz-transition: background 0.2s;
+                                                                        -ms-transition: background 0.2s;
+                                                                        -o-transition: background 0.2s;
+                                                                        transition: background 0.2s;
+                                                                        background: $mygro-black-alt;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    .form-giftcard-account {
+                                                        .actions-toolbar {
+                                                            .primary {
+                                                                margin-left: 1rem;
+                                                                .action-add.primary {
+                                                                    @include font-hellix-regular(1rem, $white);
+                                                                    -webkit-transition: background 0.2s;
+                                                                    -moz-transition: background 0.2s;
+                                                                    -ms-transition: background 0.2s;
+                                                                    -o-transition: background 0.2s;
+                                                                    transition: background 0.2s;
+                                                                    background: $mygro-dark-gray;
+                                                                    border: none;
+                                                                    &:hover {
+                                                                        -webkit-transition: background 0.2s;
+                                                                        -moz-transition: background 0.2s;
+                                                                        -ms-transition: background 0.2s;
+                                                                        -o-transition: background 0.2s;
+                                                                        transition: background 0.2s;
+                                                                        background: $mygro-black-alt;
+                                                                    }
+                                                                }
+                                                            }
+                                                            .secondary {
+                                                                .action-check {
+                                                                    @include font-hellix-regular(1rem, $white);
+                                                                    -webkit-transition: background 0.2s;
+                                                                    -moz-transition: background 0.2s;
+                                                                    -ms-transition: background 0.2s;
+                                                                    -o-transition: background 0.2s;
+                                                                    transition: background 0.2s;
+                                                                    background: $mygro-dark-gray;
+                                                                    border: none;
+                                                                    &:hover {
+                                                                        -webkit-transition: background 0.2s;
+                                                                        -moz-transition: background 0.2s;
+                                                                        -ms-transition: background 0.2s;
+                                                                        -o-transition: background 0.2s;
+                                                                        transition: background 0.2s;
+                                                                        background: $mygro-black-alt;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
-                        .opc-sidebar {
+                        .opc-sidebar.custom-slide {
+                            left: 0;
                             .modal-inner-wrap {
                                 .modal-content {
                                     #opc-sidebar {
                                         .opc-block-summary {
                                             .title {
                                                 font-size: 2rem;
+                                            }
+                                            .table-totals {
+                                                tbody {
+                                                    .totals.discount {
+                                                        .mark {
+                                                            .title {
+                                                                font-size: 1rem;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            .items-in-cart {
+                                                .minicart-items {
+                                                    margin-top: 0.5rem;
+                                                    @include max-screen($screen__m) {
+                                                        margin-top: 0.5rem;
+                                                    }
+                                                    .product-item {
+                                                        .product {
+                                                            .product-item-details {
+                                                                .product-item-name-block {
+                                                                    .product-item-name {
+                                                                        margin: 0;
+                                                                        @include max-screen($screen__m) {
+                                                                            margin: 0;
+                                                                        }
+                                                                    }
+                                                                    .details-qty {
+                                                                        margin: 0;
+                                                                        @include max-screen($screen__m) {
+                                                                            margin: 0;
+                                                                        }
+                                                                    }
+                                                                }
+                                                                .subtotal {
+                                                                    .price-excluding-tax,
+                                                                    .price-including-tax {
+                                                                        .cart-price {
+                                                                            .price {
+                                                                                font-size: 1.2rem;
+                                                                                font-weight: 700;
+                                                                                @include max-screen($screen__m) {
+                                                                                    font-size: 1.2rem;
+                                                                                    font-weight: 700;
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        .opc-block-shipping-information {
+                                            .shipping-information {
+                                                .ship-to {
+                                                    .shipping-information-title {
+                                                        span {
+                                                            font-size: 2rem;
+                                                        }
+                                                    }
+                                                }
+                                                .ship-via {
+                                                    .shipping-information-title {
+                                                        span {
+                                                            font-size: 2rem;
+                                                        }
+                                                    }
+                                                }
                                             }
                                         }
                                     }
@@ -755,5 +1034,6 @@ body {
         }
     }
 }
+
 
 
