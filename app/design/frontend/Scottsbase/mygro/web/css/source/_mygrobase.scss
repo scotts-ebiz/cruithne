@@ -682,9 +682,10 @@ body {
                                             -ms-transition: background 0.2s;
                                             -o-transition: background 0.2s;
                                             transition: background 0.2s;
-                                            background: $mygro-gray-alt;
+                                            background: $mygro-black-alt;
                                             color: $white;
-                                            padding: 1rem;
+                                            font-size: 0.85rem;
+                                            padding: 0.25rem 1rem;
                                             border-radius: 5px;
                                             &:hover {
                                                 -webkit-transition: background 0.2s;

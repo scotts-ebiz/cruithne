@@ -304,7 +304,8 @@
                                             transition: background 0.2s;
                                             background: $secondary-dark-gray;
                                             color: $white;
-                                            padding: 1rem;
+                                            font-size: 0.85rem;
+                                            padding: 0.25rem 1rem;
                                             border-radius: 5px;
                                             &:hover {
                                                 -webkit-transition: background 0.2s;
@@ -360,7 +361,7 @@
             }
         }
         .page-main {
-            margin-top: 1rem;
+            margin-top: 2rem;
             .columns {
                 .column.main {
                     .checkout-container {
@@ -377,9 +378,9 @@
                                     }
                                 }
                                 span {
-                                    font-size: 1.4rem;
+                                    font-size: 1.2rem;
                                     &:after {
-                                        font-size: 1.4rem;
+                                        font-size: 1.2rem;
                                     }
                                 }
                             }
