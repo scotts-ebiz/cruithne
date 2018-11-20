@@ -1,0 +1,31 @@
+<?php
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+/** @var Vantiv\Payment\Block\Form\Cc $block */
+$code = $block->escapeHtml($block->getMethodCode());
+?>
+<fieldset
+    class="admin__fieldset payment-method"
+    id="payment_form_<?php echo $code; ?>"
+    style="display: none;"
+>
+    <div id="payframe" data-mage-init='<?php echo $block->escapeHtml($block->getMageInitJson()); ?>'></div>
+
+    <?php if ($block->isVaultEnabled()): ?>
+        <div class="field-tooltip-content">
+            <input type="checkbox"
+                   id="<?php echo $code; ?>_сс_enable_vault"
+                   name="payment[is_active_payment_token_enabler]"
+                   class="admin__control-checkbox"/>
+            <label class="admin__field-label" for="<?php echo $code; ?>_сс_enable_vault">
+                <span><?php echo $block->escapeHtml(__('Save for later use.')); ?></span>
+            </label>
+        </div>
+    <?php endif; ?>
+
+    <input id="payment-vantiv-cc-paypage-registration-id" name="payment[additional_information][paypage_registration_id]" type="hidden">
+    <input id="payment-vantiv-cc-type" name="payment[cc_type]" type="hidden">
+</fieldset>

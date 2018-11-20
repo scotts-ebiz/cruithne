@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="shortcut_buttons_container">
+        <observer name="vantiv_paypal_shortcuts" instance="Vantiv\Payment\Observer\Paypal\AddPaypalShortcutsObserver"/>
+    </event>
+    <event name="checkout_allow_guest">
+        <observer name="vantiv_payment_checkout_allow_guest" instance="Vantiv\Payment\Observer\IsAllowedGuestCheckoutObserver"/>
+    </event>
+</config>

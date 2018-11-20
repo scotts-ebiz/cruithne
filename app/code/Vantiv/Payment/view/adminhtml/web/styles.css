@@ -1,0 +1,39 @@
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+.vantiv-main-section > .entry-edit-head {background: url("images/vantiv-main-logo.jpg") no-repeat scroll 0 50% / 18rem auto; padding-left: 20rem;}
+.vantiv-main-section .button-container {float: right;}
+
+.subcription-view > .ui-tabs-panel {
+    border: 0;
+    margin: 0;
+    padding: 0;
+}
+
+.subscription-billing-address, .subscription-information {
+    float: left;
+    width: calc((100%) * 0.5 - 30px);
+}
+
+.customer-account-information {
+    margin-bottom: 1.5rem;
+}
+
+.subscription-shipping-address, .subscription-shipping-method, .subscription-plan-information, .subscription-payment-method, .customer-account-information {
+    float: right;
+    width: calc((100%) * 0.5 - 30px);
+}
+
+.subscription-plan-information-table {
+    table-layout: fixed;
+}
+
+.subscription-plan-information-table td {
+    word-wrap: break-word;
+}
+
+.subscription-information-table td, .subscription-plan-information-table td, .customer-account-information-table td {
+    text-align: right;
+}

@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="payment_method_assign_data_vantiv_cc">
+        <observer name="vantiv_payment_observer_cc_data_assign" instance="Vantiv\Payment\Observer\CcDataAssignObserver" />
+    </event>
+    <event name="payment_method_assign_data_vault_vantiv_cc">
+        <observer name="vantiv_payment_observer_cc_vault_data_assign" instance="Vantiv\Payment\Observer\CcVaultDataAssignObserver" />
+    </event>
+    <event name="payment_method_assign_data_vault_vantiv_applepay">
+        <observer name="vantiv_payment_observer_applepay_vault_data_assign" instance="Vantiv\Payment\Observer\CcVaultDataAssignObserver" />
+    </event>
+    <event name="payment_method_assign_data_vault_vantiv_androidpay">
+        <observer name="vantiv_payment_observer_androidpay_vault_data_assign" instance="Vantiv\Payment\Observer\CcVaultDataAssignObserver" />
+    </event>
+    <event name="payment_method_assign_data_vantiv_androidpay">
+        <observer name="vantiv_payment_observer_androidpay_data_assign" instance="Vantiv\Payment\Observer\AndroidpayDataAssignObserver" />
+    </event>
+    <event name="payment_method_assign_data_vantiv_applepay">
+        <observer name="vantiv_payment_observer_applepay_data_assign" instance="Vantiv\Payment\Observer\ApplepayDataAssignObserver" />
+    </event>
+    <event name="payment_method_assign_data_vantiv_echeck">
+        <observer name="vantiv_payment_observer_echeck_data_assign" instance="Vantiv\Payment\Observer\EcheckDataAssignObserver" />
+    </event>
+    <event name="magento_giftcardaccount_create">
+        <observer name="vantiv_giftcardaccount_create" instance="Vantiv\Payment\Observer\GiftCardAccount\ActivateGiftCard" />
+    </event>
+    <event name="magento_giftcardaccount_save_after">
+        <observer name="vantiv_giftcardaccount_deactivate" instance="Vantiv\Payment\Observer\GiftCardAccount\DeactivateGiftCard" />
+    </event>
+    <event name="catalog_product_get_final_price">
+        <observer name="vantiv_subscription" instance="Vantiv\Payment\Observer\CatalogProductGetFinalPriceObserver"/>
+    </event>
+    <event name="payment_method_is_active">
+        <observer name="vantiv_subscription" instance="Vantiv\Payment\Observer\PaymentMethodIsActiveObserver"/>
+    </event>
+    <event name="sales_quote_collect_totals_before">
+        <observer name="vantiv_subscription" instance="Vantiv\Payment\Observer\SalesQuoteCollectTotalsBeforeObserver"/>
+    </event>
+    <event name="sales_model_service_quote_submit_before">
+        <observer name="vantiv_subscription" instance="Vantiv\Payment\Observer\SalesServiceQuoteSubmitBeforeObserver"/>
+    </event>
+    <event name="sales_order_item_save_commit_after">
+        <observer name="vantiv_subscription" instance="Vantiv\Payment\Observer\SaveOrderItemCommitAfterObserver"/>
+    </event>
+    <event name="checkout_cart_update_items_after">
+        <observer name="vantiv_subscription" instance="Vantiv\Payment\Observer\CheckoutCartUpdateItemsAfterObserver"/>
+    </event>
+    <event name="magento_giftcardaccount_save_before">
+        <observer name="vantiv_set_virtual_gift_card" instance="Vantiv\Payment\Observer\GiftCardAccount\GiftCardAccountSaveBefore"/>
+    </event>
+    <event name="sales_order_place_after">
+        <observer name="vantiv_sales_order_place_after" instance="Vantiv\Payment\Observer\GiftCardAccount\ChargeGiftCard"/>
+    </event>
+    <event name="sales_order_payment_capture">
+        <observer name="vantiv_sales_order_payment_capture" instance="Vantiv\Payment\Observer\GiftCardAccount\ValidateGiftCardBeforeCapture"/>
+    </event>
+</config>

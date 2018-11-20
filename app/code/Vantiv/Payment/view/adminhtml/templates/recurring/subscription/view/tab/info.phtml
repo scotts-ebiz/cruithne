@@ -1,0 +1,189 @@
+<?php
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php
+/** @var $block \Vantiv\Payment\Block\Adminhtml\Recurring\Subscription\View\Tab\Info */
+$subscription = $block->getSubscription();
+$subscriptionAdminDate = $block->formatDate(
+    $block->getSubscriptionAdminDate($subscription->getCreatedAt()),
+    \IntlDateFormatter::MEDIUM,
+    true
+);
+$subscriptionStoreDate = $block->formatDate(
+    $subscription->getCreatedAt(),
+    \IntlDateFormatter::MEDIUM,
+    true,
+    $block->getTimezoneForStore($subscription->getStore())
+);
+if ($subscription->getStartDate()) {
+    $subscriptionStartDate = $block->formatDate(
+        $subscription->getStartDate(),
+        \IntlDateFormatter::MEDIUM,
+        false,
+        date_default_timezone_get()
+    );
+}
+?>
+
+<section class="admin__page-section subscription-view-account-information">
+    <div class="admin__page-section-title">
+        <span class="title"><?php echo $block->escapeHtml(__('Subscription & Account Information')) ?></span>
+    </div>
+    <div class="admin__page-section-content">
+        <div class="admin__page-section-item subscription-information">
+            <?php /* Subscription Information */ ?>
+            <div class="admin__page-section-item-title">
+                <span class="title">
+                    <?php echo $block->escapeHtml(__('Subscription # %1', $subscription->getVantivSubscriptionId())) ?>
+                </span>
+            </div>
+            <div class="admin__page-section-item-content">
+                <table class="admin__table-secondary subscription-information-table">
+                    <tr>
+                        <th><?php echo $block->escapeHtml(__('Original Order ID')) ?></th>
+                        <?php if ($subscription->getOriginalOrderId()): ?>
+                            <td>
+                                <a href="<?php echo $block->getUrl('sales/order/view', ['order_id' => $subscription->getOriginalOrderId()]) ?>"><?php echo $block->escapeHtml($subscription->getOriginalOrderIncrementId()) ?></a>
+                            </td>
+                        <?php else: ?>
+                            <td><?php echo $block->escapeHtml($subscription->getOriginalOrderIncrementId()) ?></td>
+                        <?php endif; ?>
+                    </tr>
+                    <tr>
+                        <th><?php echo $block->escapeHtml(__('Purchase Date')) ?></th>
+                        <td><?php echo $block->escapeHtml($subscriptionAdminDate) ?></td>
+                    </tr>
+                    <?php if ($subscriptionAdminDate != $subscriptionStoreDate): ?>
+                        <tr>
+                            <th><?php echo $block->escapeHtml(__('Purchase Date (%1)', $block->getTimezoneForStore($subscription->getStore()))) ?></th>
+                            <td><?php echo $block->escapeHtml($subscriptionStoreDate) ?></td>
+                        </tr>
+                    <?php endif; ?>
+                    <tr>
+                        <th><?php echo $block->escapeHtml(__('Purchased From')) ?></th>
+                        <td><?php /* @noEscape */
+                            echo $block->getSubscriptionStoreName() ?></td>
+                    </tr>
+                    <?php if ($subscription->getStartDate()): ?>
+                        <tr>
+                            <th><?php echo $block->escapeHtml(__('Subscription Start Date')) ?></th>
+                            <td><?php echo $block->escapeHtml($subscriptionStartDate) ?></td>
+                        </tr>
+                    <?php endif; ?>
+                    <tr>
+                        <th><?php echo $block->escapeHtml(__('Subscription Status')) ?></th>
+                        <td>
+                            <span id="subscription_status"><?php echo $block->escapeHtml($subscription->getStatusLabel()) ?></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?php echo $block->escapeHtml(__('Subscription Interval Total')) ?></th>
+                        <?php if ($subscription->getIntervalAmount()): ?>
+                            <td><?php /* @noEscape */
+                                echo $subscription->getFormattedIntervalAmount() ?></td>
+                        <?php else: ?>
+                            <td><?php /* @noEscape */
+                                echo $subscription->getFormattedPlanIntervalAmount() ?></td>
+                        <?php endif; ?>
+                    </tr>
+                    <tr>
+                        <th><?php echo $block->escapeHtml(__('Product Name')) ?></th>
+                        <?php if ($subscription->getProductId()): ?>
+                            <td>
+                                <a href="<?php echo $block->getUrl('catalog/product/edit', ['id' => $subscription->getProductId()]) ?>"><?php echo $block->escapeHtml($subscription->getProductName()) ?></a>
+                            </td>
+                        <?php else: ?>
+                            <td><?php echo $block->escapeHtml($subscription->getProductName()) ?></td>
+                        <?php endif; ?>
+                    </tr>
+                    <?php echo $block->getChildHtml(); ?>
+                </table>
+            </div>
+        </div>
+
+        <div class="admin__page-section-item customer-account-information">
+            <?php /* Account Information */ ?>
+            <div class="admin__page-section-item-title">
+                <span class="title"><?php echo $block->escapeHtml(__('Account Information')) ?></span>
+            </div>
+            <div class="admin__page-section-item-content">
+                <table class="admin__table-secondary customer-account-information-table">
+                    <tr>
+                        <th><?php echo $block->escapeHtml(__('Customer Name')) ?></th>
+                        <td>
+                            <?php if ($_customerUrl = $block->getCustomerViewUrl()) : ?>
+                                <a href="<?php /* @escapeNotVerified */
+                                echo $_customerUrl ?>" target="_blank">
+                                    <span><?php echo $block->escapeHtml($subscription->getBillingName()) ?></span>
+                                </a>
+                            <?php else: ?>
+                                <?php echo $block->escapeHtml($subscription->getBillingName()) ?>
+                            <?php endif; ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?php /* @escapeNotVerified */
+                            echo __('Email') ?></th>
+                        <td>
+                            <a href="mailto:<?php echo $block->escapeHtml($subscription->getCustomerEmail()) ?>"><?php echo $block->escapeHtml($subscription->getCustomerEmail()) ?></a>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </div>
+
+        <?php if ($plan = $subscription->getPlan()): ?>
+            <div class="admin__page-section-item subscription-plan-information">
+                <?php /* Subscription Information */ ?>
+                <div class="admin__page-section-item-title">
+                <span class="title">
+                    <?php echo $block->escapeHtml(__('Plan Information')) ?>
+                </span>
+                </div>
+                <div class="admin__page-section-item-content">
+                    <table class="admin__table-secondary subscription-plan-information-table">
+                        <tr>
+                            <th><?php echo $block->escapeHtml(__('Plan Code')) ?></th>
+                            <td><?php echo $block->escapeHtml($plan->getCode()) ?></td>
+                        </tr>
+                        <tr>
+                            <th><?php echo $block->escapeHtml(__('Plan Name')) ?></th>
+                            <td><?php echo $block->escapeHtml($plan->getName()) ?></td>
+                        </tr>
+                        <tr>
+                            <th><?php echo $block->escapeHtml(__('Plan Description')) ?></th>
+                            <td><?php echo $block->escapeHtml($plan->getDescription()) ?></td>
+                        </tr>
+                        <tr>
+                            <th><?php echo $block->escapeHtml(__('Plan Interval Amount')) ?></th>
+                            <td><?php /* @noEscape */
+                                echo $subscription->getFormattedPlanIntervalAmount() ?></td>
+                        </tr>
+                        <tr>
+                            <th><?php echo $block->escapeHtml(__('Plan Interval')) ?></th>
+                            <td><?php echo $block->escapeHtml($block->getPlanIntervalLabel()) ?></td>
+                        </tr>
+                        <?php if ($plan->getNumberOfPayments()): ?>
+                            <tr>
+                                <th><?php echo $block->escapeHtml(__('Plan # of Payments')) ?></th>
+                                <td><?php echo $block->escapeHtml($plan->getNumberOfPayments()) ?></td>
+                            </tr>
+                        <?php endif; ?>
+                        <?php if ($plan->getNumberOfTrialIntervals()): ?>
+                            <tr>
+                                <th><?php echo $block->escapeHtml(__('Plan Trial')) ?></th>
+                                <td><?php echo $block->escapeHtml($block->getPlanTrialLabel()) ?></td>
+                            </tr>
+                        <?php endif; ?>
+                    </table>
+                </div>
+            </div>
+        <?php endif; ?>
+    </div>
+</section>

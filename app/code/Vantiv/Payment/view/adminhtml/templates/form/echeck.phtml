@@ -1,0 +1,83 @@
+<?php
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+/** @var Vantiv\Payment\Block\Form\Echeck $block */
+$code = $block->escapeHtml($block->getMethodCode());
+?>
+<fieldset
+    class="admin__fieldset payment-method"
+    id="payment_form_<?php echo $code; ?>"
+    style="display: none;"
+>
+    <div class="field-type admin__field _required">
+        <label class="admin__field-label" for="<?php echo $code; ?>_echeck_account_type">
+            <span><?php echo $block->escapeHtml(__('Account Type')); ?></span>
+        </label>
+        <div class="admin__field-control">
+            <select
+                id="<?php echo $code; ?>_echeck_account_type"
+                name="payment[echeck_account_type]"
+                class="admin__control-select required-entry"
+            >
+                <?php foreach ($block->getEcheckAccountTypeOptions() as $value => $label): ?>
+                    <option
+                        value="<?php echo $block->escapeHtml($value); ?>"
+                        <?php if ($value === $block->getInfoData('echeck_account_type')): ?>selected="selected"<?php endif ?>
+                    >
+                        <?php echo $block->escapeHtml($label); ?>
+                    </option>
+                <?php endforeach; ?>
+            </select>
+        </div>
+    </div>
+
+    <div class="field-number admin__field _required">
+        <label class="admin__field-label" for="<?php echo $code; ?>_echeck_account_number">
+            <span><?php echo $block->escapeHtml(__('Account Number')); ?></span>
+        </label>
+        <div class="admin__field-control">
+            <input
+                type="text"
+                id="<?php echo $code; ?>_echeck_account_number"
+                name="payment[echeck_account_name]"
+                title="<?php echo $block->escapeHtml(__('Account Number')); ?>"
+                class="admin__control-text validate-number validate-length minimum-length-4 maximum-length-17"
+                value="<?php echo $block->escapeHtml($block->getInfoData('echeck_account_name')); ?>"
+            />
+        </div>
+    </div>
+
+    <div class="field-number admin__field _required">
+        <label class="admin__field-label" for="<?php echo $code; ?>_echeck_routing_number">
+            <span><?php echo $block->escapeHtml(__('Routing Number')); ?></span>
+        </label>
+        <div class="admin__field-control">
+            <input
+                type="text"
+                id="<?php echo $code; ?>_echeck_routing_number"
+                name="payment[echeck_routing_number]"
+                title="<?php echo $block->escapeHtml(__('Routing Number')); ?>"
+                class="admin__control-text validate-number validate-length minimum-length-9 maximum-length-9"
+                value="<?php echo $block->escapeHtml($block->getInfoData('echeck_routing_number')); ?>"
+            />
+        </div>
+    </div>
+
+    <?php if ($block->isVaultEnabled()): ?>
+        <div class="admin__field">
+            <div class="admin__field-control">
+                <input type="checkbox"
+                       id="<?php echo $code; ?>_echeck_enable_vault"
+                       name="payment[is_active_payment_token_enabler]"
+                       class="admin__control-checkbox"/>
+                <label class="admin__field-label" for="<?php echo $code; ?>_echeck_enable_vault">
+                    <span><?php echo $block->escapeHtml(__('Save for later use.')); ?></span>
+                </label>
+            </div>
+        </div>
+    <?php endif; ?>
+
+</fieldset>

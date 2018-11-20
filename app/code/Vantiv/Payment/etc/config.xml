@@ -1,0 +1,213 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <vantiv>
+            <payment>
+                <merchant_id backend_model="Magento\Config\Model\Config\Backend\Encrypted"></merchant_id>
+                <username backend_model="Magento\Config\Model\Config\Backend\Encrypted"></username>
+                <password backend_model="Magento\Config\Model\Config\Backend\Encrypted"></password>
+                <http_timeout>1500</http_timeout>
+                <threatmetrix_orgid></threatmetrix_orgid>
+                <threatmetrix_sessionprefix></threatmetrix_sessionprefix>
+                <report_group>Magento 2</report_group>
+            </payment>
+            <!-- Vantiv Gift Card Settings -->
+            <giftcard>
+                <active>0</active>
+                <title>Vantiv Gift Card</title>
+                <environment>sandbox</environment>
+                <bin backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <pan_length>16</pan_length>
+            </giftcard>
+            <!-- Vantiv Subscription Settings -->
+            <subscriptions>
+                <title>Recurrent Payments</title>
+                <sftp_login backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <sftp_password backend_model="Magento\Config\Model\Config\Backend\Encrypted"/>
+                <sftp_path>outbound</sftp_path>
+                <error_email_template>vantiv_subscription_cron_error_email_template</error_email_template>
+                <error_email_sender>general</error_email_sender>
+            </subscriptions>
+        </vantiv>
+        <payment>
+            <!-- Vantiv Credit Card Settings -->
+            <vantiv_cc>
+                <model>Vantiv\Payment\Model\VantivCcFacade</model>
+                <title>Credit Card (Vantiv)</title>
+                <active>0</active>
+                <environment>sandbox</environment>
+                <payment_action>authorize</payment_action>
+                <cctypes>AE,VI,MC,DI</cctypes>
+                <order_status>processing</order_status>
+                <suspect_issuer_action>accept</suspect_issuer_action>
+                <is_gateway>1</is_gateway>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_for_vantiv_subscription>1</can_use_for_vantiv_subscription>
+                <useccv>1</useccv>
+                <can_authorize>1</can_authorize>
+                <can_authorize_vault>1</can_authorize_vault>
+                <can_capture>1</can_capture>
+                <can_capture_vault>1</can_capture_vault>
+                <can_capture_partial>1</can_capture_partial>
+                <can_use_internal>1</can_use_internal>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_refund>1</can_refund>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+                <can_review_payment>1</can_review_payment>
+                <can_deny_payment>1</can_deny_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <order_source>ecommerce</order_source>
+
+                <eprotect_paypage_id></eprotect_paypage_id>
+                <eprotect_style>empty</eprotect_style>
+                <eprotect_height>200px</eprotect_height>
+                <eprotect_num_years>8</eprotect_num_years>
+                <eprotect_tooltip_text><![CDATA[A CVV is the 3 digit code on the back of your Visa, MasterCard and Discover or a 4 digit code on the front of your American Express]]></eprotect_tooltip_text>
+                <eprotect_tab_index_account_number>1</eprotect_tab_index_account_number>
+                <eprotect_tab_index_exp_month>2</eprotect_tab_index_exp_month>
+                <eprotect_tab_index_exp_year>3</eprotect_tab_index_exp_year>
+                <eprotect_tab_index_cvv>4</eprotect_tab_index_cvv>
+                <eprotect_placeholder_text_cvv>CVV</eprotect_placeholder_text_cvv>
+                <eprotect_placeholder_text_account_number>Account Number</eprotect_placeholder_text_account_number>
+
+                <advanced_fraud_is_active>0</advanced_fraud_is_active>
+                <advanced_fraud_results_review_action>review</advanced_fraud_results_review_action>
+                <advanced_fraud_results_fail_action>review</advanced_fraud_results_fail_action>
+            </vantiv_cc>
+            <vantiv_cc_vault>
+                <model>Vantiv\Payment\Model\VantivCcVaultFacade</model>
+                <title>Stored Cards (Vantiv)</title>
+                <active>0</active>
+            </vantiv_cc_vault>
+
+            <!-- Vantiv eCheck Settings -->
+            <vantiv_echeck>
+                <model>Vantiv\Payment\Model\VantivEcheckFacade</model>
+                <title>eCheck (Vantiv)</title>
+                <payment_action>authorize</payment_action>
+                <order_status>processing</order_status>
+                <echeck_account_types>Checking,Corporate,Savings,Corp Savings</echeck_account_types>
+                <active>0</active>
+                <is_gateway>1</is_gateway>
+                <can_use_checkout>1</can_use_checkout>
+                <can_authorize>1</can_authorize>
+                <can_authorize_vault>1</can_authorize_vault>
+                <can_capture>1</can_capture>
+                <can_capture_vault>1</can_capture_vault>
+                <can_capture_partial>1</can_capture_partial>
+                <can_use_internal>1</can_use_internal>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_refund>1</can_refund>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+                <environment>sandbox</environment>
+                <allowspecific>1</allowspecific>
+                <specificcountry>US,CA</specificcountry>
+            </vantiv_echeck>
+            <vantiv_echeck_vault>
+                <model>Vantiv\Payment\Model\VantivEcheckVaultFacade</model>
+                <title>Stored Bank Accounts (Vantiv)</title>
+                <active>0</active>
+            </vantiv_echeck_vault>
+
+            <!-- Vantiv Apple Pay Settings -->
+            <vantiv_applepay>
+                <model>Vantiv\Payment\Model\VantivApplepayFacade</model>
+                <title>Apple Pay (Vantiv)</title>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+                <payment_action>authorize</payment_action>
+                <order_status>processing</order_status>
+                <active>0</active>
+                <is_gateway>1</is_gateway>
+                <can_use_for_vantiv_subscription>1</can_use_for_vantiv_subscription>
+                <can_authorize>1</can_authorize>
+                <can_authorize_vault>1</can_authorize_vault>
+                <can_capture>1</can_capture>
+                <can_capture_vault>1</can_capture_vault>
+                <can_capture_partial>1</can_capture_partial>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_refund>1</can_refund>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+                <can_review_payment>1</can_review_payment>
+                <can_deny_payment>1</can_deny_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <environment>sandbox</environment>
+                <order_source>applepay</order_source>
+            </vantiv_applepay>
+            <vantiv_applepay_vault>
+                <model>Vantiv\Payment\Model\VantivApplepayVaultFacade</model>
+                <title>Stored Apple Pay Card (Vantiv)</title>
+                <active>1</active>
+                <can_use_internal>1</can_use_internal>
+            </vantiv_applepay_vault>
+
+            <!-- Vantiv Android Pay Settings -->
+            <vantiv_androidpay>
+                <model>Vantiv\Payment\Model\VantivAndroidpayFacade</model>
+                <title>Android Pay (Vantiv)</title>
+                <can_use_checkout>1</can_use_checkout>
+                <can_use_internal>0</can_use_internal>
+                <payment_action>authorize</payment_action>
+                <order_status>processing</order_status>
+                <active>0</active>
+                <is_gateway>1</is_gateway>
+                <can_use_for_vantiv_subscription>1</can_use_for_vantiv_subscription>
+                <can_authorize>1</can_authorize>
+                <can_authorize_vault>1</can_authorize_vault>
+                <can_capture>1</can_capture>
+                <can_capture_vault>1</can_capture_vault>
+                <can_capture_partial>1</can_capture_partial>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_refund>1</can_refund>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+                <can_review_payment>1</can_review_payment>
+                <can_deny_payment>1</can_deny_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <environment>sandbox</environment>
+                <order_source>androidpay</order_source>
+            </vantiv_androidpay>
+            <vantiv_androidpay_vault>
+                <model>Vantiv\Payment\Model\VantivAndroidVaultFacade</model>
+                <title>Stored Android Pay Card (Vantiv)</title>
+                <active>1</active>
+                <can_use_internal>1</can_use_internal>
+            </vantiv_androidpay_vault>
+
+            <!-- Vantiv PayPal Settings -->
+            <vantiv_paypal_express>
+                <model>Vantiv\Payment\Model\Paypal\Express</model>
+                <title>Vantiv PayPal Express Checkout</title>
+                <payment_action>authorize</payment_action>
+                <solution_type>Mark</solution_type>
+                <line_items_enabled>1</line_items_enabled>
+                <transfer_shipping_options>1</transfer_shipping_options>
+                <visible_on_cart>1</visible_on_cart>
+                <visible_on_product>1</visible_on_product>
+                <allow_ba_signup>never</allow_ba_signup>
+                <authorization_honor_period>3</authorization_honor_period>
+                <order_valid_period>29</order_valid_period>
+                <child_authorization_number>1</child_authorization_number>
+                <verify_peer>1</verify_peer>
+                <skip_order_review_step>0</skip_order_review_step>
+                <child_authorization_number>1</child_authorization_number>
+                <authorization_honor_period>3</authorization_honor_period>
+                <environment>sandbox</environment>
+                <api_password backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <api_signature backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+                <api_username backend_model="Magento\Config\Model\Config\Backend\Encrypted" />
+            </vantiv_paypal_express>
+
+            <!-- Vantiv Certification Settings -->
+        </payment>
+    </default>
+</config>

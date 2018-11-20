@@ -1,0 +1,14 @@
+<?php
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+/**
+ * @var $block \Vantiv\Payment\Block\Paypal\Express\Shortcut
+ */
+?>
+<?php if ($block->getIsInCatalogProduct()): ?>
+    <input type="hidden" id="pp-checkout-url" name="return_url" value=""/>
+<?php endif; ?>

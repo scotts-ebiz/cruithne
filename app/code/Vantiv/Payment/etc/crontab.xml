@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Cron:etc/crontab.xsd">
+    <group id="default">
+        <job name="vantiv_recurring_payment_import" instance="Vantiv\Payment\Cron\ImportRecurringPayments" method="import">
+            <schedule>0 3 * * *</schedule>
+        </job>
+        <job name="vantiv_recovery_transaction_import" instance="Vantiv\Payment\Cron\ImportRecoveryTransactions" method="import">
+            <schedule>0 4 * * *</schedule>
+        </job>
+    </group>
+</config>
