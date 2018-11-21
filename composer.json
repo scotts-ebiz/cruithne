@@ -11,8 +11,7 @@
     },
     "require": {
         "composer/composer": "@alpha",
-        "magento/product-enterprise-edition": ">=2.3.0",
-        "vertex/sdk": "^1.0"
+        "magento/product-enterprise-edition": ">=2.3.0"
     },
     "require-dev": {
         "magento/magento2-functional-testing-framework": "2.3.3",
