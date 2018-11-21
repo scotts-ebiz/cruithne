@@ -3,21 +3,24 @@
     .page-header {
         background: $primary-green;
         height: 3.25rem;
-        .logo {
-            position: absolute;
-            top: 1rem;
-            @include max-screen($screen__m) {
-                display: block;
-                text-align: center;
-                top: 2.65rem;
-                width: 100%;
+        .header.content {
+            padding: 0;
+            .logo {
+                position: absolute;
+                top: 1rem;
+                @include max-screen($screen__m) {
+                    display: block;
+                    text-align: center;
+                    top: 2.65rem;
+                    width: 100%;
+                }
             }
-        }
-        .shipping-message {
-            text-align: center;
-            color: white;
-            font-size: 0.9rem;
-            padding: 1rem 0;
+            .shipping-message {
+                text-align: center;
+                color: white;
+                font-size: 0.9rem;
+                padding: 1rem 0;
+            }
         }
     }
     .page-footer {
