@@ -1,0 +1,22 @@
+<?php
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+/** @var \Vantiv\Payment\Block\Vault\Buttons $block */
+?>
+<div class="actions-toolbar">
+    <div class="primary">
+        <?php if ($block->isCcVaultEnabled()): ?>
+            <a class="action primary add" href="<?php echo $block->escapeHtml($block->getAddCcUrl()); ?>">
+                <span><?php echo $block->escapeHtml(__('Add Credit Card')); ?></span>
+            </a>
+        <?php endif; ?>
+        <?php if ($block->isEcheckVaultEnabled()): ?>
+            <a class="action primary add" href="<?php echo $block->escapeHtml($block->getAddEcheckUrl()); ?>">
+                <span><?php echo $block->escapeHtml(__('Add Bank Account')); ?></span>
+            </a>
+        <?php endif; ?>
+    </div>
+</div>

@@ -1,0 +1,12 @@
+<?php
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+/** @var Vantiv\Payment\Block\Adminhtml\Echeck\Invoice $block */
+?>
+
+<?php if ($block->isEcheckMethod()):?>
+<script type="text/x-magento-init"><?php echo $block->getMageInitJson();?></script>
+<?php endif;?>

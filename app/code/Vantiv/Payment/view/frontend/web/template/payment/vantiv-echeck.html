@@ -1,0 +1,127 @@
+<!--
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
+    <div class="payment-method-title field choice">
+        <input type="radio"
+               name="payment[method]"
+               class="radio"
+               data-bind="attr: {'id': getCode()}, value: getCode(), checked: isChecked, click: selectPaymentMethod, visible: isRadioButtonVisible()"/>
+        <label data-bind="attr: {'for': getCode()}" class="label">
+            <span data-bind="text: getTitle()"></span>
+        </label>
+    </div>
+
+    <div class="payment-method-content">
+        <!-- ko foreach: getRegion('messages') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+        <div class="payment-method-billing-address">
+            <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+        <form id="vantiv-echeck-form" class="form" data-role="vantiv-echeck-form">
+            <fieldset class="fieldset payment method" data-bind='attr: {id: "payment_form_" + getCode()}'>
+                <div class="field field-number required">
+                    <label for="vantiv_echeck_echeck_account_type" class="label">
+                        <span><!-- ko i18n: 'Account Type'--><!-- /ko --></span>
+                    </label>
+                    <div class="control">
+                        <select
+                            id="vantiv_echeck_echeck_account_type"
+                            name="payment[echeck_account_type]"
+                            class="select"
+                            data-validate="{required:true}"
+                            data-bind="
+                                options: getEcheckAccountTypesValues(),
+                                optionsValue: 'value',
+                                optionsText: 'label',
+                                optionsCaption: $t('Account Type'),
+                                value: echeckAccountType"
+                        >
+                        </select>
+                    </div>
+                </div>
+
+                <div class="field field-number required">
+                    <label for="vantiv_echeck_echeck_account_number" class="label">
+                        <span><!-- ko i18n: 'Account Number'--><!-- /ko --></span>
+                    </label>
+                    <div class="control">
+                        <input
+                            type="text"
+                            id="vantiv_echeck_echeck_account_number"
+                            name="payment[echeck_account_name]"
+                            data-validate="{required: true, number: true, minlength: 4, maxlength: 17}"
+                            data-bind='
+                                attr: {title: $t("Account Number")},
+                                value: echeckAccountNumber'
+                            class="input-text"
+                        />
+                    </div>
+                </div>
+
+                <div class="field field-number required">
+                    <label for="vantiv_echeck_echeck_routing_number" class="label">
+                        <span><!-- ko i18n: 'Routing Number'--><!-- /ko --></span>
+                    </label>
+                    <div class="control">
+                        <input
+                            type="text"
+                            id="vantiv_echeck_echeck_routing_number"
+                            name="payment[echeck_routing_number]"
+                            data-validate="{required: true, number: true, minlength: 9, maxlength: 9}"
+                            data-bind='
+                                attr: {title: $t("Routing Number")},
+                                value: echeckRoutingNumber'
+                            class="input-text"
+                        />
+                    </div>
+                </div>
+
+                <!-- ko if: (isVaultEnabled())-->
+                <div class="field">
+                    <div class="field choice">
+                        <input
+                            type="checkbox"
+                            name="vault[is_enabled]"
+                            class="checkbox"
+                            data-bind="
+                                attr: {'id': getCode() + '_enable_vault'},
+                                checked: vaultEnabler.isActivePaymentTokenEnabler
+                            "
+                        />
+                        <label class="label" data-bind="attr: {'for': getCode() + '_enable_vault'}">
+                            <span><!-- ko i18n: 'Save for later use.'--><!-- /ko --></span>
+                        </label>
+                    </div>
+                </div>
+                <!-- /ko -->
+            </fieldset>
+        </form>
+        <div class="checkout-agreements-block">
+            <!-- ko foreach: $parent.getRegion('before-place-order') -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+        <div class="actions-toolbar" id="review-buttons-container">
+            <div class="primary">
+                <button class="action primary checkout"
+                        type="submit"
+                        data-bind="
+                        click: placeOrder,
+                        attr: {title: $t('Place Order')},
+                        enable: (getCode() == isChecked()),
+                        css: {disabled: !isPlaceOrderActionAllowed()}
+                        "
+                        data-role="review-save">
+                    <span data-bind="i18n: 'Place Order'"></span>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

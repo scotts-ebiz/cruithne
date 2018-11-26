@@ -11,8 +11,8 @@
                 <height>300</height>
             </image>
             <image id="cart_page_product_thumbnail" type="small_image">
-                <width>55</width>
-                <height>80</height>
+                <width>35</width>
+                <height>60</height>
             </image>
             <image id="category_page_grid" type="small_image">
                 <width>240</width>
@@ -43,8 +43,8 @@
                 <height>100</height>
             </image>
             <image id="mini_cart_product_thumbnail" type="thumbnail">
-                <width>78</width>
-                <height>78</height>
+                <width>38</width>
+                <height>38</height>
             </image>
             <image id="new_products_content_widget_grid" type="small_image">
                 <width>240</width>

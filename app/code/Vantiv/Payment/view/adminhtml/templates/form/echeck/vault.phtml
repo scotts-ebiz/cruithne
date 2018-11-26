@@ -1,0 +1,33 @@
+<?php
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+use Magento\Vault\Model\Ui\TokenUiComponentProviderInterface;
+
+/** @var \Magento\Framework\View\Element\Template $block */
+$details = $block->getData('details');
+$id = $block->escapeHtml($block->getData('id'));
+?>
+<div data-mage-init='{
+        "Vantiv_Payment/js/vault": {
+            "container": "payment_<?php echo $id; ?>",
+            "publicHash": "<?php echo $block->escapeHtml(
+                                $block->getData(TokenUiComponentProviderInterface::COMPONENT_PUBLIC_HASH)
+                            ); ?>",
+            "code": "<?php echo $block->escapeHtml($block->getData('code')); ?>"
+        }
+    }' id="payment_<?php echo $id;?>" class="admin__field">
+    <div class="admin__field-control control">
+        <input type="radio" id="token_switcher_<?php echo $id; ?>" name="payment[token_switcher]" />
+        <span><?php echo $block->escapeHtml(__('ending'));?></span>
+        <span><?php echo $block->escapeHtml($details['maskedAccountNumber']); ?></span>
+        (<span><?php echo $block->escapeHtml(__('Account Type'));?></span>:
+        <span><?php echo $block->escapeHtml($details['echeckAccountType']); ?></span>,
+        <span><?php echo $block->escapeHtml(__('Routing Number'));?></span>:
+        <span><?php echo $block->escapeHtml($details['echeckRoutingNumber']); ?></span>)
+    </div>
+</div>

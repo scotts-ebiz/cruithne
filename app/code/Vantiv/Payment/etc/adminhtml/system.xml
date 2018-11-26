@@ -1,0 +1,456 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="payment">
+            <group id="vantiv_payment" sortOrder="7" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Vantiv</label>
+                <comment><![CDATA[Accept credit/debit cards, gift cards, alternative payments (eCheck and PayPal), mobile wallets (Apple Pay and Android Pay),
+                international, and recurring payments.<br/>Not a Vantiv Merchant? <a href="https://www.vantiv.com/get-started" target="_blank">Get Started Now!</a>]]></comment>
+                <fieldset_css>complex vantiv-main-section with-button</fieldset_css>
+                <frontend_model>Vantiv\Payment\Block\Adminhtml\System\Config\Fieldset\Section</frontend_model>
+                <attribute type="displayIn">recommended_solutions</attribute>
+                <group id="vantiv_payment_common" sortOrder="10" translate="label comment" type="text" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Basic Vantiv Settings</label>
+                    <field id="merchant_id" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Merchant ID</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>vantiv/payment/merchant_id</config_path>
+                    </field>
+                    <field id="username" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Username</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>vantiv/payment/username</config_path>
+                    </field>
+                    <field id="password" translate="label" type="obscure" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Password</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>vantiv/payment/password</config_path>
+                    </field>
+                    <field id="debug" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Debug</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>vantiv/payment/debug</config_path>
+                    </field>
+                    <field id="http_proxy" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>HTTP Proxy</label>
+                        <config_path>vantiv/payment/http_proxy</config_path>
+                    </field>
+                    <field id="http_timeout" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>HTTP Timeout</label>
+                        <config_path>vantiv/payment/http_timeout</config_path>
+                    </field>
+                    <field id="threatmetrix_orgid" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>ThreatMetrix ORG ID</label>
+                        <config_path>vantiv/payment/threatmetrix_orgid</config_path>
+                    </field>
+                    <field id="threatmetrix_sessionprefix" translate="label" type="text" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>ThreatMetrix Session Prefix</label>
+                        <config_path>vantiv/payment/threatmetrix_sessionprefix</config_path>
+                    </field>
+                </group>
+
+                <!-- Vantiv Credit Card Settings -->
+                <group id="vantiv_payment_cc" sortOrder="20" translate="label comment" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Credit Card Settings</label>
+                    <field id="active" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Active</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/vantiv_cc/active</config_path>
+                    </field>
+                    <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <config_path>payment/vantiv_cc/title</config_path>
+                    </field>
+                    <field id="environment" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Environment</label>
+                        <source_model>Vantiv\Payment\Model\Config\Source\VantivEnvironment</source_model>
+                        <config_path>payment/vantiv_cc/environment</config_path>
+                    </field>
+                    <field id="eprotect_paypage_id" translate="label comment" type="text" sortOrder="35" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>eProtect PayPage ID</label>
+                        <config_path>payment/vantiv_cc/eprotect_paypage_id</config_path>
+                    </field>
+                    <field id="payment_action" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Payment Action</label>
+                        <source_model>Vantiv\Payment\Model\Config\Source\PaymentAction</source_model>
+                        <config_path>payment/vantiv_cc/payment_action</config_path>
+                    </field>
+                    <field id="cctypes" translate="label comment" type="multiselect" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Credit Card Types</label>
+                        <source_model>Vantiv\Payment\Model\Config\Source\CcTypes</source_model>
+                        <config_path>payment/vantiv_cc/cctypes</config_path>
+                    </field>
+                    <field id="css_file" translate="label" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>CSS File</label>
+                        <config_path>payment/vantiv_cc/eprotect_style</config_path>
+                    </field>
+                    <field id="can_capture_vault" translate="label comment" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Enable Stored Credit Cards</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/vantiv_cc_vault/active</config_path>
+                    </field>
+                    <field id="vault_title" translate="label comment" type="text" sortOrder="95" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Stored Credit Cards Title</label>
+                        <config_path>payment/vantiv_cc_vault/title</config_path>
+                    </field>
+                    <field id="suspect_issuer_country" translate="label comment" type="multiselect" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Suspect Issuer Country</label>
+                        <source_model>Vantiv\Payment\Model\Config\Source\SuspectIssuerCountry</source_model>
+                        <config_path>payment/vantiv_cc/suspect_issuer_country</config_path>
+                    </field>
+                    <field id="suspect_issuer_action" translate="label comment" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Suspect Issuer Country Match Action</label>
+                        <source_model>Vantiv\Payment\Model\Config\Source\SuspectIssuerAction</source_model>
+                        <config_path>payment/vantiv_cc/suspect_issuer_action</config_path>
+                    </field>
+                    <field id="advanced_fraud_is_active" translate="label comment" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Advanced Fraud</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/vantiv_cc/advanced_fraud_is_active</config_path>
+                    </field>
+                    <field id="advanced_fraud_results_review_action" translate="label comment" type="select" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Advanced Fraud Review Action</label>
+                        <depends>
+                            <field id="advanced_fraud_is_active">1</field>
+                        </depends>
+                        <source_model>Vantiv\Payment\Model\Config\Source\AdvancedFraudAction</source_model>
+                        <config_path>payment/vantiv_cc/advanced_fraud_results_review_action</config_path>
+                    </field>
+                    <field id="advanced_fraud_results_fail_action" translate="label comment" type="select" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Advanced Fraud Fail Action</label>
+                        <depends>
+                            <field id="advanced_fraud_is_active">1</field>
+                        </depends>
+                        <source_model>Vantiv\Payment\Model\Config\Source\AdvancedFraudAction</source_model>
+                        <config_path>payment/vantiv_cc/advanced_fraud_results_fail_action</config_path>
+                    </field>
+                    <field id="useccv" translate="label comment" type="select" sortOrder="140" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Use CVV</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/vantiv_cc/useccv</config_path>
+                    </field>
+                </group>
+
+                <!-- Vantiv eCheck Settings -->
+                <group id="vantiv_payment_echeck" sortOrder="30" translate="label comment" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Vantiv eCheck Settings</label>
+                    <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Active</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/vantiv_echeck/active</config_path>
+                    </field>
+                    <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <config_path>payment/vantiv_echeck/title</config_path>
+                    </field>
+                    <field id="environment" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Environment</label>
+                        <source_model>Vantiv\Payment\Model\Config\Source\VantivEnvironment</source_model>
+                        <config_path>payment/vantiv_echeck/environment</config_path>
+                    </field>
+                    <field id="payment_action" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Payment Action</label>
+                        <source_model>Vantiv\Payment\Model\Config\Source\PaymentAction</source_model>
+                        <config_path>payment/vantiv_echeck/payment_action</config_path>
+                    </field>
+                    <field id="vault_active" translate="label" type="select" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Enable Saved Bank Accounts</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/vantiv_echeck_vault/active</config_path>
+                    </field>
+                    <field id="accept_on_fail" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Accept an Order if eCheck Verification Fails</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/vantiv_echeck/accept_on_fail</config_path>
+                    </field>
+                </group>
+
+                <!-- Vantiv Apple Pay Settings -->
+                <group id="vantiv_payment_applepay" sortOrder="40" translate="label" type="text"
+                       showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Apple Pay Settings</label>
+                    <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1"
+                           showInWebsite="1" showInStore="0">
+                        <label>Active</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/vantiv_applepay/active</config_path>
+                    </field>
+                    <field id="payment_action" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Payment Action</label>
+                        <source_model>Vantiv\Payment\Model\Config\Source\PaymentAction</source_model>
+                        <config_path>payment/vantiv_applepay/payment_action</config_path>
+                    </field>
+                    <field id="environment" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Environment</label>
+                        <source_model>Vantiv\Payment\Model\Config\Source\VantivEnvironment</source_model>
+                        <config_path>payment/vantiv_applepay/environment</config_path>
+                    </field>
+                    <field id="can_capture_vault" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Enable Stored Credit Cards</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/vantiv_applepay_vault/active</config_path>
+                    </field>
+                </group>
+
+                <!-- Vantiv Android Pay Settings -->
+                <group id="vantiv_payment_androidpay" sortOrder="50" translate="label" type="text"
+                       showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Android Pay Settings</label>
+                    <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1"
+                           showInWebsite="1" showInStore="0">
+                        <label>Active</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/vantiv_androidpay/active</config_path>
+                    </field>
+                    <field id="payment_action" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Payment Action</label>
+                        <source_model>Vantiv\Payment\Model\Config\Source\PaymentAction</source_model>
+                        <config_path>payment/vantiv_androidpay/payment_action</config_path>
+                    </field>
+                    <field id="environment" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Environment</label>
+                        <source_model>Vantiv\Payment\Model\Config\Source\VantivEnvironment</source_model>
+                        <config_path>payment/vantiv_androidpay/environment</config_path>
+                    </field>
+                    <field id="can_capture_vault" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Enable Stored Credit Cards</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/vantiv_androidpay_vault/active</config_path>
+                    </field>
+                </group>
+
+                <!-- Vantiv PayPal Settings -->
+                <group id="vantiv_paypal_express_checkout" sortOrder="60" translate="label comment" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Vantiv Paypal Express Checkout Settings</label>
+                    <field id="enable_express_checkout" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1">
+                        <label>Active</label>
+                        <config_path>payment/vantiv_paypal_express/active</config_path>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <frontend_model>Magento\Paypal\Block\Adminhtml\System\Config\Field\Enable\Payment</frontend_model>
+                    </field>
+                    <field id="title" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <config_path>payment/vantiv_paypal_express/title</config_path>
+                        <attribute type="shared">1</attribute>
+                    </field>
+                    <field id="environment" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Vantiv Environment</label>
+                        <source_model>Vantiv\Payment\Model\Config\Source\VantivEnvironment</source_model>
+                        <config_path>payment/vantiv_paypal_express/environment</config_path>
+                    </field>
+                    <field id="sandbox_flag" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1">
+                        <label>Paypal Sandbox Mode</label>
+                        <config_path>payment/vantiv_paypal_express/sandbox_flag</config_path>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <attribute type="shared">1</attribute>
+                    </field>
+                    <field id="payment_action" translate="label" type="select" sortOrder="50" showInDefault="1" showInWebsite="1">
+                        <label>Payment Action</label>
+                        <config_path>payment/vantiv_paypal_express/payment_action</config_path>
+                        <source_model>Vantiv\Payment\Model\Config\Source\PaymentAction</source_model>
+                        <attribute type="shared">1</attribute>
+                    </field>
+                    <field id="business_account" translate="label comment tooltip" showInDefault="1" showInWebsite="1" sortOrder="60">
+                        <label>Email Associated with PayPal Merchant Account (Optional)</label>
+                        <frontend_class>not-required</frontend_class>
+                        <comment>
+                            <![CDATA[<a href="http://www.magentocommerce.com/paypal">Start accepting payments via PayPal!</a>]]>
+                        </comment>
+                        <tooltip>Don't have a PayPal account? Simply enter your email address.</tooltip>
+                        <config_path>payment/vantiv_paypal_express/business_account</config_path>
+                        <validate>validate-email</validate>
+                        <attribute type="shared">1</attribute>
+                    </field>
+                    <field id="api_authentication" translate="label" type="select" sortOrder="70" showInDefault="1" showInWebsite="1">
+                        <label>PayPal API Authentication Methods</label>
+                        <config_path>payment/vantiv_paypal_express/api_authentication</config_path>
+                        <source_model>Vantiv\Payment\Model\Paypal\Config::getApiAuthenticationMethods</source_model>
+                        <attribute type="shared">1</attribute>
+                    </field>
+                    <field id="api_username" translate="label" type="obscure" sortOrder="80" showInDefault="1" showInWebsite="1">
+                        <label> PayPal API Username</label>
+                        <config_path>payment/vantiv_paypal_express/api_username</config_path>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <attribute type="shared">1</attribute>
+                    </field>
+                    <field id="api_password" translate="label" type="obscure" sortOrder="90" showInDefault="1" showInWebsite="1">
+                        <label>PayPal API Password</label>
+                        <config_path>payment/vantiv_paypal_express/api_password</config_path>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <attribute type="shared">1</attribute>
+                    </field>
+                    <field id="api_signature" translate="label" type="obscure" sortOrder="100" showInDefault="1" showInWebsite="1">
+                        <label>PayPal API Signature</label>
+                        <config_path>payment/vantiv_paypal_express/api_signature</config_path>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <attribute type="shared">1</attribute>
+                        <depends>
+                            <field id="api_authentication">0</field>
+                        </depends>
+                    </field>
+                    <field id="api_cert" translate="label" type="file" sortOrder="110" showInDefault="1" showInWebsite="1">
+                        <label>PayPal API Certificate</label>
+                        <config_path>payment/vantiv_paypal_express/api_cert</config_path>
+                        <backend_model>Magento\Paypal\Model\System\Config\Backend\Cert</backend_model>
+                        <attribute type="shared">1</attribute>
+                        <depends>
+                            <field id="api_authentication">1</field>
+                        </depends>
+                    </field>
+                    <field id="use_proxy" translate="label" type="select" sortOrder="120" showInDefault="1" showInWebsite="1">
+                        <label>PayPal API Uses Proxy</label>
+                        <config_path>payment/vantiv_paypal_express/use_proxy</config_path>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <attribute type="shared">1</attribute>
+                    </field>
+                    <field id="proxy_host" translate="label" type="text" sortOrder="130" showInDefault="1" showInWebsite="1">
+                        <label>PayPal Proxy Host</label>
+                        <config_path>payment/vantiv_paypal_express/proxy_host</config_path>
+                        <attribute type="shared">1</attribute>
+                        <depends>
+                            <field id="use_proxy">1</field>
+                        </depends>
+                    </field>
+                    <field id="proxy_port" translate="label" type="text" sortOrder="140" showInDefault="1" showInWebsite="1">
+                        <label>PayPal Proxy Port</label>
+                        <config_path>payment/vantiv_paypal_express/proxy_port</config_path>
+                        <attribute type="shared">1</attribute>
+                        <depends>
+                            <field id="use_proxy">1</field>
+                        </depends>
+                    </field>
+                    <field id="visible_on_product" translate="label" type="select" sortOrder="150" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Display on Product Details Page</label>
+                        <config_path>payment/vantiv_paypal_express/visible_on_product</config_path>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <attribute type="shared">1</attribute>
+                    </field>
+                    <field id="order_valid_period" translate="label comment" type="text" sortOrder="170" showInDefault="1" showInWebsite="1">
+                        <label>Order Valid Period (days)</label>
+                        <comment>Specifies what the Order Valid Period is on the merchant&#x2019;s PayPal account. It must mirror the setting in PayPal.</comment>
+                        <config_path>payment/vantiv_paypal_express/order_valid_period</config_path>
+                        <attribute type="shared">1</attribute>
+                    </field>
+                    <field id="visible_on_cart" translate="label comment" type="select" sortOrder="190" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Display on Shopping Cart</label>
+                        <config_path>payment/vantiv_paypal_express/visible_on_cart</config_path>
+                        <comment>Also affects mini-shopping cart.</comment>
+                        <source_model>Magento\Paypal\Model\System\Config\Source\Yesnoshortcut</source_model>
+                        <attribute type="shared">1</attribute>
+                    </field>
+                </group>
+
+                <!-- Vantiv Subscription Settings -->
+                <group id="vantiv_subscriptions" sortOrder="80" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Subscription Settings</label>
+                    <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Subscriptions Enabled</label>
+                        <comment>Before enabling, make sure you talk to Vantiv Implementation Manager to turn on Prepaid Filtering</comment>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>vantiv/subscriptions/active</config_path>
+                    </field>
+                    <field id="environment" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Environment</label>
+                        <source_model>Vantiv\Payment\Model\Config\Source\VantivEnvironment</source_model>
+                        <config_path>vantiv/subscriptions/environment</config_path>
+                    </field>
+                    <field id="heading_sftp" translate="label" sortOrder="30" showInDefault="1" showInWebsite="1">
+                        <label>Recurring/Recycling Payments Import SFTP Credentials</label>
+                        <frontend_model>Magento\Config\Block\System\Config\Form\Field\Heading</frontend_model>
+                        <!--attribute type="shared">1</attribute-->
+                    </field>
+                    <field id="sftp_login" translate="label" type="obscure" sortOrder="40" showInDefault="1" showInWebsite="1">
+                        <label>Login</label>
+                        <config_path>vantiv/subscriptions/sftp_login</config_path>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    </field>
+                    <field id="sftp_password" translate="label" type="obscure" sortOrder="50" showInDefault="1" showInWebsite="1">
+                        <label>Password</label>
+                        <config_path>vantiv/subscriptions/sftp_password</config_path>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                    </field>
+                    <field id="sftp_host" translate="label comment tooltip" type="text" sortOrder="60" showInDefault="1" showInWebsite="1">
+                        <label>Endpoint Hostname</label>
+                        <tooltip>Use colon to specify port. For example: "test.example.com:5224".</tooltip>
+                        <config_path>vantiv/subscriptions/sftp_host</config_path>
+                    </field>
+                    <field id="sftp_path" translate="label comment" type="text" sortOrder="70" showInDefault="1" showInWebsite="1" canRestore="1">
+                        <label>Path</label>
+                        <config_path>vantiv/subscriptions/sftp_path</config_path>
+                    </field>
+                    <field id="error_email_recipient" translate="label" type="text" sortOrder="80" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Error Email Recipient</label>
+                        <validate>validate-email</validate>
+                        <config_path>vantiv/subscriptions/error_email_recipient</config_path>
+                    </field>
+                    <field id="error_email_sender" translate="label" type="select" sortOrder="90" showInDefault="1" showInWebsite="1" showInStore="0" canRestore="1">
+                        <label>Error Email Sender</label>
+                        <source_model>Magento\Config\Model\Config\Source\Email\Identity</source_model>
+                        <config_path>vantiv/subscriptions/error_email_sender</config_path>
+                    </field>
+                </group>
+
+                <!-- Vantiv Gift Card Settings -->
+                <group id="vantiv_giftcard" sortOrder="90" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Gift Card Settings</label>
+                    <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Gift Cards Processing By Vantiv Enabled</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>vantiv/giftcard/active</config_path>
+                    </field>
+                    <field id="environment" translate="label" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Environment</label>
+                        <source_model>Vantiv\Payment\Model\Config\Source\VantivEnvironment</source_model>
+                        <config_path>vantiv/giftcard/environment</config_path>
+                    </field>
+                    <field id="bin" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Gift Card BIN</label>
+                        <backend_model>Magento\Config\Model\Config\Backend\Encrypted</backend_model>
+                        <config_path>vantiv/giftcard/bin</config_path>
+                    </field>
+                    <field id="pan_length" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Gift Card Number Length</label>
+                        <config_path>vantiv/giftcard/pan_length</config_path>
+                    </field>
+                    <field id="generate" translate="label comment" sortOrder="50" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Import Gift Card Codes</label>
+                        <frontend_model>Vantiv\Payment\Block\Adminhtml\System\Config\ImportCodes</frontend_model>
+                        <comment>File for import is provided by Vantiv</comment>
+                    </field>
+                </group>
+
+                <!-- Vantiv Certification Settings -->
+                <group id="vantiv_certification" sortOrder="100" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Certification Tests</label>
+                    <field id="vantiv_certification_tests_ready" translate="label comment" type="multiselect" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Certification Tests Ready To Run</label>
+                        <source_model>Vantiv\Payment\Model\Config\Source\CertificationTestsReady</source_model>
+                        <can_be_empty>1</can_be_empty>
+                        <comment>
+                            <![CDATA[Enabled and have Pre-Live environment selected.]]>
+                        </comment>
+                    </field>
+                    <field id="vantiv_certification_tests_run" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label></label>
+                        <frontend_model>Vantiv\Payment\Block\Adminhtml\System\Config\RunTests</frontend_model>
+                    </field>
+                    <field id="vantiv_certification_test_results" translate="label" type="multiselect" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Last Certification Test Result</label>
+                        <source_model>Vantiv\Payment\Model\Config\Source\CertificationTestResults</source_model>
+                        <can_be_empty>1</can_be_empty>
+                    </field>
+                    <field id="vantiv_certification_tests_results_download" translate="label" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label></label>
+                        <frontend_model>Vantiv\Payment\Block\Adminhtml\System\Config\DownloadResults</frontend_model>
+                    </field>
+                </group>
+            </group>
+        </section>
+    </system>
+</config>

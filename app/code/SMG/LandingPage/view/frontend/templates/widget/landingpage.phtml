@@ -22,111 +22,132 @@
 						</div>
 
 						<div class="section__hero--select">
-                            <?php if(!$block->getData('requireszipcodelookup')): ?>
+                        <?php
+                            if(!$block->getData('requireszipcodelookup'))
+                            {
+                        ?>
                             <h4 class="section__hero--sectiontitle">Select your program:</h4>
-                            <?php if($small_bundle_id):
-                                // Get small bundle product, URL, and initialize bundle price to 0
-                                $small_bundle_product = $block->getLoadProduct($small_bundle_id);
-                                $small_bundle_url = $cart_helper->getAddUrl($small_bundle_product);
-                                $small_bundle_price = 0;
+                            <?php
+                                if ($small_bundle_id)
+                                {
+                                    // Get small bundle product, URL, and initialize bundle price to 0
+                                    $small_bundle_product = $block->getLoadProduct($small_bundle_id);
+                                    $small_bundle_url = $cart_helper->getAddUrl($small_bundle_product);
+                                    $small_bundle_price = 0;
 
-                                $selection_ids = array();
-                                $tab_ids = array();
-                                $options_html = '';
+                                    $selection_ids = array();
+                                    $tab_ids = array();
+                                    $options_html = '';
 
-                                $optionCollection = $small_bundle_product->getTypeInstance()->getOptionsCollection($small_bundle_product);
-                                $selectionCollection = $small_bundle_product->getTypeInstance()->getSelectionsCollection($small_bundle_product->getTypeInstance()->getOptionsIds($small_bundle_product), $small_bundle_product);
-                                $options = $optionCollection->appendSelections($selectionCollection);
-                                foreach($options as $option):
-                                    $option_id = $option->getOptionId();
-                                    $tab_titles[] = $option->getData('default_title');
+                                    $optionCollection = $small_bundle_product->getTypeInstance()->getOptionsCollection($small_bundle_product);
+                                    $selectionCollection = $small_bundle_product->getTypeInstance()->getSelectionsCollection($small_bundle_product->getTypeInstance()->getOptionsIds($small_bundle_product), $small_bundle_product);
+                                    $options = $optionCollection->appendSelections($selectionCollection);
+                                    foreach ($options as $option)
+                                    {
+                                        $option_id = $option->getOptionId();
+                                        $tab_titles[] = $option->getData('default_title');
 
-                                    $_selections = $option->getSelections();
-                                    foreach($_selections as $selection):
-                                        $selection_price = $selection->getSelectionPriceValue();
-                                        $selection_qty = $selection->getSelectionQty();
-                                        $small_bundle_price = $small_bundle_price + ($selection_price * $selection_qty);
-                                        $selection_ids[] = $selection->getSelectionId();
-                                        $tab_ids[] = $selection->getProductId();
-                                        $options_html .= '<input type="hidden" name="bundle_option_qty[' . $option_id . ']" value="1" />';
-                                    endforeach;
-                                endforeach;
+                                        $_selections = $option->getSelections();
+                                        foreach ($_selections as $selection)
+                                        {
+                                            $selection_price = $selection->getSelectionPriceValue();
+                                            $selection_qty = $selection->getSelectionQty();
+                                            $small_bundle_price = $small_bundle_price + ($selection_price * $selection_qty);
+                                            $selection_ids[] = $selection->getSelectionId();
+                                            $tab_ids[] = $selection->getProductId();
+                                            $options_html .= '<input type="hidden" name="bundle_option_qty[' . $option_id . ']" value="1" />';
+                                        }
+                                    }
                             ?>
                             <div class="section__hero--option">
-				                <form action="<?php echo $small_bundle_url; ?>" method="post" id="product_addtocart_form">
-	                                <!--input name="form_key" type="hidden" value="<?php echo $block->getFormKey(); ?>" /-->
+                                <form action="<?php echo $small_bundle_url; ?>" method="post" id="product_addtocart_form">
+                                    <input name="form_key" type="hidden" value="<?php echo $block->getFormKey(); ?>" />
                                     <input type="hidden" name="product" value="<?php echo $small_bundle_id; ?>" />
                                     <input type="hidden" name="related_product" id="related-products-field" value="" />
                                     <?php echo $options_html; ?>
-					                <button type="submit" class="section__hero--link"><?php echo $block->getData('smallyardtext'); ?><span class="link-price">$<?php echo number_format($small_bundle_price, 2); ?></span></button>
-					                <small class="section__hero--linkinfo"><?php echo $block->getData('smallyardcoverage'); ?></small>
-				                </form>
-				            </div>
-                            <?php endif; ?>
-
-                            <?php if($large_bundle_id):
-                                $large_bundle_product = $block->getLoadProduct($large_bundle_id);
-                                $large_bundle_url = $cart_helper->getAddUrl($large_bundle_product);
-                                $large_bundle_price = 0;
-
-                                $selection_ids = array();
-                                $options_html = '';
-
-                                $optionCollection = $large_bundle_product->getTypeInstance()->getOptionsCollection($large_bundle_product);
-                                $selectionCollection = $large_bundle_product->getTypeInstance()->getSelectionsCollection($large_bundle_product->getTypeInstance()->getOptionsIds($large_bundle_product), $large_bundle_product);
-                                $options = $optionCollection->appendSelections($selectionCollection);
-                                foreach($options as $option):
-                                    $option_id = $option->getOptionId();
-                                    $_selections = $option->getSelections();
-                                    foreach($_selections as $selection):
-                                        $selection_price = $selection->getSelectionPriceValue();
-                                        $selection_qty = $selection->getSelectionQty();
-                                        $large_bundle_price = $large_bundle_price + ($selection_price * $selection_qty);
-                                        $selection_ids[] = $selection->getSelectionId();
-                                        $options_html .= '<input type="hidden" name="bundle_option_qty[' . $option_id . ']" value="1" />';
-                                    endforeach;
-                                endforeach;
-                            ?>
-                            <div class="section__hero--option">
-                                <form action="<?php echo $large_bundle_url; ?>" method="post" id="product_addtocart_form">
-                                    <!--input name="form_key" type="hidden" value="<?php echo $block->getFormKey(); ?>" /-->
-                                    <input type="hidden" name="product" value="<?php echo $large_bundle_id; ?>" />
-                                    <input type="hidden" name="related_product" id="related-products-field" value="" />
-                                    <?php echo $options_html; ?>
-                                    <button type="submit" class="section__hero--link"><?php echo $block->getData('largeyardtext'); ?><span class="link-price">$<?php echo number_format($large_bundle_price, 2); ?></span></button>
-                                    <small class="section__hero--linkinfo"><?php echo $block->getData('largeyardcoverage'); ?></small>
+                                    <button type="submit" class="section__hero--link"><?php echo $block->getData('smallyardtext'); ?><span class="link-price">$<?php echo number_format($small_bundle_price, 2); ?></span></button>
+                                    <small class="section__hero--linkinfo"><?php echo $block->getData('smallyardcoverage'); ?></small>
                                 </form>
                             </div>
-                            <?php endif;
-                            else:
+                            <?php
+                                }
+
+                                if ($large_bundle_id)
+                                {
+                                    $large_bundle_product = $block->getLoadProduct($large_bundle_id);
+                                    $large_bundle_url = $cart_helper->getAddUrl($large_bundle_product);
+                                    $large_bundle_price = 0;
+
+                                    $selection_ids = array();
+                                    $options_html = '';
+
+                                    $optionCollection = $large_bundle_product->getTypeInstance()->getOptionsCollection($large_bundle_product);
+                                    $selectionCollection = $large_bundle_product->getTypeInstance()->getSelectionsCollection($large_bundle_product->getTypeInstance()->getOptionsIds($large_bundle_product), $large_bundle_product);
+                                    $options = $optionCollection->appendSelections($selectionCollection);
+                                    foreach ($options as $option)
+                                    {
+                                        $option_id = $option->getOptionId();
+                                        $_selections = $option->getSelections();
+                                        foreach ($_selections as $selection)
+                                        {
+                                            $selection_price = $selection->getSelectionPriceValue();
+                                            $selection_qty = $selection->getSelectionQty();
+                                            $large_bundle_price = $large_bundle_price + ($selection_price * $selection_qty);
+                                            $selection_ids[] = $selection->getSelectionId();
+                                            $options_html .= '<input type="hidden" name="bundle_option_qty[' . $option_id . ']" value="1" />';
+                                        }
+                                    }
+                            ?>
+                            <div class="section__hero--option">
+                                    <form action="<?php echo $large_bundle_url; ?>" method="post" id="product_addtocart_form">
+                                        <input name="form_key" type="hidden" value="<?php echo $block->getFormKey(); ?>" />
+                                        <input type="hidden" name="product" value="<?php echo $large_bundle_id; ?>" />
+                                        <input type="hidden" name="related_product" id="related-products-field" value="" />
+                                        <?php echo $options_html; ?>
+                                        <button type="submit" class="section__hero--link"><?php echo $block->getData('largeyardtext'); ?><span class="link-price">$<?php echo number_format($large_bundle_price, 2); ?></span></button>
+                                        <small class="section__hero--linkinfo"><?php echo $block->getData('largeyardcoverage'); ?></small>
+                                    </form>
+                            </div>
+                        <?php
+                                }
+                            }
+                            else
+                            {
                                 $show_error_class = (isset($_GET['no_zip_results'])) ? 'show-errors' : '';
                                 $zip_value = (isset($_GET['zip'])) ? intval($_GET['zip']) : '';
                                 $zip_input_type = ($zip_value) ? 'hidden' : 'text';
                                 $zip_instructions = ($zip_value) ? 'Now Select Your Grass Type' : 'Enter Your Zip Code To Get Started';
                                 $zip_code_action = $block->getUrl('zip/zip');
-                            ?>
+                        ?>
                             <h4><?php echo $zip_instructions; ?></h4>
                             <form action="<?php echo $zip_code_action; ?>" method="get" class="<?php echo $show_error_class; ?>">
-                                <input type="<?php echo $zip_input_type; ?>" name="zip" pattern="[0-9]{5}" value="<?php echo $zip_value; ?>" required title="Enter first five digits of your zip code" />';
-                                <? if($zip_value): ?>
-                                    <select name="grass_type">
-                                        <option value=""></option>
-                                        <option value="Bahia">Bahia</option>
-                                        <option value="Bermuda">Bermuda</option>
-                                        <option value="Bluegrass / Rye / Fescue">Bluegrass / Rye / Fescue</option>
-                                        <option value="Bluegrass (Kentucky Bluegrass)">Bluegrass (Kentucky Bluegrass)</option>
-                                        <option value="Fescue">Fescue</option>
-                                        <option value="Ryegrass">Ryegrass</option>
-                                        <option value="Carpetgrass">Carpetgrass</option>
-                                        <option value="Centipede">Centipede</option>
-                                        <option value="St. Augustine">St. Augustine</option>
-                                        <option value="Zoysia">Zoysia</option>
-                                    </select>
-                                <?php endif; ?>
+                                <input type="<?php echo $zip_input_type; ?>" name="zip" pattern="[0-9]{5}" value="<?php echo $zip_value; ?>" required title="Enter first five digits of your zip code" />;
+                                <?php
+                                    if ($zip_value)
+                                    {
+                                ?>
+                                <select name="grass_type">
+                                    <option value=""></option>
+                                    <option value="Bahia">Bahia</option>
+                                    <option value="Bermuda">Bermuda</option>
+                                    <option value="Bluegrass / Rye / Fescue">Bluegrass / Rye / Fescue</option>
+                                    <option value="Bluegrass (Kentucky Bluegrass)">Bluegrass (Kentucky Bluegrass)</option>
+                                    <option value="Fescue">Fescue</option>
+                                    <option value="Ryegrass">Ryegrass</option>
+                                    <option value="Carpetgrass">Carpetgrass</option>
+                                    <option value="Centipede">Centipede</option>
+                                    <option value="St. Augustine">St. Augustine</option>
+                                    <option value="Zoysia">Zoysia</option>
+                                </select>
+                                <?php
+                                    }
+                                ?>
                                 <p class="error-msg">We are having difficulties with that zip code. Please call us at 1-888-295-6902 so we can help.</p>
-				                <button type="submit">Submit</button>
-			                </form>
-                            <?php endif; ?>
+                                <button type="submit">Submit</button>
+                            </form>
+                        <?php
+                            }
+                        ?>
                         </div>
 
                         <div class="widget widget-static-block">
@@ -293,64 +314,72 @@
 			<p></p>
 		</div>
 
-        <?php if(($small_bundle_id || $large_bundle_id) && !$this->getData('requireszipcodelookup')): ?>
+        <?php
+            if(($small_bundle_id || $large_bundle_id) && !$this->getData('requireszipcodelookup'))
+            {
+        ?>
         <div class="widget widget-static-block">
             <section class="section__tabs">
                 <div class="section__tabs--wrapper">
                     <div class="section__tabs--tabnav">
                         <?php
-                            foreach($tab_ids as $tab_id):
+                            foreach ($tab_ids as $tab_id)
+                            {
                                 $tab_product = $block->getLoadProduct($tab_id);
                                 $tab_headline[] = $tab_product->getData('name');
                                 $tab_description[] = $tab_product->getData('description');
                                 $tab_content[] = $tab_product->getData('short_description');
                                 $tab_image[] = $block->getMediaBaseUrl($tab_product->getImage());
-                            endforeach;
+                            }
 
                             $i = 1;
-                            foreach($tab_titles as $title):
+                            foreach ($tab_titles as $title)
+                            {
                                 $active = ($i == 1) ? ' active' : '';
                         ?>
                         <label class="tabnav-label<?php echo $active; ?>" for="toggle__tab<?php echo $i; ?>" id="tablabel__<?php echo $i; ?>"><span><?php echo $title ?></span></label>
                         <?php
                                 $i++;
-                            endforeach;
+                            }
                         ?>
                     </div>
 
                     <div class="section__tabs--tabcontainer">
-					    <div class="section__tabs--tabtrack">
+                        <div class="section__tabs--tabtrack">
                             <?php
                                 $i = 1;
-                                foreach($tab_headline as $key => $headline):
+                                foreach ($tab_headline as $key => $headline)
+                                {
                                     $checked = ($i == 1) ? 'checked="checked"' : '';
                             ?>
                             <input <?php echo $checked; ?> class="tabs__radio" id="toggle__tab<?php echo $i ?>" name="tabs__tabnav" type="radio" />
-							<div class="tabpanel" data-panel="toggle__tab<?php echo $i ?>" id="tabcontent__<?php echo $i ?>">
-							    <div class="tabpanel__wrapper">
-								    <div class="tabpanel__image">
-									    <span><img alt="Scotts&reg; Turf Builder&reg; SummerGuard&reg; Lawn Food with Insect Control" src="<?php echo $tab_image[$key]; ?>"></span>
-									</div>
+                            <div class="tabpanel" data-panel="toggle__tab<?php echo $i ?>" id="tabcontent__<?php echo $i ?>">
+                                <div class="tabpanel__wrapper">
+                                    <div class="tabpanel__image">
+                                        <span><img alt="Scotts&reg; Turf Builder&reg; SummerGuard&reg; Lawn Food with Insect Control" src="<?php echo $tab_image[$key]; ?>"></span>
+                                    </div>
 
-									<div class="tabpanel__text">
-									    <h2 class="turfbuilder--headline"><?php echo $headline; ?></h2>
-										<p class="text-desc"><?php echo $tab_description[$key]; ?></p>
-										<?php echo $tab_content[$key]; ?>
-									</div>
-								</div>
-							</div>
+                                    <div class="tabpanel__text">
+                                        <h2 class="turfbuilder--headline"><?php echo $headline; ?></h2>
+                                        <p class="text-desc"><?php echo $tab_description[$key]; ?></p>
+                                        <?php echo $tab_content[$key]; ?>
+                                    </div>
+                                </div>
+                            </div>
                             <?php
                                     $i++;
-                                endforeach;
+                                }
                             ?>
                         </div>
                     </div>
 
-					<p style="margin: 0 100px; font-size: 0.875rem;">Safety Data Sheets can be found at <a href="http://www.scottsmsds.com" target="_blank">scottsmsds.com</a></p>
-				</div><!-- .section__tabs==wrapper -->
+                    <p style="margin: 0 100px; font-size: 0.875rem;">Safety Data Sheets can be found at <a href="http://www.scottsmsds.com" target="_blank">scottsmsds.com</a></p>
+                </div><!-- .section__tabs==wrapper -->
             </section>
         </div>
-        <?php endif; ?>
+        <?php
+            }
+        ?>
 
         <div class="widget widget-static-block">
 			<style>
