@@ -1,0 +1,37 @@
+<?php
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+/** @var Vantiv\Payment\Block\Vault\EcheckList $block */
+$tokens = $block->getPaymentTokens();
+?>
+<?php if (count($tokens) !== 0 && $block->isVaultEnabled()): ?>
+    <div class="table-wrapper my-credit-cards">
+        <table class="data table table-credit-cards" id="my-orders-table">
+            <caption class="table-caption"><?php echo $block->escapeHtml(__('Stored Bank Accounts')); ?></caption>
+            <thead>
+                <tr>
+                    <th scope="col" class="col echeck-account-number">
+                        <?php echo $block->escapeHtml(__('Account Number')); ?>
+                    </th>
+                    <th scope="col" class="col echeck-routing-number">
+                        <?php echo $block->escapeHtml(__('Routing Number')); ?>
+                    </th>
+                    <th scope="col" class="col echeck-account-type">
+                        <?php echo $block->escapeHtml(__('Account Type')); ?>
+                    </th>
+                    <th scope="col" class="col actions">&nbsp;</th>
+                </tr>
+            </thead>
+            <tbody>
+                <?php
+                    foreach ($tokens as $token) {
+                        echo $block->renderTokenHtml($token);
+                    }
+                ?>
+            </tbody>
+        </table>
+    </div>
+<?php endif ?>

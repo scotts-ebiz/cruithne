@@ -1,0 +1,73 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <virtualType name="Magento\Catalog\Ui\DataProvider\Product\Form\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="recurringPlans" xsi:type="array">
+                    <item name="class" xsi:type="string">Vantiv\Payment\Ui\DataProvider\Product\Form\Modifier\RecurringPlans</item>
+                    <item name="sortOrder" xsi:type="number">200</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Vantiv\Payment\Model\Paypal\Session\Storage" type="Magento\Framework\Session\Storage">
+        <arguments>
+            <argument name="namespace" xsi:type="string">vantiv_paypal</argument>
+        </arguments>
+    </virtualType>
+    <virtualType name="Vantiv\Payment\Model\Paypal\Session" type="Magento\Framework\Session\Generic">
+        <arguments>
+            <argument name="storage" xsi:type="object">Vantiv\Payment\Model\Paypal\Session\Storage</argument>
+        </arguments>
+    </virtualType>
+    <type name="Magento\Vault\Model\Ui\Adminhtml\TokensConfigProvider">
+        <arguments>
+            <argument name="tokenUiComponentProviders" xsi:type="array">
+                <item name="vantiv_cc" xsi:type="object">Vantiv\Payment\Model\Ui\Adminhtml\CcVaultTokenUiComponentProvider</item>
+                <item name="vantiv_echeck" xsi:type="object">Vantiv\Payment\Model\Ui\Adminhtml\EcheckVaultTokenUiComponentProvider</item>
+                <item name="vantiv_androidpay" xsi:type="object">Vantiv\Payment\Model\Ui\Adminhtml\AndroidpayVaultTokenUiComponentProvider</item>
+                <item name="vantiv_applepay" xsi:type="object">Vantiv\Payment\Model\Ui\Adminhtml\ApplepayVaultTokenUiComponentProvider</item>
+            </argument>
+        </arguments>
+    </type>
+    <virtualType name="Vantiv\Payment\Ui\DataProvider\Modifier\Addon\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="addonModifier" xsi:type="array">
+                    <item name="class" xsi:type="string">Vantiv\Payment\Ui\DataProvider\Modifier\Addon</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Vantiv\Payment\Model\Recurring\Subscription\Addon\DataProvider">
+        <arguments>
+            <argument name="pool" xsi:type="object">Vantiv\Payment\Ui\DataProvider\Modifier\Addon\Pool</argument>
+        </arguments>
+    </type>
+    <virtualType name="Vantiv\Payment\Ui\DataProvider\Modifier\Discount\Pool" type="Magento\Ui\DataProvider\Modifier\Pool">
+        <arguments>
+            <argument name="modifiers" xsi:type="array">
+                <item name="discountModifier" xsi:type="array">
+                    <item name="class" xsi:type="string">Vantiv\Payment\Ui\DataProvider\Modifier\Discount</item>
+                    <item name="sortOrder" xsi:type="number">10</item>
+                </item>
+            </argument>
+        </arguments>
+    </virtualType>
+    <type name="Vantiv\Payment\Model\Recurring\Subscription\Discount\DataProvider">
+        <arguments>
+            <argument name="pool" xsi:type="object">Vantiv\Payment\Ui\DataProvider\Modifier\Discount\Pool</argument>
+        </arguments>
+    </type>
+    <type name="Magento\Sales\Block\Adminhtml\Items\Column\Name">
+        <plugin name="vantiv_payment" type="Vantiv\Payment\Block\Adminhtml\Sales\Items\Column\NamePlugin" sortOrder="100"/>
+    </type>
+</config>

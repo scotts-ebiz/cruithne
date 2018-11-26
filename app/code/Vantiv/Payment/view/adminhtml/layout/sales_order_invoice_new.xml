@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="submit_after">
+            <block class="Vantiv\Payment\Block\Adminhtml\Echeck\Invoice" name="echeck-invoice-capture-limiter" template="Vantiv_Payment::echeck/invoice/echeck-capture-limiter.phtml" />
+        </referenceContainer>
+    </body>
+</page>
