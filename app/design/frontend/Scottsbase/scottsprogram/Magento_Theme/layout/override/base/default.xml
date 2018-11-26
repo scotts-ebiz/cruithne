@@ -54,6 +54,8 @@
                 </container>
             </container>
         </referenceContainer>
+        <referenceBlock name="top.search" remove="true" />
+        <referenceBlock name="minicart" remove="true" />
         <referenceContainer name="page.top" remove="true">
             <block class="Magento\Framework\View\Element\Template" name="navigation.sections" before="-" template="Magento_Theme::html/sections.phtml">
                 <arguments>
@@ -110,6 +112,7 @@
         </referenceContainer>
         <referenceContainer name="footer-container">
             <container name="footer" as="footer" label="Page Footer" htmlTag="div" htmlClass="footer content section group">
+                <referenceBlock name="form.subscribe" remove="true"/>
                 <block class="Magento\Store\Block\Switcher" name="store_switcher" as="store_switcher" template="Magento_Store::switch/stores.phtml"/>
                 <container name="div.social-links.block" htmlTag="div" htmlClass="social-links col span_4_of_12">
                     <block class="Magento\Cms\Block\Block" name="sp-footer-social-links">

@@ -5,10 +5,16 @@
 @import 'vendor/normalize/lib'; // Normalize.css
 @import 'vendor/magento-ui/lib'; // Magento UI
 
+// Theme variables
+@import 'variables';
+
+// Override Block Styles
+@import 'blocks/extends';
+
+// Override Module Styles
+@import '../../Magento_Checkout/styles/module';
+
 // Scotts Program Defaults
 @import 'source/scottsprogramvars';
 @import 'source/scottsprogrammixins';
 @import 'source/scottsprogrambase';
-
-// Override Block Styles
-@import 'blocks/layout';

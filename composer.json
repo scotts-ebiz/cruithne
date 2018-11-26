@@ -10,8 +10,8 @@
         "sort-packages": true
     },
     "require": {
-        "magento/product-enterprise-edition": ">=2.3.0",
-        "composer/composer": "@alpha"
+        "composer/composer": "@alpha",
+        "magento/product-enterprise-edition": ">=2.3.0"
     },
     "require-dev": {
         "magento/magento2-functional-testing-framework": "2.3.3",
