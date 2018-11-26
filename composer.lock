@@ -14704,7 +14704,7 @@
                 "type": "zip",
                 "url": "https://repo.magento.com/archives/vertex/sdk/vertex-sdk-1.0.0.0.zip",
                 "reference": null,
-                "shasum": "f57d48ec0d4f79bef9daefa5364c1e67d621e22c"
+                "shasum": "6c7ed091879e66d75faf95fed7e48751693c68c7"
             },
             "require": {
                 "ext-mbstring": "*",
