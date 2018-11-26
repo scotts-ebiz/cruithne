@@ -6,13 +6,18 @@
         .header.content {
             padding: 0;
             .logo {
+                margin: 0 0 5px 40px;
                 position: absolute;
                 top: 1rem;
                 @include max-screen($screen__m) {
-                    display: block;
-                    text-align: center;
-                    top: 2.65rem;
-                    width: 100%;
+                    float: none;
+                    position: relative;
+                    top: 0;
+                }
+                > img {
+                    @include max-screen($screen__m) {
+                        margin: 0 auto;
+                    }
                 }
             }
             .shipping-message {
@@ -20,6 +25,10 @@
                 color: white;
                 font-size: 0.9rem;
                 padding: 1rem 0;
+                @include max-screen($screen__m) {
+                    display: none;
+                    visibility: hidden;
+                }
             }
         }
     }
