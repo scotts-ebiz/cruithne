@@ -18,6 +18,14 @@
                 <label>Video Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
             </parameter>
+            <parameter name="videopaddingtop" visible="true" xsi:type="text">
+                <label>Padding Top (in %)</label>
+                <value>0</value>
+            </parameter>
+            <parameter name="videopaddingbottom" visible="true" xsi:type="text">
+                <label>Padding Bottom (in %)</label>
+                <value>0</value>
+            </parameter>
             <parameter name="videoembedcode" visible="true" xsi:type="block">
                 <label>Video Embed Code</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />

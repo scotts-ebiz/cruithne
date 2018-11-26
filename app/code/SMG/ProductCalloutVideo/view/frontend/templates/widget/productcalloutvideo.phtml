@@ -1,4 +1,6 @@
-<section class="product-info-container align-top">
+<section class="product-info-container align-top" style="background: url('<?php echo $block->getData('calloutimage')
+; ?>') no-repeat; background-position: center; background-size: cover; padding-top: <?php echo $block->getData('videopaddingtop')
+; ?>%; padding-bottom: <?php echo $block->getData('videopaddingbottom')?>%;">
     <div class="product-info grid col-2">
         <h2 class="video-headline"><?php echo $block->getData('headline'); ?></h2>
         <hgroup class="mobile-only">
@@ -6,7 +8,7 @@
             <p><?php echo $block->getData('videotext'); ?></p>
         </hgroup>
         <div class="video">
-            <img src="<?php echo $block->getData('calloutimage'); ?>">
+
             <hgroup class="tablet-desktop">
                 <h2><?php echo $block->getData('videoheadline'); ?></h2>
                 <p><?php echo $block->getData('videotext'); ?></p>
