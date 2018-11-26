@@ -24,12 +24,20 @@
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
             <parameter name="paddingtop" visible="true" xsi:type="text">
-                <label>Padding Top (in px)</label>
-                <value>60</value>
+                <label>Padding Top (in %)</label>
+                <value>0</value>
             </parameter>
             <parameter name="paddingbottom" visible="true" xsi:type="text">
-                <label>Padding Bottom (in px)</label>
-                <value>60</value>
+                <label>Padding Bottom (in %)</label>
+                <value>0</value>
+            </parameter>
+            <parameter name="paddingright" visible="true" xsi:type="text">
+                <label>Padding Right (in %)</label>
+                <value>0</value>
+            </parameter>
+            <parameter name="paddingleft" visible="true" xsi:type="text">
+                <label>Padding Left (in %)</label>
+                <value>0</value>
             </parameter>
             <parameter name="textalignclass" visible="true" xsi:type="select" source_model="SMG\ProductCallout\Model\Source\TextAlignSelect">
                 <label>Text Alignment</label>
