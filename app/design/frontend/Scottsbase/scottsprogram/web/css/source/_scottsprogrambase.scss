@@ -6,7 +6,6 @@
         .header.content {
             padding: 0;
             .logo {
-                margin: 0 0 5px 40px;
                 position: absolute;
                 top: 1rem;
                 @include max-screen($screen__m) {
