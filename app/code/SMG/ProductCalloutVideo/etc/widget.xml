@@ -26,6 +26,9 @@
                 <label>Padding Bottom (in %)</label>
                 <value>0</value>
             </parameter>
+            <parameter name="textalignclass" visible="true" xsi:type="select" source_model="SMG\ProductCallout\Model\Source\TextAlignSelect">
+                <label>Text Alignment</label>
+            </parameter>
             <parameter name="videoembedcode" visible="true" xsi:type="block">
                 <label>Video Embed Code</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
