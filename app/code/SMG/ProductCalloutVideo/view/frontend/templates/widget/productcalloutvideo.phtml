@@ -1,18 +1,15 @@
 <section class="product-callout-video-widget product-info-container align-top" style="background: url('<?php echo
-$block->getData('calloutimage')
+$block->getData('videobackgroundimage')
 ; ?>') no-repeat; background-position: center; background-size: cover; padding-top: <?php echo $block->getData('videopaddingtop')
 ; ?>%; padding-bottom: <?php echo $block->getData('videopaddingbottom')?>%;">
-    <div class="product-info grid col-2 <?php echo $block->getData('textalignclass') ?>">
-        <h2 class="video-headline"><?php echo $block->getData('headline'); ?></h2>
+    <div class="product-info grid col-2 <?php echo $block->getData('textalignclass') ?> " style="padding-right:<?php
+    echo $block->getData('textpaddingright'); ?>%; padding-left:<?php echo $block->getData('textpaddingleft'); ?>%;">
+        <h2 class="video-headline" style="color:<?php echo $block->getData('bannerheadlinecolor'); ?>;"><?php echo $block->getData('bannerheadline'); ?></h2>
+        <p style="color:<?php echo $block->getData('bannertextlinecolor'); ?>;"><?php echo $block->getData('bannertext'); ?></p>
         <div class="video">
-
-            <hgroup class="tablet-desktop">
-                <h2><?php echo $block->getData('videoheadline'); ?></h2>
-                <p><?php echo $block->getData('videotext'); ?></p>
-            </hgroup>
             <?php if($this->getData('videoembedcode') != ''): ?>
             <a class="play video-link" href="#">
-                <i class="icon-play"></i>
+                <i class="icon-play"></i><span class="productvideotxt" style="color:<?php echo $block->getData('videotextcolor'); ?>;"><?php echo $block->getData('videotext'); ?></span>
                 <span class="embed-code"><?php echo $block->getData('videoembedcode'); ?></span>
             </a>
             <?php endif; ?>

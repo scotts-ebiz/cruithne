@@ -3,8 +3,32 @@
 .product-callout-video-widget.product-info-container {
     .text-left {
         text-align: left;
+        font-size: 20px;
+        i {
+            color: green;
+            border-radius: 25px;
+            background: white;
+            padding: 10px;
+            font-size: 15px;
+        }
+        span.productvideotxt {
+            font-size: 16px;
+            padding-left: 1%;
+        }
     }
     .text-right {
         text-align: right;
-  }
+        font-size: 20px;
+        i {
+            color: green;
+            border-radius: 25px;
+            background: white;
+            padding: 10px;
+            font-size: 15px;
+        }
+        span.productvideotxt {
+            font-size: 16px;
+            padding-left: 1%;
+        }
+    }
 }
