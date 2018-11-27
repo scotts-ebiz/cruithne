@@ -5,5 +5,9 @@
         <resources>
             <resource ref="self" />
         </resources>
+        <data>
+            <parameter name="startDate" force="true">%startDate%</parameter>
+            <parameter name="endDate" force="true">%endDate%</parameter>
+        </data>
     </route>
 </routes>
