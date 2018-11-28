@@ -1,4 +1,12 @@
 // Scotts Program Base
+// HP Only Style
+.cms-index-index {
+    .page-main {
+        max-width: none;
+        margin: 0;
+        padding: 0;
+    }
+}
 .page-wrapper {
     .page-header {
         background: $primary-green;
@@ -174,6 +182,11 @@
                             p {
                                 display: inline-block;
                                 margin: 1.5rem 0 0 0;
+                            }
+                            .link-badge {
+                                &:hover {
+                                    box-shadow: 0 0 10px 1px rgba(255, 255, 255, 0.3);
+                                }
                             }
                         }
                     }

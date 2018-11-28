@@ -4,19 +4,58 @@
         <label>Product Callout Video</label>
         <description>Display product video and text.</description>
         <parameters>
-            <parameter name="headline" visible="true" xsi:type="text" required="true">
-                <label>Callout Headline</label>
+            <parameter name="bannerheadline" visible="true" xsi:type="text" required="true">
+                <label>Banner Headline</label>
             </parameter>
-            <parameter name="calloutimage" visible="true" xsi:type="block">
-                <label>Callout Image</label>
-                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            <parameter name="bannerheadlinecolor" visible="true" xsi:type="text">
+                <label>Banner Headline Color (Hex Code #xxxxxx)</label>
+                <value>#fff</value>
             </parameter>
-            <parameter name="videoheadline" visible="true" xsi:type="text">
-                <label>Video Headline</label>
+            <parameter name="bannertext" visible="true" xsi:type="text">
+                <label>Banner Text</label>
+            </parameter>
+            <parameter name="bannertextlinecolor" visible="true" xsi:type="text">
+                <label>Banner Text Color (#xxxxxx)</label>
+                <value>#fff</value>
             </parameter>
             <parameter name="videotext" visible="true" xsi:type="block">
                 <label>Video Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+            </parameter>
+            <parameter name="videotextcolor" visible="true" xsi:type="text">
+                <label>Video Text Color (#xxxxxx)</label>
+                <value>#ffffff</value>
+            </parameter>
+            <parameter name="iconcolor" visible="true" xsi:type="text">
+                <label>Icon Color (#xxxxxx)</label>
+                <value>#ffffff</value>
+            </parameter>
+            <parameter name="iconbackgroundcolor" visible="true" xsi:type="text">
+                <label>Icon Background Color (#xxxxxx)</label>
+                <value>#ffffff</value>
+            </parameter>
+            <parameter name="videobackgroundimage" visible="true" xsi:type="block">
+                <label>Background Image</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+            <parameter name="videopaddingtop" visible="true" xsi:type="text">
+                <label>Background Top Padding (in %)</label>
+                <value>0</value>
+            </parameter>
+            <parameter name="videopaddingbottom" visible="true" xsi:type="text">
+                <label>Background Bottom Padding (in %)</label>
+                <value>0</value>
+            </parameter>
+            <parameter name="textalignclass" visible="true" xsi:type="select" source_model="SMG\ProductCallout\Model\Source\TextAlignSelect">
+                <label>Text Container Alignment</label>
+            </parameter>
+            <parameter name="textpaddingleft" visible="true" xsi:type="text">
+                <label>Text Container Left Padding (in %)</label>
+                <value>0</value>
+            </parameter>
+            <parameter name="textpaddingright" visible="true" xsi:type="text">
+                <label>Text Container Right Padding (in %)</label>
+                <value>0</value>
             </parameter>
             <parameter name="videoembedcode" visible="true" xsi:type="block">
                 <label>Video Embed Code</label>
