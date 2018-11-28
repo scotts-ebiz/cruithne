@@ -5,30 +5,32 @@
         text-align: left;
         font-size: 20px;
         i {
-            color: green;
             border-radius: 25px;
-            background: white;
+            margin-right: 1%;
             padding: 10px;
             font-size: 15px;
         }
         span.productvideotxt {
             font-size: 16px;
-            padding-left: 1%;
+            border-bottom: 2px solid;
+            padding-bottom: 5px;
+            font-weight: 700;
         }
     }
     .text-right {
         text-align: right;
         font-size: 20px;
         i {
-            color: green;
             border-radius: 25px;
-            background: white;
+            margin-right: 1%;
             padding: 10px;
             font-size: 15px;
         }
         span.productvideotxt {
             font-size: 16px;
-            padding-left: 1%;
+            border-bottom: 2px solid;
+            padding-bottom: 5px;
+            font-weight: 700;
         }
     }
 }

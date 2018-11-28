@@ -9,7 +9,7 @@ $block->getData('videobackgroundimage')
         <div class="video">
             <?php if($this->getData('videoembedcode') != ''): ?>
             <a class="play video-link" href="#">
-                <i class="icon-play"></i><span class="productvideotxt" style="color:<?php echo $block->getData('videotextcolor'); ?>;"><?php echo $block->getData('videotext'); ?></span>
+                <i class="icon-play" style="color: <?php echo $block->getData('iconcolor'); ?>; background-color: <?php echo $block->getData('iconbackgroundcolor'); ?> ;"></i><span class="productvideotxt" style="color:<?php echo $block->getData('videotextcolor'); ?>;"><?php echo $block->getData('videotext'); ?></span>
                 <span class="embed-code"><?php echo $block->getData('videoembedcode'); ?></span>
             </a>
             <?php endif; ?>

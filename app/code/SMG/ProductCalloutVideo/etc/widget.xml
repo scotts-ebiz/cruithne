@@ -26,6 +26,14 @@
                 <label>Video Text Color (#xxxxxx)</label>
                 <value>#ffffff</value>
             </parameter>
+            <parameter name="iconcolor" visible="true" xsi:type="text">
+                <label>Icon Color (#xxxxxx)</label>
+                <value>#ffffff</value>
+            </parameter>
+            <parameter name="iconbackgroundcolor" visible="true" xsi:type="text">
+                <label>Icon Background Color (#xxxxxx)</label>
+                <value>#ffffff</value>
+            </parameter>
             <parameter name="videobackgroundimage" visible="true" xsi:type="block">
                 <label>Background Image</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
