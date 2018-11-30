@@ -327,6 +327,7 @@
                                             }
                                             .tabpanel__text {
                                                 .turfbuilder--headline {
+                                                    @include font-roboto-condensed(2rem, false, 600);
                                                     text-align: left;
                                                     margin: 0;
                                                     @include min-screen(771px) {
