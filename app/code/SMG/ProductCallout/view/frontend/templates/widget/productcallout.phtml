@@ -20,8 +20,8 @@ $block->getData('bgcolor');
     <?php endif; ?>
 
     <div class="content span_6_of_12">
-      <h2><?php echo $block->getData('bannerheadline'); ?></h2>
-      <p><?php echo $block->getData('bannertext'); ?></p>
+      <h2 style="color:<?php echo $block->getData('bannerheadlinecolor'); ?>;"><?php echo $block->getData('bannerheadline'); ?></h2>
+      <p style="color:<?php echo $block->getData('bannertextlinecolor'); ?>;"><?php echo $block->getData('bannertext'); ?></p>
     </div>
   </div>
 </section>

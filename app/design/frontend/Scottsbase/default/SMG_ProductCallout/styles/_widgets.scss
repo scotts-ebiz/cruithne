@@ -9,7 +9,6 @@
         .content {
             h2 {
                 padding: 0 0 0 20px;
-                color: $black;
                 width: 80%;
                 @media only screen and (max-width: 1024px) {
                     width: 100%;
@@ -40,7 +39,6 @@
         }
         .content {
             h2 {
-                color: $black;
                 padding: 0 20px 0 0;
                 width: 80%;
                 @media only screen and (max-width: 1024px)  {
