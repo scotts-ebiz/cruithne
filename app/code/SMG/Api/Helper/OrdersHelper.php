@@ -104,6 +104,7 @@ class OrdersHelper
         $query = $query . "    '' as 'unit_price_2',";
         $query = $query . "    so.grand_total as 'gross_sales',";
         $query = $query . "    so.shipping_amount as 'shipping_amount',";
+        $query = $query . "    '' as 'shipping_condition',";
         $query = $query . "    '0' as 'exempt_amount',";
         $query = $query . "    so.base_discount_amount as 'discount_amount',";
         $query = $query . "    so.subtotal as 'subtotal',";
@@ -166,6 +167,7 @@ class OrdersHelper
                 'unit_price_2' => $result['unit_price_2'],
                 'gross_sales' => $result['gross_sales'],
                 'shipping_amount' => $result['shipping_amount'],
+                'shipping_condition' => $result['shipping_condition'],
                 'exempt_amount' => $result['exempt_amount'],
                 'discount_amount' => $result['discount_amount'],
                 'subtotal' => $result['subtotal'],
