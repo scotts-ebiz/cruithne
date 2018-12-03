@@ -1,57 +1,65 @@
-var SCM = SCM || {};
+define([
+    'jquery',
+    'mage/mage',
+    'domReady!'
+], function () {
+    'use strict';
 
-SCM.slider = (function(SCM, $){
-    var $slideContainer = '.section__tabs--tabtrack',
-        $slides = '.tabpanel',
-        $slideLabel = $('.tabnav-label');
+    var SCM = SCM || {};
 
-    function init() {
-        setTimeout(function() {
-            setSlideHeight($slides, $slideContainer);
-        }, 200);
+    SCM.slider = (function(SCM, $){
+        var $slideContainer = '.section__tabs--tabtrack',
+            $slides = '.tabpanel',
+            $slideLabel = $('.tabnav-label');
 
-        bindEvents();
-    }
+        function init() {
+            setTimeout(function() {
+                setSlideHeight($slides, $slideContainer);
+            }, 200);
 
-    function setSlideHeight(slide, wrap) {
-        var maxHeight = 0;
-
-        $(slide).each(function() {
-            if ($(this).height() > maxHeight) {
-                maxHeight = $(this).height();
-            }
-        });
-
-        $(wrap).css('height', maxHeight);
-    }
-
-    function bindEvents() {
-        // tabbed content sections
-        $slideLabel.on('click', function() {
-            var $el = $(this);
-
-            $el.siblings('label').removeClass('active');
-            $el.addClass('active');
-        });
-    }
-
-    return {
-        init: init
-    };
-
-})(SCM, jQuery);
-
-SCM.router = (function(SCM, $){
-    function init() {
-        if ($('.section__tabs').length) {
-            SCM.slider.init();
+            bindEvents();
         }
-    }
 
-    return {
-        init: init
-    };
+        function setSlideHeight(slide, wrap) {
+            var maxHeight = 0;
 
-})(SCM, jQuery);
+            $(slide).each(function() {
+                if ($(this).height() > maxHeight) {
+                    maxHeight = $(this).height();
+                }
+            });
 
-SCM.router.init();
+            $(wrap).css('height', maxHeight);
+        }
+
+        function bindEvents() {
+            // tabbed content sections
+            $slideLabel.on('click', function() {
+                var $el = $(this);
+
+                $el.siblings('label').removeClass('active');
+                $el.addClass('active');
+            });
+        }
+
+        return {
+            init: init
+        };
+
+    })(SCM, jQuery);
+
+    SCM.router = (function(SCM, $){
+        function init() {
+            if ($('.section__tabs').length) {
+                SCM.slider.init();
+            }
+        }
+
+        return {
+            init: init
+        };
+
+    })(SCM, jQuery);
+
+    SCM.router.init();
+});
