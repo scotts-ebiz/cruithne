@@ -50,10 +50,9 @@
             <parameter name="textalignclass" visible="true" xsi:type="select" source_model="SMG\ProductCallout\Model\Source\TextAlignSelect">
                 <label>Text Alignment</label>
             </parameter>
-            <parameter name="bgimage" visible="true" xsi:type="checkbox" source_model="SMG\ProductCallout\Model\Source\TextAlignSelect">
-                <label>Background Image (Optional)</label>
+            <parameter name="textstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCallout\Model\Source\TextStyles">
+                <label>Text Styles</label>
             </parameter>
-
         </parameters>
     </widget>
 </widgets>
