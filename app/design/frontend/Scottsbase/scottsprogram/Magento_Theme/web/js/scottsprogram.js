@@ -1,14 +1,9 @@
 var SCM = SCM || {};
 
-// SCM.nav = SCM.nav || {};
-
 SCM.slider = (function(SCM, $){
     var $slideContainer = '.section__tabs--tabtrack',
         $slides = '.tabpanel',
         $slideLabel = $('.tabnav-label');
-
-
-
 
     function init() {
         setTimeout(function() {
@@ -17,7 +12,6 @@ SCM.slider = (function(SCM, $){
 
         bindEvents();
     }
-
 
     function setSlideHeight(slide, wrap) {
         var maxHeight = 0;
@@ -31,8 +25,6 @@ SCM.slider = (function(SCM, $){
         $(wrap).css('height', maxHeight);
     }
 
-
-
     function bindEvents() {
         // tabbed content sections
         $slideLabel.on('click', function() {
@@ -43,8 +35,6 @@ SCM.slider = (function(SCM, $){
         });
     }
 
-
-
     return {
         init: init
     };
@@ -52,18 +42,10 @@ SCM.slider = (function(SCM, $){
 })(SCM, jQuery);
 
 SCM.router = (function(SCM, $){
-
     function init() {
-
-        ///////////////////////
-        // Conditional Start //
-        ///////////////////////
-
         if ($('.section__tabs').length) {
             SCM.slider.init();
         }
-
-
     }
 
     return {
