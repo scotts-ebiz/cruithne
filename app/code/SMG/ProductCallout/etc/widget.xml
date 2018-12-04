@@ -37,6 +37,9 @@
                 <label>Banner Container Padding Left (in %)</label>
                 <value>0</value>
             </parameter>
+            <parameter name="textalignclass" visible="true" xsi:type="select" source_model="SMG\ProductCallout\Model\Source\TextAlignSelect">
+                <label>Banner Container Alignment</label>
+            </parameter>
             <parameter name="bannerimage" visible="true" xsi:type="block">
                 <label>Banner Image</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
@@ -56,9 +59,6 @@
             <parameter name="paddingbottom" visible="true" xsi:type="text">
                 <label>Background Bottom Padding (in %)</label>
                 <value>0</value>
-            </parameter>
-            <parameter name="textalignclass" visible="true" xsi:type="select" source_model="SMG\ProductCallout\Model\Source\TextAlignSelect">
-                <label>Text Alignment</label>
             </parameter>
         </parameters>
     </widget>
