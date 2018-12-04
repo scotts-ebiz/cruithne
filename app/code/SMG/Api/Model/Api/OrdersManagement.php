@@ -38,6 +38,6 @@ class OrdersManagement implements OrdersManagementInterface
      */
     public function getOrders()
     {
-        return $this->_ordersHelper->getOrders($this->_request->get("startDate"), $this->_request->get("endDate"));
+        return $this->_ordersHelper->getOrders($this->_request->getRequestData());
     }
 }
