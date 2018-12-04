@@ -11,6 +11,7 @@ if($block->getData('textstyle') != ''):
   $customCssStyle = $block->getData('textstyle');
 endif;
 
+
 //If headlinetextstyle exists then set to customCssStyles
 if($block->getData('headlinetextstyle') != ''):
   $headlineCustomCssStyle = $block->getData('headlinetextstyle');
@@ -30,6 +31,9 @@ endif;
 ?>
 
 
+
+
+
 <section class="product-callout-widget product-info-container <?php echo $block->getData('textalignclass') ?>" style="background: url('<?php echo $block->getData('bgimage'); ?>') no-repeat; background-size:cover; background-position:center;
   background-color: <?php
 echo
@@ -43,7 +47,9 @@ $block->getData('bgcolor');
       </div>
     <?php endif; ?>
 
-    <div class="content span_6_of_12">
+    <div
+      class="content span_6_of_12"
+      style="padding-left: <?php echo $block->getData('bannercontainerpaddingleft');?>%; padding-right: <?php echo $block->getData('bannercontainerpaddingright');?>%;">
       <h2 style="
         <?php
           $headlinestylevalues = explode(',', $headlineCustomCssStyle);

@@ -7,9 +7,6 @@ class TextSize implements \Magento\Framework\Option\ArrayInterface
   public function toOptionArray()
   {
     return [
-        ['value' => 'font-size: 0.5rem; ', 'label' => __('0.5')],
-        ['value' => 'font-size: 0.6rem; ', 'label' => __('0.6')],
-        ['value' => 'font-size: 0.7rem; ', 'label' => __('0.7')],
         ['value' => 'font-size: 0.8rem; ', 'label' => __('0.8')],
         ['value' => 'font-size: 0.9rem; ', 'label' => __('0.9')],
         ['value' => 'font-size: 1.0rem; ', 'label' => __('1.0')],

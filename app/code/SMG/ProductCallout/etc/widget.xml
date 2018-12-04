@@ -9,7 +9,7 @@
             </parameter>
             <parameter name="bannerheadlinecolor" visible="true" xsi:type="text">
                 <label>Banner Headline Color (in #xxxxxx)</label>
-                <value>#fff</value>
+                <value>#000</value>
             </parameter>
             <parameter name="headlinetextstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCallout\Model\Source\HeadlineTextStyles">
                 <label>Banner Headline Style</label>
@@ -20,14 +20,22 @@
             </parameter>
             <parameter name="bannertextlinecolor" visible="true" xsi:type="text">
                 <label>Banner Text Color (in #xxxxxx)</label>
-                <value>#fff</value>
+                <value>#000</value>
             </parameter>
             <parameter name="bannertextsize" visible="true" xsi:type="select"
                        source_model="SMG\ProductCallout\Model\Source\TextSize">
-                <label>Banner Text Size</label>
+                <label>Banner Text Size (in rem)</label>
             </parameter>
             <parameter name="textstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCallout\Model\Source\TextStyles">
                 <label>Banner Text Style</label>
+            </parameter>
+            <parameter name="bannercontainerpaddingright" visible="true" xsi:type="text">
+                <label>Banner Container Padding Right (in %)</label>
+                <value>0</value>
+            </parameter>
+            <parameter name="bannercontainerpaddingleft" visible="true" xsi:type="text">
+                <label>Banner Container Padding Left (in %)</label>
+                <value>0</value>
             </parameter>
             <parameter name="bannerimage" visible="true" xsi:type="block">
                 <label>Banner Image</label>
@@ -42,19 +50,11 @@
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
             <parameter name="paddingtop" visible="true" xsi:type="text">
-                <label>Padding Top (in %)</label>
+                <label>Background Top Padding (in %)</label>
                 <value>0</value>
             </parameter>
             <parameter name="paddingbottom" visible="true" xsi:type="text">
-                <label>Padding Bottom (in %)</label>
-                <value>0</value>
-            </parameter>
-            <parameter name="paddingright" visible="true" xsi:type="text">
-                <label>Padding Right (in %)</label>
-                <value>0</value>
-            </parameter>
-            <parameter name="paddingleft" visible="true" xsi:type="text">
-                <label>Padding Left (in %)</label>
+                <label>Background Bottom Padding (in %)</label>
                 <value>0</value>
             </parameter>
             <parameter name="textalignclass" visible="true" xsi:type="select" source_model="SMG\ProductCallout\Model\Source\TextAlignSelect">
