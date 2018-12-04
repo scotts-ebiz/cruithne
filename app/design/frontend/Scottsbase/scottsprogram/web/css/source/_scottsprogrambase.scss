@@ -1,23 +1,42 @@
 // Scotts Program Base
+// HP Only Style
+.cms-index-index {
+    .page-main {
+        max-width: none;
+        margin: 0;
+        padding: 0;
+    }
+}
 .page-wrapper {
     .page-header {
         background: $primary-green;
         height: 3.25rem;
-        .logo {
-            position: absolute;
-            top: 1rem;
-            @include max-screen($screen__m) {
-                display: block;
-                text-align: center;
-                top: 2.65rem;
-                width: 100%;
+        .header.content {
+            padding: 0;
+            .logo {
+                position: absolute;
+                top: 1rem;
+                @include max-screen($screen__m) {
+                    float: none;
+                    position: relative;
+                    top: 0;
+                }
+                > img {
+                    @include max-screen($screen__m) {
+                        margin: 0 auto;
+                    }
+                }
             }
-        }
-        .shipping-message {
-            text-align: center;
-            color: white;
-            font-size: 0.9rem;
-            padding: 1rem 0;
+            .shipping-message {
+                text-align: center;
+                color: white;
+                font-size: 0.9rem;
+                padding: 1rem 0;
+                @include max-screen($screen__m) {
+                    display: none;
+                    visibility: hidden;
+                }
+            }
         }
     }
     .page-footer {
@@ -134,6 +153,242 @@
 .page-main {
     .columns {
         .column.main {
+            .turfbuilder__wrap {
+                .std {
+                    .section__tabs {
+                        @include min-screen(771px) {
+                            background-image: linear-gradient(to bottom, #fafafa 0%, #fff 12.5%)
+                        }
+                        .section__tabs--wrapper {
+                            margin: 0 auto;
+                            padding: 3rem 5%;
+                            @include min-screen(48.1875rem) {
+                                margin: 0 auto;
+                                max-width: 90em;
+                                width: 95%;
+                                padding: 4.5rem 0 2rem;
+                            }
+                            @include min-screen(75rem) {
+                                padding-left: 0;
+                                padding-right: 0;
+                            }
+                            .section__tabs--tabnav {
+                                display: -webkit-box;
+                                display: -ms-flexbox;
+                                display: flex;
+                                -ms-flex-wrap: wrap;
+                                flex-wrap: wrap;
+                                -webkit-box-pack: justify;
+                                -ms-flex-pack: justify;
+                                justify-content: space-between;
+                                @include min-screen(48.1875rem) {
+                                    -ms-flex-wrap: nowrap;
+                                    flex-wrap: nowrap;
+                                    margin: 0 auto;
+                                    max-width: 61.25rem;
+                                    padding: 0 2rem;
+                                    width: 90%;
+                                }
+                                label {
+                                    -webkit-transition: all 0.3s ease-in-out;
+                                    padding: 0.813rem 1rem;
+                                    cursor: pointer;
+                                    text-align: center;
+                                    transition: all 0.3s ease-in-out;
+                                    border-radius: 0.25em;
+                                    color: color('grey', 'base');
+                                    font-size: 0.813rem;
+                                    font-weight: 500;
+                                    margin: 0 0.5rem 0.5rem;
+                                    text-transform: uppercase;
+                                    width: calc(50% - 1rem);
+                                    background-color: #fafafa;
+                                    border: 1px solid #ededee;
+                                    box-shadow: 0 0 5px 0 rgba(182, 92, 0, 0);
+                                    color: #515356;
+                                    @include min-screen(771px) {
+                                        max-width: 11.25rem;
+                                    }
+                                    @include min-screen(48.1875rem) {
+                                        padding: 0.625rem 1rem;
+                                        width: 25%;
+                                    }
+                                    span {
+                                        display: block;
+                                        font-size: 0.75em;
+                                        font-weight: bold;
+                                    }
+                                    &.active,
+                                    &:hover {
+                                        background-color: $primary-green;
+                                        box-shadow: 0 0 5px 0 rgba(182,92,0,0.18);
+                                        color: #fff;
+                                    }
+                                }
+                            }
+                            .section__tabs--tabcontainer {
+                                position: relative;
+                                .section__tabs--tabtrack {
+                                    display: -webkit-box;
+                                    display: -ms-flexbox;
+                                    display: flex;
+                                    -ms-flex-wrap: nowrap;
+                                    flex-wrap: nowrap;
+                                    @include min-screen(48.1875rem) {
+                                        margin: 2rem auto 3rem;
+                                    }
+                                    .tabpanel {
+                                        opacity: 0;
+                                        position: absolute;
+                                        left: 0;
+                                        top: 0;
+                                        width: 100%;
+                                        z-index: -1;
+                                        -webkit-transition: opacity 0.25s ease-in-out;
+                                        transition: opacity 0.25s ease-in-out;
+                                        .tabpanel__wrapper {
+                                            margin: 2rem 0 0;
+                                            @include min-screen(48.1875rem) {
+                                                display: -webkit-box;
+                                                display: -ms-flexbox;
+                                                display: flex;
+                                                -webkit-box-align: start;
+                                                -ms-flex-align: start;
+                                                align-items: flex-start;
+                                                padding: 2rem 0 0;
+                                            }
+                                            .tabpanel__image {
+                                                position: relative;
+                                                margin-bottom: 4rem;
+                                                text-align: center;
+                                                @include min-screen(48.1875rem) {
+                                                    width: 45%;
+                                                }
+                                                @include min-screen(75rem) {
+                                                    width: 50%;
+                                                }
+                                                img {
+                                                    margin: 0 auto;
+                                                    position: relative;
+                                                    max-width: 11.25rem; // 180px
+                                                    @include min-screen(771px) {
+                                                        max-width: 50%;
+                                                    }
+                                                    span {
+                                                        @include min-screen(1200px) {
+                                                            background-size: 26rem auto;
+                                                        }
+                                                        @include min-screen(771px) {
+                                                            display: block;
+                                                            padding: 0 12.5%;
+                                                        }
+                                                        @include min-screen(600px) {
+                                                            display: block;
+                                                        }
+                                                        &:before,
+                                                        &:after {
+                                                            content: '';
+                                                            height: 100%;
+                                                            width: 100%;
+                                                            position: absolute;
+                                                            bottom: 0.5rem;
+                                                            left: 0;
+                                                            z-index: 0;
+                                                        }
+                                                        &:before {
+                                                            background-image: url('../images/grass.png');
+                                                            background-repeat: no-repeat;
+                                                            background-position: center bottom;
+                                                            background-size: 18rem auto;
+                                                            bottom: -2rem;
+                                                            left: -0.5rem;
+                                                            z-index: 0;
+                                                            @include min-screen(771px) {
+                                                                content: '\b7\a0';
+                                                                display: inline-block;
+                                                                font-size: 1.5em;
+                                                                line-height: 1;
+                                                                vertical-align: middle;
+                                                            }
+                                                        }
+                                                        &:after {
+                                                            background-image: url('../images/grass.png');
+                                                            background-repeat: no-repeat;
+                                                            background-position: center bottom;
+                                                            background-size: 17rem auto;
+                                                            bottom: -2rem;
+                                                            z-index: 1;
+                                                            @include min-screen(771px) {
+                                                                background-size: 92% auto;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            .tabpanel__text {
+                                                .turfbuilder--headline {
+                                                    @include font-roboto-condensed(2rem, false, 600);
+                                                    text-align: left;
+                                                    margin: 0;
+                                                    @include min-screen(771px) {
+                                                        text-align: left;
+                                                    }
+                                                }
+                                                h4 {
+                                                    color: orange;
+                                                    text-transform: uppercase;
+                                                }
+
+                                                p, li {
+                                                    font-size: 0.875rem;
+                                                    font-weight: 100;
+                                                }
+
+                                                ul {
+                                                    @include min-screen(771px) {
+                                                        margin-left: 0;
+                                                    }
+                                                    margin-bottom: 0;
+                                                    li {
+                                                        margin-left: 1.25em;
+                                                        @include min-screen(771px) {
+                                                            margin-left: 0;
+                                                        }
+                                                        @include min-screen(600px) {
+                                                            margin-left: 0;
+                                                        }
+                                                    }
+                                                }
+                                                @include min-screen(48.1875rem) {
+                                                    padding-left: 7%;
+                                                    padding-right: 7%;
+                                                    width: 55%;
+                                                }
+                                                @include min-screen(75rem) {
+                                                    padding-left: 0;
+                                                    width: 50%;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .tabs__radio {
+                                        display: none;
+                                        opacity: 0;
+                                        visibility: hidden;
+                                        &:checked {
+                                            border: 1px solid $primary-green;
+                                        }
+                                    }
+                                    .tabs__radio:checked + .tabpanel {
+                                        opacity: 1;
+                                        z-index: 0;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
             .section__app {
                 .section__app--wrapper {
                     max-width: 1280px;
@@ -164,6 +419,11 @@
                                 display: inline-block;
                                 margin: 1.5rem 0 0 0;
                             }
+                            .link-badge {
+                                &:hover {
+                                    box-shadow: 0 0 10px 1px rgba(255, 255, 255, 0.3);
+                                }
+                            }
                         }
                     }
                 }
@@ -171,4 +431,489 @@
         }
     }
 }
-
+// Cart Styles
+.checkout-cart-index {
+    .page-main {
+        .page-title-wrapper {
+            .page-title {
+                @include font-roboto(2.2rem, $secondary-dark-gray, false, false, 0.5px);
+            }
+        }
+        .columns {
+            .column {
+                .cart-container {
+                    .cart-summary {
+                        .summary.title {
+                            @include font-roboto(1.6rem, $secondary-dark-gray);
+                        }
+                        .block.shipping,
+                        .block.discount,
+                        .block.giftcard {
+                            .title {
+                                #block-shipping-heading,
+                                #block-discount-heading,
+                                #block-giftcard-heading {
+                                    @include font-roboto(1rem, $secondary-dark-gray);
+                                }
+                            }
+                        }
+                        .checkout-methods-items {
+                            .item {
+                                .action.checkout {
+                                    @include font-roboto(1.4rem, $white);
+                                    -webkit-transition: background 0.2s;
+                                    -moz-transition: background 0.2s;
+                                    -ms-transition: background 0.2s;
+                                    -o-transition: background 0.2s;
+                                    transition: background 0.2s;
+                                    background: $primary-green;
+                                    border: none;
+                                    &:hover {
+                                        -webkit-transition: background 0.2s;
+                                        -moz-transition: background 0.2s;
+                                        -ms-transition: background 0.2s;
+                                        -o-transition: background 0.2s;
+                                        transition: background 0.2s;
+                                        background: #005d49;
+                                    }
+                                }
+                                .action.multicheckout {
+                                    color: $primary-green;
+                                    text-decoration: underline;
+                                    &:hover {
+                                        text-decoration: none;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .form-cart {
+                        .cart.table-wrapper {
+                            thead {
+                                tr {
+                                    .col {
+                                        margin: 0;
+                                        padding: 0;
+                                        width: 25%;
+                                        @include max-screen($screen__m) {
+                                            padding: 0.5rem;
+                                        }
+                                    }
+                                }
+                            }
+                            .cart.item {
+                                .item-info {
+                                    .col {
+                                        margin: 0;
+                                        padding: 1rem 0;
+                                        width: 25%;
+                                    }
+                                    .item {
+                                        .product-item-photo {
+                                            @include max-screen($screen__m) {
+                                                max-width: none;
+                                                position: static;
+                                                text-align: center;
+                                            }
+                                        }
+                                        .product-item-details {
+                                            @include max-screen($screen__m) {
+                                                text-align: center;
+                                            }
+                                            .product-item-name {
+                                                a {
+                                                    color: $secondary-dark-gray;
+                                                }
+                                                @include max-screen($screen__m) {
+                                                    font-size: 0.75rem;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .qty {
+                                        .control.qty {
+                                            .qty {
+                                                border: 1px solid $secondary-dark-gray;
+                                            }
+                                        }
+                                    }
+                                    .price-including-tax,
+                                    .price-excluding-tax {
+                                        color: $secondary-dark-gray;
+                                        font-size: 1.4rem;
+                                        @include max-screen($screen__m) {
+                                            font-size: 1rem;
+                                        }
+                                    }
+                                }
+                                .item-actions {
+                                    td {
+                                        padding: 0;
+                                    }
+                                    .actions-toolbar {
+                                        height: 3rem;
+                                        .action-edit {
+                                            display: none;
+                                            visibility: hidden;
+                                        }
+                                        .action-delete {
+                                            -webkit-transition: background 0.2s;
+                                            -moz-transition: background 0.2s;
+                                            -ms-transition: background 0.2s;
+                                            -o-transition: background 0.2s;
+                                            transition: background 0.2s;
+                                            background: $secondary-dark-gray;
+                                            color: $white;
+                                            font-size: 0.85rem;
+                                            padding: 0.25rem 1rem;
+                                            border-radius: 5px;
+                                            &:hover {
+                                                -webkit-transition: background 0.2s;
+                                                -moz-transition: background 0.2s;
+                                                -ms-transition: background 0.2s;
+                                                -o-transition: background 0.2s;
+                                                transition: background 0.2s;
+                                                background: #505050;
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .cart.actions {
+                            .action.continue,
+                            .action.clear,
+                            .action.update {
+                                @include font-roboto(1rem, $secondary-dark-gray, 400);
+                            }
+                            .action.continue {
+                                &:before {
+                                    line-height: 1.4rem;
+                                }
+                            }
+                        }
+                    }
+                    #gift-options-cart {
+                        .cart-gift-item {
+                            .gift-item-block {
+                                .title {
+                                    @include font-roboto(1rem, $secondary-dark-gray, 400);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+// Checkout Styles
+.checkout-index-index {
+    .page-wrapper {
+        .page-header {
+            .header.content {
+                .logo {
+                    @include max-screen($screen__m) {
+                        // Specific Style for logo when menu isn't present
+                        left: 0;
+                    }
+                }
+            }
+        }
+        .page-main {
+            margin-top: 2rem;
+            .columns {
+                .column.main {
+                    .checkout-container {
+                        .opc-progress-bar {
+                            .opc-progress-bar-item {
+                                &._active {
+                                    &:before {
+                                        background: $primary-green;
+                                    }
+                                    span {
+                                        &:before {
+                                            background: $primary-green;
+                                        }
+                                    }
+                                }
+                                span {
+                                    font-size: 1.2rem;
+                                    &:after {
+                                        font-size: 1.2rem;
+                                    }
+                                }
+                            }
+                        }
+                        .opc-estimated-wrapper {
+                            .minicart-wrapper {
+                                .action.showcart {
+                                    .counter.qty {
+                                        background: $primary-green;
+                                    }
+                                }
+                            }
+                        }
+                        .opc-wrapper {
+                            @include max-screen($screen__m) {
+                                padding: 1rem;
+                            }
+                            .opc {
+                                .checkout-shipping-address {
+                                    .step-content {
+                                        .form-login {
+                                            border-bottom: 1px solid #c2c2c2;
+                                            padding-bottom: 1rem;
+                                        }
+                                        .form-login,
+                                        .form-shipping-address {
+                                            .fieldset {
+                                                .label {
+                                                    width: auto;
+                                                }
+                                                .control {
+                                                    float: none;
+                                                    width: auto;
+                                                }
+                                            }
+                                            .hidden-fields {
+                                                .actions-toolbar {
+                                                    margin-left: 0;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                .checkout-shipping-method {
+                                    .checkout-shipping-method {
+                                        .step-title {
+                                            font-size: 2rem;
+                                        }
+                                        .step-content {
+                                            .methods-shipping {
+                                                .actions-toolbar {
+                                                    .primary {
+                                                        .action.primary {
+                                                            @include font-roboto(1.2rem, $white, 400);
+                                                            background-color: $primary-green;
+                                                            line-height: 0;
+                                                            padding: 1rem 2rem;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                                .checkout-payment-method {
+                                    .step-content {
+                                        .form.payments {
+                                            .fieldset {
+                                                .opc-payment {
+                                                    .items.payment-methods {
+                                                        .payment-group {
+                                                            .payment-method._active {
+                                                                .payment-method-content {
+                                                                    .actions-toolbar {
+                                                                        .primary {
+                                                                            .action.primary.checkout {
+                                                                                @include font-roboto(1.4rem, $white);
+                                                                                -webkit-transition: background 0.2s;
+                                                                                -moz-transition: background 0.2s;
+                                                                                -ms-transition: background 0.2s;
+                                                                                -o-transition: background 0.2s;
+                                                                                transition: background 0.2s;
+                                                                                background: $primary-green;
+                                                                                border: none;
+                                                                                &:hover {
+                                                                                    -webkit-transition: background 0.2s;
+                                                                                    -moz-transition: background 0.2s;
+                                                                                    -ms-transition: background 0.2s;
+                                                                                    -o-transition: background 0.2s;
+                                                                                    transition: background 0.2s;
+                                                                                    background: #005d49;
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            .opc-payment-additional {
+                                                .payment-option-title {
+                                                    .action-toggle {
+                                                        color: $primary-green;
+                                                    }
+                                                }
+                                                .payment-option-content {
+                                                    .form-discount {
+                                                        .actions-toolbar {
+                                                            .primary {
+                                                                button {
+                                                                    @include font-roboto(1rem, $white);
+                                                                    -webkit-transition: background 0.2s;
+                                                                    -moz-transition: background 0.2s;
+                                                                    -ms-transition: background 0.2s;
+                                                                    -o-transition: background 0.2s;
+                                                                    transition: background 0.2s;
+                                                                    background: $secondary-dark-gray;
+                                                                    border: none;
+                                                                    &:hover {
+                                                                        -webkit-transition: background 0.2s;
+                                                                        -moz-transition: background 0.2s;
+                                                                        -ms-transition: background 0.2s;
+                                                                        -o-transition: background 0.2s;
+                                                                        transition: background 0.2s;
+                                                                        background: $secondary-dark-gray;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                    .form-giftcard-account {
+                                                        .actions-toolbar {
+                                                            .primary {
+                                                                margin-left: 1rem;
+                                                                .action-add.primary {
+                                                                    @include font-roboto(1rem, $white);
+                                                                    -webkit-transition: background 0.2s;
+                                                                    -moz-transition: background 0.2s;
+                                                                    -ms-transition: background 0.2s;
+                                                                    -o-transition: background 0.2s;
+                                                                    transition: background 0.2s;
+                                                                    background: $secondary-dark-gray;
+                                                                    border: none;
+                                                                    &:hover {
+                                                                        -webkit-transition: background 0.2s;
+                                                                        -moz-transition: background 0.2s;
+                                                                        -ms-transition: background 0.2s;
+                                                                        -o-transition: background 0.2s;
+                                                                        transition: background 0.2s;
+                                                                        background: $secondary-dark-gray;
+                                                                    }
+                                                                }
+                                                            }
+                                                            .secondary {
+                                                                .action-check {
+                                                                    @include font-roboto(1rem, $white);
+                                                                    -webkit-transition: background 0.2s;
+                                                                    -moz-transition: background 0.2s;
+                                                                    -ms-transition: background 0.2s;
+                                                                    -o-transition: background 0.2s;
+                                                                    transition: background 0.2s;
+                                                                    background: $secondary-dark-gray;
+                                                                    border: none;
+                                                                    &:hover {
+                                                                        -webkit-transition: background 0.2s;
+                                                                        -moz-transition: background 0.2s;
+                                                                        -ms-transition: background 0.2s;
+                                                                        -o-transition: background 0.2s;
+                                                                        transition: background 0.2s;
+                                                                        background: $secondary-dark-gray;
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                        .opc-sidebar.custom-slide {
+                            left: 0;
+                            .modal-inner-wrap {
+                                .modal-content {
+                                    #opc-sidebar {
+                                        .opc-block-summary {
+                                            .title {
+                                                font-size: 2rem;
+                                            }
+                                            .table-totals {
+                                                tbody {
+                                                    .totals.discount {
+                                                        .mark {
+                                                            .title {
+                                                                font-size: 1rem;
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            .items-in-cart {
+                                                .minicart-items {
+                                                    margin-top: 0.5rem;
+                                                    @include max-screen($screen__m) {
+                                                        margin-top: 0.5rem;
+                                                    }
+                                                    .product-item {
+                                                        .product {
+                                                            .product-item-details {
+                                                                .product-item-name-block {
+                                                                    .product-item-name {
+                                                                        margin: 0;
+                                                                        @include max-screen($screen__m) {
+                                                                            margin: 0;
+                                                                        }
+                                                                    }
+                                                                    .details-qty {
+                                                                        margin: 0;
+                                                                        @include max-screen($screen__m) {
+                                                                            margin: 0;
+                                                                        }
+                                                                    }
+                                                                }
+                                                                .subtotal {
+                                                                    .price-excluding-tax,
+                                                                    .price-including-tax {
+                                                                        .cart-price {
+                                                                            .price {
+                                                                                font-size: 1.2rem;
+                                                                                font-weight: 700;
+                                                                                @include max-screen($screen__m) {
+                                                                                    font-size: 1.2rem;
+                                                                                    font-weight: 700;
+                                                                                }
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        .opc-block-shipping-information {
+                                            .shipping-information {
+                                                .ship-to {
+                                                    .shipping-information-title {
+                                                        span {
+                                                            font-size: 2rem;
+                                                        }
+                                                    }
+                                                }
+                                                .ship-via {
+                                                    .shipping-information-title {
+                                                        span {
+                                                            font-size: 2rem;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}

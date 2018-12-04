@@ -51,3 +51,15 @@
     @if $lh { line-height: $lh; }
     @if $ls { letter-spacing: $ls; }
 }
+
+@mixin defaultwrap($center: true) {
+    @if $center == false {
+        margin: 0;
+    }
+    @else {
+        margin: 0 auto;
+    }
+
+    max-width: 90em;
+    width: 95%;
+}

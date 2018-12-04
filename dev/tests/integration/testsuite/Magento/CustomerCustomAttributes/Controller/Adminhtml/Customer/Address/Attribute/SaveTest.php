@@ -68,6 +68,25 @@ class SaveTest extends AbstractBackendController
     }
 
     /**
+     * Tests that controller validate file extensions.
+     *
+     * @return void
+     */
+    public function testFileExtensions(): void
+    {
+        $params = $this->getRequestNewAttributeData();
+        $request = $this->getRequest();
+        $request->setMethod('POST');
+        $request->setPostValue($params);
+
+        $this->dispatch('backend/admin/customer_address_attribute/save');
+
+        $this->assertSessionMessages(
+            $this->equalTo(['Please correct the value for file extensions.'])
+        );
+    }
+
+    /**
      * Gets request params.
      *
      * @return array
@@ -82,6 +101,23 @@ class SaveTest extends AbstractBackendController
         return [
             'attribute_id' => $regionAttribute->getAttributeId(),
             'frontend_label' => [self::$regionFrontendLabel],
+            'form_key' => $this->_objectManager->get(FormKey::class)->getFormKey(),
+        ];
+    }
+
+    /**
+     * Gets request params.
+     *
+     * @return array
+     */
+    private function getRequestNewAttributeData(): array
+    {
+        return [
+            'attribute_code' => 'new_file',
+            'frontend_label' => ['new_file'],
+            'frontend_input' => 'file',
+            'file_extensions' => 'php',
+            'sort_order' => 1,
             'form_key' => $this->_objectManager->get(FormKey::class)->getFormKey(),
         ];
     }

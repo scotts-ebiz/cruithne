@@ -6,11 +6,12 @@ if($block->getData('bgimage') != ''):
 endif;
 ?>
 
-<section class="product-callout-widget product-info-container " style="background-color: '<?php echo $block->getData('bgcolor'); ?>'; padding-top: '<?php echo $block->getData('paddingtop'); ?>px'; padding-bottom: '<?php echo $block->getData('paddingbottom'); ?>px';">
-  <?php if($this->getData('bgimage') != ''): ?>
-    <img class="full-width" src="<?php echo $block->getData('bgimage'); ?>" />
-  <?php endif; ?>
-
+<section class="product-callout-widget product-info-container <?php echo $block->getData('textalignclass') ?>" style="background: url('<?php echo $block->getData('bgimage'); ?>') no-repeat; background-size:cover; background-position:center;
+  background-color: <?php
+echo
+$block->getData('bgcolor');
+?>; padding-top: <?php echo $block->getData('paddingtop'); ?>%; padding-bottom: <?php echo $block->getData
+('paddingbottom'); ?>%;">
   <div class="product-info grid col-2 <?php echo $block->getData('textalignclass') ?>">
     <?php if($this->getData('bannerimage') != ''): ?>
       <div class="image-container span_6_of_12">

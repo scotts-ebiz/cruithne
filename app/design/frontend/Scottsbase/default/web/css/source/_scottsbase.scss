@@ -1,4 +1,38 @@
 // Scotts Base Default
-html {
+html,
+body {
     font-size: 16px;
+}
+.checkout-index-index {
+    .page-wrapper {
+        .page-main {
+            .columns {
+                .main {
+                    .checkout-container {
+                        .actions {
+                            float: right;
+                            .action.continue {
+                                color: $secondary-dark-gray;
+                                &:before {
+                                    -webkit-font-smoothing: antialiased;
+                                    -moz-osx-font-smoothing: grayscale;
+                                    font-size: 32px;
+                                    line-height: 20px;
+                                    content: "";
+                                    font-family: "icons-blank-theme";
+                                    margin: 0;
+                                    vertical-align: top;
+                                    display: inline-block;
+                                    font-weight: normal;
+                                    overflow: hidden;
+                                    speak: none;
+                                    text-align: center;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
 }
