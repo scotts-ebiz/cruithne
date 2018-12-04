@@ -11,6 +11,9 @@
                 <label>Banner Headline Color (in #xxxxxx)</label>
                 <value>#fff</value>
             </parameter>
+            <parameter name="headlinetextstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCallout\Model\Source\HeadlineTextStyles">
+                <label>Banner Headline Style</label>
+            </parameter>
             <parameter name="bannertext" visible="true" xsi:type="block">
                 <label>Banner Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
@@ -18,6 +21,9 @@
             <parameter name="bannertextlinecolor" visible="true" xsi:type="text">
                 <label>Banner Text Color (in #xxxxxx)</label>
                 <value>#fff</value>
+            </parameter>
+            <parameter name="textstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCallout\Model\Source\TextStyles">
+                <label>Banner Text Style</label>
             </parameter>
             <parameter name="bannerimage" visible="true" xsi:type="block">
                 <label>Banner Image</label>
@@ -49,9 +55,6 @@
             </parameter>
             <parameter name="textalignclass" visible="true" xsi:type="select" source_model="SMG\ProductCallout\Model\Source\TextAlignSelect">
                 <label>Text Alignment</label>
-            </parameter>
-            <parameter name="textstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCallout\Model\Source\TextStyles">
-                <label>Text Styles</label>
             </parameter>
         </parameters>
     </widget>

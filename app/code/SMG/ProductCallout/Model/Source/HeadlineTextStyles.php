@@ -2,7 +2,7 @@
 
 namespace SMG\ProductCallout\Model\Source;
 
-class TextStyles implements \Magento\Framework\Option\ArrayInterface
+class HeadlineTextStyles implements \Magento\Framework\Option\ArrayInterface
 {
   public function toOptionArray()
   {
