@@ -3,6 +3,8 @@
 $bg_class = '';
 $customCssStyle = '';
 $headlineCustomCssStyle = '';
+$paragraphTextSize = '';
+
 
 // If textstyle exists then set to customCssStyles
 if($block->getData('textstyle') != ''):
@@ -19,7 +21,14 @@ endif;
 if($block->getData('bgimage') != ''):
   $bg_class = 'image-bg';
 endif;
+
+
+// If bannertextsize exists then set to paragraphTextSize
+if($block->getData('bannertextsize') != ''):
+  $paragraphTextSize = $block->getData('bannertextsize');
+endif;
 ?>
+
 
 <section class="product-callout-widget product-info-container <?php echo $block->getData('textalignclass') ?>" style="background: url('<?php echo $block->getData('bgimage'); ?>') no-repeat; background-size:cover; background-position:center;
   background-color: <?php
@@ -46,10 +55,15 @@ $block->getData('bgcolor');
       </h2>
       <p style="
         <?php
+          //If selected display Font Styles
           $stylevalues = explode(',', $customCssStyle);
           foreach($stylevalues as $value) {
             echo $value;
-          } ?>
+          }
+
+          //If selected display font size
+          echo $paragraphTextSize;
+        ?>
         color:<?php echo $block->getData('bannertextlinecolor'); ?>;">
         <?php echo $block->getData('bannertext'); ?>
         <br/>

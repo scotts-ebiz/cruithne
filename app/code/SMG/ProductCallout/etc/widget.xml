@@ -22,6 +22,10 @@
                 <label>Banner Text Color (in #xxxxxx)</label>
                 <value>#fff</value>
             </parameter>
+            <parameter name="bannertextsize" visible="true" xsi:type="select"
+                       source_model="SMG\ProductCallout\Model\Source\TextSize">
+                <label>Banner Text Size</label>
+            </parameter>
             <parameter name="textstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCallout\Model\Source\TextStyles">
                 <label>Banner Text Style</label>
             </parameter>
