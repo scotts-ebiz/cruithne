@@ -3,18 +3,51 @@
     $list_values = $block->getData('listvalues');
     $list_headers = explode("||", $list_headers);
     $list_values = explode("||", $list_values);
-
+    $headlineCustomCssStyle = '';
+    $selectedHeaderTextColor = '';
+    $selectedDetailTextColor = '';
     $html = '';
+    $selectedListValueTextSize = '';
+    $selectedHeaderValueTextSize = '';
+
+    $selectedHeaderValueTextSize = $block->getData('headertextsize');
+
+    $selectedListValueTextSize = $block->getData('listvaluetextsize');
+
+    $selectedHeaderTextColor = $block->getData('headerstextcolor');
+
+    $selectedDetailTextColor = $block->getData('listvaluetextcolor');
 
     $i = 0;
     foreach($list_headers as $header):
-        $html .= '<li><strong>' . trim($header) . '</strong> ' . trim($list_values[$i]) . '</li>';
+        $html .= '<li><span class="specListHeaderContainer" style="color:' . trim($selectedHeaderTextColor) . ';' . trim($selectedHeaderValueTextSize) . ' "> ' . trim($header) . '</span> '
+          . '<span 
+class="specListValueContainer"
+style="color:' . trim($selectedDetailTextColor) . ';' . trim($selectedListValueTextSize) .' "> ' . trim
+          ($list_values[$i]) . '</span>' . '</li>';
         $i++;
     endforeach;
+
+
+    //If headlinetextstyle exists then set to customCssStyles
+    if($block->getData('headlinetextstyle') != ''):
+      $headlineCustomCssStyle = $block->getData('headlinetextstyle');
+    endif;
 ?>
+
 <section class="product-info-container align-top">
     <div class="product-info grid col-2">
-        <h2><?php echo $block->getData('headline'); ?></h2>
+        <h2 style="
+            <?php
+              $headlinestylevalues = explode(',', $headlineCustomCssStyle);
+              foreach($headlinestylevalues as $headlinevalue) {
+                echo $headlinevalue;
+              }
+            ?>
+          color:<?php echo $block->getData('bannerheadlinecolor'); ?>;"
+        >
+          <?php echo $block->getData('headline'); ?>
+        </h2>
         <ul class="list-info">
             <?php echo $html; ?>
         </ul>
