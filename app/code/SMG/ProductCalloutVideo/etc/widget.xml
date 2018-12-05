@@ -9,14 +9,24 @@
             </parameter>
             <parameter name="bannerheadlinecolor" visible="true" xsi:type="text">
                 <label>Banner Headline Color (Hex Code #xxxxxx)</label>
-                <value>#fff</value>
+                <value>#000000</value>
+            </parameter>
+            <parameter name="headlinetextstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCalloutVideo\Model\Source\HeadlineTextStyles">
+                <label>Banner Headline Style</label>
             </parameter>
             <parameter name="bannertext" visible="true" xsi:type="text">
                 <label>Banner Text</label>
             </parameter>
             <parameter name="bannertextlinecolor" visible="true" xsi:type="text">
                 <label>Banner Text Color (in #xxxxxx)</label>
-                <value>#fff</value>
+                <value>#000000</value>
+            </parameter>
+            <parameter name="bannertextsize" visible="true" xsi:type="select"
+                       source_model="SMG\ProductCalloutVideo\Model\Source\TextSize">
+                <label>Banner Text Size (in rem)</label>
+            </parameter>
+            <parameter name="textstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCalloutVideo\Model\Source\TextStyles">
+                <label>Banner Text Style</label>
             </parameter>
             <parameter name="videotext" visible="true" xsi:type="block">
                 <label>Video Text</label>
@@ -24,7 +34,11 @@
             </parameter>
             <parameter name="videotextcolor" visible="true" xsi:type="text">
                 <label>Video Text Color (in #xxxxxx)</label>
-                <value>#ffffff</value>
+                <value>#000000</value>
+            </parameter>
+            <parameter name="videotextsize" visible="true" xsi:type="select"
+                       source_model="SMG\ProductCalloutVideo\Model\Source\VideoTextSize">
+                <label>Video Text Size (in rem)</label>
             </parameter>
             <parameter name="iconcolor" visible="true" xsi:type="text">
                 <label>Icon Color (in #xxxxxx)</label>
@@ -32,7 +46,7 @@
             </parameter>
             <parameter name="iconbackgroundcolor" visible="true" xsi:type="text">
                 <label>Icon Background Color (in #xxxxxx)</label>
-                <value>#ffffff</value>
+                <value>#000000</value>
             </parameter>
             <parameter name="videobackgroundimage" visible="true" xsi:type="block">
                 <label>Background Image</label>
