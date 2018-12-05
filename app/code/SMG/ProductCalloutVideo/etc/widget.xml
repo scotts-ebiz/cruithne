@@ -11,6 +11,9 @@
                 <label>Banner Headline Color (Hex Code #xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
+            <parameter name="headlinetextstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCalloutVideo\Model\Source\HeadlineTextStyles">
+                <label>Banner Headline Style</label>
+            </parameter>
             <parameter name="bannertext" visible="true" xsi:type="text">
                 <label>Banner Text</label>
             </parameter>
@@ -22,6 +25,9 @@
                        source_model="SMG\ProductCalloutVideo\Model\Source\TextSize">
                 <label>Banner Text Size (in rem)</label>
             </parameter>
+            <parameter name="textstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCalloutVideo\Model\Source\TextStyles">
+                <label>Banner Text Style</label>
+            </parameter>
             <parameter name="videotext" visible="true" xsi:type="block">
                 <label>Video Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
@@ -29,6 +35,10 @@
             <parameter name="videotextcolor" visible="true" xsi:type="text">
                 <label>Video Text Color (in #xxxxxx)</label>
                 <value>#000000</value>
+            </parameter>
+            <parameter name="videotextsize" visible="true" xsi:type="select"
+                       source_model="SMG\ProductCalloutVideo\Model\Source\VideoTextSize">
+                <label>Video Text Size (in rem)</label>
             </parameter>
             <parameter name="iconcolor" visible="true" xsi:type="text">
                 <label>Icon Color (in #xxxxxx)</label>
