@@ -9,7 +9,7 @@
     <body>
         <referenceContainer name="after.body.start">
             <block class="Vantiv\Payment\Block\Fraud\ThreatMetrix" name="vantiv.payment.fraud.threatmetrix" template="Vantiv_Payment::fraud/threatmetrix.phtml"/>
-        </referenceContainer>>
+        </referenceContainer>
         <referenceBlock name="checkout.root">
             <arguments>
                 <argument name="jsLayout" xsi:type="array">
