@@ -1,3 +1,19 @@
+<?php
+
+$paragraphTextSize ='';
+
+
+// If bannertextsize exists then set to paragraphTextSize
+if($block->getData('bannertextsize') != ''):
+  $paragraphTextSize = $block->getData('bannertextsize');
+endif;
+?>
+
+
+?>
+
+
+
 <section class="product-callout-video-widget product-info-container align-top" style="background: url('<?php echo
 $block->getData('videobackgroundimage')
 ; ?>') no-repeat; background-position: center; background-size: cover; padding-top: <?php echo $block->getData('videopaddingtop')
@@ -5,7 +21,13 @@ $block->getData('videobackgroundimage')
     <div class="product-info grid col-2 <?php echo $block->getData('textalignclass') ?> " style="padding-right:<?php
     echo $block->getData('textpaddingright'); ?>%; padding-left:<?php echo $block->getData('textpaddingleft'); ?>%;">
         <h2 class="video-headline" style="color:<?php echo $block->getData('bannerheadlinecolor'); ?>;"><?php echo $block->getData('bannerheadline'); ?></h2>
-        <p style="color:<?php echo $block->getData('bannertextlinecolor'); ?>;"><?php echo $block->getData('bannertext'); ?></p>
+        <p style="color:<?php echo $block->getData('bannertextlinecolor'); ?>;
+          <?php
+            echo $paragraphTextSize;
+          ?>"
+        >
+          <?php echo $block->getData('bannertext'); ?>
+        </p>
         <div class="video">
             <?php if($this->getData('videoembedcode') != ''): ?>
             <a class="play video-link" href="#">
