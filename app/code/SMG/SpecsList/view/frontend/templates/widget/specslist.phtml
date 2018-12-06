@@ -9,6 +9,8 @@
     $html = '';
     $selectedListValueTextSize = '';
     $selectedHeaderValueTextSize = '';
+    $selectedListValueTextStyle = '';
+    $selectedHeaderTextStyle = '';
 
     $selectedHeaderValueTextSize = $block->getData('headertextsize');
 
@@ -18,13 +20,25 @@
 
     $selectedDetailTextColor = $block->getData('listvaluetextcolor');
 
+    //If value exists for listvaluetextstyle pull in the value and replace the comma for a space
+    if($block->getData('listvaluetextstyle') != ''):
+        $selectedListValueTextStyle = str_replace(',' , '', $block->getData('listvaluetextstyle'));
+    endif;
+
+    //If value exists for listvaluetextstyle pull in the value and replace the comma for a space
+    if($block->getData('headerTextStyle') != ''):
+        $selectedHeaderTextStyle = str_replace(',' , '', $block->getData('headerTextStyle'));
+    endif;
+
+
+
+
     $i = 0;
+
     foreach($list_headers as $header):
-        $html .= '<li><span class="specListHeaderContainer" style="color:' . trim($selectedHeaderTextColor) . ';' . trim($selectedHeaderValueTextSize) . ' "> ' . trim($header) . '</span> '
-          . '<span 
-class="specListValueContainer"
-style="color:' . trim($selectedDetailTextColor) . ';' . trim($selectedListValueTextSize) .' "> ' . trim
-          ($list_values[$i]) . '</span>' . '</li>';
+        $html .= '<li><span class="specListHeaderContainer" style="color:' . trim($selectedHeaderTextColor) . ';' . trim($selectedHeaderValueTextSize) . trim($selectedHeaderTextStyle) . '">' . trim($header) . '</span> '
+          . '<span class="specListValueContainer" style="color:' . trim($selectedDetailTextColor) . ';' . trim($selectedListValueTextSize) . trim($selectedListValueTextStyle) . '">' . trim($list_values[$i]) . '</span>' .
+          '</li>';
         $i++;
     endforeach;
 
