@@ -1,20 +1,28 @@
 //SCSS file for the SMG Icon List Widget
 
 .page-wrapper .page-main .grid > {
-  h2.specListHeader {
-    display: inline-block;
-    position: relative;
-    margin: 0;
-    float: left;
-  }
-  ul.specListDetails {
-    list-style: none;
-    display: inline-block;
-    position: relative;
-    padding: 0;
-    float: right;
-    li.specListDetailCell {
-      display: inline-block;
+    h2.list-icon-header {
+        display: inline-block;
+        position: relative;
+        margin: 0;
+        float: left;
     }
-  }
+    ul.list-icon {
+        list-style: none;
+        display: inline-block;
+        position: relative;
+        padding: 0;
+        float: right;
+        li.list-icon-detail {
+            display: inline-block;
+            border: 1px solid red;
+            span.list-icon-detail-test{
+                float: left;
+                display: inline-block;
+            }
+            img {
+                float: right;
+            }
+        }
+    }
 }

@@ -7,7 +7,7 @@
     $i = 0;
     foreach($items as $item):
         if($this->getData($item) != ''):
-            $html .= '<li><strong>' . $block->getData($item) . '</strong>';
+            $html .= '<li class="span_6_of_12 list-icon-detail"><span class="list-icon-detail-test">' . $block->getData($item) . '</span>';
 
             if($this->getData($item_icons[$i]) != ''):
                 $html .= '<img src="' . $block->getData($item_icons[$i]) . '" />';
@@ -21,8 +21,8 @@
 ?>
 <section class="product-info-container align-top">
     <div class="product-info grid col-2">
-        <h2><?php echo $block->getData('headline'); ?></h2>
-        <ul class="list-icon">
+        <h2 class="span_6_of_12 list-icon-header"><?php echo $block->getData('headline'); ?></h2>
+        <ul class="span_6_of_12 list-icon">
             <?php echo $html; ?>
         </ul>
     </div>
