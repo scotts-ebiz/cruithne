@@ -11,6 +11,8 @@
     $selectedHeaderValueTextSize = '';
     $selectedListValueTextStyle = '';
     $selectedHeaderTextStyle = '';
+    $selectedListValueBottomPadding = '';
+
 
     $selectedHeaderValueTextSize = $block->getData('headertextsize');
 
@@ -30,14 +32,24 @@
         $selectedHeaderTextStyle = str_replace(',' , '', $block->getData('headerTextStyle'));
     endif;
 
+    //If value exists for listValueBottomPadding pull in the value and replace the comma for a space
+    if($block->getData('listValueBottomPadding') != ''):
+      $selectedListValueBottomPadding = $block->getData('listValueBottomPadding');
+    endif;
 
 
 
     $i = 0;
 
     foreach($list_headers as $header):
-        $html .= '<li><span class="specListHeaderContainer" style="color:' . trim($selectedHeaderTextColor) . ';' . trim($selectedHeaderValueTextSize) . trim($selectedHeaderTextStyle) . '">' . trim($header) . '</span> '
-          . '<span class="specListValueContainer" style="color:' . trim($selectedDetailTextColor) . ';' . trim($selectedListValueTextSize) . trim($selectedListValueTextStyle) . '">' . trim($list_values[$i]) . '</span>' .
+        $html .= '<li class="span_6_of_12 specListDetailCell" style="' . trim
+          ($selectedListValueBottomPadding) . '">' . '<span 
+        class="specListHeaderContainer" 
+style="color:' . trim($selectedHeaderTextColor) . ';' . trim($selectedHeaderValueTextSize) . trim($selectedHeaderTextStyle) . '">
+' . trim($header) . '</span> ' . '<br/>'
+          . '<span class="specListValueContainer" style="color:' . trim($selectedDetailTextColor) . ';' . trim
+          ($selectedListValueTextSize) . trim($selectedListValueTextStyle) .
+    '">' . trim($list_values[$i]) . '</span>' .
           '</li>';
         $i++;
     endforeach;
@@ -51,7 +63,7 @@
 
 <section class="product-info-container align-top">
     <div class="product-info grid col-2">
-        <h2 style="
+        <h2 class='specListHeader span_6_of_12' style="
             <?php
               $headlinestylevalues = explode(',', $headlineCustomCssStyle);
               foreach($headlinestylevalues as $headlinevalue) {
@@ -62,7 +74,7 @@
         >
           <?php echo $block->getData('headline'); ?>
         </h2>
-        <ul class="list-info">
+        <ul class="specListDetails span_6_of_12">
             <?php echo $html; ?>
         </ul>
     </div>

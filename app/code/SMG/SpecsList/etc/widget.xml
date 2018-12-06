@@ -34,10 +34,6 @@
                 <label>List Values (Separated by ||)</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
             </parameter>
-            <parameter name="listvaluetextstyle" visible="true" xsi:type="multiselect"
-                       source_model="SMG\SpecsList\Model\Source\TextStyles">
-                <label>Banner Text Style</label>
-            </parameter>
             <parameter name="listvaluetextcolor" visible="true" xsi:type="text">
                 <label>List Value Text Color (in #xxxxxx)</label>
                 <value>#000000</value>
@@ -45,6 +41,14 @@
             <parameter name="listvaluetextsize" visible="true" xsi:type="select"
                        source_model="SMG\SpecsList\Model\Source\TextSize">
                 <label>List Value Text Size (in rem)</label>
+            </parameter>
+            <parameter name="listvaluetextstyle" visible="true" xsi:type="multiselect"
+                       source_model="SMG\SpecsList\Model\Source\TextStyles">
+                <label>List Value Text Style</label>
+            </parameter>
+            <parameter name="listValueBottomPadding" visible="true" xsi:type="select"
+                       source_model="SMG\SpecsList\Model\Source\PaddingValues">
+                <label>List Value Bottom Padding (in %)</label>
             </parameter>
         </parameters>
     </widget>

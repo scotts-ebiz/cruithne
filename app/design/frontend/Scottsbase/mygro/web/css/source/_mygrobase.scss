@@ -365,9 +365,11 @@ body {
             display: table;
             clear: both;
         }
+        /*Might not need this
         .grid > h2 {
-            width: 100%;
+            Might not need this - width: 100%;
         }
+        */
         .col-3 {
             .item {
                 width: calc(33.33% - 28px);
