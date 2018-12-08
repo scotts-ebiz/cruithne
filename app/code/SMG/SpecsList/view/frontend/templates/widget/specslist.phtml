@@ -32,7 +32,7 @@
         $selectedHeaderTextStyle = str_replace(',' , '', $block->getData('headerTextStyle'));
     endif;
 
-    //If value exists for listValueBottomPadding pull in the value and replace the comma for a space
+    //If value exists for listValueBottomPadding then set to $selectedListValueBottomPadding
     if($block->getData('listValueBottomPadding') != ''):
       $selectedListValueBottomPadding = $block->getData('listValueBottomPadding');
     endif;
