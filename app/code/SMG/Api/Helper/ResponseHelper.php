@@ -21,14 +21,14 @@ class ResponseHelper
         {
             $response['statusCode'] = '200';
             $response['statusMessage'] = 'Success';
+            $response['response'] = $message;
         }
         else
         {
             $response['statusCode'] = '300';
-            $response['statusMessage'] = 'Failure';
+            $response['statusMessage'] = $message;
+            $response['response'] = null;
         }
-
-        $response['response'] = $message;
 
         // return
         return json_encode($response);
