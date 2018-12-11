@@ -609,6 +609,37 @@
 }
 // Checkout Styles
 .checkout-index-index {
+    .fieldset {
+        .field.required,
+        .field._required {
+            label,
+            .label {
+                &:after {
+                    font-size: 0.8rem;
+                }
+            }
+        }
+        .fields {
+            .field.required,
+            .field._required {
+                label,
+                .label {
+                    &:after {
+                        font-size: 0.8rem;
+                    }
+                }
+            }
+        }
+    }
+    .field-error {
+        font-size: 1rem;
+    }
+    .mage-error[generated] {
+        font-size: 1rem;
+    }
+    .message.warning {
+        font-size: 1rem;
+    }
     .page-wrapper {
         .page-header {
             .header.content {
