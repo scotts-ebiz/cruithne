@@ -2,12 +2,11 @@
 
 namespace SMG\FeaturesList\Model\Source;
 
-class HeadlineTextSize implements \Magento\Framework\Option\ArrayInterface
+class FeaturesListHeadlineSize implements \Magento\Framework\Option\ArrayInterface
 {
   public function toOptionArray()
   {
     return [
-        ['value' => 'font-size: 1.1rem; ', 'label' => __('1.1')],
         ['value' => 'font-size: 1.2rem; ', 'label' => __('1.2')],
         ['value' => 'font-size: 1.3rem; ', 'label' => __('1.3')],
         ['value' => 'font-size: 1.4rem; ', 'label' => __('1.4')],
