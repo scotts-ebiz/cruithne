@@ -42,7 +42,7 @@
             </parameter>
 
             <parameter name="featureHeadlineStyles" visible="true" xsi:type="multiselect"
-                       source_model="SMG\FeaturesList\Model\Source\FeatureListHeadlineStyles">
+                       source_model="SMG\FeaturesList\Model\Source\FeatureHeadlineStyles">
                 <label>Feature Headline Style</label>
             </parameter>
 
