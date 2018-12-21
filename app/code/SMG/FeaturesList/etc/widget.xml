@@ -27,22 +27,18 @@
 
 
             <!-- Feature(s) Headline Customization -->
-
             <parameter name="featureHeadlineLabel" visible="true" xsi:type="block">
                 <label>Feature Headline Customization</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
-
             <parameter name="featureHeadlineSize" visible="true" xsi:type="select"
                        source_model="SMG\FeaturesList\Model\Source\FeatureHeadlineSize">
                 <label>Feature Headline Size (in rem)</label>
             </parameter>
-
             <parameter name="featureHeadlineColor" visible="true" xsi:type="text">
                 <label>Feature Headline Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
-
             <parameter name="featureHeadlineStyles" visible="true" xsi:type="multiselect"
                        source_model="SMG\FeaturesList\Model\Source\FeatureHeadlineStyles">
                 <label>Feature Headline Style</label>
@@ -50,41 +46,22 @@
 
 
             <!-- Feature Text Customization -->
-
             <parameter name="featureTextLabel" visible="true" xsi:type="block">
                 <label>Feature Text Customization</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
-
             <parameter name="featureTextSize" visible="true" xsi:type="select"
                        source_model="SMG\FeaturesList\Model\Source\FeatureTextSize">
                 <label>Feature Text Size (in rem)</label>
             </parameter>
-
             <parameter name="featureTextColor" visible="true" xsi:type="text">
                 <label>Feature Text Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
-
             <parameter name="featureTextStyles" visible="true" xsi:type="multiselect"
                        source_model="SMG\FeaturesList\Model\Source\FeatureTextStyles">
                 <label>Feature Text Style</label>
             </parameter>
-
-            <!--
-            <parameter name="featureTextSize" visible="true" xsi:type="select"
-                       source_model="SMG\FeaturesList\Model\Source\TextSize">
-                <label>Feature Text Size (in rem)</label>
-            </parameter>
-            <parameter name="featureTextColor" visible="true" xsi:type="text">
-                <label>Feature Text Color (#xxxxxx)</label>
-                <value>#000000</value>
-            </parameter>
-            <parameter name="textStyle" visible="true" xsi:type="multiselect"
-                       source_model="SMG\FeaturesList\Model\Source\TextStyles">
-                <label>Feature Text Style</label>
-            </parameter>
-            -->
 
 
             <!-- Feature 1 -->
@@ -103,7 +80,6 @@
                 <label>Feature #1 Image</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
-
 
 
             <!-- Feature 2 -->

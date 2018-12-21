@@ -24,6 +24,6 @@
     endforeach;
 ?>
 <section class="<?php echo 'feature-list grid col-' . $cols; ?>">
-    <h2><?php echo $block->getData('headline'); ?></h2>
+    <h2 style="color:<?php echo $block->getData('featuresListHeadlineColor')?>;"><?php echo $block->getData('featuresListHeadline'); ?></h2>
     <?php echo $html; ?>
 </section>
