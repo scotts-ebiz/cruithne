@@ -4,7 +4,7 @@
         <label>Features List</label>
         <description>Display list of features.</description>
         <parameters>
-            <!-- Features List Headline
+            <!-- Features List Headline -->
             <parameter name="featuresListHeadline" visible="true" xsi:type="text" required="true">
                 <label>Features List Headline</label>
             </parameter>
@@ -19,18 +19,23 @@
             <parameter name="featuresListHeadlineStyles" visible="true" xsi:type="multiselect"
                        source_model="SMG\FeaturesList\Model\Source\FeaturesListHeadlineStyles">
                 <label>Features List Headline Style</label>
-            </parameter>-->
+            </parameter>
 
 
             <!-- Feature(s) Headline Customization -->
+            <!--
             <parameter name="featureHeadlineLabel" visible="true" xsi:type="block">
                 <label>Feature Headline Customization</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
+            -->
+
             <parameter name="featureHeadlineSize" visible="true" xsi:type="select"
                        source_model="SMG\FeaturesList\Model\Source\FeatureHeadlineSize">
                 <label>Feature Headline Size (in rem)</label>
             </parameter>
+
+            <!--
             <parameter name="featureHeadlineColor" visible="true" xsi:type="text">
                 <label>Feature Headline Color (#xxxxxx)</label>
                 <value>#000000</value>
@@ -40,7 +45,7 @@
                        source_model="SMG\FeaturesList\Model\Source\FeatureHeadlineStyles">
                 <label>Feature Headline Style</label>
             </parameter>
-
+            -->
 
             <!-- Feature Text Customization
             <parameter name="featureTextSize" visible="true" xsi:type="select"
