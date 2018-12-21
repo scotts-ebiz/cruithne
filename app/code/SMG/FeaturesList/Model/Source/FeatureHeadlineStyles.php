@@ -2,7 +2,7 @@
 
 namespace SMG\FeaturesList\Model\Source;
 
-class FeatureListHeadlineStyles implements \Magento\Framework\Option\ArrayInterface
+class FeatureHeadlineStyles implements \Magento\Framework\Option\ArrayInterface
 {
   public function toOptionArray()
   {
