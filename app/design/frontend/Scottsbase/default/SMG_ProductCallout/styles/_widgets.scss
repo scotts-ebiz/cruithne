@@ -1,14 +1,20 @@
 /* Widget Start - Location - App / design / frontend / Scottsbase / default / SMG_ProdcutCallout / styles */
 
 .product-callout-widget.product-info-container {
+    display: inline-block;
+    position: relative;
     .product-info {
+        .image-container {
+            display: inline-block;
+            position: relative;
+        }
         @media only screen and (max-width: 1024px) {
             display: block;
         }
         .content.text-left {
             float: left;
             h2 {
-                width: 80%;
+                width: 90%;
                 text-align: left;
                 @media only screen and (max-width: 1024px) {
                     width: 100%;
@@ -21,8 +27,7 @@
             }
             p {
                 text-align: left;
-                width: 80%;
-                font-size: 1.0rem;
+                width: 90%;
                 @media only screen and (max-width: 1024px) {
                     width: 100%;
                     padding: 0;
@@ -35,7 +40,7 @@
             float: right;
             h2 {
                 text-align: right;
-                width: 80%;
+                width: 90%;
                 @media only screen and (max-width: 1024px) {
                     width: 100%;
                     font-size: 32px;
@@ -47,8 +52,7 @@
             }
             p {
                 text-align: right;
-                width: 80%;
-                font-size: 20px;
+                width: 90%;
                 @media only screen and (max-width: 1024px) {
                     width: 100%;
                     padding: 0;
