@@ -1,3 +1,38 @@
+### 1.5.0 (2018-12-19)
+
+* Add support for payload extender in shipping-save-processor [#181](https://github.com/classyllama/ClassyLlama_AvaTax/issues/181)
+* Add support for Magento 2.3 [#108](https://github.com/classyllama/ClassyLlama_AvaTax/issues/108)
+
+### 1.4.9 (2018-10-25)
+
+* Fix issue where $0 rates are inaccurate in tax summary [PR #193](https://github.com/classyllama/ClassyLlama_AvaTax/pull/193)
+* Fix issue where tax isn't calculated prior to checkout for virtual orders [#121](https://github.com/classyllama/ClassyLlama_AvaTax/issues/121)
+* Fix issue where duplicate entries can be created in address book [#115](https://github.com/classyllama/ClassyLlama_AvaTax/issues/115)
+* Refactor VAT ID submission code to match behavior described in config comment [PR #204](https://github.com/classyllama/ClassyLlama_AvaTax/pull/204)
+* Refactor code to prevent rounding tax rate prior to displaying on frontend [#179](https://github.com/classyllama/ClassyLlama_AvaTax/issues/179)
+
+### 1.4.8 (2018-10-15)
+
+* Fix issue where editing customer in backend of Magento 2.1.x results in missing tabs (e.g. "Orders") [#151](https://github.com/classyllama/ClassyLlama_AvaTax/issues/151)
+* Added sensitive and environment-specific entries to the configuration type pool [#178](https://github.com/classyllama/ClassyLlama_AvaTax/issues/178) (from @leoquijano)
+* Add additional conditional check to prevent inadvertently disabling address validation [PR #124](https://github.com/classyllama/ClassyLlama_AvaTax/pull/124) (from @vovayatsyuk)
+
+### 1.4.7 (2018-10-02)
+
+* Fix issue where Magento 2.1.15 and 2.2.6 zero out shipping amount at checkout [#184](https://github.com/classyllama/ClassyLlama_AvaTax/issues/184)
+
+### 1.4.6 (2018-09-27)
+
+* Update the customer use codes for Religious and Educational classes to be separate types [#169](https://github.com/classyllama/ClassyLlama_AvaTax/issues/169)
+
+### 1.4.5 (2018-09-14)
+
+* Fix issue where saving AvaTax credentials at the website scope can result in an error [#171](https://github.com/classyllama/ClassyLlama_AvaTax/issues/171)
+
+### 1.4.4 (2018-09-13)
+
+* Fix issue where invalid/partial zip code values result in errors logged [#122](https://github.com/classyllama/ClassyLlama_AvaTax/issues/122)
+
 ### 1.4.3 (2018-07-13)
 
 * Fix issue where address validation in admin while editing customer doesn't display region in original address [#135](https://github.com/classyllama/ClassyLlama_AvaTax/issues/135)
