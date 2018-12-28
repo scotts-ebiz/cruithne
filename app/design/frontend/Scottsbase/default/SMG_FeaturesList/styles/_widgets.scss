@@ -1,1 +1,16 @@
 /* Features List Widget Styling */
+section.feature-list {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    h2 {
+        width: 100%;
+        text-align: center;
+    }
+    div.item {
+        margin-bottom: 50px;
+        padding: 5px 5px;
+        text-align: center;
+    }
+}

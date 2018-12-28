@@ -9,7 +9,7 @@
     $cols = 0;
     foreach($headlines as $headline):
         if($this->getData($headline) != ''):
-            $html .= '<div class="item span_3_of_12">
+            $html .= '<div class="item">
                 <div class="image-container">
                     <img src="' . $block->getData($images[$i]) . '" />
                 </div>
@@ -23,7 +23,10 @@
         $i++;
     endforeach;
 ?>
+<!-- Old Section:
 <section class="<?php echo 'feature-list grid col-' . $cols; ?>">
+-->
+<section class="<?php echo 'feature-list'?>">
     <h2 style="color:<?php echo $block->getData('featuresListHeadlineColor')?>;"><?php echo $block->getData('featuresListHeadline'); ?></h2>
     <?php echo $html; ?>
 </section>
