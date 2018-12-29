@@ -5,6 +5,18 @@
 
     $html = '';
 
+    //If headlinetextstyle exists then set to customCssStyles
+    if($block->getData('featuresListHeadlineStyles') != ''):
+        $featuresListHeadlineCustomStyles = $block->getData('featuresListHeadlineStyles');
+    endif;
+
+    if($block->getData('featuresListHeadlineSize') != ''):
+      $featuresListHeadlineCustomSize = $block->getData('featuresListHeadlineSize');
+    endif;
+
+
+
+
     $i = 0;
     $cols = 0;
     foreach($headlines as $headline):
@@ -27,6 +39,15 @@
 <section class="<?php echo 'feature-list grid col-' . $cols; ?>">
 -->
 <section class="<?php echo 'feature-list'?>">
-    <h2 style="color:<?php echo $block->getData('featuresListHeadlineColor')?>;"><?php echo $block->getData('featuresListHeadline'); ?></h2>
+    <h2 style="
+      <?php
+      $headlinestylevalues = explode(',', $featuresListHeadlineCustomStyles);
+      foreach($headlinestylevalues as $headlinevalue) {
+          echo $headlinevalue;
+      }
+      echo $featuresListHeadlineCustomSize;
+      ?>
+      color:<?php echo $block->getData('featuresListHeadlineColor')?>;">
+      <?php echo $block->getData('featuresListHeadline'); ?></h2>
     <?php echo $html; ?>
 </section>
