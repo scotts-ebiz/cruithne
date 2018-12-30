@@ -12,5 +12,8 @@ section.feature-list {
         margin-bottom: 50px;
         padding: 5px 5px;
         text-align: center;
+        .image-container {
+            height: 125px;
+        }
     }
 }

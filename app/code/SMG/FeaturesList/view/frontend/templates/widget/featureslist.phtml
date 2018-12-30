@@ -5,13 +5,64 @@
 
     $html = '';
 
-    //If headlinetextstyle exists then set to customCssStyles
+    $featureHeadlineCustomStyles = '';
+
+    $featureHeadlineCustomSize = '';
+
+    $featureHeadlineCustomColor = '';
+
+    $featureTextCustomSize = '';
+
+    $featureTextCustomColor = '';
+
+    $featureTextCustomStyles = '';
+
+
+    //If headlinetextstyle exists then set to $featuresListHeadlineCustomStyles
     if($block->getData('featuresListHeadlineStyles') != ''):
         $featuresListHeadlineCustomStyles = $block->getData('featuresListHeadlineStyles');
     endif;
 
+
+    //If featuresListHeadlineSize exists then set to $featuresListHeadlineCustomSize
     if($block->getData('featuresListHeadlineSize') != ''):
       $featuresListHeadlineCustomSize = $block->getData('featuresListHeadlineSize');
+    endif;
+
+
+    //If featureHeadlineSize exists then set to $featureHeadlineCustomSize
+    if($block->getData('featureHeadlineSize') != ''):
+      $featureHeadlineCustomSize = $block->getData('featureHeadlineSize');
+    endif;
+
+
+    //If featureTextSize exists then set to $featureTextCustomSize
+    if($block->getData('featureTextSize') != ''):
+      $featureTextCustomSize = $block->getData('featureTextSize');
+    endif;
+
+
+    //If featureHeadlineColor exists then set to $featureHeadlineCustomColor
+    if($block->getData('featureHeadlineColor') != ''):
+      $featureHeadlineCustomColor = $block->getData('featureHeadlineColor');
+    endif;
+
+
+    //If featureTextColor exists then set to $featureHeadlineCustomColor
+    if($block->getData('featureTextColor') != ''):
+      $featureTextCustomColor = $block->getData('featureTextColor');
+    endif;
+
+
+    //If value exists for featureHeadlineStyles pull in the value and replace the comma for a space
+    if($block->getData('featureHeadlineStyles') != ''):
+      $featureHeadlineCustomStyles = str_replace(',' , '', $block->getData('featureHeadlineStyles'));
+    endif;
+
+
+    //If value exists for featureTextStyles pull in the value and replace the comma for a space
+    if($block->getData('featureTextStyles') != ''):
+      $featureTextCustomStyles = str_replace(',' , '', $block->getData('featureTextStyles'));
     endif;
 
 
@@ -25,8 +76,8 @@
                 <div class="image-container">
                     <img src="' . $block->getData($images[$i]) . '" />
                 </div>
-                <h3>' . $block->getData($headline) . '</h3>
-                <p>' . $block->getData($text[$i]) . '</p>
+                <h3 style="' . $featureHeadlineCustomSize . 'color:' . $featureHeadlineCustomColor . '; ' . trim($featureHeadlineCustomStyles) . '">' . $block->getData($headline) . '</h3>
+                <p style="' . $featureTextCustomSize . 'color:' . $featureTextCustomColor . '; ' . trim($featureTextCustomStyles) . '">' . $block->getData($text[$i]) . '</p>
             </div>';
 
             $cols++;
@@ -46,8 +97,7 @@
           echo $headlinevalue;
       }
       echo $featuresListHeadlineCustomSize;
-      ?>
-      color:<?php echo $block->getData('featuresListHeadlineColor')?>;">
+      ?>color:<?php echo $block->getData('featuresListHeadlineColor')?>;">
       <?php echo $block->getData('featuresListHeadline'); ?></h2>
     <?php echo $html; ?>
 </section>

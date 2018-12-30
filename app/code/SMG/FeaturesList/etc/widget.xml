@@ -6,7 +6,7 @@
         <parameters>
             <!-- Features List Headline -->
             <parameter name="featuresListHeadlineLabel" visible="true" xsi:type="block">
-                <label>Features List Headline</label>
+                <label>FEATURES LIST HEADLINE</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="featuresListHeadline" visible="true" xsi:type="text" required="true">
@@ -28,7 +28,7 @@
 
             <!-- Feature(s) Headline Customization -->
             <parameter name="featureHeadlineLabel" visible="true" xsi:type="block">
-                <label>Feature Headline Customization</label>
+                <label>FEATURE HEADLINE CUSTOMIZATION</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="featureHeadlineSize" visible="true" xsi:type="select"
@@ -47,7 +47,7 @@
 
             <!-- Feature Text Customization -->
             <parameter name="featureTextLabel" visible="true" xsi:type="block">
-                <label>Feature Text Customization</label>
+                <label>FEATURE TEXT CUSTOMIZATION</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="featureTextSize" visible="true" xsi:type="select"
@@ -66,7 +66,7 @@
 
             <!-- Feature 1 -->
             <parameter name="featureone" visible="true" xsi:type="block">
-                <label>Feature #1</label>
+                <label>FEATURE #1</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="featureoneheadline" visible="true" xsi:type="text">
@@ -84,7 +84,7 @@
 
             <!-- Feature 2 -->
             <parameter name="featuretwo" visible="true" xsi:type="block">
-                <label>Feature #2</label>
+                <label>FEATURE #2</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="featuretwoheadline" visible="true" xsi:type="text">
@@ -102,7 +102,7 @@
 
             <!-- Feature 3 -->
             <parameter name="featurethree" visible="true" xsi:type="block">
-                <label>Feature #3</label>
+                <label>FEATURE #3</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="featurethreeheadline" visible="true" xsi:type="text">
@@ -120,7 +120,7 @@
 
             <!-- Feature 4 -->
             <parameter name="featurefour" visible="true" xsi:type="block">
-                <label>Feature #4</label>
+                <label>FEATURE #4</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="featurefourheadline" visible="true" xsi:type="text">
@@ -138,7 +138,7 @@
 
             <!-- Feature 5 -->
             <parameter name="featurefive" visible="true" xsi:type="block">
-                <label>Feature #5</label>
+                <label>FEATURE #5</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="featurefiveheadline" visible="true" xsi:type="text">
