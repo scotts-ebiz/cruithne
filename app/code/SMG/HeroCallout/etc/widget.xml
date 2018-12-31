@@ -47,6 +47,10 @@
             <parameter name="buttontext" visible="true" xsi:type="text">
                 <label>Button Text</label>
             </parameter>
+            <parameter name="HeroCalloutButtonTextSize" visible="true" xsi:type="select"
+                       source_model="SMG\HeroCallout\Model\Source\HeroCalloutButtonTextSize">
+                <label>Button Text Size (in rem)</label>
+            </parameter>
             <parameter name="buttonlink" visible="true" xsi:type="text">
                 <label>Button Link</label>
             </parameter>
