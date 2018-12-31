@@ -480,12 +480,9 @@ body {
                 padding: 50px 0;
             }
             img {
-                height: 60px;
                 display: inline-block;
             }
             h2 {
-                font-size: 48px;
-                color: $mygro-black-alt;
                 margin-bottom: 75px;
                 margin-top: 0;
                 @include max-screen($screen__l) {
@@ -506,17 +503,18 @@ body {
                 padding: 0 50px;
             }
             .image-container {
-                height: 110px;
-                width: 140px;
-                padding: 40px 0 0;
+                height: 155px;
+                width: 155px;
                 background: $white;
                 border-radius: 50%;
                 color: $mygro-green;
-                font-size: 60px;
                 box-shadow: 0 6px 24px 0 rgba(0, 0, 0, 0.04);
                 display: block;
                 margin: 0 auto;
-                text-align: center;
+                img {
+                    height: 85px;
+                    padding: 35px 0 0 0;
+                }
             }
         }
     }
@@ -729,6 +727,8 @@ body {
         }
     }
 }
+
+
 // Checkout Styles
 .checkout-index-index {
     .page-wrapper {
