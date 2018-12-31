@@ -11,7 +11,7 @@
             </parameter>
             <parameter name="HeroCalloutBannerHeadlineSize" visible="true" xsi:type="select"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerHeadlineSize">
-                <label>Banner Headline Headline Size (in rem)</label>
+                <label>Banner Headline Size (in rem)</label>
             </parameter>
 
 
@@ -19,6 +19,10 @@
             <parameter name="bannertext" visible="true" xsi:type="block">
                 <label>Banner Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+            </parameter>
+            <parameter name="HeroCalloutBannerTextSize" visible="true" xsi:type="select"
+                       source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextSize">
+                <label>Banner Text Size (in rem)</label>
             </parameter>
 
 
