@@ -13,6 +13,10 @@
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerHeadlineSize">
                 <label>Banner Headline Size (in rem)</label>
             </parameter>
+            <parameter name="HeroCalloutBannerHeadlineColor" visible="true" xsi:type="text">
+                <label>Banner Headline Color (#xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
 
 
             <!-- Banner Text Customizations -->
@@ -23,6 +27,10 @@
             <parameter name="HeroCalloutBannerTextSize" visible="true" xsi:type="select"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextSize">
                 <label>Banner Text Size (in rem)</label>
+            </parameter>
+            <parameter name="HeroCalloutBannerTextColor" visible="true" xsi:type="text">
+                <label>Banner Text Color (#xxxxxx)</label>
+                <value>#000000</value>
             </parameter>
 
 
@@ -50,6 +58,10 @@
             <parameter name="HeroCalloutButtonTextSize" visible="true" xsi:type="select"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutButtonTextSize">
                 <label>Button Text Size (in rem)</label>
+            </parameter>
+            <parameter name="HeroCalloutButtonTextColor" visible="true" xsi:type="text">
+                <label>Button Text Color (#xxxxxx)</label>
+                <value>#000000</value>
             </parameter>
             <parameter name="buttonlink" visible="true" xsi:type="text">
                 <label>Button Link</label>
