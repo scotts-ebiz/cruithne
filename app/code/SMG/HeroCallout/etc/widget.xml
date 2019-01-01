@@ -21,6 +21,10 @@
                 <label>Banner Headline Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
+            <parameter name="HeroCalloutBannerHeadlineStyles" visible="true" xsi:type="multiselect"
+                       source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerHeadlineStyles">
+                <label>Banner Headline Style</label>
+            </parameter>
 
 
             <!-- Banner Text Customizations -->
