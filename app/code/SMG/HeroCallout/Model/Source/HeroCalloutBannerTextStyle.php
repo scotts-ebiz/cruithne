@@ -2,7 +2,7 @@
 
 namespace SMG\HeroCallout\Model\Source;
 
-class HeroCalloutBannerHeadlineStyles implements \Magento\Framework\Option\ArrayInterface
+class HeroCalloutBannerTextStyle implements \Magento\Framework\Option\ArrayInterface
 {
   public function toOptionArray()
   {
