@@ -50,6 +50,14 @@
             <parameter name="bannertexthighlight" visible="true" xsi:type="text">
                 <label>Banner Text Highlight</label>
             </parameter>
+            <parameter name="HeroCalloutBannerTextHighlightSize" visible="true" xsi:type="select"
+                       source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextHighlightSize">
+                <label>Banner Text Highlight Size (in rem)</label>
+            </parameter>
+            <parameter name="HeroCalloutBannerTextHighlightColor" visible="true" xsi:type="text">
+                <label>Banner Text Highlight Color (#xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
 
 
             <!-- Banner Image Section -->
