@@ -44,12 +44,10 @@
                 <label>Banner Text Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
-            <!--
             <parameter name="HeroCalloutBannerTextStyles" visible="true" xsi:type="multiselect"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextStyles.php">
                 <label>Banner Text Style</label>
             </parameter>
-            -->
 
 
 
