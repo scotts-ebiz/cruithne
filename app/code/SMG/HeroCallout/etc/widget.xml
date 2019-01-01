@@ -44,11 +44,6 @@
                 <label>Banner Text Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
-            <parameter name="HeroCalloutBannerTextStyles" visible="true" xsi:type="multiselect"
-                       source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextStyles.php">
-                <label>Banner Text Style</label>
-            </parameter>
-
 
 
             <!-- Banner Text Highlight Customizations -->
@@ -67,12 +62,6 @@
                 <label>Banner Text Highlight Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
-            <!--
-            <parameter name="HeroCalloutBannerTextHighlightStyles" visible="true" xsi:type="multiselect"
-                       source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextHighlightStyles.php">
-                <label>Banner Text Highlight Style</label>
-            </parameter>
-            -->
 
 
             <!-- Banner Image Section -->
