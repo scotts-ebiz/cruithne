@@ -68,7 +68,7 @@
             </parameter>
             <parameter name="HeroCalloutBannerTextHighlightStyles" visible="true" xsi:type="multiselect"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextHighlightStyles.php">
-                <label>Banner Text Style</label>
+                <label>Banner Text Highlight Style</label>
             </parameter>
 
 
