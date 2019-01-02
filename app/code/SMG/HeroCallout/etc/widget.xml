@@ -99,6 +99,10 @@
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutButtonTextSize">
                 <label>Button Text Size (in rem)</label>
             </parameter>
+            <parameter name="HeroCalloutButtonTextStyle" visible="true" xsi:type="multiselect"
+                       source_model="SMG\HeroCallout\Model\Source\HeroCalloutButtonTextStyle">
+                <label>Button Text Style</label>
+            </parameter>
             <parameter name="HeroCalloutButtonTextColor" visible="true" xsi:type="text">
                 <label>Button Text Color (#xxxxxx)</label>
                 <value>#000000</value>
