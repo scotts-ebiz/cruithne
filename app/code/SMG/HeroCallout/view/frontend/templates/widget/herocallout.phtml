@@ -89,6 +89,12 @@ if($block->getData('HeroCalloutBannerTextHighlightStyle') != ''):
 endif;
 
 
+//If value exists for HeroCalloutButtonTextStyle pull in the value and replace the comma for a space
+if($block->getData('HeroCalloutButtonTextStyle') != ''):
+  $HeroCalloutButtonTextCustomStyle = str_replace(',' , '', $block->getData
+  ('HeroCalloutButtonTextStyle'));
+endif;
+
 ?>
 
 
@@ -100,7 +106,7 @@ endif;
         <p class="highlight" style="<?php echo $HeroCalloutBannerTextHighlightCustomSize?> color:<?php echo $HeroCalloutBannerTextHighlightCustomColor?>; <?php echo $HeroCalloutBannerTextHighlightCustomStyle?>"><?php echo $block->getData('bannertexthighlight'); ?></p>
 
         <?php if($block->getData('buttontext')): ?>
-        <a class="button" style="<?php echo $HeroCalloutButtonTextCustomSize?> color:<?php echo $HeroCalloutButtonTextCustomColor?>; background:<?php echo $HeroCalloutButtonCustomColor?>;" href="<?php echo $block->getData('buttonlink'); ?>"><?php echo $block->getData('buttontext'); ?></a>
+        <a class="button" style="<?php echo $HeroCalloutButtonTextCustomSize?> color:<?php echo $HeroCalloutButtonTextCustomColor?>; background:<?php echo $HeroCalloutButtonCustomColor?>; <?php echo $HeroCalloutButtonTextCustomStyle?>" href="<?php echo $block->getData('buttonlink'); ?>"><?php echo $block->getData('buttontext'); ?></a>
         <?php endif; ?>
     </div>
 </section>
