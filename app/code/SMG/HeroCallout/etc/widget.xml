@@ -46,7 +46,7 @@
             </parameter>
             <parameter name="HeroCalloutBannerTextStyle" visible="true" xsi:type="multiselect"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextStyle">
-                <label>Banner Headline Style</label>
+                <label>Banner Text Style</label>
             </parameter>
 
 
@@ -65,6 +65,10 @@
             <parameter name="HeroCalloutBannerTextHighlightColor" visible="true" xsi:type="text">
                 <label>Banner Text Highlight Color (#xxxxxx)</label>
                 <value>#000000</value>
+            </parameter>
+            <parameter name="HeroCalloutBannerTextHighlightStyle" visible="true" xsi:type="multiselect"
+                       source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextHighlightStyle">
+                <label>Banner Text Highlight Style</label>
             </parameter>
 
 
