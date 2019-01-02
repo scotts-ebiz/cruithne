@@ -12,6 +12,7 @@ $HeroCalloutButtonTextCustomColor = '';
 $HeroCalloutButtonCustomColor = '';
 $HeroCalloutBannerTextHighlightCustomStyle = '';
 $HeroCalloutBannerHeadlineCustomStyles = '';
+$HeroCalloutBannerTextCustomStyle = '';
 
 
 
@@ -74,15 +75,29 @@ if($block->getData('HeroCalloutBannerHeadlineStyles') != ''):
   $HeroCalloutBannerHeadlineCustomStyles = str_replace(',' , '', $block->getData('HeroCalloutBannerHeadlineStyles'));
 endif;
 
+
+//If value exists for HeroCalloutBannerTextStyle pull in the value and replace the comma for a space
+if($block->getData('HeroCalloutBannerTextStyle') != ''):
+  $HeroCalloutBannerTextCustomStyle = str_replace(',' , '', $block->getData('HeroCalloutBannerTextStyle'));
+endif;
+
+
+//If value exists for HeroCalloutBannerTextHighlightStyle pull in the value and replace the comma for a space
+if($block->getData('HeroCalloutBannerTextHighlightStyle') != ''):
+  $HeroCalloutBannerTextHighlightCustomStyle = str_replace(',' , '', $block->getData
+  ('HeroCalloutBannerTextHighlightStyle'));
+endif;
+
+
 ?>
 
 
 <section class="connect-home col-2 span_12_of_12">
     <div class="content">
         <h2 style="<?php echo $HeroCalloutBannerHeadlineCustomSize?> color:<?php echo $HeroCalloutBannerHeadlineCustomColor?>; <?php echo $HeroCalloutBannerHeadlineCustomStyles?>"><?php echo $block->getData('bannerheadline'); ?></h2>
-        <p style="<?php echo $HeroCalloutBannerTextCustomSize?> color:<?php echo $HeroCalloutBannerTextCustomColor?>;"><?php echo $block->getData
+        <p style="<?php echo $HeroCalloutBannerTextCustomSize?> color:<?php echo $HeroCalloutBannerTextCustomColor?>; <?php echo $HeroCalloutBannerTextCustomStyle?>"><?php echo $block->getData
         ('bannertext'); ?></p>
-        <p class="highlight" style="<?php echo $HeroCalloutBannerTextHighlightCustomSize?> color:<?php echo $HeroCalloutBannerTextHighlightCustomColor?>;"><?php echo $block->getData('bannertexthighlight'); ?></p>
+        <p class="highlight" style="<?php echo $HeroCalloutBannerTextHighlightCustomSize?> color:<?php echo $HeroCalloutBannerTextHighlightCustomColor?>; <?php echo $HeroCalloutBannerTextHighlightCustomStyle?>"><?php echo $block->getData('bannertexthighlight'); ?></p>
 
         <?php if($block->getData('buttontext')): ?>
         <a class="button" style="<?php echo $HeroCalloutButtonTextCustomSize?> color:<?php echo $HeroCalloutButtonTextCustomColor?>; background:<?php echo $HeroCalloutButtonCustomColor?>;" href="<?php echo $block->getData('buttonlink'); ?>"><?php echo $block->getData('buttontext'); ?></a>
