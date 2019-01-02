@@ -105,7 +105,15 @@
             </parameter>
             <parameter name="HeroCalloutButtonTextColor" visible="true" xsi:type="text">
                 <label>Button Text Color (#xxxxxx)</label>
-                <value>#000000</value>
+                <value>#ffffff</value>
+            </parameter>
+            <parameter name="HeroCalloutButtonColor" visible="true" xsi:type="text">
+                <label>Button Color (#xxxxxx)</label>
+                <value>#4d4d4e</value>
+            </parameter>
+            <parameter name="HeroCalloutButtonHoverColor" visible="true" xsi:type="text">
+                <label>Button Hover Color (#xxxxxx)</label>
+                <value>#636363</value>
             </parameter>
             <parameter name="buttonlink" visible="true" xsi:type="text">
                 <label>Button Link</label>
