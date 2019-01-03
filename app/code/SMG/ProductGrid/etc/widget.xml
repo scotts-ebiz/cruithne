@@ -61,8 +61,8 @@
                 <label>Product #1 Background Image</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
-            <parameter name="pricetextone" visible="true" xsi:type="text">
-                <label>Product #1 Price</label>
+            <parameter name="productSubTextOne" visible="true" xsi:type="text">
+                <label>Product #1 Sub Text</label>
             </parameter>
             <parameter name="prodbuttontextone" visible="true" xsi:type="text">
                 <label>Product #1 Button Text</label>
@@ -91,7 +91,7 @@
                 <label>Product #2 Background Image</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
-            <parameter name="pricetexttwo" visible="true" xsi:type="text">
+            <parameter name="productSubTextTwo" visible="true" xsi:type="text">
                 <label>Product #2 Price</label>
             </parameter>
             <parameter name="prodbuttontexttwo" visible="true" xsi:type="text">
@@ -121,7 +121,7 @@
                 <label>Product #3 Background Image</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
-            <parameter name="pricetextthree" visible="true" xsi:type="text">
+            <parameter name="productSubTextThree" visible="true" xsi:type="text">
                 <label>Product #3 Price</label>
             </parameter>
             <parameter name="prodbuttontextthree" visible="true" xsi:type="text">
