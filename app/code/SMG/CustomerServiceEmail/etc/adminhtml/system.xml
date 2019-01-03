@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2019 SMG, LLC. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="sales_email" >
+            <group id="customer_service_team" translate="label" type="text" sortOrder="0.5" showInDefault="1"
+                   showInWebsite="1" showInStore="1">
+                <label>Customer Service Team</label>
+                <field id="association_report_emails_header" translate="label" type="label" sortOrder="10"
+                       showInDefault="0" showInWebsite="1" showInStore="1">
+                    <label><![CDATA[<strong>>Customer Service Team Emails</strong>]]></label>
+                    <comment>You can only configure email subscribers at a global level.</comment>
+                </field>
+                <field id="team_emails" translate="label" sortOrder="10" showInDefault="1" showInWebsite="0"
+                       showInStore="0" canRestore="1">
+                    <label>Team Emails</label>
+                    <frontend_model>SMG\CustomerServiceEmail\Block\Adminhtml\Form\Field\Subscribers</frontend_model>
+                    <backend_model>Magento\Config\Model\Config\Backend\Serialized\ArraySerialized</backend_model>
+                    <comment>Emails to receive error and status notifications</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
