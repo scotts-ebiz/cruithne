@@ -32,6 +32,10 @@
                 <label>Product Headline Text Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
+            <parameter name="productHeadlineTextSize" visible="true" xsi:type="select"
+                       source_model="SMG\ProductGrid\Model\Source\productHeadlineTextSize">
+                <label>Product Headline Text Size (in rem)</label>
+            </parameter>
 
 
             <!-- Product 1 Settings -->
