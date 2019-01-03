@@ -98,7 +98,7 @@ endif;
 ?>
 
 
-<section class="connect-home col-2 span_12_of_12">
+<section class="hero-callout col-2 span_12_of_12">
     <div class="content">
         <h2 style="<?php echo $HeroCalloutBannerHeadlineCustomSize?> color:<?php echo $HeroCalloutBannerHeadlineCustomColor?>; <?php echo $HeroCalloutBannerHeadlineCustomStyles?>"><?php echo $block->getData('bannerheadline'); ?></h2>
         <p style="<?php echo $HeroCalloutBannerTextCustomSize?> color:<?php echo $HeroCalloutBannerTextCustomColor?>; <?php echo $HeroCalloutBannerTextCustomStyle?>"><?php echo $block->getData
@@ -120,7 +120,7 @@ endif;
 
     <?php if($this->getData('bannerimage') != ''): ?>
     @media screen and (min-width: 1024px) {
-        .connect-home {
+        .hero-callout {
             background-image: url('<?php echo $block->getData('bannerimage'); ?>');
         }
     }
