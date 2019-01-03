@@ -17,6 +17,21 @@
                        source_model="SMG\ProductGrid\Model\Source\productNameTextSize">
                 <label>Product Name Text Size (in rem)</label>
             </parameter>
+            <parameter name="productNameTextStyle" visible="true" xsi:type="multiselect"
+                       source_model="SMG\ProductGrid\Model\Source\productNameTextStyle">
+                <label>Product Name Text Style</label>
+            </parameter>
+
+
+            <!-- Product Headline Customization -->
+            <parameter name="productHeadlineCustomizationLabel" visible="true" xsi:type="block">
+                <label>PRODUCT HEADLINE CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="productHeadlineColor" visible="true" xsi:type="text">
+                <label>Product Headline Text Color (#xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
 
 
             <!-- Product 1 Settings -->
