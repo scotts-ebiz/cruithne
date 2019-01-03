@@ -9,6 +9,14 @@
                 <label>PRODUCT NAME CUSTOMIZATION</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
+            <parameter name="productNameColor" visible="true" xsi:type="text">
+                <label>Product Name Text Color (#xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
+            <parameter name="productNameTextSize" visible="true" xsi:type="select"
+                       source_model="SMG\ProductGrid\Model\Source\productNameTextSize">
+                <label>Product Name Text Size (in rem)</label>
+            </parameter>
 
 
             <!-- Product 1 Settings -->
