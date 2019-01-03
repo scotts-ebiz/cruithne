@@ -5,16 +5,14 @@
         <description>Display products in grid.</description>
         <parameters>
             <parameter name="prodlabelone" visible="true" xsi:type="block">
-                <label>Product #1</label>
+                <label>PRODUCT #1</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="prodnameone" visible="true" xsi:type="text" required="true">
                 <label>Product #1 Name</label>
-                <value>Product Name</value>
             </parameter>
             <parameter name="prodheadlineone" visible="true" xsi:type="text">
                 <label>Product #1 Headline</label>
-                <value>Take the guesswork out of watering.</value>
             </parameter>
             <parameter name="prodimageone" visible="true" xsi:type="block">
                 <label>Product #1 Image</label>
@@ -26,26 +24,22 @@
             </parameter>
             <parameter name="pricetextone" visible="true" xsi:type="text">
                 <label>Product #1 Price</label>
-                <value>Starting at $99.99</value>
             </parameter>
             <parameter name="prodbuttontextone" visible="true" xsi:type="text">
                 <label>Product #1 Button Text</label>
-                <value>Shop Now</value>
             </parameter>
             <parameter name="prodbuttonlinkone" visible="true" xsi:type="text">
                 <label>Product #1 Button Link</label>
             </parameter>
             <parameter name="prodlabeltwo" visible="true" xsi:type="block">
-                <label>Product #2</label>
+                <label>PRODUCT #2</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="prodnametwo" visible="true" xsi:type="text">
                 <label>Product #2 Name</label>
-                <value>Product Name</value>
             </parameter>
             <parameter name="prodheadlinetwo" visible="true" xsi:type="text">
                 <label>Product #2 Headline</label>
-                <value>Take the guesswork out of watering.</value>
             </parameter>
             <parameter name="prodimagetwo" visible="true" xsi:type="block">
                 <label>Product #2 Image</label>
@@ -57,26 +51,22 @@
             </parameter>
             <parameter name="pricetexttwo" visible="true" xsi:type="text">
                 <label>Product #2 Price</label>
-                <value>Starting at $99.99</value>
             </parameter>
             <parameter name="prodbuttontexttwo" visible="true" xsi:type="text">
                 <label>Product #2 Button Text</label>
-                <value>Shop Now</value>
             </parameter>
             <parameter name="prodbuttonlinktwo" visible="true" xsi:type="text">
                 <label>Product #2 Button Link</label>
             </parameter>
             <parameter name="prodlabelthree" visible="true" xsi:type="block">
-                <label>Product #3</label>
+                <label>PRODUCT #3</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="prodnamethree" visible="true" xsi:type="text">
                 <label>Product #3 Name</label>
-                <value>Product Name</value>
             </parameter>
             <parameter name="prodheadlinethree" visible="true" xsi:type="text">
                 <label>Product #3 Headline</label>
-                <value>Take the guesswork out of watering.</value>
             </parameter>
             <parameter name="prodimagethree" visible="true" xsi:type="block">
                 <label>Product #3 Image</label>
@@ -88,11 +78,9 @@
             </parameter>
             <parameter name="pricetextthree" visible="true" xsi:type="text">
                 <label>Product #3 Price</label>
-                <value>Starting at $99.99</value>
             </parameter>
             <parameter name="prodbuttontextthree" visible="true" xsi:type="text">
                 <label>Product #3 Button Text</label>
-                <value>Shop Now</value>
             </parameter>
             <parameter name="prodbuttonlinkthree" visible="true" xsi:type="text">
                 <label>Product #3 Button Link</label>

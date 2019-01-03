@@ -266,6 +266,7 @@ body {
                 margin: 0 0 1em;
             }
         }
+        /* COMMENTING OUT - Due to moving this to the product-grid scss
         .products {
             padding-bottom: 24px;
             position: relative;
@@ -297,6 +298,7 @@ body {
                 }
             }
         }
+        */
         .products.grid:after {
             display: none;
         }
