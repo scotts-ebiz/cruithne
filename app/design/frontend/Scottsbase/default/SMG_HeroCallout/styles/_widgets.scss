@@ -23,10 +23,11 @@
         display: inline-block;
         margin: 5% 0 18% 0;
         @include max-screen($screen__l) {
+            max-width: 1000px;
             top: 0;
             padding: 0;
             text-align: left;
-            margin: 52% 0 0 2%;
+            margin: 55% 0 0 2%;
         }
     }
     @media screen and (max-width: 1399px) and (min-width: 1024px) {
@@ -40,15 +41,17 @@
         width: 75%;
         @include max-screen($screen__l) {
             width: 100%;
-            font-size: 35px;
             line-height: 35px;
-            margin-bottom: 0;
+        }
+    }
+    .heroCallout-bannerText {
+        width: 85%;
+        @include max-screen($screen__l) {
+            width: 100%;
         }
     }
     p {
-        font-size: 16px;
-        line-height: 28px;
-        margin-bottom: 20px;
+        line-height: 34px;
     }
 }
 

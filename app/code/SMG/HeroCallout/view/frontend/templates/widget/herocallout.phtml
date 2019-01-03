@@ -101,9 +101,9 @@ endif;
 <section class="hero-callout col-2 span_12_of_12">
     <div class="content">
         <h2 style="<?php echo $HeroCalloutBannerHeadlineCustomSize?> color:<?php echo $HeroCalloutBannerHeadlineCustomColor?>; <?php echo $HeroCalloutBannerHeadlineCustomStyles?>"><?php echo $block->getData('bannerheadline'); ?></h2>
-        <p style="<?php echo $HeroCalloutBannerTextCustomSize?> color:<?php echo $HeroCalloutBannerTextCustomColor?>; <?php echo $HeroCalloutBannerTextCustomStyle?>"><?php echo $block->getData
+        <p class="heroCallout-bannerText" style="<?php echo $HeroCalloutBannerTextCustomSize?> color:<?php echo $HeroCalloutBannerTextCustomColor?>; <?php echo $HeroCalloutBannerTextCustomStyle?>"><?php echo $block->getData
         ('bannertext'); ?></p>
-        <p class="highlight" style="<?php echo $HeroCalloutBannerTextHighlightCustomSize?> color:<?php echo $HeroCalloutBannerTextHighlightCustomColor?>; <?php echo $HeroCalloutBannerTextHighlightCustomStyle?>"><?php echo $block->getData('bannertexthighlight'); ?></p>
+        <p class="heroCallout-bannerTextHighlight" style="<?php echo $HeroCalloutBannerTextHighlightCustomSize?> color:<?php echo $HeroCalloutBannerTextHighlightCustomColor?>; <?php echo $HeroCalloutBannerTextHighlightCustomStyle?>"><?php echo $block->getData('bannertexthighlight'); ?></p>
 
         <?php if($block->getData('buttontext')): ?>
         <a class="button" style="<?php echo $HeroCalloutButtonTextCustomSize?> color:<?php echo $HeroCalloutButtonTextCustomColor?>; background:<?php echo $HeroCalloutButtonCustomColor?>; <?php echo $HeroCalloutButtonTextCustomStyle?>" href="<?php echo $block->getData('buttonlink'); ?>"><?php echo $block->getData('buttontext'); ?></a>
@@ -113,7 +113,7 @@ endif;
 
 <style type="text/css">
     <?php if($this->getData('bannerimagemobile') != ''): ?>
-    .connect-home {
+    .hero-callout {
         background-image: url('<?php echo $block->getData('bannerimagemobile'); ?>');
     }
     <?php endif; ?>
