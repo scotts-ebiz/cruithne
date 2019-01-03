@@ -4,6 +4,14 @@
         <label>Product Grid</label>
         <description>Display products in grid.</description>
         <parameters>
+            <!-- Product Name Customization -->
+            <parameter name="productNameCustomizationLabel" visible="true" xsi:type="block">
+                <label>PRODUCT NAME CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+
+
+            <!-- Product 1 Settings -->
             <parameter name="prodlabelone" visible="true" xsi:type="block">
                 <label>PRODUCT #1</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
@@ -31,6 +39,9 @@
             <parameter name="prodbuttonlinkone" visible="true" xsi:type="text">
                 <label>Product #1 Button Link</label>
             </parameter>
+
+
+            <!-- Product 2 Settings -->
             <parameter name="prodlabeltwo" visible="true" xsi:type="block">
                 <label>PRODUCT #2</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
@@ -58,6 +69,9 @@
             <parameter name="prodbuttonlinktwo" visible="true" xsi:type="text">
                 <label>Product #2 Button Link</label>
             </parameter>
+
+
+            <!-- Product 3 Settings -->
             <parameter name="prodlabelthree" visible="true" xsi:type="block">
                 <label>PRODUCT #3</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
