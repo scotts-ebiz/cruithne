@@ -36,6 +36,10 @@
                        source_model="SMG\ProductGrid\Model\Source\productHeadlineTextSize">
                 <label>Product Headline Text Size (in rem)</label>
             </parameter>
+            <parameter name="productHeadlineTextStyle" visible="true" xsi:type="multiselect"
+                       source_model="SMG\ProductGrid\Model\Source\productHeadlineTextStyle">
+                <label>Product Headline Text Style</label>
+            </parameter>
 
 
             <!-- Product 1 Settings -->

@@ -7,6 +7,7 @@ class productHeadlineTextSize implements \Magento\Framework\Option\ArrayInterfac
   public function toOptionArray()
   {
     return [
+        ['value' => 'font-size: 1.5rem; ', 'label' => __('1.5')],
         ['value' => 'font-size: 1.6rem; ', 'label' => __('1.6')],
         ['value' => 'font-size: 1.7rem; ', 'label' => __('1.7')],
         ['value' => 'font-size: 1.8rem; ', 'label' => __('1.8')],
