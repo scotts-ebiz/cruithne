@@ -4,6 +4,9 @@
     .page-main {
         section.product-grid {
             display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            align-items: flex-start;
             padding-bottom: 24px;
             position: relative;
             .button {
