@@ -51,6 +51,10 @@
                 <label>Product Sub Text Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
+            <parameter name="productSubTextSize" visible="true" xsi:type="select"
+                       source_model="SMG\ProductGrid\Model\Source\productSubTextSize">
+                <label>Product Sub Text Size (in rem)</label>
+            </parameter>
 
 
             <!-- Product 1 Settings -->
