@@ -55,6 +55,10 @@
                        source_model="SMG\ProductGrid\Model\Source\productSubTextSize">
                 <label>Product Sub Text Size (in rem)</label>
             </parameter>
+            <parameter name="productSubTextStyle" visible="true" xsi:type="multiselect"
+                       source_model="SMG\ProductGrid\Model\Source\productSubTextStyle">
+                <label>Product Sub Text Style</label>
+            </parameter>
 
 
             <!-- Product 1 Settings -->
