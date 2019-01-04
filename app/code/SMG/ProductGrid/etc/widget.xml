@@ -87,7 +87,7 @@
                 <label>Product #1 Button Text</label>
             </parameter>
             <parameter name="prodbuttonlinkone" visible="true" xsi:type="text">
-                <label>Product #1 Button Link</label>
+                <label>Product #1 Button / Header Link</label>
             </parameter>
 
 
@@ -117,7 +117,7 @@
                 <label>Product #2 Button Text</label>
             </parameter>
             <parameter name="prodbuttonlinktwo" visible="true" xsi:type="text">
-                <label>Product #2 Button Link</label>
+                <label>Product #2 Button / Header Link</label>
             </parameter>
 
 
@@ -147,7 +147,7 @@
                 <label>Product #3 Button Text</label>
             </parameter>
             <parameter name="prodbuttonlinkthree" visible="true" xsi:type="text">
-                <label>Product #3 Button Link</label>
+                <label>Product #3 Button / Header Link</label>
             </parameter>
         </parameters>
     </widget>
