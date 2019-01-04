@@ -42,6 +42,17 @@
             </parameter>
 
 
+            <!-- Product Sub Text Customization -->
+            <parameter name="productSubTextCustomizationLabel" visible="true" xsi:type="block">
+                <label>PRODUCT SUB TEXT CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="productSubTextColor" visible="true" xsi:type="text">
+                <label>Product Sub Text Color (#xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
+
+
             <!-- Product 1 Settings -->
             <parameter name="prodlabelone" visible="true" xsi:type="block">
                 <label>PRODUCT #1</label>
@@ -92,7 +103,7 @@
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
             <parameter name="productSubTextTwo" visible="true" xsi:type="text">
-                <label>Product #2 Price</label>
+                <label>Product #2 Sub Text</label>
             </parameter>
             <parameter name="prodbuttontexttwo" visible="true" xsi:type="text">
                 <label>Product #2 Button Text</label>
@@ -122,7 +133,7 @@
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
             <parameter name="productSubTextThree" visible="true" xsi:type="text">
-                <label>Product #3 Price</label>
+                <label>Product #3 Sub Text</label>
             </parameter>
             <parameter name="prodbuttontextthree" visible="true" xsi:type="text">
                 <label>Product #3 Button Text</label>
