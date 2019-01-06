@@ -5,14 +5,31 @@
     elseif($block->getData('prodnametwo') != '' || $block->getData('prodnamethree') != ''):
         $cols = 2;
     endif;
+
+
+  $productNameCustomColor = '';
+  $productHeadlineCustomColor = '';
+
+
+  //If productNameColor exists then set to $productNameCustomColor
+  if($block->getData('productNameColor') != ''):
+    $productNameCustomColor = $block->getData('productNameColor');
+  endif;
+
+
+  //If productHeadlineColor exists then set to $productHeadlineCustomColor
+  if($block->getData('productHeadlineColor') != ''):
+    $productHeadlineCustomColor = $block->getData('productHeadlineColor');
+  endif;
+
 ?>
 
 <section class="product-grid products grid">
     <?php if($block->getData('prodnameone') != ''): ?>
     <div class="item" style="background-image: url('<?php echo $block->getData('prodbgimageone'); ?>');">
-        <h2><a href="<?php echo $block->getData('prodbuttonlinkone'); ?>"><?php echo $block->getData('prodnameone'); ?></a></h2>
+        <h2 style="color:<?php echo $productNameCustomColor?>;"><a href="<?php echo $block->getData('prodbuttonlinkone'); ?>"><?php echo $block->getData('prodnameone'); ?></a></h2>
         <h4><?php echo $block->getData('prodheadlineone'); ?></h4>
-        <a href="<?php echo $block->getData('prodbuttonlinkone'); ?>"><img src="<?php echo $block->getData('prodimageone'); ?>" /></a>
+        <a class="prodGrid-imgLink" href="<?php echo $block->getData('prodbuttonlinkone'); ?>"><img src="<?php echo $block->getData('prodimageone'); ?>" /></a>
         <div class="shop-cta">
             <a class="button" href="<?php echo $block->getData('prodbuttonlinkone'); ?>"><?php echo $block->getData('prodbuttontextone'); ?></a>
             <?php if($this->getData('productSubTextOne') != ''): ?>
@@ -26,7 +43,7 @@
     <div class="item" style="background-image: url('<?php echo $block->getData('prodbgimagetwo'); ?>');">
         <h2><a href="<?php echo $block->getData('prodbuttonlinktwo'); ?>"><?php echo $block->getData('prodnametwo'); ?></a></h2>
         <h4><?php echo $block->getData('prodheadlinetwo'); ?></h4>
-        <a href="<?php echo $block->getData('prodbuttonlinktwo'); ?>"><img src="<?php echo $block->getData('prodimagetwo'); ?>" /></a>
+        <a class="prodGrid-imgLink" href="<?php echo $block->getData('prodbuttonlinktwo'); ?>"><img src="<?php echo $block->getData('prodimagetwo'); ?>" /></a>
         <div class="shop-cta">
             <a class="button" href="<?php echo $block->getData('prodbuttonlinktwo'); ?>"><?php echo $block->getData('prodbuttontexttwo'); ?></a>
             <?php if($this->getData('productSubTextTwo') != ''): ?>
@@ -40,7 +57,7 @@
     <div class="item" style="background-image: url('<?php echo $block->getData('prodbgimagethree'); ?>');">
         <h2><a href="<?php echo $block->getData('prodbuttonlinkthree'); ?>"><?php echo $block->getData('prodnamethree'); ?></a></h2>
         <h4><?php echo $block->getData('prodheadlinethree'); ?></h4>
-        <a href="<?php echo $block->getData('prodbuttonlinkthree'); ?>"><img src="<?php echo $block->getData('prodimagethree'); ?>" /></a>
+        <a class="prodGrid-imgLink" href="<?php echo $block->getData('prodbuttonlinkthree'); ?>"><img src="<?php echo $block->getData('prodimagethree'); ?>" /></a>
         <div class="shop-cta">
             <a class="button" href="<?php echo $block->getData('prodbuttonlinkthree'); ?>"><?php echo $block->getData('prodbuttontextthree'); ?></a>
             <?php if($this->getData('productSubTextThree') != ''): ?>
