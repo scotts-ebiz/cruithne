@@ -1,15 +1,78 @@
+<?php
+
+$paragraphTextSize ='';
+$headlineCustomCssStyle = '';
+$selectedvideotextsize ='';
+$textCustomCssStyles = '';
+
+// If bannertextsize exists then set to paragraphTextSize
+if($block->getData('bannertextsize') != ''):
+  $paragraphTextSize = $block->getData('bannertextsize');
+endif;
+
+
+// If textstyle exists then set to textCustomCssStyles
+if($block->getData('textstyle') != ''):
+  $textCustomCssStyles = $block->getData('textstyle');
+endif;
+
+
+//If headlinetextstyle exists then set to headlineCustomCssStyles
+if($block->getData('headlinetextstyle') != ''):
+  $headlineCustomCssStyle = $block->getData('headlinetextstyle');
+endif;
+
+
+//If videotextsize exists then set to selectedvideotextsize
+if($block->getData('videotextsize') != ''):
+  $selectedvideotextsize = $block->getData('videotextsize');
+endif;
+
+?>
+
+
 <section class="product-callout-video-widget product-info-container align-top" style="background: url('<?php echo
 $block->getData('videobackgroundimage')
 ; ?>') no-repeat; background-position: center; background-size: cover; padding-top: <?php echo $block->getData('videopaddingtop')
 ; ?>%; padding-bottom: <?php echo $block->getData('videopaddingbottom')?>%;">
     <div class="product-info grid col-2 <?php echo $block->getData('textalignclass') ?> " style="padding-right:<?php
     echo $block->getData('textpaddingright'); ?>%; padding-left:<?php echo $block->getData('textpaddingleft'); ?>%;">
-        <h2 class="video-headline" style="color:<?php echo $block->getData('bannerheadlinecolor'); ?>;"><?php echo $block->getData('bannerheadline'); ?></h2>
-        <p style="color:<?php echo $block->getData('bannertextlinecolor'); ?>;"><?php echo $block->getData('bannertext'); ?></p>
+        <h2 class="video-headline"
+            style="
+              color:<?php echo $block->getData('bannerheadlinecolor'); ?>;
+              <?php
+                  $headlinestylevalues = explode(',', $headlineCustomCssStyle);
+                  foreach($headlinestylevalues as $headlinevalue) {
+                    echo $headlinevalue;
+                  }
+              ?>"
+        >
+            <?php echo $block->getData('bannerheadline'); ?>
+        </h2>
+        <p style="
+          color:<?php echo $block->getData('bannertextlinecolor'); ?>;
+          <?php echo $paragraphTextSize;?>
+          <?php
+            $selectedTextCustomCssStyles = explode(',', $textCustomCssStyles);
+            foreach($selectedTextCustomCssStyles as $textStyleValue) {
+              echo $textStyleValue;
+            }
+          ?>"
+        >
+            <?php echo $block->getData('bannertext'); ?>
+        </p>
         <div class="video">
             <?php if($this->getData('videoembedcode') != ''): ?>
             <a class="play video-link" href="#">
-                <i class="icon-play" style="color: <?php echo $block->getData('iconcolor'); ?>; background-color: <?php echo $block->getData('iconbackgroundcolor'); ?> ;"></i><span class="productvideotxt" style="color:<?php echo $block->getData('videotextcolor'); ?>;"><?php echo $block->getData('videotext'); ?></span>
+                <i class="icon-play" style="color: <?php echo $block->getData('iconcolor'); ?>; background-color: <?php echo $block->getData('iconbackgroundcolor'); ?> ;"></i>
+                <span
+                    class="productvideotxt"
+                    style="
+                        color:<?php echo $block->getData('videotextcolor'); ?>;
+                        <?php echo $selectedvideotextsize;?>"
+                >
+                    <?php echo $block->getData('videotext'); ?>
+                </span>
                 <span class="embed-code"><?php echo $block->getData('videoembedcode'); ?></span>
             </a>
             <?php endif; ?>

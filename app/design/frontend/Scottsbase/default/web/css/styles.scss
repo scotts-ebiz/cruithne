@@ -77,6 +77,13 @@
 @import '../../Magento_Cms/styles/widgets';
 @import '../../Magento_MultipleWishlist/styles/widgets';
 @import '../../Magento_VersionsCms/styles/widgets';
+@import '../../SMG_FeaturesList/styles/widgets';
+@import '../../SMG_ProductCallout/styles/widgets';
+@import '../../SMG_ProductGrid/styles/widgets';
+@import '../../SMG_ProductCalloutVideo/styles/widgets';
+@import '../../SMG_HeroCallout/styles/widgets';
+@import '../../SMG_SpecList/styles/widgets';
+@import '../../SMG_IconList/styles/widgets';
 
 
 // Scotts Base Defaults
@@ -85,9 +92,6 @@
 @import 'source/scottsbase';
 
 
-// Widget Styles
-@import '../../SMG_ProductCallout/styles/widgets';
-@import '../../SMG_ProductCalloutVideo/styles/widgets';
 
 
 

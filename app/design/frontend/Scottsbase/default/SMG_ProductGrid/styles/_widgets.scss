@@ -1,0 +1,42 @@
+/* Widget Start - Location - App / design / frontend / Scottsbase / default / SMG_ProdcutCallout / styles */
+
+.page-wrapper {
+    .page-main {
+        section.product-grid {
+            display: flex;
+            justify-content: space-around;
+            flex-wrap: wrap;
+            align-items: flex-start;
+            padding-bottom: 24px;
+            position: relative;
+            .button {
+                margin-bottom: 20px;
+            }
+            h2 {
+                font-size: 40px;
+                margin: 0 -20px 15px;
+                @include max-screen($screen__l) {
+                    font-size: 35px;
+                }
+            }
+            .item {
+                background-size: cover;
+                text-align: center;
+                padding: 35px 40px;
+                box-sizing: border-box;
+                position: relative;
+                @include max-screen($screen__l) {
+                    margin: 0 16px 16px;
+                    img {
+                        max-height: 320px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
+
+

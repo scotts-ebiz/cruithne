@@ -1,27 +1,79 @@
 <?php
+//Declare vars to be used
 $bg_class = '';
+$customCssStyle = '';
+$headlineCustomCssStyle = '';
+$paragraphTextSize = '';
 
+
+// If textstyle exists then set to customCssStyles
+if($block->getData('textstyle') != ''):
+  $customCssStyle = $block->getData('textstyle');
+endif;
+
+
+//If headlinetextstyle exists then set to customCssStyles
+if($block->getData('headlinetextstyle') != ''):
+  $headlineCustomCssStyle = $block->getData('headlinetextstyle');
+endif;
+
+
+// If bgimage exists then set to bg_class
 if($block->getData('bgimage') != ''):
   $bg_class = 'image-bg';
 endif;
+
+
+// If bannertextsize exists then set to paragraphTextSize
+if($block->getData('bannertextsize') != ''):
+  $paragraphTextSize = $block->getData('bannertextsize');
+endif;
 ?>
 
-<section class="product-callout-widget product-info-container <?php echo $block->getData('textalignclass') ?>" style="background: url('<?php echo $block->getData('bgimage'); ?>') no-repeat; background-size:cover; background-position:center;
+
+
+
+
+<section class="product-callout-widget product-info-container" style="background: url('<?php echo $block->getData('bgimage'); ?>') no-repeat; background-size:cover; background-position:center;
   background-color: <?php
 echo
 $block->getData('bgcolor');
 ?>; padding-top: <?php echo $block->getData('paddingtop'); ?>%; padding-bottom: <?php echo $block->getData
 ('paddingbottom'); ?>%;">
-  <div class="product-info grid col-2 <?php echo $block->getData('textalignclass') ?>">
+  <div class="product-info grid col-2">
     <?php if($this->getData('bannerimage') != ''): ?>
       <div class="image-container span_6_of_12">
         <img src="<?php echo $block->getData('bannerimage'); ?>">
       </div>
     <?php endif; ?>
 
-    <div class="content span_6_of_12">
-      <h2><?php echo $block->getData('bannerheadline'); ?></h2>
-      <p><?php echo $block->getData('bannertext'); ?></p>
+    <div
+      class="content span_6_of_12 <?php echo $block->getData('textalignclass') ?>"
+      style="padding-left: <?php echo $block->getData('bannercontainerpaddingleft');?>%; padding-right: <?php echo $block->getData('bannercontainerpaddingright');?>%;">
+      <h2 style="
+        <?php
+          $headlinestylevalues = explode(',', $headlineCustomCssStyle);
+            foreach($headlinestylevalues as $headlinevalue) {
+            echo $headlinevalue;
+            } ?>
+        color:<?php echo $block->getData('bannerheadlinecolor'); ?>;">
+          <?php echo $block->getData('bannerheadline'); ?>
+      </h2>
+      <p style="
+        <?php
+          //If selected display Font Styles
+          $stylevalues = explode(',', $customCssStyle);
+          foreach($stylevalues as $value) {
+            echo $value;
+          }
+
+          //If selected display font size
+          echo $paragraphTextSize;
+        ?>
+        color:<?php echo $block->getData('bannertextlinecolor'); ?>;">
+        <?php echo $block->getData('bannertext'); ?>
+        <br/>
+      </p>
     </div>
   </div>
 </section>

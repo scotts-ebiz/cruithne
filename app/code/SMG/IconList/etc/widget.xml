@@ -7,6 +7,27 @@
             <parameter name="headline" visible="true" xsi:type="text" required="true">
                 <label>Headline</label>
             </parameter>
+            <parameter name="headlinecolor" visible="true" xsi:type="text">
+                <label>Headline Banner Color (in #xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
+            <parameter name="headlineBannerStyle" visible="true" xsi:type="multiselect"
+                       source_model="SMG\IconList\Model\Source\HeadlineBannerStyle">
+                <label>Headline Banner Style</label>
+            </parameter>
+            <parameter name="itemTextColor" visible="true" xsi:type="text">
+                <label>Item Text Color (in #xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
+            <parameter name="itemTextSize" visible="true" xsi:type="select" source_model="SMG\IconList\Model\Source\TextSize">
+                <label>Item Text Size (in rem)</label>
+            </parameter>
+            <parameter name="itemTextStyle" visible="true" xsi:type="multiselect" source_model="SMG\IconList\Model\Source\TextStyle">
+                <label>Item Text Style</label>
+            </parameter>
+            <parameter name="itemTextContainerPadding" visible="true" xsi:type="select" source_model="SMG\IconList\Model\Source\PaddingValues">
+                <label>Item Text Container Bottom Padding</label>
+            </parameter>
             <parameter name="itemlabelone" visible="true" xsi:type="block">
                 <label>Item #1</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
