@@ -74,6 +74,10 @@
                        source_model="SMG\ProductGrid\Model\Source\productButtonTextSize">
                 <label>Button Text Size (in rem)</label>
             </parameter>
+            <parameter name="productButtonTextStyle" visible="true" xsi:type="multiselect"
+                       source_model="SMG\ProductGrid\Model\Source\productButtonTextStyle">
+                <label>Button Text Style</label>
+            </parameter>
             <parameter name="productButtonColor" visible="true" xsi:type="text">
                 <label>Button Color (#xxxxxx)</label>
                 <value>#000000</value>
