@@ -13,6 +13,7 @@
   $productNameTextCustomSize = '';
   $productHeadlineTextCustomSize = '';
   $productSubTextCustomSize = '';
+  $productNameTextCustomStyle = '';
 
 
   //If productNameColor exists then set to $productNameCustomColor
@@ -51,12 +52,19 @@
   endif;
 
 
+  //If value exists for productNameTextStyle pull in the value and replace the comma for a space
+  if($block->getData('productNameTextStyle') != ''):
+    $productNameTextCustomStyle = str_replace(',' , '', $block->getData('productNameTextStyle'));
+  endif;
+
+
 ?>
 
 <section class="product-grid products grid">
     <?php if($block->getData('prodnameone') != ''): ?>
     <div class="item" style="background-image: url('<?php echo $block->getData('prodbgimageone'); ?>');">
-        <h2><a style="color:<?php echo $productNameCustomColor?>; <?php echo $productNameTextCustomSize?>" href="<?php echo $block->getData('prodbuttonlinkone'); ?>"><?php echo $block->getData('prodnameone'); ?></a></h2>
+        <h2><a style="color:<?php echo $productNameCustomColor?>; <?php echo $productNameTextCustomSize?> <?php echo $productNameTextCustomStyle
+          ?>" href="<?php echo $block->getData('prodbuttonlinkone'); ?>"><?php echo $block->getData('prodnameone'); ?></a></h2>
         <h4 style="color:<?php echo $productHeadlineCustomColor?>; <?php echo $productHeadlineTextCustomSize?>"><?php echo $block->getData
         ('prodheadlineone');
           ?></h4>
