@@ -61,6 +61,21 @@
             </parameter>
 
 
+            <!-- Button Customization -->
+            <parameter name="productButtonCustomizationLabel" visible="true" xsi:type="block">
+                <label>BUTTON CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="productButtonTextColor" visible="true" xsi:type="text">
+                <label>Button Text Color (#xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
+            <parameter name="productButtonColor" visible="true" xsi:type="text">
+                <label>Button Color (#xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
+
+
             <!-- Product 1 Settings -->
             <parameter name="prodlabelone" visible="true" xsi:type="block">
                 <label>PRODUCT #1</label>
