@@ -5,6 +5,7 @@ namespace SMG\Api\Model\Api;
 use Magento\Framework\Webapi\Rest\Request;
 
 use SMG\Api\Helper\OrdersHelper;
+use SMG\Api\Helper\RequestHelper;
 use SMG\Api\Model\OrdersManagementInterface;
 
 class OrdersManagement implements OrdersManagementInterface
@@ -20,15 +21,22 @@ class OrdersManagement implements OrdersManagementInterface
     protected $_request;
 
     /**
+     * @var RequestHelper
+     */
+    protected $_requestHelper;
+
+    /**
      * OrdersManagement constructor.
      *
      * @param OrdersHelper $ordersHelper
      * @param Request $request
+     * @param RequestHelper $requestHelper
      */
-    public function __construct(OrdersHelper $ordersHelper, Request $request)
+    public function __construct(OrdersHelper $ordersHelper, Request $request, RequestHelper $requestHelper)
     {
         $this->_ordersHelper = $ordersHelper;
         $this->_request = $request;
+        $this->_requestHelper = $requestHelper;
     }
 
     /**
@@ -38,6 +46,6 @@ class OrdersManagement implements OrdersManagementInterface
      */
     public function getOrders()
     {
-        return $this->_ordersHelper->getOrders($this->_request->getRequestData());
+        return $this->_ordersHelper->getOrders($this->_requestHelper->getRequest($this->_request->getRequestData()));
     }
 }

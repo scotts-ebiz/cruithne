@@ -35,20 +35,47 @@ class OrdersHelper
      */
     public function getOrders($requestData)
     {
-        // check if the dates are provided
+        // make sure that we were given something from the request
         if (!empty($requestData))
         {
-            // for some reason the call came back differently when ran
-            // sometimes it would come back with one value in the array
-            // as a JSON string other times it would come back with two
-            // different values in the array so we needed to accommodate for them
-            if (count($requestData) === 1)
+            // determine if the required input parameters were availabe
+            if (array_key_exists("startDate", $requestData))
             {
-                $orders = $this->getOrdersFromJson($requestData[0]);
-            }
-            else
+                // get the start date
+                $startDate = $requestData["startDate"];
+
+                if (array_key_exists("endDate", $requestData))
+                {
+                    // get the end date
+                    $endDate = $requestData["endDate"];
+
+                    // get the data from the database
+                    $results = $this->getOrderData($startDate, $endDate);
+
+                    // if there are results then loop through them and create the file
+                    if ($results)
+                    {
+                        $orders = $this->getOrdersJson($results);
+                    } else
+                    {
+                        // log that there were no records found.
+                        $this->_logger->info("SMG\Api\Helper\OrdersHelper - No Orders were found for Begin Date: " . $startDate . " and End Date: " . $endDate);
+
+                        $orders = $this->_responseHelper->createResponse(true, 'No Orders where found for Begin Date: ' . $startDate . " and End Date: " . $endDate);
+                    }
+                } else
+                {
+                    // log the error
+                    $this->_logger->error("SMG\Api\Helper\OrdersHelper - The End Date was not provided.");
+
+                    $orders = $this->_responseHelper->createResponse(false, 'The End Date was not provided.');
+                }
+            } else
             {
-                $orders = $this->getOrdersFromArray($requestData);
+                // log the error
+                $this->_logger->error("SMG\Api\Helper\OrdersHelper - The Start Date was not provided.");
+
+                $orders = $this->_responseHelper->createResponse(false, 'The Start Date was not provided.');
             }
         }
         else
@@ -57,107 +84,6 @@ class OrdersHelper
             $this->_logger->error("SMG\Api\Helper\OrdersHelper - The Start Date and End Date was not provided.");
 
             $orders = $this->_responseHelper->createResponse(false, 'The Start Date and End Date was not provided.');
-        }
-
-        // return
-        return $orders;
-    }
-
-    /**
-     * This returns the $orders from the provided array input values
-     *
-     * @param string $jsonString
-     * @return string
-     */
-    public function getOrdersFromJson($jsonString)
-    {
-        // decode the json string
-        $json = json_decode($jsonString, true);
-
-        // determine if the required input parameters were availabe
-        if (array_key_exists("startDate", $json))
-        {
-            if (array_key_exists("endDate", $json))
-            {
-                // get the data from the database
-                $results = $this->getOrderData($json["startDate"], $json["endDate"]);
-
-                // if there are results then loop through them and create the file
-                if ($results)
-                {
-                    $orders = $this->getOrdersJson($results);
-                }
-                else
-                {
-                    // log that there were no records found.
-                    $this->_logger->info("SMG\Api\Helper\OrdersHelper - No Orders were found for Begin Date: " . $startDate . " and End Date: " . $endDate);
-
-                    $orders = $this->_responseHelper->createResponse(false, 'No Orders where found for Begin Date: ' . $startDate . " and End Date: " . $endDate);
-                }
-            }
-            else
-            {
-                // log the error
-                $this->_logger->error("SMG\Api\Helper\OrdersHelper - The End Date was not provided.");
-
-                $orders = $this->_responseHelper->createResponse(false, 'The End Date was not provided.');
-            }
-        }
-        else
-        {
-            // log the error
-            $this->_logger->error("SMG\Api\Helper\OrdersHelper - The Start Date was not provided.");
-
-            $orders = $this->_responseHelper->createResponse(false, 'The Start Date was not provided.');
-        }
-
-        // return
-        return $orders;
-    }
-
-    /**
-     * This returns the $orders from the provided array input values
-     *
-     * @param array $requestData
-     * @return string
-     */
-    private function getOrdersFromArray($requestData)
-    {
-        // determine if the required input parameters were availabe
-        if (array_key_exists("startDate", $requestData))
-        {
-            if (array_key_exists("endDate", $requestData))
-            {
-                // get the data from the database
-                $results = $this->getOrderData($requestData["startDate"], $requestData["endDate"]);
-
-                // if there are results then loop through them and create the file
-                if ($results)
-                {
-                    $orders = $this->getOrdersJson($results);
-                }
-                else
-                {
-                    // log that there were no records found.
-                    $this->_logger->info("SMG\Api\Helper\OrdersHelper - No Orders were found for Begin Date: " . $startDate . " and End Date: " . $endDate);
-
-                    $orders = $this->_responseHelper->createResponse(false, 'No Orders where found for Begin Date: ' . $startDate . " and End Date: " . $endDate);
-                }
-            }
-            else
-            {
-                // log the error
-                $this->_logger->error("SMG\Api\Helper\OrdersHelper - The End Date was not provided.");
-
-                $orders = $this->_responseHelper->createResponse(false, 'The End Date was not provided.');
-            }
-        }
-        else
-        {
-            // log the error
-            $this->_logger->error("SMG\Api\Helper\OrdersHelper - The Start Date was not provided.");
-
-            $orders = $this->_responseHelper->createResponse(false, 'The Start Date was not provided.');
         }
 
         // return
