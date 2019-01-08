@@ -16,6 +16,34 @@
   $productNameTextCustomStyle = '';
   $productHeadlineTextCustomStyle = '';
   $productSubTextCustomStyle = '';
+  $productButtonTextCustomColor = '';
+  $productButtonTextCustomSize = '';
+  $productButtonTextCustomStyle = '';
+  $productButtonCustomColor = '';
+
+
+  //If productButtonColor exists then set to $productNameCustomColor
+  if($block->getData('productButtonColor') != ''):
+    $productButtonCustomColor = $block->getData('productButtonColor');
+  endif;
+
+
+  //If productNameColor exists then set to $productNameCustomColor
+  if($block->getData('productButtonTextColor') != ''):
+    $productButtonTextCustomColor = $block->getData('productButtonTextColor');
+  endif;
+
+
+  //If productButtonTextSize exists then set to $productHeadlineTextCustomSize
+  if($block->getData('productButtonTextSize') != ''):
+    $productButtonTextCustomSize = $block->getData('productButtonTextSize');
+  endif;
+
+
+  //If value exists for productButtonTextStyle pull in the value and replace the comma for a space
+  if($block->getData('productButtonTextStyle') != ''):
+    $productButtonTextCustomStyle = str_replace(',' , '', $block->getData('productButtonTextStyle'));
+  endif;
 
 
   //If productNameColor exists then set to $productNameCustomColor
@@ -96,9 +124,9 @@
         <h4 style="color:<?php echo $productHeadlineCustomColor?>; <?php echo $productHeadlineTextCustomSize?> <?php echo trim($productHeadlineTextCustomStyle)?>
           "><?php echo $block->getData('prodheadlinetwo');
           ?></h4>
-        <a class="prodGrid-imgLink" href="<?php echo $block->getData('prodbuttonlinktwo'); ?>"><img src="<?php echo $block->getData('prodimagetwo'); ?>" /></a>
+        <a class="prodGrid-imgLink" href="<?php echo $block->getData('prodbuttonlinktwo');?>"><img src="<?php echo $block->getData('prodimagetwo'); ?>" /></a>
         <div class="shop-cta">
-            <a class="button" href="<?php echo $block->getData('prodbuttonlinktwo'); ?>"><?php echo $block->getData('prodbuttontexttwo'); ?></a>
+            <a class="button" href="<?php echo $block->getData('prodbuttonlinktwo');?>"><?php echo $block->getData('prodbuttontexttwo');?></a>
             <?php if($this->getData('productSubTextTwo') != ''): ?>
             <aside style="color:<?php echo $productSubTextCustomColor?>;<?php echo $productSubTextCustomSize?><?php echo trim($productSubTextCustomStyle)?>"><?php echo $block->getData('productSubTextTwo'); ?></aside>
             <?php endif; ?>
