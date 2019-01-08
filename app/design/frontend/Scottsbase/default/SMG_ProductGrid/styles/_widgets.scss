@@ -15,11 +15,14 @@
             .item {
                 background-size: cover;
                 text-align: center;
+                max-width: 32%;
                 padding: 35px 40px;
+                margin: 25px 0 0 0;
                 box-sizing: border-box;
                 position: relative;
                 @include max-screen($screen__l) {
                     margin: 0 16px 16px;
+                    max-width: 90%;
                     img {
                         max-height: 320px;
                     }
@@ -33,7 +36,7 @@
                 }
                 a.prodGrid-imgLink {
                     img {
-                        max-height: 350px;
+                        max-height: 400px;
                     }
                 }
             }
