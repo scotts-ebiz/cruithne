@@ -282,6 +282,7 @@ return [
         'Vantiv_Payment' => 1,
         'SMG_Zip' => 1,
         'SMG_ZipCodeList' => 1,
+        'SMG_ZipToAvalara' => 1,
         'Temando_Shipping' => 1,
         'SMG_Vantiv' => 1,
         'Vertex_Tax' => 1
