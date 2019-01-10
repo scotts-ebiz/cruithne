@@ -173,8 +173,7 @@ class InstallSchema implements InstallSchemaInterface
             Table::TYPE_TIMESTAMP,
             null,
             [
-                'nullable' => true,
-                'default' => Table::TIMESTAMP_INIT_UPDATE
+                'nullable' => true
             ]
         );
 
