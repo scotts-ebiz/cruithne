@@ -4,6 +4,18 @@ $paragraphTextSize ='';
 $headlineCustomCssStyle = '';
 $selectedvideotextsize ='';
 $textCustomCssStyles = '';
+$videoEmbedCustomcode = '';
+$html = '';
+
+
+/*
+protected function _toHtml($videoEmbedCustomcode) {
+ $html = $this->getData('videoembedcode');
+
+  return $html;
+}
+*/
+
 
 // If bannertextsize exists then set to paragraphTextSize
 if($block->getData('bannertextsize') != ''):
@@ -26,6 +38,12 @@ endif;
 //If videotextsize exists then set to selectedvideotextsize
 if($block->getData('videotextsize') != ''):
   $selectedvideotextsize = $block->getData('videotextsize');
+endif;
+
+
+// If videoembedcode exists then set to textCustomCssStyles
+if($block->getData('videoembedcode') != ''):
+  $videoEmbedCustomcode = $block->getData('videoembedcode');
 endif;
 
 ?>
@@ -73,7 +91,7 @@ $block->getData('videobackgroundimage')
                 >
                     <?php echo $block->getData('videotext'); ?>
                 </span>
-                <span class="embed-code"><?php echo $block->getData('videoembedcode'); ?></span>
+                <span class="embed-code"><?php echo _toHtml($videoEmbedCustomcode);?></span>
             </a>
             <?php endif; ?>
         </div>
