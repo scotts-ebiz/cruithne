@@ -5,16 +5,7 @@ $headlineCustomCssStyle = '';
 $selectedvideotextsize ='';
 $textCustomCssStyles = '';
 $videoEmbedCustomcode = '';
-$html = '';
 
-
-/*
-protected function _toHtml($videoEmbedCustomcode) {
- $html = $this->getData('videoembedcode');
-
-  return $html;
-}
-*/
 
 
 // If bannertextsize exists then set to paragraphTextSize
@@ -50,9 +41,9 @@ endif;
 
 
 <section class="product-callout-video-widget product-info-container align-top" style="background: url('<?php echo
-$block->getData('videobackgroundimage')
-; ?>') no-repeat; background-position: center; background-size: cover; padding-top: <?php echo $block->getData('videopaddingtop')
-; ?>%; padding-bottom: <?php echo $block->getData('videopaddingbottom')?>%;">
+  $block->getData('videobackgroundimage')
+  ; ?>') no-repeat; background-position: center; background-size: cover; padding-top: <?php echo $block->getData('videopaddingtop')
+  ; ?>%; padding-bottom: <?php echo $block->getData('videopaddingbottom')?>%;">
     <div class="product-info grid col-2 <?php echo $block->getData('textalignclass') ?> " style="padding-right:<?php
     echo $block->getData('textpaddingright'); ?>%; padding-left:<?php echo $block->getData('textpaddingleft'); ?>%;">
         <h2 class="video-headline"
@@ -91,7 +82,7 @@ $block->getData('videobackgroundimage')
                 >
                     <?php echo $block->getData('videotext'); ?>
                 </span>
-                <span class="embed-code"><?php echo _toHtml($videoEmbedCustomcode);?></span>
+                <span class="embed-code"><?php echo $videoEmbedCustomcode?></span>
             </a>
             <?php endif; ?>
         </div>
