@@ -31,8 +31,7 @@ class InstallData implements InstallDataInterface
             ['status' => 'created_approved', 'label' => 'Created - Approved'],
             ['status' => 'created_blocked', 'label' => 'Created - Blocked'],
             ['status' => 'capture', 'label' => 'Capture'],
-            ['status' => 'order_shipped', 'label' => 'Order Shipped'],
-            ['status' => 'updated', 'label' => 'Updated']
+            ['status' => 'order_shipped', 'label' => 'Order Shipped']
         ];
 
         // insert the rows

@@ -33,6 +33,11 @@ class BatchCaptureHelper
     );
 
     /**
+     * @var array
+     */
+    protected $_customerServiceEmail = [];
+
+    /**
      * @var LoggerInterface
      */
     protected $_logger;
@@ -228,6 +233,9 @@ class BatchCaptureHelper
             }
         }
 
+        // send customer service emails
+        $this->sendCustomerServiceEmails();
+
         // return
         return $orderStatusResponse;
     }
@@ -313,6 +321,10 @@ class BatchCaptureHelper
                 // there was an issue with capturing the payment
                 // so set to unauthorized flag
                 $sapBatchOrder->setData("is_unauthorized", true);
+
+                // add the order id to the array to send email
+                // to customer service
+                $this->_customerServiceEmail[] = $sapBatchOrder->getData('order_id');
             }
 
             // save the data
@@ -377,5 +389,22 @@ class BatchCaptureHelper
 
         // return
         return $invoice;
+    }
+
+    /**
+     * Sends email to customer service for the orders
+     */
+    private function sendCustomerServiceEmails()
+    {
+        // if there is something to send then send the emails
+        if (count($this->_customerServiceEmail) > 0)
+        {
+            // we need to update this to send an email with all of the order information
+            // this is waiting on changes from ClassyLlama
+            foreach ($this->_customerServiceEmail as $email)
+            {
+                $this->_logger->debug("OrderId: " . $email);
+            }
+        }
     }
 }
