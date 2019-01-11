@@ -95,8 +95,8 @@ class Carrier
             return false;
         }
 
-        /** @var Result $result */
-        $result = $this->rateResultFactory->create();
+        $price = $result->getCheapestRate()->getPrice();
+        $cost = $result->getCheapestRate()->getCost();
 
         foreach ($subject->getAllowedMethods() as $code => $name) {
             /** @var Method $method */
@@ -104,16 +104,12 @@ class Carrier
             $method->setCarrier(self::CODE);
             $carrierTitle = $subject->getConfigData('title');
 
-            if ($carrierTitle == self::DEFAULT_TITLE) {
-                $carrierTitle = '';
-            }
-
             $method->setCarrierTitle($carrierTitle);
             $method->setMethod($code);
             $method->setMethodTitle($name);
 
-            $method->setPrice(0);
-            $method->setCost(0);
+            $method->setPrice($price);
+            $method->setCost($cost);
 
             $result->append($method);
         }
