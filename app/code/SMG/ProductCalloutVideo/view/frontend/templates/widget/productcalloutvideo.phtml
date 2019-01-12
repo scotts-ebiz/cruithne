@@ -27,19 +27,19 @@ if($block->getData('headlinetextstyle') != ''):
 endif;
 
 
-//If videotextsize exists then set to selectedvideotextsize
+//If videotextsize exists then set to $selectedvideotextsize
 if($block->getData('videotextsize') != ''):
   $selectedvideotextsize = $block->getData('videotextsize');
 endif;
 
 
-// If videoembedcode exists then set to textCustomCssStyles
-if($block->getData('videoembedcode') != ''):
-  $videoEmbedCustomcode = $block->getData('videoembedcode');
+// If iframeVideoLink exists then set to $iframeVideoCustomLink
+if($block->getData('iframeVideoLink') != ''):
+  $iframeVideoCustomLink = $block->getData('iframeVideoLink');
 endif;
 
 
-// If iframeWidth exists then set to textCustomCssStyles
+// If iframeWidth exists then set to $iframeCustomWidth
 if($block->getData('iframeWidth') != ''):
   $iframeCustomWidth = $block->getData('iframeWidth');
 endif;
@@ -80,7 +80,7 @@ endif;
             <?php echo $block->getData('bannertext'); ?>
         </p>
         <div class="video">
-            <?php if($this->getData('videoembedcode') != ''): ?>
+            <?php if($this->getData('iframeVideoLink') != ''): ?>
             <a class="play video-link" href="#">
                 <i class="icon-play" style="color: <?php echo $block->getData('iconcolor'); ?>; background-color: <?php echo $block->getData('iconbackgroundcolor'); ?> ;"></i>
                 <span
@@ -95,7 +95,7 @@ endif;
                   <iframe width="<?php echo $iframeCustomWidth?>" height="315" src="https://www.youtube.com/embed/fX7WVDm5SAY?rel=0&amp;
                   controls=0&amp;showinfo=0&amp;enablejsapi=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="" id="fX7WVDm5SAY" data-dayt="true">
 
-                  </iframe><?php echo $videoEmbedCustomcode?></span>
+                  </iframe></span>
             </a>
             <?php endif; ?>
         </div>
