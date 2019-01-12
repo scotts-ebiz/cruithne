@@ -82,7 +82,10 @@ endif;
                 >
                     <?php echo $block->getData('videotext'); ?>
                 </span>
-                <span class="embed-code"><?php echo $videoEmbedCustomcode?></span>
+                <span class="embed-code">
+                  <iframe width="560" height="315" src="https://www.youtube.com/embed/fX7WVDm5SAY?rel=0&amp;controls=0&amp;showinfo=0&amp;enablejsapi=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="" id="fX7WVDm5SAY" data-dayt="true">
+
+                  </iframe><?php echo $videoEmbedCustomcode?></span>
             </a>
             <?php endif; ?>
         </div>

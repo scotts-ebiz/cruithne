@@ -4,6 +4,12 @@
         <label>Product Callout Video</label>
         <description>Display product video and text.</description>
         <parameters>
+
+            <!-- Banner Headline -->
+            <parameter name="bannerHeadlineCustomLabel" visible="true" xsi:type="block">
+                <label>BANNER HEADLINE CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
             <parameter name="bannerheadline" visible="true" xsi:type="text" required="true">
                 <label>Banner Headline</label>
             </parameter>
@@ -13,6 +19,13 @@
             </parameter>
             <parameter name="headlinetextstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCalloutVideo\Model\Source\HeadlineTextStyles">
                 <label>Banner Headline Style</label>
+            </parameter>
+
+
+            <!-- Banner Text -->
+            <parameter name="bannerTextCustomLabel" visible="true" xsi:type="block">
+                <label>BANNER TEXT CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannertext" visible="true" xsi:type="text">
                 <label>Banner Text</label>
@@ -27,6 +40,13 @@
             </parameter>
             <parameter name="textstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCalloutVideo\Model\Source\TextStyles">
                 <label>Banner Text Style</label>
+            </parameter>
+
+
+            <!-- Video Text -->
+            <parameter name="videoTextCustomLabel" visible="true" xsi:type="block">
+                <label>VIDEO TEXT CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="videotext" visible="true" xsi:type="block">
                 <label>Video Text</label>
@@ -48,6 +68,13 @@
                 <label>Icon Background Color (in #xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
+
+
+            <!-- Background Image -->
+            <parameter name="backgroundImageCustomLabel" visible="true" xsi:type="block">
+                <label>BACKGROUND IMAGE CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
             <parameter name="videobackgroundimage" visible="true" xsi:type="block">
                 <label>Background Image</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
@@ -60,6 +87,13 @@
                 <label>Background Bottom Padding (in %)</label>
                 <value>0</value>
             </parameter>
+
+
+            <!-- Text Container -->
+            <parameter name="textContainerCustomLabel" visible="true" xsi:type="block">
+                <label>TEXT CONTAINER CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
             <parameter name="textalignclass" visible="true" xsi:type="select" source_model="SMG\ProductCallout\Model\Source\TextAlignSelect">
                 <label>Text Container Alignment</label>
             </parameter>
@@ -70,6 +104,13 @@
             <parameter name="textpaddingright" visible="true" xsi:type="text">
                 <label>Text Container Right Padding (in %)</label>
                 <value>0</value>
+            </parameter>
+
+
+            <!-- Embeded Video -->
+            <parameter name="videoCustomLabel" visible="true" xsi:type="block">
+                <label>VIDEO CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="videoembedcode" visible="true" xsi:type="block">
                 <label>Video Embed Code</label>
