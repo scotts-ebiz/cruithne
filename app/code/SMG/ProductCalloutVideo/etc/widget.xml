@@ -66,10 +66,6 @@
                 <label>VIDEO CUSTOMIZATION</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
-            <parameter name="videoTextCustomLabel" visible="true" xsi:type="block">
-                <label>VIDEO TEXT CUSTOMIZATION</label>
-                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
-            </parameter>
             <parameter name="videotext" visible="true" xsi:type="block">
                 <label>Video Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
@@ -93,6 +89,13 @@
             <parameter name="iframeWidth" visible="true" xsi:type="text">
                 <label>iFrame Width (in px)</label>
                 <value>560</value>
+            </parameter>
+            <parameter name="iframeHeight" visible="true" xsi:type="text">
+                <label>iFrame Height (in px)</label>
+                <value>315</value>
+            </parameter>
+            <parameter name="iframeVideoLink" visible="true" xsi:type="text">
+                <label>Video Link</label>
             </parameter>
 
 
