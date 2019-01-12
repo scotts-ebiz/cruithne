@@ -86,6 +86,9 @@
                 <label>Icon Background Color (in #xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
+            <parameter name="iframeVideoLink" visible="true" xsi:type="text">
+                <label>iFrame Video Link</label>
+            </parameter>
             <parameter name="iframeWidth" visible="true" xsi:type="text">
                 <label>iFrame Width (in px)</label>
                 <value>560</value>
@@ -94,8 +97,8 @@
                 <label>iFrame Height (in px)</label>
                 <value>315</value>
             </parameter>
-            <parameter name="iframeVideoLink" visible="true" xsi:type="text">
-                <label>Video Link</label>
+            <parameter name="iframeId" visible="true" xsi:type="text">
+                <label>iFrame Id</label>
             </parameter>
 
 
