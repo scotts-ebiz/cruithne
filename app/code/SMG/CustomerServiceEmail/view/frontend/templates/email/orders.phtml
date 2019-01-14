@@ -5,6 +5,7 @@
 
 /** @var \SMG\CustomerServiceEmail\Block\View\Orders $block */
 $orders = $block->getOrders();
+$giftMessageHelper = $this->helper('Magento\GiftMessage\Helper\Message');
 ?>
 
 <?php foreach ($orders as $order): ?>
@@ -51,6 +52,8 @@ $orders = $block->getOrders();
                     <?php endif; ?>
                 </tr>
             </table>
+            <?php $block->getChildBlock('items')->setOrder($order); ?>
+            <?= $block->getChildHtml('items'); ?>
         </td>
     </tr>
 <?php endforeach; ?>
