@@ -14,6 +14,8 @@ use Magento\Sales\Model\ResourceModel\Order\Invoice\CollectionFactory as Invoice
 use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\CollectionFactory as TransactionCollectionFactory;
 use Magento\Sales\Model\Spi\OrderResourceInterface;
 use \Psr\Log\LoggerInterface;
+use SMG\CustomerServiceEmail\Api\OrderManagementInterface;
+use SMG\CustomerServiceEmail\Api\Data\ItemInterface;
 use SMG\Sap\Model\SapOrder;
 use SMG\Sap\Model\SapOrderBatchFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch;
@@ -35,7 +37,7 @@ class BatchCaptureHelper
     /**
      * @var array
      */
-    protected $_customerServiceEmail = [];
+    protected $_customerServiceEmailIds = [];
 
     /**
      * @var LoggerInterface
@@ -113,6 +115,16 @@ class BatchCaptureHelper
     protected $_orderResource;
 
     /**
+     * @var OrderManagementInterface
+     */
+    protected $_orderManagementInterface;
+
+    /**
+     * @var ItemInterface
+     */
+    protected $_itemInterface;
+
+    /**
      * BatchCaptureHelper constructor.
      *
      * @param LoggerInterface $logger
@@ -130,6 +142,8 @@ class BatchCaptureHelper
      * @param InvoiceCollectionFactory $invoiceCollectionFactory
      * @param OrderInterfaceFactory $orderFactory
      * @param OrderResourceInterface $orderResource
+     * @param OrderManagementInterface $orderManagementInterface
+     * @param ItemInterface $itemInterface
      */
     public function __construct(LoggerInterface $logger,
         ResponseHelper $responseHelper,
@@ -145,7 +159,9 @@ class BatchCaptureHelper
         InvoiceItemCreationInterfaceFactory $invoiceItemCreationInterfaceFactory,
         InvoiceCollectionFactory $invoiceCollectionFactory,
         OrderInterfaceFactory $orderFactory,
-        OrderResourceInterface $orderResource)
+        OrderResourceInterface $orderResource,
+        OrderManagementInterface $orderManagementInterface,
+        ItemInterface $itemInterface)
     {
         $this->_logger = $logger;
         $this->_responseHelper = $responseHelper;
@@ -162,6 +178,8 @@ class BatchCaptureHelper
         $this->_invoiceCollectionFactory = $invoiceCollectionFactory;
         $this->_orderFactory = $orderFactory;
         $this->_orderResource = $orderResource;
+        $this->_orderManagementInterface = $orderManagementInterface;
+        $this->_itemInterface = $itemInterface;
     }
 
     /**
@@ -324,7 +342,7 @@ class BatchCaptureHelper
 
                 // add the order id to the array to send email
                 // to customer service
-                $this->_customerServiceEmail[] = $sapBatchOrder->getData('order_id');
+                $this->_customerServiceEmailIds[] = $sapBatchOrder->getData('order_id');
             }
 
             // save the data
@@ -397,14 +415,13 @@ class BatchCaptureHelper
     private function sendCustomerServiceEmails()
     {
         // if there is something to send then send the emails
-        if (count($this->_customerServiceEmail) > 0)
+        if (count($this->_customerServiceEmailIds) > 0)
         {
-            // we need to update this to send an email with all of the order information
-            // this is waiting on changes from ClassyLlama
-            foreach ($this->_customerServiceEmail as $email)
-            {
-                $this->_logger->debug("OrderId: " . $email);
-            }
+            // add the items to the item interface
+            $this->_itemInterface->setOrderIds($this->_customerServiceEmailIds);
+
+            // send the email
+            $this->_orderManagementInterface->notifyEmailsServiceTeam($this->_itemInterface);
         }
     }
 }
