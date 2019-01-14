@@ -1,15 +1,21 @@
 /* Widget Start - Location - App / design / frontend / Scottsbase / default / SMG_ProdcutCallout / styles */
 
 .product-callout-widget.product-info-container {
-    .product-info.text-right {
-        display: flex;
+    display: inline-block;
+    position: relative;
+    .product-info {
+        .image-container {
+            display: inline-block;
+            position: relative;
+        }
         @media only screen and (max-width: 1024px) {
             display: block;
         }
-        .content {
+        .content.text-left {
+            float: left;
             h2 {
-                padding: 0 0 0 20px;
-                width: 80%;
+                width: 90%;
+                text-align: left;
                 @media only screen and (max-width: 1024px) {
                     width: 100%;
                     font-size: 32px;
@@ -20,9 +26,8 @@
                 }
             }
             p {
-                padding: 0 0 0 20px;
-                width: 80%;
-                font-size: 1.0rem;
+                text-align: left;
+                width: 90%;
                 @media only screen and (max-width: 1024px) {
                     width: 100%;
                     padding: 0;
@@ -30,18 +35,13 @@
                 }
             }
         }
-    }
-    .product-info.text-left {
-        display: flex;
-        flex-direction: row-reverse;
-        @media only screen and (max-width: 1024px) {
-            display: block;
-        }
-        .content {
+
+        .content.text-right {
+            float: right;
             h2 {
-                padding: 0 20px 0 0;
-                width: 80%;
-                @media only screen and (max-width: 1024px)  {
+                text-align: right;
+                width: 90%;
+                @media only screen and (max-width: 1024px) {
                     width: 100%;
                     font-size: 32px;
                     padding: 0;
@@ -51,9 +51,8 @@
                 }
             }
             p {
-                padding: 0 20px 0 0;
-                width: 80%;
-                font-size: 20px;
+                text-align: right;
+                width: 90%;
                 @media only screen and (max-width: 1024px) {
                     width: 100%;
                     padding: 0;

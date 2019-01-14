@@ -5,9 +5,11 @@
         <resources>
             <resource ref="self" />
         </resources>
-        <data>
-            <parameter name="startDate" force="true">%startDate%</parameter>
-            <parameter name="endDate" force="true">%endDate%</parameter>
-        </data>
+    </route>
+    <route url="/V1/smg/orderStatus" method="POST">
+        <service class="SMG\Api\Model\OrderStatusManagementInterface" method="setOrderStatus" />
+        <resources>
+            <resource ref="self" />
+        </resources>
     </route>
 </routes>
