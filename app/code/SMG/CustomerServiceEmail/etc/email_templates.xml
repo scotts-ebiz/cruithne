@@ -11,4 +11,7 @@
               file="order_cancellation_guest.html" type="html" module="SMG_CustomerServiceEmail" area="frontend"/>
     <template id="sales_email_customer_service_team_template" label="Failed Capture Transaction"
               file="failed_capture_transaction.html" type="html" module="SMG_CustomerServiceEmail" area="frontend"/>
+    <template id="sales_email_customer_service_team_template_orders" label="Failed Capture Transaction Orders"
+              file="failed_capture_transaction_orders.html" type="html" module="SMG_CustomerServiceEmail"
+              area="frontend"/>
 </config>

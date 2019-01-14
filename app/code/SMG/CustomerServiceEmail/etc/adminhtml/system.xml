@@ -70,6 +70,12 @@
                     <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
                     <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
                 </field>
+                <field id="template_orders" translate="label comment" type="select" sortOrder="4" showInDefault="1"
+                       showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Failed Capture Transaction Template For Multiple Orders</label>
+                    <comment>Email template chosen based on theme fallback when "Default" option is selected.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Email\Template</source_model>
+                </field>
             </group>
         </section>
     </system>

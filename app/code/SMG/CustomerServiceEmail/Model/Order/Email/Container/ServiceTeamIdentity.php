@@ -23,6 +23,7 @@ class ServiceTeamIdentity extends Container implements IdentityInterface
     const XML_PATH_EMAIL_TEAM = 'sales_email/customer_service_team/team_emails';
     const XML_PATH_EMAIL_IDENTITY = 'sales_email/customer_service_team/identity';
     const XML_PATH_EMAIL_TEMPLATE = 'sales_email/customer_service_team/template';
+    const XML_PATH_EMAIL_TEMPLATE_ORDERS = 'sales_email/customer_service_team/template_orders';
     const SUBSCRIBER_EMAIL = 'subscriber_email';
 
     /**
@@ -116,6 +117,16 @@ class ServiceTeamIdentity extends Container implements IdentityInterface
     public function getTemplateId()
     {
         return $this->getConfigValue(self::XML_PATH_EMAIL_TEMPLATE, $this->getStore()->getStoreId());
+    }
+
+    /**
+     * Return orders template id
+     *
+     * @return mixed
+     */
+    public function getOrdersTemplateId()
+    {
+        return $this->getConfigValue(self::XML_PATH_EMAIL_TEMPLATE_ORDERS, $this->getStore()->getStoreId());
     }
 
     /**

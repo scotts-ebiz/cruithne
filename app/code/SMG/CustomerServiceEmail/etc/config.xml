@@ -18,6 +18,7 @@
             <customer_service_team>
                 <identity>sales</identity>
                 <template>sales_email_customer_service_team_template</template>
+                <template_orders>sales_email_customer_service_team_template_orders</template_orders>
             </customer_service_team>
         </sales_email>
     </default>

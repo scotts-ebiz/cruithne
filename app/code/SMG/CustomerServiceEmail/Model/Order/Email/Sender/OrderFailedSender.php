@@ -14,6 +14,8 @@ use Magento\Sales\Model\Order\Address\Renderer;
 use Magento\Framework\Event\ManagerInterface;
 use Magento\Framework\DataObject;
 use Magento\Sales\Model\Order\Email\SenderBuilderFactory;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Model\Order\Email\SenderBuilder;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -86,6 +88,35 @@ class OrderFailedSender extends Sender
     }
 
     /**
+     * Sends cancel orders email to the customer.
+     *
+     * @param OrderInterface[] $orders
+     * @return bool
+     * @throws \Exception
+     */
+    public function sendOrders(array $orders)
+    {
+        if (!$this->identityContainer->isEnabled()) {
+            return false;
+        }
+
+        $this->prepareOrdersTemplate($orders);
+        /** @var SenderBuilder $sender */
+        $sender = $this->getSender();
+
+        try {
+            $sender->send();
+            $sender->sendCopyTo();
+        } catch (\Exception $e) {
+            $this->logger->error($e->getMessage());
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
      * Prepare email template with variables
      *
      * @param Order $order
@@ -119,6 +150,32 @@ class OrderFailedSender extends Sender
         }
 
         $this->identityContainer->setCustomerName($customerName);
+        $this->identityContainer->setCustomerEmail($this->identityContainer->getServiceTeamEmails());
+        $this->templateContainer->setTemplateId($templateId);
+    }
+
+    /**
+     * Prepare email orders template with variables
+     *
+     * @param OrderInterface[] $orders
+     * @return void
+     * @throws \Exception
+     */
+    protected function prepareOrdersTemplate(array $orders)
+    {
+        $transportObject = new DataObject([
+            'orders' => $orders
+        ]);
+
+        $this->eventManager->dispatch(
+            'failed_email_order_set_template_vars_before',
+            ['sender' => $this, 'transportObject' => $transportObject]
+        );
+
+        $this->templateContainer->setTemplateVars($transportObject->getData());
+        $this->templateContainer->setTemplateOptions($this->getTemplateOptions());
+        $templateId = $this->identityContainer->getOrdersTemplateId();
+
         $this->identityContainer->setCustomerEmail($this->identityContainer->getServiceTeamEmails());
         $this->templateContainer->setTemplateId($templateId);
     }

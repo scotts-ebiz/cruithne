@@ -100,12 +100,7 @@ class OrderService implements OrderManagementInterface
                     ->create()
             )->getItems();
 
-            /** @var Order $order */
-            foreach ($orders as $order) {
-                $this->failedTransactionNotifier->notify($order);
-            }
-
-            return true;
+            return $this->failedTransactionNotifier->notifyOrders($orders);
         }
 
         return false;
