@@ -9,7 +9,7 @@
 <table>
     <tr class="email-information">
         <td>
-            {{block class='SMG\\CustomerServiceEmail\\Block\\View\\Orders' template='SMG_CustomerServiceEmail::email/orders.phtml' orders=$orders area="frontend"}}
+            {{layout handle="sales_email_orders" orders=$orders area="frontend"}}
         </td>
     </tr>
 </table>
