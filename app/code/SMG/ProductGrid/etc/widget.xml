@@ -4,6 +4,88 @@
         <label>Product Grid</label>
         <description>Display products in grid.</description>
         <parameters>
+            <!-- Product Name Customization -->
+            <parameter name="productNameCustomizationLabel" visible="true" xsi:type="block">
+                <label>PRODUCT NAME CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="productNameColor" visible="true" xsi:type="text">
+                <label>Product Name Text Color (#xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
+            <parameter name="productNameTextSize" visible="true" xsi:type="select"
+                       source_model="SMG\ProductGrid\Model\Source\productNameTextSize">
+                <label>Product Name Text Size (in rem)</label>
+            </parameter>
+            <parameter name="productNameTextStyle" visible="true" xsi:type="multiselect"
+                       source_model="SMG\ProductGrid\Model\Source\productNameTextStyle">
+                <label>Product Name Text Style</label>
+            </parameter>
+
+
+            <!-- Product Headline Customization -->
+            <parameter name="productHeadlineCustomizationLabel" visible="true" xsi:type="block">
+                <label>PRODUCT HEADLINE CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="productHeadlineColor" visible="true" xsi:type="text">
+                <label>Product Headline Text Color (#xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
+            <parameter name="productHeadlineTextSize" visible="true" xsi:type="select"
+                       source_model="SMG\ProductGrid\Model\Source\productHeadlineTextSize">
+                <label>Product Headline Text Size (in rem)</label>
+            </parameter>
+            <parameter name="productHeadlineTextStyle" visible="true" xsi:type="multiselect"
+                       source_model="SMG\ProductGrid\Model\Source\productHeadlineTextStyle">
+                <label>Product Headline Text Style</label>
+            </parameter>
+
+
+            <!-- Product Sub Text Customization -->
+            <parameter name="productSubTextCustomizationLabel" visible="true" xsi:type="block">
+                <label>PRODUCT SUB TEXT CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="productSubTextColor" visible="true" xsi:type="text">
+                <label>Product Sub Text Color (#xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
+            <parameter name="productSubTextSize" visible="true" xsi:type="select"
+                       source_model="SMG\ProductGrid\Model\Source\productSubTextSize">
+                <label>Product Sub Text Size (in rem)</label>
+            </parameter>
+            <parameter name="productSubTextStyle" visible="true" xsi:type="multiselect"
+                       source_model="SMG\ProductGrid\Model\Source\productSubTextStyle">
+                <label>Product Sub Text Style</label>
+            </parameter>
+
+
+            <!-- Button Customization - NOT USING AT THIS TIME!
+            <parameter name="productButtonCustomizationLabel" visible="true" xsi:type="block">
+                <label>BUTTON CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="productButtonTextColor" visible="true" xsi:type="text">
+                <label>Button Text Color (#xxxxxx)</label>
+                <value>#ffffff</value>
+            </parameter>
+            <parameter name="productButtonTextSize" visible="true" xsi:type="select"
+                       source_model="SMG\ProductGrid\Model\Source\productButtonTextSize">
+                <label>Button Text Size (in rem)</label>
+            </parameter>
+            <parameter name="productButtonTextStyle" visible="true" xsi:type="multiselect"
+                       source_model="SMG\ProductGrid\Model\Source\productButtonTextStyle">
+                <label>Button Text Style</label>
+            </parameter>
+            <parameter name="productButtonColor" visible="true" xsi:type="text">
+                <label>Button Color (#xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
+            -->
+
+
+            <!-- Product 1 Settings -->
             <parameter name="prodlabelone" visible="true" xsi:type="block">
                 <label>PRODUCT #1</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
@@ -22,15 +104,18 @@
                 <label>Product #1 Background Image</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
-            <parameter name="pricetextone" visible="true" xsi:type="text">
-                <label>Product #1 Price</label>
+            <parameter name="productSubTextOne" visible="true" xsi:type="text">
+                <label>Product #1 Sub Text</label>
             </parameter>
             <parameter name="prodbuttontextone" visible="true" xsi:type="text">
                 <label>Product #1 Button Text</label>
             </parameter>
             <parameter name="prodbuttonlinkone" visible="true" xsi:type="text">
-                <label>Product #1 Button Link</label>
+                <label>Product #1 Button / Header Link</label>
             </parameter>
+
+
+            <!-- Product 2 Settings -->
             <parameter name="prodlabeltwo" visible="true" xsi:type="block">
                 <label>PRODUCT #2</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
@@ -49,15 +134,18 @@
                 <label>Product #2 Background Image</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
-            <parameter name="pricetexttwo" visible="true" xsi:type="text">
-                <label>Product #2 Price</label>
+            <parameter name="productSubTextTwo" visible="true" xsi:type="text">
+                <label>Product #2 Sub Text</label>
             </parameter>
             <parameter name="prodbuttontexttwo" visible="true" xsi:type="text">
                 <label>Product #2 Button Text</label>
             </parameter>
             <parameter name="prodbuttonlinktwo" visible="true" xsi:type="text">
-                <label>Product #2 Button Link</label>
+                <label>Product #2 Button / Header Link</label>
             </parameter>
+
+
+            <!-- Product 3 Settings -->
             <parameter name="prodlabelthree" visible="true" xsi:type="block">
                 <label>PRODUCT #3</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
@@ -76,14 +164,14 @@
                 <label>Product #3 Background Image</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
-            <parameter name="pricetextthree" visible="true" xsi:type="text">
-                <label>Product #3 Price</label>
+            <parameter name="productSubTextThree" visible="true" xsi:type="text">
+                <label>Product #3 Sub Text</label>
             </parameter>
             <parameter name="prodbuttontextthree" visible="true" xsi:type="text">
                 <label>Product #3 Button Text</label>
             </parameter>
             <parameter name="prodbuttonlinkthree" visible="true" xsi:type="text">
-                <label>Product #3 Button Link</label>
+                <label>Product #3 Button / Header Link</label>
             </parameter>
         </parameters>
     </widget>
