@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2019 SMG, LLC. All rights reserved.
+ */
+-->
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/orders/:id/cancel_emails" method="POST">
+        <service class="SMG\CustomerServiceEmail\Api\OrderManagementInterface" method="notify"/>
+        <resources>
+            <resource ref="Magento_Sales::sales" />
+        </resources>
+    </route>
+    <route url="/V1/orders/:id/failed_emails" method="POST">
+        <service class="SMG\CustomerServiceEmail\Api\OrderManagementInterface" method="notifyServiceTeam"/>
+        <resources>
+            <resource ref="Magento_Sales::sales" />
+        </resources>
+    </route>
+    <route url="/V1/orders/failed_emails" method="POST">
+        <service class="SMG\CustomerServiceEmail\Api\OrderManagementInterface" method="notifyEmailsServiceTeam"/>
+        <resources>
+            <resource ref="Magento_Sales::sales" />
+        </resources>
+    </route>
+</routes>

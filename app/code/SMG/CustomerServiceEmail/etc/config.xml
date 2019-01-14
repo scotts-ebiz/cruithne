@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2019 SMG, LLC. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <sales_email>
+            <order_cancellation>
+                <enabled>1</enabled>
+                <template>sales_email_order_cancellation_template</template>
+                <guest_template>sales_email_order_cancellation_guest_template</guest_template>
+                <identity>sales</identity>
+                <copy_method>bcc</copy_method>
+            </order_cancellation>
+            <customer_service_team>
+                <identity>sales</identity>
+                <template>sales_email_customer_service_team_template</template>
+                <template_orders>sales_email_customer_service_team_template_orders</template_orders>
+            </customer_service_team>
+        </sales_email>
+    </default>
+</config>

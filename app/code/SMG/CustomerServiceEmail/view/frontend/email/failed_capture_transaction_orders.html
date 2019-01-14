@@ -1,0 +1,16 @@
+<!--
+/**
+ * Copyright © 2019 SMG, LLC. All rights reserved.
+ */
+-->
+<!--@subject {{trans "GRO DTC CANCELLATION"}} @-->
+
+{{template config_path="design/email/header_template"}}
+<table>
+    <tr class="email-information">
+        <td>
+            {{block class='SMG\\CustomerServiceEmail\\Block\\View\\Orders' template='SMG_CustomerServiceEmail::email/orders.phtml' orders=$orders area="frontend"}}
+        </td>
+    </tr>
+</table>
+{{template config_path="design/email/footer_template"}}
