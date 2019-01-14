@@ -8,4 +8,6 @@
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="SMG\CustomerServiceEmail\Api\OrderManagementInterface"
                 type="SMG\CustomerServiceEmail\Model\Service\OrderService"/>
+    <preference for="SMG\CustomerServiceEmail\Api\Data\ItemInterface"
+                type="SMG\CustomerServiceEmail\Model\Order\Item"/>
 </config>

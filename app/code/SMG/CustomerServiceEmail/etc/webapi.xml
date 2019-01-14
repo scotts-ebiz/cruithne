@@ -18,4 +18,10 @@
             <resource ref="Magento_Sales::sales" />
         </resources>
     </route>
+    <route url="/V1/orders/failed_emails" method="POST">
+        <service class="SMG\CustomerServiceEmail\Api\OrderManagementInterface" method="notifyEmailsServiceTeam"/>
+        <resources>
+            <resource ref="Magento_Sales::sales" />
+        </resources>
+    </route>
 </routes>
