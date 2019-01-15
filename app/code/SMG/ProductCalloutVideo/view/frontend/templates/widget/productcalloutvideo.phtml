@@ -7,6 +7,7 @@ $textCustomCssStyles = '';
 $videoEmbedCustomcode = '';
 $iframeCustomWidth = '';
 $iframeCustomHeight = '';
+$iframeCustomId = '';
 
 
 
@@ -34,12 +35,6 @@ if($block->getData('videotextsize') != ''):
 endif;
 
 
-// If iframeVideoLink exists then set to variable
-if($block->getData('iframeVideoLink') != ''):
-  $iframeVideoCustomLink = $block->getData('iframeVideoLink');
-endif;
-
-
 // If iframeWidth exists then set to variable
 if($block->getData('iframeWidth') != ''):
   $iframeCustomWidth = $block->getData('iframeWidth');
@@ -51,6 +46,17 @@ if($block->getData('iframeHeight') != ''):
   $iframeCustomHeight = $block->getData('iframeHeight');
 endif;
 
+
+// If iframeId exists then set to variable
+if($block->getData('iframeId') != ''):
+  $iframeCustomId = $block->getData('iframeId');
+endif;
+
+
+// If iframeVideoLink exists then set to variable
+if($block->getData('iframeVideoLink') != ''):
+  $iframeVideoCustomLink = $block->getData('iframeVideoLink');
+endif;
 
 ?>
 
@@ -98,7 +104,9 @@ endif;
                     <?php echo $block->getData('videotext'); ?>
                 </span>
                 <span class="embed-code">
-                  <iframe width="<?php echo $iframeCustomWidth?>" height="<?php echo $iframeCustomHeight?>" src="https://www.youtube.com/embed/fX7WVDm5SAY?rel=0&amp;controls=0&amp;showinfo=0&amp;enablejsapi=1" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="" id="fX7WVDm5SAY" data-dayt="true">
+                  <iframe width="<?php echo $iframeCustomWidth?>" height="<?php echo $iframeCustomHeight?>"
+                          src="<?php echo $iframeVideoCustomLink?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen=""
+                          id="<?php echo $iframeCustomId?>" data-dayt="true">
                   </iframe></span>
             </a>
             <?php endif; ?>
