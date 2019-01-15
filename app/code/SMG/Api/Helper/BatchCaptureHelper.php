@@ -267,7 +267,7 @@ class BatchCaptureHelper
     private function wasCaptureSuccessful($invoice)
     {
         // set the success flag
-        $isBatchCaptureSuccess = true;
+        $isBatchCaptureSuccess = false;
 
         // load the transaction data
         $transactions = $this->_transactionCollectionFactory->create();
@@ -280,9 +280,9 @@ class BatchCaptureHelper
             $additionalInformation = $transaction->getData('additional_information');
             if (!empty($additionalInformation))
             {
-                if (!in_array($additionalInformation['raw_details_info']['response'], self::CAPTURE_APPROVED_STATUS))
+                if (in_array($additionalInformation['raw_details_info']['response'], self::CAPTURE_APPROVED_STATUS))
                 {
-                    $isBatchCaptureSuccess = false;
+                    $isBatchCaptureSuccess = true;
                 }
             }
         }
