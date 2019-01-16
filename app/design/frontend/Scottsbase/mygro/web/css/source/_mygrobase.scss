@@ -410,7 +410,7 @@ body {
             }
         }
         .embed-code {
-            display: none;
+            display: none !important;
         }
         .icon-play:before {
             content: "\e901";
