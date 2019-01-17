@@ -6,12 +6,14 @@
 -->
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <!-- Customer Email -->
     <route url="/V1/orders/:id/cancel_emails" method="POST">
         <service class="SMG\CustomerServiceEmail\Api\OrderManagementInterface" method="notify"/>
         <resources>
             <resource ref="Magento_Sales::sales" />
         </resources>
     </route>
+    <!-- Service Team Email -->
     <route url="/V1/orders/:id/failed_emails" method="POST">
         <service class="SMG\CustomerServiceEmail\Api\OrderManagementInterface" method="notifyServiceTeam"/>
         <resources>
@@ -20,6 +22,19 @@
     </route>
     <route url="/V1/orders/failed_emails" method="POST">
         <service class="SMG\CustomerServiceEmail\Api\OrderManagementInterface" method="notifyEmailsServiceTeam"/>
+        <resources>
+            <resource ref="Magento_Sales::sales" />
+        </resources>
+    </route>
+    <route url="/V1/orders/:id/shipment_emails" method="POST">
+        <service class="SMG\CustomerServiceEmail\Api\OrderManagementInterface" method="notifyShipmentServiceTeam"/>
+        <resources>
+            <resource ref="Magento_Sales::sales" />
+        </resources>
+    </route>
+    <route url="/V1/orders/shipment_emails" method="POST">
+        <service class="SMG\CustomerServiceEmail\Api\OrderManagementInterface"
+                 method="notifyShipmentOrdersServiceTeam"/>
         <resources>
             <resource ref="Magento_Sales::sales" />
         </resources>

@@ -1,0 +1,81 @@
+<?php
+/**
+ * Copyright © 2019 SMG, LLC. All rights reserved.
+ */
+
+/** @var \SMG\CustomerServiceEmail\Block\View\Orders $block */
+$shipments = $block->getShipments();
+?>
+
+<?php foreach ($shipments as $shipment): ?>
+    <?php $order = $shipment->getOrder(); ?>
+    <tr class="email-summary">
+        <td>
+            <h1><?= $block->escapeHtml(__(
+                'Your Shipment #%1 for Order #%2', $shipment->getIncrementId(), $order->getIncrementId()
+                )) ?>
+            </h1>
+        </td>
+    </tr>
+    <tr class="email-information">
+        <td>
+            <?php if ($shipment->getCustomerNote()): ?>
+                <table class="message-info">
+                    <tr>
+                        <td>
+                            <?= $block->escapeHtml($shipment->getCustomerNote())?>
+                        </td>
+                    </tr>
+                </table>
+            <?php endif; ?>
+            <?php if ($shipment->getAllTracks()): ?>
+                <br />
+                <table class="shipment-track">
+                    <thead>
+                    <tr>
+                        <th><?= /* @escapeNotVerified */  __('Shipped By') ?></th>
+                        <th><?= /* @escapeNotVerified */  __('Tracking Number') ?></th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <?php foreach ($shipment->getAllTracks() as $item): ?>
+                        <tr>
+                            <td><?= $block->escapeHtml($item->getTitle()) ?>:</td>
+                            <td><?= $block->escapeHtml($item->getNumber()) ?></td>
+                        </tr>
+                    <?php endforeach ?>
+                    </tbody>
+                </table>
+            <?php endif; ?>
+            <table class="order-details">
+                <tr>
+                    <td class="address-details">
+                        <h3><?= __('Billing Info') ?></h3>
+                        <p><?= $block->getFormattedBillingAddress($order) ?></p>
+                    </td>
+                    <?php if ($order->getIsNotVirtual()): ?>
+                        <td class="address-details">
+                            <h3><?= __('Shipping Info') ?></h3>
+                            <p><?= $block->getFormattedShippingAddress($order) ?></p>
+                        </td>
+                    <?php endif; ?>
+                </tr>
+                <tr>
+                    <td class="method-info">
+                        <h3><?= __('Payment Method') ?></h3>
+                        <?= $block->getPaymentHtml($order) ?>
+                    </td>
+                    <?php if ($order->getIsNotVirtual()): ?>
+                        <td class="method-info">
+                            <h3><?= __('Shipping Method') ?></h3>
+                            <p><?= $order->getShippingDescription() ?></p>
+                        </td>
+                    <?php endif; ?>
+                </tr>
+            </table>
+            <?php $block->getChildBlock('items')->setOrder($order); ?>
+            <?php $block->getChildBlock('items')->setShipment($shipment); ?>
+            <?= $block->getChildHtml('items'); ?>
+        </td>
+    </tr>
+<?php endforeach; ?>
