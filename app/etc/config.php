@@ -276,6 +276,7 @@ return [
         'SMG_HeroZip' => 1,
         'SMG_IconList' => 1,
         'SMG_LandingPage' => 1,
+        'SMG_OfflineShipping' => 1,
         'SMG_ParameterTypes' => 1,
         'SMG_ProductCallout' => 1,
         'SMG_ProductCalloutText' => 1,
@@ -286,6 +287,7 @@ return [
         'Vantiv_Payment' => 1,
         'SMG_Zip' => 1,
         'SMG_ZipCodeList' => 1,
+        'SMG_ZipToAvalara' => 1,
         'Temando_Shipping' => 1,
         'SMG_Vantiv' => 1,
         'Vertex_Tax' => 1
