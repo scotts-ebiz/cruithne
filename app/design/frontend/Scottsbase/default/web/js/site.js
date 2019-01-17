@@ -78,7 +78,13 @@ jQuery(document).ready(function($) {
 		
 		e.preventDefault();
 	});
-	
+
+
+    $(".video-link").click(function(){
+        alert("The paragraph was clicked.");
+    });
+
+    /*
 	$(".video-link").on("click", function(e) {
 		var embedCode = $(this).find(".embed-code").html();
 		
@@ -87,6 +93,7 @@ jQuery(document).ready(function($) {
 		
 		e.preventDefault();
 	});
+	*/
 
 	$(".video-overlay").on("click", function(e) {
 		$("body").toggleClass("video-open");
