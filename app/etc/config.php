@@ -4,6 +4,8 @@ return [
         'Magento_Store' => 1,
         'Magento_Directory' => 1,
         'Magento_Theme' => 1,
+        'Creditvantiv_Payment' => 1,
+        'Custom_Gtm' => 1,
         'Magento_Backend' => 1,
         'Magento_Variable' => 1,
         'Magento_Eav' => 1,
@@ -283,6 +285,7 @@ return [
         'Vantiv_Payment' => 1,
         'SMG_Zip' => 1,
         'SMG_ZipCodeList' => 1,
+        'SMG_ZipToAvalara' => 1,
         'Temando_Shipping' => 1,
         'SMG_Vantiv' => 1,
         'Vertex_Tax' => 1

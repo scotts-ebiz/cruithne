@@ -4,7 +4,8 @@
  * Copyright © 2019 SMG, LLC. All rights reserved.
  */
 -->
-<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Email:etc/email_templates.xsd">
     <template id="sales_email_order_cancellation_template" label="Order Cancellation"
               file="order_cancellation.html" type="html" module="SMG_CustomerServiceEmail" area="frontend"/>
     <template id="sales_email_order_cancellation_guest_template" label="Order Cancellation for Guest"
@@ -14,4 +15,6 @@
     <template id="sales_email_customer_service_team_template_orders" label="Failed Capture Transaction Orders"
               file="failed_capture_transaction_orders.html" type="html" module="SMG_CustomerServiceEmail"
               area="frontend"/>
+    <template id="sales_email_customer_service_team_shipment_template" label="Shipment Email Service Team"
+              file="shipment_service_team_email.html" type="html" module="SMG_CustomerServiceEmail" area="frontend"/>
 </config>

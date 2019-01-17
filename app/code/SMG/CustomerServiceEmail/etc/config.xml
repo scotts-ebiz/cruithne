@@ -19,6 +19,8 @@
                 <identity>sales</identity>
                 <template>sales_email_customer_service_team_template</template>
                 <template_orders>sales_email_customer_service_team_template_orders</template_orders>
+                <shipment_identity>sales</shipment_identity>
+                <shipment_template>sales_email_customer_service_team_shipment_template</shipment_template>
             </customer_service_team>
         </sales_email>
     </default>
