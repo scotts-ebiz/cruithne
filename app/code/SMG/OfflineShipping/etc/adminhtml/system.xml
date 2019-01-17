@@ -35,6 +35,11 @@
                 <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Title</label>
                 </field>
+                <field id="allowed_methods" translate="label" type="multiselect" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
+                    <label>Allowed Methods</label>
+                    <source_model>SMG\OfflineShipping\Model\Config\Source\Method</source_model>
+                    <can_be_empty>1</can_be_empty>
+                </field>
                 <field id="type" translate="label" type="select" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Type</label>
                     <source_model>Magento\OfflineShipping\Model\Config\Source\Flatrate</source_model>
