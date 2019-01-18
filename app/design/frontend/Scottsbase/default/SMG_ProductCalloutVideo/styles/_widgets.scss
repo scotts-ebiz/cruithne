@@ -1,7 +1,7 @@
 /* Widget Start - Location - App / design / frontend / Scottsbase / default / SMG_ProdcutCalloutVideo / styles */
 body {
     .product-callout-video-widget.product-info-container {
-        .text-left {
+        .product-info.text-left {
             text-align: left;
             font-size: 20px;
             i {
@@ -16,8 +16,11 @@ body {
                 padding-bottom: 5px;
                 font-weight: 700;
             }
+            span.embed-code {
+                display: none !important;
+            }
         }
-        .text-right {
+        .product-info.text-right {
             text-align: right;
             font-size: 20px;
             i {
@@ -31,6 +34,9 @@ body {
                 border-bottom: 2px solid;
                 padding-bottom: 5px;
                 font-weight: 700;
+            }
+            span.embed-code {
+                display: none !important;
             }
         }
         .video-overlay {
@@ -70,6 +76,40 @@ body {
         }
     }
 }
+
+body {
+  .product-callout-video-widget.product-info-container {
+      .product-info {
+          .video {
+              .watch-video {
+                  i {
+                      height: 36px;
+                      width: 36px;
+                      line-height: 36px;
+                      background: $white;
+                      border-radius: 50%;
+                      text-align: center;
+                      color: $mygro-green;
+                      display: inline-block;
+                      margin-right: 15px;
+                  }
+                  span {
+                      display: inline-block;
+                      color: $white;
+                      font-size: 16px;
+                      font-family: "Hellix-Heavy";
+                      letter-spacing: 0.5px;
+                      border-bottom: 2px solid $mygro-green;
+                      padding-bottom: 3px;
+                      position: relative;
+                      top: -3px;
+                  }
+              }
+          }
+      }
+  }
+}
+
 /* Styling relating to the Product Callout Video Widget */
 body.video-open {
     .product-callout-video-widget.product-info-container {
