@@ -71,11 +71,13 @@ body {
     }
 }
 body.video-open {
-    .video-overlay {
-        visibility: visible;
-        opacity: 1;
-    }
-    .video-container {
-        display: block;
+    .product-callout-video-widget.product-info-container {
+        .video-overlay {
+            visibility: visible;
+            opacity: 1;
+        }
+        .video-container {
+            display: block;
+        }
     }
 }
