@@ -1,6 +1,4 @@
 jQuery(document).ready(function($) {
-    var $extraAddressBtn = $('.extraAddressBtn'),
-        $extraAddress = $('.extraAddress');
 
 /*
 	$(".product-image-slider").slick({
@@ -89,15 +87,10 @@ jQuery(document).ready(function($) {
 
  */
 	$(".video-link").on("click", function(e) {
-        alert("The paragraph was clicked.");
 	    var embedCode = $(this).find(".embed-code").html();
-        alert("The paragraph was clicked2.");
 		$("body").toggleClass("video-open");
-        alert("The paragraph was clicked3.");
 		$("#video-container .video-frame").html(embedCode);
-        alert("The paragraph was clicked4.");
 		e.preventDefault();
-        alert("You're out of preventDefault.");
 	});
 
 
