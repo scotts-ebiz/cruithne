@@ -57,11 +57,8 @@ class SapOrder extends AbstractModel
         return $this->_order;
     }
 
-    public function getStatus()
+    public function getSapOrderByOrderId($orderId)
     {
-        if (!$this->_sapOrderStatus)
-        {
-            $this->_sapOrderStatus = $this->_resourceModel->getStatus($this->getStatus());
-        }
+        return $this->_resourceModel->getSapOrderByOrderId($orderId);
     }
 }

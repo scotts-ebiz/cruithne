@@ -1,5 +1,18 @@
 <?xml version="1.0"?>
-<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+<routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
+    <route url="/V1/smg/authReversal" method="POST">
+        <service class="SMG\Api\Model\AuthReversalManagementInterface" method="processAuthReversal" />
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
+    <route url="/V1/smg/batchCapture" method="POST">
+        <service class="SMG\Api\Model\BatchCaptureManagementInterface" method="processBatchCapture" />
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
     <route url="/V1/smg/orders" method="POST">
         <service class="SMG\Api\Model\OrdersManagementInterface" method="getOrders" />
         <resources>

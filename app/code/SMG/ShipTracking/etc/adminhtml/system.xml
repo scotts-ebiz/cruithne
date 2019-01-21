@@ -1,0 +1,34 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2019 SMG, LLC. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="ship_tracking" translate="label" type="text" sortOrder="302" showInDefault="1" showInWebsite="1"
+                 showInStore="1">
+            <label>Tracking</label>
+            <tab>sales</tab>
+            <resource>Magento_Sales::config_sales</resource>
+            <group id="trackers" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>Tracking URLS</label>
+                <field id="urls" translate="label" type="textarea" sortOrder="10" showInDefault="1" showInWebsite="1"
+                       showInStore="1" canRestore="1">
+                    <label>Shipping Trackers</label>
+                    <comment>
+                        <![CDATA[
+                        When a customer is viewing an order, if the order contains a tracking number,
+                        this mapping will be used to turn that tracking number into a link.<br>
+                        This settings maps codes to tracking URLs for the associated service.<br>
+                        The content should be pipe-delimited and each map on a new line.<br>
+                        For example, <strong>UPS|http://wwwapps.ups.com/etracking/tracking.cgi?tracknums_displayed=1&TypeOfInquiryNumber=T&HTMLVersion=4.0&InquiryNumber1={{code}}</strong>
+                        ]]>
+                    </comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

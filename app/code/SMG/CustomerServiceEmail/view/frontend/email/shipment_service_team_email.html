@@ -1,0 +1,16 @@
+<!--
+/**
+ * Copyright © 2019 SMG, LLC. All rights reserved.
+ */
+-->
+<!--@subject {{trans "GRO DTC SHIPPED"}} @-->
+
+{{template config_path="design/email/header_template"}}
+<table>
+    <tr class="email-information">
+        <td>
+            {{layout handle="sales_email_order_shipments" shipments=$shipments area="frontend"}}
+        </td>
+    </tr>
+</table>
+{{template config_path="design/email/footer_template"}}
