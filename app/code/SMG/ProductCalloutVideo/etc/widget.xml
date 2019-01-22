@@ -97,9 +97,12 @@
                 <label>iFrame Height (in px)</label>
                 <value>315</value>
             </parameter>
+
+            <!-- Removing the iframeId for now as deemed not needed
             <parameter name="iframeId" visible="true" xsi:type="text">
                 <label>iFrame Id</label>
             </parameter>
+            -->
 
 
 
