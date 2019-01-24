@@ -4,6 +4,12 @@
         <label>Product Callout Video</label>
         <description>Display product video and text.</description>
         <parameters>
+
+            <!-- Banner Headline Customization -->
+            <parameter name="bannerHeadlineCustomLabel" visible="true" xsi:type="block">
+                <label>BANNER HEADLINE CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
             <parameter name="bannerheadline" visible="true" xsi:type="text" required="true">
                 <label>Banner Headline</label>
             </parameter>
@@ -13,6 +19,13 @@
             </parameter>
             <parameter name="headlinetextstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCalloutVideo\Model\Source\HeadlineTextStyles">
                 <label>Banner Headline Style</label>
+            </parameter>
+
+
+            <!-- Banner Text Customization -->
+            <parameter name="bannerTextCustomLabel" visible="true" xsi:type="block">
+                <label>BANNER TEXT CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannertext" visible="true" xsi:type="text">
                 <label>Banner Text</label>
@@ -27,6 +40,31 @@
             </parameter>
             <parameter name="textstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCalloutVideo\Model\Source\TextStyles">
                 <label>Banner Text Style</label>
+            </parameter>
+
+
+            <!-- Text Container Customization -->
+            <parameter name="textContainerCustomLabel" visible="true" xsi:type="block">
+                <label>TEXT CONTAINER CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="textalignclass" visible="true" xsi:type="select" source_model="SMG\ProductCallout\Model\Source\TextAlignSelect">
+                <label>Text Container Alignment</label>
+            </parameter>
+            <parameter name="textpaddingleft" visible="true" xsi:type="text">
+                <label>Text Container Left Padding (in %)</label>
+                <value>0</value>
+            </parameter>
+            <parameter name="textpaddingright" visible="true" xsi:type="text">
+                <label>Text Container Right Padding (in %)</label>
+                <value>0</value>
+            </parameter>
+
+
+            <!-- Video Customization -->
+            <parameter name="videoCustomLabel" visible="true" xsi:type="block">
+                <label>VIDEO CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="videotext" visible="true" xsi:type="block">
                 <label>Video Text</label>
@@ -48,6 +86,31 @@
                 <label>Icon Background Color (in #xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
+            <parameter name="iframeVideoLink" visible="true" xsi:type="text">
+                <label>iFrame Video Link</label>
+            </parameter>
+            <parameter name="iframeWidth" visible="true" xsi:type="text">
+                <label>iFrame Width (in px)</label>
+                <value>560</value>
+            </parameter>
+            <parameter name="iframeHeight" visible="true" xsi:type="text">
+                <label>iFrame Height (in px)</label>
+                <value>315</value>
+            </parameter>
+
+            <!-- Removing the iframeId for now as deemed not needed
+            <parameter name="iframeId" visible="true" xsi:type="text">
+                <label>iFrame Id</label>
+            </parameter>
+            -->
+
+
+
+            <!-- Background Image Customization -->
+            <parameter name="backgroundImageCustomLabel" visible="true" xsi:type="block">
+                <label>BACKGROUND IMAGE CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
             <parameter name="videobackgroundimage" visible="true" xsi:type="block">
                 <label>Background Image</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
@@ -60,21 +123,7 @@
                 <label>Background Bottom Padding (in %)</label>
                 <value>0</value>
             </parameter>
-            <parameter name="textalignclass" visible="true" xsi:type="select" source_model="SMG\ProductCallout\Model\Source\TextAlignSelect">
-                <label>Text Container Alignment</label>
-            </parameter>
-            <parameter name="textpaddingleft" visible="true" xsi:type="text">
-                <label>Text Container Left Padding (in %)</label>
-                <value>0</value>
-            </parameter>
-            <parameter name="textpaddingright" visible="true" xsi:type="text">
-                <label>Text Container Right Padding (in %)</label>
-                <value>0</value>
-            </parameter>
-            <parameter name="videoembedcode" visible="true" xsi:type="block">
-                <label>Video Embed Code</label>
-                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
-            </parameter>
+
         </parameters>
     </widget>
 </widgets>
