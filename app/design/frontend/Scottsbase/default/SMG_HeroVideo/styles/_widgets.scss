@@ -1,6 +1,6 @@
 /* Widget Start - Location - App / design / frontend / Scottsbase / default / SMG_ProdcutCalloutVideo / styles */
 body {
-    .product-callout-video-widget.product-info-container {
+    .hero-video-widget.product-info-container {
         .product-info.text-left {
             text-align: left;
         }
@@ -11,7 +11,7 @@ body {
 }
 
 body {
-    .product-callout-video-widget.product-info-container {
+    .hero-video-widget.product-info-container {
         .product-info {
             font-size: 20px;
             .video {
@@ -90,7 +90,7 @@ body {
 
 /* Styling relating to the Product Callout Video Widget */
 body.video-open {
-    .product-callout-video-widget.product-info-container {
+    .hero-video-widget.product-info-container {
         .video-overlay {
             visibility: visible;
             opacity: 1;
