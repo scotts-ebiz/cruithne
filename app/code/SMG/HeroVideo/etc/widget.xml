@@ -49,7 +49,7 @@
                 <label>TEXT CONTAINER CUSTOMIZATION</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
-            <parameter name="textalignclass" visible="true" xsi:type="select" source_model="SMG\ProductCallout\Model\Source\TextAlignSelect">
+            <parameter name="textalignclass" visible="true" xsi:type="select" source_model="SMG\HeroVideo\Model\Source\TextAlignSelect">
                 <label>Text Container Alignment</label>
             </parameter>
             <parameter name="textpaddingleft" visible="true" xsi:type="text">
