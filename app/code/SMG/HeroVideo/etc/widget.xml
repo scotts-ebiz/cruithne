@@ -35,7 +35,7 @@
                 <value>#000000</value>
             </parameter>
             <parameter name="bannertextsize" visible="true" xsi:type="select"
-                       source_model="SMG\ProductCalloutVideo\Model\Source\TextSize">
+                       source_model="SMG\HeroVideo\Model\Source\TextSize">
                 <label>Banner Text Size (in rem)</label>
             </parameter>
             <parameter name="textstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCalloutVideo\Model\Source\TextStyles">
@@ -75,7 +75,7 @@
                 <value>#000000</value>
             </parameter>
             <parameter name="videotextsize" visible="true" xsi:type="select"
-                       source_model="SMG\ProductCalloutVideo\Model\Source\VideoTextSize">
+                       source_model="SMG\HeroVideo\Model\Source\VideoTextSize">
                 <label>Video Text Size (in rem)</label>
             </parameter>
             <parameter name="iconcolor" visible="true" xsi:type="text">
