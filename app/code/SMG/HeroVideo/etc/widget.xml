@@ -76,7 +76,7 @@
                 <value>#000000</value>
             </parameter>
             <parameter name="videotextsize" visible="true" xsi:type="select"
-                       source_model="SMG\ProductCalloutVideo\Model\Source\VideoTextSize">
+                       source_model="SMG\HeroVideo\Model\Source\VideoTextSize">
                 <label>Video Text Size (in rem)</label>
             </parameter>
             <parameter name="iconcolor" visible="true" xsi:type="text">

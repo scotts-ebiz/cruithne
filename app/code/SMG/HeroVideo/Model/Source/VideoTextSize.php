@@ -1,6 +1,6 @@
 <?php
 
-namespace SMG\ProductCalloutVideo\Model\Source;
+namespace SMG\HeroVideo\Model\Source;
 
 class VideoTextSize implements \Magento\Framework\Option\ArrayInterface
 {
