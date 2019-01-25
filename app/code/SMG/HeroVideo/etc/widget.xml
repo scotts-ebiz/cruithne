@@ -70,6 +70,7 @@
             <parameter name="videotext" visible="true" xsi:type="block">
                 <label>Video Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+                <value>Press Play</value>
             </parameter>
             <parameter name="videotextcolor" visible="true" xsi:type="text">
                 <label>Video Text Color (in #xxxxxx)</label>
