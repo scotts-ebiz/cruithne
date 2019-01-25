@@ -17,7 +17,7 @@
                 <label>Banner Headline Color (Hex Code #xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
-            <parameter name="headlinetextstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCalloutVideo\Model\Source\HeadlineTextStyles">
+            <parameter name="headlinetextstyle" visible="true" xsi:type="multiselect" source_model="SMG\HeroVideo\Model\Source\HeadlineTextStyles">
                 <label>Banner Headline Style</label>
             </parameter>
 
