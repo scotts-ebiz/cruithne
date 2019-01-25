@@ -38,7 +38,8 @@
                        source_model="SMG\HeroVideo\Model\Source\TextSize">
                 <label>Banner Text Size (in rem)</label>
             </parameter>
-            <parameter name="textstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCalloutVideo\Model\Source\TextStyles">
+            <parameter name="textstyle" visible="true" xsi:type="multiselect"
+                       source_model="SMG\HeroVideo\Model\Source\TextStyles">
                 <label>Banner Text Style</label>
             </parameter>
 
