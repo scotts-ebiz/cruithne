@@ -137,7 +137,7 @@ class InstallData implements InstallDataInterface
 				'type' 		=> 'text',
 				'backend' 	=> '',
 				'frontend' 	=> '',
-				'label' 	=> 'Unit Of Measurement',
+				'label' 	=> 'smg_uom',
 				'input' 	=> 'text',
 				'class' 	=> '',
 				'source' 	=> '',
@@ -239,7 +239,110 @@ class InstallData implements InstallDataInterface
                 'unique' => false
             ]
         );
-	    
+	    $eavSetup->addAttribute(
+			\Magento\Catalog\Model\Product::ENTITY,
+			'Product Weight UOM',
+			[
+				'type' 		=> 'text',
+				'backend' 	=> '',
+				'frontend' 	=> '',
+				'label' 	=> 'Product Weight UOM',
+				'input' 	=> 'text',
+				'class' 	=> '',
+				'source' 	=> '',
+				'global' 	=> \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
+				'visible' 	=> true,
+				'required' 	=> false,
+				'user_defined' => true,
+				'default' 	=> 'lbs',
+				'searchable'=> false,
+				'filterable'=> false,
+				'comparable'=> false,
+				'visible_on_front' => true,
+				'used_in_product_listing' => true,
+				'unique' 	=> false,
+				'group' => 'General Custom',
+				'apply_to' 	=> ''
+			]
+		);
+		 $eavSetup->addAttribute(
+			\Magento\Catalog\Model\Product::ENTITY,
+			'Product Volume',
+			[
+				'type' 		=> 'text',
+				'backend' 	=> '',
+				'frontend' 	=> '',
+				'label' 	=> 'Product Volume',
+				'input' 	=> 'text',
+				'class' 	=> '',
+				'source' 	=> '',
+				'global' 	=> \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
+				'visible' 	=> true,
+				'required' 	=> false,
+				'user_defined' => true,
+				'default' 	=> '',
+				'searchable'=> false,
+				'filterable'=> false,
+				'comparable'=> false,
+				'visible_on_front' => true,
+				'used_in_product_listing' => true,
+				'unique' 	=> false,
+				'group' => 'General Custom',
+				'apply_to' 	=> ''
+			]
+		);
+		 $eavSetup->addAttribute(
+			\Magento\Catalog\Model\Product::ENTITY,
+			'Product Volume UOM',
+			[
+				'type' 		=> 'text',
+				'backend' 	=> '',
+				'frontend' 	=> '',
+				'label' 	=> 'Product Volume UOM',
+				'input' 	=> 'text',
+				'class' 	=> '',
+				'source' 	=> '',
+				'global' 	=> \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
+				'visible' 	=> true,
+				'required' 	=> false,
+				'user_defined' => true,
+				'default' 	=> '',
+				'searchable'=> false,
+				'filterable'=> false,
+				'comparable'=> false,
+				'visible_on_front' => true,
+				'used_in_product_listing' => true,
+				'unique' 	=> false,
+				'group' => 'General Custom',
+				'apply_to' 	=> ''
+			]
+		);
+		 $eavSetup->addAttribute(
+			\Magento\Catalog\Model\Product::ENTITY,
+			'Product Length',
+			[
+				'type' 		=> 'text',
+				'backend' 	=> '',
+				'frontend' 	=> '',
+				'label' 	=> 'Product Length',
+				'input' 	=> 'text',
+				'class' 	=> '',
+				'source' 	=> '',
+				'global' 	=> \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
+				'visible' 	=> true,
+				'required' 	=> false,
+				'user_defined' => true,
+				'default' 	=> '',
+				'searchable'=> false,
+				'filterable'=> false,
+				'comparable'=> false,
+				'visible_on_front' => true,
+				'used_in_product_listing' => true,
+				'unique' 	=> false,
+				'group' => 'General Custom',
+				'apply_to' 	=> ''
+			]
+		);
 	    
 	}
 }
