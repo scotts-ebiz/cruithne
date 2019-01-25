@@ -87,9 +87,11 @@ body {
         }
     }
     .hero-video-mobileContent {
-        display: none;
-    }
+        @media (max-width: $screen__xl) {
+            display: none;
+        }
 
+    }
 }
 
 /* Styling relating to the Product Callout Video Widget */
