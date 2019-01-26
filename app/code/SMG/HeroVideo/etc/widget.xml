@@ -118,11 +118,11 @@
             </parameter>
             <parameter name="videopaddingtop" visible="true" xsi:type="text">
                 <label>Background Top Padding (in %)</label>
-                <value>0</value>
+                <value>15</value>
             </parameter>
             <parameter name="videopaddingbottom" visible="true" xsi:type="text">
                 <label>Background Bottom Padding (in %)</label>
-                <value>0</value>
+                <value>15</value>
             </parameter>
 
         </parameters>
