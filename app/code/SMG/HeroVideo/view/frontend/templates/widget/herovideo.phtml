@@ -126,5 +126,17 @@ $block->getData('videobackgroundimage')
   }?>">
     <?php echo $block->getData('bannerheadline'); ?>
   </h2>
+  <p style="
+    color:<?php echo $block->getData('bannertextlinecolor'); ?>;
+  <?php echo $paragraphTextSize;?>
+  <?php
+  $selectedTextCustomCssStyles = explode(',', $textCustomCssStyles);
+  foreach($selectedTextCustomCssStyles as $textStyleValue) {
+    echo $textStyleValue;
+  }
+  ?>"
+  >
+    <?php echo $block->getData('bannertext'); ?>
+  </p>
 
 </div>

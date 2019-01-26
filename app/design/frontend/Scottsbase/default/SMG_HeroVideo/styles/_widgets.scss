@@ -14,7 +14,24 @@ body {
     .hero-video-widget.product-info-container {
         .product-info {
             font-size: 20px;
+
+            h2.video-headline {
+                @media only screen and (max-width: $screen__s) {
+                    display: none;
+                }
+            }
+            p {
+                @media only screen and (max-width: $screen__s) {
+                    display: none;
+                }
+            }
             .video {
+                @media only screen and (max-width: $screen__s) {
+                    width: 100%;
+                    display: inline-block;
+                    position: relative;
+                    top: 55px;
+                }
                 .watch-video {
                     i {
                         height: 36px;
@@ -87,9 +104,16 @@ body {
         }
     }
     .hero-video-mobileContent {
-        @media (max-width: $screen__xl) {
+        @media only screen and (min-width: $screen__s) {
             display: none;
         }
+        @media only screen and (max-width: $screen__s) {
+            display: inline-block;
+            position: relative;
+        }
+
+
+
 
     }
 }
