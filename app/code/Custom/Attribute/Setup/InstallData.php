@@ -21,6 +21,7 @@ class InstallData implements InstallDataInterface
 	public function install(ModuleDataSetupInterface $setup, ModuleContextInterface $context)
 	{
 		$eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
+		if ( version_compare($context->getVersion(), '1.0.0', '=' )) {
 		$eavSetup->addAttribute(
 			\Magento\Catalog\Model\Product::ENTITY,
 			'smg_sku',
@@ -343,6 +344,6 @@ class InstallData implements InstallDataInterface
 				'apply_to' 	=> ''
 			]
 		);
-	    
+	 } 
 	}
 }
