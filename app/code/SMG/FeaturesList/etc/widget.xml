@@ -6,7 +6,7 @@
         <parameters>
             <!-- Features List Headline -->
             <parameter name="featuresListHeadlineLabel" visible="true" xsi:type="block">
-                <label>FEATURES LIST HEADLINE</label>
+                <label>FEATURES LIST CUSTOMIZATION</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="featuresListHeadline" visible="true" xsi:type="text" required="true">

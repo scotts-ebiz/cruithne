@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © 2019 SMG, LLC. All rights reserved.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <sales_email>
+            <shipment>
+                <template>sales_email_shipment_template</template>
+                <guest_template>sales_email_shipment_guest_template</guest_template>
+            </shipment>
+        </sales_email>
+        <ship_tracking>
+            <trackers>
+                <urls>
+                    <![CDATA[FEDEX|https://www.fedex.com/apps/fedextrack/?action=track&trackingnumber={{code}}
+USPS|https://tools.usps.com/go/TrackConfirmAction_input?qtc_tLabels1={{code}}
+UPS|https://wwwapps.ups.com/WebTracking/returnToDetails?tracknum={{code}}]]>
+                </urls>
+            </trackers>
+        </ship_tracking>
+    </default>
+</config>

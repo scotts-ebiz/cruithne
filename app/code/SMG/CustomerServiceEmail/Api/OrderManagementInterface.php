@@ -35,4 +35,20 @@ interface OrderManagementInterface
      * @return bool
      */
     public function notifyEmailsServiceTeam(\SMG\CustomerServiceEmail\Api\Data\ItemInterface $item);
+
+    /**
+     * Shipment email a specified order.
+     *
+     * @param int $id The order ID.
+     * @return bool
+     */
+    public function notifyShipmentServiceTeam($id);
+
+    /**
+     * Shipment email a specified orders.
+     *
+     * @param \SMG\CustomerServiceEmail\Api\Data\ItemInterface $item
+     * @return bool
+     */
+    public function notifyShipmentOrdersServiceTeam(\SMG\CustomerServiceEmail\Api\Data\ItemInterface $item);
 }

@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @copyright Copyright (c) 2019 SMG, LLC
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\OfflineShipping\Model\Carrier\Flatrate">
+        <plugin name="smg_offline_shipping_flatrate_plugin"
+                type="SMG\OfflineShipping\Plugin\Model\Carrier" />
+    </type>
+</config>

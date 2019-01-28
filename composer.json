@@ -10,6 +10,7 @@
         "sort-packages": true
     },
     "require": {
+        "classyllama/module-avatax": "^1.5",
         "composer/composer": "@alpha",
         "magento/product-enterprise-edition": ">=2.3.0"
     },
