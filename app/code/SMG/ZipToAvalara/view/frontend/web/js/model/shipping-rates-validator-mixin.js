@@ -7,8 +7,9 @@ define([
     'mage/translate',
     'Magento_Checkout/js/model/postcode-validator',
     'uiRegistry',
+    'Magento_Checkout/js/action/get-totals',
     'mage/cookies'
-], function ($, $t, postcodeValidator, uiRegistry) {
+], function ($, $t, postcodeValidator, uiRegistry, getTotalsAction) {
     'use strict';
 
     return function (target) {
@@ -40,6 +41,9 @@ define([
             }
 
             $.mage.cookies.set('estimated-tax', false);
+
+            var deferred = $.Deferred();
+            getTotalsAction([], deferred);
 
             return validationResult;
         };
