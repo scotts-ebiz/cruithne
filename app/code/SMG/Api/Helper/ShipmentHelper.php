@@ -10,6 +10,8 @@ use Magento\Sales\Api\ShipOrderInterface;
 use Magento\Sales\Model\Spi\OrderResourceInterface;
 use Magento\Sales\Model\Spi\ShipmentTrackResourceInterface;
 use Psr\Log\LoggerInterface;
+use SMG\CustomerServiceEmail\Api\OrderManagementInterface;
+use SMG\CustomerServiceEmail\Api\Data\ItemInterface;
 use SMG\Sap\Model\ResourceModel\SapOrder;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
@@ -88,6 +90,16 @@ class ShipmentHelper
     protected $_sapOrderResource;
 
     /**
+     * @var OrderManagementInterface
+     */
+    protected $_orderManagementInterface;
+
+    /**
+     * @var ItemInterface
+     */
+    protected $_itemInterface;
+
+    /**
      * BatchCaptureHelper constructor.
      *
      * @param LoggerInterface $logger
@@ -102,7 +114,9 @@ class ShipmentHelper
      * @param ShipmentTrackInterfaceFactory $shipmentTrackFactory
      * @param ShipmentTrackResourceInterface $shipmentTrackResource
      * @param SapOrderBatch $sapOrderBatchResource
-     * @param SapOrderResource $sapOrderResource
+     * @param SapOrder $sapOrderResource
+     * @param OrderManagementInterface $orderManagementInterface
+     * @param ItemInterface $itemInterface
      */
     public function __construct(LoggerInterface $logger,
         ResponseHelper $responseHelper,
@@ -116,7 +130,9 @@ class ShipmentHelper
         ShipmentTrackInterfaceFactory $shipmentTrackFactory,
         ShipmentTrackResourceInterface $shipmentTrackResource,
         SapOrderBatch $sapOrderBatchResource,
-        SapOrder $sapOrderResource)
+        SapOrder $sapOrderResource,
+        OrderManagementInterface $orderManagementInterface,
+        ItemInterface $itemInterface)
     {
         $this->_logger = $logger;
         $this->_responseHelper = $responseHelper;
@@ -131,6 +147,8 @@ class ShipmentHelper
         $this->_shipmentTracKResource = $shipmentTrackResource;
         $this->_sapOrderBatchResource = $sapOrderBatchResource;
         $this->_sapOrderResource = $sapOrderResource;
+        $this->_orderManagementInterface = $orderManagementInterface;
+        $this->_itemInterface = $itemInterface;
     }
 
     /**
@@ -145,10 +163,11 @@ class ShipmentHelper
         $orderStatusResponse = $this->_responseHelper->createResponse(true, "The shipment process completed successfully.");
 
         // get all of the records in the batch capture table
-        // where the capture processed date is not null and the capture flag is set
+        // where the shipment has not been completed and the order was not unauthorized
         $sapBatchOrders = $this->_sapOrderBatchCollectionFactory->create();
         $sapBatchOrders->addFieldToFilter('is_shipment', ['eq' => true]);
         $sapBatchOrders->addFieldToFilter('shipment_process_date', ['null' => true]);
+        $sapBatchOrders->addFieldToFilter('is_unauthorized', ['neq' => true]);
 
         // loop through all of the batch capture records that have not been processed
         foreach ($sapBatchOrders as $sapBatchOrder)
@@ -163,7 +182,7 @@ class ShipmentHelper
             $this->updateSapBatch($sapBatchOrder, $orderId);
 
             // send consumer service email
-
+            $this->sendCustomerServiceEmails();
         }
 
         // return
@@ -317,7 +336,7 @@ class ShipmentHelper
             $this->_itemInterface->setOrderIds($this->_customerServiceEmailIds);
 
             // send the email
-            $this->_orderManagementInterface->notifyEmailsServiceTeam($this->_itemInterface);
+            $this->_orderManagementInterface->notifyShipmentOrdersServiceTeam($this->_itemInterface);
         }
     }
 }
