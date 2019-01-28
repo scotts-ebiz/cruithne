@@ -1,0 +1,323 @@
+<?php
+
+namespace SMG\Api\Helper;
+
+use Magento\Sales\Api\Data\OrderInterfaceFactory;
+use Magento\Sales\Api\Data\ShipmentTrackInterfaceFactory;
+use Magento\Sales\Api\Data\ShipmentItemCreationInterfaceFactory;
+use Magento\Sales\Api\Data\ShipmentTrackCreationInterfaceFactory;
+use Magento\Sales\Api\ShipOrderInterface;
+use Magento\Sales\Model\Spi\OrderResourceInterface;
+use Magento\Sales\Model\Spi\ShipmentTrackResourceInterface;
+use Psr\Log\LoggerInterface;
+use SMG\Sap\Model\ResourceModel\SapOrder;
+use SMG\Sap\Model\ResourceModel\SapOrderBatch;
+use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
+use SMG\Sap\Model\ResourceModel\SapOrderItem\CollectionFactory as SapOrderItemCollectionFactory;
+
+class ShipmentHelper
+{
+    /**
+     * @var array
+     */
+    protected $_customerServiceEmailIds = [];
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $_logger;
+
+    /**
+     * @var ResponseHelper
+     */
+    protected $_responseHelper;
+
+    /**
+     * @var SapOrderBatchCollectionFactory
+     */
+    protected $_sapOrderBatchCollectionFactory;
+
+    /**
+     * @var ShipOrderInterface
+     */
+    protected $_shipOrderInterface;
+
+    /**
+     * @var ShipmentItemCreationInterfaceFactory
+     */
+    protected $_shipmentItemCreationInterfaceFactory;
+
+    /**
+     * @var OrderInterfaceFactory
+     */
+    protected $_orderFactory;
+
+    /**
+     * @var OrderResourceInterface
+     */
+    protected $_orderResource;
+
+    /**
+     * @var ShipmentTrackCreationInterfaceFactory
+     */
+    protected $_shipmentTrackCreationInterfaceFactory;
+
+    /**
+     * @var SapOrderItemCollectionFactory
+     */
+    protected $_sapOrderItemCollectionFactory;
+
+    /**
+     * @var ShipmentTrackInterfaceFactory
+     */
+    protected $_shipmentTrackFactory;
+
+    /**
+     * @var ShipmentTrackResourceInterface
+     */
+    protected $_shipmentTracKResource;
+
+    /**
+     * @var SapOrderBatch
+     */
+    protected $_sapOrderBatchResource;
+
+    /**
+     * @var SapOrder
+     */
+    protected $_sapOrderResource;
+
+    /**
+     * BatchCaptureHelper constructor.
+     *
+     * @param LoggerInterface $logger
+     * @param ResponseHelper $responseHelper
+     * @param SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
+     * @param ShipOrderInterface $shipOrderInterface
+     * @param ShipmentItemCreationInterfaceFactory $shipmentItemCreationInterfaceFactory
+     * @param OrderInterfaceFactory $orderFactory
+     * @param OrderResourceInterface $orderResource
+     * @param ShipmentTrackCreationInterfaceFactory $shipmentTrackCreationInterfaceFactory
+     * @param SapOrderItemCollectionFactory $sapOrderItemCollectionFactory
+     * @param ShipmentTrackInterfaceFactory $shipmentTrackFactory
+     * @param ShipmentTrackResourceInterface $shipmentTrackResource
+     * @param SapOrderBatch $sapOrderBatchResource
+     * @param SapOrderResource $sapOrderResource
+     */
+    public function __construct(LoggerInterface $logger,
+        ResponseHelper $responseHelper,
+        SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory,
+        ShipOrderInterface $shipOrderInterface,
+        ShipmentItemCreationInterfaceFactory $shipmentItemCreationInterfaceFactory,
+        OrderInterfaceFactory $orderFactory,
+        OrderResourceInterface $orderResource,
+        ShipmentTrackCreationInterfaceFactory $shipmentTrackCreationInterfaceFactory,
+        SapOrderItemCollectionFactory $sapOrderItemCollectionFactory,
+        ShipmentTrackInterfaceFactory $shipmentTrackFactory,
+        ShipmentTrackResourceInterface $shipmentTrackResource,
+        SapOrderBatch $sapOrderBatchResource,
+        SapOrder $sapOrderResource)
+    {
+        $this->_logger = $logger;
+        $this->_responseHelper = $responseHelper;
+        $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
+        $this->_shipOrderInterface = $shipOrderInterface;
+        $this->_shipmentItemCreationInterfaceFactory = $shipmentItemCreationInterfaceFactory;
+        $this->_orderFactory = $orderFactory;
+        $this->_orderResource = $orderResource;
+        $this->_shipmentTrackCreationInterfaceFactory = $shipmentTrackCreationInterfaceFactory;
+        $this->_sapOrderItemCollectionFactory = $sapOrderItemCollectionFactory;
+        $this->_shipmentTrackFactory = $shipmentTrackFactory;
+        $this->_shipmentTracKResource = $shipmentTrackResource;
+        $this->_sapOrderBatchResource = $sapOrderBatchResource;
+        $this->_sapOrderResource = $sapOrderResource;
+    }
+
+    /**
+     * This function will process the orders
+     * that have been set as ready to ship
+     *
+     * @return string
+     */
+    public function processShipment()
+    {
+        // variables
+        $orderStatusResponse = $this->_responseHelper->createResponse(true, "The shipment process completed successfully.");
+
+        // get all of the records in the batch capture table
+        // where the capture processed date is not null and the capture flag is set
+        $sapBatchOrders = $this->_sapOrderBatchCollectionFactory->create();
+        $sapBatchOrders->addFieldToFilter('is_shipment', ['eq' => true]);
+        $sapBatchOrders->addFieldToFilter('shipment_process_date', ['null' => true]);
+
+        // loop through all of the batch capture records that have not been processed
+        foreach ($sapBatchOrders as $sapBatchOrder)
+        {
+            // get the order id
+            $orderId = $sapBatchOrder->getData('order_id');
+
+            // create the shipment request
+            $this->createShipmentRequest($orderId);
+
+            // update the sap order batch
+            $this->updateSapBatch($sapBatchOrder, $orderId);
+
+            // send consumer service email
+
+        }
+
+        // return
+        return $orderStatusResponse;
+    }
+
+    /**
+     * Create the Shipment Request to set the order as
+     * shipped.
+     *
+     * @param $orderId
+     */
+    private function createShipmentRequest($orderId)
+    {
+        // get the order to get the order items
+        /**
+         * @var \Magento\Sales\Model\Order $order
+         */
+        $order = $this->_orderFactory->create();
+        $this->_orderResource->load($order, $orderId);
+
+        // determine if this can be shipped
+        if ($order->canShip())
+        {
+            // create the list of items
+            // initialize the items array
+            $items = [];
+            $tracks = [];
+
+            /**
+             * @var \SMG\Sap\Model\SapOrder $sapOrder
+             */
+            $sapOrder = $this->_sapOrderResource->getSapOrderByOrderId($orderId);
+
+            /**
+             * @var \Magento\Sales\Model\Order\Item $orderItem
+             */
+            foreach ($order->getAllItems() as $orderItem)
+            {
+                // get the sap order item
+                $sapOrderItems = $this->_sapOrderItemCollectionFactory->create();
+                $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $sapOrder->getId()]);
+                $sapOrderItems->addFieldToFilter('ship_tracking_number', ['notnull' => true]);
+                $sapOrderItems->addFieldToFilter('sku', ['eq' => $orderItem->getSku()]);
+
+                // get the first item from the collection.  there should only be one
+                // item
+                /**
+                 * @var \SMG\Sap\Model\SapOrderItem $sapOrderItem
+                 */
+                foreach ($sapOrderItems as $sapOrderItem)
+                {
+                    if (!empty($sapOrderItem))
+                    {
+                        /**
+                         * @var \Magento\Sales\Api\Data\ShipmentItemCreationInterface $shipmentItemCreation
+                         */
+                        $shipmentItemCreation = $this->_shipmentItemCreationInterfaceFactory->create();
+                        $shipmentItemCreation->setOrderItemId($orderItem->getItemId());
+                        $shipmentItemCreation->setQty($orderItem->getQtyOrdered());
+                        $items[] = $shipmentItemCreation;
+
+                        /**
+                         * @var \Magento\Sales\Api\Data\ShipmentTrackCreationInterface @$shipmentTrackItemCreation
+                         */
+                        $shipmentTrackItemCreation = $this->_shipmentTrackCreationInterfaceFactory->create();
+                        $shipmentTrackItemCreation->setTrackNumber($sapOrderItem->getData('ship_tracking_number'));
+                        $shipmentTrackItemCreation->setTitle($order->getShippingDescription());
+                        $shipmentTrackItemCreation->setCarrierCode("Federal Express");
+                        $tracks[] = $shipmentTrackItemCreation;
+                    }
+                }
+            }
+
+            // check to see if the items were added
+            if (!empty($items) && !empty($tracks))
+            {
+                // create shipment status
+                $this->_shipOrderInterface->execute($orderId, $items, true, false, null, $tracks);
+            }
+        }
+        else
+        {
+            $this->_logger->error("The order Id " . $orderId . " can not be shipped.  The order status currently is " . $order->getStatus());
+        }
+    }
+
+    /**
+     * @param $sapBatchOrder
+     * @param $orderId
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     */
+    private function updateSapBatch($sapBatchOrder, $orderId)
+    {
+        // check the status
+        if ($this->wasShipmentSuccessful($orderId))
+        {
+            // get the current date
+            $today = date('Y-m-d H:i:s');
+
+            // set the capture date
+            $sapBatchOrder->setData('shipment_process_date', $today);
+
+            // save the data
+            $this->_sapOrderBatchResource->save($sapBatchOrder);
+
+            // add the order id to the array to send email
+            // to customer service
+            $this->_customerServiceEmailIds[] = $orderId;
+        }
+    }
+
+    /**
+     * Determine if the update was successful
+     *
+     * @param $orderId
+     * @return bool
+     */
+    private function wasShipmentSuccessful($orderId)
+    {
+        // set the success flag
+        $isBatchCaptureSuccess = false;
+
+        // load the shipment track data
+        /**
+         * @var \Magento\Sales\Model\Order\Shipment\Track $shipmentTrack
+         */
+        $shipmentTrack = $this->_shipmentTrackFactory->create();
+        $this->_shipmentTracKResource->load($shipmentTrack, $orderId, 'order_id');
+
+        // check to see if the user is loaded
+        $trackingNumber = $shipmentTrack->getTrackNumber();
+        if (isset($trackingNumber))
+        {
+            $isBatchCaptureSuccess = true;
+        }
+
+        // return
+        return $isBatchCaptureSuccess;
+    }
+
+    /**
+     * Sends email to customer service for the orders
+     */
+    private function sendCustomerServiceEmails()
+    {
+        // if there is something to send then send the emails
+        if (count($this->_customerServiceEmailIds) > 0)
+        {
+            // add the items to the item interface
+            $this->_itemInterface->setOrderIds($this->_customerServiceEmailIds);
+
+            // send the email
+            $this->_orderManagementInterface->notifyEmailsServiceTeam($this->_itemInterface);
+        }
+    }
+}
