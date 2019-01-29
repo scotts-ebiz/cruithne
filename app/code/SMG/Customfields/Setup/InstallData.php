@@ -343,6 +343,6 @@ class InstallData implements InstallDataInterface
 				'apply_to' 	=> ''
 			]
 		);
-	   
+
 	}
 }

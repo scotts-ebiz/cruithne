@@ -2,7 +2,7 @@
     "name": "custom/module-gtm",
     "description": "",
     "type": "magento2-module",
-    "license": "OSL-3.0",
+    "license": "proprietary",
     "authors": [
         {
             "email": "",
