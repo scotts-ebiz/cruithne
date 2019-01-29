@@ -12,7 +12,8 @@
     "require": {
         "classyllama/module-avatax": "^1.5",
         "composer/composer": "@alpha",
-        "magento/product-enterprise-edition": ">=2.3.0"
+        "magento/product-enterprise-edition": ">=2.3.0",
+        "firebear/importexport": "^3.1"
     },
     "require-dev": {
         "magento/magento2-functional-testing-framework": "2.3.3",
@@ -58,12 +59,16 @@
     "prefer-stable": true,
     "version": "2.3.0",
     "minimum-stability": "alpha",
-    "repositories": [
-        {
+    "repositories": {
+        "0": {
             "type": "composer",
             "url": "https://repo.magento.com/"
+        },
+        "firebear": {
+            "type": "composer",
+            "url": "https://firebearstudio.com/composer/download/package/type/ee/user/efa71144d8594b981e88474ac2d279c1/password/645cb1f99ccc2c072f0d24024053ff88/"
         }
-    ],
+    },
     "extra": {
         "magento-force": "override"
     }

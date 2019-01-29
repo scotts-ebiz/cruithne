@@ -1221,6 +1221,30 @@
             "time": "2017-10-22T18:56:00+00:00"
         },
         {
+            "name": "firebear/importexport",
+            "version": "3.1.4",
+            "dist": {
+                "type": "zip",
+                "url": "https://firebearstudio.com/composer/download/package/user/efa71144d8594b981e88474ac2d279c1/password/645cb1f99ccc2c072f0d24024053ff88/module/importexport/type/ee/v/3.1.4/",
+                "reference": null,
+                "shasum": null
+            },
+            "require": {
+                "box/spout": "~2.7",
+                "salsify/json-streaming-parser": "~6.0",
+                "tcdent/php-restclient": "^0.1.7"
+            },
+            "type": "library",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Firebear\\ImportExport\\": ""
+                }
+            }
+        },
+        {
             "name": "google/recaptcha",
             "version": "1.2.1",
             "source": {
