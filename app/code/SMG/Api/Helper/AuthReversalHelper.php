@@ -93,7 +93,7 @@ class AuthReversalHelper
     public function processAuthReversal()
     {
         // variables
-        $orderStatusResponse = $this->_responseHelper->createResponse(true, "The batch capture process completed successfully.");
+        $orderStatusResponse = $this->_responseHelper->createResponse(true, "The auth reversal process completed successfully.");
 
         // get all of the records in the batch capture table
         // where the capture processed date is not null and the capture flag is set
