@@ -7,5 +7,16 @@
         <link src="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i|Oswald:300,400,500,700|Rokkitt:300,400,500,700,800,900" src_type="url" rel="stylesheet" />
         <script type="text/javascript" src="js/jquery-3.3.1.js" />
         <script type="text/javascript" src="js/site.js" />
+        <script src="//assets.adobedtm.com/607edf92a426ed8b5a89acff073b761a7424d056/satelliteLib-8212b36a93ce380d12a7bceb9a890232f0324b71-staging.js" type="text/javascript" src_type="url"></script>
+         <script type="text/javascript" src="js/scotts-analytics.js"/>
     </head>
+     <body>
+	    <referenceContainer name="before.body.end">
+		    <block class="Magento\Framework\View\Element\Text" name="jsScript">
+		        <arguments>
+		           <argument name="text" xsi:type="string"><![CDATA[<script type="text/javascript">_satelite.pageBottom();</script>]]></argument>
+		        </arguments>
+		    </block>
+		</referenceContainer>
+	</body>
 </page>

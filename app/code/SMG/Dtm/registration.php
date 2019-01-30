@@ -1,7 +1,7 @@
 <?php
 \Magento\Framework\Component\ComponentRegistrar::register(
     \Magento\Framework\Component\ComponentRegistrar::MODULE,
-    'Custom_Gtm',
+    'SMG_Dtm',
     __DIR__
 );
 

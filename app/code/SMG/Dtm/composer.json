@@ -1,12 +1,12 @@
 {
-    "name": "creditvantiv/module-payment",
+    "name": "custom/module-gtm",
     "description": "",
     "type": "magento2-module",
     "license": "proprietary",
     "authors": [
         {
-            "email": "info@mage2gen.com",
-            "name": "Mage2Gen"
+            "email": "",
+            "name": ""
         }
     ],
     "minimum-stability": "dev",
@@ -16,7 +16,7 @@
             "registration.php"
         ],
         "psr-4": {
-            "Creditvantiv\\Payment\\": ""
+            "SMG\\Dtm\\": ""
         }
     }
 }
