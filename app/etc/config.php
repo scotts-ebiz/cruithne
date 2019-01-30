@@ -216,6 +216,7 @@ return [
         'Magento_CatalogRuleStaging' => 1,
         'Magento_RewardStaging' => 1,
         'ClassyLlama_AvaTax' => 1,
+        'Klarna_Ordermanagement' => 1,
         'Magento_UrlRewrite' => 1,
         'Magento_ScalableCheckout' => 1,
         'Magento_ScalableInventory' => 1,
