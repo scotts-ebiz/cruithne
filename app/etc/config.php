@@ -268,6 +268,7 @@ return [
         'SMG_Api' => 1,
         'SMG_Creditvantiv' => 1,
         'SMG_CustomerServiceEmail' => 1,
+        'SMG_Customfields' => 1,
         'SMG_FeaturesList' => 1,
         'SMG_HeroCallout' => 1,
         'SMG_HeroVideo' => 1,
