@@ -157,11 +157,21 @@ class OrdersHelper
                 $orderItems->addFieldToFilter("order_id", ['eq' => $order->getId()]);
                 $orderItems->addFieldToFilter("product_type", ['neq' => 'bundle']);
 
+                // split the base url into different parts for later use
+                $urlParts = parse_url($order->getStore()->getBaseUrl());
+
                 /**
                  * @var \Magento\Sales\Model\Order\Item $orderItem
                  */
                 foreach ($orderItems as $orderItem)
                 {
+                    // check to see if there was a value
+                    $invoiceAmount = $order->getData('total_invoiced');
+                    if (empty($invoiceAmount))
+                    {
+                        $invoiceAmount = '';
+                    }
+
                     $ordersArray[] = array(
                         'OrderNumber' => $order->getId(),
                         'DatePlaced' => $order->getData('created_at'),
@@ -183,15 +193,15 @@ class OrdersHelper
                         'Subtotal' => $order->getData('subtotal'),
                         'TaxRate' => $orderItem->getTaxPercent(),
                         'SalesTax' => $order->getData('tax_amount'),
-                        'InvoiceAmount' => $order->getData('total_invoiced'),
+                        'InvoiceAmount' => $invoiceAmount,
                         'DeliveryLocation' => '',
                         'CustomerEmail' => $order->getData('customer_email'),
                         'CustomerPhone' => $order->getData('telephone'),
                         'DeliveryWindow' => '',
                         'ShippingCondition' => '',
-                        'WebsiteURL' => '',
+                        'WebsiteURL' => $urlParts['host'],
                         'CreditAmount' => '',
-                        'CR/DR/RE/Flag' => '',
+                        'CR/DR/RE/Flag' => 'DR',
                         'ReferenceDocNum' => '',
                         'CreditComment' => '',
                         'OrderReason' => '',

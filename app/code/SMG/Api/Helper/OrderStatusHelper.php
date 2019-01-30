@@ -23,19 +23,20 @@ use SMG\Sap\Model\ResourceModel\SapOrderItemHistory\CollectionFactory as SapOrde
 class OrderStatusHelper
 {
     // Input JSON File Constants
-    const INPUT_SAP_ORDER_NUMBER = 'sapOrderNumber';
-    const INPUT_SAP_MAGENTO_PO = 'magentoPo';
-    const INPUT_SAP_ORDER_CREATE_DATE = 'orderCreat';
-    const INPUT_SAP_SAP_ORDER_STATUS = 'orderStatus';
-    const INPUT_SAP_FULFILLMENT_LOCATION = 'fulfillmentLocation';
-    const INPUT_SAP_SKU = 'sku';
-    const INPUT_SAP_SKU_DESCRIPTION = 'skuDescription';
-    const INPUT_SAP_ORDER_QTY = 'orderQty';
-    const INPUT_SAP_CONFIRMED_QTY = 'confirmedQty';
-    const INPUT_SAP_SHIP_TRACKING_NUMBER = 'shipTrackingNumber';
-    const INPUT_SAP_SAP_BILLING_DOC_NUMBER = 'invoiceNumber';
-    const INPUT_SAP_SAP_BILLING_DOC_DATE = 'invoiceDate';
-    const INPUT_SAP_PAYER_ID = 'payerId';
+    const INPUT_SAP_ORDER_NUMBER = 'SAPOrderNumber';
+    const INPUT_SAP_MAGENTO_PO = 'MagentoPO';
+    const INPUT_SAP_ORDER_CREATE_DATE = 'OrderCreat';
+    const INPUT_SAP_SAP_ORDER_STATUS = 'OrderStatus';
+    const INPUT_SAP_FULFILLMENT_LOCATION = 'FulfillmentLocation';
+    const INPUT_SAP_SKU = 'SKU';
+    const INPUT_SAP_SKU_DESCRIPTION = 'SKUDescription';
+    const INPUT_SAP_ORDER_QTY = 'OrderQTY';
+    const INPUT_SAP_CONFIRMED_QTY = 'ConfirmedQTY';
+    const INPUT_SAP_SHIP_TRACKING_NUMBER = 'ShipTrackingNumber';
+    const INPUT_SAP_SAP_BILLING_DOC_NUMBER = 'InvoiceNumber';
+    const INPUT_SAP_SAP_BILLING_DOC_DATE = 'InvoiceDate';
+    const INPUT_SAP_PAYER_ID = 'PayerId';
+    const INPUT_SAP_DELIVERY_NUMBER = 'DeliveryNumber';
 
     // Table Constants
     const SALES_ORDER_SAP_ORDER_ID = 'order_id';
@@ -46,6 +47,7 @@ class OrderStatusHelper
     const SALES_ORDER_SAP_SAP_BILLING_DOC_NUMBER = 'sap_billing_doc_number';
     const SALES_ORDER_SAP_SAP_BILLING_DOC_DATE = 'sap_billing_doc_date';
     const SALES_ORDER_SAP_SAP_PAYER_ID = 'sap_payer_id';
+    const SALES_ORDER_SAP_DELIVERY_NUMBER = 'delivery_number';
 
     const SALES_ORDER_SAP_HISTORY_ORDER_SAP_ID = 'order_sap_id';
     const SALES_ORDER_SAP_HISTORY_ORDER_STATUS = 'order_status';
@@ -380,6 +382,7 @@ class OrderStatusHelper
         $sapOrder->setData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_NUMBER, $sapBillingDocNumber);
         $sapOrder->setData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_DATE, $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_DATE]);
         $sapOrder->setData(self::SALES_ORDER_SAP_SAP_PAYER_ID, $inputOrder[self::INPUT_SAP_PAYER_ID]);
+        $sapOrder->setData(self::SALES_ORDER_SAP_DELIVERY_NUMBER, $inputOrder[self::INPUT_SAP_DELIVERY_NUMBER]);
 
         // save the data to the table
         $this->_sapOrderResource->save($sapOrder);
