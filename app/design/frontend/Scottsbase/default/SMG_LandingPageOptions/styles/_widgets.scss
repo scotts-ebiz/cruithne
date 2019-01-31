@@ -2,6 +2,54 @@
 .landingPageOptions-container {
     section.section__hero {
         background-position: center center;
-        border: 1 px solid red;
+        display: inline-block;
+        width: 100%;
+    }
+    .section__hero--wrapper {
+        .section__hero--purchase {
+            display: inline-block;
+            position: relative;
+            background-color: #ffffff;
+            float: right;
+            width: 30%;
+            margin-right: 10%;
+            margin-top: 2%;
+            margin-bottom: 2%;
+            padding: 4%;
+            border-radius: 0.25rem;
+            .section__hero--text {
+                h1 {
+                    font-size: 1rem;
+                    font-weight: 700;
+                }
+                h2 {
+                    font-size: 1.7rem;
+                    font-weight: 700;
+                    margin-top: 1.0rem;
+                    margin-bottom: 1.0rem;
+                }
+            }
+        }
+    }
+    .section__hero--select {
+        h4 {
+            text-transform: uppercase;
+            font-size: 1.0rem;
+            margin-bottom: 0.75rem;
+        }
+        .section__hero--option {
+            form {
+                button {
+                    background-color: #075534;
+                    border-radius: 0.313rem;
+                }
+                small.section__hero--linkinfo {
+                    display: inline-block;
+                }
+                &:nth-child(2) {
+                    margin-top: 1.5rem;
+                }
+            }
+        }
     }
 }
