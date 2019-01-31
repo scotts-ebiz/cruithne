@@ -106,29 +106,6 @@ class InstallData implements InstallDataInterface
                 'backend' => ''
 				 ]
               );
-        
-        $eavSetup->addAttribute(
-	             \Magento\Catalog\Model\Product::ENTITY,
-	             'reason_code', [
-	            'type' => 'int',
-	            'backend' => '',
-	            'frontend' => '',
-	             'label' => 'Reason Code',
-	            'input' => 'select',
-	            'group' => 'Custom Fields',          
-	            'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
-	            'visible' =>  true,
-	            'required' => false,
-	            'user_defined' => false,
-	            'default' => '',
-	            'searchable' => false,
-	            'filterable' => false,
-	            'comparable' => false,
-	            'visible_on_front' => false,
-	            'used_in_product_listing' => true,
-	            'unique' => false
-	                ]
-	    );
          
         $eavSetup->addAttribute(
 			\Magento\Catalog\Model\Product::ENTITY,
