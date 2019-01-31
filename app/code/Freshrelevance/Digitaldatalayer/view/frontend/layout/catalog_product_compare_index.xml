@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<body>
+    <referenceContainer name="after.body.start">
+        <block class="Magento\Catalog\Block\Product\Compare\ListCompare"
+               name="name_catcher"
+               template="Freshrelevance_Digitaldatalayer::pages/compare.phtml"
+               after="-">
+        </block>
+    </referenceContainer>
+</body>
