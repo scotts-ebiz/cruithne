@@ -1,0 +1,33 @@
+<?php
+use Freshrelevance\Digitaldatalayer\Helper\PageType;
+
+$objectManager=\Magento\Framework\App\ObjectManager::getInstance();
+$config=$objectManager->create('Freshrelevance\Digitaldatalayer\Helper\Config');
+$pageTypeHelper=$objectManager->create('Freshrelevance\Digitaldatalayer\Helper\PageType');
+$helper = $objectManager->create('Freshrelevance\Digitaldatalayer\Helper\Data');
+$config=$objectManager->create('Freshrelevance\Digitaldatalayer\Helper\Config');
+$isDdlEnabled=$config->getEnabledDdl();
+$ddlData = null;
+if($isDdlEnabled) {
+    try{
+        if ($pageTypeHelper->isTransactionDataAvailable()) {
+            $ddlData = $helper->getDdlTransactionData();
+        } else {
+            $ddlData = $helper->getDdlCmsData();
+        }
+    } catch (Exception $e) {}
+}
+
+
+?>
+<?php if($isDdlEnabled):?>
+    <script type="text/javascript">
+        (function () {
+            window.digitalData = (<?php echo $ddlData?$ddlData:'{}';?>);
+        })();
+    </script>
+<?php endif;?>
+<!-- You have successfully installed the W3C Digital Data Layer Extension by Fresh Relevance.
+With Fresh Relevance, you can create effortless personalization, live email content and cart and browse abandonment emails.
+If you want to know more about us, then check us out at http://www.freshrelevance.com
+If you need help with the extension, go to http://www.freshrelevance.com/contact -->
