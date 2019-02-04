@@ -25,6 +25,12 @@
             <resource ref="self" />
         </resources>
     </route>
+    <route url="/V1/smg/productImport" method="POST">
+        <service class="SMG\Api\Model\ProductImportManagementInterface" method="processProductImport" />
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
     <route url="/V1/smg/shipment" method="POST">
         <service class="SMG\Api\Model\ShipmentManagementInterface" method="processShipment" />
         <resources>
