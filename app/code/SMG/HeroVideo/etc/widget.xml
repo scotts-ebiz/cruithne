@@ -4,24 +4,129 @@
         <label>Hero Video</label>
         <description>Display hero video and text.</description>
         <parameters>
-            <parameter name="heroheadline" visible="true" xsi:type="text" required="true">
-                <label>Hero Headline</label>
+
+            <!-- Banner Headline Customization -->
+            <parameter name="bannerHeadlineCustomLabel" visible="true" xsi:type="block">
+                <label>BANNER HEADLINE CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
-            <parameter name="herotext" visible="true" xsi:type="block">
-                <label>Hero Text</label>
+            <parameter name="bannerheadline" visible="true" xsi:type="text" required="true">
+                <label>Banner Headline</label>
+            </parameter>
+            <parameter name="bannerheadlinecolor" visible="true" xsi:type="text">
+                <label>Banner Headline Color (Hex Code #xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
+            <parameter name="headlinetextstyle" visible="true" xsi:type="multiselect" source_model="SMG\HeroVideo\Model\Source\HeadlineTextStyles">
+                <label>Banner Headline Style</label>
+            </parameter>
+
+
+            <!-- Banner Text Customization -->
+            <parameter name="bannerTextCustomLabel" visible="true" xsi:type="block">
+                <label>BANNER TEXT CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="bannertext" visible="true" xsi:type="text">
+                <label>Banner Text</label>
+            </parameter>
+            <parameter name="bannertextlinecolor" visible="true" xsi:type="text">
+                <label>Banner Text Color (in #xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
+            <parameter name="bannertextsize" visible="true" xsi:type="select"
+                       source_model="SMG\HeroVideo\Model\Source\TextSize">
+                <label>Banner Text Size (in rem)</label>
+            </parameter>
+            <parameter name="textstyle" visible="true" xsi:type="multiselect"
+                       source_model="SMG\HeroVideo\Model\Source\TextStyles">
+                <label>Banner Text Style</label>
+            </parameter>
+
+
+            <!-- Text Container Customization -->
+            <parameter name="textContainerCustomLabel" visible="true" xsi:type="block">
+                <label>TEXT CONTAINER CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="textalignclass" visible="true" xsi:type="select" source_model="SMG\HeroVideo\Model\Source\TextAlignSelect">
+                <label>Text Container Alignment</label>
+            </parameter>
+            <parameter name="textpaddingleft" visible="true" xsi:type="text">
+                <label>Text Container Left Padding (in %)</label>
+                <value>0</value>
+            </parameter>
+            <parameter name="textpaddingright" visible="true" xsi:type="text">
+                <label>Text Container Right Padding (in %)</label>
+                <value>0</value>
+            </parameter>
+
+
+            <!-- Video Customization -->
+            <parameter name="videoCustomLabel" visible="true" xsi:type="block">
+                <label>VIDEO CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="videotext" visible="true" xsi:type="block">
+                <label>Video Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
             </parameter>
-            <parameter name="heroimage" visible="true" xsi:type="block">
-                <label>Hero Image</label>
+            <parameter name="videotextcolor" visible="true" xsi:type="text">
+                <label>Video Text Color (in #xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
+            <parameter name="videotextsize" visible="true" xsi:type="select"
+                       source_model="SMG\HeroVideo\Model\Source\VideoTextSize">
+                <label>Video Text Size (in rem)</label>
+            </parameter>
+            <parameter name="iconcolor" visible="true" xsi:type="text">
+                <label>Icon Color (in #xxxxxx)</label>
+                <value>#ffffff</value>
+            </parameter>
+            <parameter name="iconbackgroundcolor" visible="true" xsi:type="text">
+                <label>Icon Background Color (in #xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
+            <parameter name="iframeVideoLink" visible="true" xsi:type="text">
+                <label>iFrame Video Link</label>
+            </parameter>
+            <parameter name="iframeWidth" visible="true" xsi:type="text">
+                <label>iFrame Width (in px)</label>
+                <value>560</value>
+            </parameter>
+            <parameter name="iframeHeight" visible="true" xsi:type="text">
+                <label>iFrame Height (in px)</label>
+                <value>315</value>
+            </parameter>
+
+            <!-- Removing the iframeId for now as deemed not needed
+            <parameter name="iframeId" visible="true" xsi:type="text">
+                <label>iFrame Id</label>
+            </parameter>
+            -->
+
+
+
+            <!-- Background Image Customization -->
+            <parameter name="backgroundImageCustomLabel" visible="true" xsi:type="block">
+                <label>BACKGROUND IMAGE CUSTOMIZATION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="videobackgroundimage" visible="true" xsi:type="block">
+                <label>Background Image</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
-            <parameter name="buttontext" visible="true" xsi:type="text">
-                <label>Video Text</label>
+            <parameter name="videopaddingtop" visible="true" xsi:type="text">
+                <label>Background Top Padding (in %)</label>
+                <value>15</value>
             </parameter>
-            <parameter name="videoembedcode" visible="true" xsi:type="block">
-                <label>Video Embed Code</label>
-                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+            <parameter name="videopaddingbottom" visible="true" xsi:type="text">
+                <label>Background Bottom Padding (in %)</label>
+                <value>15</value>
             </parameter>
+
         </parameters>
+
+
     </widget>
 </widgets>

@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../Magento/Config/etc/system_file.xsd">
+    <system> <tab id="ddl" translate="label" sortOrder="11">
+        <label>Digital Data Layer</label>
+    </tab>
+        <section id="freshrelevance_ddl" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Digital Data Layer Settings</label>
+            <tab>ddl</tab>
+            <resource>Freshrelevance_Digitaldatalayer::configuration1</resource>
+        <group id="ddl_settings" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
+            <comment><![CDATA[ <div class="imagecontainer"><a href="https://d1y9qtn9cuc3xw.cloudfront.net/le409lob/s/magento-2-ddl-banner/?k=bs346oo&minify=false&format=dynamiclink"><img src="https://d1y9qtn9cuc3xw.cloudfront.net/le409lob/s/magento-2-ddl-banner/?k=bs346oo&minify=false&format=dynamicimage"></a> ]]></comment>
+            <label>Digital Data Layer Settings</label>
+            <field id="setting_1" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Enable Digital Data Layer</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <comment><![CDATA[ See <a href="http://www.w3.org/2013/12/ceddl-201312.pdf" target="_blank">http://www.w3.org/2013/12/ceddl-201312.pdf</a> for the specification. ]]></comment>
+            </field>
+            <field id="setting_2" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Expose Product Data On All Pages</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <comment><![CDATA[ The Digital Data Layer object will be exposed on every page of the website ]]></comment>
+            </field>
+            <field id="setting_3" translate="label" type="multiselect" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Expose Product Data On These Pages</label>
+                <source_model>Freshrelevance\Digitaldatalayer\Model\Config\Source\StorePages</source_model>
+                <comment><![CDATA[ Choose which pages to expose the DDL object on.<br> <span style="color:#00838F;">Use CTRL to select multiple<span>]]></comment>
+                <depends>
+                    <field id="setting_2">0</field>
+                </depends>
+            </field>
+            <field id="setting_4" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Custom Product Exposure</label>
+                <comment><![CDATA[ You can add extra pages to expose product information on, by adding the LAYOUT HANDLES of the desired page above. Enter in CSV format.]]></comment>
+                <depends>
+                    <field id="setting_2">0</field>
+                </depends>
+            </field>
+            <field id="setting_5" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Custom Purchase Complete Handling</label>
+                <comment><![CDATA[ You can add extra pages to expose the Transaction data on. Enter in CSV format.<br> <span style="color:#00838F;">Note: For Fresh Relevance users, this will add the Purchase Complete Image too.<span>]]></comment>
+            </field>
+            <field id="setting_6" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Enable User Group Explosure</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <comment><![CDATA[ Expose the user group that any logged in user is a part of. <span style="color:#00838F; display: inline;">Disable if you require this to be kept private.</span> ]]></comment>
+            </field>
+            <field id="setting_7" translate="label" type="multiselect" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Enable Product Attributes</label>
+                <source_model>Freshrelevance\Digitaldatalayer\Model\Config\Source\ProductAttributes</source_model>
+                <comment><![CDATA[ Select the custom product attributes that you would like to expose.<br><span style="color:#00838F; display: inline;">You can use Shift or CTRL to select multiple attributes.</span> ]]></comment>
+            </field>
+            <field id="setting_8" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Enable Stock Exposure</label>
+                <source_model>Freshrelevance\Digitaldatalayer\Model\Config\Source\StockExposure</source_model>
+                <comment><![CDATA[ Expose stock level data in the Digital Data Layer. ]]></comment>
+            </field>
+            <field id="setting_9" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Enable Rating Exposure</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <comment><![CDATA[ Expose average rating and number of ratings in the Digital Data Layer. ]]></comment>
+            </field>
+            <field id="setting_10" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Product List Exposure Type</label>
+                <source_model>Freshrelevance\Digitaldatalayer\Model\Config\Source\ExposureType</source_model>
+                <comment><![CDATA[ <b>Simple exposure</b> exposes the data avilable to the digital datalayer extension without reloading the products from the database. Some data sets such as attributes and linked products may not be included with this option. <br> <b>Full exposure</b> reloads products from the database to expose all data available.  <span style="color: #b71c1c;"><b>Increase's page load times, we recommend only using this feature with a product list exposure limit</b></span> ]]></comment>
+            </field>
+            <field id="setting_11" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Enable Linked Product Exposure</label>
+                <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                <comment><![CDATA[ Expose Linked Products in the Digital Data Layer for Configurable, Bundle and Grouped Products. ]]></comment>
+            </field>
+        </group>
+        </section>
+    </system>
+</config>

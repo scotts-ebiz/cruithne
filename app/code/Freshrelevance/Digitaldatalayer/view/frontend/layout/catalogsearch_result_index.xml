@@ -1,0 +1,10 @@
+<?xml version="1.0"?>
+<body>
+    <referenceContainer name="after.body.start">
+        <block class="Freshrelevance\Digitaldatalayer\Block\DdlProduct"
+               name="name_catcher"
+               template="Freshrelevance_Digitaldatalayer::pages/category_view.phtml"
+               after="-">
+        </block>
+    </referenceContainer>
+</body>
