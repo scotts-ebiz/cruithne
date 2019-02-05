@@ -12,8 +12,11 @@ body {
 
 body {
     .hero-video-widget.product-info-container {
+        display: inline-block;
+        width: 100%;
         .product-info {
             font-size: 20px;
+            width: 50%;
 
             h2.video-headline {
                 @media only screen and (max-width: $screen__s) {
@@ -30,7 +33,7 @@ body {
                     width: 100%;
                     display: inline-block;
                     position: relative;
-                    top: 55px;
+                    top: 40px;
                 }
                 .watch-video {
                     i {
@@ -46,7 +49,7 @@ body {
                         margin-right: 1%;
                         padding: 10px;
                         @media only screen and (max-width: $screen__s) {
-                            padding: 5px;
+                            padding: 2px;
                         }
                     }
                     span {
@@ -64,9 +67,14 @@ body {
                         display: none !important;
                     }
                 }
+                /*
                 .icon-play:before {
+
                     content: "\e901";
+
+                    content: "\f04b";
                 }
+                */
             }
         }
         .video-overlay {
@@ -113,10 +121,8 @@ body {
             display: inline-block;
             position: relative;
             h2 {
-                color: #000000;
-            }
-            p {
-                color: #000000;
+                margin-top: 1.0rem;
+                margin-bottom: 1.0rem;
             }
         }
 
