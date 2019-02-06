@@ -136,6 +136,7 @@ script:
 - sudo find /var/www/ -type f -exec chmod ug+rw {} \;
 - sudo find /var/www/ -type d -exec chmod ug+rwxs {} \;
 - php bin/magento setup:upgrade
+- git checkout test 
 - git pull
 
 #deploy:
