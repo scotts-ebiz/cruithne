@@ -1,11 +1,19 @@
 //Scss file for the SMG SpecList Widget
 
+.specList-container {
+    display: inline-block;
+    width: 100%;
+}
+
 .page-wrapper .page-main .grid > {
     h2.specListHeader {
         display: inline-block;
         position: relative;
         margin: 0;
         float: left;
+        @media only screen and (max-width: $screen__m) {
+            text-align: center;
+        }
     }
     ul.specListDetails {
         list-style: none;
@@ -15,6 +23,9 @@
         float: right;
         li.specListDetailCell {
             display: inline-block;
+            @media only screen and (max-width: $screen__m) {
+                padding-left: 2%;
+            }
         }
     }
 }
