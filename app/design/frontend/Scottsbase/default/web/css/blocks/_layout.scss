@@ -43,8 +43,8 @@ $layout-column__additional-sidebar-offset : $layout-column-main__sidebar-offset 
     .page-wrapper > .page-bottom,
     .block.category.event,
     .top-container {
-        padding-left: $layout__width-xs-indent;
-        padding-right: $layout__width-xs-indent;
+        padding-left: 0px;
+        padding-right: 0px;
     }
 
     .page-main {

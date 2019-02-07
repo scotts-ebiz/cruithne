@@ -14,7 +14,11 @@
                 <label>Banner Headline</label>
             </parameter>
             <parameter name="bannerheadlinecolor" visible="true" xsi:type="text">
-                <label>Banner Headline Color (Hex Code #xxxxxx)</label>
+                <label>Banner Headline Desktop Color (in #xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
+            <parameter name="bannerheadlineMobileColor" visible="true" xsi:type="text">
+                <label>Banner Headline Mobile Color (in #xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
             <parameter name="headlinetextstyle" visible="true" xsi:type="multiselect" source_model="SMG\HeroVideo\Model\Source\HeadlineTextStyles">
@@ -32,6 +36,10 @@
             </parameter>
             <parameter name="bannertextlinecolor" visible="true" xsi:type="text">
                 <label>Banner Text Color (in #xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
+            <parameter name="bannertextlineMobileColor" visible="true" xsi:type="text">
+                <label>Banner Text Mobile Color (in #xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
             <parameter name="bannertextsize" visible="true" xsi:type="select"
