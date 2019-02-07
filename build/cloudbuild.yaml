@@ -1,0 +1,26 @@
+# Build instructions for Google Cloud Build 
+# Runs Docker and deploys new image to test
+# Will need to modify to be enviornment agnostic
+
+steps:
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['build', '-t', 'gcr.io/ecommerce-platform-211419/test-magento:$SHORT_SHA', '-t', 'gcr.io/ecommerce-platform-211419/test-magento:latest', '-t', 'gcr.io/ecommerce-platform-211419/test-magento:$(date +%Y%m%d%H%M%S)',  '.']
+  dir: 'build'
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['tag', 'gcr.io/ecommerce-platform-211419/test-magento:$SHORT_SHA', 'gcr.io/ecommerce-platform-211419/test-magento:$(date +%Y%m%d%H%M%S)']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/ecommerce-platform-211419/test-magento:$SHORT_SHA']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/ecommerce-platform-211419/test-magento:latest']
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['push', 'gcr.io/ecommerce-platform-211419/test-magento:$(date +%Y%m%d%H%M%S)']
+# - name: 'gcr.io/cloud-builders/kubectl'
+#   args: 
+#     - 'set'
+#     - 'image'
+#     - 'deployment/magento-test'
+#     - 'test-magento=gcr.io/ecommerce-platform-211419/test-magento:$SHORT_SHA'
+#   env:
+#     - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
+#     - 'CLOUDSDK_CONTAINER_CLUSTER=magento-test-cluster'
+timeout: 300s
