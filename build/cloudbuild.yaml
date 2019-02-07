@@ -6,7 +6,7 @@ steps:
 - name: 'ubuntu'
   args: ['bash', '-c', 'date -u +%Y%m%d%H%M%S > _TIMESTAMP']
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/ecommerce-platform-211419/test-magento:$SHORT_SHA', '-t', 'gcr.io/ecommerce-platform-211419/test-magento:latest', '-t', 'gcr.io/ecommerce-platform-211419/test-magento:$(cat _TIMESTAMP)',  '.']
+  args: ['build', '-t', 'gcr.io/ecommerce-platform-211419/test-magento:$SHORT_SHA', '-t', 'gcr.io/ecommerce-platform-211419/test-magento:latest',  '.']
   dir: 'build'
 - name: 'gcr.io/cloud-builders/docker'
   args: ['tag', 'gcr.io/ecommerce-platform-211419/test-magento:$SHORT_SHA', 'gcr.io/ecommerce-platform-211419/test-magento:$(date +%Y%m%d%H%M%S)']
