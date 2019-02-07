@@ -7,13 +7,13 @@ use Magento\Sales\Api\Data\InvoiceItemCreationInterfaceFactory;
 use Magento\Sales\Model\Order\InvoiceFactory;
 use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Model\Order\Item;
-use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Oxrder;
 use Magento\Sales\Api\Data\OrderInterfaceFactory;
 use Magento\Sales\Model\ResourceModel\Order\Invoice as InvoiceResource;
 use Magento\Sales\Model\ResourceModel\Order\Invoice\CollectionFactory as InvoiceCollectionFactory;
 use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\CollectionFactory as TransactionCollectionFactory;
 use Magento\Sales\Model\Spi\OrderResourceInterface;
-use \Psr\Log\LoggerInterface;
+use Psr\Log\LoggerInterface;
 use SMG\CustomerServiceEmail\Api\OrderManagementInterface;
 use SMG\CustomerServiceEmail\Api\Data\ItemInterface;
 use SMG\Sap\Model\SapOrder;
@@ -383,7 +383,7 @@ class BatchCaptureHelper
             foreach ($order->getAllItems() as $orderItem)
             {
                 /**
-                 * @var InvoiceItemCreationInterfaceFactory $invoiceItemCreation
+                 * @var \Magento\Sales\Api\Data\InvoiceItemCreationInterface $invoiceItemCreation
                  */
                 $invoiceItemCreation = $this->_invoiceItemCreationInterfaceFactory->create();
                 $invoiceItemCreation->setOrderItemId($orderItem->getItemId());

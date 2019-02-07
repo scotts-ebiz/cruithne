@@ -21,6 +21,11 @@ class UpgradeSchema implements UpgradeSchemaInterface
         {
             $this->updateColumnVersion110($setup);
         }
+
+        if (version_compare($context->getVersion(), '1.2.0', '<'))
+        {
+            $this->updateColumnVersion120($setup);
+        }
     }
 
     private function updateColumnVersion110(SchemaSetupInterface $setup)
@@ -38,6 +43,28 @@ class UpgradeSchema implements UpgradeSchemaInterface
             [
                 'type' => Table::TYPE_TIMESTAMP,
                 'nullable' => true
+            ]
+        );
+
+        // end the setup
+        $setup->endSetup();
+    }
+
+    private function updateColumnVersion120(SchemaSetupInterface $setup)
+    {
+        // start the setup
+        $setup->startSetup();
+
+        $tableName = 'sales_order_sap';
+
+        // make a new table with the desired table name
+        $setup->getConnection()->addColumn(
+            $tableName,
+            'delivery_number',
+            [
+                'type' => Table::TYPE_TEXT,
+                'nullable' => true,
+                'comment' => 'New SAP field for delivery information'
             ]
         );
 
