@@ -8,6 +8,8 @@ $videoEmbedCustomcode = '';
 $iframeCustomWidth = '';
 $iframeCustomHeight = '';
 $iframeCustomId = '';
+$bannerheadlineMobileCustomColor = '';
+$bannertextlineMobileCustomColor = '';
 
 
 
@@ -57,6 +59,19 @@ endif;
 if($block->getData('iframeVideoLink') != ''):
   $iframeVideoCustomLink = $block->getData('iframeVideoLink');
 endif;
+
+
+//If videotextsize exists then set to variable
+if($block->getData('bannerheadlineMobileColor') != ''):
+  $bannerheadlineMobileCustomColor = $block->getData('bannerheadlineMobileColor');
+endif;
+
+
+//If videotextsize exists then set to variable
+if($block->getData('bannertextlineMobileColor') != ''):
+  $bannertextlineMobileCustomColor = $block->getData('bannertextlineMobileColor');
+endif;
+
 
 ?>
 
@@ -118,7 +133,7 @@ $block->getData('videobackgroundimage')
 </section>
 <div class="hero-video-mobileContent">
   <h2 class="mobile-video-headline" style="
-    color:<?php echo $block->getData('bannerheadlinecolor'); ?>;
+    color:<?php echo $bannerheadlineMobileCustomColor?>;
   <?php
   $headlinestylevalues = explode(',', $headlineCustomCssStyle);
   foreach($headlinestylevalues as $headlinevalue) {
@@ -127,7 +142,7 @@ $block->getData('videobackgroundimage')
     <?php echo $block->getData('bannerheadline'); ?>
   </h2>
   <p style="
-    color:<?php echo $block->getData('bannertextlinecolor'); ?>;
+    color:<?php echo $bannertextlineMobileCustomColor?>;
   <?php echo $paragraphTextSize;?>
   <?php
   $selectedTextCustomCssStyles = explode(',', $textCustomCssStyles);

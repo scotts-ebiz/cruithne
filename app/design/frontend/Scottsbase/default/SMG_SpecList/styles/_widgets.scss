@@ -11,6 +11,9 @@
         position: relative;
         margin: 0;
         float: left;
+        @media only screen and (max-width: $screen__m) {
+            text-align: center;
+        }
     }
     ul.specListDetails {
         list-style: none;
@@ -20,6 +23,9 @@
         float: right;
         li.specListDetailCell {
             display: inline-block;
+            @media only screen and (max-width: $screen__m) {
+                padding-left: 2%;
+            }
         }
     }
 }
