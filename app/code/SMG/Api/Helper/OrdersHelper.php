@@ -6,8 +6,6 @@ use Magento\Framework\App\ResourceConnection;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory as OrderItemCollectionFactory;
 use Psr\Log\LoggerInterface;
-use SMG\OfflineShipping\Model\ShippingConditionCodeFactory;
-use SMG\OfflineShipping\Model\ResourceModel\ShippingConditionCode as ShippingConditionCodeResource;
 
 class OrdersHelper
 {
@@ -37,16 +35,6 @@ class OrdersHelper
     protected $_orderItemCollectionFactory;
 
     /**
-     * @var ShippingConditionCodeFactory
-     */
-    protected $_shippingConditionCodeFactory;
-
-    /**
-     * @var ShippingConditionCodeResource
-     */
-    protected $_shippingConditionCodeResource;
-
-    /**
      * OrdersHelper constructor.
      *
      * @param LoggerInterface $logger
@@ -54,24 +42,18 @@ class OrdersHelper
      * @param ResponseHelper $responseHelper
      * @param OrderCollectionFactory $orderCollectionFactory
      * @param OrderItemCollectionFactory $orderItemCollectionFactory
-     * @param ShippingConditionCodeFactory $shippingConditionCodeFactory
-     * @param ShippingConditionCodeResource $shippingConditionCodeResource
      */
     public function __construct(LoggerInterface $logger,
         ResourceConnection $resourceConnection,
         ResponseHelper $responseHelper,
         OrderCollectionFactory $orderCollectionFactory,
-        OrderItemCollectionFactory $orderItemCollectionFactory,
-        ShippingConditionCodeFactory $shippingConditionCodeFactory,
-        ShippingConditionCodeResource $shippingConditionCodeResource)
+        OrderItemCollectionFactory $orderItemCollectionFactory)
     {
         $this->_logger = $logger;
         $this->_resourceConnection = $resourceConnection;
         $this->_responseHelper = $responseHelper;
         $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->_orderItemCollectionFactory = $orderItemCollectionFactory;
-        $this->_shippingConditionCodeFactory = $shippingConditionCodeFactory;
-        $this->_shippingConditionCodeResource = $shippingConditionCodeResource;
     }
 
     /**
@@ -178,13 +160,6 @@ class OrdersHelper
                 // split the base url into different parts for later use
                 $urlParts = parse_url($order->getStore()->getBaseUrl());
 
-                // get the shipping condition data
-                /**
-                 * @var /SMG/OfflineShipping/Model/ShippingConditionCode $shippingCondition
-                 */
-                $shippingCondition = $this->_shippingConditionCodeFactory->create();
-                $this->_shippingConditionCodeResource->load($shippingCondition, $order->getShippingMethod(), 'shipping_method');
-
                 /**
                  * @var \Magento\Sales\Model\Order\Item $orderItem
                  */
@@ -223,7 +198,7 @@ class OrdersHelper
                         'CustomerEmail' => $order->getData('customer_email'),
                         'CustomerPhone' => $order->getData('telephone'),
                         'DeliveryWindow' => '',
-                        'ShippingCondition' => $shippingCondition->getData('sap_shipping_method'),
+                        'ShippingCondition' => 'C5',
                         'WebsiteURL' => $urlParts['host'],
                         'CreditAmount' => '',
                         'CR/DR/RE/Flag' => 'DR',
