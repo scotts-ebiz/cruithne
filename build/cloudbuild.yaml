@@ -13,7 +13,6 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   entrypoint: sh 
   args:
-    - 'c'
     - 'docker tag gcr.io/$PROJECT_ID/test-magento:$(date +%Y%m%d%H%M%S)'
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/ecommerce-platform-211419/test-magento:$SHORT_SHA']
@@ -22,7 +21,6 @@ steps:
 - name: 'gcr.io/cloud-builders/docker'
   entrypoint: sh 
   args:
-    - 'c'
     - 'docker push gcr.io/$PROJECT_ID/test-magento:$(date +%Y%m%d%H%M%S)'
 # - name: 'gcr.io/cloud-builders/kubectl'
 #   args: 
@@ -35,4 +33,4 @@ steps:
 #     - 'CLOUDSDK_CONTAINER_CLUSTER=magento-test-cluster'
 options:
     substitution_option: 'ALLOW_LOOSE'
-timeout: 300s
+timeout: 600s
