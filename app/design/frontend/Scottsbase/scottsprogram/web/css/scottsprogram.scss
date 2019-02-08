@@ -4,10 +4,11 @@
 // Vendor libs
 @import 'vendor/normalize/lib'; // Normalize.css
 @import 'vendor/magento-ui/lib'; // Magento UI
-@import 'normalize/lib';
+@import 'normalize/lib'; // Normalize file for Scottsprogram
 
 // Theme variables
 @import 'variables';
+@import 'variables/colors';
 
 // Override Block Styles
 @import 'blocks/extends';
