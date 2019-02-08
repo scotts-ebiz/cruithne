@@ -24,8 +24,6 @@ steps:
   args:
     - 'c'
     - 'docker push gcr.io/$PROJECT_ID/test-magento:$(date +%Y%m%d%H%M%S)'
-- name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/ecommerce-platform-211419/test-magento:$(date +%Y%m%d%H%M%S)']
 # - name: 'gcr.io/cloud-builders/kubectl'
 #   args: 
 #     - 'set'
