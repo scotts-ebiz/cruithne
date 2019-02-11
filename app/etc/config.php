@@ -6,12 +6,16 @@ return [
         'Magento_Theme' => 1,
         'Magento_Backend' => 1,
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
         'Creditvantiv_Payment' => 1,
         'Custom_Gtm' => 1,
 >>>>>>> c8eee74641b3dc254ee81a487042d67c5e135c48
+=======
+>>>>>>> 195317d8beef9403894fe1b1bc10eb7bb85d452a
         'Magento_Variable' => 1,
         'Magento_Eav' => 1,
+        'Freshrelevance_Digitaldatalayer' => 1,
         'Magento_AdminNotification' => 1,
         'Magento_Indexer' => 1,
         'Magento_Customer' => 1,
@@ -219,7 +223,6 @@ return [
         'Magento_CatalogRuleStaging' => 1,
         'Magento_RewardStaging' => 1,
         'ClassyLlama_AvaTax' => 1,
-        'Klarna_Ordermanagement' => 1,
         'Magento_UrlRewrite' => 1,
         'Magento_ScalableCheckout' => 1,
         'Magento_ScalableInventory' => 1,
@@ -273,6 +276,8 @@ return [
         'Magento_WishlistAnalytics' => 1,
         'Magento_Worldpay' => 1,
         'SMG_Api' => 1,
+        'SMG_Creditvantiv' => 1,
+        'SMG_CustomFields' => 1,
         'SMG_CustomerServiceEmail' => 1,
         'SMG_Dtm' => 1,
         'SMG_FeaturesList' => 1,
@@ -299,3 +304,4 @@ return [
         'Vertex_Tax' => 1
     ]
 ];
+

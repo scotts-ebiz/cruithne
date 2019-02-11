@@ -1,10 +1,10 @@
 {
     "_readme": [
         "This file locks the dependencies of your project to a known state",
-        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
+        "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "417e6c1c293f0fc2dcb90f767a8a7a9b",
+    "content-hash": "93353622164906eadb3c94f1377659c0",
     "packages": [
         {
             "name": "amzn/amazon-pay-and-login-magento-2-module",
@@ -13803,6 +13803,28 @@
                 "phra"
             ],
             "time": "2015-10-13T18:44:15+00:00"
+        },
+        {
+            "name": "snowdog/frontools",
+            "version": "1.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/SnowdogApps/magento2-frontools.git",
+                "reference": "752e3733584e0ab6e87709ae6a19e043ebb9bc05"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/SnowdogApps/magento2-frontools/zipball/752e3733584e0ab6e87709ae6a19e043ebb9bc05",
+                "reference": "752e3733584e0ab6e87709ae6a19e043ebb9bc05",
+                "shasum": ""
+            },
+            "type": "magento2-component",
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Set of front-end tools for Magento 2, based on Gulp.js",
+            "time": "2018-12-18T13:02:58+00:00"
         },
         {
             "name": "spomky-labs/otphp",

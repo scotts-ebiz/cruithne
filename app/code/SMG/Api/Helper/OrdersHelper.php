@@ -198,7 +198,7 @@ class OrdersHelper
                         'CustomerEmail' => $order->getData('customer_email'),
                         'CustomerPhone' => $order->getData('telephone'),
                         'DeliveryWindow' => '',
-                        'ShippingCondition' => '',
+                        'ShippingCondition' => 'C5',
                         'WebsiteURL' => $urlParts['host'],
                         'CreditAmount' => '',
                         'CR/DR/RE/Flag' => 'DR',
