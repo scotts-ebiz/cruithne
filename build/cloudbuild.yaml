@@ -4,7 +4,10 @@
 
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/$PROJECT_ID/${_CONTAINER_REPO}:$SHORT_SHA', '-t', 'gcr.io/$PROJECT_ID/${_CONTAINER_REPO}:latest',  '.']
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/${_CONTAINER_REPO}:$SHORT_SHA', '.']
+  dir: 'build'
+- name: 'gcr.io/cloud-builders/docker'
+  args: ['tag', 'gcr.io/$PROJECT_ID/${_CONTAINER_REPO}:latest']
   dir: 'build'
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/$PROJECT_ID/${_CONTAINER_REPO}:$SHORT_SHA']
