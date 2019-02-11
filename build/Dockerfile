@@ -2,7 +2,7 @@
 #Base image is Google's Optimized Ubuntu Image
 
 # TODO: environment switch to test image OR replace env.php file here
-ARG IMAGE=gcr.io/ecommerce-platform-211419/primer:latest
+ARG IMAGE=gcr.io/ecommerce-platform-211419/test-primer:latest
 FROM $IMAGE
 ENTRYPOINT []
 

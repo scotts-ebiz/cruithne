@@ -4,12 +4,12 @@
 
 steps:
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['build', '-t', 'gcr.io/ecommerce-platform-211419/test-magento:$SHORT_SHA', '-t', 'gcr.io/ecommerce-platform-211419/test-magento:latest',  '.']
+  args: ['build', '-t', 'gcr.io/$PROJECT_ID/${_CONTAINER_REPO}:$SHORT_SHA', '-t', 'gcr.io/$PROJECT_ID/${_CONTAINER_REPO}:latest',  '.']
   dir: 'build'
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/ecommerce-platform-211419/test-magento:$SHORT_SHA']
+  args: ['push', 'gcr.io/$PROJECT_ID/${_CONTAINER_REPO}:$SHORT_SHA']
 - name: 'gcr.io/cloud-builders/docker'
-  args: ['push', 'gcr.io/ecommerce-platform-211419/test-magento:latest']
+  args: ['push', 'gcr.io/$PROJECT_ID/${_CONTAINER_REPO}:latest']
 # - name: 'gcr.io/cloud-builders/kubectl'
 #   args: 
 #     - 'set'
