@@ -32,7 +32,6 @@ class Regionoptions extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractS
      */
     public function getAllOptions()
     {
-		
 		$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $regionFactory = $objectManager->create('Magento\Directory\Model\ResourceModel\Region\CollectionFactory')->create();
         $regionFactory->addFieldToFilter('country_id', array('eq' => 'US'));
