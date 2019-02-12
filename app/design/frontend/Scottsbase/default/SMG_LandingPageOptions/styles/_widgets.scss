@@ -11,9 +11,12 @@
             width: 100%;
             max-width: 1425px;
             @media only screen and (max-width: 1200px) {
-                height: 325px;
+                height: 300px;
                 background-position: center;
             }
+            @media only screen and (max-width: 480px) {
+                height: 225px;
+          }
         }
         .section__hero--wrapper {
             .section__hero--purchase {
@@ -33,10 +36,14 @@
                     float: inherit;
                     margin-right: auto;
                     margin-left: auto;
-                    margin-top: 200px;
+                    margin-top: 250px;
                     width: 85%;
                     text-align: center;
                     max-width: 1000px;
+                }
+                @media only screen and (max-width: 480px) {
+                    width: 90%;
+                    margin-top: 180px;
                 }
                 .section__hero--text {
                     h1 {

@@ -10,12 +10,14 @@
     $large_bundle_url = '';
     $large_bundle_price = '';
 
+
+
 ?>
 
 <style>
   @media only screen and (max-width: 1200px) {
     .background-test {
-      background-image: url('http://wease.net/igall/dragnet.jpg') !important;
+        background-image: url('<?php echo $block->getData('heroMobileImage'); ?>') !important;
     }
   }
 </style>
