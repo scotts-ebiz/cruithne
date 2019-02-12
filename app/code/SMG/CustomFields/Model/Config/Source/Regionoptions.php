@@ -9,7 +9,7 @@ use Magento\Framework\DB\Ddl\Table;
  *
  * @author      Webkul Core Team <support@webkul.com>
  */
-class Regionoptions extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
+class RegionOptions extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
 {
     /**
      * @var OptionFactory
