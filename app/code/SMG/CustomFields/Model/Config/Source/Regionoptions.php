@@ -1,6 +1,5 @@
 <?php
- 
-namespace SMG\Customfields\Model\Config\Source;
+ namespace SMG\Customfields\Model\Config\Source;
  
 use Magento\Eav\Model\ResourceModel\Entity\Attribute\OptionFactory;
 use Magento\Framework\DB\Ddl\Table;

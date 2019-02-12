@@ -357,7 +357,7 @@ class UpgradeData implements UpgradeDataInterface
 							'used_in_product_listing' => true,
 							'wysiwyg_enabled' => false,
 							'unique' => false,
-							'apply_to' => ''
+							'apply_to' => '' 
 						]
 				);
 	 }
