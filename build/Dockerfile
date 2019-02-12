@@ -22,7 +22,9 @@ RUN git pull
 RUN  \
     . $NVM_DIR/nvm.sh \
     && cd $MAGENTO_DIR/tools \
-    && gulp styles
+    && gulp clean && gulp styles
+
+RUN sed -i "s/save.*/save' => 'files',\n\t 'save_path' => '\/tmp',/" app/etc/env.php
 
 RUN date
 
