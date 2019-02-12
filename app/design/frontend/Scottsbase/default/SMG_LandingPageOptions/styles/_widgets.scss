@@ -1,0 +1,102 @@
+/* Landing Page Options Widget Styling */
+.landingPageOptions-container {
+    .hero__wrapper {
+        text-align: center;
+        section.section__hero {
+            background-position: left -60px top 50%;;
+            background-repeat: no-repeat;
+            background-size: cover;
+            display: inline-block;
+            position: relative;
+            width: 100%;
+            max-width: 1425px;
+            @media only screen and (max-width: 1200px) {
+                height: 300px;
+                background-position: center;
+            }
+            @media only screen and (max-width: 480px) {
+                height: 225px;
+          }
+        }
+        .section__hero--wrapper {
+            .section__hero--purchase {
+                display: inline-block;
+                position: relative;
+                background-color: #ffffff;
+                float: right;
+                margin-right: 1%;
+                margin-top: 2%;
+                margin-bottom: 2%;
+                padding: 2%;
+                border-radius: 0.25rem;
+                max-width: 400px;
+                text-align: left;
+                @media only screen and (max-width: 1200px) {
+                    display: block;
+                    float: inherit;
+                    margin-right: auto;
+                    margin-left: auto;
+                    margin-top: 250px;
+                    width: 85%;
+                    text-align: center;
+                    max-width: 1000px;
+                }
+                @media only screen and (max-width: 480px) {
+                    width: 90%;
+                    margin-top: 180px;
+                }
+                .section__hero--text {
+                    h1 {
+                        color: #ed9016;
+                    }
+                    h2 {
+                        margin-top: 1.0rem;
+                        margin-bottom: 1.0rem;
+                    }
+                }
+            }
+        }
+        .section__hero--select {
+            h4 {
+                margin-bottom: 0.75rem;
+            }
+            .section__hero--option {
+                form {
+                    margin-bottom: 1.5rem;
+                    button {
+                        span {
+                            float: right;
+                        }
+                    }
+                    small.section__hero--linkinfo {
+                        display: inline-block;
+                    }
+                }
+            }
+        }
+        .widget-static-block {
+            .section__hero--promo {
+                img {
+                    height: 25px;
+                    float: left;
+                }
+                p {
+                    margin-left: 2%;
+                    margin-bottom: 2%;
+                    display: inline-block;
+                    position: relative;
+                    text-transform: uppercase;
+                    font-weight: 700;
+                    font-family: 'Roboto Condensed';
+                    font-size: 1.0rem;
+                    color: #075534;
+                }
+                small {
+                    display: inline-block;
+                    position: relative;
+                }
+            }
+        }
+    }
+}
+
