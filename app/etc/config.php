@@ -296,3 +296,4 @@ return [
         'Vertex_Tax' => 1
     ]
 ];
+

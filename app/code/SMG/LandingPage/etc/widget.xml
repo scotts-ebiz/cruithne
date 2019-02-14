@@ -11,6 +11,10 @@
                 <label>Hero Image</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
+            <parameter name="heroMobileImage" visible="true" xsi:type="block">
+                <label>Hero Mobile Image</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
             <parameter name="herosupportingheadline" visible="true" xsi:type="text">
                 <label>Hero Supporting Headline</label>
                 <value>Scotts® Turf Builder® Annual Program</value>
