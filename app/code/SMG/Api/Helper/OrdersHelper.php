@@ -173,7 +173,7 @@ class OrdersHelper
                     }
 
                     $ordersArray[] = array(
-                        'OrderNumber' => $order->getId(),
+                        'OrderNumber' => $order->getIncrementId(),
                         'DatePlaced' => $order->getData('created_at'),
                         'SAPDeliveryDate' => $tomorrow,
                         'CustomerName' => $order->getData('customer_firstname') . ' ' . $order->getData('customer_lastname'),
