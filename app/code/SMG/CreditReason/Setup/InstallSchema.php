@@ -57,6 +57,16 @@ class InstallSchema implements InstallSchemaInterface
             ]
         );
 
+        $table->addColumn(
+            'is_active',
+            Table::TYPE_BOOLEAN,
+            null,
+            [
+                'nullable' => false,
+                'default' => true
+            ]
+        );
+
         // create the table
         $setup->getConnection()->createTable($table);
 

@@ -22,7 +22,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
         // start the setup
         $setup->startSetup();
 
-        $tableName = 'sales_order_item';
+        $tableName = 'sales_creditmemo_item';
 
         // add new column to the table
         $setup->getConnection()->addColumn(
