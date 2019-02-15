@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
     <widget class="SMG\LandingPage\Block\Widget\Landingpage" id="smg_landingpage_landingpage">
-        <label>Landing Page Options</label>
+        <label>Scottsprogram Landing Page</label>
         <description>Landing page custom fields.</description>
         <parameters>
             <parameter name="requireszipcodelookup" visible="true" xsi:type="select" source_model="SMG\ParameterTypes\Model\Source\YesNoSelect">
@@ -62,6 +62,10 @@
             <parameter name="disclaimertext" visible="true" xsi:type="block">
                 <label>Disclaimer Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+            </parameter>
+            <parameter name="howItWorks-title" visible="true" xsi:type="text">
+                <label>How it Works Title</label>
+                <value>How it Works</value>
             </parameter>
             <parameter name="howitworksdescriptionone" visible="true" xsi:type="block">
                 <label>How It Works Text #1</label>
