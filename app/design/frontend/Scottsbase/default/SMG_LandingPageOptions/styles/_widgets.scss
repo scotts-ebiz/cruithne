@@ -99,9 +99,17 @@
         }
     }
     .howItWorks__wrapper {
+        text-align: center;
+        margin-top: 90px;
         .section__steps--item {
             display: inline-block;
             position: relative;
+            .widget-static-block {
+                p {
+                    font-weight: 100;
+                    font-size: 0.85rem;
+                }
+            }
         }
     }
 }
