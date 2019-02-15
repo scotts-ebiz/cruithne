@@ -63,20 +63,28 @@
                 <label>Disclaimer Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
             </parameter>
-            <parameter name="howItWorks-title" visible="true" xsi:type="text">
-                <label>How it Works Title</label>
-                <value>How it Works</value>
+            <parameter name="stepsSectionTitle" visible="true" xsi:type="text">
+                <label>Steps Section Title</label>
+            </parameter>
+            <parameter name="stepOneTitle" visible="true" xsi:type="text">
+                <label>Step 1 Title</label>
             </parameter>
             <parameter name="howitworksdescriptionone" visible="true" xsi:type="block">
-                <label>How It Works Text #1</label>
+                <label>Step 1 Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+            </parameter>
+            <parameter name="stepTwoTitle" visible="true" xsi:type="text">
+                <label>Step 2 Title</label>
             </parameter>
             <parameter name="howitworksdescriptiontwo" visible="true" xsi:type="block">
-                <label>How It Works Text #2</label>
+                <label>Step 2 Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
             </parameter>
+            <parameter name="stepThreeTitle" visible="true" xsi:type="text">
+                <label>Step 3 Title</label>
+            </parameter>
             <parameter name="howitworksdescriptionthree" visible="true" xsi:type="block">
-                <label>How It Works Text #3</label>
+                <label>Step 3 Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
             </parameter>
         </parameters>
