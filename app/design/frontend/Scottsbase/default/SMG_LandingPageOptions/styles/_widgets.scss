@@ -98,5 +98,11 @@
             }
         }
     }
+    .howItWorks__wrapper {
+        .section__steps--item {
+            display: inline-block;
+            position: relative;
+        }
+    }
 }
 
