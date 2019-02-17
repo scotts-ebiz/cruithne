@@ -6,7 +6,8 @@ $headlineCustomCssStyle = '';
 $paragraphTextSize = '';
 $selectedBannerTextImageOne = '';
 $selectedBannerTextImageTwo = '';
-
+$selectedBannerTextImgOneLink = '';
+$selectedBannerTextImgTwoLink = '';
 
 
 // If textstyle exists then set to customCssStyles
@@ -39,9 +40,21 @@ if($block->getData('bannerTextImageOne') != ''):
 endif;
 
 
-// Check for existence of bannerTextImgOne
+// Check for existence of bannerTextImgTwo
 if($block->getData('bannerTextImageTwo') !=''):
   $selectedBannerTextImageTwo = $block->getData('bannerTextImageTwo');
+endif;
+
+
+// Check for existence of bannerTextImgOneLink
+if($block->getData('bannerTextImgOneLink') !=''):
+  $selectedBannerTextImgOneLink = $block->getData('bannerTextImgOneLink');
+endif;
+
+
+// Check for existence of bannerTextImgTwoLink
+if($block->getData('bannerTextImgTwoLink') !=''):
+  $selectedBannerTextImgTwoLink = $block->getData('bannerTextImgTwoLink');
 endif;
 
 ?>
@@ -58,13 +71,13 @@ $block->getData('bgcolor');
 ('paddingbottom'); ?>%;">
   <div class="product-info grid col-2">
     <?php if($this->getData('bannerimage') != ''): ?>
-      <div class="image-container span_6_of_12">
+      <div class="productCallout-imageContainer span_6_of_12">
         <img src="<?php echo $block->getData('bannerimage'); ?>">
       </div>
     <?php endif; ?>
 
     <div
-      class="content span_6_of_12 <?php echo $block->getData('textalignclass') ?>">
+      class="productCallout-contentContainer span_6_of_12 <?php echo $block->getData('textalignclass') ?>">
       <h2 style="<?php
           $headlinestylevalues = explode(',', $headlineCustomCssStyle);
             foreach($headlinestylevalues as $headlinevalue) {
@@ -87,10 +100,20 @@ $block->getData('bgcolor');
         <?php echo $block->getData('bannertext'); ?>
       </p>
 
-      <!-- If Text Img Selected then display -->
+      <!-- If Text Img One is Selected then display -->
       <?php if($selectedBannerTextImageOne != ''): ?>
-          <p>I like cheese, really expensive cheese</p>
+          <div class="selected-bannerTextImage selected-bannerTextImageOne">
+              <img src="<?php echo $selectedBannerTextImageOne?>">
+          </div>
       <?php endif; ?>
+
+      <!-- If Text Img Two is Selected then display -->
+      <?php if($selectedBannerTextImageTwo != ''): ?>
+        <div class="selected-bannerTextImage selected-bannerTextImageTwo">
+          <img src="<?php echo $selectedBannerTextImageTwo?>">
+        </div>
+      <?php endif; ?>
+
     </div>
   </div>
 </section>

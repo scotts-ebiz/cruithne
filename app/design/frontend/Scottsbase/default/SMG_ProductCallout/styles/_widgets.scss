@@ -4,7 +4,7 @@
     display: inline-block;
     position: relative;
     .product-info {
-        .image-container {
+        .productCallout-imageContainer {
             display: inline-block;
             position: relative;
             text-align: center;
@@ -16,13 +16,13 @@
         @media only screen and (max-width: 1024px) {
             display: block;
         }
-        .content.text-left {
+        .productCallout-contentContainer.text-left {
             float: left;
             @media only screen and (max-width: $screen__s) {
                 width: 98%;
           }
             h2 {
-                width: 90%;
+                width: 70%;
                 text-align: left;
                 @media only screen and (max-width: 1024px) {
                     width: 100%;
@@ -35,7 +35,7 @@
             }
             p {
                 text-align: left;
-                width: 90%;
+                width: 70%;
                 @media only screen and (max-width: 1024px) {
                     width: 100%;
                     padding: 0;
@@ -44,7 +44,7 @@
             }
         }
 
-        .content.text-right {
+        .productCallout-contentContainer.text-right {
             float: right;
             @media only screen and (max-width: $screen__s) {
                 float: left;
@@ -52,7 +52,7 @@
             }
             h2 {
                 text-align: left;
-                width: 90%;
+                width: 70%;
                 @media only screen and (max-width: 1024px) {
                     width: 100%;
                     font-size: 32px;
@@ -67,7 +67,7 @@
             }
             p {
                 text-align: left;
-                width: 90%;
+                width: 70%;
                 @media only screen and (max-width: 1024px) {
                     width: 100%;
                     padding: 0;
@@ -77,4 +77,5 @@
         }
     }
 }
+
 
