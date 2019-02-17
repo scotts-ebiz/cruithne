@@ -4,6 +4,9 @@ $bg_class = '';
 $customCssStyle = '';
 $headlineCustomCssStyle = '';
 $paragraphTextSize = '';
+$selectedBannerTextImageOne = '';
+$selectedBannerTextImageTwo = '';
+
 
 
 // If textstyle exists then set to customCssStyles
@@ -28,6 +31,19 @@ endif;
 if($block->getData('bannertextsize') != ''):
   $paragraphTextSize = $block->getData('bannertextsize');
 endif;
+
+
+// Check for existence of bannerTextImgOne
+if($block->getData('bannerTextImageOne') != ''):
+  $selectedBannerTextImageOne = $block->getData('bannerTextImageOne');
+endif;
+
+
+// Check for existence of bannerTextImgOne
+if($block->getData('bannerTextImageTwo') !=''):
+  $selectedBannerTextImageTwo = $block->getData('bannerTextImageTwo');
+endif;
+
 ?>
 
 
@@ -69,8 +85,12 @@ $block->getData('bgcolor');
         ?>
         color:<?php echo $block->getData('bannertextlinecolor'); ?>;">
         <?php echo $block->getData('bannertext'); ?>
-        <br/>
       </p>
+
+      <!-- If Text Img Selected then display -->
+      <?php if($selectedBannerTextImageOne != ''): ?>
+          <p>I like cheese, really expensive cheese</p>
+      <?php endif; ?>
     </div>
   </div>
 </section>
