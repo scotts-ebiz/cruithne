@@ -49,8 +49,7 @@ $block->getData('bgcolor');
 
     <div
       class="content span_6_of_12 <?php echo $block->getData('textalignclass') ?>">
-      <h2 style="padding-left: <?php echo $block->getData('bannercontainerpaddingleft');?>%; padding-right: <?php echo $block->getData('bannercontainerpaddingright');?>%;
-        <?php
+      <h2 style="<?php
           $headlinestylevalues = explode(',', $headlineCustomCssStyle);
             foreach($headlinestylevalues as $headlinevalue) {
             echo $headlinevalue;
@@ -58,8 +57,7 @@ $block->getData('bgcolor');
         color:<?php echo $block->getData('bannerheadlinecolor'); ?>;">
           <?php echo $block->getData('bannerheadline'); ?>
       </h2>
-      <p style="padding-left: <?php echo $block->getData('bannercontainerpaddingleft');?>%; padding-right: <?php echo $block->getData('bannercontainerpaddingright');?>%;
-        <?php
+      <p style="<?php
           //If selected display Font Styles
           $stylevalues = explode(',', $customCssStyle);
           foreach($stylevalues as $value) {
