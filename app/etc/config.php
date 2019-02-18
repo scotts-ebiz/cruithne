@@ -7,7 +7,6 @@ return [
         'Magento_Backend' => 1,
         'Magento_Variable' => 1,
         'Magento_Eav' => 1,
-        'Freshrelevance_Digitaldatalayer' => 1,
         'Magento_AdminNotification' => 1,
         'Magento_Indexer' => 1,
         'Magento_Customer' => 1,
@@ -296,4 +295,3 @@ return [
         'Vertex_Tax' => 1
     ]
 ];
-
