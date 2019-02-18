@@ -173,7 +173,7 @@ class OrdersHelper
                     }
 
                     $ordersArray[] = array(
-                        'OrderNumber' => $order->getId(),
+                        'OrderNumber' => $order->getIncrementId(),
                         'DatePlaced' => $order->getData('created_at'),
                         'SAPDeliveryDate' => $tomorrow,
                         'CustomerName' => $order->getData('customer_firstname') . ' ' . $order->getData('customer_lastname'),
@@ -198,7 +198,7 @@ class OrdersHelper
                         'CustomerEmail' => $order->getData('customer_email'),
                         'CustomerPhone' => $order->getData('telephone'),
                         'DeliveryWindow' => '',
-                        'ShippingCondition' => '',
+                        'ShippingCondition' => 'C5',
                         'WebsiteURL' => $urlParts['host'],
                         'CreditAmount' => '',
                         'CR/DR/RE/Flag' => 'DR',

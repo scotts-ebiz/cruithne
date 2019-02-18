@@ -13,6 +13,9 @@
         }
         .content.text-left {
             float: left;
+            @media only screen and (max-width: $screen__s) {
+                width: 98%;
+          }
             h2 {
                 width: 90%;
                 text-align: left;
@@ -38,8 +41,12 @@
 
         .content.text-right {
             float: right;
+            @media only screen and (max-width: $screen__s) {
+                float: left;
+                width: 98%;
+            }
             h2 {
-                text-align: right;
+                text-align: left;
                 width: 90%;
                 @media only screen and (max-width: 1024px) {
                     width: 100%;
@@ -49,9 +56,12 @@
                     margin-bottom: 15px;
                     margin-top: 15px;
                 }
+                @media only screen and (max-width: $screen__s) {
+                    font-size: 2.0rem;
+                }
             }
             p {
-                text-align: right;
+                text-align: left;
                 width: 90%;
                 @media only screen and (max-width: 1024px) {
                     width: 100%;

@@ -2,8 +2,9 @@
 
 namespace SMG\Api\Helper;
 
+use Magento\Sales\Model\OrderFactory;
+use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Psr\Log\LoggerInterface;
-use SMG\Api\Helper\ResponseHelper;
 use SMG\Sap\Model\SapOrderFactory;
 use SMG\Sap\Model\SapOrderBatchFactory;
 use SMG\Sap\Model\SapOrderHistoryFactory;
@@ -161,6 +162,16 @@ class OrderStatusHelper
     protected $_responseHelper;
 
     /**
+     * @var OrderFactory
+     */
+    protected $_orderFactory;
+
+    /**
+     * @var OrderResource
+     */
+    protected $_orderResource;
+
+    /**
      * OrdersHelper constructor.
      *
      * @param LoggerInterface $logger
@@ -180,6 +191,8 @@ class OrderStatusHelper
      * @param SapOrderItemCollectionFactory $sapOrderItemCollectionFactory
      * @param SapOrderItemHistoryCollectionFactory $sapOrderItemHistoryCollectionFactory
      * @param ResponseHelper $responseHelper
+     * @param OrderFactory $orderFactory
+     * @param OrderResource $orderResource
      */
     public function __construct(
         LoggerInterface $logger,
@@ -198,7 +211,9 @@ class OrderStatusHelper
         SapOrderHistoryCollectionFactory $sapOrderHistoryCollectionFactory,
         SapOrderItemCollectionFactory $sapOrderItemCollectionFactory,
         SapOrderItemHistoryCollectionFactory $sapOrderItemHistoryCollectionFactory,
-        ResponseHelper $responseHelper)
+        ResponseHelper $responseHelper,
+        OrderFactory $orderFactory,
+        OrderResource $orderResource)
     {
         $this->_logger = $logger;
         $this->_sapOrderFactory = $sapOrderFactory;
@@ -217,6 +232,8 @@ class OrderStatusHelper
         $this->_sapOrderItemCollectionFactory = $sapOrderItemCollectionFactory;
         $this->_sapOrderItemHistoryCollectionFactory = $sapOrderItemHistoryCollectionFactory;
         $this->_responseHelper = $responseHelper;
+        $this->_orderFactory = $orderFactory;
+        $this->_orderResource = $orderResource;
     }
 
     /**
@@ -236,12 +253,29 @@ class OrderStatusHelper
             // loop through the orders that were sent via the JSON file
             foreach ($requestData as $inputOrder)
             {
-                // process the sap order info
-                $this->processOrderSapInfo($inputOrder);
+                // check to see if there is an order increment number
+                $orderIncrementId = $inputOrder[self::INPUT_SAP_MAGENTO_PO];
+                if ($orderIncrementId)
+                {
+                    // get the order from the increment id
+                    $order = $this->_orderFactory->create();
+                    $this->_orderResource->load($order, $orderIncrementId, 'increment_id');
 
-                // update the batch processing for those
-                // that need to be processed through batch capture
-                $this->processOrderSapBatchInfo($inputOrder);
+                    // get the order id
+                    $orderId = $order->getId();
+
+                    // process the sap order info
+                    $this->processOrderSapInfo($inputOrder, $orderId);
+
+                    // update the batch processing for those
+                    // that need to be processed through batch capture
+                    $this->processOrderSapBatchInfo($inputOrder, $orderId);
+                }
+                else
+                {
+                    // log the error
+                    $this->_logger->error("SMG\Api\Helper\OrderStatusHelper - Missing magento po number.");
+                }
             }
         }
         else
@@ -260,12 +294,12 @@ class OrderStatusHelper
      * Takes the request data and inserts/updates the appropriate SAP tables
      *
      * @param $inputOrder
+     * @param $orderId
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    private function processOrderSapInfo($inputOrder)
+    private function processOrderSapInfo($inputOrder, $orderId)
     {
         // check to see if there is an order id
-        $orderId = $inputOrder[self::INPUT_SAP_MAGENTO_PO];
         if ($orderId)
         {
             // create the sap orders factory to retrieve all
@@ -363,13 +397,13 @@ class OrderStatusHelper
     private function insertOrderSap($inputOrder, $orderId, $orderStatus, $orderStatusNotes)
     {
         // variables
-        $sapBillingDocNumber = $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER];
+        $sapOrderStatus = $inputOrder[self::INPUT_SAP_SAP_ORDER_STATUS];
 
         // if the order status is empty then that means this is a new
         // order so make it created
         if (empty($orderStatus))
         {
-            $orderStatus = $this->getOrderStatus(null, $sapBillingDocNumber, $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]);
+            $orderStatus = $this->getOrderStatus($sapOrderStatus, $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]);
         }
 
         // Add to the sales_order_sap table
@@ -377,9 +411,9 @@ class OrderStatusHelper
         $sapOrder->setData(self::SALES_ORDER_SAP_ORDER_ID, $orderId);
         $sapOrder->setData(self::SALES_ORDER_SAP_SAP_ORDER_ID, $inputOrder[self::INPUT_SAP_ORDER_NUMBER]);
         $sapOrder->setData(self::SALES_ORDER_SAP_ORDER_CREATED_AT, $inputOrder[self::INPUT_SAP_ORDER_CREATE_DATE]);
-        $sapOrder->setData(self::SALES_ORDER_SAP_SAP_ORDER_STATUS, $inputOrder[self::INPUT_SAP_SAP_ORDER_STATUS]);
+        $sapOrder->setData(self::SALES_ORDER_SAP_SAP_ORDER_STATUS, $sapOrderStatus);
         $sapOrder->setData(self::SALES_ORDER_SAP_ORDER_STATUS, $orderStatus);
-        $sapOrder->setData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_NUMBER, $sapBillingDocNumber);
+        $sapOrder->setData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_NUMBER, $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER]);
         $sapOrder->setData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_DATE, $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_DATE]);
         $sapOrder->setData(self::SALES_ORDER_SAP_SAP_PAYER_ID, $inputOrder[self::INPUT_SAP_PAYER_ID]);
         $sapOrder->setData(self::SALES_ORDER_SAP_DELIVERY_NUMBER, $inputOrder[self::INPUT_SAP_DELIVERY_NUMBER]);
@@ -494,7 +528,7 @@ class OrderStatusHelper
         }
 
         // check order status
-        $inputValue = $this->getOrderStatus(null, $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER], $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]);
+        $inputValue = $this->getOrderStatus($inputOrder[self::INPUT_SAP_SAP_ORDER_STATUS], $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]);
         $sapOrderValue = $sapOrder->getData(self::SALES_ORDER_SAP_ORDER_STATUS);
         if ((!empty($inputValue) || !empty($sapOrderValue)) && $inputValue !== $sapOrderValue)
         {
@@ -579,14 +613,13 @@ class OrderStatusHelper
         // variables
         $sapOrderStatus = $inputOrder[self::INPUT_SAP_SAP_ORDER_STATUS];
         $shipTrackingNumber = $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER];
-        $sapBillingDocNumber = $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER];
 
         // if the order status is empty then that means this is a new
         // order so make it created
         if (empty($orderStatus))
         {
             // get the order status
-            $orderStatus = $this->getOrderStatus($sapOrderStatus, $sapBillingDocNumber, $shipTrackingNumber);
+            $orderStatus = $this->getOrderStatus($sapOrderStatus, $shipTrackingNumber);
         }
 
         // add to the sales_order_sap_item table
@@ -662,7 +695,7 @@ class OrderStatusHelper
         }
 
         // check order status
-        $inputValue = $this->getOrderStatus($inputOrder[self::INPUT_SAP_SAP_ORDER_STATUS], $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER], $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]);
+        $inputValue = $this->getOrderStatus($inputOrder[self::INPUT_SAP_SAP_ORDER_STATUS], $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]);
         $sapOrderItemValue = $sapOrderItem->getData(self::SALES_ORDER_SAP_ITEM_ORDER_STATUS);
         if ((!empty($inputValue) || !empty($sapOrderValue)) && $inputValue !== $sapOrderItemValue)
         {
@@ -727,11 +760,10 @@ class OrderStatusHelper
      * Determine the status of the order or the order item
      *
      * @param $sapOrderStatus
-     * @param $sapBillingDocNumber
      * @param $shipTrackingNumber
      * @return string
      */
-    private function getOrderStatus($sapOrderStatus, $sapBillingDocNumber, $shipTrackingNumber)
+    private function getOrderStatus($sapOrderStatus, $shipTrackingNumber)
     {
         $status = 'created';
 
@@ -740,21 +772,17 @@ class OrderStatusHelper
         {
             $status = 'order_shipped';
         }
-        else if (!empty($sapBillingDocNumber))
+        else if ($sapOrderStatus === 'A')
         {
             $status = 'capture';
         }
+        else if ($sapOrderStatus === 'B')
+        {
+            $status = 'created_blocked';
+        }
         else
         {
-            // check to see what was provided for the sap order status
-            if ($sapOrderStatus === 'A')
-            {
-                $status = 'created_approved';
-            }
-            else if ($sapOrderStatus === 'B')
-            {
-                $status = 'created_blocked';
-            }
+            $status = 'created_approved';
         }
 
         // return the status
@@ -765,12 +793,12 @@ class OrderStatusHelper
      * Process the batch processing table with the appropriate values
      *
      * @param $inputOrder
+     * @param $orderId
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    private function processOrderSapBatchInfo($inputOrder)
+    private function processOrderSapBatchInfo($inputOrder, $orderId)
     {
         // check to see if there is an order id
-        $orderId = $inputOrder[self::INPUT_SAP_MAGENTO_PO];
         if ($orderId)
         {
             // create the sap orders factory to retrieve all
@@ -821,7 +849,7 @@ class OrderStatusHelper
         $sapOrderBatch->setData(self::SALES_ORDER_SAP_BATCH_ORDER_ID, $orderId);
 
         // since this is an insert we need to check if the capture flag can be set
-        if (!empty($inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER]))
+        if ($inputOrder[self::INPUT_SAP_SAP_ORDER_STATUS] === 'A')
         {
             $sapOrderBatch->setData(self::SALES_ORDER_SAP_BATCH_IS_CAPTURE, true);
         }
@@ -847,7 +875,7 @@ class OrderStatusHelper
         if ($sapOrderBatch->getData(self::SALES_ORDER_SAP_BATCH_IS_UNAUTHORIZED) !== true)
         {
             // check the capture
-            if (!empty($inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER]) &&
+            if ($inputOrder[self::INPUT_SAP_SAP_ORDER_STATUS] === 'A' &&
                 empty($sapOrderBatch->getData(self::SALES_ORDER_SAP_BATCH_CAPTURE_PROCESS_DATE)) &&
                 !$sapOrderBatch->getData(self::SALES_ORDER_SAP_BATCH_IS_CAPTURE))
             {
