@@ -18,6 +18,9 @@ RUN rm /usr/local/bin/entrypoint.sh
 
 USER magento
 WORKDIR $MAGENTO_DIR
+
+RUN sed -i '/Freshrelevance/d' ./app/etc/config.php
+
 RUN git pull
 RUN  \
     . $NVM_DIR/nvm.sh \
@@ -25,6 +28,10 @@ RUN  \
     && gulp clean && gulp styles
 
 RUN sed -i "s/save.*/save' => 'files',\n\t 'save_path' => '\/tmp',/" app/etc/env.php
+
+RUN php ./bin/magento setup:static-config:set
+RUN php ./bin/magento cache:clean
+RUN php ./bin/magento cache:flush
 
 RUN date
 
