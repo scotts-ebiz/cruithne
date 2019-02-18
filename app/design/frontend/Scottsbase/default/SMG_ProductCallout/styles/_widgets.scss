@@ -42,6 +42,11 @@
                     margin-bottom: 100px;
                 }
             }
+            .selected-bannerTextImage {
+                img {
+                    width:25%;
+                }
+            }
         }
 
         .productCallout-contentContainer.text-right {
@@ -72,6 +77,11 @@
                     width: 100%;
                     padding: 0;
                     margin-bottom: 100px;
+                }
+            }
+            .selected-bannerTextImage {
+                img {
+                    width:25%;
                 }
             }
         }
