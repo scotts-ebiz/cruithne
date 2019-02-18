@@ -19,8 +19,8 @@ RUN rm /usr/local/bin/entrypoint.sh
 USER magento
 WORKDIR $MAGENTO_DIR
 
-RUN sed -i '/Freshrelevance/d' ./app/etc/config.php
-
+RUN git fetch
+RUN git checkout origin/test ./app/etc/config.php
 RUN git pull
 RUN  \
     . $NVM_DIR/nvm.sh \
