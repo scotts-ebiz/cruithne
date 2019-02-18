@@ -98,23 +98,36 @@ $block->getData('bgcolor');
         <?php echo $block->getData('bannertext'); ?>
       </p>
 
-      <!-- If Text Img One is Selected then display -->
-      <?php if($selectedBannerTextImageOne != ''): ?>
-          <div class="selected-bannerTextImage selected-bannerTextImageOne">
-              <a href="<?php echo $selectedBannerTextImgOneLink?>" target="_blank">
-                  <img src="<?php echo $selectedBannerTextImageOne?>">
-              </a>
-          </div>
+
+      <!-- Check if link selected for Text Img One -->
+      <?php if($selectedBannerTextImgOneLink != ''): ?>
+        <div class="selected-bannerTextImage selected-bannerTextImageOne">
+          <a href="<?php echo $selectedBannerTextImgOneLink?>" target="_blank">
+            <img src="<?php echo $selectedBannerTextImageOne?>">
+          </a>
+        </div>
+        <!-- If link not selected for Text Img One then display just Img -->
+      <?php else: ?>
+        <div class="selected-bannerTextImage selected-bannerTextImageOne">
+          <img src="<?php echo $selectedBannerTextImageOne?>">
+        </div>
       <?php endif;?>
 
-      <!-- If Text Img Two is Selected then display -->
-      <?php if($selectedBannerTextImageTwo != ''): ?>
+
+      <!-- Check if link selected for Text Img Two -->
+      <?php if($selectedBannerTextImgTwoLink != ''): ?>
         <div class="selected-bannerTextImage selected-bannerTextImageTwo">
-            <a href="<?php echo $selectedBannerTextImgTwoLink?>" target="_blank">
-                <img src="<?php echo $selectedBannerTextImageTwo?>">
-            </a>
+          <a href="<?php echo $selectedBannerTextImgTwoLink?>" target="_blank">
+            <img src="<?php echo $selectedBannerTextImageTwo?>">
+          </a>
         </div>
-      <?php endif; ?>
+
+        <!-- If link not selected for Text Img Two then display just Img -->
+      <?php else: ?>
+        <div class="selected-bannerTextImage selected-bannerTextImageTwo">
+            <img src="<?php echo $selectedBannerTextImageTwo?>">
+        </div>
+      <?php endif;?>
 
     </div>
   </div>
