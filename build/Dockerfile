@@ -30,7 +30,7 @@ RUN  \
 
 RUN sed -i "s/save.*/save' => 'files',\n\t 'save_path' => '\/tmp',/" app/etc/env.php
 
-RUN php ./bin/magento setup:static-config:set
+RUN php ./bin/magento setup:static-content:deploy
 RUN php ./bin/magento cache:clean
 RUN php ./bin/magento cache:flush
 
