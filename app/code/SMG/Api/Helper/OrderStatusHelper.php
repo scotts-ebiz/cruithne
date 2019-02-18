@@ -2,6 +2,8 @@
 
 namespace SMG\Api\Helper;
 
+use Magento\Sales\Model\OrderFactory;
+use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Psr\Log\LoggerInterface;
 use SMG\Sap\Model\SapOrderFactory;
 use SMG\Sap\Model\SapOrderBatchFactory;
@@ -160,6 +162,16 @@ class OrderStatusHelper
     protected $_responseHelper;
 
     /**
+     * @var OrderFactory
+     */
+    protected $_orderFactory;
+
+    /**
+     * @var OrderResource
+     */
+    protected $_orderResource;
+
+    /**
      * OrdersHelper constructor.
      *
      * @param LoggerInterface $logger
@@ -179,6 +191,8 @@ class OrderStatusHelper
      * @param SapOrderItemCollectionFactory $sapOrderItemCollectionFactory
      * @param SapOrderItemHistoryCollectionFactory $sapOrderItemHistoryCollectionFactory
      * @param ResponseHelper $responseHelper
+     * @param OrderFactory $orderFactory
+     * @param OrderResource $orderResource
      */
     public function __construct(
         LoggerInterface $logger,
@@ -197,7 +211,9 @@ class OrderStatusHelper
         SapOrderHistoryCollectionFactory $sapOrderHistoryCollectionFactory,
         SapOrderItemCollectionFactory $sapOrderItemCollectionFactory,
         SapOrderItemHistoryCollectionFactory $sapOrderItemHistoryCollectionFactory,
-        ResponseHelper $responseHelper)
+        ResponseHelper $responseHelper,
+        OrderFactory $orderFactory,
+        OrderResource $orderResource)
     {
         $this->_logger = $logger;
         $this->_sapOrderFactory = $sapOrderFactory;
@@ -216,6 +232,8 @@ class OrderStatusHelper
         $this->_sapOrderItemCollectionFactory = $sapOrderItemCollectionFactory;
         $this->_sapOrderItemHistoryCollectionFactory = $sapOrderItemHistoryCollectionFactory;
         $this->_responseHelper = $responseHelper;
+        $this->_orderFactory = $orderFactory;
+        $this->_orderResource = $orderResource;
     }
 
     /**
@@ -235,12 +253,29 @@ class OrderStatusHelper
             // loop through the orders that were sent via the JSON file
             foreach ($requestData as $inputOrder)
             {
-                // process the sap order info
-                $this->processOrderSapInfo($inputOrder);
+                // check to see if there is an order increment number
+                $orderIncrementId = $inputOrder[self::INPUT_SAP_MAGENTO_PO];
+                if ($orderIncrementId)
+                {
+                    // get the order from the increment id
+                    $order = $this->_orderFactory->create();
+                    $this->_orderResource->load($order, $orderIncrementId, 'increment_id');
 
-                // update the batch processing for those
-                // that need to be processed through batch capture
-                $this->processOrderSapBatchInfo($inputOrder);
+                    // get the order id
+                    $orderId = $order->getId();
+
+                    // process the sap order info
+                    $this->processOrderSapInfo($inputOrder, $orderId);
+
+                    // update the batch processing for those
+                    // that need to be processed through batch capture
+                    $this->processOrderSapBatchInfo($inputOrder, $orderId);
+                }
+                else
+                {
+                    // log the error
+                    $this->_logger->error("SMG\Api\Helper\OrderStatusHelper - Missing magento po number.");
+                }
             }
         }
         else
@@ -259,12 +294,12 @@ class OrderStatusHelper
      * Takes the request data and inserts/updates the appropriate SAP tables
      *
      * @param $inputOrder
+     * @param $orderId
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    private function processOrderSapInfo($inputOrder)
+    private function processOrderSapInfo($inputOrder, $orderId)
     {
         // check to see if there is an order id
-        $orderId = $inputOrder[self::INPUT_SAP_MAGENTO_PO];
         if ($orderId)
         {
             // create the sap orders factory to retrieve all
@@ -758,12 +793,12 @@ class OrderStatusHelper
      * Process the batch processing table with the appropriate values
      *
      * @param $inputOrder
+     * @param $orderId
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    private function processOrderSapBatchInfo($inputOrder)
+    private function processOrderSapBatchInfo($inputOrder, $orderId)
     {
         // check to see if there is an order id
-        $orderId = $inputOrder[self::INPUT_SAP_MAGENTO_PO];
         if ($orderId)
         {
             // create the sap orders factory to retrieve all
