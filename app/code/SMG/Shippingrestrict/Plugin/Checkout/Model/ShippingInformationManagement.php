@@ -1,6 +1,6 @@
 <?php
 namespace SMG\Shippingrestrict\Plugin\Checkout\Model;
-
+use Magento\Framework\Exception\InputException;
 class ShippingInformationManagement
 {
 		protected $_checkoutSession;
@@ -26,30 +26,33 @@ class ShippingInformationManagement
 		$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
 		$cart = $objectManager->get('\Magento\Checkout\Model\Cart'); 
 		$items = $cart->getQuote()->getAllItems();
-		
+		$validate = false;
 		$State= $this->_checkoutSession->getQuote()->getShippingAddress()->getRegion();
 	
 			foreach($items as $item) {
 				$itemId = $item-> getItemId();
 				$productId=$item->getProductId();
 				$product=$this->_productloader->create()->load($productId);
+				$productname[] = $product->getName();
 				$StateNotAllowd= $product->getStateNotAllowed();
 				$data = explode(',', $StateNotAllowd);	
-			    $option_value = array();
+			    $option_value = array(); 
 			    foreach($data as $value)
 			    {
                    $attr = $product->getResource()->getAttribute('state_not_allowed');
                    $option_value[] = $attr->getSource()->getOptionText($value);
 			    }
                 if(in_array($State, $option_value)){
-				$cart->removeItem($itemId)->save(); 
-                  
-                $message = __('You deleted item from shopping cart');
-                $response = ['success' => true];
+                 $validate = true;
+				 $cart->removeItem($itemId)->save(); 
                 }
 
 			}
-		return  $result;
+			if($validate){
+				$message = implode(',',$productname).' is restricted in '.$State.' the product has been removed from the cart. Please refresh page for changes';
+               throw new InputException(__($message));
+             }
+		     return  $result;
     }
 
 }
