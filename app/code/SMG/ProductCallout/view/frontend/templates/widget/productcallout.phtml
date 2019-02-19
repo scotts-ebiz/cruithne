@@ -100,34 +100,35 @@ $block->getData('bgcolor');
 
 
       <!-- Check if link selected for Text Img One -->
-      <?php if($selectedBannerTextImgOneLink != ''): ?>
+      <?php if($selectedBannerTextImgOneLink != ''){?>
         <div class="selected-bannerTextImage selected-bannerTextImageOne">
           <a href="<?php echo $selectedBannerTextImgOneLink?>" target="_blank">
             <img src="<?php echo $selectedBannerTextImageOne?>">
           </a>
         </div>
-        <!-- If link not selected for Text Img One then display just Img -->
-      <?php else: ?>
+      <?php }elseif ($selectedBannerTextImageOne != ''){?>
         <div class="selected-bannerTextImage selected-bannerTextImageOne">
           <img src="<?php echo $selectedBannerTextImageOne?>">
         </div>
-      <?php endif;?>
+      <?php }else{?>
+        <!-- No One Img was selected -->
+      <?php }?>
 
 
       <!-- Check if link selected for Text Img Two -->
-      <?php if($selectedBannerTextImgTwoLink != ''): ?>
+      <?php if($selectedBannerTextImgTwoLink != ''){?>
         <div class="selected-bannerTextImage selected-bannerTextImageTwo">
           <a href="<?php echo $selectedBannerTextImgTwoLink?>" target="_blank">
             <img src="<?php echo $selectedBannerTextImageTwo?>">
           </a>
         </div>
-
-        <!-- If link not selected for Text Img Two then display just Img -->
-      <?php else: ?>
+      <?php }elseif ($selectedBannerTextImageTwo != ''){?>
         <div class="selected-bannerTextImage selected-bannerTextImageTwo">
-            <img src="<?php echo $selectedBannerTextImageTwo?>">
+          <img src="<?php echo $selectedBannerTextImageTwo?>">
         </div>
-      <?php endif;?>
+      <?php }else{?>
+        <!-- No Two Img was selected -->
+      <?php }?>
 
     </div>
   </div>
