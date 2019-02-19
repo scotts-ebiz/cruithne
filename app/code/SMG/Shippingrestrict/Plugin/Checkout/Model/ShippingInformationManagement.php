@@ -1,7 +1,6 @@
 <?php
 namespace SMG\ShippingRestrict\Plugin\Checkout\Model;
 use Magento\Framework\Exception\InputException;
-
 class ShippingInformationManagement
 {
 		protected $_checkoutSession;
