@@ -1,21 +1,25 @@
 <?php
-namespace SMG\Shippingrestrict\Plugin\Checkout\Model;
+namespace SMG\ShippingRestrict\Plugin\Checkout\Model;
 use Magento\Framework\Exception\InputException;
+
 class ShippingInformationManagement
 {
 		protected $_checkoutSession;
 		protected $_productloader; 
 		protected $_messageManager; 
+		protected $_cart;
 
 		public function __construct(
 			\Magento\Checkout\Model\Session $checkoutSession,
 			\Magento\Catalog\Model\ProductFactory $_productloader,
-			\Magento\Framework\Message\ManagerInterface $messageManager					
-		)
+			\Magento\Framework\Message\ManagerInterface $messageManager,
+			\Magento\Checkout\Model\Cart $cart
+			)
 		{
 			$this->_checkoutSession = $checkoutSession;
 	        $this->_productloader = $_productloader;
 	        $this->_messageManager = $messageManager;
+	        $this->_cart = $cart;
 		}
 
 	public function afterSaveAddressInformation(
@@ -23,9 +27,7 @@ class ShippingInformationManagement
          $result
     )
     {
-		$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-		$cart = $objectManager->get('\Magento\Checkout\Model\Cart'); 
-		$items = $cart->getQuote()->getAllItems();
+		$items = $this->_cart->getQuote()->getAllItems();
 		$validate = false;
 		$State= $this->_checkoutSession->getQuote()->getShippingAddress()->getRegion();
 	
@@ -44,7 +46,7 @@ class ShippingInformationManagement
 			    }
                 if(in_array($State, $option_value)){
                  $validate = true;
-				 $cart->removeItem($itemId)->save(); 
+				 $this->_cart->removeItem($itemId)->save(); 
                 }
 
 			}

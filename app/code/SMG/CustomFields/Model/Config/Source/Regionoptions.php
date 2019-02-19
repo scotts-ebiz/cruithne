@@ -40,7 +40,6 @@ class RegionOptions extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractS
         $this->_options= $optionsc;
         return $this->_options;
     }
- 
     /**
      * Get a text for option value
      *
@@ -56,7 +55,6 @@ class RegionOptions extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractS
         }
         return false;
     }
- 
     /**
      * Retrieve flat column definition
      *

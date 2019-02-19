@@ -1,6 +1,6 @@
 <?php
 \Magento\Framework\Component\ComponentRegistrar::register(
     \Magento\Framework\Component\ComponentRegistrar::MODULE,
-    'SMG_Shippingrestrict',
+    'SMG_ShippingRestrict',
     __DIR__
 );

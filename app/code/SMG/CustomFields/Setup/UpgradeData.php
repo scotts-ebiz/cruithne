@@ -287,7 +287,7 @@ class UpgradeData implements UpgradeDataInterface
 	            'input' => 'multiselect',
 	            'group' => 'Custom Fields',
 	            'class' => 'shipping',
-	            'source' => 'SMG\Customfields\Model\Config\Source\Regionoptions',	            
+	            'source' => 'SMG\Customfields\Model\Config\Source\RegionOptions',	            
 	            'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
 	            'visible' =>    true,
 	            'required' => false,
