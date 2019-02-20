@@ -9,10 +9,10 @@
             position: relative;
             text-align: center;
             img {
-                width: 50%;
+                width: 90%;
                 max-width: inherit;
                 @media only screen and (max-width: $screen__m) {
-                    width: 35%;
+                    width: 75%;
                 }
             }
         }
@@ -59,11 +59,19 @@
                 }
             }
             .selected-bannerTextImage {
+                display: block;
+                position: relative;
+                width: 70%;
+                margin-right: auto;
+                margin-left: auto;
+                @media only screen and (max-width: 1024px) {
+                    width: 80%;
+                }
                 @media only screen and (max-width: $screen__m) {
                     text-align: center;
                 }
                 img {
-                    width:25%;
+                    width:30%;
                     @media only screen and (max-width: $screen__m) {
                         width: 30%;
                     }

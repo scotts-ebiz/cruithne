@@ -73,7 +73,7 @@
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannerimage" visible="true" xsi:type="block">
-                <label>Callout Image</label>
+                <label>Callout Image (800x800)</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
             <parameter name="bgcolor" visible="true" xsi:type="text">
