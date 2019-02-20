@@ -1,5 +1,5 @@
 <?php
-namespace SMG\CustomFields\Setup;
+namespace SMG\Customfields\Setup;
 
 use Magento\Eav\Setup\EavSetup;
 use Magento\Eav\Setup\EavSetupFactory;
@@ -266,6 +266,101 @@ class UpgradeData implements UpgradeDataInterface
 		
 		
  
-	 }        
+	 }
+	 
+	 if ( version_compare($context->getVersion(), '1.0.2', '<' )) {
+		 
+		 
+		  $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
+		  
+		   $entityTypeId = 4; // Find these in the eav_entity_type table
+           $eavSetup->removeAttribute($entityTypeId, 'states_not_allowed');
+
+		  
+		  $eavSetup->addAttribute(
+	             \Magento\Catalog\Model\Product::ENTITY,
+	             'state_not_allowed', [
+	            'type' => 'text',
+	            'backend' => 'Magento\Eav\Model\Entity\Attribute\Backend\ArrayBackend',
+	            'frontend' => '',
+	             'label' => 'States shipping not allow',
+	            'input' => 'multiselect',
+	            'group' => 'Custom Fields',
+	            'class' => 'shipping',
+	            'source' => 'SMG\Customfields\Model\Config\Source\RegionOptions',	            
+	            'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
+	            'visible' =>    true,
+	            'required' => false,
+	            'user_defined' => false,
+	            'default' => '',
+	            'searchable' => false,
+	            'filterable' => false,
+	            'comparable' => false,
+	            'visible_on_front' => false,
+	            'used_in_product_listing' => true,
+	            'unique' => false
+	                ]
+	    );
+	    
+	    
+	    $eavSetup->addAttribute(
+			\Magento\Catalog\Model\Product::ENTITY,
+						'zip_not_allowed',
+						[
+							'group' => 'Custom Fields',
+							'type' => 'text',
+							'backend' => '',
+							'frontend' => '',
+							'label' => 'Zip Not Allow',
+							'input' => 'textarea',
+							'class' => '',
+							'source' => '',
+							'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
+							'is_html_allowed_on_front' => true,
+							'visible' => true,
+							'required' => false,
+							'user_defined' => false,
+							'default' => '',
+							'searchable' => false,
+							'filterable' => false,
+							'comparable' => false,
+							'visible_on_front' => false,
+							'used_in_product_listing' => true,
+							'wysiwyg_enabled' => false,
+							'unique' => false,
+							'apply_to' => ''
+						]
+				);
+				
+				$eavSetup->addAttribute(
+			\Magento\Catalog\Model\Product::ENTITY,
+						'county_not_allowed',
+						[
+							'group' => 'Custom Fields',
+							'type' => 'text',
+							'backend' => '',
+							'frontend' => '',
+							'label' => 'County Not Allow',
+							'input' => 'textarea',
+							'class' => '',
+							'source' => '',
+							'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
+							'is_html_allowed_on_front' => true,
+							'visible' => true,
+							'required' => false,
+							'user_defined' => false,
+							'default' => '',
+							'searchable' => false,
+							'filterable' => false,
+							'comparable' => false,
+							'visible_on_front' => false,
+							'used_in_product_listing' => true,
+							'wysiwyg_enabled' => false,
+							'unique' => false,
+							'apply_to' => '' 
+						]
+				);
+	 }
+	         
 	}
 }
