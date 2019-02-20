@@ -5,46 +5,144 @@
     elseif($block->getData('prodnametwo') != '' || $block->getData('prodnamethree') != ''):
         $cols = 2;
     endif;
+
+
+  $productNameCustomColor = '';
+  $productHeadlineCustomColor = '';
+  $productSubTextCustomColor = '';
+  $productNameTextCustomSize = '';
+  $productHeadlineTextCustomSize = '';
+  $productSubTextCustomSize = '';
+  $productNameTextCustomStyle = '';
+  $productHeadlineTextCustomStyle = '';
+  $productSubTextCustomStyle = '';
+  $productButtonTextCustomColor = '';
+  $productButtonTextCustomSize = '';
+  $productButtonTextCustomStyle = '';
+  $productButtonCustomColor = '';
+
+
+  //If productButtonColor exists then set to $productNameCustomColor
+  if($block->getData('productButtonColor') != ''):
+    $productButtonCustomColor = $block->getData('productButtonColor');
+  endif;
+
+
+  //If productNameColor exists then set to $productNameCustomColor
+  if($block->getData('productButtonTextColor') != ''):
+    $productButtonTextCustomColor = $block->getData('productButtonTextColor');
+  endif;
+
+
+  //If productButtonTextSize exists then set to $productHeadlineTextCustomSize
+  if($block->getData('productButtonTextSize') != ''):
+    $productButtonTextCustomSize = $block->getData('productButtonTextSize');
+  endif;
+
+
+  //If value exists for productButtonTextStyle pull in the value and replace the comma for a space
+  if($block->getData('productButtonTextStyle') != ''):
+    $productButtonTextCustomStyle = str_replace(',' , '', $block->getData('productButtonTextStyle'));
+  endif;
+
+
+  //If productNameColor exists then set to $productNameCustomColor
+  if($block->getData('productNameColor') != ''):
+    $productNameCustomColor = $block->getData('productNameColor');
+  endif;
+
+
+  //If productHeadlineColor exists then set to $productHeadlineCustomColor
+  if($block->getData('productHeadlineColor') != ''):
+    $productHeadlineCustomColor = $block->getData('productHeadlineColor');
+  endif;
+
+
+  //If productSubTextColor exists then set to $productSubTextCustomColor
+  if($block->getData('productSubTextColor') != ''):
+    $productSubTextCustomColor = $block->getData('productSubTextColor');
+  endif;
+
+
+  //If productNameTextSize exists then set to $productNameTextCustomSize
+  if($block->getData('productNameTextSize') != ''):
+    $productNameTextCustomSize = $block->getData('productNameTextSize');
+  endif;
+
+
+  //If productHeadlineTextSize exists then set to $productHeadlineTextCustomSize
+  if($block->getData('productHeadlineTextSize') != ''):
+    $productHeadlineTextCustomSize = $block->getData('productHeadlineTextSize');
+  endif;
+
+
+  //If productSubTextSize exists then set to $productSubTextCustomSize
+  if($block->getData('productSubTextSize') != ''):
+    $productSubTextCustomSize = $block->getData('productSubTextSize');
+  endif;
+
+
+  //If value exists for productNameTextStyle pull in the value and replace the comma for a space
+  if($block->getData('productNameTextStyle') != ''):
+    $productNameTextCustomStyle = str_replace(',' , '', $block->getData('productNameTextStyle'));
+  endif;
+
+
+  //If value exists for productHeadlineTextStyle pull in the value and replace the comma for a space
+  if($block->getData('productHeadlineTextStyle') != ''):
+    $productHeadlineTextCustomStyle = str_replace(',' , '', $block->getData('productHeadlineTextStyle'));
+  endif;
+
+
+  //If value exists for productHeadlineTextStyle pull in the value and replace the comma for a space
+  if($block->getData('productSubTextStyle') != ''):
+    $productSubTextCustomStyle = str_replace(',' , '', $block->getData('productSubTextStyle'));
+  endif;
+
 ?>
 
-<section class="products grid col-<?php echo $cols; ?>">
+
+<section class="product-grid products grid">
     <?php if($block->getData('prodnameone') != ''): ?>
-    <div class="item span_4_of_12" style="background-image: url('<?php echo $block->getData('prodbgimageone'); ?>');">
-        <h2><a href="<?php echo $block->getData('prodbuttonlinkone'); ?>"><?php echo $block->getData('prodnameone'); ?></a></h2>
-        <h4><?php echo $block->getData('prodheadlineone'); ?></h4>
-        <a href="<?php echo $block->getData('prodbuttonlinkone'); ?>"><img src="<?php echo $block->getData('prodimageone'); ?>" /></a>
+    <div class="item" style="background-image: url('<?php echo $block->getData('prodbgimageone'); ?>');">
+        <h2><a style="color:<?php echo $productNameCustomColor?>; <?php echo $productNameTextCustomSize?><?php echo trim($productNameTextCustomStyle)?>" href="<?php echo $block->getData('prodbuttonlinkone');?>"><?php echo $block->getData('prodnameone');?></a></h2>
+        <h4 style="color:<?php echo $productHeadlineCustomColor?>; <?php echo $productHeadlineTextCustomSize?><?php echo trim($productHeadlineTextCustomStyle)?>"><?php echo $block->getData
+        ('prodheadlineone');?></h4>
+        <a class="prodGrid-imgLink" href="<?php echo $block->getData('prodbuttonlinkone'); ?>"><img src="<?php echo $block->getData('prodimageone'); ?>" /></a>
         <div class="shop-cta">
             <a class="button" href="<?php echo $block->getData('prodbuttonlinkone'); ?>"><?php echo $block->getData('prodbuttontextone'); ?></a>
-            <?php if($this->getData('pricetextone') != ''): ?>
-            <aside><?php echo $block->getData('pricetextone'); ?></aside>
+            <?php if($this->getData('productSubTextOne') != ''): ?>
+            <aside style="color:<?php echo $productSubTextCustomColor?>;<?php echo $productSubTextCustomSize?><?php echo trim($productSubTextCustomStyle)?>"><?php echo $block->getData('productSubTextOne');?></aside>
             <?php endif; ?>
         </div>
     </div>
     <?php endif; ?>
 
     <?php if($this->getData('prodnametwo') != ''): ?>
-    <div class="item span_4_of_12" style="background-image: url('<?php echo $block->getData('prodbgimagetwo'); ?>');">
-        <h2><a href="<?php echo $block->getData('prodbuttonlinktwo'); ?>"><?php echo $block->getData('prodnametwo'); ?></a></h2>
-        <h4><?php echo $block->getData('prodheadlinetwo'); ?></h4>
-        <a href="<?php echo $block->getData('prodbuttonlinktwo'); ?>"><img src="<?php echo $block->getData('prodimagetwo'); ?>" /></a>
+    <div class="item" style="background-image: url('<?php echo $block->getData('prodbgimagetwo'); ?>');">
+        <h2><a style="color:<?php echo $productNameCustomColor?>; <?php echo $productNameTextCustomSize?> <?php echo trim($productNameTextCustomStyle)?>" href="<?php echo $block->getData('prodbuttonlinktwo'); ?>"><?php echo $block->getData('prodnametwo'); ?></a></h2>
+        <h4 style="color:<?php echo $productHeadlineCustomColor?>; <?php echo $productHeadlineTextCustomSize?> <?php echo trim($productHeadlineTextCustomStyle)?>
+          "><?php echo $block->getData('prodheadlinetwo');
+          ?></h4>
+        <a class="prodGrid-imgLink" href="<?php echo $block->getData('prodbuttonlinktwo');?>"><img src="<?php echo $block->getData('prodimagetwo'); ?>" /></a>
         <div class="shop-cta">
-            <a class="button" href="<?php echo $block->getData('prodbuttonlinktwo'); ?>"><?php echo $block->getData('prodbuttontexttwo'); ?></a>
-            <?php if($this->getData('pricetexttwo') != ''): ?>
-            <aside><?php echo $block->getData('pricetexttwo'); ?></aside>
+            <a class="button" href="<?php echo $block->getData('prodbuttonlinktwo');?>"><?php echo $block->getData('prodbuttontexttwo');?></a>
+            <?php if($this->getData('productSubTextTwo') != ''): ?>
+            <aside style="color:<?php echo $productSubTextCustomColor?>;<?php echo $productSubTextCustomSize?><?php echo trim($productSubTextCustomStyle)?>"><?php echo $block->getData('productSubTextTwo'); ?></aside>
             <?php endif; ?>
         </div>
     </div>
     <?php endif; ?>
 
     <?php if($this->getData('prodnamethree') != ''): ?>
-    <div class="item span_4_of_12" style="background-image: url('<?php echo $block->getData('prodbgimagethree'); ?>');">
-        <h2><a href="<?php echo $block->getData('prodbuttonlinkthree'); ?>"><?php echo $block->getData('prodnamethree'); ?></a></h2>
-        <h4><?php echo $block->getData('prodheadlinethree'); ?></h4>
-        <a href="<?php echo $block->getData('prodbuttonlinkthree'); ?>"><img src="<?php echo $block->getData('prodimagethree'); ?>" /></a>
+    <div class="item" style="background-image: url('<?php echo $block->getData('prodbgimagethree'); ?>');">
+        <h2><a style="color:<?php echo $productNameCustomColor?>; <?php echo $productNameTextCustomSize?> <?php echo trim($productNameTextCustomStyle)?>" href="<?php echo $block->getData('prodbuttonlinkthree'); ?>"><?php echo $block->getData('prodnamethree'); ?></a></h2>
+        <h4 style="color:<?php echo $productHeadlineCustomColor?>; <?php echo $productHeadlineTextCustomSize?> <?php echo trim($productHeadlineTextCustomStyle) ?>"><?php echo $block->getData('prodheadlinethree'); ?></h4>
+        <a class="prodGrid-imgLink" href="<?php echo $block->getData('prodbuttonlinkthree'); ?>"><img src="<?php echo $block->getData('prodimagethree'); ?>" /></a>
         <div class="shop-cta">
             <a class="button" href="<?php echo $block->getData('prodbuttonlinkthree'); ?>"><?php echo $block->getData('prodbuttontextthree'); ?></a>
-            <?php if($this->getData('pricetextthree') != ''): ?>
-            <aside><?php echo $block->getData('pricetextthree'); ?></aside>
+            <?php if($this->getData('productSubTextThree') != ''): ?>
+            <aside style="color:<?php echo $productSubTextCustomColor?>;<?php echo $productSubTextCustomSize?><?php echo trim($productSubTextCustomStyle)?>"><?php echo $block->getData('productSubTextThree'); ?></aside>
             <?php endif; ?>
         </div>
     </div>

@@ -1,0 +1,36 @@
+//SCSS file for the SMG Icon List Widget
+
+.page-wrapper .page-main .grid > {
+    h2.list-icon-header {
+        display: inline-block;
+        position: relative;
+        margin: 0;
+        float: left;
+        @media only screen and (max-width: 768px) {
+            margin-bottom: 15%;
+        }
+    }
+    ul.list-icon {
+        list-style: none;
+        display: inline-block;
+        position: relative;
+        padding: 0;
+        float: right;
+        li.list-icon-detail {
+            display: inline-block;
+            width: 40%;
+            margin-right: 10%;
+            @media only screen and (max-width: 768px) {
+                width: 100%;
+            }
+            span.list-icon-detail-test {
+                float: left;
+                display: inline-block;
+            }
+            img {
+                float: right;
+                width: 20%;
+            }
+        }
+    }
+}

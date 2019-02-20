@@ -9,7 +9,7 @@
             </parameter>
             <parameter name="bannerheadlinecolor" visible="true" xsi:type="text">
                 <label>Banner Headline Color (in #xxxxxx)</label>
-                <value>#000</value>
+                <value>#000000</value>
             </parameter>
             <parameter name="headlinetextstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCallout\Model\Source\HeadlineTextStyles">
                 <label>Banner Headline Style</label>
@@ -20,7 +20,7 @@
             </parameter>
             <parameter name="bannertextlinecolor" visible="true" xsi:type="text">
                 <label>Banner Text Color (in #xxxxxx)</label>
-                <value>#000</value>
+                <value>#000000</value>
             </parameter>
             <parameter name="bannertextsize" visible="true" xsi:type="select"
                        source_model="SMG\ProductCallout\Model\Source\TextSize">

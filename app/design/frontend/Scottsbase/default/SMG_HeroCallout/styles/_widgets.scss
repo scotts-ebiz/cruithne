@@ -1,0 +1,57 @@
+/* Widget Start - Location - App / design / frontend / Scottsbase / default / SMG_ProdcutCallout / styles */
+.hero-callout {
+    max-width: 1440px;
+    background-size: 100% auto;
+    background-repeat: no-repeat;
+    height: 655px;
+    position: relative;
+    display: inline-block;
+    margin: 65px 0 0 0;
+    @media (max-width: 1200px) {
+        height: 550px;
+    }
+    @include max-screen($screen__l) {
+        height: auto;
+        background-position: top;
+        background-size: 95%;
+        margin: 40px 0 0 0;
+    }
+    .content {
+        max-width: 500px;
+        padding-left: 50px;
+        position: relative;
+        display: inline-block;
+        margin: 5% 0 18% 0;
+        @include max-screen($screen__l) {
+            max-width: 1000px;
+            top: 0;
+            padding: 0;
+            text-align: left;
+            margin: 55% 0 0 2%;
+        }
+    }
+    @media screen and (max-width: 1399px) and (min-width: 1024px) {
+        .content {
+            width: 34%;
+            padding-left: 40px;
+        }
+    }
+    h2 {
+        margin-bottom: 25px;
+        width: 75%;
+        @include max-screen($screen__l) {
+            width: 100%;
+            line-height: 35px;
+        }
+    }
+    .heroCallout-bannerText {
+        width: 85%;
+        @include max-screen($screen__l) {
+            width: 100%;
+        }
+    }
+    p {
+        line-height: 34px;
+    }
+}
+

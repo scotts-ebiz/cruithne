@@ -1,11 +1,157 @@
-<section class="hero-video" style="background-image: url('<?php echo $block->getData('heroimage'); ?>');">
-    <img class="mobile-tablet" src="<?php echo $block->getData('heroimage'); ?>" />
-    <div class="content">
-        <h2><?php echo $block->getData('heroheadline'); ?></h2>
-        <p><?php echo $block->getData('herotext'); ?></p>
+<?php
 
-        <?php if($this->getData('videoembedcode') != ''): ?>
-        <a class="watch-video video-link" href="#"><i class="icon-play"></i> <span><?php echo $block->getData('buttontext'); ?></span> <span class="embed-code"><?php echo $block->getData('videoembedcode'); ?></a>
-        <?php endif; ?>
+$paragraphTextSize ='';
+$headlineCustomCssStyle = '';
+$selectedvideotextsize ='';
+$textCustomCssStyles = '';
+$videoEmbedCustomcode = '';
+$iframeCustomWidth = '';
+$iframeCustomHeight = '';
+$iframeCustomId = '';
+$bannerheadlineMobileCustomColor = '';
+$bannertextlineMobileCustomColor = '';
+
+
+
+// If bannertextsize exists then set to variable
+if($block->getData('bannertextsize') != ''):
+  $paragraphTextSize = $block->getData('bannertextsize');
+endif;
+
+
+// If textstyle exists then set to variable
+if($block->getData('textstyle') != ''):
+  $textCustomCssStyles = $block->getData('textstyle');
+endif;
+
+
+//If headlinetextstyle exists then set to variable
+if($block->getData('headlinetextstyle') != ''):
+  $headlineCustomCssStyle = $block->getData('headlinetextstyle');
+endif;
+
+
+//If videotextsize exists then set to variable
+if($block->getData('videotextsize') != ''):
+  $selectedvideotextsize = $block->getData('videotextsize');
+endif;
+
+
+// If iframeWidth exists then set to variable
+if($block->getData('iframeWidth') != ''):
+  $iframeCustomWidth = $block->getData('iframeWidth');
+endif;
+
+
+// If iframeHeight exists then set to variable
+if($block->getData('iframeHeight') != ''):
+  $iframeCustomHeight = $block->getData('iframeHeight');
+endif;
+
+
+// If iframeId exists then set to variable
+if($block->getData('iframeId') != ''):
+  $iframeCustomId = $block->getData('iframeId');
+endif;
+
+
+// If iframeVideoLink exists then set to variable
+if($block->getData('iframeVideoLink') != ''):
+  $iframeVideoCustomLink = $block->getData('iframeVideoLink');
+endif;
+
+
+//If videotextsize exists then set to variable
+if($block->getData('bannerheadlineMobileColor') != ''):
+  $bannerheadlineMobileCustomColor = $block->getData('bannerheadlineMobileColor');
+endif;
+
+
+//If videotextsize exists then set to variable
+if($block->getData('bannertextlineMobileColor') != ''):
+  $bannertextlineMobileCustomColor = $block->getData('bannertextlineMobileColor');
+endif;
+
+
+?>
+
+
+<section class="hero-video-widget product-info-container align-top" style="background: url('<?php echo
+$block->getData('videobackgroundimage')
+; ?>') no-repeat; background-position: center; background-size: cover; padding-top: <?php echo $block->getData('videopaddingtop')
+; ?>%; padding-bottom: <?php echo $block->getData('videopaddingbottom')?>%;">
+  <div class="product-info grid col-2 <?php echo $block->getData('textalignclass') ?> " style="padding-right:<?php
+  echo $block->getData('textpaddingright'); ?>%; padding-left:<?php echo $block->getData('textpaddingleft'); ?>%;">
+    <h2 class="video-headline"
+        style="
+          color:<?php echo $block->getData('bannerheadlinecolor'); ?>;
+        <?php
+        $headlinestylevalues = explode(',', $headlineCustomCssStyle);
+        foreach($headlinestylevalues as $headlinevalue) {
+          echo $headlinevalue;
+        }
+        ?>"
+    >
+      <?php echo $block->getData('bannerheadline'); ?>
+    </h2>
+    <p style="
+      color:<?php echo $block->getData('bannertextlinecolor'); ?>;
+    <?php echo $paragraphTextSize;?>
+    <?php
+    $selectedTextCustomCssStyles = explode(',', $textCustomCssStyles);
+    foreach($selectedTextCustomCssStyles as $textStyleValue) {
+      echo $textStyleValue;
+    }
+    ?>"
+    >
+      <?php echo $block->getData('bannertext'); ?>
+    </p>
+    <div class="video">
+      <?php if($this->getData('iframeVideoLink') != ''): ?>
+        <a class="watch-video play video-link" href="#">
+          <i class="icon-play fas fa-play" style="color: <?php echo $block->getData('iconcolor'); ?>; background-color: <?php echo $block->getData('iconbackgroundcolor'); ?> ;"></i>
+          <span
+            class="productvideotxt"
+            style="
+              color:<?php echo $block->getData('videotextcolor'); ?>;
+            <?php echo $selectedvideotextsize;?>"
+          >
+                    <?php echo $block->getData('videotext'); ?>
+                </span>
+          <span class="embed-code">
+                  <iframe width="<?php echo $iframeCustomWidth?>" height="<?php echo $iframeCustomHeight?>"
+                          src="<?php echo $iframeVideoCustomLink?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="" data-dayt="true">
+                  </iframe></span>
+        </a>
+      <?php endif; ?>
     </div>
+  </div>
+  <div id="video-overlay" class="video-overlay"></div>
+  <div id="video-container" class="video-container">
+    <div class="video-frame"></div>
+  </div>
 </section>
+<div class="hero-video-mobileContent">
+  <h2 class="mobile-video-headline" style="
+    color:<?php echo $bannerheadlineMobileCustomColor?>;
+  <?php
+  $headlinestylevalues = explode(',', $headlineCustomCssStyle);
+  foreach($headlinestylevalues as $headlinevalue) {
+    echo $headlinevalue;
+  }?>">
+    <?php echo $block->getData('bannerheadline'); ?>
+  </h2>
+  <p style="
+    color:<?php echo $bannertextlineMobileCustomColor?>;
+  <?php echo $paragraphTextSize;?>
+  <?php
+  $selectedTextCustomCssStyles = explode(',', $textCustomCssStyles);
+  foreach($selectedTextCustomCssStyles as $textStyleValue) {
+    echo $textStyleValue;
+  }
+  ?>"
+  >
+    <?php echo $block->getData('bannertext'); ?>
+  </p>
+
+</div>

@@ -1,0 +1,148 @@
+/* Widget Start - Location - App / design / frontend / Scottsbase / default / SMG_ProdcutCalloutVideo / styles */
+body {
+    .hero-video-widget.product-info-container {
+        .product-info.text-left {
+            text-align: left;
+        }
+        .product-info.text-right {
+            text-align: right;
+        }
+    }
+}
+
+body {
+    .hero-video-widget.product-info-container {
+        display: inline-block;
+        width: 100%;
+        .product-info {
+            font-size: 20px;
+            width: 50%;
+
+            h2.video-headline {
+                @media only screen and (max-width: $screen__s) {
+                    display: none;
+                }
+            }
+            p {
+                @media only screen and (max-width: $screen__s) {
+                    display: none;
+                }
+            }
+            .video {
+                @media only screen and (max-width: $screen__s) {
+                    width: 100%;
+                    display: inline-block;
+                    position: relative;
+                    top: 40px;
+                }
+                .watch-video {
+                    i {
+                        height: 25px;
+                        width: 25px;
+                        line-height: 26px;
+                        color: #ffffff;
+                        font-size: 12px;
+                        background: #000000;
+                        border-radius: 50%;
+                        text-align: center;
+                        display: inline-block;
+                        margin-right: 1%;
+                        padding: 5px;
+                        @media only screen and (max-width: $screen__s) {
+                            padding: 2px;
+                        }
+                    }
+                    span {
+                        display: inline-block;
+                        color: #ffffff;
+                        font-size: 16px;
+                        font-weight: 700;
+                        font-family: "Hellix-Heavy";
+                        letter-spacing: 0.5px;
+                        padding-bottom: 3px;
+                        position: relative;
+                        top: -3px;
+                    }
+                    span.embed-code {
+                        display: none !important;
+                    }
+                }
+                /*
+                .icon-play:before {
+                    content: "\f04b";
+                }
+                */
+            }
+        }
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 8;
+            height: 100%;
+            width: 100%;
+            background: rgba(0, 0, 0, .9);
+            visibility: hidden;
+            opacity: 0;
+            transition: .2s visibility linear, .2s opacity linear;
+        }
+        .video-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            max-width: 1000px;
+            transform: translate(-50%, -50%);
+            z-index: 9;
+            .video-frame {
+                position: relative;
+                padding-bottom: 56.25%; /* 16:9 */
+                padding-top: 25px;
+                height: 0;
+            }
+            .video-frame iframe {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+            }
+        }
+    }
+    .hero-video-mobileContent {
+        @media only screen and (min-width: $screen__s) {
+            display: none;
+        }
+        @media only screen and (max-width: $screen__s) {
+            display: inline-block;
+            position: relative;
+            padding-left: 2%;
+            h2 {
+                margin-top: 0.5rem;
+                margin-bottom: 0.5rem;
+                font-size: 2.0rem;
+            }
+            p {
+                font-size: 1.0rem;
+            }
+        }
+
+
+
+
+    }
+}
+
+/* Styling relating to the Product Callout Video Widget */
+body.video-open {
+    .hero-video-widget.product-info-container {
+        .video-overlay {
+            visibility: visible;
+            opacity: 1;
+        }
+        .video-container {
+            display: block;
+        }
+    }
+}
