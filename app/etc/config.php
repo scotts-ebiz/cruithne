@@ -266,7 +266,7 @@ return [
         'Magento_WishlistAnalytics' => 1,
         'Magento_Worldpay' => 1,
         'SMG_Api' => 1,
-        'SMG_Creditvantiv' => 1,
+        'SMG_CreditReason' => 1,
         'SMG_CustomFields' => 1,
         'SMG_CustomerServiceEmail' => 1,
         'SMG_Dtm' => 1,
