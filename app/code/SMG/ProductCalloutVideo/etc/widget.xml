@@ -85,24 +85,31 @@
             </parameter>
 
 
-            <!-- Background Image Customization -->
-            <parameter name="pcvBackgroundImageCustomLabel" visible="true" xsi:type="block">
-                <label>CUSTOMIZE BACKGROUND IMAGE</label>
+            <!-- Customize Callout Img / Background -->
+            <parameter name="pcvImgBgCustomizeLabel" visible="true" xsi:type="block">
+                <label>CUSTOMIZE IMAGE / BACKGROUND</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
-            <parameter name="pcvBackgroundImage" visible="true" xsi:type="block">
-                <label>Background Image</label>
+            <parameter name="pcvCalloutImage" visible="true" xsi:type="block">
+                <label>Callout Image (800x800)</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
-            <parameter name="pcvVideoPaddingTop" visible="true" xsi:type="text">
+            <parameter name="pcvBgColor" visible="true" xsi:type="text">
+                <label>Background Color</label>
+                <value>#ffffff</value>
+            </parameter>
+            <parameter name="pcvBgImage" visible="true" xsi:type="block">
+                <label>Background Image (Optional)</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+            <parameter name="pcvBgPaddingTop" visible="true" xsi:type="text">
                 <label>Background Top Padding (in %)</label>
                 <value>0</value>
             </parameter>
-            <parameter name="pcvVideoPaddingBottom" visible="true" xsi:type="text">
+            <parameter name="pcvBgPaddingbottom" visible="true" xsi:type="text">
                 <label>Background Bottom Padding (in %)</label>
                 <value>0</value>
             </parameter>
-
         </parameters>
     </widget>
 </widgets>

@@ -1,76 +1,22 @@
 <?php
-//Declare vars to be used
-$pcvHeadlineCustomCssStyle = '';
-$pcvHeadlineStyleValues = '';
-$pcvTextContainerAlignmentSelected = '';
-$pcvHeadlinevalue = '';
-$pcvParagraphTextSize = '';
-$pcvBannerTextStyleSelected = '';
-$pcvBannerTextStyleValuesSelected = '';
-
-
-//If pcvBannerHeadlineStyle exists then set to customCssStyles
-if($block->getData('pcvBannerHeadlineStyle') != ''):
-  $pcvHeadlineCustomCssStyle = $block->getData('pcvBannerHeadlineStyle');
-endif;
-
-
-// If pcvTextContainerAlignment exists then set to $pcvTextContainerAlignmentSelected
-if($block->getData('pcvTextContainerAlignment') != ''):
-  $pcvTextContainerAlignmentSelected = $block->getData('pcvTextContainerAlignment')
-endif;
-
-
-// If bannertextsize exists then set to paragraphTextSize
-if($block->getData('pcvBannerTextSize') != ''):
-  $pcvParagraphTextSize = $block->getData('pcvBannerTextSize');
-endif;
-
-
-// If textstyle exists then set to customCssStyles
-if($block->getData('pcvBannerTextStyle') != ''):
-  $pcvBannerTextStyleSelected = $block->getData('pcvBannerTextStyle');
-endif;
+//Set Vars
 
 ?>
 
 
-<section class="product-callout-video-widget product-info-container" style="background: url('<?php echo $block->getData('bgimage'); ?>') no-repeat; background-size:cover; background-position:center;
-  background-color: <?php
-echo
-$block->getData('bgcolor');
-?>; padding-top: <?php echo $block->getData('paddingtop'); ?>%; padding-bottom: <?php echo $block->getData
-('paddingbottom'); ?>%;">
+<section class="product-callout-video-widget product-info-container">
     <div class="product-info grid col-2">
-        <!-- Product Callout Video - Image and Video Container -->
         <div class="productCalloutVideo-imageContainer span_6_of_12">
-            <?php if($this->getData('bannerimage') != ''): ?>
-                <img src="<?php echo $block->getData('bannerimage'); ?>">
+            <!-- Add pcv Callout Img if selected-->
+            <?php if($this->getData('pcvCalloutImage') != ''): ?>
+                <img src="<?php echo $block->getData('pcvCalloutImage'); ?>">
             <?php endif; ?>
-            <p>Place holder for callout / banner img code</p>
         </div>
-
-        <!-- Product Callout Video - Content Container -->
-        <div class="productCalloutVideo-contentContainer span_6_of_12 <?php echo $pcvTextContainerAlignmentSelected ?>">
-            <h2 style="<?php
-            $pcvHeadlineStyleValues = explode(',', $pcvHeadlineCustomCssStyle);
-            foreach($pcvHeadlineStyleValues as $pcvHeadlinevalue) {
-              echo $pcvHeadlinevalue;
-            } ?>
-        color:<?php echo $block->getData('pcvBannerHeadlineColor'); ?>;">
+        <div class="productCalloutVideo-contentContainer span_6_of_12 <?php echo $block->getData('pcvTextContainerAlignment') ?>">
+            <h2 style="color:<?php echo $block->getData('pcvBannerHeadlineColor');?>;">
                 <?php echo $block->getData('pcvBannerHeadline'); ?>
             </h2>
-            <p style="<?php
-                //If selected display Font Styles
-                $pcvBannerTextStyleValuesSelected = explode(',', $pcvBannerTextStyleSelected);
-                foreach($pcvBannerTextStyleValuesSelected as $valueOfTextStyle) {
-                    echo $valueOfTextStyle;
-                }
-                //If selected display font size
-                echo $pcvParagraphTextSize;?>
-                color:<?php echo $block->getData('pcvBannerTextColor'); ?>;">
-                    <?php echo $block->getData('pcvBannerText'); ?>
-            </p>
+            <p><?php echo $block->getData('pcvBannerText'); ?></p>
         </div>
     </div>
 </section>
