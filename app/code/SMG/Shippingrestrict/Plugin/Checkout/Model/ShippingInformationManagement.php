@@ -11,12 +11,14 @@ class ShippingInformationManagement
 		public function __construct(
 			\Magento\Checkout\Model\Session $checkoutSession,
 			\Magento\Catalog\Model\ProductFactory $_productloader,
+			\Magento\Framework\UrlInterface $urlInterface,
 			\Magento\Framework\Message\ManagerInterface $messageManager,
 			\Magento\Checkout\Model\Cart $cart
 			)
 		{
 			$this->_checkoutSession = $checkoutSession;
 	        $this->_productloader = $_productloader;
+	        $this->_urlInterface = $urlInterface;
 	        $this->_messageManager = $messageManager;
 	        $this->_cart = $cart;
 		}
@@ -50,8 +52,11 @@ class ShippingInformationManagement
 
 			}
 			if($validate){
-				$message = implode(',',$productname).' is restricted in '.$State.' the product has been removed from the cart. Please refresh page for changes';
-               throw new InputException(__($message));
+				$homepage = $this->_urlInterface->getBaseUrl();
+				$checkout = $this->_urlInterface->getUrl('checkout/cart', ['_secure' => true]);
+			    $message="Unfortunately one or more of the selected products is restricted from shipping to ".$State." The item has been removed from the cart.<br/>
+			     Please <a href='".$homepage."' target='_blank' class='messagehref'>Continue Shopping</a> or <a href='".$checkout."' class='messagehref'>Proceed to Checkout</a>";
+                throw new InputException(__($message));
              }
 		     return  $result;
     }
