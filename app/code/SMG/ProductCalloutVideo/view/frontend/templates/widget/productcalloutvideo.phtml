@@ -6,6 +6,8 @@ $pcvParagraphTextSize = '';
 $pcvBannerTextStyleSelected = '';
 $pcvBannerTextStyleValuesSelected = '';
 $valueOfTextStyle = '';
+$pcvIconColorSelected = '';
+$pcvIconBackgroundColorSelected = '';
 
 
 //If pcvBannerHeadlineStyle exists then set to customCssStyles
@@ -14,6 +16,7 @@ if($block->getData('pcvBannerHeadlineStyle') != ''):
 endif;
 
 
+//If pcvBannerTextSize exists then set to $pcvParagraphTextSize
 if($block->getData('pcvBannerTextSize') != ''):
     $pcvParagraphTextSize = $block->getData('pcvBannerTextSize');
 endif;
@@ -24,16 +27,31 @@ if($block->getData('pcvBannerTextStyle') != ''):
   $pcvBannerTextStyleSelected = $block->getData('pcvBannerTextStyle');
 endif;
 
+
+// If pcvIconColor exists then set to $pcvIconColorSelected
+if($block->getData('pcvIconColor') != ''):
+  $pcvIconColorSelected = $block->getData('pcvIconColor');
+endif;
+
+
+// If pcvIconBackgroundColor exists then set to $pcvIconBackgroundColorSelected
+if($block->getData('pcvIconBackgroundColor') != ''):
+  $pcvIconBackgroundColorSelected = $block->getData('pcvIconBackgroundColor');
+endif;
 ?>
 
 
 <section class="product-callout-video-widget product-info-container">
     <div class="product-info grid col-2">
         <div class="productCalloutVideo-imageContainer span_6_of_12">
-            <!-- Add pcv Callout Img if selected-->
-            <?php if($this->getData('pcvCalloutImage') != ''): ?>
-                <img src="<?php echo $block->getData('pcvCalloutImage'); ?>">
-            <?php endif; ?>
+            <div class="productCalloutVideo-selectedImgContainer" style="background: url('<?php echo $block->getData
+            ('pcvCalloutImage'); ?>') no-repeat;
+              background-size:cover; background-position:center;">
+                <a class="productCalloutVideo-watchVideo play video-link" href="#">
+                    <i class="icon-play fas fa-play" style="color:<?php echo $pcvIconColorSelected?>;
+                      background-color:<?php echo $pcvIconBackgroundColorSelected?>;"></i>
+                </a>
+            </div>
         </div>
         <div class="productCalloutVideo-contentContainer span_6_of_12 <?php echo $block->getData('pcvTextContainerAlignment') ?>">
             <h2 style="<?php

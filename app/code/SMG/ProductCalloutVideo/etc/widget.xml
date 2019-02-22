@@ -52,18 +52,6 @@
                 <label>CUSTOMIZE VIDEO</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
-            <parameter name="pcvVideoText" visible="true" xsi:type="block">
-                <label>Video Text</label>
-                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
-            </parameter>
-            <parameter name="pcvVideoTextColor" visible="true" xsi:type="text">
-                <label>Video Text Color (in #xxxxxx)</label>
-                <value>#000000</value>
-            </parameter>
-            <parameter name="pcvVideoTextSize" visible="true" xsi:type="select"
-                       source_model="SMG\ProductCalloutVideo\Model\Source\VideoTextSize">
-                <label>Video Text Size (in rem)</label>
-            </parameter>
             <parameter name="pcvIconColor" visible="true" xsi:type="text">
                 <label>Icon Color (in #xxxxxx)</label>
                 <value>#ffffff</value>
