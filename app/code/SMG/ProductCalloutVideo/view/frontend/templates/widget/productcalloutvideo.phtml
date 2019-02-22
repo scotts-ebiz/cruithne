@@ -1,5 +1,28 @@
 <?php
 //Set Vars
+$pcvHeadlineCustomCssStyle = '';
+$pcvHeadlineStyleValues = '';
+$pcvParagraphTextSize = '';
+$pcvBannerTextStyleSelected = '';
+$pcvBannerTextStyleValuesSelected = '';
+$valueOfTextStyle = '';
+
+
+//If pcvBannerHeadlineStyle exists then set to customCssStyles
+if($block->getData('pcvBannerHeadlineStyle') != ''):
+    $pcvHeadlineCustomCssStyle = $block->getData('pcvBannerHeadlineStyle');
+endif;
+
+
+if($block->getData('pcvBannerTextSize') != ''):
+    $pcvParagraphTextSize = $block->getData('pcvBannerTextSize');
+endif;
+
+
+// If pcvBannerTextStyle exists then set to $pcvBannerTextStyleSelected
+if($block->getData('pcvBannerTextStyle') != ''):
+  $pcvBannerTextStyleSelected = $block->getData('pcvBannerTextStyle');
+endif;
 
 ?>
 
@@ -13,10 +36,23 @@
             <?php endif; ?>
         </div>
         <div class="productCalloutVideo-contentContainer span_6_of_12 <?php echo $block->getData('pcvTextContainerAlignment') ?>">
-            <h2 style="color:<?php echo $block->getData('pcvBannerHeadlineColor');?>;">
+            <h2 style="<?php
+            $pcvHeadlineStyleValues = explode(',', $pcvHeadlineCustomCssStyle);
+            foreach($pcvHeadlineStyleValues as $pcvHeadlinevalue) {
+              echo $pcvHeadlinevalue;
+            } ?>color:<?php echo $block->getData('pcvBannerHeadlineColor');?>;">
                 <?php echo $block->getData('pcvBannerHeadline'); ?>
             </h2>
-            <p><?php echo $block->getData('pcvBannerText'); ?></p>
+            <p style="<?php echo $pcvParagraphTextSize?>
+              <?php
+              $pcvBannerTextStyleValuesSelected = explode(',', $pcvBannerTextStyleSelected);
+                foreach($pcvBannerTextStyleValuesSelected as $valueOfTextStyle) {
+                  echo $valueOfTextStyle;
+                }
+              ?>
+              color:<?php echo $block->getData('pcvBannerTextColor'); ?>;">
+              <?php echo $block->getData('pcvBannerText');?>
+            </p>
         </div>
     </div>
 </section>
