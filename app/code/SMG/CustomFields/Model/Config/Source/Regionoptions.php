@@ -1,5 +1,5 @@
 <?php
-namespace SMG\Customfields\Model\Config\Source;
+namespace SMG\CustomFields\Model\Config\Source;
 use Magento\Eav\Model\ResourceModel\Entity\Attribute\OptionFactory;
 use Magento\Framework\DB\Ddl\Table;
 /**
@@ -22,7 +22,6 @@ class RegionOptions extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractS
         $this->optionFactory = $optionFactory;  
         //you can use this if you want to prepare options dynamically  
     }*/
- 
     /**
      * Get all options
      *

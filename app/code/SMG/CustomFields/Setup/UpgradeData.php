@@ -1,5 +1,5 @@
 <?php
-namespace SMG\Customfields\Setup;
+namespace SMG\CustomFields\Setup;
 
 use Magento\Eav\Setup\EavSetup;
 use Magento\Eav\Setup\EavSetupFactory;
