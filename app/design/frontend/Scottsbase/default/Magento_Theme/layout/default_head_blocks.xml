@@ -15,7 +15,7 @@
 	    <referenceContainer name="before.body.end">
 		    <block class="Magento\Framework\View\Element\Text" name="jsScript">
 		        <arguments>
-		           <argument name="text" xsi:type="string"><![CDATA[<script type="text/javascript">_satelite.pageBottom();</script>]]></argument>
+		           <argument name="text" xsi:type="string"><![CDATA[<script type="text/javascript">_satellite.pageBottom();</script>]]></argument>
 		        </arguments>
 		    </block>
 		</referenceContainer>
