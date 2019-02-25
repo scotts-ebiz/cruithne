@@ -27,6 +27,8 @@ RUN  \
     . $NVM_DIR/nvm.sh \
     && cd $MAGENTO_DIR/tools \
     && gulp clean && gulp styles
+    && cd $MAGENTO_DIR \
+    && php -f ./bin/magento setup:static-content:deploy
 
 RUN sed -i "s/save.*/save' => 'files',\n\t 'save_path' => '\/tmp',/" app/etc/env.php
 
