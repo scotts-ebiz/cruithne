@@ -26,7 +26,7 @@ RUN git pull
 RUN  \
     . $NVM_DIR/nvm.sh \
     && cd $MAGENTO_DIR/tools \
-    && gulp clean && gulp styles
+    && gulp clean && gulp styles \
     && cd $MAGENTO_DIR \
     && php -f ./bin/magento setup:static-content:deploy
 
