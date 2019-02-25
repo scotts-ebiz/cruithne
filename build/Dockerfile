@@ -26,9 +26,7 @@ RUN git pull
 RUN  \
     . $NVM_DIR/nvm.sh \
     && cd $MAGENTO_DIR/tools \
-    && gulp clean && gulp styles \
-    && cd $MAGENTO_DIR \
-    && php -f ./bin/magento setup:static-content:deploy
+    && gulp clean && gulp styles
 
 RUN sed -i "s/save.*/save' => 'files',\n\t 'save_path' => '\/tmp',/" app/etc/env.php
 
@@ -38,6 +36,9 @@ USER root
 
 RUN sed 's/newrelic\.license/;newrelic\.license/' /etc/php/7.2/apache2/conf.d/20-newrelic.ini
 RUN echo "newrelic.license = 'bc904518f55ecc33a8a79a28465a7fe36db5455e'" >> /etc/php/7.2/apache2/conf.d/20-newrelic.ini
+
+# Static Content Deploy should be in Entrypoint
+ENTRYPOINT ["su", "- magento", "-c", "/var/www/html/magento2/bin/magento -vvv setup:static-content:deploy"]
 
 # Expose Ports for Apache
 EXPOSE 80/tcp 443/tcp
