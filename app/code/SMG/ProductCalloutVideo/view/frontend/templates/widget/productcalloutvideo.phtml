@@ -8,6 +8,9 @@ $pcvBannerTextStyleValuesSelected = '';
 $valueOfTextStyle = '';
 $pcvIconColorSelected = '';
 $pcvIconBackgroundColorSelected = '';
+$pcvIframeWidthSelected = '';
+$pcvIframeHeightSelected = '';
+$pcvIframeVideoLinkSelected = '';
 
 
 //If pcvBannerHeadlineStyle exists then set to customCssStyles
@@ -38,6 +41,25 @@ endif;
 if($block->getData('pcvIconBackgroundColor') != ''):
   $pcvIconBackgroundColorSelected = $block->getData('pcvIconBackgroundColor');
 endif;
+
+
+// If pcvIframeWidth exists then set to $pcvIframeWidthSelected
+if($block->getData('pcvIframeWidth') != ''):
+  $pcvIframeWidthSelected = $block->getData('pcvIframeWidth');
+endif;
+
+
+// If pcvIframeHeight exists then set to $pcvIframeHeightSelected
+if($block->getData('pcvIframeHeight') != ''):
+  $pcvIframeHeightSelected = $block->getData('pcvIframeHeight');
+endif;
+
+
+// If pcvIframeVideoLink exists then set to $pcvIframeVideoLinkSelected
+if($block->getData('pcvIframeVideoLink') != ''):
+  $pcvIframeVideoLinkSelected = $block->getData('pcvIframeVideoLink');
+endif;
+
 ?>
 
 
@@ -51,7 +73,7 @@ endif;
                     <i class="icon-play fas fa-play" style="color:<?php echo $pcvIconColorSelected?>;
                       background-color:<?php echo $pcvIconBackgroundColorSelected?>;"></i>
                     <span class="embed-code">
-                        <iframe width="<?php echo $iframeCustomWidth?>" height="<?php echo $iframeCustomHeight?>" src="<?php echo $iframeVideoCustomLink?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="" data-dayt="true">
+                        <iframe width="<?php echo $pcvIframeWidthSelected?>" height="<?php echo $pcvIframeHeightSelected?>" src="<?php echo $pcvIframeVideoLinkSelected?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="" data-dayt="true">
                         </iframe>
                     </span>
                 </a>
