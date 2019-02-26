@@ -5,14 +5,6 @@ return [
         'Magento_Directory' => 1,
         'Magento_Theme' => 1,
         'Magento_Backend' => 1,
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-        'Creditvantiv_Payment' => 1,
-        'Custom_Gtm' => 1,
->>>>>>> c8eee74641b3dc254ee81a487042d67c5e135c48
-=======
->>>>>>> 195317d8beef9403894fe1b1bc10eb7bb85d452a
         'Magento_Variable' => 1,
         'Magento_Eav' => 1,
         'Freshrelevance_Digitaldatalayer' => 1,
@@ -148,6 +140,10 @@ return [
         'Magento_InventoryConfigurableProductIndexer' => 1,
         'Magento_InventoryConfiguration' => 1,
         'Magento_InventoryConfigurationApi' => 1,
+        'Magento_InventoryDistanceBasedSourceSelection' => 0,
+        'Magento_InventoryDistanceBasedSourceSelectionAdminUi' => 0,
+        'Magento_InventoryDistanceBasedSourceSelectionApi' => 0,
+        'Magento_InventoryElasticsearch' => 0,
         'Magento_InventoryGroupedProduct' => 1,
         'Magento_InventoryGroupedProductAdminUi' => 1,
         'Magento_InventoryGroupedProductIndexer' => 1,
@@ -164,6 +160,7 @@ return [
         'Magento_InventorySalesAdminUi' => 1,
         'Magento_InventorySalesApi' => 1,
         'Magento_InventorySalesFrontendUi' => 1,
+        'Magento_InventorySetupFixtureGenerator' => 0,
         'Magento_InventoryShipping' => 1,
         'Magento_Shipping' => 1,
         'Magento_InventorySourceDeductionApi' => 1,
@@ -294,6 +291,7 @@ return [
         'SMG_ProductGrid' => 1,
         'SMG_Sap' => 1,
         'SMG_ShipTracking' => 1,
+        'SMG_ShippingRestrict' => 1,
         'SMG_SpecsList' => 1,
         'Vantiv_Payment' => 1,
         'SMG_Zip' => 1,
@@ -304,4 +302,3 @@ return [
         'Vertex_Tax' => 1
     ]
 ];
-
