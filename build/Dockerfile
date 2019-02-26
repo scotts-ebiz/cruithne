@@ -44,11 +44,7 @@ RUN \
      -H 'X-Api-Key:033455e6b2ed8503dbfaf55460d5a2868c42d238db5455e' -i \
      -H 'Content-Type: application/json' \
      -d \
-	'{
-  		"deployment": {
-    	"revision": "$REV"
-  		}
-	}' 
+	'{ "deployment": { "revision": "$REV" } }'
 
 # Expose Ports for Apache
 EXPOSE 80/tcp 443/tcp
