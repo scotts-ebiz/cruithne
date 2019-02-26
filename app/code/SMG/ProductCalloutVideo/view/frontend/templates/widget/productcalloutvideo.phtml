@@ -11,6 +11,8 @@ $pcvIconBackgroundColorSelected = '';
 $pcvIframeWidthSelected = '';
 $pcvIframeHeightSelected = '';
 $pcvIframeVideoLinkSelected = '';
+$pcvBgPaddingTopSelected = '';
+$pcvBgPaddingBottomSelected = '';
 
 
 //If pcvBannerHeadlineStyle exists then set to customCssStyles
@@ -60,10 +62,23 @@ if($block->getData('pcvIframeVideoLink') != ''):
   $pcvIframeVideoLinkSelected = $block->getData('pcvIframeVideoLink');
 endif;
 
+
+// If pcvBgPaddingTop exists then set to $pcvBgPaddingTopSelected
+if($block->getData('pcvBgPaddingTop') != ''):
+  $pcvBgPaddingTopSelected = $block->getData('pcvBgPaddingTop');
+endif;
+
+
+// If pcvBgPaddingBottom exists then set to $pcvBgPaddingBottomSelected
+if($block->getData('pcvBgPaddingBottom') != ''):
+  $pcvBgPaddingBottomSelected = $block->getData('pcvBgPaddingBottom');
+endif;
+
+
 ?>
 
 
-<section class="product-callout-video-widget product-info-container">
+<section class="product-callout-video-widget product-info-container" style="padding-top:<?php echo $pcvBgPaddingTopSelected?>%; padding-bottom: <?php echo $pcvBgPaddingBottomSelected?>%;">
     <div class="product-info grid col-2">
         <div class="productCalloutVideo-imageContainer span_6_of_12">
             <div class="productCalloutVideo-selectedImgContainer" style="background: url('<?php echo $block->getData
