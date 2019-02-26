@@ -345,6 +345,7 @@ function CleanTrackingTags() {
   }
 }
 
+
 function EndTracking() {
   if (ScottsLocaleAnalytics.isDebugging()) {
     ScottsLocaleAnalytics.summarize();
