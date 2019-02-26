@@ -1,13 +1,16 @@
 <?php
+ 
 namespace SMG\CustomFields\Model\Config\Source;
+ 
 use Magento\Eav\Model\ResourceModel\Entity\Attribute\OptionFactory;
 use Magento\Framework\DB\Ddl\Table;
+ 
 /**
  * Custom Attribute Renderer
  *
  * @author      Webkul Core Team <support@webkul.com>
  */
-class RegionOptions extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
+class Options extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractSource
 {
     /**
      * @var OptionFactory
@@ -22,6 +25,7 @@ class RegionOptions extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractS
         $this->optionFactory = $optionFactory;  
         //you can use this if you want to prepare options dynamically  
     }*/
+ 
     /**
      * Get all options
      *
@@ -29,14 +33,15 @@ class RegionOptions extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractS
      */
     public function getAllOptions()
     {
-		$objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-        $regionFactory = $objectManager->create('Magento\Directory\Model\ResourceModel\Region\CollectionFactory')->create();
-        $regionFactory->addFieldToFilter('country_id', array('eq' => 'US'));
         /* your Attribute options list*/
-         $optionsc=$regionFactory->toOptionArray();
-        $this->_options= $optionsc;
+        $this->_options=[ ['label'=>'Select Options', 'value'=>''],
+                          ['label'=>'S', 'value'=>'1'],
+                          ['label'=>'M', 'value'=>'2'],
+                          ['label'=>'L', 'value'=>'3'],
+                         ];
         return $this->_options;
     }
+ 
     /**
      * Get a text for option value
      *
@@ -52,6 +57,7 @@ class RegionOptions extends \Magento\Eav\Model\Entity\Attribute\Source\AbstractS
         }
         return false;
     }
+ 
     /**
      * Retrieve flat column definition
      *
