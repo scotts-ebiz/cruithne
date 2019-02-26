@@ -1,118 +1,121 @@
 <?php
+//Set Vars
+$pcvHeadlineCustomCssStyle = '';
+$pcvHeadlineStyleValues = '';
+$pcvParagraphTextSize = '';
+$pcvBannerTextStyleSelected = '';
+$pcvBannerTextStyleValuesSelected = '';
+$valueOfTextStyle = '';
+$pcvIconColorSelected = '';
+$pcvIconBackgroundColorSelected = '';
+$pcvIframeWidthSelected = '';
+$pcvIframeHeightSelected = '';
+$pcvIframeVideoLinkSelected = '';
+$pcvBgPaddingTopSelected = '';
+$pcvBgPaddingBottomSelected = '';
 
-$paragraphTextSize ='';
-$headlineCustomCssStyle = '';
-$selectedvideotextsize ='';
-$textCustomCssStyles = '';
-$videoEmbedCustomcode = '';
-$iframeCustomWidth = '';
-$iframeCustomHeight = '';
-$iframeCustomId = '';
 
-
-
-// If bannertextsize exists then set to variable
-if($block->getData('bannertextsize') != ''):
-  $paragraphTextSize = $block->getData('bannertextsize');
+//If pcvBannerHeadlineStyle exists then set to customCssStyles
+if($block->getData('pcvBannerHeadlineStyle') != ''):
+    $pcvHeadlineCustomCssStyle = $block->getData('pcvBannerHeadlineStyle');
 endif;
 
 
-// If textstyle exists then set to variable
-if($block->getData('textstyle') != ''):
-  $textCustomCssStyles = $block->getData('textstyle');
+//If pcvBannerTextSize exists then set to $pcvParagraphTextSize
+if($block->getData('pcvBannerTextSize') != ''):
+    $pcvParagraphTextSize = $block->getData('pcvBannerTextSize');
 endif;
 
 
-//If headlinetextstyle exists then set to variable
-if($block->getData('headlinetextstyle') != ''):
-  $headlineCustomCssStyle = $block->getData('headlinetextstyle');
+// If pcvBannerTextStyle exists then set to $pcvBannerTextStyleSelected
+if($block->getData('pcvBannerTextStyle') != ''):
+  $pcvBannerTextStyleSelected = $block->getData('pcvBannerTextStyle');
 endif;
 
 
-//If videotextsize exists then set to variable
-if($block->getData('videotextsize') != ''):
-  $selectedvideotextsize = $block->getData('videotextsize');
+// If pcvIconColor exists then set to $pcvIconColorSelected
+if($block->getData('pcvIconColor') != ''):
+  $pcvIconColorSelected = $block->getData('pcvIconColor');
 endif;
 
 
-// If iframeWidth exists then set to variable
-if($block->getData('iframeWidth') != ''):
-  $iframeCustomWidth = $block->getData('iframeWidth');
+// If pcvIconBackgroundColor exists then set to $pcvIconBackgroundColorSelected
+if($block->getData('pcvIconBackgroundColor') != ''):
+  $pcvIconBackgroundColorSelected = $block->getData('pcvIconBackgroundColor');
 endif;
 
 
-// If iframeHeight exists then set to variable
-if($block->getData('iframeHeight') != ''):
-  $iframeCustomHeight = $block->getData('iframeHeight');
+// If pcvIframeWidth exists then set to $pcvIframeWidthSelected
+if($block->getData('pcvIframeWidth') != ''):
+  $pcvIframeWidthSelected = $block->getData('pcvIframeWidth');
 endif;
 
 
-// If iframeId exists then set to variable
-if($block->getData('iframeId') != ''):
-  $iframeCustomId = $block->getData('iframeId');
+// If pcvIframeHeight exists then set to $pcvIframeHeightSelected
+if($block->getData('pcvIframeHeight') != ''):
+  $pcvIframeHeightSelected = $block->getData('pcvIframeHeight');
 endif;
 
 
-// If iframeVideoLink exists then set to variable
-if($block->getData('iframeVideoLink') != ''):
-  $iframeVideoCustomLink = $block->getData('iframeVideoLink');
+// If pcvIframeVideoLink exists then set to $pcvIframeVideoLinkSelected
+if($block->getData('pcvIframeVideoLink') != ''):
+  $pcvIframeVideoLinkSelected = $block->getData('pcvIframeVideoLink');
 endif;
+
+
+// If pcvBgPaddingTop exists then set to $pcvBgPaddingTopSelected
+if($block->getData('pcvBgPaddingTop') != ''):
+  $pcvBgPaddingTopSelected = $block->getData('pcvBgPaddingTop');
+endif;
+
+
+// If pcvBgPaddingBottom exists then set to $pcvBgPaddingBottomSelected
+if($block->getData('pcvBgPaddingBottom') != ''):
+  $pcvBgPaddingBottomSelected = $block->getData('pcvBgPaddingBottom');
+endif;
+
 
 ?>
 
 
-<section class="product-callout-video-widget product-info-container align-top" style="background: url('<?php echo
-  $block->getData('videobackgroundimage')
-  ; ?>') no-repeat; background-position: center; background-size: cover; padding-top: <?php echo $block->getData('videopaddingtop')
-  ; ?>%; padding-bottom: <?php echo $block->getData('videopaddingbottom')?>%;">
-    <div class="product-info grid col-2 <?php echo $block->getData('textalignclass') ?> " style="padding-right:<?php
-    echo $block->getData('textpaddingright'); ?>%; padding-left:<?php echo $block->getData('textpaddingleft'); ?>%;">
-        <h2 class="video-headline"
-            style="
-              color:<?php echo $block->getData('bannerheadlinecolor'); ?>;
-              <?php
-                  $headlinestylevalues = explode(',', $headlineCustomCssStyle);
-                  foreach($headlinestylevalues as $headlinevalue) {
-                    echo $headlinevalue;
-                  }
-              ?>"
-        >
-            <?php echo $block->getData('bannerheadline'); ?>
-        </h2>
-        <p style="
-          color:<?php echo $block->getData('bannertextlinecolor'); ?>;
-          <?php echo $paragraphTextSize;?>
-          <?php
-            $selectedTextCustomCssStyles = explode(',', $textCustomCssStyles);
-            foreach($selectedTextCustomCssStyles as $textStyleValue) {
-              echo $textStyleValue;
-            }
-          ?>"
-        >
-            <?php echo $block->getData('bannertext'); ?>
-        </p>
-        <div class="video">
-            <?php if($this->getData('iframeVideoLink') != ''): ?>
-            <a class="watch-video play video-link" href="#">
-                <i class="icon-play" style="color: <?php echo $block->getData('iconcolor'); ?>; background-color: <?php echo $block->getData('iconbackgroundcolor'); ?> ;"></i>
-                <span
-                    class="productvideotxt"
-                    style="
-                        color:<?php echo $block->getData('videotextcolor'); ?>;
-                        <?php echo $selectedvideotextsize;?>"
-                >
-                    <?php echo $block->getData('videotext'); ?>
-                </span>
-                <span class="embed-code">
-                  <iframe width="<?php echo $iframeCustomWidth?>" height="<?php echo $iframeCustomHeight?>"
-                          src="<?php echo $iframeVideoCustomLink?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="" data-dayt="true">
-                  </iframe></span>
-            </a>
-            <?php endif; ?>
+<section class="product-callout-video-widget product-info-container" style="padding-top:<?php echo $pcvBgPaddingTopSelected?>%; padding-bottom: <?php echo $pcvBgPaddingBottomSelected?>%;">
+    <div class="product-info grid col-2">
+        <div class="productCalloutVideo-imageContainer span_6_of_12">
+            <div class="productCalloutVideo-selectedImgContainer" style="background: url('<?php echo $block->getData
+            ('pcvCalloutImage'); ?>') no-repeat;
+              background-size:cover; background-position:center;">
+                <a class="productCalloutVideo-watchVideo play video-link" href="#">
+                    <i class="icon-play fas fa-play" style="color:<?php echo $pcvIconColorSelected?>;
+                      background-color:<?php echo $pcvIconBackgroundColorSelected?>;"></i>
+                    <span class="embed-code">
+                        <iframe width="<?php echo $pcvIframeWidthSelected?>" height="<?php echo $pcvIframeHeightSelected?>" src="<?php echo $pcvIframeVideoLinkSelected?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="" data-dayt="true">
+                        </iframe>
+                    </span>
+                </a>
+            </div>
         </div>
-    </div>
-    <div id="video-overlay" class="video-overlay"></div>
-    <div id="video-container" class="video-container">
-        <div class="video-frame"></div>
+        <div class="productCalloutVideo-contentContainer span_6_of_12 <?php echo $block->getData('pcvTextContainerAlignment') ?>">
+            <h2 style="<?php
+            $pcvHeadlineStyleValues = explode(',', $pcvHeadlineCustomCssStyle);
+            foreach($pcvHeadlineStyleValues as $pcvHeadlinevalue) {
+              echo $pcvHeadlinevalue;
+            } ?>color:<?php echo $block->getData('pcvBannerHeadlineColor');?>;">
+                <?php echo $block->getData('pcvBannerHeadline'); ?>
+            </h2>
+            <p style="<?php echo $pcvParagraphTextSize?>
+              <?php
+              $pcvBannerTextStyleValuesSelected = explode(',', $pcvBannerTextStyleSelected);
+                foreach($pcvBannerTextStyleValuesSelected as $valueOfTextStyle) {
+                  echo $valueOfTextStyle;
+                }
+              ?>
+              color:<?php echo $block->getData('pcvBannerTextColor'); ?>;">
+              <?php echo $block->getData('pcvBannerText');?>
+            </p>
+        </div>
+        <div id="video-overlay" class="video-overlay"></div>
+        <div id="video-container" class="video-container">
+            <div class="video-frame"></div>
+        </div>
     </div>
 </section>
