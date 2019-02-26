@@ -50,6 +50,10 @@ endif;
                 <a class="productCalloutVideo-watchVideo play video-link" href="#">
                     <i class="icon-play fas fa-play" style="color:<?php echo $pcvIconColorSelected?>;
                       background-color:<?php echo $pcvIconBackgroundColorSelected?>;"></i>
+                    <span class="embed-code">
+                        <iframe width="<?php echo $iframeCustomWidth?>" height="<?php echo $iframeCustomHeight?>" src="<?php echo $iframeVideoCustomLink?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="" data-dayt="true">
+                        </iframe>
+                    </span>
                 </a>
             </div>
         </div>
@@ -71,6 +75,10 @@ endif;
               color:<?php echo $block->getData('pcvBannerTextColor'); ?>;">
               <?php echo $block->getData('pcvBannerText');?>
             </p>
+        </div>
+        <div id="video-overlay" class="video-overlay"></div>
+        <div id="video-container" class="video-container">
+            <div class="video-frame"></div>
         </div>
     </div>
 </section>
