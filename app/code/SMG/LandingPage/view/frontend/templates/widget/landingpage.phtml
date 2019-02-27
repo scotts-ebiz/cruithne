@@ -15,7 +15,7 @@
 ?>
 
 <style>
-  @media only screen and (max-width: 1200px) {
+  @media only screen and (max-width: 1130px) {
     .background-test {
         background-image: url('<?php echo $block->getData('heroMobileImage'); ?>') !important;
     }
@@ -109,7 +109,6 @@
                                     {
                                         $option_id = $option->getOptionId();
                                         $_selections = $option->getSelections();
-                                        /*THIS WASNT WORKING SO I COMMENTED IT OUT
                                         foreach ($_selections as $selection)
                                         {
                                             $selection_price = $selection->getSelectionPriceValue();
@@ -118,7 +117,6 @@
                                             $selection_ids[] = $selection->getSelectionId();
                                             $options_html .= '<input type="hidden" name="bundle_option_qty[' . $option_id . ']" value="1" />';
                                         }
-                                        */
                                     }
                             ?>
 
@@ -148,7 +146,7 @@
                         ?>
                             <h4><?php echo $zip_instructions; ?></h4>
                             <form action="<?php echo $zip_code_action; ?>" method="get" class="<?php echo $show_error_class; ?>">
-                                <input type="<?php echo $zip_input_type; ?>" name="zip" pattern="[0-9]{5}" value="<?php echo $zip_value; ?>" required title="Enter first five digits of your zip code" />;
+                                <input type="<?php echo $zip_input_type; ?>" name="zip" pattern="[0-9]{5}" value="<?php echo $zip_value; ?>" required title="Enter first five digits of your zip code" />
                                 <?php
                                     if ($zip_value)
                                     {
