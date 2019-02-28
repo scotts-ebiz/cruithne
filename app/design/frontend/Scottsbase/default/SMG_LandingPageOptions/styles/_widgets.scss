@@ -117,5 +117,86 @@
             }
         }
     }
+    .tabSection__wrapper {
+        section.section__tabs {
+            .section__tabs--wrapper {
+                .section__tabs--tabnav {
+                    text-align: center;
+                    margin-top:100px;
+                    label.tabnav-label {
+                        background-color: #fafafa;
+                        border: 1px solid #ededee;
+                        border-radius: 0.25rem;
+                        font-family: "Raleway", "Helvetica Neue", Verdana, Arial, sans-serif;
+                        color: #515356;
+                        font-size: 0.65rem;
+                        font-weight: 700;
+                        text-transform: uppercase;
+                        padding: 10px 35px;
+                        cursor: pointer;
+                    }
+                    label.tabnav-label.active {
+                        background-color: #075534;
+                        box-shadow: 0 0 5px 0 rgba(182, 92, 0, 0.18);
+                        color: #fff;
+                        font-weight: 400;
+                    }
+                    label.tabnav-label.hover {
+                        background-color: #075534;
+                        box-shadow: 0 0 5px 0 rgba(182, 92, 0, 0.18);
+                        color: #fff;
+                        font-weight: 400;
+                    }
+                }
+                .section__tabs--tabcontainer {
+                    margin-top: 100px;
+                    .section__tabs--tabtrack {
+                        input.tabs__radio {
+                            display: none;
+                            opacity: 0;
+                            visibility: hidden;
+                        }
+                        .tabpanel {
+                            .tabpanel__wrapper {
+                                display: inline-block;
+                                position: relative;
+                                .tabpanel__image {
+                                    display: inline-block;
+                                    position: relative;
+                                    float: left;
+                                    span {
+                                        img {
+                                            margin-left: 2%;
+                                        }
+                                    }
+                                }
+                                .tabpanel__text {
+                                    display: inline-block;
+                                    position: relative;
+                                    float: right;
+                                    .turfbuilder--headline {
+                                        margin: 0;
+                                    }
+                                    p {
+                                        font-weight: 100;
+                                        font-size: 0.85rem;
+                                    }
+                                    ul {
+                                        font-weight: 100;
+                                        font-size: 0.85rem;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                p {
+                    display: inline-block;
+                    position: relative;
+                    width: 100%;
+                    margin: 0;
+                }
+            }
+        }
+    }
 }
-

@@ -343,7 +343,7 @@
             if(($small_bundle_id || $large_bundle_id) && !$this->getData('requireszipcodelookup'))
             {
         ?>
-        <div class="widget widget-static-block">
+        <div class="widget widget-static-block tabSection__wrapper">
             <section class="section__tabs">
                 <div class="section__tabs--wrapper">
                     <div class="section__tabs--tabnav">
@@ -380,11 +380,11 @@
                             <input <?php echo $checked; ?> class="tabs__radio" id="toggle__tab<?php echo $i ?>" name="tabs__tabnav" type="radio" />
                             <div class="tabpanel" data-panel="toggle__tab<?php echo $i ?>" id="tabcontent__<?php echo $i ?>">
                                 <div class="tabpanel__wrapper">
-                                    <div class="tabpanel__image">
+                                    <div class="tabpanel__image span_6_of_12">
                                         <span><img alt="Scotts&reg; Turf Builder&reg; SummerGuard&reg; Lawn Food with Insect Control" src="<?php echo $tab_image[$key]; ?>"></span>
                                     </div>
 
-                                    <div class="tabpanel__text">
+                                    <div class="tabpanel__text span_6_of_12">
                                         <h2 class="turfbuilder--headline"><?php echo $headline; ?></h2>
                                         <p class="text-desc"><?php echo $tab_description[$key]; ?></p>
                                         <?php echo $tab_content[$key]; ?>
@@ -398,7 +398,7 @@
                         </div>
                     </div>
 
-                    <p style="margin: 0 100px; font-size: 0.875rem;">Safety Data Sheets can be found at <a href="https://www.scottsmsds.com" target="_blank">scottsmsds.com</a></p>
+                    <p>Safety Data Sheets can be found at <a href="https://www.scottsmsds.com" target="_blank">scottsmsds.com</a></p>
                 </div><!-- .section__tabs==wrapper -->
             </section>
         </div>
