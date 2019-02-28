@@ -285,7 +285,6 @@ return [
         'SMG_ProductGrid' => 1,
         'SMG_Sap' => 1,
         'SMG_ShipTracking' => 1,
-        'SMG_ShippingRestrict' => 1,
         'SMG_SpecsList' => 1,
         'Vantiv_Payment' => 1,
         'SMG_Zip' => 1,

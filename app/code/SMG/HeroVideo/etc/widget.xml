@@ -50,23 +50,8 @@
                        source_model="SMG\HeroVideo\Model\Source\TextStyles">
                 <label>Banner Text Style</label>
             </parameter>
-
-
-            <!-- Text Container Customization -->
-            <parameter name="textContainerCustomLabel" visible="true" xsi:type="block">
-                <label>CUSTOMIZE TEXT CONTAINER</label>
-                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
-            </parameter>
             <parameter name="textalignclass" visible="true" xsi:type="select" source_model="SMG\HeroVideo\Model\Source\TextAlignSelect">
                 <label>Text Container Alignment</label>
-            </parameter>
-            <parameter name="textpaddingleft" visible="true" xsi:type="text">
-                <label>Text Container Left Padding (in %)</label>
-                <value>0</value>
-            </parameter>
-            <parameter name="textpaddingright" visible="true" xsi:type="text">
-                <label>Text Container Right Padding (in %)</label>
-                <value>0</value>
             </parameter>
 
 
@@ -76,7 +61,7 @@
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="videotext" visible="true" xsi:type="block">
-                <label>Video Text</label>
+                <label>Video Text Callout</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
             </parameter>
             <parameter name="videotextcolor" visible="true" xsi:type="text">
@@ -134,7 +119,6 @@
             </parameter>
 
         </parameters>
-
 
     </widget>
 </widgets>
