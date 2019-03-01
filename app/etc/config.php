@@ -278,7 +278,6 @@ return [
         'SMG_IconList' => 1,
         'SMG_LandingPage' => 1,
         'SMG_OfflineShipping' => 1,
-        'SMG_OrderDiscount' => 1,
         'SMG_ParameterTypes' => 1,
         'SMG_ProductCallout' => 1,
         'SMG_ProductCalloutText' => 1,
