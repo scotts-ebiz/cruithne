@@ -111,7 +111,7 @@ class OrdersHelper
      * @param SapOrderBatchItemCollectionFactory $sapOrderBatchItemCollectionFactory
      * @parma OrderFactory $orderFactory
      * @param OrderResource $orderResource
-     # @param ItemFactory $itemFactory
+     * @param ItemFactory $itemFactory
      * @param ItemResource $itemResource
      * @param SapOrderFactory $sapOrderFactory
      * @param SapOrderResource $sapOrderResource
