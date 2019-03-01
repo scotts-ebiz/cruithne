@@ -8,7 +8,5 @@
         <script type="text/javascript" src="js/jquery-3.3.1.js" />
         <script type="text/javascript" src="js/site.js" />
         <link rel="stylesheet" src_type="url" src="https://use.fontawesome.com/releases/v5.7.1/css/all.css" />
-        <script src="//assets.adobedtm.com/607edf92a426ed8b5a89acff073b761a7424d056/satelliteLib-8212b36a93ce380d12a7bceb9a890232f0324b71-staging.js" type="text/javascript" src_type="url"></script>
-        <script type="text/javascript" src="js/scotts-analytics.js"/>
     </head>
 </page>
