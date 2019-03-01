@@ -12,4 +12,19 @@ jQuery(document).ready(function($) {
 		$("#video-container .video-frame").html('');
 	});
     /* Product Callout Video Widget: End */
+
+    alert('New Test?');
+
+    $('#tablabel__1').click(function(){
+        if ($("#divOne").hasClass("MojoRisen")) {
+            alert('MojoRisen was already there!');
+        } else {
+            $('#divOne').addClass('MojoRisen');
+            alert('You just added MojoRisen!')
+        };
+
+        /*$('#divOne').addClass('asdf');*/
+    });
+
+
 });
