@@ -31,9 +31,54 @@ class InstallSchema implements InstallSchemaInterface
         );
  
         $table->addColumn(
+            'MagentoDescription',
+            Table::TYPE_TEXT,
+            255,
+            [
+                'nullable' => false
+            ]
+        );
+        
+        $table->addColumn(
+            'MagentoCouponCode',
+            Table::TYPE_TEXT,
+            255,
+            [
+                'nullable' => false
+            ]
+        );
+        
+        $table->addColumn(
+            'DiscCondCode',
+            Table::TYPE_TEXT,
+            255,
+            [
+                'nullable' => false
+            ]
+        );
+        
+        $table->addColumn(
+            'DiscFixedAmt',
+            Table::TYPE_TEXT,
+            255,
+            [
+                'nullable' => true
+            ]
+        );
+        
+        $table->addColumn(
+            'SAPDiscPercAmt',
+            Table::TYPE_TEXT,
+            255,
+            [
+                'nullable' => true
+            ]
+        );
+        
+        $table->addColumn(
             'discount_title',
             Table::TYPE_TEXT,
-            10,
+            255,
             [
                 'nullable' => false
             ]
@@ -42,7 +87,7 @@ class InstallSchema implements InstallSchemaInterface
         $table->addColumn(
             'discount_values',
             Table::TYPE_TEXT,
-            10,
+            255,
             [
                 'nullable' => false
             ]
@@ -60,7 +105,38 @@ class InstallSchema implements InstallSchemaInterface
         // create the table
         $setup->getConnection()->createTable($table);
 
+
+       
+       $eavTable = $setup->getTable('quote_item');
+
+        $custom_discount_label = [
+            'custom_discount_label' => [
+            'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+            'nullable' => true,
+            'comment' => 'custom_discount_label',
+            ],
+
+        ];
+        
+        $custom_discount_value = [
+            'custom_discount_value' => [
+            'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+            'nullable' => true,
+            'comment' => 'custom_discount_value',
+            ],
+
+        ];
+
+        $connection = $setup->getConnection();
+        foreach ($custom_discount_label as $name => $definition) {
+        $connection->addColumn($eavTable, $name, $definition);
+        }
+        foreach ($custom_discount_value as $name => $definition) {
+        $connection->addColumn($eavTable, $name, $definition);
+        }
+
         // end setup
         $setup->endSetup();
     }
 }
+
