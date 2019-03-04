@@ -23,7 +23,12 @@ jQuery(document).ready(function($) {
             alert('Tabcontent__1 already has Active class!');
         } else {
             $('#tabcontent__1').addClass('active');
-            alert('You just added the Active class for Tabcontent__1!')
+            $('#tabcontent__2').removeClass('active');
+            $('#tabcontent__3').removeClass('active');
+            $('#tabcontent__4').removeClass('active');
+            $('#tabcontent__5').removeClass('active');
+            $('#tabcontent__6').removeClass('active');
+            alert('You just added the Active class for Tabcontent__1 and removed for tabcontent__2!!!')
         };
     });
 
@@ -32,7 +37,12 @@ jQuery(document).ready(function($) {
             alert('Tabcontent__2 already has Active class!');
         } else {
             $('#tabcontent__2').addClass('active');
-            alert('You just added the Active class for Tabcontent__2!')
+            $('#tabcontent__1').removeClass('active');
+            $('#tabcontent__3').removeClass('active');
+            $('#tabcontent__4').removeClass('active');
+            $('#tabcontent__5').removeClass('active');
+            $('#tabcontent__6').removeClass('active');
+            alert('You just added the Active class for Tabcontent__2 and removed for tabcontent__1!!!')
         };
     });
 
@@ -41,6 +51,11 @@ jQuery(document).ready(function($) {
             alert('Tabcontent__3 already has Active class!');
         } else {
             $('#tabcontent__3').addClass('active');
+            $('#tabcontent__1').removeClass('active');
+            $('#tabcontent__2').removeClass('active');
+            $('#tabcontent__4').removeClass('active');
+            $('#tabcontent__5').removeClass('active');
+            $('#tabcontent__6').removeClass('active');
             alert('You just added the Active class for Tabcontent__3!')
         };
     });
@@ -50,6 +65,11 @@ jQuery(document).ready(function($) {
             alert('Tabcontent__4 already has Active class!');
         } else {
             $('#tabcontent__4').addClass('active');
+            $('#tabcontent__1').removeClass('active');
+            $('#tabcontent__2').removeClass('active');
+            $('#tabcontent__3').removeClass('active');
+            $('#tabcontent__5').removeClass('active');
+            $('#tabcontent__6').removeClass('active');
             alert('You just added the Active class for Tabcontent__4!')
         };
     });
@@ -59,6 +79,11 @@ jQuery(document).ready(function($) {
             alert('Tabcontent__5 already has Active class!');
         } else {
             $('#tabcontent__5').addClass('active');
+            $('#tabcontent__1').removeClass('active');
+            $('#tabcontent__2').removeClass('active');
+            $('#tabcontent__3').removeClass('active');
+            $('#tabcontent__4').removeClass('active');
+            $('#tabcontent__6').removeClass('active');
             alert('You just added the Active class for Tabcontent__5!')
         };
     });
@@ -68,6 +93,11 @@ jQuery(document).ready(function($) {
             alert('Tabcontent__6 already has Active class!');
         } else {
             $('#tabcontent__6').addClass('active');
+            $('#tabcontent__1').removeClass('active');
+            $('#tabcontent__2').removeClass('active');
+            $('#tabcontent__3').removeClass('active');
+            $('#tabcontent__4').removeClass('active');
+            $('#tabcontent__5').removeClass('active');
             alert('You just added the Active class for Tabcontent__6!')
         };
     });
