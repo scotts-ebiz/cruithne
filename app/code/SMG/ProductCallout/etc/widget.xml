@@ -4,6 +4,11 @@
         <label>Product Callout</label>
         <description>Display product banner and text.</description>
         <parameters>
+            <!-- Customize Banner Headline -->
+            <parameter name="bannerHeadlineCustomizeLabel" visible="true" xsi:type="block">
+                <label>CUSTOMIZE BANNER HEADLINE</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
             <parameter name="bannerheadline" visible="true" xsi:type="text" required="true">
                 <label>Banner Headline</label>
             </parameter>
@@ -13,6 +18,13 @@
             </parameter>
             <parameter name="headlinetextstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCallout\Model\Source\HeadlineTextStyles">
                 <label>Banner Headline Style</label>
+            </parameter>
+
+
+            <!-- Customize Banner Text -->
+            <parameter name="bannerTextCustomizeLabel" visible="true" xsi:type="block">
+                <label>CUSTOMIZE BANNER TEXT</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannertext" visible="true" xsi:type="block">
                 <label>Banner Text</label>
@@ -29,19 +41,39 @@
             <parameter name="textstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCallout\Model\Source\TextStyles">
                 <label>Banner Text Style</label>
             </parameter>
-            <parameter name="bannercontainerpaddingright" visible="true" xsi:type="text">
-                <label>Banner Container Padding Right (in %)</label>
-                <value>0</value>
-            </parameter>
-            <parameter name="bannercontainerpaddingleft" visible="true" xsi:type="text">
-                <label>Banner Container Padding Left (in %)</label>
-                <value>0</value>
-            </parameter>
             <parameter name="textalignclass" visible="true" xsi:type="select" source_model="SMG\ProductCallout\Model\Source\TextAlignSelect">
-                <label>Banner Container Alignment</label>
+                <label>Container Text Alignment</label>
+            </parameter>
+
+
+            <!-- Customize Banner Text Img-->
+            <parameter name="bannerTextImgCustomizeLabel" visible="true" xsi:type="block">
+                <label>CUSTOMIZE BANNER TEXT IMG</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="bannerTextImageOne" visible="true" xsi:type="block">
+                <label>Banner Text Image 1</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+            <parameter name="bannerTextImgOneLink" visible="true" xsi:type="text">
+                <label>Banner Text Image 1 Link</label>
+            </parameter>
+            <parameter name="bannerTextImageTwo" visible="true" xsi:type="block">
+                <label>Banner Text Image 2</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+            <parameter name="bannerTextImgTwoLink" visible="true" xsi:type="text">
+                <label>Banner Text Image 2 Link</label>
+            </parameter>
+
+
+            <!-- Customize Callout Img / Background -->
+            <parameter name="imgBgCustomizeLabel" visible="true" xsi:type="block">
+                <label>CUSTOMIZE IMAGE / BACKGROUND</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannerimage" visible="true" xsi:type="block">
-                <label>Banner Image</label>
+                <label>Callout Image (800x800)</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
             <parameter name="bgcolor" visible="true" xsi:type="text">

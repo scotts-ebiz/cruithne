@@ -7,7 +7,7 @@
 
             <!-- Banner Headline Customization -->
             <parameter name="bannerHeadlineCustomLabel" visible="true" xsi:type="block">
-                <label>BANNER HEADLINE CUSTOMIZATION</label>
+                <label>CUSTOMIZE BANNER HEADLINE</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannerheadline" visible="true" xsi:type="text" required="true">
@@ -28,7 +28,7 @@
 
             <!-- Banner Text Customization -->
             <parameter name="bannerTextCustomLabel" visible="true" xsi:type="block">
-                <label>BANNER TEXT CUSTOMIZATION</label>
+                <label>CUSTOMIZE BANNER TEXT</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannertext" visible="true" xsi:type="text">
@@ -50,33 +50,18 @@
                        source_model="SMG\HeroVideo\Model\Source\TextStyles">
                 <label>Banner Text Style</label>
             </parameter>
-
-
-            <!-- Text Container Customization -->
-            <parameter name="textContainerCustomLabel" visible="true" xsi:type="block">
-                <label>TEXT CONTAINER CUSTOMIZATION</label>
-                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
-            </parameter>
             <parameter name="textalignclass" visible="true" xsi:type="select" source_model="SMG\HeroVideo\Model\Source\TextAlignSelect">
                 <label>Text Container Alignment</label>
-            </parameter>
-            <parameter name="textpaddingleft" visible="true" xsi:type="text">
-                <label>Text Container Left Padding (in %)</label>
-                <value>0</value>
-            </parameter>
-            <parameter name="textpaddingright" visible="true" xsi:type="text">
-                <label>Text Container Right Padding (in %)</label>
-                <value>0</value>
             </parameter>
 
 
             <!-- Video Customization -->
             <parameter name="videoCustomLabel" visible="true" xsi:type="block">
-                <label>VIDEO CUSTOMIZATION</label>
+                <label>CUSTOMIZE VIDEO SECTION</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="videotext" visible="true" xsi:type="block">
-                <label>Video Text</label>
+                <label>Video Text Callout</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
             </parameter>
             <parameter name="videotextcolor" visible="true" xsi:type="text">
@@ -117,7 +102,7 @@
 
             <!-- Background Image Customization -->
             <parameter name="backgroundImageCustomLabel" visible="true" xsi:type="block">
-                <label>BACKGROUND IMAGE CUSTOMIZATION</label>
+                <label>CUSTOMIZE BACKGROUND IMAGE</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="videobackgroundimage" visible="true" xsi:type="block">
@@ -134,7 +119,6 @@
             </parameter>
 
         </parameters>
-
 
     </widget>
 </widgets>

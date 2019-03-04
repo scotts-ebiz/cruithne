@@ -5,7 +5,7 @@
  * will save time if names change later. */
 
 /* generic names */
-var TagID_article_id = "article_id";
+/* var TagID_article_id = "article_id";
 var TagID_base_material_codes = "base_material_codes";
 var TagID_cart = "cart";
 var TagID_channel = "channel";
@@ -42,11 +42,11 @@ var TagID_subsubcategory = "subsubcategory";
 var TagID_tax_dollar = "tax_dollar";
 var TagID_tool_name = "tool_name";
 var TagID_tool_end = "tool_end";
-var TagID_zip = "zip";
+var TagID_zip = "zip";*/
 
 /* DTM specific names */
 //initializes the DTM object
-if(typeof dtmData == 'undefined'){ dtmData = {}; }
+/*if(typeof dtmData == 'undefined'){ dtmData = {}; }
 var DTM_article_id = "article_id";
 var DTM_base_material_codes = "base_material_codes";
 var DTM_cart = "cart";
@@ -84,10 +84,10 @@ var DTM_subsubcategory = "subsubcategory";
 var DTM_tax_dollar = "tax_dollar";
 var DTM_tool_name = "tool_name";
 var DTM_tool_end = "tool_end";
-var DTM_zip = "zip";
+var DTM_zip = "zip"; */
 
 /* Revised by NC: possible values are */
-var DTM_TYPE_catalog = "catalog";
+/*var DTM_TYPE_catalog = "catalog";
 var DTM_TYPE_category = "category";
 var DTM_TYPE_content_faq = "content_faq";
 var DTM_TYPE_content_howto = "content_howto";
@@ -146,14 +146,14 @@ var AnalyticsValueFilter = (function() {
 
   return AnalyticsValueFilter;
 
-}());
+}()); */
 
 /* This code is intended to be used in September to track the following information:
     1. The browser's preferred locale
     2. The locale in which the page was rendered
     3. The subdomain in the address bar.
  */
-var ScottsLocaleAnalytics = {
+/*var ScottsLocaleAnalytics = {
   getBrowserLanguage: function getBrowserLanguage() {
     var language = window.navigator.userLanguage // IE
       || window.navigator.language; // Everybody else
@@ -254,9 +254,9 @@ var ScottsLocaleAnalytics = {
   }
 
 };
-
+*/
 /** Set up the clientside dtmdebug stuff. Like whether it's supported and turned on and so on. */
-(function() {
+/*(function() {
   if ('localStorage' in window && window['localStorage'] !== null) {
     var a = document.createElement("a");
     a.href = window.location.href;
@@ -345,8 +345,9 @@ function CleanTrackingTags() {
   }
 }
 
+
 function EndTracking() {
   if (ScottsLocaleAnalytics.isDebugging()) {
     ScottsLocaleAnalytics.summarize();
   }
-}
+} */
