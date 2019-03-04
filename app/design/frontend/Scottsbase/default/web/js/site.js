@@ -28,7 +28,7 @@ jQuery(document).ready(function($) {
             $('#tabcontent__4').removeClass('active');
             $('#tabcontent__5').removeClass('active');
             $('#tabcontent__6').removeClass('active');
-            alert('You just added the Active class for Tabcontent__1 and removed for tabcontent__2!!!')
+            alert('You just added the Active class for Tabcontent__1!')
         };
     });
 
@@ -42,7 +42,7 @@ jQuery(document).ready(function($) {
             $('#tabcontent__4').removeClass('active');
             $('#tabcontent__5').removeClass('active');
             $('#tabcontent__6').removeClass('active');
-            alert('You just added the Active class for Tabcontent__2 and removed for tabcontent__1!!!')
+            alert('You just added the Active class for Tabcontent__2!')
         };
     });
 
