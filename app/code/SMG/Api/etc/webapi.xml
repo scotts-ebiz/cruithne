@@ -19,6 +19,12 @@
             <resource ref="self" />
         </resources>
     </route>
+    <route url="/V1/smg/ordersSent" method="POST">
+        <service class="SMG\Api\Model\OrdersSentManagementInterface" method="updateOrders" />
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
     <route url="/V1/smg/orderStatus" method="POST">
         <service class="SMG\Api\Model\OrderStatusManagementInterface" method="setOrderStatus" />
         <resources>
