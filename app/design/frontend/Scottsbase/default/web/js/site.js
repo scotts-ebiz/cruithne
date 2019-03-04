@@ -13,18 +13,65 @@ jQuery(document).ready(function($) {
 	});
     /* Product Callout Video Widget: End */
 
+
+    /* Scottsprogram Landing Page Code: Start */
+
     alert('New Test?');
 
     $('#tablabel__1').click(function(){
-        if ($("#divOne").hasClass("MojoRisen")) {
-            alert('MojoRisen was already there!');
+        if ($("#tabcontent__1").hasClass("active")) {
+            alert('Tabcontent__1 already has Active class!');
         } else {
-            $('#divOne').addClass('MojoRisen');
-            alert('You just added MojoRisen!')
+            $('#tabcontent__1').addClass('active');
+            alert('You just added the Active class for Tabcontent__1!')
         };
-
-        /*$('#divOne').addClass('asdf');*/
     });
 
+    $('#tablabel__2').click(function(){
+        if ($("#tabcontent__2").hasClass("active")) {
+            alert('Tabcontent__2 already has Active class!');
+        } else {
+            $('#tabcontent__2').addClass('active');
+            alert('You just added the Active class for Tabcontent__2!')
+        };
+    });
+
+    $('#tablabel__3').click(function(){
+        if ($("#tabcontent__3").hasClass("active")) {
+            alert('Tabcontent__3 already has Active class!');
+        } else {
+            $('#tabcontent__3').addClass('active');
+            alert('You just added the Active class for Tabcontent__3!')
+        };
+    });
+
+    $('#tablabel__4').click(function(){
+        if ($("#tabcontent__4").hasClass("active")) {
+            alert('Tabcontent__4 already has Active class!');
+        } else {
+            $('#tabcontent__4').addClass('active');
+            alert('You just added the Active class for Tabcontent__4!')
+        };
+    });
+
+    $('#tablabel__5').click(function(){
+        if ($("#tabcontent__5").hasClass("active")) {
+            alert('Tabcontent__5 already has Active class!');
+        } else {
+            $('#tabcontent__5').addClass('active');
+            alert('You just added the Active class for Tabcontent__5!')
+        };
+    });
+
+    $('#tablabel__6').click(function(){
+        if ($("#tabcontent__6").hasClass("active")) {
+            alert('Tabcontent__6 already has Active class!');
+        } else {
+            $('#tabcontent__6').addClass('active');
+            alert('You just added the Active class for Tabcontent__6!')
+        };
+    });
+
+    /* Scottsprogram Landing Page Code: End */
 
 });
