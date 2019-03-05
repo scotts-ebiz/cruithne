@@ -49,5 +49,8 @@ RUN \
 # Expose Ports for Apache
 EXPOSE 80/tcp 443/tcp
 
-# CMD "exec /usr/sbin/apachectl -DFOREGROUND -k start"
-CMD /usr/sbin/apachectl -DFOREGROUND 
+# Run entrypoint file
+COPY ondemand-entrypoint.sh /usr/local/bin/entrypoint.sh
+
+# The apachectl command is in entrypoint :-)
+ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
