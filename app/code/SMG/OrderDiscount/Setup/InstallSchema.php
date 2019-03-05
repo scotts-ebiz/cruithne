@@ -103,11 +103,11 @@ class InstallSchema implements InstallSchemaInterface
         );
 
         // create the table
-        /*$setup->getConnection()->createTable($table);
+        $setup->getConnection()->createTable($table);
 
 
        
-       $eavTable = $setup->getTable('quote_item');
+       /*$eavTable = $setup->getTable('quote_item');
 
         $disc_cond_code = [
             'disc_cond_code' => [
@@ -145,10 +145,10 @@ class InstallSchema implements InstallSchemaInterface
         }
         foreach ($disc_perc_amt as $name => $definition) {
         $connection->addColumn($eavTable, $name, $definition);
-        }
+        } */
 
         // end setup
-        $setup->endSetup(); */
+        $setup->endSetup(); 
     }
 }
 
