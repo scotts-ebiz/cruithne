@@ -103,7 +103,7 @@ class InstallSchema implements InstallSchemaInterface
         );
 
         // create the table
-        $setup->getConnection()->createTable($table);
+        /*$setup->getConnection()->createTable($table);
 
 
        
@@ -148,7 +148,7 @@ class InstallSchema implements InstallSchemaInterface
         }
 
         // end setup
-        $setup->endSetup();
+        $setup->endSetup(); */
     }
 }
 
