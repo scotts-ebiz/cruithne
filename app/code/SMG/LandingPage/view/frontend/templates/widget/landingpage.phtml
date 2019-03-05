@@ -376,9 +376,12 @@
                                 foreach ($tab_headline as $key => $headline)
                                 {
                                     $checked = ($i == 1) ? 'checked="checked"' : '';
+                                    $activeTab = ($i == 1) ? ' active' : '';
                             ?>
                             <input <?php echo $checked; ?> class="tabs__radio" id="toggle__tab<?php echo $i ?>" name="tabs__tabnav" type="radio" />
-                            <div class="tabpanel" data-panel="toggle__tab<?php echo $i ?>" id="tabcontent__<?php echo $i ?>">
+                            <div class="tabpanel <?php echo $activeTab; ?>" data-panel="toggle__tab<?php echo $i ?>"
+                                 id="tabcontent__<?php
+                            echo $i ?>">
                                 <div class="tabpanel__wrapper">
                                     <div class="tabpanel__image span_6_of_12">
                                         <span><img alt="Scotts&reg; Turf Builder&reg; SummerGuard&reg; Lawn Food with Insect Control" src="<?php echo $tab_image[$key]; ?>"></span>
@@ -392,7 +395,7 @@
                                 </div>
                             </div>
                             <?php
-                                    $i++;
+                                  $i++;
                                 }
                             ?>
                         </div>

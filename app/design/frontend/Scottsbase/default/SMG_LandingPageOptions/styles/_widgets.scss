@@ -165,12 +165,22 @@
                                 position: relative;
                                 .tabpanel__image {
                                     display: inline-block;
-                                    position: relative;
+                                    position: absolute;
+                                    bottom: 0;
                                     float: left;
+                                    @media only screen and (max-width: 1130px) {
+                                        position: relative;
+                                    }
                                     span {
-                                        img {
-                                            margin-left: 2%;
-                                        }
+                                      display: inherit;
+                                      position: relative;
+                                      text-align: center;
+                                          img {
+                                              display: inline-block;
+                                              position: relative;
+                                              max-width: 250px;
+                                              vertical-align: bottom;
+                                          }
                                     }
                                 }
                                 .tabpanel__text {

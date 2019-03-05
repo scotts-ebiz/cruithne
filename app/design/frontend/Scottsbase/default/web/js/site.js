@@ -18,8 +18,17 @@ jQuery(document).ready(function($) {
 
     $('#tablabel__1').click(function(){
         if ($("#tabcontent__1").hasClass("active")) {
-            alert('Tabcontent__1 already has Active class!');
+            //Do nothing
         } else {
+            //Add or Remove Class for tablabel
+            $('#tablabel__1').addClass('active');
+            $('#tablabel__2').removeClass('active');
+            $('#tablabel__3').removeClass('active');
+            $('#tablabel__4').removeClass('active');
+            $('#tablabel__5').removeClass('active');
+            $('#tablabel__6').removeClass('active');
+
+            //Add or remove Class for tabcontent
             $('#tabcontent__1').addClass('active');
             $('#tabcontent__2').removeClass('active');
             $('#tabcontent__3').removeClass('active');
@@ -31,8 +40,17 @@ jQuery(document).ready(function($) {
 
     $('#tablabel__2').click(function(){
         if ($("#tabcontent__2").hasClass("active")) {
-            alert('Tabcontent__2 already has Active class!');
+            //Do nothing
         } else {
+            //Add or Remove Class for tablabel
+            $('#tablabel__2').addClass('active');
+            $('#tablabel__1').removeClass('active');
+            $('#tablabel__3').removeClass('active');
+            $('#tablabel__4').removeClass('active');
+            $('#tablabel__5').removeClass('active');
+            $('#tablabel__6').removeClass('active');
+
+            //Add or remove Class for tabcontent
             $('#tabcontent__2').addClass('active');
             $('#tabcontent__1').removeClass('active');
             $('#tabcontent__3').removeClass('active');
@@ -44,8 +62,17 @@ jQuery(document).ready(function($) {
 
     $('#tablabel__3').click(function(){
         if ($("#tabcontent__3").hasClass("active")) {
-            alert('Tabcontent__3 already has Active class!');
+            //Do nothing
         } else {
+            //Add or Remove Class for tablabel
+            $('#tablabel__3').addClass('active');
+            $('#tablabel__1').removeClass('active');
+            $('#tablabel__2').removeClass('active');
+            $('#tablabel__4').removeClass('active');
+            $('#tablabel__5').removeClass('active');
+            $('#tablabel__6').removeClass('active');
+
+            //Add or remove Class for tabcontent
             $('#tabcontent__3').addClass('active');
             $('#tabcontent__1').removeClass('active');
             $('#tabcontent__2').removeClass('active');
@@ -57,8 +84,17 @@ jQuery(document).ready(function($) {
 
     $('#tablabel__4').click(function(){
         if ($("#tabcontent__4").hasClass("active")) {
-            alert('Tabcontent__4 already has Active class!');
+            //Do nothing
         } else {
+            //Add or Remove Class for tablabel
+            $('#tablabel__4').addClass('active');
+            $('#tablabel__1').removeClass('active');
+            $('#tablabel__2').removeClass('active');
+            $('#tablabel__3').removeClass('active');
+            $('#tablabel__5').removeClass('active');
+            $('#tablabel__6').removeClass('active');
+
+            //Add or remove Class for tabcontent
             $('#tabcontent__4').addClass('active');
             $('#tabcontent__1').removeClass('active');
             $('#tabcontent__2').removeClass('active');
@@ -70,8 +106,17 @@ jQuery(document).ready(function($) {
 
     $('#tablabel__5').click(function(){
         if ($("#tabcontent__5").hasClass("active")) {
-            alert('Tabcontent__5 already has Active class!');
+            //Do nothing
         } else {
+            //Add or Remove Class for tablabel
+            $('#tablabel__5').addClass('active');
+            $('#tablabel__1').removeClass('active');
+            $('#tablabel__2').removeClass('active');
+            $('#tablabel__3').removeClass('active');
+            $('#tablabel__4').removeClass('active');
+            $('#tablabel__6').removeClass('active');
+
+            //Add or remove Class for tabcontent
             $('#tabcontent__5').addClass('active');
             $('#tabcontent__1').removeClass('active');
             $('#tabcontent__2').removeClass('active');
@@ -83,8 +128,16 @@ jQuery(document).ready(function($) {
 
     $('#tablabel__6').click(function(){
         if ($("#tabcontent__6").hasClass("active")) {
-            alert('Tabcontent__6 already has Active class!');
-        } else {
+            //Do nothing
+        } else {//Add or Remove Class for tablabel
+            $('#tablabel__6').addClass('active');
+            $('#tablabel__1').removeClass('active');
+            $('#tablabel__2').removeClass('active');
+            $('#tablabel__3').removeClass('active');
+            $('#tablabel__4').removeClass('active');
+            $('#tablabel__5').removeClass('active');
+
+            //Add or remove Class for tabcontent
             $('#tabcontent__6').addClass('active');
             $('#tabcontent__1').removeClass('active');
             $('#tabcontent__2').removeClass('active');
