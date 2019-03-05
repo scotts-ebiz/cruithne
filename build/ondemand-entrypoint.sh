@@ -32,4 +32,4 @@ su - magento -c '/var/www/html/magento2/bin/magento -vvv setup:static-content:de
 # chown -R magento:www-data /var/www/html/
 
 # CMD "exec /usr/sbin/apachectl -DFOREGROUND -k start"
-/usr/sbin/apachectl -DFOREGROUND 
+# su - root -c /usr/sbin/apachectl -DFOREGROUND 
