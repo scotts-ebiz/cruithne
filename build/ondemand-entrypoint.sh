@@ -33,3 +33,4 @@ su - magento -c '/var/www/html/magento2/bin/magento -vvv setup:static-content:de
 
 # CMD "exec /usr/sbin/apachectl -DFOREGROUND -k start"
 /usr/sbin/apachectl -DFOREGROUND 
+
