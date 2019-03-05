@@ -54,5 +54,8 @@ USER root
 # Run entrypoint file
 COPY ondemand-entrypoint.sh /usr/local/bin/entrypoint.sh
 
+# Make executable
+RUN ["chmod", "+x", "/usr/local/bin/entrypoint.sh"]
+
 # The apachectl command is in entrypoint :-)
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
