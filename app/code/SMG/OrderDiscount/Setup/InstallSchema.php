@@ -49,7 +49,7 @@ class InstallSchema implements InstallSchemaInterface
         );
         
         $table->addColumn(
-            'DiscCondCode',
+            'disc_cond_code',
             Table::TYPE_TEXT,
             255,
             [
@@ -58,7 +58,7 @@ class InstallSchema implements InstallSchemaInterface
         );
         
         $table->addColumn(
-            'DiscFixedAmt',
+            'disc_fixed_amt',
             Table::TYPE_TEXT,
             255,
             [
@@ -67,7 +67,7 @@ class InstallSchema implements InstallSchemaInterface
         );
         
         $table->addColumn(
-            'DiscPercAmt',
+            'disc_perc_amt',
             Table::TYPE_TEXT,
             255,
             [
@@ -109,29 +109,41 @@ class InstallSchema implements InstallSchemaInterface
        
        $eavTable = $setup->getTable('quote_item');
 
-        $custom_discount_label = [
-            'custom_discount_label' => [
+        $disc_cond_code = [
+            'disc_cond_code' => [
             'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
             'nullable' => true,
-            'comment' => 'custom_discount_label',
+            'comment' => 'disc_cond_code',
             ],
 
         ];
         
-        $custom_discount_value = [
-            'custom_discount_value' => [
+        $disc_fixed_amt = [
+            'disc_fixed_amt' => [
             'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
             'nullable' => true,
-            'comment' => 'custom_discount_value',
+            'comment' => 'disc_fixed_amt',
+            ],
+
+        ];
+
+         $disc_perc_amt = [
+            'disc_perc_amt' => [
+            'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+            'nullable' => true,
+            'comment' => 'disc_perc_amt',
             ],
 
         ];
 
         $connection = $setup->getConnection();
-        foreach ($custom_discount_label as $name => $definition) {
+        foreach ($disc_cond_code as $name => $definition) {
         $connection->addColumn($eavTable, $name, $definition);
         }
-        foreach ($custom_discount_value as $name => $definition) {
+        foreach ($disc_fixed_amt as $name => $definition) {
+        $connection->addColumn($eavTable, $name, $definition);
+        }
+        foreach ($disc_perc_amt as $name => $definition) {
         $connection->addColumn($eavTable, $name, $definition);
         }
 
