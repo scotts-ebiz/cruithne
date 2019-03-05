@@ -124,6 +124,8 @@
                     text-align: center;
                     margin-top:100px;
                     label.tabnav-label {
+                        display: inline-block;
+                        position: relative;
                         background-color: #fafafa;
                         border: 1px solid #ededee;
                         border-radius: 0.25rem;
@@ -157,6 +159,7 @@
                             visibility: hidden;
                         }
                         .tabpanel {
+                            display: none;
                             .tabpanel__wrapper {
                                 display: inline-block;
                                 position: relative;
@@ -187,6 +190,10 @@
                                     }
                                 }
                             }
+                        }
+                        .tabpanel.active {
+                            display: inline-block;
+                            position: relative;
                         }
                     }
                 }

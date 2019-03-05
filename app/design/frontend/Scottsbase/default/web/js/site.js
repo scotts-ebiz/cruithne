@@ -16,8 +16,6 @@ jQuery(document).ready(function($) {
 
     /* Scottsprogram Landing Page Code: Start */
 
-    alert('New Test?');
-
     $('#tablabel__1').click(function(){
         if ($("#tabcontent__1").hasClass("active")) {
             alert('Tabcontent__1 already has Active class!');
@@ -28,7 +26,6 @@ jQuery(document).ready(function($) {
             $('#tabcontent__4').removeClass('active');
             $('#tabcontent__5').removeClass('active');
             $('#tabcontent__6').removeClass('active');
-            alert('You just added the Active class for Tabcontent__1!')
         };
     });
 
@@ -42,7 +39,6 @@ jQuery(document).ready(function($) {
             $('#tabcontent__4').removeClass('active');
             $('#tabcontent__5').removeClass('active');
             $('#tabcontent__6').removeClass('active');
-            alert('You just added the Active class for Tabcontent__2!')
         };
     });
 
@@ -56,7 +52,6 @@ jQuery(document).ready(function($) {
             $('#tabcontent__4').removeClass('active');
             $('#tabcontent__5').removeClass('active');
             $('#tabcontent__6').removeClass('active');
-            alert('You just added the Active class for Tabcontent__3!')
         };
     });
 
@@ -70,7 +65,6 @@ jQuery(document).ready(function($) {
             $('#tabcontent__3').removeClass('active');
             $('#tabcontent__5').removeClass('active');
             $('#tabcontent__6').removeClass('active');
-            alert('You just added the Active class for Tabcontent__4!')
         };
     });
 
@@ -84,7 +78,6 @@ jQuery(document).ready(function($) {
             $('#tabcontent__3').removeClass('active');
             $('#tabcontent__4').removeClass('active');
             $('#tabcontent__6').removeClass('active');
-            alert('You just added the Active class for Tabcontent__5!')
         };
     });
 
@@ -98,7 +91,6 @@ jQuery(document).ready(function($) {
             $('#tabcontent__3').removeClass('active');
             $('#tabcontent__4').removeClass('active');
             $('#tabcontent__5').removeClass('active');
-            alert('You just added the Active class for Tabcontent__6!')
         };
     });
 
