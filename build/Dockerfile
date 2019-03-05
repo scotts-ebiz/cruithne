@@ -61,4 +61,4 @@ RUN ["chmod", "+x", "/usr/local/bin/entrypoint.sh"]
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
 
 # CMD "exec /usr/sbin/apachectl -DFOREGROUND -k start"
-CMD /usr/sbin/apachectl -DFOREGROUND 
+# CMD /usr/sbin/apachectl -DFOREGROUND 
