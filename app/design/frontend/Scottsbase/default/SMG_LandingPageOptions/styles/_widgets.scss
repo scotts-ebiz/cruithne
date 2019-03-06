@@ -123,6 +123,10 @@
                 .section__tabs--tabnav {
                     text-align: center;
                     margin-top:100px;
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    justify-content: space-around;
                     label.tabnav-label {
                         display: inline-block;
                         position: relative;
@@ -136,6 +140,8 @@
                         text-transform: uppercase;
                         padding: 10px 35px;
                         cursor: pointer;
+                        margin: 10px 0 10px 0;
+                        min-width: 7.25rem;
                     }
                     label.tabnav-label.active {
                         background-color: #075534;
@@ -152,7 +158,13 @@
                 }
                 .section__tabs--tabcontainer {
                     margin-top: 100px;
+                    @media only screen and (max-width: 768px) {
+                        margin-top: 30px;
+                    }
                     .section__tabs--tabtrack {
+                        display: inline-block;
+                        position: relative;
+                        min-height: 450px;
                         input.tabs__radio {
                             display: none;
                             opacity: 0;
@@ -165,38 +177,61 @@
                                 position: relative;
                                 .tabpanel__image {
                                     display: inline-block;
-                                    position: absolute;
-                                    bottom: 0;
+                                    position: relative;
                                     float: left;
-                                    @media only screen and (max-width: 1130px) {
-                                        position: relative;
-                                    }
                                     span {
-                                      display: inherit;
-                                      position: relative;
-                                      text-align: center;
-                                          img {
-                                              display: inline-block;
-                                              position: relative;
-                                              max-width: 250px;
-                                              vertical-align: bottom;
-                                          }
+                                        display: inherit;
+                                        position: relative;
+                                        text-align: center;
+                                        img {
+                                            display: inline-block;
+                                            position: relative;
+                                            max-width: 250px;
+                                            vertical-align: bottom;
+                                            @media only screen and (max-width: 480px) {
+                                                max-width: 200px;
+                                            }
+                                        }
                                     }
                                 }
                                 .tabpanel__text {
                                     display: inline-block;
                                     position: relative;
                                     float: right;
+                                    @media only screen and (max-width: 768px) {
+                                        margin-top: 20px;
+                                    }
                                     .turfbuilder--headline {
                                         margin: 0;
+                                        width: 90%;
+                                        @media only screen and (max-width: 768px) {
+                                            display: block;
+                                            margin-right: auto;
+                                            margin-left: auto;
+                                        }
                                     }
                                     p {
                                         font-weight: 100;
                                         font-size: 0.85rem;
+                                        width: 90%;
+                                        @media only screen and (max-width: 768px) {
+                                            display: block;
+                                            margin-right: auto;
+                                            margin-left: auto;
+                                        }
                                     }
                                     ul {
                                         font-weight: 100;
                                         font-size: 0.85rem;
+                                        width: 90%;
+                                        @media only screen and (max-width: 768px) {
+                                            display: block;
+                                            margin-right: auto;
+                                            margin-left: auto;
+                                        }
+                                        li {
+                                            margin-bottom: 0.25rem;
+                                        }
                                     }
                                 }
                             }
@@ -212,6 +247,12 @@
                     position: relative;
                     width: 100%;
                     margin: 0;
+                    @media only screen and (max-width: 768px) {
+                        width: 90%;
+                        display: block;
+                        margin-right: auto;
+                        margin-left: auto;
+                    }
                 }
             }
         }
