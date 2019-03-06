@@ -23,4 +23,6 @@ steps:
     - 'CLOUDSDK_CONTAINER_CLUSTER=magento-test-workload-cluster'
 
 # kubectl rolling-update test-magento --image=gcr.io/ecommerce-platform-211419/test-magento:20190207211618
+
+
 timeout: 6000s
