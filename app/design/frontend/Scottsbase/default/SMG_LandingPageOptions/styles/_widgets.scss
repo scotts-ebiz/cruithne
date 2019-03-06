@@ -145,14 +145,14 @@
                         cursor: pointer;
                         margin: 10px 0 10px 0;
                         min-width: 7.25rem;
+                        &:hover {
+                            background-color: #075534;
+                            box-shadow: 0 0 5px 0 rgba(182, 92, 0, 0.18);
+                            color: #fff;
+                            font-weight: 400;
+                        }
                     }
                     label.tabnav-label.active {
-                        background-color: #075534;
-                        box-shadow: 0 0 5px 0 rgba(182, 92, 0, 0.18);
-                        color: #fff;
-                        font-weight: 400;
-                    }
-                    label.tabnav-label.hover {
                         background-color: #075534;
                         box-shadow: 0 0 5px 0 rgba(182, 92, 0, 0.18);
                         color: #fff;
