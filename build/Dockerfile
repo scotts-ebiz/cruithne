@@ -39,7 +39,6 @@ RUN sed -i "s/.*mouseEventProps = .*/\tmouseEventProps = 0,/" $MAGENTO_DIR/pub/s
 
 # This is a Patch for Magento per https://github.com/magento/magento2/issues/13269
 # Should be able to be removed after Magento 2.3.1 is live
-
 RUN sed -i "s/.*result = mb_convert_encoding.*/\t\t\$result = mb_convert_encoding(preg_replace('\/\&\/', \'\&amp\;\', html_entity_decode(\$domDocument->saveHTML())), \'HTML-ENTITIES\', \'UTF-8\');\n/" $MAGENTO_DIR/vendor/magento/framework/Escaper.php
 
 USER root
