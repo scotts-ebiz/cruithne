@@ -39,5 +39,8 @@ su - magento -c '/var/www/html/magento2/bin/magento -v cache:flush'
 
 # chown -R magento:www-data /var/www/html/
 
+# For the readiness check
+touch /tmp/healthy
+
 # CMD "exec /usr/sbin/apachectl -DFOREGROUND -k start"
 exec /usr/sbin/apachectl -DFOREGROUND
