@@ -33,10 +33,11 @@ RUN sed -i "s/save.*/save' => 'files',\n\t 'save_path' => '\/tmp',/" app/etc/env
 RUN date
 
 # Neelam Special Per https://scotts.jira.com/browse/ECOM-496
-# This is also a Patch for Magento per https://github.com/magento/magento2/issues/13269
 
+# This is a Patch for jquery.mobile to allow mouse events
 RUN sed -i "s/.*mouseEventProps = .*/\tmouseEventProps = 0,/" $MAGENTO_DIR/pub/static/frontend/Scottsbase/mygro/en_US/jquery/jquery.mobile.custom.js
 
+# This is a Patch for Magento per https://github.com/magento/magento2/issues/13269
 RUN sed -i "s/.*result = mb_convert_encoding.*/\t\t\$result = mb_convert_encoding(preg_replace('\/\&\/', \'\&amp\;\', html_entity_decode(\$domDocument->saveHTML())), \'HTML-ENTITIES\', \'UTF-8\');\n/" $MAGENTO_DIR/vendor/magento/framework/Escaper.php
 
 USER root
