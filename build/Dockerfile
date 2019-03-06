@@ -59,3 +59,6 @@ RUN ["chmod", "+x", "/usr/local/bin/entrypoint.sh"]
 
 # The apachectl command is in entrypoint :-)
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
+
+# CMD "exec /usr/sbin/apachectl -DFOREGROUND -k start"
+# CMD /usr/sbin/apachectl -DFOREGROUND 
