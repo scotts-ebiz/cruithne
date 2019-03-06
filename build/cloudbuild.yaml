@@ -12,15 +12,15 @@ steps:
   args: ['push', 'gcr.io/$PROJECT_ID/${_CONTAINER_REPO_NAME}:$SHORT_SHA']
 - name: 'gcr.io/cloud-builders/docker'
   args: ['push', 'gcr.io/$PROJECT_ID/${_CONTAINER_REPO_NAME}:latest']
-# - name: 'gcr.io/cloud-builders/kubectl'
-#   args: 
-#     - 'rolling-update'
-#     - 'test-magento'
-#     - 'deployment/magento-test'
-#     - 'test-magento=gcr.io/ecommerce-platform-211419/test-magento:$SHORT_SHA'
-#   env:
-#     - 'CLOUDSDK_COMPUTE_ZONE=us-central1-a'
-#     - 'CLOUDSDK_CONTAINER_CLUSTER=magento-test-cluster'
+- name: 'gcr.io/cloud-builders/kubectl'
+  args: 
+    - 'rolling-update'
+    - 'test-magento'
+    - 'deployment/magento-test'
+    - 'test-magento=gcr.io/$PROJECT_ID/${_CONTAINER_REPO_NAME}:$SHORT_SHA'
+  env:
+    - 'CLOUDSDK_COMPUTE_ZONE=us-east1-b'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=magento-test-cluster'
 
 # kubectl rolling-update test-magento --image=gcr.io/ecommerce-platform-211419/test-magento:20190207211618
 timeout: 6000s
