@@ -17,8 +17,8 @@ COMMAND="$@"
 # rm -rf /var/www/html/magento2/var/generation/*
 # su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s developer'
 su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s production'
-su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade'
-su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile'
+# su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade'
+# su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile'
 
 # TODO We should abstract the server address....
 su - magento -c 'php /var/www/html/magento2/bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=10.0.2.3   --cache-backend-redis-db=0'
