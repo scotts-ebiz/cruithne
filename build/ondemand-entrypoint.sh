@@ -16,7 +16,7 @@ COMMAND="$@"
 
 # rm -rf /var/www/html/magento2/var/generation/*
 # su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s developer'
-# su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s production'
+su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s production'
 # su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade'
 # su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile'
 
