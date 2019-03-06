@@ -33,7 +33,7 @@ su - magento -c 'php /var/www/html/magento2/bin/magento setup:config:set --sessi
 su - magento -c '/var/www/html/magento2/bin/magento setup:static-content:deploy'
 
 # This is a Patch for jquery.mobile to allow mouse events
-su - magento -c 'sed "s/.*mouseEventProps = .*/\tmouseEventProps = 0,/" $MAGENTO_DIR/pub/static/frontend/Scottsbase/mygro/en_US/jquery/jquery.mobile.custom.js'
+su - magento -c 'sed "s/.*mouseEventProps = .*/\tmouseEventProps = 0,/" /var/www/html/magento2/pub/static/frontend/Scottsbase/mygro/en_US/jquery/jquery.mobile.custom.js'
 
 su - magento -c '/var/www/html/magento2/bin/magento -v cache:flush'
 
