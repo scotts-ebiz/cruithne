@@ -16,7 +16,7 @@ steps:
   args: 
     - 'set'
     - 'image'
-    - 'deployment/magento-test'
+    - 'deployment/magento-test-workload'
     - 'test-magento=gcr.io/$PROJECT_ID/${_CONTAINER_REPO_NAME}:$SHORT_SHA'
   env:
     - 'CLOUDSDK_COMPUTE_ZONE=us-east1-b'
