@@ -2,6 +2,6 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
     <event name="sales_order_save_after">
-        <observer instance="SMG\Sales\Observer\Backend\OrderSaveAfter" name="smg_sales_observer_backend_ordersaveafter"/>
+        <observer instance="SMG\Sales\Observer\OrderSaveAfter" name="smg_sales_observer_ordersaveafter"/>
     </event>
 </config>

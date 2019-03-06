@@ -6,7 +6,7 @@
  * Time: 3:14 PM
  */
 
-namespace SMG\Sales\Observer\Backend;
+namespace SMG\Sales\Observer;
 
 use Magento\Framework\Event\Observer;
 use Magento\Framework\Event\ObserverInterface;
