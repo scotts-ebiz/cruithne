@@ -4,16 +4,16 @@ namespace SMG\Api\Model\Api;
 
 use Magento\Framework\Webapi\Rest\Request;
 
-use SMG\Api\Helper\OrdersHelper;
+use SMG\Api\Helper\OrdersSentHelper;
 use SMG\Api\Helper\RequestHelper;
 use SMG\Api\Model\OrdersSentManagementInterface;
 
 class OrdersSentManagement implements OrdersSentManagementInterface
 {
     /**
-     * @var OrdersHelper
+     * @var OrdersSentHelper
      */
-    protected $_ordersHelper;
+    protected $_ordersSentHelper;
 
     /**
      * @var Request
@@ -28,13 +28,15 @@ class OrdersSentManagement implements OrdersSentManagementInterface
     /**
      * OrdersManagement constructor.
      *
-     * @param OrdersHelper $ordersHelper
+     * @param OrdersSentHelper $ordersSentHelper
      * @param Request $request
      * @param RequestHelper $requestHelper
      */
-    public function __construct(OrdersHelper $ordersHelper, Request $request, RequestHelper $requestHelper)
+    public function __construct(OrdersSentHelper $ordersSentHelper,
+        Request $request,
+        RequestHelper $requestHelper)
     {
-        $this->_ordersHelper = $ordersHelper;
+        $this->_ordersSentHelper = $ordersSentHelper;
         $this->_request = $request;
         $this->_requestHelper = $requestHelper;
     }
