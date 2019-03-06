@@ -14,8 +14,8 @@ steps:
   args: ['push', 'gcr.io/$PROJECT_ID/${_CONTAINER_REPO_NAME}:latest']
 - name: 'gcr.io/cloud-builders/kubectl'
   args: 
-    - 'rolling-update'
-    - 'test-magento'
+    - 'set'
+    - 'image'
     - 'deployment/magento-test'
     - '--image=gcr.io/$PROJECT_ID/${_CONTAINER_REPO_NAME}:$SHORT_SHA'
   env:
