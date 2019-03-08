@@ -1,0 +1,1 @@
+alert('Maybe I can start a record label');
