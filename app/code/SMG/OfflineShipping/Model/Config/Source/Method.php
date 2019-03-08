@@ -33,6 +33,7 @@ class Method implements OptionSourceInterface
         return [
             'fedex-nextday' => __('Fedex Next Day'),
             'fedex-2ndday' => __('Fedex 2nd Day'),
+            'flat-rate-shipping' => __('Flat Rate Shipping'),
         ];
     }
 }
