@@ -4,8 +4,6 @@
 /* repository of name strings. Currently all are literally the same but this set of constants
  * will save time if names change later. */
 
-alert('This is an alert!');
-
 /* generic names */
 var TagID_article_id = "article_id";
 var TagID_base_material_codes = "base_material_codes";
