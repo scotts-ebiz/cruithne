@@ -44,7 +44,8 @@ class UpgradeData implements UpgradeDataInterface
 
         // create the data
         $data = [
-            [['shipping_method' => 'flatrate_flat-rate-shipping', 'sap_shipping_method' => 'C6', 'description' => 'Flat Rate Shipping'];
+            ['shipping_method' => 'flatrate_flat-rate-shipping', 'sap_shipping_method' => 'C6', 'description' => 'Flat Rate Shipping']
+            ];
 
         // insert the rows
         $setup->getConnection()->insertMultiple($tableName, $data);
