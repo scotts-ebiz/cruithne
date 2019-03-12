@@ -60,10 +60,31 @@
             h4 {
                 margin-bottom: 0.75rem;
             }
+            form.zip-form {
+                input {
+                    display: inline-block;
+                    position: relative;
+                    width: 49%;
+                }
+                p.error-msg {
+                    display: none;
+                }
+                button {
+                    display: block;
+                    width: 49%;
+                    text-align: center;
+                    margin: 10px 0 10px;
+                    @media only screen and (max-width: 1130px){
+                        margin-right: auto;
+                        margin-left: auto;
+                    }
+                }
+            }
             .section__hero--option {
                 form {
                     margin-bottom: 1.5rem;
                     button {
+                        width: 100%;
                         span {
                             float: right;
                         }
@@ -79,6 +100,9 @@
                 img {
                     height: 25px;
                     float: left;
+                    @media only screen and (max-width: 1130px){
+                      float: inherit;
+                    }
                 }
                 p {
                     margin-left: 2%;
@@ -94,7 +118,17 @@
                 small {
                     display: inline-block;
                     position: relative;
-                  width: 100%;
+                    width: 100%;
+                    @media only screen and (max-width: 1130px){
+                        width: 49%;
+                        display: block;
+                        margin-right: auto;
+                        margin-left: auto;
+                        text-align: left;
+                    }
+                    @media only screen and (max-width: 768px) {
+                        width: 80%;
+                    }
                 }
             }
         }

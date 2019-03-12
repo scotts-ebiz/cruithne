@@ -1,8 +1,0 @@
-<?xml version="1.0"?>
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <head>
-        <!-- for js file -->
-        <script type="text/javascript" src="SMG_LandingPage::js/scottsprogram-landing.js"/>
-        <script type="text/javascript" src="js/asdf.js"/>
-    </head>
-</page>

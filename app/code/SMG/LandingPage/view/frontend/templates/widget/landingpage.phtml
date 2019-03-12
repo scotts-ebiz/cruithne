@@ -145,7 +145,8 @@
                                 $zip_code_action = $block->getUrl('zip/zip');
                         ?>
                             <h4><?php echo $zip_instructions; ?></h4>
-                            <form action="<?php echo $zip_code_action; ?>" method="get" class="<?php echo $show_error_class; ?>">
+                            <form action="<?php echo $zip_code_action; ?>" method="get" class="<?php echo
+                            $show_error_class; ?>zip-form">
                                 <input type="<?php echo $zip_input_type; ?>" name="zip" pattern="[0-9]{5}" value="<?php echo $zip_value; ?>" required title="Enter first five digits of your zip code" />
                                 <?php
                                     if ($zip_value)
