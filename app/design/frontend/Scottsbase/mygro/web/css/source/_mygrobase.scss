@@ -266,39 +266,6 @@ body {
                 margin: 0 0 1em;
             }
         }
-        /* COMMENTING OUT - Due to moving this to the product-grid scss
-        .products {
-            padding-bottom: 24px;
-            position: relative;
-            .button {
-                margin-bottom: 20px;
-            }
-            h2 {
-                font-size: 40px;
-                margin: 0 -20px 15px;
-                @include max-screen($screen__l) {
-                    font-size: 35px;
-                }
-                a {
-                    color: $white;
-                }
-            }
-            .item {
-                background-size: cover;
-                text-align: center;
-                color: $white;
-                padding: 35px 40px;
-                box-sizing: border-box;
-                position: relative;
-                @include max-screen($screen__l) {
-                    margin: 0 16px 16px;
-                    img {
-                        max-height: 320px;
-                    }
-                }
-            }
-        }
-        */
         .products.grid:after {
             display: none;
         }
@@ -307,11 +274,6 @@ body {
             display: table;
             clear: both;
         }
-        /*Might not need this
-        .grid > h2 {
-            Might not need this - width: 100%;
-        }
-        */
         .col-3 {
             .item {
                 width: calc(33.33% - 28px);
@@ -463,6 +425,12 @@ body {
         }
     }
 }
+
+//Product Page Styles
+.product.info.detailed {
+    display: none;
+}
+
 // Cart Styles
 .checkout-cart-index {
     .page-main {
