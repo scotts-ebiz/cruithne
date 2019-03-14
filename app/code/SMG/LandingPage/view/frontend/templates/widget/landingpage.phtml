@@ -15,7 +15,7 @@
 ?>
 
 <style>
-  @media only screen and (max-width: 1200px) {
+  @media only screen and (max-width: 1130px) {
     .background-test {
         background-image: url('<?php echo $block->getData('heroMobileImage'); ?>') !important;
     }
@@ -109,7 +109,6 @@
                                     {
                                         $option_id = $option->getOptionId();
                                         $_selections = $option->getSelections();
-                                        /*THIS WASNT WORKING SO I COMMENTED IT OUT
                                         foreach ($_selections as $selection)
                                         {
                                             $selection_price = $selection->getSelectionPriceValue();
@@ -118,7 +117,6 @@
                                             $selection_ids[] = $selection->getSelectionId();
                                             $options_html .= '<input type="hidden" name="bundle_option_qty[' . $option_id . ']" value="1" />';
                                         }
-                                        */
                                     }
                             ?>
 
@@ -147,8 +145,9 @@
                                 $zip_code_action = $block->getUrl('zip/zip');
                         ?>
                             <h4><?php echo $zip_instructions; ?></h4>
-                            <form action="<?php echo $zip_code_action; ?>" method="get" class="<?php echo $show_error_class; ?>">
-                                <input type="<?php echo $zip_input_type; ?>" name="zip" pattern="[0-9]{5}" value="<?php echo $zip_value; ?>" required title="Enter first five digits of your zip code" />;
+                            <form action="<?php echo $zip_code_action; ?>" method="get" class="<?php echo
+                            $show_error_class; ?>zip-form">
+                                <input type="<?php echo $zip_input_type; ?>" name="zip" pattern="[0-9]{5}" value="<?php echo $zip_value; ?>" required title="Enter first five digits of your zip code" />
                                 <?php
                                     if ($zip_value)
                                     {
@@ -345,7 +344,7 @@
             if(($small_bundle_id || $large_bundle_id) && !$this->getData('requireszipcodelookup'))
             {
         ?>
-        <div class="widget widget-static-block">
+        <div class="widget widget-static-block tabSection__wrapper">
             <section class="section__tabs">
                 <div class="section__tabs--wrapper">
                     <div class="section__tabs--tabnav">
@@ -378,15 +377,18 @@
                                 foreach ($tab_headline as $key => $headline)
                                 {
                                     $checked = ($i == 1) ? 'checked="checked"' : '';
+                                    $activeTab = ($i == 1) ? ' active' : '';
                             ?>
                             <input <?php echo $checked; ?> class="tabs__radio" id="toggle__tab<?php echo $i ?>" name="tabs__tabnav" type="radio" />
-                            <div class="tabpanel" data-panel="toggle__tab<?php echo $i ?>" id="tabcontent__<?php echo $i ?>">
+                            <div class="tabpanel <?php echo $activeTab; ?>" data-panel="toggle__tab<?php echo $i ?>"
+                                 id="tabcontent__<?php
+                            echo $i ?>">
                                 <div class="tabpanel__wrapper">
-                                    <div class="tabpanel__image">
+                                    <div class="tabpanel__image span_6_of_12">
                                         <span><img alt="Scotts&reg; Turf Builder&reg; SummerGuard&reg; Lawn Food with Insect Control" src="<?php echo $tab_image[$key]; ?>"></span>
                                     </div>
 
-                                    <div class="tabpanel__text">
+                                    <div class="tabpanel__text span_6_of_12">
                                         <h2 class="turfbuilder--headline"><?php echo $headline; ?></h2>
                                         <p class="text-desc"><?php echo $tab_description[$key]; ?></p>
                                         <?php echo $tab_content[$key]; ?>
@@ -394,13 +396,13 @@
                                 </div>
                             </div>
                             <?php
-                                    $i++;
+                                  $i++;
                                 }
                             ?>
                         </div>
                     </div>
 
-                    <p style="margin: 0 100px; font-size: 0.875rem;">Safety Data Sheets can be found at <a href="https://www.scottsmsds.com" target="_blank">scottsmsds.com</a></p>
+                    <p>Safety Data Sheets can be found at <a href="https://www.scottsmsds.com" target="_blank">scottsmsds.com</a></p>
                 </div><!-- .section__tabs==wrapper -->
             </section>
         </div>
@@ -409,3 +411,4 @@
         ?>
 	</div>
 </div>
+
