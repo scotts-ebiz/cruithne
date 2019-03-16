@@ -2916,7 +2916,7 @@ body > .loading-mask {
   display: none; }
 
 .nav-sections {
-  background: whitesmoke; }
+  /*background: whitesmoke;*/ background: transparent; }
 
 .nav-toggle {
   display: inline-block;
@@ -3215,7 +3215,8 @@ body > .loading-mask {
   .nav-sections-item-content > .navigation {
     display: block; }
   .navigation {
-    background: whitesmoke;
+    /*background: whitesmoke;*/
+	background: tranparent;
     font-weight: 700;
     height: inherit;
     left: auto;
@@ -3244,7 +3245,8 @@ body > .loading-mask {
       .navigation .level0 > .level-top {
         color: #575757;
         line-height: 53px;
-        padding: 0 12px;
+        /*padding: 0 12px;*/
+		padding: 0 25px;
         text-decoration: none;
         box-sizing: border-box;
         position: relative; }
@@ -3254,7 +3256,7 @@ body > .loading-mask {
       .navigation .level0.active > .level-top, .navigation .level0.has-active > .level-top {
         border-color: #ff5501;
         border-style: solid;
-        border-width: 0 0 3px;
+        border-width: 0 0 0px;
         color: #333;
         text-decoration: none;
         display: inline-block; }
@@ -7463,11 +7465,12 @@ body.catalog-product-compare-index .action.print {
 
 @media only screen and (max-width: 639px) {
   .minicart-wrapper {
-    margin-top: 10px; } }
+	margin-top: 0px;
+    /*margin-top: 10px;*/ } }
 
 @media only screen and (min-width: 768px) {
   .minicart-wrapper {
-    margin-left: 13px; }
+    /*margin-left: 13px;*/ }
     .minicart-wrapper .block-minicart {
       right: -15px;
       width: 390px; } }
@@ -12257,11 +12260,22 @@ table thead tr th {
     top: 30px !important;
 }
 .page-wrapper .page-header .header.content {
-    background-color: #075534;
-    height: 3.25rem;
+    background-color: #ffffff;
+    /*height: 3.25rem;
 	width: auto;
     padding-left: 9rem;
-    padding-right: 9rem;
+    padding-right: 9rem;*/
+ 	padding: 20px 0 12px;
+    border-bottom: 1px solid #dcdcdc;
+    position: fixed;
+    z-index: 2;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    height: 74px;
+	padding-left: 22px;
+	padding-right: 22px;
 }
 .page-wrapper .page-header .header.content .logo {
     position: static !important;
@@ -12274,8 +12288,12 @@ table thead tr th {
 .page-wrapper .page-header .header.content .logo img {
     height: auto;
     max-width: 100%;
-    padding-top: 1rem;
 }
+
+.page-wrapper .page-header .header .skip { display:none; }
+
+.page-wrapper .page-header .panel.header { display:none; }
+
 .cart-parent-summary .cart-summary-divlink {
     float: left;
     margin-top: 70px !important;
@@ -13119,6 +13137,7 @@ input.btn-popup {
 	}
 	.checkout-cart-index .cart.table-wrapper .action.update_cust_btn{
 		margin:0;
+		text-align:left;
 	}
 	.checkout-index-index div[name="shippingAddress.firstname"], .checkout-index-index div[name="shippingAddress.lastname"] {
 		width: 100%;
@@ -13269,11 +13288,43 @@ input.btn-popup {
 	}
 }
 
-.product-image-container {
-    width: 100% !important;
-}
-#shopping-cart-table td, #theme__responsive .cart-table td{
-	/*padding: 0.625rem 0 !important;*/
+.product-image-container { width: 100% !important; }
+
+#shopping-cart-table td, #theme__responsive .cart-table td{ /*padding: 0.625rem 0 !important;*/ }
+
+.icon-bag { /*float: right;*/ color: #008065; font-size: 19px; margin: 5px 10px 0 0; }
+
+.cart-total-container { float: right; text-transform: uppercase; letter-spacing: 1px; font-size: 10px; color: #000; text-align: left; }
+
+.cart-total-container .total-amt .price { display: block; letter-spacing: 0; font-size: 18px; padding: 0 0 0 0; margin-left: -1px; font-weight: bold; } 
+
+.page-main { padding-top: 90px; }
+
+@media screen and (max-width: 767px) {
+
+
+
 }
 
+@media screen and (max-width: 1023px) {
+
+.nav-toggle:before { color: #075534!important; }
+
+.page-wrapper .page-header .header.content { padding: 22px; box-sizing: border-box; }
+
+.page-wrapper .page-header .header.content .logo { position: absolute!important; left: 50%; transform: translateX(-50%); }
+
+}
+
+@media screen and (min-width: 1024px) {
+
+.nav-sections { width: 65%; display: inline-block; margin: 0 7%; text-align: center; }
+
+.top-navigation { top: -10px; } 
+
+.top-navigation .ui-menu li a { font-size: 14px!important; font-weight:normal!important; text-transform: uppercase; padding: 0 25px!important; }
+
+.top-navigation .ui-menu li.active a { font-weight:bold!important; color: #008065!important; }
+
+}
 
