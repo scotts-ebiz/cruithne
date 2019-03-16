@@ -2,65 +2,230 @@
 
 namespace SMG\Api\Helper;
 
-use \Magento\Framework\App\ResourceConnection;
-use \Psr\Log\LoggerInterface;
+use Magento\Framework\App\ResourceConnection;
+use Magento\Sales\Api\CreditmemoRepositoryInterface;
+use Magento\Sales\Api\Data\CreditmemoInterface;
+use Magento\Sales\Api\Data\CreditmemoItemInterface;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\OrderFactory;
+use Magento\Sales\Model\Order\Item;
+use Magento\Sales\Model\Order\ItemFactory;
+use Magento\Sales\Model\ResourceModel\Order as OrderResource;
+use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
+use Magento\Sales\Model\ResourceModel\Order\Item as ItemResource;
+use Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory as OrderItemCollectionFactory;
+use Psr\Log\LoggerInterface;
+use SMG\OfflineShipping\Model\ShippingConditionCodeFactory;
+use SMG\OfflineShipping\Model\ResourceModel\ShippingConditionCode as ShippingConditionCodeResource;
+use SMG\Sap\Model\SapOrderFactory;
+use SMG\Sap\Model\ResourceModel\SapOrder as SapOrderResource;
+use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
+use SMG\Sap\Model\ResourceModel\SapOrderBatchItem\CollectionFactory as SapOrderBatchItemCollectionFactory;
 
 class OrdersHelper
 {
-    // Variables
+    // Output JSON file constants
+    const ORDER_NUMBER = 'OrderNumber';
+    const DATE_PLACED = 'DatePlaced';
+    const SAP_DELIVERY_DATE = 'SAPDeliveryDate';
+    const CUSTOMER_NAME = 'CustomerName';
+    const ADDRESS_STREET = 'CustomerShippingAddressStreet';
+    const ADDRESS_CITY = 'CustomerShippingAddressCity';
+    const ADDRESS_STATE = 'CustomerShippingAddressState';
+    const ADDRESS_ZIP = 'CustomerShippingAddressZip';
+    const SMG_SKU = 'SMGSKU';
+    const WEB_SKU = 'WebSKU';
+    const QUANTITY = 'Quantity';
+    const UNIT = 'Unit';
+    const UNIT_PRICE = 'UnitPrice';
+    const GROSS_SALES = 'GrossSales';
+    const SHIPPING_AMOUNT = 'ShippingAmount';
+    const EXEMPT_AMOUNT = 'ExemptAmount';
+    const DISCOUNT_AMOUNT = 'DiscountAmount';
+    const SUBTOTAL = 'Subtotal';
+    const TAX_RATE = 'TaxRate';
+    const SALES_TAX = 'SalesTax';
+    const INVOICE_AMOUNT = 'InvoiceAmount';
+    const DELIVERY_LOCATION = 'DeliveryLocation';
+    const EMAIL = 'CustomerEmail';
+    const PHONE = 'CustomerPhone';
+    const DELIVERY_WINDOW = 'DeliveryWindow';
+    const SHIPPING_CONDITION = 'ShippingCondition';
+    const WEBSITE_URL = 'WebsiteURL';
+    const CREDIT_AMOUNT = 'CreditAmount';
+    const CR_DR_RE_FLAG = 'CR/DR/RE/Flag';
+    const SAP_BILLING_DOC_NUMBER = 'ReferenceDocNum';
+    const CREDIT_COMMENT = 'CreditComment';
+    const ORDER_REASON = 'OrderReason';
+    const DISCOUNT_CONDITION_CODE = 'DiscCondCode';
+    const SURCH_CONDITION_CODE = 'SurchCondCode';
+    const DISCOUNT_FIXED_AMOUNT = 'DiscFixedAmt';
+    const SURCH_FIXED_AMOUNT = 'SurchFixedAmt';
+    const DISCOUNT_PERCENT_AMOUNT = 'DiscPercAmt';
+    const SURCH_PERCENT_AMOUNT = 'SurchPercAmt';
+
+    /**
+     * @var LoggerInterface
+     */
     protected $_logger;
+
+    /**
+     * @var ResourceConnection
+     */
     protected $_resourceConnection;
+
+    /**
+     * @var ResponseHelper
+     */
+    protected $_responseHelper;
+
+    /**
+     * @var OrderCollectionFactory
+     */
+    protected $_orderCollectionFactory;
+
+    /**
+     * @var OrderItemCollectionFactory
+     */
+    protected $_orderItemCollectionFactory;
+
+    /**
+     * @var ShippingConditionCodeFactory
+     */
+    protected $_shippingConditionCodeFactory;
+
+    /**
+     * @var ShippingConditionCodeResource
+     */
+    protected $_shippingConditionCodeResource;
+
+    /**
+     * @var SapOrderBatchItemCollectionFactory
+     */
+    protected  $_sapOrderBatchItemCollectionFactory;
+
+    /**
+     * @var OrderFactory
+     */
+    protected $_orderFactory;
+
+    /**
+     * @var OrderResource
+     */
+    protected $_orderResource;
+
+    /**
+     * @var ItemFactory
+     */
+    protected $_itemFactory;
+
+    /**
+     * @var ItemResource
+     */
+    protected $_itemResource;
+
+    /**
+     * @var SapOrderFactory
+     */
+    protected $_sapOrderFactory;
+
+    /**
+     * @var SapOrderResource
+     */
+    protected $_sapOrderResource;
+
+    /**
+     * @var CreditmemoRepositoryInterface
+     */
+    protected $_creditmemoRespository;
+
+    /**
+     * @var SapOrderBatchCollectionFactory
+     */
+    protected $_sapOrderBatchCollectionFactory;
 
     /**
      * OrdersHelper constructor.
      *
      * @param LoggerInterface $logger
      * @param ResourceConnection $resourceConnection
+     * @param ResponseHelper $responseHelper
+     * @param OrderCollectionFactory $orderCollectionFactory
+     * @param OrderItemCollectionFactory $orderItemCollectionFactory
+     * @param ShippingConditionCodeFactory $shippingConditionCodeFactory
+     * @param ShippingConditionCodeResource $shippingConditionCodeResource
+     * @param SapOrderBatchItemCollectionFactory $sapOrderBatchItemCollectionFactory
+     * @parma OrderFactory $orderFactory
+     * @param OrderResource $orderResource
+     * @param ItemFactory $itemFactory
+     * @param ItemResource $itemResource
+     * @param SapOrderFactory $sapOrderFactory
+     * @param SapOrderResource $sapOrderResource
+     * @param CreditmemoRepositoryInterface $creditmemoRepository
+     * @param SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
      */
-    public function __construct(LoggerInterface $logger, ResourceConnection $resourceConnection)
+    public function __construct(LoggerInterface $logger,
+        ResourceConnection $resourceConnection,
+        ResponseHelper $responseHelper,
+        OrderCollectionFactory $orderCollectionFactory,
+        OrderItemCollectionFactory $orderItemCollectionFactory,
+        ShippingConditionCodeFactory $shippingConditionCodeFactory,
+        ShippingConditionCodeResource $shippingConditionCodeResource,
+        SapOrderBatchItemCollectionFactory $sapOrderBatchItemCollectionFactory,
+        OrderFactory $orderFactory,
+        OrderResource $orderResource,
+        ItemFactory $itemFactory,
+        ItemResource $itemResource,
+        SapOrderFactory $sapOrderFactory,
+        SapOrderResource $sapOrderResource,
+        CreditmemoRepositoryInterface $creditmemoRepository,
+        SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory)
     {
         $this->_logger = $logger;
         $this->_resourceConnection = $resourceConnection;
+        $this->_responseHelper = $responseHelper;
+        $this->_orderCollectionFactory = $orderCollectionFactory;
+        $this->_orderItemCollectionFactory = $orderItemCollectionFactory;
+        $this->_shippingConditionCodeFactory = $shippingConditionCodeFactory;
+        $this->_shippingConditionCodeResource = $shippingConditionCodeResource;
+        $this->_sapOrderBatchItemCollectionFactory = $sapOrderBatchItemCollectionFactory;
+        $this->_orderFactory = $orderFactory;
+        $this->_orderResource = $orderResource;
+        $this->_itemFactory = $itemFactory;
+        $this->_itemResource = $itemResource;
+        $this->_sapOrderFactory = $sapOrderFactory;
+        $this->_sapOrderResource = $sapOrderResource;
+        $this->_creditmemoRespository = $creditmemoRepository;
+        $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
     }
 
     /**
      * Get the sales orders in the desired format
      *
-     * @param $startDate
-     * @param $endDate
      * @return string
      */
-    public function getOrders($startDate, $endDate)
+    public function getOrders()
     {
-        // initialize the return value
-        $orders = '{}';
+        // get the debit order data
+        $debitArray = $this->getDebitOrderData();
 
-        // check if the dates are provided
-        if ($startDate && $endDate)
-        {
-            // get the data from the database
-            $results = $this->getOrderData($startDate, $endDate);
+        // get the credit order data
+        $creditArray = $this->getCreditOrderData();
 
-            // if there are results then loop through them and create the file
-            if ($results)
-            {
-                $orders = $this->getOrdersJson($results);
-            }
-            else
-            {
-                // log that there were no records found.
-                $this->_logger->info("SMG\Api\Helper\OrdersHelper - No Orders were found for Begin Date: " . $startDate . " and End Date: " . $endDate);
-            }
-        }
-        elseif (!$startDate)
+        // merge the debits and credits
+        $ordersArray = array_merge($debitArray, $creditArray);
+
+        // determine if there is anything there to send
+        if (empty($ordersArray))
         {
-            // log the error
-            $this->_logger->error("SMG\Api\Helper\OrdersHelper - The Start Date was not provided.");
+            // log that there were no records found.
+            $this->_logger->info("SMG\Api\Helper\OrdersHelper - No Orders were found for processing.");
+
+            $orders = $this->_responseHelper->createResponse(true, 'No Orders where found for processing.');
         }
         else
         {
-            // log the error
-            $this->_logger->error("SMG\Api\Helper\OrdersHelper - The End Date was not provided.");
+            $orders = $this->_responseHelper->createResponse(true, $ordersArray);
         }
 
         // return
@@ -68,123 +233,237 @@ class OrdersHelper
     }
 
     /**
-     * This function gets the desired sales order data from the database
-     * based on the startdate and enddate
+     * Get the debit orders
      *
-     * @param $startDate
-     * @param $endDate
-     * @return array|null
+     * @return array
      */
-    private function getOrderData($startDate, $endDate)
+    private function getDebitOrderData()
     {
-        // default the results
-        $results = null;
+        $ordersArray = array();
 
-        // get a connection
-        $connection = $this->_resourceConnection->getConnection(ResourceConnection::DEFAULT_CONNECTION);
+        // get the orders that are ready to be sent to SAP
+        $sapOrderBatches = $this->_sapOrderBatchCollectionFactory->create();
+        $sapOrderBatches->addFieldToFilter('is_order', ['eq' => true]);
+        $sapOrderBatches->addFieldToFilter('order_process_date', ['null' => true]);
 
-        // create the query
-        $query = "SELECT distinct so.entity_id as 'order_number',";
-        $query = $query . "    so.created_at as 'date_placed',";
-        $query = $query . "    '' as 'sap_delivery_date',";
-        $query = $query . "    CONCAT(so.customer_firstname, ' ', so.customer_lastname) as 'customer_name',";
-        $query = $query . "    soa.street as 'customer_shipping_address_street',";
-        $query = $query . "    soa.city as 'customer_shipping_address_city',";
-        $query = $query . "    soa.region as 'customer_shipping_address_state',";
-        $query = $query . "    soa.postcode as 'customer_shipping_address_zip',";
-        $query = $query . "    soi.sku as 'smg_sku_1',";
-        $query = $query . "    soi.sku as 'web_sku_1',";
-        $query = $query . "    soi.qty_ordered as 'quantity_1',";
-        $query = $query . "    soi.product_id as 'unit_1',";
-        $query = $query . "    soi.price as 'unit_price_1',";
-        $query = $query . "    '' as 'smg_sku_2',";
-        $query = $query . "    '' as 'web_sku_2',";
-        $query = $query . "    '' as 'quantity_2',";
-        $query = $query . "    '' as 'unit_2',";
-        $query = $query . "    '' as 'unit_price_2',";
-        $query = $query . "    so.grand_total as 'gross_sales',";
-        $query = $query . "    so.shipping_amount as 'shipping_amount',";
-        $query = $query . "    '' as 'shipping_condition',";
-        $query = $query . "    '0' as 'exempt_amount',";
-        $query = $query . "    so.base_discount_amount as 'discount_amount',";
-        $query = $query . "    so.subtotal as 'subtotal',";
-        $query = $query . "    soi.tax_percent as 'tax_rate',";
-        $query = $query . "    so.tax_amount as 'sales_tax_no_shipping',";
-        $query = $query . "    so.shipping_tax_amount as 'sales_tax_on_shipping',";
-        $query = $query . "    so.total_invoiced as 'invoice_amount',";
-        $query = $query . "    so.shipping_description as 'delivery_location',";
-        $query = $query . "    so.customer_email as 'customer_email',";
-        $query = $query . "    soa.telephone as 'customer_phone',";
-        $query = $query . "    '' as 'delivery_window' ";
-        $query = $query . "from sales_order so";
-        $query = $query . "    inner join sales_order_item soi on soi.order_id = so.entity_id";
-        $query = $query . "    inner join sales_order_address soa on soa.parent_id = soi.order_id ";
-        $query = $query . "where soa.address_type = 'shipping'";
-        $query = $query . " and soi.product_type <> 'bundle'";
-        $query = $query . " and so.created_at between '" . $startDate . "' and '" . $endDate . "' ";
-        $query = $query . "order by so.entity_id";
+        // check if there are orders to process
+        if ($sapOrderBatches->count() > 0)
+        {
+            /**
+             * @var \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
+             */
+            foreach ($sapOrderBatches as $sapOrderBatch)
+            {
+                // get the required fields needed for processing
+                $orderId = $sapOrderBatch->getData('order_id');
 
-        // execute the query
-        $results = $connection->fetchAll($query);
+                // Get the sales order
+                /**
+                 * @var \Magento\Sales\Model\Order $order
+                 */
+                $order = $this->_orderFactory->create();
+                $this->_orderResource->load($order, $orderId);
 
-        // return the results
-        return $results;
+                // get the list of items for this order
+                $orderItems = $this->_orderItemCollectionFactory->create();
+                $orderItems->addFieldToFilter("order_id", ['eq' => $order->getId()]);
+                $orderItems->addFieldToFilter("product_type", ['neq' => 'bundle']);
+
+                /**
+                 * @var \Magento\Sales\Model\Order\Item $orderItem
+                 */
+                foreach ($orderItems as $orderItem)
+                {
+                    $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem);
+                }
+
+            }
+        }
+
+        // return
+        return $ordersArray;
     }
 
     /**
-     * Create the JSON file as a string
+     * Takes the order and item details and puts it in an array
      *
-     * @param $results
-     * @return string
+     * @param Order $order
+     * @param Item $orderItem
+     * @param CreditmemoInterface $creditMemo
+     * @param CreditmemoItemInterface $creditMemoItem
+     * @return array
      */
-    private function getOrdersJson($results)
+    private function addRecordToOrdersArray($order, $orderItem, $creditMemo = null, $creditMemoItem = null)
     {
-        // variables
-        $response = array();
-        $orders = array();
+        // get tomorrows date
+        $tomorrow = date('Y-m-d', strtotime("tomorrow"));
 
-        // loop through each row of data creating the csv file
-        foreach ($results as $result)
+        // split the base url into different parts for later use
+        $urlParts = parse_url($order->getStore()->getBaseUrl());
+
+        // get the shipping condition data
+        /**
+         * @var /SMG/OfflineShipping/Model/ShippingConditionCode $shippingCondition
+         */
+        $shippingCondition = $this->_shippingConditionCodeFactory->create();
+        $this->_shippingConditionCodeResource->load($shippingCondition, $order->getShippingMethod(), 'shipping_method');
+
+        // get the shipping address
+        $address = $order->getShippingAddress();
+
+        // check to see if there was a value
+        $invoiceAmount = $order->getData('total_invoiced');
+        if (empty($invoiceAmount))
         {
-            $orders[] = array(
-                'order_number' => $result['order_number'],
-                'date_placed' => $result['date_placed'],
-                'sap_delivery_date' => $result['sap_delivery_date'],
-                'customer_name' => $result['customer_name'],
-                'customer_shipping_address_street' => $result['customer_shipping_address_street'],
-                'customer_shipping_address_city' => $result['customer_shipping_address_city'],
-                'customer_shipping_address_state' => $result['customer_shipping_address_state'],
-                'customer_shipping_address_zip' => $result['customer_shipping_address_zip'],
-                'smg_sku_1' => $result['smg_sku_1'],
-                'web_sku_1' => $result['web_sku_1'],
-                'quantity_1' => $result['quantity_1'],
-                'unit_1' => $result['unit_1'],
-                'unit_price_1' => $result['unit_price_1'],
-                'smg_sku_2' => $result['smg_sku_2'],
-                'web_sku_2' => $result['web_sku_2'],
-                'quantity_2' => $result['quantity_2'],
-                'unit_2' => $result['unit_2'],
-                'unit_price_2' => $result['unit_price_2'],
-                'gross_sales' => $result['gross_sales'],
-                'shipping_amount' => $result['shipping_amount'],
-                'shipping_condition' => $result['shipping_condition'],
-                'exempt_amount' => $result['exempt_amount'],
-                'discount_amount' => $result['discount_amount'],
-                'subtotal' => $result['subtotal'],
-                'tax_rate' => $result['tax_rate'],
-                'sales_tax_no_shipping' => $result['sales_tax_no_shipping'],
-                'sales_tax_on_shipping' => $result['sales_tax_on_shipping'],
-                'invoice_amount' => $result['invoice_amount'],
-                'delivery_location' => $result['delivery_location'],
-                'customer_email' => $result['customer_email'],
-                'customer_phone' => $result['customer_phone'],
-                'delivery_window' => $result['delivery_window']
-            );
+            $invoiceAmount = '';
         }
 
-        $response['orders'] = $orders;
+        // get the quantity
+        $quantity = $orderItem->getQtyOrdered();
+        $shippingAmount = $order->getData('shipping_amount');
+
+        // set credit fields to empty
+        $creditAmount = '';
+        $referenceDocNum = '';
+        $creditComment = '';
+        $orderReason = '';
+        $discCondCode = '';
+        $surchCondCode = '';
+        $discFixedAmt = '';
+        $surchFixedAmt = '';
+        $discPerAmt = '';
+        $surchPerAmt = '';
+
+        // determine what type of order
+        $debitCreditFlag = 'DR';
+        if (!empty($creditMemo) && !empty($creditMemoItem))
+        {
+            $debitCreditFlag = 'CR';
+
+            // set other credit memeo type fields
+            $quantity = $creditMemoItem->getQty();
+            $shippingAmount = $creditMemo->getShippingAmount();
+            $creditAmount = $creditMemoItem->getRowTotalInclTax();
+            $creditComment = $creditMemo->getData('customer_note');
+            $orderReason = $creditMemoItem->getData('refunded_reason_code');
+
+            // get the sap order for the billing doc number
+            /**
+             * @var \SMG\Sap\Model\SapOrder $sapOrder
+             */
+            $sapOrder = $this->_sapOrderFactory->create();
+            $this->_sapOrderResource->load($sapOrder, $order->getId(), 'order_id');
+
+            // get the billing doc number
+            $referenceDocNum = $sapOrder->getData('sap_billing_doc_number');
+        }
 
         // return
-        return json_encode($response);
+        return array(
+            self::ORDER_NUMBER => $order->getIncrementId(),
+            self::DATE_PLACED => $order->getData('created_at'),
+            self::SAP_DELIVERY_DATE => $tomorrow,
+            self::CUSTOMER_NAME => $order->getData('customer_firstname') . ' ' . $order->getData('customer_lastname'),
+            self::ADDRESS_STREET => $address->getStreetLine(1),
+            self::ADDRESS_CITY => $address->getCity(),
+            self::ADDRESS_STATE => $address->getRegion(),
+            self::ADDRESS_ZIP => $address->getPostcode(),
+            self::SMG_SKU => $orderItem->getSku(),
+            self::WEB_SKU => $orderItem->getSku(),
+            self::QUANTITY => $quantity,
+            self::UNIT => 'EA',
+            self::UNIT_PRICE => $orderItem->getPrice(),
+            self::GROSS_SALES => $order->getData('grand_total'),
+            self::SHIPPING_AMOUNT => $shippingAmount,
+            self::EXEMPT_AMOUNT => '0',
+            self::DISCOUNT_AMOUNT => $order->getData('base_discount_amount'),
+            self::SUBTOTAL => $order->getData('subtotal'),
+            self::TAX_RATE => $orderItem->getTaxPercent(),
+            self::SALES_TAX => $order->getData('tax_amount'),
+            self::INVOICE_AMOUNT => $invoiceAmount,
+            self::DELIVERY_LOCATION => '',
+            self::EMAIL => $order->getData('customer_email'),
+            self::PHONE => $address->getTelephone(),
+            self::DELIVERY_WINDOW => '',
+            self::SHIPPING_CONDITION => $shippingCondition->getData('sap_shipping_method'),
+            self::WEBSITE_URL => $urlParts['host'],
+            self::CREDIT_AMOUNT => $creditAmount,
+            self::CR_DR_RE_FLAG => $debitCreditFlag,
+            self::SAP_BILLING_DOC_NUMBER => $referenceDocNum,
+            self::CREDIT_COMMENT => $creditComment,
+            self::ORDER_REASON => $orderReason,
+            self::DISCOUNT_CONDITION_CODE => $discCondCode,
+            self::SURCH_CONDITION_CODE => $surchCondCode,
+            self::DISCOUNT_FIXED_AMOUNT => $discFixedAmt,
+            self::SURCH_FIXED_AMOUNT => $surchFixedAmt,
+            self::DISCOUNT_PERCENT_AMOUNT => $discPerAmt,
+            self::SURCH_PERCENT_AMOUNT => $surchPerAmt
+        );
+    }
+
+    /**
+     * Get the array of credit orders
+     *
+     * @return array
+     */
+    private function getCreditOrderData()
+    {
+        $ordersArray = array();
+
+        // get the orders that are ready to be sent to SAP
+        $sapOrderBatchItems = $this->_sapOrderBatchItemCollectionFactory->create();
+        $sapOrderBatchItems->addFieldToFilter('is_credit', ['eq' => true]);
+        $sapOrderBatchItems->addFieldToFilter('credit_process_date', ['null' => true]);
+
+        // check if there are orders to process
+        if ($sapOrderBatchItems->count() > 0)
+        {
+            /**
+             * @var \SMG\Sap\Model\SapOrderBatchItem $sapOrderBatchItem
+             */
+            foreach ($sapOrderBatchItems as $sapOrderBatchItem)
+            {
+                // get the required fields needed for processing
+                $orderId = $sapOrderBatchItem->getData('order_id');
+                $orderItemId = $sapOrderBatchItem->getData('order_item_id');
+                $creditmemoId = $sapOrderBatchItem->getData('creditmemo_order_id');
+                $sku = $sapOrderBatchItem->getData('sku');
+
+                // Get the sales order
+                /**
+                 * @var \Magento\Sales\Model\Order $order
+                 */
+                $order = $this->_orderFactory->create();
+                $this->_orderResource->load($order, $orderId);
+
+                // Get the sales order item
+                /**
+                 * @var \Magento\Sales\Model\Order\Item $orderItem
+                 */
+                $orderItem = $this->_itemFactory->create();
+                $this->_itemResource->load($orderItem, $orderItemId);
+
+                // Get the credit memo
+                $creditMemo = $this->_creditmemoRespository->get($creditmemoId);
+
+                // Get the credit memo items
+                $creditMemoItems = $creditMemo->getItems();
+                foreach ($creditMemoItems as $creditMemoItem)
+                {
+                    // see if the sku is the same as the sku that we are looking for
+                    if ($sku === $creditMemoItem->getSku())
+                    {
+                        // add the record to the orders array
+                        $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem, $creditMemo, $creditMemoItem);
+
+                        // get out of the loop as we found it
+                        break;
+                    }
+                }
+            }
+        }
+
+        // return
+        return $ordersArray;
     }
 }

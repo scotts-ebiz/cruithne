@@ -15,20 +15,13 @@ class OrdersManagement implements OrdersManagementInterface
     protected $_ordersHelper;
 
     /**
-     * @var Request
-     */
-    protected $_request;
-
-    /**
      * OrdersManagement constructor.
      *
      * @param OrdersHelper $ordersHelper
-     * @param Request $request
      */
-    public function __construct(OrdersHelper $ordersHelper, Request $request)
+    public function __construct(OrdersHelper $ordersHelper)
     {
         $this->_ordersHelper = $ordersHelper;
-        $this->_request = $request;
     }
 
     /**
@@ -38,6 +31,6 @@ class OrdersManagement implements OrdersManagementInterface
      */
     public function getOrders()
     {
-        return $this->_ordersHelper->getOrders($this->_request->get("startDate"), $this->_request->get("endDate"));
+        return $this->_ordersHelper->getOrders();
     }
 }

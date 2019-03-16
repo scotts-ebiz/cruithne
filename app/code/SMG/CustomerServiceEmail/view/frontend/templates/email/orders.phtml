@@ -1,0 +1,59 @@
+<?php
+/**
+ * Copyright © 2019 SMG, LLC. All rights reserved.
+ */
+
+/** @var \SMG\CustomerServiceEmail\Block\View\Orders $block */
+$orders = $block->getOrders();
+$giftMessageHelper = $this->helper('Magento\GiftMessage\Helper\Message');
+?>
+
+<?php foreach ($orders as $order): ?>
+    <tr class="email-summary">
+        <td>
+            <h1><?= $block->escapeHtml(__('Order ID: %1', $order->getId())); ?></h1>
+            <p><?= $block->escapeHtml(__('Placed on: %1', $order->getCreatedAtFormatted(2))); ?></p>
+        </td>
+    </tr>
+    <tr class="email-information">
+        <td>
+            <?php if ($order->getEmailCustomerNote()): ?>
+                <table class="message-info">
+                    <tr>
+                        <td>
+                            <?= $block->escapeHtml($order->getEmailCustomerNote())?>
+                        </td>
+                    </tr>
+                </table>
+            <?php endif; ?>
+            <table class="order-details">
+                <tr>
+                    <td class="address-details">
+                        <h3><?= __('Billing Info') ?></h3>
+                        <p><?= $block->getFormattedBillingAddress($order) ?></p>
+                    </td>
+                    <?php if ($order->getIsNotVirtual()): ?>
+                        <td class="address-details">
+                            <h3><?= __('Shipping Info') ?></h3>
+                            <p><?= $block->getFormattedShippingAddress($order) ?></p>
+                        </td>
+                    <?php endif; ?>
+                </tr>
+                <tr>
+                    <td class="method-info">
+                        <h3><?= __('Payment Method') ?></h3>
+                        <?= $block->getPaymentHtml($order) ?>
+                    </td>
+                    <?php if ($order->getIsNotVirtual()): ?>
+                        <td class="method-info">
+                            <h3><?= __('Shipping Method') ?></h3>
+                            <p><?= $order->getShippingDescription() ?></p>
+                        </td>
+                    <?php endif; ?>
+                </tr>
+            </table>
+            <?php $block->getChildBlock('items')->setOrder($order); ?>
+            <?= $block->getChildHtml('items'); ?>
+        </td>
+    </tr>
+<?php endforeach; ?>

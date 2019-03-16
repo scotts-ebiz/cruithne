@@ -1,36 +1,142 @@
 /* Widget Start - Location - App / design / frontend / Scottsbase / default / SMG_ProdcutCalloutVideo / styles */
 
 .product-callout-video-widget.product-info-container {
-    .text-left {
-        text-align: left;
-        font-size: 20px;
-        i {
-            border-radius: 25px;
-            margin-right: 1%;
-            padding: 10px;
-            font-size: 15px;
+    display: inline-block;
+    position: relative;
+    width: 100%;
+    .product-info {
+        .productCalloutVideo-imageContainer {
+            display: inline-block;
+            position: relative;
+            text-align: center;
+            .productCalloutVideo-selectedImgContainer {
+                padding: 40% 5% 5% 80%;
+                a.productCalloutVideo-watchVideo {
+                    i {
+                        color: #ffffff;
+                        height: 65px;
+                        width: 65px;
+                        line-height: 65px;
+                        font-size: 25px;
+                        background: #000000;
+                        border-radius: 50%;
+                        text-align: center;
+                        display: inline-block;
+                        margin-right: 1%;
+                        padding: 5px;
+                    }
+                    span.embed-code {
+                        display: none !important;
+                    }
+                }
+            }
         }
-        span.productvideotxt {
-            font-size: 16px;
-            border-bottom: 2px solid;
-            padding-bottom: 5px;
-            font-weight: 700;
+        @media only screen and (max-width: 1024px) {
+            display: block;
+        }
+        .productCalloutVideo-contentContainer {
+            @media only screen and (max-width: $screen__s) {
+                float: left;
+                width: 98%;
+            }
+            h2 {
+                text-align: left;
+                width: 70%;
+                margin-right: auto;
+                margin-left: auto;
+                @media only screen and (max-width: 1024px) {
+                    width: 80%;
+                    padding: 0;
+                    line-height: 32px;
+                    margin-bottom: 15px;
+                    margin-top: 15px;
+                }
+                @media only screen and (max-width: $screen__m) {
+                    width: 95%;
+                    margin-right: auto;
+                    margin-left: auto;
+                    text-align: center;
+                }
+            }
+            p {
+                text-align: left;
+                width: 70%;
+                margin-right: auto;
+                margin-left: auto;
+                @media only screen and (max-width: 1024px) {
+                    padding: 0;
+                    width: 80%;
+                }
+                @media only screen and (max-width: $screen__m) {
+                    width: 95%;
+                    margin-right: auto;
+                    margin-left: auto;
+                }
+            }
+            .selected-bannerTextImage {
+                display: block;
+                position: relative;
+                width: 70%;
+                margin-right: auto;
+                margin-left: auto;
+                @media only screen and (max-width: 1024px) {
+                    width: 80%;
+                }
+                @media only screen and (max-width: $screen__m) {
+                    text-align: center;
+                }
+                img {
+                    width:30%;
+                }
+            }
+        }
+        .video-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 8;
+            height: 100%;
+            width: 100%;
+            background: rgba(0, 0, 0, .9);
+            visibility: hidden;
+            opacity: 0;
+            transition: .2s visibility linear, .2s opacity linear;
+        }
+        .video-container {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            width: 100%;
+            max-width: 1000px;
+            -webkit-transform: translate(-50%, -50%);
+            transform: translate(-50%, -50%);
+            z-index: 9;
+            .video-frame {
+                position: relative;
+                padding-bottom: 56.25%;
+                padding-top: 25px;
+                height: 0;
+            }
         }
     }
-    .text-right {
-        text-align: right;
-        font-size: 20px;
-        i {
-            border-radius: 25px;
-            margin-right: 1%;
-            padding: 10px;
-            font-size: 15px;
-        }
-        span.productvideotxt {
-            font-size: 16px;
-            border-bottom: 2px solid;
-            padding-bottom: 5px;
-            font-weight: 700;
-        }
+}
+
+.product-callout-video-widget.product-info-container {
+  .product-info {
+    .productCalloutVideo-contentContainer.text-left {
+      float: left;
+      h2 {
+        margin-right: auto;
+        margin-left: auto;
+      }
+      p {
+        margin-right: auto;
+        margin-left: auto;
+      }
     }
+    .productCalloutVideo-contentContainer.text-right {
+      float: right;
+    }
+  }
 }

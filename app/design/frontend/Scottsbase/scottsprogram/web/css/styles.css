@@ -2295,14 +2295,13 @@ select:not([disabled]):focus {
     .fieldset > .field .additional,
     .fieldset > .fields > .field .additional {
       margin-top: 10px; }
-    /*.fieldset > .field.required > .label:after,
     .fieldset > .field._required > .label:after,
     .fieldset > .fields > .field.required > .label:after,
     .fieldset > .fields > .field._required > .label:after {
       content: '*';
       color: #e02b27;
       font-size: 1.2rem;
-      margin: 0 0 0 5px; }*/
+      margin: 0 0 0 5px; }
     .fieldset > .field .note,
     .fieldset > .fields > .field .note {
       font-size: 1.2rem;
@@ -12445,7 +12444,6 @@ color: #bbbcbf;
   .page-wrapper #maincontent .columns .column .cart-container .cart-summary { margin-bottom:10px; }
 
 }
-/*  shipping popup   */
 #ac-wrapper {
     position: fixed;
     top: 0;
@@ -12802,4 +12800,5 @@ input.btn-popup {
     left: 420px;
     top: 92px;
     float: left;
-}
+  
+.cart-summary .block > .title{padding: 7px 20px 5px 17px !important;}

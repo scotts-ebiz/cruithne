@@ -4,6 +4,10 @@ $bg_class = '';
 $customCssStyle = '';
 $headlineCustomCssStyle = '';
 $paragraphTextSize = '';
+$selectedBannerTextImageOne = '';
+$selectedBannerTextImageTwo = '';
+$selectedBannerTextImgOneLink = '';
+$selectedBannerTextImgTwoLink = '';
 
 
 // If textstyle exists then set to customCssStyles
@@ -28,30 +32,51 @@ endif;
 if($block->getData('bannertextsize') != ''):
   $paragraphTextSize = $block->getData('bannertextsize');
 endif;
+
+
+// Check for existence of bannerTextImgOne
+if($block->getData('bannerTextImageOne') != ''):
+  $selectedBannerTextImageOne = $block->getData('bannerTextImageOne');
+endif;
+
+
+// Check for existence of bannerTextImgTwo
+if($block->getData('bannerTextImageTwo') !=''):
+  $selectedBannerTextImageTwo = $block->getData('bannerTextImageTwo');
+endif;
+
+
+// Check for existence of bannerTextImgOneLink
+if($block->getData('bannerTextImgOneLink') !=''):
+  $selectedBannerTextImgOneLink = $block->getData('bannerTextImgOneLink');
+endif;
+
+
+// Check for existence of bannerTextImgTwoLink
+if($block->getData('bannerTextImgTwoLink') !=''):
+  $selectedBannerTextImgTwoLink = $block->getData('bannerTextImgTwoLink');
+endif;
+
 ?>
 
 
 
-
-
-<section class="product-callout-widget product-info-container <?php echo $block->getData('textalignclass') ?>" style="background: url('<?php echo $block->getData('bgimage'); ?>') no-repeat; background-size:cover; background-position:center;
+<section class="product-callout-widget product-info-container" style="background: url('<?php echo $block->getData('bgimage'); ?>') no-repeat; background-size:cover; background-position:center;
   background-color: <?php
 echo
 $block->getData('bgcolor');
 ?>; padding-top: <?php echo $block->getData('paddingtop'); ?>%; padding-bottom: <?php echo $block->getData
 ('paddingbottom'); ?>%;">
-  <div class="product-info grid col-2 <?php echo $block->getData('textalignclass') ?>">
+  <div class="product-info grid col-2">
     <?php if($this->getData('bannerimage') != ''): ?>
-      <div class="image-container span_6_of_12">
+      <div class="productCallout-imageContainer span_6_of_12">
         <img src="<?php echo $block->getData('bannerimage'); ?>">
       </div>
     <?php endif; ?>
 
     <div
-      class="content span_6_of_12"
-      style="padding-left: <?php echo $block->getData('bannercontainerpaddingleft');?>%; padding-right: <?php echo $block->getData('bannercontainerpaddingright');?>%;">
-      <h2 style="
-        <?php
+      class="productCallout-contentContainer span_6_of_12 <?php echo $block->getData('textalignclass') ?>">
+      <h2 style="<?php
           $headlinestylevalues = explode(',', $headlineCustomCssStyle);
             foreach($headlinestylevalues as $headlinevalue) {
             echo $headlinevalue;
@@ -59,8 +84,7 @@ $block->getData('bgcolor');
         color:<?php echo $block->getData('bannerheadlinecolor'); ?>;">
           <?php echo $block->getData('bannerheadline'); ?>
       </h2>
-      <p style="
-        <?php
+      <p style="<?php
           //If selected display Font Styles
           $stylevalues = explode(',', $customCssStyle);
           foreach($stylevalues as $value) {
@@ -72,8 +96,40 @@ $block->getData('bgcolor');
         ?>
         color:<?php echo $block->getData('bannertextlinecolor'); ?>;">
         <?php echo $block->getData('bannertext'); ?>
-        <br/>
       </p>
+
+
+      <!-- Check if link selected for Text Img One -->
+      <?php if($selectedBannerTextImgOneLink != ''){?>
+        <div class="selected-bannerTextImage selected-bannerTextImageOne">
+          <a href="<?php echo $selectedBannerTextImgOneLink?>" target="_blank">
+            <img src="<?php echo $selectedBannerTextImageOne?>">
+          </a>
+        </div>
+      <?php }elseif ($selectedBannerTextImageOne != ''){?>
+        <div class="selected-bannerTextImage selected-bannerTextImageOne">
+          <img src="<?php echo $selectedBannerTextImageOne?>">
+        </div>
+      <?php }else{?>
+        <!-- No One Img was selected -->
+      <?php }?>
+
+
+      <!-- Check if link selected for Text Img Two -->
+      <?php if($selectedBannerTextImgTwoLink != ''){?>
+        <div class="selected-bannerTextImage selected-bannerTextImageTwo">
+          <a href="<?php echo $selectedBannerTextImgTwoLink?>" target="_blank">
+            <img src="<?php echo $selectedBannerTextImageTwo?>">
+          </a>
+        </div>
+      <?php }elseif ($selectedBannerTextImageTwo != ''){?>
+        <div class="selected-bannerTextImage selected-bannerTextImageTwo">
+          <img src="<?php echo $selectedBannerTextImageTwo?>">
+        </div>
+      <?php }else{?>
+        <!-- No Two Img was selected -->
+      <?php }?>
+
     </div>
   </div>
 </section>

@@ -78,6 +78,7 @@ body {
 
 .page-main {
     > .page-title-wrapper {
+        display: none;
         .page-title + .action {
             margin-top: $indent__l;
         }
