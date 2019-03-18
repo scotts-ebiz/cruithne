@@ -19,10 +19,51 @@ use SMG\OfflineShipping\Model\ShippingConditionCodeFactory;
 use SMG\OfflineShipping\Model\ResourceModel\ShippingConditionCode as ShippingConditionCodeResource;
 use SMG\Sap\Model\SapOrderFactory;
 use SMG\Sap\Model\ResourceModel\SapOrder as SapOrderResource;
+use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderBatchItem\CollectionFactory as SapOrderBatchItemCollectionFactory;
 
 class OrdersHelper
 {
+    // Output JSON file constants
+    const ORDER_NUMBER = 'OrderNumber';
+    const DATE_PLACED = 'DatePlaced';
+    const SAP_DELIVERY_DATE = 'SAPDeliveryDate';
+    const CUSTOMER_NAME = 'CustomerName';
+    const ADDRESS_STREET = 'CustomerShippingAddressStreet';
+    const ADDRESS_CITY = 'CustomerShippingAddressCity';
+    const ADDRESS_STATE = 'CustomerShippingAddressState';
+    const ADDRESS_ZIP = 'CustomerShippingAddressZip';
+    const SMG_SKU = 'SMGSKU';
+    const WEB_SKU = 'WebSKU';
+    const QUANTITY = 'Quantity';
+    const UNIT = 'Unit';
+    const UNIT_PRICE = 'UnitPrice';
+    const GROSS_SALES = 'GrossSales';
+    const SHIPPING_AMOUNT = 'ShippingAmount';
+    const EXEMPT_AMOUNT = 'ExemptAmount';
+    const DISCOUNT_AMOUNT = 'DiscountAmount';
+    const SUBTOTAL = 'Subtotal';
+    const TAX_RATE = 'TaxRate';
+    const SALES_TAX = 'SalesTax';
+    const INVOICE_AMOUNT = 'InvoiceAmount';
+    const DELIVERY_LOCATION = 'DeliveryLocation';
+    const EMAIL = 'CustomerEmail';
+    const PHONE = 'CustomerPhone';
+    const DELIVERY_WINDOW = 'DeliveryWindow';
+    const SHIPPING_CONDITION = 'ShippingCondition';
+    const WEBSITE_URL = 'WebsiteURL';
+    const CREDIT_AMOUNT = 'CreditAmount';
+    const CR_DR_RE_FLAG = 'CR/DR/RE/Flag';
+    const SAP_BILLING_DOC_NUMBER = 'ReferenceDocNum';
+    const CREDIT_COMMENT = 'CreditComment';
+    const ORDER_REASON = 'OrderReason';
+    const DISCOUNT_CONDITION_CODE = 'DiscCondCode';
+    const SURCH_CONDITION_CODE = 'SurchCondCode';
+    const DISCOUNT_FIXED_AMOUNT = 'DiscFixedAmt';
+    const SURCH_FIXED_AMOUNT = 'SurchFixedAmt';
+    const DISCOUNT_PERCENT_AMOUNT = 'DiscPercAmt';
+    const SURCH_PERCENT_AMOUNT = 'SurchPercAmt';
+
     /**
      * @var LoggerInterface
      */
@@ -99,6 +140,11 @@ class OrdersHelper
     protected $_creditmemoRespository;
 
     /**
+     * @var SapOrderBatchCollectionFactory
+     */
+    protected $_sapOrderBatchCollectionFactory;
+
+    /**
      * OrdersHelper constructor.
      *
      * @param LoggerInterface $logger
@@ -116,6 +162,7 @@ class OrdersHelper
      * @param SapOrderFactory $sapOrderFactory
      * @param SapOrderResource $sapOrderResource
      * @param CreditmemoRepositoryInterface $creditmemoRepository
+     * @param SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
      */
     public function __construct(LoggerInterface $logger,
         ResourceConnection $resourceConnection,
@@ -131,7 +178,8 @@ class OrdersHelper
         ItemResource $itemResource,
         SapOrderFactory $sapOrderFactory,
         SapOrderResource $sapOrderResource,
-        CreditmemoRepositoryInterface $creditmemoRepository)
+        CreditmemoRepositoryInterface $creditmemoRepository,
+        SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory)
     {
         $this->_logger = $logger;
         $this->_resourceConnection = $resourceConnection;
@@ -148,73 +196,36 @@ class OrdersHelper
         $this->_sapOrderFactory = $sapOrderFactory;
         $this->_sapOrderResource = $sapOrderResource;
         $this->_creditmemoRespository = $creditmemoRepository;
+        $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
     }
 
     /**
      * Get the sales orders in the desired format
      *
-     * @param $requestData
-     *
      * @return string
      */
-    public function getOrders($requestData)
+    public function getOrders()
     {
-        // make sure that we were given something from the request
-        if (!empty($requestData))
+        // get the debit order data
+        $debitArray = $this->getDebitOrderData();
+
+        // get the credit order data
+        $creditArray = $this->getCreditOrderData();
+
+        // merge the debits and credits
+        $ordersArray = array_merge($debitArray, $creditArray);
+
+        // determine if there is anything there to send
+        if (empty($ordersArray))
         {
-            // determine if the required input parameters were availabe
-            if (array_key_exists("startDate", $requestData))
-            {
-                // get the start date
-                $startDate = $requestData["startDate"];
+            // log that there were no records found.
+            $this->_logger->info("SMG\Api\Helper\OrdersHelper - No Orders were found for processing.");
 
-                if (array_key_exists("endDate", $requestData))
-                {
-                    // get the end date
-                    $endDate = $requestData["endDate"];
-
-                    // get the debit order data
-                    $debitArray = $this->getDebitOrderData($startDate, $endDate);
-
-                    // get the credit order data
-                    $creditArray = $this->getCreditOrderData();
-
-                    $ordersArray = array_merge($debitArray, $creditArray);
-
-                    // determine if there is anything there to send
-                    if (empty($ordersArray))
-                    {
-                        // log that there were no records found.
-                        $this->_logger->info("SMG\Api\Helper\OrdersHelper - No Orders were found for Begin Date: " . $startDate . " and End Date: " . $endDate);
-
-                        $orders = $this->_responseHelper->createResponse(true, 'No Orders where found for Begin Date: ' . $startDate . " and End Date: " . $endDate);
-                    }
-                    else
-                    {
-                        $orders = $this->_responseHelper->createResponse(true, $ordersArray);
-                    }
-                }
-                else
-                {
-                    // log the error
-                    $this->_logger->error("SMG\Api\Helper\OrdersHelper - The End Date was not provided.");
-
-                    $orders = $this->_responseHelper->createResponse(false, 'The End Date was not provided.');
-                }
-            } else
-            {
-                // log the error
-                $this->_logger->error("SMG\Api\Helper\OrdersHelper - The Start Date was not provided.");
-
-                $orders = $this->_responseHelper->createResponse(false, 'The Start Date was not provided.');
-            }
+            $orders = $this->_responseHelper->createResponse(true, 'No Orders where found for processing.');
         }
         else
         {
-            // log the error
-            $this->_logger->error("SMG\Api\Helper\OrdersHelper - The Start Date and End Date was not provided.");
-
-            $orders = $this->_responseHelper->createResponse(false, 'The Start Date and End Date was not provided.');
+            $orders = $this->_responseHelper->createResponse(true, $ordersArray);
         }
 
         // return
@@ -224,27 +235,36 @@ class OrdersHelper
     /**
      * Get the debit orders
      *
-     * @param $startDate
-     * @param $endDate
      * @return array
      */
-    private function getDebitOrderData($startDate, $endDate)
+    private function getDebitOrderData()
     {
         $ordersArray = array();
 
-        // get the list of orders with shipping address info
-        $orders = $this->_orderCollectionFactory->create();
-        $orders->addFieldToFilter("created_at", ["gteq" => $startDate]);
-        $orders->addFieldToFilter("created_at", ["lt" => $endDate]);
+        // get the orders that are ready to be sent to SAP
+        $sapOrderBatches = $this->_sapOrderBatchCollectionFactory->create();
+        $sapOrderBatches->addFieldToFilter('is_order', ['eq' => true]);
+        $sapOrderBatches->addFieldToFilter('order_process_date', ['null' => true]);
 
         // check if there are orders to process
-        if ($orders->count() > 0)
+        if ($sapOrderBatches->count() > 0)
         {
             /**
-             * @var \Magento\Sales\Model\Order $order
+             * @var \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
              */
-            foreach ($orders as $order)
+            foreach ($sapOrderBatches as $sapOrderBatch)
             {
+                // get the required fields needed for processing
+                $orderId = $sapOrderBatch->getData('order_id');
+
+                // Get the sales order
+                /**
+                 * @var \Magento\Sales\Model\Order $order
+                 */
+                $order = $this->_orderFactory->create();
+                $this->_orderResource->load($order, $orderId);
+
+                // get the list of items for this order
                 $orderItems = $this->_orderItemCollectionFactory->create();
                 $orderItems->addFieldToFilter("order_id", ['eq' => $order->getId()]);
                 $orderItems->addFieldToFilter("product_type", ['neq' => 'bundle']);
@@ -256,6 +276,7 @@ class OrdersHelper
                 {
                     $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem);
                 }
+
             }
         }
 
@@ -339,44 +360,44 @@ class OrdersHelper
 
         // return
         return array(
-            'OrderNumber' => $order->getIncrementId(),
-            'DatePlaced' => $order->getData('created_at'),
-            'SAPDeliveryDate' => $tomorrow,
-            'CustomerName' => $order->getData('customer_firstname') . ' ' . $order->getData('customer_lastname'),
-            'CustomerShippingAddressStreet' => $address->getStreetLine(1),
-            'CustomerShippingAddressCity' => $address->getCity(),
-            'CustomerShippingAddressState' => $address->getRegion(),
-            'CustomerShippingAddressZip' => $address->getPostcode(),
-            'SMGSKU' => $orderItem->getSku(),
-            'WebSKU' => $orderItem->getSku(),
-            'Quantity' => $quantity,
-            'Unit' => 'EA',
-            'UnitPrice' => $orderItem->getPrice(),
-            'GrossSales' => $order->getData('grand_total'),
-            'ShippingAmount' => $shippingAmount,
-            'ExemptAmount' => '0',
-            'DiscountAmount' => $order->getData('base_discount_amount'),
-            'Subtotal' => $order->getData('subtotal'),
-            'TaxRate' => $orderItem->getTaxPercent(),
-            'SalesTax' => $order->getData('tax_amount'),
-            'InvoiceAmount' => $invoiceAmount,
-            'DeliveryLocation' => '',
-            'CustomerEmail' => $order->getData('customer_email'),
-            'CustomerPhone' => $address->getTelephone(),
-            'DeliveryWindow' => '',
-            'ShippingCondition' => $shippingCondition->getData('sap_shipping_method'),
-            'WebsiteURL' => $urlParts['host'],
-            'CreditAmount' => $creditAmount,
-            'CR/DR/RE/Flag' => $debitCreditFlag,
-            'ReferenceDocNum' => $referenceDocNum,
-            'CreditComment' => $creditComment,
-            'OrderReason' => $orderReason,
-            'DiscCondCode' => $discCondCode,
-            'SurchCondCode' => $surchCondCode,
-            'DiscFixedAmt' => $discFixedAmt,
-            'SurchFixedAmt' => $surchFixedAmt,
-            'DiscPercAmt' => $discPerAmt,
-            'SurchPercAmt' => $surchPerAmt
+            self::ORDER_NUMBER => $order->getIncrementId(),
+            self::DATE_PLACED => $order->getData('created_at'),
+            self::SAP_DELIVERY_DATE => $tomorrow,
+            self::CUSTOMER_NAME => $order->getData('customer_firstname') . ' ' . $order->getData('customer_lastname'),
+            self::ADDRESS_STREET => $address->getStreetLine(1),
+            self::ADDRESS_CITY => $address->getCity(),
+            self::ADDRESS_STATE => $address->getRegion(),
+            self::ADDRESS_ZIP => $address->getPostcode(),
+            self::SMG_SKU => $orderItem->getSku(),
+            self::WEB_SKU => $orderItem->getSku(),
+            self::QUANTITY => $quantity,
+            self::UNIT => 'EA',
+            self::UNIT_PRICE => $orderItem->getPrice(),
+            self::GROSS_SALES => $order->getData('grand_total'),
+            self::SHIPPING_AMOUNT => $shippingAmount,
+            self::EXEMPT_AMOUNT => '0',
+            self::DISCOUNT_AMOUNT => $order->getData('base_discount_amount'),
+            self::SUBTOTAL => $order->getData('subtotal'),
+            self::TAX_RATE => $orderItem->getTaxPercent(),
+            self::SALES_TAX => $order->getData('tax_amount'),
+            self::INVOICE_AMOUNT => $invoiceAmount,
+            self::DELIVERY_LOCATION => '',
+            self::EMAIL => $order->getData('customer_email'),
+            self::PHONE => $address->getTelephone(),
+            self::DELIVERY_WINDOW => '',
+            self::SHIPPING_CONDITION => $shippingCondition->getData('sap_shipping_method'),
+            self::WEBSITE_URL => $urlParts['host'],
+            self::CREDIT_AMOUNT => $creditAmount,
+            self::CR_DR_RE_FLAG => $debitCreditFlag,
+            self::SAP_BILLING_DOC_NUMBER => $referenceDocNum,
+            self::CREDIT_COMMENT => $creditComment,
+            self::ORDER_REASON => $orderReason,
+            self::DISCOUNT_CONDITION_CODE => $discCondCode,
+            self::SURCH_CONDITION_CODE => $surchCondCode,
+            self::DISCOUNT_FIXED_AMOUNT => $discFixedAmt,
+            self::SURCH_FIXED_AMOUNT => $surchFixedAmt,
+            self::DISCOUNT_PERCENT_AMOUNT => $discPerAmt,
+            self::SURCH_PERCENT_AMOUNT => $surchPerAmt
         );
     }
 

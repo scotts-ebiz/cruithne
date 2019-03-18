@@ -32,6 +32,11 @@ RUN sed -i "s/save.*/save' => 'files',\n\t 'save_path' => '\/tmp',/" app/etc/env
 
 RUN date
 
+# Neelam Special Per https://scotts.jira.com/browse/ECOM-496
+# This is a Patch for Magento per https://github.com/magento/magento2/issues/13269
+# Should be able to be removed after Magento 2.3.1 is live
+RUN sed -i "s/.*result = mb_convert_encoding.*/\t\t\$result = mb_convert_encoding(preg_replace('\/\&\/', \'\&amp\;\', html_entity_decode(\$domDocument->saveHTML())), \'HTML-ENTITIES\', \'UTF-8\');\n/" $MAGENTO_DIR/vendor/magento/framework/Escaper.php
+
 USER root
 
 RUN sed 's/newrelic\.license/;newrelic\.license/' /etc/php/7.2/apache2/conf.d/20-newrelic.ini
@@ -49,5 +54,16 @@ RUN \
 # Expose Ports for Apache
 EXPOSE 80/tcp 443/tcp
 
+USER root
+
+# Run entrypoint file
+COPY ondemand-entrypoint.sh /usr/local/bin/entrypoint.sh
+
+# Make executable
+RUN ["chmod", "+x", "/usr/local/bin/entrypoint.sh"]
+
+# The apachectl command is in entrypoint :-)
+ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
+
 # CMD "exec /usr/sbin/apachectl -DFOREGROUND -k start"
-CMD /usr/sbin/apachectl -DFOREGROUND 
+# CMD /usr/sbin/apachectl -DFOREGROUND 
