@@ -84,6 +84,7 @@
                 <label>Background Image (Optional)</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
+            <!-- Commenting out | As of right now going with default value
             <parameter name="paddingtop" visible="true" xsi:type="text">
                 <label>Background Top Padding (in %)</label>
                 <value>0</value>
@@ -92,6 +93,7 @@
                 <label>Background Bottom Padding (in %)</label>
                 <value>0</value>
             </parameter>
+            -->
         </parameters>
     </widget>
 </widgets>
