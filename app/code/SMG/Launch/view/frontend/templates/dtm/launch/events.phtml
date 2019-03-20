@@ -1,0 +1,34 @@
+<?php
+$helper = $block->getHelper();
+$session = $block->getSession();
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance(); 
+$CheckoutSession = $objectManager->get('Magento\Checkout\Model\Session');
+$item = $CheckoutSession->getSmgAddToCart(); 
+?>
+
+<?php if ($item) : ?>
+
+<script>
+smgData.events.push({
+
+	name: 'cartAdd',
+
+	product: {
+		<?php foreach($CheckoutSession->getSmgAddToCart() as $pro){ ?>
+		id: '<?php echo $pro['id'];?>',
+		name: '<?php echo $pro['name'];?>',
+		category: [<?php echo $pro['category'];?>], 
+		currency: '<?php echo $block->getCurrencyCode();?>',
+		unitPrice: <?php echo $pro['unitPrice'];?>,
+		sku: '<?php echo $pro['sku'];?>',
+		quantity: <?php echo $pro['category'];?>
+		
+		<?php } ?>
+
+	}
+
+});
+</script>
+<?php $CheckoutSession->unsSmgAddToCart();?>
+<?php endif; ?>
