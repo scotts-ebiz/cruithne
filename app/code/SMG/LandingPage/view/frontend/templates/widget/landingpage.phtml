@@ -1,35 +1,28 @@
 <?php
-    $small_bundle_parts = explode("/", $this->getData('smallyardbundle'));
-    $small_bundle_id = (isset($small_bundle_parts[1])) ? intval($small_bundle_parts[1]) : 0;
+$small_bundle_parts = explode("/", $this->getData('smallyardbundle'));
+$small_bundle_id = (isset($small_bundle_parts[1])) ? intval($small_bundle_parts[1]) : 0;
 
-    $large_bundle_parts = explode("/", $this->getData('largeyardbundle'));
-    $large_bundle_id = (isset($large_bundle_parts[1])) ? intval($large_bundle_parts[1]) : 0;
+$large_bundle_parts = explode("/", $this->getData('largeyardbundle'));
+$large_bundle_id = (isset($large_bundle_parts[1])) ? intval($large_bundle_parts[1]) : 0;
 
-    // Create the Checkout Cart Helper For Later Use
-    $cart_helper = $this->helper('\Magento\Checkout\Helper\Cart');
-    $large_bundle_url = '';
-    $large_bundle_price = '';
-
-
-
+// Create the Checkout Cart Helper For Later Use
+$cart_helper = $this->helper('\Magento\Checkout\Helper\Cart');
+$large_bundle_url = '';
+$large_bundle_price = '';
 ?>
-
 <style>
-  @media only screen and (max-width: 1130px) {
-    .background-test {
-        background-image: url('<?php echo $block->getData('heroMobileImage'); ?>') !important;
+    @media only screen and (max-width: 1130px) {
+        .background-test {
+            background-image: url('<?php echo $block->getData('heroMobileImage'); ?>') !important;
+        }
     }
-  }
 </style>
-
-
-
 <div class="landingPageOptions-container">
   <div class="std">
 		<div class="widget widget-static-block hero__wrapper">
       <section class="section__hero background-test" style="background-image: url('<?php echo $block->getData('heroimage'); ?>');">
 				<div class="section__hero--wrapper info-right">
-					<div class="section__hero--purchase">
+                    <div class="section__hero--purchase">
 						<div class="section__hero--text">
 							<h1 class="section__hero--headline"><?php echo $block->getData('herosupportingheadline'); ?></h1>
 							<h2 class="section__hero--subhead"><?php echo $block->getData('heroheadline'); ?></h2>
