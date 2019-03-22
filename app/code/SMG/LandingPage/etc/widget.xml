@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
     <widget class="SMG\LandingPage\Block\Widget\Landingpage" id="smg_landingpage_landingpage">
-        <label>Landing Page Options</label>
+        <label>Scottsprogram Landing Page</label>
         <description>Landing page custom fields.</description>
         <parameters>
             <parameter name="requireszipcodelookup" visible="true" xsi:type="select" source_model="SMG\ParameterTypes\Model\Source\YesNoSelect">
@@ -9,6 +9,10 @@
             </parameter>
             <parameter name="heroimage" visible="true" xsi:type="block">
                 <label>Hero Image</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+            <parameter name="heroMobileImage" visible="true" xsi:type="block">
+                <label>Hero Mobile Image</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
             <parameter name="herosupportingheadline" visible="true" xsi:type="text">
@@ -59,16 +63,28 @@
                 <label>Disclaimer Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
             </parameter>
+            <parameter name="stepsSectionTitle" visible="true" xsi:type="text">
+                <label>Steps Section Title</label>
+            </parameter>
+            <parameter name="stepOneTitle" visible="true" xsi:type="text">
+                <label>Step 1 Title</label>
+            </parameter>
             <parameter name="howitworksdescriptionone" visible="true" xsi:type="block">
-                <label>How It Works Text #1</label>
+                <label>Step 1 Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+            </parameter>
+            <parameter name="stepTwoTitle" visible="true" xsi:type="text">
+                <label>Step 2 Title</label>
             </parameter>
             <parameter name="howitworksdescriptiontwo" visible="true" xsi:type="block">
-                <label>How It Works Text #2</label>
+                <label>Step 2 Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
             </parameter>
+            <parameter name="stepThreeTitle" visible="true" xsi:type="text">
+                <label>Step 3 Title</label>
+            </parameter>
             <parameter name="howitworksdescriptionthree" visible="true" xsi:type="block">
-                <label>How It Works Text #3</label>
+                <label>Step 3 Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
             </parameter>
         </parameters>

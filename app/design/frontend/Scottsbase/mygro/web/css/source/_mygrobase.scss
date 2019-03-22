@@ -241,66 +241,6 @@ body {
         }
 
         .column.main {
-            .connect-home {
-                max-width: 1440px;
-                background-size: 100% auto;
-                background-repeat: no-repeat;
-                height: 655px;
-                position: relative;
-                display: inline-block;
-                margin: 65px 0 0 0;
-                @media (max-width: 1200px) {
-                    height: 550px;
-                }
-
-                @include max-screen($screen__l) {
-                    height: auto;
-                    background-position: top;
-                    background-size: 95%;
-                    margin: 40px 0 0 0;
-                }
-
-                .content {
-                    max-width: 500px;
-                    padding-left: 50px;
-                    position: relative;
-                    display: inline-block;
-                    margin: 5% 0 18% 0;
-                    @include max-screen($screen__l) {
-                        top: 0;
-                        padding: 0;
-                        text-align: left;
-                        margin: 52% 0 0 2%;
-                    }
-                }
-
-                @media screen and (max-width: 1399px) and (min-width: 1024px) {
-                    .content {
-                        width: 34%;
-                        padding-left: 40px;
-                    }
-                }
-                h2 {
-                    font-size: 48px;
-                    line-height: 56px;
-                    margin-bottom: 25px;
-                    color: $mygro-green;
-                    width: 75%;
-                    @include max-screen($screen__l) {
-                        width: 100%;
-                        font-size: 35px;
-                        line-height: 35px;
-                        margin-bottom: 0;
-                    }
-                }
-
-                p {
-                    font-size: 16px;
-                    line-height: 28px;
-                    color: $mygro-gray;
-                    margin-bottom: 20px;
-                }
-            }
             .cart-empty {
                 font-size: 1rem;
                 a {
@@ -326,37 +266,6 @@ body {
                 margin: 0 0 1em;
             }
         }
-        .products {
-            padding-bottom: 24px;
-            position: relative;
-            .button {
-                margin-bottom: 20px;
-            }
-            h2 {
-                font-size: 40px;
-                margin: 0 -20px 15px;
-                @include max-screen($screen__l) {
-                    font-size: 35px;
-                }
-                a {
-                    color: $white;
-                }
-            }
-            .item {
-                background-size: cover;
-                text-align: center;
-                color: $white;
-                padding: 35px 40px;
-                box-sizing: border-box;
-                position: relative;
-                @include max-screen($screen__l) {
-                    margin: 0 16px 16px;
-                    img {
-                        max-height: 320px;
-                    }
-                }
-            }
-        }
         .products.grid:after {
             display: none;
         }
@@ -364,9 +273,6 @@ body {
             content: '';
             display: table;
             clear: both;
-        }
-        .grid > h2 {
-            width: 100%;
         }
         .col-3 {
             .item {
@@ -441,36 +347,6 @@ body {
                 }
             }
         }
-        .watch-video {
-            i {
-                height: 36px;
-                width: 36px;
-                line-height: 36px;
-                background: $white;
-                border-radius: 50%;
-                text-align: center;
-                color: $mygro-green;
-                display: inline-block;
-                margin-right: 15px;
-            }
-            span {
-                display: inline-block;
-                color: $white;
-                font-size: 16px;
-                font-family: "Hellix-Heavy";
-                letter-spacing: 0.5px;
-                border-bottom: 2px solid $mygro-green;
-                padding-bottom: 3px;
-                position: relative;
-                top: -3px;
-            }
-        }
-        .embed-code {
-            display: none;
-        }
-        .icon-play:before {
-            content: "\e901";
-        }
         .feature-list {
             padding: 90px 0;
             text-align: center;
@@ -478,12 +354,9 @@ body {
                 padding: 50px 0;
             }
             img {
-                height: 60px;
                 display: inline-block;
             }
             h2 {
-                font-size: 48px;
-                color: $mygro-black-alt;
                 margin-bottom: 75px;
                 margin-top: 0;
                 @include max-screen($screen__l) {
@@ -504,17 +377,18 @@ body {
                 padding: 0 50px;
             }
             .image-container {
-                height: 110px;
-                width: 140px;
-                padding: 40px 0 0;
+                height: 155px;
+                width: 155px;
                 background: $white;
                 border-radius: 50%;
                 color: $mygro-green;
-                font-size: 60px;
                 box-shadow: 0 6px 24px 0 rgba(0, 0, 0, 0.04);
                 display: block;
                 margin: 0 auto;
-                text-align: center;
+                img {
+                    height: 85px;
+                    padding: 35px 0 0 0;
+                }
             }
         }
     }
@@ -551,6 +425,12 @@ body {
         }
     }
 }
+
+//Product Page Styles
+.product.info.detailed {
+    display: none;
+}
+
 // Cart Styles
 .checkout-cart-index {
     .page-main {
@@ -727,6 +607,8 @@ body {
         }
     }
 }
+
+
 // Checkout Styles
 .checkout-index-index {
     .page-wrapper {

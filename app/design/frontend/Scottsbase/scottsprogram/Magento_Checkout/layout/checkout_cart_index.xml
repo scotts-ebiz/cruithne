@@ -14,6 +14,7 @@
 					<container name="custom-checkout-btn-wrap" htmlTag="div" htmlClass="custom-checkout-btn-wrap">
 							<block class="Magento\Checkout\Block\Onepage\Link" name="custom-checkout-btn" template="Magento_Checkout::onepage/link.phtml" />
 					</container> 
+
 						<container name="checkout.cart.form.before" as="form_before" label="Shopping Cart Items Before" htmlTag="div" htmlClass="rewards"/>
 						<block class="Magento\Checkout\Block\Cart\Grid" name="checkout.cart.form" as="cart-items" template="Magento_Checkout::cart/form.phtml" after="-">
 							<block class="Magento\Framework\View\Element\RendererList" name="checkout.cart.item.renderers" as="renderer.list"/>
@@ -183,6 +184,7 @@
 																			</item>
 																		</item>
 																		<item name="postcode" xsi:type="array">
+
 																			<item name="component" xsi:type="string">
 																				Magento_Ui/js/form/element/abstract
 																			</item>
@@ -313,6 +315,6 @@
 			</block>
 		</referenceContainer>
 		<block class="Magento\Checkout\Block\Cart\Additional\Info" name="additional.product.info" template="Magento_Checkout::cart/additional/info.phtml"/>
-		<!--<move element="custom-checkout-btn" destination="page.main.title" after="-" />-->
+
 	</body>
 </page>
