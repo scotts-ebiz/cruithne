@@ -28,7 +28,7 @@ RUN  \
     && cd $MAGENTO_DIR/tools \
     && gulp clean && gulp styles
 
-RUN sed -i "s/save.*/save' => 'files',\n\t 'save_path' => '\/tmp',/" app/etc/env.php
+# RUN sed -i "s/save.*/save' => 'files',\n\t 'save_path' => '\/tmp',/" app/etc/env.php
 
 RUN date
 
