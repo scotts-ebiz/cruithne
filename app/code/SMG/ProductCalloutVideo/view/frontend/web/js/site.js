@@ -1,14 +1,16 @@
-
-jQuery(document).ready(function($) {
+define([
+    'jquery'
+], function ($) {
+    "use strict";
     /* Product Callout Video Widget: Start */
-    $(".video-link").on("click", function(e) {
+    $(".video-link").on("click", function (e) {
         var embedCode = $(this).find(".embed-code").html();
         $("body").toggleClass("video-open");
         $("#video-container .video-frame").html(embedCode);
         e.preventDefault();
     });
 
-    $(".video-overlay").on("click", function(e) {
+    $(".video-overlay").on("click", function (e) {
         $("body").toggleClass("video-open");
         $("#video-container .video-frame").html('');
     });
@@ -17,7 +19,7 @@ jQuery(document).ready(function($) {
 
     /* Scottsprogram Landing Page Code: Start */
 
-    $('#tablabel__1').click(function(){
+    $('#tablabel__1').click(function () {
         if ($("#tabcontent__1").hasClass("active")) {
             //Do nothing
         } else {
@@ -39,7 +41,7 @@ jQuery(document).ready(function($) {
         };
     });
 
-    $('#tablabel__2').click(function(){
+    $('#tablabel__2').click(function () {
         if ($("#tabcontent__2").hasClass("active")) {
             //Do nothing
         } else {
@@ -61,7 +63,7 @@ jQuery(document).ready(function($) {
         };
     });
 
-    $('#tablabel__3').click(function(){
+    $('#tablabel__3').click(function () {
         if ($("#tabcontent__3").hasClass("active")) {
             //Do nothing
         } else {
@@ -83,7 +85,7 @@ jQuery(document).ready(function($) {
         };
     });
 
-    $('#tablabel__4').click(function(){
+    $('#tablabel__4').click(function () {
         if ($("#tabcontent__4").hasClass("active")) {
             //Do nothing
         } else {
@@ -105,7 +107,7 @@ jQuery(document).ready(function($) {
         };
     });
 
-    $('#tablabel__5').click(function(){
+    $('#tablabel__5').click(function () {
         if ($("#tabcontent__5").hasClass("active")) {
             //Do nothing
         } else {
@@ -127,7 +129,7 @@ jQuery(document).ready(function($) {
         };
     });
 
-    $('#tablabel__6').click(function(){
+    $('#tablabel__6').click(function () {
         if ($("#tabcontent__6").hasClass("active")) {
             //Do nothing
         } else {//Add or Remove Class for tablabel
@@ -146,8 +148,8 @@ jQuery(document).ready(function($) {
             $('#tabcontent__4').removeClass('active');
             $('#tabcontent__5').removeClass('active');
         };
+
+        /* Scottsprogram Landing Page Code: End */
     });
 
-    /* Scottsprogram Landing Page Code: End */
 });
-
