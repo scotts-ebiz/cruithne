@@ -12,7 +12,7 @@ COMMAND="$@"
 #PRE_COMPILE_HOOK="/hooks/pre_compile.sh"
 #POST_INSTALL_HOOK="/hooks/post_install.sh"
 
-
+chown -R magento:www-data /var/www/html/
 
 # rm -rf /var/www/html/magento2/var/generation/*
 # su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s developer'
@@ -34,8 +34,6 @@ su - magento -c 'php /var/www/html/magento2/bin/magento setup:config:set --sessi
 su - magento -c '/var/www/html/magento2/bin/magento setup:static-content:deploy'
 
 su - magento -c '/var/www/html/magento2/bin/magento -v cache:flush'
-
-chown -R magento:www-data /var/www/html/
 
 # For the readiness check
 touch /tmp/healthy
