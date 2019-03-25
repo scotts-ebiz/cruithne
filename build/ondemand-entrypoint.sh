@@ -27,6 +27,7 @@ su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile'
 su - magento -c 'php /var/www/html/magento2/bin/magento setup:config:set --session-save=redis --session-save-redis-host=10.0.2.3 --session-save-redis-log-level=3 --session-save-redis-db=2 -q'
 
 # TODO these aren't working. says gulp isn't there not sure why it's not installed globally
+su - magento -c '/home/magento/.nvm/nvm.sh'
 su - magento -c 'gulp clean -f /var/www/html/magento2/tools/gulpfile.js'
 su - magento -c 'gulp styles -f /var/www/html/magento2/tools/gulpfile.js'
 
