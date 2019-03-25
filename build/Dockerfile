@@ -16,6 +16,11 @@ LABEL maintainer="rick.feldschau@scotts.com"
 
 RUN rm /usr/local/bin/entrypoint.sh
 
+# Can move these to nightly build
+RUN curl -sL https://deb.nodesource.com/setup_11.x | bash -
+RUN apt-get install -y nodejs
+RUN npm i -g gulp
+
 USER magento
 WORKDIR $MAGENTO_DIR
 
@@ -23,28 +28,10 @@ RUN git fetch
 RUN git checkout origin/test ./app/etc/config.php
 
 RUN git pull
-RUN  \
-    . $NVM_DIR/nvm.sh \
-    && cd $MAGENTO_DIR/tools \
-    && gulp clean && gulp styles
 
 # RUN sed -i "s/save.*/save' => 'files',\n\t 'save_path' => '\/tmp',/" app/etc/env.php
 
 RUN date
-
-USER root
-
-RUN sed 's/newrelic\.license/;newrelic\.license/' /etc/php/7.2/apache2/conf.d/20-newrelic.ini
-RUN echo "newrelic.license = 'bc904518f55ecc33a8a79a28465a7fe36db5455e'" >> /etc/php/7.2/apache2/conf.d/20-newrelic.ini
-
-RUN REV=$(git rev-parse HEAD)
-
-RUN \
-	curl -X POST 'https://api.newrelic.com/v2/applications/180724804/deployments.json' \
-     -H 'X-Api-Key:033455e6b2ed8503dbfaf55460d5a2868c42d238db5455e' -i \
-     -H 'Content-Type: application/json' \
-     -d \
-	'{ "deployment": { "revision": "$REV" } }'
 
 # Expose Ports for Apache
 EXPOSE 80/tcp 443/tcp

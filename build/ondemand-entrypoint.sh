@@ -14,23 +14,22 @@ COMMAND="$@"
 
 # chown -R magento:www-data /var/www/html/
 
-
-
 # rm -rf /var/www/html/magento2/var/generation/*
 # su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s developer'
-# su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s production'
-# su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade'
-# su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile'
+su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s production'
+su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade'
+su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile'
 
 # TODO We should abstract the server address....
 # Turning this off for now. 
 # su - magento -c 'php /var/www/html/magento2/bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=10.0.2.3   --cache-backend-redis-db=0'
 # su - magento -c 'php /var/www/html/magento2/bin/magento setup:config:set --page-cache=redis --page-cache-redis-server=10.0.2.3 --page-cache-redis-db=1'
-# su - magento -c 'php /var/www/html/magento2/bin/magento setup:config:set --session-save=redis --session-save-redis-host=10.0.2.3 --session-save-redis-log-level=3 --session-save-redis-db=2 -q'
+su - magento -c 'php /var/www/html/magento2/bin/magento setup:config:set --session-save=redis --session-save-redis-host=10.0.2.3 --session-save-redis-log-level=3 --session-save-redis-db=2 -q'
 
-# TODO these aren't working. says gulp isn't there not sure why it's not installed globally
-su - magento -c '/home/magento/.nvm/nvm.sh && gulp clean -f /var/www/html/magento2/tools/gulpfile.js'
-su - magento -c '/home/magento/.nvm/nvm.sh && gulp styles -f /var/www/html/magento2/tools/gulpfile.js'
+su - magento -c 'gulp clean -f /var/www/html/magento2/tools/gulpfile.js'
+su - magento -c 'gulp styles -f /var/www/html/magento2/tools/gulpfile.js'
+
+# /home/magento/.nvm/nvm.sh && cd /var/www/html/magento2/tools && gulp clean && gulp styles
 
 
 su - magento -c '/var/www/html/magento2/bin/magento setup:static-content:deploy'
