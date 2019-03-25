@@ -17,6 +17,7 @@ LABEL maintainer="rick.feldschau@scotts.com"
 RUN rm /usr/local/bin/entrypoint.sh
 
 # Can move these to nightly build
+
 RUN curl -sL https://deb.nodesource.com/setup_11.x | bash -
 RUN apt-get install -y nodejs
 RUN npm i -g gulp

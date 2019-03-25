@@ -12,8 +12,6 @@ COMMAND="$@"
 #PRE_COMPILE_HOOK="/hooks/pre_compile.sh"
 #POST_INSTALL_HOOK="/hooks/post_install.sh"
 
-# chown -R magento:www-data /var/www/html/
-
 # rm -rf /var/www/html/magento2/var/generation/*
 # su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s developer'
 su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s production'
@@ -27,7 +25,7 @@ su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile'
 su - magento -c 'php /var/www/html/magento2/bin/magento setup:config:set --session-save=redis --session-save-redis-host=10.0.2.3 --session-save-redis-log-level=3 --session-save-redis-db=2 -q'
 
 su - magento -c 'gulp clean -f /var/www/html/magento2/tools/gulpfile.js'
-su - magento -c 'gulp styles -f /var/www/html/magento2/tools/gulpfile.js'
+su - magento -c 'cd /var/www/html/magento2/tools && npm rebuild node-sass && gulp styles -f /var/www/html/magento2/tools/gulpfile.js'
 
 # /home/magento/.nvm/nvm.sh && cd /var/www/html/magento2/tools && gulp clean && gulp styles
 
