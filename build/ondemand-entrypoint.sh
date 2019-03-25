@@ -14,6 +14,8 @@ COMMAND="$@"
 
 # chown -R magento:www-data /var/www/html/
 
+
+
 # rm -rf /var/www/html/magento2/var/generation/*
 # su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s developer'
 # su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s production'
