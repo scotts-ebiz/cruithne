@@ -34,6 +34,9 @@ RUN date
 
 USER root
 
+# Added this in as a test to force php to save sessions in redis
+RUN sed -i '/session.save_handler/s/^/; /g' /etc/php/7.2/apache2/php.ini
+
 RUN sed 's/newrelic\.license/;newrelic\.license/' /etc/php/7.2/apache2/conf.d/20-newrelic.ini
 RUN echo "newrelic.license = 'bc904518f55ecc33a8a79a28465a7fe36db5455e'" >> /etc/php/7.2/apache2/conf.d/20-newrelic.ini
 
