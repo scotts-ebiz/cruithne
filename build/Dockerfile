@@ -16,6 +16,12 @@ LABEL maintainer="rick.feldschau@scotts.com"
 
 RUN rm /usr/local/bin/entrypoint.sh
 
+# Can move these to nightly build
+
+RUN curl -sL https://deb.nodesource.com/setup_11.x | bash -
+RUN apt-get install -y nodejs
+RUN npm i -g gulp
+
 USER magento
 WORKDIR $MAGENTO_DIR
 
@@ -23,10 +29,6 @@ RUN git fetch
 RUN git checkout origin/test ./app/etc/config.php
 
 RUN git pull
-RUN  \
-    . $NVM_DIR/nvm.sh \
-    && cd $MAGENTO_DIR/tools \
-    && gulp clean && gulp styles
 
 # RUN sed -i "s/save.*/save' => 'files',\n\t 'save_path' => '\/tmp',/" app/etc/env.php
 
