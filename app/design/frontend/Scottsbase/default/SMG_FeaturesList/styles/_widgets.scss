@@ -7,15 +7,45 @@ section.feature-list {
     h2 {
         width: 100%;
         text-align: center;
+        margin-bottom: 75px;
+        margin-top: 0;
+        @include max-screen($screen__l) {
+            margin-bottom: 0;
+        }
+    }
+    h3 {
+        font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
+        letter-spacing: 0.5px;
+        font-size: 28px;
+        color: #000000; //$black
+        margin-bottom: 15px;
     }
     div.item {
         margin-bottom: 50px;
         padding: 5px 5px;
         text-align: center;
+        width: 300px;
         .image-container {
+            height: 125px;
+            width: 125px;
+            background: #ffffff; //$white
+            border-radius: 50%;
+            color: #008065; //$mygro-green
+            box-shadow: 0 6px 24px 0 rgba(0, 0, 0, 0.04);
+            display: block;
+            margin: 0 auto;
             img {
-                height: 125px;
+                display: inline-block;
+                height: 65px;
+                padding: 28px 0 0 0;
             }
+        }
+        p {
+            margin-right: auto;
+            margin-left: auto;
+            font-size: 16px;
+            line-height: 26px;
+            color: #909090;
         }
     }
 }
