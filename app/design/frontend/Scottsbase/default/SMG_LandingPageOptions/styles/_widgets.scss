@@ -3,7 +3,7 @@
     .hero__wrapper {
         text-align: center;
         section.section__hero {
-            /*background-position: left -25px top 50%;*/
+            background-position: left -65px top 50%;
             background-repeat: no-repeat;
             background-size: cover;
             display: inline-block;
@@ -24,11 +24,7 @@
                 position: relative;
                 background-color: #ffffff;
                 float: right;
-                margin-right: 1%;
-                margin-top: 2%;
-                margin-bottom: 2%;
                 padding: 2%;
-                border-radius: 0.25rem;
                 max-width: 400px;
                 text-align: left;
                 @media only screen and (max-width: 1130px) {

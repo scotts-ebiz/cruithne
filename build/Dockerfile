@@ -16,6 +16,12 @@ LABEL maintainer="rick.feldschau@scotts.com"
 
 RUN rm /usr/local/bin/entrypoint.sh
 
+# Can move these to nightly build
+
+RUN curl -sL https://deb.nodesource.com/setup_11.x | bash -
+RUN apt-get install -y nodejs
+RUN npm i -g gulp
+
 USER magento
 WORKDIR $MAGENTO_DIR
 
@@ -23,21 +29,15 @@ RUN git fetch
 RUN git checkout origin/test ./app/etc/config.php
 
 RUN git pull
-RUN  \
-    . $NVM_DIR/nvm.sh \
-    && cd $MAGENTO_DIR/tools \
-    && gulp clean && gulp styles
 
 RUN sed -i "s/save.*/save' => 'files',\n\t 'save_path' => '\/tmp',/" app/etc/env.php
 
 RUN date
 
-# Neelam Special Per https://scotts.jira.com/browse/ECOM-496
-# This is a Patch for Magento per https://github.com/magento/magento2/issues/13269
-# Should be able to be removed after Magento 2.3.1 is live
-RUN sed -i "s/.*result = mb_convert_encoding.*/\t\t\$result = mb_convert_encoding(preg_replace('\/\&\/', \'\&amp\;\', html_entity_decode(\$domDocument->saveHTML())), \'HTML-ENTITIES\', \'UTF-8\');\n/" $MAGENTO_DIR/vendor/magento/framework/Escaper.php
-
 USER root
+
+# Added this in as a test to force php to save sessions in redis
+RUN sed -i '/session.save_handler/s/^/; /g' /etc/php/7.2/apache2/php.ini
 
 RUN sed 's/newrelic\.license/;newrelic\.license/' /etc/php/7.2/apache2/conf.d/20-newrelic.ini
 RUN echo "newrelic.license = 'bc904518f55ecc33a8a79a28465a7fe36db5455e'" >> /etc/php/7.2/apache2/conf.d/20-newrelic.ini
