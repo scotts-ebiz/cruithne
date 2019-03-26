@@ -4,6 +4,11 @@ section.feature-list {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
+    padding: 90px 0;
+    text-align: center;
+    @include max-screen($screen__l) {
+        padding: 50px 0;
+    }
     h2 {
         width: 100%;
         text-align: center;
@@ -24,7 +29,7 @@ section.feature-list {
         margin-bottom: 50px;
         padding: 5px 5px;
         text-align: center;
-        width: 300px;
+        max-width: 300px;
         .image-container {
             height: 125px;
             width: 125px;

@@ -347,13 +347,6 @@ body {
                 }
             }
         }
-        .feature-list {
-            padding: 90px 0;
-            text-align: center;
-            @include max-screen($screen__l) {
-                padding: 50px 0;
-            }
-        }
     }
 
     .page-footer {
