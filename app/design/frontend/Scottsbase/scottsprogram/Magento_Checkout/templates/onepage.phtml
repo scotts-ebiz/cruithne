@@ -7,22 +7,20 @@
 // @codingStandardsIgnoreFile
 ?>
 <div id="checkout" data-bind="scope:'checkout'" class="checkout-container">
-	<div class="custom-checkout-nav-btns">	
-		<div class="actions backbtn">
-			<a class="action back"
-			   href="<?= $block->getUrl('checkout/cart/') ?>"
-			   title="<?= $block->escapeHtml(__('Back to Cart')) ?>">
-				<span><?= /* @escapeNotVerified */ __('Back to Cart') ?></span>
-			</a>
-		</div>
-		<div class="actions">
-			<a class="action continue"
-			   href="<?= $block->getUrl('') ?>"
-			   title="<?= $block->escapeHtml(__('Continue Shopping')) ?>">
-				<span><?= /* @escapeNotVerified */ __('Continue Shopping') ?></span>
-			</a>
-		</div>
-	</div>
+    <div class="actions">
+        <a class="action continue"
+           href="<?= $block->getUrl('') ?>"
+           title="<?= $block->escapeHtml(__('Continue Shopping')) ?>">
+            <span><?= /* @escapeNotVerified */ __('Continue Shopping') ?></span>
+        </a>
+    </div>
+	<div class="actions backbtn">
+        <a class="action back"
+           href="<?= $block->getUrl('checkout/cart/') ?>"
+           title="<?= $block->escapeHtml(__('Back to Cart')) ?>">
+            <span><?= /* @escapeNotVerified */ __('Back to Cart') ?></span>
+        </a>
+    </div>
     <div id="checkout-loader" data-role="checkout-loader" class="loading-mask" data-mage-init='{"checkoutLoader": {}}'>
         <div class="loader">
             <img src="<?= /* @escapeNotVerified */ $block->getViewFileUrl('images/loader-1.gif') ?>"
@@ -60,4 +58,22 @@
         "Magento_Checkout/custom": {}
     }
 }
+</script>
+<script type="text/javascript">
+ require([
+    'jquery',
+    'jquery/ui',
+    'jquery/validate',
+    'mage/translate'
+], function($){
+
+    $.validator.addMethod(
+        'required-entry', function (value) {
+			alert("www");
+            if(value) return true;
+            else return false;
+        }, $.mage.__('Please select a variant!'));
+		
+
+});
 </script>
