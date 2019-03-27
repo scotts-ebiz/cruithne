@@ -135,23 +135,6 @@
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
 
-
-            <!-- Feature 5 -->
-            <parameter name="featurefive" visible="true" xsi:type="block">
-                <label>FEATURE #5</label>
-                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
-            </parameter>
-            <parameter name="featurefiveheadline" visible="true" xsi:type="text">
-                <label>Feature #5 Headline</label>
-            </parameter>
-            <parameter name="featurefivetext" visible="true" xsi:type="block">
-                <label>Feature #5 Text</label>
-                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
-            </parameter>
-            <parameter name="featurefiveimage" visible="true" xsi:type="block">
-                <label>Feature #5 Image</label>
-                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
-            </parameter>
         </parameters>
     </widget>
 </widgets>

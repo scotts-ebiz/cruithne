@@ -347,50 +347,6 @@ body {
                 }
             }
         }
-        .feature-list {
-            padding: 90px 0;
-            text-align: center;
-            @include max-screen($screen__l) {
-                padding: 50px 0;
-            }
-            img {
-                display: inline-block;
-            }
-            h2 {
-                margin-bottom: 75px;
-                margin-top: 0;
-                @include max-screen($screen__l) {
-                    margin-bottom: 0;
-                }
-            }
-            h3 {
-                font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
-                letter-spacing: 0.5px;
-                font-size: 28px;
-                color: $black;
-                margin-bottom: 15px;
-            }
-            p {
-                color: $mygro-gray;
-                font-size: 16px;
-                line-height: 26px;
-                padding: 0 50px;
-            }
-            .image-container {
-                height: 155px;
-                width: 155px;
-                background: $white;
-                border-radius: 50%;
-                color: $mygro-green;
-                box-shadow: 0 6px 24px 0 rgba(0, 0, 0, 0.04);
-                display: block;
-                margin: 0 auto;
-                img {
-                    height: 85px;
-                    padding: 35px 0 0 0;
-                }
-            }
-        }
     }
 
     .page-footer {
