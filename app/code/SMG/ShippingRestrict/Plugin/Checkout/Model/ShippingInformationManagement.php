@@ -54,7 +54,8 @@ class ShippingInformationManagement
 			if($validate){
 				$homepage = $this->_urlInterface->getBaseUrl();
 				$checkout = $this->_urlInterface->getUrl('checkout/cart', ['_secure' => true]);
-			    $message="Unfortunately one or more of the selected products is restricted from shipping to ".$State.". The item has been removed from the cart.";
+			    $message="Unfortunately one or more of the selected products is restricted from shipping to ".$State." The item has been removed from the cart.<br/>
+			     Please <a href='".$homepage."' target='_blank' class='messagehref'>Continue Shopping</a> or <a href='".$checkout."' class='messagehref'>Proceed to Checkout</a>";
                 throw new InputException(__($message));
              }
 		     return  $result;
