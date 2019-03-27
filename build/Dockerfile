@@ -19,7 +19,7 @@ RUN rm /usr/local/bin/entrypoint.sh
 # Can move these to nightly build
 
 RUN curl -sL https://deb.nodesource.com/setup_11.x | bash -
-RUN apt-get install -y nodejs
+RUN apt-get install -y --no-install-recommends nodejs php7.2-redis
 RUN npm i -g gulp
 
 USER magento
@@ -30,7 +30,7 @@ RUN git checkout origin/test ./app/etc/config.php
 
 RUN git pull
 
-RUN sed -i "s/save.*/save' => 'files',\n\t 'save_path' => '\/tmp',/" app/etc/env.php
+RUN sed -i "s/save.*/save' => 'redis',/" app/etc/env.php
 
 RUN date
 
