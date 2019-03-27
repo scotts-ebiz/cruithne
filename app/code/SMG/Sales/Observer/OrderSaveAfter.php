@@ -20,7 +20,6 @@ class OrderSaveAfter implements ObserverInterface
      * @var LoggerInterface
      */
     protected $_logger;
-
     /**
      * @var SapOrderBatchFactory
      */
@@ -42,7 +41,9 @@ class OrderSaveAfter implements ObserverInterface
 
     public function execute(Observer $observer)
     {
-        $this->_logger->debug("I am in the observer.");
+        $this->_logger->debug("*************************");
+        $this->_logger->debug("**");
+        $this->_logger->debug("Start execute(Observer)");
 
         // get the order
         /**
@@ -50,16 +51,29 @@ class OrderSaveAfter implements ObserverInterface
          */
         $order = $observer->getData('order');
 
+        $this->_logger->debug("OrderId: " . $order->getId());
         /**
          * @var \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
          */
         $sapOrderBatch = $this->_sapOrderBatchFactory->create();
+        $this->_sapOrderBatchResource->load($sapOrderBatch, $order->getId(), 'order_id');
 
-        // set the values
-        $sapOrderBatch->setData('order_id', $order->getId());
-        $sapOrderBatch->setData('is_order', true);
+        $this->_logger->debug("IsOrder: " . $sapOrderBatch->getData("is_order"));
 
-        // save the record
-        $this->_sapOrderBatchResource->save($sapOrderBatch);
+        // get the is order flag to see if it has already been set
+        $isOrder = $sapOrderBatch->getData('is_order');
+        if (!isset($isOrder))
+        {
+            // set the values
+            $sapOrderBatch->setData('order_id', $order->getId());
+            $sapOrderBatch->setData('is_order', true);
+
+            // save the record
+            $this->_sapOrderBatchResource->save($sapOrderBatch);
+        }
+
+        $this->_logger->debug("End execute(Observer)");
+        $this->_logger->debug("**");
+        $this->_logger->debug("*************************");
     }
 }
