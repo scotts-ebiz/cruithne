@@ -30,7 +30,7 @@ RUN git checkout origin/test ./app/etc/config.php
 
 RUN git pull
 
-# RUN sed -i "s/save.*/save' => 'files',\n\t 'save_path' => '\/tmp',/" app/etc/env.php
+RUN sed -i "s/save.*/save' => 'redis',/" app/etc/env.php
 
 RUN date
 
