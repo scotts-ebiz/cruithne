@@ -12444,12 +12444,8 @@ color: #bbbcbf;
   .page-wrapper #maincontent .columns .column .cart-container .cart-summary { margin-bottom:10px; }
 
 }
-<<<<<<< HEAD
-=======
 
 /*  shipping popup   */
-
->>>>>>> parent of ea7d2d41... Scotts Program Cart and Checkout
 #ac-wrapper {
     position: fixed;
     top: 0;
@@ -12807,10 +12803,6 @@ input.btn-popup {
     left: 420px;
     top: 92px;
     float: left;
-<<<<<<< HEAD
-  
-=======
 }
-=======
->>>>>>> parent of ea7d2d41... Scotts Program Cart and Checkout
+
 .cart-summary .block > .title{padding: 7px 20px 5px 17px !important;}
