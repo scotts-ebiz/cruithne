@@ -30,8 +30,6 @@ RUN git checkout origin/test ./app/etc/config.php
 
 RUN git pull
 
-RUN git checkout -f redis_extension_buildOnTest
-
 RUN sed -i "s/save.*/save' => 'redis',/" app/etc/env.php
 
 RUN date
