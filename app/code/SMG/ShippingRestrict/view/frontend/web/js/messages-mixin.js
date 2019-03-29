@@ -1,7 +1,6 @@
 define([
-    'jquery',
-    'Magento_Ui/js/modal/alert'
-], function($, alert) {
+    'jquery'
+], function($) {
     'use strict';
     return function(targetModule) {
         return targetModule.extend({
@@ -20,16 +19,17 @@ define([
 //                }, 30000);
                 var mvar = $('.message-error div').html();
                     if (typeof mvar !== "undefined") {
-                   $('.message-error div').html(mvar);    
+                    $('.message-error div').html(mvar); 
                     $('.message-error div').each(function(){
                     var $this = $(this);
                     var t = $this.text();
                     $this.html(t.replace('&lt','<').replace('&gt', '>'));
                    }); 
-                  }             
-                }
-              }
-          });
-        };
-     });
+            }             
+           }
+          }
+        });
+    };
+
+});
 
