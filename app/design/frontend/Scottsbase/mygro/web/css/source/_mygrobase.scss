@@ -387,6 +387,41 @@ body {
     display: none;
 }
 
+// PDP Page Styles
+.page-product-grouped {
+    .product-info-main {
+        .product-add-form {
+            form {
+                .table-wrapper {
+                    table {
+                        tbody {
+                            tr {
+                                border: 2px solid #008065;
+                            }
+                        }
+                    }
+                }
+                .box-tocart {
+                    .fieldset {
+                        .actions {
+                            button {
+                                background: #008065;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .product-social-links {
+            display: none;
+        }
+    }
+  .product.media {
+      background: #F0F2F5;
+  }
+
+}
+
 // Cart Styles
 .checkout-cart-index {
     .page-main {
