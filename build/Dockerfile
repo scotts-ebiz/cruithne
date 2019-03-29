@@ -36,7 +36,7 @@ COPY qualys/qagent_restart.sh /usr/local/qualys/cloud-agent/bin/qagent_restart.s
 RUN chmod +x /tmp/qualys/qualys-cloud-agent.postinst
 RUN /tmp/qualys/qualys-cloud-agent.postinst
 
-RUN /usr/local/qualys/cloud-agent/bin/qualys-cloud-agent.sh ActivationId="67906ffb-cd7c-4105-bdc7-1540c13343aa" CustomerId="63d94f9b-9dfc-7538-823c-333fc1d63ac9"
+RUN /usr/local/qualys/cloud-agent/bin/qualys-cloud-agent.sh ActivationId="67906ffb-cd7c-4105-bdc7-1540c13343aa" CustomerId="63d94f9b-9dfc-7538-823c-333fc1d63ac9" ProviderName="GCP" UseSudo=0
 
 USER magento
 WORKDIR $MAGENTO_DIR
