@@ -1,4 +1,4 @@
-@charset "UTF-8"; 
+@charset "UTF-8";
 html {
   font-family: sans-serif;
   -webkit-text-size-adjust: 100%;
@@ -18,7 +18,7 @@ footer,
 header,
 main,
 menu,
-nav, 
+nav,
 section,
 summary {
   display: block; }
@@ -679,11 +679,11 @@ address {
   box-shadow: none;
   outline: 0; }
 
-/*._keyfocus *:focus,
+._keyfocus *:focus,
 input:not([disabled]):focus,
 textarea:not([disabled]):focus,
-select:not([disabled]):focus { 
-  box-shadow: 0 0 3px 1px #68a8e0; }*/
+select:not([disabled]):focus {
+  box-shadow: 0 0 3px 1px #68a8e0; }
 
 .actions-toolbar > .primary,
 .actions-toolbar > .secondary {
@@ -1940,7 +1940,7 @@ select:not([disabled]):focus {
   display: inline-block;
   text-decoration: none;
   padding-left: 5px; }
-  .abs-shopping-cart-items .action.update:before, .block-cart-failed .action.update:before{
+  .abs-shopping-cart-items .action.update:before, .block-cart-failed .action.update:before, .cart-container .form-cart .action.update:before {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     font-size: 32px;
@@ -2295,14 +2295,13 @@ select:not([disabled]):focus {
     .fieldset > .field .additional,
     .fieldset > .fields > .field .additional {
       margin-top: 10px; }
-    /*.fieldset > .field.required > .label:after,
     .fieldset > .field._required > .label:after,
     .fieldset > .fields > .field.required > .label:after,
     .fieldset > .fields > .field._required > .label:after {
       content: '*';
       color: #e02b27;
       font-size: 1.2rem;
-      margin: 0 0 0 5px; }*/
+      margin: 0 0 0 5px; }
     .fieldset > .field .note,
     .fieldset > .fields > .field .note {
       font-size: 1.2rem;
@@ -6921,7 +6920,7 @@ body.catalog-product-compare-index .action.print {
 .cart.table-wrapper .product-item-photo {
   display: block;
   left: 0;
-  /*max-width: 60px;*/
+  max-width: 60px;
   padding: 0;
   position: absolute;
   top: 15px;
@@ -6943,7 +6942,7 @@ body.catalog-product-compare-index .action.print {
   margin-bottom: 10px; }
 
 .cart.table-wrapper .product-item-name + .item-options {
-  margin-top: 42px; }
+  margin-top: 10px; }
 
 .cart.table-wrapper .action.configure {
   display: inline-block;
@@ -8006,8 +8005,8 @@ body.catalog-product-compare-index .action.print {
   .opc-block-summary .not-calculated {
     font-style: italic; }
   .opc-block-summary .items-in-cart > .title {
-    /*border-bottom: 1px solid #d1d1d1;
-    padding: 10px 40px 10px 0;*/
+    border-bottom: 1px solid #d1d1d1;
+    padding: 10px 40px 10px 0;
     cursor: pointer;
     display: block;
     text-decoration: none;
@@ -12155,9 +12154,9 @@ table thead tr th {
 	text-align:center;
 }
 
-/*.cart.table-wrapper .table th.col.qty > span{
+.cart.table-wrapper .table th.col.qty > span{
 	color:#fff !important; 
-}*/
+}
 
 .cart.table-wrapper .table .col.qty{
 	width:12.5%;
@@ -12235,7 +12234,7 @@ table thead tr th {
 }
 .cart-container .checkout-methods-items .action.primary.checkout{ margin-top:15px;}
 .cart-container  .checkout-methods-items .action.primary:hover {
-	background-color: #075534;
+	background-color: green;
 }
 /*.page-wrapper #maincontent .columns .column .cart-container .cart-summary div#block-shipping {
     display: none;
@@ -12298,9 +12297,9 @@ font-size: 20px;
 color: #bbbcbf;
 }
 
-/*.cart-container .cart-summary-divlink div.content {
+.cart-container .cart-summary-divlink div.content {
 	display:block !important;
-}*/
+}
 
 .cart-container .cart-summary-divlink div.content #discount-coupon-form label.label{
 	color: #4d4d4e;
@@ -12326,7 +12325,6 @@ color: #bbbcbf;
 	color: #4d4d4e;
 	font-size: 14px;
 	text-transform:uppercase;
-	cursor: pointer;
 }
 
 @media (min-width: 481px) and (max-width: 767px) {
@@ -12375,9 +12373,6 @@ color: #bbbcbf;
 }
   .cart.table-wrapper .item .col.item{
 	  width:93% !important;
-  }
-  .checkout-cart-index .cart.table-wrapper .item .col.item{
-	  width:100% !important;
   }
   
   .cart.table-wrapper .table th.col.qty > span{ display:none !important; }
@@ -12450,8 +12445,12 @@ color: #bbbcbf;
 
 }
 
+<<<<<<< HEAD
 
+=======
+>>>>>>> parent of ea7d2d41... Scotts Program Cart and Checkout
 /*  shipping popup   */
+
 #ac-wrapper {
     position: fixed;
     top: 0;
@@ -12473,13 +12472,8 @@ color: #bbbcbf;
     -moz-box-shadow: #64686e 0px 0px 3px 3px;
     -webkit-box-shadow: #64686e 0px 0px 3px 3px;
     position: relative; 
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	-webkit-transform: translate(-50%, -50%);
-	-moz-transform: translate(-50%, -50%);
-	-ms-transform: translate(-50%, -50%);
-
+    top: 45px;
+    left: 421px;
 }
 .checkout-cart-index div[name="shippingAddress.region_id"],
 .checkout-cart-index div[name="shippingAddress.country_id"] {
@@ -12491,10 +12485,7 @@ color: #bbbcbf;
 #popup span.closes {
     cursor: pointer;
     position: relative;
-    right: 10px;
-    display: inline-block;
-    width: 100%;
-    text-align: right;
+    left: 472px;
 }
 input.btn-popup {
     background-color: #075534;
@@ -12505,6 +12496,7 @@ input.btn-popup {
     margin-left: 23px;
     border: 0;
 }
+
 /* end shipping popup   */
 
 .cart-summary .block > .title{padding: 7px 20px 5px 17px !important;}
@@ -12512,7 +12504,8 @@ input.btn-popup {
 /*------ 14-02-2019 --------*/
 .checkout-index-index .field-tooltip .field-tooltip-action:before{
 	opacity: 1;
-    color: #008065;
+    background: rgba(7, 85, 52, 0.6);
+    color: #fff;
 }
 .checkout-index-index .abs-field-tooltip input, .field .control._with-tooltip input{
 	width: 90% !important;
@@ -12760,13 +12753,11 @@ input.btn-popup {
 }
 .checkout-index-index div[name='shippingAddress.street.1'],
 .checkout-index-index div[name='shippingAddress.street.2'],
-.checkout-index-index div[name='billingAddressauthorizenet_directpost.street.1'],
-.checkout-index-index div[name='billingAddressauthorizenet_directpost.street.2'],
 .field.street.admin__control-fields div[name="billingAddresscheckmo.street.1"],
 .field.street.admin__control-fields div[name="billingAddresscheckmo.street.2"]{
 	display:none;
 }
- 
+
 .opc-block-shipping-information .shipping-information-title .action-edit:before{
 	content:'Edit';
 	font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
@@ -12813,10 +12804,11 @@ input.btn-popup {
 	margin-right:3px;
 }
 .checkout-index-index .page-wrapper #checkout > .actions.backbtn .action.back{
-    /*position: absolute;
+    position: absolute;
     left: 420px;
     top: 92px;
     float: left;
+<<<<<<< HEAD
   
 .cart-summary .block > .title{padding: 7px 20px 5px 17px !important;}
 
@@ -13282,3 +13274,8 @@ input.btn-popup {
 	/*padding: 0.625rem 0 !important;*/
 }
 
+=======
+}
+=======
+.cart-summary .block > .title{padding: 7px 20px 5px 17px !important;}
+>>>>>>> parent of ea7d2d41... Scotts Program Cart and Checkout
