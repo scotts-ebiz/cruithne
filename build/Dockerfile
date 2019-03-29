@@ -67,7 +67,7 @@ RUN REV=$(git rev-parse HEAD)
 
 RUN \
 	curl -X POST 'https://api.newrelic.com/v2/applications/180724804/deployments.json' \
-     -H 'X-Api-Key:033455e6b2ed8503dbfaf55460d5a2868c42d238db5455e' -i \
+     -H 'X-Api-Key:abb8c9f78734ce8444b721b2ad8f0474899a8932522d942' -i \
      -H 'Content-Type: application/json' \
      -d \
 	'{ "deployment": { "revision": "$REV" } }'
