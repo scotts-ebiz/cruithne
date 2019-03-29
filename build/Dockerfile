@@ -66,7 +66,7 @@ RUN echo "newrelic.license = 'eeaa206f88996c7640153d2c3ba77c0d3522d942'" >> /etc
 RUN REV=$(git rev-parse HEAD)
 
 RUN \
-	curl -X POST 'https://api.newrelic.com/v2/applications/180724804/deployments.json' \
+	curl -X POST 'https://api.newrelic.com/v2/applications/203206085/deployments.json' \
      -H 'X-Api-Key:abb8c9f78734ce8444b721b2ad8f0474899a8932522d942' -i \
      -H 'Content-Type: application/json' \
      -d \
