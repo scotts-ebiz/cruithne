@@ -2,4 +2,9 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magento\Sales\Block\Adminhtml\Order\Create\Search\Grid" type="SMG\OrderCreateGrid\Block\Adminhtml\Order\Create\Search\Grid" />
-</config>
+    <type name="Magento\Bundle\Block\Catalog\Product\View\Type\Bundle\Option">
+    	
+    	<plugin name="bundle_product_option" type="SMG\OrderCreateGrid\Plugin\OptionPlugin" />
+
+    </type>
+    	</config>
