@@ -16,11 +16,11 @@ steps:
   args: 
     - 'set'
     - 'image'
-    - 'deployment/magento-test-workload'
+    - 'deployment/${_WORKLOAD}'
     - 'test-magento=gcr.io/$PROJECT_ID/${_CONTAINER_REPO_NAME}:$SHORT_SHA'
   env:
-    - 'CLOUDSDK_COMPUTE_ZONE=us-east1-b'
-    - 'CLOUDSDK_CONTAINER_CLUSTER=magento-test-workload-cluster'
+    - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
+    - 'CLOUDSDK_CONTAINER_CLUSTER=${_CONTAINER_REPO_NAME}'
 
 # kubectl rolling-update test-magento --image=gcr.io/ecommerce-platform-211419/test-magento:20190207211618
 
