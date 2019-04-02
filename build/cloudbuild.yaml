@@ -17,7 +17,7 @@ steps:
     - 'set'
     - 'image'
     - 'deployment/${_WORKLOAD}'
-    - 'test-magento=gcr.io/$PROJECT_ID/${_CONTAINER_REPO_NAME}:$SHORT_SHA'
+    - '${_CONTAINER_REPO_NAME}=gcr.io/$PROJECT_ID/${_CONTAINER_REPO_NAME}:$SHORT_SHA'
   env:
     - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
     - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
