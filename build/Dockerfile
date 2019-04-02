@@ -7,6 +7,7 @@ ARG IMAGE=gcr.io/ecommerce-platform-211419/test-primer:latest
 FROM $IMAGE
 ENTRYPOINT []
 
+
 RUN date
 
 ENV NVM_DIR /home/magento/.nvm
