@@ -6,10 +6,10 @@ return [
     'db' => [
         'connection' => [
             'indexer' => [
-                'host' => '10.55.32.6',
+                'host' => '10.0.0.45',
                 'dbname' => 'magento',
                 'username' => 'magento',
-                'password' => '4IBlhtLk9!0LS!Aup5GW',
+                'password' => 'C4UnW1GB#n!kGU9Mix2Y',
                 'model' => 'mysql4',
                 'engine' => 'innodb',
                 'initStatements' => 'SET NAMES utf8;',
@@ -17,10 +17,10 @@ return [
                 'persistent' => NULL
             ],
             'default' => [
-                'host' => '10.55.32.6',
+                'host' => '10.0.0.45',
                 'dbname' => 'magento',
                 'username' => 'magento',
-                'password' => '4IBlhtLk9!0LS!Aup5GW',
+                'password' => 'C4UnW1GB#n!kGU9Mix2Y',
                 'model' => 'mysql4',
                 'engine' => 'innodb',
                 'initStatements' => 'SET NAMES utf8;',
