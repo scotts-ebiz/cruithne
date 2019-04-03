@@ -26,13 +26,13 @@ RUN npm i -g gulp
 ## Installing the Qualys Cloud Agent in this Dockerfile for now. Will move to Nightly Build when proven successfull. 
 
 # Copy Cloud agent to tmp directory
-COPY ../qualys/qualys-cloud-agent.x86_64.deb /tmp/qualys/qualys-cloud-agent.x86_64.deb
+COPY qualys/qualys-cloud-agent.x86_64.deb /tmp/qualys/qualys-cloud-agent.x86_64.deb
 
 # Run Qualys Installer
 RUN dpkg --install /tmp/qualys/qualys-cloud-agent.x86_64.deb
 
-COPY ../qualys/qualys-cloud-agent.postinst /tmp/qualys/qualys-cloud-agent.postinst
-COPY ../qualys/qagent_restart.sh /usr/local/qualys/cloud-agent/bin/qagent_restart.sh
+COPY qualys/qualys-cloud-agent.postinst /tmp/qualys/qualys-cloud-agent.postinst
+COPY qualys/qagent_restart.sh /usr/local/qualys/cloud-agent/bin/qagent_restart.sh
 
 RUN chmod +x /tmp/qualys/qualys-cloud-agent.postinst
 RUN /tmp/qualys/qualys-cloud-agent.postinst
