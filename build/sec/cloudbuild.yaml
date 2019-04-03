@@ -16,13 +16,13 @@ steps:
   args: 
     - 'set'
     - 'image'
-    - 'deployment/${_WORKLOAD}'
+    - 'statefulset/${_WORKLOAD}'
     - '${_CONTAINER_REPO_NAME}=gcr.io/$PROJECT_ID/${_CONTAINER_REPO_NAME}:$SHORT_SHA'
   env:
     - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
     - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
 
 # kubectl rolling-update test-magento --image=gcr.io/ecommerce-platform-211419/test-magento:20190207211618
-
+# kubectl set image statefulset stateful-magento-test magento-stateful=gcr.io/ecommerce-platform-211419/magento-stateful:2a51b2a
 
 timeout: 6000s
