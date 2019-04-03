@@ -6,10 +6,10 @@ return [
     'db' => [
         'connection' => [
             'indexer' => [
-                'host' => '10.0.0.7',
+                'host' => '10.55.32.6',
                 'dbname' => 'magento',
                 'username' => 'magento',
-                'password' => '6jjpXfzyRaiHLZfewKLXQEhyrQo99KrrtijYLK6BmZgG3Sdiu4Ab686D8P5TisFg',
+                'password' => '4IBlhtLk9!0LS!Aup5GW',
                 'model' => 'mysql4',
                 'engine' => 'innodb',
                 'initStatements' => 'SET NAMES utf8;',
@@ -17,10 +17,10 @@ return [
                 'persistent' => NULL
             ],
             'default' => [
-                'host' => '10.0.0.7',
+                'host' => '10.55.32.6',
                 'dbname' => 'magento',
                 'username' => 'magento',
-                'password' => '6jjpXfzyRaiHLZfewKLXQEhyrQo99KrrtijYLK6BmZgG3Sdiu4Ab686D8P5TisFg',
+                'password' => '4IBlhtLk9!0LS!Aup5GW',
                 'model' => 'mysql4',
                 'engine' => 'innodb',
                 'initStatements' => 'SET NAMES utf8;',
@@ -78,8 +78,5 @@ return [
         'config_webservice' => 1,
         'translate' => 1,
         'vertex' => 1
-    ],
-    'install' => [
-        'date' => 'Wed, 28 Nov 2018 20:22:14 +0000'
     ]
 ];

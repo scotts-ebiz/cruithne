@@ -39,6 +39,12 @@ RUN /tmp/qualys/qualys-cloud-agent.postinst
 
 RUN /usr/local/qualys/cloud-agent/bin/qualys-cloud-agent.sh ActivationId="67906ffb-cd7c-4105-bdc7-1540c13343aa" CustomerId="63d94f9b-9dfc-7538-823c-333fc1d63ac9" ProviderName="GCP" UseSudo=0
 
+
+#Stage/sec stuff
+COPY env.sec.php $MAGENTO_DIR/app/etc/env.php
+RUN chown magento:www-data $MAGENTO_DIR/app/etc/env.php
+
+
 USER magento
 WORKDIR $MAGENTO_DIR
 
