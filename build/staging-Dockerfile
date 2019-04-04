@@ -9,6 +9,8 @@ ENTRYPOINT []
 
 RUN date
 
+
+
 ENV NVM_DIR /home/magento/.nvm
 ENV MAGENTO_DIR /var/www/html/magento2
 
