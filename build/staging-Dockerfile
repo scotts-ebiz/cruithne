@@ -50,6 +50,12 @@ RUN chown magento:www-data $MAGENTO_DIR/app/etc/env.php
 USER magento
 WORKDIR $MAGENTO_DIR
 
+RUN find var generated vendor pub/static pub/media app/etc -type f \
+    -exec chmod g+w {} \; \
+    && find var generated vendor pub/static pub/media app/etc -type d \
+    -exec chmod g+ws {} \; \
+    && chmod u+x bin/magento
+
 RUN git fetch
 RUN git checkout origin/test ./app/etc/config.php
 
