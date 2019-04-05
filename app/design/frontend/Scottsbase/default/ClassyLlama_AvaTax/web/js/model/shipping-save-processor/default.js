@@ -23,7 +23,8 @@ define(
         'Magento_Checkout/js/model/full-screen-loader',
         'Magento_Checkout/js/action/select-billing-address',
         'ClassyLlama_AvaTax/js/view/checkout-validation-handler',
-        'Magento_Ui/js/modal/alert'
+        'Magento_Ui/js/modal/alert',
+        'Magento_Customer/js/customer-data'
     ],
     function (
         $,
@@ -36,7 +37,8 @@ define(
         fullScreenLoader,
         selectBillingAddressAction,
         checkoutValidationHandler,
-        alert
+        alert,
+        customerData
     ) {
         'use strict';
 
@@ -80,6 +82,8 @@ define(
                     function (response) {
                         // Begin Edit - Native error message display is not obvious enough, so add to an alert box
                         var messageObject = JSON.parse(response.responseText);
+                        var sections = ['cart'];
+                        customerData.invalidate(sections);
                         alert({
                             title: $.mage.__('Error'),
                             content: messageObject.message,
