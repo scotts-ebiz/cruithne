@@ -51,7 +51,7 @@ class ShippingInformationManagement
                 }
 
 			}
-			if($validate){
+				if($validate){
 				$homepage = $this->_urlInterface->getBaseUrl();
 				$checkout = $this->_urlInterface->getUrl('checkout/cart', ['_secure' => true]);
 			    $message="Unfortunately one or more of the selected products is restricted from shipping to ".$State.". 
