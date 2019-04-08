@@ -14,21 +14,19 @@
  */
 ?>
 
-<!-- Define Shot Description Variables -->
-<?php
-    $_attributeType = $block->getAtType();
-    $_className = $block->getCssClass();
-?>
-
 <?php $block->setPreconfiguredValue(); ?>
 <?php $_product = $block->getProduct(); ?>
 <?php $_associatedProducts = $block->getAssociatedProducts(); ?>
 <?php $_hasAssociatedProducts = count($_associatedProducts) > 0; ?>
 
 <!-- Inject Short Description -->
-<div class="product attribute <?= /* @escapeNotVerified */ $_className?>">
-    <?php echo $_attributeType ?>
-    <br/>Where your new code is going to go.
+<div class="product attribute">
+    <?= /* @escapeNotVerified */ $_product->getShortDescription();?>
+  <?= /* @escapeNotVerified */ $_product->getName();?>
+  <?= /* @escapeNotVerified */ $_product->getData('name');?>
+  <?= /* @escapeNotVerified */ $_product->getData('short_description');?>
+
+    <br/>Where your new code is going to go.qwer
 </div>
 
 <!-- Grouped Table -->
