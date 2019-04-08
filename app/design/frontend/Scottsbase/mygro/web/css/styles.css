@@ -1544,7 +1544,7 @@ select:not([disabled]):focus {
 .block-authentication .action.action-login, .checkout-payment-method .payment-method-content > .actions-toolbar > .primary .action.primary, .form-address-edit .actions-toolbar .action.primary, .multicheckout .action.primary {
   line-height: 2.2rem;
   padding: 14px 17px;
-  font-size: 1.8rem; }
+  font-size: 1.5rem; }
 
 .abs-action-button-as-link, .abs-action-remove, .abs-add-fields .action.remove, .form-giftregistry-share .action.remove, .form-giftregistry-edit .action.remove, .form-add-invitations .action.remove, .form-create-return .action.remove, .form.send.friend .action.remove, .cart.table-wrapper .action.help.map, .opc-wrapper .edit-address-link, .opc-block-shipping-information .shipping-information-title .action-edit, .action-auth-toggle, .checkout-payment-method .checkout-billing-address .action-cancel, .checkout-agreements-block .action-show, .cart-summary .block.giftcard .action.check, .gift-options .actions-toolbar .action-cancel, .table-comparison .wishlist.split.button > .action,
 .product-items .wishlist.split.button > .action, .paypal-button-widget .paypal-button {

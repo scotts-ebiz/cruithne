@@ -279,26 +279,26 @@ body {
                 width: calc(33.33% - 28px);
             }
         }
-        .button {
+        button {
             background: $mygro-green;
             border-radius: 4px;
             color: $white;
             font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
-            font-size: 16px;
+            font-size: 1.5rem !important;
+            line-height: 0px !important;
+            padding: 45px !important;
             text-align: center;
             display: inline-block;
-            height: 48px;
-            line-height: 48px;
             box-sizing: border-box;
             width: 100%;
             max-width: 200px;
             transition: background 0.2s linear;
             letter-spacing: 0.5px;
         }
-        .button:hover {
+        button:hover {
             background: $mygro-dark-green;
         }
-        .button:active {
+        button:active {
             background: $mygro-light-green;
         }
         .hero-video {
@@ -390,22 +390,34 @@ body {
 // PDP Page Styles
 .page-product-grouped {
     .product-info-main {
+        .product-info-price {
+            display: none;
+        }
         .product-add-form {
             form {
                 .table-wrapper {
                     table {
                         tbody {
-                            tr {
+                            tr.asdf {
                                 border: 2px solid #008065;
                             }
                         }
                     }
                 }
                 .box-tocart {
+                    display: inline-block;
+                    position: relative;
+                    width: 100%;
                     .fieldset {
                         .actions {
+                            display: inline-block;
+                            position: relative;
+                            width: 100%;
                             button {
-                                background: #008065;
+                                display: inline-block;
+                                position: relative;
+                                width: 100%;
+                                max-width: inherit;
                             }
                         }
                     }
@@ -416,10 +428,9 @@ body {
             display: none;
         }
     }
-  .product.media {
-      background: #F0F2F5;
-  }
-
+    .product.media {
+        background: #F0F2F5;
+    }
 }
 
 // Cart Styles

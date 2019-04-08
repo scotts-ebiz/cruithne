@@ -13,13 +13,27 @@
  * @var $block \Magento\GroupedProduct\Block\Product\View\Type\Grouped
  */
 ?>
+
+<!-- Define Shot Description Variables -->
+<?php
+    $_attributeType = $block->getAtType();
+    $_className = $block->getCssClass();
+?>
+
 <?php $block->setPreconfiguredValue(); ?>
 <?php $_product = $block->getProduct(); ?>
 <?php $_associatedProducts = $block->getAssociatedProducts(); ?>
 <?php $_hasAssociatedProducts = count($_associatedProducts) > 0; ?>
 
+<!-- Inject Short Description -->
+<div class="product attribute <?= /* @escapeNotVerified */ $_className?>">
+    <?php echo $_attributeType ?>
+    <br/>Where your new code is going to go.
+</div>
+
+<!-- Grouped Table -->
 <div class="table-wrapper grouped">
-  <table class="table data grouped asdf"
+  <table class="table data grouped"
          id="super-product-table"
          data-mage-init='{ "Magento_GroupedProduct/js/product-ids-resolver": {} }'>
     <caption class="table-caption"><?= /* @escapeNotVerified */ __('Grouped product items') ?></caption>
@@ -34,8 +48,8 @@
 
     <?php if ($_hasAssociatedProducts): ?>
       <?php foreach ($_associatedProducts as $_item): ?>
-        <tbody>
-        <tr>
+            <tbody>
+        <tr class="asdf">
           <td data-th="<?= $block->escapeHtml(__('Product Name')) ?>" class="col item">
             <strong class="product-item-name"><?= $block->escapeHtml($_item->getName()) ?></strong>
             <?php if ($block->getCanShowProductPrice($_product)): ?>
@@ -65,6 +79,7 @@
             </td>
           <?php endif; ?>
         </tr>
+        <tr><td><br/></td></tr>
         <?php if ($block->getCanShowProductPrice($_product)
           && $block->getCanShowProductPrice($_item)
           && trim($block->getProductPriceHtml(
