@@ -19,6 +19,13 @@ LABEL maintainer="rick.feldschau@scotts.com"
 
 RUN rm /usr/local/bin/entrypoint.sh
 
+# install gsutil
+ENV CLOUD_SDK_REPO "cloud-sdk-$(lsb_release -c -s)"
+RUN echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+
+RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+RUN apt-get update -y  && apt-get install -y google-cloud-sdk
+
 # Can move these to nightly build
 
 RUN curl -sL https://deb.nodesource.com/setup_11.x | bash -
