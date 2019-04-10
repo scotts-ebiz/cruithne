@@ -1,0 +1,116 @@
+<?php
+$helper = $block->getHelper();
+
+$objectManager = \Magento\Framework\App\ObjectManager::getInstance(); 
+$CheckoutSession = $objectManager->get('Magento\Checkout\Model\Session');
+$session = $objectManager->get('Magento\Catalog\Model\Session');
+$item = $CheckoutSession->getDtmAddToCart(); 
+$cart = $objectManager->get('\Magento\Checkout\Model\Cart'); 
+?>
+<?php if ($item) : ?>
+<script>
+window.dtmData.events.push({
+
+	name: 'cartAdd',
+
+	product: {
+		<?php foreach($CheckoutSession->getDtmAddToCart() as $pro){ ?>
+		id: '<?php echo $pro['id'];?>',
+		name: '<?php $p_name = $pro['name']; echo str_replace("™","",$p_name); ?>',
+		category: [<?php echo $pro['category'];?>], 
+		currency: '<?php echo $block->getCurrencyCode();?>',
+		unitPrice: <?php echo $pro['unitPrice'];?>,
+		sku: '<?php echo $pro['sku'];?>',
+		quantity: <?php echo $pro['quantity'];?>
+		
+		<?php } ?>
+
+	}
+
+});
+</script>
+<?php $CheckoutSession->unsDtmAddToCart();?>
+<?php endif; ?>
+
+<?php /*Newsletter event*/ ?>
+<?php $newsletter = $session->getDtmNewsletter(); ?>
+<?php if($newsletter) : ?>
+	<script>
+	window.dtmData.events.push({
+		name: 'newsletterSuccess',
+		email: '<?php echo $newsletter;?>'
+	});
+	</script>
+	
+<?php $session->unsDtmNewsletter();?>	
+<?php endif; ?>
+
+<?php /*update qty event*/ ?>
+
+<?php $updateditems = $CheckoutSession->getUpdateqty(); ?>
+<?php if ($updateditems) : ?>
+<?php foreach($updateditems as $pro){ ?>
+	<script>
+	window.dtmData.events.push({
+		name: 'cartUpdate',
+		product: {
+			id: '<?php echo $pro['id'];?>',
+			name: '<?php $p_name = $pro['name']; echo str_replace("™","",$p_name); ?>',
+			category: [<?php echo $pro['category'];?>], 
+			currency: '<?php echo $block->getCurrencyCode();?>',
+			unitPrice: <?php echo $pro['unitPrice'];?>,
+			sku: '<?php echo $pro['sku'];?>',
+			quantity: <?php echo $pro['quantity'];?>,
+			previousQuantity: <?php echo $pro['previousQuantity'];?>
+		}
+	});
+	</script>
+<?php } ?>
+<?php $CheckoutSession->unsUpdateqty(); ?>
+<?php endif; ?>
+
+
+<?php /*delete item event*/ ?>
+<?php $deleteitem = $CheckoutSession->getDeleteitem(); ?>
+<?php if ($deleteitem) : ?>
+	<script>
+	window.dtmData.events.push({
+		name: 'cartRemove',
+		product: {
+			id: '<?php echo $deleteitem['id'];?>',
+			name: '<?php $p_name = $deleteitem['name']; echo str_replace("™","",$p_name); ?>',
+			category: [<?php echo $deleteitem['category'];?>], 
+			currency: '<?php echo $block->getCurrencyCode();?>',
+			unitPrice: <?php echo $deleteitem['unitPrice'];?>,
+			sku: '<?php echo $deleteitem['sku'];?>',
+			quantity: <?php echo $deleteitem['quantity'];?>,
+		}
+	});
+	</script>
+<?php $CheckoutSession->unsDeleteitem(); ?>
+<?php endif; ?>
+
+<?php /*coupen event*/ ?>
+<?php $coupen = $CheckoutSession->getCoupen(); ?>
+<?php if ($coupen) : ?>
+	<script>
+	window.dtmData.events.push({
+		name: 'promoApplied',
+		promoCode:'<?php echo $coupen; ?>',
+		success: '<?php if($cart->getQuote()->getCouponCode() == $coupen){ echo "true"; }else{ echo "false"; } ?>'
+	});
+	</script>
+<?php $CheckoutSession->unsDeleteitem(); ?>
+<?php endif; ?>
+
+<?php /*contact error*/ ?>
+<?php $errorcontact = $CheckoutSession->getContactError(); ?>
+<?php if($errorcontact):?>
+	<script>
+	window.dtmData.events.push({
+		name: 'errorMessage',
+		errorMessage:'<?php echo $errorcontact; ?>'
+	});
+	</script>
+<?php $CheckoutSession->unsContactError(); ?>
+<?php endif;  ?>
