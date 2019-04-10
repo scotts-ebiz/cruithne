@@ -9,7 +9,11 @@
 ?>
 <?php /** @var $block \Magento\Checkout\Block\Cart\Shipping */ ?>
 
-
+<div class="pop-cust-click title" data-role="title">
+	<strong id="block-shipping-heading" role="heading" aria-level="2">
+		<?= /* @escapeNotVerified */ $block->getQuote()->isVirtual() ? __('Estimate Tax') : __('Estimate Taxes') ?>
+	</strong>
+</div>
 <div id="ac-wrapper" style='display:none'>
     <div id="popup">
 	<span class="closes">X</span>
@@ -49,10 +53,19 @@
 	require(['jquery'],function($){
 
 		$(document).ready(function(){
+			
 			$('.btn-popup').click(function () {
-				$('#ac-wrapper').hide();
-				$('#popup').hide();
+				var pop = $('input[name="postcode"]').val();
+				if(pop == ''){
+					$('input[name="postcode"]').css("border-color", "red");
+					//$("div[name='shippingAddress.postcode']").append("<span class='cust-btn-add' >Please Enter Postcode</span>");
+					return false;
+				} else {
+					$('#ac-wrapper').hide();
+					$('#popup').hide();
+				}
 			});
+			
 			$('.closes').click(function () {
 				$('#ac-wrapper').hide();
 				$('#popup').hide();
@@ -61,11 +74,14 @@
 					if (hideOrshow == 'hide') document.getElementById('ac-wrapper').style.display = "none";
 					else document.getElementById('ac-wrapper').removeAttribute('style');
 				}
-				window.onload = function () {
+			//window.onload = function () {
+				$('.pop-cust-click').click(function () {
 					//setTimeout(function () {
 						PopUp('show');
+						$('#popup').show();
 					//}, 1000);
-				}  
+				});
+			//}  
 		});
 		
 	});
