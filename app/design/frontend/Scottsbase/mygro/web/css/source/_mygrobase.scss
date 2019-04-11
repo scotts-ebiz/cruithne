@@ -395,11 +395,37 @@ body {
         }
         .product-add-form {
             form {
+                .grouped-title-section {
+                    h2.grouped-product-header {
+                        color: #000000;
+                    }
+                    p {
+                        font-size: 1.3rem;
+                    }
+                }
                 .table-wrapper {
+                    margin-bottom: 0;
                     table {
+                        thead {
+                            tr.grouped-table-titles {
+                                display: none;
+                            }
+                        }
                         tbody {
-                            tr.asdf {
+                            tr.grouped-row {
                                 border: 2px solid #008065;
+                                td {
+                                    color: #000000;
+                                    font-size: 1.2rem;
+                                    .price-box {
+                                        .price-container {
+                                            .price {
+                                                color: #008065;
+                                                font-size: 1.0rem;
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
                     }
@@ -425,6 +451,9 @@ body {
             }
         }
         .product-social-links {
+            display: none;
+        }
+        .product.attribute.overview {
             display: none;
         }
     }
