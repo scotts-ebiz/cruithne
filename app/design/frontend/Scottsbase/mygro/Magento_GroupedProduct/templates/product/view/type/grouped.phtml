@@ -43,46 +43,14 @@
           <?php endif; ?>
         </tr>
         </thead>
-
       <?php if ($_hasAssociatedProducts): ?>
         <?php foreach ($_associatedProducts as $_item): ?>
-          <?php
-          $data = $_item->getData();
-          if (gettype($data) === 'array')
-          {
-            foreach ($data as $test)
-            {
-              if (gettype($test) === 'array')
-              {
-                foreach ($test as $test2)
-                {
-                  if (gettype($test2) === 'array')
-                  {
-
-                  }
-                }
-              }
-              else
-              {
-                ?>
-
-                <?=$test ?><?php
-              }
-            }
-          }
-          else
-          {
-            ?>
-            <?=$data ?>
-            <?php
-          }
-          ?>
               <tbody>
               <tr class="grouped-row">
                   <td data-th="<?= $block->escapeHtml(__('Product Name')) ?>" class="col item">
-                      <strong class="product-item-name"><?= $block->escapeHtml($_item->getName()) ?>wuss</strong>
+                      <strong class="product-item-name"><?= $block->escapeHtml($_item->getName()) ?></strong>
                       <!-- Product Short Description -->
-                    <?= /* @escapeNotVerified */ $_item->getData('short_description');?>short
+
 
                       <!-- Insert Product Price -->
                     <?php if ($block->getCanShowProductPrice($_product)): ?>
