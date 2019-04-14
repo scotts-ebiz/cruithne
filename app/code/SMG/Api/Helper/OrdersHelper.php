@@ -41,6 +41,12 @@ class OrdersHelper
     const GROSS_SALES = 'GrossSales';
     const SHIPPING_AMOUNT = 'ShippingAmount';
     const EXEMPT_AMOUNT = 'ExemptAmount';
+    const HDR_DISC_FIXED_AMOUNT = 'HdrDiscFixedAmount';
+    const HDR_DISC_PERC = 'HdrDiscPerc';
+    const HDR_DISC_COND_CODE = 'HdrDiscCondCode';
+    const HDR_SURCH_FIXED_AMOUNT = 'HdrSurchFixedAmount';
+    const HDR_SURCH_PERC = 'HdrSurchPerc';
+    const HDR_SURCH_COND_CODE = 'HdrSurchCondCode';
     const DISCOUNT_AMOUNT = 'DiscountAmount';
     const SUBTOTAL = 'Subtotal';
     const TAX_RATE = 'TaxRate';
@@ -228,7 +234,8 @@ class OrdersHelper
             $orders = $this->_responseHelper->createResponse(true, $ordersArray);
         }
 
-        // return
+        // return..
+        
         return $orders;
     }
 
@@ -323,6 +330,12 @@ class OrdersHelper
         $shippingAmount = $order->getData('shipping_amount');
 
         // set credit fields to empty
+        $hdrDiscFixedAmount = $order->getData('hdr_disc_fixed_amount');
+        $hdrDiscPerc = $order->getData('hdr_disc_perc');
+        $hdrDiscCondCode = $order->getData('hdr_disc_cond_code');
+        $hdrSurchFixedAmount = '';
+        $hdrSurchPerc = '';
+        $hdrSurchCondCode = '';
         $creditAmount = '';
         $referenceDocNum = '';
         $creditComment = '';
@@ -376,6 +389,12 @@ class OrdersHelper
             self::GROSS_SALES => $order->getData('grand_total'),
             self::SHIPPING_AMOUNT => $shippingAmount,
             self::EXEMPT_AMOUNT => '0',
+            self::HDR_DISC_FIXED_AMOUNT => $hdrDiscFixedAmount,
+            self::HDR_DISC_PERC => $hdrDiscPerc,
+            self::HDR_DISC_COND_CODE => $hdrDiscCondCode,
+            self::HDR_SURCH_FIXED_AMOUNT => $hdrSurchFixedAmount,
+            self::HDR_SURCH_PERC => $hdrSurchPerc,
+            self::HDR_SURCH_COND_CODE => $hdrSurchCondCode,
             self::DISCOUNT_AMOUNT => $order->getData('base_discount_amount'),
             self::SUBTOTAL => $order->getData('subtotal'),
             self::TAX_RATE => $orderItem->getTaxPercent(),
