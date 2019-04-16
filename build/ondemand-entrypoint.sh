@@ -19,6 +19,9 @@ su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s productio
 su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade'
 su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile'
 
+# Pulling down images
+gsutil -m rsync -d -r gs://test_magento_image_repo/media pub/media/
+
 # TODO We should abstract the server address....
 su - magento -c 'php /var/www/html/magento2/bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=10.0.2.3   --cache-backend-redis-db=0 -q'
 su - magento -c 'php /var/www/html/magento2/bin/magento setup:config:set --page-cache=redis --page-cache-redis-server=10.0.2.3 --page-cache-redis-db=1 -q'

@@ -1,6 +1,7 @@
 # TODO: Pre-cache composer as much as possible
 #Base image is Google's Optimized Ubuntu Image
 
+
 # TODO: environment switch to test image OR replace env.php file here
 
 ARG IMAGE=gcr.io/ecommerce-platform-211419/test-primer:latest
@@ -17,6 +18,13 @@ LABEL company="The Scotts MiracleGro Company"
 LABEL maintainer="rick.feldschau@scotts.com"
 
 RUN rm /usr/local/bin/entrypoint.sh
+
+# install gsutil
+RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"; echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+RUN cat /etc/apt/sources.list.d/google-cloud-sdk.list
+
+RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+RUN apt-get update -y  && apt-get install -y google-cloud-sdk
 
 # Can move these to nightly build
 
