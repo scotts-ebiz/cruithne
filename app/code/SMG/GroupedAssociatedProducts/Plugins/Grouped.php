@@ -8,5 +8,3 @@ class Grouped {
     return 'Test Test';
   }
 }
-
-
