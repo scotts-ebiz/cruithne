@@ -8,68 +8,46 @@ We use the following platforms for communication on this project. Please make su
 2. Confluence - Contains deep wiki information and documentation for developers
 3. Slack - Day to Day Communication for the project #magento2project
 4. Google Cloud - Cloud Infrastructure Access
+5. Github - This Repo is at https://github.com/scotts-ebiz/cruithne
 
-## Creating my local Development Environtment
-[Magento System Requirements](https://devdocs.magento.com/guides/v2.3/install-gde/system-requirements.html).
+### Wiki Documentation 
+Most of the documentation can be found at the [Magento 2](https://scotts.jira.com/wiki/spaces/DTCWiki/pages/541327393/Magento+2) Confluence Page
 
-## Install Magento
+## Installation/Local Development
+Use the guide below to setup your local environment
+[M2 - Setup Local Environment](https://scotts.jira.com/wiki/spaces/DTCWiki/pages/541261927/M2+-+Setup+Local+Environment)
 
-*	[Installation Guide](https://devdocs.magento.com/guides/v2.3/install-gde/bk-install-guide.html).
+## Contributing to this codebase
+Currently our daily development branch is the `test` branch. You'll see the most regular changes in this branch and should use it to start your development. 
 
-<h2>Contributing to the Magento 2 Code Base</h2>
-Contributions can take the form of new components or features, changes to existing features, tests, documentation (such as developer guides, user guides, examples, or specifications), bug fixes, optimizations, or just good suggestions.
+### Start with a JIRA ticket
+When possible start with an assigned JIRA ticket at [scotts.jira.com](https://scotts.jira.com/secure/RapidBoard.jspa?rapidView=89&projectKey=ECOM). Move your ticket from the *ToDo* status to *InProgress*. 
 
-To learn about how to make a contribution, click [here][1].
+### Create a branch from test
+You may start development by pulling the latest version of the `test` branch and creating a new branch from this. 
+Please name your new branch so that it starts with the Ticket Number/ID. Example `ECOM-523-Changing-a-thing`. What you put after the ID is up to you, but please make sure it's descriptive enough for us to know what this branch entails. 
 
-To learn about issues, click [here][2]. To open an issue, click [here][3].
+### Checkout your new branch
+Checkout your branch and start work. Make as many changes and commits as necessary. We're not strict on commit messages, but please make them descriptive enough to descibre what the new change you made was. 
 
-To suggest documentation improvements, click [here][4].
+### Push to github
+Once you've got your code completed, push the changes to the origin, which should be "git@github.com:scotts-ebiz/cruithne.git"
 
-[1]: <https://devdocs.magento.com/guides/v2.3/contributor-guide/contributing.html>
-[2]: <https://devdocs.magento.com/guides/v2.3/contributor-guide/contributing.html#report>
-[3]: <https://github.com/magento/magento2/issues>
-[4]: <https://devdocs.magento.com>
+### Create the Pull Request
+Browse to your branch in github and create a new pull request. Please make sure that your are pulling your code into the `test` branch. 
 
-<h3>Community Maintainers</h3>
-The members of this team have been recognized for their outstanding commitment to maintaining and improving Magento. Magento has granted them permission to accept, merge, and reject pull requests, as well as review issues, and thanks these Community Maintainers for their valuable contributions.
+The Pull Request is an important time to communicate to the other developers what you are trying to achieve with your new code change. Please make sure the PR is descriptive and include a link to the original JIRA issue. 
+Please also make sure any manual testing steps are included. 
 
-<a href="https://magento.com/magento-contributors#maintainers">
-    <img src="https://raw.githubusercontent.com/wiki/magento/magento2/images/maintainers.png"/>
-</a>
+Also. Make sure to include the following groups in the "Reviewers" section. Pro-Tip - it autofills, so you can just start typing `magento` and you should see the groups quickly.
+* scotts-ebiz/magento2-scotts-contractors 
+* scotts-ebiz/magento2-scotts-developers
 
-<h3>Top Contributors</h3>
-Magento is thankful for any contribution that can improve our code base, documentation or increase test coverage. We always recognize our most active members, as their contributions are the foundation of the Magento Open Source platform.
-<a href="https://magento.com/magento-contributors">
-    <img src="https://raw.githubusercontent.com/wiki/magento/magento2/images/contributors.png"/>
-</a>
+Once you're ready, create the PR
 
-### Labels Applied by the Magento Team
-We apply labels to public Pull Requests and Issues to help other participants retrieve additional information about current progress, component assignments, Magento release lines, and much more.
-Please review the [Code Contributions guide](https://devdocs.magento.com/guides/v2.3/contributor-guide/contributing.html#labels) for detailed information on labels used in Magento 2 repositories.
+### Respond to any requests
+At this point other developers will review your code, please respond accordingly. 
 
-## Reporting Security Issues
+We also have TravisCI creating an adhoc sample build of Magento every time a new PR is created. Monitor this check to make sure it passes. If it fails, we may not be able to send it through. 
 
-To report security vulnerabilities in Magento software or web sites, please create a Bugcrowd researcher account [there](https://bugcrowd.com/magento) to submit and follow-up your issue. Learn more about reporting security issues [here](https://magento.com/security/reporting-magento-security-issue).
-
-Stay up-to-date on the latest security news and patches for Magento by signing up for [Security Alert Notifications](https://magento.com/security/sign-up).
-
-## License
-
-Each Magento source file included in this distribution is licensed under OSL 3.0 or the Magento Enterprise Edition (MEE) license.
-
-[Open Software License (OSL 3.0)](https://opensource.org/licenses/osl-3.0.php).
-Please see [LICENSE.txt](https://github.com/magento/magento2/blob/2.3-develop/LICENSE.txt) for the full text of the OSL 3.0 license or contact license@magentocommerce.com for a copy.
-
-Subject to Licensee's payment of fees and compliance with the terms and conditions of the MEE License, the MEE License supersedes the OSL 3.0 license for each source file.
-Please see LICENSE_EE.txt for the full text of the MEE License or visit https://magento.com/legal/terms/enterprise.
-
-## Community Engineering Slack
-
-To connect with Magento and the Community, join us on the [Magento Community Engineering Slack](https://magentocommeng.slack.com). If you are interested in joining Slack, or a specific channel, send us request at [engcom@adobe.com](mailto:engcom@adobe.com) or [self signup](https://tinyurl.com/engcom-slack).
-
-
-We have channels for each project. These channels are recommended for new members:
-
-- [general](https://magentocommeng.slack.com/messages/C4YS78WE6): Open chat for introductions and Magento 2 questions
-- [github](https://magentocommeng.slack.com/messages/C7KB93M32): Support for GitHub issues, pull requests, and processes
-- [public-backlog](https://magentocommeng.slack.com/messages/CCV3J3RV5): Discussions of the Magento 2 backlog
+Lastly, look out for conflicts. Not just at PR creation time, but as new PRs go in. Sometimes code affects each other and you may be responsible to update any conficts that arrise. 
