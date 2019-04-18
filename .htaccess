@@ -1,6 +1,6 @@
 AuthType Basic
 AuthName "Password Protected Area"
-AuthUserFile /var/www/cruithne/.htpasswd
+AuthUserFile /var/www/html/magento2/.htpasswd
 Require valid-user
 
 ############################################
