@@ -7,7 +7,7 @@ require valid-user
 ## overrides deployment configuration mode value
 ## use command bin/magento deploy:mode:set to switch modes
 
-   SetEnv MAGE_MODE developer
+   SetEnv MAGE_MODE production
 
 ############################################
 ## uncomment these lines for CGI mode
