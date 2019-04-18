@@ -3,8 +3,6 @@ AuthType Basic
 AuthUserFile /var/www/cruithne/.htpasswd
 require valid-user
 
-
-
 ############################################
 ## overrides deployment configuration mode value
 ## use command bin/magento deploy:mode:set to switch modes
