@@ -1,14 +1,15 @@
+AuthName "restricted area"
 AuthType Basic
-AuthName "Password Protected Area"
-AuthUserFile /var/www/html/magento2/.htpasswd
-Require valid-user
+AuthUserFile /var/www/cruithne/.htpasswd
+require valid-user
+
 
 
 ############################################
 ## overrides deployment configuration mode value
 ## use command bin/magento deploy:mode:set to switch modes
 
-#   SetEnv MAGE_MODE developer
+   SetEnv MAGE_MODE developer
 
 ############################################
 ## uncomment these lines for CGI mode
