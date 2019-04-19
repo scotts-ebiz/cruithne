@@ -282,6 +282,7 @@ return [
         'SMG_OfflineShipping' => 1,
         'SMG_OrderCreateGrid' => 1,
         'SMG_OrderDiscount' => 1,
+        'SMG_OrderReason' => 1,
         'SMG_ParameterTypes' => 1,
         'SMG_ProductCallout' => 1,
         'SMG_ProductCalloutText' => 1,
