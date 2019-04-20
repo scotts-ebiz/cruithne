@@ -15,16 +15,15 @@ class Grouped extends \Magento\GroupedProduct\Block\Product\View\Type\Grouped {
 
   protected $_productsFactory;
 
-  //Create a Factory to handle the array for $result this must be instantiated in a construct
+  //Create a Factory Object to handle the array for $result this must be instantiated in a construct
   public function __construct(\SMG\GroupedAssociatedProducts\Model\ProductsFactory $productsFactory){
     $this -> _productsFactory = $productsFactory;
   }
 
 
 
-
   public function afterGetAssociatedProducts($result) {
-      $products = $this->_productsFactory->create();
+      $products = $this->_productsFactory->create($result);
 
 
 
