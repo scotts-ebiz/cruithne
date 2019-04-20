@@ -25,8 +25,17 @@ class Grouped extends \Magento\GroupedProduct\Block\Product\View\Type\Grouped {
   public function afterGetAssociatedProducts($result) {
       $products = $this->_productsFactory->create($result);
 
+      $productId = $result->getData('entity_id');
+
+      // - Why do I need the entity_id?
+
+      // - Do I need to use the load() function? Why?
+
+      // - I think I still need a foreach loop to loop through each product to get the short_decript and set a value
+      // to it. $results->setData('short_description', $shortDescription);
 
 
+      //Q - How do I now do something w/ $result? I'll need to do some sort of foreach for short_descript
 
        //$shortDescription = $product->getData('short_description');
 
