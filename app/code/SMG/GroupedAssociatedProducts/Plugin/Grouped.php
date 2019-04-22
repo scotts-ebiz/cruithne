@@ -6,40 +6,50 @@ namespace SMG\GroupedAssociatedProducts\Plugin;
 class Grouped extends \Magento\GroupedProduct\Block\Product\View\Type\Grouped {
 
 
-
-
-  /*
-  Take $result Array, loop through it, (get short_descript) add short_descript for each product, package in a
-  productFactory, return $result
-  */
-
   protected $_productsFactory;
+
 
   //Create a Factory Object to handle the array for $result this must be instantiated in a construct
   public function __construct(\SMG\GroupedAssociatedProducts\Model\ProductsFactory $productsFactory){
-    $this -> _productsFactory = $productsFactory;
+    $this->_productsFactory = $productsFactory;
   }
 
 
 
+  // Q - Do I need to load $results into function?
   public function afterGetAssociatedProducts($result) {
-      $products = $this->_productsFactory->create($result);
-
-      $productId = $result->getData('entity_id');
-
-      // - Why do I need the entity_id?
-
-      // - Do I need to use the load() function? Why?
-
-      // - I think I still need a foreach loop to loop through each product to get the short_decript and set a value
-      // to it. $results->setData('short_description', $shortDescription);
 
 
-      //Q - How do I now do something w/ $result? I'll need to do some sort of foreach for short_descript
+      //Create instance of $_productsFactory factory object and call it $products and put $results into it
+      // Q - Do I need to load $results into factory object, if dont what data can it play with?
+      $products = $this->_productsFactory->create();
 
-       //$shortDescription = $product->getData('short_description');
 
-        //$product->setData('short_description');
+      /*
+      1. Do I get entity_id? Why? From where? Do I use load(). How do $results have short_description and yet
+      I need to assign short_description to getAssociatedProduct $results?
+
+      2. I need short_description how to I get that, from where?
+
+      3. I need to load short_description in the results of associatedProducts, how do I do that?
+      foreach?
+
+      */
+
+
+      //Get entity_id from $products factory object
+      $productId = $products->getData('entity_id');
+
+
+      //Get short_description from $products factory object
+      $shortDescription = $products->getData('short_description');
+
+
+      $productResourceModel->load($products, $productId);
+
+
+
+
 
 
 
