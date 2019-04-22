@@ -32,6 +32,9 @@ RUN curl -sL https://deb.nodesource.com/setup_11.x | bash -
 RUN apt-get install -y --no-install-recommends nodejs php7.2-redis
 RUN npm i -g gulp
 
+## ElasticSearch
+RUN a2enmod proxy_http
+
 ## Installing the Qualys Cloud Agent in this Dockerfile for now. Will move to Nightly Build when proven successfull. 
 
 # Copy Cloud agent to tmp directory
