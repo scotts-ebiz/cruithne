@@ -268,6 +268,8 @@ return [
         'Magento_ProductVideoStaging' => 1,
         'Magento_WishlistAnalytics' => 1,
         'Magento_Worldpay' => 1,
+        'Mageplaza_Core' => 1,
+        'Mageplaza_Smtp' => 1,
         'SMG_Api' => 1,
         'SMG_CreditReason' => 1,
         'SMG_Creditvantiv' => 1,
