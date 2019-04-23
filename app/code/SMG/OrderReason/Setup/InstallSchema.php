@@ -29,21 +29,6 @@ class InstallSchema implements InstallSchemaInterface
                     ]
                 );
         }
-        
-        if ($connection->tableColumnExists('sales_order_sap_item', 'reason_code') === false) {
-            $connection
-                ->addColumn(
-                    $setup->getTable('sales_order_sap_item'),
-                    'reason_code',
-                    [
-                        'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-                        'length' => 0,
-                        'nullable' => true,
-                        'comment' => 'Reason code'
-                    ]
-                );
-        }
-        
          // end setup
         $setup->endSetup();
     }
