@@ -1,0 +1,88 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php /** @var $block \Magento\Checkout\Block\Cart\Shipping */ ?>
+
+<div class="pop-cust-click title" data-role="title">
+	<strong id="block-shipping-heading" role="heading" aria-level="2">
+		<?= /* @escapeNotVerified */ $block->getQuote()->isVirtual() ? __('Estimate Tax') : __('Estimate Taxes') ?>
+	</strong>
+</div>
+<div id="ac-wrapper" style='display:none'>
+    <div id="popup">
+	<span class="closes">X</span>
+			   <div id="block-shipping" class="block shipping custshipblk" data-mage-init='{"collapsible":{"openedState": "active", "saveState": true}}'>
+				<div class="title" data-role="title">
+					<strong id="block-shipping-heading" role="heading" aria-level="2">
+						<?= /* @escapeNotVerified */ $block->getQuote()->isVirtual() ? __('Estimate Tax') : __('Estimate Shipping and Tax') ?>
+					</strong>
+				</div>
+				<div id="block-summary" data-bind="scope:'block-summary'" class="content" data-role="content" aria-labelledby="block-shipping-heading">
+					<!-- ko template: getTemplate() --><!-- /ko -->
+					<script type="text/x-magento-init">
+						{
+							"#block-summary": {
+								"Magento_Ui/js/core/app": <?= /* @escapeNotVerified */ $block->getJsLayout() ?>
+							}
+						}
+					</script>
+					<script>
+						window.checkoutConfig = <?= /* @escapeNotVerified */ $block->getSerializedCheckoutConfig() ?>;
+						window.customerData = window.checkoutConfig.customerData;
+						window.isCustomerLoggedIn = window.checkoutConfig.isCustomerLoggedIn;
+						require([
+							'mage/url',
+							'Magento_Ui/js/block-loader'
+						], function(url, blockLoader) {
+							blockLoader("<?= /* @escapeNotVerified */ $block->getViewFileUrl('images/loader-1.gif') ?>");
+							return url.setBaseUrl('<?= /* @escapeNotVerified */ $block->getBaseUrl() ?>');
+						})
+					</script>
+				</div>
+			</div>
+			<input type="submit" class="btn-popup" value="Submit"/>
+    </div>
+</div>
+<script type="text/javascript"> 
+	require(['jquery'],function($){
+
+		$(document).ready(function(){
+			
+			$('.btn-popup').click(function () {
+				var pop = $('input[name="postcode"]').val();
+				if(pop == ''){
+					$('input[name="postcode"]').css("border-color", "red");
+					//$("div[name='shippingAddress.postcode']").append("<span class='cust-btn-add' >Please Enter Postcode</span>");
+					return false;
+				} else {
+					$('#ac-wrapper').hide();
+					$('#popup').hide();
+				}
+			});
+			
+			$('.closes').click(function () {
+				$('#ac-wrapper').hide();
+				$('#popup').hide();
+			});
+			  function PopUp(hideOrshow) {
+					if (hideOrshow == 'hide') document.getElementById('ac-wrapper').style.display = "none";
+					else document.getElementById('ac-wrapper').removeAttribute('style');
+				}
+			//window.onload = function () {
+				$('.pop-cust-click').click(function () {
+					//setTimeout(function () {
+						PopUp('show');
+						$('#popup').show();
+					//}, 1000);
+				});
+			//}  
+		});
+		
+	});
+</script>
