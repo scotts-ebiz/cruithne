@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d966c4e35409bf37bc81262cebceda6e",
+    "content-hash": "10b92be841fda6156fbd0f0e200bf66d",
     "packages": [
         {
             "name": "amzn/amazon-pay-and-login-magento-2-module",
@@ -1089,6 +1089,51 @@
                 }
             ],
             "description": "dotmailer integration for magento 2 enterprise"
+        },
+        {
+            "name": "ebizmarts/mailchimp-lib",
+            "version": "3.0.30",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ebizmarts/mailchimp-lib.git",
+                "reference": "293960203ff1d834af5b2f2726f03063494a2265"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ebizmarts/mailchimp-lib/zipball/293960203ff1d834af5b2f2726f03063494a2265",
+                "reference": "293960203ff1d834af5b2f2726f03063494a2265",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">=5.2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-0": {
+                    "Mailchimp": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ebizmarts Corp.",
+                    "email": "info@ebizmarts.com",
+                    "homepage": "http://ebizmarts.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "API client library for the MailChimp",
+            "homepage": "https://github.com/ebizmarts/mailchimp-lib",
+            "keywords": [
+                "api",
+                "email",
+                "mailchimp"
+            ],
+            "time": "2019-03-07T19:47:51+00:00"
         },
         {
             "name": "elasticsearch/elasticsearch",
@@ -12374,6 +12419,120 @@
                 "framework"
             ],
             "time": "2018-08-09T15:03:40+00:00"
+        },
+        {
+            "name": "mageplaza/module-core",
+            "version": "1.4.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/mageplaza/module-core.git",
+                "reference": "19fcf838306acb4632972b2c31d5a2d283ddead8"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/mageplaza/module-core/zipball/19fcf838306acb4632972b2c31d5a2d283ddead8",
+                "reference": "19fcf838306acb4632972b2c31d5a2d283ddead8",
+                "shasum": ""
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Mageplaza\\Core\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Mageplaza",
+                    "email": "support@mageplaza.com",
+                    "homepage": "https://www.mageplaza.com",
+                    "role": "Technical Support"
+                }
+            ],
+            "description": "Mageplaza Core for Magento 2",
+            "time": "2019-02-19T03:17:17+00:00"
+        },
+        {
+            "name": "mageplaza/module-smtp",
+            "version": "1.2.9",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/mageplaza/module-smtp/mageplaza-module-smtp-1.2.9.0.zip",
+                "shasum": "ccaf31ab7ca4645a33577a3de7e8a8aff4e2fc6a"
+            },
+            "require": {
+                "mageplaza/module-core": "^1.4.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Mageplaza\\Smtp\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Mageplaza",
+                    "email": "support@mageplaza.com",
+                    "homepage": "https://www.mageplaza.com",
+                    "role": "Technical Support"
+                }
+            ],
+            "description": "SMTP Extension for Magento 2 helps the owner of store simply install SMTP (Simple Mail Transfer Protocol) server which transmits the messages into codes or numbers",
+            "keywords": [
+                "email settings",
+                "gmail smtp",
+                "magento 2",
+                "magento 2 smtp",
+                "magento smtp",
+                "mageplaza",
+                "smtp"
+            ]
+        },
+        {
+            "name": "mailchimp/mc-magento2",
+            "version": "102.3.34",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/mailchimp/mc-magento2/mailchimp-mc-magento2-102.3.34.0.zip",
+                "shasum": "acb35c7935b3f35385f295c8656e4606e9cb2f80"
+            },
+            "require": {
+                "ebizmarts/mailchimp-lib": ">=3.0.27",
+                "magento/framework": "102.0.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "psr-4": {
+                    "Ebizmarts\\MailChimp\\": ""
+                },
+                "files": [
+                    "registration.php"
+                ]
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Ebizmarts Corp",
+                    "email": "mailchimp@ebizmarts-desk.zendesk.com",
+                    "homepage": "http://ebizmarts.com"
+                }
+            ],
+            "description": "Connect MailChimp with Magento"
         },
         {
             "name": "monolog/monolog",

@@ -13,6 +13,8 @@
         "classyllama/module-avatax": "^1.5",
         "composer/composer": "@alpha",
         "magento/product-enterprise-edition": "2.3.0",
+        "mageplaza/module-smtp": "^1.2",
+        "mailchimp/mc-magento2": "^102.3",
         "snowdog/frontools": "^1.6"
     },
     "require-dev": {
