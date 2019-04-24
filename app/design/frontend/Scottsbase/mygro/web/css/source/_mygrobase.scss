@@ -417,11 +417,15 @@ body {
                                 td {
                                     color: #000000;
                                     font-size: 1.2rem;
-                                    .price-box {
+                                    p{
+                                        color: #909090;
+                                        font-size: 1.0rem;
+                                    }
+                                  .price-box {
                                         .price-container {
                                             .price {
                                                 color: #008065;
-                                                font-size: 1.0rem;
+                                                font-size: 1.2rem;
                                             }
                                         }
                                     }

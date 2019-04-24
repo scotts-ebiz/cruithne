@@ -22,10 +22,10 @@
 
 <div class="product attribute grouped-title-section">
 
-    <!-- Inject Grouped Product Name -->
+    <!-- Grouped Product Name -->
     <h2 class="grouped-product-header"><?= /* @escapeNotVerified */ $_product->getData('name');?></h2>
 
-    <!-- Inject Short Description -->
+    <!-- Grouped Short Description -->
   <?= /* @escapeNotVerified */ $_product->getData('short_description');?>
 </div>
 
@@ -51,8 +51,8 @@
                       <strong class="product-item-name"><?= $block->escapeHtml($_item->getName()) ?></strong>
 
 
-                      <!-- Product Short asdf -->
-                    <?= /* @escapeNotVerified */ $_item->getData('short_description');?>
+                      <!-- Simple Product Short Description -->
+                      <p class="simple-product-shortdescription"><?= /* @escapeNotVerified */ $_item->getData('short_description');?></p>
 
                       <!-- Insert Product Price -->
                     <?php if ($block->getCanShowProductPrice($_product)): ?>
