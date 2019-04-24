@@ -49,8 +49,10 @@
               <tr class="grouped-row">
                   <td data-th="<?= $block->escapeHtml(__('Product Name')) ?>" class="col item">
                       <strong class="product-item-name"><?= $block->escapeHtml($_item->getName()) ?></strong>
-                      <!-- Product Short Description -->
 
+
+                      <!-- Product Short asdf -->
+                    <?= /* @escapeNotVerified */ $_item->getData('short_description');?>
 
                       <!-- Insert Product Price -->
                     <?php if ($block->getCanShowProductPrice($_product)): ?>
