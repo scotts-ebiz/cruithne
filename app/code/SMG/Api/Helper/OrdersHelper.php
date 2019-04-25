@@ -21,6 +21,7 @@ use SMG\Sap\Model\SapOrderFactory;
 use SMG\Sap\Model\ResourceModel\SapOrder as SapOrderResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderBatchItem\CollectionFactory as SapOrderBatchItemCollectionFactory;
+use SMG\OrderDiscount\Helper\Data as DiscountHelper;
 
 class OrdersHelper
 {
@@ -150,6 +151,11 @@ class OrdersHelper
      */
     protected $_sapOrderBatchCollectionFactory;
 
+     /**
+     * @var DiscountHelper
+     */
+    protected $_discountHelper;
+
     /**
      * OrdersHelper constructor.
      *
@@ -161,7 +167,6 @@ class OrdersHelper
      * @param ShippingConditionCodeFactory $shippingConditionCodeFactory
      * @param ShippingConditionCodeResource $shippingConditionCodeResource
      * @param SapOrderBatchItemCollectionFactory $sapOrderBatchItemCollectionFactory
-     * @parma OrderFactory $orderFactory
      * @param OrderResource $orderResource
      * @param ItemFactory $itemFactory
      * @param ItemResource $itemResource
@@ -185,7 +190,8 @@ class OrdersHelper
         SapOrderFactory $sapOrderFactory,
         SapOrderResource $sapOrderResource,
         CreditmemoRepositoryInterface $creditmemoRepository,
-        SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory)
+        SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory,
+        DiscountHelper $discountHelper)
     {
         $this->_logger = $logger;
         $this->_resourceConnection = $resourceConnection;
@@ -203,6 +209,7 @@ class OrdersHelper
         $this->_sapOrderResource = $sapOrderResource;
         $this->_creditmemoRespository = $creditmemoRepository;
         $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
+        $this->_discountHelper = $discountHelper;
     }
 
     /**
@@ -328,11 +335,21 @@ class OrdersHelper
         // get the quantity
         $quantity = $orderItem->getQtyOrdered();
         $shippingAmount = $order->getData('shipping_amount');
+        
+        $hdrDiscFixedAmount = '';
+        $hdrDiscPerc = '';
+        $hdrDiscCondCode = '';
 
+        if(!empty($order->getData('coupon_code'))){
+        $orderDiscount = $this->_discountHelper->DiscountCode($order->getData('coupon_code'));
+        $hdrDiscFixedAmount = $orderDiscount['hdr_disc_fixed_amount'];
+        $hdrDiscPerc = $orderDiscount['hdr_disc_perc'];
+        $hdrDiscCondCode = $orderDiscount['hdr_disc_cond_code'];
+        }
+        
         // set credit fields to empty
-        $hdrDiscFixedAmount = $order->getData('hdr_disc_fixed_amount');
-        $hdrDiscPerc = $order->getData('hdr_disc_perc');
-        $hdrDiscCondCode = $order->getData('hdr_disc_cond_code');
+       
+
         $hdrSurchFixedAmount = '';
         $hdrSurchPerc = '';
         $hdrSurchCondCode = '';
