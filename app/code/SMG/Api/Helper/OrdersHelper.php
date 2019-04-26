@@ -70,6 +70,7 @@ class OrdersHelper
     const SURCH_FIXED_AMOUNT = 'SurchFixedAmt';
     const DISCOUNT_PERCENT_AMOUNT = 'DiscPercAmt';
     const SURCH_PERCENT_AMOUNT = 'SurchPercAmt';
+    const DISCOUNT_REASON = 'ReasonCode';
 
     /**
      * @var LoggerInterface
@@ -348,8 +349,9 @@ class OrdersHelper
         }
         
         // set credit fields to empty
-       
-
+        $hdrDiscFixedAmount = $order->getData('hdr_disc_fixed_amount');
+        $hdrDiscPerc = $order->getData('hdr_disc_perc');
+        $hdrDiscCondCode = $order->getData('hdr_disc_cond_code');
         $hdrSurchFixedAmount = '';
         $hdrSurchPerc = '';
         $hdrSurchCondCode = '';
@@ -433,7 +435,8 @@ class OrdersHelper
             self::DISCOUNT_FIXED_AMOUNT => $discFixedAmt,
             self::SURCH_FIXED_AMOUNT => $surchFixedAmt,
             self::DISCOUNT_PERCENT_AMOUNT => $discPerAmt,
-            self::SURCH_PERCENT_AMOUNT => $surchPerAmt
+            self::SURCH_PERCENT_AMOUNT => $surchPerAmt,
+            self::DISCOUNT_REASON => $orderItem->getReasonCode()
         );
     }
 
