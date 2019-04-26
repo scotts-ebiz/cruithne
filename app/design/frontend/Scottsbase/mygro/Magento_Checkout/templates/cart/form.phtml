@@ -11,12 +11,12 @@
 <?php $mergedCells = ($this->helper('Magento\Tax\Helper\Data')->displayCartBothPrices() ? 2 : 1); ?>
 <?= $block->getChildHtml('form_before') ?>
 <form action="<?= /* @escapeNotVerified */ $block->getUrl('checkout/cart/updatePost') ?>"
-          method="post"
-          id="form-validate"
-          data-mage-init='{"Magento_Checkout/js/action/update-shopping-cart":
+      method="post"
+      id="form-validate"
+      data-mage-init='{"Magento_Checkout/js/action/update-shopping-cart":
               {"validationURL" : "/checkout/cart/updateItemQty"}
           }'
-          class="form form-cart">
+      class="form form-cart">
     <?= $block->getBlockHtml('formkey') ?>
     <div class="cart table-wrapper<?= $mergedCells == 2 ? ' detailed' : '' ?>">
         <?php if ($block->getPagerHtml()): ?>
@@ -28,12 +28,14 @@
                "updateCartActionContainer": "#update_cart_action_container"}}'>
             <caption role="heading" aria-level="2" class="table-caption"><?= /* @escapeNotVerified */ __('Shopping Cart Items') ?></caption>
             <thead>
-                <tr>
-                    <th class="col item" scope="col"><span><?= /* @escapeNotVerified */ __('Item') ?></span></th>
-                    <th class="col price" scope="col"><span><?= /* @escapeNotVerified */ __('Price') ?></span></th>
-                    <th class="col qty" scope="col"><span><?= /* @escapeNotVerified */ __('Qty') ?></span></th>
-                    <th class="col subtotal" scope="col"><span><?= /* @escapeNotVerified */ __('Subtotal') ?></span></th>
-                </tr>
+            <tr> 
+            
+                <!-- <th class="col item" scope="col"><span><?= /* @escapeNotVerified */ __('Product Name') ?></span></th> -->
+				<th class="col item" scope="col"><span>&nbsp;</span></th>
+                <th class="col price" scope="col"><span><?= /* @escapeNotVerified */ __('Unit Price') ?></span></th>
+                <th class="col qty" scope="col"><span><?= /* @escapeNotVerified */ __('Quantity') ?></span></th>
+                <th class="col subtotal" scope="col"><span><?= /* @escapeNotVerified */ __('Subtotal') ?></span></th>
+            </tr>
             </thead>
             <?php foreach ($block->getItems() as $_item): ?>
                 <?= $block->getItemHtml($_item) ?>
