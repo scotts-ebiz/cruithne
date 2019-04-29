@@ -1,8 +1,10 @@
 # TODO: Pre-cache composer as much as possible
 #Base image is Google's Optimized Ubuntu Image
 
+
 # TODO: environment switch to test image OR replace env.php file here
-ARG IMAGE=gcr.io/ecommerce-platform-211419/test-primer:latest
+
+ARG IMAGE=gcr.io/ecommerce-platform-211419/magento-dev-primer:latest
 FROM $IMAGE
 ENTRYPOINT []
 
@@ -16,11 +18,31 @@ LABEL maintainer="rick.feldschau@scotts.com"
 
 RUN rm /usr/local/bin/entrypoint.sh
 
+# install SumoLogic
+WORKDIR /tmp
+RUN wget "https://collectors.sumologic.com/rest/download/deb/64" -O SumoCollector.deb && dpkg --install /tmp/SumoCollector.deb && service collector start
+RUN printf "name = Magento2-Collector\naccessid = suJx8dS3MKjFSu\naccesskey = Q1cq15TX5wS4BzERvxap0ugIdU2Ti5HX9oVw8yAFJaqfgrShfR7VpWontR9Qd4Wo\n" >  /opt/SumoCollector/config/user.properties
+
+
+# install gsutil
+RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"; echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+RUN cat /etc/apt/sources.list.d/google-cloud-sdk.list
+
+RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
+RUN apt-get update -y  && apt-get install -y google-cloud-sdk
+
 # Can move these to nightly build
 
 RUN curl -sL https://deb.nodesource.com/setup_11.x | bash -
 RUN apt-get install -y --no-install-recommends nodejs php7.2-redis
 RUN npm i -g gulp
+
+## ElasticSearch
+RUN a2enmod proxy_http
+
+##n98-magerun tools
+RUN curl -O https://files.magerun.net/n98-magerun2.phar
+RUN chmod +x n98-magerun2.phar
 
 ## Installing the Qualys Cloud Agent in this Dockerfile for now. Will move to Nightly Build when proven successfull. 
 
@@ -43,6 +65,7 @@ WORKDIR $MAGENTO_DIR
 
 RUN git fetch
 RUN git checkout origin/test ./app/etc/config.php
+RUN git checkout origin/test .htaccess
 
 RUN git pull
 
