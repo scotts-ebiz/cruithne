@@ -40,6 +40,10 @@ RUN npm i -g gulp
 ## ElasticSearch
 RUN a2enmod proxy_http
 
+##n98-magerun tools
+RUN curl -O https://files.magerun.net/n98-magerun2.phar
+RUN chmod +x n98-magerun2.phar
+
 ## Installing the Qualys Cloud Agent in this Dockerfile for now. Will move to Nightly Build when proven successfull. 
 
 # Copy Cloud agent to tmp directory
