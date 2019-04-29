@@ -80,6 +80,10 @@ RUN sed -i "s/.*result = mb_convert_encoding.*/\t\t\$result = mb_convert_encodin
 
 USER root
 
+# Magento 2.3 fix that will fix catalog rules to be applied
+# https://magento.stackexchange.com/questions/152101/catalog-price-rule-not-applied-working-in-magento-2-ee-v2-1-2
+RUN sed -i '24s/.*/                <visble>true<\/visible>/' $MAGENTO_DIR/vendor/magento/module-catalog-rule-staging/view/adminhtml/ui_component/catalog_rule_form.xml 
+
 # Added this in as a test to force php to save sessions in redis
 RUN sed -i '/session.save_handler/s/^/; /g' /etc/php/7.2/apache2/php.ini
 
