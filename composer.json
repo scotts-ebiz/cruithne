@@ -14,7 +14,7 @@
         "composer/composer": "@alpha",
         "magento/product-enterprise-edition": "2.3.0",
         "mageplaza/module-smtp": "^1.2",
-        "snowdog/frontools": "^1.6"
+        "snowdog/frontools": "^1.6",
         "smg/launch": "1.0.0" 
     },
     "require-dev": {
