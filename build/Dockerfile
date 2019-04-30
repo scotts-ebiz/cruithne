@@ -27,6 +27,10 @@ RUN npm i -g gulp
 ## ElasticSearch
 RUN a2enmod proxy_http
 
+## UFW Uncomplicated Firewall iptables interface
+RUN apt install ufw 
+
+
 ## Installing the Qualys Cloud Agent in this Dockerfile for now. Will move to Nightly Build when proven successfull. 
 
 # Copy Cloud agent to tmp directory
