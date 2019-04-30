@@ -3,7 +3,7 @@
     <body>
         <referenceBlock name="items_grid">
             <action method='setTemplate'>
-                <argument name='template' xsi:type='string'>SMG_OrderDiscount::order/create/items/grid.phtml</argument>
+                <argument name='template' xsi:type='string'>SMG_OrderReason::order/create/items/grid.phtml</argument>
             </action>
         </referenceBlock>
     </body>

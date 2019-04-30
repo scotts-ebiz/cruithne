@@ -8,6 +8,6 @@ class OrderCustomDiscount extends AbstractDb
 {
     protected function _construct()
     {
-        $this->_init('smg_discount_codes', 'entity_id');
+        $this->_init('smg_order_discount', 'entity_id');
     }
 }

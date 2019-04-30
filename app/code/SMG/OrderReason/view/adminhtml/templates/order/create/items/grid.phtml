@@ -80,18 +80,20 @@
                                 <?= implode('<br />', $this->helper('Magento\Catalog\Helper\Data')->splitSku($block->escapeHtml($_item->getSku()))) ?>
                                 
                                 <br/>
-                                <span><?= __('Discount') ?>:</span>
-                                <?php $discountcodeobj = $block->getOrderCustomDiscount();?>
-                                 <select class="admin__control-select" name="">
-											<?php
-											// get the list of Discount
-											foreach ($discountcodeobj as $discountcode)
-											{
-											?>
-											<option value="<?= /* @escapeNotVerified */ $discountcode->getData('discount_values') ?>"><?= /* @escapeNotVerified */ $discountcode->getData('discount_title'); ?></option>
-											<?
-											}
-											?>
+                                <?php $creditReasonCodes = $block->getCreditReasonCodes();?>
+                                <span><?= __('Reason Code') ?>:</span>
+                                 <select class="admin__control-select" id="order_item_<?= /* @escapeNotVerified */ $_item->getId() ?>_reason_code" name="item[<?= /* @escapeNotVerified */ $_item->getId() ?>][reason_code]">
+									 <option value="">Select Reason</option>
+											            <?php
+													// get the list of credit reason codes
+													
+													foreach ($creditReasonCodes as $creditReasonCode)
+													{
+												?>
+												<option value="<?= /* @escapeNotVerified */ $creditReasonCode->getData('short_desc') ?>"><?= /* @escapeNotVerified */ $creditReasonCode->getData('short_desc'); ?></option>
+												<?
+													}
+												?>
 									 </select>
                             </div>
                             <div class="product-configure-block">
@@ -265,3 +267,10 @@ require([
 </script>
 <?php endif; ?>
 <?php endif; ?>
+ <script>      
+    function isDisabled(id) {
+        jQuery('#'+id).trigger('click');
+    }
+</script>
+
+

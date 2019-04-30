@@ -3,14 +3,14 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace SMG\OrderDiscount\Block\Adminhtml\Order\Create\Items;
+namespace SMG\OrderReason\Block\Adminhtml\Order\Create\Items;
 
 use Magento\CatalogInventory\Api\StockRegistryInterface;
 use Magento\CatalogInventory\Api\StockStateInterface;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
-use SMG\OrderDiscount\Model\OrderCustomDiscountFactory;
-use SMG\OrderDiscount\Model\ResourceModel\OrderCustomDiscount as OrderCustomDiscountResource;
-use SMG\OrderDiscount\Model\ResourceModel\OrderCustomDiscount\CollectionFactory as OrderCustomDiscountCollectionFactory;
+use SMG\CreditReason\Model\CreditReasonCodeFactory;
+use SMG\CreditReason\Model\ResourceModel\CreditReasonCode as CreditReasonCodeReource;
+use SMG\CreditReason\Model\ResourceModel\CreditReasonCode\CollectionFactory as CreditReasonCodeCollectionFactory;
 /**
  * Adminhtml sales order create items grid block
  * @api
@@ -20,19 +20,19 @@ use SMG\OrderDiscount\Model\ResourceModel\OrderCustomDiscount\CollectionFactory 
 class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
 {
     /**
-     * @var _orderCustomDiscountFactory
+     * @var _creditReasonCodeFactory
      */
-    protected $_orderCustomDiscountFactory;
+      protected $_creditReasonCodeFactory;
 
     /**
-     * @var _orderCustomDiscountResource
+     * @var CreditReasonCodeReource
      */
-    protected $_orderCustomDiscountResource;
+    protected $_creditReasonCodeResource;
 
     /**
-     * @var _orderCustomDiscountCollectionFactory
+     * @var CreditReasonCodeCollectionFactory
      */
-    protected $_orderCustomDiscountCollectionFactory;
+    protected $_creditReasonCodeCollectionFactory;
     
     /**
      * @param \Magento\Backend\Block\Template\Context $context
@@ -64,9 +64,9 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
         \Magento\GiftMessage\Helper\Message $messageHelper,
         StockRegistryInterface $stockRegistry,
         StockStateInterface $stockState,
-        OrderCustomDiscountFactory $orderCustomDiscountFactory,
-        OrderCustomDiscountResource $_orderCustomDiscountResource,
-        OrderCustomDiscountCollectionFactory $orderCustomDiscountCollectionFactory,
+        CreditReasonCodeFactory $creditReasonCodeFactory,
+        CreditReasonCodeReource $_creditReasonCodeResource,
+        CreditReasonCodeCollectionFactory $creditReasonCodeCollectionFactory,
         array $data = []
     ) {
 		$this->_messageHelper = $messageHelper;
@@ -90,18 +90,46 @@ class Grid extends \Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid
               $stockState, 
               $data
     );
-        $this->_orderCustomDiscountFactory = $orderCustomDiscountFactory;
-        $this->_orderCustomDiscountResource = $_orderCustomDiscountResource;
-        $this->_orderCustomDiscountCollectionFactory = $orderCustomDiscountCollectionFactory;
+        $this->_creditReasonCodeFactory = $creditReasonCodeFactory;
+        $this->_creditReasonCodeResource = $_creditReasonCodeResource;
+        $this->_creditReasonCodeCollectionFactory = $creditReasonCodeCollectionFactory;
        
     }
     
-    public function getOrderCustomDiscount()
+    /**
+     * Get the list of Credit Reason Codes
+     *
+     * @return CreditReasonCodeReource\Collection
+     */
+    public function getCreditReasonCodes()
     {
         // Get the list of active reason codes
-        $orderCustomDiscount = $this->_orderCustomDiscountCollectionFactory->create();
+        $creditResonCodes = $this->_creditReasonCodeCollectionFactory->create();
+        $creditResonCodes->addFieldToFilter("is_active", ["eq" => true]);
 
         // return the reason codes
-        return $orderCustomDiscount;
+        return $creditResonCodes;
     }
+    
+     public function getCreditReasonCode()
+    {
+        // get the reason code
+        $creditReasonCode = $this->getItem()->getData('reason_code');
+
+        // Get the reason code to get the short description
+        $creditReason = $this->_creditReasonCodeFactory->create();
+        $this->_creditReasonCodeResource->load($creditReason, $creditReasonCode, 'reason_code');
+
+        // get the short description and make sure it has a value
+        $shortDescription = $creditReason->getData('short_desc');
+        if (empty($shortDescription))
+        {
+            $shortDescription = 'No Reason Found';
+        }
+
+        // return the short description
+        return $shortDescription;
+    }
+    
+    
 }
