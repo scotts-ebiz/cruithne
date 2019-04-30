@@ -7,7 +7,7 @@
 
             <!-- Banner Headline Customizations -->
             <parameter name="HeroCalloutBannerHeadlineLabel" visible="true" xsi:type="block">
-                <label>BANNER HEADLINE CUSTOMIZATION</label>
+                <label>CUSTOMIZE BANNER HEADLINE</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannerheadline" visible="true" xsi:type="text" required="true">
@@ -29,7 +29,7 @@
 
             <!-- Banner Text Customizations -->
             <parameter name="HeroCalloutBannerTextLabel" visible="true" xsi:type="block">
-                <label>BANNER TEXT CUSTOMIZATION</label>
+                <label>CUSTOMIZE BANNER TEXT</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannertext" visible="true" xsi:type="block">
@@ -52,7 +52,7 @@
 
             <!-- Banner Text Highlight Customizations -->
             <parameter name="HeroCalloutBannerTextHighlightLabel" visible="true" xsi:type="block">
-                <label>BANNER TEXT HIGHLIGHT CUSTOMIZATION</label>
+                <label>CUSTOMIZE BANNER TEXT HIGHLIGHT</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannertexthighlight" visible="true" xsi:type="text">
@@ -74,7 +74,7 @@
 
             <!-- Banner Image Section -->
             <parameter name="HeroCalloutBannerImagesLabel" visible="true" xsi:type="block">
-                <label>BANNER IMAGES</label>
+                <label>CUSTOMIZE BANNER IMAGES</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannerimage" visible="true" xsi:type="block">
@@ -89,7 +89,7 @@
 
             <!-- Button Customizations -->
             <parameter name="HeroCalloutButtonLabel" visible="true" xsi:type="block">
-                <label>BUTTON CUSTOMIZATION</label>
+                <label>CUSTOMIZE BUTTON</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="buttontext" visible="true" xsi:type="text">

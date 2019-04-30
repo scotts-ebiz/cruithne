@@ -3,6 +3,9 @@
 //  ---------------------------------------------
 
 //  Summary block
+.no-margin{
+    margin:0px;
+}
 .cart-summary {
     @extend .abs-add-box-sizing;
     @extend .abs-adjustment-incl-excl-tax;

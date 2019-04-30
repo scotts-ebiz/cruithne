@@ -3,8 +3,8 @@
     <media>
         <images module="Magento_Catalog">
             <image id="cart_page_product_thumbnail" type="small_image">
-                <width>2000</width>
-                <height>1000</height>
+                <width>800</width>
+                <height>300</height>
             </image>
         </images>
     </media>
