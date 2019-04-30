@@ -44,6 +44,10 @@ RUN a2enmod proxy_http
 RUN curl -O https://files.magerun.net/n98-magerun2.phar
 RUN chmod +x n98-magerun2.phar
 
+#enabling the web-server to write
+RUN chgrp www-data /var/www/html/magento2/
+RUN chmod g+w /var/www/html/magento2/
+
 ## Installing the Qualys Cloud Agent in this Dockerfile for now. Will move to Nightly Build when proven successfull. 
 
 # Copy Cloud agent to tmp directory
