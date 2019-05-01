@@ -52,6 +52,14 @@
                         </arguments>
                     </block>
                 </container>
+				<container name="div.cart.cta.block" htmlTag="div" htmlClass="cart-cta">
+                    <block class="Magento\Cms\Block\Block" name="cart-cta">
+                        <arguments>
+                            <argument name="block_id" xsi:type="string">cart-cta</argument>
+                            <argument name="css_class" xsi:type="string">cart-cta</argument>
+                        </arguments>
+                    </block>
+                </container>
             </container>
         </referenceContainer>
         <referenceBlock name="top.search" remove="true" />
@@ -147,4 +155,9 @@
         </referenceContainer>
         <referenceContainer name="before.body.end">
             <block class="Magento\Theme\Block\Html\Footer" name="absolute_footer" template="Magento_Theme::html/absolute_footer.phtml" />
-        </referenceContaine
+        </referenceContainer>
+        <referenceContainer name="content">
+            <block class="Magento\Framework\View\Element\FormKey" name="formkey"/>
+        </referenceContainer>
+    </body>
+</page>
