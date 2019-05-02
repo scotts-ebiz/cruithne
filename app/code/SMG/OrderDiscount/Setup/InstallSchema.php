@@ -12,11 +12,13 @@ class InstallSchema implements InstallSchemaInterface
     public function install(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
         // being setup
-        $setup->startSetup();
+        $installer = $setup;
+        $installer->startSetup();
+        $connection = $installer->getConnection();
 
-        $tableName = 'smg_discount_codes';
+        $tableName = 'smg_order_discount';
 
-        $table = $setup->getConnection()->newTable($setup->getTable($tableName));
+        $table = $connection->newTable($setup->getTable($tableName));
 
         $table->addColumn(
             'entity_id',
@@ -31,24 +33,6 @@ class InstallSchema implements InstallSchemaInterface
         );
  
         $table->addColumn(
-            'magento_desc',
-            Table::TYPE_TEXT,
-            255,
-            [
-                'nullable' => false
-            ]
-        );
-        
-        $table->addColumn(
-            'magento_coupon_code',
-            Table::TYPE_TEXT,
-            255,
-            [
-                'nullable' => false
-            ]
-        );
-        
-        $table->addColumn(
             'disc_cond_code',
             Table::TYPE_TEXT,
             255,
@@ -58,25 +42,7 @@ class InstallSchema implements InstallSchemaInterface
         );
         
         $table->addColumn(
-            'disc_fixed_amt',
-            Table::TYPE_TEXT,
-            255,
-            [
-                'nullable' => true
-            ]
-        );
-        
-        $table->addColumn(
-            'disc_perc_amt',
-            Table::TYPE_TEXT,
-            255,
-            [
-                'nullable' => true
-            ]
-        );
-        
-        $table->addColumn(
-            'discount_title',
+            'magento_rule_type',
             Table::TYPE_TEXT,
             255,
             [
@@ -85,7 +51,7 @@ class InstallSchema implements InstallSchemaInterface
         );
         
         $table->addColumn(
-            'discount_values',
+            'application_type',
             Table::TYPE_TEXT,
             255,
             [
@@ -93,62 +59,55 @@ class InstallSchema implements InstallSchemaInterface
             ]
         );
         
-        $table->addColumn(
-            'discount_type',
-            Table::TYPE_TEXT,
-            null,
-            [
-                'nullable' => false
-            ]
-        );
-
         // create the table
-        $setup->getConnection()->createTable($table);
-
+        $connection->createTable($table);
+      
+        if ($connection->tableColumnExists('sales_order', 'disc_cond_code') === false) {
+            $connection
+                ->addColumn(
+                    $setup->getTable('sales_order'),
+                    'disc_cond_code',
+                    [
+                        'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                        'length' => 0,
+                        'nullable' => true,
+                        'comment' => 'Discount condition code'
+                    ]
+                );
+        }
+        
+        if ($connection->tableColumnExists('sales_order', 'disc_fixed_amt') === false) {
+            $connection
+                ->addColumn(
+                    $setup->getTable('sales_order'),
+                    'disc_fixed_amt',
+                    [
+                        'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                        'length' => 0,
+                        'nullable' => true,
+                        'comment' => 'Discount Fixed Amount'
+                    ]
+                );
+        }
+        
+        if ($connection->tableColumnExists('sales_order', 'disc_perc_amt') === false) {
+            $connection
+                ->addColumn(
+                    $setup->getTable('sales_order'),
+                    'disc_perc_amt',
+                    [
+                        'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
+                        'length' => 0,
+                        'nullable' => true,
+                        'comment' => 'Discount Percentage Amount'
+                    ]
+                );
+        }
 
        
-       /*$eavTable = $setup->getTable('quote_item');
-
-        $disc_cond_code = [
-            'disc_cond_code' => [
-            'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-            'nullable' => true,
-            'comment' => 'disc_cond_code',
-            ],
-
-        ];
-        
-        $disc_fixed_amt = [
-            'disc_fixed_amt' => [
-            'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-            'nullable' => true,
-            'comment' => 'disc_fixed_amt',
-            ],
-
-        ];
-
-         $disc_perc_amt = [
-            'disc_perc_amt' => [
-            'type' => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-            'nullable' => true,
-            'comment' => 'disc_perc_amt',
-            ],
-
-        ];
-
-        $connection = $setup->getConnection();
-        foreach ($disc_cond_code as $name => $definition) {
-        $connection->addColumn($eavTable, $name, $definition);
-        }
-        foreach ($disc_fixed_amt as $name => $definition) {
-        $connection->addColumn($eavTable, $name, $definition);
-        }
-        foreach ($disc_perc_amt as $name => $definition) {
-        $connection->addColumn($eavTable, $name, $definition);
-        } */
+       
 
         // end setup
-        $setup->endSetup(); 
+        $setup->endSetup();
     }
 }
-
