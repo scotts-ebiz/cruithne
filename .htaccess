@@ -1,4 +1,4 @@
-SetEnvIf Request_URI ^/rest/ noauth=1
+SetEnvIf Request_URI ^/rest/.* noauth=1
 
 AuthType Basic
 AuthName "Password Protected Area"
