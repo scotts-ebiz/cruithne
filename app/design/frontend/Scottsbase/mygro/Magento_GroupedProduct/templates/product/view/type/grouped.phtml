@@ -29,6 +29,20 @@
   <?= /* @escapeNotVerified */ $_product->getData('short_description');?>
 </div>
 
+
+<!-- Product Select Wrapper -->
+<div class="grouped-product-wrapper">
+        <h5>Choose an Option</h5>
+        <select name="selectProduct">
+            <?php foreach ($_associatedProducts as $_values): ?>
+                <option class="product-item-name" name="<?= /* @escapeNotVerified */ $_values->getData('entity_id');?>"><?= /* @escapeNotVerified */
+         $_values->getData('name');?>
+          <!-- <?= $_values->getData('entity_id');?>-->
+         </option>
+        <?php endforeach; ?>
+      </select>
+</div>
+
 <!-- Grouped Table -->
 <div class="table-wrapper grouped">
     <table class="table data grouped"
@@ -47,12 +61,9 @@
         <?php foreach ($_associatedProducts as $_item): ?>
               <tbody>
               <tr class="grouped-row">
-                  <td data-th="<?= $block->escapeHtml(__('Product Name')) ?>" class="col item">
-                      <strong class="product-item-name"><?= $block->escapeHtml($_item->getName()) ?></strong>
-
-
+                  <td data-th="<?= $block->escapeHtml(__('Product Name')) ?>" class="col item product-detail-td">
                       <!-- Simple Product Short Description -->
-                      <p class="simple-product-shortdescription"><?= /* @escapeNotVerified */ $_item->getData('short_description');?></p>
+                      <?= /* @escapeNotVerified */ $_item->getData('short_description');?>
 
                       <!-- Insert Product Price -->
                     <?php if ($block->getCanShowProductPrice($_product)): ?>
@@ -62,7 +73,7 @@
                     <?php endif; ?>
                   </td>
                 <?php if ($_product->isSaleable()): ?>
-                    <td data-th="<?= $block->escapeHtml(__('Qty')) ?>" class="col qty">
+                    <td data-th="<?= $block->escapeHtml(__('Qty')) ?>" class="col qty product-qty-td">
                       <?php if ($_item->isSaleable()) : ?>
                           <div class="control qty">
                               <input type="number"
