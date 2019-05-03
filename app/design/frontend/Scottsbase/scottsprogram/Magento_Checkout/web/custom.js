@@ -12,7 +12,6 @@ function($){
 			
 			$(".street > .control").append("<a class='cust-btn-add' href='javascript:void(0)'>Add New Line</a>");
 			
-			
 			$("input[name='postcode']").attr('pattern', '[0-9]*');
 			$("input[name='postcode']").attr('inputmode', 'numeric');
 			$("input[name='telephone']").attr('pattern', '[0-9]*');
@@ -43,7 +42,7 @@ function($){
 		}, 7000);
 	});
 	/*------- Sticky Header --------*/
-	$(window).scroll(function(){
+	$(window).scroll(function(){ 
 		var sticky = $('.custom-checkout-btn-wrap');
 		
 		if(typeof  sticky != "undefined" && sticky){
@@ -51,10 +50,12 @@ function($){
 			if ($(window).scrollTop() >= 200) {
 				$('.custom-checkout-btn-wrap').addClass('stickyCart');
 				$('.custom-checkout-btn-wrap').removeClass('slide-up');
+				$('.header.content').addClass('stickyHeader');
 			}
 			else { 
 				$('.custom-checkout-btn-wrap').removeClass('stickyCart');
 				$('.custom-checkout-btn-wrap').addClass('slide-up');
+				$('.header.content').removeClass('stickyHeader');
 			}
 			
 		}

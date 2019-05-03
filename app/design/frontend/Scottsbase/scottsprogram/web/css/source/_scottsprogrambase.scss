@@ -13,7 +13,7 @@
                 @include max-screen($screen__m) {
                     float: none;
                     position: relative;
-                    top: 0;
+                    top: 0;  
                 }
                 > img {
                     @include max-screen($screen__m) {
@@ -31,12 +31,32 @@
                     visibility: hidden;
                 }
             }
+			.cart-cta{
+				max-width: 100%;
+				position: absolute;
+				top: 5px;
+				right: 0;
+				display: inline-block;
+				width: 40px;
+					
+					a { 
+						color: #fff;
+						display: inline-block;
+						width: 25px;
+						text-align: center;
+						font-size: 14px;
+						
+						&:hover {
+							text-decoration: none;
+						}
+					}
+			}
         }
     }
     .page-footer {
         @include max-screen($screen__m) {
             padding: 3rem 10%;
-        }
+        } 
         .footer {
             letter-spacing: 0.35px;
             .social-links {
@@ -853,6 +873,13 @@
 				background-color: unset !important;
 				padding: 0 !important;
 				text-align: left;
+				
+				/*------  01052019 Start-----*/
+				padding: 10px !important;
+				background: #075534 !important;
+				color: #fff !important;
+				border-radius: 0;
+				/*------  01052019 END-----*/
 			}
 		}
 	}
@@ -921,6 +948,15 @@
 }
 // Checkout Styles
 .checkout-index-index {
+	.table-checkout-shipping-method tbody td {
+		border:0;
+	}
+	.table-checkout-shipping-method tbody tr {
+		border-top: 1px solid #ccc;
+	}
+	.table-checkout-shipping-method tbody tr:first-child{
+		border-top: none;
+	}
     .fieldset {
         .field.required,
         .field._required {
@@ -1187,6 +1223,7 @@
                                                                     transition: background 0.2s;
                                                                     background: $secondary-dark-gray;
                                                                     border: none;
+																	margin-top: 0;/*---02052019---*/
                                                                     &:hover {
                                                                         -webkit-transition: background 0.2s;
                                                                         -moz-transition: background 0.2s;
@@ -1207,6 +1244,7 @@
                                                                     transition: background 0.2s;
                                                                     background: $secondary-dark-gray;
                                                                     border: none;
+																	margin-top: 0;/*---02052019---*/
                                                                     &:hover {
                                                                         -webkit-transition: background 0.2s;
                                                                         -moz-transition: background 0.2s;
@@ -1457,7 +1495,7 @@
 	}
 	.action.primary.checkout,
 	.actions-toolbar > .primary .action:last-child{
-		height: 45px;
+		height: 42px;
 		line-height: $font_normal;
 		background: $color_dark30_green_shade;
 		color: $color_white;
@@ -1689,6 +1727,81 @@
 		}
 	}
 	/*---- 17042019 End ----*/
+	
+	/*---- 01052019 Start ----*/
+	#block-discount-heading span{
+		font-weight: 700;
+		line-height: 1.1;
+		margin-top: 2rem;
+		margin-bottom: 2rem;
+		font-size: 18px;
+	}
+	#discount-form label {
+		padding: 6px 15px 0 0;
+		text-align: right;
+		width: 25.8%;
+		box-sizing: border-box;
+		float: left;
+		position: relative;
+		font-weight: 700;
+		overflow: visible;
+		height: auto;
+	}
+	#discount-form .control {
+		width: auto;
+		float: left;
+		
+		 .actions-toolbar .primary {
+			float: none;
+		 }
+		
+	}
+	#payment #checkout-step-payment {
+		.payment-option .payment-option-content {
+			#discount-form .primary .action.action-apply {
+				background: none;
+				border: 0;
+				display: inline-block;
+				font-size: 14px;
+				color: #075534 !important;
+				font-weight: 700 !important;
+				background-color: unset !important;
+				padding: 0 !important;
+				text-align: left;
+				
+				padding: 10px !important;
+				background: #075534 !important;
+				color: #fff !important;
+				border-radius: 0;
+				
+			}
+			#discount-form {
+				.actions-toolbar {
+				    margin-left: 25.8%;
+				}
+				.primary {
+					float: none !important;
+				}
+			}
+		}
+	}
+	.checkout-payment-method {
+		.discount-code  {
+			.payment-option-title {
+				padding-bottom: 10px;
+			}
+		}
+	}	
+	.opc-wrapper .form-discount {
+		max-width: none;
+	}
+	.payment-option-inner > .field {
+		&:after {
+			display: inline-block;
+			content: '';
+			clear: both;
+		}
+	}
 }
 /*------- 11042019 Custom Changes - Start -------*/
 .abs-product-link, 
@@ -1764,6 +1877,14 @@
 	} 
 	
 }
+/*---- 24042019 Start ----*/
+@media screen and (max-width: 1130px) {
+	div.widget.widget-static-block.howItWorks__wrapper {
+		margin-top: 22px;
+	}
+}
+/*---- 24042019 End ----*/
+
 @media screen and (max-width: $screen_1024) {
 	.checkout-cart-index{
 		.cart.table-wrapper{
@@ -1814,8 +1935,15 @@
 				}
 			}
 		}
+		/*---- 01052019 Start ----*/ 
+		#discount-form label {
+			width: auto;
+		}
+		/*---- 01052019 End ----*/ 
 	}
 	/*---- 15042019 Start ----*/ 
+	
+	
 }
 
 @media screen and (max-width: $screen_1024) and (min-width: $screen_769) {
@@ -1973,11 +2101,29 @@
 		/*---- 15042019 Start ----*/
 		.field-tooltip {
 			top: 0%;
+			/*---- 30042019 Start ----*/
+			.field-tooltip-content:before, 
+			.field-tooltip-content:after {
+				top: 1px;
+			}/*---- 30042019 End ----*/
 		}
 		.opc-progress-bar {
 			padding: 0 15px;
 		}
 		/*---- 15042019 End ----*/ 
+		
+		/*---- 02052019 Start ----*/ 
+		#giftcard-form.form-giftcard-account {
+			.actions-toolbar {
+				.primary {
+					margin-left: 0 !important;
+					
+					.action.action-add.primary {
+						margin-left: 0;
+					}
+				}
+			}
+		}/*---- 02052019 End ----*/ 
 	} 
 	.cart.table-wrapper .product-item-photo {
 		width: 100% !important;
@@ -1993,15 +2139,35 @@
 		display: none !important;
 	}
 	
-	/*---- 17042019 Start ----*/ 
+	/*---- 17042019   Start ----*/ 
 	.return-policy-content{
 		margin-bottom:-50px;
+		padding-right: 38px; /*---- 20042019 ----*/ 
 	}
 	.footer.content{
 		border-top: 0;
 	}
 	/*---- 17042019 End ----*/ 
 	
+	/*---- 23042019 Start ----*/
+	.landingPageOptions-container {
+		.howItWorks__wrapper {
+			.section__steps--item {
+				margin-bottom: 40px;
+			}
+		}
+	}/*---- 20042019 End ----*/
+	
+	/*---- 01052019 Start ----*/
+	#payment #checkout-step-payment {
+		.payment-option .payment-option-content {
+			#discount-form {
+				.actions-toolbar {
+				    margin-left: 0;
+				}
+			}
+		}
+	}
 }
 @media screen and (max-width: $screen_568) {
 	.checkout-cart-index {
@@ -2017,6 +2183,11 @@
 			z-index: 9999;
 			display:block;
 			@include transition(all 0.2s ease-in-out);
+			/*-- 01-05-2019 Start--*/	
+			.action.primary.checkout{
+					 border-radius: 0px;
+			}
+			/*-- 01-05-2019 End--*/
 		}
 		.cart-parent-summary{
 			.cart-summary-divlink{
@@ -2153,6 +2324,76 @@
 .product-image-container {
     width: 100% !important;
 }
+/*---- 20042019 Start ----*/
+.widget.widget-static-block.howItWorks__wrapper{
+	 background-color: #f7f7f7;
+}
+.widget.widget-static-block.howItWorks__wrapper{
+	.section__steps--headline{
+		padding-top: 10px;
+	}
+}
+.widget.widget-static-block.howItWorks__wrapper{
+	padding-top: 0px;/*------ 23-04-2019 -------*/
+	margin-top: -5px;/*------ 24-04-2019 -------*/
+	.section__steps--wrapper{
+		padding-bottom: 57px;
+	}
+	
+}
+
+a#totop {
+    height: 29px;
+    position: absolute;
+    right: 114px;
+    width: 40px;
+    z-index: 9999;
+    top: -90px;
+    background-color: #ef962a;
+    font-size: 11px;
+    color: #fff;
+    text-align: center;
+    line-height: 1;
+    padding: 18px 13px;
+	display:none;
+    border-radius: 53px;
+	text-decoration: none;
+}
+.cms-scotts-lawn-care-program-home-page {
+	a#totop {
+		display:block;
+	}
+}
+.return-policy-content p{
+	text-align: justify;
+}
+.return-policy-content{
+	padding-right: 40px;
+}
+.landingPageOptions-container .howItWorks__wrapper .section__steps--item {
+    vertical-align: top;
+}
+.faq-content{
+	padding-right: 40px;
+}
+.page-footer{
+	position: relative;
+}
+@media screen and (min-width: $screen_768) {
+	.cms-faq {
+		.page-wrapper{ 
+			.page-header{ 
+				.header.content {
+					padding: 0 25px;
+				}
+			}
+		}
+	}
+	
+	
+}
+
+/*---- 20042019 End ----*/
 /*------- 11042019 Custom Changes - End --------*/
 
 
