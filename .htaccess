@@ -1,3 +1,17 @@
+SetEnvIf Request_URI ^/rest/V1/smg/ noauth=1
+
+AuthType Basic
+AuthName "Password Protected Area"
+AuthUserFile /var/www/html/magento2/.htpasswd
+Require valid-user
+
+## Setting the allow/deny to include the noauth 
+## variable for rest api
+Order Deny,Allow
+Satisfy any
+Deny from all
+Allow from env=noauth
+
 ############################################
 ## overrides deployment configuration mode value
 ## use command bin/magento deploy:mode:set to switch modes

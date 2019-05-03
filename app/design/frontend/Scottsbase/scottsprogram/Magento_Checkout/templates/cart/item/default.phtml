@@ -11,26 +11,20 @@
 $_item = $block->getItem();
 $product = $_item->getProduct();
 
-
 $isVisibleProduct = $product->isVisibleInSiteVisibility();
 /** @var \Magento\Msrp\Helper\Data $helper */
 $helper = $this->helper('Magento\Msrp\Helper\Data');
 $canApplyMsrp = $helper->isShowBeforeOrderConfirm($product) && $helper->isMinimalPriceLessMsrp($product);
 
-$objectManager = \Magento\Framework\App\ObjectManager::getInstance(); 
-$productShortDescription = $objectManager->get('Magento\Catalog\Model\Product')->load($_item->getProductId())->getShortDescription();
+$checkhelper = $this->helper('SMG\Checkout\Helper\Data');
+$productShortDescription = $checkhelper->getProduct()->load($_item->getProductId())->getShortDescription();
 
-$typeInstance = $objectManager->get('Magento\Bundle\Model\Product\Type');
-$selections = $typeInstance->getSelectionsCollection($typeInstance->getOptionsIds($product), $product);
+$selections = $checkhelper->getBundleProductType()->getSelectionsCollection($checkhelper->getBundleProductType()->getOptionsIds($product), $product);
 
 $arrayop = array();
 foreach($selections as $selc){
-	//$arrayop[] = $selc['image'];
 	$arrayop[] = $selc->getImage();
-	//echo '<pre>';
-	//var_dump($selc->debug());
 }
-//exit;
 ?>
 
 <tbody class="cart item">

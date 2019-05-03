@@ -29,7 +29,6 @@
   <?= /* @escapeNotVerified */ $_product->getData('short_description');?>
 </div>
 
-
 <!-- Product Select Wrapper -->
 <div class="grouped-product-wrapper">
         <h5>Choose an Option</h5>
@@ -64,6 +63,7 @@
                   <td data-th="<?= $block->escapeHtml(__('Product Name')) ?>" class="col item product-detail-td">
                       <!-- Simple Product Short Description -->
                       <?= /* @escapeNotVerified */ $_item->getData('short_description');?>
+
 
                       <!-- Insert Product Price -->
                     <?php if ($block->getCanShowProductPrice($_product)): ?>
