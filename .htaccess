@@ -1,5 +1,6 @@
 SetEnvIf Request_URI ^/rest/.* noauth=1
 
+
 AuthType Basic
 AuthName "Password Protected Area"
 AuthUserFile /var/www/html/magento2/.htpasswd
