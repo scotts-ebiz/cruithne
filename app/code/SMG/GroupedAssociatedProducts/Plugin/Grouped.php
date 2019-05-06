@@ -41,8 +41,10 @@ class Grouped extends \Magento\GroupedProduct\Block\Product\View\Type\Grouped {
           $productId = $associatedProductItem->getData('entity_id');
 
 
-          //Use the resource model _productResource to load all data for specific $productId and place in factory
-          //object $products
+          /*
+            Use the resource model _productResource to load all data for specific $productId and place in factory
+            object $products
+          */
           $this->_productsResource->load($products, $productId);
 
 
