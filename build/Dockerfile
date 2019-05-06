@@ -69,8 +69,6 @@ RUN git checkout origin/test .htaccess
 
 RUN git pull
 
-RUN git checkout origin/fix_apis_buildOnTest .htaccess
-
 RUN sed -i "s/save.*/save' => 'redis',/" app/etc/env.php
 
 RUN date
