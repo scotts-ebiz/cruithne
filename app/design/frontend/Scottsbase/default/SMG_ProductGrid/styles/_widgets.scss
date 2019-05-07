@@ -21,6 +21,10 @@
                   letter-spacing: .5px;
                   font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
                 }
+              .button:hover{
+                  background: #00634F;
+                  transition: background .2s linear;
+              }
             }
             .item {
                 background-size: cover;
