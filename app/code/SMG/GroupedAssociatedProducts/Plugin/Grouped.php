@@ -21,6 +21,7 @@ class Grouped extends \Magento\GroupedProduct\Block\Product\View\Type\Grouped {
 
   public function __construct(\Psr\Log\LoggerInterface $logger,
                               \Magento\Catalog\Model\ProductFactory $productsFactory,
+
                               \Magento\Catalog\Model\ResourceModel\Product $productsResource){
       $this->_logger = $logger;
       $this->_productsFactory = $productsFactory;
@@ -41,8 +42,10 @@ class Grouped extends \Magento\GroupedProduct\Block\Product\View\Type\Grouped {
           $productId = $associatedProductItem->getData('entity_id');
 
 
-          //Use the resource model _productResource to load all data for specific $productId and place in factory
-          //object $products
+          /*
+            Use the resource model _productResource to load all data for specific $productId and place in factory
+            object $products
+          */
           $this->_productsResource->load($products, $productId);
 
 

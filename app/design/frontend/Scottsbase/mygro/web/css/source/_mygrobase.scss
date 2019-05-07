@@ -296,9 +296,9 @@ body {
             border-radius: 4px;
             color: $white;
             font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
-            font-size: 1.5rem !important;
-            line-height: 0px !important;
-            padding: 45px !important;
+            font-size: 1.0rem;
+            line-height: 0px;
+            height: 48px;
             text-align: center;
             display: inline-block;
             box-sizing: border-box;
@@ -415,6 +415,23 @@ body {
                         font-size: 1.3rem;
                     }
                 }
+                .grouped-product-wrapper {
+                    margin-bottom: 20px;
+                    h5 {
+                        font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
+                        color:#222222;
+                        font-size: 1.2rem;
+                        margin: 0 0 10px 0;
+                    }
+                    select {
+                        border-radius: 0px;
+                        border: 0px;
+                        outline: 1px inset #909090;
+                        outline-style: solid;
+                        height: 45px;
+                        font-size: 1.2rem;
+                    }
+                }
                 .table-wrapper {
                     margin-bottom: 0;
                     table {
@@ -425,7 +442,6 @@ body {
                         }
                         tbody {
                             tr.grouped-row {
-                                border: 2px solid #008065;
                                 td {
                                     color: #000000;
                                     font-size: 1.2rem;
@@ -437,10 +453,20 @@ body {
                                         .price-container {
                                             .price {
                                                 color: #008065;
-                                                font-size: 1.2rem;
+                                                font-size: 1.5rem;
                                             }
                                         }
                                     }
+                                }
+                                td.product-detail-td {
+                                    width: 70%;
+                                    margin: 0;
+                                    padding: 0;
+                                }
+                                td.product-qty-td {
+                                    width: 30%;
+                                    text-align: right;
+                                    padding: 0;
                                 }
                             }
                         }
@@ -460,6 +486,9 @@ body {
                                 position: relative;
                                 width: 100%;
                                 max-width: inherit;
+                                padding: 45px 0;
+                                height: inherit;
+                                line-height: 0;
                             }
                         }
                     }
