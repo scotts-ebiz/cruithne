@@ -21,7 +21,6 @@ class Grouped extends \Magento\GroupedProduct\Block\Product\View\Type\Grouped {
 
   public function __construct(\Psr\Log\LoggerInterface $logger,
                               \Magento\Catalog\Model\ProductFactory $productsFactory,
-
                               \Magento\Catalog\Model\ResourceModel\Product $productsResource){
       $this->_logger = $logger;
       $this->_productsFactory = $productsFactory;
