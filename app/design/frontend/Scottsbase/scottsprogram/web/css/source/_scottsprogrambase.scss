@@ -819,7 +819,7 @@
 					font-size: $font32;
 					line-height: 16px;
 					color: #8f8f8f;
-					content: "";
+					content: "î˜¢";
 					font-family: "icons-blank-theme";
 					margin: 0;
 					vertical-align: middle;
@@ -832,7 +832,7 @@
 			}
 			&.active{
 				.title:after {
-					content: "";
+					content: "î˜¡";
 				}
 			}
 		}
@@ -1607,7 +1607,7 @@
 				-moz-osx-font-smoothing: grayscale;
 				font-size: $font32;
 				line-height: 20px;
-				content: "";
+				content: "î˜—";
 				font-family: "icons-blank-theme";
 				margin: 0;
 				vertical-align: top;

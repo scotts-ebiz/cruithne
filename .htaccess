@@ -1,8 +1,3 @@
-AuthType Basic
-AuthName "Password Protected Area"
-AuthUserFile /var/www/html/magento2/.htpasswd
-Require valid-user
-
 ############################################
 ## overrides deployment configuration mode value
 ## use command bin/magento deploy:mode:set to switch modes

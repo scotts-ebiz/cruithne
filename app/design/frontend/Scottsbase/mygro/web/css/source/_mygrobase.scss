@@ -287,26 +287,26 @@ body {
                 width: calc(33.33% - 28px);
             }
         }
-        .button {
+        button {
             background: $mygro-green;
             border-radius: 4px;
             color: $white;
             font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
-            font-size: 16px;
+            font-size: 1.0rem;
+            line-height: 0px;
+            height: 48px;
             text-align: center;
             display: inline-block;
-            height: 48px;
-            line-height: 48px;
             box-sizing: border-box;
             width: 100%;
             max-width: 200px;
             transition: background 0.2s linear;
             letter-spacing: 0.5px;
         }
-        .button:hover {
+        button:hover {
             background: $mygro-dark-green;
         }
-        .button:active {
+        button:active {
             background: $mygro-light-green;
         }
         .hero-video {
@@ -395,6 +395,113 @@ body {
     display: none;
 }
 
+// PDP Page Styles
+.page-product-grouped {
+    .product-info-main {
+        .product-info-price {
+            display: none;
+        }
+        .product-add-form {
+            form {
+                .grouped-title-section {
+                    h2.grouped-product-header {
+                        color: #000000;
+                    }
+                    p {
+                        font-size: 1.3rem;
+                    }
+                }
+                .grouped-product-wrapper {
+                    margin-bottom: 20px;
+                    h5 {
+                        font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
+                        color:#222222;
+                        font-size: 1.2rem;
+                        margin: 0 0 10px 0;
+                    }
+                    select {
+                        border-radius: 0px;
+                        border: 0px;
+                        outline: 1px inset #909090;
+                        outline-style: solid;
+                        height: 45px;
+                        font-size: 1.2rem;
+                    }
+                }
+                .table-wrapper {
+                    margin-bottom: 0;
+                    table {
+                        thead {
+                            tr.grouped-table-titles {
+                                display: none;
+                            }
+                        }
+                        tbody {
+                            tr.grouped-row {
+                                td {
+                                    color: #000000;
+                                    font-size: 1.2rem;
+                                    p{
+                                        color: #909090;
+                                        font-size: 1.0rem;
+                                    }
+                                  .price-box {
+                                        .price-container {
+                                            .price {
+                                                color: #008065;
+                                                font-size: 1.5rem;
+                                            }
+                                        }
+                                    }
+                                }
+                                td.product-detail-td {
+                                    width: 70%;
+                                    margin: 0;
+                                    padding: 0;
+                                }
+                                td.product-qty-td {
+                                    width: 30%;
+                                    text-align: right;
+                                    padding: 0;
+                                }
+                            }
+                        }
+                    }
+                }
+                .box-tocart {
+                    display: inline-block;
+                    position: relative;
+                    width: 100%;
+                    .fieldset {
+                        .actions {
+                            display: inline-block;
+                            position: relative;
+                            width: 100%;
+                            button {
+                                display: inline-block;
+                                position: relative;
+                                width: 100%;
+                                max-width: inherit;
+                                padding: 45px 0;
+                                height: inherit;
+                                line-height: 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        .product-social-links {
+            display: none;
+        }
+        .product.attribute.overview {
+            display: none;
+        }
+    }
+    .product.media {
+        background: #F0F2F5;
+    }
+}
 
 // Cart Styles
 .checkout-cart-index {

@@ -70,7 +70,6 @@ class OrdersHelper
     const SURCH_FIXED_AMOUNT = 'SurchFixedAmt';
     const DISCOUNT_PERCENT_AMOUNT = 'DiscPercAmt';
     const SURCH_PERCENT_AMOUNT = 'SurchPercAmt';
-    const DISCOUNT_REASON = 'ReasonCode';
 
     /**
      * @var LoggerInterface
@@ -340,18 +339,24 @@ class OrdersHelper
         $hdrDiscFixedAmount = '';
         $hdrDiscPerc = '';
         $hdrDiscCondCode = '';
-
         if(!empty($order->getData('coupon_code'))){
         $orderDiscount = $this->_discountHelper->DiscountCode($order->getData('coupon_code'));
         $hdrDiscFixedAmount = $orderDiscount['hdr_disc_fixed_amount'];
         $hdrDiscPerc = $orderDiscount['hdr_disc_perc'];
         $hdrDiscCondCode = $orderDiscount['hdr_disc_cond_code'];
         }
-        
+        $discCondCode = '';
+        $discFixedAmt = '';
+        $discPerAmt = '';
+        $itemDiscount = $this->_discountHelper->CatalogCode($order->getId(), $orderItem);
+        if(!empty($itemDiscount))
+        { 
+         $discFixedAmt = $itemDiscount['disc_fixed_amount'];
+         $discPerAmt  = $itemDiscount['disc_percent_amount'];
+         $discCondCode = $itemDiscount['disc_condition_code'];
+        }
+
         // set credit fields to empty
-        $hdrDiscFixedAmount = $order->getData('hdr_disc_fixed_amount');
-        $hdrDiscPerc = $order->getData('hdr_disc_perc');
-        $hdrDiscCondCode = $order->getData('hdr_disc_cond_code');
         $hdrSurchFixedAmount = '';
         $hdrSurchPerc = '';
         $hdrSurchCondCode = '';
@@ -359,12 +364,9 @@ class OrdersHelper
         $referenceDocNum = '';
         $creditComment = '';
         $orderReason = '';
-        $discCondCode = '';
-        $surchCondCode = '';
-        $discFixedAmt = '';
-        $surchFixedAmt = '';
-        $discPerAmt = '';
-        $surchPerAmt = '';
+        $surchCondCode='';
+        $surchFixedAmt='';
+        $surchPerAmt='';
 
         // determine what type of order
         $debitCreditFlag = 'DR';
@@ -435,8 +437,7 @@ class OrdersHelper
             self::DISCOUNT_FIXED_AMOUNT => $discFixedAmt,
             self::SURCH_FIXED_AMOUNT => $surchFixedAmt,
             self::DISCOUNT_PERCENT_AMOUNT => $discPerAmt,
-            self::SURCH_PERCENT_AMOUNT => $surchPerAmt,
-            self::DISCOUNT_REASON => $orderItem->getReasonCode()
+            self::SURCH_PERCENT_AMOUNT => $surchPerAmt
         );
     }
 
