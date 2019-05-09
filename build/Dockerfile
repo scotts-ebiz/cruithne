@@ -20,7 +20,7 @@ RUN rm /usr/local/bin/entrypoint.sh
 
 # install SumoLogic
 WORKDIR /tmp
-RUN wget "https://collectors.sumologic.com/rest/download/deb/64" -O SumoCollector.deb && dpkg --install /tmp/SumoCollector.deb && service collector start
+RUN wget "https://collectors.sumologic.com/rest/download/deb/64" -O SumoCollector.deb && dpkg --install /tmp/SumoCollector.deb
 RUN printf "name = Magento2-Collector\naccessid = suJx8dS3MKjFSu\naccesskey = Q1cq15TX5wS4BzERvxap0ugIdU2Ti5HX9oVw8yAFJaqfgrShfR7VpWontR9Qd4Wo\n" >  /opt/SumoCollector/config/user.properties
 
 
@@ -43,6 +43,10 @@ RUN a2enmod proxy_http
 ##n98-magerun tools
 RUN curl -O https://files.magerun.net/n98-magerun2.phar
 RUN chmod +x n98-magerun2.phar
+
+#enabling the web-server to write
+RUN chgrp www-data /var/www/html/magento2/
+RUN chmod g+w /var/www/html/magento2/
 
 ## Installing the Qualys Cloud Agent in this Dockerfile for now. Will move to Nightly Build when proven successfull. 
 

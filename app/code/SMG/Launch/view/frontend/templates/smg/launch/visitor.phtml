@@ -75,7 +75,7 @@ if($currentPage == 'cms_index_index'){
 	  user: {
 		userId: '', 
 		email: '',
-		isLoggedIn: ,
+		isLoggedIn: 0,
 		zip: '',
 		cartId: '<?php echo $cart_id;?>' 
 	  },
@@ -83,7 +83,7 @@ if($currentPage == 'cms_index_index'){
 	  <?php if($currentPage != 'checkout_onepage_success'){ ?>
 	  cart: {
 		currency: '<?php echo $smghelper->getCheckoutCart()->getQuote()->getBaseCurrencyCode();?>',
-		subtotal: <?php echo $subTotal;?>, 
+		subtotal: '<?php echo $subTotal;?>', 
 		promoCode: '<?php echo $smghelper->getCheckoutCart()->getQuote()->getCouponCode();?>', 
 		lineItems: [ 
 		<?php foreach($items as $item) {
@@ -166,7 +166,7 @@ if($currentPage == 'cms_index_index'){
 		transaction: {
 			orderId: '<?php echo $orderId;?>', 
 			currency: '<?php echo $order->getOrderCurrencyCode(); ?>',
-			subtotal: <?php echo (float)$order->getSubtotal(); ?>,
+			subtotal: '<?php echo (float)$order->getSubtotal(); ?>',
 			shippingCost: <?php echo (float)$order->getShippingAmount(); ?>,
 			tax: <?php echo (float)$order->getTaxAmount(); ?>,
 			total: <?php echo (float)$order->getGrandTotal(); ?>,
