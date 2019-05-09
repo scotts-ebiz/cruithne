@@ -68,8 +68,8 @@ $block->getData('bgcolor');
 ?>; padding-top:5%; padding-bottom:5%;">
   <div class="product-info grid col-2">
     <?php if($this->getData('bannerimage') != ''): ?>
-      <div class="productCallout-imageContainer span_6_of_12">
-        <img src="<?php echo $block->getData('bannerimage'); ?>">
+      <div class="productCallout-imageContainer span_6_of_12"> 
+        <img src="<?php echo $block->getData('bannerimage'); ?>" alt="<?php echo __('Image of MyLawn app from Scotts'); ?>">
       </div>
     <?php endif; ?>
 
@@ -101,8 +101,8 @@ $block->getData('bgcolor');
       <!-- Check if link selected for Text Img One -->
       <?php if($selectedBannerTextImgOneLink != ''){?>
         <div class="selected-bannerTextImage selected-bannerTextImageOne">
-          <a href="<?php echo $selectedBannerTextImgOneLink?>" target="_blank">
-            <img src="<?php echo $selectedBannerTextImageOne?>">
+          <a href="<?php echo $selectedBannerTextImgOneLink?>" target="_blank" title="Download iOS app">
+            <img src="<?php echo $selectedBannerTextImageOne?>" alt="<?php echo __('Download on the App Store'); ?>">
           </a>
         </div>
       <?php }elseif ($selectedBannerTextImageOne != ''){?>
@@ -117,8 +117,8 @@ $block->getData('bgcolor');
       <!-- Check if link selected for Text Img Two -->
       <?php if($selectedBannerTextImgTwoLink != ''){?>
         <div class="selected-bannerTextImage selected-bannerTextImageTwo">
-          <a href="<?php echo $selectedBannerTextImgTwoLink?>" target="_blank">
-            <img src="<?php echo $selectedBannerTextImageTwo?>">
+          <a href="<?php echo $selectedBannerTextImgTwoLink?>" target="_blank" title="Download Android app">
+            <img src="<?php echo $selectedBannerTextImageTwo?>" alt="<?php echo __('Get It On Google Play'); ?>">
           </a>
         </div>
       <?php }elseif ($selectedBannerTextImageTwo != ''){?>

@@ -13,7 +13,9 @@
         "classyllama/module-avatax": "^1.5",
         "composer/composer": "@alpha",
         "magento/product-enterprise-edition": "2.3.0",
-        "snowdog/frontools": "^1.6"
+        "mageplaza/module-smtp": "^1.2",
+        "snowdog/frontools": "^1.6",
+        "smg/launch": "1.0.0" 
     },
     "require-dev": {
         "magento/magento2-functional-testing-framework": "2.3.3",

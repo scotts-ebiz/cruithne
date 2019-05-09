@@ -23,11 +23,11 @@ class UpgradeData implements UpgradeDataInterface
         $tableName = $setup->getTable('sales_order_status_sap');
 
         // create the data
-        $data = [
+       /* $data = [
             ['status' => 'updated', 'label' => 'Updated']
         ];
 
         // insert the rows
-        $setup->getConnection()->insertMultiple($tableName, $data);
+        $setup->getConnection()->insertMultiple($tableName, $data);*/
     }
 }

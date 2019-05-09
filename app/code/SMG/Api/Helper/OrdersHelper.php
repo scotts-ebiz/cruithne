@@ -21,6 +21,7 @@ use SMG\Sap\Model\SapOrderFactory;
 use SMG\Sap\Model\ResourceModel\SapOrder as SapOrderResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderBatchItem\CollectionFactory as SapOrderBatchItemCollectionFactory;
+use SMG\OrderDiscount\Helper\Data as DiscountHelper;
 
 class OrdersHelper
 {
@@ -41,6 +42,12 @@ class OrdersHelper
     const GROSS_SALES = 'GrossSales';
     const SHIPPING_AMOUNT = 'ShippingAmount';
     const EXEMPT_AMOUNT = 'ExemptAmount';
+    const HDR_DISC_FIXED_AMOUNT = 'HdrDiscFixedAmount';
+    const HDR_DISC_PERC = 'HdrDiscPerc';
+    const HDR_DISC_COND_CODE = 'HdrDiscCondCode';
+    const HDR_SURCH_FIXED_AMOUNT = 'HdrSurchFixedAmount';
+    const HDR_SURCH_PERC = 'HdrSurchPerc';
+    const HDR_SURCH_COND_CODE = 'HdrSurchCondCode';
     const DISCOUNT_AMOUNT = 'DiscountAmount';
     const SUBTOTAL = 'Subtotal';
     const TAX_RATE = 'TaxRate';
@@ -144,6 +151,11 @@ class OrdersHelper
      */
     protected $_sapOrderBatchCollectionFactory;
 
+     /**
+     * @var DiscountHelper
+     */
+    protected $_discountHelper;
+
     /**
      * OrdersHelper constructor.
      *
@@ -155,7 +167,6 @@ class OrdersHelper
      * @param ShippingConditionCodeFactory $shippingConditionCodeFactory
      * @param ShippingConditionCodeResource $shippingConditionCodeResource
      * @param SapOrderBatchItemCollectionFactory $sapOrderBatchItemCollectionFactory
-     * @parma OrderFactory $orderFactory
      * @param OrderResource $orderResource
      * @param ItemFactory $itemFactory
      * @param ItemResource $itemResource
@@ -179,7 +190,8 @@ class OrdersHelper
         SapOrderFactory $sapOrderFactory,
         SapOrderResource $sapOrderResource,
         CreditmemoRepositoryInterface $creditmemoRepository,
-        SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory)
+        SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory,
+        DiscountHelper $discountHelper)
     {
         $this->_logger = $logger;
         $this->_resourceConnection = $resourceConnection;
@@ -197,6 +209,7 @@ class OrdersHelper
         $this->_sapOrderResource = $sapOrderResource;
         $this->_creditmemoRespository = $creditmemoRepository;
         $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
+        $this->_discountHelper = $discountHelper;
     }
 
     /**
@@ -228,7 +241,8 @@ class OrdersHelper
             $orders = $this->_responseHelper->createResponse(true, $ordersArray);
         }
 
-        // return
+        // return..
+        
         return $orders;
     }
 
@@ -321,18 +335,38 @@ class OrdersHelper
         // get the quantity
         $quantity = $orderItem->getQtyOrdered();
         $shippingAmount = $order->getData('shipping_amount');
+        
+        $hdrDiscFixedAmount = '';
+        $hdrDiscPerc = '';
+        $hdrDiscCondCode = '';
+        if(!empty($order->getData('coupon_code'))){
+        $orderDiscount = $this->_discountHelper->DiscountCode($order->getData('coupon_code'));
+        $hdrDiscFixedAmount = $orderDiscount['hdr_disc_fixed_amount'];
+        $hdrDiscPerc = $orderDiscount['hdr_disc_perc'];
+        $hdrDiscCondCode = $orderDiscount['hdr_disc_cond_code'];
+        }
+        $discCondCode = '';
+        $discFixedAmt = '';
+        $discPerAmt = '';
+        $itemDiscount = $this->_discountHelper->CatalogCode($order->getId(), $orderItem);
+        if(!empty($itemDiscount))
+        { 
+         $discFixedAmt = $itemDiscount['disc_fixed_amount'];
+         $discPerAmt  = $itemDiscount['disc_percent_amount'];
+         $discCondCode = $itemDiscount['disc_condition_code'];
+        }
 
         // set credit fields to empty
+        $hdrSurchFixedAmount = '';
+        $hdrSurchPerc = '';
+        $hdrSurchCondCode = '';
         $creditAmount = '';
         $referenceDocNum = '';
         $creditComment = '';
         $orderReason = '';
-        $discCondCode = '';
-        $surchCondCode = '';
-        $discFixedAmt = '';
-        $surchFixedAmt = '';
-        $discPerAmt = '';
-        $surchPerAmt = '';
+        $surchCondCode='';
+        $surchFixedAmt='';
+        $surchPerAmt='';
 
         // determine what type of order
         $debitCreditFlag = 'DR';
@@ -376,6 +410,12 @@ class OrdersHelper
             self::GROSS_SALES => $order->getData('grand_total'),
             self::SHIPPING_AMOUNT => $shippingAmount,
             self::EXEMPT_AMOUNT => '0',
+            self::HDR_DISC_FIXED_AMOUNT => $hdrDiscFixedAmount,
+            self::HDR_DISC_PERC => $hdrDiscPerc,
+            self::HDR_DISC_COND_CODE => $hdrDiscCondCode,
+            self::HDR_SURCH_FIXED_AMOUNT => $hdrSurchFixedAmount,
+            self::HDR_SURCH_PERC => $hdrSurchPerc,
+            self::HDR_SURCH_COND_CODE => $hdrSurchCondCode,
             self::DISCOUNT_AMOUNT => $order->getData('base_discount_amount'),
             self::SUBTOTAL => $order->getData('subtotal'),
             self::TAX_RATE => $orderItem->getTaxPercent(),
