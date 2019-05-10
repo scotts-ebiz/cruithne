@@ -305,3 +305,36 @@
         }
     }
 }
+
+@media screen and (max-width: 1130px) {
+	div.widget.widget-static-block.howItWorks__wrapper {
+		margin-top: 22px;
+	}
+}
+
+.widget.widget-static-block.howItWorks__wrapper{
+	 background-color: #f7f7f7;
+}
+.widget.widget-static-block.howItWorks__wrapper{
+	.section__steps--headline{
+		padding-top: 10px;
+	}
+}
+.widget.widget-static-block.howItWorks__wrapper{
+	padding-top: 0px;/*------ 23-04-2019 -------*/
+	margin-top: -5px;/*------ 24-04-2019 -------*/
+	.section__steps--wrapper{
+		padding-bottom: 57px;
+	}
+	
+}
+.landingPageOptions-container{ 
+	.howItWorks__wrapper{ 
+		.section__steps--item{ 
+			.widget-static-block p{
+				color: #515356;
+				font-weight: normal;
+			 }
+		 }
+	}
+}
