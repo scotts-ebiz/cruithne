@@ -122,7 +122,7 @@ if($currentPage == 'cms_index_index'){
 		<?php } ?>
 		]
 	  },
-	  <?php } ?>
+	  <?php } ?> 
 	  <?php if($currentPage == 'catalog_category_view'){ 
 			$cat = $smghelper->getRegistry()->registry('current_category');
 			$category = $smghelper->getCatalogCategory()->load($cat->getId());
@@ -183,7 +183,7 @@ if($currentPage == 'cms_index_index'){
 				$productUrl  = $product->getProductUrl();
 				
 				$categoryIds = $product->getCategoryIds();
-				$categories = $categoryCollection->create()
+				$categories = $smghelper->getCategoryCollection()->create()
 									 ->addAttributeToSelect('*')
 									 ->addAttributeToFilter('entity_id', $categoryIds);
 				$cats = [];
