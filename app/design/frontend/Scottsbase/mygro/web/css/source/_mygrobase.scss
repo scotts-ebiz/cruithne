@@ -1498,11 +1498,15 @@ body {
 		content: '';
 		position: absolute;
 		left: 0;
+		top: 2px;
+		width: 8px;
+		height: 8px;
 		top: 2px;  
 		width: 14px;
 		height: 14px;
 		border-radius: 100%;
-		background: $color_blue54_shade;
+		background: $color_white;
+		border: 3px solid $color_blue54_shade;
 	}
 	[type="radio"]:checked + label:after,
 	[type="radio"]:not(:checked) + label:after {
@@ -1510,7 +1514,7 @@ body {
 		width: 8px;
 		height: 8px;
 		border: 1px solid $color_blue54_shade;
-		background: $color_white;
+		background: $color_blue54_shade;
 		position: absolute;
 		top: -12px;
 		left: 2px;
