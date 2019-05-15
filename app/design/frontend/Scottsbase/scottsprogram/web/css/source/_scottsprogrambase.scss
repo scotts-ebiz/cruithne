@@ -1469,9 +1469,7 @@
 		top: 2px;
 		width: 8px;
 		height: 8px;
-    top: 2px;  
-		width: 14px;
-		height: 14px;
+
 		border-radius: 100%;
 		background: $color_white;
 		border: 3px solid $color_blue54_shade;
@@ -1813,6 +1811,7 @@
 		}
 	} 
 }
+
 
 @media screen and (max-width: 1130px) {
 	div.widget.widget-static-block.howItWorks__wrapper {
@@ -2219,6 +2218,7 @@
 .product-image-container {
     width: 100% !important;
 }
+
 
 .widget.widget-static-block.howItWorks__wrapper{
 	 background-color: #f7f7f7;
