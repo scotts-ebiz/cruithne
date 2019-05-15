@@ -1,7 +1,7 @@
-AuthType Basic
-AuthName "Password Protected Area"
-AuthUserFile /var/www/html/magento2/.htpasswd
-Require valid-user
+# Set environment variable if this request is not for the home page
+# set the var ROBOTS_NOINDEX 
+SetEnvIf Request_URI !^test.scottsprogram\.com$ [NC] ROBOTS_NOINDEX
+
 
 ############################################
 ## overrides deployment configuration mode value

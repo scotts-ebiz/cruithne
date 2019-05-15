@@ -11,7 +11,7 @@ function($){
 		setTimeout(function(){
 			
 			$(".street > .control").append("<a class='cust-btn-add' href='javascript:void(0)'>Add New Line</a>");
-			$(".table-checkout-shipping-method tbody tr:first-child td:first-child").append(" <label class='cust-radio'></label>"); 
+			
 			
 			$("input[name='postcode']").attr('pattern', '[0-9]*');
 			$("input[name='postcode']").attr('inputmode', 'numeric');
@@ -35,9 +35,12 @@ function($){
 					$('.cust-btn-add').css({"pointer-events": "none", "color": "#c2c2c2"});
 				}
 			});
-			 
+			$('.form-shipping-address input:visible').keyup(function() {
+				var str = $(this).val();
+				var nval = str.replace(/[&\/\\#,+()$~%.'":*?<>{}@]/g, '');
+				$(this).val(nval);
+			});
 		}, 7000);
-
 	});
 	/*------- Sticky Header --------*/
 	$(window).scroll(function(){
