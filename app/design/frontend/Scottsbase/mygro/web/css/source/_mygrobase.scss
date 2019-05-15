@@ -1,5 +1,5 @@
 // MyGro Base
-body {
+body { 
     @include font-hellix-regular();
     font-size: 1.2rem;
 
@@ -1534,6 +1534,13 @@ body {
 	.field-error{
 		font-size:$font15;
 	}
+	
+	.payment-method  [type="radio"]:checked + label:after,
+	.payment-method [type="radio"]:not(:checked) + label:after {
+		top: 4px !important	;
+	}
+	
+	
 	.shipping-information-content a,
 	.billing-address-details a,
 	.shipping-address-item.selected-item a{
