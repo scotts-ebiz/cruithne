@@ -819,7 +819,7 @@
 					font-size: $font32;
 					line-height: 16px;
 					color: #8f8f8f;
-					content: "";
+					content: "î˜¢";
 					font-family: "icons-blank-theme";
 					margin: 0;
 					vertical-align: middle;
@@ -832,7 +832,7 @@
 			}
 			&.active{
 				.title:after {
-					content: "";
+					content: "î˜¡";
 				}
 			}
 		}
@@ -1469,6 +1469,7 @@
 		top: 2px;
 		width: 8px;
 		height: 8px;
+
 		border-radius: 100%;
 		background: $color_white;
 		border: 3px solid $color_blue54_shade;
@@ -1615,7 +1616,7 @@
 				-moz-osx-font-smoothing: grayscale;
 				font-size: $font32;
 				line-height: 20px;
-				content: "";
+				content: "î˜—";
 				font-family: "icons-blank-theme";
 				margin: 0;
 				vertical-align: top;
@@ -1809,6 +1810,14 @@
 			text-align:center;
 		}
 	} 
+}
+
+
+
+@media screen and (max-width: 1130px) {
+	div.widget.widget-static-block.howItWorks__wrapper {
+		margin-top: 22px;
+	}
 }
 
 @media screen and (max-width: $screen_1024) {
@@ -2212,6 +2221,24 @@
 }
 
 
+.widget.widget-static-block.howItWorks__wrapper{
+	 background-color: #f7f7f7;
+}
+.widget.widget-static-block.howItWorks__wrapper{
+	.section__steps--headline{
+		padding-top: 10px;
+	}
+}
+.widget.widget-static-block.howItWorks__wrapper{
+	padding-top: 0px;
+	margin-top: -5px;
+	.section__steps--wrapper{
+		padding-bottom: 57px;
+	}
+	
+}
+
+
 a#totop {
     height: 29px;
     position: absolute;
@@ -2301,6 +2328,29 @@ a#totop {
 
 @media screen and (min-width: $screen_768) {
  
+}
+
+@media screen and (min-width: $screen_768) {
+	.howItWorks__wrapper{ 
+		.section__steps--item{ 
+			.widget-static-block p{
+				color: #515356;
+				font-weight: normal;
+			 }
+		 }
+	   }
+	}
+
+@media screen and (min-width: $screen_768) {
+	.cms-faq {
+		.page-wrapper{ 
+			.page-header{ 
+				.header.content {
+					padding: 0 25px;
+				}
+			}
+		}
+	}
 }
 
 

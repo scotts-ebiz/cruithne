@@ -7,7 +7,7 @@ define([
 'use strict';
 
 	return function (validator) {
-
+ 
 		validator.addRule(
 			'required-entry-firstname',
 			function (value) {
@@ -68,9 +68,11 @@ define([
 			function (value) {
 				if ($("input[name='telephone']").val() != '') {
 					var str = $("input[name='telephone']").val();
-					var mob = str.replace(/\-/g, '');
-					if(mob.length < 10){
-						return false;
+					if(str){
+						var mob = str.replace(/\-/g, '');
+						if(mob.length < 10){
+							return false;
+						}
 					}
 					var filter = /^((\+[1-9]{1,4}[ \-]*)|(\([0-9]{2,3}\)[ \-]*)|([0-9]{2,4})[ \-]*)*?[0-9]{3,4}?[ \-]*[0-9]{3,4}?$/;
 					if (value.length > 9 && filter.test(value)) {
@@ -86,8 +88,7 @@ define([
 			},
 			$.mage.__('Invalid Phone')
 		);
-
-
+		
 		return validator;
 	};
 });
