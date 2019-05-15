@@ -416,7 +416,7 @@ class OrdersHelper
             self::HDR_SURCH_FIXED_AMOUNT => $hdrSurchFixedAmount,
             self::HDR_SURCH_PERC => $hdrSurchPerc,
             self::HDR_SURCH_COND_CODE => $hdrSurchCondCode,
-            self::DISCOUNT_AMOUNT => $order->getData('base_discount_amount'),
+            self::DISCOUNT_AMOUNT => '',
             self::SUBTOTAL => $order->getData('subtotal'),
             self::TAX_RATE => $orderItem->getTaxPercent(),
             self::SALES_TAX => $order->getData('tax_amount'),
