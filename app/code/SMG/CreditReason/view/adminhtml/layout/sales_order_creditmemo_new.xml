@@ -7,6 +7,11 @@
                 <argument name="template" translate="true" xsi:type="string">SMG_CreditReason::order/creditmemo/create/items.phtml</argument>
             </action>
         </referenceBlock>
+        <referenceBlock name="order_items.bundle">
+            <action method="setTemplate">
+                <argument name="template" translate="true" xsi:type="string">SMG_CreditReason::order/creditmemo/create/items/renderer.phtml</argument>
+            </action>
+        </referenceBlock>
         <referenceBlock name="order_items.default">
             <action method="setTemplate">
                 <argument name="template" translate="true" xsi:type="string">SMG_CreditReason::order/creditmemo/create/items/renderer/default.phtml</argument>
