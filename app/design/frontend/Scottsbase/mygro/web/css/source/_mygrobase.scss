@@ -286,28 +286,6 @@ body {
                 width: calc(33.33% - 28px);
             }
         }
-        button {
-            background: $mygro-green;
-            border-radius: 4px;
-            color: $white;
-            font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
-            font-size: 1.0rem;
-            line-height: 0px;
-            height: 48px;
-            text-align: center;
-            display: inline-block;
-            box-sizing: border-box;
-            width: 100%;
-            max-width: 200px;
-            transition: background 0.2s linear;
-            letter-spacing: 0.5px;
-        }
-        button:hover {
-            background: $mygro-dark-green;
-        }
-        button:active {
-            background: $mygro-light-green;
-        }
         .hero-video {
             background: url(../images/bg-hero.jpg) 50% 0% no-repeat;
             background-size: cover;
