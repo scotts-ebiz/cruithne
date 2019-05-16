@@ -70,7 +70,7 @@ class OrdersHelper
     const SURCH_FIXED_AMOUNT = 'SurchFixedAmt';
     const DISCOUNT_PERCENT_AMOUNT = 'DiscPercAmt';
     const SURCH_PERCENT_AMOUNT = 'SurchPercAmt';
-
+    const DISCOUNT_REASON = 'ReasonCode';
     /**
      * @var LoggerInterface
      */
@@ -437,7 +437,8 @@ class OrdersHelper
             self::DISCOUNT_FIXED_AMOUNT => $discFixedAmt,
             self::SURCH_FIXED_AMOUNT => $surchFixedAmt,
             self::DISCOUNT_PERCENT_AMOUNT => $discPerAmt,
-            self::SURCH_PERCENT_AMOUNT => $surchPerAmt
+            self::SURCH_PERCENT_AMOUNT => $surchPerAmt,
+            self::DISCOUNT_REASON => $orderItem->getReasonCode()
         );
     }
 
