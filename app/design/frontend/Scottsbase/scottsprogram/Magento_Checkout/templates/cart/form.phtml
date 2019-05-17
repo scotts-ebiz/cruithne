@@ -28,10 +28,12 @@
                "updateCartActionContainer": "#update_cart_action_container"}}'>
             <caption role="heading" aria-level="2" class="table-caption"><?= /* @escapeNotVerified */ __('Shopping Cart Items') ?></caption>
             <thead>
-            <tr>
-                <th class="col item" scope="col"><span><?= /* @escapeNotVerified */ __('Item') ?></span></th>
-                <th class="col price" scope="col"><span><?= /* @escapeNotVerified */ __('Price') ?></span></th>
-                <th class="col qty" scope="col"><span><?= /* @escapeNotVerified */ __('Qty') ?></span></th>
+            <tr> 
+            
+                <!-- <th class="col item" scope="col"><span><?= /* @escapeNotVerified */ __('Product Name') ?></span></th> -->
+				<th class="col item" scope="col"><span>&nbsp;</span></th>
+                <th class="col price" scope="col"><span><?= /* @escapeNotVerified */ __('Unit Price') ?></span></th>
+                <th class="col qty" scope="col"><span><?= /* @escapeNotVerified */ __('Quantity') ?></span></th>
                 <th class="col subtotal" scope="col"><span><?= /* @escapeNotVerified */ __('Subtotal') ?></span></th>
             </tr>
             </thead>

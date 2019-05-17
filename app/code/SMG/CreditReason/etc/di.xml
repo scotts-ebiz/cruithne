@@ -2,4 +2,9 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magento\Sales\Block\Adminhtml\Items\Renderer\DefaultRenderer" type="SMG\CreditReason\Block\Adminhtml\Items\Renderer\DefaultRenderer" />
+    <preference for="Magento\Bundle\Block\Adminhtml\Sales\Order\Items\Renderer" type="SMG\CreditReason\Block\Adminhtml\Items\Renderer" />
+
+    <type name="Magento\Sales\Model\Order\CreditmemoRepository">
+        <plugin name="smg_creditmemo_plugin_creditreason" type="SMG\CreditReason\Plugin\Model\Order\CreditmemoRepository" />
+    </type>
 </config>
