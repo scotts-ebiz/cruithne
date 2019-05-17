@@ -388,7 +388,7 @@ class OrdersHelper
             $sapOrder = $this->_sapOrderFactory->create();
             $this->_sapOrderResource->load($sapOrder, $order->getId(), 'order_id');
 
-            $sapOrderItems = $sapOrder->getSapOrderItem();
+            $sapOrderItems = $sapOrder->getSapOrderItems();
             $sapOrderItems->addFieldToFilter('sku', ['eq' => $orderItem->getSku()]);
 
             // if there is something there then get the first item

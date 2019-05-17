@@ -72,7 +72,7 @@ class SapOrder extends AbstractModel
      *
      * @return \SMG\Sap\Model\ResourceModel\SapOrderItem\Collection
      */
-    public function getSapOrderItem()
+    public function getSapOrderItems()
     {
         // create the collection that will be returned
         $sapOrderBatches = $this->_sapOrderItemCollectionFactory->create();

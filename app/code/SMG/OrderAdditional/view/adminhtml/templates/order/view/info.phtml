@@ -185,7 +185,45 @@ $customerUrl = $block->getCustomerViewUrl();
                     </tr>
                     <tr>
                         <th><?= $block->escapeHtml(__('SAP Invoice #')) ?></th>
-                        <td><?php if(!empty($orderAdd['sap_billing_doc_number'])) echo $block->escapeHtml(__($orderAdd['sap_billing_doc_number'])) ?></td>
+                        <td>
+                            <ul class="smg_additional_details">
+                            <?php
+                                if(!empty($orderAdd['sap_billing_doc_number']))
+                                {
+                                    $invoices = explode(",", $orderAdd['sap_billing_doc_number']);
+
+                                    // loop through the invoices
+                                    foreach ($invoices as $invoice)
+                                    {
+                            ?>
+                            <li><?php echo $block->escapeHtml(__($invoice)); ?></li>
+                            <?php
+                                    }
+                                }
+                            ?>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Fulfillment Locations')) ?></th>
+                        <td>
+                            <ul class="smg_additional_details">
+                                <?php
+                                if(!empty($orderAdd['fulfillment_location']))
+                                {
+                                    $fulfillmentLocations = explode(",", $orderAdd['fulfillment_location']);
+
+                                    // loop through the invoices
+                                    foreach ($fulfillmentLocations as $fulfillmentLocation)
+                                    {
+                                        ?>
+                                        <li><?php echo $block->escapeHtml(__($fulfillmentLocation)); ?></li>
+                                        <?php
+                                    }
+                                }
+                                ?>
+                            </ul>
+                        </td>
                     </tr>
                     <tr>
                         <th><?= $block->escapeHtml(__('Last 4')) ?></th>
@@ -213,7 +251,24 @@ $customerUrl = $block->getCustomerViewUrl();
                     </tr>
                     <tr>
                         <th><?= $block->escapeHtml(__('Tracking #')) ?></th>
-                        <td><?php if(!empty($orderAdd['tracking'])) echo $block->escapeHtml(__($orderAdd['tracking'])) ?></td>
+                        <td>
+                            <ul class="smg_additional_details">
+                                <?php
+                                if(!empty($orderAdd['tracking']))
+                                {
+                                    $trackingNumbers = explode(",", $orderAdd['tracking']);
+
+                                    // loop through the invoices
+                                    foreach ($trackingNumbers as $trackingNumber)
+                                    {
+                                        ?>
+                                        <li><?php echo $block->escapeHtml(__($trackingNumber)); ?></li>
+                                        <?php
+                                    }
+                                }
+                                ?>
+                            </ul>
+                        </td>
                     </tr>
                     <tr>
                         <th><?= $block->escapeHtml(__('Delivery Number')) ?></th>
