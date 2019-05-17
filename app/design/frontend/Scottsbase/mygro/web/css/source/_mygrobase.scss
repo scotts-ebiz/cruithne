@@ -1,5 +1,5 @@
 // MyGro Base
-body {
+body { 
     @include font-hellix-regular();
     font-size: 1.2rem;
 
@@ -1501,9 +1501,7 @@ body {
 		top: 2px;
 		width: 8px;
 		height: 8px;
-		top: 2px;  
-		width: 14px;
-		height: 14px;
+
 		border-radius: 100%;
 		background: $color_white;
 		border: 3px solid $color_blue54_shade;
@@ -1534,6 +1532,13 @@ body {
 	.field-error{
 		font-size:$font15;
 	}
+	
+	.payment-method  [type="radio"]:checked + label:after,
+	.payment-method [type="radio"]:not(:checked) + label:after {
+		top: 4px !important	;
+	}
+	
+	
 	.shipping-information-content a,
 	.billing-address-details a,
 	.shipping-address-item.selected-item a{
