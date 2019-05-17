@@ -388,8 +388,19 @@ class OrdersHelper
             $sapOrder = $this->_sapOrderFactory->create();
             $this->_sapOrderResource->load($sapOrder, $order->getId(), 'order_id');
 
+            $sapOrderItems = $sapOrder->getSapOrderItem();
+            $sapOrderItems->addFieldToFilter('sku', ['eq' => $orderItem->getSku()]);
+
+            // if there is something there then get the first item
+            // there should only be one item but get the first just in case
+            $sapOrderItem = $sapOrderItems->getFirstItem();
+
             // get the billing doc number
-            $referenceDocNum = $sapOrder->getData('sap_billing_doc_number');
+            $referenceDocNum = $sapOrderItem->getData('sap_billing_doc_number');
+            if (!isset($referenceDocNum))
+            {
+                $referenceDocNum = '';
+            }
         }
 
         // return

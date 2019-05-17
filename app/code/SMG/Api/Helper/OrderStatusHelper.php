@@ -413,8 +413,6 @@ class OrderStatusHelper
         $sapOrder->setData(self::SALES_ORDER_SAP_ORDER_CREATED_AT, $inputOrder[self::INPUT_SAP_ORDER_CREATE_DATE]);
         $sapOrder->setData(self::SALES_ORDER_SAP_SAP_ORDER_STATUS, $sapOrderStatus);
         $sapOrder->setData(self::SALES_ORDER_SAP_ORDER_STATUS, $orderStatus);
-        $sapOrder->setData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_NUMBER, $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER]);
-        $sapOrder->setData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_DATE, $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_DATE]);
         $sapOrder->setData(self::SALES_ORDER_SAP_SAP_PAYER_ID, $inputOrder[self::INPUT_SAP_PAYER_ID]);
         $sapOrder->setData(self::SALES_ORDER_SAP_DELIVERY_NUMBER, $inputOrder[self::INPUT_SAP_DELIVERY_NUMBER]);
 
@@ -538,46 +536,6 @@ class OrderStatusHelper
             $orderStatusNotes .= 'Order Status was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
         }
 
-        // check to see if the billing doc number changed
-        $inputValue = $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER];
-        $sapOrderValue = $sapOrder->getData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_NUMBER);
-        if ((!empty($inputValue) || !empty($sapOrderValue)) && $inputValue !== $sapOrderValue)
-        {
-            $isUpdateNeeded = true;
-            $sapOrder->setData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_NUMBER, $inputValue);
-            $orderStatusNotes .= 'SAP Invoice was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
-        }
-
-        // check to see if the billing doc date changed
-        $inputValue = $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_DATE];
-        $sapOrderValue = $sapOrder->getData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_DATE);
-        if ((!empty($inputValue) || !empty($sapOrderValue)))
-        {
-            // update date
-            $isUpdateDate = true;
-
-            // if they both have a value then compare the dates
-            // otherwise go ahead and update
-            if (!empty($inputValue) && !empty($sapOrderValue))
-            {
-                // compare the dates if they are not equal then update
-                $originalDate = date("y-m-d", strtotime($sapOrderValue));
-                $newDate = date("y-m-d", strtotime($inputValue));
-                if ($originalDate === $newDate)
-                {
-                    $isUpdateDate = false;
-                }
-            }
-
-            // if the date is okay to update then update
-            if ($isUpdateDate)
-            {
-                $isUpdateNeeded = true;
-                $sapOrder->setData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_DATE, $inputValue);
-                $orderStatusNotes .= 'SAP Invoice Date was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
-            }
-        }
-
         // check if the payer id changed
         $inputValue = $inputOrder[self::INPUT_SAP_PAYER_ID];
         $sapOrderValue = $sapOrder->getData(self::SALES_ORDER_SAP_SAP_PAYER_ID);
@@ -633,6 +591,8 @@ class OrderStatusHelper
         $sapOrderItem->setData(self::SALES_ORDER_SAP_ITEM_QTY, $inputOrder[self::INPUT_SAP_ORDER_QTY]);
         $sapOrderItem->setData(self::SALES_ORDER_SAP_ITEM_CONFIRMED_QTY, $inputOrder[self::INPUT_SAP_CONFIRMED_QTY]);
         $sapOrderItem->setData(self::SALES_ORDER_SAP_ITEM_SHIP_TRACKING_NUMBER, $shipTrackingNumber);
+        $sapOrderItem->setData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_NUMBER, $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER]);
+        $sapOrderItem->setData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_DATE, $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_DATE]);
 
         // save the data to the table
         $this->_sapOrderItemResource->save($sapOrderItem);
@@ -743,6 +703,46 @@ class OrderStatusHelper
             $isUpdateNeeded = true;
             $sapOrderItem->setData(self::SALES_ORDER_SAP_ITEM_SHIP_TRACKING_NUMBER, $inputValue);
             $orderStatusNotes .= 'Ship Tracking was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
+        }
+
+        // check to see if the billing doc number changed
+        $inputValue = $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER];
+        $sapOrderValue = $sapOrderItem->getData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_NUMBER);
+        if ((!empty($inputValue) || !empty($sapOrderValue)) && $inputValue !== $sapOrderValue)
+        {
+            $isUpdateNeeded = true;
+            $sapOrderItem->setData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_NUMBER, $inputValue);
+            $orderStatusNotes .= 'SAP Invoice was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
+        }
+
+        // check to see if the billing doc date changed
+        $inputValue = $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_DATE];
+        $sapOrderValue = $sapOrderItem->getData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_DATE);
+        if ((!empty($inputValue) || !empty($sapOrderValue)))
+        {
+            // update date
+            $isUpdateDate = true;
+
+            // if they both have a value then compare the dates
+            // otherwise go ahead and update
+            if (!empty($inputValue) && !empty($sapOrderValue))
+            {
+                // compare the dates if they are not equal then update
+                $originalDate = date("y-m-d", strtotime($sapOrderValue));
+                $newDate = date("y-m-d", strtotime($inputValue));
+                if ($originalDate === $newDate)
+                {
+                    $isUpdateDate = false;
+                }
+            }
+
+            // if the date is okay to update then update
+            if ($isUpdateDate)
+            {
+                $isUpdateNeeded = true;
+                $sapOrderItem->setData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_DATE, $inputValue);
+                $orderStatusNotes .= 'SAP Invoice Date was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
+            }
         }
 
         // if there was something updated then update the table
