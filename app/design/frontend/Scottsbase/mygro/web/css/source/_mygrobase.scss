@@ -1,5 +1,5 @@
 // MyGro Base
-body {
+body { 
     @include font-hellix-regular();
     font-size: 1.2rem;
 
@@ -21,9 +21,11 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 // Base Page Styles
+.skip-content-header{
+    display:none;
+}
 .page-wrapper {
     .page-header {
-        padding: 12px 0 12px;
         border-bottom: 1px solid #dcdcdc;
         position: fixed;
         z-index: 2;
@@ -32,9 +34,6 @@ body {
         width: 100%;
         background: #fff;
         text-align: center;
-        .panel.wrapper {
-            display: none;
-        }
         .header.content {
             @include max-screen($screen__l) {
                 .nav-toggle {
@@ -286,28 +285,6 @@ body {
             .item {
                 width: calc(33.33% - 28px);
             }
-        }
-        button {
-            background: $mygro-green;
-            border-radius: 4px;
-            color: $white;
-            font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
-            font-size: 1.0rem;
-            line-height: 0px;
-            height: 48px;
-            text-align: center;
-            display: inline-block;
-            box-sizing: border-box;
-            width: 100%;
-            max-width: 200px;
-            transition: background 0.2s linear;
-            letter-spacing: 0.5px;
-        }
-        button:hover {
-            background: $mygro-dark-green;
-        }
-        button:active {
-            background: $mygro-light-green;
         }
         .hero-video {
             background: url(../images/bg-hero.jpg) 50% 0% no-repeat;
@@ -1498,11 +1475,12 @@ body {
 		content: '';
 		position: absolute;
 		left: 0;
-		top: 2px;  
-		width: 14px;
-		height: 14px;
+		top: 2px;
+		width: 8px;
+		height: 8px;
 		border-radius: 100%;
-		background: $color_blue54_shade;
+		background: $color_white;
+		border: 3px solid $color_blue54_shade;
 	}
 	[type="radio"]:checked + label:after,
 	[type="radio"]:not(:checked) + label:after {
@@ -1510,7 +1488,7 @@ body {
 		width: 8px;
 		height: 8px;
 		border: 1px solid $color_blue54_shade;
-		background: $color_white;
+		background: $color_blue54_shade;
 		position: absolute;
 		top: -12px;
 		left: 2px;
@@ -1530,6 +1508,13 @@ body {
 	.field-error{
 		font-size:$font15;
 	}
+	
+	.payment-method  [type="radio"]:checked + label:after,
+	.payment-method [type="radio"]:not(:checked) + label:after {
+		top: 4px !important	;
+	}
+	
+	
 	.shipping-information-content a,
 	.billing-address-details a,
 	.shipping-address-item.selected-item a{
@@ -2306,4 +2291,16 @@ body {
 }
 /*---- Client End-----*/
 
+.header {
+    .shipping-message-pl{
+        background: #075534;
+        padding: 10px;
+        text-align: center;
+        color: white;
+        font-size: 0.9rem;
 
+        .shipping-message-pl p{
+            margin-bottom: 0px !important;
+        }
+    }    
+}

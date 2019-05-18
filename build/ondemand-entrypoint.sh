@@ -21,7 +21,7 @@ gsutil -m rsync -d -r gs://test_magento_image_repo/media pub/media/
 service collector start
 
 # su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s developer'
-su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s production'
+# su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s production'
 su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade'
 su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile'
 

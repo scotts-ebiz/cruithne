@@ -16,8 +16,6 @@ ENV MAGENTO_DIR /var/www/html/magento2
 LABEL company="The Scotts MiracleGro Company"
 LABEL maintainer="rick.feldschau@scotts.com"
 
-RUN rm /usr/local/bin/entrypoint.sh
-
 # install SumoLogic
 WORKDIR /tmp
 RUN wget "https://collectors.sumologic.com/rest/download/deb/64" -O SumoCollector.deb && dpkg --install /tmp/SumoCollector.deb
