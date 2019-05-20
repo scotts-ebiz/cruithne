@@ -29,6 +29,11 @@ RUN cat /etc/apt/sources.list.d/google-cloud-sdk.list
 RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 RUN apt-get update -y  && apt-get install -y google-cloud-sdk
 
+# for icons to stick need paths and permissions
+mkdir pub/media/tmp/design/file/
+chmod 0755 pub/media/tmp/design/file/
+
+
 # Can move these to nightly build
 
 RUN curl -sL https://deb.nodesource.com/setup_11.x | bash -
