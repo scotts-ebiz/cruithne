@@ -40,6 +40,7 @@ function($){
 				var nval = str.replace(/[&\/\\#,+()$~%.'":*?<>{}@]/g, '');
 				$(this).val(nval);
 			});
+
 			if ($("input[name='postcode']").val() != '') {
 				if($("input[name='postcode']").val() >= 5){
 					$('#shipping-method-buttons-container button').prop('disabled', false);

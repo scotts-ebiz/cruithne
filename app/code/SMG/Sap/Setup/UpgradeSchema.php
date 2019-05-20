@@ -31,11 +31,6 @@ class UpgradeSchema implements UpgradeSchemaInterface
         {
             $this->updateColumnVersion130($setup);
         }
-        
-        if (version_compare($context->getVersion(), '1.4.0', '<'))
-        {
-            $this->updateColumnVersion140($setup);
-        }
     }
 
     private function updateColumnVersion110(SchemaSetupInterface $setup)
@@ -209,76 +204,4 @@ class UpgradeSchema implements UpgradeSchemaInterface
         // create the table
         $setup->getConnection()->createTable($table);
     }
-    
-    private function updateColumnVersion140(SchemaSetupInterface $setup)
-    {
-       // start the setup
-        $setup->startSetup();
-
-        $tableName = 'sales_order_sap';
-
-        // make a new table with the desired table name
-        $setup->getConnection()->addColumn(
-            $tableName,
-            'hdr_disc_fixed_amount',
-            [
-                'type' => Table::TYPE_TEXT,
-                'nullable' => true,
-                'comment' => 'HDR Discount Fixed Amount'
-            ]
-        );
-        
-        $setup->getConnection()->addColumn(
-            $tableName,
-            'hdr_disc_perc',
-            [
-                'type' => Table::TYPE_TEXT,
-                'nullable' => true,
-                'comment' => 'HDR Discount Percentage'
-            ]
-        );
-        
-        $setup->getConnection()->addColumn(
-            $tableName,
-            'hdr_disc_cond_code',
-            [
-                'type' => Table::TYPE_TEXT,
-                'nullable' => true,
-                'comment' => 'HDR Discount Condition Code'
-            ]
-        );
-        
-        $setup->getConnection()->addColumn(
-            $tableName,
-            'hdr_surch_fixed_amount',
-            [
-                'type' => Table::TYPE_TEXT,
-                'nullable' => true,
-                'comment' => 'HDR Surch Fixed Amount'
-            ]
-        );
-        
-         $setup->getConnection()->addColumn(
-            $tableName,
-            'hdr_surch_perc',
-            [
-                'type' => Table::TYPE_TEXT,
-                'nullable' => true,
-                'comment' => 'HDR Surch Percentage'
-            ]
-        );
-        
-        $setup->getConnection()->addColumn(
-            $tableName,
-            'hdr_surch_cond_code',
-            [
-                'type' => Table::TYPE_TEXT,
-                'nullable' => true,
-                'comment' => 'HDR Surch Condition Code'
-            ]
-        );
-        // end the setup
-        $setup->endSetup();
-    }
-    
 }
