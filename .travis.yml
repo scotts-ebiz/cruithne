@@ -61,6 +61,7 @@ notifications:
 
 before_install:
 # Check Docker build
+- cat $docker_token | docker login -u oauth2accesstoken --password-stdin https://gcr.io
 - docker build build/
 # Encryption
 - openssl aes-256-cbc -K $encrypted_8919753b6e88_key -iv $encrypted_8919753b6e88_iv
