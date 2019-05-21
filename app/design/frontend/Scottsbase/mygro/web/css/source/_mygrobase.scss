@@ -426,7 +426,7 @@ body {
                                         .price-container {
                                             .price {
                                                 color: #008065;
-                                                font-size: 1.5rem;
+                                                font-size: 1.2rem;
                                             }
                                         }
                                     }
@@ -1100,7 +1100,7 @@ body {
 																[type="radio"]:not(:checked) + label:before{
 																	top: 2px;
 																}
-																[type="radio"]:checked + label:after, 
+																[type="radio"]:checked + label:after,
 																[type="radio"]:not(:checked) + label:after{
 																	top: 6px;
 																}
@@ -1331,7 +1331,7 @@ body {
 		opacity: 1;
 		color: $color_dark_green_shade;
 	}
-	.abs-field-tooltip, 
+	.abs-field-tooltip,
 	.field .control._with-tooltip{
 		input{
 			width: 90% !important;
@@ -1354,10 +1354,10 @@ body {
 		width:50%;
 		display:inline-block;
 	}
-		
+
 	div[name="shippingAddress.firstname"]{
 		padding-right:10px !important;
-	}	
+	}
 	div[name="shippingAddress.lastname"] {
 		padding-left:10px !important;
 	}
@@ -1388,7 +1388,7 @@ body {
 					display:none;
 				}
 			}
-		} 
+		}
 	}
 	.minicart-items{
 		.product > .product-image-container{
@@ -1396,8 +1396,7 @@ body {
 		}
 		.product-item-details {
 			padding-left: 60px;
-			
-			.price-including-tax, 
+			.price-including-tax,
 			.price-excluding-tax{
 				font-size:16px;
 			}
@@ -1421,9 +1420,8 @@ body {
 	}
 	#checkout{
 		margin-top: 30px;
-		
 		.opc-block-summary{
-			 .minicart-items .product-image-container { 
+			 .minicart-items .product-image-container {
 				display: inline-block;
 				width: auto !important;
 			}
@@ -1451,9 +1449,9 @@ body {
 		font-size: $font15;
 		padding: 0px 40px;
 		@include transition(all 0.2s ease);
-		
+
 		&:hover{
-			background:$color_black15_shade;	
+			background:$color_black15_shade;
 		}
 	}
 	[type="radio"]:checked,
@@ -1476,8 +1474,9 @@ body {
 		position: absolute;
 		left: 0;
 		top: 2px;
-		width: 8px;
-		height: 8px;
+		width: 14px;
+		height: 14px;
+		border: 1px solid $color_blue54_shade;
 		border-radius: 100%;
 		background: $color_white;
 		border: 3px solid $color_blue54_shade;
@@ -1542,7 +1541,7 @@ body {
 			float: left;
 		}
 	}
-	.fieldset > .field.choice:before, 
+	.fieldset > .field.choice:before,
 	.fieldset > .field.no-label:before{
 		width: 0;
 	}

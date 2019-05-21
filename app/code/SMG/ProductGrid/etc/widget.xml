@@ -97,7 +97,7 @@
                 <label>Product #1 Headline</label>
             </parameter>
             <parameter name="prodimageone" visible="true" xsi:type="block">
-                <label>Product #1 Image</label>
+                <label>Product #1 Image (800x800)</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
             <parameter name="prodbgimageone" visible="true" xsi:type="block">
@@ -127,7 +127,7 @@
                 <label>Product #2 Headline</label>
             </parameter>
             <parameter name="prodimagetwo" visible="true" xsi:type="block">
-                <label>Product #2 Image</label>
+                <label>Product #2 Image (800x800)</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
             <parameter name="prodbgimagetwo" visible="true" xsi:type="block">
@@ -157,7 +157,7 @@
                 <label>Product #3 Headline</label>
             </parameter>
             <parameter name="prodimagethree" visible="true" xsi:type="block">
-                <label>Product #3 Image</label>
+                <label>Product #3 Image (800x800)</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
             <parameter name="prodbgimagethree" visible="true" xsi:type="block">
