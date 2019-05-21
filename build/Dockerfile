@@ -30,7 +30,9 @@ RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 RUN apt-get update -y  && apt-get install -y google-cloud-sdk
 
 # for icons to stick need paths and permissions
+mkdir pub/media/tmp/design/
 mkdir pub/media/tmp/design/file/
+chmod 0755 pub/media/tmp/design/
 chmod 0755 pub/media/tmp/design/file/
 
 
