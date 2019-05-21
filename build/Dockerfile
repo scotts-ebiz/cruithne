@@ -16,11 +16,9 @@ ENV MAGENTO_DIR /var/www/html/magento2
 LABEL company="The Scotts MiracleGro Company"
 LABEL maintainer="rick.feldschau@scotts.com"
 
-RUN rm /usr/local/bin/entrypoint.sh
-
 # install SumoLogic
 WORKDIR /tmp
-RUN wget "https://collectors.sumologic.com/rest/download/deb/64" -O SumoCollector.deb && dpkg --install /tmp/SumoCollector.deb && service collector start
+RUN wget "https://collectors.sumologic.com/rest/download/deb/64" -O SumoCollector.deb && dpkg --install /tmp/SumoCollector.deb
 RUN printf "name = Magento2-Collector\naccessid = suJx8dS3MKjFSu\naccesskey = Q1cq15TX5wS4BzERvxap0ugIdU2Ti5HX9oVw8yAFJaqfgrShfR7VpWontR9Qd4Wo\n" >  /opt/SumoCollector/config/user.properties
 
 
@@ -39,10 +37,6 @@ RUN npm i -g gulp
 
 ## ElasticSearch
 RUN a2enmod proxy_http
-
-## UFW Uncomplicated Firewall iptables interface
-RUN apt install ufw 
-
 
 ##n98-magerun tools
 RUN curl -O https://files.magerun.net/n98-magerun2.phar
