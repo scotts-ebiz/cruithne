@@ -173,7 +173,7 @@ class InvoiceReconciliationHelper
                             $isAddOrder = true;
 
                             // get the transaction amount from the invoice
-                            $transactionAmount = $order->getData('total_invoiced');;
+                            $transactionAmount = $order->getData('total_invoiced');
                         }
 
                         // add to the return array
