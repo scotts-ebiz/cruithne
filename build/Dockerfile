@@ -85,6 +85,10 @@ RUN date
 # Should be able to be removed after Magento 2.3.1 is live
 RUN sed -i "s/.*result = mb_convert_encoding.*/\t\t\$result = mb_convert_encoding(preg_replace('\/\&\/', \'\&amp\;\', html_entity_decode(\$domDocument->saveHTML())), \'HTML-ENTITIES\', \'UTF-8\');\n/" $MAGENTO_DIR/vendor/magento/framework/Escaper.php
 
+# for icons to stick need paths and permissions
+RUN mkdir -p pub/media/tmp/design/file/
+RUN chmod 0755 pub/media/tmp/design/file/
+
 USER root
 
 # Magento 2.3 fix that will fix catalog rules to be applied
