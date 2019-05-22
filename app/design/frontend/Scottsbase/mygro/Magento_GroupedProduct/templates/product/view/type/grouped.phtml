@@ -19,8 +19,30 @@
 <?php $_associatedProducts = $block->getAssociatedProducts(); ?>
 <?php $_hasAssociatedProducts = count($_associatedProducts) > 0; ?>
 
+<!--
+<script data-main="../../../../../../default/web/js/requirejs-config" src="../../../../../../../../../.
+./lib/web/requirejs/require.js"></script>
+-->
+<script>alert();</script>
 
-<script data-main="config" src="../../../../../../../../../../lib/web/requirejs/require.js"></script>
+
+<!-- Alert test for Require -->
+<script>
+    require(['config'], function () {
+        alert('Inside of config');
+    });
+</script>
+
+
+<!-- Call JS File test for Require -->
+<script>
+    require(['config'], function () {
+        require(['']);
+    });
+</script>
+
+
+
 
 <div class="product attribute grouped-title-section">
 
