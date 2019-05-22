@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: nvanhoose
- * Date: 12/18/18
- * Time: 2:37 PM
+ * User: cnixon
+ * Date: 5/14/19
  */
 
 namespace SMG\Sap\Model;
@@ -13,7 +11,7 @@ use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 
-class SapOrderBatchItem extends AbstractModel
+class SapOrderBatchRma extends AbstractModel
 {
     /**
      * @var \SMG\Sap\Model\ResourceModel\SapOrderBatchItem
@@ -27,7 +25,7 @@ class SapOrderBatchItem extends AbstractModel
 
     public function __construct(Context $context,
         \Magento\Framework\Registry $registry,
-        \SMG\Sap\Model\ResourceModel\SapOrderBatchItem $resourceModel,
+        \SMG\Sap\Model\ResourceModel\SapOrderBatchRma $resourceModel,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = [])
@@ -39,7 +37,7 @@ class SapOrderBatchItem extends AbstractModel
 
     protected function _construct()
     {
-        $this->_init(\SMG\Sap\Model\ResourceModel\SapOrderBatchItem::class);
+        $this->_init(\SMG\Sap\Model\ResourceModel\SapOrderBatchRma::class);
     }
 
     public function getOrder()
