@@ -16,11 +16,9 @@ ENV MAGENTO_DIR /var/www/html/magento2
 LABEL company="The Scotts MiracleGro Company"
 LABEL maintainer="rick.feldschau@scotts.com"
 
-RUN rm /usr/local/bin/entrypoint.sh
-
 # install SumoLogic
 WORKDIR /tmp
-RUN wget "https://collectors.sumologic.com/rest/download/deb/64" -O SumoCollector.deb && dpkg --install /tmp/SumoCollector.deb && service collector start
+RUN wget "https://collectors.sumologic.com/rest/download/deb/64" -O SumoCollector.deb && dpkg --install /tmp/SumoCollector.deb
 RUN printf "name = Magento2-Collector\naccessid = suJx8dS3MKjFSu\naccesskey = Q1cq15TX5wS4BzERvxap0ugIdU2Ti5HX9oVw8yAFJaqfgrShfR7VpWontR9Qd4Wo\n" >  /opt/SumoCollector/config/user.properties
 
 
@@ -30,6 +28,11 @@ RUN cat /etc/apt/sources.list.d/google-cloud-sdk.list
 
 RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 RUN apt-get update -y  && apt-get install -y google-cloud-sdk
+
+# for icons to stick need paths and permissions
+RUN mkdir -p pub/media/tmp/design/file/
+RUN chmod 0755 pub/media/tmp/design/file/
+
 
 # Can move these to nightly build
 
@@ -43,6 +46,10 @@ RUN a2enmod proxy_http
 ##n98-magerun tools
 RUN curl -O https://files.magerun.net/n98-magerun2.phar
 RUN chmod +x n98-magerun2.phar
+
+#enabling the web-server to write
+RUN chgrp www-data /var/www/html/magento2/
+RUN chmod g+w /var/www/html/magento2/
 
 ## Installing the Qualys Cloud Agent in this Dockerfile for now. Will move to Nightly Build when proven successfull. 
 
@@ -78,7 +85,15 @@ RUN date
 # Should be able to be removed after Magento 2.3.1 is live
 RUN sed -i "s/.*result = mb_convert_encoding.*/\t\t\$result = mb_convert_encoding(preg_replace('\/\&\/', \'\&amp\;\', html_entity_decode(\$domDocument->saveHTML())), \'HTML-ENTITIES\', \'UTF-8\');\n/" $MAGENTO_DIR/vendor/magento/framework/Escaper.php
 
+# for icons to stick need paths and permissions
+RUN mkdir -p pub/media/tmp/design/file/
+RUN chmod 0755 pub/media/tmp/design/file/
+
 USER root
+
+# Magento 2.3 fix that will fix catalog rules to be applied
+# https://magento.stackexchange.com/questions/152101/catalog-price-rule-not-applied-working-in-magento-2-ee-v2-1-2
+RUN sed -i '22s/.*/                <visible>true<\/visible>/' $MAGENTO_DIR/vendor/magento/module-catalog-rule-staging/view/adminhtml/ui_component/catalog_rule_form.xml 
 
 # Added this in as a test to force php to save sessions in redis
 RUN sed -i '/session.save_handler/s/^/; /g' /etc/php/7.2/apache2/php.ini

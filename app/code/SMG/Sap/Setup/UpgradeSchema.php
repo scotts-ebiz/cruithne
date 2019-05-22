@@ -12,9 +12,44 @@ use Magento\Framework\DB\Ddl\Table;
 use Magento\Framework\Setup\ModuleContextInterface;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\Setup\UpgradeSchemaInterface;
+use SMG\Sap\Model\ResourceModel\SapOrder\CollectionFactory as SapOrderCollectionFactory;
+use SMG\Sap\Model\ResourceModel\SapOrderItem\CollectionFactory as SapOrderItemCollectionFactory;
+use SMG\Sap\Model\ResourceModel\SapOrderItem as SapOrderItemResource;
+
 
 class UpgradeSchema implements UpgradeSchemaInterface
 {
+    /**
+     * @var SapOrderCollectionFactory
+     */
+    protected $_sapOrderCollectionFactory;
+
+    /**
+     * @var SapOrderItemCollectionFactory
+     */
+    protected $_sapOrderItemCollectionFactory;
+
+    /**
+     * @var SapOrderItemResource
+     */
+    protected $_sapOrderItemResource;
+
+    /**
+     * UpgradeSchema constructor.
+     *
+     * @param SapOrderCollectionFactory $sapOrderCollectionFactory
+     * @param SapOrderItemCollectionFactory $sapOrderItemCollectionFactory
+     * @param SapOrderItemResource $sapOrderItemResource
+     */
+    public function __construct(SapOrderCollectionFactory $sapOrderCollectionFactory,
+        SapOrderItemCollectionFactory $sapOrderItemCollectionFactory,
+        SapOrderItemResource $sapOrderItemResource)
+    {
+        $this->_sapOrderCollectionFactory = $sapOrderCollectionFactory;
+        $this->_sapOrderItemCollectionFactory = $sapOrderItemCollectionFactory;
+        $this->_sapOrderItemResource = $sapOrderItemResource;
+    }
+
     public function upgrade(SchemaSetupInterface $setup, ModuleContextInterface $context)
     {
         if (version_compare($context->getVersion(), '1.1.0', '<'))
@@ -32,9 +67,9 @@ class UpgradeSchema implements UpgradeSchemaInterface
             $this->updateColumnVersion130($setup);
         }
         
-        if (version_compare($context->getVersion(), '1.4.0', '<'))
+        if (version_compare($context->getVersion(), '1.5.0', '<'))
         {
-            $this->updateColumnVersion140($setup);
+            $this->updateColumnVersion150($setup);
         }
     }
 
@@ -210,75 +245,97 @@ class UpgradeSchema implements UpgradeSchemaInterface
         $setup->getConnection()->createTable($table);
     }
     
-    private function updateColumnVersion140(SchemaSetupInterface $setup)
+    /**
+     * ECOM-658 - required moving the invoice fields (sap_billing_doc_number
+     * and sap_billing_doc_date) to the item level.
+     *
+     * This upgrade version does that change
+     *
+     * @param SchemaSetupInterface $setup
+     */
+    private function updateColumnVersion150(SchemaSetupInterface $setup)
     {
-       // start the setup
+        // start the setup
+        // add the two new columns to the sap item table
+        $setup->startSetup();
+
+        $tableName = 'sales_order_sap_item';
+
+        $setup->getConnection()->addColumn(
+            $tableName,
+            'sap_billing_doc_number',
+            [
+                'type' => Table::TYPE_TEXT,
+                'nullable' => true,
+                'size' => 10,
+                'comment' => 'SAP Invoice Number'
+            ]
+        );
+
+        $setup->getConnection()->addColumn(
+            $tableName,
+            'sap_billing_doc_date',
+            [
+                'type' => Table::TYPE_TIMESTAMP,
+                'nullable' => true,
+                'default' => Table::TIMESTAMP_INIT_UPDATE,
+                'comment' => 'SAP Invoice Date'
+            ]
+        );
+
+        // end the setup
+        $setup->endSetup();
+
+        // add values to the new fields from sap order table
+        $this->addInvoiceData();
+
+        // start the setup
+        // drop the two columns from the sap table as they have moved to the sap item table
         $setup->startSetup();
 
         $tableName = 'sales_order_sap';
 
-        // make a new table with the desired table name
-        $setup->getConnection()->addColumn(
-            $tableName,
-            'hdr_disc_fixed_amount',
-            [
-                'type' => Table::TYPE_TEXT,
-                'nullable' => true,
-                'comment' => 'HDR Discount Fixed Amount'
-            ]
-        );
-        
-        $setup->getConnection()->addColumn(
-            $tableName,
-            'hdr_disc_perc',
-            [
-                'type' => Table::TYPE_TEXT,
-                'nullable' => true,
-                'comment' => 'HDR Discount Percentage'
-            ]
-        );
-        
-        $setup->getConnection()->addColumn(
-            $tableName,
-            'hdr_disc_cond_code',
-            [
-                'type' => Table::TYPE_TEXT,
-                'nullable' => true,
-                'comment' => 'HDR Discount Condition Code'
-            ]
-        );
-        
-        $setup->getConnection()->addColumn(
-            $tableName,
-            'hdr_surch_fixed_amount',
-            [
-                'type' => Table::TYPE_TEXT,
-                'nullable' => true,
-                'comment' => 'HDR Surch Fixed Amount'
-            ]
-        );
-        
-         $setup->getConnection()->addColumn(
-            $tableName,
-            'hdr_surch_perc',
-            [
-                'type' => Table::TYPE_TEXT,
-                'nullable' => true,
-                'comment' => 'HDR Surch Percentage'
-            ]
-        );
-        
-        $setup->getConnection()->addColumn(
-            $tableName,
-            'hdr_surch_cond_code',
-            [
-                'type' => Table::TYPE_TEXT,
-                'nullable' => true,
-                'comment' => 'HDR Surch Condition Code'
-            ]
-        );
+        $setup->getConnection()->dropColumn($setup->getTable($tableName), 'sap_billing_doc_number');
+        $setup->getConnection()->dropColumn($setup->getTable($tableName), 'sap_billing_doc_date');
+
         // end the setup
         $setup->endSetup();
     }
-    
+
+    /**
+     * Adds the invoice number and invoice date to the new fields in sap order item
+     * from the original fields in sap order
+     *
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     */
+    private function addInvoiceData()
+    {
+        // populate the table with values from the sap order table
+        $sapOrders = $this->_sapOrderCollectionFactory->create();
+
+        /**
+         * @var \SMG\Sap\Model\Model\SapOrder $sapOrder
+         */
+        foreach ($sapOrders as $sapOrder)
+        {
+            $orderSapId = $sapOrder->getId();
+            $invoiceNumber = $sapOrder->getData('sap_billing_doc_number');
+            $invoiceDate = $sapOrder->getData('sap_billing_doc_date');
+
+            // load the item data for the order sap id
+            $sapOrderItems = $this->_sapOrderItemCollectionFactory->create();
+            $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $orderSapId]);
+            if (isset($sapOrderItems))
+            {
+                foreach ($sapOrderItems as $sapOrderItem)
+                {
+                    $sapOrderItem->setData('sap_billing_doc_number', $invoiceNumber);
+                    $sapOrderItem->setData('sap_billing_doc_date', $invoiceDate);
+
+                    // save to the database
+                    $this->_sapOrderItemResource->save($sapOrderItem);
+                }
+            }
+        }
+    }
 }

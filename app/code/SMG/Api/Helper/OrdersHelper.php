@@ -71,7 +71,6 @@ class OrdersHelper
     const DISCOUNT_PERCENT_AMOUNT = 'DiscPercAmt';
     const SURCH_PERCENT_AMOUNT = 'SurchPercAmt';
     const DISCOUNT_REASON = 'ReasonCode';
-
     /**
      * @var LoggerInterface
      */
@@ -340,18 +339,24 @@ class OrdersHelper
         $hdrDiscFixedAmount = '';
         $hdrDiscPerc = '';
         $hdrDiscCondCode = '';
-
         if(!empty($order->getData('coupon_code'))){
         $orderDiscount = $this->_discountHelper->DiscountCode($order->getData('coupon_code'));
         $hdrDiscFixedAmount = $orderDiscount['hdr_disc_fixed_amount'];
         $hdrDiscPerc = $orderDiscount['hdr_disc_perc'];
         $hdrDiscCondCode = $orderDiscount['hdr_disc_cond_code'];
         }
-        
+        $discCondCode = '';
+        $discFixedAmt = '';
+        $discPerAmt = '';
+        $itemDiscount = $this->_discountHelper->CatalogCode($order->getId(), $orderItem);
+        if(!empty($itemDiscount))
+        { 
+         $discFixedAmt = $itemDiscount['disc_fixed_amount'];
+         $discPerAmt  = $itemDiscount['disc_percent_amount'];
+         $discCondCode = $itemDiscount['disc_condition_code'];
+        }
+
         // set credit fields to empty
-        $hdrDiscFixedAmount = $order->getData('hdr_disc_fixed_amount');
-        $hdrDiscPerc = $order->getData('hdr_disc_perc');
-        $hdrDiscCondCode = $order->getData('hdr_disc_cond_code');
         $hdrSurchFixedAmount = '';
         $hdrSurchPerc = '';
         $hdrSurchCondCode = '';
@@ -359,12 +364,9 @@ class OrdersHelper
         $referenceDocNum = '';
         $creditComment = '';
         $orderReason = '';
-        $discCondCode = '';
-        $surchCondCode = '';
-        $discFixedAmt = '';
-        $surchFixedAmt = '';
-        $discPerAmt = '';
-        $surchPerAmt = '';
+        $surchCondCode='';
+        $surchFixedAmt='';
+        $surchPerAmt='';
 
         // determine what type of order
         $debitCreditFlag = 'DR';
@@ -386,8 +388,19 @@ class OrdersHelper
             $sapOrder = $this->_sapOrderFactory->create();
             $this->_sapOrderResource->load($sapOrder, $order->getId(), 'order_id');
 
+            $sapOrderItems = $sapOrder->getSapOrderItems();
+            $sapOrderItems->addFieldToFilter('sku', ['eq' => $orderItem->getSku()]);
+
+            // if there is something there then get the first item
+            // there should only be one item but get the first just in case
+            $sapOrderItem = $sapOrderItems->getFirstItem();
+
             // get the billing doc number
-            $referenceDocNum = $sapOrder->getData('sap_billing_doc_number');
+            $referenceDocNum = $sapOrderItem->getData('sap_billing_doc_number');
+            if (!isset($referenceDocNum))
+            {
+                $referenceDocNum = '';
+            }
         }
 
         // return
@@ -414,7 +427,7 @@ class OrdersHelper
             self::HDR_SURCH_FIXED_AMOUNT => $hdrSurchFixedAmount,
             self::HDR_SURCH_PERC => $hdrSurchPerc,
             self::HDR_SURCH_COND_CODE => $hdrSurchCondCode,
-            self::DISCOUNT_AMOUNT => $order->getData('base_discount_amount'),
+            self::DISCOUNT_AMOUNT => '',
             self::SUBTOTAL => $order->getData('subtotal'),
             self::TAX_RATE => $orderItem->getTaxPercent(),
             self::SALES_TAX => $order->getData('tax_amount'),
