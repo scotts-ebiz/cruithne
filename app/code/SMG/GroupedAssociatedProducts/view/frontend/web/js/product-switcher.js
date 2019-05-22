@@ -7,8 +7,12 @@ define([
 ], function ($) {
     'use strict';
 
-    return function (target) {
-        ("#super-product-table").html("<h2>jQuery Hello World</h2>");
-        return target;
-    };
-});
+    $('#asdfasdf').click(function() {
+        if ($("#asdfasdf").hasClass("active")) {
+            //Do nothing
+        } else {
+            //Add or Remove Class for tablabel
+            $('#asdfasdf').addClass('active');
+        };
+    });
+]});

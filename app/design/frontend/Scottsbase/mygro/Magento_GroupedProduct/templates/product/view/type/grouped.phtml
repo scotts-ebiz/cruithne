@@ -20,6 +20,8 @@
 <?php $_hasAssociatedProducts = count($_associatedProducts) > 0; ?>
 
 
+<script data-main="config" src="../../../../../../../../../../lib/web/requirejs/require.js"></script>
+
 <div class="product attribute grouped-title-section">
 
     <!-- Grouped Product Name -->
@@ -31,7 +33,7 @@
 
 <!-- Product Select Wrapper -->
 <div class="grouped-product-wrapper">
-        <h5>Choose an Option</h5>
+        <h5 class="qwerqwer" id="asdfasdf">Choose an Option</h5>
         <select name="selectProduct">
             <?php foreach ($_associatedProducts as $_values): ?>
                 <option class="product-item-name" name="<?= /* @escapeNotVerified */ $_values->getData('entity_id');?>"><?= /* @escapeNotVerified */
