@@ -20,7 +20,7 @@ use SMG\OfflineShipping\Model\ResourceModel\ShippingConditionCode as ShippingCon
 use SMG\Sap\Model\SapOrderFactory;
 use SMG\Sap\Model\ResourceModel\SapOrder as SapOrderResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
-use SMG\Sap\Model\ResourceModel\SapOrderBatchItem\CollectionFactory as SapOrderBatchItemCollectionFactory;
+use SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo\CollectionFactory as SapOrderBatchCreditmemoCollectionFactory;
 use SMG\OrderDiscount\Helper\Data as DiscountHelper;
 
 class OrdersHelper
@@ -107,9 +107,9 @@ class OrdersHelper
     protected $_shippingConditionCodeResource;
 
     /**
-     * @var SapOrderBatchItemCollectionFactory
+     * @var SapOrderBatchCreditmemoCollectionFactory
      */
-    protected  $_sapOrderBatchItemCollectionFactory;
+    protected  $_sapOrderBatchCreditmemoCollectionFactory;
 
     /**
      * @var OrderFactory
@@ -166,7 +166,7 @@ class OrdersHelper
      * @param OrderItemCollectionFactory $orderItemCollectionFactory
      * @param ShippingConditionCodeFactory $shippingConditionCodeFactory
      * @param ShippingConditionCodeResource $shippingConditionCodeResource
-     * @param SapOrderBatchItemCollectionFactory $sapOrderBatchItemCollectionFactory
+     * @param SapOrderBatchCreditmemoCollectionFactory $sapOrderBatchCreditmemoCollectionFactory
      * @param OrderResource $orderResource
      * @param ItemFactory $itemFactory
      * @param ItemResource $itemResource
@@ -182,7 +182,7 @@ class OrdersHelper
         OrderItemCollectionFactory $orderItemCollectionFactory,
         ShippingConditionCodeFactory $shippingConditionCodeFactory,
         ShippingConditionCodeResource $shippingConditionCodeResource,
-        SapOrderBatchItemCollectionFactory $sapOrderBatchItemCollectionFactory,
+        SapOrderBatchCreditmemoCollectionFactory $sapOrderBatchCreditmemoCollectionFactory,
         OrderFactory $orderFactory,
         OrderResource $orderResource,
         ItemFactory $itemFactory,
@@ -200,7 +200,7 @@ class OrdersHelper
         $this->_orderItemCollectionFactory = $orderItemCollectionFactory;
         $this->_shippingConditionCodeFactory = $shippingConditionCodeFactory;
         $this->_shippingConditionCodeResource = $shippingConditionCodeResource;
-        $this->_sapOrderBatchItemCollectionFactory = $sapOrderBatchItemCollectionFactory;
+        $this->_sapOrderBatchCreditmemoCollectionFactory = $sapOrderBatchCreditmemoCollectionFactory;
         $this->_orderFactory = $orderFactory;
         $this->_orderResource = $orderResource;
         $this->_itemFactory = $itemFactory;
@@ -463,23 +463,23 @@ class OrdersHelper
         $ordersArray = array();
 
         // get the orders that are ready to be sent to SAP
-        $sapOrderBatchItems = $this->_sapOrderBatchItemCollectionFactory->create();
-        $sapOrderBatchItems->addFieldToFilter('is_credit', ['eq' => true]);
-        $sapOrderBatchItems->addFieldToFilter('credit_process_date', ['null' => true]);
+        $sapOrderBatchCreditmemos = $this->_sapOrderBatchCreditmemoCollectionFactory->create();
+        $sapOrderBatchCreditmemos->addFieldToFilter('is_credit', ['eq' => true]);
+        $sapOrderBatchCreditmemos->addFieldToFilter('credit_process_date', ['null' => true]);
 
         // check if there are orders to process
-        if ($sapOrderBatchItems->count() > 0)
+        if ($sapOrderBatchCreditmemos->count() > 0)
         {
             /**
-             * @var \SMG\Sap\Model\SapOrderBatchItem $sapOrderBatchItem
+             * @var \SMG\Sap\Model\SapOrderBatchCreditmemo $sapOrderBatchCreditmemo
              */
-            foreach ($sapOrderBatchItems as $sapOrderBatchItem)
+            foreach ($sapOrderBatchCreditmemos as $sapOrderBatchCreditmemo)
             {
                 // get the required fields needed for processing
-                $orderId = $sapOrderBatchItem->getData('order_id');
-                $orderItemId = $sapOrderBatchItem->getData('order_item_id');
-                $creditmemoId = $sapOrderBatchItem->getData('creditmemo_order_id');
-                $sku = $sapOrderBatchItem->getData('sku');
+                $orderId = $sapOrderBatchCreditmemo->getData('order_id');
+                $orderItemId = $sapOrderBatchCreditmemo->getData('order_item_id');
+                $creditmemoId = $sapOrderBatchCreditmemo->getData('creditmemo_order_id');
+                $sku = $sapOrderBatchCreditmemo->getData('sku');
 
                 // Get the sales order
                 /**
