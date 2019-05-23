@@ -8,9 +8,9 @@ use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Psr\Log\LoggerInterface;
 use SMG\Sap\Model\SapOrderBatchFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch as SapOrderBatchResource;
-use SMG\Sap\Model\ResourceModel\SapOrderBatchItem as SapOrderBatchItemResource;
+use SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo as SapOrderBatchCreditmemoResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatchRma as SapOrderBatchRmaResource;
-use SMG\Sap\Model\ResourceModel\SapOrderBatchItem\CollectionFactory as SapOrderBatchItemCollectionFactory;
+use SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo\CollectionFactory as SapOrderBatchCreditmemoCollectionFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderBatchRma\CollectionFactory as SapOrderBatchRmaCollectionFactory;
 
 class OrdersSentHelper
@@ -57,14 +57,14 @@ class OrdersSentHelper
     protected $_orderResource;
 
     /**
-     * @var SapOrderBatchItemCollectionFactory
+     * @var SapOrderBatchCreditmemoCollectionFactory
      */
-    protected $_sapOrderBatchItemCollectionFactory;
+    protected $_sapOrderBatchCreditmemoCollectionFactory;
 
     /**
-     * @var SapOrderBatchItemResource
+     * @var SapOrderBatchCreditmemoResource
      */
-    protected $_sapOrderBatchItemResource;
+    protected $_sapOrderBatchCreditmemoResource;
 
     /**
      * @var SapOrderBatchRmaResource
@@ -81,8 +81,8 @@ class OrdersSentHelper
      * @param SapOrderBatchResource $sapOrderBatchResource
      * @param OrderFactory $orderFactory
      * @param OrderResource $orderResource
-     * @param SapOrderBatchItemCollectionFactory $sapOrderBatchItemCollectionFactory
-     * @param SapOrderBatchItemResource $sapOrderBatchItemResource
+     * @param SapOrderBatchCreditmemoCollectionFactory $sapOrderBatchCreditmemoCollectionFactory
+     * @param SapOrderBatchCreditmemoResource $sapOrderBatchCreditmemoResource
      */
     public function __construct(LoggerInterface $logger,
         ResourceConnection $resourceConnection,
@@ -91,10 +91,10 @@ class OrdersSentHelper
         SapOrderBatchResource $sapOrderBatchResource,
         OrderFactory $orderFactory,
         OrderResource $orderResource,
-        SapOrderBatchItemCollectionFactory $sapOrderBatchItemCollectionFactory,
         SapOrderBatchRmaCollectionFactory $sapOrderBatchRmaCollectionFactory,
-        SapOrderBatchItemResource $sapOrderBatchItemResource,
-        SapOrderBatchRmaResource $sapOrderBatchRmaResource)
+        SapOrderBatchRmaResource $sapOrderBatchRmaResource,
+        SapOrderBatchCreditmemoCollectionFactory $sapOrderBatchCreditmemoCollectionFactory,
+        SapOrderBatchCreditmemoResource $sapOrderBatchCreditmemoResource)
     {
         $this->_logger = $logger;
         $this->_resourceConnection = $resourceConnection;
@@ -103,8 +103,8 @@ class OrdersSentHelper
         $this->_sapOrderBatchResource = $sapOrderBatchResource;
         $this->_orderFactory = $orderFactory;
         $this->_orderResource = $orderResource;
-        $this->_sapOrderBatchItemCollectionFactory = $sapOrderBatchItemCollectionFactory;
-        $this->_sapOrderBatchItemResource = $sapOrderBatchItemResource;
+        $this->_sapOrderBatchCreditmemoCollectionFactory = $sapOrderBatchCreditmemoCollectionFactory;
+        $this->_sapOrderBatchCreditmemoResource = $sapOrderBatchCreditmemoResource;
         $this->_sapOrderBatchRmaCollectionFactory = $sapOrderBatchRmaCollectionFactory;
         $this->_sapOrderBatchRmaResource = $sapOrderBatchRmaResource;
     }
@@ -238,24 +238,24 @@ class OrdersSentHelper
     private function creditOrders($order, $sku, $today)
     {
         // get the sap order items collection
-        $sapOrderBatchItems = $this->_sapOrderBatchItemCollectionFactory->create();
-        $sapOrderBatchItems->addFieldToFilter('order_id', ['eq' => $order->getId()]);
-        $sapOrderBatchItems->addFieldToFilter('sku', ['eq' => $sku]);
+        $sapOrderBatchCreditmemos = $this->_sapOrderBatchCreditmemoCollectionFactory->create();
+        $sapOrderBatchCreditmemos->addFieldToFilter('order_id', ['eq' => $order->getId()]);
+        $sapOrderBatchCreditmemos->addFieldToFilter('sku', ['eq' => $sku]);
 
         // make sure that there is something provided
         // there should only be one
-        if ($sapOrderBatchItems->count() > 0)
+        if ($sapOrderBatchCreditmemos->count() > 0)
         {
             /**
-             * @var \SMG\Sap\Model\SapOrderBatchItem $sapOrderBatchItem
+             * @var \SMG\Sap\Model\SapOrderBatchCreditmemo $sapOrderBatchCreditmemo
              */
-            foreach ($sapOrderBatchItems as $sapOrderBatchItem)
+            foreach ($sapOrderBatchCreditmemos as $sapOrderBatchCreditmemo)
             {
                 // update the process date
-                $sapOrderBatchItem->setData('credit_process_date', $today);
+                $sapOrderBatchCreditmemo->setData('credit_process_date', $today);
 
                 // save the changes
-                $this->_sapOrderBatchItemResource->save($sapOrderBatchItem);
+                $this->_sapOrderBatchCreditmemoResource->save($sapOrderBatchCreditmemo);
             }
         }
     }

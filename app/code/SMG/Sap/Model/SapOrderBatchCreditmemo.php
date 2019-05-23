@@ -13,10 +13,10 @@ use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 
-class SapOrderBatchItem extends AbstractModel
+class SapOrderBatchCreditmemo extends AbstractModel
 {
     /**
-     * @var \SMG\Sap\Model\ResourceModel\SapOrderBatchItem
+     * @var \SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo
      */
     protected $_resourceModel;
 
@@ -39,7 +39,7 @@ class SapOrderBatchItem extends AbstractModel
 
     protected function _construct()
     {
-        $this->_init(\SMG\Sap\Model\ResourceModel\SapOrderBatchItem::class);
+        $this->_init(\SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo::class);
     }
 
     public function getOrder()
