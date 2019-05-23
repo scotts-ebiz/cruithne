@@ -417,7 +417,7 @@ class OrdersHelper
             self::WEB_SKU => $orderItem->getSku(),
             self::QUANTITY => $quantity,
             self::UNIT => 'EA',
-            self::UNIT_PRICE => $orderItem->getPrice(),
+            self::UNIT_PRICE => $orderItem->getOriginalPrice(),
             self::GROSS_SALES => $order->getData('grand_total'),
             self::SHIPPING_AMOUNT => $shippingAmount,
             self::EXEMPT_AMOUNT => '0',
