@@ -40,5 +40,7 @@ su - magento -c '/var/www/html/magento2/bin/magento -v cache:flush'
 # For the readiness check
 touch /tmp/healthy
 
+curl -X POST --data-urlencode "payload={\"channel\": \"#magento2project\", \"username\": \"m2deploybot\", \"text\": \"The most recent commit below has been deployed to the $(git rev-parse --abbrev-ref HEAD) environment $(git show | head -n 10)\", \"icon_emoji\": \":rocket:\"}" https://hooks.slack.com/services/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
+
 # CMD "exec /usr/sbin/apachectl -DFOREGROUND -k start"
 exec /usr/sbin/apachectl -DFOREGROUND

@@ -75,6 +75,8 @@ class OrderStatusHelper
     const SALES_ORDER_SAP_BATCH_SHIPMENT_PROCESS_DATE = "shipment_process_date";
     const SALES_ORDER_SAP_BATCH_IS_UNAUTHORIZED = "is_unauthorized";
     const SALES_ORDER_SAP_BATCH_UNAUTHORIZED_PROCESS_DATE = "unauthorized_process_date";
+    const SALES_ORDER_SAP_BATCH_IS_INVOICE_RECONCILIATION = "is_invoice_reconciliation";
+    const SALES_ORDER_SAP_BATCH_INVOICE_RECONCILIATION_DATE = "invoice_reconciliation_date";
 
     /**
      * @var LoggerInterface
@@ -854,6 +856,13 @@ class OrderStatusHelper
             $sapOrderBatch->setData(self::SALES_ORDER_SAP_BATCH_IS_CAPTURE, true);
         }
 
+        // check to see if the sap billing doc is set if it is then set the
+        // invoice reconciliation for processing
+        if (!empty($inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER]))
+        {
+            $sapOrderBatch->setData(self::SALES_ORDER_SAP_BATCH_IS_INVOICE_RECONCILIATION, true);
+        }
+
         // save the data to the table
         $this->_sapOrderBatchResource->save($sapOrderBatch);
     }
@@ -891,6 +900,16 @@ class OrderStatusHelper
             {
                 $isUpdateNeeded = true;
                 $sapOrderBatch->setData(self::SALES_ORDER_SAP_BATCH_IS_SHIPMENT, true);
+            }
+
+            // check if the order was invoiced
+            // if it was then it is ready to be reconciled
+            if (!empty($inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER]) &&
+                empty($sapOrderBatch->getData(self::SALES_ORDER_SAP_BATCH_INVOICE_RECONCILIATION_DATE)) &&
+                !$sapOrderBatch->getData(self::SALES_ORDER_SAP_BATCH_IS_INVOICE_RECONCILIATION))
+            {
+                $isUpdateNeeded = true;
+                $sapOrderBatch->setData(self::SALES_ORDER_SAP_BATCH_IS_INVOICE_RECONCILIATION, true);
             }
         }
 

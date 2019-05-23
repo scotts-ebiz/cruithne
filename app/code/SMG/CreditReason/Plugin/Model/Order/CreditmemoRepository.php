@@ -14,8 +14,8 @@ use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order\Item as ItemResource;
 
 use Psr\Log\LoggerInterface;
-use SMG\Sap\Model\SapOrderBatchItemFactory;
-use SMG\Sap\Model\ResourceModel\SapOrderBatchItem as SapOrderBatchItemResource;
+use SMG\Sap\Model\SapOrderBatchCreditmemoFactory;
+use SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo as SapOrderBatchCreditmemoResource;
 
 class CreditmemoRepository
 {
@@ -30,14 +30,14 @@ class CreditmemoRepository
     protected $_request;
 
     /**
-     * @var SapOrderBatchItemFactory
+     * @var SapOrderBatchCreditmemoFactory
      */
-    protected $_sapOrderBatchItemFactory;
+    protected $_sapOrderBatchCreditmemoFactory;
 
     /**
-     * @var SapOrderBatchItemResource
+     * @var SapOrderBatchCreditmemoResource
      */
-    protected $_sapOrderBatchItemResource;
+    protected $_sapOrderBatchCreditmemoResource;
 
     /**
      * @var ItemFactory
@@ -53,22 +53,22 @@ class CreditmemoRepository
      * CreditmemoRepository constructor.
      * @param LoggerInterface $logger
      * @param RequestInterface $request
-     * @param SapOrderBatchItemFactory $sapOrderBatchItemFactory
-     * @param SapOrderBatchItemResource $sapOrderBatchItemResource
+     * @param SapOrderBatchCreditmemoFactory $sapOrderBatchCreditmemoFactory
+     * @param SapOrderBatchCreditmemoResource $sapOrderBatchCreditmemoResource
      * @param ItemFactory $itemFactory
      * @param ItemResource $itemResource
      */
     public function __construct(LoggerInterface $logger,
         RequestInterface $request,
-        SapOrderBatchItemFactory $sapOrderBatchItemFactory,
-        SapOrderBatchItemResource $sapOrderBatchItemResource,
+        SapOrderBatchCreditmemoFactory $sapOrderBatchCreditmemoFactory,
+        SapOrderBatchCreditmemoResource $sapOrderBatchCreditmemoResource,
         ItemFactory $itemFactory,
         ItemResource $itemResource)
     {
         $this->_logger = $logger;
         $this->_request = $request;
-        $this->_sapOrderBatchItemFactory = $sapOrderBatchItemFactory;
-        $this->_sapOrderBatchItemResource = $sapOrderBatchItemResource;
+        $this->_sapOrderBatchCreditmemoFactory = $sapOrderBatchCreditmemoFactory;
+        $this->_sapOrderBatchCreditmemoResource = $sapOrderBatchCreditmemoResource;
         $this->_itemFactory = $itemFactory;
         $this->_itemResource = $itemResource;
     }
@@ -167,16 +167,16 @@ class CreditmemoRepository
                 if (isset($productType) && $productType != 'bundle')
                 {
                     // create a record in the sales order sap batch items table
-                    $sapOrderBatchItem = $this->_sapOrderBatchItemFactory->create();
+                    $sapOrderBatchCreditmemo = $this->_sapOrderBatchCreditmemoFactory->create();
 
-                    $sapOrderBatchItem->setData('creditmemo_order_id', $creditMemoOrderId);
-                    $sapOrderBatchItem->setData('order_id', $orderId);
-                    $sapOrderBatchItem->setData('order_item_id', $item->getData("order_item_id"));
-                    $sapOrderBatchItem->setData('sku', $item->getData('sku'));
-                    $sapOrderBatchItem->setData('is_credit', true);
+                    $sapOrderBatchCreditmemo->setData('creditmemo_order_id', $creditMemoOrderId);
+                    $sapOrderBatchCreditmemo->setData('order_id', $orderId);
+                    $sapOrderBatchCreditmemo->setData('order_item_id', $item->getData("order_item_id"));
+                    $sapOrderBatchCreditmemo->setData('sku', $item->getData('sku'));
+                    $sapOrderBatchCreditmemo->setData('is_credit', true);
 
                     // save to the database
-                    $this->_sapOrderBatchItemResource->save($sapOrderBatchItem);
+                    $this->_sapOrderBatchCreditmemoResource->save($sapOrderBatchCreditmemo);
                 }
             }
         }
