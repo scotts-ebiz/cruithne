@@ -76,6 +76,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
         {
             $this->updateColumnVersion160($setup);
         }
+        if (version_compare($context->getVersion(), '1.7.0', '<'))
+        {
+            $this->updateColumnVersion170($setup);
+        }
     }
 
     private function updateColumnVersion110(SchemaSetupInterface $setup)
@@ -345,6 +349,61 @@ class UpgradeSchema implements UpgradeSchemaInterface
         }
     }
 
+    /**
+     * ECOM-106: Added reconciliation batch processing fields to the
+     * SAP order batch processing table.
+     *
+     * @param SchemaSetupInterface $setup
+     */
+    private function updateColumnVersion160(SchemaSetupInterface $setup)
+    {
+        // start the setup
+        // add new fields to the batch table
+        $setup->startSetup();
+
+        $tableName = 'sales_order_sap_batch';
+
+        // make a new table with the desired table name
+        $setup->getConnection()->addColumn(
+            $tableName,
+            'is_invoice_reconciliation',
+            [
+                'type' => Table::TYPE_BOOLEAN,
+                'nullable' => false,
+                'default' => false,
+                'comment' => 'Flag for when and order is ready for reconciliation'
+            ]
+        );
+
+        $setup->getConnection()->addColumn(
+            $tableName,
+            'invoice_reconciliation_date',
+            [
+                'type' => Table::TYPE_TIMESTAMP,
+                'nullable' => true,
+                'comment' => 'Datetime for when an order has been reconciled'
+            ]
+        );
+
+        // end the setup
+        $setup->endSetup();
+
+        // start the setup
+        // rename the table
+        $setup->startSetup();
+
+        $tableNameOld = 'sales_order_sap_batch_item';
+        $tableNameNew = 'sales_order_sap_batch_creditmemo';
+
+        $setup->getConnection()->renameTable(
+            $tableNameOld,
+            $tableNameNew
+        );
+
+        // end the setup
+        $setup->endSetup();
+    }
+
     private function updateColumnVersion170(SchemaSetupInterface $setup)
     {
         // start the setup
@@ -447,60 +506,5 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
         // create the table
         $setup->getConnection()->createTable($table);
-    }
-
-    /**
-     * ECOM-106: Added reconciliation batch processing fields to the
-     * SAP order batch processing table.
-     *
-     * @param SchemaSetupInterface $setup
-     */
-    private function updateColumnVersion160(SchemaSetupInterface $setup)
-    {
-        // start the setup
-        // add new fields to the batch table
-        $setup->startSetup();
-
-        $tableName = 'sales_order_sap_batch';
-
-        // make a new table with the desired table name
-        $setup->getConnection()->addColumn(
-            $tableName,
-            'is_invoice_reconciliation',
-            [
-                'type' => Table::TYPE_BOOLEAN,
-                'nullable' => false,
-                'default' => false,
-                'comment' => 'Flag for when and order is ready for reconciliation'
-            ]
-        );
-
-        $setup->getConnection()->addColumn(
-            $tableName,
-            'invoice_reconciliation_date',
-            [
-                'type' => Table::TYPE_TIMESTAMP,
-                'nullable' => true,
-                'comment' => 'Datetime for when an order has been reconciled'
-            ]
-        );
-
-        // end the setup
-        $setup->endSetup();
-
-        // start the setup
-        // rename the table
-        $setup->startSetup();
-
-        $tableNameOld = 'sales_order_sap_batch_item';
-        $tableNameNew = 'sales_order_sap_batch_creditmemo';
-
-        $setup->getConnection()->renameTable(
-            $tableNameOld,
-            $tableNameNew
-        );
-
-        // end the setup
-        $setup->endSetup();
     }
 }
