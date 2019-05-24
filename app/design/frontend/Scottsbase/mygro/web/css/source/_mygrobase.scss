@@ -442,6 +442,7 @@ body {
                         }
                         tbody {
                             tr.grouped-row {
+                                //display: none;
                                 td {
                                     color: #000000;
                                     font-size: 1.2rem;
@@ -468,6 +469,9 @@ body {
                                     text-align: right;
                                     padding: 0;
                                 }
+                            }
+                            tr.grouped-row.active {
+                                display: table-row;
                             }
                         }
                     }

@@ -19,11 +19,18 @@
 <?php $_associatedProducts = $block->getAssociatedProducts(); ?>
 <?php $_hasAssociatedProducts = count($_associatedProducts) > 0; ?>
 
+<!-- Define Variables -->
+<?php
+    $i = 1;
+    $active = '';
+?>
+
+
 <!--
 <script data-main="../../../../../../default/web/js/requirejs-config" src="../../../../../../../../../.
 ./lib/web/requirejs/require.js"></script>
 -->
-<script>alert('First Alert');</script>
+<script>alert('New Alert');</script>
 
 
 <!-- Alert test for Require -->
@@ -51,8 +58,11 @@
         <h5 class="qwerqwer" id="asdfasdf">Choose an Option</h5>
         <select name="selectProduct">
             <?php foreach ($_associatedProducts as $_values): ?>
-                <option class="product-item-name" name="<?= /* @escapeNotVerified */ $_values->getData('entity_id');?>"><?= /* @escapeNotVerified */
-         $_values->getData('name');?>
+                <option class="product-item-name" name="<?= /* @escapeNotVerified */
+                $_values->getData
+                ('entity_id');
+                ?>">
+                    <?= /* @escapeNotVerified */ $_values->getData('name');?>
           <!-- <?= $_values->getData('entity_id');?>-->
          </option>
         <?php endforeach; ?>
@@ -76,8 +86,10 @@
       <?php if ($_hasAssociatedProducts): ?>
         <?php foreach ($_associatedProducts as $_item): ?>
               <tbody>
-              <tr class="grouped-row">
-                  <td data-th="<?= $block->escapeHtml(__('Product Name')) ?>" class="col item product-detail-td">
+              <!-- If ID has a 1 then set $active to 'active'-->
+              <tr class="grouped-row" id="product_item_id__<?php echo $i;?>">
+                    <?php $i++;?>
+                    <td data-th="<?= $block->escapeHtml(__('Product Name')) ?>" class="col item product-detail-td">
                       <!-- Simple Product Short Description -->
                       <?= /* @escapeNotVerified */ $_item->getData('short_description');?>
 
@@ -110,7 +122,6 @@
                     </td>
                 <?php endif; ?>
               </tr>
-              <tr><td><br/></td></tr>
               <?php if ($block->getCanShowProductPrice($_product)
                 && $block->getCanShowProductPrice($_item)
                 && trim($block->getProductPriceHtml(
