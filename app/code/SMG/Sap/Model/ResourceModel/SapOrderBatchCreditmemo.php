@@ -13,7 +13,7 @@ use Magento\Framework\Model\ResourceModel\Db\Context;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order;
 
-class SapOrderBatchItem extends AbstractDb
+class SapOrderBatchCreditmemo extends AbstractDb
 {
     /**
      * @var OrderFactory
@@ -27,7 +27,7 @@ class SapOrderBatchItem extends AbstractDb
 
     protected function _construct()
     {
-        $this->_init('sales_order_sap_batch_item', 'entity_id');
+        $this->_init('sales_order_sap_batch_creditmemo', 'entity_id');
     }
 
     public function __construct(Context $context,
