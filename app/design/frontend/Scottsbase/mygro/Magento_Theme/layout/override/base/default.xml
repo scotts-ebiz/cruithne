@@ -32,13 +32,15 @@
         </referenceContainer>
         <referenceContainer name="header.container">
             <container name="header.panel.wrapper" htmlClass="panel wrapper" htmlTag="div" before="-">
-                <container name="header.panel" label="Page Header Panel" htmlTag="div" htmlClass="panel header">
-                    <block class="Magento\Framework\View\Element\Template" name="skip_to_content" template="Magento_Theme::html/skip.phtml">
+                <container name="div.shipping-message.blockk" htmlTag="div" htmlClass="shipping-message-pl">
+                    <block class="Magento\Cms\Block\Block" name="sp-free-shippingg">
                         <arguments>
-                            <argument name="target" xsi:type="string">contentarea</argument>
-                            <argument name="label" translate="true" xsi:type="string">Skip to Content</argument>
+                            <argument name="block_id" xsi:type="string">pl-free-shipping</argument>
+                            <argument name="css_class" xsi:type="string">shipping-message</argument>
                         </arguments>
                     </block>
+                </container>
+                <container name="header.panel" label="Page Header Panel" htmlTag="div" htmlClass="panel header skip-content-header">
                     <block class="Magento\Store\Block\Switcher" name="store_language" as="store_language" template="Magento_Store::switch/languages.phtml"/>
                 </container>
             </container>
