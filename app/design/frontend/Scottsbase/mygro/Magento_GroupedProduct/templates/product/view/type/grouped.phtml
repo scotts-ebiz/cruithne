@@ -22,6 +22,7 @@
 <!-- Define Variables -->
 <?php
     $i = 1;
+    $x = 1;
     $active = '';
 ?>
 
@@ -42,8 +43,6 @@
 </script>
 
 
-
-
 <div class="product attribute grouped-title-section">
 
     <!-- Grouped Product Name -->
@@ -56,12 +55,13 @@
 <!-- Product Select Wrapper -->
 <div class="grouped-product-wrapper">
         <h5 class="qwerqwer" id="asdfasdf">Choose an Option</h5>
-        <select name="selectProduct">
+        <select name="selectProduct" id="product_selector">
             <?php foreach ($_associatedProducts as $_values): ?>
-                <option class="product-item-name" name="<?= /* @escapeNotVerified */
+                <option class="product-item-name" value="kenis" name="<?= /* @escapeNotVerified */
                 $_values->getData
                 ('entity_id');
-                ?>">
+                ?>" id="product_item_id__<? echo $x;?>">
+                    <? $x++; ?>
                     <?= /* @escapeNotVerified */ $_values->getData('name');?>
           <!-- <?= $_values->getData('entity_id');?>-->
          </option>
@@ -88,7 +88,7 @@
               <tbody>
               <!-- If ID has a 1 then set $active to 'active'-->
               <?php $active = ($i == 1) ? ' active' : '';?>
-              <tr class="grouped-row<?php echo $active?>" id="product_item_id__<?php echo $i;?>">
+              <tr class="grouped-row<?php echo $active?>" id="product_summary_id__<?php echo $i;?>">
                     <?php $i++;?>
                     <td data-th="<?= $block->escapeHtml(__('Product Name')) ?>" class="col item product-detail-td">
                       <!-- Simple Product Short Description -->
