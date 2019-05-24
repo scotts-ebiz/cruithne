@@ -28,7 +28,7 @@
             </parameter>
             <parameter name="bannertext" visible="true" xsi:type="block">
                 <label>Banner Text</label>
-                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
             </parameter>
             <parameter name="bannertextlinecolor" visible="true" xsi:type="text">
                 <label>Banner Text Color (in #xxxxxx)</label>
