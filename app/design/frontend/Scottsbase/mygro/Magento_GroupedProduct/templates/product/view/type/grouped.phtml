@@ -87,7 +87,8 @@
         <?php foreach ($_associatedProducts as $_item): ?>
               <tbody>
               <!-- If ID has a 1 then set $active to 'active'-->
-              <tr class="grouped-row" id="product_item_id__<?php echo $i;?>">
+              <?php $active = ($i == 1) ? ' active' : '';?>
+              <tr class="grouped-row<?php echo $active?>" id="product_item_id__<?php echo $i;?>">
                     <?php $i++;?>
                     <td data-th="<?= $block->escapeHtml(__('Product Name')) ?>" class="col item product-detail-td">
                       <!-- Simple Product Short Description -->
