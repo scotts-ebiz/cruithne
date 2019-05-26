@@ -31,7 +31,7 @@
 <script data-main="../../../../../../default/web/js/requirejs-config" src="../../../../../../../../../.
 ./lib/web/requirejs/require.js"></script>
 -->
-<script>alert('New Alert');</script>
+<script>alert('qwer Alert');</script>
 
 
 <!-- Alert test for Require -->
@@ -57,10 +57,10 @@
         <h5 class="qwerqwer" id="asdfasdf">Choose an Option</h5>
         <select name="selectProduct" id="product_selector">
             <?php foreach ($_associatedProducts as $_values): ?>
-                <option class="product-item-name" value="kenis" name="<?= /* @escapeNotVerified */
+                <option class="product-item-name" value=product_item_id__<? echo $x;?>" name="<?= /* @escapeNotVerified */
                 $_values->getData
                 ('entity_id');
-                ?>" id="product_item_id__<? echo $x;?>">
+                ?>">
                     <? $x++; ?>
                     <?= /* @escapeNotVerified */ $_values->getData('name');?>
           <!-- <?= $_values->getData('entity_id');?>-->
