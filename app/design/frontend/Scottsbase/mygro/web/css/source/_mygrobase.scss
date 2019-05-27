@@ -406,13 +406,20 @@ body {
             display: none;
         }
         .product-add-form {
+            width: 85%;
+            margin-left: auto;
+            margin-right: auto;
             form {
                 .grouped-title-section {
                     h2.grouped-product-header {
                         color: #000000;
+                        margin-top: 1.0rem;
+                        margin-bottom: 1.0rem;
+                        font-size: 2.5rem;
+                        letter-spacing: 0.5px;
                     }
                     p {
-                        font-size: 1.3rem;
+                        font-size: 1.2rem;
                     }
                 }
                 .grouped-product-wrapper {
@@ -420,7 +427,7 @@ body {
                     h5 {
                         font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
                         color:#222222;
-                        font-size: 1.2rem;
+                        font-size: 0.9rem;
                         margin: 0 0 10px 0;
                     }
                     select {
@@ -428,8 +435,8 @@ body {
                         border: 0px;
                         outline: 1px inset #909090;
                         outline-style: solid;
-                        height: 45px;
-                        font-size: 1.2rem;
+                        height: 35px;
+                        font-size: 1.0rem;
                     }
                 }
                 .table-wrapper {
@@ -451,7 +458,7 @@ body {
                                     font-size: 1.2rem;
                                     p{
                                         color: #909090;
-                                        font-size: 1.0rem;
+                                        font-size: 0.85rem;
                                     }
                                   .price-box {
                                         .price-container {
@@ -488,14 +495,18 @@ body {
                             display: inline-block;
                             position: relative;
                             width: 100%;
+                            padding-top: 0;
                             button {
                                 display: inline-block;
                                 position: relative;
                                 width: 100%;
                                 max-width: inherit;
-                                padding: 45px 0;
+                                padding: 35px 0;
                                 height: inherit;
                                 line-height: 0;
+                                span{
+                                    font-size: 1.3rem;
+                                }
                             }
                         }
                     }
