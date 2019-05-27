@@ -27,16 +27,6 @@
 ?>
 
 
-<!--
-<script data-main="../../../../../../default/web/js/requirejs-config" src="../../../../../../../../../.
-./lib/web/requirejs/require.js"></script>
--->
-<script>alert('qwer Alert');</script>
-
-
-<!-- Alert test for Require -->
-
-
 <!-- Call JS File test for Require -->
 <script>
     require(["SMG_GroupedAssociatedProducts/js/product-switcher"]);
@@ -54,7 +44,7 @@
 
 <!-- Product Select Wrapper -->
 <div class="grouped-product-wrapper">
-        <h5 class="qwerqwer" id="asdfasdf">Choose an Option</h5>
+        <h5>Choose an Option</h5>
         <select name="selectProduct" id="product_selector">
             <?php foreach ($_associatedProducts as $_values): ?>
                 <option class="product-item-name" value=product_item_id__<? echo $x;?>" name="<?= /* @escapeNotVerified */
@@ -90,7 +80,7 @@
               <?php $active = ($i == 1) ? ' active' : '';?>
               <tr class="grouped-row<?php echo $active?>" id="product_summary_id__<?php echo $i;?>">
                     <?php $i++;?>
-                    <td data-th="<?= $block->escapeHtml(__('Product Name')) ?>" class="col item product-detail-td">
+                    <td class="col item product-detail-td">
                       <!-- Simple Product Short Description -->
                       <?= /* @escapeNotVerified */ $_item->getData('short_description');?>
 
@@ -103,7 +93,7 @@
                     <?php endif; ?>
                   </td>
                 <?php if ($_product->isSaleable()): ?>
-                    <td data-th="<?= $block->escapeHtml(__('Qty')) ?>" class="col qty product-qty-td">
+                    <td class="col qty product-qty-td">
                       <?php if ($_item->isSaleable()) : ?>
                           <div class="control qty">
                               <input type="number"
