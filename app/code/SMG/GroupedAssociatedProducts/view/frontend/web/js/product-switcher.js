@@ -1,7 +1,8 @@
 define(['jquery'], function($){
     $('#product_selector').change(function () {
+
+        //Set selectValue to the "value" of the option that is selected
         var selectValue = this.value;
-        //alert(selectValue);
 
         if ($(selectValue == 'product_item_id__1') && !$("#product_summary_id__1").hasClass("active")){
             $('#product_summary_id__1').addClass('active');
