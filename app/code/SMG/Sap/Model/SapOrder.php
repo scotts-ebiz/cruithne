@@ -12,27 +12,31 @@ use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Sales\Model\Order;
+use SMG\Sap\Model\ResourceModel\SapOrder as SapOrderResource;
+use SMG\Sap\Model\ResourceModel\SapOrderItem\CollectionFactory as SapOrderItemCollectionFactory;
 
 class SapOrder extends AbstractModel
 {
     /**
-     * @var \SMG\Sap\Model\ResourceModel\SapOrder
+     * @var SapOrderResource
      */
     protected $_resourceModel;
 
     /**
-     * @var \Magento\Sales\Model\Order
+     * @var Order
      */
     protected $_order;
 
     /**
-     * @var \SMG\Sap\Model\SapOrderStatus
+     * @var SapOrderItemCollectionFactory
      */
-    protected $_sapOrderStatus;
+    protected $_sapOrderItemCollectionFactory;
 
     public function __construct(Context $context,
         \Magento\Framework\Registry $registry,
-        \SMG\Sap\Model\ResourceModel\SapOrder $resourceModel,
+        SapOrderResource $resourceModel,
+        SapOrderItemCollectionFactory $sapOrderItemCollectionFactory,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = [])
@@ -40,6 +44,7 @@ class SapOrder extends AbstractModel
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
 
         $this->_resourceModel = $resourceModel;
+        $this->_sapOrderItemCollectionFactory = $sapOrderItemCollectionFactory;
     }
 
     protected function _construct()
@@ -60,5 +65,22 @@ class SapOrder extends AbstractModel
     public function getSapOrderByOrderId($orderId)
     {
         return $this->_resourceModel->getSapOrderByOrderId($orderId);
+    }
+
+    /**
+     * Get the Sap Order Item for this Sap Order
+     *
+     * @return \SMG\Sap\Model\ResourceModel\SapOrderItem\Collection
+     */
+    public function getSapOrderItems()
+    {
+        // create the collection that will be returned
+        $sapOrderBatches = $this->_sapOrderItemCollectionFactory->create();
+
+        // add filter for this sap order
+        $sapOrderBatches->addFieldToFilter('order_sap_id', ['eq' => $this->getId()]);
+
+        // return
+        return $sapOrderBatches;
     }
 }

@@ -17,9 +17,11 @@ gsutil -m rsync -d -r gs://test_magento_image_repo/media pub/media/
 
 
 /usr/local/qualys/cloud-agent/bin/qualys-cloud-agent.sh ActivationId="67906ffb-cd7c-4105-bdc7-1540c13343aa" CustomerId="63d94f9b-9dfc-7538-823c-333fc1d63ac9" ProviderName="GCP" UseSudo=0
+# Activate SumoLogic
+service collector start
 
 # su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s developer'
-su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s production'
+# su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s production'
 su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade'
 su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile'
 
@@ -37,6 +39,8 @@ su - magento -c '/var/www/html/magento2/bin/magento -v cache:flush'
 
 # For the readiness check
 touch /tmp/healthy
+
+curl -X POST --data-urlencode "payload={\"channel\": \"#magento2project\", \"username\": \"m2deploybot\", \"text\": \"The most recent commit below has been deployed to the $(git rev-parse --abbrev-ref HEAD) environment $(git show | head -n 10)\", \"icon_emoji\": \":rocket:\"}" https://hooks.slack.com/services/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
 
 # CMD "exec /usr/sbin/apachectl -DFOREGROUND -k start"
 exec /usr/sbin/apachectl -DFOREGROUND
