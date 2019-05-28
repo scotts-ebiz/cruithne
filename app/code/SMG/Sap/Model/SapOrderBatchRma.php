@@ -1,9 +1,7 @@
 <?php
 /**
- * Created by PhpStorm.
- * User: nvanhoose
- * Date: 12/18/18
- * Time: 2:37 PM
+ * User: cnixon
+ * Date: 5/14/19
  */
 
 namespace SMG\Sap\Model;
@@ -13,10 +11,10 @@ use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 
-class SapOrderBatchCreditmemo extends AbstractModel
+class SapOrderBatchRma extends AbstractModel
 {
     /**
-     * @var \SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo
+     * @var \SMG\Sap\Model\ResourceModel\SapOrderBatchItem
      */
     protected $_resourceModel;
 
@@ -27,7 +25,7 @@ class SapOrderBatchCreditmemo extends AbstractModel
 
     public function __construct(Context $context,
         \Magento\Framework\Registry $registry,
-        \SMG\Sap\Model\ResourceModel\SapOrderBatch $resourceModel,
+        \SMG\Sap\Model\ResourceModel\SapOrderBatchRma $resourceModel,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = [])
@@ -39,7 +37,7 @@ class SapOrderBatchCreditmemo extends AbstractModel
 
     protected function _construct()
     {
-        $this->_init(\SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo::class);
+        $this->_init(\SMG\Sap\Model\ResourceModel\SapOrderBatchRma::class);
     }
 
     public function getOrder()
