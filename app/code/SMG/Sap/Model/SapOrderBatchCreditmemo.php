@@ -27,7 +27,7 @@ class SapOrderBatchCreditmemo extends AbstractModel
 
     public function __construct(Context $context,
         \Magento\Framework\Registry $registry,
-        \SMG\Sap\Model\ResourceModel\SapOrderBatchItem $resourceModel,
+        \SMG\Sap\Model\ResourceModel\SapOrderBatch $resourceModel,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = [])
