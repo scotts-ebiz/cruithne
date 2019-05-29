@@ -396,6 +396,9 @@ body {
 
 // PDP Page Styles
 .page-product-grouped {
+    .page-title-wrapper {
+        display: none !important;
+    }
     .product-info-main {
         .product-info-price {
             display: none;
@@ -2393,7 +2396,7 @@ body {
 }
 
 .page-wrapper .page-main .page-title-wrapper{
-  display: block !important;
+  display: block;
   margin-top: 7rem;
 }
 
