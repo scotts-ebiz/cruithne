@@ -17,8 +17,8 @@ class InstallData implements InstallDataInterface
         $data = [
             ['disc_cond_code'=>'Z333','magento_rule_type'=> 'CartRule','application_type'=>'FixedAmt'],
             ['disc_cond_code'=>'ZZZZ','magento_rule_type'=> 'CartRule','application_type'=>'PercAmt'],
-            ['disc_cond_code'=>'Z525','magento_rule_type'=> 'CatalogRule','application_type'=>'FixedAmt'],
-            ['disc_cond_code'=>'Z526','magento_rule_type'=> 'CatalogRule','application_type'=>'PercAmt']
+            ['disc_cond_code'=>'Z526','magento_rule_type'=> 'CatalogRule','application_type'=>'FixedAmt'],
+            ['disc_cond_code'=>'Z525','magento_rule_type'=> 'CatalogRule','application_type'=>'PercAmt']
         ];
 
         // insert the rows
