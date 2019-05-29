@@ -2400,6 +2400,10 @@ body {
   margin-top: 7rem;
 }
 
+.categorypath-home #page-title-heading{
+display:none;
+}
+
 @media only screen and (max-width: $screen_768) {
 .checkout-cart-index .page-wrapper .page-main .page-title-wrapper {
     display: block !important;
