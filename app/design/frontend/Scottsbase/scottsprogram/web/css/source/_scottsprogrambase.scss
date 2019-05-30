@@ -5,15 +5,21 @@
     .page-header {
         background: $primary-green;
         height: 3.25rem;
+        @include max-screen($screen_m){
+        	position: fixed;
+    		z-index: 99999;
+    		width: 100%;
+    		top: 0;
+        }
         .header.content {
             padding: 0;
             .logo {
                 position: absolute; 
                 top: 1rem;
                 @include max-screen($screen__m) {
-                    float: none;
+                    float: left;
                     position: relative;
-                    top: 0;  
+                    top: 22px;  
                 }
                 > img {
                     @include max-screen($screen__m) {
@@ -38,6 +44,9 @@
 				right: 0;
 				display: inline-block;
 				width: 40px;
+                @media (max-width:767px){
+                    right: 30px;
+                }
 					
 					a { 
 						color: #fff;
@@ -450,7 +459,13 @@
         .page-title-wrapper {
 			border-bottom:0;
             .page-title {
-                @include font-roboto(2.2rem, $secondary-dark-gray, false, false, 0.5px);
+                    color: #636363;
+                    text-transform: uppercase;
+                    font-size: 1.313rem !important;
+                    width: 100%;
+                    border-bottom: 1px solid #ededed;
+                    padding: 0 1rem;
+                    letter-spacing:0.5px;
             }
         }
         .columns {
@@ -2074,11 +2089,13 @@
 			right: 0;
 			width: 100%;
 			padding: 0;
-			z-index: 9999;
+			z-index: 9990;
 			display:block;
 			@include transition(all 0.2s ease-in-out);
 			.action.primary.checkout{
-					 border-radius: 0px;
+				 border-radius: 0px;
+				 margin-top: 53px;
+				padding-top: 34px;
 			}
 		}
 		.cart-parent-summary{
@@ -2306,13 +2323,77 @@ a#totop {
 
 
 .page-wrapper .page-main .page-title-wrapper{
-  display: block !important;
-  margin-top: 7rem;
+  display: block;
+  margin-top: 0rem;
+  font-size:2rem !important;
 }
 
-@media only screen and (max-width: $screen_768) {
+@media screen and (max-width: $screen_768) {
 .checkout-cart-index .page-wrapper .page-main .page-title-wrapper {
-    display: block !important;
-    margin-top: 9rem;
+    display: block;
+    margin-top: 5rem;
 }
+.checkout-cart-index{
+    .page.messages{
+        .message.error{
+            background: #ececec;
+            color: #000;
+            width: auto;
+        }
+    }
+}
+.page-main{
+	padding-left:10px !important;
+	padding-right:10px !important;
+}
+}
+.checkout-cart-index{
+    .page.messages{
+        .message-error{
+            background: #ececec;
+            color: #000;
+            width: 42%;
+
+            .message-error div:before{
+                display:none !important;
+            }
+        }
+    }
+}
+.checkout-cart-index{
+    .page.messages{
+        .message.error{
+                background: #ececec;
+                color: #000;
+                width: 42%;
+            }
+    }
+}
+
+.opc-block-shipping-information {
+    .shipping-information-title {
+        .action-edit{
+            width:auto;
+        }
+    }
+}
+
+.empty-cart-page{
+    .page-main{
+        padding: 30px 0 0;
+        max-width:72%;
+        @media (max-width: 767px){
+            max-width: 100%;
+        }
+    }
+    .cart-empty{
+        margin: 10px 0 0 15px;
+
+        p{
+            font-size: 16px;
+            a{
+                color:#000;
+            }
+        }
+    }
 }
