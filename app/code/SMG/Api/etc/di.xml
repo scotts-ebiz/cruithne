@@ -4,6 +4,7 @@
     <preference for="SMG\Api\Model\AuthReversalManagementInterface" type="SMG\Api\Model\Api\AuthReversalManagement" />
     <preference for="SMG\Api\Model\BatchCaptureManagementInterface" type="SMG\Api\Model\Api\BatchCaptureManagement" />
     <preference for="SMG\Api\Model\InvoiceReconciliationManagementInterface" type="SMG\Api\Model\Api\InvoiceReconciliationManagement" />
+    <preference for="SMG\Api\Model\InvoiceReconciliationSentManagementInterface" type="SMG\Api\Model\Api\InvoiceReconciliationSentManagement" />
     <preference for="SMG\Api\Model\OrdersManagementInterface" type="SMG\Api\Model\Api\OrdersManagement" />
     <preference for="SMG\Api\Model\OrdersSentManagementInterface" type="SMG\Api\Model\Api\OrdersSentManagement" />
     <preference for="SMG\Api\Model\OrderStatusManagementInterface" type="SMG\Api\Model\Api\OrderStatusManagement" />

@@ -1,6 +1,6 @@
 <?php
 
-namespace SMG\ParameterTypes\Block\Adminhtml\Widget\Type;
+namespace SMG\ParameterTypes\Block\Adminhtml\Widget;
 
 use \Magento\Backend\Block\Template;
 use \Magento\Backend\Block\Template\Context;
@@ -58,6 +58,7 @@ Class Wysiwyg extends Template
         }
 
         $element->setData('after_element_html', $editor->getElementHtml());
+        $element->setValue(''); // Hides the additional label that gets added.
 
         // return
         return $element;

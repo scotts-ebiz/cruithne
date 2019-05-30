@@ -19,6 +19,12 @@
             <resource ref="self" />
         </resources>
     </route>
+    <route url="/V1/smg/invoiceReconciliationSent" method="POST">
+        <service class="SMG\Api\Model\InvoiceReconciliationSentManagementInterface" method="updateOrders" />
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
     <route url="/V1/smg/orders" method="POST">
         <service class="SMG\Api\Model\OrdersManagementInterface" method="getOrders" />
         <resources>
