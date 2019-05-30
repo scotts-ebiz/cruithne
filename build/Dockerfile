@@ -21,6 +21,24 @@ WORKDIR /tmp
 RUN wget "https://collectors.sumologic.com/rest/download/deb/64" -O SumoCollector.deb && dpkg --install /tmp/SumoCollector.deb
 RUN printf "name = Magento2-Collector\naccessid = suJx8dS3MKjFSu\naccesskey = Q1cq15TX5wS4BzERvxap0ugIdU2Ti5HX9oVw8yAFJaqfgrShfR7VpWontR9Qd4Wo\n" >  /opt/SumoCollector/config/user.properties
 
+# Add crontab file in the cron directory
+ADD crontab /etc/cron.d/cron
+
+# Give execution rights on the cron job
+RUN chmod 0644 /etc/cron.d/cron
+
+# Apply cron job
+RUN crontab /etc/cron.d/cron
+
+# Create the log file to be able to run tail
+RUN touch /var/log/cron.log
+RUN touch /var/log/magento.cron.log
+RUN touch /var/log/update.cron.log
+RUN touch /var/log/setup.cron.log
+
+# Change user back to root to continue on
+RUN whoami
+USER root
 
 # install gsutil
 RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"; echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
