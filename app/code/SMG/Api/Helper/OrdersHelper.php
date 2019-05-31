@@ -23,6 +23,7 @@ use SMG\OfflineShipping\Model\ShippingConditionCodeFactory;
 use SMG\OfflineShipping\Model\ResourceModel\ShippingConditionCode as ShippingConditionCodeResource;
 use SMG\Sap\Model\SapOrderFactory;
 use SMG\Sap\Model\ResourceModel\SapOrder as SapOrderResource;
+use SMG\Sap\Model\ResourceModel\SapOrderBatch as SapOrderBatchResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo\CollectionFactory as SapOrderBatchCreditmemoCollectionFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderBatchRma\CollectionFactory as SapOrderBatchRmaCollectionFactory;
@@ -190,24 +191,36 @@ class OrdersHelper
     protected $_discountHelper;
 
     /**
+     * @var SapOrderBatchResource
+     */
+    protected $_sapOrderBatchResource;
+
+    /**
      * OrdersHelper constructor.
      *
      * @param LoggerInterface $logger
      * @param ResourceConnection $resourceConnection
+     * @param CreditReasonCodeFactory $creditReasonCodeFactory
+     * @param CreditReasonCodeReource $_creditReasonCodeResource
+     * @param CreditReasonCodeCollectionFactory $creditReasonCodeCollectionFactory
      * @param ResponseHelper $responseHelper
      * @param OrderCollectionFactory $orderCollectionFactory
      * @param OrderItemCollectionFactory $orderItemCollectionFactory
      * @param ShippingConditionCodeFactory $shippingConditionCodeFactory
      * @param ShippingConditionCodeResource $shippingConditionCodeResource
-     * @param SapOrderBatchRmaCollectionFactory $sapOrderBatchRmaCollectionFactory
      * @param SapOrderBatchCreditmemoCollectionFactory $sapOrderBatchCreditmemoCollectionFactory
+     * @param SapOrderBatchRmaCollectionFactory $sapOrderBatchRmaCollectionFactory
+     * @param OrderFactory $orderFactory
      * @param OrderResource $orderResource
      * @param ItemFactory $itemFactory
      * @param ItemResource $itemResource
      * @param SapOrderFactory $sapOrderFactory
      * @param SapOrderResource $sapOrderResource
      * @param CreditmemoRepositoryInterface $creditmemoRepository
+     * @param RmaRepositoryInterface $rmaRepository
      * @param SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
+     * @param DiscountHelper $discountHelper
+     * @param SapOrderBatchResource $sapOrderBatchResource
      */
     public function __construct(LoggerInterface $logger,
         ResourceConnection $resourceConnection,
@@ -230,10 +243,14 @@ class OrdersHelper
         CreditmemoRepositoryInterface $creditmemoRepository,
         RmaRepositoryInterface $rmaRepository,
         SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory,
-        DiscountHelper $discountHelper)
+        DiscountHelper $discountHelper,
+        SapOrderBatchResource $sapOrderBatchResource)
     {
         $this->_logger = $logger;
         $this->_resourceConnection = $resourceConnection;
+        $this->_creditReasonCodeFactory = $creditReasonCodeFactory;
+        $this->_creditReasonCodeResource = $_creditReasonCodeResource;
+        $this->_creditReasonCodeCollectionFactory = $creditReasonCodeCollectionFactory;
         $this->_responseHelper = $responseHelper;
         $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->_orderItemCollectionFactory = $orderItemCollectionFactory;
@@ -251,10 +268,7 @@ class OrdersHelper
         $this->_rmaRespository = $rmaRepository;
         $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
         $this->_discountHelper = $discountHelper;
-        $this->_logger = $logger;
-        $this->_creditReasonCodeFactory = $creditReasonCodeFactory;
-        $this->_creditReasonCodeResource = $_creditReasonCodeResource;
-        $this->_creditReasonCodeCollectionFactory = $creditReasonCodeCollectionFactory;
+        $this->_sapOrderBatchResource = $sapOrderBatchResource;
     }
 
     /**
@@ -326,19 +340,34 @@ class OrdersHelper
                 $order = $this->_orderFactory->create();
                 $this->_orderResource->load($order, $orderId);
 
-                // get the list of items for this order
-                $orderItems = $this->_orderItemCollectionFactory->create();
-                $orderItems->addFieldToFilter("order_id", ['eq' => $order->getId()]);
-                $orderItems->addFieldToFilter("product_type", ['neq' => 'bundle']);
-
-                /**
-                 * @var \Magento\Sales\Model\Order\Item $orderItem
-                 */
-                foreach ($orderItems as $orderItem)
+                // make sure that this order was not canceled before continuing
+                // we do not want to send canceled orders
+                if ($order->isCanceled())
                 {
-                    $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem);
-                }
+                    // get the date for today
+                    $today = date('Y-m-d H:i:s');
 
+                    // update the process date so it isn't picked up again
+                    $sapOrderBatch->setData('order_process_date', $today);
+
+                    // save to the database
+                    $this->_sapOrderBatchResource->save($sapOrderBatch);
+                }
+                else
+                {
+                    // get the list of items for this order
+                    $orderItems = $this->_orderItemCollectionFactory->create();
+                    $orderItems->addFieldToFilter("order_id", ['eq' => $order->getId()]);
+                    $orderItems->addFieldToFilter("product_type", ['neq' => 'bundle']);
+
+                    /**
+                     * @var \Magento\Sales\Model\Order\Item $orderItem
+                     */
+                    foreach ($orderItems as $orderItem)
+                    {
+                        $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem);
+                    }
+                }
             }
         }
 

@@ -180,6 +180,21 @@ $customerUrl = $block->getCustomerViewUrl();
                         <td><?php if(!empty($orderAdd['sap_order_id'])) echo $block->escapeHtml(__($orderAdd['sap_order_id'])) ?></td>
                     </tr>
                     <tr>
+                        <th><?= $block->escapeHtml(__('Sent to SAP')) ?></th>
+                        <td id="order-sent"><?php if(!empty($orderAdd['order_sent'])) echo $block->escapeHtml(__($orderAdd['order_sent'])) ?></td>
+                    </tr>
+                    <?php
+                     if(!empty($orderAdd['order_sent_date']))
+                     {
+                    ?>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Sent to SAP Date')) ?></th>
+                        <td><?php echo $block->escapeHtml(__($orderAdd['order_sent_date'])) ?></td>
+                    </tr>
+                    <?php
+                     }
+                    ?>
+                    <tr>
                         <th><?= $block->escapeHtml(__('SAP Order Status')) ?></th>
                         <td><?php if(!empty($orderAdd['order_status'])) echo $block->escapeHtml(__($orderAdd['order_status'])) ?></td>
                     </tr>

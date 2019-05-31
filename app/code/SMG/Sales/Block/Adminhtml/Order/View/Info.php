@@ -1,8 +1,8 @@
 <?php
 
-namespace SMG\OrderAdditional\Block\Adminhtml\Order\View;
+namespace SMG\Sales\Block\Adminhtml\Order\View;
 
-use SMG\OrderAdditional\Helper\AccountDetailsHelper;
+use SMG\Sales\Helper\AccountDetailsHelper;
 
 class Info extends \Magento\Sales\Block\Adminhtml\Order\View\Info
 {
