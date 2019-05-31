@@ -40,7 +40,7 @@ body {
                     float: left;
                     position: relative;
                     left: 0;
-                    top: -20px;
+                    top: 0.5rem;
                 }
             }
             position: relative;
@@ -70,7 +70,6 @@ body {
                     margin-top: 0;
                     position: relative;
                     right: 0;
-                    top: -25px;
                 }
                 .showcart {
                     color: $mygro-green;
@@ -235,7 +234,7 @@ body {
         margin-top: 6rem;
 
         .page-title-wrapper {
-            //display: none;
+            display: none;
         }
 
         a:active,
@@ -583,11 +582,7 @@ body {
 			}
 			border-bottom:0;
             .page-title {
-            	font-weight: bold;
-                font-size: 1.313rem;
-    			padding: 0 1rem;
-    			color: #636363;
-    			border-bottom: 1px solid #ededed;
+                @include font-hellix-heavy(2.2rem, $mygro-black, false, false, 0.5px);
             }
         }
         .columns {
@@ -2160,12 +2155,25 @@ body {
 @media screen and (max-width: $screen_568) {
 	.checkout-cart-index {
 		div.header.content.stickyHeader{
-			// padding-top: 33px;
+			padding-top: 33px;
 		}
 		.custom-checkout-btn-wrap{
 			display: none;
 		}
-			.cart-parent-summary{
+		.custom-checkout-btn-wrap.stickyCart{
+			position: fixed;
+			top: 0;
+			right: 0;
+			width: 100%;
+			padding: 0;
+			z-index: 9999;
+			display:block;
+			@include transition(all 0.2s ease-in-out);
+			.action.primary.checkout{
+					 border-radius: 0px;
+			}
+		}
+		.cart-parent-summary{
 			.cart-summary-divlink{
 				float: none;
 				margin-right: 0px;
@@ -2368,7 +2376,7 @@ body {
 }
 /*---- Client End-----*/
 
-.page-header {
+.header {
     .shipping-message-pl{
         background: #075534;
         padding: 10px;
@@ -2377,7 +2385,7 @@ body {
         font-size: 0.9rem;
 
         .shipping-message-pl p{
-            margin-bottom: 0px;
+            margin-bottom: 0px !important;
         }
     }
 }
@@ -2386,20 +2394,6 @@ body {
 .cms-home .hero-callout{
   margin: 120px auto 20px !important;
 }
-
-
-.page-wrapper {
-    .page-main {
-        .page-title-wrapper{
-          display: block;
-          margin-top: 7rem;
-          font-size:2rem !important;
-        }
-    }
-}
-
-
-@media screen and (max-width: $screen_768) {
 
 .page-wrapper .page-main .page-title-wrapper{
   display: block;
@@ -2411,70 +2405,8 @@ display:none;
 }
 
 @media only screen and (max-width: $screen_768) {
-
 .checkout-cart-index .page-wrapper .page-main .page-title-wrapper {
-    display: block;
+    display: block !important;
     margin-top: 9rem;
 }
-.checkout-cart-index{
-	.page.messages{
-		.message.error{
-	  		background: #ececec;
-	  		color: #000;
-	  		width: auto;
-		}
-	}
-}
-.page-wrapper{
-	 .page-header{
-	    height: 100px;
-	 }
-}
-.custom-checkout-btn-wrap.stickyCart{
-            position: fixed;
-            top: 100px;
-            right: 0;
-            width: 100%;
-            padding: 0;
-            z-index: 9999;
-            display:block;
-            @include transition(all 0.2s ease-in-out);
-            .action.primary.checkout{
-                     border-radius: 0px;
-            }
-        }
-}
-
-.checkout-cart-index{
-    .message-error{
-        background: #ececec;
-        color: #000;
-        width: 42%;
-
-        .message-error div:before{
-            display:none;
-        }
-    }
-}
-
-.empty-cart-page{
-    .page-main{
-        max-width:72%;
-        @media (max-width: 767px){
-        	max-width: 100%;
-        }
-        .page-title-wrapper{
-        	margin-top: 9rem;
-        }
-    }
-    .cart-empty{
-        margin: 10px 0 0 15px;
-
-        p{
-            font-size: 16px;
-            a{
-                color:#000;
-            }
-        }
-    }
 }
