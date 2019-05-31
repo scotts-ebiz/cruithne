@@ -34,9 +34,9 @@ define([
         if (orderSent === 'Yes')
         {
             var msg = $.mage.__('The order has already been sent to SAP for fulfillment, please contact SAP Order ' +
-                'team miraclegrostore@scotts.com.<br /><br />Upon cancellation of the SAP order, come back to ' +
-                'Magento to complete any refunds and returns needed for the order.<br /><br />Are you sure you ' +
-                'want to cancel this order?'),
+                'team <a href="mailto:miraclegrostore@scotts.com">miraclegrostore@scotts.com</a>.<br /><br />Upon ' +
+                'cancellation of the SAP order, come back to  Magento to complete any refunds and returns needed ' +
+                'for the order.<br /><br />Are you sure you want to cancel this order?'),
                 url = $('#order-view-cancel-button').data('url');
         }
         else
