@@ -129,14 +129,6 @@ before_script:
 # Copy repo to /var/www
 - sudo cp -r $TRAVIS_BUILD_DIR /var/www/
 
-script:
-#  Move permissions to before script once unit tests are set.
-# Permissions
-- sudo chown -R www-data:www-data /var/www/
-- sudo chmod -R 666 /var/www/
-- sudo find /var/www/ -type f -exec chmod ug+rw {} \;
-- sudo find /var/www/ -type d -exec chmod ug+rwxs {} \;
-
 #deploy:
 #  provider: gae
 #  keyfile: ecommerce-platform-09cafe6cc096.json
