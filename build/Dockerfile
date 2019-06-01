@@ -1,7 +1,6 @@
 # TODO: Pre-cache composer as much as possible
 #Base image is Google's Optimized Ubuntu Image
 
-
 # TODO: environment switch to test image OR replace env.php file here
 
 ARG IMAGE=gcr.io/ecommerce-platform-211419/magento-dev-primer:latest
@@ -16,15 +15,31 @@ ENV MAGENTO_DIR /var/www/html/magento2
 LABEL company="The Scotts MiracleGro Company"
 LABEL maintainer="rick.feldschau@scotts.com"
 
+# Add crontab file in the cron directory
+RUN touch crontab /etc/cron.d/cron
+ 
+# Give execution rights on the cron job
+RUN chmod 0644 /etc/cron.d/cron
+ 
+# Apply cron job
+RUN crontab /etc/cron.d/cron
+ 
+# Create the log file to be able to run tail
+RUN touch /var/log/cron.log
+RUN touch /var/log/magento.cron.log
+RUN touch /var/log/update.cron.log
+RUN touch /var/log/setup.cron.log
+ 
+# Change user back to root to continue on
+RUN whoami
+USER root
+
 # install gsutil
 RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"; echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
 RUN cat /etc/apt/sources.list.d/google-cloud-sdk.list
 
 RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 RUN apt-get update -y  && apt-get install -y google-cloud-sdk
-
-# for icons to stick need paths and permissions
-RUN chmod 0777 pub/media/tmp/design/file/
 
 #enabling the web-server to write
 RUN chgrp www-data /var/www/html/magento2/
@@ -48,6 +63,10 @@ RUN /usr/local/qualys/cloud-agent/bin/qualys-cloud-agent.sh ActivationId="67906f
 
 USER magento
 WORKDIR $MAGENTO_DIR
+
+# permissions for favicons
+RUN mkdir -p pub/media/tmp/design/file/
+RUN chmod 0777 pub/media/tmp/design/file/
 
 RUN git fetch
 RUN git checkout origin/test ./app/etc/config.php
@@ -103,7 +122,3 @@ ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
 
 # CMD "exec /usr/sbin/apachectl -DFOREGROUND -k start"
 # CMD /usr/sbin/apachectl -DFOREGROUND 
-
-# permissions for favicons                     
-RUN chmod 0755 pub/media/tmp/design/file/
-
