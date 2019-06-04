@@ -9,7 +9,9 @@ use Psr\Log\LoggerInterface;
 use SMG\Sap\Model\SapOrderBatchFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch as SapOrderBatchResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo as SapOrderBatchCreditmemoResource;
+use SMG\Sap\Model\ResourceModel\SapOrderBatchRma as SapOrderBatchRmaResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo\CollectionFactory as SapOrderBatchCreditmemoCollectionFactory;
+use SMG\Sap\Model\ResourceModel\SapOrderBatchRma\CollectionFactory as SapOrderBatchRmaCollectionFactory;
 
 class OrdersSentHelper
 {
@@ -29,9 +31,15 @@ class OrdersSentHelper
     protected $_responseHelper;
 
     /**
-     * @var SapOrderBatchFactory\
+     * @var SapOrderBatchFactory
      */
     protected $_sapOrderBatchFactory;
+
+
+    /**
+     * @var SapOrderBatchRmaCollectionFactory
+     */
+    protected  $_sapOrderBatchRmaCollectionFactory;
 
     /**
      * @var SapOrderBatchResource
@@ -59,6 +67,11 @@ class OrdersSentHelper
     protected $_sapOrderBatchCreditmemoResource;
 
     /**
+     * @var SapOrderBatchRmaResource
+     */
+    protected $_sapOrderBatchRmaResource;
+
+    /**
      * OrdersHelper constructor.
      *
      * @param LoggerInterface $logger
@@ -78,6 +91,8 @@ class OrdersSentHelper
         SapOrderBatchResource $sapOrderBatchResource,
         OrderFactory $orderFactory,
         OrderResource $orderResource,
+        SapOrderBatchRmaCollectionFactory $sapOrderBatchRmaCollectionFactory,
+        SapOrderBatchRmaResource $sapOrderBatchRmaResource,
         SapOrderBatchCreditmemoCollectionFactory $sapOrderBatchCreditmemoCollectionFactory,
         SapOrderBatchCreditmemoResource $sapOrderBatchCreditmemoResource)
     {
@@ -90,6 +105,8 @@ class OrdersSentHelper
         $this->_orderResource = $orderResource;
         $this->_sapOrderBatchCreditmemoCollectionFactory = $sapOrderBatchCreditmemoCollectionFactory;
         $this->_sapOrderBatchCreditmemoResource = $sapOrderBatchCreditmemoResource;
+        $this->_sapOrderBatchRmaCollectionFactory = $sapOrderBatchRmaCollectionFactory;
+        $this->_sapOrderBatchRmaResource = $sapOrderBatchRmaResource;
     }
 
     /**
@@ -126,10 +143,27 @@ class OrdersSentHelper
                     $this->_orderResource->load($order, $orderIncrementId, 'increment_id');
 
                     // determine the order type that is being processed
-                    if ($orderType === 'DR' || $orderType === 'RE')
+                    if ($orderType === 'DR')
                     {
                         // process debit orders
                         $this->debitOrders($order, $today);
+                    }
+                    else if ($orderType === 'RE') {
+                        // get the sku value from the input JSON
+                        $sku = $inputOrder['WebSku'];
+
+                        // make sure that there was a sku provided
+                        if (!empty($sku))
+                        {
+                            // process the credit orders
+                            $this->rmaOrders($order, $sku, $today);
+                        }
+                        else
+                        {
+                            // log the error
+                            $this->_logger->error("SMG\Api\Helper\OrdersSentHelper - The order number " . $orderIncrementId . " is missing the sku for the order type of " . $orderType);
+                        }
+
                     }
                     else if ($orderType === 'CR')
                     {
@@ -222,6 +256,39 @@ class OrdersSentHelper
 
                 // save the changes
                 $this->_sapOrderBatchCreditmemoResource->save($sapOrderBatchCreditmemo);
+            }
+        }
+    }
+
+    /**
+     * Update the credit order process
+     *
+     * @param \Magento\Sales\Model\Order $order
+     * @param $sku
+     * @param $today
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     */
+    private function rmaOrders($order, $sku, $today)
+    {
+        // get the sap order items collection
+        $sapOrderBatchRmas = $this->_sapOrderBatchRmaCollectionFactory->create();
+        $sapOrderBatchRmas->addFieldToFilter('order_id', ['eq' => $order->getId()]);
+        $sapOrderBatchRmas->addFieldToFilter('sku', ['eq' => $sku]);
+
+        // make sure that there is something provided
+        // there should only be one
+        if ($sapOrderBatchRmas->count() > 0)
+        {
+            /**
+             * @var \SMG\Sap\Model\SapOrderBatchItem $sapOrderBatchItem
+             */
+            foreach ($sapOrderBatchRmas as $sapOrderBatchRma)
+            {
+                // update the process date
+                $sapOrderBatchRma->setData('return_process_date', $today);
+
+                // save the changes
+                $this->_sapOrderBatchRmaResource->save($sapOrderBatchRma);
             }
         }
     }

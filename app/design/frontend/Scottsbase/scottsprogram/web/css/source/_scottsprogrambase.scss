@@ -819,7 +819,7 @@
 					font-size: $font32;
 					line-height: 16px;
 					color: #8f8f8f;
-					content: "î˜¢";
+					content: "";
 					font-family: "icons-blank-theme";
 					margin: 0;
 					vertical-align: middle;
@@ -832,7 +832,7 @@
 			}
 			&.active{
 				.title:after {
-					content: "î˜¡";
+					content: "";
 				}
 			}
 		}
@@ -1615,7 +1615,7 @@
 				-moz-osx-font-smoothing: grayscale;
 				font-size: $font32;
 				line-height: 20px;
-				content: "î˜—";
+				content: "";
 				font-family: "icons-blank-theme";
 				margin: 0;
 				vertical-align: top;
@@ -1809,12 +1809,6 @@
 			text-align:center;
 		}
 	} 
-}
-
-@media screen and (max-width: 1130px) {
-	div.widget.widget-static-block.howItWorks__wrapper {
-		margin-top: 22px;
-	}
 }
 
 @media screen and (max-width: $screen_1024) {
@@ -2218,24 +2212,6 @@
 }
 
 
-.widget.widget-static-block.howItWorks__wrapper{
-	 background-color: #f7f7f7;
-}
-.widget.widget-static-block.howItWorks__wrapper{
-	.section__steps--headline{
-		padding-top: 10px;
-	}
-}
-.widget.widget-static-block.howItWorks__wrapper{
-	padding-top: 0px;
-	margin-top: -5px;
-	.section__steps--wrapper{
-		padding-bottom: 57px;
-	}
-	
-}
-
-
 a#totop {
     height: 29px;
     position: absolute;
@@ -2328,28 +2304,15 @@ a#totop {
 }
 
 
-@media screen and (min-width: $screen_768) {
-	.howItWorks__wrapper{ 
-		.section__steps--item{ 
-			.widget-static-block p{
-				color: #515356;
-				font-weight: normal;
-			 }
-		 }
-	   }
-	}
 
-@media screen and (min-width: $screen_768) {
-	.cms-faq {
-		.page-wrapper{ 
-			.page-header{ 
-				.header.content {
-					padding: 0;
-				}
-			}
-		}
-	}
-
+.page-wrapper .page-main .page-title-wrapper{
+  display: block !important;
+  margin-top: 7rem;
 }
 
-
+@media only screen and (max-width: $screen_768) {
+.checkout-cart-index .page-wrapper .page-main .page-title-wrapper {
+    display: block !important;
+    margin-top: 9rem;
+}
+}

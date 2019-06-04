@@ -76,6 +76,10 @@ class UpgradeSchema implements UpgradeSchemaInterface
         {
             $this->updateColumnVersion160($setup);
         }
+        if (version_compare($context->getVersion(), '1.7.0', '<'))
+        {
+            $this->updateColumnVersion170($setup);
+        }
     }
 
     private function updateColumnVersion110(SchemaSetupInterface $setup)
@@ -159,7 +163,7 @@ class UpgradeSchema implements UpgradeSchemaInterface
             [
                 'type' => Table::TYPE_TIMESTAMP,
                 'nullable' => true,
-                'comment' => 'Datetime for when an order was sent to SAP'
+                'comment' => 'Datetime for when an cd order was sent to SAP'
             ]
         );
     }
@@ -398,5 +402,109 @@ class UpgradeSchema implements UpgradeSchemaInterface
 
         // end the setup
         $setup->endSetup();
+    }
+
+    private function updateColumnVersion170(SchemaSetupInterface $setup)
+    {
+        // start the setup
+        $setup->startSetup();
+
+        // create batch table
+        $this->createSalesOrderSapBatchRma($setup);
+
+        // end the setup
+        $setup->endSetup();
+    }
+
+    private function createSalesOrderSapBatchRma(SchemaSetupInterface $setup)
+    {
+        $tableName = 'sales_order_sap_batch_rma';
+
+        // make a new table with the desired table name
+        $table = $setup->getConnection()->newTable($setup->getTable($tableName));
+
+        // add the desired columns
+        $table->addColumn(
+            'entity_id',
+            Table::TYPE_INTEGER,
+            null,
+            [
+                'primary' => true,
+                'auto_increment' => true,
+                'nullable' => false,
+                'unsigned' => true
+            ]
+        );
+
+        $table->addColumn(
+            'rma_id',
+            Table::TYPE_INTEGER,
+            null,
+            [
+                'nullable' => false,
+                'unsigned' => true
+            ]
+        );
+
+        $table->addColumn(
+            'order_id',
+            Table::TYPE_INTEGER,
+            null,
+            [
+                'nullable' => false,
+                'unsigned' => true
+            ]
+        );
+
+        $table->addColumn(
+            'order_item_id',
+            Table::TYPE_INTEGER,
+            null,
+            [
+                'nullable' => false,
+                'unsigned' => true
+            ]
+        );
+
+        $table->addColumn(
+            'sku',
+            Table::TYPE_TEXT,
+            255,
+            [
+                'nullable' => false
+            ]
+        );
+
+        $table->addColumn(
+            'is_return',
+            Table::TYPE_BOOLEAN,
+            null,
+            [
+                'nullable' => false,
+                'default' => false
+            ]
+        );
+
+        $table->addColumn(
+            'return_process_date',
+            Table::TYPE_TIMESTAMP,
+            null,
+            [
+                'nullable' => true
+            ]
+        );
+
+        $table->addColumn(
+            'reason_id',
+            Table::TYPE_INTEGER,
+            null,
+            [
+                'nullable' => false,
+                'unsigned' => true
+            ]
+        );
+
+        // create the table
+        $setup->getConnection()->createTable($table);
     }
 }
