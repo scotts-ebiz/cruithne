@@ -6,7 +6,7 @@
  * Time: 10:56 AM
  */
 
-namespace SMG\OrderAdditional\Helper;
+namespace SMG\Sales\Helper;
 
 use Magento\Framework\Api\FilterBuilder;
 use Magento\Framework\Api\SearchCriteriaBuilder;
@@ -15,6 +15,8 @@ use Magento\Sales\Model\Order\Payment\Transaction\Repository as TransactionRepos
 use SMG\OfflineShipping\Model\ShippingConditionCodeFactory;
 use SMG\OfflineShipping\Model\ResourceModel\ShippingConditionCode as ShippingConditionCodeResource;
 use SMG\Sap\Model\ResourceModel\SapOrder as SapOrderResource;
+use SMG\Sap\Model\SapOrderBatchFactory;
+use SMG\Sap\Model\ResourceModel\SapOrderBatch as SapOrderBatchResource;
 
 class AccountDetailsHelper
 {
@@ -51,7 +53,17 @@ class AccountDetailsHelper
     /**
      * @var TransactionRepository
      */
-    protected $transactionRepository;
+    protected $_transactionRepository;
+
+    /**
+     * @var SapOrderBatchFactory
+     */
+    protected $_sapOrderBatchFactory;
+
+    /**
+     * @var SapOrderBatchResource
+     */
+    protected $_sapOrderBatchResource;
 
     /**
      * AccountDetailsHelper constructor.
@@ -63,6 +75,8 @@ class AccountDetailsHelper
      * @param FilterBuilder $filterBuilder
      * @param SearchCriteriaBuilder $searchCriteriaBuilder
      * @param TransactionRepository $transactionRepository
+     * @param SapOrderBatchFactory $sapOrderBatchFactory
+     * @param SapOrderBatchResource $sapOrderBatchResource
      */
     public function __construct(OrderRepositoryInterface $orderRepository,
         SapOrderResource $sapOrderResource,
@@ -70,7 +84,9 @@ class AccountDetailsHelper
         ShippingConditionCodeResource $shippingConditionCodeResource,
         FilterBuilder $filterBuilder,
         SearchCriteriaBuilder $searchCriteriaBuilder,
-        TransactionRepository $transactionRepository)
+        TransactionRepository $transactionRepository,
+        SapOrderBatchFactory $sapOrderBatchFactory,
+        SapOrderBatchResource $sapOrderBatchResource)
     {
         $this->_orderRepository = $orderRepository;
         $this->_sapOrderResource = $sapOrderResource;
@@ -78,7 +94,9 @@ class AccountDetailsHelper
         $this->_shippingConditionCodeResource = $shippingConditionCodeResource;
         $this->_filterBuilder = $filterBuilder;
         $this->_searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->transactionRepository = $transactionRepository;
+        $this->_transactionRepository = $transactionRepository;
+        $this->_sapOrderBatchFactory = $sapOrderBatchFactory;
+        $this->_sapOrderBatchResource = $sapOrderBatchResource;
     }
 
     /**
@@ -97,6 +115,8 @@ class AccountDetailsHelper
         // initialize the return array to have empty values for viewing.
         $dataobj['sap_order_id']=NULL;
         $dataobj['order_status']=NULL;
+        $dataobj['order_sent']=NULL;
+        $dataobj['order_sent_date']=NULL;
         $dataobj['sap_billing_doc_number']=NULL;
         $dataobj['additional_information']=NULL;
         $dataobj['cc_authorization_transaction'] = NULL;
@@ -123,6 +143,25 @@ class AccountDetailsHelper
         $dataobj['sap_order_id'] = $sapOrder->getSapOrderId();
         $dataobj['order_status'] = $sapOrder->getOrderStatus();
         $dataobj['delivery_number'] = $sapOrder->getDeliveryNumber();
+
+        // determine if the order was sent to SAP
+        /**
+         * @var \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
+         */
+        $sapOrderBatch = $this->_sapOrderBatchFactory->create();
+        $this->_sapOrderBatchResource->load($sapOrderBatch, $orderId, 'order_id');
+
+        $orderProcessDate = $sapOrderBatch->getData('order_process_date');
+
+        if (!empty($orderProcessDate))
+        {
+            $dataobj['order_sent'] = 'Yes';
+            $dataobj['order_sent_date'] = $orderProcessDate;
+        }
+        else
+        {
+            $dataobj['order_sent'] = 'No';
+        }
 
         // get the SAP Order Item info
         $sapOrderItems = $sapOrder->getSapOrderItems();
@@ -169,7 +208,7 @@ class AccountDetailsHelper
             ->create();
 
         // get the list of transactions for the order
-        $transactionList = $this->transactionRepository->getList($searchCriteria);
+        $transactionList = $this->_transactionRepository->getList($searchCriteria);
         if($transactionList)
         {
             foreach($transactionList as $transactionObj)
