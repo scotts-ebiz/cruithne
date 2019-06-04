@@ -3,6 +3,7 @@
 	<module name="SMG_ShippingRestrict" setup_version="1.0.1"/>
 		<sequence>
             <module name="Magento_Catalog"/>
+            <module name="Magento_Customer"/>  
         </sequence> 
         
 </config>

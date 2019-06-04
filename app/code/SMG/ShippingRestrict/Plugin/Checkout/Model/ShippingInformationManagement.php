@@ -7,13 +7,15 @@ class ShippingInformationManagement
 		protected $_productloader; 
 		protected $_messageManager; 
 		protected $_cart;
-
+        protected $quoteRepository;
+        
 		public function __construct(
 			\Magento\Checkout\Model\Session $checkoutSession,
 			\Magento\Catalog\Model\ProductFactory $_productloader,
 			\Magento\Framework\UrlInterface $urlInterface,
 			\Magento\Framework\Message\ManagerInterface $messageManager,
-			\Magento\Checkout\Model\Cart $cart
+			\Magento\Checkout\Model\Cart $cart,
+			\Magento\Quote\Api\CartRepositoryInterface $quoteRepository
 			)
 		{
 			$this->_checkoutSession = $checkoutSession;
@@ -21,6 +23,7 @@ class ShippingInformationManagement
 	        $this->_urlInterface = $urlInterface;
 	        $this->_messageManager = $messageManager;
 	        $this->_cart = $cart;
+	        $this->quoteRepository = $quoteRepository;
 		}
 
 	public function afterSaveAddressInformation(
@@ -52,6 +55,9 @@ class ShippingInformationManagement
 
 			}
 				if($validate){
+				$quoteId = $this->_checkoutSession->getQuote()->getId();
+				$quote = $this->quoteRepository->get($quoteId);
+                $this->quoteRepository->save($quote);	
 				$homepage = $this->_urlInterface->getBaseUrl();
 				$checkout = $this->_urlInterface->getUrl('checkout/cart', ['_secure' => true]);
 			    $message="Unfortunately one or more of the selected products is restricted from shipping to ".$State.". 
