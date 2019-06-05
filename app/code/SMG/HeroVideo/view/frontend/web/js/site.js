@@ -1,8 +1,7 @@
 define([
     'jquery'
 ], function ($) {
-    alert('This is a test!');
-    /* Product Callout Video Widget: Start */
+    /* Video Widget Code: Start */
     $(".video-link").on("click", function (e) {
         var embedCode = $(this).find(".embed-code").html();
         $("body").toggleClass("video-open");
@@ -14,5 +13,5 @@ define([
         $("body").toggleClass("video-open");
         $("#video-container .video-frame").html('');
     });
-    /* Product Callout Video Widget: End */
+    /* Video Widget Code: End */
 });
