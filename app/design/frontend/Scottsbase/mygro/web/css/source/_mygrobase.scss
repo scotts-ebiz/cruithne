@@ -400,11 +400,17 @@ body {
         display: none !important;
     }
     .product-info-main {
+        width: 48%;
+        margin-right: auto;
+        margin-left: auto;
+        @media only screen and (max-width: $screen_768){
+          width: 90%;
+        }
         .product-info-price {
             display: none;
         }
         .product-add-form {
-            width: 85%;
+            width: 80%;
             margin-left: auto;
             margin-right: auto;
             @media only screen and (max-width: $screen_768){
@@ -561,7 +567,16 @@ body {
         }
     }
     .product.media {
-        background: #F0F2F5;
+        width: 50%;
+        margin-right: auto;
+        margin-left: auto;
+        //background: #F0F2F5;
+        @include max-screen($screen__m) {
+            width: 90%;
+        }
+        .action-skip-wrapper {
+            display: none;
+        }
     }
 }
 
