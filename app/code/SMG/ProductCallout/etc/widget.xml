@@ -69,7 +69,7 @@
 
             <!-- Customize Callout Img / Background -->
             <parameter name="imgBgCustomizeLabel" visible="true" xsi:type="block">
-                <label>CUSTOMIZE IMAGE / BACKGROUND</label>
+                <label>CUSTOMIZE IMAGES</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannerimage" visible="true" xsi:type="block">
