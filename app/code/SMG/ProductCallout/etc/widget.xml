@@ -58,12 +58,18 @@
             <parameter name="bannerTextImgOneLink" visible="true" xsi:type="text">
                 <label>Blurb Image 1 Link</label>
             </parameter>
+            <parameter name="blurbImgOneAltTxt" visible="true" xsi:type="text">
+                <label>Blurb Image 1 Alt Text</label>
+            </parameter>
             <parameter name="bannerTextImageTwo" visible="true" xsi:type="block">
                 <label>Blurb Image 2</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
             <parameter name="bannerTextImgTwoLink" visible="true" xsi:type="text">
                 <label>Blurb Image 2 Link</label>
+            </parameter>
+            <parameter name="blurbImgTwoAltTxt" visible="true" xsi:type="text">
+                <label>Blurb Image 2 Alt Text</label>
             </parameter>
 
 
@@ -75,6 +81,9 @@
             <parameter name="bannerimage" visible="true" xsi:type="block">
                 <label>Callout Image (800x800)</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+            <parameter name="bannerCalloutImageAltTxt" visible="true" xsi:type="text">
+                <label>Callout Image Alt Text</label>
             </parameter>
             <parameter name="bgcolor" visible="true" xsi:type="text">
                 <label>Background Color (in #xxxxxx)</label>
