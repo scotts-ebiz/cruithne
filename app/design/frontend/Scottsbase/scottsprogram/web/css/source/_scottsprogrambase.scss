@@ -1721,7 +1721,7 @@
 				font-weight: 700 !important;
 				background-color: unset !important;
 				padding: 0 !important;
-				text-align: left;
+				text-align: center;
 				
 				padding: 10px !important;
 				background: #075534 !important;
@@ -2068,11 +2068,15 @@
 			}
 		}
 	}
-	#payment #checkout-step-payment {
-		.payment-option .payment-option-content {
-			#discount-form {
-				.actions-toolbar {
-				    margin-left: 0;
+	.checkout-index-index{
+		#payment{
+			#checkout-step-payment {
+				.payment-option .payment-option-content {
+					#discount-form {
+						.actions-toolbar {
+							margin-left: 0;
+						}
+					}
 				}
 			}
 		}
@@ -2396,4 +2400,68 @@ a#totop {
             }
         }
     }
+}
+
+.column.main{
+    .landingPageOptions-container{
+        .tabSection__wrapper section.section__tabs{
+            .section__tabs--wrapper{
+                .section__tabs--tabnav label.tabnav-label.active{
+                    font-weight:700;
+                }
+                .section__tabs--tabnav label.tabnav-label:hover{
+                    font-weight:700;
+                }
+            }
+        }
+    }
+}
+
+.actions-toolbar{
+    .primary{
+        .action-add.primary{
+            text-align:center;
+        }   
+    } 
+}
+button.action{
+    text-align:center;
+}
+
+.payment-group:last-child{
+	padding-bottom:18px;
+}
+
+#block-discount-heading{
+	@media (max-width: 767px){
+        	padding: 0 10px 15px 0px;
+        }
+}
+.checkout-index-index{
+	#discount-form{
+		.control{
+			@media (max-width: 767px){
+				float:none;
+			}
+			input[type="text"]
+			{
+				@media (max-width: 767px){
+					line-height:40px;
+				}
+			}
+		}
+		
+		.primary{
+			.action.action-apply{
+				@media (max-width: 767px){
+					text-align: center;
+				}
+			}
+		}
+		.payment-option-inner{
+			@media (max-width: 767px){
+				margin:0 0 0px;
+			}
+		}
+	}
 }
