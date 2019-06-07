@@ -2510,12 +2510,11 @@ button.action{
 			}
 			input[type="text"]
 			{
-				@media (max-width: 767px){
-					line-height:40px;
+			@media (max-width: 767px){
+				line-height:40px;
 				}
 			}
 		}
-		
 		.primary{
 			.action.action-apply{
 				@media (max-width: 767px){
