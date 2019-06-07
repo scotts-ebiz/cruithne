@@ -2378,8 +2378,7 @@ width: 48%;
 	}
 	.top-navigation { 
 		top: -10px; 
-		
-		.ui-menu li a { 
+			.ui-menu li a { 
 			font-size: $font14 !important; 
 			font-weight:$font_normal !important; 
 			text-transform: uppercase; 
@@ -2393,7 +2392,6 @@ width: 48%;
 	
 }
 /*---- Client End-----*/
-
 .page-header {
 		.shipping-message-pl{
 			background: #075534;
@@ -2401,20 +2399,14 @@ width: 48%;
 			text-align: center;
 			color: white;
 			font-size: 0.9rem;
-
-			.shipping-message-pl p{
-				margin-bottom: 0px;
+		.shipping-message-pl p{
+			margin-bottom: 0px;
 			}
 		} 
-
-
 }
-
-
 .cms-home .hero-callout{
   margin: 120px auto 20px !important;
 }
-
 .page-wrapper {
     .page-main {
         .page-title-wrapper{
@@ -2424,8 +2416,6 @@ width: 48%;
         }
     }
 }
-
-
 @media screen and (max-width: $screen_768) {
 .checkout-cart-index .page-wrapper .page-main .page-title-wrapper {
     display: block;
@@ -2471,7 +2461,6 @@ width: 48%;
         }
     }
 }
-
 .empty-cart-page{
     .page-main{
         max-width:72%;
@@ -2493,7 +2482,6 @@ width: 48%;
         }
     }
 }
-
 .actions-toolbar{
     .primary{
         .action-add.primary{
