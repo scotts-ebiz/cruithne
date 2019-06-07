@@ -7,43 +7,43 @@
 
             <!-- Banner Headline Customization -->
             <parameter name="pcvBannerHeadlineCustomLabel" visible="true" xsi:type="block">
-                <label>CUSTOMIZE BANNER HEADLINE</label>
+                <label>CUSTOMIZE HEADLINE</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="pcvBannerHeadline" visible="true" xsi:type="text" required="true">
-                <label>Banner Headline</label>
+                <label>Headline Text</label>
             </parameter>
             <parameter name="pcvBannerHeadlineColor" visible="true" xsi:type="text">
-                <label>Banner Headline Color (Hex Code #xxxxxx)</label>
+                <label>Headline Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
             <parameter name="pcvBannerHeadlineStyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCalloutVideo\Model\Source\HeadlineTextStyles">
-                <label>Banner Headline Style</label>
+                <label>Headline Style</label>
             </parameter>
 
 
             <!-- Banner Text Customization -->
             <parameter name="pcvBannerTextCustomLabel" visible="true" xsi:type="block">
-                <label>CUSTOMIZE BANNER TEXT</label>
+                <label>CUSTOMIZE BLURB</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="pcvBannerText" visible="true" xsi:type="text">
-                <label>Banner Text</label>
+                <label>Blurb Text</label>
             </parameter>
             <parameter name="pcvBannerTextColor" visible="true" xsi:type="text">
-                <label>Banner Text Color (in #xxxxxx)</label>
+                <label>Blurb Text Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
             <parameter name="pcvBannerTextSize" visible="true" xsi:type="select"
                        source_model="SMG\ProductCalloutVideo\Model\Source\TextSize">
-                <label>Banner Text Size (in rem)</label>
+                <label>Blurb Text Size (rem)</label>
             </parameter>
             <parameter name="pcvBannerTextStyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCalloutVideo\Model\Source\TextStyles">
-                <label>Banner Text Style</label>
+                <label>Blurb Text Style</label>
             </parameter>
             <parameter name="pcvTextContainerAlignment" visible="true" xsi:type="select"
                        source_model="SMG\ProductCallout\Model\Source\TextAlignSelect">
-                <label>Text Container Alignment</label>
+                <label>Blurb Container Alignment</label>
             </parameter>
 
 
@@ -53,41 +53,43 @@
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="pcvIconColor" visible="true" xsi:type="text">
-                <label>Icon Color (in #xxxxxx)</label>
+                <label>Icon Color (#xxxxxx)</label>
                 <value>#ffffff</value>
             </parameter>
             <parameter name="pcvIconBackgroundColor" visible="true" xsi:type="text">
-                <label>Icon Background Color (in #xxxxxx)</label>
+                <label>Icon Background Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
             <parameter name="pcvIframeVideoLink" visible="true" xsi:type="text">
                 <label>iFrame Video Link</label>
             </parameter>
             <parameter name="pcvIframeWidth" visible="true" xsi:type="text">
-                <label>iFrame Width (in px)</label>
+                <label>iFrame Width (560)</label>
                 <value>560</value>
             </parameter>
             <parameter name="pcvIframeHeight" visible="true" xsi:type="text">
-                <label>iFrame Height (in px)</label>
+                <label>iFrame Height (315)</label>
                 <value>315</value>
             </parameter>
 
 
             <!-- Customize Callout Img / Background -->
             <parameter name="pcvImgBgCustomizeLabel" visible="true" xsi:type="block">
-                <label>CUSTOMIZE IMAGE / BACKGROUND</label>
+                <label>CUSTOMIZE IMAGE</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="pcvCalloutImage" visible="true" xsi:type="block">
-                <label>Callout Image</label>
+                <label>Callout Image (1100x550)</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
-            <parameter name="pcvBgPaddingTop" visible="true" xsi:type="text">
-                <label>Background Top Padding (in %)</label>
+            <!-- Current Set to Hidden-->
+            <parameter name="pcvBgPaddingTop" visible="false" xsi:type="text">
+                <label>Background Top Padding (xx%)</label>
                 <value>0</value>
             </parameter>
-            <parameter name="pcvBgPaddingBottom" visible="true" xsi:type="text">
-                <label>Background Bottom Padding (in %)</label>
+            <!-- Current Set to Hidden-->
+            <parameter name="pcvBgPaddingBottom" visible="false" xsi:type="text">
+                <label>Background Bottom Padding (xx%)</label>
                 <value>0</value>
             </parameter>
         </parameters>
