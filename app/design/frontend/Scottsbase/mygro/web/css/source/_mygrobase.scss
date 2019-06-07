@@ -2,7 +2,6 @@
 body { 
     @include font-hellix-regular();
     font-size: 1.2rem;
-
     h2 {
         font-weight: bold;
         font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
@@ -395,183 +394,196 @@ body {
     display: none;
 }
 
-// PDP Page Styles
-.page-product-grouped {
-    .page-title-wrapper {
-        display: none !important;
-    }
-    .product-info-main {
-        width: 48%;
+// PDP Page Styles	
+.page-product-grouped {	
+    .page-title-wrapper {	
+        display: none !important;	
+    }	
+
+    .product-info-main {	
+width: 48%;
         margin-right: auto;
         margin-left: auto;
         @media only screen and (max-width: $screen_768){
           width: 90%;
         }
-        .product-info-price {
-            display: none;
-        }
-        .product-add-form {
-            width: 80%;
-            margin-left: auto;
-            margin-right: auto;
-            @media only screen and (max-width: $screen_768){
-                width: 95%;
-            }
-            form {
-                .grouped-title-section {
-                    h2.grouped-product-header {
-                        color: #000000;
-                        margin-top: 1.0rem;
-                        margin-bottom: 1.0rem;
-                        font-size: 2.5rem;
-                        letter-spacing: 0.5px;
-                        @media only screen and (max-width: $screen_768){
-                            text-align: center;
-                            font-size: 2.0rem;
-                        }
-                    }
-                    p {
-                        font-size: 1.2rem;
-                        line-height: 1.5rem;
-                        @media only screen and (max-width: $screen_768){
-                            font-size: 1.0rem;
-                            line-height: 1.2rem;
-                        }
-                    }
-                }
-                .grouped-product-wrapper {
-                    margin-bottom: 20px;
-                    h5 {
-                        font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
-                        color:#222222;
-                        font-size: 0.9rem;
-                        margin: 0 0 10px 0;
-                        @media only screen and (max-width: $screen_768){
-                            font-size: 0.8rem;
-                        }
-                    }
-                    select {
-                        border-radius: 0px;
-                        border: 0px;
-                        outline: 1px inset #909090;
-                        outline-style: solid;
-                        height: 35px;
-                        font-size: 1.0rem;
-                        @media only screen and (max-width: $screen_768){
-                            font-size: 0.9rem;
-                        }
-                    }
-                }
-                .table-wrapper {
-                    margin-bottom: 0;
-                    table {
-                        display: table !important;
-                        thead {
-                            tr.grouped-table-titles {
-                                display: none;
-                            }
-                        }
-                        tbody {
-                            display: table-row-group !important;
-                            border-top: 0px;
-                            @media only screen and (max-width: 639px){
-                                display: table-row-group;
-                            }
-                            tr.grouped-row.active {
-                                display: table-row;
-                            }
-                            tr.grouped-row {
-                                display: none;
-                                td {
-                                    color: #000000;
-                                    font-size: 1.2rem;
-                                    @media only screen and (max-width: $screen_768){
-                                        font-size: 1.0rem;
-                                    }
-                                    p{
-                                        color: #909090;
-                                        font-size: 0.85rem;
-                                        @media only screen and (max-width: $screen_768){
-                                            font-size: 0.75rem;
-                                        }
-                                    }
-                                  .price-box {
-                                        .price-container {
-                                            .price {
-                                                color: #008065;
-                                                font-size: 1.2rem;
-                                            }
-                                        }
-                                    }
-                                }
-                                td.product-detail-td {
-                                    width: 70%;
-                                    margin: 0;
-                                    padding: 0;
-                                    &:before{
-                                        content: none;
-                                    }
-                                }
-                                td.product-qty-td {
-                                    width: 30%;
-                                    text-align: right;
-                                    padding: 0;
-                                    &:before{
-                                        content: none;
-                                    }
-                                }
-                            }
-                            tr.grouped-row.active {
-                                display: table-row;
-                            }
-                        }
-                    }
-                }
-                .box-tocart {
-                    display: inline-block;
-                    position: relative;
-                    width: 100%;
-                    .fieldset {
-                        .actions {
-                            display: inline-block;
-                            position: relative;
-                            width: 100%;
-                            padding-top: 0;
-                            button {
-                                display: inline-block;
-                                position: relative;
-                                width: 100%;
-                                max-width: inherit;
-                                padding: 35px 0;
-                                height: inherit;
-                                line-height: 0;
-                                @media only screen and (max-width: $screen_768){
-                                    padding: 30px 0;
-                                }
-                                span{
-                                    font-size: 1.3rem;
-                                    @media only screen and (max-width: $screen_768){
-                                        font-size: 1.0rem;
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        .product-social-links {
-            display: none;
-        }
-        .product.attribute.overview {
-            display: none;
-        }
-    }
+        .product-info-price {	
+            display: none;	
+        }	
+
+        .product-add-form {	
+            width: 80%;	
+
+            margin-left: auto;	
+            margin-right: auto;	
+            @media only screen and (max-width: $screen_768){	
+                width: 95%;	
+            }	
+            form {	
+                .grouped-title-section {	
+                    h2.grouped-product-header {	
+                        color: #000000;	
+                        margin-top: 1.0rem;	
+                        margin-bottom: 1.0rem;	
+                        font-size: 2.5rem;	
+                        letter-spacing: 0.5px;	
+                        @media only screen and (max-width: $screen_768){	
+                            text-align: center;	
+                            font-size: 2.0rem;	
+                        }	
+                    }	
+                    p {	
+                        font-size: 1.2rem;	
+                        line-height: 1.5rem;	
+                        @media only screen and (max-width: $screen_768){	
+                            font-size: 1.0rem;	
+                            line-height: 1.2rem;	
+                        }	
+                    }	
+                }	
+                .grouped-product-wrapper {	
+                    margin-bottom: 20px;	
+                    h5 {	
+
+                        font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;	
+                        color:#222222;	
+                        font-size: 0.9rem;	
+                        margin: 0 0 10px 0;	
+                        @media only screen and (max-width: $screen_768){	
+                            font-size: 0.8rem;	
+                        }	
+                    }	
+                    select {	
+                        border-radius: 0px;	
+                        border: 0px;	
+
+                        outline: 1px inset #909090;	
+                        outline-style: solid;	
+                        height: 35px;	
+
+                        font-size: 1.0rem;	
+                        @media only screen and (max-width: $screen_768){	
+                            font-size: 0.9rem;	
+                        }	
+                    }	
+                }	
+                .table-wrapper {	
+                    margin-bottom: 0;	
+                    table {	
+
+                        display: table !important;	
+                        thead {	
+
+                            tr.grouped-table-titles {	
+                                display: none;	
+                            }	
+                        }	
+                        tbody {	
+                            display: table-row-group !important;	
+                            border-top: 0px;	
+
+                            @media only screen and (max-width: 639px){	
+                                display: table-row-group;	
+                            }	
+
+                            tr.grouped-row.active {	
+                                display: table-row;	
+                            }	
+                            tr.grouped-row {	
+                                display: none;	
+                                td {	
+                                    color: #000000;	
+                                    font-size: 1.2rem;	
+                                    @media only screen and (max-width: $screen_768){	
+                                        font-size: 1.0rem;	
+                                    }	
+                                    p{	
+                                        color: #909090;	
+                                        font-size: 0.85rem;	
+                                        @media only screen and (max-width: $screen_768){	
+                                            font-size: 0.75rem;	
+                                        }	
+                                    }	
+                                  .price-box {	
+                                        .price-container {	
+                                            .price {	
+                                                color: #008065;	
+                                                font-size: 1.2rem;	
+                                            }	
+                                        }	
+                                    }	
+                                }	
+                                td.product-detail-td {	
+                                    width: 70%;	
+                                    margin: 0;	
+                                    padding: 0;	
+                                    &:before{	
+                                        content: none;	
+                                    }	
+                                }	
+                                td.product-qty-td {	
+                                    width: 30%;	
+                                    text-align: right;	
+                                    padding: 0;	
+                                    &:before{	
+                                        content: none;	
+                                    }	
+                                }	
+                            }	
+                            tr.grouped-row.active {	
+                                display: table-row;	
+                            }	
+                        }	
+                    }	
+                }	
+                .box-tocart {	
+                    display: inline-block;	
+                    position: relative;	
+                    width: 100%;	
+                    .fieldset {	
+                        .actions {	
+                            display: inline-block;	
+                            position: relative;	
+                            width: 100%;	
+                            padding-top: 0;	
+                            button {	
+                                display: inline-block;	
+                                position: relative;	
+                                width: 100%;	
+
+                                max-width: inherit;	
+                                padding: 35px 0;	
+                                height: inherit;	
+                                line-height: 0;	
+                                @media only screen and (max-width: $screen_768){	
+                                    padding: 30px 0;	
+                                }	
+                                span{	
+                                    font-size: 1.3rem;	
+                                    @media only screen and (max-width: $screen_768){	
+                                        font-size: 1.0rem;	
+                                    }	
+                                }	
+                            }	
+                        }	
+                    }	
+                }	
+            }	
+        }	
+        .product-social-links {	
+            display: none;	
+        }	
+
+        .product.attribute.overview {	
+            display: none;	
+        }	
+    }	
     .product.media {
         width: 50%;
         margin-right: auto;
         margin-left: auto;
         //background: #F0F2F5;
+
         @include max-screen($screen__m) {
             width: 90%;
         }
@@ -580,7 +592,6 @@ body {
         }
     }
 }
-
 // Cart Styles
 .checkout-cart-index {
     .page-main {
@@ -1221,9 +1232,7 @@ body {
                                                                                 transition: background 0.2s;
                                                                                 background: $mygro-green;
                                                                                 border: none;
-																				display: inline-block;
-																				font-size: $font20;
-																				height: auto;
+									 	height: auto;
                                                                                 &:hover {
                                                                                     -webkit-transition: background 0.2s;
                                                                                     -moz-transition: background 0.2s;
@@ -1981,7 +1990,6 @@ body {
 		}
 	}
 }
-
 @media screen and (max-width: $screen_1024) and (min-width: $screen_769) {
 	#shopping-cart-table{
 		.col.item .product-item-details {
@@ -2161,7 +2169,9 @@ body {
 	}
 	.footer.content{
 		border-top: 0;
-	}	
+	}
+	.checkout-index-index {
+
 	#payment #checkout-step-payment {
 		.payment-option .payment-option-content {
 			#discount-form {
@@ -2170,6 +2180,7 @@ body {
 				}
 			}
 		}
+	}
 	}
 }
 @media screen and (max-width: $screen_568) {
@@ -2367,8 +2378,7 @@ body {
 	}
 	.top-navigation { 
 		top: -10px; 
-		
-		.ui-menu li a { 
+			.ui-menu li a { 
 			font-size: $font14 !important; 
 			font-weight:$font_normal !important; 
 			text-transform: uppercase; 
@@ -2382,26 +2392,21 @@ body {
 	
 }
 /*---- Client End-----*/
-
 .page-header {
-    .shipping-message-pl{
-        background: #075534;
-        padding: 10px;
-        text-align: center;
-        color: white;
-        font-size: 0.9rem;
-
-        .shipping-message-pl p{
-            margin-bottom: 0px;
-        }
-    }    
+		.shipping-message-pl{
+			background: #075534;
+			padding: 10px;
+			text-align: center;
+			color: white;
+			font-size: 0.9rem;
+		.shipping-message-pl p{
+			margin-bottom: 0px;
+			}
+		} 
 }
-
-
 .cms-home .hero-callout{
   margin: 120px auto 20px !important;
 }
-
 .page-wrapper {
     .page-main {
         .page-title-wrapper{
@@ -2411,8 +2416,6 @@ body {
         }
     }
 }
-
-
 @media screen and (max-width: $screen_768) {
 .checkout-cart-index .page-wrapper .page-main .page-title-wrapper {
     display: block;
@@ -2458,7 +2461,6 @@ body {
         }
     }
 }
-
 .empty-cart-page{
     .page-main{
         max-width:72%;
@@ -2479,4 +2481,75 @@ body {
             }
         }
     }
+}
+.actions-toolbar{
+    .primary{
+        .action-add.primary{
+            text-align:center;
+        }   
+    } 
+}
+button.action{
+    text-align:center;
+}
+
+.payment-group:last-child{
+	padding-bottom:18px;
+}
+
+#block-discount-heading{
+	@media (max-width: 767px){
+        	padding: 0 10px 15px 0px;
+        }
+}
+.checkout-index-index{
+	#discount-form{
+		.control{
+			@media (max-width: 767px){
+				float:none;
+			}
+			input[type="text"]
+			{
+			@media (max-width: 767px){
+				line-height:40px;
+				}
+			}
+		}
+		.primary{
+			.action.action-apply{
+				@media (max-width: 767px){
+					text-align: center;
+				}
+			}
+		}
+		.payment-option-inner{
+			@media (max-width: 767px){
+				margin:0 0 0px;
+			}
+		}
+	}
+}
+#product_addtocart_form{
+	.table-wrapper{
+		.table:not(.cart):not(.totals):not(.table-comparison){
+			tbody{
+				@media (max-width: 639px){
+					display:inline-block;
+					width: 100%;
+				}
+				tr{
+					td:first-child{
+						@media (max-width: 639px){
+							width:85%;
+						}
+					}
+					td.qty:last-child{
+						@media (max-width: 639px){
+							margin-top:10px;
+						}
+					}
+				}
+			}
+		}
+	}
 }
