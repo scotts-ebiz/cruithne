@@ -1,6 +1,6 @@
 <?php
 /**
- * Checlout Rewrite Checkout Cart Index Controller
+ * Checkout Rewrite Checkout Cart Index Controller
  *
  * @category    SMG
  * @package     SMG_Checkout
