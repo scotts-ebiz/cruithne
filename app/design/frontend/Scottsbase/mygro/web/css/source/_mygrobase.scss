@@ -2,7 +2,6 @@
 body { 
     @include font-hellix-regular();
     font-size: 1.2rem;
-
     h2 {
         font-weight: bold;
         font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
@@ -421,8 +420,6 @@ width: 48%;
                 width: 95%;	
             }	
             form {	
-
-
                 .grouped-title-section {	
                     h2.grouped-product-header {	
                         color: #000000;	
@@ -436,9 +433,6 @@ width: 48%;
                         }	
                     }	
                     p {	
-
-
-
                         font-size: 1.2rem;	
                         line-height: 1.5rem;	
                         @media only screen and (max-width: $screen_768){	
@@ -447,9 +441,6 @@ width: 48%;
                         }	
                     }	
                 }	
-
-
-
                 .grouped-product-wrapper {	
                     margin-bottom: 20px;	
                     h5 {	
@@ -463,9 +454,6 @@ width: 48%;
                         }	
                     }	
                     select {	
-
-
-
                         border-radius: 0px;	
                         border: 0px;	
 
@@ -479,9 +467,6 @@ width: 48%;
                         }	
                     }	
                 }	
-
-
-
                 .table-wrapper {	
                     margin-bottom: 0;	
                     table {	
@@ -494,10 +479,6 @@ width: 48%;
                             }	
                         }	
                         tbody {	
-
-
-
-
                             display: table-row-group !important;	
                             border-top: 0px;	
 
@@ -513,23 +494,12 @@ width: 48%;
                                 td {	
                                     color: #000000;	
                                     font-size: 1.2rem;	
-
-
-
-
-
-
                                     @media only screen and (max-width: $screen_768){	
                                         font-size: 1.0rem;	
                                     }	
                                     p{	
                                         color: #909090;	
                                         font-size: 0.85rem;	
-
-
-
-
-
                                         @media only screen and (max-width: $screen_768){	
                                             font-size: 0.75rem;	
                                         }	
@@ -543,18 +513,6 @@ width: 48%;
                                         }	
                                     }	
                                 }	
-
-
-
-
-
-
-
-
-
-
-
-
                                 td.product-detail-td {	
                                     width: 70%;	
                                     margin: 0;	
@@ -563,13 +521,6 @@ width: 48%;
                                         content: none;	
                                     }	
                                 }	
-
-
-
-
-
-
-
                                 td.product-qty-td {	
                                     width: 30%;	
                                     text-align: right;	
@@ -579,41 +530,23 @@ width: 48%;
                                     }	
                                 }	
                             }	
-
-
-
-
-
-
-
-
                             tr.grouped-row.active {	
                                 display: table-row;	
                             }	
                         }	
                     }	
                 }	
-
-
-
-
                 .box-tocart {	
                     display: inline-block;	
                     position: relative;	
                     width: 100%;	
                     .fieldset {	
                         .actions {	
-
-
-
                             display: inline-block;	
                             position: relative;	
                             width: 100%;	
                             padding-top: 0;	
                             button {	
-
-
-
                                 display: inline-block;	
                                 position: relative;	
                                 width: 100%;	
@@ -622,18 +555,11 @@ width: 48%;
                                 padding: 35px 0;	
                                 height: inherit;	
                                 line-height: 0;	
-
-
-
                                 @media only screen and (max-width: $screen_768){	
                                     padding: 30px 0;	
                                 }	
                                 span{	
                                     font-size: 1.3rem;	
-
-
-
-
                                     @media only screen and (max-width: $screen_768){	
                                         font-size: 1.0rem;	
                                     }	
@@ -644,15 +570,6 @@ width: 48%;
                 }	
             }	
         }	
-
-
-
-
-
-
-
-
-
         .product-social-links {	
             display: none;	
         }	
@@ -661,8 +578,6 @@ width: 48%;
             display: none;	
         }	
     }	
-
-
     .product.media {
         width: 50%;
         margin-right: auto;
@@ -677,7 +592,6 @@ width: 48%;
         }
     }
 }
-
 // Cart Styles
 .checkout-cart-index {
     .page-main {
@@ -1318,9 +1232,7 @@ width: 48%;
                                                                                 transition: background 0.2s;
                                                                                 background: $mygro-green;
                                                                                 border: none;
-																				display: inline-block;
-																				font-size: $font20;
-																				height: auto;
+									 	height: auto;
                                                                                 &:hover {
                                                                                     -webkit-transition: background 0.2s;
                                                                                     -moz-transition: background 0.2s;
@@ -2078,7 +1990,6 @@ width: 48%;
 		}
 	}
 }
-
 @media screen and (max-width: $screen_1024) and (min-width: $screen_769) {
 	#shopping-cart-table{
 		.col.item .product-item-details {
@@ -2631,7 +2542,6 @@ button.action{
 		}
 	}
 }
-
 #product_addtocart_form{
 	.table-wrapper{
 		.table:not(.cart):not(.totals):not(.table-comparison){
