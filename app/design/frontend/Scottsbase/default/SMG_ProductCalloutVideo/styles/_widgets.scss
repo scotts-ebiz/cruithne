@@ -114,9 +114,16 @@
             z-index: 9;
             .video-frame {
                 position: relative;
-                padding-bottom: 56.25%;
+                padding-bottom: 56.25%; /* 16:9 */
                 padding-top: 25px;
                 height: 0;
+            }
+            .video-frame iframe {
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
             }
         }
     }
@@ -137,6 +144,19 @@
     }
     .productCalloutVideo-contentContainer.text-right {
       float: right;
+    }
+  }
+}
+
+/* Styling relating to the Product Callout Video Widget */
+body.video-open {
+  .product-callout-video-widget.product-info-container {
+    .video-overlay {
+      visibility: visible;
+      opacity: 1;
+    }
+    .video-container {
+      display: block;
     }
   }
 }
