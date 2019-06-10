@@ -90,7 +90,7 @@
                 }
             }
         }
-        .video-overlay {
+        .productCalloutVideo-video-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -102,7 +102,7 @@
             opacity: 0;
             transition: .2s visibility linear, .2s opacity linear;
         }
-        .video-container {
+        .productCalloutVideo-video-container {
             display: none;
             position: fixed;
             top: 50%;
@@ -151,11 +151,11 @@
 /* Styling relating to the Product Callout Video Widget */
 body.video-open {
   .product-callout-video-widget.product-info-container {
-    .video-overlay {
+    .productCalloutVideo-video-overlay {
       visibility: visible;
       opacity: 1;
     }
-    .video-container {
+    .productCalloutVideo-video-container {
       display: block;
     }
   }
