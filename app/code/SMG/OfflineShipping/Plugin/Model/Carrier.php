@@ -5,6 +5,7 @@
 
 namespace SMG\OfflineShipping\Plugin\Model;
 
+use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\OfflineShipping\Model\Carrier\Flatrate;
 use Magento\Shipping\Model\Rate\Result;
 use Magento\Shipping\Model\Rate\ResultFactory;
@@ -44,18 +45,26 @@ class Carrier
     private $rateMethodFactory;
 
     /**
-     * @param SourceMethod $sourceMethod
-     * @param ResultFactory $rateResultFactory
-     * @param MethodFactory $rateMethodFactory
+     * @var ScopeConfigInterface
+     */
+    protected $scopeConfig;
+
+    /**
+     * @param SourceMethod         $sourceMethod
+     * @param ResultFactory        $rateResultFactory
+     * @param MethodFactory        $rateMethodFactory
+     * @param ScopeConfigInterface $scopeConfig
      */
     public function __construct(
         SourceMethod $sourceMethod,
         ResultFactory $rateResultFactory,
-        MethodFactory $rateMethodFactory
+        MethodFactory $rateMethodFactory,
+        ScopeConfigInterface $scopeConfig
     ) {
         $this->sourceMethod = $sourceMethod;
         $this->rateResultFactory = $rateResultFactory;
         $this->rateMethodFactory = $rateMethodFactory;
+        $this->scopeConfig = $scopeConfig;
     }
 
     /**
@@ -67,49 +76,64 @@ class Carrier
         Flatrate $subject,
         array $result
     ) {
-        $allowedMethods = explode(",", $subject->getConfigData('allowed_methods'));
         $availableMethods = $this->sourceMethod->getAvailableMethods();
+        $allowedCodes = $this->getConfiguredAllowedMethods();
         $list = [];
 
-        foreach ($availableMethods as $code => $title) {
-            if (!in_array($code, $allowedMethods)) {
-                continue;
+        foreach ($availableMethods as $method) {
+            $code = $method->getShippingMethod();
+            $title = $method->getDescription();
+            if (\in_array($code, $allowedCodes)) {
+                $list[$code] = $title;
             }
-
-            $list[$code] = $title;
         }
 
         return $list;
     }
     /**
      * @param Flatrate $subject
-     * @param $result
+     * @param \Magento\Shipping\Model\Rate\Result $result
      * @return bool|Result
      */
     public function afterCollectRates(
         Flatrate $subject,
         $result
     ) {
+
         if (!$subject->getConfigFlag('active') || !$subject->getAllowedMethods()) {
             return false;
         }
 
-        $price = $result->getCheapestRate()->getPrice();
-        $cost = $result->getCheapestRate()->getCost();
+        $allowedMethods = $this->getConfiguredAllowedMethods();
 
-        foreach ($subject->getAllowedMethods() as $code => $name) {
-            /** @var Method $method */
-            $method = $this->rateMethodFactory->create();
-            $method->setCarrier(self::CODE);
-            $carrierTitle = $subject->getConfigData('title');
-            $method->setCarrierTitle($carrierTitle);
-            $method->setMethod($code);
-            $method->setMethodTitle($name);
-            $method->setPrice($price);
-            $method->setCost($cost);
-            $result->append($method);
+        /** @var \SMG\OfflineShipping\Model\ShippingConditionCode $method */
+        foreach ($this->sourceMethod->getAvailableMethods() as $conditionCode) {
+            if (\in_array($conditionCode->getShippingMethod(), $allowedMethods)) {
+                /** @var Method $method */
+                $method = $this->rateMethodFactory->create();
+                $method->setCarrier(self::CODE);
+                $carrierTitle = $subject->getConfigData('title');
+                $method->setCarrierTitle($carrierTitle);
+                $method->setMethod($conditionCode->getShippingMethod());
+                $method->setMethodTitle($conditionCode->getDescription());
+                $method->setPrice($conditionCode->getRate());
+                $method->setCost($conditionCode->getRate());
+                $result->append($method);
+            }
         }
 
         return $result;
+    }
+
+    /**
+     * @return array
+     */
+    protected function getConfiguredAllowedMethods()
+    {
+        $allowedMethods = $this->scopeConfig->getValue(
+            'carriers/flatrate/allowed_methods',
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
+        return empty($allowedMethods) ? [] : explode(',', $allowedMethods);
     }
 }
