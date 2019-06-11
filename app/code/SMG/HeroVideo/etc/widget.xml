@@ -5,53 +5,53 @@
         <description>Display hero video and text.</description>
         <parameters>
 
-            <!-- Banner Headline Customization -->
+            <!-- Headline Customization -->
             <parameter name="bannerHeadlineCustomLabel" visible="true" xsi:type="block">
-                <label>CUSTOMIZE BANNER HEADLINE</label>
+                <label>CUSTOMIZE HEADLINE</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannerheadline" visible="true" xsi:type="text" required="true">
-                <label>Banner Headline</label>
+                <label>Headline Text</label>
             </parameter>
             <parameter name="bannerheadlinecolor" visible="true" xsi:type="text">
-                <label>Banner Headline Desktop Color (in #xxxxxx)</label>
+                <label>Headline Desktop Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
             <parameter name="bannerheadlineMobileColor" visible="true" xsi:type="text">
-                <label>Banner Headline Mobile Color (in #xxxxxx)</label>
+                <label>Headline Mobile Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
             <parameter name="headlinetextstyle" visible="true" xsi:type="multiselect" source_model="SMG\HeroVideo\Model\Source\HeadlineTextStyles">
-                <label>Banner Headline Style</label>
+                <label>Headline Style</label>
             </parameter>
 
 
-            <!-- Banner Text Customization -->
+            <!-- Blurb Customization -->
             <parameter name="bannerTextCustomLabel" visible="true" xsi:type="block">
-                <label>CUSTOMIZE BANNER TEXT</label>
+                <label>CUSTOMIZE BLURB</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannertext" visible="true" xsi:type="text">
-                <label>Banner Text</label>
+                <label>Blurb Text</label>
             </parameter>
             <parameter name="bannertextlinecolor" visible="true" xsi:type="text">
-                <label>Banner Text Color (in #xxxxxx)</label>
+                <label>Blurb Text Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
             <parameter name="bannertextlineMobileColor" visible="true" xsi:type="text">
-                <label>Banner Text Mobile Color (in #xxxxxx)</label>
+                <label>Blurb Text Mobile Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
             <parameter name="bannertextsize" visible="true" xsi:type="select"
                        source_model="SMG\HeroVideo\Model\Source\TextSize">
-                <label>Banner Text Size (in rem)</label>
+                <label>Blurb Text Size (in rem)</label>
             </parameter>
             <parameter name="textstyle" visible="true" xsi:type="multiselect"
                        source_model="SMG\HeroVideo\Model\Source\TextStyles">
-                <label>Banner Text Style</label>
+                <label>Blurb Text Style</label>
             </parameter>
             <parameter name="textalignclass" visible="true" xsi:type="select" source_model="SMG\HeroVideo\Model\Source\TextAlignSelect">
-                <label>Text Container Alignment</label>
+                <label>Text Align</label>
             </parameter>
 
 
@@ -61,34 +61,34 @@
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="videotext" visible="true" xsi:type="block">
-                <label>Video Text Callout</label>
+                <label>Video CTA</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
             </parameter>
             <parameter name="videotextcolor" visible="true" xsi:type="text">
-                <label>Video Text Color (in #xxxxxx)</label>
+                <label>Video CTA Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
             <parameter name="videotextsize" visible="true" xsi:type="select"
                        source_model="SMG\HeroVideo\Model\Source\VideoTextSize">
-                <label>Video Text Size (in rem)</label>
+                <label>Video CTA Size (rem)</label>
             </parameter>
             <parameter name="iconcolor" visible="true" xsi:type="text">
-                <label>Icon Color (in #xxxxxx)</label>
+                <label>Icon Color (#xxxxxx)</label>
                 <value>#ffffff</value>
             </parameter>
             <parameter name="iconbackgroundcolor" visible="true" xsi:type="text">
-                <label>Icon Background Color (in #xxxxxx)</label>
+                <label>Icon Background Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
             <parameter name="iframeVideoLink" visible="true" xsi:type="text">
                 <label>iFrame Video Link</label>
             </parameter>
             <parameter name="iframeWidth" visible="true" xsi:type="text">
-                <label>iFrame Width (in px)</label>
+                <label>iFrame Width (560)</label>
                 <value>560</value>
             </parameter>
             <parameter name="iframeHeight" visible="true" xsi:type="text">
-                <label>iFrame Height (in px)</label>
+                <label>iFrame Height (315)</label>
                 <value>315</value>
             </parameter>
 
@@ -109,11 +109,15 @@
                 <label>Background Image</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
-            <parameter name="videopaddingtop" visible="true" xsi:type="text">
-                <label>Background Top Padding (in %)</label>
+
+            <!-- Hiding from CMS User | visable:false -->
+            <parameter name="videopaddingtop" visible="false" xsi:type="text">
+                <label>Background Top Padding (%)</label>
                 <value>15</value>
             </parameter>
-            <parameter name="videopaddingbottom" visible="true" xsi:type="text">
+
+            <!-- Hiding from CMS User | visable:false -->
+            <parameter name="videopaddingbottom" visible="false" xsi:type="text">
                 <label>Background Bottom Padding (in %)</label>
                 <value>15</value>
             </parameter>

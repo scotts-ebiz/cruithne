@@ -43,7 +43,7 @@
             </parameter>
             <parameter name="pcvTextContainerAlignment" visible="true" xsi:type="select"
                        source_model="SMG\ProductCallout\Model\Source\TextAlignSelect">
-                <label>Blurb Container Alignment</label>
+                <label>Text Align</label>
             </parameter>
 
 
