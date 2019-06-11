@@ -1,4 +1,4 @@
-/* Widget Start - Location - App / design / frontend / Scottsbase / default / SMG_ProdcutCalloutVideo / styles */
+/* Widget Start - Location - App / design / frontend / Scottsbase / default / SMG_HeroVideo / styles */
 body {
     .hero-video-widget.product-info-container {
         .product-info.text-left {
@@ -82,7 +82,7 @@ body {
                 */
             }
         }
-        .video-overlay {
+        .heroVideo-video-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -94,7 +94,7 @@ body {
             opacity: 0;
             transition: .2s visibility linear, .2s opacity linear;
         }
-        .video-container {
+        .heroVideo-video-container {
             display: none;
             position: fixed;
             top: 50%;
@@ -144,13 +144,13 @@ body {
 }
 
 /* Styling relating to the Product Callout Video Widget */
-body.video-open {
+body.heroVideo-video-open {
     .hero-video-widget.product-info-container {
-        .video-overlay {
+        .heroVideo-video-overlay {
             visibility: visible;
             opacity: 1;
         }
-        .video-container {
+        .heroVideo-video-container {
             display: block;
         }
     }
