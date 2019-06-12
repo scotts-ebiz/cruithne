@@ -8,21 +8,25 @@ $heroVideoBtnHeadlineStyleSelected = '';
 
 
 //Setting Headline Color to variable
-if($block->getData('heroVideoBtnHeadlineTxtColor') != ''):
+if($block->getData('heroVideoBtnHeadlineTxtColor') != ''){
   $heroVideoBtnHeadlineTxtColorSelected = $block->getData('heroVideoBtnHeadlineTxtColor');
-endif;
+} else {
+    $heroVideoBtnHeadlineTxtColorSelected = '#000000';
+}
+
 
 //Setting Mobile Headline Color to variable
-if($block->getData('heroVideoBtnHeadlineTxtMobileColor') != ''):
+if($block->getData('heroVideoBtnHeadlineTxtMobileColor') != ''){
   $heroVideoBtnHeadlineTxtMobileColorSelected = $block->getData('heroVideoBtnHeadlineTxtMobileColor');
-endif;
+} else {
+  $heroVideoBtnHeadlineTxtMobileColorSelected = '#000000';
+}
+
 
 //Setting Headline Style to variable
 if($block->getData('heroVideoBtnHeadlineStyle') != ''):
   $heroVideoBtnHeadlineStyleSelected = $block->getData('heroVideoBtnHeadlineStyle');
 endif;
-
-
 
 ?>
 
@@ -34,15 +38,16 @@ endif;
         foreach($videoheadlinestylevalues as $videoheadlinevalue) {
           echo $videoheadlinevalue;
         }
-        ?>"><?php echo
-          $block->getData('heroVideoBtnHeadlineTxt');?>
-        </h2>
+        ?>"><?php echo $block->getData('heroVideoBtnHeadlineTxt');?></h2>
 
     </div>
 </section>
 
 <div class="hero-video-btn-mobileContent">
-    <h2 class="mobile-video--btn-headline" style="color:<?php echo $heroVideoBtnHeadlineTxtMobileColorSelected;?>;">
-      <?php echo $block->getData('heroVideoBtnHeadlineTxt');?>
-    </h2>
+    <h2 class="mobile-video--btn-headline" style="color:<?php echo $heroVideoBtnHeadlineTxtMobileColorSelected;?>; <?php
+    $videoheadlinestylevalues = explode(',', $heroVideoBtnHeadlineStyleSelected);
+    foreach($videoheadlinestylevalues as $videoheadlinevalue) {
+      echo $videoheadlinevalue;
+    }
+    ?>"><?php echo $block->getData('heroVideoBtnHeadlineTxt');?></h2>
 </div>
