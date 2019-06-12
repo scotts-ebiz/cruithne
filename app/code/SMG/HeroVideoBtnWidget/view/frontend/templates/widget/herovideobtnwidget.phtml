@@ -1,24 +1,38 @@
+<?php
 
 
+//Declare Vars
+$heroVideoBtnHeadlineTxtColorSelected = '';
+$heroVideoBtnHeadlineTxtMobileColorSelected = '';
 
-<section class="hero-video-btn-widget product-info-container align-top" style="background: url('<?php echo
-$block->getData('videobackgroundimage')
-; ?>') no-repeat; background-position: center; background-size: cover; padding-top: <?php echo $block->getData('videopaddingtop')
-; ?>%; padding-bottom: <?php echo $block->getData('videopaddingbottom')?>%;">
+
+//Setting Headline Color to variable
+if($block->getData('heroVideoBtnHeadlineTxtColor') != ''):
+  $heroVideoBtnHeadlineTxtColorSelected = $block->getData('heroVideoBtnHeadlineTxtColor');
+endif;
+
+//Setting Mobile Headline Color to variable
+if($block->getData('heroVideoBtnHeadlineTxtMobileColor') != ''):
+  $heroVideoBtnHeadlineTxtMobileColorSelected = $block->getData('heroVideoBtnHeadlineTxtMobileColor');
+endif;
+
+
+?>
+
+
+<section class="hero-video-btn-widget product-info-container align-top">
     <div class="product-info grid col-2 <?php echo $block->getData('textalignclass') ?> ">
-        <h2 class="video-headline">
+        <h2 class="video-headline" style="
+                color:<?php echo $heroVideoBtnHeadlineTxtColorSelected?>;">
           <?php echo $block->getData('heroVideoBtnHeadlineTxt'); ?>
         </h2>
-
-
 
     </div>
 </section>
 
 <div class="hero-video-btn-mobileContent">
-    <h2 class="mobile-video--btn-headline">
+    <h2 class="mobile-video--btn-headline" style="
+            color:<?php echo $heroVideoBtnHeadlineTxtMobileColorSelected;?>;">
       <?php echo $block->getData('heroVideoBtnHeadlineTxt'); ?>
     </h2>
-
-
 </div>
