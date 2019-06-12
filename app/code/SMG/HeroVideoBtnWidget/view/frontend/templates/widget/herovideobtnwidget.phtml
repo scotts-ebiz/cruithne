@@ -4,6 +4,7 @@
 //Declare Vars
 $heroVideoBtnHeadlineTxtColorSelected = '';
 $heroVideoBtnHeadlineTxtMobileColorSelected = '';
+$heroVideoBtnHeadlineStyleSelected = '';
 
 
 //Setting Headline Color to variable
@@ -16,13 +17,25 @@ if($block->getData('heroVideoBtnHeadlineTxtMobileColor') != ''):
   $heroVideoBtnHeadlineTxtMobileColorSelected = $block->getData('heroVideoBtnHeadlineTxtMobileColor');
 endif;
 
+//Setting Headline Style to variable
+if($block->getData('heroVideoBtnHeadlineStyle') != ''):
+  $heroVideoBtnHeadlineStyleSelected = $block->getData('heroVideoBtnHeadlineStyle');
+endif;
+
+
 
 ?>
 
 
 <section class="hero-video-btn-widget product-info-container align-top">
     <div class="product-info grid col-2 <?php echo $block->getData('textalignclass') ?> ">
-        <h2 class="video-headline" style="color:<?php echo $heroVideoBtnHeadlineTxtColorSelected?>;"><?php echo $block->getData('heroVideoBtnHeadlineTxt');?>
+        <h2 class="video-headline" style="color:<?php echo $heroVideoBtnHeadlineTxtColorSelected?>; <?php
+        $videoheadlinestylevalues = explode(',', $heroVideoBtnHeadlineStyleSelected);
+        foreach($videoheadlinestylevalues as $videoheadlinevalue) {
+          echo $videoheadlinevalue;
+        }
+        ?>"><?php echo
+          $block->getData('heroVideoBtnHeadlineTxt');?>
         </h2>
 
     </div>
