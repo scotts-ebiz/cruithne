@@ -21,6 +21,10 @@
                 <label>Headline Mobile Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
+            <parameter name="heroVideoBtnHeadlineStyle" visible="true" xsi:type="multiselect"
+                       source_model="SMG\HeroVideoBtnWidget\Model\Source\HeadlineTextStyles">
+                <label>Headline Style</label>
+            </parameter>
         </parameters>
     </widget>
 </widgets>
