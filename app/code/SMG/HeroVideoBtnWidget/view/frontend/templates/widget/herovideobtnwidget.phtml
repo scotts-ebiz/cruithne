@@ -1,12 +1,24 @@
 
 
 
-<section class="hero-video-widget product-info-container align-top" style="background: url('<?php echo
+<section class="hero-video-btn-widget product-info-container align-top" style="background: url('<?php echo
 $block->getData('videobackgroundimage')
 ; ?>') no-repeat; background-position: center; background-size: cover; padding-top: <?php echo $block->getData('videopaddingtop')
 ; ?>%; padding-bottom: <?php echo $block->getData('videopaddingbottom')?>%;">
-  <div class="product-info grid col-2 <?php echo $block->getData('textalignclass') ?> ">
-    <h2>This is a header</h2>
+    <div class="product-info grid col-2 <?php echo $block->getData('textalignclass') ?> ">
+        <h2 class="video-headline">
+          <?php echo $block->getData('heroVideoBtnHeadlineTxt'); ?>
+        </h2>
 
-  </div>
+
+
+    </div>
 </section>
+
+<div class="hero-video--btn-mobileContent">
+    <h2 class="mobile-video--btn-headline">
+      <?php echo $block->getData('heroVideoBtnHeadlineTxt'); ?>
+    </h2>
+
+
+</div>
