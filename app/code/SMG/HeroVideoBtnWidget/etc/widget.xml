@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+    <widget class="SMG\HeroVideoBtnWidget\Block\Widget\Herovideobtnwidget"
+            id="smg_herovideobtnwidget_herovideobtnwidget">
+        <label>Hero Video</label>
+        <description>Display hero video and text.</description>
+        <parameters>
+            <!-- Headline Customization -->
+            <parameter name="heroVideoBtnHeadlineTxt" visible="true" xsi:type="block">
+                <label>CUSTOMIZE HEADLINE</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="bannerheadline" visible="true" xsi:type="text" required="true">
+                <label>Headline Text</label>
+            </parameter>
+            <parameter name="bannerheadlinecolor" visible="true" xsi:type="text">
+                <label>Headline Desktop Color (#xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
+            <parameter name="bannerheadlineMobileColor" visible="true" xsi:type="text">
+                <label>Headline Mobile Color (#xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
+            <parameter name="headlinetextstyle" visible="true" xsi:type="multiselect" source_model="SMG\HeroVideo\Model\Source\HeadlineTextStyles">
+                <label>Headline Style</label>
+            </parameter>
+
+        </parameters>
+    </widget>
+</widgets>
