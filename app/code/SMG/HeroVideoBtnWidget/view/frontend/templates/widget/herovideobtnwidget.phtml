@@ -10,6 +10,7 @@ $heroVideoBtnBlurbColorValue = '';
 $heroVideoBtnBlurbMobileColorValue = '';
 $heroVideoBtnBlurbTxtSizeValue = '';
 $heroVideoBtnBlurbTxtStyleSelected = '';
+$heroVideoBtnBlurbTxtAlignValue = '';
 
 
 //Setting Headline Color to variable
@@ -64,11 +65,18 @@ if($block->getData('heroVideoBtnBlurbTxtStyle') != ''):
 endif;
 
 
+//Setting Text Alignment to variable
+if($block->getData('heroVideoBtnBlurbTxtAlign') != ''):
+  $heroVideoBtnBlurbTxtAlignValue = $block->getData('heroVideoBtnBlurbTxtAlign');
+endif;
+
+
+
 ?>
 
 
 <section class="hero-video-btn-widget product-info-container align-top">
-    <div class="product-info grid col-2 <?php echo $block->getData('textalignclass') ?> ">
+    <div class="product-info grid col-2 <? echo  $heroVideoBtnBlurbTxtAlignValue?>">
         <h2 class="video-headline" style="color:<?php echo $heroVideoBtnHeadlineTxtColorSelected?>; <?php
         $videoheadlinestylevalues = explode(',', $heroVideoBtnHeadlineStyleSelected);
         foreach($videoheadlinestylevalues as $videoheadlinevalue) {

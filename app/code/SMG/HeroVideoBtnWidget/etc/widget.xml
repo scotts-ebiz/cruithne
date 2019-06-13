@@ -55,6 +55,21 @@
                        source_model="SMG\HeroVideoBtnWidget\Model\Source\TextAlignSelect">
                 <label>Text Align</label>
             </parameter>
+
+
+            <!-- Video Customization -->
+            <parameter name="heroVideoBtnVideoLabel" visible="true" xsi:type="block">
+                <label>CUSTOMIZE VIDEO SECTION</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="heroVideoBtnVideoCtaTxt" visible="true" xsi:type="text">
+                <label>CTA Text</label>
+                <value>Learn More</value>
+            </parameter>
+            <parameter name="heroVideoBtnVideoCtaTxtColor" visible="true" xsi:type="text">
+                <label>CTA Text Color (#xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
         </parameters>
     </widget>
 </widgets>
