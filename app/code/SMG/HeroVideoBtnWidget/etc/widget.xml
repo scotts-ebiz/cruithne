@@ -70,6 +70,19 @@
                 <label>CTA Text Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
+            <parameter name="heroVideoBtnIframeVideoLink" visible="true" xsi:type="text">
+                <label>iFrame Video Link</label>
+            </parameter>
+            <!-- Hide from CMS user -->
+            <parameter name="heroVideoBtnIframeWidth" visible="false" xsi:type="text">
+                <label>iFrame Width (560)</label>
+                <value>560</value>
+            </parameter>
+            <!-- Hide from CMS user -->
+            <parameter name="heroVideoBtnIframeHeight" visible="false" xsi:type="text">
+                <label>iFrame Height (315)</label>
+                <value>315</value>
+            </parameter>
         </parameters>
     </widget>
 </widgets>

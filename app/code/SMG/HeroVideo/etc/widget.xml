@@ -83,11 +83,13 @@
             <parameter name="iframeVideoLink" visible="true" xsi:type="text">
                 <label>iFrame Video Link</label>
             </parameter>
-            <parameter name="iframeWidth" visible="true" xsi:type="text">
+            <!-- Hide from CMS user -->
+            <parameter name="iframeWidth" visible="false" xsi:type="text">
                 <label>iFrame Width (560)</label>
                 <value>560</value>
             </parameter>
-            <parameter name="iframeHeight" visible="true" xsi:type="text">
+            <!-- Hide from CMS user -->
+            <parameter name="iframeHeight" visible="false" xsi:type="text">
                 <label>iFrame Height (315)</label>
                 <value>315</value>
             </parameter>
