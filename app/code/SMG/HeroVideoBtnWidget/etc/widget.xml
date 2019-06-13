@@ -51,6 +51,10 @@
                        source_model="SMG\HeroVideoBtnWidget\Model\Source\TextStyles">
                 <label>Blurb Text Style</label>
             </parameter>
+            <parameter name="heroVideoBtnBlurbTxtAlign" visible="true" xsi:type="select"
+                       source_model="SMG\HeroVideoBtnWidget\Model\Source\TextAlignSelect">
+                <label>Text Align</label>
+            </parameter>
         </parameters>
     </widget>
 </widgets>
