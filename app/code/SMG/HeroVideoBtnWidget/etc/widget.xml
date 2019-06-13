@@ -25,6 +25,24 @@
                        source_model="SMG\HeroVideoBtnWidget\Model\Source\HeadlineTextStyles">
                 <label>Headline Style</label>
             </parameter>
+
+
+            <!-- Blurb Customization -->
+            <parameter name="heroVideoBtnBlurbLabel" visible="true" xsi:type="block">
+                <label>CUSTOMIZE BLURB</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="heroVideoBtnBlurbTxt" visible="true" xsi:type="text">
+                <label>Blurb Text</label>
+            </parameter>
+            <parameter name="heroVideoBtnBlurbColor" visible="true" xsi:type="text">
+                <label>Blurb Text Color (#xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
+            <parameter name="heroVideoBtnBlurbMobileColor" visible="true" xsi:type="text">
+                <label>Blurb Text Mobile Color (#xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
         </parameters>
     </widget>
 </widgets>
