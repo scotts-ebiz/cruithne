@@ -29,7 +29,7 @@ RUN touch /var/log/cron.log
 RUN touch /var/log/magento.cron.log
 RUN touch /var/log/update.cron.log
 RUN touch /var/log/setup.cron.log
- 
+
 # Change user back to root to continue on
 RUN whoami
 USER root

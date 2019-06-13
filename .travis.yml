@@ -84,6 +84,7 @@ before_install:
 - sudo chmod 644 /etc/apache2/sites-available/default-ssl.conf
 - sudo apachectl configtest
 - sudo service apache2 restart
+- npm install -g gulp-cli
 
 # Travis Env
 - shopt -s expand_aliases
@@ -132,6 +133,7 @@ before_script:
 script:
 #  Move permissions to before script once unit tests are set.
 # Permissions
+- cd vendor/snowdog/frontools/ && yarn install && gulp clean && npm rebuild node-sass && gulp styles --ci
 - sudo chown -R www-data:www-data /var/www/
 - sudo chmod -R 666 /var/www/
 - sudo find /var/www/ -type f -exec chmod ug+rw {} \;

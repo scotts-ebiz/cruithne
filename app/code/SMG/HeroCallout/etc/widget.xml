@@ -1,119 +1,237 @@
 <?xml version="1.0"?>
+
 <widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+
     <widget class="SMG\HeroCallout\Block\Widget\Herocallout" id="smg_herocallout_herocallout">
+
         <label>Hero Callout</label>
+
         <description>Display hero banner and text.</description>
+
         <parameters>
 
+
+
             <!-- Banner Headline Customizations -->
+
             <parameter name="HeroCalloutBannerHeadlineLabel" visible="true" xsi:type="block">
+
                 <label>CUSTOMIZE BANNER HEADLINE</label>
+
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+
             </parameter>
+
             <parameter name="bannerheadline" visible="true" xsi:type="text" required="true">
+
                 <label>Banner Headline</label>
+
             </parameter>
+
             <parameter name="HeroCalloutBannerHeadlineSize" visible="true" xsi:type="select"
+
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerHeadlineSize">
+
                 <label>Banner Headline Size (in rem)</label>
+
             </parameter>
+
             <parameter name="HeroCalloutBannerHeadlineColor" visible="true" xsi:type="text">
+
                 <label>Banner Headline Color (#xxxxxx)</label>
+
                 <value>#000000</value>
+
             </parameter>
+
             <parameter name="HeroCalloutBannerHeadlineStyles" visible="true" xsi:type="multiselect"
+
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerHeadlineStyles">
+
                 <label>Banner Headline Style</label>
+
             </parameter>
+
+
+
 
 
             <!-- Banner Text Customizations -->
+
             <parameter name="HeroCalloutBannerTextLabel" visible="true" xsi:type="block">
+
                 <label>CUSTOMIZE BANNER TEXT</label>
+
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+
             </parameter>
+
             <parameter name="bannertext" visible="true" xsi:type="block">
+
                 <label>Banner Text</label>
-                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
+
             </parameter>
+
             <parameter name="HeroCalloutBannerTextSize" visible="true" xsi:type="select"
+
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextSize">
+
                 <label>Banner Text Size (in rem)</label>
+
             </parameter>
+
             <parameter name="HeroCalloutBannerTextColor" visible="true" xsi:type="text">
+
                 <label>Banner Text Color (#xxxxxx)</label>
+
                 <value>#000000</value>
+
             </parameter>
+
             <parameter name="HeroCalloutBannerTextStyle" visible="true" xsi:type="multiselect"
+
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextStyle">
+
                 <label>Banner Text Style</label>
+
             </parameter>
+
+
+
 
 
             <!-- Banner Text Highlight Customizations -->
+
             <parameter name="HeroCalloutBannerTextHighlightLabel" visible="true" xsi:type="block">
+
                 <label>CUSTOMIZE BANNER TEXT HIGHLIGHT</label>
+
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+
             </parameter>
+
             <parameter name="bannertexthighlight" visible="true" xsi:type="text">
+
                 <label>Banner Text Highlight</label>
+
             </parameter>
+
             <parameter name="HeroCalloutBannerTextHighlightSize" visible="true" xsi:type="select"
+
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextHighlightSize">
+
                 <label>Banner Text Highlight Size (in rem)</label>
+
             </parameter>
+
             <parameter name="HeroCalloutBannerTextHighlightColor" visible="true" xsi:type="text">
+
                 <label>Banner Text Highlight Color (#xxxxxx)</label>
+
                 <value>#000000</value>
+
             </parameter>
+
             <parameter name="HeroCalloutBannerTextHighlightStyle" visible="true" xsi:type="multiselect"
+
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextHighlightStyle">
+
                 <label>Banner Text Highlight Style</label>
+
             </parameter>
+
+
+
 
 
             <!-- Banner Image Section -->
+
             <parameter name="HeroCalloutBannerImagesLabel" visible="true" xsi:type="block">
+
                 <label>CUSTOMIZE BANNER IMAGES</label>
+
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+
             </parameter>
+
             <parameter name="bannerimage" visible="true" xsi:type="block">
+
                 <label>Banner Image</label>
+
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+
             </parameter>
+
             <parameter name="bannerimagemobile" visible="true" xsi:type="block">
+
                 <label>Banner Image (Mobile)</label>
+
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+
             </parameter>
+
+
+
 
 
             <!-- Button Customizations -->
+
             <parameter name="HeroCalloutButtonLabel" visible="true" xsi:type="block">
+
                 <label>CUSTOMIZE BUTTON</label>
+
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+
             </parameter>
+
             <parameter name="buttontext" visible="true" xsi:type="text">
+
                 <label>Button Text</label>
+
             </parameter>
+
             <parameter name="HeroCalloutButtonTextSize" visible="true" xsi:type="select"
+
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutButtonTextSize">
+
                 <label>Button Text Size (in rem)</label>
+
             </parameter>
+
             <parameter name="HeroCalloutButtonTextStyle" visible="true" xsi:type="multiselect"
+
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutButtonTextStyle">
+
                 <label>Button Text Style</label>
+
             </parameter>
+
             <parameter name="HeroCalloutButtonTextColor" visible="true" xsi:type="text">
+
                 <label>Button Text Color (#xxxxxx)</label>
+
                 <value>#ffffff</value>
+
             </parameter>
+
             <parameter name="HeroCalloutButtonColor" visible="true" xsi:type="text">
+
                 <label>Button Color (#xxxxxx)</label>
+
                 <value>#4d4d4e</value>
+
             </parameter>
+
             <parameter name="buttonlink" visible="true" xsi:type="text">
+
                 <label>Button Link</label>
+
             </parameter>
+
         </parameters>
+
     </widget>
+
 </widgets>

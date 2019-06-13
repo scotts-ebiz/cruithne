@@ -282,7 +282,6 @@ return [
         'SMG_LandingPage' => 1,
         'SMG_Launch' => 1,
         'SMG_OfflineShipping' => 1,
-        'SMG_OrderAdditional' => 1,
         'SMG_OrderCreateGrid' => 1,
         'SMG_Sap' => 1,
         'SMG_OrderReason' => 1,
