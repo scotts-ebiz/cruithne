@@ -68,6 +68,10 @@
             </parameter>
             <parameter name="heroVideoBtnVideoCtaTxtColor" visible="true" xsi:type="text">
                 <label>CTA Text Color (#xxxxxx)</label>
+                <value>#ffffff</value>
+            </parameter>
+            <parameter name="heroVideoBtnVideoCtaBgColor" visible="true" xsi:type="text">
+                <label>CTA Background Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
             <parameter name="heroVideoBtnIframeVideoLink" visible="true" xsi:type="text">
