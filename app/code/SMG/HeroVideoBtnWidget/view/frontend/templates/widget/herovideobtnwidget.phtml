@@ -120,7 +120,10 @@ if($block->getData('heroVideoBtnVideoCtaBgColor') != ''){
 }
 
 
-
+//Setting CTA Text Size to variable
+if($block->getData('heroVideoBtnVideoCtaTxtSize') != ''):
+  $heroVideoBtnVideoCtaTxtSizeValue = $block->getData('heroVideoBtnVideoCtaTxtSize');
+endif;
 
 
 
@@ -147,7 +150,8 @@ if($block->getData('heroVideoBtnVideoCtaBgColor') != ''){
           <?php if($this->getData('heroVideoBtnIframeVideoLink') != ''): ?>
               <a class="watch-video play heroVideoBtn-video-link" href="#" style="background-color:<? echo
               $heroVideoBtnVideoCtaBgColorValue;?>">
-                  <span class="productvideotxt" style="color:<? echo $heroVideoBtnVideoCtaTxtColorValue?>">
+                  <span class="productvideotxt" style="color:<? echo $heroVideoBtnVideoCtaTxtColorValue?><? echo
+                  $heroVideoBtnVideoCtaTxtSizeValue;?>">
                     <?php echo $heroVideoBtnVideoCtaTxtValue;?>
                 </span>
                   <span class="embed-code">

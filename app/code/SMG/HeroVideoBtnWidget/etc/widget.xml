@@ -70,6 +70,10 @@
                 <label>CTA Text Color (#xxxxxx)</label>
                 <value>#ffffff</value>
             </parameter>
+            <parameter name="heroVideoBtnVideoCtaTxtSize" visible="true" xsi:type="select"
+                       source_model="SMG\HeroVideoBtnWidget\Model\Source\CtaTextSize">
+                <label>CTA Text Size</label>
+            </parameter>
             <parameter name="heroVideoBtnVideoCtaBgColor" visible="true" xsi:type="text">
                 <label>CTA Background Color (#xxxxxx)</label>
                 <value>#000000</value>
