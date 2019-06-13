@@ -47,7 +47,7 @@
                        source_model="SMG\HeroVideoBtnWidget\Model\Source\TextSize">
                 <label>Blurb Text Size (in rem)</label>
             </parameter>
-            <parameter name="textstyle" visible="true" xsi:type="multiselect"
+            <parameter name="heroVideoBtnBlurbTxtStyle" visible="true" xsi:type="multiselect"
                        source_model="SMG\HeroVideoBtnWidget\Model\Source\TextStyles">
                 <label>Blurb Text Style</label>
             </parameter>

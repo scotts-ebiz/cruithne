@@ -9,6 +9,7 @@ $heroVideoBtnBlurbTxtValue = '';
 $heroVideoBtnBlurbColorValue = '';
 $heroVideoBtnBlurbMobileColorValue = '';
 $heroVideoBtnBlurbTxtSizeValue = '';
+$heroVideoBtnBlurbTxtStyleSelected = '';
 
 
 //Setting Headline Color to variable
@@ -57,9 +58,9 @@ if($block->getData('heroVideoBtnHeadlineStyle') != ''):
 endif;
 
 
-//Setting Blurb Size to variable
-if($block->getData('heroVideoBtnBlurbTxtSize') != ''):
-  $heroVideoBtnBlurbTxtSizeValue = $block->getData('heroVideoBtnBlurbTxtSize');
+//Setting Blurb Style to variable
+if($block->getData('heroVideoBtnBlurbTxtStyle') != ''):
+  $heroVideoBtnBlurbTxtStyleSelected = $block->getData('heroVideoBtnBlurbTxtStyle');
 endif;
 
 
@@ -74,7 +75,12 @@ endif;
           echo $videoheadlinevalue;
         }
         ?>"><?php echo $block->getData('heroVideoBtnHeadlineTxt');?></h2>
-        <p style="color:<?php echo $heroVideoBtnBlurbColorValue;?>; <? echo $heroVideoBtnBlurbTxtSizeValue;?>">
+        <p style="color:<?php echo $heroVideoBtnBlurbColorValue;?>; <? echo $heroVideoBtnBlurbTxtSizeValue;?><?php
+        $selectedBlurbTextStyles = explode(',', $heroVideoBtnBlurbTxtStyleSelected);
+        foreach($selectedBlurbTextStyles as $selectedBlurbTextStyleValue) {
+          echo $selectedBlurbTextStyleValue;
+        }
+        ?>">
           <?php echo $heroVideoBtnBlurbTxtValue;?>
         </p>
 
@@ -88,7 +94,12 @@ endif;
       echo $videoheadlinevalue;
     }
     ?>"><?php echo $block->getData('heroVideoBtnHeadlineTxt');?></h2>
-    <p style="color:<?echo $heroVideoBtnBlurbMobileColorValue;?>; <? echo $heroVideoBtnBlurbTxtSizeValue;?>">
+    <p style="color:<?echo $heroVideoBtnBlurbMobileColorValue;?>; <? echo $heroVideoBtnBlurbTxtSizeValue;?><?php
+    $selectedBlurbTextStyles = explode(',', $heroVideoBtnBlurbTxtStyleSelected);
+    foreach($selectedBlurbTextStyles as $selectedBlurbTextStyleValue) {
+      echo $selectedBlurbTextStyleValue;
+    }
+    ?>">
       <?php echo $heroVideoBtnBlurbTxtValue;?>
     </p>
 </div>
