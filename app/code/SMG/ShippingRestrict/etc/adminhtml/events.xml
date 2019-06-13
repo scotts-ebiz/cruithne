@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    <event name="sales_order_save_before">
+        <observer instance="SMG\Shippingrestrict\Observer\Backend\Sales\OrderCreateBeforeSave" name="smg_shippingrestrict_observer_backend_sales_ordercreatebeforesave"/>
+    </event>
+</config>
