@@ -43,6 +43,10 @@
                 <label>Blurb Text Mobile Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
+            <parameter name="heroVideoBtnBlurbTxtSize" visible="true" xsi:type="select"
+                       source_model="SMG\HeroVideoBtnWidget\Model\Source\TextSize">
+                <label>Blurb Text Size (in rem)</label>
+            </parameter>
         </parameters>
     </widget>
 </widgets>
