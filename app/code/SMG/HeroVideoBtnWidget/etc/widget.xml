@@ -109,14 +109,14 @@
 
             <!-- Hiding from CMS User | visable:false -->
             <parameter name="heroVideoBtnImgTopPadding" visible="false" xsi:type="text">
-                <label>Background Top Padding (%)</label>
-                <value>15</value>
+                <label>Background Top Padding (xx%)</label>
+                <value>15%</value>
             </parameter>
 
             <!-- Hiding from CMS User | visable:false -->
             <parameter name="heroVideoBtnImgBottomPadding" visible="false" xsi:type="text">
-                <label>Background Bottom Padding (in %)</label>
-                <value>15</value>
+                <label>Background Bottom Padding (xx%)</label>
+                <value>15%</value>
             </parameter>
 
         </parameters>

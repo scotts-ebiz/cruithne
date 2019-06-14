@@ -17,6 +17,9 @@ $heroVideoBtnIframeVideoLinkValue = '';
 $heroVideoBtnVideoCtaTxtColorValue = '';
 $heroVideoBtnVideoCtaBgColorValue = '';
 $heroVideoBtnVideoCtaBgHoverValue = '';
+$heroVideoBtnBgImgValue = '';
+$heroVideoBtnImgTopPaddingValue = '';
+$heroVideoBtnImgBottomPaddingValue = '';
 
 
 //Setting Headline Color to variable
@@ -128,12 +131,32 @@ if($block->getData('heroVideoBtnVideoCtaBgHover') != ''){
 }
 
 
-
-
 //Setting CTA Text Size to variable
 if($block->getData('heroVideoBtnVideoCtaTxtSize') != ''):
   $heroVideoBtnVideoCtaTxtSizeValue = $block->getData('heroVideoBtnVideoCtaTxtSize');
 endif;
+
+
+//Setting Bg Img to variable
+if($block->getData('heroVideoBtnBgImg') != ''):
+  $heroVideoBtnBgImgValue = $block->getData('heroVideoBtnBgImg');
+endif;
+
+
+//Setting Top Padding to variable
+if($block->getData('heroVideoBtnImgTopPadding') != ''){
+  $heroVideoBtnImgTopPaddingValue = $block->getData('heroVideoBtnImgTopPadding');
+} else {
+  $heroVideoBtnImgTopPaddingValue = '15%';
+}
+
+
+//Setting Bottom Padding to variable
+if($block->getData('heroVideoBtnImgBottomPadding') != ''){
+  $heroVideoBtnImgBottomPaddingValue = $block->getData('heroVideoBtnImgBottomPadding');
+} else {
+  $heroVideoBtnImgBottomPaddingValue = '15%';
+}
 
 ?>
 
@@ -145,7 +168,9 @@ endif;
 </style>
 
 
-<section class="hero-video-btn-widget product-info-container align-top">
+<section class="hero-video-btn-widget product-info-container align-top" style="background: url('<? echo $heroVideoBtnBgImgValue?>')
+        no-repeat; padding-top: <? echo $heroVideoBtnImgTopPaddingValue;?>; padding-bottom: <? echo
+$heroVideoBtnImgBottomPaddingValue;?>; background-position: center; background-size: cover;">
     <div class="product-info grid col-2 <? echo  $heroVideoBtnBlurbTxtAlignValue?>">
         <h2 class="video-headline" style="color:<?php echo $heroVideoBtnHeadlineTxtColorSelected?>; <?php
         $videoheadlinestylevalues = explode(',', $heroVideoBtnHeadlineStyleSelected);
@@ -183,7 +208,7 @@ endif;
 </section>
 
 <div class="hero-video-btn-mobileContent">
-    <h2 class="mobile-video--btn-headline" style="color:<?php echo $heroVideoBtnHeadlineTxtMobileColorSelected;?>; <?php
+    <h2 class="mobile-video-btn-headline" style="color:<?php echo $heroVideoBtnHeadlineTxtMobileColorSelected;?>; <?php
     $videoheadlinestylevalues = explode(',', $heroVideoBtnHeadlineStyleSelected);
     foreach($videoheadlinestylevalues as $videoheadlinevalue) {
       echo $videoheadlinevalue;

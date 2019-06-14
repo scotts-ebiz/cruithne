@@ -19,9 +19,10 @@ body {
 }
 
 body {
-    .hero-video-btn-widget.product-info-container {
+    section.hero-video-btn-widget.product-info-container {
         display: inline-block;
         width: 100%;
+        margin-bottom: 10% !important;
         .product-info {
             font-size: 20px;
             width: 40%;
