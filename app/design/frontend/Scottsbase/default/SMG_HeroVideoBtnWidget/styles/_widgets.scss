@@ -23,6 +23,9 @@ body {
         display: inline-block;
         width: 100%;
         margin-bottom: 10% !important;
+        @media only screen and (max-width: $screen__s) {
+            margin-bottom: 0 !important;
+        }
         .product-info {
             font-size: 20px;
             width: 40%;
@@ -106,6 +109,7 @@ body {
             display: inline-block;
             position: relative;
             padding-left: 2%;
+            margin-bottom: 10%;
             h2 {
                 margin-top: 0.5rem;
                 margin-bottom: 0.5rem;
