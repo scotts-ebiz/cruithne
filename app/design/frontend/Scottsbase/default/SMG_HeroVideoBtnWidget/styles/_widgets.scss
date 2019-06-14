@@ -46,42 +46,18 @@ body {
                 .watch-video {
                     padding: 15px 25px;
                     border-radius: 4px;
-                    i {
-                        height: 25px;
-                        width: 25px;
-                        line-height: 26px;
-                        color: #ffffff;
-                        font-size: 12px;
-                        background: #000000;
-                        border-radius: 50%;
-                        text-align: center;
-                        display: inline-block;
-                        margin-right: 1%;
-                        padding: 5px;
-                        @media only screen and (max-width: $screen__s) {
-                            padding: 2px;
-                        }
-                    }
-                    span {
-                        display: inline-block;
-                        color: #ffffff;
-                        font-size: 16px;
-                        font-weight: 700;
-                        font-family: "Hellix-Heavy";
-                        letter-spacing: 0.5px;
-                        padding-bottom: 3px;
-                        position: relative;
-                        top: -3px;
-                    }
+                    display: inline-block;
+                    position: relative;
+                    color: #ffffff;
+                    transition: background .2s linear;
+                    font-size: 16px;
+                    font-weight: 700;
+                    font-family: "Hellix-Heavy";
+                    letter-spacing: 0.5px;
                     span.embed-code {
                         display: none !important;
                     }
                 }
-                /*
-                .icon-play:before {
-                    content: "\f04b";
-                }
-                */
             }
         }
         .heroVideoBtn-video-overlay {

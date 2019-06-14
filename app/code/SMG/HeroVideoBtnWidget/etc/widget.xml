@@ -78,6 +78,10 @@
                 <label>CTA Background Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
+            <parameter name="heroVideoBtnVideoCtaBgHover" visible="true" xsi:type="text">
+                <label>CTA Background Hover (#xxxxxx)</label>
+                <value>#0a0a0a</value>
+            </parameter>
             <parameter name="heroVideoBtnIframeVideoLink" visible="true" xsi:type="text">
                 <label>iFrame Video Link</label>
             </parameter>
@@ -91,6 +95,30 @@
                 <label>iFrame Height (315)</label>
                 <value>315</value>
             </parameter>
+
+
+            <!-- Background Image Customization -->
+            <parameter name="heroVideoBtnImgLabel" visible="true" xsi:type="block">
+                <label>CUSTOMIZE BACKGROUND IMAGE</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
+            </parameter>
+            <parameter name="heroVideoBtnBgImg" visible="true" xsi:type="block">
+                <label>Background Image</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+            </parameter>
+
+            <!-- Hiding from CMS User | visable:false -->
+            <parameter name="heroVideoBtnImgTopPadding" visible="false" xsi:type="text">
+                <label>Background Top Padding (%)</label>
+                <value>15</value>
+            </parameter>
+
+            <!-- Hiding from CMS User | visable:false -->
+            <parameter name="heroVideoBtnImgBottomPadding" visible="false" xsi:type="text">
+                <label>Background Bottom Padding (in %)</label>
+                <value>15</value>
+            </parameter>
+
         </parameters>
     </widget>
 </widgets>

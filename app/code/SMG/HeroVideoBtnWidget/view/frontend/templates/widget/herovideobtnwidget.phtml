@@ -16,6 +16,7 @@ $heroVideoBtnIframeWidthValue = '';
 $heroVideoBtnIframeVideoLinkValue = '';
 $heroVideoBtnVideoCtaTxtColorValue = '';
 $heroVideoBtnVideoCtaBgColorValue = '';
+$heroVideoBtnVideoCtaBgHoverValue = '';
 
 
 //Setting Headline Color to variable
@@ -119,15 +120,29 @@ if($block->getData('heroVideoBtnVideoCtaBgColor') != ''){
   $heroVideoBtnVideoCtaBgColorValue = '#000000';
 }
 
+//Setting CTA BG Hover to variable
+if($block->getData('heroVideoBtnVideoCtaBgHover') != ''){
+  $heroVideoBtnVideoCtaBgHoverValue = $block->getData('heroVideoBtnVideoCtaBgHover');
+} else {
+  $heroVideoBtnVideoCtaBgHoverValue = '#0a0a0a';
+}
+
+
+
 
 //Setting CTA Text Size to variable
 if($block->getData('heroVideoBtnVideoCtaTxtSize') != ''):
   $heroVideoBtnVideoCtaTxtSizeValue = $block->getData('heroVideoBtnVideoCtaTxtSize');
 endif;
 
-
-
 ?>
+
+<!-- Setting CMS Value of Hover Color -->
+<style>
+    .hero-video-btn-widget .video .watch-video:hover{
+        background-color:<? echo $heroVideoBtnVideoCtaBgHoverValue;?> !important;
+    }
+</style>
 
 
 <section class="hero-video-btn-widget product-info-container align-top">
@@ -149,11 +164,9 @@ endif;
         <div class="video">
           <?php if($this->getData('heroVideoBtnIframeVideoLink') != ''): ?>
               <a class="watch-video play heroVideoBtn-video-link" href="#" style="background-color:<? echo
-              $heroVideoBtnVideoCtaBgColorValue;?>">
-                  <span class="productvideotxt" style="color:<? echo $heroVideoBtnVideoCtaTxtColorValue?><? echo
-                  $heroVideoBtnVideoCtaTxtSizeValue;?>">
+              $heroVideoBtnVideoCtaBgColorValue;?>; color:<? echo $heroVideoBtnVideoCtaTxtColorValue?>; <? echo
+              $heroVideoBtnVideoCtaTxtSizeValue;?>">
                     <?php echo $heroVideoBtnVideoCtaTxtValue;?>
-                </span>
                   <span class="embed-code">
                   <iframe width="<?php echo $heroVideoBtnIframeWidthValue?>" height="<?php echo $heroVideoBtnIframeHeightValue?>"
                           src="<?php echo $heroVideoBtnIframeVideoLinkValue?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="" data-dayt="true">
@@ -162,6 +175,10 @@ endif;
           <?php endif; ?>
         </div>
 
+    </div>
+    <div id="heroVideoBtn-video-overlay" class="heroVideoBtn-video-overlay"></div>
+    <div id="heroVideoBtn-video-container" class="heroVideoBtn-video-container">
+        <div class="video-frame"></div>
     </div>
 </section>
 
