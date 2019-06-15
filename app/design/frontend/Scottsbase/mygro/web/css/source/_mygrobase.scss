@@ -205,18 +205,20 @@ body {
                             }
                         }
                         ul {
-                            .category-item {
+                            li.category-item.level-top {
                                 a.level-top {
-                                    color: red; //$mygro-black
-                                    &:active {
-                                        color: $mygro-green;
-                                        text-decoration: underline;
-                                        font-weight: 700;
-                                    }
+                                    color: $mygro-black;
                                     &:hover {
-                                        color: blue; //$mygro-green;
+                                        color: $mygro-green;
                                         transition: color 0.2s linear;
                                     }
+                                }
+                            }
+                            li.level0.category-item.active.level-top {
+                                a.level-top {
+                                    color: $mygro-green;
+                                    @include font-hellix-heavy;
+                                    border-style: none;
                                 }
                             }
                         }
