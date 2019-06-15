@@ -212,6 +212,11 @@ body {
                                         color: $mygro-green;
                                         transition: color 0.2s linear;
                                     }
+                                    span {
+                                        @media only screen and (max-width: 1023px){
+                                            margin-left: 0;
+                                        }
+                                    }
                                 }
                             }
                             li.level0.category-item.active.level-top {
