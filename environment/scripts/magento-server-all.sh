@@ -3,15 +3,18 @@
 ###############################################################
 #
 # This script calls common commands that are used while working
-# with Magneto 2.  This script makes the following calls.
+# with Magneto 2 on the server.  This script makes the following calls.
+# 
+# There is probably no use for this script locally
 #
+# setup:upgrade
+# setup:di:compile
+# cd tools && gulp clean && gulp styles && cd ..
+# setup:static-content:deploy
 # indexer:reindex
 # cache:flush
-# cache:clean
-# setup:upgrade
+# 
 #
-# This script can be setup as an alias with in the vagrant ssh
-# for the vagrant user to make to update the code as needed.
 #
 ################################################################
 # Magento Direcotry
