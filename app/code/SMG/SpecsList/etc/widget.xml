@@ -1,55 +1,109 @@
 <?xml version="1.0"?>
+
 <widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+
     <widget class="SMG\SpecsList\Block\Widget\Specslist" id="smg_specslist_specslist">
+
         <label>Specs List</label>
+
         <description>Two-column list with headline.</description>
+
         <parameters>
+
             <parameter name="headline" visible="true" xsi:type="text" required="true">
+
                 <label>Callout Headline</label>
+
             </parameter>
+
             <parameter name="bannerheadlinecolor" visible="true" xsi:type="text">
+
                 <label>Banner Headline Color (in #xxxxxx)</label>
+
                 <value>#000000</value>
+
             </parameter>
+
             <parameter name="headlinetextstyle" visible="true" xsi:type="multiselect" source_model="SMG\SpecsList\Model\Source\HeadlineTextStyles">
+
                 <label>Callout Headline Style</label>
+
             </parameter>
+
             <parameter name="listheaders" visible="true" xsi:type="block">
+
                 <label>List Headers (Separated by ||)</label>
-                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
+
             </parameter>
+
             <parameter name="headerstextcolor" visible="true" xsi:type="text">
+
                 <label>Headers Text Color (in #xxxxxx)</label>
+
                 <value>#000000</value>
+
             </parameter>
+
             <parameter name="headertextsize" visible="true" xsi:type="select"
+
                        source_model="SMG\SpecsList\Model\Source\HeaderTextSize">
+
                 <label>Header Text Size (in rem)</label>
+
             </parameter>
+
             <parameter name="headerTextStyle" visible="true" xsi:type="multiselect"
+
                        source_model="SMG\SpecsList\Model\Source\TextStyles">
+
                 <label>Header Text Style</label>
+
             </parameter>
+
             <parameter name="listvalues" visible="true" xsi:type="block">
+
                 <label>List Values (Separated by ||)</label>
-                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
+
             </parameter>
+
             <parameter name="listvaluetextcolor" visible="true" xsi:type="text">
+
                 <label>List Value Text Color (in #xxxxxx)</label>
+
                 <value>#000000</value>
+
             </parameter>
+
             <parameter name="listvaluetextsize" visible="true" xsi:type="select"
+
                        source_model="SMG\SpecsList\Model\Source\TextSize">
+
                 <label>List Value Text Size (in rem)</label>
+
             </parameter>
+
             <parameter name="listvaluetextstyle" visible="true" xsi:type="multiselect"
+
                        source_model="SMG\SpecsList\Model\Source\TextStyles">
+
                 <label>List Value Text Style</label>
+
             </parameter>
+
             <parameter name="listValueBottomPadding" visible="true" xsi:type="select"
+
                        source_model="SMG\SpecsList\Model\Source\PaddingValues">
+
                 <label>List Value Bottom Padding (in %)</label>
+
             </parameter>
+
         </parameters>
+
     </widget>
+
 </widgets>

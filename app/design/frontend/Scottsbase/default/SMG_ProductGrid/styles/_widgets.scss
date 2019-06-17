@@ -9,8 +9,22 @@
             align-items: flex-start;
             padding-bottom: 24px;
             position: relative;
-            .button {
-                margin-bottom: 20px;
+            .shop-cta {
+                margin: 50px 0 0 0;
+                .button {
+                  margin-bottom: 20px;
+                  padding: 15px 45px;
+                  color: #fff;
+                  background: #008065;
+                  line-height: 0;
+                  border-radius: 4px;
+                  letter-spacing: .5px;
+                  font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
+                }
+              .button:hover{
+                  background: #00634F;
+                  transition: background .2s linear;
+              }
             }
             .item {
                 background-size: cover;

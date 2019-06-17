@@ -3,6 +3,9 @@
 .product-callout-widget.product-info-container {
     display: inline-block;
     position: relative;
+    @media only screen and (max-width: $screen__m) {
+        background: none !important;
+    }
     .product-info {
         .productCallout-imageContainer {
             display: inline-block;
