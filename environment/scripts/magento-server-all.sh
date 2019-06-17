@@ -40,7 +40,7 @@ echo ''
 
 # Setup Code Compile
 echo 'Begin Static Content Deploy...'
-sudo php $MAGENTO setup:static-content:deploy
+sudo php $MAGENTO setup:static-content:deploy -f
 echo 'End Static content Deploy.'
 echo ''
 
