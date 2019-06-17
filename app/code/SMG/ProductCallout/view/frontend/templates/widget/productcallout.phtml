@@ -6,11 +6,10 @@ $headlineCustomCssStyle = '';
 $paragraphTextSize = '';
 $selectedBannerTextImageOne = '';
 $selectedBannerTextImageTwo = '';
+$selectAltTextImageOne = '';
+$selectAltTextImageTwo = '';
 $selectedBannerTextImgOneLink = '';
 $selectedBannerTextImgTwoLink = '';
-$selectedBlurbImgOneAltTxt = '';
-$selectedBlurbImgTwoAltTxt = '';
-$selectedBannerCalloutImageAltTxt = '';
 
 
 // If textstyle exists then set to customCssStyles
@@ -48,7 +47,6 @@ if($block->getData('bannerTextImageTwo') !=''):
   $selectedBannerTextImageTwo = $block->getData('bannerTextImageTwo');
 endif;
 
-
 // Check for existence of bannerTextImgOneLink
 if($block->getData('bannerTextImgOneLink') !=''):
   $selectedBannerTextImgOneLink = $block->getData('bannerTextImgOneLink');
@@ -58,21 +56,6 @@ endif;
 // Check for existence of bannerTextImgTwoLink
 if($block->getData('bannerTextImgTwoLink') !=''):
   $selectedBannerTextImgTwoLink = $block->getData('bannerTextImgTwoLink');
-endif;
-
-// Check existence of an alt txt for Blurb Img One
-if($block->getData('blurbImgOneAltTxt') !=''):
-  $selectedBlurbImgOneAltTxt = $block->getData('blurbImgOneAltTxt');
-endif;
-
-// Check existence of an alt txt for Blurb Img Two
-if($block->getData('blurbImgTwoAltTxt') !=''):
-  $selectedBlurbImgTwoAltTxt = $block->getData('blurbImgTwoAltTxt');
-endif;
-
-// Check existence of an alt txt for Callout Img
-if($block->getData('bannerCalloutImageAltTxt') !=''):
-  $selectedBannerCalloutImageAltTxt = $block->getData('bannerCalloutImageAltTxt');
 endif;
 
 ?>
@@ -87,7 +70,7 @@ $block->getData('bgcolor');
   <div class="product-info grid col-2">
     <?php if($this->getData('bannerimage') != ''): ?>
       <div class="productCallout-imageContainer span_6_of_12"> 
-        <img src="<?php echo $block->getData('bannerimage'); ?>" alt="<?php echo $selectedBannerCalloutImageAltTxt;?>">
+        <img src="<?php echo $block->getData('bannerimage'); ?>" alt="<?php echo $block->getData('banneralt'); ?><?php //echo __('Image of MyLawn app from Scotts'); ?>">
       </div>
     <?php endif; ?>
 
@@ -112,37 +95,36 @@ $block->getData('bgcolor');
           echo $paragraphTextSize;
         ?>
         color:<?php echo $block->getData('bannertextlinecolor'); ?>;">
-        <?php echo $block->getData('bannertext'); ?>
+        <?php echo strip_tags($block->getData('bannertext')); ?>
       </p>
 
 
-      <!-- Check if link selected for Blurb Img One -->
+      <!-- Check if link selected for Text Img One -->
       <?php if($selectedBannerTextImgOneLink != ''){?>
         <div class="selected-bannerTextImage selected-bannerTextImageOne">
-          <a href="<?php echo $selectedBannerTextImgOneLink?>" target="_blank" title="<?php echo $selectedBlurbImgOneAltTxt;?>">
-            <img src="<?php echo $selectedBannerTextImageOne?>" alt="<?php echo $selectedBlurbImgOneAltTxt;?>">
+          <a href="<?php echo $selectedBannerTextImgOneLink; ?>" target="_blank" title="<?php echo $block->getData('alttextimage1'); ?>">
+            <img src="<?php echo $selectedBannerTextImageOne; ?>" alt="<?php echo $block->getData('alttextimage1'); ?>">
           </a>
         </div>
       <?php }elseif ($selectedBannerTextImageOne != ''){?>
         <div class="selected-bannerTextImage selected-bannerTextImageOne">
-          <img src="<?php echo $selectedBannerTextImageOne?>">
+          <img src="<?php echo $selectedBannerTextImageOne; ?>" alt="<?php echo $block->getData('alttextimage1'); ?>">
         </div>
       <?php }else{?>
         <!-- No One Img was selected -->
       <?php }?>
 
 
-      <!-- Check if link selected for Blurb Img Two -->
+      <!-- Check if link selected for Text Img Two -->
       <?php if($selectedBannerTextImgTwoLink != ''){?>
         <div class="selected-bannerTextImage selected-bannerTextImageTwo">
-          <a href="<?php echo $selectedBannerTextImgTwoLink?>" target="_blank" title="<?php echo
-          $selectedBlurbImgTwoAltTxt;?>">
-            <img src="<?php echo $selectedBannerTextImageTwo?>" alt="<?php echo $selectedBlurbImgTwoAltTxt;?>">
+          <a href="<?php echo $selectedBannerTextImgTwoLink; ?>" target="_blank" title="<?php echo $block->getData('alttextimage2'); ?>">
+            <img src="<?php echo $selectedBannerTextImageTwo; ?>" alt="<?php echo $block->getData('alttextimage2'); ?>">
           </a>
         </div>
       <?php }elseif ($selectedBannerTextImageTwo != ''){?>
         <div class="selected-bannerTextImage selected-bannerTextImageTwo">
-          <img src="<?php echo $selectedBannerTextImageTwo?>">
+          <img src="<?php echo $selectedBannerTextImageTwo?>" alt="<?php echo $block->getData('alttextimage2'); ?>">
         </div>
       <?php }else{?>
         <!-- No Two Img was selected -->
