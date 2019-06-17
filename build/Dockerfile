@@ -123,3 +123,5 @@ ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
 
 # CMD "exec /usr/sbin/apachectl -DFOREGROUND -k start"
 # CMD /usr/sbin/apachectl -DFOREGROUND 
+
+# Let's generate a new commit hash.
