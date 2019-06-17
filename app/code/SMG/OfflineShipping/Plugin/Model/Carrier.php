@@ -50,6 +50,11 @@ class Carrier
     protected $scopeConfig;
 
     /**
+     * @var \SMG\OfflineShipping\Helper\Config
+     */
+    protected $config;
+
+    /**
      * @param SourceMethod         $sourceMethod
      * @param ResultFactory        $rateResultFactory
      * @param MethodFactory        $rateMethodFactory
@@ -59,12 +64,14 @@ class Carrier
         SourceMethod $sourceMethod,
         ResultFactory $rateResultFactory,
         MethodFactory $rateMethodFactory,
-        ScopeConfigInterface $scopeConfig
+        ScopeConfigInterface $scopeConfig,
+        \SMG\OfflineShipping\Helper\Config $config
     ) {
         $this->sourceMethod = $sourceMethod;
         $this->rateResultFactory = $rateResultFactory;
         $this->rateMethodFactory = $rateMethodFactory;
         $this->scopeConfig = $scopeConfig;
+        $this->config = $config;
     }
 
     /**
@@ -80,9 +87,7 @@ class Carrier
         $allowedCodes = $this->getConfiguredAllowedMethods();
         $list = [];
 
-        foreach ($availableMethods as $method) {
-            $code = $method->getShippingMethod();
-            $title = $method->getDescription();
+        foreach ($availableMethods as $code => $title) {
             if (\in_array($code, $allowedCodes)) {
                 $list[$code] = $title;
             }
@@ -105,19 +110,20 @@ class Carrier
         }
 
         $allowedMethods = $this->getConfiguredAllowedMethods();
+        $allMethods = $this->sourceMethod->getAvailableMethods();
 
         /** @var \SMG\OfflineShipping\Model\ShippingConditionCode $method */
-        foreach ($this->sourceMethod->getAvailableMethods() as $conditionCode) {
-            if (\in_array($conditionCode->getShippingMethod(), $allowedMethods)) {
+        foreach ($this->config->getFlatRatePrices() as $code => $rateInfo) {
+            if (\in_array($code, $allowedMethods)) {
                 /** @var Method $method */
                 $method = $this->rateMethodFactory->create();
                 $method->setCarrier(self::CODE);
                 $carrierTitle = $subject->getConfigData('title');
                 $method->setCarrierTitle($carrierTitle);
-                $method->setMethod($conditionCode->getShippingMethod());
-                $method->setMethodTitle($conditionCode->getDescription());
-                $method->setPrice($conditionCode->getRate());
-                $method->setCost($conditionCode->getRate());
+                $method->setMethod($code);
+                $method->setMethodTitle($allMethods[$code]);
+                $method->setPrice($rateInfo['rate']);
+                $method->setCost($rateInfo['rate']);
                 $result->append($method);
             }
         }
