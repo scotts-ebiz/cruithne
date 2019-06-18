@@ -6,18 +6,18 @@
         <parameters>
             <!-- Customize Banner Headline -->
             <parameter name="bannerHeadlineCustomizeLabel" visible="true" xsi:type="block">
-                <label>CUSTOMIZE BANNER HEADLINE</label>
+                <label>CUSTOMIZE HEADLINE</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannerheadline" visible="true" xsi:type="text" required="true">
-                <label>Banner Headline</label>
+                <label>Headline Text</label>
             </parameter>
             <parameter name="bannerheadlinecolor" visible="true" xsi:type="text">
-                <label>Banner Headline Color (in #xxxxxx)</label>
+                <label>Headline Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
             <parameter name="headlinetextstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCallout\Model\Source\HeadlineTextStyles">
-                <label>Banner Headline Style</label>
+                <label>Headline Style</label>
             </parameter>
 
 
@@ -31,7 +31,7 @@
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
             </parameter>
             <parameter name="bannertextlinecolor" visible="true" xsi:type="text">
-                <label>Blurb Text Color (in #xxxxxx)</label>
+                <label>Blurb Text Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
             <parameter name="bannertextsize" visible="true" xsi:type="select"
@@ -86,7 +86,7 @@
                 <label>Callout Image Alt Text</label>
             </parameter>
             <parameter name="bgcolor" visible="true" xsi:type="text">
-                <label>Background Color (in #xxxxxx)</label>
+                <label>Background Color (#xxxxxx)</label>
                 <value>#ffffff</value>
             </parameter>
             <parameter name="bgimage" visible="true" xsi:type="block">
