@@ -15,16 +15,27 @@ class ObserverItem implements ObserverInterface{
 
     public function execute(\Magento\Framework\Event\Observer $observer)
     {
-	 $params = $this->_request->getParams();
-	 $quote = $observer->getData('order');
-	 $order = $observer->getData('order');
-	 $orderItems = $order->getItems();
-	 if(!empty($params['item'])){
-		 foreach ($orderItems as $quoteItem){
-			$quoteItemid = $quoteItem->getQuoteItemId();
-			if(!empty($params['item'][$quoteItemid]['reason_code']))
-			$quoteItem->setReasonCode($params['item'][$quoteItemid]['reason_code']);
-		 }
-	 }
+   $params = $this->_request->getParams();
+   $quote = $observer->getData('order');
+   $order = $observer->getData('order');
+   $orderItems = $order->getAllVisibleItems();
+   if(!empty($params['item'])){
+     foreach ($orderItems as $quoteItem){
+      $quoteItemId = $quoteItem->getQuoteItemId();
+      $bundle = $quoteItem->getBuyRequest()->getBundleOption();
+      if($quoteItem->getProductType() == 'bundle')
+      $bundleId = $quoteItemId;       
+      elseif($quoteItem->getProductType() == 'simple' && isset($bundle))
+      $bundleId = $bundleId;
+      else
+      $bundleId = $quoteItemId;
+      
+      if(!empty($params['item'][$bundleId]['reason_code']) && isset($bundle))
+      $quoteItem->setReasonCode($params['item'][$bundleId]['reason_code']);
+      elseif(!empty($params['item'][$quoteItemId]['reason_code']))
+      $quoteItem->setReasonCode($params['item'][$quoteItemId]['reason_code']);
+     }
+   }
+   
     }
 }
