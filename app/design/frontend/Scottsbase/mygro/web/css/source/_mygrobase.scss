@@ -572,7 +572,13 @@ width: 48%;
                             }	
                         }	
                     }	
-                }	
+                }
+                .product-quickInfo {
+                    display: none;
+                }
+                .product-quickInfo.active {
+                    display: inline-block;
+                }
             }	
         }	
         .product-social-links {	

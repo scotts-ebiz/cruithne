@@ -39,12 +39,46 @@
       </div>
     </div>
   </div>
-This is a test.
 <?php endif; ?>
+
+
+<!-- Product Quick Info -->
+<div class="product-quickInfo" id="sensors-quickInfo">
+    <div class="quickInfo-item">
+        <img src="">
+        <span>For indoor and outdoor plants</span>
+    </div>
+    <div class="quickInfo-item">
+        <img src="">
+        <span>Easy to<br>setup</span>
+    </div>
+    <div class="quickInfo-item">
+        <img src="">
+        <span>Managed from your phone</span>
+    </div>
+</div>
+<div class="product-quickInfo" id="controllers-quickInfo">
+    <div class="quickInfo-item">
+        <img src="">
+        <span>Uses local weather data</span>
+    </div>
+    <div class="quickInfo-item">
+        <img src="">
+        <span>Easy to<br>install</span>
+    </div>
+    <div class="quickInfo-item">
+        <img src="">
+        <span>Connect to your phone</span>
+    </div>
+</div>
+
+
+<!-- Calling JS -->
 <script type="text/x-magento-init">
-    {
-        "#product_addtocart_form": {
-            "Magento_Catalog/js/validate-product": {}
-        }
+
+{
+    "*": {
+        "Magento_Catalog/js/product-quick-info": {}
     }
+}
 </script>
