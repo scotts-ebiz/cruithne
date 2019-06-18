@@ -52,32 +52,33 @@ class OrderCreateBeforeSave implements ObserverInterface
         $order = $observer->getEvent()->getOrder();
         $quoteId = $order->getQuoteId();
         $quote = $this->_quoteFactory->create()->load($quoteId);    
-$items = $quote->getAllItems();
-$State= $quote->getShippingAddress()->getRegion();
-  
-foreach($items as $item) {
-$itemId = $item-> getItemId();
-$productId=$item->getProductId();
-$product=$this->_productloader->create()->load($productId);
-$productname[] = $product->getName();
-$StateNotAllowd= $product->getStateNotAllowed();
-$data = explode(',', $StateNotAllowd);  
-   $option_value = array(); 
-   foreach($data as $value)
+        $items = $quote->getAllItems();
+    if($quote->getShippingAddress()){
+        $State= $quote->getShippingAddress()->getRegion();
+    foreach($items as $item) {
+        $itemId = $item-> getItemId();
+        $productId=$item->getProductId();
+        $product=$this->_productloader->create()->load($productId);
+        $productname[] = $product->getName();
+        $StateNotAllowd= $product->getStateNotAllowed();
+        $data = explode(',', $StateNotAllowd);  
+        $option_value = array(); 
+    foreach($data as $value)
    {
-                   $attr = $product->getResource()->getAttribute('state_not_allowed');
-                   $option_value[] = $attr->getSource()->getOptionText($value);
+        $attr = $product->getResource()->getAttribute('state_not_allowed');
+        $option_value[] = $attr->getSource()->getOptionText($value);
    }
-                if(in_array($State, $option_value)){
-                 $validate = true;
-                }
+    if(in_array($State, $option_value)){
+        $validate = true;
+    }
 
 }
-if($validate){
+   if($validate){
    echo $message="Unfortunately one or more of the selected products is restricted from shipping to ".$State.". ";
                 throw new \Magento\Framework\Exception\NoSuchEntityException(__($message));
                 return $this->_responseFactory->create()->setRedirect($redirectionUrl)->sendResponse();
                 die;  
-             }       
+            }       
+        }
     }
 }
