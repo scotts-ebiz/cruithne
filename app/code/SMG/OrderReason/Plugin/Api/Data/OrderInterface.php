@@ -1,8 +1,8 @@
 <?php
-namespace SMG\OrderReason\Plugin;
+namespace SMG\OrderReason\Plugin\Api\Data;
 use Magento\Framework\App\RequestInterface;
 use Magento\Sales\Model\Order;
-class ObserverItem{
+class OrderInterface{
     
     protected $_request;
     protected $_order;
@@ -37,7 +37,6 @@ class ObserverItem{
 			elseif(!empty($params['item'][$quoteItemId]['reason_code']))
 			$quoteItem->setReasonCode($params['item'][$quoteItemId]['reason_code']);
 		 }
-	 }
-	 
-    }
+	  }
+   }
 }

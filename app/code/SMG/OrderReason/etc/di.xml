@@ -3,6 +3,6 @@
     xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magento\Sales\Block\Adminhtml\Order\Create\Items\Grid" type="SMG\OrderReason\Block\Adminhtml\Order\Create\Items\Grid"/>
     <type name="Magento\Sales\Api\Data\OrderInterface">
-      <plugin name="SMG_OrderReason_Plugin_ObserverItem" type="SMG\OrderReason\Plugin\ObserverItem" sortOrder="1"/>
+      <plugin name="SMG_OrderReason_Plugin_OrderInterface" type="SMG\OrderReason\Plugin\Api\Data\OrderInterface" sortOrder="1"/>
     </type>
 </config>
