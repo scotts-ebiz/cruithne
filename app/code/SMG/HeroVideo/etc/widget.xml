@@ -91,7 +91,6 @@
             </parameter>
             <!-- Hide from CMS user -->
             <parameter name="iframeHeight" visible="false" xsi:type="text">
-
                 <label>iFrame Height (315)</label>
                 <value>315</value>
             </parameter>
