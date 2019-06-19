@@ -63,15 +63,14 @@
             <parameter name="pcvIframeVideoLink" visible="true" xsi:type="text">
                 <label>iFrame Video Link</label>
             </parameter>
-            <parameter name="pcvIframeWidth" visible="true" xsi:type="text">
+            <parameter name="pcvIframeWidth" visible="false" xsi:type="text">
                 <label>iFrame Width (560)</label>
                 <value>560</value>
             </parameter>
-            <parameter name="pcvIframeHeight" visible="true" xsi:type="text">
+            <parameter name="pcvIframeHeight" visible="false" xsi:type="text">
                 <label>iFrame Height (315)</label>
                 <value>315</value>
             </parameter>
-
 
             <!-- Customize Callout Img / Background -->
             <parameter name="pcvImgBgCustomizeLabel" visible="true" xsi:type="block">

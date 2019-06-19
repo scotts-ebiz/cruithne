@@ -4,7 +4,6 @@
     <module name="SMG_OrderReason" setup_version="1.0.0">
         <sequence>
             <module name="Magento_Sales" />
-                <module name="SMG_Sap" />
         </sequence>
     </module>
 </config>
