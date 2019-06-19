@@ -226,6 +226,13 @@ body {
                                     border-style: none;
                                 }
                             }
+                            li.level0.category-item.active.level-top {
+                                a.level-top {
+                                    color: $mygro-green;
+                                    @include font-hellix-heavy;
+                                    border-style: none;
+                                }
+                            }
                         }
                     }
                 }
