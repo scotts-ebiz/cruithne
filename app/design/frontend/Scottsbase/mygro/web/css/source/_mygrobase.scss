@@ -207,20 +207,32 @@ body {
                             }
                         }
                         ul {
-                            .first {
-                                .level-top {
-                                    span {
-                                        @include font-hellix-heavy(false, $mygro-green);
-                                    }
-                                }
-                            }
-                            .category-item {
-                                span {
+                            li.category-item.level-top {
+                                a.level-top {
                                     color: $mygro-black;
                                     &:hover {
                                         color: $mygro-green;
                                         transition: color 0.2s linear;
                                     }
+                                    span {
+                                        @media only screen and (max-width: 1023px){
+                                            margin-left: 0;
+                                        }
+                                    }
+                                }
+                            }
+                            li.level0.category-item.active.level-top {
+                                a.level-top {
+                                    color: $mygro-green;
+                                    @include font-hellix-heavy;
+                                    border-style: none;
+                                }
+                            }
+                            li.level0.category-item.active.level-top {
+                                a.level-top {
+                                    color: $mygro-green;
+                                    @include font-hellix-heavy;
+                                    border-style: none;
                                 }
                             }
                         }

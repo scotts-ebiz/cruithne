@@ -1,6 +1,6 @@
-/* Widget Start - Location - App / design / frontend / Scottsbase / default / SMG_HeroVideo / styles */
+/* Widget Start - Location - App / design / frontend / Scottsbase / default / SMG_HeroVideoBtnWidget / styles */
 body {
-    .hero-video-widget.product-info-container {
+    .hero-video-btn-widget.product-info-container {
         .product-info.text-left {
             text-align: left;
             margin-left: 75px;
@@ -19,9 +19,13 @@ body {
 }
 
 body {
-    .hero-video-widget.product-info-container {
+    section.hero-video-btn-widget.product-info-container {
         display: inline-block;
         width: 100%;
+        margin-bottom: 10% !important;
+        @media only screen and (max-width: $screen__s) {
+            margin-bottom: 0 !important;
+        }
         .product-info {
             font-size: 20px;
             width: 40%;
@@ -44,45 +48,23 @@ body {
                     top: 40px;
                 }
                 .watch-video {
-                    i {
-                        height: 25px;
-                        width: 25px;
-                        line-height: 26px;
-                        color: #ffffff;
-                        font-size: 12px;
-                        background: #000000;
-                        border-radius: 50%;
-                        text-align: center;
-                        display: inline-block;
-                        margin-right: 1%;
-                        padding: 5px;
-                        @media only screen and (max-width: $screen__s) {
-                            padding: 2px;
-                        }
-                    }
-                    span {
-                        display: inline-block;
-                        color: #ffffff;
-                        font-size: 16px;
-                        font-weight: 700;
-                        font-family: "Hellix-Heavy";
-                        letter-spacing: 0.5px;
-                        padding-bottom: 3px;
-                        position: relative;
-                        top: -3px;
-                    }
+                    padding: 15px 25px;
+                    border-radius: 4px;
+                    display: inline-block;
+                    position: relative;
+                    color: #ffffff;
+                    transition: background .2s linear;
+                    font-size: 16px;
+                    font-weight: 700;
+                    font-family: "Hellix-Heavy";
+                    letter-spacing: 0.5px;
                     span.embed-code {
                         display: none !important;
                     }
                 }
-                /*
-                .icon-play:before {
-                    content: "\f04b";
-                }
-                */
             }
         }
-        .heroVideo-video-overlay {
+        .heroVideoBtn-video-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -94,7 +76,7 @@ body {
             opacity: 0;
             transition: .2s visibility linear, .2s opacity linear;
         }
-        .heroVideo-video-container {
+        .heroVideoBtn-video-container {
             display: none;
             position: fixed;
             top: 50%;
@@ -119,7 +101,7 @@ body {
             }
         }
     }
-    .hero-video-mobileContent {
+    .hero-video-btn-mobileContent {
         @media only screen and (min-width: $screen__s) {
             display: none;
         }
@@ -127,6 +109,7 @@ body {
             display: inline-block;
             position: relative;
             padding-left: 2%;
+            margin-bottom: 10%;
             h2 {
                 margin-top: 0.5rem;
                 margin-bottom: 0.5rem;
@@ -136,21 +119,17 @@ body {
                 font-size: 1.0rem;
             }
         }
-
-
-
-
     }
 }
 
 /* Styling relating to the Product Callout Video Widget */
-body.heroVideo-video-open {
-    .hero-video-widget.product-info-container {
-        .heroVideo-video-overlay {
+body.heroVideoBtn-video-open {
+    .hero-video-btn-widget.product-info-container {
+        .heroVideoBtn-video-overlay {
             visibility: visible;
             opacity: 1;
         }
-        .heroVideo-video-container {
+        .heroVideoBtn-video-container {
             display: block;
         }
     }

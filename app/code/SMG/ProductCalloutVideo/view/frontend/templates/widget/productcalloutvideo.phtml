@@ -84,11 +84,13 @@ endif;
             <div class="productCalloutVideo-selectedImgContainer" style="background: url('<?php echo $block->getData
             ('pcvCalloutImage'); ?>') no-repeat;
               background-size:cover; background-position:center;">
-                <a class="productCalloutVideo-watchVideo play video-link" href="#">
+                <a class="productCalloutVideo-watchVideo play productCalloutVideo-video-link" href="#">
                     <i class="icon-play fas fa-play" style="color:<?php echo $pcvIconColorSelected?>;
                       background-color:<?php echo $pcvIconBackgroundColorSelected?>;"></i>
                     <span class="embed-code">
-                        <iframe width="<?php echo $pcvIframeWidthSelected?>" height="<?php echo $pcvIframeHeightSelected?>" src="<?php echo $pcvIframeVideoLinkSelected?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="" data-dayt="true">
+                        <iframe width="<?php echo $pcvIframeWidthSelected;?>" height="<?php echo
+                        $pcvIframeHeightSelected;?>" src="<?php echo $pcvIframeVideoLinkSelected?>" frameborder="0"
+                                allow="autoplay; encrypted-media" allowfullscreen="" data-dayt="true">
                         </iframe>
                     </span>
                 </a>
@@ -113,13 +115,14 @@ endif;
               <?php echo $block->getData('pcvBannerText');?>
             </p>
         </div>
-        <div id="video-overlay" class="video-overlay"></div>
-        <div id="video-container" class="video-container">
+        <div id="productCalloutVideo-video-overlay" class="productCalloutVideo-video-overlay"></div>
+        <div id="productCalloutVideo-video-container" class="productCalloutVideo-video-container">
             <div class="video-frame"></div>
         </div>
     </div>
 </section>
 
+<!-- Calling JS -->
 <script type="text/x-magento-init">
 
 {
