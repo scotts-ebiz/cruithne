@@ -853,19 +853,24 @@
 		}
 		#discount-coupon-form{
 			.action.apply.primary{
-				background: none;
-				border: 0;
-				display: inline-block;
-				font-size: $font14;
-				color: $color_green_shade !important;
-				font-weight: 700 !important;
-				background-color: unset !important;
-				padding: 0 !important;
-				text-align: left;
-				padding: 10px !important;
-				background: #075534 !important;
-				color: #fff !important;
-				border-radius: 0;
+				height:30px;
+                background: none;
+                border: 0;
+                display: inline-block;
+                font-size: $font14;
+                color: $color_green_shade !important;
+                font-weight: 700 !important;
+                background-color: unset !important;
+                padding: 0 !important;
+                text-align: center;
+                padding: 5px 10px 5px 10px !important;
+                background: #075534 !important;
+                color: #fff !important;
+                border-radius: 0;
+                margin-left: 20px;
+                @include max-screen($screen__s){
+                    margin-left:0px;
+                }
 			}
 		}
 	}
@@ -1592,6 +1597,7 @@
 	}
 	.cust-btn-add {
 		font-size: $font14;
+		float: right;
 
 		&:before{
 			content:'+';
@@ -1723,7 +1729,7 @@
 				padding: 0 !important;
 				text-align: center;
 				
-				padding: 10px !important;
+				padding: 5px 10px 5px 10px !important;
 				background: #075534 !important;
 				color: #fff !important;
 				border-radius: 0;
@@ -1732,9 +1738,23 @@
 			#discount-form {
 				.actions-toolbar {
 				    margin-left: 25.8%;
+					margin-top: -43px;
+					@include max-screen($screen__s){
+						margin-top:0px;
+					}
 				}
 				.primary {
 					float: none !important;
+					margin-left: 20px;
+					@include max-screen($screen__s){
+						margin-left: 0;
+					}
+				}
+				.action:last-child{
+				    height: 30px;
+					@include max-screen($screen__s){
+						height: 100%;
+					}
 				}
 			}
 		}
@@ -2464,4 +2484,171 @@ button.action{
 			}
 		}
 	}
+}
+
+.billing-address-details{
+    .action-edit-address{
+        width:auto;
+    }
+}
+
+.form-shipping-address{
+    ._error{
+            padding-bottom: 10px;
+    }
+    .control{
+        position:relative;
+        .field-error{
+            position:absolute;
+        }
+    }
+}
+
+.messages{
+	.message.error{
+		font-size:16px;
+	}
+}
+
+.catalog-product-view{
+	#maincontent{
+		margin-top:40px;
+	}
+}
+
+.tabpanel__wrapper{
+	.tabpanel__image{
+		img{
+			width: 250px;
+			height:350px;
+			max-height:350px;
+		}
+	}
+}
+
+.empty-cart-page{
+        .column.main{
+                min-height:0px;
+                padding-bottom: 0px;
+            }
+            .page-footer{
+                margin-top:0px;
+            }
+            
+    .page-main {
+        flex-grow: 0;
+        flex-basis: unset;
+    }
+}
+
+.faq-wrapper{
+	.faq-content{
+		.page-title{
+			@include max-screen($screen__s){
+				margin-top:70px;
+			}
+		}
+	}
+}
+
+.opc-wrapper{
+    .checkout-payment-method{
+        .giftcardaccount{
+            .form-giftcard-account{
+                max-width:100%;
+                .form-giftcard-account{
+                    position:relative;
+                    .field{
+                        margin:0 0 0px;
+                        @include max-screen($screen__s){
+                            margin:0px;
+                        }
+                    }
+                }
+            }
+            .payment-option-content{
+                .payment-option-inner{
+                    float:left;
+                    max-width:50%;
+                    @include max-screen($screen__s){
+                        max-width:100%;
+                        margin:0px;
+                        float: none;
+                    }
+                }
+                .actions-toolbar{
+                    float: left;
+                   // bottom: 50px;
+                    @include max-screen($screen__s){
+                        float: left;
+                        width:100%;
+                    }
+                }
+                div.primary{
+                    float: left;
+                    margin-right: 20px;
+                    @include max-screen($screen__s){
+                        width:48%;
+                        margin-right:0px;
+                    }
+                    .action.primary{
+                        height: 30px;
+                    }
+                }
+                .secondary{
+                    float: left;
+                    @include max-screen($screen__s){
+                        float: left;
+                        width: 48%;
+                        margin-left: 5px;
+                    }
+                    .action{
+                        height:30px;
+                        padding: 5px 20px;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.cart-container{
+    .cart-summary-divlink{
+        #discount-coupon-form{
+            .field{
+                float:left;
+                 @include max-screen($screen__s){
+                    float:none;
+                }
+                .label{
+                    width:unset;
+                }
+                .control{
+                    div.mage-error{
+                        font-size:1rem;
+                    }
+                }
+            }
+        }
+    }
+}
+
+.field{
+    .control{
+        .field-error{
+            margin-top:0px;
+            bottom: 0;
+        }
+    }
+}
+.form-shipping-address{
+    .control{
+        height:85px;
+        @include max-screen($screen__s){
+            height:54px;
+        }
+    }
+    ._error {
+        padding-bottom: 0;
+    }
 }
