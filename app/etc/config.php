@@ -277,6 +277,7 @@ return [
         'SMG_GroupedAssociatedProducts' => 1,
         'SMG_HeroCallout' => 1,
         'SMG_HeroVideo' => 1,
+        'SMG_HeroVideoBtnWidget' => 1,
         'SMG_HeroZip' => 1,
         'SMG_IconList' => 1,
         'SMG_LandingPage' => 1,
