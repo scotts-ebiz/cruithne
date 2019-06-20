@@ -35,9 +35,6 @@
                 <field id="title" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Title</label>
                 </field>
-                <field id="allowed_methods_info" translate="label comment" type="label" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="0">
-                    <comment>Allowed shipping methods are configurable at the store view scope</comment>
-                </field>
                 <field id="allowed_methods" translate="label" type="multiselect" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1" canRestore="1">
                     <label>Allowed Methods</label>
                     <source_model>SMG\OfflineShipping\Model\Config\Source\Method</source_model>

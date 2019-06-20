@@ -112,6 +112,10 @@ class Carrier
         $allowedMethods = $this->getConfiguredAllowedMethods();
         $allMethods = $this->sourceMethod->getAvailableMethods();
 
+        if (!\in_array('flatrate', \array_values($allowedMethods))) {
+            $result->reset();
+        }
+
         /** @var \SMG\OfflineShipping\Model\ShippingConditionCode $method */
         foreach ($this->config->getFlatRatePrices() as $code => $rateInfo) {
             if (\in_array($code, $allowedMethods)) {
