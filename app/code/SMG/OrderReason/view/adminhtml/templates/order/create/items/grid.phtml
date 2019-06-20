@@ -83,18 +83,18 @@
                                 <?php $creditReasonCodes = $block->getCreditReasonCodes();?>
                                 <span><?= __('Reason Code') ?>:</span>
                                  <select class="admin__control-select" id="order_item_<?= /* @escapeNotVerified */ $_item->getId() ?>_reason_code" name="item[<?= /* @escapeNotVerified */ $_item->getId() ?>][reason_code]">
-                                     <option value="">Select Reason</option>
-                                                        <?php
-                                                    // get the list of credit reason codes
-                                                    
-                                                    foreach ($creditReasonCodes as $creditReasonCode)
-                                                    {
-                                                ?>
-                                                <option value="<?= /* @escapeNotVerified */ $creditReasonCode->getData('reason_code') ?>"><?= /* @escapeNotVerified */ $creditReasonCode->getData('short_desc'); ?></option>
-                                                <?
-                                                    }
-                                                ?>
-                                     </select>
+									 <option value="">Select Reason</option>
+											            <?php
+													// get the list of credit reason codes
+													
+													foreach ($creditReasonCodes as $creditReasonCode)
+													{
+												?>
+												<option value="<?= /* @escapeNotVerified */ $creditReasonCode->getData('reason_code') ?>"><?= /* @escapeNotVerified */ $creditReasonCode->getData('short_desc'); ?></option>
+												<?
+													}
+												?>
+									 </select>
                             </div>
                             <div class="product-configure-block">
                                 <?= $block->getConfigureButtonHtml($_item) ?>

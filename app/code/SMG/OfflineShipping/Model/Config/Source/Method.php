@@ -22,6 +22,10 @@ class Method implements OptionSourceInterface
         foreach ($this->getAvailableMethods() as $code => $title) {
             $options[] = ['value' => $code, 'label' => $title];
         }
+        $options[] = [
+            'value' => 'flatrate',
+            'label' => __('Native Flatrate Shipping')
+        ];
         return $options;
     }
 
@@ -33,7 +37,7 @@ class Method implements OptionSourceInterface
         return [
             'fedex-nextday' => __('Fedex Next Day'),
             'fedex-2ndday' => __('Fedex 2nd Day'),
-            'flat-rate-shipping' => __('Flat Rate Shipping'),
+            'flat-rate-shipping' => __('Flat Rate Shipping')
         ];
     }
 }
