@@ -4,4 +4,3 @@
     'SMG_ShippingRestrict',
     __DIR__
 );
-
