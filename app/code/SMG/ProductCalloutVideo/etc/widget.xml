@@ -72,7 +72,6 @@
                 <value>315</value>
             </parameter>
 
-
             <!-- Customize Callout Img / Background -->
             <parameter name="pcvImgBgCustomizeLabel" visible="true" xsi:type="block">
                 <label>CUSTOMIZE IMAGE</label>
