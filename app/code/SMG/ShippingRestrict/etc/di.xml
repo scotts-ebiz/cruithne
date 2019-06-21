@@ -6,4 +6,5 @@
      <type name="Magento\Sales\Api\Data\OrderInterface">
       <plugin name="SMG_ShippingRestrict_Plugin_OrderInterface" type="SMG\ShippingRestrict\Plugin\Api\Data\OrderInterface" sortOrder="1"/>
     </type>
+
 </config>

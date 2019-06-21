@@ -11,7 +11,7 @@ class OrderInterface{
     protected $_responseFactory;
     protected $_url;
     
-public function __construct(RequestInterface $request,
+    public function __construct(RequestInterface $request,
     \Magento\Quote\Model\QuoteFactory $quoteFactory,
     \Magento\Catalog\Model\ProductFactory $productFactory,
     \Magento\Framework\App\ResponseFactory $responseFactory,
@@ -26,8 +26,8 @@ public function __construct(RequestInterface $request,
 	    $this->_responseFactory = $responseFactory;
     }
     
-public function beforePlace(
-    \Magento\Sales\Api\Data\OrderInterface $subject
+    public function beforePlace(
+        \Magento\Sales\Api\Data\OrderInterface $subject
      )
     {
 		$redirectionUrl = $this->_url->getUrl('sales/order_create/index');
@@ -52,6 +52,7 @@ public function beforePlace(
                 if(in_array($State, $option_value)){
                  $validate = true;
                 }
+
 			}
 			if($validate){
 			    echo $message="Unfortunately one or more of the selected products is restricted from shipping to ".$State.".";
