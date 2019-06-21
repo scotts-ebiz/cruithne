@@ -1,5 +1,4 @@
 define(['jquery'], function($){
-    alert('This is a testy!');
 
     if ($("body").hasClass("product-sensors")){
         alert('Product Sensors');

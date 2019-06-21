@@ -73,9 +73,18 @@
 </div>
 
 
-<!-- Calling JS -->
+<!-- Calling Active Nav JS -->
 <script type="text/x-magento-init">
+{
+    "*": {
+        "Magento_Catalog/js/groupedPdp-setActiveNav": {}
+    }
+}
+</script>
 
+
+<!-- Calling Quick Info JS -->
+<script type="text/x-magento-init">
 {
     "*": {
         "Magento_Catalog/js/product-quick-info": {}
