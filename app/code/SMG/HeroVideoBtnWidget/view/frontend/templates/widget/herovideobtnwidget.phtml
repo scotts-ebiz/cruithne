@@ -1,0 +1,236 @@
+<?php
+
+
+//Declare Vars
+$heroVideoBtnHeadlineTxtColorSelected = '';
+$heroVideoBtnHeadlineTxtMobileColorSelected = '';
+$heroVideoBtnHeadlineStyleSelected = '';
+$heroVideoBtnBlurbTxtValue = '';
+$heroVideoBtnBlurbColorValue = '';
+$heroVideoBtnBlurbMobileColorValue = '';
+$heroVideoBtnBlurbTxtSizeValue = '';
+$heroVideoBtnBlurbTxtStyleSelected = '';
+$heroVideoBtnBlurbTxtAlignValue = '';
+$heroVideoBtnVideoCtaTxtValue = '';
+$heroVideoBtnIframeWidthValue = '';
+$heroVideoBtnIframeVideoLinkValue = '';
+$heroVideoBtnVideoCtaTxtColorValue = '';
+$heroVideoBtnVideoCtaBgColorValue = '';
+$heroVideoBtnVideoCtaBgHoverValue = '';
+$heroVideoBtnBgImgValue = '';
+$heroVideoBtnImgTopPaddingValue = '';
+$heroVideoBtnImgBottomPaddingValue = '';
+
+
+//Setting Headline Color to variable
+if($block->getData('heroVideoBtnHeadlineTxtColor') != ''){
+  $heroVideoBtnHeadlineTxtColorSelected = $block->getData('heroVideoBtnHeadlineTxtColor');
+} else {
+    $heroVideoBtnHeadlineTxtColorSelected = '#000000';
+}
+
+
+//Setting Mobile Headline Color to variable
+if($block->getData('heroVideoBtnHeadlineTxtMobileColor') != ''){
+  $heroVideoBtnHeadlineTxtMobileColorSelected = $block->getData('heroVideoBtnHeadlineTxtMobileColor');
+} else {
+  $heroVideoBtnHeadlineTxtMobileColorSelected = '#000000';
+}
+
+
+//Setting Blurb Text variable
+if($block->getData('heroVideoBtnBlurbTxt') != ''){
+  $heroVideoBtnBlurbTxtValue = $block->getData('heroVideoBtnBlurbTxt');
+} else {
+  $heroVideoBtnBlurbTxtValue = '';
+}
+
+
+//Setting Blurb Txt Color variable
+if($block->getData('heroVideoBtnBlurbColor') != ''){
+  $heroVideoBtnBlurbColorValue = $block->getData('heroVideoBtnBlurbColor');
+} else {
+  $heroVideoBtnBlurbColorValue = '#000000';
+}
+
+
+//Setting Blurb Mobile Txt Color variable
+if($block->getData('heroVideoBtnBlurbMobileColor') != ''){
+  $heroVideoBtnBlurbMobileColorValue = $block->getData('heroVideoBtnBlurbMobileColor');
+} else {
+  $heroVideoBtnBlurbMobileColorValue = '#000000';
+}
+
+
+//Setting Headline Style to variable
+if($block->getData('heroVideoBtnHeadlineStyle') != ''):
+  $heroVideoBtnHeadlineStyleSelected = $block->getData('heroVideoBtnHeadlineStyle');
+endif;
+
+
+//Setting Blurb Style to variable
+if($block->getData('heroVideoBtnBlurbTxtStyle') != ''):
+  $heroVideoBtnBlurbTxtStyleSelected = $block->getData('heroVideoBtnBlurbTxtStyle');
+endif;
+
+
+//Setting Text Alignment to variable
+if($block->getData('heroVideoBtnBlurbTxtAlign') != ''):
+  $heroVideoBtnBlurbTxtAlignValue = $block->getData('heroVideoBtnBlurbTxtAlign');
+endif;
+
+
+//Setting Video CTA Txt to variable
+if($block->getData('heroVideoBtnVideoCtaTxt') != ''):
+  $heroVideoBtnVideoCtaTxtValue = $block->getData('heroVideoBtnVideoCtaTxt');
+endif;
+
+
+//Setting Video Width to variable
+if($block->getData('heroVideoBtnIframeWidth') != ''){
+  $heroVideoBtnIframeWidthValue = $block->getData('heroVideoBtnIframeWidth');
+} else {
+  $heroVideoBtnIframeWidthValue = '560';
+}
+
+
+//Setting Video Height to variable
+if($block->getData('heroVideoBtnIframeHeight') != ''){
+  $heroVideoBtnIframeHeightValue = $block->getData('heroVideoBtnIframeHeight');
+} else {
+  $heroVideoBtnIframeHeightValue = '315';
+}
+
+
+//Setting Video Link to variable
+if($block->getData('heroVideoBtnIframeVideoLink') != ''):
+  $heroVideoBtnIframeVideoLinkValue = $block->getData('heroVideoBtnIframeVideoLink');
+endif;
+
+
+//Setting Video Width to variable
+if($block->getData('heroVideoBtnVideoCtaTxtColor') != ''){
+  $heroVideoBtnVideoCtaTxtColorValue = $block->getData('heroVideoBtnVideoCtaTxtColor');
+} else {
+  $heroVideoBtnVideoCtaTxtColorValue = '#ffffff';
+}
+
+
+//Setting CTA BG Color to variable
+if($block->getData('heroVideoBtnVideoCtaBgColor') != ''){
+  $heroVideoBtnVideoCtaBgColorValue = $block->getData('heroVideoBtnVideoCtaBgColor');
+} else {
+  $heroVideoBtnVideoCtaBgColorValue = '#000000';
+}
+
+//Setting CTA BG Hover to variable
+if($block->getData('heroVideoBtnVideoCtaBgHover') != ''){
+  $heroVideoBtnVideoCtaBgHoverValue = $block->getData('heroVideoBtnVideoCtaBgHover');
+} else {
+  $heroVideoBtnVideoCtaBgHoverValue = '#0a0a0a';
+}
+
+
+//Setting CTA Text Size to variable
+if($block->getData('heroVideoBtnVideoCtaTxtSize') != ''):
+  $heroVideoBtnVideoCtaTxtSizeValue = $block->getData('heroVideoBtnVideoCtaTxtSize');
+endif;
+
+
+//Setting Bg Img to variable
+if($block->getData('heroVideoBtnBgImg') != ''):
+  $heroVideoBtnBgImgValue = $block->getData('heroVideoBtnBgImg');
+endif;
+
+
+//Setting Top Padding to variable
+if($block->getData('heroVideoBtnImgTopPadding') != ''){
+  $heroVideoBtnImgTopPaddingValue = $block->getData('heroVideoBtnImgTopPadding');
+} else {
+  $heroVideoBtnImgTopPaddingValue = '15%';
+}
+
+
+//Setting Bottom Padding to variable
+if($block->getData('heroVideoBtnImgBottomPadding') != ''){
+  $heroVideoBtnImgBottomPaddingValue = $block->getData('heroVideoBtnImgBottomPadding');
+} else {
+  $heroVideoBtnImgBottomPaddingValue = '15%';
+}
+
+?>
+
+<!-- Setting CMS Value of Hover Color -->
+<style>
+    .hero-video-btn-widget .video .watch-video:hover{
+        background-color:<? echo $heroVideoBtnVideoCtaBgHoverValue;?> !important;
+    }
+</style>
+
+
+<section class="hero-video-btn-widget product-info-container align-top" style="background: url('<? echo $heroVideoBtnBgImgValue?>')
+        no-repeat; padding-top: <? echo $heroVideoBtnImgTopPaddingValue;?>; padding-bottom: <? echo
+$heroVideoBtnImgBottomPaddingValue;?>; background-position: center; background-size: cover;">
+    <div class="product-info grid col-2 <? echo  $heroVideoBtnBlurbTxtAlignValue?>">
+        <h2 class="video-headline" style="color:<?php echo $heroVideoBtnHeadlineTxtColorSelected?>; <?php
+        $videoheadlinestylevalues = explode(',', $heroVideoBtnHeadlineStyleSelected);
+        foreach($videoheadlinestylevalues as $videoheadlinevalue) {
+          echo $videoheadlinevalue;
+        }
+        ?>"><?php echo $block->getData('heroVideoBtnHeadlineTxt');?></h2>
+        <p style="color:<?php echo $heroVideoBtnBlurbColorValue;?>; <? echo $heroVideoBtnBlurbTxtSizeValue;?><?php
+        $selectedBlurbTextStyles = explode(',', $heroVideoBtnBlurbTxtStyleSelected);
+        foreach($selectedBlurbTextStyles as $selectedBlurbTextStyleValue) {
+          echo $selectedBlurbTextStyleValue;
+        }
+        ?>">
+          <?php echo $heroVideoBtnBlurbTxtValue;?>
+        </p>
+        <div class="video">
+          <?php if($this->getData('heroVideoBtnIframeVideoLink') != ''): ?>
+              <a class="watch-video play heroVideoBtn-video-link" href="#" style="background-color:<? echo
+              $heroVideoBtnVideoCtaBgColorValue;?>; color:<? echo $heroVideoBtnVideoCtaTxtColorValue?>; <? echo
+              $heroVideoBtnVideoCtaTxtSizeValue;?>">
+                    <?php echo $heroVideoBtnVideoCtaTxtValue;?>
+                  <span class="embed-code">
+                  <iframe width="<?php echo $heroVideoBtnIframeWidthValue?>" height="<?php echo $heroVideoBtnIframeHeightValue?>"
+                          src="<?php echo $heroVideoBtnIframeVideoLinkValue?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="" data-dayt="true">
+                  </iframe></span>
+              </a>
+          <?php endif; ?>
+        </div>
+
+    </div>
+    <div id="heroVideoBtn-video-overlay" class="heroVideoBtn-video-overlay"></div>
+    <div id="heroVideoBtn-video-container" class="heroVideoBtn-video-container">
+        <div class="video-frame"></div>
+    </div>
+</section>
+
+<div class="hero-video-btn-mobileContent">
+    <h2 class="mobile-video-btn-headline" style="color:<?php echo $heroVideoBtnHeadlineTxtMobileColorSelected;?>; <?php
+    $videoheadlinestylevalues = explode(',', $heroVideoBtnHeadlineStyleSelected);
+    foreach($videoheadlinestylevalues as $videoheadlinevalue) {
+      echo $videoheadlinevalue;
+    }
+    ?>"><?php echo $block->getData('heroVideoBtnHeadlineTxt');?></h2>
+    <p style="color:<?echo $heroVideoBtnBlurbMobileColorValue;?>; <? echo $heroVideoBtnBlurbTxtSizeValue;?><?php
+    $selectedBlurbTextStyles = explode(',', $heroVideoBtnBlurbTxtStyleSelected);
+    foreach($selectedBlurbTextStyles as $selectedBlurbTextStyleValue) {
+      echo $selectedBlurbTextStyleValue;
+    }
+    ?>">
+      <?php echo $heroVideoBtnBlurbTxtValue;?>
+    </p>
+</div>
+
+
+<!-- Calling JS -->
+<script type="text/x-magento-init">
+
+{
+    "*": {
+        "SMG_HeroVideoBtnWidget/js/site": {}
+    }
+}
+</script>
