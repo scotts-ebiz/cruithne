@@ -208,7 +208,7 @@ body {
                             }
                         }
                         ul {
-                            li.category-item.level-top {
+                            li.level-top {
                                 a.level-top {
                                     color: $mygro-black;
                                     &:hover {
@@ -221,8 +221,13 @@ body {
                                         }
                                     }
                                 }
+                                a.level-top.active {
+                                    color: $mygro-green;
+                                    @include font-hellix-heavy;
+                                    border-style: none;
+                                }
                             }
-                            li.level0.category-item.active.level-top {
+                            li.level0.active.level-top {
                                 a.level-top {
                                     color: $mygro-green;
                                     @include font-hellix-heavy;
