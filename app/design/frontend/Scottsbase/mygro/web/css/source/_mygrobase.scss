@@ -20,6 +20,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
 // Base Page Styles
 .skip-content-header{
     display:none;
@@ -395,6 +396,16 @@ body {
         }
     }
 }
+
+//Navigation - Active Styles
+body.product-sensors .page-wrapper .header.content .sections.nav-sections .nav-sections-item-content .navigation ul li.category-item.level-top a.level-top {
+  font {
+
+  }
+}
+
+
+
 
 //Product Page Styles
 .product.info.detailed {
