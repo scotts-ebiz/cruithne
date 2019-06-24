@@ -41,7 +41,7 @@ $productId=$item->getProductId();
 $product=$this->_productloader->create()->load($productId);
 $productname[] = $product->getName();
 $StateNotAllowd= $product->getStateNotAllowed();
-$data = explode(',', $StateNotAllowd);	
+$data = explode(',', $StateNotAllowd);  
    $option_value = array(); 
    foreach($data as $value)
    {
@@ -64,7 +64,7 @@ $message="Unfortunately one or more of the selected products is restricted from 
 The item has been removed from the cart.";
  throw new InputException(__($message));
              }
-		     return  $result;
+         return  $result;
     }
 
 }
