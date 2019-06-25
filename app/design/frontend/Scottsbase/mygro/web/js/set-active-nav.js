@@ -1,5 +1,7 @@
 define(['jquery'], function($){
 
+    alert('Seth Avett rules!');
+
     if ($('body').hasClass('product-sensors')){
         $('#mygro-sensors-page').addClass('active');
         $('#mygro-controllers-page').removeClass('active');
