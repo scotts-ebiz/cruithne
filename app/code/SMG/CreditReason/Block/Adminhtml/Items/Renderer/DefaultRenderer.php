@@ -2,6 +2,7 @@
 
 namespace SMG\CreditReason\Block\Adminhtml\Items\Renderer;
 
+use Psr\Log\LoggerInterface;
 use SMG\CreditReason\Helper\CreditReasonHelper;
 
 class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Items\Renderer\DefaultRenderer
@@ -12,6 +13,11 @@ class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Items\Renderer\Defa
     protected $_creditReasonHelper;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $_logger;
+
+    /**
      * DefaultRenderer constructor.
      *
      * @param \Magento\Backend\Block\Template\Context $context
@@ -19,6 +25,7 @@ class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Items\Renderer\Defa
      * @param \Magento\CatalogInventory\Api\StockConfigurationInterface $stockConfiguration
      * @param \Magento\Framework\Registry $registry
      * @param CreditReasonHelper $creditReasonHelper
+     * @param LoggerInterface $logger
      * @param array $data
      */
     public function __construct(\Magento\Backend\Block\Template\Context $context,
@@ -26,11 +33,13 @@ class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Items\Renderer\Defa
         \Magento\CatalogInventory\Api\StockConfigurationInterface $stockConfiguration,
         \Magento\Framework\Registry $registry,
         CreditReasonHelper $creditReasonHelper,
+        LoggerInterface $logger,
         array $data = [])
     {
         parent::__construct($context, $stockRegistry, $stockConfiguration, $registry, $data);
 
         $this->_creditReasonHelper = $creditReasonHelper;
+        $this->_logger = $logger;
     }
 
     /**
@@ -47,12 +56,13 @@ class DefaultRenderer extends \Magento\Sales\Block\Adminhtml\Items\Renderer\Defa
     /**
      * Gets the Short Description of the desired reason code
      *
+     * @param \Magento\Sales\Model\Order\Item $item
      * @return mixed|string
      */
-    public function getCreditReasonCode()
+    public function getCreditReasonCode($item)
     {
         // get the reason code
-        $creditReasonCode = $this->getItem()->getData('refunded_reason_code');
+        $creditReasonCode = $item->getData('refunded_reason_code');
 
         // return the short description
         return $this->_creditReasonHelper->getCreditReasonCode($creditReasonCode);
