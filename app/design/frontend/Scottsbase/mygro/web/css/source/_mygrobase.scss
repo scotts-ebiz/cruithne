@@ -587,8 +587,17 @@ width: 48%;
                     align-items: flex-start;
                     align-content: stretch;
                     .quickInfo-item {
+                        max-width: 33%;
+                        img {
+                            width: 30%;
+                        }
                         span {
+                            display: inline-block;
+                            max-width: 60%;
                             font-size: 0.80rem;
+                            line-height: 15px;
+                            vertical-align: top;
+                            margin-top: 10px;
                         }
                     }
                 }
