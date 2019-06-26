@@ -574,7 +574,24 @@ width: 48%;
                             }	
                         }	
                     }	
-                }	
+                }
+                .product-quickInfo {
+                    display: none;
+                }
+                .product-quickInfo.active {
+                    display: flex;
+                    border: 1px solid;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    justify-content: space-around;
+                    align-items: flex-start;
+                    align-content: stretch;
+                    .quickInfo-item {
+                        span {
+                            font-size: 0.80rem;
+                        }
+                    }
+                }
             }	
         }	
         .product-social-links {	
