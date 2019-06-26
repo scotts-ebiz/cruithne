@@ -3,6 +3,5 @@
     <head>
         <css src="css/basegrid.css" />
         <css src="css/mygro.css" />
-        <link src="js/set-active-nav.js"/>
     </head>
 </page>
