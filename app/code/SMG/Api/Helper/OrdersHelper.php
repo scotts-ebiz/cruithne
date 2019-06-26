@@ -413,25 +413,45 @@ class OrdersHelper
         $quantity = $orderItem->getQtyOrdered();
         $shippingAmount = $order->getData('shipping_amount');
         $taxAmount = $order->getData('tax_amount');
-
         $hdrDiscFixedAmount = '';
         $hdrDiscPerc = '';
         $hdrDiscCondCode = '';
-        if(!empty($order->getData('coupon_code'))){
-        $orderDiscount = $this->_discountHelper->DiscountCode($order->getData('coupon_code'));
-        $hdrDiscFixedAmount = $orderDiscount['hdr_disc_fixed_amount'];
-        $hdrDiscPerc = $orderDiscount['hdr_disc_perc'];
-        $hdrDiscCondCode = $orderDiscount['hdr_disc_cond_code'];
+
+        // get the customer name
+        $customerName = '';
+        $customerFirstName = $order->getData('customer_firstname');
+        $customerLastName = $order->getData('customer_lastname');
+        if (!empty($customerFirstName) && !empty($customerLastName))
+        {
+            $customerName = $order->getData('customer_firstname') . ' ' . $order->getData('customer_lastname');
         }
+        else
+        {
+            /**
+             * @var \Magento\Sales\Model\Order\Address $shippingAddress
+             */
+            $shippingAddress = $order->getShippingAddress();
+
+            $customerName = $shippingAddress->getFirstname() . ' ' . $shippingAddress->getLastname();
+        }
+
+        if(!empty($order->getData('coupon_code'))){
+            $orderDiscount = $this->_discountHelper->DiscountCode($order->getData('coupon_code'));
+            $hdrDiscFixedAmount = $orderDiscount['hdr_disc_fixed_amount'];
+            $hdrDiscPerc = $orderDiscount['hdr_disc_perc'];
+            $hdrDiscCondCode = $orderDiscount['hdr_disc_cond_code'];
+        }
+
         $discCondCode = '';
         $discFixedAmt = '';
         $discPerAmt = '';
         $itemDiscount = $this->_discountHelper->CatalogCode($order->getId(), $orderItem);
+
         if(!empty($itemDiscount))
         { 
-         $discFixedAmt = $itemDiscount['disc_fixed_amount'];
-         $discPerAmt  = $itemDiscount['disc_percent_amount'];
-         $discCondCode = $itemDiscount['disc_condition_code'];
+            $discFixedAmt = $itemDiscount['disc_fixed_amount'];
+            $discPerAmt  = $itemDiscount['disc_percent_amount'];
+            $discCondCode = $itemDiscount['disc_condition_code'];
         }
 
         // set credit fields to empty
@@ -482,7 +502,6 @@ class OrdersHelper
         }
 
         // Returns (Rma)
-
         if (!empty($rmaItem) && !empty($rmaItemInfo))
         {
             $debitCreditFlag = 'RE';
@@ -532,7 +551,7 @@ class OrdersHelper
             self::ORDER_NUMBER => $order->getIncrementId(),
             self::DATE_PLACED => $order->getData('created_at'),
             self::SAP_DELIVERY_DATE => $tomorrow,
-            self::CUSTOMER_NAME => $order->getData('customer_firstname') . ' ' . $order->getData('customer_lastname'),
+            self::CUSTOMER_NAME => $customerName,
             self::ADDRESS_STREET => $address->getStreetLine(1),
             self::ADDRESS_CITY => $address->getCity(),
             self::ADDRESS_STATE => $address->getRegion(),

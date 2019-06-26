@@ -29,6 +29,7 @@ class InstallSchema implements InstallSchemaInterface
                     ]
                 );
         }
+        
         if ($connection->tableColumnExists('sales_order_sap_item', 'reason_code') === false) {
             $connection
                 ->addColumn(
@@ -42,6 +43,7 @@ class InstallSchema implements InstallSchemaInterface
                     ]
                 );
         }
+        
          // end setup
         $setup->endSetup();
     }
