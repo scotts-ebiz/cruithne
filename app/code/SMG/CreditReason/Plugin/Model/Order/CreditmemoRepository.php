@@ -95,30 +95,47 @@ class CreditmemoRepository
              */
             $orderItem = $this->_itemFactory->create();
 
-            // loop through the items on the credit memo
-            /**
-             * @var \Magento\Sales\Api\Data\CreditmemoInterface[] $items
-             */
-            foreach ($items as $item)
+            // get the keys for the items on the form
+            // the keys are the orderItemId values that
+            // we need to check product information
+            // loop through the keys as these are the items
+            // that we want to update
+            $keys = array_keys($itemsParams);
+            foreach ($keys as $key)
             {
-                // get the order item id
-                $orderItemId = $item->getData("order_item_id");
-
-                // load the order item from the order item id
-                $this->_itemResource->load($orderItem, $orderItemId);
-
-                // determine if this is a bundle product
-                // if it is then we will wait to update the reason code values
-                // otherwise update the reason code values now
-                $productType = $orderItem->getProductType();
-                if (isset($productType) && $productType != 'bundle')
+                // loop through the items on the credit memo
+                /**
+                 * @var \Magento\Sales\Api\Data\CreditmemoInterface[] $items
+                 */
+                foreach ($items as $item)
                 {
-                    // get the refunded reason code
-                    $refundedReadonCode = $itemsParams[$orderItemId]['refunded_reason_code'];
-                    if (isset($refundedReadonCode))
+                    // get the order item id
+                    $orderItemId = $item->getData("order_item_id");
+
+                    // determine if this was the item that was modified
+                    // on the creditmemo form
+                    if ($orderItemId == $key)
                     {
-                        // set the refunded reason code on the credit memo item
-                        $item->setData('refunded_reason_code', $refundedReadonCode);
+                        // load the order item from the order item id
+                        $this->_itemResource->load($orderItem, $orderItemId);
+
+                        // determine if this is a bundle product
+                        // if it is then we will wait to update the reason code values
+                        // otherwise update the reason code values now
+                        $productType = $orderItem->getProductType();
+                        if (isset($productType) && $productType != 'bundle')
+                        {
+                            // get the refunded reason code
+                            $refundedReadonCode = $itemsParams[$orderItemId]['refunded_reason_code'];
+                            if (isset($refundedReadonCode))
+                            {
+                                // set the refunded reason code on the credit memo item
+                                $item->setData('refunded_reason_code', $refundedReadonCode);
+                            }
+                        }
+
+                        // return out of the loop
+                        break;
                     }
                 }
             }
