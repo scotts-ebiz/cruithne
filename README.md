@@ -20,6 +20,20 @@ Use the guide below to setup your local environment
 ## Contributing to this codebase
 Currently our daily development branch is the `test` branch. You'll see the most regular changes in this branch and should use it to start your development. 
 
+### Some basic rules
+1. Do NOT modify the `vendor` files directory. We are not in the business in modifying the Magento code directly. Magento can be buggy if we absolutely cannot fix the problem with our own module. Do NOT put our code in the vendor directory. We will sometimes have to patch Magento code, but that is done outside of the `vendor` directory.
+1. All SMG code must be in the following directory `app/code/SMG`. 
+1. Try to install external modules with composer whenever possible. If you cannot find a module that works with our current Magento version, then do some effort to re-evalute how necessary that module is. If we absolutely need that 3rd party module (ex. _Vantiv_), then we install it in the `app/code/<insert vendor name>` directory
+1. A Branch and therefore PR should be distinct and should _not_ rely on any other branch. Please build your code modularly. We like small PRs, but we like independent PRs more.
+
+### Creating a Module
+1. We use semantic versioning for module versioning. Most often we just update the right most number whenever there is an update to the module
+1. When creating a module, make sure all your information is in the `UpgradeSchema.php` or `UpgradeData.php`. `InstallSchema.php` and `InstallData.php` only run when the module is first installed. We run a `setup:upgrade` on each deploy to pull the latest changes to modules. 
+1. If you're creating a Widget Module, make sure to add the word "Widget" to the end so that we know it's a Widget. Most of the time we're creating Modules because they're more generic
+1. Frontend work should be in the `frontend` module directory, Admin/Backend work should be in the `view/adminhtml` module directory. 
+1. Please start all Class variables with `$_`.
+1. Escape all outputs in HTML (to combat Cross-Site Scripting Attacks)
+
 ### Start with a JIRA ticket
 When possible start with an assigned JIRA ticket at [scotts.jira.com](https://scotts.jira.com/secure/RapidBoard.jspa?rapidView=89&projectKey=ECOM). Move your ticket from the *ToDo* status to *InProgress*. 
 

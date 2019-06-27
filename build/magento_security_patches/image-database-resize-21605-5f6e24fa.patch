@@ -1,0 +1,183 @@
+diff --git a/vendor/magento/module-catalog/Block/Adminhtml/Product/Helper/Form/Gallery/Content.php b/vendor/magento/module-catalog/Block/Adminhtml/Product/Helper/Form/Gallery/Content.php
+index e1208e2..653fbcf 100644
+--- a/vendor/magento/module-catalog/Block/Adminhtml/Product/Helper/Form/Gallery/Content.php
++++ b/vendor/magento/module-catalog/Block/Adminhtml/Product/Helper/Form/Gallery/Content.php
+@@ -17,6 +17,7 @@ use Magento\Backend\Block\Media\Uploader;
+ use Magento\Framework\View\Element\AbstractBlock;
+ use Magento\Framework\App\Filesystem\DirectoryList;
+ use Magento\Framework\Exception\FileSystemException;
++use Magento\MediaStorage\Helper\File\Storage\Database;
+
+ /**
+  * Block for gallery content.
+@@ -43,21 +44,30 @@ class Content extends \Magento\Backend\Block\Widget
+      */
+     private $imageHelper;
+
++    /**
++     * @var Database
++     */
++    private $fileStorageDatabase;
++
+     /**
+      * @param \Magento\Backend\Block\Template\Context $context
+      * @param \Magento\Framework\Json\EncoderInterface $jsonEncoder
+      * @param \Magento\Catalog\Model\Product\Media\Config $mediaConfig
+      * @param array $data
++     * @param Database $fileStorageDatabase
+      */
+     public function __construct(
+         \Magento\Backend\Block\Template\Context $context,
+         \Magento\Framework\Json\EncoderInterface $jsonEncoder,
+         \Magento\Catalog\Model\Product\Media\Config $mediaConfig,
+-        array $data = []
++        array $data = [],
++        Database $fileStorageDatabase = null
+     ) {
+         $this->_jsonEncoder = $jsonEncoder;
+         $this->_mediaConfig = $mediaConfig;
+         parent::__construct($context, $data);
++        $this->fileStorageDatabase = $fileStorageDatabase
++            ?: ObjectManager::getInstance()->get(Database::class);
+     }
+
+     /**
+@@ -149,6 +159,13 @@ class Content extends \Magento\Backend\Block\Widget
+             $images = $this->sortImagesByPosition($value['images']);
+             foreach ($images as &$image) {
+                 $image['url'] = $this->_mediaConfig->getMediaUrl($image['file']);
++                if ($this->fileStorageDatabase->checkDbUsage() &&
++                    !$mediaDir->isFile($this->_mediaConfig->getMediaPath($image['file']))
++                ) {
++                    $this->fileStorageDatabase->saveFileToFilesystem(
++                        $this->_mediaConfig->getMediaPath($image['file'])
++                    );
++                }
+                 try {
+                     $fileHandler = $mediaDir->stat($this->_mediaConfig->getMediaPath($image['file']));
+                     $image['size'] = $fileHandler['size'];
+diff --git a/vendor/magento/module-catalog/Test/Unit/Block/Adminhtml/Product/Helper/Form/Gallery/ContentTest.php b/vendor/magento/module-catalog/Test/Unit/Block/Adminhtml/Product/Helper/Form/Gallery/ContentTest.php
+index 249c32f..fc32778 100644
+--- a/vendor/magento/module-catalog/Test/Unit/Block/Adminhtml/Product/Helper/Form/Gallery/ContentTest.php
++++ b/vendor/magento/module-catalog/Test/Unit/Block/Adminhtml/Product/Helper/Form/Gallery/ContentTest.php
+@@ -9,6 +9,7 @@ use Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Gallery\Content;
+ use Magento\Catalog\Model\Entity\Attribute;
+ use Magento\Catalog\Model\Product;
+ use Magento\Framework\Phrase;
++use Magento\MediaStorage\Helper\File\Storage\Database;
+
+ /**
+  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
+@@ -50,6 +51,11 @@ class ContentTest extends \PHPUnit\Framework\TestCase
+      */
+     protected $imageHelper;
+
++    /**
++     * @var \Magento\MediaStorage\Helper\File\Storage\Database|\PHPUnit_Framework_MockObject_MockObject
++     */
++    protected $databaseMock;
++
+     /**
+      * @var \Magento\Framework\TestFramework\Unit\Helper\ObjectManager
+      */
+@@ -71,13 +77,18 @@ class ContentTest extends \PHPUnit\Framework\TestCase
+             ->disableOriginalConstructor()
+             ->getMock();
+
++        $this->databaseMock = $this->getMockBuilder(Database::class)
++            ->disableOriginalConstructor()
++            ->getMock();
++
+         $this->objectManager = new \Magento\Framework\TestFramework\Unit\Helper\ObjectManager($this);
+         $this->content = $this->objectManager->getObject(
+             \Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Gallery\Content::class,
+             [
+                 'mediaConfig' => $this->mediaConfigMock,
+                 'jsonEncoder' => $this->jsonEncoderMock,
+-                'filesystem' => $this->fileSystemMock
++                'filesystem' => $this->fileSystemMock,
++                'fileStorageDatabase' => $this->databaseMock
+             ]
+         );
+     }
+@@ -143,6 +154,13 @@ class ContentTest extends \PHPUnit\Framework\TestCase
+         $this->readMock->expects($this->any())->method('stat')->willReturnMap($sizeMap);
+         $this->jsonEncoderMock->expects($this->once())->method('encode')->willReturnCallback('json_encode');
+
++        $this->readMock->expects($this->any())
++            ->method('isFile')
++            ->will($this->returnValue(true));
++        $this->databaseMock->expects($this->any())
++            ->method('checkDbUsage')
++            ->will($this->returnValue(false));
++
+         $this->assertSame(json_encode($imagesResult), $this->content->getImagesJson());
+     }
+
+@@ -210,6 +228,12 @@ class ContentTest extends \PHPUnit\Framework\TestCase
+         $this->fileSystemMock->expects($this->any())->method('getDirectoryRead')->willReturn($this->readMock);
+         $this->mediaConfigMock->expects($this->any())->method('getMediaUrl');
+         $this->mediaConfigMock->expects($this->any())->method('getMediaPath');
++        $this->readMock->expects($this->any())
++            ->method('isFile')
++            ->will($this->returnValue(true));
++        $this->databaseMock->expects($this->any())
++            ->method('checkDbUsage')
++            ->will($this->returnValue(false));
+         $this->readMock->expects($this->any())->method('stat')->willReturnOnConsecutiveCalls(
+             $this->throwException(
+                 new \Magento\Framework\Exception\FileSystemException(new Phrase('test'))
+@@ -365,4 +389,53 @@ class ContentTest extends \PHPUnit\Framework\TestCase
+
+         return $mediaAttribute;
+     }
++
++    /**
++     * Test GetImagesJson() calls MediaStorage functions to obtain image from DB prior to stat call
++     *
++     * @return void
++     */
++
++    public function testGetImagesJsonMediaStorageMode()
++    {
++        $images = [
++            'images' => [
++                [
++                    'value_id' => '0',
++                    'file' => 'file_1.jpg',
++                    'media_type' => 'image',
++                    'position' => '0'
++                ]
++            ]
++        ];
++
++        $mediaPath = [
++            ['file_1.jpg', 'catalog/product/image_1.jpg']
++        ];
++
++        $this->content->setElement($this->galleryMock);
++
++        $this->galleryMock->expects($this->once())
++            ->method('getImages')
++            ->willReturn($images);
++        $this->fileSystemMock->expects($this->once())
++            ->method('getDirectoryRead')
++            ->willReturn($this->readMock);
++        $this->mediaConfigMock->expects($this->any())
++            ->method('getMediaPath')
++            ->willReturnMap($mediaPath);
++
++        $this->readMock->expects($this->any())
++            ->method('isFile')
++            ->will($this->returnValue(false));
++        $this->databaseMock->expects($this->any())
++            ->method('checkDbUsage')
++            ->will($this->returnValue(true));
++
++        $this->databaseMock->expects($this->once())
++            ->method('saveFileToFilesystem')
++            ->with('catalog/product/image_1.jpg');
++
++        $this->content->getImagesJson();
++    }
+ }

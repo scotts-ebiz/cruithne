@@ -23,18 +23,19 @@ class OrderInterface{
         $this->_quoteFactory = $quoteFactory;
         $this->_productloader = $productFactory;
         $this->_url = $url;
-	    $this->_responseFactory = $responseFactory;
+	$this->_responseFactory = $responseFactory;
     }
     
     public function beforePlace(
         \Magento\Sales\Api\Data\OrderInterface $subject
      )
     {
-		$redirectionUrl = $this->_url->getUrl('sales/order_create/index');
+	$redirectionUrl = $this->_url->getUrl('sales/order_create/index');
         $validate = false;
         $quoteId = $subject->getQuoteId();
         $quote = $this->_quoteFactory->create()->load($quoteId);	
-		$items = $quote->getAllItems();
+	$items = $quote->getAllItems();
+        if($quote->getShippingAddress()){
 		$State= $quote->getShippingAddress()->getRegion();
 		foreach($items as $item) {
 				$itemId = $item-> getItemId();
@@ -60,6 +61,6 @@ class OrderInterface{
                 die();
              }   
 	    return $subject;
-	 
     }
+  }
 }
