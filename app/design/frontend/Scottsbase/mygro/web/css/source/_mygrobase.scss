@@ -588,16 +588,18 @@ width: 48%;
                     align-content: stretch;
                     .quickInfo-item {
                         max-width: 33%;
+                        text-align: center;
                         img {
-                            width: 30%;
+                            width: 25%;
                         }
                         span {
                             display: inline-block;
-                            max-width: 60%;
-                            font-size: 0.80rem;
-                            line-height: 15px;
+                            width: 85px;
+                            font-size: 0.75rem;
+                            line-height: 13px;
                             vertical-align: top;
                             margin-top: 10px;
+                            text-align: left;
                         }
                     }
                 }
