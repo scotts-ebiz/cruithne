@@ -181,3 +181,6 @@ index 249c32f..fc32778 100644
 +        $this->content->getImagesJson();
 +    }
  }
+ --
+2.17.1
+
