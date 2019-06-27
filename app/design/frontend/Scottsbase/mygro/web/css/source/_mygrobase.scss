@@ -293,7 +293,7 @@ body {
                 width: calc(33.33% - 28px);
             }
         }
-        .button {
+        button {
             background: $mygro-green;
             border-radius: 4px;
             color: $white;
@@ -309,10 +309,10 @@ body {
             transition: background 0.2s linear;
             letter-spacing: 0.5px;
         }
-        .button:hover {
+        button:hover {
             background: $mygro-dark-green;
         }
-        .button:active {
+        button:active {
             background: $mygro-light-green;
         }
         .hero-video {
