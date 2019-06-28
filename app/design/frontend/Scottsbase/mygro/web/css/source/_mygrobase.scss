@@ -299,7 +299,7 @@ body {
                 width: calc(33.33% - 28px);
             }
         }
-        .button {
+        button {
             background: $mygro-green;
             border-radius: 4px;
             color: $white;
@@ -315,10 +315,10 @@ body {
             transition: background 0.2s linear;
             letter-spacing: 0.5px;
         }
-        .button:hover {
+        button:hover {
             background: $mygro-dark-green;
         }
-        .button:active {
+        button:active {
             background: $mygro-light-green;
         }
         .hero-video {
@@ -401,7 +401,6 @@ body {
         }
     }
 }
-
 
 //Product Page Styles
 .product.info.detailed {
@@ -581,7 +580,39 @@ width: 48%;
                             }	
                         }	
                     }	
-                }	
+                }
+                .product-quickInfo {
+                    display: none;
+                }
+                .product-quickInfo.active {
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    justify-content: space-around;
+                    align-items: flex-start;
+                    align-content: stretch;
+                    .quickInfo-item {
+                        max-width: 33%;
+                        &:nth-child(2){
+                            text-align: center;
+                        }
+                        &:nth-child(3){
+                            text-align: right;
+                        }
+                        img {
+                            width: 25%;
+                        }
+                        span {
+                            display: inline-block;
+                            width: 75px;
+                            font-size: 0.75rem;
+                            line-height: 13px;
+                            vertical-align: top;
+                            margin-top: 10px;
+                            text-align: left;
+                        }
+                    }
+                }
             }	
         }	
         .product-social-links {	
