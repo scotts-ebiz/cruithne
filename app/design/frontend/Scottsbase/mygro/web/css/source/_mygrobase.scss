@@ -301,6 +301,7 @@ body {
         }
         button {
             background: $mygro-green;
+            border: 0;
             border-radius: 4px;
             color: $white;
             font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
@@ -308,7 +309,7 @@ body {
             text-align: center;
             display: inline-block;
             height: 48px;
-            line-height: 48px;
+            //line-height: 48px; **Might have to put this back**
             box-sizing: border-box;
             width: 100%;
             max-width: 200px;

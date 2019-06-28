@@ -107,7 +107,10 @@ endif;
         <p class="heroCallout-bannerTextHighlight" style="<?php echo $HeroCalloutBannerTextHighlightCustomSize?> color:<?php echo $HeroCalloutBannerTextHighlightCustomColor?>; <?php echo $HeroCalloutBannerTextHighlightCustomStyle?>"><?php echo $block->getData('bannertexthighlight'); ?></p>
 
         <?php if($block->getData('buttontext')): ?>
-        <a class="button" style="<?php echo $HeroCalloutButtonTextCustomSize?> color:<?php echo $HeroCalloutButtonTextCustomColor?>; background:<?php echo $HeroCalloutButtonCustomColor?>; <?php echo $HeroCalloutButtonTextCustomStyle?>" href="<?php echo $block->getData('buttonlink'); ?>"><?php echo $block->getData('buttontext'); ?></a>
+        <button class="button" style="<?php echo $HeroCalloutButtonTextCustomSize?> color:<?php echo
+        $HeroCalloutButtonTextCustomColor?>; background:<?php echo $HeroCalloutButtonCustomColor?>; <?php echo
+        $HeroCalloutButtonTextCustomStyle?>" href="<?php echo $block->getData('buttonlink'); ?>"><?php echo
+          $block->getData('buttontext'); ?></button>
         <?php endif; ?>
     </div>
 </section>
