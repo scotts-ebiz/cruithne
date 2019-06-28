@@ -224,6 +224,14 @@
 
             </parameter>
 
+            <parameter name="HeroCalloutButtonHoverColor" visible="true" xsi:type="text">
+
+                <label>CTA Color Hover (#xxxxxx)</label>
+
+                <value>#4d4d4e</value>
+
+            </parameter>
+
             <parameter name="buttonlink" visible="true" xsi:type="text">
 
                 <label>CTA Link</label>
