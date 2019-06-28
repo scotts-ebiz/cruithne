@@ -40,8 +40,8 @@ su - magento -c '/var/www/html/magento2/bin/magento setup:static-content:deploy'
 # su - magento -c '/var/www/html/magento2/bin/magento -v cache:flush'
 
 # Remove this
-chown -R magento:www-data /var/www/html/magento2/pub
-chmod -R 777 /var/www/html/magento2/pub
+find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -exec chown magento:www-data {} \;
+find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -exec chmod 777 {} \;
 
 # For the readiness check
 touch /tmp/healthy
