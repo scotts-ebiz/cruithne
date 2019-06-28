@@ -13,7 +13,7 @@ COMMAND="$@"
 #POST_INSTALL_HOOK="/hooks/post_install.sh"
 
 # Pulling down images
-mkdir -p pub/media/catalog
+mkdir -p /var/www/html/magneto2/pub/media/catalog
 gsutil -m rsync -d -r gs://test_magento_image_repo/media/catalog pub/media/catalog
 
 
