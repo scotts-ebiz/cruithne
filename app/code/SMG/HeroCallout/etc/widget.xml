@@ -16,7 +16,7 @@
 
             <parameter name="HeroCalloutBannerHeadlineLabel" visible="true" xsi:type="block">
 
-                <label>CUSTOMIZE BANNER HEADLINE</label>
+                <label>CUSTOMIZE HEADLINE</label>
 
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
 
@@ -24,7 +24,7 @@
 
             <parameter name="bannerheadline" visible="true" xsi:type="text" required="true">
 
-                <label>Banner Headline</label>
+                <label>Headline Text</label>
 
             </parameter>
 
@@ -32,13 +32,13 @@
 
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerHeadlineSize">
 
-                <label>Banner Headline Size (in rem)</label>
+                <label>Headline Size (rem)</label>
 
             </parameter>
 
             <parameter name="HeroCalloutBannerHeadlineColor" visible="true" xsi:type="text">
 
-                <label>Banner Headline Color (#xxxxxx)</label>
+                <label>Headline Color (#xxxxxx)</label>
 
                 <value>#000000</value>
 
@@ -48,7 +48,7 @@
 
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerHeadlineStyles">
 
-                <label>Banner Headline Style</label>
+                <label>Headline Style</label>
 
             </parameter>
 
@@ -60,7 +60,7 @@
 
             <parameter name="HeroCalloutBannerTextLabel" visible="true" xsi:type="block">
 
-                <label>CUSTOMIZE BANNER TEXT</label>
+                <label>CUSTOMIZE BLURB</label>
 
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
 
@@ -68,7 +68,7 @@
 
             <parameter name="bannertext" visible="true" xsi:type="block">
 
-                <label>Banner Text</label>
+                <label>Blurb Text</label>
 
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
 
@@ -78,13 +78,13 @@
 
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextSize">
 
-                <label>Banner Text Size (in rem)</label>
+                <label>Blurb Text Size (rem)</label>
 
             </parameter>
 
             <parameter name="HeroCalloutBannerTextColor" visible="true" xsi:type="text">
 
-                <label>Banner Text Color (#xxxxxx)</label>
+                <label>Blurb Text Color (#xxxxxx)</label>
 
                 <value>#000000</value>
 
@@ -94,7 +94,7 @@
 
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextStyle">
 
-                <label>Banner Text Style</label>
+                <label>Blurb Text Style</label>
 
             </parameter>
 
@@ -106,7 +106,7 @@
 
             <parameter name="HeroCalloutBannerTextHighlightLabel" visible="true" xsi:type="block">
 
-                <label>CUSTOMIZE BANNER TEXT HIGHLIGHT</label>
+                <label>CUSTOMIZE SMALL BLURB</label>
 
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
 
@@ -114,7 +114,7 @@
 
             <parameter name="bannertexthighlight" visible="true" xsi:type="text">
 
-                <label>Banner Text Highlight</label>
+                <label>Small Blurb Text</label>
 
             </parameter>
 
@@ -122,13 +122,13 @@
 
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextHighlightSize">
 
-                <label>Banner Text Highlight Size (in rem)</label>
+                <label>Small Blurb Size (rem)</label>
 
             </parameter>
 
             <parameter name="HeroCalloutBannerTextHighlightColor" visible="true" xsi:type="text">
 
-                <label>Banner Text Highlight Color (#xxxxxx)</label>
+                <label>Small Blurb Text Color (#xxxxxx)</label>
 
                 <value>#000000</value>
 
@@ -138,7 +138,7 @@
 
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextHighlightStyle">
 
-                <label>Banner Text Highlight Style</label>
+                <label>Small Blurb Text Style</label>
 
             </parameter>
 
@@ -150,7 +150,7 @@
 
             <parameter name="HeroCalloutBannerImagesLabel" visible="true" xsi:type="block">
 
-                <label>CUSTOMIZE BANNER IMAGES</label>
+                <label>CUSTOMIZE BACKGROUND IMAGE</label>
 
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
 
