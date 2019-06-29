@@ -234,7 +234,7 @@
 
             <parameter name="buttonlink" visible="true" xsi:type="text">
 
-                <label>CTA Link</label>
+                <label>CTA Link (http://www.url.com)</label>
 
             </parameter>
 
