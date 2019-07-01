@@ -13,7 +13,7 @@ window.dtmData.events.push({
 		<?php foreach($smghelper->getCheckoutSession()->getDtmAddToCart() as $pro){ ?>
 		id: '<?php echo $pro['id'];?>',
 		name: '<?php $p_name = $pro['name']; echo str_replace("™","",$p_name); ?>',
-		category: [<?php echo $pro['category'];?>], 
+		category: ['<?php echo $pro['category'];?>'],
 		currency: '<?php echo $block->getCurrencyCode();?>',
 		unitPrice: <?php echo $pro['unitPrice'];?>,
 		sku: '<?php echo $pro['sku'];?>',
