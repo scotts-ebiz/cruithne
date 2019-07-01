@@ -118,12 +118,6 @@ RUN sed -i '/session.save_handler/s/^/; /g' /etc/php/7.2/apache2/php.ini
 
 RUN git apply $MAGENTO_DIR/build/magento_security_patches/PRODSECBUG-2198-2.3-EE.composer-2019-03-27-06-10-53.patch
 
-# Image database fix patch
-# Can be removed after release 2.3.3
-# From https://github.com/magento/magento2/issues/21546
-# Original core commit: https://github.com/magento/magento2/commit/5f6e24fa20087d3d37063bfab77ffca42625c9c5
-RUN git apply $MAGENTO_DIR/build/magento_security_patches/image-database-resize-21605-5f6e24fa.patch
-
 RUN sed 's/newrelic\.license/;newrelic\.license/' /etc/php/7.2/apache2/conf.d/20-newrelic.ini
 RUN echo "newrelic.license = 'eeaa206f88996c7640153d2c3ba77c0d3522d942'" >> /etc/php/7.2/apache2/conf.d/20-newrelic.ini
 
