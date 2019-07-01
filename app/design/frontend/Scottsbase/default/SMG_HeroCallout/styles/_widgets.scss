@@ -26,7 +26,7 @@
             max-width: 1000px;
             top: 0;
             padding: 0;
-            text-align: left;
+            text-align: center;
             margin: 55% 0 0 2%;
         }
     }
@@ -34,6 +34,7 @@
         .content {
             width: 34%;
             padding-left: 40px;
+            text-align: left;
         }
     }
     h2 {
@@ -42,12 +43,20 @@
         @include max-screen($screen__l) {
             width: 100%;
             line-height: 35px;
+            text-align: left;
         }
     }
     .heroCallout-bannerText {
         width: 85%;
         @include max-screen($screen__l) {
             width: 100%;
+            text-align: left;
+        }
+    }
+    .heroCallout-bannerTextHighlight {
+        @include max-screen($screen__l) {
+            width: 100%;
+            text-align: left;
         }
     }
     p {
