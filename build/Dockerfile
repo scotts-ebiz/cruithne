@@ -85,10 +85,6 @@ RUN /tmp/qualys/qualys-cloud-agent.postinst
 
 RUN /usr/local/qualys/cloud-agent/bin/qualys-cloud-agent.sh ActivationId="67906ffb-cd7c-4105-bdc7-1540c13343aa" CustomerId="63d94f9b-9dfc-7538-823c-333fc1d63ac9" ProviderName="GCP" UseSudo=0
 
-
-# Copy Apache config over for staging
-COPY apache/000-default.staging.conf /etc/apache2/sites-available/000-default.conf
-
 USER magento
 WORKDIR $MAGENTO_DIR
 
@@ -121,6 +117,12 @@ RUN sed -i '22s/.*/                <visible>true<\/visible>/' $MAGENTO_DIR/vendo
 RUN sed -i '/session.save_handler/s/^/; /g' /etc/php/7.2/apache2/php.ini
 
 RUN git apply $MAGENTO_DIR/build/magento_security_patches/PRODSECBUG-2198-2.3-EE.composer-2019-03-27-06-10-53.patch
+
+# Image database fix patch
+# Can be removed after release 2.3.3
+# From https://github.com/magento/magento2/issues/21546
+# Original core commit: https://github.com/magento/magento2/commit/5f6e24fa20087d3d37063bfab77ffca42625c9c5
+RUN git apply $MAGENTO_DIR/build/magento_security_patches/image-database-resize-21605-5f6e24fa.patch
 
 RUN sed 's/newrelic\.license/;newrelic\.license/' /etc/php/7.2/apache2/conf.d/20-newrelic.ini
 RUN echo "newrelic.license = 'eeaa206f88996c7640153d2c3ba77c0d3522d942'" >> /etc/php/7.2/apache2/conf.d/20-newrelic.ini
