@@ -72,7 +72,7 @@ $large_bundle_price = '';
                                             $selection_ids[] = $selection->getSelectionId();
                                             $tab_ids[] = $selection->getProductId();
 					    $options_html .= '<input type="hidden" name="bundle_option_qty[' . $option_id . ']" value="1" />';
-                                            $options_html .= '<input type="hidden" name="bundle_option[' . $option_id . ']" value="'.$option_id.'" />';
+                                            $options_html .= '<input type="hidden" name="bundle_option[' . $option_id . ']" value="'.$selection->getSelectionId().'" />';
                                         }
                                     }
                             ?>
@@ -122,7 +122,7 @@ $large_bundle_price = '';
                                             //$large_bundle_price = $large_bundle_price + ($selection_price * $selection_qty);
                                             $selection_ids[] = $selection->getSelectionId();
                                             $options_html .= '<input type="hidden" name="bundle_option_qty[' . $option_id . ']" value="1" />';
-					    $options_html .= '<input type="hidden" name="bundle_option[' . $option_id . ']" value="'.$option_id.'" />';
+					    $options_html .= '<input type="hidden" name="bundle_option[' . $option_id . ']" value="'.$selection->getSelectionId().'" />';
                                         }
                                     }
                             ?>
