@@ -16,7 +16,7 @@
         "mageplaza/module-smtp": "^1.2",
 	"freshrelevance/digitaldatalayer": "0.1.4",
 	"smg/launch": "1.0.0",
-	"smg/budleproduct"; "1.0.1",
+	"smg/budleproduct": "1.0.1",
         "snowdog/frontools": "^1.6"
     },
     "require-dev": {
