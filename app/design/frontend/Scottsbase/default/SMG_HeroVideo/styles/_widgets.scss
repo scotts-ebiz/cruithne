@@ -18,19 +18,14 @@ body {
     }
 }
 
-//Had use this selector pattern to override base magento
-body .page-wrapper .page-main .column.main section.hero-video-widget.product-info-container {
-    margin: 0 0 85px 0;
-    @media only screen and (max-width: $screen__s) {
-        margin: 0;
-    }
-}
-
-
 body {
     section.hero-video-widget.product-info-container {
         display: inline-block;
         width: 100%;
+        margin: 0 0 85px 0 !important;
+        @media only screen and (max-width: $screen__s) {
+            margin: 0 !important;
+        }
         .product-info {
             font-size: 20px;
             width: 40%;
