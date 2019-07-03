@@ -1,20 +1,14 @@
 /* Widget Start - Location - App / design / frontend / Scottsbase / default / SMG_ProdcutCallout / styles */
-.hero-callout {
+.page-wrapper .page-main .column.main section.hero-callout {
     max-width: 1440px;
     background-size: 100% auto;
     background-repeat: no-repeat;
-    height: 655px;
     position: relative;
     display: inline-block;
-    margin: 65px 0 0 0;
-    @media (max-width: 1200px) {
-        height: 550px;
-    }
+    margin: 0 0 85px 0;
     @include max-screen($screen__l) {
         height: auto;
         background-position: top;
-        background-size: 95%;
-        margin: 40px 0 0 0;
     }
     .content {
         max-width: 500px;
@@ -24,10 +18,14 @@
         margin: 5% 0 18% 0;
         @include max-screen($screen__l) {
             max-width: 1000px;
+            width: 100%;
             top: 0;
             padding: 0;
             text-align: center;
-            margin: 55% 0 0 2%;
+            margin: 48% 0 0 0;
+        }
+        @include max-screen($screen__m) {
+            margin: 45% 0 0 0;
         }
     }
     @media screen and (max-width: 1399px) and (min-width: 1024px) {

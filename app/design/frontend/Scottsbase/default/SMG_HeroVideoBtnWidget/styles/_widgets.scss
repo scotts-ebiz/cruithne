@@ -22,13 +22,16 @@ body {
     section.hero-video-btn-widget.product-info-container {
         display: inline-block;
         width: 100%;
-        margin-bottom: 10% !important;
+        margin: 0 0 85px 0 !important;
         @media only screen and (max-width: $screen__s) {
             margin-bottom: 0 !important;
         }
         .product-info {
             font-size: 20px;
             width: 40%;
+            @media only screen and (max-width: $screen__m) {
+                width: 75%;
+            }
 
             h2.video-headline {
                 @media only screen and (max-width: $screen__s) {
@@ -48,16 +51,6 @@ body {
                     top: 40px;
                 }
                 .watch-video {
-                    padding: 15px 25px;
-                    border-radius: 4px;
-                    display: inline-block;
-                    position: relative;
-                    color: #ffffff;
-                    transition: background .2s linear;
-                    font-size: 16px;
-                    font-weight: 700;
-                    font-family: "Hellix-Heavy";
-                    letter-spacing: 0.5px;
                     span.embed-code {
                         display: none !important;
                     }
@@ -109,7 +102,7 @@ body {
             display: inline-block;
             position: relative;
             padding-left: 2%;
-            margin-bottom: 10%;
+            margin: 0 0 85px 0;
             h2 {
                 margin-top: 0.5rem;
                 margin-bottom: 0.5rem;
