@@ -13,15 +13,17 @@ COMMAND="$@"
 #POST_INSTALL_HOOK="/hooks/post_install.sh"
 
 # Pulling down images
-gsutil -m rsync -d -r gs://test_magento_image_repo/media pub/media/
+#mkdir -p /var/www/html/magneto2/pub/media/catalog
+#gsutil -m rsync -d -r gs://test_magento_image_repo/media/catalog /var/www/html/magento2/pub/media/catalog
 
 
-/usr/local/qualys/cloud-agent/bin/qualys-cloud-agent.sh ActivationId="67906ffb-cd7c-4105-bdc7-1540c13343aa" CustomerId="63d94f9b-9dfc-7538-823c-333fc1d63ac9" ProviderName="GCP" UseSudo=0
+#/usr/local/qualys/cloud-agent/bin/qualys-cloud-agent.sh ActivationId="67906ffb-cd7c-4105-bdc7-1540c13343aa" CustomerId="63d94f9b-9dfc-7538-823c-333fc1d63ac9" ProviderName="GCP" UseSudo=0
 # Activate SumoLogic
-service collector start
+#service collector start
 
 # su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s developer'
 # su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s production'
+# su - magento -c '/var/www/html/magento2/bin/magento setup:install'
 su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade'
 su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile'
 
@@ -34,8 +36,12 @@ su - magento -c 'gulp clean -f /var/www/html/magento2/tools/gulpfile.js'
 su - magento -c 'cd /var/www/html/magento2/tools && npm rebuild node-sass && gulp styles -f /var/www/html/magento2/tools/gulpfile.js'
 
 su - magento -c '/var/www/html/magento2/bin/magento setup:static-content:deploy'
-su - magento -c '/var/www/html/magento2/bin/magento -v index:reindex'
-su - magento -c '/var/www/html/magento2/bin/magento -v cache:flush'
+# su - magento -c '/var/www/html/magento2/bin/magento -v index:reindex'
+# su - magento -c '/var/www/html/magento2/bin/magento -v cache:flush'
+
+# Remove this
+find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -exec chown magento:www-data {} \;
+find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -exec chmod 777 {} \;
 
 # For the readiness check
 touch /tmp/healthy

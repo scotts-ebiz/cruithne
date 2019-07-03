@@ -6,78 +6,87 @@
         <parameters>
             <!-- Customize Banner Headline -->
             <parameter name="bannerHeadlineCustomizeLabel" visible="true" xsi:type="block">
-                <label>CUSTOMIZE BANNER HEADLINE</label>
+                <label>CUSTOMIZE HEADLINE</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannerheadline" visible="true" xsi:type="text" required="true">
-                <label>Banner Headline</label>
+                <label>Headline Text</label>
             </parameter>
             <parameter name="bannerheadlinecolor" visible="true" xsi:type="text">
-                <label>Banner Headline Color (in #xxxxxx)</label>
+                <label>Headline Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
             <parameter name="headlinetextstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCallout\Model\Source\HeadlineTextStyles">
-                <label>Banner Headline Style</label>
+                <label>Headline Style</label>
             </parameter>
 
 
-            <!-- Customize Banner Text -->
+            <!-- Customize Blurb -->
             <parameter name="bannerTextCustomizeLabel" visible="true" xsi:type="block">
-                <label>CUSTOMIZE BANNER TEXT</label>
+                <label>CUSTOMIZE BLURB</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannertext" visible="true" xsi:type="block">
-                <label>Banner Text</label>
+                <label>Blurb Text</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
             </parameter>
             <parameter name="bannertextlinecolor" visible="true" xsi:type="text">
-                <label>Banner Text Color (in #xxxxxx)</label>
+                <label>Blurb Text Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
             <parameter name="bannertextsize" visible="true" xsi:type="select"
                        source_model="SMG\ProductCallout\Model\Source\TextSize">
-                <label>Banner Text Size (in rem)</label>
+                <label>Blurb Text Size (in rem)</label>
             </parameter>
             <parameter name="textstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCallout\Model\Source\TextStyles">
-                <label>Banner Text Style</label>
+                <label>Blurb Text Style</label>
             </parameter>
             <parameter name="textalignclass" visible="true" xsi:type="select" source_model="SMG\ProductCallout\Model\Source\TextAlignSelect">
                 <label>Text Align</label>
             </parameter>
 
 
-            <!-- Customize Banner Text Img-->
+            <!-- Customize Blurb Imgs -->
             <parameter name="bannerTextImgCustomizeLabel" visible="true" xsi:type="block">
-                <label>CUSTOMIZE BANNER TEXT IMG</label>
+                <label>CUSTOMIZE BLURB IMAGES</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannerTextImageOne" visible="true" xsi:type="block">
-                <label>Banner Text Image 1</label>
+                <label>Blurb Image 1</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
             <parameter name="bannerTextImgOneLink" visible="true" xsi:type="text">
-                <label>Banner Text Image 1 Link</label>
+                <label>Blurb Image 1 Link</label>
+            </parameter>
+            <parameter name="blurbImgOneAltTxt" visible="true" xsi:type="text">
+                <label>Blurb Image 1 Alt Text</label>
             </parameter>
             <parameter name="bannerTextImageTwo" visible="true" xsi:type="block">
-                <label>Banner Text Image 2</label>
+                <label>Blurb Image 2</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
             <parameter name="bannerTextImgTwoLink" visible="true" xsi:type="text">
-                <label>Banner Text Image 2 Link</label>
+                <label>Blurb Image 2 Link</label>
+            </parameter>
+            <parameter name="blurbImgTwoAltTxt" visible="true" xsi:type="text">
+                <label>Blurb Image 2 Alt Text</label>
             </parameter>
 
 
             <!-- Customize Callout Img / Background -->
             <parameter name="imgBgCustomizeLabel" visible="true" xsi:type="block">
-                <label>CUSTOMIZE IMAGE / BACKGROUND</label>
+                <label>CUSTOMIZE IMAGES</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannerimage" visible="true" xsi:type="block">
                 <label>Callout Image (800x800)</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
+            <parameter name="bannerCalloutImageAltTxt" visible="true" xsi:type="text">
+                <label>Callout Image Alt Text</label>
+            </parameter>
             <parameter name="bgcolor" visible="true" xsi:type="text">
-                <label>Background Color (in #xxxxxx)</label>
+                <label>Background Color (#xxxxxx)</label>
                 <value>#ffffff</value>
             </parameter>
             <parameter name="bgimage" visible="true" xsi:type="block">

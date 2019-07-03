@@ -8,6 +8,9 @@ $selectedBannerTextImageOne = '';
 $selectedBannerTextImageTwo = '';
 $selectedBannerTextImgOneLink = '';
 $selectedBannerTextImgTwoLink = '';
+$selectedBlurbImgOneAltTxt = '';
+$selectedBlurbImgTwoAltTxt = '';
+$selectedBannerCalloutImageAltTxt = '';
 
 
 // If textstyle exists then set to customCssStyles
@@ -57,6 +60,21 @@ if($block->getData('bannerTextImgTwoLink') !=''):
   $selectedBannerTextImgTwoLink = $block->getData('bannerTextImgTwoLink');
 endif;
 
+// Check existence of an alt txt for Blurb Img One
+if($block->getData('blurbImgOneAltTxt') !=''):
+  $selectedBlurbImgOneAltTxt = $block->getData('blurbImgOneAltTxt');
+endif;
+
+// Check existence of an alt txt for Blurb Img Two
+if($block->getData('blurbImgTwoAltTxt') !=''):
+  $selectedBlurbImgTwoAltTxt = $block->getData('blurbImgTwoAltTxt');
+endif;
+
+// Check existence of an alt txt for Callout Img
+if($block->getData('bannerCalloutImageAltTxt') !=''):
+  $selectedBannerCalloutImageAltTxt = $block->getData('bannerCalloutImageAltTxt');
+endif;
+
 ?>
 
 
@@ -69,7 +87,7 @@ $block->getData('bgcolor');
   <div class="product-info grid col-2">
     <?php if($this->getData('bannerimage') != ''): ?>
       <div class="productCallout-imageContainer span_6_of_12"> 
-        <img src="<?php echo $block->getData('bannerimage'); ?>" alt="<?php echo __('Image of MyLawn app from Scotts'); ?>">
+        <img src="<?php echo $block->getData('bannerimage'); ?>" alt="<?php echo $selectedBannerCalloutImageAltTxt;?>">
       </div>
     <?php endif; ?>
 
@@ -98,11 +116,11 @@ $block->getData('bgcolor');
       </p>
 
 
-      <!-- Check if link selected for Text Img One -->
+      <!-- Check if link selected for Blurb Img One -->
       <?php if($selectedBannerTextImgOneLink != ''){?>
         <div class="selected-bannerTextImage selected-bannerTextImageOne">
-          <a href="<?php echo $selectedBannerTextImgOneLink?>" target="_blank" title="Download iOS app">
-            <img src="<?php echo $selectedBannerTextImageOne?>" alt="<?php echo __('Download on the App Store'); ?>">
+          <a href="<?php echo $selectedBannerTextImgOneLink?>" target="_blank" title="<?php echo $selectedBlurbImgOneAltTxt;?>">
+            <img src="<?php echo $selectedBannerTextImageOne?>" alt="<?php echo $selectedBlurbImgOneAltTxt;?>">
           </a>
         </div>
       <?php }elseif ($selectedBannerTextImageOne != ''){?>
@@ -114,11 +132,12 @@ $block->getData('bgcolor');
       <?php }?>
 
 
-      <!-- Check if link selected for Text Img Two -->
+      <!-- Check if link selected for Blurb Img Two -->
       <?php if($selectedBannerTextImgTwoLink != ''){?>
         <div class="selected-bannerTextImage selected-bannerTextImageTwo">
-          <a href="<?php echo $selectedBannerTextImgTwoLink?>" target="_blank" title="Download Android app">
-            <img src="<?php echo $selectedBannerTextImageTwo?>" alt="<?php echo __('Get It On Google Play'); ?>">
+          <a href="<?php echo $selectedBannerTextImgTwoLink?>" target="_blank" title="<?php echo
+          $selectedBlurbImgTwoAltTxt;?>">
+            <img src="<?php echo $selectedBannerTextImageTwo?>" alt="<?php echo $selectedBlurbImgTwoAltTxt;?>">
           </a>
         </div>
       <?php }elseif ($selectedBannerTextImageTwo != ''){?>
