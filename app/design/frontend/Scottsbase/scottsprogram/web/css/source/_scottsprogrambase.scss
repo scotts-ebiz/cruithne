@@ -12,7 +12,7 @@
     		top: 0;
         }
         .header.content {
-            padding: 0;
+            padding: 0; 
             .logo {
                 position: absolute; 
                 top: 1rem;
@@ -1561,7 +1561,12 @@
 	div[name='shippingAddress.street.1'],
 	div[name='shippingAddress.street.2'],
 	div[name='billingAddressauthorizenet_directpost.street.1'],
-	div[name='billingAddressauthorizenet_directpost.street.2']{
+	div[name='billingAddressauthorizenet_directpost.street.2'],
+	div[name='billingAddressvantiv_cc.street.1'],
+	div[name='billingAddressvantiv_cc.street.2'],
+	div[name='billingAddresscashondelivery.street.1'],
+	div[name='billingAddresscashondelivery.street.2']
+	{
 		display:none;
 	}
 	.field-tooltip .field-tooltip-content {
@@ -2650,5 +2655,58 @@ button.action{
     }
     ._error {
         padding-bottom: 0;
+    }
+}
+
+.checkout-onepage-success{
+    .page-wrapper{
+        #maincontent{
+            margin-left: 16rem;
+            @include max-screen($screen__s){
+                margin-left:0rem;
+            }
+            .page-title-wrapper{
+                margin-top: 3.5rem;
+                @include max-screen($screen__s){
+                    margin-top: 7.5rem;
+                }
+                .page-title{
+                    font-size: 16px;
+                    color: #000;
+                    font-weight: bold;
+                }
+            }
+            .checkout-success{
+                color: #000;
+                font-weight: 400;
+                width: 700px;
+                font-size:16px;
+                @include max-screen($screen__s){
+                    width:auto;
+                }
+                .actions-toolbar{
+                    width: 100%;
+                    padding-top: 20px;
+                    border-top: 1px solid #ccc;
+                    text-align: right;
+                    .primary{
+                        float: right;
+                        width: 100%;
+                        .action.primary.continue{
+                            color: #fff;
+                            padding: 10px 25px 10px 25px;
+                            display: inline-block;
+                            background: #075534;
+                            margin: 0;
+                            float: right;
+                            width: auto;
+                        }
+                    }
+                }
+            }
+            #registration{
+                display:none;
+            }
+        }
     }
 }

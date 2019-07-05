@@ -12,7 +12,7 @@ body {
 [class*=" icon-"] {
     font-family: 'gro'; 
     speak: none;
-    font-style: normal;
+    font-style: normal; 
     font-weight: normal;
     font-variant: normal;
     text-transform: none;
@@ -20,7 +20,6 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
-
 // Base Page Styles
 .skip-content-header{
     display:none;
@@ -42,6 +41,7 @@ body {
                     position: relative;
                     left: 0;
                     top: -16px;
+                    display:block;
                 }
             }
             position: relative;
@@ -208,30 +208,20 @@ body {
                             }
                         }
                         ul {
-                            li.level-top {
-                                a.level-top {
+                            .first {
+                                .level-top {
+                                    span {
+                                        @include font-hellix-heavy(false, $mygro-green);
+                                    }
+                                }
+                            }
+                            .category-item {
+                                span {
                                     color: $mygro-black;
                                     &:hover {
                                         color: $mygro-green;
                                         transition: color 0.2s linear;
                                     }
-                                    span {
-                                        @media only screen and (max-width: 1023px){
-                                            margin-left: 0;
-                                        }
-                                    }
-                                }
-                                a.level-top.active {
-                                    color: $mygro-green;
-                                    @include font-hellix-heavy;
-                                    border-style: none;
-                                }
-                            }
-                            li.level0.active.level-top {
-                                a.level-top {
-                                    color: $mygro-green;
-                                    @include font-hellix-heavy;
-                                    border-style: none;
                                 }
                             }
                         }
@@ -299,40 +289,27 @@ body {
                 width: calc(33.33% - 28px);
             }
         }
-        button {
-            background: $mygro-green;
-            border: 0;
-            padding: 25px 45px;
-            border-radius: 4px;
-            color: $white;
-            font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
-            font-size: 16px;
-            text-align: center;
-            display: inline-block;
-            line-height: 0;
-            box-sizing: border-box;
-            transition: background 0.2s linear;
-            letter-spacing: 0.5px;
-        }
-        button:hover {
-            background: $mygro-dark-green;
-        }
-        button:active {
-            background: $mygro-light-green;
-        }
         .button {
             background: $mygro-green;
-            border: 0;
-            padding: 25px 45px;
             border-radius: 4px;
             color: $white;
             font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
             font-size: 16px;
-            line-height: 0;
-            transition: background 0.2s linear;
-            letter-spacing: 0.5px;
             text-align: center;
             display: inline-block;
+            height: 48px;
+            line-height: 48px;
+            box-sizing: border-box;
+            width: 100%;
+            max-width: 200px;
+            transition: background 0.2s linear;
+            letter-spacing: 0.5px;
+        }
+        .button:hover {
+            background: $mygro-dark-green;
+        }
+        .button:active {
+            background: $mygro-light-green;
         }
         .hero-video {
             background: url(../images/bg-hero.jpg) 50% 0% no-repeat;
@@ -418,237 +395,6 @@ body {
 //Product Page Styles
 .product.info.detailed {
     display: none;
-}
-
-// PDP Page Styles	
-.page-product-grouped {	
-    .page-title-wrapper {	
-        display: none !important;	
-    }	
-
-    .product-info-main {	
-width: 48%;
-        margin-right: auto;
-        margin-left: auto;
-        @media only screen and (max-width: $screen_768){
-          width: 90%;
-        }
-        .product-info-price {	
-            display: none;	
-        }	
-
-        .product-add-form {	
-            width: 80%;	
-
-            margin-left: auto;	
-            margin-right: auto;	
-            @media only screen and (max-width: $screen_768){	
-                width: 95%;	
-            }	
-            form {	
-                .grouped-title-section {	
-                    h2.grouped-product-header {	
-                        color: #000000;	
-                        margin-top: 1.0rem;	
-                        margin-bottom: 1.0rem;	
-                        font-size: 2.5rem;	
-                        letter-spacing: 0.5px;	
-                        @media only screen and (max-width: $screen_768){	
-                            text-align: center;	
-                            font-size: 2.0rem;	
-                        }	
-                    }	
-                    p {	
-                        font-size: 1.2rem;	
-                        line-height: 1.5rem;	
-                        @media only screen and (max-width: $screen_768){	
-                            font-size: 1.0rem;	
-                            line-height: 1.2rem;	
-                        }	
-                    }	
-                }	
-                .grouped-product-wrapper {	
-                    margin-bottom: 20px;	
-                    h5 {	
-
-                        font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;	
-                        color:#222222;	
-                        font-size: 0.9rem;	
-                        margin: 0 0 10px 0;	
-                        @media only screen and (max-width: $screen_768){	
-                            font-size: 0.8rem;	
-                        }	
-                    }	
-                    select {	
-                        border-radius: 0px;	
-                        border: 0px;	
-
-                        outline: 1px inset #909090;	
-                        outline-style: solid;	
-                        height: 35px;	
-
-                        font-size: 1.0rem;	
-                        @media only screen and (max-width: $screen_768){	
-                            font-size: 0.9rem;	
-                        }	
-                    }	
-                }	
-                .table-wrapper {	
-                    margin-bottom: 0;	
-                    table {	
-
-                        display: table !important;	
-                        thead {	
-
-                            tr.grouped-table-titles {	
-                                display: none;	
-                            }	
-                        }	
-                        tbody {	
-                            display: table-row-group !important;	
-                            border-top: 0px;	
-
-                            @media only screen and (max-width: 639px){	
-                                display: table-row-group;	
-                            }	
-
-                            tr.grouped-row.active {	
-                                display: table-row;	
-                            }	
-                            tr.grouped-row {	
-                                display: none;	
-                                td {	
-                                    color: #000000;	
-                                    font-size: 1.2rem;	
-                                    @media only screen and (max-width: $screen_768){	
-                                        font-size: 1.0rem;	
-                                    }	
-                                    p{	
-                                        color: #909090;	
-                                        font-size: 0.85rem;	
-                                        @media only screen and (max-width: $screen_768){	
-                                            font-size: 0.75rem;	
-                                        }	
-                                    }	
-                                  .price-box {	
-                                        .price-container {	
-                                            .price {	
-                                                color: #008065;	
-                                                font-size: 1.2rem;	
-                                            }	
-                                        }	
-                                    }	
-                                }	
-                                td.product-detail-td {	
-                                    width: 70%;	
-                                    margin: 0;	
-                                    padding: 0;	
-                                    &:before{	
-                                        content: none;	
-                                    }	
-                                }	
-                                td.product-qty-td {	
-                                    width: 30%;	
-                                    text-align: right;	
-                                    padding: 0;	
-                                    &:before{	
-                                        content: none;	
-                                    }	
-                                }	
-                            }	
-                            tr.grouped-row.active {	
-                                display: table-row;	
-                            }	
-                        }	
-                    }	
-                }	
-                .box-tocart {	
-                    display: inline-block;	
-                    position: relative;	
-                    width: 100%;	
-                    .fieldset {	
-                        .actions {	
-                            display: inline-block;	
-                            position: relative;	
-                            width: 100%;	
-                            padding-top: 0;	
-                            button {	
-                                display: inline-block;	
-                                position: relative;	
-                                width: 100%;	
-
-                                max-width: inherit;	
-                                padding: 35px 0;	
-                                height: inherit;	
-                                line-height: 0;	
-                                @media only screen and (max-width: $screen_768){	
-                                    padding: 30px 0;	
-                                }	
-                                span{	
-                                    font-size: 1.3rem;	
-                                    @media only screen and (max-width: $screen_768){	
-                                        font-size: 1.0rem;	
-                                    }	
-                                }	
-                            }	
-                        }	
-                    }	
-                }
-                .product-quickInfo {
-                    display: none;
-                }
-                .product-quickInfo.active {
-                    display: flex;
-                    flex-direction: row;
-                    flex-wrap: wrap;
-                    justify-content: space-around;
-                    align-items: flex-start;
-                    align-content: stretch;
-                    .quickInfo-item {
-                        max-width: 33%;
-                        &:nth-child(2){
-                            text-align: center;
-                        }
-                        &:nth-child(3){
-                            text-align: right;
-                        }
-                        img {
-                            width: 25%;
-                        }
-                        span {
-                            display: inline-block;
-                            width: 75px;
-                            font-size: 0.75rem;
-                            line-height: 13px;
-                            vertical-align: top;
-                            margin-top: 10px;
-                            text-align: left;
-                        }
-                    }
-                }
-            }	
-        }	
-        .product-social-links {	
-            display: none;	
-        }	
-
-        .product.attribute.overview {	
-            display: none;	
-        }	
-    }	
-    .product.media {
-        width: 50%;
-        margin-right: auto;
-        margin-left: auto;
-        //background: #F0F2F5;
-
-        @include max-screen($screen__m) {
-            width: 90%;
-        }
-        .action-skip-wrapper {
-            display: none;
-        }
-    }
 }
 
 
@@ -1153,9 +899,14 @@ width: 48%;
         .page-header {
             .header.content {
                 .logo {
-                    @include max-screen($screen__m) {
+                    //@include max-screen($screen__m) {
                         // Specific Style for logo when menu isn't present
-                        left: 0;
+                    //    left: 0;
+                    //}
+                    img{
+                        @include max-screen($screen__m) {
+                            width:96px;
+                        }
                     }
                 }
             }
@@ -1359,7 +1110,7 @@ width: 48%;
                                                                     -ms-transition: background 0.2s;
                                                                     -o-transition: background 0.2s;
                                                                     transition: background 0.2s;
-                                                                    background: $mygro-dark-gray;
+                                                                    background: #444;
                                                                     border: none;
 																	margin-top: 0;
                                                                     &:hover {
@@ -1368,7 +1119,7 @@ width: 48%;
                                                                         -ms-transition: background 0.2s;
                                                                         -o-transition: background 0.2s;
                                                                         transition: background 0.2s;
-                                                                        background: $mygro-black-alt;
+                                                                        background: #909090;
                                                                     }
                                                                 }
                                                             }
@@ -1380,7 +1131,7 @@ width: 48%;
                                                                     -ms-transition: background 0.2s;
                                                                     -o-transition: background 0.2s;
                                                                     transition: background 0.2s;
-                                                                    background: $mygro-dark-gray;
+                                                                    background: #444;
                                                                     border: none;
 																	margin-top: 0;
                                                                     &:hover {
@@ -1389,7 +1140,7 @@ width: 48%;
                                                                         -ms-transition: background 0.2s;
                                                                         -o-transition: background 0.2s;
                                                                         transition: background 0.2s;
-                                                                        background: $mygro-black-alt;
+                                                                        background: #909090;
                                                                     }
                                                                 }
                                                             }
@@ -1731,7 +1482,12 @@ width: 48%;
 	div[name='shippingAddress.street.1'],
 	div[name='shippingAddress.street.2'],
 	div[name='billingAddressauthorizenet_directpost.street.1'],
-	div[name='billingAddressauthorizenet_directpost.street.2']{
+	div[name='billingAddressauthorizenet_directpost.street.2'],
+	div[name='billingAddressvantiv_cc.street.1'],
+	div[name='billingAddressvantiv_cc.street.2'],
+	div[name='billingAddresscashondelivery.street.1'],
+	div[name='billingAddresscashondelivery.street.2']
+	{
 		display:none;
 	}
 	.field-tooltip .field-tooltip-content {
@@ -1894,16 +1650,17 @@ width: 48%;
 				border: 0;
 				display: inline-block;
 				font-size: 14px;
-				color: #075534 !important;
+				color: #444 !important;
 				font-weight: 700 !important;
-				background-color: unset !important;
+				background-color: #444 !important;
 				padding: 0 !important;
 				text-align: center;
-				
 				padding: 10px !important;
-				background: #075534 !important;
 				color: #fff !important;
 			}
+            #discount-form .primary .action.action-apply:hover{
+                background:#909090;
+            }
 			#discount-form {
 				.actions-toolbar {
 				    margin-left: 25.8%;
@@ -2459,8 +2216,8 @@ width: 48%;
 	}
 	.top-navigation { 
 		top: -10px; 
-
-		.ui-menu li a {
+		
+		.ui-menu li a { 
 			font-size: $font14 !important; 
 			font-weight:$font_normal !important; 
 			text-transform: uppercase; 
@@ -2486,7 +2243,7 @@ width: 48%;
 				p.free-shipping-text{
 					margin-bottom: 0px;
 				}
-			}
+			} 
 	}
 }
 
@@ -2606,7 +2363,7 @@ button.action{
 				}
 			}
 		}
-
+		
 		.primary{
 			.action.action-apply{
 				@media (max-width: 767px){
@@ -2787,7 +2544,7 @@ button.action{
 
 .cms-the-groconnect-app{
     .breadcrumbs{
-        margin-top: 7rem;
+        margin-top: 7rem;   
         .item:not(:last-child):after{
             content:"\002F";
         }
@@ -2802,5 +2559,81 @@ button.action{
         .page-main{
             margin-top:0px;
         }
+    }
+}
+
+.checkout-onepage-success{
+    .page-wrapper{
+        #maincontent{
+            margin-left: 16rem;
+            @include max-screen($screen__s){
+                margin-left:0rem;
+            }
+            .page-title-wrapper{
+                margin-top: 9.5rem;
+                .page-title{
+                    font-size: 16px;
+                    color: #000;
+                    font-weight: bold;
+                }
+            }
+            .checkout-success{
+                color: #000;
+                font-weight: 400;
+                width: 700px;
+                @include max-screen($screen__s){
+                    width:auto;
+                }
+                .actions-toolbar{
+                    width: 100%;
+                    padding-top: 20px;
+                    border-top: 1px solid #ccc;
+                    text-align: right;
+                    .primary{
+                        float: right;
+                        width: 100%;
+                        .action.primary.continue{
+                            color: #fff;
+                            padding: 10px 25px 10px 25px;
+                            display: inline-block;
+                            background: #075534;
+                            margin: 0;
+                            float: right;
+                            width: auto;
+                        }
+                    }
+                }
+            }
+            #registration{
+                display:none;
+            }
+        }
+    }
+}
+
+.opc-payment{
+	.payment-method-content{
+		.actions-toolbar{
+			@include max-screen($screen__s){
+				width:50%;
+			}
+			.primary{
+				.action.primary.checkout{
+					@include max-screen($screen__s){
+						padding: 0px 0px;
+						font-size:16px;
+					}
+				}
+			}
+		}
+	}
+}
+
+.checkout-cart-index{
+    .columns{
+        .block.crosssell{
+            margin-top:0px;            
+            margin-left:15px;
+       }
     }
 }
