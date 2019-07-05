@@ -36,7 +36,7 @@
             </parameter>
 
 
-            <!-- Banner Text Customizations -->
+            <!-- Customize Blurb -->
             <parameter name="HeroCalloutBannerTextLabel" visible="true" xsi:type="block">
                 <label>CUSTOMIZE BLURB</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
@@ -64,13 +64,14 @@
             </parameter>
 
 
-            <!-- Banner Text Highlight Customizations -->
+            <!-- Customize Small Blurb -->
             <parameter name="HeroCalloutBannerTextHighlightLabel" visible="true" xsi:type="block">
                 <label>CUSTOMIZE SMALL BLURB</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
-            <parameter name="bannertexthighlight" visible="true" xsi:type="text">
+            <parameter name="bannertexthighlight" visible="true" xsi:type="block">
                 <label>Small Blurb Text</label>
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
             </parameter>
             <parameter name="HeroCalloutBannerTextHighlightSize" visible="true" xsi:type="select"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextHighlightSize">
@@ -80,7 +81,8 @@
                 <label>Small Blurb Text Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
-            <parameter name="HeroCalloutBannerTextHighlightStyle" visible="true" xsi:type="multiselect"
+            <!-- Hiding Blurb Text Style in lue of WYSIWYG -->
+            <parameter name="HeroCalloutBannerTextHighlightStyle" visible="false" xsi:type="multiselect"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextHighlightStyle">
                 <label>Small Blurb Text Style</label>
             </parameter>

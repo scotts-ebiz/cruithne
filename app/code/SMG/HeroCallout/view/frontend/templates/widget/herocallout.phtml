@@ -145,7 +145,12 @@ endif;
             </div>
         <?php endif; ?>
 
-        <p class="heroCallout-bannerTextHighlight" style="<?php echo $HeroCalloutBannerTextHighlightCustomSize?> color:<?php echo $HeroCalloutBannerTextHighlightCustomColor?>; <?php echo $HeroCalloutBannerTextHighlightCustomStyle?>"><?php echo $block->getData('bannertexthighlight'); ?></p>
+        <?php if($block->getData('bannertexthighlight') != ''): ?>
+            <div class="heroCallout-bannerTextHighlight" style="<?php echo $HeroCalloutBannerTextHighlightCustomSize?>
+                color:<?php echo $HeroCalloutBannerTextHighlightCustomColor?>;">
+                <?php echo $block->getData('bannertexthighlight'); ?>
+            </div>
+        <?php endif; ?>
 
         <?php if($block->getData('buttontext')): ?>
         <button style="<?php echo $HeroCalloutButtonTextCustomSize?> color:<?php echo
