@@ -10,232 +10,128 @@
 
         <parameters>
 
-
-
             <!-- Banner Headline Customizations -->
-
             <parameter name="HeroCalloutBannerHeadlineLabel" visible="true" xsi:type="block">
-
                 <label>CUSTOMIZE HEADLINE</label>
-
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
-
             </parameter>
-
             <parameter name="bannerheadline" visible="true" xsi:type="text" required="true">
-
                 <label>Headline Text</label>
-
             </parameter>
-
             <parameter name="HeroCalloutBannerHeadlineSize" visible="true" xsi:type="select"
-
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerHeadlineSize">
-
                 <label>Headline Size (rem)</label>
-
             </parameter>
-
             <parameter name="HeroCalloutBannerHeadlineColor" visible="true" xsi:type="text">
-
-                <label>Headline Color (#xxxxxx)</label>
-
+                <label>Headline Desktop Color (#xxxxxx)</label>
                 <value>#000000</value>
-
             </parameter>
-
+            <parameter name="headlineMobileColor" visible="true" xsi:type="text">
+                <label>Headline Mobile Color (#xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
             <parameter name="HeroCalloutBannerHeadlineStyles" visible="true" xsi:type="multiselect"
-
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerHeadlineStyles">
-
                 <label>Headline Style</label>
-
             </parameter>
-
-
-
 
 
             <!-- Banner Text Customizations -->
-
             <parameter name="HeroCalloutBannerTextLabel" visible="true" xsi:type="block">
-
                 <label>CUSTOMIZE BLURB</label>
-
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
-
             </parameter>
-
             <parameter name="bannertext" visible="true" xsi:type="block">
-
                 <label>Blurb Text</label>
-
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
-
             </parameter>
-
             <parameter name="HeroCalloutBannerTextSize" visible="true" xsi:type="select"
-
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextSize">
-
                 <label>Blurb Text Size (rem)</label>
-
             </parameter>
-
             <parameter name="HeroCalloutBannerTextColor" visible="true" xsi:type="text">
-
-                <label>Blurb Text Color (#xxxxxx)</label>
-
+                <label>Blurb Desktop Text Color (#xxxxxx)</label>
                 <value>#000000</value>
-
             </parameter>
-
-            <parameter name="HeroCalloutBannerTextStyle" visible="true" xsi:type="multiselect"
-
+            <parameter name="blurbMobileTextColor" visible="true" xsi:type="text">
+                <label>Blurb Mobile Text Color (#xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
+            <!-- Hiding Blurb Text Style in lue of WYSIWYG -->
+            <parameter name="HeroCalloutBannerTextStyle" visible="false" xsi:type="multiselect"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextStyle">
-
                 <label>Blurb Text Style</label>
-
             </parameter>
-
-
-
 
 
             <!-- Banner Text Highlight Customizations -->
-
             <parameter name="HeroCalloutBannerTextHighlightLabel" visible="true" xsi:type="block">
-
                 <label>CUSTOMIZE SMALL BLURB</label>
-
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
-
             </parameter>
-
             <parameter name="bannertexthighlight" visible="true" xsi:type="text">
-
                 <label>Small Blurb Text</label>
-
             </parameter>
-
             <parameter name="HeroCalloutBannerTextHighlightSize" visible="true" xsi:type="select"
-
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextHighlightSize">
-
                 <label>Small Blurb Size (rem)</label>
-
             </parameter>
-
             <parameter name="HeroCalloutBannerTextHighlightColor" visible="true" xsi:type="text">
-
                 <label>Small Blurb Text Color (#xxxxxx)</label>
-
                 <value>#000000</value>
-
             </parameter>
-
             <parameter name="HeroCalloutBannerTextHighlightStyle" visible="true" xsi:type="multiselect"
-
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextHighlightStyle">
-
                 <label>Small Blurb Text Style</label>
-
             </parameter>
-
-
-
 
 
             <!-- Banner Image Section -->
-
             <parameter name="HeroCalloutBannerImagesLabel" visible="true" xsi:type="block">
-
                 <label>CUSTOMIZE BACKGROUND IMAGE</label>
-
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
-
             </parameter>
-
             <parameter name="bannerimage" visible="true" xsi:type="block">
-
                 <label>Banner Image</label>
-
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
-
             </parameter>
-
             <parameter name="bannerimagemobile" visible="true" xsi:type="block">
-
                 <label>Banner Image (Mobile)</label>
-
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
-
             </parameter>
-
-
 
 
 
             <!-- Button Customizations -->
-
             <parameter name="HeroCalloutButtonLabel" visible="true" xsi:type="block">
-
                 <label>CUSTOMIZE CTA</label>
-
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
-
             </parameter>
-
             <parameter name="buttontext" visible="true" xsi:type="text">
-
                 <label>CTA Text</label>
-
             </parameter>
-
             <parameter name="HeroCalloutButtonTextSize" visible="true" xsi:type="select"
-
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutButtonTextSize">
-
                 <label>CTA Text Size (rem)</label>
-
             </parameter>
-
             <parameter name="HeroCalloutButtonTextStyle" visible="true" xsi:type="multiselect"
-
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutButtonTextStyle">
-
                 <label>CTA Text Style</label>
-
             </parameter>
-
             <parameter name="HeroCalloutButtonTextColor" visible="true" xsi:type="text">
-
                 <label>CTA Text Color (#xxxxxx)</label>
-
                 <value>#ffffff</value>
-
             </parameter>
-
             <parameter name="HeroCalloutButtonColor" visible="true" xsi:type="text">
-
                 <label>CTA Color (#xxxxxx)</label>
-
                 <value>#4d4d4e</value>
-
             </parameter>
-
             <parameter name="HeroCalloutButtonHoverColor" visible="true" xsi:type="text">
-
                 <label>CTA Color Hover (#xxxxxx)</label>
-
                 <value>#4d4d4e</value>
-
             </parameter>
-
             <parameter name="buttonlink" visible="true" xsi:type="text">
-
                 <label>CTA Link (http://www.url.com)</label>
-
             </parameter>
 
         </parameters>

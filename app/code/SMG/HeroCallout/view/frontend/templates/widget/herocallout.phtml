@@ -16,6 +16,20 @@ $HeroCalloutBannerTextCustomStyle = '';
 $HeroCalloutButtonTextCustomStyle = '';
 $selectedButtonlink = '';
 $selectedHeroCalloutButtonHoverColor = '';
+$selectedBlurbMobileTextColor = '';
+$selectedHeadlineMobileColor = '';
+
+
+//If blurbMobileTextColor exists then set to variable
+if($block->getData('blurbMobileTextColor') != ''):
+  $selectedBlurbMobileTextColor = $block->getData('blurbMobileTextColor');
+endif;
+
+
+//If headlineMobileColor exists then set to variable
+if($block->getData('headlineMobileColor') != ''):
+  $selectedHeadlineMobileColor = $block->getData('headlineMobileColor');
+endif;
 
 
 //If buttonlink exists then set to variable
@@ -122,8 +136,15 @@ endif;
 <section class="hero-callout col-2 span_12_of_12">
     <div class="content">
         <h2 style="<?php echo $HeroCalloutBannerHeadlineCustomSize?> color:<?php echo $HeroCalloutBannerHeadlineCustomColor?>; <?php echo $HeroCalloutBannerHeadlineCustomStyles?>"><?php echo $block->getData('bannerheadline'); ?></h2>
-        <p class="heroCallout-bannerText" style="<?php echo $HeroCalloutBannerTextCustomSize?> color:<?php echo $HeroCalloutBannerTextCustomColor?>; <?php echo $HeroCalloutBannerTextCustomStyle?>"><?php echo $block->getData
-        ('bannertext'); ?></p>
+
+        <?php if($block->getData('bannertext') != ''): ?>
+            <div class="heroCallout-bannerText" style="<?php echo $HeroCalloutBannerTextCustomSize?> color:<?php echo
+            $HeroCalloutBannerTextCustomColor?>;">
+                <!-- Load WYSIWYG Content -->
+                <?php echo $block->getData('bannertext'); ?>
+            </div>
+        <?php endif; ?>
+
         <p class="heroCallout-bannerTextHighlight" style="<?php echo $HeroCalloutBannerTextHighlightCustomSize?> color:<?php echo $HeroCalloutBannerTextHighlightCustomColor?>; <?php echo $HeroCalloutBannerTextHighlightCustomStyle?>"><?php echo $block->getData('bannertexthighlight'); ?></p>
 
         <?php if($block->getData('buttontext')): ?>
@@ -136,6 +157,14 @@ endif;
 </section>
 
 <style type="text/css">
+    @media screen and (max-width: 1024px) {
+        .hero-callout .content h2 {
+            color: <?php echo $selectedHeadlineMobileColor?> !important;
+        }
+        .hero-callout .content .heroCallout-bannerText{
+            color: <?php echo $selectedBlurbMobileTextColor?> !important;
+        }
+    }
     <?php if($this->getData('bannerimagemobile') != ''): ?>
     .hero-callout {
         background-image: url('<?php echo $block->getData('bannerimagemobile'); ?>');
