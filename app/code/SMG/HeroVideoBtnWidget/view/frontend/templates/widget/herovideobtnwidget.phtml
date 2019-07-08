@@ -157,7 +157,6 @@ if($block->getData('heroVideoBtnImgBottomPadding') != ''){
 } else {
   $heroVideoBtnImgBottomPaddingValue = '15%';
 }
-
 ?>
 
 <!-- Setting CMS Value of Hover Color -->
@@ -188,7 +187,7 @@ $heroVideoBtnImgBottomPaddingValue;?>; background-position: center; background-s
         </p>
         <div class="video">
           <?php if($this->getData('heroVideoBtnIframeVideoLink') != ''): ?>
-              <a class="watch-video play heroVideoBtn-video-link" href="#" style="background-color:<? echo
+              <a class="watch-video play heroVideoBtn-video-link button" href="#" style="background-color:<? echo
               $heroVideoBtnVideoCtaBgColorValue;?>; color:<? echo $heroVideoBtnVideoCtaTxtColorValue?>; <? echo
               $heroVideoBtnVideoCtaTxtSizeValue;?>">
                     <?php echo $heroVideoBtnVideoCtaTxtValue;?>

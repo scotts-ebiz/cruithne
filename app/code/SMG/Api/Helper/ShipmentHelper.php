@@ -211,6 +211,7 @@ class ShipmentHelper
             // initialize the items array
             $items = [];
             $tracks = [];
+            $shipTrackingNumbers = [];
 
             /**
              * @var \SMG\Sap\Model\SapOrder $sapOrder
@@ -222,6 +223,14 @@ class ShipmentHelper
              */
             foreach ($order->getAllItems() as $orderItem)
             {
+                /**
+                 * @var \Magento\Sales\Api\Data\ShipmentItemCreationInterface $shipmentItemCreation
+                 */
+                $shipmentItemCreation = $this->_shipmentItemCreationInterfaceFactory->create();
+                $shipmentItemCreation->setOrderItemId($orderItem->getItemId());
+                $shipmentItemCreation->setQty($orderItem->getQtyOrdered());
+                $items[] = $shipmentItemCreation;
+
                 // get the sap order item
                 $sapOrderItems = $this->_sapOrderItemCollectionFactory->create();
                 $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $sapOrder->getId()]);
@@ -237,22 +246,25 @@ class ShipmentHelper
                 {
                     if (!empty($sapOrderItem))
                     {
-                        /**
-                         * @var \Magento\Sales\Api\Data\ShipmentItemCreationInterface $shipmentItemCreation
-                         */
-                        $shipmentItemCreation = $this->_shipmentItemCreationInterfaceFactory->create();
-                        $shipmentItemCreation->setOrderItemId($orderItem->getItemId());
-                        $shipmentItemCreation->setQty($orderItem->getQtyOrdered());
-                        $items[] = $shipmentItemCreation;
+                        // get the shipping tracking number
+                        $shipTrackingNumber = $sapOrderItem->getData('ship_tracking_number');
 
-                        /**
-                         * @var \Magento\Sales\Api\Data\ShipmentTrackCreationInterface @$shipmentTrackItemCreation
-                         */
-                        $shipmentTrackItemCreation = $this->_shipmentTrackCreationInterfaceFactory->create();
-                        $shipmentTrackItemCreation->setTrackNumber($sapOrderItem->getData('ship_tracking_number'));
-                        $shipmentTrackItemCreation->setTitle($order->getShippingDescription());
-                        $shipmentTrackItemCreation->setCarrierCode("Federal Express");
-                        $tracks[] = $shipmentTrackItemCreation;
+                        // check if the ship tracking number exists in the array as we don't want to add
+                        // the same ship tracking number twice
+                        if (!in_array($shipTrackingNumber, $shipTrackingNumbers))
+                        {
+                            // add the ship tracking number to the array
+                            $shipTrackingNumbers[] = $shipTrackingNumber;
+
+                            /**
+                             * @var \Magento\Sales\Api\Data\ShipmentTrackCreationInterface @$shipmentTrackItemCreation
+                             */
+                            $shipmentTrackItemCreation = $this->_shipmentTrackCreationInterfaceFactory->create();
+                            $shipmentTrackItemCreation->setTrackNumber($shipTrackingNumber);
+                            $shipmentTrackItemCreation->setTitle($order->getShippingDescription());
+                            $shipmentTrackItemCreation->setCarrierCode("Federal Express");
+                            $tracks[] = $shipmentTrackItemCreation;
+                        }
                     }
                 }
             }
