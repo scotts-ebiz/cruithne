@@ -241,13 +241,8 @@ class BatchCaptureHelper
                             $errorMsg = "An error has occurred for order - " . $orderId . " - " . $e->getMessage();
                             $this->_logger->error($errorMsg);
 
-                            // there was an issue with capturing the payment
-                            // so set to unauthorized flag
-                            $sapBatchOrder->setData("is_unauthorized", true);
-
-                            // add the order id to the array to send email
-                            // to customer service
-                            $this->_customerServiceEmailIds[] = $sapBatchOrder->getData('order_id');
+                            // update the sap order batch
+                            $this->updateSapBatch($sapBatchOrder);
                         }
                     }
                     else
@@ -260,10 +255,7 @@ class BatchCaptureHelper
             }
             else
             {
-                $invoice = $this->createInvoiceAndCapture($sapBatchOrder);
-
-                // update the sap order batch
-                $this->updateSapBatch($sapBatchOrder, $invoice);
+                $this->createInvoiceAndCapture($sapBatchOrder);
             }
         }
 
@@ -280,25 +272,28 @@ class BatchCaptureHelper
      * @param $invoice Invoice
      * @return bool
      */
-    private function wasCaptureSuccessful($invoice)
+    private function wasCaptureSuccessful($invoice = null)
     {
         // set the success flag
         $isBatchCaptureSuccess = false;
 
-        // load the transaction data
-        $transactions = $this->_transactionCollectionFactory->create();
-        $transactions->addFieldToFilter('order_id', ['eq' => $invoice->getData('order_id')]);
-        $transactions->addFieldToFilter('txn_id', ['eq' => $invoice->getData('transaction_id')]);
-
-        // loop through the transactions but there should only be one
-        foreach ($transactions as $transaction)
+        if (isset($invoice))
         {
-            $additionalInformation = $transaction->getData('additional_information');
-            if (!empty($additionalInformation))
+            // load the transaction data
+            $transactions = $this->_transactionCollectionFactory->create();
+            $transactions->addFieldToFilter('order_id', ['eq' => $invoice->getData('order_id')]);
+            $transactions->addFieldToFilter('txn_id', ['eq' => $invoice->getData('transaction_id')]);
+
+            // loop through the transactions but there should only be one
+            foreach ($transactions as $transaction)
             {
-                if (in_array($additionalInformation['raw_details_info']['response'], self::CAPTURE_APPROVED_STATUS))
+                $additionalInformation = $transaction->getData('additional_information');
+                if (!empty($additionalInformation))
                 {
-                    $isBatchCaptureSuccess = true;
+                    if (in_array($additionalInformation['raw_details_info']['response'], self::CAPTURE_APPROVED_STATUS))
+                    {
+                        $isBatchCaptureSuccess = true;
+                    }
                 }
             }
         }
@@ -311,72 +306,64 @@ class BatchCaptureHelper
      * Update the Sap Batch Order table
      *
      * @param $sapBatchOrder \SMG\Sap\Model\SapOrderBatch
-     * @param $invoice
+     * @param $invoice Invoice
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    private function updateSapBatch($sapBatchOrder, $invoice)
+    private function updateSapBatch($sapBatchOrder, $invoice = null)
     {
+        $today = date('Y-m-d H:i:s');
+
+        // set the capture date
+        $sapBatchOrder->setData('capture_process_date', $today);
+
         // check to see if the $invoice has been set
-        if (isset($invoice))
+        if ($this->wasCaptureSuccessful($invoice))
         {
-            $today = date('Y-m-d H:i:s');
-
-            // set the capture date
-            $sapBatchOrder->setData('capture_process_date', $today);
-
-            // check the status of the invoice
-            if ($this->wasCaptureSuccessful($invoice))
+            // check if the ship flag has been set
+            // if it hasn't see if it can be set
+            if (!$sapBatchOrder->getData('is_shipment'))
             {
-                // check if the ship flag has been set
-                // if it hasn't see if it can be set
-                if (!$sapBatchOrder->getData('is_shipment'))
-                {
                     // get the items from the sap item table to check
                     // to see if the order is able to be shipped
                     /**
                      * @var SapOrder $sapOrder
-                     */
-                    $sapOrder = $this->_sapOrderResource->getSapOrderByOrderId($sapBatchOrder->getData("order_id"));
+                */
+                $sapOrder = $this->_sapOrderResource->getSapOrderByOrderId($sapBatchOrder->getData("order_id"));
 
-                    // get the items
-                    $sapOrderItems = $this->_sapOrderItemCollectionFactory->create();
-                    $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $sapOrder->getId()]);
-                    $sapOrderItems->addFieldToFilter('ship_tracking_number', ['notnull' => true]);
+                // get the items
+                $sapOrderItems = $this->_sapOrderItemCollectionFactory->create();
+                $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $sapOrder->getId()]);
+                $sapOrderItems->addFieldToFilter('ship_tracking_number', ['notnull' => true]);
 
-                    // if there is a ship track number then we can set the flag
-                    if ($sapOrderItems->count() > 0)
-                    {
-                        $sapBatchOrder->setData('is_shipment', true);
-                    }
+                // if there is a ship track number then we can set the flag
+                if ($sapOrderItems->count() > 0)
+                {
+                    $sapBatchOrder->setData('is_shipment', true);
                 }
             }
-            else
-            {
-                // there was an issue with capturing the payment
-                // so set to unauthorized flag
-                $sapBatchOrder->setData("is_unauthorized", true);
-
-                // add the order id to the array to send email
-                // to customer service
-                $this->_customerServiceEmailIds[] = $sapBatchOrder->getData('order_id');
-            }
-
-            // save the data
-            $this->_sapOrderBatchResource->save($sapBatchOrder);
         }
+        else
+        {
+            // there was an issue with capturing the payment
+            // so set to unauthorized flag
+            $sapBatchOrder->setData("is_unauthorized", true);
+
+            // add the order id to the array to send email
+            // to customer service
+            $this->_customerServiceEmailIds[] = $sapBatchOrder->getData('order_id');
+        }
+
+        // save the data
+        $this->_sapOrderBatchResource->save($sapBatchOrder);
     }
 
     /**
      * Invoice and Capture the order
      *
      * @param $sapBatchOrder
-     * @return null
      */
     private function createInvoiceAndCapture($sapBatchOrder)
     {
-        // initialize the invoice response
-        $invoice = null;
-
         // get the order Id
         $orderId = $sapBatchOrder->getData("order_id");
 
@@ -390,39 +377,51 @@ class BatchCaptureHelper
 
         if ($order->canInvoice())
         {
-            // initialize the items array
-            $items = [];
-
-            /**
-             * @var Item $orderItem
-             */
-            foreach ($order->getAllItems() as $orderItem)
+            try
             {
+                // initialize the items array
+                $items = [];
+
                 /**
-                 * @var \Magento\Sales\Api\Data\InvoiceItemCreationInterface $invoiceItemCreation
+                 * @var Item $orderItem
                  */
-                $invoiceItemCreation = $this->_invoiceItemCreationInterfaceFactory->create();
-                $invoiceItemCreation->setOrderItemId($orderItem->getItemId());
-                $invoiceItemCreation->setQty($orderItem->getQtyOrdered());
-                $items[] = $invoiceItemCreation;
-            }
+                foreach ($order->getAllItems() as $orderItem)
+                {
+                    /**
+                     * @var \Magento\Sales\Api\Data\InvoiceItemCreationInterface $invoiceItemCreation
+                     */
+                    $invoiceItemCreation = $this->_invoiceItemCreationInterfaceFactory->create();
+                    $invoiceItemCreation->setOrderItemId($orderItem->getItemId());
+                    $invoiceItemCreation->setQty($orderItem->getQtyOrdered());
+                    $items[] = $invoiceItemCreation;
+                }
 
-            // call the invoice API to create the invoice and capture the credit card request
-            $invoiceId = $this->_invoiceOrder->execute($orderId, true, $items);
-            if (!empty($invoiceId))
-            {
+                // call the invoice API to create the invoice and capture the credit card request
+                $invoiceId = $this->_invoiceOrder->execute($orderId, true, $items);
+
                 // load the invoice data
                 $invoice = $this->_invoiceFactory->create();
                 $this->_invoiceResource->load($invoice, $invoiceId);
+
+                // update the sap order batch
+                $this->updateSapBatch($sapBatchOrder, $invoice);
+            }
+            catch (\Exception $e)
+            {
+                $errorMsg = "An error has occurred for order - " . $orderId . " - " . $e->getMessage();
+                $this->_logger->error($errorMsg);
+
+                // update the sap order batch
+                $this->updateSapBatch($sapBatchOrder);
             }
         }
         else
         {
             $this->_logger->error("The order Id " . $orderId . " can not be invoiced.  The order status currently is " . $order->getStatus());
-        }
 
-        // return
-        return $invoice;
+            // update the sap order batch
+            $this->updateSapBatch($sapBatchOrder);
+        }
     }
 
     /**
