@@ -28,9 +28,9 @@ $large_bundle_price = '';
                 <div class="section__hero--wrapper info-right">
                     <div class="section__hero--purchase">
                         <div class="section__hero--text">
-                            <h1 class="section__hero--headline"><?php echo $block->escapeHtmlAttr($block->getData('herosupportingheadline')); ?></h1>
-                            <h2 class="section__hero--subhead"><?php echo $block->escapeHtmlAttr($block->getData('heroheadline')); ?></h2>
-                            <p class="section__hero--description"><?php echo $block->escapeHtmlAttr($block->getData('herodescription')); ?></p>
+                            <h1 class="section__hero--headline"><?php echo $block->escapeHtml($block->getData('herosupportingheadline')); ?></h1>
+                            <h2 class="section__hero--subhead"><?php echo $block->escapeHtml($block->getData('heroheadline')); ?></h2>
+                            <p class="section__hero--description"><?php echo $block->escapeHtml($block->getData('herodescription')); ?></p>
                         </div>
 
 <!-- Section Hero Select -->
@@ -77,10 +77,10 @@ $large_bundle_price = '';
                                     }
                             ?>
                             <div class="section__hero--option">
-                                <form action="<?php echo $block->escapeHtml($small_bundle_url); ?>" method="post" id="product_addtocart_form">
-                                    <input name="form_key" type="hidden" value="<?php echo $block->escapeHtml($block->getFormKey()); ?>" />
-				    <input type="hidden" name="item" value="<?php echo $block->escapeHtml($small_bundle_id); ?>" />
-                                    <input type="hidden" name="product" value="<?php echo $block->escapeHtml($small_bundle_id); ?>" />
+                                <form action="<?php echo $block->escapeHtmlAttr($small_bundle_url); ?>" method="post" id="product_addtocart_form">
+                                    <input name="form_key" type="hidden" value="<?php echo $block->escapeHtmlAttr($block->getFormKey()); ?>" />
+				    <input type="hidden" name="item" value="<?php echo $block->escapeHtmlAttr($small_bundle_id); ?>" />
+                                    <input type="hidden" name="product" value="<?php echo $block->escapeHtmlAttr($small_bundle_id); ?>" />
                                     <input type="hidden" name="related_product" id="related-products-field" value="" />
 				    <input type="hidden" name="selected_configurable_option" value="">
                                     <?php echo $block->escapeHtml($options_html); ?>
