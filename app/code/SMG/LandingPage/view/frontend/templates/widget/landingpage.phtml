@@ -74,9 +74,10 @@ $large_bundle_price = '';
                                     }
                             ?>
                             <div class="section__hero--option">
-                                <form action="<?php echo $small_bundle_url; ?>" method="post" id="product_addtocart_form">
-                                    <input name="form_key" type="hidden" value="<?php echo $block->getFormKey(); ?>" />
-                                    <input type="hidden" name="product" value="<?php echo $small_bundle_id; ?>" />
+                                <form action="<?php echo $block->escapeHtmlAttr($small_bundle_url); ?>" method="post" id="product_addtocart_form">
+                                    <input name="form_key" type="hidden" value="<?php echo $block->escapeHtmlAttr($block->getFormKey()); ?>" />
+				    <input type="hidden" name="item" value="<?php echo $block->escapeHtmlAttr($small_bundle_id); ?>" />
+                                    <input type="hidden" name="product" value="<?php echo $block->escapeHtmlAttr($small_bundle_id); ?>" />
                                     <input type="hidden" name="related_product" id="related-products-field" value="" />
                                     <?php echo $options_html; ?>
                                     <button type="submit" class="section__hero--link"><?php echo $block->getData('smallyardtext'); ?>
