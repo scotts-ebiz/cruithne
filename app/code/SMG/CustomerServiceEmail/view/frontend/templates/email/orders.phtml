@@ -29,7 +29,7 @@ $giftMessageHelper = $this->helper('Magento\GiftMessage\Helper\Message');
             <table class="order-details">
                 <tr>
                     <td class="address-details">
-                        <h3>Billing Info</h3>
+                        <h3><?= echo $block->escapeHtml(__('Billing Info')) ?></h3>
                         <p><?= $block->escapeHtml(getFormattedBillingAddress($order)) ?></p>
                     </td>
                     <?php if ($order->getIsNotVirtual()): ?>
@@ -41,12 +41,12 @@ $giftMessageHelper = $this->helper('Magento\GiftMessage\Helper\Message');
                 </tr>
                 <tr>
                     <td class="method-info">
-                        <h3>Payment Method</h3>
+                        <h3>echo $block->escapeHtml(__('Payment Method'))</h3>
                         <?= $block->getPaymentHtml($order) ?>
                     </td>
                     <?php if ($order->getIsNotVirtual()): ?>
                         <td class="method-info">
-                            <h3>Shipping Method</h3>
+                            <h3>echo $block->escapeHtml(__('Shipping Method'))</h3>
                             <p><?= $order->escapeHtml(getShippingDescription()) ?></p>
                         </td>
                     <?php endif; ?>
