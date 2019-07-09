@@ -13,4 +13,4 @@ S3_BUCKET=s3://scotts-scotts-b2c-nonprod
 read -p "Enter Location to list: " FOLDER_TO_LIST
 
 # Run the command to list the files in the S3 bucket
-aws s3 ls $S3_BUCKET/$FOLDER_TO_LIST
+aws s3 ls $S3_BUCKET/$FOLDER_TO_LIST/
