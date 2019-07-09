@@ -130,7 +130,7 @@ class AuthReversalHelper
             }
 
             // update the sap order batch
-            $this->updateSapBatch($sapBatchOrder, $wasInvoiced);
+            $this->updateSapBatch($sapBatchOrder);
         }
 
         // return
@@ -138,61 +138,20 @@ class AuthReversalHelper
     }
 
     /**
-     * Determine if the cancel and authorization reversal was successful
-     *
-     * @param $orderId
-     * @return bool
-     */
-    private function wasCancelAndUnAuthorizeSuccessful($orderId)
-    {
-        // set the success flag
-        $isCancelAndUnAuthorizeSuccess = false;
-
-        // load the transaction data
-        $transactions = $this->_transactionCollectionFactory->create();
-        $transactions->addFieldToFilter('order_id', ['eq' => $orderId]);
-        $transactions->addFieldToFilter('txn_type', ['eq' => 'void']);
-
-        // loop through the transactions but there should only be one
-        foreach ($transactions as $transaction)
-        {
-            $additionalInformation = $transaction->getData('additional_information');
-            if (!empty($additionalInformation))
-            {
-                if (in_array($additionalInformation['raw_details_info']['response'], self::CAPTURE_APPROVED_STATUS))
-                {
-                    $isCancelAndUnAuthorizeSuccess = true;
-                }
-            }
-        }
-
-        // return
-        return $isCancelAndUnAuthorizeSuccess;
-    }
-
-    /**
      * Update the Sap Batch Order table
      *
      * @param $sapBatchOrder \SMG\Sap\Model\SapOrderBatch
-     * @param $wasInvoiced bool
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    private function updateSapBatch($sapBatchOrder, $wasInvoiced)
+    private function updateSapBatch($sapBatchOrder)
     {
-        // get the order if for this order
-        $orderId = $sapBatchOrder->getData('order_id');
+        $today = date('Y-m-d H:i:s');
 
-        // check the status of the cancel
-        if ($wasInvoiced || $this->wasCancelAndUnAuthorizeSuccessful($orderId))
-        {
-            $today = date('Y-m-d H:i:s');
+        // set the capture date
+        $sapBatchOrder->setData('unauthorized_process_date', $today);
 
-            // set the capture date
-            $sapBatchOrder->setData('unauthorized_process_date', $today);
-
-            // save the data
-            $this->_sapOrderBatchResource->save($sapBatchOrder);
-        }
+        // save the data
+        $this->_sapOrderBatchResource->save($sapBatchOrder);
     }
 
     /**
@@ -202,7 +161,15 @@ class AuthReversalHelper
      */
     private function cancelAndUnAuthorize($orderId)
     {
-        // cancel the request
-        $this->_orderManagementInterface->cancel($orderId);
+        try
+        {
+            // cancel the request
+            $this->_orderManagementInterface->cancel($orderId);
+        }
+        catch (\Exception $e)
+        {
+            $errorMsg = "An error has occurred for order - " . $orderId . " - " . $e->getMessage();
+            $this->_logger->error($errorMsg);
+        }
     }
 }

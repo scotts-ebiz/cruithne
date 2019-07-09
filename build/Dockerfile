@@ -148,8 +148,3 @@ ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
 # CMD /usr/sbin/apachectl -DFOREGROUND 
 
 # Let's generate a new commit hash.
-
-# REMOVE ME!
-RUN echo "\nupload_tmp_dir=/var/www/html/magento2/pub/media/tmp\n" >> /etc/php/7.2/apache2/conf.d/00_magento.ini
-RUN echo "\nupload_tmp_dir=/var/www/html/magento2/pub/media/tmp\n" >> /etc/php/7.2/cli/conf.d/00_magento.ini
-
