@@ -226,13 +226,29 @@ class BatchCaptureHelper
                     // if so then lets capture
                     if ($invoice->canCapture())
                     {
-                        // capture the invoice
-                        // this is when the order was invoiced but not capture
-                        // which can only occur in the admin portal
-                        $invoice->capture();
+                        try
+                        {
+                            // capture the invoice
+                            // this is when the order was invoiced but not capture
+                            // which can only occur in the admin portal
+                            $invoice->capture();
 
-                        // update the sap order batch
-                        $this->updateSapBatch($sapBatchOrder, $invoice);
+                            // update the sap order batch
+                            $this->updateSapBatch($sapBatchOrder, $invoice);
+                        }
+                        catch (\Exception $e)
+                        {
+                            $errorMsg = "An error has occurred for order - " . $orderId . " - " . $e->getMessage();
+                            $this->_logger->error($errorMsg);
+
+                            // there was an issue with capturing the payment
+                            // so set to unauthorized flag
+                            $sapBatchOrder->setData("is_unauthorized", true);
+
+                            // add the order id to the array to send email
+                            // to customer service
+                            $this->_customerServiceEmailIds[] = $sapBatchOrder->getData('order_id');
+                        }
                     }
                     else
                     {

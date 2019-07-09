@@ -202,7 +202,15 @@ class AuthReversalHelper
      */
     private function cancelAndUnAuthorize($orderId)
     {
-        // cancel the request
-        $this->_orderManagementInterface->cancel($orderId);
+        try
+        {
+            // cancel the request
+            $this->_orderManagementInterface->cancel($orderId);
+        }
+        catch (\Exception $e)
+        {
+            $errorMsg = "An error has occurred for order - " . $orderId . " - " . $e->getMessage();
+            $this->_logger->error($errorMsg);
+        }
     }
 }
