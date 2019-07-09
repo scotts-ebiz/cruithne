@@ -46,44 +46,44 @@
             </parameter>
 
 
-            <!-- Customize Banner Text Img-->
+            <!-- Customize Blurb Img-->
             <parameter name="bannerTextImgCustomizeLabel" visible="true" xsi:type="block">
-                <label>CUSTOMIZE BANNER TEXT IMG</label>
+                <label>CUSTOMIZE BLURB IMG</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannerTextImageOne" visible="true" xsi:type="block">
-                <label>Banner Text Image 1</label>
+                <label>Blurb Image 1</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
-            </parameter>
-            <parameter name="alttextimage1" visible="true" xsi:type="text">
-                <label>Alt Text For Image 1</label>
             </parameter>
             <parameter name="bannerTextImgOneLink" visible="true" xsi:type="text">
-                <label>Banner Text Image 1 Link</label>
+                <label>Blurb Image 1 Link</label>
+            </parameter>
+            <parameter name="blurbImgOneAltText" visible="true" xsi:type="text">
+                <label>Blurb Image 1 Alt Text</label>
             </parameter>
             <parameter name="bannerTextImageTwo" visible="true" xsi:type="block">
-                <label>Banner Text Image 2</label>
+                <label>Blurb Image 2</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
-            <parameter name="alttextimage2" visible="true" xsi:type="text">
-                <label>Alt Text For Image 2</label>
-            </parameter>
             <parameter name="bannerTextImgTwoLink" visible="true" xsi:type="text">
-                <label>Banner Text Image 2 Link</label>
+                <label>Blurb Image 2 Link</label>
+            </parameter>
+            <parameter name="blurbImgTwoAltText" visible="true" xsi:type="text">
+                <label>Blurb Image 2 Alt Text</label>
             </parameter>
 
 
             <!-- Customize Callout Img / Background -->
             <parameter name="imgBgCustomizeLabel" visible="true" xsi:type="block">
-                <label>CUSTOMIZE IMAGE / BACKGROUND</label>
+                <label>CUSTOMIZE IMAGES</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannerimage" visible="true" xsi:type="block">
                 <label>Callout Image (800x800)</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
-            <parameter name="banneralt" visible="true" xsi:type="text">
-                <label>Alt Text For Banner image</label>
+            <parameter name="bannerCalloutImageAltText" visible="true" xsi:type="text">
+                <label>Callout Image Alt Text</label>
             </parameter>
             <parameter name="bgcolor" visible="true" xsi:type="text">
                 <label>Background Color (in #xxxxxx)</label>
