@@ -6,7 +6,7 @@
         <parameters>
             <!-- Customize Banner Headline -->
             <parameter name="bannerHeadlineCustomizeLabel" visible="true" xsi:type="block">
-                <label>CUSTOMIZE BANNER HEADLINE</label>
+                <label>CUSTOMIZE HEADLINE</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannerheadline" visible="true" xsi:type="text" required="true">
@@ -17,7 +17,7 @@
                 <value>#000000</value>
             </parameter>
             <parameter name="headlinetextstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCallout\Model\Source\HeadlineTextStyles">
-                <label>Banner Headline Style</label>
+                <label>Headline Style</label>
             </parameter>
 
 
@@ -46,7 +46,7 @@
             </parameter>
 
 
-            <!-- Customize Blurb Imgs-->
+            <!-- Customize Blurb Imgs -->
             <parameter name="bannerTextImgCustomizeLabel" visible="true" xsi:type="block">
                 <label>CUSTOMIZE BLURB IMAGES</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
