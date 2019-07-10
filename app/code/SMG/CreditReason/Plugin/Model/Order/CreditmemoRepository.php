@@ -14,8 +14,8 @@ use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order\Item as ItemResource;
 
 use Psr\Log\LoggerInterface;
-use SMG\Sap\Model\SapOrderBatchItemFactory;
-use SMG\Sap\Model\ResourceModel\SapOrderBatchItem as SapOrderBatchItemResource;
+use SMG\Sap\Model\SapOrderBatchCreditmemoFactory;
+use SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo as SapOrderBatchCreditmemoResource;
 
 class CreditmemoRepository
 {
@@ -30,14 +30,14 @@ class CreditmemoRepository
     protected $_request;
 
     /**
-     * @var SapOrderBatchItemFactory
+     * @var SapOrderBatchCreditmemoFactory
      */
-    protected $_sapOrderBatchItemFactory;
+    protected $_sapOrderBatchCreditmemoFactory;
 
     /**
-     * @var SapOrderBatchItemResource
+     * @var SapOrderBatchCreditmemoResource
      */
-    protected $_sapOrderBatchItemResource;
+    protected $_sapOrderBatchCreditmemoResource;
 
     /**
      * @var ItemFactory
@@ -53,22 +53,22 @@ class CreditmemoRepository
      * CreditmemoRepository constructor.
      * @param LoggerInterface $logger
      * @param RequestInterface $request
-     * @param SapOrderBatchItemFactory $sapOrderBatchItemFactory
-     * @param SapOrderBatchItemResource $sapOrderBatchItemResource
+     * @param SapOrderBatchCreditmemoFactory $sapOrderBatchCreditmemoFactory
+     * @param SapOrderBatchCreditmemoResource $sapOrderBatchCreditmemoResource
      * @param ItemFactory $itemFactory
      * @param ItemResource $itemResource
      */
     public function __construct(LoggerInterface $logger,
         RequestInterface $request,
-        SapOrderBatchItemFactory $sapOrderBatchItemFactory,
-        SapOrderBatchItemResource $sapOrderBatchItemResource,
+        SapOrderBatchCreditmemoFactory $sapOrderBatchCreditmemoFactory,
+        SapOrderBatchCreditmemoResource $sapOrderBatchCreditmemoResource,
         ItemFactory $itemFactory,
         ItemResource $itemResource)
     {
         $this->_logger = $logger;
         $this->_request = $request;
-        $this->_sapOrderBatchItemFactory = $sapOrderBatchItemFactory;
-        $this->_sapOrderBatchItemResource = $sapOrderBatchItemResource;
+        $this->_sapOrderBatchCreditmemoFactory = $sapOrderBatchCreditmemoFactory;
+        $this->_sapOrderBatchCreditmemoResource = $sapOrderBatchCreditmemoResource;
         $this->_itemFactory = $itemFactory;
         $this->_itemResource = $itemResource;
     }
@@ -95,30 +95,47 @@ class CreditmemoRepository
              */
             $orderItem = $this->_itemFactory->create();
 
-            // loop through the items on the credit memo
-            /**
-             * @var \Magento\Sales\Api\Data\CreditmemoInterface[] $items
-             */
-            foreach ($items as $item)
+            // get the keys for the items on the form
+            // the keys are the orderItemId values that
+            // we need to check product information
+            // loop through the keys as these are the items
+            // that we want to update
+            $keys = array_keys($itemsParams);
+            foreach ($keys as $key)
             {
-                // get the order item id
-                $orderItemId = $item->getData("order_item_id");
-
-                // load the order item from the order item id
-                $this->_itemResource->load($orderItem, $orderItemId);
-
-                // determine if this is a bundle product
-                // if it is then we will wait to update the reason code values
-                // otherwise update the reason code values now
-                $productType = $orderItem->getProductType();
-                if (isset($productType) && $productType != 'bundle')
+                // loop through the items on the credit memo
+                /**
+                 * @var \Magento\Sales\Api\Data\CreditmemoInterface[] $items
+                 */
+                foreach ($items as $item)
                 {
-                    // get the refunded reason code
-                    $refundedReadonCode = $itemsParams[$orderItemId]['refunded_reason_code'];
-                    if (isset($refundedReadonCode))
+                    // get the order item id
+                    $orderItemId = $item->getData("order_item_id");
+
+                    // determine if this was the item that was modified
+                    // on the creditmemo form
+                    if ($orderItemId == $key)
                     {
-                        // set the refunded reason code on the credit memo item
-                        $item->setData('refunded_reason_code', $refundedReadonCode);
+                        // load the order item from the order item id
+                        $this->_itemResource->load($orderItem, $orderItemId);
+
+                        // determine if this is a bundle product
+                        // if it is then we will wait to update the reason code values
+                        // otherwise update the reason code values now
+                        $productType = $orderItem->getProductType();
+                        if (isset($productType) && $productType != 'bundle')
+                        {
+                            // get the refunded reason code
+                            $refundedReadonCode = $itemsParams[$orderItemId]['refunded_reason_code'];
+                            if (isset($refundedReadonCode))
+                            {
+                                // set the refunded reason code on the credit memo item
+                                $item->setData('refunded_reason_code', $refundedReadonCode);
+                            }
+                        }
+
+                        // return out of the loop
+                        break;
                     }
                 }
             }
@@ -167,16 +184,16 @@ class CreditmemoRepository
                 if (isset($productType) && $productType != 'bundle')
                 {
                     // create a record in the sales order sap batch items table
-                    $sapOrderBatchItem = $this->_sapOrderBatchItemFactory->create();
+                    $sapOrderBatchCreditmemo = $this->_sapOrderBatchCreditmemoFactory->create();
 
-                    $sapOrderBatchItem->setData('creditmemo_order_id', $creditMemoOrderId);
-                    $sapOrderBatchItem->setData('order_id', $orderId);
-                    $sapOrderBatchItem->setData('order_item_id', $item->getData("order_item_id"));
-                    $sapOrderBatchItem->setData('sku', $item->getData('sku'));
-                    $sapOrderBatchItem->setData('is_credit', true);
+                    $sapOrderBatchCreditmemo->setData('creditmemo_order_id', $creditMemoOrderId);
+                    $sapOrderBatchCreditmemo->setData('order_id', $orderId);
+                    $sapOrderBatchCreditmemo->setData('order_item_id', $item->getData("order_item_id"));
+                    $sapOrderBatchCreditmemo->setData('sku', $item->getData('sku'));
+                    $sapOrderBatchCreditmemo->setData('is_credit', true);
 
                     // save to the database
-                    $this->_sapOrderBatchItemResource->save($sapOrderBatchItem);
+                    $this->_sapOrderBatchCreditmemoResource->save($sapOrderBatchCreditmemo);
                 }
             }
         }

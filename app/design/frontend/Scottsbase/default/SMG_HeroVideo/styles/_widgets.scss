@@ -1,4 +1,4 @@
-/* Widget Start - Location - App / design / frontend / Scottsbase / default / SMG_ProdcutCalloutVideo / styles */
+/* Widget Start - Location - App / design / frontend / Scottsbase / default / SMG_HeroVideo / styles */
 body {
     .hero-video-widget.product-info-container {
         .product-info.text-left {
@@ -19,9 +19,13 @@ body {
 }
 
 body {
-    .hero-video-widget.product-info-container {
+    section.hero-video-widget.product-info-container {
         display: inline-block;
         width: 100%;
+        margin: 0 0 85px 0 !important;
+        @media only screen and (max-width: $screen__s) {
+            margin: 0 !important;
+        }
         .product-info {
             font-size: 20px;
             width: 40%;
@@ -82,7 +86,7 @@ body {
                 */
             }
         }
-        .video-overlay {
+        .heroVideo-video-overlay {
             position: fixed;
             top: 0;
             left: 0;
@@ -94,13 +98,14 @@ body {
             opacity: 0;
             transition: .2s visibility linear, .2s opacity linear;
         }
-        .video-container {
+        .heroVideo-video-container {
             display: none;
             position: fixed;
             top: 50%;
             left: 50%;
             width: 100%;
             max-width: 1000px;
+            -webkit-transform: translate(-50%, -50%);
             transform: translate(-50%, -50%);
             z-index: 9;
             .video-frame {
@@ -126,6 +131,7 @@ body {
             display: inline-block;
             position: relative;
             padding-left: 2%;
+            margin: 0 0 85px 0;
             h2 {
                 margin-top: 0.5rem;
                 margin-bottom: 0.5rem;
@@ -143,13 +149,13 @@ body {
 }
 
 /* Styling relating to the Product Callout Video Widget */
-body.video-open {
+body.heroVideo-video-open {
     .hero-video-widget.product-info-container {
-        .video-overlay {
+        .heroVideo-video-overlay {
             visibility: visible;
             opacity: 1;
         }
-        .video-container {
+        .heroVideo-video-container {
             display: block;
         }
     }

@@ -437,13 +437,13 @@ define([
             function (value) {
                 return utils.isEmptyNoTrim(value) || /^([a-z0-9,!\#\$%&'\*\+\/=\?\^_`\{\|\}~-]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z0-9,!\#\$%&'\*\+\/=\?\^_`\{\|\}~-]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*@([a-z0-9-]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z0-9-]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*\.(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]){2,})$/i.test(value);//eslint-disable-line max-len
             },
-            $.mage.__('Please enter a valid email address (Ex: johndoe@domain.com).')
+            $.mage.__('Please enter a valid email address.')
         ],
         'validate-emailSender': [
             function (value) {
                 return utils.isEmptyNoTrim(value) || /^[\S ]+$/.test(value);
             },
-            $.mage.__('Please enter a valid email address (Ex: johndoe@domain.com).')
+            $.mage.__('Please enter a valid email address.')
         ],
         'validate-password': [
             function (value) {
@@ -568,7 +568,7 @@ define([
                 return utils.isEmptyNoTrim(value) || /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(value);
 
             },
-            $.mage.__('Invalid Zip Code')
+            $.mage.__('Please enter valid  Zip Code')
         ],
         'validate-date-au': [
             function (value) {
@@ -751,7 +751,7 @@ define([
             function (value) {
                 return utils.isEmptyNoTrim(value) || /^[a-zA-Z]+$/.test(value);
             },
-            $.mage.__('Invalid Name.')
+            $.mage.__('Please enter valid name.')
         ],
         'validate-code': [
             function (value) {

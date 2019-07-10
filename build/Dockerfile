@@ -21,6 +21,24 @@ WORKDIR /tmp
 RUN wget "https://collectors.sumologic.com/rest/download/deb/64" -O SumoCollector.deb && dpkg --install /tmp/SumoCollector.deb
 RUN printf "name = Magento2-Collector\naccessid = suJx8dS3MKjFSu\naccesskey = Q1cq15TX5wS4BzERvxap0ugIdU2Ti5HX9oVw8yAFJaqfgrShfR7VpWontR9Qd4Wo\n" >  /opt/SumoCollector/config/user.properties
 
+# Add crontab file in the cron directory
+ADD crontab /etc/cron.d/cron
+
+# Give execution rights on the cron job
+RUN chmod 0644 /etc/cron.d/cron
+
+# Apply cron job
+RUN crontab /etc/cron.d/cron
+
+# Create the log file to be able to run tail
+RUN touch /var/log/cron.log
+RUN touch /var/log/magento.cron.log
+RUN touch /var/log/update.cron.log
+RUN touch /var/log/setup.cron.log
+
+# Change user back to root to continue on
+RUN whoami
+USER root
 
 # install gsutil
 RUN export CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)"; echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
@@ -28,6 +46,11 @@ RUN cat /etc/apt/sources.list.d/google-cloud-sdk.list
 
 RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg | apt-key add -
 RUN apt-get update -y  && apt-get install -y google-cloud-sdk
+
+# for icons to stick need paths and permissions
+RUN mkdir -p pub/media/tmp/design/file/
+RUN chmod 0755 pub/media/tmp/design/file/
+
 
 # Can move these to nightly build
 
@@ -62,10 +85,6 @@ RUN /tmp/qualys/qualys-cloud-agent.postinst
 
 RUN /usr/local/qualys/cloud-agent/bin/qualys-cloud-agent.sh ActivationId="67906ffb-cd7c-4105-bdc7-1540c13343aa" CustomerId="63d94f9b-9dfc-7538-823c-333fc1d63ac9" ProviderName="GCP" UseSudo=0
 
-
-# Copy Apache config over for staging
-COPY apache/000-default.staging.conf /etc/apache2/sites-available/000-default.conf
-
 USER magento
 WORKDIR $MAGENTO_DIR
 
@@ -83,6 +102,10 @@ RUN date
 # This is a Patch for Magento per https://github.com/magento/magento2/issues/13269
 # Should be able to be removed after Magento 2.3.1 is live
 RUN sed -i "s/.*result = mb_convert_encoding.*/\t\t\$result = mb_convert_encoding(preg_replace('\/\&\/', \'\&amp\;\', html_entity_decode(\$domDocument->saveHTML())), \'HTML-ENTITIES\', \'UTF-8\');\n/" $MAGENTO_DIR/vendor/magento/framework/Escaper.php
+
+# for icons to stick need paths and permissions
+RUN mkdir -p pub/media/tmp/design/file/
+RUN chmod 0755 pub/media/tmp/design/file/
 
 USER root
 
@@ -123,3 +146,5 @@ ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
 
 # CMD "exec /usr/sbin/apachectl -DFOREGROUND -k start"
 # CMD /usr/sbin/apachectl -DFOREGROUND 
+
+# Let's generate a new commit hash.

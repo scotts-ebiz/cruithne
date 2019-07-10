@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"  xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="styles"/>
+    <update handle="editor"/>
+
+    <head>
+        <css src="SMG_Sales::css/orderadditional.css" />
+    </head>
+
+    <body>
+        <referenceBlock name="order_info">
+            <action method="setTemplate">
+                <argument name="template" xsi:type="string">SMG_Sales::order/view/info.phtml</argument>
+            </action>
+        </referenceBlock>
+    </body>
+</page>
+
+ 

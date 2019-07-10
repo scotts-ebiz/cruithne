@@ -1,37 +1,73 @@
 <?xml version="1.0"?>
+
 <widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+
     <widget class="SMG\HeroZip\Block\Widget\Herozip" id="smg_herozip_herozip">
+
         <label>Hero Zip</label>
+
         <description>Display hero banner, text, and zip code lookup.</description>
+
         <parameters>
+
             <parameter name="heroimage" visible="true" xsi:type="block">
+
                 <label>Hero Image</label>
+
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+
             </parameter>
+
             <parameter name="heroimagemobile" visible="true" xsi:type="block">
+
                 <label>Hero Image (Mobile)</label>
+
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+
             </parameter>
+
             <parameter name="herosupportingheadline" visible="true" xsi:type="text" required="true">
+
                 <label>Hero Supporting Headline</label>
+
                 <value>Scotts Big Bag Home Delivery</value>
+
             </parameter>
+
             <parameter name="heroheadline" visible="true" xsi:type="text" required="true">
+
                 <label>Hero Headline</label>
+
                 <value>Save Time And Be Ready For Springtime!</value>
+
             </parameter>
+
             <parameter name="herotext" visible="true" xsi:type="block">
+
                 <label>Hero Text</label>
-                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
+
             </parameter>
+
             <parameter name="buttontext" visible="true" xsi:type="text" required="true">
+
                 <label>Button Text</label>
+
                 <value>Get Started</value>
+
             </parameter>
+
             <parameter name="validzipcodes" visible="true" xsi:type="block" required="true">
+
                 <label>Valid Zip Codes</label>
-                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
+
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
+
             </parameter>
+
         </parameters>
+
     </widget>
+
 </widgets>

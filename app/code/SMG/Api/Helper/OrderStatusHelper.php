@@ -75,6 +75,8 @@ class OrderStatusHelper
     const SALES_ORDER_SAP_BATCH_SHIPMENT_PROCESS_DATE = "shipment_process_date";
     const SALES_ORDER_SAP_BATCH_IS_UNAUTHORIZED = "is_unauthorized";
     const SALES_ORDER_SAP_BATCH_UNAUTHORIZED_PROCESS_DATE = "unauthorized_process_date";
+    const SALES_ORDER_SAP_BATCH_IS_INVOICE_RECONCILIATION = "is_invoice_reconciliation";
+    const SALES_ORDER_SAP_BATCH_INVOICE_RECONCILIATION_DATE = "invoice_reconciliation_date";
 
     /**
      * @var LoggerInterface
@@ -413,8 +415,6 @@ class OrderStatusHelper
         $sapOrder->setData(self::SALES_ORDER_SAP_ORDER_CREATED_AT, $inputOrder[self::INPUT_SAP_ORDER_CREATE_DATE]);
         $sapOrder->setData(self::SALES_ORDER_SAP_SAP_ORDER_STATUS, $sapOrderStatus);
         $sapOrder->setData(self::SALES_ORDER_SAP_ORDER_STATUS, $orderStatus);
-        $sapOrder->setData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_NUMBER, $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER]);
-        $sapOrder->setData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_DATE, $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_DATE]);
         $sapOrder->setData(self::SALES_ORDER_SAP_SAP_PAYER_ID, $inputOrder[self::INPUT_SAP_PAYER_ID]);
         $sapOrder->setData(self::SALES_ORDER_SAP_DELIVERY_NUMBER, $inputOrder[self::INPUT_SAP_DELIVERY_NUMBER]);
 
@@ -538,46 +538,6 @@ class OrderStatusHelper
             $orderStatusNotes .= 'Order Status was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
         }
 
-        // check to see if the billing doc number changed
-        $inputValue = $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER];
-        $sapOrderValue = $sapOrder->getData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_NUMBER);
-        if ((!empty($inputValue) || !empty($sapOrderValue)) && $inputValue !== $sapOrderValue)
-        {
-            $isUpdateNeeded = true;
-            $sapOrder->setData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_NUMBER, $inputValue);
-            $orderStatusNotes .= 'SAP Invoice was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
-        }
-
-        // check to see if the billing doc date changed
-        $inputValue = $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_DATE];
-        $sapOrderValue = $sapOrder->getData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_DATE);
-        if ((!empty($inputValue) || !empty($sapOrderValue)))
-        {
-            // update date
-            $isUpdateDate = true;
-
-            // if they both have a value then compare the dates
-            // otherwise go ahead and update
-            if (!empty($inputValue) && !empty($sapOrderValue))
-            {
-                // compare the dates if they are not equal then update
-                $originalDate = date("y-m-d", strtotime($sapOrderValue));
-                $newDate = date("y-m-d", strtotime($inputValue));
-                if ($originalDate === $newDate)
-                {
-                    $isUpdateDate = false;
-                }
-            }
-
-            // if the date is okay to update then update
-            if ($isUpdateDate)
-            {
-                $isUpdateNeeded = true;
-                $sapOrder->setData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_DATE, $inputValue);
-                $orderStatusNotes .= 'SAP Invoice Date was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
-            }
-        }
-
         // check if the payer id changed
         $inputValue = $inputOrder[self::INPUT_SAP_PAYER_ID];
         $sapOrderValue = $sapOrder->getData(self::SALES_ORDER_SAP_SAP_PAYER_ID);
@@ -633,6 +593,8 @@ class OrderStatusHelper
         $sapOrderItem->setData(self::SALES_ORDER_SAP_ITEM_QTY, $inputOrder[self::INPUT_SAP_ORDER_QTY]);
         $sapOrderItem->setData(self::SALES_ORDER_SAP_ITEM_CONFIRMED_QTY, $inputOrder[self::INPUT_SAP_CONFIRMED_QTY]);
         $sapOrderItem->setData(self::SALES_ORDER_SAP_ITEM_SHIP_TRACKING_NUMBER, $shipTrackingNumber);
+        $sapOrderItem->setData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_NUMBER, $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER]);
+        $sapOrderItem->setData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_DATE, $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_DATE]);
 
         // save the data to the table
         $this->_sapOrderItemResource->save($sapOrderItem);
@@ -745,6 +707,46 @@ class OrderStatusHelper
             $orderStatusNotes .= 'Ship Tracking was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
         }
 
+        // check to see if the billing doc number changed
+        $inputValue = $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER];
+        $sapOrderValue = $sapOrderItem->getData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_NUMBER);
+        if ((!empty($inputValue) || !empty($sapOrderValue)) && $inputValue !== $sapOrderValue)
+        {
+            $isUpdateNeeded = true;
+            $sapOrderItem->setData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_NUMBER, $inputValue);
+            $orderStatusNotes .= 'SAP Invoice was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
+        }
+
+        // check to see if the billing doc date changed
+        $inputValue = $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_DATE];
+        $sapOrderValue = $sapOrderItem->getData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_DATE);
+        if ((!empty($inputValue) || !empty($sapOrderValue)))
+        {
+            // update date
+            $isUpdateDate = true;
+
+            // if they both have a value then compare the dates
+            // otherwise go ahead and update
+            if (!empty($inputValue) && !empty($sapOrderValue))
+            {
+                // compare the dates if they are not equal then update
+                $originalDate = date("y-m-d", strtotime($sapOrderValue));
+                $newDate = date("y-m-d", strtotime($inputValue));
+                if ($originalDate === $newDate)
+                {
+                    $isUpdateDate = false;
+                }
+            }
+
+            // if the date is okay to update then update
+            if ($isUpdateDate)
+            {
+                $isUpdateNeeded = true;
+                $sapOrderItem->setData(self::SALES_ORDER_SAP_SAP_BILLING_DOC_DATE, $inputValue);
+                $orderStatusNotes .= 'SAP Invoice Date was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
+            }
+        }
+
         // if there was something updated then update the table
         if ($isUpdateNeeded)
         {
@@ -854,6 +856,13 @@ class OrderStatusHelper
             $sapOrderBatch->setData(self::SALES_ORDER_SAP_BATCH_IS_CAPTURE, true);
         }
 
+        // check to see if the sap billing doc is set if it is then set the
+        // invoice reconciliation for processing
+        if (!empty($inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER]))
+        {
+            $sapOrderBatch->setData(self::SALES_ORDER_SAP_BATCH_IS_INVOICE_RECONCILIATION, true);
+        }
+
         // save the data to the table
         $this->_sapOrderBatchResource->save($sapOrderBatch);
     }
@@ -891,6 +900,16 @@ class OrderStatusHelper
             {
                 $isUpdateNeeded = true;
                 $sapOrderBatch->setData(self::SALES_ORDER_SAP_BATCH_IS_SHIPMENT, true);
+            }
+
+            // check if the order was invoiced
+            // if it was then it is ready to be reconciled
+            if (!empty($inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER]) &&
+                empty($sapOrderBatch->getData(self::SALES_ORDER_SAP_BATCH_INVOICE_RECONCILIATION_DATE)) &&
+                !$sapOrderBatch->getData(self::SALES_ORDER_SAP_BATCH_IS_INVOICE_RECONCILIATION))
+            {
+                $isUpdateNeeded = true;
+                $sapOrderBatch->setData(self::SALES_ORDER_SAP_BATCH_IS_INVOICE_RECONCILIATION, true);
             }
         }
 
