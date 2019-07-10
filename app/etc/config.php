@@ -269,6 +269,7 @@ return [
         'Mageplaza_Core' => 1,
         'Mageplaza_Smtp' => 1,
         'SMG_Api' => 1,
+        'SMG_Bundleprouct' => 1,
         'SMG_Checkout' => 1,
         'SMG_CreditReason' => 1,
         'SMG_Creditvantiv' => 1,
@@ -304,15 +305,6 @@ return [
         'SMG_ZipToAvalara' => 1,
         'Temando_Shipping' => 1,
         'SMG_Vantiv' => 1,
-        'Vertex_Tax' => 1,
-        'Magento_InventorySetupFixtureGenerator' => 0,
-        'Magento_InventoryReservationCli' => 0,
-        'Magento_InventoryGraphQl' => 0,
-        'Magento_InventoryExportStockApi' => 0,
-        'Magento_InventoryExportStock' => 0,
-        'Magento_InventoryElasticsearch' => 0,
-        'Magento_InventoryDistanceBasedSourceSelectionApi' => 0,
-        'Magento_InventoryDistanceBasedSourceSelectionAdminUi' => 0,
-        'Magento_InventoryDistanceBasedSourceSelection' => 0
+        'Vertex_Tax' => 1
     ]
 ];
