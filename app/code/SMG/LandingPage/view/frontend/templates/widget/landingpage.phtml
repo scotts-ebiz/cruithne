@@ -80,9 +80,10 @@ $large_bundle_price = '';
                                     <input type="hidden" name="product" value="<?php echo $block->escapeHtmlAttr($small_bundle_id); ?>" />
                                     <input type="hidden" name="related_product" id="related-products-field" value="" />
                                     <?php echo $options_html; ?>
-                                    <button type="submit" class="section__hero--link"><?php echo $block->getData('smallyardtext'); ?>
-                                    <span class="link-price">$<?php echo number_format($small_bundle_price, 2); ?></span></button>
-                                    <small class="section__hero--linkinfo"><?php echo $block->getData('smallyardcoverage'); ?></small>
+                                    <button type="submit" class="section__hero--link"><?php echo $block->escapeHtml($block->getData('smallyardtext')); ?>
+                                    <span class="link-price">$<?php echo $block->escapeHtml(number_format($small_bundle_price, 2)); ?></span></button>
+                                    <?php $smallyardcoverage = $block->getData('smallyardcoverage')?>
+                                    <small class="section__hero--linkinfo"><?php echo $block->escapeHtml(strip_tags($smallyardcoverage)); ?></small>
                                 </form>
                             </div>
 
@@ -125,11 +126,13 @@ $large_bundle_price = '';
                                         <input name="form_key" type="hidden" value="<?php echo $block->getFormKey(); ?>" />
                                         <input type="hidden" name="product" value="<?php echo $large_bundle_id; ?>" />
                                         <input type="hidden" name="related_product" id="related-products-field" value="" />
-                                        <?php echo $options_html; ?>
-                                        <button type="submit" class="section__hero--link"><?php echo $block->getData('largeyardtext'); ?><span class="link-price">$<?php echo /*THIS WASNT WORKING SO I COMMENTED IT OUT number_format($large_bundle_price,
-  2); */
-                                        $large_bundle_price?></span></button>
-                                        <small class="section__hero--linkinfo"><?php echo $block->getData('largeyardcoverage'); ?></small>
+                                        <input type="hidden" name="selected_configurable_option" value="">
+                                        <!-- This section is not escaped because we create the HTML using IDs above in `$options_html` -->
+					<?php echo $options_html; ?>
+                                        <button type="submit" class="section__hero--link"><?php echo $block->escapeHtml($block->getData('largeyardtext')); ?><span class="link-price">$<?php echo $block->escapeHtml($large_bundle_price)?></span></button>
+                                        <?php echo $block->escapeHtml($block->getData('largeyardcoverage')); ?>
+                                        <?php $largeyardcoverage = $block->getData('largeyardcoverage')?>
+                                        <small class="section__hero--linkinfo"><?php echo $block->escapeHtml(strip_tags($largeyardcoverage)); ?></small>
                                     </form>
                             </div>
                         <?php
@@ -176,30 +179,31 @@ $large_bundle_price = '';
                         </div>
 
                         <div class="widget widget-static-block">
-							<div class="section__hero--promo">
-								<img id="icon--shipping" src="<?php echo $block->getData('freeshippingicon'); ?>" />
-								<p><?php echo $block->getData('freeshippingmessage'); ?></p>
-                                <small class="section__hero--linkinfo"><?php echo $block->getData('disclaimertext'); ?></small>
-							</div><!-- .section__hero==promo -->
-						</div>
-					</div><!-- .section__hero==purchase -->
-				</div><!-- .section__hero==wrapper -->
-			</section>
-		</div>
-		<div class="widget widget-static-block howItWorks__wrapper">
-			<div class="section__steps--headline">
-				<h2 class="turfbuilder--headline"><?php echo $block->getData('stepsSectionTitle'); ?></h2>
-			</div>
-			<div class="section__steps--wrapper">
-				<div class="section__steps--item span_4_of_12">
-					<div class="widget widget-static-block">
-						<div class="step-item__image">
-							<svg class="how_step1" aria-label="[title]" height="165px" style="enable-background:new 0 0 136.9 165;" version="1.1" viewbox="0 0 136.9 165" width="136.9px" x="0px" xmlns="http://www.w3.org/2000/svg" y="0px">
-							<title>ORDER YOUR LAWN PROGRAM</title>
-							<style>
-							    .how_step1 .st0 {
-                                    fill:#FFFFFF;
-                                }
+                            <div class="section__hero--promo">
+                                <img id="icon--shipping" src="<?php echo $block->escapeUrl($block->getData('freeshippingicon')); ?>" />
+                                <p><?php echo $block->escapeHtml($block->getData('freeshippingmessage')); ?></p>
+                              <?php /* @noEscape */ $disclaimertext = strip_tags($block->getData('disclaimertext')); ?>
+                                <small class="section__hero--linkinfo"><?php /* @noEscape */ echo $disclaimertext; ?></small>
+                            </div><!-- .section__hero==promo -->
+                        </div>
+                    </div><!-- .section__hero==purchase -->
+                </div><!-- .section__hero==wrapper -->
+      </section>
+        </div>
+      <div class="widget widget-static-block howItWorks__wrapper">
+          <div class="section__steps--headline">
+              <h2 class="turfbuilder--headline"><?php echo $block->escapeHtml($block->getData('stepsSectionTitle')); ?></h2>
+          </div>
+          <div class="section__steps--wrapper">
+              <div class="section__steps--item span_4_of_12">
+                  <div class="widget widget-static-block">
+                      <div class="step-item__image">
+                          <svg class="how_step1" aria-label="[title]" height="165px" style="enable-background:new 0 0 136.9 165;" version="1.1" viewbox="0 0 136.9 165" width="136.9px" x="0px" xmlns="http://www.w3.org/2000/svg" y="0px">
+                              <title>ORDER YOUR LAWN PROGRAM</title>
+                              <style>
+                                  .how_step1 .st0 {
+                                      fill:#FFFFFF;
+                                  }
 
                                 .how_step1 .st1 {
                                     fill:#005531;
