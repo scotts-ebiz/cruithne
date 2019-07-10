@@ -80,7 +80,7 @@ $large_bundle_price = '';
                                             //$small_bundle_price = $small_bundle_price + ($selection_price * $selection_qty);
                                             $selection_ids[] = $selection->getSelectionId();
                                             $tab_ids[] = $selection->getProductId();
-											$options_html .= '<input type="hidden" name="bundle_option_qty[' . $option_id . ']" value="1" />';
+						$options_html .= '<input type="hidden" name="bundle_option_qty[' . $option_id . ']" value="1" />';
                                             $options_html .= '<input type="hidden" name="bundle_option[' . $option_id . ']" value="'.$selection->getSelectionId().'" />';
                                         }
                                     }
@@ -147,7 +147,7 @@ $large_bundle_price = '';
                                             //$large_bundle_price = $large_bundle_price + ($selection_price * $selection_qty);
                                             $selection_ids[] = $selection->getSelectionId();
                                             $options_html .= '<input type="hidden" name="bundle_option_qty[' . $option_id . ']" value="1" />';
-											$options_html .= '<input type="hidden" name="bundle_option[' . $option_id . ']" value="'.$option_id.'" />';
+						$options_html .= '<input type="hidden" name="bundle_option[' . $option_id . ']" value="'.$option_id.'" />';
                                         }
                                     }
                             ?>
@@ -157,10 +157,10 @@ $large_bundle_price = '';
                                     <form action="<?php echo $large_bundle_url; ?>" method="post" id="product_addtocart_form">
                                         <input name="form_key" type="hidden" value="<?php echo $block->getFormKey(); ?>" />
                                         <input type="hidden" name="item" value="<?php echo $large_bundle_id; ?>" />
-										<input type="hidden" name="product" value="<?php echo $large_bundle_id; ?>" />
+					<input type="hidden" name="product" value="<?php echo $large_bundle_id; ?>" />
                                         <input type="hidden" name="related_product" id="related-products-field" value="" />
                                         <input type="hidden" name="selected_configurable_option" value="">
-										<?php echo $options_html; ?>
+					<?php echo $options_html; ?>
                                         <button type="submit" class="section__hero--link"><?php echo htmlspecialchars_decode($block->getData('largeyardtext')); ?><span class="link-price">$<?php echo /*THIS WASNT WORKING SO I COMMENTED IT OUT number_format($large_bundle_price,
   2); */
                                         $large_bundle_price?></span></button>
