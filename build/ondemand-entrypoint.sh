@@ -50,3 +50,9 @@ curl -X POST --data-urlencode "payload={\"channel\": \"#magento2project\", \"use
 
 # CMD "exec /usr/sbin/apachectl -DFOREGROUND -k start"
 exec /usr/sbin/apachectl -DFOREGROUND
+
+#always start elasticsearch for fulltext catalog search indexer
+service elasticsearch start
+
+#always start cron
+service cron start
