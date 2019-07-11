@@ -62,14 +62,13 @@ class Content extends \Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Galle
         \Magento\Backend\Block\Template\Context $context,
         \Magento\Framework\Json\EncoderInterface $jsonEncoder,
         \Magento\Catalog\Model\Product\Media\Config $mediaConfig,
-        array $data = [],
-        Database $fileStorageDatabase = null
+        Database $fileStorageDatabase,
+        array $data = []
     ) {
         $this->_jsonEncoder = $jsonEncoder;
         $this->_mediaConfig = $mediaConfig;
         parent::__construct($context, $jsonEncoder, $mediaConfig, $data);
-        $this->fileStorageDatabase = $fileStorageDatabase
-            ?: ObjectManager::getInstance()->get(Database::class);
+        $this->fileStorageDatabase = $fileStorageDatabase;
     }
 
     /**
