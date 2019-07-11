@@ -310,17 +310,15 @@ body {
             font-size: 16px;
             text-align: center;
             display: inline-block;
-            line-height: 48px;
+            line-height: 0;
             box-sizing: border-box;
-			width: 100%;
-            max-width: 200px;
             transition: background 0.2s linear;
             letter-spacing: 0.5px;
         }
-        .button:hover {
+        button:hover {
             background: $mygro-dark-green;
         }
-        .button:active {
+        button:active {
             background: $mygro-light-green;
         }
         .button {
