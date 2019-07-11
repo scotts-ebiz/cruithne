@@ -13,10 +13,12 @@
  */
 namespace SMG\ImageGallery\Block\Adminhtml\Product\Gallery;
 
+use Magento\Framework\App\ObjectManager;
 use Magento\Backend\Block\Media\Uploader;
 use Magento\Framework\View\Element\AbstractBlock;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Exception\FileSystemException;
+use Magento\MediaStorage\Helper\File\Storage\Database;
 
 /**
  * Block for gallery content.
@@ -44,20 +46,29 @@ class Content extends \Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Galle
     private $imageHelper;
 
     /**
+     * @var Database
+     */
+    private $fileStorageDatabase;
+
+    /**
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\Framework\Json\EncoderInterface $jsonEncoder
      * @param \Magento\Catalog\Model\Product\Media\Config $mediaConfig
      * @param array $data
+     * @param ImageUploadConfigDataProvider $imageUploadConfigDataProvider
+     * @param Database $fileStorageDatabase
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
         \Magento\Framework\Json\EncoderInterface $jsonEncoder,
         \Magento\Catalog\Model\Product\Media\Config $mediaConfig,
+        Database $fileStorageDatabase,
         array $data = []
     ) {
         $this->_jsonEncoder = $jsonEncoder;
         $this->_mediaConfig = $mediaConfig;
         parent::__construct($context, $jsonEncoder, $mediaConfig, $data);
+        $this->fileStorageDatabase = $fileStorageDatabase;
     }
 
     /**
@@ -122,6 +133,13 @@ class Content extends \Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Galle
             $images = $this->sortImagesByPosition($value['images']);
             foreach ($images as &$image) {
                 $image['url'] = $this->_mediaConfig->getMediaUrl($image['file']);
+                if ($this->fileStorageDatabase->checkDbUsage() &&
+                    !$mediaDir->isFile($this->_mediaConfig->getMediaPath($image['file']))
+                ) {
+                    $this->fileStorageDatabase->saveFileToFilesystem(
+                        $this->_mediaConfig->getMediaPath($image['file'])
+                    );
+                }
                 try {
                     $fileHandler = $mediaDir->stat($this->_mediaConfig->getMediaPath($image['file']));
                     $image['size'] = $fileHandler['size'];
@@ -145,9 +163,12 @@ class Content extends \Magento\Catalog\Block\Adminhtml\Product\Helper\Form\Galle
     private function sortImagesByPosition($images)
     {
         if (is_array($images)) {
-            usort($images, function ($imageA, $imageB) {
-                return ($imageA['position'] < $imageB['position']) ? -1 : 1;
-            });
+            usort(
+                $images,
+                function ($imageA, $imageB) {
+                    return ($imageA['position'] < $imageB['position']) ? -1 : 1;
+                }
+            );
         }
         return $images;
     }
