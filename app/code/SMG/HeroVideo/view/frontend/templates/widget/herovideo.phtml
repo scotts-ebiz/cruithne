@@ -107,7 +107,7 @@ $block->getData('videobackgroundimage')
     </p>
     <div class="video">
       <?php if($this->getData('iframeVideoLink') != ''): ?>
-        <a class="watch-video play video-link" href="#">
+        <a class="watch-video play heroVideo-video-link" href="#">
           <i class="icon-play fas fa-play" style="color: <?php echo $block->getData('iconcolor'); ?>; background-color: <?php echo $block->getData('iconbackgroundcolor'); ?> ;"></i>
           <span
             class="productvideotxt"
@@ -125,12 +125,9 @@ $block->getData('videobackgroundimage')
       <?php endif; ?>
     </div>
   </div>
-  <div id="video-overlay" class="video-overlay"></div>
-  <div id="video-container" class="video-container">
-    <div class="video-frame">
-      <iframe width="<?php echo $iframeCustomWidth?>" height="<?php echo $iframeCustomHeight?>" src="<?php echo $iframeVideoCustomLink?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="" data-dayt="true">
-      </iframe>
-    </div>
+  <div id="heroVideo-video-overlay" class="heroVideo-video-overlay"></div>
+  <div id="heroVideo-video-container" class="heroVideo-video-container">
+    <div class="video-frame"></div>
   </div>
 </section>
 <div class="hero-video-mobileContent">
@@ -154,13 +151,16 @@ $block->getData('videobackgroundimage')
   ?>"
   >
     <?php echo $block->getData('bannertext'); ?>
-  </p> 
+  </p>
 
 </div>
+
+<!-- Calling JS -->
 <script type="text/x-magento-init">
+
 {
     "*": {
-        "SMG_HeroVideo/js/herovideo.js": {}
+        "SMG_HeroVideo/js/site": {}
     }
 }
 </script>
