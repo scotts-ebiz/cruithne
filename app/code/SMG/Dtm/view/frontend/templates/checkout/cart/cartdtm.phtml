@@ -67,6 +67,6 @@ $eventarr['cart']=array('currency'=>'USD','subtotal'=>$subtotal,'promoCode'=>$co
 //print_r($eventarr);
 ?>
 <script type="text/javascript">
-	var dtmData = <?php echo json_encode($eventarr );?>;
+	var dtmData = <?php echo $block->escapeJs(json_encode($eventarr ));?>;
 </script>
 
