@@ -11,7 +11,6 @@ function($){
 		setTimeout(function(){
 			
 			$(".street > .control").append("<a class='cust-btn-add' href='javascript:void(0)'>Add New Line</a>");
-			
 			$("input[name='postcode']").attr('pattern', '[0-9]*');
 			$("input[name='postcode']").attr('inputmode', 'numeric');
 			$("input[name='telephone']").attr('pattern', '[0-9]*');
