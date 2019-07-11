@@ -13,7 +13,7 @@
                 <label>Headline Text</label>
             </parameter>
             <parameter name="bannerheadlinecolor" visible="true" xsi:type="text">
-                <label>Headline Color (in #xxxxxx)</label>
+                <label>Headline Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
             <parameter name="headlinetextstyle" visible="true" xsi:type="multiselect" source_model="SMG\ProductCallout\Model\Source\HeadlineTextStyles">
@@ -31,7 +31,7 @@
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
             </parameter>
             <parameter name="bannertextlinecolor" visible="true" xsi:type="text">
-                <label>Blurb Text Color (in #xxxxxx)</label>
+                <label>Blurb Text Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
             <parameter name="bannertextsize" visible="true" xsi:type="select"
@@ -58,7 +58,7 @@
             <parameter name="bannerTextImgOneLink" visible="true" xsi:type="text">
                 <label>Blurb Image 1 Link</label>
             </parameter>
-            <parameter name="blurbImgOneAltText" visible="true" xsi:type="text">
+            <parameter name="blurbImgOneAltTxt" visible="true" xsi:type="text">
                 <label>Blurb Image 1 Alt Text</label>
             </parameter>
             <parameter name="bannerTextImageTwo" visible="true" xsi:type="block">
@@ -68,7 +68,7 @@
             <parameter name="bannerTextImgTwoLink" visible="true" xsi:type="text">
                 <label>Blurb Image 2 Link</label>
             </parameter>
-            <parameter name="blurbImgTwoAltText" visible="true" xsi:type="text">
+            <parameter name="blurbImgTwoAltTxt" visible="true" xsi:type="text">
                 <label>Blurb Image 2 Alt Text</label>
             </parameter>
 
@@ -82,11 +82,11 @@
                 <label>Callout Image (800x800)</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
-            <parameter name="bannerCalloutImageAltText" visible="true" xsi:type="text">
+            <parameter name="bannerCalloutImageAltTxt" visible="true" xsi:type="text">
                 <label>Callout Image Alt Text</label>
             </parameter>
             <parameter name="bgcolor" visible="true" xsi:type="text">
-                <label>Background Color (in #xxxxxx)</label>
+                <label>Background Color (#xxxxxx)</label>
                 <value>#ffffff</value>
             </parameter>
             <parameter name="bgimage" visible="true" xsi:type="block">
