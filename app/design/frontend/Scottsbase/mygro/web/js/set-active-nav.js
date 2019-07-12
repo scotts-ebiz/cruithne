@@ -5,7 +5,7 @@ define(['jquery'], function($){
         $('#mygro-controllers-page').removeClass('active');
         $('#mygro-home-page').removeClass('active');
 
-    } else if ($("body").hasClass("product-controllers")){
+    } else if ($("body").hasClass("product-controller")){
         $('#mygro-controllers-page').addClass('active');
         $('#mygro-sensors-page').removeClass('active');
         $('#mygro-home-page').removeClass('active');
