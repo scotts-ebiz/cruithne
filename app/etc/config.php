@@ -305,6 +305,15 @@ return [
         'SMG_ZipToAvalara' => 1,
         'Temando_Shipping' => 1,
         'SMG_Vantiv' => 1,
-        'Vertex_Tax' => 1
+        'Vertex_Tax' => 1,
+        'Magento_InventorySetupFixtureGenerator' => 0,
+        'Magento_InventoryReservationCli' => 0,
+        'Magento_InventoryGraphQl' => 0,
+        'Magento_InventoryExportStockApi' => 0,
+        'Magento_InventoryExportStock' => 0,
+        'Magento_InventoryElasticsearch' => 0,
+        'Magento_InventoryDistanceBasedSourceSelectionApi' => 0,
+        'Magento_InventoryDistanceBasedSourceSelectionAdminUi' => 0,
+        'Magento_InventoryDistanceBasedSourceSelection' => 0
     ]
 ];
