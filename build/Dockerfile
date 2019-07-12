@@ -89,8 +89,6 @@ USER magento
 WORKDIR $MAGENTO_DIR
 
 RUN git fetch
-RUN git checkout origin/test ./app/etc/config.php
-RUN git checkout origin/test .htaccess
 
 RUN git pull
 
