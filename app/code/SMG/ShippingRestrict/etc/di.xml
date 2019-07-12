@@ -3,8 +3,7 @@
     <type name="Magento\Checkout\Model\ShippingInformationManagement">
         <plugin name="get_shipping_info" type="SMG\ShippingRestrict\Plugin\Checkout\Model\ShippingInformationManagement" sortOrder="1"/>
     </type>
-     <type name="Magento\Sales\Api\Data\OrderInterface">
-      <plugin name="SMG_ShippingRestrict_Plugin_OrderInterface" type="SMG\ShippingRestrict\Plugin\Api\Data\OrderInterface" sortOrder="1"/>
+    <type name="Magento\Sales\Api\OrderRepositoryInterface">
+        <plugin name="smg_shipping_restrict_orderrepositoryinterface" type="SMG\ShippingRestrict\Plugin\Api\OrderRepositoryInterface" sortOrder="1" />
     </type>
-
 </config>
