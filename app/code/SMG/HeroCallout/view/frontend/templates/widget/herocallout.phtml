@@ -135,26 +135,32 @@ endif;
 
 <section class="hero-callout col-2 span_12_of_12">
     <div class="content">
-        <h2 style="<?php echo $HeroCalloutBannerHeadlineCustomSize?> color:<?php echo $HeroCalloutBannerHeadlineCustomColor?>; <?php echo $HeroCalloutBannerHeadlineCustomStyles?>"><?php echo $block->getData('bannerheadline'); ?></h2>
+        <h2 style="<?php echo $block->escapeHtmlAttr($HeroCalloutBannerHeadlineCustomSize);?> color:<?php echo
+        $block->escapeHtmlAttr($HeroCalloutBannerHeadlineCustomColor);?>; <?php echo $block->escapeHtmlAttr($HeroCalloutBannerHeadlineCustomStyles);?>">
+          <?php echo $block->escapeHtml($block->getData('bannerheadline')); ?>
+        </h2>
 
         <?php if($block->getData('bannertext') != ''): ?>
-            <div class="heroCallout-bannerText" style="<?php echo $HeroCalloutBannerTextCustomSize?> color:<?php echo
-            $HeroCalloutBannerTextCustomColor?>;">
+            <div class="heroCallout-bannerText" style="<?php echo $block->escapeHtmlAttr
+            ($HeroCalloutBannerTextCustomSize);?> color:<?php echo $block->escapeHtmlAttr
+            ($HeroCalloutBannerTextCustomColor);?>;">
                 <!-- Load WYSIWYG Content -->
-                <?php echo $block->getData('bannertext'); ?>
+                <?php echo /* @noEscape */ $block->getData('bannertext'); ?>
             </div>
         <?php endif; ?>
 
         <?php if($block->getData('bannertexthighlight') != ''): ?>
-            <div class="heroCallout-bannerTextHighlight" style="<?php echo $HeroCalloutBannerTextHighlightCustomSize?>
-                color:<?php echo $HeroCalloutBannerTextHighlightCustomColor?>;">
-                <?php echo $block->getData('bannertexthighlight'); ?>
+            <div class="heroCallout-bannerTextHighlight" style="<?php echo
+            $block->escapeHtmlAttr($HeroCalloutBannerTextHighlightCustomSize);?> color:<?php echo
+            $block->escapeHtmlAttr($HeroCalloutBannerTextHighlightCustomColor);?>;">
+                <?php echo /* @noEscape */ $block->getData('bannertexthighlight'); ?>
             </div>
         <?php endif; ?>
 
         <?php if($block->getData('buttontext')): ?>
-        <button style="<?php echo $HeroCalloutButtonTextCustomSize?> color:<?php echo
-        $HeroCalloutButtonTextCustomColor?>; background:<?php echo $HeroCalloutButtonCustomColor?>; <?php echo
+        <button style="<?php echo $block->escapeHtmlAttr($HeroCalloutButtonTextCustomSize);?> color:<?php echo
+        $block->escapeHtmlAttr($HeroCalloutButtonTextCustomColor);?>; background:<?php echo $block->escapeHtmlAttr
+        ($HeroCalloutButtonCustomColor);?>; <?php echo
         $HeroCalloutButtonTextCustomStyle?>" onclick="window.location='<? echo $selectedButtonlink?>';"><?php echo
           $block->getData('buttontext'); ?></button>
         <?php endif; ?>
