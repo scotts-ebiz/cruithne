@@ -31,7 +31,7 @@ $large_bundle_price = '';
                             <!-- This block of code is not escaped because it's CMS content coming from and admin widget -->
                             <h1 class="section__hero--headline"><?php echo $block->getData('herosupportingheadline'); ?></h1>
                             <h2 class="section__hero--subhead"><?php echo $block->getData('heroheadline'); ?></h2>
-                            <p class="section__hero--description"><?php echo $block->getData('herodescription'); ?></p>
+                            <p class="section__hero--description"><?php /* @noEscape */ echo $block->getData('herodescription'); ?></p>
                         </div>
 
 <!-- Section Hero Select -->
@@ -85,10 +85,10 @@ $large_bundle_price = '';
                                     <input type="hidden" name="related_product" id="related-products-field" value="" />
 				    <input type="hidden" name="selected_configurable_option" value="">
                                     <!-- This section is not escaped because we create the HTML using IDs above in `$options_html` -->
-                                    <?php echo $options_html; ?>
+                                    <?php /* @noEscape */ echo $options_html; ?>
                                     <button type="submit" class="section__hero--link"><?php echo $block->escapeHtml($block->getData('smallyardtext')); ?>
                                     <span class="link-price">$<?php echo $block->escapeHtml(number_format($small_bundle_price, 2)); ?></span></button>
-                                    <?php $smallyardcoverage = $block->escapeHtml($block->getData('smallyardcoverage'))?>
+                                    <?php /* @noEscape */ $smallyardcoverage = $block->getData('smallyardcoverage')?>
                                     <small class="section__hero--linkinfo"><?php echo $block->escapeHtml(strip_tags($smallyardcoverage)); ?></small>
                                 </form>
                             </div>
@@ -138,10 +138,9 @@ $large_bundle_price = '';
                                         <input type="hidden" name="related_product" id="related-products-field" value="" />
                                         <input type="hidden" name="selected_configurable_option" value="">
                                         <!-- This section is not escaped because we create the HTML using IDs above in `$options_html` -->
-					<?php echo $options_html; ?>
+					<?php /* @noEscape */ echo $options_html; ?>
                                         <button type="submit" class="section__hero--link"><?php echo $block->escapeHtml($block->getData('largeyardtext')); ?><span class="link-price">$<?php echo $block->escapeHtml($large_bundle_price)?></span></button>
-                                        <?php echo $block->escapeHtml($block->getData('largeyardcoverage')); ?>
-                                        <?php $largeyardcoverage = $block->escapeHtml($block->getData('largeyardcoverage'))?>
+                                        <?php /* @noEscape */ $largeyardcoverage = $block->getData('largeyardcoverage')?>
                                         <small class="section__hero--linkinfo"><?php echo $block->escapeHtml(strip_tags($largeyardcoverage)); ?></small>
                                     </form>
                             </div>
@@ -191,8 +190,8 @@ $large_bundle_price = '';
                             <div class="section__hero--promo">
                                 <img id="icon--shipping" src="<?php echo $block->escapeUrl($block->getData('freeshippingicon')); ?>" />
                                 <p><?php echo $block->escapeHtml($block->getData('freeshippingmessage')); ?></p>
-                                <?php $disclaimertext = $block->escapeHtml(strip_tags($block->getData('disclaimertext'))); ?>
-                                <small class="section__hero--linkinfo"><?php echo $block->escapeHtml($disclaimertext); ?></small>
+                                <?php /* @noEscape */ $disclaimertext = strip_tags($block->getData('disclaimertext')); ?>
+                                <small class="section__hero--linkinfo"><?php /* @noEscape */ echo $disclaimertext; ?></small>
                             </div><!-- .section__hero==promo -->
                         </div>
                     </div><!-- .section__hero==purchase -->
@@ -404,8 +403,8 @@ $large_bundle_price = '';
 
                                     <div class="tabpanel__text span_6_of_12">
                                         <h2 class="turfbuilder--headline"><?php echo $block->escapeHtml($headline); ?></h2>
-                                        <p class="text-desc"><?php echo $block->escapeHtml($tab_description[$key]); ?></p>
-                                        <?php echo $block->escapeHtml($tab_content[$key]); ?>
+                                        <p class="text-desc"><?php echo $tab_description[$key]; ?></p>
+                                        <?php echo $tab_content[$key]; ?>
                                     </div>
                                 </div>
                             </div>
