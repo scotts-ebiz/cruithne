@@ -213,7 +213,7 @@ return [
         'Magento_SalesInventory' => 1,
         'Magento_CatalogRuleStaging' => 1,
         'Magento_RewardStaging' => 1,
-        'ClassyLlama_AvaTax' => 1,
+        'ClassyLlama_AvaTax' => 0,
         'Magento_UrlRewrite' => 1,
         'Magento_ScalableCheckout' => 1,
         'Magento_ScalableInventory' => 1,
