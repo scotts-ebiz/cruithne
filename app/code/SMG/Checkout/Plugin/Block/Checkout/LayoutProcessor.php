@@ -26,7 +26,7 @@ class LayoutProcessor
 							['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
 							['lastname']['validation'] = ['required-entry' => false,'required-entry-blastname' => true];
 						}
-						
+						 
 						/* Postcode */
 						if (isset($payment['children']['form-fields']['children']['postcode'])) {
 							$result['components']['checkout']['children']['steps']['children']['billing-step']['children']
@@ -41,7 +41,7 @@ class LayoutProcessor
 							['telephone']['validation'] = ['required-entry' => false,'required-entry-btelephone' => true];
 						}
 					}
+					return $result;
                 }
-				return $result;
             }
     }
