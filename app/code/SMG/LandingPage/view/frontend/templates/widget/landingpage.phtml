@@ -13,31 +13,24 @@ $large_bundle_price = '';
 
     @media only screen and (max-width: 1130px) {
         .background-test {
-            background-image: url('<?php echo $block->escapeUrl($block->getData('heroMobileImage')); ?>') !important;
+            background-image: url('<?php echo $block->getData('heroMobileImage'); ?>') !important;
         }
 
   @media only screen and (max-width: 1130px) {
     .background-test {
-        background-image: url('<?php echo $block->escapeUrl($block->getData('heroMobileImage')); ?>') !important;
+        background-image: url('<?php echo $block->getData('heroMobileImage'); ?>') !important;
     }
 </style>
 <div class="landingPageOptions-container">
   <div class="std">
         <div class="widget widget-static-block hero__wrapper">
-      <section class="section__hero background-test" style="background-image: url('<?php echo $block->escapeUrl($block->getData('heroimage')); ?>');">
+      <section class="section__hero background-test" style="background-image: url('<?php echo $block->getData('heroimage'); ?>');">
                 <div class="section__hero--wrapper info-right">
                     <div class="section__hero--purchase">
                         <div class="section__hero--text">
                             <h1 class="section__hero--headline"><?php echo htmlspecialchars_decode($block->getData('herosupportingheadline')); ?></h1>
                             <h2 class="section__hero--subhead"><?php echo htmlspecialchars_decode($block->getData('heroheadline')); ?></h2>
                             <p class="section__hero--description"><?php echo htmlspecialchars_decode($block->getData('herodescription')); ?></p>
-                            <h1 class="section__hero--headline"><?php echo $block->escapeHtmlAttr($block->getData('herosupportingheadline')); ?></h1>
-                            <h2 class="section__hero--subhead"><?php echo $block->escapeHtmlAttr($block->getData('heroheadline')); ?></h2>
-                            <p class="section__hero--description"><?php echo $block->escapeHtmlAttr($block->getData('herodescription')); ?></p>
-                            <!-- This block of code is not escaped because it's CMS content coming from and admin widget -->
-                            <h1 class="section__hero--headline"><?php echo $block->getData('herosupportingheadline'); ?></h1>
-                            <h2 class="section__hero--subhead"><?php echo $block->getData('heroheadline'); ?></h2>
-                            <p class="section__hero--description"><?php echo $block->getData('herodescription'); ?></p>
                         </div>
 
 <!-- Section Hero Select -->
@@ -78,9 +71,8 @@ $large_bundle_price = '';
                                             $selection_qty = $selection->getSelectionQty();
                                             $small_bundle_price = $small_bundle_price + $selection_price;
                                             //$small_bundle_price = $small_bundle_price + ($selection_price * $selection_qty);
-                                            $selection_ids[] = $selection->getSelectionId();
                                             $tab_ids[] = $selection->getProductId();
-						$options_html .= '<input type="hidden" name="bundle_option_qty[' . $option_id . ']" value="1" />';
+											$options_html .= '<input type="hidden" name="bundle_option_qty[' . $option_id . ']" value="1" />';
                                             $options_html .= '<input type="hidden" name="bundle_option[' . $option_id . ']" value="'.$selection->getSelectionId().'" />';
                                         }
                                     }
@@ -97,22 +89,6 @@ $large_bundle_price = '';
                                     <span class="link-price">$<?php echo number_format($small_bundle_price, 2); ?></span></button>
                                     <?php $smallyardcoverage = $block->getData('smallyardcoverage')?>
                                     <small class="section__hero--linkinfo"><?php echo htmlspecialchars_decode($smallyardcoverage); ?></small>
-                                <form action="<?php echo $block->escapeHtml($small_bundle_url); ?>" method="post" id="product_addtocart_form">
-                                    <input name="form_key" type="hidden" value="<?php echo $block->escapeHtml($block->getFormKey()); ?>" />
-				    <input type="hidden" name="item" value="<?php echo $block->escapeHtml($small_bundle_id); ?>" />
-                                    <input type="hidden" name="product" value="<?php echo $block->escapeHtml($small_bundle_id); ?>" />
-                                <form action="<?php echo $block->escapeHtmlAttr($small_bundle_url); ?>" method="post" id="product_addtocart_form">
-                                    <input name="form_key" type="hidden" value="<?php echo $block->escapeHtmlAttr($block->getFormKey()); ?>" />
-				    <input type="hidden" name="item" value="<?php echo $block->escapeHtmlAttr($small_bundle_id); ?>" />
-                                    <input type="hidden" name="product" value="<?php echo $block->escapeHtmlAttr($small_bundle_id); ?>" />
-                                    <input type="hidden" name="related_product" id="related-products-field" value="" />
-				    <input type="hidden" name="selected_configurable_option" value="">
-                                    <!-- This section is not escaped because we create the HTML using IDs above in `$options_html` -->
-                                    <?php echo $options_html; ?>
-                                    <button type="submit" class="section__hero--link"><?php echo $block->escapeHtml($block->getData('smallyardtext')); ?>
-                                    <span class="link-price">$<?php echo $block->escapeHtml(number_format($small_bundle_price, 2)); ?></span></button>
-                                    <?php $smallyardcoverage = $block->escapeHtml($block->getData('smallyardcoverage'))?>
-                                    <small class="section__hero--linkinfo"><?php echo $block->escapeHtml(strip_tags($smallyardcoverage)); ?></small>
                                 </form>
                             </div>
 
@@ -147,7 +123,7 @@ $large_bundle_price = '';
                                             //$large_bundle_price = $large_bundle_price + ($selection_price * $selection_qty);
                                             $selection_ids[] = $selection->getSelectionId();
                                             $options_html .= '<input type="hidden" name="bundle_option_qty[' . $option_id . ']" value="1" />';
-						$options_html .= '<input type="hidden" name="bundle_option[' . $option_id . ']" value="'.$option_id.'" />';
+											$options_html .= '<input type="hidden" name="bundle_option[' . $option_id . ']" value="'.$option_id.'" />';
                                         }
                                     }
                             ?>
@@ -157,28 +133,16 @@ $large_bundle_price = '';
                                     <form action="<?php echo $large_bundle_url; ?>" method="post" id="product_addtocart_form">
                                         <input name="form_key" type="hidden" value="<?php echo $block->getFormKey(); ?>" />
                                         <input type="hidden" name="item" value="<?php echo $large_bundle_id; ?>" />
-					<input type="hidden" name="product" value="<?php echo $large_bundle_id; ?>" />
+										<input type="hidden" name="product" value="<?php echo $large_bundle_id; ?>" />
                                         <input type="hidden" name="related_product" id="related-products-field" value="" />
                                         <input type="hidden" name="selected_configurable_option" value="">
-					<?php echo $options_html; ?>
+										<?php echo $options_html; ?>
                                         <button type="submit" class="section__hero--link"><?php echo htmlspecialchars_decode($block->getData('largeyardtext')); ?><span class="link-price">$<?php echo /*THIS WASNT WORKING SO I COMMENTED IT OUT number_format($large_bundle_price,
   2); */
                                         $large_bundle_price?></span></button>
                                         <!-- <small class="section__hero--linkinfo"><?php echo $block->getData('largeyardcoverage'); ?></small> -->
                                         <?php $largeyardcoverage = $block->getData('largeyardcoverage')?>
                                         <small class="section__hero--linkinfo"><?php echo htmlspecialchars_decode($largeyardcoverage); ?></small>
-                                    <form action="<?php echo $block->escapeHtml($large_bundle_url); ?>" method="post" id="product_addtocart_form">
-                                        <input name="form_key" type="hidden" value="<?php echo $block->escapeHtml($block->getFormKey()); ?>" />
-                                        <input type="hidden" name="item" value="<?php echo $block->escapeHtml($large_bundle_id); ?>" />
-					<input type="hidden" name="product" value="<?php echo $block->escapeHtml($large_bundle_id); ?>" />
-                                        <input type="hidden" name="related_product" id="related-products-field" value="" />
-                                        <input type="hidden" name="selected_configurable_option" value="">
-                                        <!-- This section is not escaped because we create the HTML using IDs above in `$options_html` -->
-					<?php echo $options_html; ?>
-                                        <button type="submit" class="section__hero--link"><?php echo $block->escapeHtml($block->getData('largeyardtext')); ?><span class="link-price">$<?php echo $block->escapeHtml($large_bundle_price)?></span></button>
-                                        <?php echo $block->escapeHtml($block->getData('largeyardcoverage')); ?>
-                                        <?php $largeyardcoverage = $block->escapeHtml($block->getData('largeyardcoverage'))?>
-                                        <small class="section__hero--linkinfo"><?php echo $block->escapeHtml(strip_tags($largeyardcoverage)); ?></small>
                                     </form>
                             </div>
                         <?php
@@ -192,9 +156,10 @@ $large_bundle_price = '';
                                 $zip_instructions = ($zip_value) ? 'Now Select Your Grass Type' : 'Enter Your Zip Code To Get Started';
                                 $zip_code_action = $block->getUrl('zip/zip');
                         ?>
-                            <h4><?php echo $block->escapeHtml($zip_instructions); ?></h4>
-                            <form action="<?php echo $block->escapeHtml($zip_code_action); ?>" method="get" class="<?php echo $block->escapeHtmlAttr($show_error_class); ?>zip-form">
-                                <input type="<?php echo $block->escapeHtml($zip_input_type); ?>" name="zip" pattern="[0-9]{5}" value="<?php echo $block->escapeHtml($zip_value); ?>" required title="Enter first five digits of your zip code" />
+                            <h4><?php echo $zip_instructions; ?></h4>
+                            <form action="<?php echo $zip_code_action; ?>" method="get" class="<?php echo
+                            $show_error_class; ?>zip-form">
+                                <input type="<?php echo $zip_input_type; ?>" name="zip" pattern="[0-9]{5}" value="<?php echo $zip_value; ?>" required title="Enter first five digits of your zip code" />
                                 <?php
                                     if ($zip_value)
                                     {
@@ -229,10 +194,6 @@ $large_bundle_price = '';
                                 <p><?php echo htmlspecialchars_decode($block->getData('freeshippingmessage')); ?></p>
                                 <?php $disclaimertext = $block->getData('disclaimertext'); $h = htmlspecialchars_decode($disclaimertext); $html = html_entity_decode($h);?>
                                 <small class="section__hero--linkinfo"><?php echo htmlspecialchars_decode($html); ?></small>
-                                <img id="icon--shipping" src="<?php echo $block->escapeUrl($block->getData('freeshippingicon')); ?>" />
-                                <p><?php echo $block->escapeHtml($block->getData('freeshippingmessage')); ?></p>
-                                <?php $disclaimertext = $block->escapeHtml(strip_tags($block->getData('disclaimertext'))); ?>
-                                <small class="section__hero--linkinfo"><?php echo $block->escapeHtml($disclaimertext); ?></small>
                             </div><!-- .section__hero==promo -->
                         </div>
                     </div><!-- .section__hero==purchase -->
@@ -242,7 +203,6 @@ $large_bundle_price = '';
         <div class="widget widget-static-block howItWorks__wrapper">
             <div class="section__steps--headline">
                 <h2 class="turfbuilder--headline"><?php echo htmlspecialchars_decode($block->getData('stepsSectionTitle')); ?></h2>
-                <h2 class="turfbuilder--headline"><?php echo $block->escapeHtml($block->getData('stepsSectionTitle')); ?></h2>
             </div>
             <div class="section__steps--wrapper">
                 <div class="section__steps--item span_4_of_12">
@@ -299,8 +259,6 @@ $large_bundle_price = '';
                         </div><!-- .step-item__image -->
                         <h3 class="step-item__title"><?php echo htmlspecialchars_decode($block->getData('stepOneTitle')); ?></h3>
                         <p><?php echo htmlspecialchars_decode($block->getData('howitworksdescriptionone')); ?></p>
-                        <h3 class="step-item__title"><?php echo $block->escapeHtml($block->getData('stepOneTitle')); ?></h3>
-                        <p><?php echo $block->escapeHtml($block->getData('howitworksdescriptionone')); ?></p>
                     </div>
                 </div>
                 <div class="section__steps--item span_4_of_12">
@@ -361,8 +319,6 @@ $large_bundle_price = '';
                         </div><!-- .step-item__image -->
                         <h3 class="step-item__title"><?php echo htmlspecialchars_decode($block->getData('stepTwoTitle')); ?></h3>
                         <p><?php echo htmlspecialchars_decode($block->getData('howitworksdescriptiontwo')); ?></p>
-                        <h3 class="step-item__title"><?php echo $block->escapeHtml($block->getData('stepTwoTitle')); ?></h3>
-                        <p><?php echo $block->escapeHtml($block->getData('howitworksdescriptiontwo')); ?></p>
                     </div>
                 </div>
                 <div class="section__steps--item span_4_of_12">
@@ -394,8 +350,6 @@ $large_bundle_price = '';
                         </div><!-- .step-item__image -->
                         <h3 class="step-item__title"><?php echo htmlspecialchars_decode($block->getData('stepThreeTitle')); ?></h3>
                         <p><?php echo htmlspecialchars_decode($block->getData('howitworksdescriptionthree')); ?></p>
-                        <h3 class="step-item__title"><?php echo $block->escapeHtml($block->getData('stepThreeTitle')); ?></h3>
-                        <p><?php echo $block->escapeHtml($block->getData('howitworksdescriptionthree')); ?></p>
                     </div>
                 </div>
             </div><!-- .section__steps==wrapper -->
@@ -425,7 +379,6 @@ $large_bundle_price = '';
                                 $active = ($i == 1) ? ' active' : '';
                         ?>
                         <label class="tabnav-label<?php echo $active; ?>" for="toggle__tab<?php echo $i; ?>" id="tablabel__<?php echo $i; ?>"><span><?php echo htmlspecialchars_decode($title) ?></span></label>
-                        <label class="tabnav-label<?php echo $block->escapeHtmlAttr($active); ?>" for="toggle__tab<?php echo $block->escapeHtmlAttr($i); ?>" id="tablabel__<?php echo $block->escapeHtmlAttr($i); ?>"><span><?php echo $block->escapeHtml($title) ?></span></label>
                         <?php
                                 $i++;
                             }
@@ -441,19 +394,19 @@ $large_bundle_price = '';
                                     $checked = ($i == 1) ? 'checked="checked"' : '';
                                     $activeTab = ($i == 1) ? ' active' : '';
                             ?>
-                            <input <?php echo $block->escapeHtmlAttr($checked); ?> class="tabs__radio" id="toggle__tab<?php echo $block->escapeHtml($i) ?>" name="tabs__tabnav" type="radio" />
-                            <div class="tabpanel <?php echo $block->escapeHtmlAttr($activeTab); ?>" data-panel="toggle__tab<?php echo $block->escapeHtmlAttr($i) ?>"
+                            <input <?php echo $checked; ?> class="tabs__radio" id="toggle__tab<?php echo $i ?>" name="tabs__tabnav" type="radio" />
+                            <div class="tabpanel <?php echo $activeTab; ?>" data-panel="toggle__tab<?php echo $i ?>"
                                  id="tabcontent__<?php
-                            echo $block->escapeHtmlAttr($i) ?>">
+                            echo $i ?>">
                                 <div class="tabpanel__wrapper">
                                     <div class="tabpanel__image span_6_of_12">
-                                        <span><img alt="Scotts&reg; Turf Builder&reg; SummerGuard&reg; Lawn Food with Insect Control" src="<?php echo $block->escapeUrl($tab_image[$key]); ?>"></span>
+                                        <span><img alt="Scotts&reg; Turf Builder&reg; SummerGuard&reg; Lawn Food with Insect Control" src="<?php echo $tab_image[$key]; ?>"></span>
                                     </div>
 
                                     <div class="tabpanel__text span_6_of_12">
-                                        <h2 class="turfbuilder--headline"><?php echo $block->escapeHtml($headline); ?></h2>
-                                        <p class="text-desc"><?php echo $block->escapeHtml($tab_description[$key]); ?></p>
-                                        <?php echo $block->escapeHtml($tab_content[$key]); ?>
+                                        <h2 class="turfbuilder--headline"><?php echo $headline; ?></h2>
+                                        <p class="text-desc"><?php echo $tab_description[$key]; ?></p>
+                                        <?php echo $tab_content[$key]; ?>
                                     </div>
                                 </div>
                             </div>
