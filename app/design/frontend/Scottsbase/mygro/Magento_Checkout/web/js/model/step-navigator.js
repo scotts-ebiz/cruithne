@@ -1,5 +1,5 @@
 /**
- * Copyright © Magento, Inc. All rights reserved.
+ * Copyright Â© Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -130,13 +130,11 @@ define([
 								$('.cust-btn-add').on("click", function(){
 									count += 1;
 									if (count == 1) {
-										$("div[name='shippingAddress.street.1']").css('display','block');
 										$("div[name='billingAddressauthorizenet_directpost.street.1']").css('display','block');
 										$("div[name='billingAddresscheckmo.street.1']").css('display','block');
 										$("div[name='billingAddressvantiv_cc.street.1']").css('display','block');
 										$("div[name='billingAddresscashondelivery.street.1']").css('display','block');
 									}else if(count == 2){
-										$("div[name='shippingAddress.street.2']").css('display','block');
 										$("div[name='billingAddressauthorizenet_directpost.street.2']").css('display','block');
 										$("div[name='billingAddresscheckmo.street.2']").css('display','block');
 										$("div[name='billingAddressvantiv_cc.street.2']").css('display','block');
