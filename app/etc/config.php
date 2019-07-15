@@ -283,6 +283,7 @@ return [
         'SMG_HeroVideoBtnWidget' => 1,
         'SMG_HeroZip' => 1,
         'SMG_IconList' => 1,
+        'SMG_ImageGallery' => 1,
         'SMG_LandingPage' => 1,
         'SMG_Launch' => 1,
         'SMG_OfflineShipping' => 1,
