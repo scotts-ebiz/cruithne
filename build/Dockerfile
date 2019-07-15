@@ -89,8 +89,6 @@ USER magento
 WORKDIR $MAGENTO_DIR
 
 RUN git fetch
-RUN git checkout origin/test ./app/etc/config.php
-RUN git checkout origin/test .htaccess
 
 RUN git pull
 
@@ -146,3 +144,5 @@ ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
 
 # CMD "exec /usr/sbin/apachectl -DFOREGROUND -k start"
 # CMD /usr/sbin/apachectl -DFOREGROUND 
+
+# Let's generate a new commit hash.
