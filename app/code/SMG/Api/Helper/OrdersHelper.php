@@ -509,8 +509,6 @@ class OrdersHelper
             // set rma fields
             $quantity = $rmaItem->getData('qty_returned');
             $shippingAmount = '0';
-            $discCondCode = 'ZMPA';
-            $discPerAmt = '100';
             $taxAmount = '0';
 
             // Get the reason code
@@ -535,9 +533,11 @@ class OrdersHelper
             $this->_sapOrderResource->load($sapOrder, $order->getId(), 'order_id');
             $sapOrderItems = $sapOrder->getSapOrderItems();
             $sapOrderItems->addFieldToFilter('sku', ['eq' => $orderItem->getSku()]);
+
             // if there is something there then get the first item
             // there should only be one item but get the first just in case
             $sapOrderItem = $sapOrderItems->getFirstItem();
+
             // get the billing doc number
             $referenceDocNum = $sapOrderItem->getData('sap_billing_doc_number');
             if (!isset($referenceDocNum))
