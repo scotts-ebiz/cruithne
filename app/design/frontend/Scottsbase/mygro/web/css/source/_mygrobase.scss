@@ -629,9 +629,15 @@ width: 48%;
                         }
                         &:nth-child(3){
                             text-align: right;
+                            @include max-screen($screen__xs) {
+                                text-align: center;
+                            }
                         }
                         img {
                             width: 25%;
+                            @include max-screen($screen__xs) {
+                                width: 35%;
+                            }
                         }
                         span {
                             display: inline-block;
@@ -641,6 +647,12 @@ width: 48%;
                             vertical-align: top;
                             margin-top: 10px;
                             text-align: left;
+                            @include max-screen($screen__xs) {
+                                margin-top: 0px;
+                            }
+                        }
+                        @include max-screen($screen__xs) {
+                            text-align: center;
                         }
                     }
                 }
