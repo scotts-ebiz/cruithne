@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
+ * Copyright Â© Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 
@@ -26,6 +26,9 @@
         {
             "#checkout": {
                 "Magento_Ui/js/core/app": <?= /* @escapeNotVerified */ $block->getJsLayout() ?>
+            },
+            "*": {
+                "Magento_Checkout/custom": {}
             }
         }
     </script>
@@ -45,11 +48,3 @@
         })
     </script>
 </div>
-
-<script type="text/x-magento-init">
-{
-    "*": {
-        "Magento_Checkout/custom": {}
-    }
-}
-</script>
