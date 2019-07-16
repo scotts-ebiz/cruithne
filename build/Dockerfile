@@ -90,7 +90,7 @@ WORKDIR $MAGENTO_DIR
 
 RUN git fetch
 
-RUN git pull
+RUN git diff && git pull
 RUN git show --name-status
 RUN sed -i "s/save.*/save' => 'redis',/" app/etc/env.php
 
