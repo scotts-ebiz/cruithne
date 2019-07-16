@@ -41,7 +41,7 @@ class LayoutProcessor
 							['telephone']['validation'] = ['required-entry' => false,'required-entry-btelephone' => true];
 						}
 					}
-						return $result;
                 }
+                return $result;
             }
     }
