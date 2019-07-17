@@ -59,7 +59,7 @@ class Index extends \Magento\Checkout\Controller\Cart implements HttpGetActionIn
           $resultPage->getConfig()->getTitle()->set(__('Your Cart is Empty'));
           $resultPage->getConfig()->addBodyClass('empty-cart-page');
         }
-        else{
+        else {
             $resultPage->getConfig()->getTitle()->set(__('Shopping Cart'));
         }
         return $resultPage;
