@@ -123,7 +123,7 @@ $large_bundle_price = '';
                                             //$large_bundle_price = $large_bundle_price + ($selection_price * $selection_qty);
                                             $selection_ids[] = $selection->getSelectionId();
                                             $options_html .= '<input type="hidden" name="bundle_option_qty[' . $option_id . ']" value="1" />';
-											$options_html .= '<input type="hidden" name="bundle_option[' . $option_id . ']" value="'.$selection->getSelectionId().'" />';
+					    $options_html .= '<input type="hidden" name="bundle_option[' . $option_id . ']" value="'.$selection->getSelectionId().'" />';
                                         }
                                     }
                             ?>
@@ -133,7 +133,7 @@ $large_bundle_price = '';
                                     <form action="<?php echo $block->escapeHtml($large_bundle_url); ?>" method="post" id="product_addtocart_form">
                                         <input name="form_key" type="hidden" value="<?php echo $block->escapeHtml($block->getFormKey()); ?>" />
                                         <input type="hidden" name="item" value="<?php echo $block->escapeHtml($large_bundle_id); ?>" />
-										<input type="hidden" name="product" value="<?php echo $block->escapeHtml($large_bundle_id); ?>" />
+					<input type="hidden" name="product" value="<?php echo $block->escapeHtml($large_bundle_id); ?>" />
                                         <input type="hidden" name="related_product" id="related-products-field" value="" />
                                         <input type="hidden" name="selected_configurable_option" value="">
                                         <!-- This section is not escaped because we create the HTML using IDs above in `$options_html` -->
