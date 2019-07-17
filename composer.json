@@ -14,18 +14,30 @@
         "composer/composer": "@alpha",
         "magento/product-enterprise-edition": "2.3.0",
         "mageplaza/module-smtp": "^1.2",
+	"freshrelevance/digitaldatalayer": "0.1.4",
+	"smg/launch": "1.0.0",
+	"smg/budleproduct": "1.0.1",
         "snowdog/frontools": "^1.6"
     },
     "require-dev": {
-        "magento/magento2-functional-testing-framework": "2.3.3",
         "friendsofphp/php-cs-fixer": "~2.12.0",
         "lusitanian/oauth": "~0.8.10",
+        "magento/magento-coding-standard": "^2.0",
+        "magento/magento2-functional-testing-framework": "2.3.3",
         "pdepend/pdepend": "2.5.2",
         "phpmd/phpmd": "@stable",
         "phpunit/phpunit": "~6.5.0",
         "sebastian/phpcpd": "~3.0.0",
-        "squizlabs/php_codesniffer": "3.3.0"
+        "squizlabs/php_codesniffer": "3.4.0"
     },
+    "scripts": {
+    	"post-install-cmd": [
+      		"[ $COMPOSER_DEV_MODE -eq 1 ] && vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/"
+    	],
+    		"post-update-cmd": [
+      		"[ $COMPOSER_DEV_MODE -eq 1 ] && vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/"
+    	]
+	},
     "autoload": {
         "psr-4": {
             "Magento\\Framework\\": "lib/internal/Magento/Framework/",

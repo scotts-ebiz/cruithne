@@ -54,8 +54,6 @@ RUN chmod 0755 pub/media/tmp/design/file/
 
 # Can move these to nightly build
 
-RUN curl -sL https://deb.nodesource.com/setup_11.x | bash -
-RUN apt-get install -y --no-install-recommends nodejs php7.2-redis
 RUN npm i -g gulp
 
 ## ElasticSearch
@@ -85,16 +83,10 @@ RUN /tmp/qualys/qualys-cloud-agent.postinst
 
 RUN /usr/local/qualys/cloud-agent/bin/qualys-cloud-agent.sh ActivationId="67906ffb-cd7c-4105-bdc7-1540c13343aa" CustomerId="63d94f9b-9dfc-7538-823c-333fc1d63ac9" ProviderName="GCP" UseSudo=0
 
-
-# Copy Apache config over for staging
-COPY apache/000-default.staging.conf /etc/apache2/sites-available/000-default.conf
-
 USER magento
 WORKDIR $MAGENTO_DIR
 
 RUN git fetch
-RUN git checkout origin/test ./app/etc/config.php
-RUN git checkout origin/test .htaccess
 
 RUN git pull
 

@@ -20,6 +20,7 @@ body {
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
+
 // Base Page Styles
 .skip-content-header{
     display:none;
@@ -207,7 +208,7 @@ body {
                             }
                         }
                         ul {
-                            li.category-item.level-top {
+                            li.level-top {
                                 a.level-top {
                                     color: $mygro-black;
                                     &:hover {
@@ -220,15 +221,13 @@ body {
                                         }
                                     }
                                 }
-                            }
-                            li.level0.category-item.active.level-top {
-                                a.level-top {
+                                a.level-top.active {
                                     color: $mygro-green;
                                     @include font-hellix-heavy;
                                     border-style: none;
                                 }
                             }
-                            li.level0.category-item.active.level-top {
+                            li.level0.active.level-top {
                                 a.level-top {
                                     color: $mygro-green;
                                     @include font-hellix-heavy;
@@ -300,27 +299,40 @@ body {
                 width: calc(33.33% - 28px);
             }
         }
-        .button {
+        button {
             background: $mygro-green;
+            border: 0;
+            padding: 25px 45px;
             border-radius: 4px;
             color: $white;
             font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
             font-size: 16px;
             text-align: center;
             display: inline-block;
-            height: 48px;
-            line-height: 48px;
+            line-height: 0;
             box-sizing: border-box;
-            width: 100%;
-            max-width: 200px;
             transition: background 0.2s linear;
             letter-spacing: 0.5px;
         }
-        .button:hover {
+        button:hover {
             background: $mygro-dark-green;
         }
-        .button:active {
+        button:active {
             background: $mygro-light-green;
+        }
+        .button {
+            background: $mygro-green;
+            border: 0;
+            padding: 25px 45px;
+            border-radius: 4px;
+            color: $white;
+            font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
+            font-size: 16px;
+            line-height: 0;
+            transition: background 0.2s linear;
+            letter-spacing: 0.5px;
+            text-align: center;
+            display: inline-block;
         }
         .hero-video {
             background: url(../images/bg-hero.jpg) 50% 0% no-repeat;
@@ -403,12 +415,30 @@ body {
     }
 }
 
-//Product Page Styles
-.product.info.detailed {
-    display: none;
+
+// PDP Page Styles
+
+
+/*Since only one controller product removing select styling*/
+body.product-controller.page-product-grouped .product-info-main .product-add-form form .grouped-product-wrapper {
+    h5 {
+            display: none;
+        }
+    select{
+        outline: 0;
+        padding: 0;
+        appearance: none;
+        -moz-appearance: none;
+        -webkit-appearance: none;
+    }
 }
 
-// PDP Page Styles	
+
+.product.info.detailed {
+  display: none;
+}
+
+
 .page-product-grouped {	
     .page-title-wrapper {	
         display: none !important;	
@@ -581,7 +611,39 @@ width: 48%;
                             }	
                         }	
                     }	
-                }	
+                }
+                .product-quickInfo {
+                    display: none;
+                }
+                .product-quickInfo.active {
+                    display: flex;
+                    flex-direction: row;
+                    flex-wrap: wrap;
+                    justify-content: space-around;
+                    align-items: flex-start;
+                    align-content: stretch;
+                    .quickInfo-item {
+                        max-width: 33%;
+                        &:nth-child(2){
+                            text-align: center;
+                        }
+                        &:nth-child(3){
+                            text-align: right;
+                        }
+                        img {
+                            width: 25%;
+                        }
+                        span {
+                            display: inline-block;
+                            width: 75px;
+                            font-size: 0.75rem;
+                            line-height: 13px;
+                            vertical-align: top;
+                            margin-top: 10px;
+                            text-align: left;
+                        }
+                    }
+                }
             }	
         }	
         .product-social-links {	
@@ -2415,8 +2477,8 @@ width: 48%;
 	}
 	.top-navigation { 
 		top: -10px; 
-		
-		.ui-menu li a { 
+
+		.ui-menu li a {
 			font-size: $font14 !important; 
 			font-weight:$font_normal !important; 
 			text-transform: uppercase; 
@@ -2442,7 +2504,7 @@ width: 48%;
 				p.free-shipping-text{
 					margin-bottom: 0px;
 				}
-			} 
+			}
 	}
 }
 
@@ -2562,7 +2624,7 @@ button.action{
 				}
 			}
 		}
-		
+
 		.primary{
 			.action.action-apply{
 				@media (max-width: 767px){
@@ -2743,7 +2805,7 @@ button.action{
 
 .cms-the-groconnect-app{
     .breadcrumbs{
-        margin-top: 7rem;   
+        margin-top: 7rem;
         .item:not(:last-child):after{
             content:"\002F";
         }
