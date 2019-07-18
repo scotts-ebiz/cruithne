@@ -28,6 +28,12 @@
                 "Magento_Ui/js/core/app": <?= /* @escapeNotVerified */ $block->getJsLayout() ?>
             }
         }
+
+        {
+            "*": {
+                "Magento_Checkout/custom": {}
+            }
+        }
     </script>
     <script>
         window.checkoutConfig = <?= /* @escapeNotVerified */ $block->getSerializedCheckoutConfig() ?>;
@@ -45,11 +51,3 @@
         })
     </script>
 </div>
-
-<script type="text/x-magento-init">
-{
-    "*": {
-        "Magento_Checkout/custom": {}
-    }
-}
-</script>
