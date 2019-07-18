@@ -1,7 +1,7 @@
-gcloud container clusters get-credentials magento-cluster --zone us-east1-b
+gcloud container clusters get-credentials magento-prod-cluster --zone us-east1
 
 # get the number of items in cluster
-LIST=$(kubectl get pod -l app=magento-app-workload | wc -l)
+LIST=$(kubectl get pod -l app=magento-prod | wc -l)
 
 LIST_COUNT=`expr $LIST - 1`
 #echo $LIST_COUNT
@@ -17,7 +17,7 @@ read -p "Enter number from 0 - $MAX_COUNT for cluster to view: " CLUSTER_ID
 CLUSTER_NAME={.items[$CLUSTER_ID].metadata.name}
 #echo $CLUSTER_NAME
 
-INSTANCE=$(kubectl get pod -l app=magento-app-workload -o jsonpath="$CLUSTER_NAME")
+INSTANCE=$(kubectl get pod -l app=magento-prod -o jsonpath="$CLUSTER_NAME")
 #echo $INSTANCE
 
 # connect to the desirec instance
