@@ -122,7 +122,7 @@ class ImageResize extends \Magento\MediaStorage\Service\ImageResize
         Filesystem $filesystem,
         GalleryDatabase $galleryDatabase,
         FileDatabase $filesystemStorage,
-        Database $fileStorageDatabase = null
+        Database $fileStorageDatabase
     ) {
         $this->appState = $appState;
         $this->imageConfig = $imageConfig;
@@ -136,8 +136,7 @@ class ImageResize extends \Magento\MediaStorage\Service\ImageResize
         $this->mediaDirectory = $filesystem->getDirectoryWrite(DirectoryList::MEDIA);
         $this->filesystem = $filesystem;
         parent::__construct($appState, $imageConfig, $productImage, $imageFactory, $paramsBuilder, $viewConfig, $assertImageFactory, $themeCustomizationConfig, $themeCollection, $filesystem);
-        $this->fileStorageDatabase = $fileStorageDatabase ?:
-            \Magento\Framework\App\ObjectManager::getInstance()->get(Database::class);
+        $this->fileStorageDatabase = $fileStorageDatabase;
         $this->galleryDatabase = $galleryDatabase;
         $this->_filesystemStorage = $filesystemStorage;    
     }
@@ -295,7 +294,7 @@ class ImageResize extends \Magento\MediaStorage\Service\ImageResize
 			if (!file_exists($originalImagePath)) {
 			 $file = $this->galleryDatabase->loadByFilename($mediastoragefilename);
 			  if ($file->getId()) {
-			   $this->_filesystemStorage->saveFile($file, true);
+			      $this->_filesystemStorage->saveFile($file, true);
 			  }
 			} 
        
