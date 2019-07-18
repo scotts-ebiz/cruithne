@@ -144,9 +144,9 @@ if($currentPage == 'cms_index_index'){
                     currency: '<?php echo $block->escapeHtml($smghelper->getCheckoutCart()->getQuote()->getBaseCurrencyCode());?>',
                     unitPrice: <?php echo $block->escapeHtml($item->getPrice());?>,
                     sku: '<?php echo $block->escapeHtml($item->getSku());?>',
-                    imageUrl: '<?php echo $block->escapeHtml($productImageUrl);?>',
+                    imageUrl: '<?php echo $block->escapeUrl($productImageUrl);?>',
                     quantity: <?php echo $block->escapeHtml($item->getQty());?>,
-                    url: '<?php echo $block->escapeHtml($productUrl);?>'
+                    url: '<?php echo $block->escapeUrl($productUrl);?>'
                 }<?php if (!($item === end($items))) { echo ','; } ?>
                 <?php } ?>
             ]
@@ -169,7 +169,7 @@ if($currentPage == 'cms_index_index'){
         product: {
             id: '<?php echo $block->escapeHtml($product->getId())?>',
             product_category_id: '<?php echo $block->escapeHtml(implode(',',$product->getCategoryIds()));?>',
-            purchase_online: <?php echo $product->getStatus();?> ,
+            purchase_online: <?php echo $block->escapeHtml($product->getStatus());?> ,
             name: '<?php $p_name = $product->getName(); echo $block->escapeHtml(str_replace("™","",$p_name)); ?> ',
             currency: '<?php echo $block->escapeHtml($smghelper->getCheckoutCart()->getQuote()->getBaseCurrencyCode());?>',
             unitPrice: '<?php echo $block->escapeHtml($product->getPrice()); ?>',
@@ -231,9 +231,9 @@ if($currentPage == 'cms_index_index'){
                     currency: '<?php echo $block->escapeHtml($order->getOrderCurrencyCode());?>',
                     unitPrice: <?php echo $block->escapeHtml($item->getPrice());?>,
                     sku: '<?php echo $block->escapeHtml($item->getSku());?>',
-                    imageUrl: '<?php echo $block->escapeHtml($productImageUrl);?>',
+                    imageUrl: '<?php echo $block->escapeUrl($productImageUrl);?>',
                     quantity: <?php echo $block->escapeHtml($item->getQty());?>,
-                    url: '<?php echo $block->escapeHtml($productUrl);?>'
+                    url: '<?php echo $block->escapeUrl($productUrl);?>'
                 },
                 <?php } ?>
             ]
