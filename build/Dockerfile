@@ -54,8 +54,6 @@ RUN chmod 0755 pub/media/tmp/design/file/
 
 # Can move these to nightly build
 
-RUN curl -sL https://deb.nodesource.com/setup_11.x | bash -
-RUN apt-get install -y --no-install-recommends nodejs php7.2-redis
 RUN npm i -g gulp
 
 ## ElasticSearch
@@ -89,8 +87,6 @@ USER magento
 WORKDIR $MAGENTO_DIR
 
 RUN git fetch
-RUN git checkout origin/test ./app/etc/config.php
-RUN git checkout origin/test .htaccess
 
 RUN git pull
 

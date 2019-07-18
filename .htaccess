@@ -44,6 +44,12 @@ SetEnvIf Request_URI !^test.scottsprogram\.com$ [NC] ROBOTS_NOINDEX
     php_value memory_limit 4000M
     php_value max_execution_time 18000
 
+###########################################
+## Set secure PHPSESSID attribute
+
+    php_value session.cookie_httponly 1
+    php_value session.cookie_secure 1
+
 ############################################
 ## disable automatic session start
 ## before autoload was initialized

@@ -9,7 +9,7 @@ $code = $block->escapeHtml($block->getMethodCode());
 ?>
 <fieldset
     class="admin__fieldset payment-method"
-    id="payment_form_<?php echo $code; ?>"
+    id="payment_form_<?php echo $block->escapeHtmlAttr($code); ?>"
     style="display: none;"
 >
     <div id="payframe" data-mage-init='<?php echo $block->escapeHtml($block->getMageInitJson()); ?>'></div>
@@ -17,10 +17,10 @@ $code = $block->escapeHtml($block->getMethodCode());
     <?php if ($block->isVaultEnabled()): ?>
         <div class="field-tooltip-content">
             <input type="checkbox"
-                   id="<?php echo $code; ?>_сс_enable_vault"
+                   id="<?php echo $block->escapeHtmlAttr($code); ?>_сс_enable_vault"
                    name="payment[is_active_payment_token_enabler]"
                    class="admin__control-checkbox"/>
-            <label class="admin__field-label" for="<?php echo $code; ?>_сс_enable_vault">
+            <label class="admin__field-label" for="<?php echo $block->escapeHtmlAttr($code); ?>_сс_enable_vault">
                 <span><?php echo $block->escapeHtml(__('Save for later use.')); ?></span>
             </label>
         </div>

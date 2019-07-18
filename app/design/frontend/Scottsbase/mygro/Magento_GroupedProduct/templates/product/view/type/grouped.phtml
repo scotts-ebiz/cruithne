@@ -96,7 +96,10 @@
                     <td class="col qty product-qty-td">
                       <?php if ($_item->isSaleable()) : ?>
                           <div class="control qty">
+                              <input type="button" value="-" class="qtyminus box_down<?php echo $_item->getId(); ?>" id="qtyminus" field="quantity"
+                                     data-mage-init='{ "Magento_GroupedProduct/js/quantity-changer": {"id": <?php echo $_item->getId(); ?>} }' />
                               <input type="number"
+                                     id="super_group[<?= /* @escapeNotVerified */ $_item->getId() ?>]"
                                      name="super_group[<?= /* @escapeNotVerified */ $_item->getId() ?>]"
                                      data-selector="super_group[<?= /* @escapeNotVerified */ $_item->getId() ?>]"
                                      value="<?= /* @escapeNotVerified */ $_item->getQty() * 1 ?>"
@@ -104,6 +107,8 @@
                                      class="input-text qty"
                                      data-validate="{'validate-grouped-qty':'#super-product-table'}"
                                      data-errors-message-box="#validation-message-box"/>
+                              <input type="button" value="+" id="qtyplus" class="qtyplus" field="quantity"
+                                     data-mage-init='{ "Magento_GroupedProduct/js/quantity-changer": {"id": <?php echo $_item->getId(); ?>} }' />
                           </div>
                       <?php else: ?>
                           <div class="stock unavailable" title="<?= /* @escapeNotVerified */ __('Availability') ?>">
