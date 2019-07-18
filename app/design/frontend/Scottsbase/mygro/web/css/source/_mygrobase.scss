@@ -2834,3 +2834,78 @@ button.action{
         }
     }
 }
+.checkout-onepage-success{
+    .page-wrapper{
+        #maincontent{
+            margin-left: 16rem;
+            @include max-screen($screen__s){
+                margin-left:0rem;
+            }
+            .page-title-wrapper{
+                margin-top: 9.5rem;
+                .page-title{
+                    font-size: 16px;
+                    color: #000;
+                    font-weight: bold;
+                }
+            }
+            .checkout-success{
+                color: #000;
+                font-weight: 400;
+                width: 700px;
+                @include max-screen($screen__s){
+                    width:auto;
+                }
+                .actions-toolbar{
+                    width: 100%;
+                    padding-top: 20px;
+                    border-top: 1px solid #ccc;
+                    text-align: right;
+                    .primary{
+                        float: right;
+                        width: 100%;
+                        .action.primary.continue{
+                            color: #fff;
+                            padding: 10px 25px 10px 25px;
+                            display: inline-block;
+                            background: #075534;
+                            margin: 0;
+                            float: right;
+                            width: auto;
+                        }
+                    }
+                }
+            }
+            #registration{
+                display:none;
+            }
+        }
+    }
+}
+
+.opc-payment{
+	.payment-method-content{
+		.actions-toolbar{
+			@include max-screen($screen__s){
+				width:50%;
+			}
+			.primary{
+				.action.primary.checkout{
+					@include max-screen($screen__s){
+						padding: 0px 0px;
+						font-size:16px;
+					}
+				}
+			}
+		}
+	}
+}
+
+.checkout-cart-index{
+    .columns{
+        .block.crosssell{
+            margin-top:0px;            
+            margin-left:15px;
+       }
+    }
+}

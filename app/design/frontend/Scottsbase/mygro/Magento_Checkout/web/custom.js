@@ -19,20 +19,20 @@ function($){
 		
 			var count = 0;
 			$('.cust-btn-add').on("click", function(){
-				count += 1;
+				count += 1; 
 				if (count == 1) {
-					$("div[name='shippingAddress.street.1']").css('display','block');
-					$("div[name='billingAddressauthorizenet_directpost.street.1']").css('display','block');
-					$("div[name='billingAddresscheckmo.street.1']").css('display','block');
-					$("div[name='billingAddressvantiv_cc.street.1']").css('display','block');
-					$("div[name='billingAddresscashondelivery.street.1']").css('display','block');
+					$(this).parents('.control').find("div[name='shippingAddress.street.1']").css('display','block');
+					$(this).parents('.control').find("div[name='billingAddressauthorizenet_directpost.street.1']").css('display','block');
+					$(this).parents('.control').find("div[name='billingAddresscheckmo.street.1']").css('display','block');
+					$(this).parents('.control').find("div[name='billingAddressvantiv_cc.street.1']").css('display','block');
+					$(this).parents('.control').find("div[name='billingAddresscashondelivery.street.1']").css('display','block');
 				}else if(count == 2){
-					$("div[name='shippingAddress.street.2']").css('display','block');
-					$("div[name='billingAddressauthorizenet_directpost.street.2']").css('display','block');
-					$("div[name='billingAddresscheckmo.street.2']").css('display','block');
-					$("div[name='billingAddressvantiv_cc.street.2']").css('display','block');
-					$("div[name='billingAddresscashondelivery.street.2']").css('display','block');
-					$('.cust-btn-add').css({"pointer-events": "none", "color": "#c2c2c2"});
+					$(this).parents('.control').find("div[name='shippingAddress.street.2']").css('display','block');
+					$(this).parents('.control').find("div[name='billingAddressauthorizenet_directpost.street.2']").css('display','block');
+					$(this).parents('.control').find("div[name='billingAddresscheckmo.street.2']").css('display','block');
+					$(this).parents('.control').find("div[name='billingAddressvantiv_cc.street.2']").css('display','block');
+					$(this).parents('.control').find("div[name='billingAddresscashondelivery.street.2']").css('display','block');
+					$(this).parents('.control').find('.cust-btn-add').css({"pointer-events": "none", "color": "#c2c2c2"});
 				}
 				else{ 
 					$('.cust-btn-add').css({"pointer-events": "none", "color": "#c2c2c2"});
@@ -58,7 +58,7 @@ function($){
 		}, 12000);
 	});
 	/*------- Sticky Header --------*/
-	$(window).scroll(function(){
+	$(window).scroll(function(){ 
 		var sticky = $('.custom-checkout-btn-wrap');
 		
 		if(typeof  sticky != "undefined" && sticky){
@@ -66,10 +66,12 @@ function($){
 			if ($(window).scrollTop() >= 200) {
 				$('.custom-checkout-btn-wrap').addClass('stickyCart');
 				$('.custom-checkout-btn-wrap').removeClass('slide-up');
+				$('.header.content').addClass('stickyHeader');
 			}
 			else { 
 				$('.custom-checkout-btn-wrap').removeClass('stickyCart');
 				$('.custom-checkout-btn-wrap').addClass('slide-up');
+				$('.header.content').removeClass('stickyHeader');
 			}
 			
 		}
