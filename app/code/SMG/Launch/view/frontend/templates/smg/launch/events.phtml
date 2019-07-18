@@ -13,7 +13,7 @@ window.dtmData.events.push({
 		<?php foreach($smghelper->getCheckoutSession()->getDtmAddToCart() as $pro){ ?>
 		id: '<?php echo $pro['id'];?>',
 		name: '<?php $p_name = $pro['name']; echo str_replace("™","",$p_name); ?>',
-		category: ['<?php echo $pro['category'];?>'],
+		category: [<?php echo $pro['category'];?>],
 		currency: '<?php echo $block->getCurrencyCode();?>',
 		unitPrice: <?php echo $pro['unitPrice'];?>,
 		sku: '<?php echo $pro['sku'];?>',
@@ -110,3 +110,20 @@ window.dtmData.events.push({
 	</script>
 <?php $smghelper->getCheckoutSession()->unsContactError(); ?>
 <?php endif;  ?>
+
+<?php /* Product Page Tab */ ?>
+
+<script>
+require([
+    'jquery',
+], function ($) {
+    $(document).ready(function(){
+		 $('.product.info.detailed a').on("click",function(){
+			var tabtext = $(this).text();
+			var trimStr = $.trim(tabtext);
+			$('#tabclick_event').remove();
+			$(".product-info-main").append("<div id='tabclick_event'><script>dtmData.events.push({name: 'tabClick',tabName:'"+trimStr+"'});<\/script><\/div>");
+		});
+	});
+});
+</script>
