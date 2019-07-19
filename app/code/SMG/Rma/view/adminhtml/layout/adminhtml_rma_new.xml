@@ -18,7 +18,7 @@
                     <block class="Magento\Rma\Block\Adminhtml\Rma\Edit\Tab\General\ShippingAddress" template="Magento_Rma::edit/general/shippingaddress.phtml" name="shipping_address"/>
                     <block class="Magento\Rma\Block\Adminhtml\Rma\Edit\Tab\General\Returnaddress" template="Magento_Rma::edit/general/returnadress.phtml" name="return_address"/>
                     <block class="Magento\Rma\Block\Adminhtml\Rma\Edit\Tab\General\History" template="Magento_Rma::new/general/history.phtml" name="comments_history"/>
-                    <block class="Magento\Rma\Block\Adminhtml\Rma\Edit\Tab\General\History" template="SMG_Sap::new/general/confirmation.phtml" name="return_confirmation"/>
+                    <block class="Magento\Rma\Block\Adminhtml\Rma\Edit\Tab\General\History" template="SMG_Rma::new/general/confirmation.phtml" name="return_confirmation"/>
                 </block>
                 <block class="Magento\Rma\Block\Adminhtml\Rma\NewRma\Tab\Items" name="magento_rma_new_tab_items" template="Magento_Rma::new/items.phtml">
                     <block class="Magento\Rma\Block\Adminhtml\Rma\NewRma\Tab\Items\Grid" name="rma_items_grid"/>

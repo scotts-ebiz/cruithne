@@ -295,6 +295,7 @@ return [
         'SMG_ProductCalloutText' => 1,
         'SMG_ProductCalloutVideo' => 1,
         'SMG_ProductGrid' => 1,
+        'SMG_Rma' => 1,
         'SMG_Sales' => 1,
         'SMG_OrderDiscount' => 1,
         'SMG_ShipTracking' => 1,

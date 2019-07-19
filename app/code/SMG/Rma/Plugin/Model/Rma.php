@@ -3,7 +3,8 @@
  * User: cnixon
  * Date: 5/14/19
  */
-namespace SMG\Sap\Plugin\Model;
+namespace SMG\Rma\Plugin\Model;
+
 use Magento\Framework\App\RequestInterface;
 use Magento\Rma\Model\Rma\Source\Status;
 use Magento\Sales\Model\Order\ItemFactory;
@@ -12,6 +13,7 @@ use Magento\Framework\Stdlib\DateTime\DateTimeFactory;
 use Psr\Log\LoggerInterface;
 use SMG\Sap\Model\SapOrderBatchRmaFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderBatchRma as SapOrderBatchRmaResource;
+
 class Rma
 {
     /**
