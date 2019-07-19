@@ -43,7 +43,7 @@
             </parameter>
             <parameter name="bannertext" visible="true" xsi:type="block">
                 <label>Blurb Text</label>
-                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
             </parameter>
             <parameter name="HeroCalloutBannerTextSize" visible="true" xsi:type="select"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextSize">
@@ -71,7 +71,7 @@
             </parameter>
             <parameter name="bannertexthighlight" visible="true" xsi:type="block">
                 <label>Small Blurb Text</label>
-                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
             </parameter>
             <parameter name="HeroCalloutBannerTextHighlightSize" visible="true" xsi:type="select"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextHighlightSize">

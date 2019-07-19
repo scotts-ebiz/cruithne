@@ -7,58 +7,73 @@
     display: inline-block;
     margin: 0 0 85px 0;
     @include max-screen($screen__l) {
+        display: none;
+    }
+    .heroCallout-bannerText {
+        margin: 0 0 0.8rem 0;
+    }
+    .heroCallout-bannerTextHighlight {
+        margin: 0 0 0.8rem 0;
+    }
+    p {
+        line-height: 30px;
+        @include max-screen($screen__l) {
+            line-height: 15px;
+            margin: 0;
+        }
+    }
+    @include max-screen($screen__l) {
         height: auto;
         background-position: top;
     }
-    .content {
+    .heroCallout-desktopContent {
         max-width: 500px;
         padding-left: 50px;
         position: relative;
         display: inline-block;
         margin: 5% 0 18% 0;
-        @include max-screen($screen__l) {
-            max-width: 1000px;
-            width: 100%;
-            top: 0;
-            padding: 0;
-            text-align: center;
-            margin: 48% 0 0 0;
+        h2 {
+            margin-bottom: 25px;
+            width: 75%;
         }
-        @include max-screen($screen__m) {
-            margin: 45% 0 0 0;
+        .heroCallout-bannerText {
+            width: 85%;
+            @include max-screen($screen__l) {
+                width: 100%;
+                text-align: left;
+            }
+        }
+        .heroCallout-bannerTextHighlight {
+            width: 85%;
         }
     }
     @media screen and (max-width: 1399px) and (min-width: 1024px) {
-        .content {
+        .heroCallout-desktopContent {
             width: 34%;
             padding-left: 40px;
             text-align: left;
         }
     }
+}
+
+.heroCallout-mobileContent {
+    @media only screen and (min-width: $screen__l) {
+        display: none;
+    }
+    @media only screen and (max-width: $screen__l) {
+        display: inline-block;
+        position: relative;
+        margin: 0 0 85px 0;
+    }
     h2 {
-        margin-bottom: 25px;
-        width: 75%;
-        @include max-screen($screen__l) {
-            width: 100%;
-            line-height: 35px;
-            text-align: left;
-        }
+        width: 90%;
+        margin: 0 0 1.0rem 0;
     }
     .heroCallout-bannerText {
-        width: 85%;
-        @include max-screen($screen__l) {
-            width: 100%;
-            text-align: left;
-        }
+        width: 90%;
     }
     .heroCallout-bannerTextHighlight {
-        @include max-screen($screen__l) {
-            width: 100%;
-            text-align: left;
-        }
-    }
-    p {
-        line-height: 34px;
+        width: 90%;
     }
 }
 
