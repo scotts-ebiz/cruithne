@@ -3,7 +3,7 @@
  * User: cnixon
  * Date: 5/14/19
  */
-namespace SMG\Sap\Block\Adminhtml\Rma\NewRma\Tab\Items\Renderer;
+namespace SMG\Rma\Block\Adminhtml\Rma\NewRma\Tab\Items\Renderer;
 
 use Psr\Log\LoggerInterface;
 use SMG\CreditReason\Model\CreditReasonCodeFactory;
@@ -87,7 +87,7 @@ class Reason extends \Magento\Rma\Block\Adminhtml\Rma\NewRma\Tab\Items\Renderer\
     public function getCreditReasonCode()
     {
 
-        // May use to display Reason Code in admin in future
+        // May use wto display Reason Code in admin in future
 
 
 //        // get the reason code
