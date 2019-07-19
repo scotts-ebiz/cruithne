@@ -19,6 +19,7 @@ $selectedHeroCalloutButtonHoverColor = '';
 $selectedBlurbMobileTextColor = '';
 $selectedHeadlineMobileColor = '';
 $selectedBannerImage = '';
+$selectedSmallBlurbMobileTextColor = '';
 
 
 //If blurbMobileTextColor exists then set to variable
@@ -84,6 +85,12 @@ endif;
 //If HeroCalloutBannerTextHighlightColor exists then set to variable
 if($block->getData('HeroCalloutBannerTextHighlightColor') != ''):
   $HeroCalloutBannerTextHighlightCustomColor = $block->getData('HeroCalloutBannerTextHighlightColor');
+endif;
+
+
+//If HeroCalloutBannerTextHighlightColor exists then set to variable
+if($block->getData('smallBlurbMobileTextColor') != ''):
+  $selectedSmallBlurbMobileTextColor = $block->getData('smallBlurbMobileTextColor');
 endif;
 
 
@@ -160,9 +167,12 @@ endif;
         <?php if($block->getData('buttontext')): ?>
             <button style="<?php echo $block->escapeHtmlAttr($HeroCalloutButtonTextCustomSize);?> color:<?php echo
             $block->escapeHtmlAttr($HeroCalloutButtonTextCustomColor);?>; background:<?php echo $block->escapeHtmlAttr
-            ($HeroCalloutButtonCustomColor);?>; <?php echo
-            $HeroCalloutButtonTextCustomStyle?>" onclick="window.location='<? echo $block->escapeUrl($selectedButtonlink)
-            ;?>';"><?php echo $block->escapeHtml($block->getData('buttontext')); ?></button>
+            ($HeroCalloutButtonCustomColor);?>; <?php echo /* @noEscape */ $HeroCalloutButtonTextCustomStyle?>"
+                    onclick="window
+                    .location='<? echo $block->escapeUrl($selectedButtonlink)
+            ;?>';" onmouseover="this.style.backgroundColor='<?php echo /* @noEscape */ $selectedHeroCalloutButtonHoverColor; ?>'" onmouseout="this.style.backgroundColor='<?php echo /* @noEscape */ $HeroCalloutButtonCustomColor; ?>'">
+              <?php echo $block->escapeHtml($block->getData('buttontext')); ?>
+            </button>
         <?php endif; ?>
     </div>
 </section>
@@ -191,32 +201,21 @@ endif;
   <?php if($block->getData('bannertexthighlight') != ''): ?>
       <div class="heroCallout-bannerTextHighlight" style="<?php echo
       $block->escapeHtmlAttr($HeroCalloutBannerTextHighlightCustomSize);?> color:<?php echo
-      $block->escapeHtmlAttr($HeroCalloutBannerTextHighlightCustomColor);?>;">
+      $block->escapeHtmlAttr($selectedSmallBlurbMobileTextColor);?>;">
         <?php echo /* @noEscape */ $block->getData('bannertexthighlight'); ?>
       </div>
-  <?php endif; ?>s
+  <?php endif; ?>
 
   <?php if($block->getData('buttontext')): ?>
       <button style="<?php echo $block->escapeHtmlAttr($HeroCalloutButtonTextCustomSize);?> color:<?php echo
       $block->escapeHtmlAttr($HeroCalloutButtonTextCustomColor);?>; background:<?php echo $block->escapeHtmlAttr
-      ($HeroCalloutButtonCustomColor);?>; <?php echo
-      $HeroCalloutButtonTextCustomStyle?>" onclick="window.location='<? echo $block->escapeUrl($selectedButtonlink)
-      ;?>';"><?php echo $block->escapeHtml($block->getData('buttontext')); ?></button>
+      ($HeroCalloutButtonCustomColor);?>; <?php echo /* @noEscape */ $HeroCalloutButtonTextCustomStyle?>"
+              onclick="window.location='<? echo $block->escapeUrl($selectedButtonlink)
+      ;?>';" onmouseover="this.style.backgroundColor='<?php echo /* @noEscape */ $selectedHeroCalloutButtonHoverColor;
+      ?>'" onmouseout="this.style.backgroundColor='<?php echo /* @noEscape */ $HeroCalloutButtonCustomColor;
+      ?>'"><?php echo $block->escapeHtml($block->getData
+      ('buttontext')); ?></button>
   <?php endif; ?>
 </div>
 
-
-
-<style type="text/css">
-
-    <?php if($this->getData('bannerimagemobile') != ''): ?>
-    .hero-callout {
-        background-image: url('<?php echo $block->escapeUrl($block->getData('bannerimagemobile')); ?>');
-    }
-    <?php endif; ?>
-
-    .hero-callout button:hover {
-        background-color:<? echo /* @noEscape */ $selectedHeroCalloutButtonHoverColor?> !important;
-    }
-</style>
 

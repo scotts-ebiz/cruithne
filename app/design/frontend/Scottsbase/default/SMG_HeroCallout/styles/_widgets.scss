@@ -15,33 +15,18 @@
     .heroCallout-bannerTextHighlight {
         margin: 0 0 0.8rem 0;
     }
-    p {
-        line-height: 30px;
-        @include max-screen($screen__l) {
-            line-height: 15px;
-            margin: 0;
-        }
-    }
-    @include max-screen($screen__l) {
-        height: auto;
-        background-position: top;
-    }
     .heroCallout-desktopContent {
         max-width: 500px;
         padding-left: 50px;
         position: relative;
         display: inline-block;
-        margin: 5% 0 18% 0;
+        margin: 4% 0 18% 0;
         h2 {
             margin-bottom: 25px;
             width: 75%;
         }
         .heroCallout-bannerText {
             width: 85%;
-            @include max-screen($screen__l) {
-                width: 100%;
-                text-align: left;
-            }
         }
         .heroCallout-bannerTextHighlight {
             width: 85%;
@@ -51,7 +36,6 @@
         .heroCallout-desktopContent {
             width: 34%;
             padding-left: 40px;
-            text-align: left;
         }
     }
 }
@@ -71,9 +55,11 @@
     }
     .heroCallout-bannerText {
         width: 90%;
+        margin: 0 0 0.8rem 0;
     }
     .heroCallout-bannerTextHighlight {
         width: 90%;
+        margin: 0 0 0.8rem 0;
     }
 }
 
