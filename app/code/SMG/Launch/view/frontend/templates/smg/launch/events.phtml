@@ -11,14 +11,13 @@ $item = $smghelper->getCheckoutSession()->getDtmAddToCart();
 
             product: {
                 <?php foreach($smghelper->getCheckoutSession()->getDtmAddToCart() as $pro){ ?>
-                id: '<?php echo $block->escapeHtml($pro['id']);?>',
-                name: '<?php $p_name = $pro['name']; echo $block->escapeHtml(str_replace("™","",$p_name)); ?>',
-                category: [<?php echo $block->escapeHtml($pro['category']);?>],
+		id: '<?php echo $block->escapeHtml($pro["id"]);?>',
+		name: '<?php $p_name = $pro["name"]; echo $block->escapeHtml(str_replace("™","",$p_name)); ?>',
+		category: [<?php echo $block->escapeHtml($pro["category"]);?>],
                 currency: '<?php echo $block->escapeHtml($block->getCurrencyCode());?>',
-                unitPrice: <?php echo $block->escapeHtml($pro['unitPrice'];?>,
-                sku: '<?php echo $block->escapeHtml($pro['sku']);?>',
-                quantity: <?php echo $block->escapeHtml($pro['quantity']);?>
-
+		unitPrice: <?php echo $block->escapeHtml($pro["unitPrice"]);?>,
+		sku: '<?php echo $block->escapeHtml($pro["sku"]);?>',
+		quantity: <?php echo $block->escapeHtml($pro["quantity"]);?>
                 <?php } ?>
 
             }
@@ -50,14 +49,14 @@ $item = $smghelper->getCheckoutSession()->getDtmAddToCart();
             window.dtmData.events.push({
                 name: 'cartUpdate',
                 product: {
-                    id: '<?php echo $block->escapeHtml($pro['id']);?>',
-                    name: '<?php $p_name = $pro['name']; echo $block->escapeHtml(str_replace("™","",$p_name)); ?>',
-                    category: [<?php echo $block->escapeHtml($pro['category']);?>],
-                    currency: '<?php echo $block->escapeHtml($block->getCurrencyCode());?>',
-                    unitPrice: <?php echo $block->escapeHtml($pro['unitPrice']);?>,
-                    sku: '<?php echo $block->escapeHtml($pro['sku']);?>',
-                    quantity: <?php echo $block->escapeHtml($pro['quantity']);?>,
-                    previousQuantity: <?php echo $block->escapeHtml($pro['previousQuantity']);?>
+			id: '<?php echo $block->escapeHtml($pro["id"]);?>',
+			name: '<?php $p_name = $pro["name"]; echo $block->escapeHtml(str_replace("™","",$p_name)); ?>',
+			category: [<?php echo $block->escapeHtml($pro["category"]);?>],
+            currency: '<?php echo $block->escapeHtml($block->getCurrencyCode());?>',
+			unitPrice: <?php echo $block->escapeHtml($pro["unitPrice"]);?>,
+			sku: '<?php echo $block->escapeHtml($pro["sku"]);?>',
+			quantity: <?php echo $block->escapeHtml($pro["quantity"]);?>,
+			previousQuantity: <?php echo $block->escapeHtml($pro["previousQuantity"]);?>
                 }
             });
         </script>
@@ -73,13 +72,13 @@ $item = $smghelper->getCheckoutSession()->getDtmAddToCart();
         window.dtmData.events.push({
             name: 'cartRemove',
             product: {
-                id: '<?php echo $block->escapeHtml($deleteitem['id']);?>',
-                name: '<?php $p_name = $deleteitem['name']; echo $block->escapeHtml(str_replace("™","",$p_name)); ?>',
-                category: [<?php echo $block->escapeHtml($deleteitem['category']);?>],
+			id: '<?php echo $block->escapeHtml($deleteitem["id"]);?>',
+			name: '<?php $p_name = $deleteitem["name"]; echo $block->escapeHtml(str_replace("™","",$p_name)); ?>',
+			category: [<?php echo $block->escapeHtml($deleteitem["category"]);?>],
                 currency: '<?php echo $block->escapeHtml($block->getCurrencyCode());?>',
-                unitPrice: <?php echo $block->escapeHtml($deleteitem['unitPrice']);?>,
-                sku: '<?php echo $block->escapeHtml($deleteitem['sku']);?>',
-                quantity: <?php echo $block->escapeHtml($deleteitem['quantity']);?>,
+			unitPrice: <?php echo $block->escapeHtml($deleteitem["unitPrice"]);?>,
+			sku: '<?php echo $block->escapeHtml($deleteitem["sku"]);?>',
+			quantity: <?php echo $block->escapeHtml($deleteitem["quantity"]);?>,
             }
         });
     </script>
@@ -112,19 +111,11 @@ $item = $smghelper->getCheckoutSession()->getDtmAddToCart();
 <?php endif;  ?>
 
 <?php /* Product Page Tab */ ?>
-
-<script>
-    require([
-        'jquery',
-    ], function ($) {
-        $(document).ready(function(){
-            $('.product.info.detailed a').on("click",function(){
-                var tabtext = $(this).text();
-                var trimStr = $.trim(tabtext);
-                $('#tabclick_event').remove();
-                $(".product-info-main").append("<div id='tabclick_event'><script>dtmData.events.push({name: 'tabClick',tabName:'"+trimStr+"'});<\/script><\/div>");
-            });
-        });
-    });
+<script type="text/x-magento-init">
+{
+	"*": {
+			"SMG_Launch/launch": {}
+		}
+}
 </script>
 
