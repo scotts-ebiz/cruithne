@@ -4,6 +4,7 @@ body {
         .product-info.text-left {
             text-align: left;
             margin-left: 75px;
+            margin-top: 150px;
             @media only screen and (max-width: $screen__s) {
                 margin-left: 15px;
             }
@@ -11,6 +12,7 @@ body {
         .product-info.text-right {
             float: right;
             margin-right: 75px;
+            margin-top: 150px;
             @media only screen and (max-width: $screen__s) {
                 margin-right: 15px;
             }
@@ -22,9 +24,13 @@ body {
     section.hero-video-widget.product-info-container {
         display: inline-block;
         width: 100%;
+        height: 600px;
         margin: 0 0 85px 0 !important;
-        @media only screen and (max-width: $screen__s) {
+        background-position: center;
+        background-size: cover;
+        @media only screen and (max-width: $screen__l) {
             margin: 0 !important;
+            height: 200px;
         }
         .product-info {
             font-size: 20px;
@@ -45,7 +51,6 @@ body {
                     width: 100%;
                     display: inline-block;
                     position: relative;
-                    top: 40px;
                 }
                 .watch-video {
                     i {
@@ -124,13 +129,12 @@ body {
         }
     }
     .hero-video-mobileContent {
-        @media only screen and (min-width: $screen__s) {
+        @media only screen and (min-width: $screen__l) {
             display: none;
         }
-        @media only screen and (max-width: $screen__s) {
+        @media only screen and (max-width: $screen__l) {
             display: inline-block;
             position: relative;
-            padding-left: 2%;
             margin: 0 0 85px 0;
             h2 {
                 margin-top: 0.5rem;
