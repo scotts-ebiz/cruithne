@@ -300,7 +300,7 @@ body {
                 width: calc(33.33% - 28px);
             }
         }
-        button {
+        .button {
             background: $mygro-green;
             border: 0;
             padding: 25px 45px;
@@ -317,10 +317,10 @@ body {
             transition: background 0.2s linear;
             letter-spacing: 0.5px;
         }
-        button:hover {
+        .button:hover {
             background: $mygro-dark-green;
         }
-        button:active {
+        .button:active {
             background: $mygro-light-green;
         }
         .button {
@@ -2375,7 +2375,7 @@ width: 48%;
 		}
 		.actions-toolbar.no-margin{
 			margin-top: 0 !important;
-			margin-bottom: -4px !important;
+			margin-bottom: -25px !important;
 		}
 	} 
 	.cart-container .form-cart .action.update{

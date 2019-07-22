@@ -52,7 +52,7 @@ return [
         'Magento_SalesRule' => 1,
         'Magento_WebsiteRestriction' => 1,
         'Magento_Downloadable' => 1,
-        'Magento_GiftCard' => 1,
+        'Magento_GiftCard' => 0,
         'Magento_CatalogUrlRewriteGraphQl' => 1,
         'Magento_Staging' => 1,
         'Magento_Widget' => 1,
