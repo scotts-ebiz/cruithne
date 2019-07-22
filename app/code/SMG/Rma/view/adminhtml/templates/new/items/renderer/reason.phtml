@@ -1,0 +1,35 @@
+<?php
+/**
+ * User: cnixon
+ * Date: 5/14/19
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php
+/**
+ * @see \SMG\Rma\Block\Adminhtml\Rma\NewRma\Tab\Items\Renderer\Reason
+ */
+?>
+<tr>
+    <td class="label"></td>
+    <td class="value">
+        <select
+            id="rma_properties_reason"
+            name="reason"
+            class="admin__control-select">
+            <?php
+            if ($values = $block->getCreditReasonCodes()) {
+                foreach ($values as $key => $option) {
+                    ?>
+                    <option value="<?= $block->escapeHtml($option['entity_id']) ?>" title="<?= $block->escapeHtml($option['long_desc']) ?>">
+                        <?= $block->escapeHtml($option['short_desc']) ?>
+                    </option>
+                    <?php
+                }
+            }
+            ?>
+        </select>
+    </td>
+</tr>

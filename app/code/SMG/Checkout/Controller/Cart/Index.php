@@ -56,7 +56,7 @@ class Index extends \Magento\Checkout\Controller\Cart implements HttpGetActionIn
     {
         $resultPage = $this->resultPageFactory->create();
         if ($this->cart->getItemsCount() === 0) {
-          $resultPage->getConfig()->getTitle()->set(__('Shopping Cart is Empty'));
+          $resultPage->getConfig()->getTitle()->set(__('Your Cart is Empty'));
           $resultPage->getConfig()->addBodyClass('empty-cart-page');
         }
         else {

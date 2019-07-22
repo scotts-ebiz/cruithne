@@ -16,6 +16,22 @@ $HeroCalloutBannerTextCustomStyle = '';
 $HeroCalloutButtonTextCustomStyle = '';
 $selectedButtonlink = '';
 $selectedHeroCalloutButtonHoverColor = '';
+$selectedBlurbMobileTextColor = '';
+$selectedHeadlineMobileColor = '';
+$selectedBannerImage = '';
+$selectedSmallBlurbMobileTextColor = '';
+
+
+//If blurbMobileTextColor exists then set to variable
+if($block->getData('blurbMobileTextColor') != ''):
+  $selectedBlurbMobileTextColor = $block->getData('blurbMobileTextColor');
+endif;
+
+
+//If headlineMobileColor exists then set to variable
+if($block->getData('headlineMobileColor') != ''):
+  $selectedHeadlineMobileColor = $block->getData('headlineMobileColor');
+endif;
 
 
 //If buttonlink exists then set to variable
@@ -72,6 +88,12 @@ if($block->getData('HeroCalloutBannerTextHighlightColor') != ''):
 endif;
 
 
+//If HeroCalloutBannerTextHighlightColor exists then set to variable
+if($block->getData('smallBlurbMobileTextColor') != ''):
+  $selectedSmallBlurbMobileTextColor = $block->getData('smallBlurbMobileTextColor');
+endif;
+
+
 //If HeroCalloutButtonTextColor exists then set to variable
 if($block->getData('HeroCalloutButtonTextColor') != ''):
   $HeroCalloutButtonTextCustomColor = $block->getData('HeroCalloutButtonTextColor');
@@ -81,6 +103,12 @@ endif;
 //If HeroCalloutButtonColor exists then set to variable
 if($block->getData('HeroCalloutButtonColor') != ''):
   $HeroCalloutButtonCustomColor = $block->getData('HeroCalloutButtonColor');
+endif;
+
+
+//If HeroCalloutButtonColor exists then set to variable
+if($block->getData('bannerimage') != ''):
+  $selectedBannerImage = $block->getData('bannerimage');
 endif;
 
 
@@ -112,41 +140,82 @@ endif;
 ?>
 
 
-<!-- Setting CMS Value of Hover Color -->
-<style>
-    .hero-callout button:hover {
-        background-color:<? echo $selectedHeroCalloutButtonHoverColor?> !important;
-    }
-</style>
 
-<section class="hero-callout col-2 span_12_of_12">
-    <div class="content">
-        <h2 style="<?php echo $HeroCalloutBannerHeadlineCustomSize?> color:<?php echo $HeroCalloutBannerHeadlineCustomColor?>; <?php echo $HeroCalloutBannerHeadlineCustomStyles?>"><?php echo $block->getData('bannerheadline'); ?></h2>
-        <p class="heroCallout-bannerText" style="<?php echo $HeroCalloutBannerTextCustomSize?> color:<?php echo $HeroCalloutBannerTextCustomColor?>; <?php echo $HeroCalloutBannerTextCustomStyle?>"><?php echo $block->getData
-        ('bannertext'); ?></p>
-        <p class="heroCallout-bannerTextHighlight" style="<?php echo $HeroCalloutBannerTextHighlightCustomSize?> color:<?php echo $HeroCalloutBannerTextHighlightCustomColor?>; <?php echo $HeroCalloutBannerTextHighlightCustomStyle?>"><?php echo $block->getData('bannertexthighlight'); ?></p>
+<section class="hero-callout col-2 span_12_of_12" style="background-image: url('<?php echo $block->escapeUrl
+($selectedBannerImage); ?>')">
+    <div class="heroCallout-desktopContent">
+        <h2 style="<?php echo $block->escapeHtmlAttr($HeroCalloutBannerHeadlineCustomSize);?> color:<?php echo
+        $block->escapeHtmlAttr($HeroCalloutBannerHeadlineCustomColor);?>; <?php echo $block->escapeHtmlAttr($HeroCalloutBannerHeadlineCustomStyles);?>">
+          <?php echo $block->escapeHtml($block->getData('bannerheadline')); ?></h2>
+
+        <?php if($block->getData('bannertext') != ''): ?>
+            <div class="heroCallout-bannerText" style="<?php echo $block->escapeHtmlAttr
+            ($HeroCalloutBannerTextCustomSize);?> color:<?php echo $block->escapeHtmlAttr
+            ($HeroCalloutBannerTextCustomColor);?>;">
+                <?php echo /* @noEscape */ $block->getData('bannertext'); ?>
+            </div>
+        <?php endif; ?>
+
+        <?php if($block->getData('bannertexthighlight') != ''): ?>
+            <div class="heroCallout-bannerTextHighlight" style="<?php echo
+            $block->escapeHtmlAttr($HeroCalloutBannerTextHighlightCustomSize);?> color:<?php echo
+            $block->escapeHtmlAttr($HeroCalloutBannerTextHighlightCustomColor);?>;">
+                <?php echo /* @noEscape */ $block->getData('bannertexthighlight'); ?>
+            </div>
+        <?php endif; ?>
 
         <?php if($block->getData('buttontext')): ?>
-        <button style="<?php echo $HeroCalloutButtonTextCustomSize?> color:<?php echo
-        $HeroCalloutButtonTextCustomColor?>; background:<?php echo $HeroCalloutButtonCustomColor?>; <?php echo
-        $HeroCalloutButtonTextCustomStyle?>" onclick="window.location='<? echo $selectedButtonlink?>';"><?php echo
-          $block->getData('buttontext'); ?></button>
+            <button style="<?php echo $block->escapeHtmlAttr($HeroCalloutButtonTextCustomSize);?> color:<?php echo
+            $block->escapeHtmlAttr($HeroCalloutButtonTextCustomColor);?>; background:<?php echo $block->escapeHtmlAttr
+            ($HeroCalloutButtonCustomColor);?>; <?php echo /* @noEscape */ $HeroCalloutButtonTextCustomStyle?>"
+                    onclick="window
+                    .location='<? echo $block->escapeUrl($selectedButtonlink)
+            ;?>';" onmouseover="this.style.backgroundColor='<?php echo /* @noEscape */ $selectedHeroCalloutButtonHoverColor; ?>'" onmouseout="this.style.backgroundColor='<?php echo /* @noEscape */ $HeroCalloutButtonCustomColor; ?>'">
+              <?php echo $block->escapeHtml($block->getData('buttontext')); ?>
+            </button>
         <?php endif; ?>
     </div>
 </section>
 
-<style type="text/css">
-    <?php if($this->getData('bannerimagemobile') != ''): ?>
-    .hero-callout {
-        background-image: url('<?php echo $block->getData('bannerimagemobile'); ?>');
-    }
+
+<!-- Mobile Content -->
+<div class="heroCallout-mobileContent">
+    <?php if ($block->getData('bannerimagemobile') != ''): ?>
+        <img src="<?php echo $block->escapeUrl($block->getData('bannerimagemobile'));?>">
+    <?php else: ?>
+        <img src="<?php echo $block->escapeUrl($selectedBannerImage); ?>">
     <?php endif; ?>
 
-    <?php if($this->getData('bannerimage') != ''): ?>
-    @media screen and (min-width: 1024px) {
-        .hero-callout {
-            background-image: url('<?php echo $block->getData('bannerimage'); ?>');
-        }
-    }
-    <?php endif; ?>
-</style>
+    <h2 style="<?php echo $block->escapeHtmlAttr($HeroCalloutBannerHeadlineCustomSize);?> color:<?php echo
+    $block->escapeHtmlAttr($selectedHeadlineMobileColor);?>; <?php echo $block->escapeHtmlAttr($HeroCalloutBannerHeadlineCustomStyles);?>">
+      <?php echo $block->escapeHtml($block->getData('bannerheadline')); ?></h2>
+
+  <?php if($block->getData('bannertext') != ''): ?>
+      <div class="heroCallout-bannerText" style="<?php echo $block->escapeHtmlAttr
+      ($HeroCalloutBannerTextCustomSize);?> color:<?php echo $block->escapeHtmlAttr
+      ($selectedBlurbMobileTextColor);?>;">
+        <?php echo /* @noEscape */ $block->getData('bannertext'); ?>
+      </div>
+  <?php endif; ?>
+
+  <?php if($block->getData('bannertexthighlight') != ''): ?>
+      <div class="heroCallout-bannerTextHighlight" style="<?php echo
+      $block->escapeHtmlAttr($HeroCalloutBannerTextHighlightCustomSize);?> color:<?php echo
+      $block->escapeHtmlAttr($selectedSmallBlurbMobileTextColor);?>;">
+        <?php echo /* @noEscape */ $block->getData('bannertexthighlight'); ?>
+      </div>
+  <?php endif; ?>
+
+  <?php if($block->getData('buttontext')): ?>
+      <button style="<?php echo $block->escapeHtmlAttr($HeroCalloutButtonTextCustomSize);?> color:<?php echo
+      $block->escapeHtmlAttr($HeroCalloutButtonTextCustomColor);?>; background:<?php echo $block->escapeHtmlAttr
+      ($HeroCalloutButtonCustomColor);?>; <?php echo /* @noEscape */ $HeroCalloutButtonTextCustomStyle?>"
+              onclick="window.location='<? echo $block->escapeUrl($selectedButtonlink)
+      ;?>';" onmouseover="this.style.backgroundColor='<?php echo /* @noEscape */ $selectedHeroCalloutButtonHoverColor;
+      ?>'" onmouseout="this.style.backgroundColor='<?php echo /* @noEscape */ $HeroCalloutButtonCustomColor;
+      ?>'"><?php echo $block->escapeHtml($block->getData
+      ('buttontext')); ?></button>
+  <?php endif; ?>
+</div>
+
+
