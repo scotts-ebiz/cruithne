@@ -43,7 +43,7 @@
             </parameter>
             <parameter name="bannertext" visible="true" xsi:type="block">
                 <label>Blurb Text</label>
-                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
             </parameter>
             <parameter name="HeroCalloutBannerTextSize" visible="true" xsi:type="select"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextSize">
@@ -71,7 +71,7 @@
             </parameter>
             <parameter name="bannertexthighlight" visible="true" xsi:type="block">
                 <label>Small Blurb Text</label>
-                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
+                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\TextAreaField" />
             </parameter>
             <parameter name="HeroCalloutBannerTextHighlightSize" visible="true" xsi:type="select"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextHighlightSize">
@@ -79,6 +79,10 @@
             </parameter>
             <parameter name="HeroCalloutBannerTextHighlightColor" visible="true" xsi:type="text">
                 <label>Small Blurb Text Color (#xxxxxx)</label>
+                <value>#000000</value>
+            </parameter>
+            <parameter name="smallBlurbMobileTextColor" visible="true" xsi:type="text">
+                <label>Small Blurb Mobile Text Color (#xxxxxx)</label>
                 <value>#000000</value>
             </parameter>
             <!-- Hiding Blurb Text Style in lue of WYSIWYG -->
@@ -94,11 +98,11 @@
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="bannerimage" visible="true" xsi:type="block">
-                <label>Banner Image</label>
+                <label>Banner Image (2000x900)</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
             <parameter name="bannerimagemobile" visible="true" xsi:type="block">
-                <label>Banner Image (Mobile)</label>
+                <label>Mobile Banner Image</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
             </parameter>
 
