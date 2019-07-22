@@ -1,8 +1,8 @@
 <?php
 $helper = $block->getHelper();
 $smghelper = $this->helper('SMG\Launch\Helper\Data');
-$item = $smghelper->getCheckoutSession()->getDtmAddToCart();  
-?> 
+$item = $smghelper->getCheckoutSession()->getDtmAddToCart();
+?>
 <?php if ($item) : ?>
 <script>
 window.dtmData.events.push({
@@ -11,14 +11,14 @@ window.dtmData.events.push({
 
 	product: {
 		<?php foreach($smghelper->getCheckoutSession()->getDtmAddToCart() as $pro){ ?>
-		id: '<?php echo $pro['id'];?>',
-		name: '<?php $p_name = $pro['name']; echo str_replace("™","",$p_name); ?>',
-		category: ['<?php echo $pro['category'];?>'],
-		currency: '<?php echo $block->getCurrencyCode();?>',
-		unitPrice: <?php echo $pro['unitPrice'];?>,
-		sku: '<?php echo $pro['sku'];?>',
-		quantity: <?php echo $pro['quantity'];?>
-		
+		id: '<?php echo $block->escapeHTML($pro['id']);?>',
+		name: '<?php $p_name = $pro['name']; echo $block->escapeHTML(str_replace("™","",$p_name)); ?>',
+		category: ['<?php echo $block->escapeHTML($pro['category']);?>'],
+		currency: '<?php echo $block->escapeHTML($block->getCurrencyCode());?>',
+		unitPrice: <?php echo $block->escapeHTML($pro['unitPrice']);?>,
+		sku: '<?php echo $block->escapeHTML($pro['sku']);?>',
+		quantity: <?php echo $block->escapeHTML($pro['quantity']);?>
+
 		<?php } ?>
 
 	}
@@ -34,11 +34,11 @@ window.dtmData.events.push({
 	<script>
 	window.dtmData.events.push({
 		name: 'newsletterSuccess',
-		email: '<?php echo $newsletter;?>'
+		email: '<?php echo $block->escapeHTML($newsletter);?>'
 	});
 	</script>
-	
-<?php $smghelper->getCatalogSession()->unsDtmNewsletter();?>	
+
+<?php $smghelper->getCatalogSession()->unsDtmNewsletter();?>
 <?php endif; ?>
 
 <?php /*update qty event*/ ?>
@@ -50,14 +50,14 @@ window.dtmData.events.push({
 	window.dtmData.events.push({
 		name: 'cartUpdate',
 		product: {
-			id: '<?php echo $pro['id'];?>',
-			name: '<?php $p_name = $pro['name']; echo str_replace("™","",$p_name); ?>',
-			category: [<?php echo $pro['category'];?>], 
-			currency: '<?php echo $block->getCurrencyCode();?>',
-			unitPrice: <?php echo $pro['unitPrice'];?>,
-			sku: '<?php echo $pro['sku'];?>',
-			quantity: <?php echo $pro['quantity'];?>,
-			previousQuantity: <?php echo $pro['previousQuantity'];?>
+			id: '<?php echo $block->escapeHTML($pro['id']);?>',
+			name: '<?php $p_name = $pro['name']; echo $block->escapeHTML(str_replace("™","",$p_name)); ?>',
+			category: [<?php echo $block->escapeHTML($pro['category']);?>],
+			currency: '<?php echo $block->escapeHTML($block->getCurrencyCode());?>',
+			unitPrice: <?php echo $block->escapeHTML($pro['unitPrice']);?>,
+			sku: '<?php echo $block->escapeHTML($pro['sku']);?>',
+			quantity: <?php echo $block->escapeHTML($pro['quantity']);?>,
+			previousQuantity: <?php echo $block->escapeHTML($pro['previousQuantity']);?>
 		}
 	});
 	</script>
@@ -73,13 +73,13 @@ window.dtmData.events.push({
 	window.dtmData.events.push({
 		name: 'cartRemove',
 		product: {
-			id: '<?php echo $deleteitem['id'];?>',
-			name: '<?php $p_name = $deleteitem['name']; echo str_replace("™","",$p_name); ?>',
-			category: [<?php echo $deleteitem['category'];?>], 
-			currency: '<?php echo $block->getCurrencyCode();?>',
-			unitPrice: <?php echo $deleteitem['unitPrice'];?>,
-			sku: '<?php echo $deleteitem['sku'];?>',
-			quantity: <?php echo $deleteitem['quantity'];?>,
+			id: '<?php echo $block->escapeHTML($deleteitem['id']);?>',
+			name: '<?php $p_name = $deleteitem['name']; echo $block->escapeHTML(str_replace("™","",$p_name)); ?>',
+			category: [<?php echo $block->escapeHTML($deleteitem['category']);?>],
+			currency: '<?php echo $block->escapeHTML($block->getCurrencyCode());?>',
+			unitPrice: <?php echo $block->escapeHTML($deleteitem['unitPrice']);?>,
+			sku: '<?php echo $block->escapeHTML($deleteitem['sku']);?>',
+			quantity: <?php echo $block->escapeHTML($deleteitem['quantity']);?>,
 		}
 	});
 	</script>
@@ -92,7 +92,7 @@ window.dtmData.events.push({
 	<script>
 	window.dtmData.events.push({
 		name: 'promoApplied',
-		promoCode:'<?php echo $coupen; ?>',
+		promoCode:'<?php echo $block->escapeHTML($coupen); ?>',
 		success: '<?php if($smghelper->getCheckoutCart()->getQuote()->getCouponCode() == $coupen){ echo "true"; }else{ echo "false"; } ?>'
 	});
 	</script>
@@ -105,7 +105,7 @@ window.dtmData.events.push({
 	<script>
 	window.dtmData.events.push({
 		name: 'errorMessage',
-		errorMessage:'<?php echo $errorcontact; ?>'
+		errorMessage:'<?php echo $block->escapeHTML($errorcontact); ?>'
 	});
 	</script>
 <?php $smghelper->getCheckoutSession()->unsContactError(); ?>
