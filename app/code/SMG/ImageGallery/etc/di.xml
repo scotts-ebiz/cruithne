@@ -2,7 +2,6 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magento\MediaStorage\Service\ImageResize" type="SMG\ImageGallery\MediaStorage\Service\ImageResize" />
-    <preference for="Magento\Catalog\Model\ResourceModel\Product\Image" type="SMG\ImageGallery\Catalog\Model\ResourceModel\Product\Image" />
 </config>
 
 
