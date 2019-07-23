@@ -1,4 +1,4 @@
-gcloud container clusters get-credentials magento-test-cluster --zone us-east1-b
+gcloud container clusters get-credentials magento-test-ha-cluster --zone us-east1
 
 # get the number of items in cluster
 LIST=$(kubectl get pod -l app=magento-test | wc -l)
