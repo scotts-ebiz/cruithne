@@ -60,15 +60,18 @@ if($block->getData('bannerTextImgTwoLink') !=''):
   $selectedBannerTextImgTwoLink = $block->getData('bannerTextImgTwoLink');
 endif;
 
+
 // Check existence of an alt txt for Blurb Img One
 if($block->getData('blurbImgOneAltTxt') !=''):
   $selectedBlurbImgOneAltTxt = $block->getData('blurbImgOneAltTxt');
 endif;
 
+
 // Check existence of an alt txt for Blurb Img Two
 if($block->getData('blurbImgTwoAltTxt') !=''):
   $selectedBlurbImgTwoAltTxt = $block->getData('blurbImgTwoAltTxt');
 endif;
+
 
 // Check existence of an alt txt for Callout Img
 if($block->getData('bannerCalloutImageAltTxt') !=''):
@@ -89,11 +92,8 @@ endif;
       </div>
     <?php endif; ?>
 
-    <div
-      class="productCallout-contentContainer span_6_of_12 <?php echo $block->escapeHtml($block->getData
-      ('textalignclass')); ?>">
-      <h2 style="<?php
-          $headlinestylevalues = explode(',', $headlineCustomCssStyle);
+    <div class="productCallout-contentContainer span_6_of_12 <?php echo $block->escapeHtml($block->getData('textalignclass')); ?>">
+      <h2 style="<?php $headlinestylevalues = explode(',', $headlineCustomCssStyle);
             foreach($headlinestylevalues as $headlinevalue) {
             echo  /* @noEscape */ $headlinevalue;
             } ?>color:<?php echo $block->escapeHtmlAttr($block->getData('bannerheadlinecolor')); ?>;"><?php echo /* @noEscape */ $block->getData('bannerheadline'); ?></h2>
