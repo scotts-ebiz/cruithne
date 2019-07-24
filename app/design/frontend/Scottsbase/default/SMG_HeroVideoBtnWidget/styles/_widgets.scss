@@ -4,15 +4,27 @@ body {
         .product-info.text-left {
             text-align: left;
             margin-left: 75px;
-            @media only screen and (max-width: $screen__s) {
-                margin-left: 15px;
-            }
+          margin-top: 150px;
+          @media only screen and (max-width: $screen__l) {
+              margin-left: 15px;
+              margin-top: 275px;
+          }
+          @media only screen and (max-width: $screen__s) {
+              margin-left: 15px;
+              margin-top: 125px;
+          }
         }
         .product-info.text-right {
             float: right;
             margin-right: 75px;
+            margin-top: 150px;
+            @media only screen and (max-width: $screen__l) {
+                margin-right: 15px;
+                margin-top: 275px;
+            }
             @media only screen and (max-width: $screen__s) {
                 margin-right: 15px;
+                margin-top: 125px;
             }
         }
     }
@@ -22,24 +34,28 @@ body {
     section.hero-video-btn-widget.product-info-container {
         display: inline-block;
         width: 100%;
-        margin: 0 0 85px 0 !important;
+        height: 600px;
+        margin: 0 0 100px 0 !important;
+        @media only screen and (max-width: $screen__l) {
+            margin: 0 !important;
+            height: 350px;
+        }
         @media only screen and (max-width: $screen__s) {
-            margin-bottom: 0 !important;
+            height: 200px;
         }
         .product-info {
             font-size: 20px;
             width: 40%;
             @media only screen and (max-width: $screen__m) {
-                width: 75%;
+                width: 100%;
             }
-
             h2.video-headline {
-                @media only screen and (max-width: $screen__s) {
+                @media only screen and (max-width: $screen__l) {
                     display: none;
                 }
             }
             p {
-                @media only screen and (max-width: $screen__s) {
+                @media only screen and (max-width: $screen__l) {
                     display: none;
                 }
             }
@@ -48,7 +64,6 @@ body {
                     width: 100%;
                     display: inline-block;
                     position: relative;
-                    top: 40px;
                 }
                 .watch-video {
                     span.embed-code {
@@ -81,7 +96,7 @@ body {
             z-index: 9;
             .video-frame {
                 position: relative;
-                padding-bottom: 56.25%; /* 16:9 */
+                padding-bottom: 56.25%;
                 padding-top: 25px;
                 height: 0;
             }
@@ -95,13 +110,12 @@ body {
         }
     }
     .hero-video-btn-mobileContent {
-        @media only screen and (min-width: $screen__s) {
+        @media only screen and (min-width: $screen__l) {
             display: none;
         }
-        @media only screen and (max-width: $screen__s) {
+        @media only screen and (max-width: $screen__l) {
             display: inline-block;
             position: relative;
-            padding-left: 2%;
             margin: 0 0 85px 0;
             h2 {
                 margin-top: 0.5rem;
