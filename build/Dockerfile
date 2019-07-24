@@ -94,11 +94,6 @@ RUN sed -i "s/save.*/save' => 'redis',/" app/etc/env.php
 
 RUN date
 
-# Neelam Special Per https://scotts.jira.com/browse/ECOM-496
-# This is a Patch for Magento per https://github.com/magento/magento2/issues/13269
-# Should be able to be removed after Magento 2.3.1 is live
-RUN sed -i "s/.*result = mb_convert_encoding.*/\t\t\$result = mb_convert_encoding(preg_replace('\/\&\/', \'\&amp\;\', html_entity_decode(\$domDocument->saveHTML())), \'HTML-ENTITIES\', \'UTF-8\');\n/" $MAGENTO_DIR/vendor/magento/framework/Escaper.php
-
 # for icons to stick need paths and permissions
 RUN mkdir -p pub/media/tmp/design/file/
 RUN chmod 0755 pub/media/tmp/design/file/
@@ -108,9 +103,6 @@ USER root
 # Magento 2.3 fix that will fix catalog rules to be applied
 # https://magento.stackexchange.com/questions/152101/catalog-price-rule-not-applied-working-in-magento-2-ee-v2-1-2
 RUN sed -i '22s/.*/                <visible>true<\/visible>/' $MAGENTO_DIR/vendor/magento/module-catalog-rule-staging/view/adminhtml/ui_component/catalog_rule_form.xml 
-
-# Added this in as a test to force php to save sessions in redis
-RUN sed -i '/session.save_handler/s/^/; /g' /etc/php/7.2/apache2/php.ini
 
 RUN git apply $MAGENTO_DIR/build/magento_security_patches/PRODSECBUG-2198-2.3-EE.composer-2019-03-27-06-10-53.patch
 

@@ -35,8 +35,10 @@ su - magento -c 'gulp clean -f /var/www/html/magento2/tools/gulpfile.js'
 su - magento -c 'cd /var/www/html/magento2/tools && npm rebuild node-sass && gulp styles -f /var/www/html/magento2/tools/gulpfile.js'
 
 su - magento -c '/var/www/html/magento2/bin/magento setup:static-content:deploy'
-# su - magento -c '/var/www/html/magento2/bin/magento -v index:reindex'
-# su - magento -c '/var/www/html/magento2/bin/magento -v cache:flush'
+su - magento -c '/var/www/html/magento2/bin/magento catalog:images:resize'
+
+su - magento -c '/var/www/html/magento2/bin/magento -v index:reindex'
+su - magento -c '/var/www/html/magento2/bin/magento -v cache:flush'
 
 # Remove this
 find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -exec chown magento:www-data {} \;
