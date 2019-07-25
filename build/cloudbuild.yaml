@@ -3,7 +3,6 @@
 # Will need to modify to be enviornment agnostic
 
 steps:
-## This step pulls down the latest image from the repo to try to speed up build
 - name: 'gcr.io/cloud-builders/docker'
   entrypoint: 'bash'
   args: ['-c', 'docker pull gcr.io/$PROJECT_ID/${_CONTAINER_REPO_NAME}:latest || exit 0']
