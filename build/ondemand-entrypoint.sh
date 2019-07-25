@@ -39,13 +39,6 @@ su - magento -c '/var/www/html/magento2/bin/magento catalog:images:resize'
 su - magento -c '/var/www/html/magento2/bin/magento -v index:reindex'
 su - magento -c '/var/www/html/magento2/bin/magento -v cache:flush'
 
-# Remove this
-find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -exec chown magento:www-data {} \;
-find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -exec chmod 777 {} \;
-
-# For the readiness check
-touch /tmp/healthy
-
 curl -X POST --data-urlencode "payload={\"channel\": \"#magento2project\", \"username\": \"m2deploybot\", \"text\": \"The most recent commit below has been deployed to the $(git rev-parse --abbrev-ref HEAD) environment $(git show | head -n 10)\", \"icon_emoji\": \":rocket:\"}" https://hooks.slack.com/services/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
 
 #always start elasticsearch for fulltext catalog search indexer
