@@ -335,6 +335,12 @@ body {
             text-align: center;
             display: inline-block;
         }
+        .button:hover {
+            background: $mygro-dark-green;
+        }
+        .button:active {
+            background: $mygro-light-green;
+        }
         .hero-video {
             background: url(../images/bg-hero.jpg) 50% 0% no-repeat;
             background-size: cover;
@@ -2373,7 +2379,7 @@ width: 48%;
 		}
 		.actions-toolbar.no-margin{
 			margin-top: 0 !important;
-			margin-bottom: -4px !important;
+			margin-bottom: -25px !important;
 		}
 	} 
 	.cart-container .form-cart .action.update{

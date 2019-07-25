@@ -751,7 +751,7 @@ define([
             function (value) {
                 return utils.isEmptyNoTrim(value) || /^[a-zA-Z]+$/.test(value);
             },
-            $.mage.__('Please enter valid name.')
+            $.mage.__('Please enter a valid name.')
         ],
         'validate-code': [
             function (value) {
