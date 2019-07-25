@@ -57,10 +57,11 @@ style="color:' . $block->getData('itemTextColor') . '; ' . trim($selectedItemTex
 ?>
 <section class="product-info-container align-top widget-margin">
     <div class="product-info grid col-2">
-        <h2 class="span_6_of_12 list-icon-header" style="color:<?php echo $block->getData('headlinecolor');?>; <?php echo $selectedHeadlineBannerStyle;?>"><?php
-          echo $block->getData('headline'); ?></h2>
+        <h2 class="span_6_of_12 list-icon-header" style="color:<?php echo $block->escapeHtmlAttr($block->getData('headlinecolor'));?>;
+        <?php echo /* @noEscape */ $selectedHeadlineBannerStyle;?>"><?php
+          echo /* @noEscape */ $block->getData('headline'); ?></h2>
         <ul class="span_6_of_12 list-icon">
-            <?php echo $html; ?>
+            <?php echo /* @noEscape */ $html; ?>
         </ul>
     </div>
 </section>
