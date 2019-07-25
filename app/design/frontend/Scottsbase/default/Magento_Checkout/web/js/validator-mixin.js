@@ -15,7 +15,7 @@ define([
 					if (!isNaN(value)) {
 						return false;
 					}
-					if( value.match( /^[a-zA-Z ]*$/) ) {
+					if( value.match( /^[a-zA-Z\. ]*$/) ) {
 						 return true
 					}else{
 						return false;
@@ -25,16 +25,18 @@ define([
 					return !$.mage.isEmpty(value);
 				}
 			},
-			$.mage.__('Please enter a valid name.')
+			$.mage.__('Please enter your first name.')
 		);
 		validator.addRule(
 			'required-entry-bfirstname',
 			function (value) {
-				if ($(".billing-address-form input[name='firstname']").val() != '') {
+				var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.firstname';
+				if ($("div[name='"+inpt+"'] input[name='firstname']").val() != '') {
+
 					if (!isNaN(value)) {
 						return false;
 					}
-					if( value.match( /^[a-zA-Z ]*$/) ) {
+					if( value.match( /^[a-zA-Z\. ]*$/) ) {
 						 return true
 					}else{
 						return false;
@@ -44,7 +46,7 @@ define([
 					return !$.mage.isEmpty(value);
 				}
 			},
-			$.mage.__('Please enter a valid name.')
+			$.mage.__('Please enter your first name')
 		);
 		validator.addRule(
 			'required-entry-lastname',
@@ -67,7 +69,8 @@ define([
 		validator.addRule(
 			'required-entry-blastname',
 			function (value) {
-				if ($(".billing-address-form input[name='lastname']").val() != '') {
+				var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.lastname';
+				if ($("div[name='"+inpt+"'] input[name='lastname']").val() != '') {
 					if (!isNaN(value)) {
 						return false;
 					}
@@ -80,7 +83,25 @@ define([
 					return !$.mage.isEmpty(value);
 				}
 			},
-			$.mage.__('Please enter a valid name.')
+			$.mage.__('Please enter your last name')
+		);
+		validator.addRule(
+			'required-entry-bcity',
+			function (value) {
+				if ($(".billing-address-form input[name='city']").val() != '') {
+					if (!isNaN(value)) {
+						return false;
+					}
+					if( value.match( /^[a-zA-Z ]*$/) ) {
+						 return true
+					}else{
+						return false;
+					}
+				} else {
+					return !$.mage.isEmpty(value);
+				}
+			},
+			$.mage.__('Please enter a valid city')
 		);
 		validator.addRule(
 			'required-entry-pcode',
@@ -103,7 +124,8 @@ define([
 		validator.addRule(
 			'required-entry-bpcode',
 			function (value) {
-				if ($(".billing-address-form input[name='postcode']").val() != '') {
+				var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.postcode';
+				if ($("div[name='"+inpt+"'] input[name='postcode']").val() != '') {
 					if(value.length < 5){
 						return false;
 					}
@@ -123,7 +145,7 @@ define([
 							return false;
 						}
 					}
-					var filter = /^((\+[1-9]{1,4}[ \-]*)|(\([0-9]{2,3}\)[ \-]*)|([0-9]{2,4})[ \-]*)*?[0-9]{3,4}?[ \-]*[0-9]{3,4}?$/;
+					var filter = /\d{3}-\d{3}-\d{4}$/;
 					if (value.length > 9 && filter.test(value)) {
 						return true;
 					}else {
@@ -140,15 +162,16 @@ define([
 		validator.addRule(
 			'required-entry-btelephone',
 			function (value) {
-				if ($(".billing-address-form input[name='telephone']").val() != '') {
-					var str = $(".billing-address-form input[name='telephone']").val();
+				var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.telephone';
+				if ($("div[name='"+inpt+"'] input[name='telephone']").val() != '') {
+					var str = $("div[name='"+inpt+"'] input[name='telephone']").val();
 					if(str){
 						var mob = str.replace(/\-/g, '');
 						if(mob.length < 10){
 							return false;
 						}
 					}
-					var filter = /^((\+[1-9]{1,4}[ \-]*)|(\([0-9]{2,3}\)[ \-]*)|([0-9]{2,4})[ \-]*)*?[0-9]{3,4}?[ \-]*[0-9]{3,4}?$/;
+					var filter = /\d{3}-\d{3}-\d{4}$/;
 					if (value.length > 9 && filter.test(value)) {
 						return true;
 					}else {
@@ -160,7 +183,7 @@ define([
 					return !$.mage.isEmpty(value);
 				}
 			},
-			$.mage.__('Please enter a valid phone.')
+			$.mage.__('Please enter a valid phone number.')
 		);
 		
 		return validator;
