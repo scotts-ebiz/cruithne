@@ -442,7 +442,18 @@ body {
     }
 }
 
-// PDP Page Styles
+
+// Base Widget Styles
+.widget-margin {
+    margin: 0 0 150px 0 !important;
+    @media only screen and (max-width: $screen__l) {
+        margin: 0 0 100px 0 !important;
+    }
+}
+
+.widget-margin-mobile {
+    margin: 0 0 100px 0 !important;
+}
 
 
 /*Since only one controller product removing select styling*/
@@ -463,6 +474,7 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
 .product.info.detailed {
   display: none;
 }
+
 
 // PDP Page Styles
 .page-product-grouped {	

@@ -78,41 +78,35 @@ endif;
 ?>
 
 
-<section class="product-callout-video-widget product-info-container" style="padding-top:<?php echo $pcvBgPaddingTopSelected?>%; padding-bottom: <?php echo $pcvBgPaddingBottomSelected?>%;">
+<section class="product-callout-video-widget product-info-container">
     <div class="product-info grid col-2">
         <div class="productCalloutVideo-imageContainer span_6_of_12">
-            <div class="productCalloutVideo-selectedImgContainer" style="background: url('<?php echo $block->getData
-            ('pcvCalloutImage'); ?>') no-repeat;
+            <div class="productCalloutVideo-selectedImgContainer" style="background: url('<?php echo $block->escapeUrl($block->getData('pcvCalloutImage')); ?>') no-repeat;
               background-size:cover; background-position:center;">
                 <a class="productCalloutVideo-watchVideo play productCalloutVideo-video-link" href="#">
-                    <i class="icon-play fas fa-play" style="color:<?php echo $pcvIconColorSelected?>;
-                      background-color:<?php echo $pcvIconBackgroundColorSelected?>;"></i>
+                    <i class="icon-play fas fa-play" style="color:<?php echo $block->escapeHtmlAttr
+                    ($pcvIconColorSelected);?>;background-color:<?php echo $block->escapeHtmlAttr
+                    ($pcvIconBackgroundColorSelected);?>;"></i>
                     <span class="embed-code">
-                        <iframe width="<?php echo $pcvIframeWidthSelected;?>" height="<?php echo
-                        $pcvIframeHeightSelected;?>" src="<?php echo $pcvIframeVideoLinkSelected?>" frameborder="0"
+                        <iframe width="<?php echo $block->escapeHtml($pcvIframeWidthSelected);?>" height="<?php echo
+                        $block->escapeHtml($pcvIframeHeightSelected);?>" src="<?php echo
+                        $block->escapeUrl($pcvIframeVideoLinkSelected)?>" frameborder="0"
                                 allow="autoplay; encrypted-media" allowfullscreen="" data-dayt="true">
                         </iframe>
                     </span>
                 </a>
             </div>
         </div>
-        <div class="productCalloutVideo-contentContainer span_6_of_12 <?php echo $block->getData('pcvTextContainerAlignment') ?>">
+        <div class="productCalloutVideo-contentContainer span_6_of_12 <?php echo $block->escapeHtml($block->getData('pcvTextContainerAlignment')); ?>">
             <h2 style="<?php
             $pcvHeadlineStyleValues = explode(',', $pcvHeadlineCustomCssStyle);
-            foreach($pcvHeadlineStyleValues as $pcvHeadlinevalue) {
-              echo $pcvHeadlinevalue;
-            } ?>color:<?php echo $block->getData('pcvBannerHeadlineColor');?>;">
-                <?php echo $block->getData('pcvBannerHeadline'); ?>
-            </h2>
-            <p style="<?php echo $pcvParagraphTextSize?>
-              <?php
-              $pcvBannerTextStyleValuesSelected = explode(',', $pcvBannerTextStyleSelected);
+            foreach($pcvHeadlineStyleValues as $pcvHeadlinevalue) {echo /* @noEscape */ $pcvHeadlinevalue;} ?>color:<?php echo $block->escapeHtmlAttr($block->getData('pcvBannerHeadlineColor'));?>;"><?php echo /* @noEscape */ $block->getData('pcvBannerHeadline'); ?></h2>
+            <p style="<?php echo /* @noEscape */ $pcvParagraphTextSize?>
+              <?php $pcvBannerTextStyleValuesSelected = explode(',', $pcvBannerTextStyleSelected);
                 foreach($pcvBannerTextStyleValuesSelected as $valueOfTextStyle) {
-                  echo $valueOfTextStyle;
-                }
-              ?>
-              color:<?php echo $block->getData('pcvBannerTextColor'); ?>;">
-              <?php echo $block->getData('pcvBannerText');?>
+                  /* @noEscape */ echo $valueOfTextStyle;
+                } ?>color:<?php echo $block->escapeHtmlAttr($block->getData('pcvBannerTextColor')); ?>;">
+              <?php echo /* @noEscape */ $block->getData('pcvBannerText');?>
             </p>
         </div>
         <div id="productCalloutVideo-video-overlay" class="productCalloutVideo-video-overlay"></div>
