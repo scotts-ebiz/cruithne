@@ -109,12 +109,6 @@ RUN git apply $MAGENTO_DIR/build/magento_security_patches/PRODSECBUG-2198-2.3-EE
 RUN sed 's/newrelic\.license/;newrelic\.license/' /etc/php/7.2/apache2/conf.d/20-newrelic.ini
 RUN echo "newrelic.license = 'eeaa206f88996c7640153d2c3ba77c0d3522d942'" >> /etc/php/7.2/apache2/conf.d/20-newrelic.ini
 
-
-# Remove this
-RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -exec chown magento:www-data {} \;
-RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -exec chmod 777 {} \;
-
-
 RUN REV=$(git rev-parse HEAD)
 
 RUN \
@@ -137,3 +131,8 @@ RUN ["chmod", "+x", "/usr/local/bin/entrypoint.sh"]
 
 # The apachectl command is in entrypoint :-)
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
+
+# CMD "exec /usr/sbin/apachectl -DFOREGROUND -k start"
+# CMD /usr/sbin/apachectl -DFOREGROUND 
+
+# Let's generate a new commit hash.
