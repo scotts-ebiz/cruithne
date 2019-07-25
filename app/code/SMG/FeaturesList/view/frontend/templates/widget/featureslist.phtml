@@ -87,18 +87,16 @@
         $i++;
     endforeach;
 ?>
-<!-- Old Section:
-<section class="<?php echo 'feature-list grid col-' . $cols; ?>">
--->
-<section class="<?php echo 'feature-list'?>">
+
+<section class="<?php echo 'feature-list'?> widget-margin">
     <h2 style="
       <?php
       $headlinestylevalues = explode(',', $featuresListHeadlineCustomStyles);
       foreach($headlinestylevalues as $headlinevalue) {
-          echo $headlinevalue;
+          echo /* @noEscape */ $headlinevalue;
       }
-      echo $featuresListHeadlineCustomSize;
-      ?>color:<?php echo $block->getData('featuresListHeadlineColor')?>;">
-      <?php echo $block->getData('featuresListHeadline'); ?></h2>
-    <?php echo $html; ?>
+      echo /* @noEscape */ $featuresListHeadlineCustomSize;
+      ?>color:<?php echo $block->escapeHtmlAttr($block->getData('featuresListHeadlineColor'));?>;">
+      <?php echo /* @noEscape */ $block->getData('featuresListHeadline'); ?>asdf</h2>
+    <?php echo /* @noEscape */ $html; ?>
 </section>
