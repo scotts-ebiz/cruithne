@@ -41,7 +41,7 @@
     $i = 0;
     foreach($items as $item):
         if($this->getData($item) != ''):
-            $html .= '<li class="list-icon-detail" style="' . trim($selectedItemTextContainerPadding) . '">' . '<span class="list-icon-detail-test" 
+            $html .= '<li class="list-icon-detail">' . '<span class="list-icon-detail-test" 
 style="color:' . $block->getData('itemTextColor') . '; ' . trim($selectedItemTextSize) . trim($selectedItemTextStyle) .
               '">' . $block->getData($item) . '</span>';
 
@@ -55,7 +55,7 @@ style="color:' . $block->getData('itemTextColor') . '; ' . trim($selectedItemTex
         $i++;
     endforeach;
 ?>
-<section class="product-info-container align-top">
+<section class="product-info-container align-top widget-margin">
     <div class="product-info grid col-2">
         <h2 class="span_6_of_12 list-icon-header" style="color:<?php echo $block->getData('headlinecolor');?>; <?php echo $selectedHeadlineBannerStyle;?>"><?php
           echo $block->getData('headline'); ?></h2>
