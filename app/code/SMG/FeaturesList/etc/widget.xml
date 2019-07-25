@@ -156,7 +156,7 @@
 
             <parameter name="featureoneimage" visible="true" xsi:type="block">
 
-                <label>Feature #1 Image</label>
+                <label>Feature #1 Image (300x300)</label>
 
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
 
@@ -192,7 +192,7 @@
 
             <parameter name="featuretwoimage" visible="true" xsi:type="block">
 
-                <label>Feature #2 Image</label>
+                <label>Feature #2 Image (300x300)</label>
 
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
 
@@ -228,7 +228,7 @@
 
             <parameter name="featurethreeimage" visible="true" xsi:type="block">
 
-                <label>Feature #3 Image</label>
+                <label>Feature #3 Image (300x300)</label>
 
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
 
@@ -264,7 +264,7 @@
 
             <parameter name="featurefourimage" visible="true" xsi:type="block">
 
-                <label>Feature #4 Image</label>
+                <label>Feature #4 Image (300x300)</label>
 
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
 

@@ -60,15 +60,18 @@ if($block->getData('bannerTextImgTwoLink') !=''):
   $selectedBannerTextImgTwoLink = $block->getData('bannerTextImgTwoLink');
 endif;
 
+
 // Check existence of an alt txt for Blurb Img One
 if($block->getData('blurbImgOneAltTxt') !=''):
   $selectedBlurbImgOneAltTxt = $block->getData('blurbImgOneAltTxt');
 endif;
 
+
 // Check existence of an alt txt for Blurb Img Two
 if($block->getData('blurbImgTwoAltTxt') !=''):
   $selectedBlurbImgTwoAltTxt = $block->getData('blurbImgTwoAltTxt');
 endif;
+
 
 // Check existence of an alt txt for Callout Img
 if($block->getData('bannerCalloutImageAltTxt') !=''):
@@ -79,53 +82,41 @@ endif;
 
 
 
-<section class="product-callout-widget product-info-container" style="background: url('<?php echo $block->getData('bgimage'); ?>') no-repeat; background-size:cover; background-position:center;
-  background-color: <?php
-echo
-$block->getData('bgcolor');
-?>; padding-top:5%; padding-bottom:5%;">
+<section class="product-callout-widget product-info-container" style="<?php if ($this->getData('bgimage') != ''):
+  ?>background: url('<?php echo $block->escapeUrl($block->getData('bgimage')); ?>') no-repeat; background-size:cover;background-position:center;<?php endif; ?><?php if ($this->getData('bgcolor') != ''):?>background-color:<?php echo $block->escapeHtmlAttr($block->getData('bgcolor')); ?>;<?php else: ?>background-color:transparent<?php endif;?>">
   <div class="product-info grid col-2">
     <?php if($this->getData('bannerimage') != ''): ?>
       <div class="productCallout-imageContainer span_6_of_12"> 
-        <img src="<?php echo $block->getData('bannerimage'); ?>" alt="<?php echo $selectedBannerCalloutImageAltTxt;?>">
+        <img src="<?php echo $block->escapeUrl($block->getData('bannerimage')); ?>" alt="<?php echo
+        $block->escapeHtml($selectedBannerCalloutImageAltTxt);?>">
       </div>
     <?php endif; ?>
 
-    <div
-      class="productCallout-contentContainer span_6_of_12 <?php echo $block->getData('textalignclass') ?>">
-      <h2 style="<?php
-          $headlinestylevalues = explode(',', $headlineCustomCssStyle);
+    <div class="productCallout-contentContainer span_6_of_12 <?php echo $block->escapeHtml($block->getData('textalignclass')); ?>">
+      <h2 style="<?php $headlinestylevalues = explode(',', $headlineCustomCssStyle);
             foreach($headlinestylevalues as $headlinevalue) {
-            echo $headlinevalue;
-            } ?>
-        color:<?php echo $block->getData('bannerheadlinecolor'); ?>;">
-          <?php echo $block->getData('bannerheadline'); ?>
-      </h2>
-      <p style="<?php
-          //If selected display Font Styles
-          $stylevalues = explode(',', $customCssStyle);
+            echo  /* @noEscape */ $headlinevalue;
+            } ?>color:<?php echo $block->escapeHtmlAttr($block->getData('bannerheadlinecolor')); ?>;"><?php echo /* @noEscape */ $block->getData('bannerheadline'); ?></h2>
+      <p style="<?php $stylevalues = explode(',', $customCssStyle);
           foreach($stylevalues as $value) {
-            echo $value;
-          }
-
-          //If selected display font size
-          echo $paragraphTextSize;
-        ?>
-        color:<?php echo $block->getData('bannertextlinecolor'); ?>;">
-        <?php echo $block->getData('bannertext'); ?>
+            /* @noEscape */ echo $value;
+          }echo /* @noEscape */ $paragraphTextSize;?>color:<?php echo $block->escapeHtmlAttr($block->getData('bannertextlinecolor')); ?>;">
+        <?php echo /* @noEscape */ $block->getData('bannertext'); ?>
       </p>
-
 
       <!-- Check if link selected for Blurb Img One -->
       <?php if($selectedBannerTextImgOneLink != ''){?>
         <div class="selected-bannerTextImage selected-bannerTextImageOne">
-          <a href="<?php echo $selectedBannerTextImgOneLink?>" target="_blank" title="<?php echo $selectedBlurbImgOneAltTxt;?>">
-            <img src="<?php echo $selectedBannerTextImageOne?>" alt="<?php echo $selectedBlurbImgOneAltTxt;?>">
+          <a href="<?php echo $block->escapeUrl($selectedBannerTextImgOneLink);?>" target="_blank" title="<?php echo
+          $block->escapeHtml($selectedBlurbImgOneAltTxt);?>">
+            <img src="<?php echo $block->escapeUrl($selectedBannerTextImageOne);?>" alt="<?php echo
+            $block->escapeHtml($selectedBlurbImgOneAltTxt);?>">
           </a>
         </div>
+          <!-- If no link then load just img -->
       <?php }elseif ($selectedBannerTextImageOne != ''){?>
         <div class="selected-bannerTextImage selected-bannerTextImageOne">
-          <img src="<?php echo $selectedBannerTextImageOne?>">
+          <img src="<?php echo $block->escapeUrl($selectedBannerTextImageOne);?>">
         </div>
       <?php }else{?>
         <!-- No One Img was selected -->
@@ -135,14 +126,16 @@ $block->getData('bgcolor');
       <!-- Check if link selected for Blurb Img Two -->
       <?php if($selectedBannerTextImgTwoLink != ''){?>
         <div class="selected-bannerTextImage selected-bannerTextImageTwo">
-          <a href="<?php echo $selectedBannerTextImgTwoLink?>" target="_blank" title="<?php echo
-          $selectedBlurbImgTwoAltTxt;?>">
-            <img src="<?php echo $selectedBannerTextImageTwo?>" alt="<?php echo $selectedBlurbImgTwoAltTxt;?>">
+          <a href="<?php echo $block->escapeUrl($selectedBannerTextImgTwoLink);?>" target="_blank" title="<?php echo
+          $block->escapeHtml($selectedBlurbImgTwoAltTxt);?>">
+            <img src="<?php echo $block->escapeUrl($selectedBannerTextImageTwo);?>" alt="<?php echo
+            $block->escapeHtml($selectedBlurbImgTwoAltTxt);?>">
           </a>
         </div>
+        <!-- If no link then load just img -->
       <?php }elseif ($selectedBannerTextImageTwo != ''){?>
         <div class="selected-bannerTextImage selected-bannerTextImageTwo">
-          <img src="<?php echo $selectedBannerTextImageTwo?>">
+          <img src="<?php echo $block->escapeUrl($selectedBannerTextImageTwo);?>">
         </div>
       <?php }else{?>
         <!-- No Two Img was selected -->
