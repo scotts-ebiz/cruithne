@@ -19,7 +19,9 @@ LABEL maintainer="rick.feldschau@scotts.com"
 # install SumoLogic
 WORKDIR /tmp
 RUN wget "https://collectors.sumologic.com/rest/download/deb/64" -O SumoCollector.deb && dpkg --install /tmp/SumoCollector.deb
-RUN printf "name = Magento2-Collector\naccessid = suJx8dS3MKjFSu\naccesskey = Q1cq15TX5wS4BzERvxap0ugIdU2Ti5HX9oVw8yAFJaqfgrShfR7VpWontR9Qd4Wo\nephemeral=true\n" >  /opt/SumoCollector/config/user.properties
+
+ADD sources.json /tmp/sources.json
+RUN printf "name = Magento2-Collector\naccessid = suJx8dS3MKjFSu\naccesskey = Q1cq15TX5wS4BzERvxap0ugIdU2Ti5HX9oVw8yAFJaqfgrShfR7VpWontR9Qd4Wo\nephemeral=true\nsources=/tmp/sources.json" >  /opt/SumoCollector/config/user.properties
 
 # Add crontab file in the cron directory
 ADD crontab /etc/cron.d/cron
