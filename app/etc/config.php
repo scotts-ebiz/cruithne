@@ -52,7 +52,7 @@ return [
         'Magento_SalesRule' => 1,
         'Magento_WebsiteRestriction' => 1,
         'Magento_Downloadable' => 1,
-        'Magento_GiftCard' => 1,
+        'Magento_GiftCard' => 0,
         'Magento_CatalogUrlRewriteGraphQl' => 1,
         'Magento_Staging' => 1,
         'Magento_Widget' => 1,
@@ -283,7 +283,7 @@ return [
         'SMG_HeroVideoBtnWidget' => 1,
         'SMG_HeroZip' => 1,
         'SMG_IconList' => 1,
-        'SMG_ImageGallery' => 1,
+        'SMG_ImageGallery' => 0, //PLEASE MAKE SURE TO LEAVE THIS DISABLED IN GITHUB UNTIL 2.3.3
         'SMG_LandingPage' => 1,
         'SMG_Launch' => 1,
         'SMG_OfflineShipping' => 1,

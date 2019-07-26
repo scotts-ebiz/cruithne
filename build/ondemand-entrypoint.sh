@@ -20,11 +20,10 @@ COMMAND="$@"
 # Activate SumoLogic
 service collector start
 
-# su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s developer'
-# su - magento -c '/var/www/html/magento2/bin/magento deploy:mode:set -s production'
-# su - magento -c '/var/www/html/magento2/bin/magento setup:install'
+# We're disabling ImageGallery by default so builds pass. We enable here so it works on the server
+su - magento -c '/var/www/html/magento2/bin/magento module:enable SMG_ImageGallery'
 su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade'
-su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile'
+su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile' 
 
 # TODO We should abstract the server address....
 # su - magento -c 'php /var/www/html/magento2/bin/magento setup:config:set --cache-backend=redis --cache-backend-redis-server=10.0.2.3   --cache-backend-redis-db=0 -q'
@@ -35,15 +34,10 @@ su - magento -c 'gulp clean -f /var/www/html/magento2/tools/gulpfile.js'
 su - magento -c 'cd /var/www/html/magento2/tools && npm rebuild node-sass && gulp styles -f /var/www/html/magento2/tools/gulpfile.js'
 
 su - magento -c '/var/www/html/magento2/bin/magento setup:static-content:deploy'
-# su - magento -c '/var/www/html/magento2/bin/magento -v index:reindex'
-# su - magento -c '/var/www/html/magento2/bin/magento -v cache:flush'
+su - magento -c '/var/www/html/magento2/bin/magento catalog:images:resize'
 
-# Remove this
-find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -exec chown magento:www-data {} \;
-find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -exec chmod 777 {} \;
-
-# For the readiness check
-touch /tmp/healthy
+su - magento -c '/var/www/html/magento2/bin/magento -v index:reindex'
+su - magento -c '/var/www/html/magento2/bin/magento -v cache:flush'
 
 curl -X POST --data-urlencode "payload={\"channel\": \"#magento2project\", \"username\": \"m2deploybot\", \"text\": \"The most recent commit below has been deployed to the $(git rev-parse --abbrev-ref HEAD) environment $(git show | head -n 10)\", \"icon_emoji\": \":rocket:\"}" https://hooks.slack.com/services/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
 

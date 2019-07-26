@@ -19,8 +19,9 @@ LABEL maintainer="rick.feldschau@scotts.com"
 # install SumoLogic
 WORKDIR /tmp
 RUN wget "https://collectors.sumologic.com/rest/download/deb/64" -O SumoCollector.deb && dpkg --install /tmp/SumoCollector.deb
+
 ADD sources.json /tmp/sources.json
-RUN printf "name = Magento2-Collector\naccessid = suJx8dS3MKjFSu\naccesskey = Q1cq15TX5wS4BzERvxap0ugIdU2Ti5HX9oVw8yAFJaqfgrShfR7VpWontR9Qd4Wo\nsources=/tmp/sources.json" >  /opt/SumoCollector/config/user.properties
+RUN printf "name = Magento2-Collector\naccessid = suJx8dS3MKjFSu\naccesskey = Q1cq15TX5wS4BzERvxap0ugIdU2Ti5HX9oVw8yAFJaqfgrShfR7VpWontR9Qd4Wo\nephemeral=true\nsources=/tmp/sources.json" >  /opt/SumoCollector/config/user.properties
 
 # Add crontab file in the cron directory
 ADD crontab /etc/cron.d/cron
@@ -95,11 +96,6 @@ RUN sed -i "s/save.*/save' => 'redis',/" app/etc/env.php
 
 RUN date
 
-# Neelam Special Per https://scotts.jira.com/browse/ECOM-496
-# This is a Patch for Magento per https://github.com/magento/magento2/issues/13269
-# Should be able to be removed after Magento 2.3.1 is live
-RUN sed -i "s/.*result = mb_convert_encoding.*/\t\t\$result = mb_convert_encoding(preg_replace('\/\&\/', \'\&amp\;\', html_entity_decode(\$domDocument->saveHTML())), \'HTML-ENTITIES\', \'UTF-8\');\n/" $MAGENTO_DIR/vendor/magento/framework/Escaper.php
-
 # for icons to stick need paths and permissions
 RUN mkdir -p pub/media/tmp/design/file/
 RUN chmod 0755 pub/media/tmp/design/file/
@@ -109,9 +105,6 @@ USER root
 # Magento 2.3 fix that will fix catalog rules to be applied
 # https://magento.stackexchange.com/questions/152101/catalog-price-rule-not-applied-working-in-magento-2-ee-v2-1-2
 RUN sed -i '22s/.*/                <visible>true<\/visible>/' $MAGENTO_DIR/vendor/magento/module-catalog-rule-staging/view/adminhtml/ui_component/catalog_rule_form.xml 
-
-# Added this in as a test to force php to save sessions in redis
-RUN sed -i '/session.save_handler/s/^/; /g' /etc/php/7.2/apache2/php.ini
 
 RUN git apply $MAGENTO_DIR/build/magento_security_patches/PRODSECBUG-2198-2.3-EE.composer-2019-03-27-06-10-53.patch
 
@@ -131,6 +124,9 @@ RUN \
 EXPOSE 80/tcp 443/tcp
 
 USER root
+
+RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -exec chown magento:www-data {} \;
+RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -exec chmod 777 {} \;
 
 # Run entrypoint file
 COPY ondemand-entrypoint.sh /usr/local/bin/entrypoint.sh

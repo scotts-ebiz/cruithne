@@ -211,8 +211,7 @@ endif;
       $block->escapeHtmlAttr($HeroCalloutButtonTextCustomColor);?>; background:<?php echo $block->escapeHtmlAttr
       ($HeroCalloutButtonCustomColor);?>; <?php echo /* @noEscape */ $HeroCalloutButtonTextCustomStyle?>"
               onclick="window.location='<? echo $block->escapeUrl($selectedButtonlink)
-      ;?>';" onmouseover="this.style.backgroundColor='<?php echo /* @noEscape */ $selectedHeroCalloutButtonHoverColor;
-      ?>'" onmouseout="this.style.backgroundColor='<?php echo /* @noEscape */ $HeroCalloutButtonCustomColor;
+      ;?>';" onmouseover="this.style.backgroundColor='<?php echo /* @noEscape */ $selectedHeroCalloutButtonHoverColor;?>'" onmouseout="this.style.backgroundColor='<?php echo /* @noEscape */ $HeroCalloutButtonCustomColor;
       ?>'"><?php echo $block->escapeHtml($block->getData
       ('buttontext')); ?></button>
   <?php endif; ?>
