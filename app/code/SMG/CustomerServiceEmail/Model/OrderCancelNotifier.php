@@ -7,6 +7,7 @@ namespace SMG\CustomerServiceEmail\Model;
 
 use SMG\CustomerServiceEmail\Model\Order\Email\Sender\OrderCancelSender;
 use Magento\Sales\Model\AbstractModel;
+use Magento\Sales\Api\Data\OrderInterface;
 
 /**
  * Class OrderCancelNotifier
@@ -36,5 +37,17 @@ class OrderCancelNotifier
     public function notify(AbstractModel $model)
     {
         return $this->sender->send($model);
+    }
+
+    /**
+     * Notify service team multiple orders
+     *
+     * @param OrderInterface[] $orders
+     * @return bool
+     * @throws /Exception
+     */
+    public function notifyOrders(array $orders)
+    {
+        return $this->sender->sendOrders($orders);
     }
 }

@@ -18,7 +18,7 @@ COMMAND="$@"
 
 #/usr/local/qualys/cloud-agent/bin/qualys-cloud-agent.sh ActivationId="67906ffb-cd7c-4105-bdc7-1540c13343aa" CustomerId="63d94f9b-9dfc-7538-823c-333fc1d63ac9" ProviderName="GCP" UseSudo=0
 # Activate SumoLogic
-#service collector start
+service collector start
 
 # We're disabling ImageGallery by default so builds pass. We enable here so it works on the server
 su - magento -c '/var/www/html/magento2/bin/magento module:enable SMG_ImageGallery'
