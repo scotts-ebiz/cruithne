@@ -1459,7 +1459,7 @@
 		margin-top: 30px;
 	}
 	#checkout-shipping-method-load{
-		float: left;
+		//float: left;
 	}
 	#shipping-method-buttons-container{
 		float: right;
@@ -2777,5 +2777,11 @@ button.action{
 .cart-parent-summary{
     .cart-summary._sticky{
         top:0px !important;
+    }
+}
+
+#checkout-step-shipping_method{
+    .message.notice{
+        font-size:16px;
     }
 }
