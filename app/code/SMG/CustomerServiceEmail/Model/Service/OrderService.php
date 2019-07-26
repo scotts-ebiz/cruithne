@@ -80,6 +80,29 @@ class OrderService implements OrderManagementInterface
     }
 
     /**
+     * Cancel emails a user a specified orders.
+     *
+     * @param ItemInterface $item
+     * @return bool
+     */
+    public function notifyCancellations(ItemInterface $item)
+    {
+        $ids = $item->getOrderIds();
+
+        if (!empty($ids)) {
+            $orders = $this->orderRepository->getList(
+                $this->searchCriteriaBuilder
+                    ->addFilter('entity_id', $ids, 'in')
+                    ->create()
+            )->getItems();
+
+            return $this->notifier->notifyOrders($orders);
+        }
+
+        return false;
+    }
+
+    /**
      * Failed capture transaction email a specified order.
      *
      * @param int $id The order ID.

@@ -3,8 +3,11 @@
 namespace SMG\Api\Helper;
 
 use Magento\Sales\Api\OrderManagementInterface;
+use Magento\Sales\Model\Order\Status\HistoryFactory;
 use Magento\Sales\Model\ResourceModel\Order\Invoice\CollectionFactory as InvoiceCollectionFactory;
 use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\CollectionFactory as TransactionCollectionFactory;
+use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction as TransactionResource;
+use Magento\Sales\Model\ResourceModel\Order\Status\History as HistoryResource;
 use Psr\Log\LoggerInterface;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
@@ -51,9 +54,24 @@ class AuthReversalHelper
     protected $_transactionCollectionFactory;
 
     /**
+     * @var TransactionResource
+     */
+    protected $_transactionResource;
+
+    /**
      * @var SapOrderBatch
      */
     protected $_sapOrderBatchResource;
+
+    /**
+     * @var HistoryFactory
+     */
+    protected $_historyFactory;
+
+    /**
+     * @var HistoryResource
+     */
+    protected $_historyResource;
 
     /**
      * AuthReversalHelper constructor.
@@ -64,7 +82,10 @@ class AuthReversalHelper
      * @param InvoiceCollectionFactory $invoiceCollectionFactory
      * @param OrderManagementInterface $orderManagementInterface
      * @param TransactionCollectionFactory $transactionCollectionFactory
+     * @param TransactionResource $transactionResource
      * @param SapOrderBatch $sapOrderBatchResource
+     * @param HistoryFactory $historyFactory
+     * @param HistoryResource $historyResource
      */
     public function __construct(LoggerInterface $logger,
         ResponseHelper $responseHelper,
@@ -72,7 +93,10 @@ class AuthReversalHelper
         InvoiceCollectionFactory $invoiceCollectionFactory,
         OrderManagementInterface $orderManagementInterface,
         TransactionCollectionFactory $transactionCollectionFactory,
-        SapOrderBatch $sapOrderBatchResource)
+        TransactionResource $transactionResource,
+        SapOrderBatch $sapOrderBatchResource,
+        HistoryFactory $historyFactory,
+        HistoryResource $historyResource)
     {
         $this->_logger = $logger;
         $this->_responseHelper = $responseHelper;
@@ -80,7 +104,10 @@ class AuthReversalHelper
         $this->_invoiceCollectionFactory = $invoiceCollectionFactory;
         $this->_orderManagementInterface = $orderManagementInterface;
         $this->_transactionCollectionFactory = $transactionCollectionFactory;
+        $this->_transactionResource = $transactionResource;
         $this->_sapOrderBatchResource = $sapOrderBatchResource;
+        $this->_historyFactory = $historyFactory;
+        $this->_historyResource = $historyResource;
     }
 
     /**
@@ -112,25 +139,20 @@ class AuthReversalHelper
             $invoices = $this->_invoiceCollectionFactory->create();
             $invoices->addFieldToFilter('order_id', ['eq' => $orderId]);
 
-            // was this order invoiced
-            $wasInvoiced = false;
-
             // determine if there was an invoice created
             // if not then we can continue.  If it was created then
             // we will update the date for the authorization as
             // it might have been invoiced manually
             if ($invoices->count() > 0)
             {
-                $wasInvoiced = true;
+                // update the sap order batch
+                $this->updateSapBatch($sapBatchOrder);
             }
             else
             {
                 // cancel and reverse the credit authorization
-                $this->cancelAndUnAuthorize($orderId);
+                $this->cancelAndUnAuthorize($orderId, $sapBatchOrder);
             }
-
-            // update the sap order batch
-            $this->updateSapBatch($sapBatchOrder);
         }
 
         // return
@@ -141,34 +163,119 @@ class AuthReversalHelper
      * Update the Sap Batch Order table
      *
      * @param $sapBatchOrder \SMG\Sap\Model\SapOrderBatch
-     * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
     private function updateSapBatch($sapBatchOrder)
     {
-        $today = date('Y-m-d H:i:s');
+        try
+        {
+            $today = date('Y-m-d H:i:s');
 
-        // set the capture date
-        $sapBatchOrder->setData('unauthorized_process_date', $today);
+            // set the capture date
+            $sapBatchOrder->setData('unauthorized_process_date', $today);
 
-        // save the data
-        $this->_sapOrderBatchResource->save($sapBatchOrder);
+            // save the data
+            $this->_sapOrderBatchResource->save($sapBatchOrder);
+        }
+        catch (\Exception $e)
+        {
+            $errorMsg = "An error has occurred during Batch Date Update for order - " . $sapBatchOrder->getData('order_id') . " - " . $e->getMessage();
+            $this->_logger->error($errorMsg);
+        }
     }
 
     /**
      * Cancel and Release Authorization from card
      *
      * @param $orderId
+     * @param $sapBatchOrder
      */
-    private function cancelAndUnAuthorize($orderId)
+    private function cancelAndUnAuthorize($orderId, $sapBatchOrder)
     {
         try
         {
             // cancel the request
             $this->_orderManagementInterface->cancel($orderId);
+
+            // update the sap order batch
+            $this->updateSapBatch($sapBatchOrder);
         }
         catch (\Exception $e)
         {
-            $errorMsg = "An error has occurred for order - " . $orderId . " - " . $e->getMessage();
+            $errorMsg = "An error has occurred during Reverse Authorization for order - " . $orderId . " - " . $e->getMessage();
+            $this->_logger->error($errorMsg);
+
+            // add to the order history so a message will display on the order
+            $this->addOrderHistory($orderId);
+
+            // update the transaction to close and then cancel
+            $this->updateTransaction($orderId);
+        }
+    }
+
+    /**
+     * This function will update the sales_order_status_history.
+     * This table displays on the Order under the comments section.
+     *
+     * @param $orderId
+     */
+    private function addOrderHistory($orderId)
+    {
+        try
+        {
+            // get the date for today with time
+            $today = date('Y-m-d H:i:s');
+
+            // add the error to the history
+            /**
+             * @var \Magento\Sales\Model\Order\Status\History $orderHistory
+             */
+            $orderHistory = $this->_historyFactory->create();
+
+            // set the desired values
+            $orderHistory->setParentId($orderId);
+            $orderHistory->setComment('Reverse Authorization has failed.');
+            $orderHistory->setStatus('closed');
+            $orderHistory->setCreatedAt($today);
+            $orderHistory->setEntityName('order');
+
+            // save the history for displaying on the order
+            $this->_historyResource->save($orderHistory);
+        }
+        catch (\Exception $e)
+        {
+            $errorMsg = "Could not add to the order history for order - " . $orderId . " - " . $e->getMessage();
+            $this->_logger->error($errorMsg);
+        }
+    }
+
+    /**
+     * This function updates the authorizaton to close so when we try to cancel it
+     * will not try to reverse auth as there was an issue with the auth
+     *
+     * @param $orderId
+     */
+    private function updateTransaction($orderId)
+    {
+        try
+        {
+            // load the transaction data
+            $transactions = $this->_transactionCollectionFactory->create();
+            $transactions->addFieldToFilter('order_id', ['eq' => $orderId]);
+            $transactions->addFieldToFilter('txn_type', ['eq' => 'authorization']);
+
+            // loop through the transactions there should only be one
+            /**
+             * @var \Magento\Sales\Model\Order\Payment\Transaction $transaction
+             */
+            foreach ($transactions as $transaction)
+            {
+                // update the closed
+                $transaction->close(true);
+            }
+        }
+        catch (\Exception $e)
+        {
+            $errorMsg = "Could not update the authorization to closed for order - " . $orderId . " - " . $e->getMessage();
             $this->_logger->error($errorMsg);
         }
     }

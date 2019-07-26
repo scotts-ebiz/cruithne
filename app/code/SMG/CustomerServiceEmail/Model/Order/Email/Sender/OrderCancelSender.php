@@ -80,6 +80,36 @@ class OrderCancelSender extends Sender
     }
 
     /**
+     * Sends cancel orders email to the customer.
+     *
+     * @param OrderInterface[] $orders
+     * @return bool
+     * @throws \Exception
+     */
+    public function sendOrders(array $orders)
+    {
+        // create return value
+        $returnVal = true;
+
+        //loop through the orders and send cancellation
+        foreach ($orders as $order)
+        {
+            try
+            {
+                $this->checkAndSend($order);
+            }
+            catch (\Exception $e)
+            {
+                $this->logger->error($e->getMessage());
+
+                $returnVal = false;
+            }
+        }
+
+        return $returnVal;
+    }
+
+    /**
      * Prepare email template with variables
      *
      * @param Order $order
