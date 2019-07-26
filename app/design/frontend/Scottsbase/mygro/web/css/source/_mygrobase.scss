@@ -4,8 +4,11 @@ body {
     font-size: 1.2rem;
 
     h2 {
-        font-weight: bold;
         font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
+        font-size: 2.5rem;
+        @media only screen and (max-width: $screen__l) {
+        font-size: 2.1rem;
+        }
     }
 }
 [class^="icon-"],
