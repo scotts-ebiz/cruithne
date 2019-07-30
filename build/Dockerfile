@@ -25,6 +25,7 @@ WORKDIR $MAGENTO_DIR
 RUN git fetch
 RUN git checkout origin/test app/etc/config.php
 RUN git pull
+RUN composer install
 
 RUN sed -i "s/save.*/save' => 'redis',/" app/etc/env.php
 
