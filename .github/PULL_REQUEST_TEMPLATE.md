@@ -11,7 +11,6 @@
     Please provide a list of fixed JIRA tickets in the format https://scotts.jira.com/browse/ECOM-<issue_number>.
     If no ticket, please write NO JIRA ISSUE
 -->
-https://scotts.jira.com/browse/ECOM-273
 
 ### Manual testing scenarios
 <!---
