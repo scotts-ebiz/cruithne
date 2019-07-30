@@ -16,6 +16,9 @@ ENV MAGENTO_DIR /var/www/html/magento2
 LABEL company="The Scotts MiracleGro Company"
 LABEL maintainer="rick.feldschau@scotts.com"
 
+USER root
+RUN chown -R magento:www-data .git
+
 USER magento
 WORKDIR $MAGENTO_DIR
 
