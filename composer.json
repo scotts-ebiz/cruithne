@@ -14,10 +14,8 @@
         "composer/composer": "@alpha",
         "magento/product-enterprise-edition": "2.3.0",
         "mageplaza/module-smtp": "^1.2",
-	"freshrelevance/digitaldatalayer": "0.1.4",
-	"smg/launch": "1.0.0",
-	"smg/budleproduct": "1.0.1",
-        "snowdog/frontools": "^1.6"
+        "snowdog/frontools": "^1.6",
+        "zaius/zaius-magento-2": "^1.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "~2.12.0",
@@ -28,7 +26,7 @@
         "phpmd/phpmd": "@stable",
         "phpunit/phpunit": "~6.5.0",
         "sebastian/phpcpd": "~3.0.0",
-        "squizlabs/php_codesniffer": "3.4.0"
+        "squizlabs/php_codesniffer": "^3.0.0"
     },
     "scripts": {
     	"post-install-cmd": [
