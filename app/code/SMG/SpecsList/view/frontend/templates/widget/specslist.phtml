@@ -43,8 +43,7 @@
 
     //This creates the HTML for the Details section on the side
     foreach($list_headers as $header):
-        $html .= '<li class="span_6_of_12 specListDetailCell" style="' . trim
-          ($selectedListValueBottomPadding) . '">' . '<span 
+        $html .= '<li class="span_6_of_12 specListDetailCell">'. '<span 
         class="specListHeaderContainer" 
 style="color:' . trim($selectedHeaderTextColor) . ';' . trim($selectedHeaderValueTextSize) . trim($selectedHeaderTextStyle) . '">
 ' . trim($header) . '</span> ' . '<br/>'
@@ -62,21 +61,17 @@ style="color:' . trim($selectedHeaderTextColor) . ';' . trim($selectedHeaderValu
     endif;
 ?>
 
-<section class="product-info-container specList-container align-top">
+<section class="product-info-container specList-container align-top widget-margin">
     <div class="product-info grid col-2">
-        <h2 class='specListHeader span_6_of_12' style="
-            <?php
+        <h2 class='specListHeader span_6_of_12' style="<?php
               $headlinestylevalues = explode(',', $headlineCustomCssStyle);
               foreach($headlinestylevalues as $headlinevalue) {
-                echo $headlinevalue;
-              }
-            ?>
-          color:<?php echo $block->getData('bannerheadlinecolor'); ?>;"
-        >
+                /* @noEscape */ echo $headlinevalue;
+              } ?>color:<?php echo $block->escapeHtmlAttr($block->getData('bannerheadlinecolor')); ?>;">
           <?php echo $block->getData('headline'); ?>
         </h2>
         <ul class="specListDetails span_6_of_12">
-            <?php echo $html; ?>
+            <?php echo /* @noEscape */ $html; ?>
         </ul>
     </div>
 </section>
