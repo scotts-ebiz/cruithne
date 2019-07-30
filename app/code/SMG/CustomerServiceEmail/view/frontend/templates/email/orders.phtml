@@ -30,19 +30,19 @@ $giftMessageHelper = $this->helper('Magento\GiftMessage\Helper\Message');
                 <tr>
                     <td class="address-details">
                         <h3><?= __('Billing Info') ?></h3>
-                        <p><?= $block->getFormattedBillingAddress($order) ?></p>
+                        <p><?= $block->escapeHtml($block->getFormattedBillingAddress($order)) ?></p>
                     </td>
                     <?php if ($order->getIsNotVirtual()): ?>
                         <td class="address-details">
                             <h3><?= __('Shipping Info') ?></h3>
-                            <p><?= $block->getFormattedShippingAddress($order) ?></p>
+                            <p><?= $block->escapeHtml($block->getFormattedShippingAddress($order)) ?></p>
                         </td>
                     <?php endif; ?>
                 </tr>
                 <tr>
                     <td class="method-info">
                         <h3><?= __('Payment Method') ?></h3>
-                        <?= $block->getPaymentHtml($order) ?>
+                        <?= $block->escapeHtml($block->getPaymentHtml($order)) ?>
                     </td>
                     <?php if ($order->getIsNotVirtual()): ?>
                         <td class="method-info">
@@ -52,8 +52,8 @@ $giftMessageHelper = $this->helper('Magento\GiftMessage\Helper\Message');
                     <?php endif; ?>
                 </tr>
             </table>
-            <?php $block->getChildBlock('items')->setOrder($order); ?>
-            <?= $block->getChildHtml('items'); ?>
+            <?php $block->escapeHtml($block->getChildBlock('items')->setOrder($order)); ?>
+            <?= $block->escapeHtml($block->getChildHtml('items')); ?>
         </td>
     </tr>
 <?php endforeach; ?>
