@@ -132,7 +132,7 @@ define([
 					return true;
 				} 
 			},
-			$.mage.__('Please enter a valid zip code.')
+			$.mage.__('Please enter a valid ZIP code.')
 		);
 		validator.addRule(
 			'required-entry-telephone',
@@ -157,7 +157,7 @@ define([
 					return !$.mage.isEmpty(value);
 				}
 			},
-			$.mage.__('Please enter a valid phone.')
+			$.mage.__('Please enter a valid phone number.')
 		);
 		validator.addRule(
 			'required-entry-btelephone',
