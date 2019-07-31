@@ -51,31 +51,31 @@ $shipments = $block->getShipments();
                 <tr>
                     <td class="address-details">
                         <h3><?= __('Billing Info') ?></h3>
-                        <p><?= $block->getFormattedBillingAddress($order) ?></p>
+                        <p><?= $block->escapeHtml($block->getFormattedBillingAddress($order)) ?></p>
                     </td>
                     <?php if ($order->getIsNotVirtual()): ?>
                         <td class="address-details">
                             <h3><?= __('Shipping Info') ?></h3>
-                            <p><?= $block->getFormattedShippingAddress($order) ?></p>
+                            <p><?= $block->escapeHtml($block->getFormattedShippingAddress($order)) ?></p>
                         </td>
                     <?php endif; ?>
                 </tr>
                 <tr>
                     <td class="method-info">
                         <h3><?= __('Payment Method') ?></h3>
-                        <?= $block->getPaymentHtml($order) ?>
+                        <?= $block->escapeHtml($block->getPaymentHtml($order)) ?>
                     </td>
                     <?php if ($order->getIsNotVirtual()): ?>
                         <td class="method-info">
                             <h3><?= __('Shipping Method') ?></h3>
-                            <p><?= $order->getShippingDescription() ?></p>
+                            <p><?= $block->escapeHtml($order->getShippingDescription()) ?></p>
                         </td>
                     <?php endif; ?>
                 </tr>
             </table>
-            <?php $block->getChildBlock('items')->setOrder($order); ?>
-            <?php $block->getChildBlock('items')->setShipment($shipment); ?>
-            <?= $block->getChildHtml('items'); ?>
+            <?php $block->escapeHtml($block->getChildBlock('items')->setOrder($order)); ?>
+            <?php $block->escapeHtml($block->getChildBlock('items')->setShipment($shipment)); ?>
+            <?= $block->escapeHtml($block->getChildHtml('items')); ?>
         </td>
     </tr>
 <?php endforeach; ?>

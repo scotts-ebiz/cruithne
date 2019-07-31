@@ -79,7 +79,7 @@ endif;
 <section class="hero-video-widget product-info-container align-top" style="background: url('<?php echo
 $block->getData('videobackgroundimage')
 ; ?>') no-repeat; background-position: center; background-size: cover;">
-  <div class="product-info grid col-2 <?php echo $block->getData('textalignclass') ?> ">
+  <div class="product-info grid col-2 <?php echo $block->escapeHtml($block->getData('textalignclass')) ?> ">
     <h2 class="video-headline"
         style="
           color:<?php echo $block->getData('bannerheadlinecolor'); ?>;
@@ -90,11 +90,11 @@ $block->getData('videobackgroundimage')
         }
         ?>"
     >
-      <?php echo $block->getData('bannerheadline'); ?>
+      <?php echo $block->escapeHtml($block->getData('bannerheadline')); ?>
     </h2>
     <p style="
       color:<?php echo $block->getData('bannertextlinecolor'); ?>;
-    <?php echo $paragraphTextSize;?>
+    <?php echo $block->escapeHtml($paragraphTextSize);?>
     <?php
     $selectedTextCustomCssStyles = explode(',', $textCustomCssStyles);
     foreach($selectedTextCustomCssStyles as $textStyleValue) {
@@ -102,7 +102,7 @@ $block->getData('videobackgroundimage')
     }
     ?>"
     >
-      <?php echo $block->getData('bannertext'); ?>
+      <?php echo $block->escapeHtml($block->getData('bannertext')); ?>
     </p>
     <div class="video">
       <?php if($this->getData('iframeVideoLink') != ''): ?>
@@ -112,13 +112,13 @@ $block->getData('videobackgroundimage')
             class="productvideotxt"
             style="
               color:<?php echo $block->getData('videotextcolor'); ?>;
-            <?php echo $selectedvideotextsize;?>"
+            <?php echo $block->escapeCss($selectedvideotextsize);?>"
           >
-                    <?php echo $block->getData('videotext'); ?>
+                    <?php echo $block->escapeHtml($block->getData('videotext')); ?>
                 </span>
           <span class="embed-code">
-                  <iframe width="<?php echo $iframeCustomWidth?>" height="<?php echo $iframeCustomHeight?>"
-                          src="<?php echo $iframeVideoCustomLink?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="" data-dayt="true">
+                  <iframe width="<?php echo $block->escapeHtmlAttr($iframeCustomWidth)?>" height="<?php echo $block->escapeHtmlAttr($iframeCustomHeight)?>"
+                          src="<?php echo $block->escapeHtmlAttr($iframeVideoCustomLink)?>" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen="" data-dayt="true">
                   </iframe></span>
         </a>
       <?php endif; ?>
@@ -137,19 +137,19 @@ $block->getData('videobackgroundimage')
   foreach($headlinestylevalues as $headlinevalue) {
     echo $headlinevalue;
   }?>">
-    <?php echo $block->getData('bannerheadline'); ?>
+    <?php echo $block->escapeHtml($block->getData('bannerheadline')); ?>
   </h2>
   <p style="
     color:<?php echo $bannertextlineMobileCustomColor?>;
-  <?php echo $paragraphTextSize;?>
+  <?php echo $block->escapeHtml($paragraphTextSize);?>
   <?php
   $selectedTextCustomCssStyles = explode(',', $textCustomCssStyles);
   foreach($selectedTextCustomCssStyles as $textStyleValue) {
-    echo $textStyleValue;
+    echo $block->escapeHtml($textStyleValue);
   }
   ?>"
   >
-    <?php echo $block->getData('bannertext'); ?>
+    <?php echo $block->escapeHtml($block->getData('bannertext')); ?>
   </p>
 
 </div>
