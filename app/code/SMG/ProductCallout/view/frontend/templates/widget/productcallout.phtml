@@ -93,11 +93,11 @@ endif;
     <div class="productCallout-contentContainer span_6_of_12 <?php echo $block->escapeHtml($block->getData('textalignclass')); ?>">
       <h2 style="<?php $headlinestylevalues = explode(',', $headlineCustomCssStyle);
             foreach($headlinestylevalues as $headlinevalue) {
-            echo  /* @noEscape */ $headlinevalue;
+            echo  /* @noEscape */ $block->escapeHtml($headlinevalue);
             } ?>color:<?php echo $block->escapeHtmlAttr($block->getData('bannerheadlinecolor')); ?>;"><?php echo /* @noEscape */ $block->escapeHtml($block->getData('bannerheadline')); ?></h2>
       <p style="<?php $stylevalues = explode(',', $customCssStyle);
           foreach($stylevalues as $value) {
-            /* @noEscape */ echo $value;
+            /* @noEscape */ echo $block->escapeHtml($value);
           }echo /* @noEscape */ $block->escapeHtml($paragraphTextSize);?>color:<?php echo $block->escapeHtmlAttr($block->getData('bannertextlinecolor')); ?>;">
         <?php echo /* @noEscape */ $block->escapeHtml($block->getData('bannertext')); ?>
       </p>
