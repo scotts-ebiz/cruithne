@@ -86,6 +86,9 @@ before_install:
 - sudo service apache2 restart
 - npm install -g gulp-cli
 
+# Add Amasty (2FA) Repo
+- composer config repositories.amasty composer https://composer.amasty.com/enterprise/
+
 # Travis Env
 - shopt -s expand_aliases
 - composer selfupdate
@@ -110,8 +113,7 @@ before_install:
 - php -m
 install:
 # Set Magento Enterprise Creds
-- echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGENTO_USER}\",\"password\":\"${MAGENTO_PASSWORD}\"}}}"
-    > auth.json
+- echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGENTO_USER}\",\"password\":\"${MAGENTO_PASSWORD}\"},\"composer.amasty.com\":{\"username\":\"${AMASTY_USER}\",\"password\":\"${AMASTY_PASSWORD}\"}}}" > auth.json
 - composer install --prefer-dist
 
 before_script:
