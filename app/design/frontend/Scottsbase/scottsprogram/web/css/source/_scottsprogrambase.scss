@@ -943,6 +943,7 @@
 		.form-cart .action.update{
 			margin-left: 0;
 			padding-left: 0;
+			cursor: pointer;
 		}
 	} 
 }
@@ -2784,4 +2785,34 @@ button.action{
     .message.notice{
         font-size:16px;
     }
+}
+.modal-inner-wrap {
+	.modal-footer {
+		text-align:right;
+		.action-primary {
+			background: #075534;
+			color: #fff;
+			width: 57px;
+		}
+	}
+}
+
+.cart-parent-summary {
+	.cart-summary-divlink {
+		#block-discount {
+			.content {
+				display: block !important;
+			}
+			.content.disc_active {
+				display: none !important;
+			}
+		}
+	}
+}
+div[name="shippingAddress.postcode"] {
+	.control {
+		.message.warning {
+			display: none;
+		}
+	}
 }

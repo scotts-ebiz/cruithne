@@ -4,8 +4,11 @@ body {
     font-size: 1.2rem;
 
     h2 {
-        font-weight: bold;
         font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
+        font-size: 2.5rem;
+        @media only screen and (max-width: $screen__l) {
+        font-size: 2.1rem;
+        }
     }
 }
 [class^="icon-"],
@@ -1203,6 +1206,7 @@ width: 48%;
 		.form-cart .action.update{
 			margin-left: 0;
 			padding-left: 0;
+			cursor: pointer;
 		}
 	} 
 }
@@ -2984,5 +2988,34 @@ button.action{
 #checkout-step-shipping_method{
 	.message.notice{
 		font-size:16px;
+	}
+}
+.modal-inner-wrap {
+	.modal-footer{
+		text-align:right;
+		.action-primary{
+			background: #075534;
+			color: #fff;
+		}
+	}
+}
+.cart-parent-summary {
+	.cart-summary-divlink {
+		#block-discount {
+			.content {
+				display: block !important;
+			}
+			.content.disc_active {
+				display: none !important;
+			}
+		}
+	}
+}
+
+div[name="shippingAddress.postcode"] {
+	.control {
+		.message.warning {
+			display: none;
+		}
 	}
 }
