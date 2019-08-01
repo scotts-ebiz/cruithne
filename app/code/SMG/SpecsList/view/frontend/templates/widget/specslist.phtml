@@ -71,7 +71,7 @@ style="color:' . trim($selectedHeaderTextColor) . ';' . trim($selectedHeaderValu
           <?php echo $block->escapeHtml($block->getData('headline')); ?>
         </h2>
         <ul class="specListDetails span_6_of_12">
-            <?php echo /* @noEscape */ $html; ?>
+            <?php echo /* @noEscape */ $block->escapeHtml($html); ?>
         </ul>
     </div>
 </section>

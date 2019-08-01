@@ -94,12 +94,12 @@ endif;
       <h2 style="<?php $headlinestylevalues = explode(',', $headlineCustomCssStyle);
             foreach($headlinestylevalues as $headlinevalue) {
             echo  /* @noEscape */ $headlinevalue;
-            } ?>color:<?php echo $block->escapeHtmlAttr($block->getData('bannerheadlinecolor')); ?>;"><?php echo /* @noEscape */ $block->getData('bannerheadline'); ?></h2>
+            } ?>color:<?php echo $block->escapeHtmlAttr($block->getData('bannerheadlinecolor')); ?>;"><?php echo /* @noEscape */ $block->escapeHtml($block->getData('bannerheadline')); ?></h2>
       <p style="<?php $stylevalues = explode(',', $customCssStyle);
           foreach($stylevalues as $value) {
             /* @noEscape */ echo $value;
-          }echo /* @noEscape */ $paragraphTextSize;?>color:<?php echo $block->escapeHtmlAttr($block->getData('bannertextlinecolor')); ?>;">
-        <?php echo /* @noEscape */ $block->getData('bannertext'); ?>
+          }echo /* @noEscape */ $block->escapeHtml($paragraphTextSize);?>color:<?php echo $block->escapeHtmlAttr($block->getData('bannertextlinecolor')); ?>;">
+        <?php echo /* @noEscape */ $block->escapeHtml($block->getData('bannertext')); ?>
       </p>
 
       <!-- Check if link selected for Blurb Img One -->

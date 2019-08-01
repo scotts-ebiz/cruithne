@@ -33,8 +33,8 @@ $shipments = $block->getShipments();
                 <table class="shipment-track">
                     <thead>
                     <tr>
-                        <th><?= /* @escapeNotVerified */  __('Shipped By') ?></th>
-                        <th><?= /* @escapeNotVerified */  __('Tracking Number') ?></th>
+                        <th><?= /* @escapeNotVerified */  $block->escapeHtml(__('Shipped By')) ?></th>
+                        <th><?= /* @escapeNotVerified */  $block->escapeHtml(__('Tracking Number')) ?></th>
                     </tr>
                     </thead>
                     <tbody>
@@ -50,24 +50,24 @@ $shipments = $block->getShipments();
             <table class="order-details">
                 <tr>
                     <td class="address-details">
-                        <h3><?= __('Billing Info') ?></h3>
+                        <h3><?= $block->escapeHtml(__('Billing Info')) ?></h3>
                         <p><?= $block->escapeHtml($block->getFormattedBillingAddress($order)) ?></p>
                     </td>
                     <?php if ($order->getIsNotVirtual()): ?>
                         <td class="address-details">
-                            <h3><?= __('Shipping Info') ?></h3>
+                            <h3><?= $block->escapeHtml(__('Shipping Info')) ?></h3>
                             <p><?= $block->escapeHtml($block->getFormattedShippingAddress($order)) ?></p>
                         </td>
                     <?php endif; ?>
                 </tr>
                 <tr>
                     <td class="method-info">
-                        <h3><?= __('Payment Method') ?></h3>
+                        <h3><?= $block->escapeHtml(__('Payment Method')) ?></h3>
                         <?= $block->escapeHtml($block->getPaymentHtml($order)) ?>
                     </td>
                     <?php if ($order->getIsNotVirtual()): ?>
                         <td class="method-info">
-                            <h3><?= __('Shipping Method') ?></h3>
+                            <h3><?= $block->escapeHtml(__('Shipping Method')) ?></h3>
                             <p><?= $block->escapeHtml($order->getShippingDescription()) ?></p>
                         </td>
                     <?php endif; ?>

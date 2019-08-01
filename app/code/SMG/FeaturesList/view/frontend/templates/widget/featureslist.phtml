@@ -95,8 +95,8 @@
       foreach($headlinestylevalues as $headlinevalue) {
           echo /* @noEscape */ $headlinevalue;
       }
-      echo /* @noEscape */ $featuresListHeadlineCustomSize;
+      echo /* @noEscape */ $block->escapeHtml($featuresListHeadlineCustomSize);
       ?>color:<?php echo $block->escapeHtmlAttr($block->getData('featuresListHeadlineColor'));?>;">
-      <?php echo /* @noEscape */ $block->getData('featuresListHeadline'); ?></h2>
-    <?php echo /* @noEscape */ $html; ?>
+      <?php echo /* @noEscape */ $block->escapeHtml($block->getData('featuresListHeadline')); ?></h2>
+    <?php echo /* @noEscape */ $block->escapeHtml($html); ?>
 </section>
