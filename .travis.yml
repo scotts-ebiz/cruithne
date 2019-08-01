@@ -63,30 +63,30 @@ notifications:
 
 before_install:
 # Check Docker build:
-openssl aes-256-cbc -K $encrypted_b17a4b75f504_key -iv $encrypted_b17a4b75f504_iv -in ecommerce-platform-211419-cb2647450c4d.json.enc -out ecommerce-platform-211419-cb2647450c4d.json -d
-cat ecommerce-platform-211419-cb2647450c4d.json | docker login -u _json_key --password-stdin https://gcr.io
-docker build build/
+- openssl aes-256-cbc -K $encrypted_b17a4b75f504_key -iv $encrypted_b17a4b75f504_iv -in ecommerce-platform-211419-cb2647450c4d.json.enc -out ecommerce-platform-211419-cb2647450c4d.json -d
+- cat ecommerce-platform-211419-cb2647450c4d.json | docker login -u _json_key --password-stdin https://gcr.io
+- docker build build/
 # Apache
-sudo apt-get -y install apache2
-sudo a2enmod ssl
-sudo a2ensite default-ssl
-sudo mkdir -p "$SSL_DIR"
-sudo openssl genrsa -out "$SSL_DIR/cruithne.key" 2048
-sudo openssl req -new -subj "$(echo -n "$SUBJ" | tr "\n" "/")" -key "$SSL_DIR/cruithne.key" -out "$SSL_DIR/cruithne.csr" -passin pass:$PASSPHRASE
-sudo openssl x509 -req -days 365 -in "$SSL_DIR/cruithne.csr" -signkey "$SSL_DIR/cruithne.key" -out "$SSL_DIR/cruithne.crt"
-sudo openssl genrsa -out "$SSL_DIR/mygro.key" 2048
-sudo openssl req -new -subj "$(echo -n "$MYGRO_SUBJ" | tr "\n" "/")" -key "$SSL_DIR/mygro.key" -out "$SSL_DIR/mygro.csr" -passin pass:$PASSPHRASE
-sudo openssl x509 -req -days 365 -in "$SSL_DIR/mygro.csr" -signkey "$SSL_DIR/mygro.key" -out "$SSL_DIR/mygro.crt"
-sudo cp -f $TRAVIS_BUILD_DIR/environment/config/000-default.conf /etc/apache2/sites-available/000-default.conf
-sudo cp -f $TRAVIS_BUILD_DIR/environment/config/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
-sudo openssl genrsa -out "$SSL_DIR/mygro.key" 2048
-sudo openssl req -new -subj "$(echo -n "$MYGRO_SUBJ" | tr "\n" "/")" -key "$SSL_DIR/mygro.key" -out "$SSL_DIR/mygro.csr" -passin pass:$PASSPHRASE
-sudo openssl x509 -req -days 365 -in "$SSL_DIR/mygro.csr" -signkey "$SSL_DIR/mygro.key" -out "$SSL_DIR/mygro.crt"
-sudo chmod 644 /etc/apache2/sites-available/000-default.conf
-sudo chmod 644 /etc/apache2/sites-available/default-ssl.conf
-sudo apachectl configtest
-sudo service apache2 restart
-npm install -g gulp-cli
+- sudo apt-get -y install apache2
+- sudo a2enmod ssl
+- sudo a2ensite default-ssl
+- sudo mkdir -p "$SSL_DIR"
+- sudo openssl genrsa -out "$SSL_DIR/cruithne.key" 2048
+- sudo openssl req -new -subj "$(echo -n "$SUBJ" | tr "\n" "/")" -key "$SSL_DIR/cruithne.key" -out "$SSL_DIR/cruithne.csr" -passin pass:$PASSPHRASE
+- sudo openssl x509 -req -days 365 -in "$SSL_DIR/cruithne.csr" -signkey "$SSL_DIR/cruithne.key" -out "$SSL_DIR/cruithne.crt"
+- sudo openssl genrsa -out "$SSL_DIR/mygro.key" 2048
+- sudo openssl req -new -subj "$(echo -n "$MYGRO_SUBJ" | tr "\n" "/")" -key "$SSL_DIR/mygro.key" -out "$SSL_DIR/mygro.csr" -passin pass:$PASSPHRASE
+- sudo openssl x509 -req -days 365 -in "$SSL_DIR/mygro.csr" -signkey "$SSL_DIR/mygro.key" -out "$SSL_DIR/mygro.crt"
+- sudo cp -f $TRAVIS_BUILD_DIR/environment/config/000-default.conf /etc/apache2/sites-available/000-default.conf
+- sudo cp -f $TRAVIS_BUILD_DIR/environment/config/default-ssl.conf /etc/apache2/sites-available/default-ssl.conf
+- sudo openssl genrsa -out "$SSL_DIR/mygro.key" 2048
+- sudo openssl req -new -subj "$(echo -n "$MYGRO_SUBJ" | tr "\n" "/")" -key "$SSL_DIR/mygro.key" -out "$SSL_DIR/mygro.csr" -passin pass:$PASSPHRASE
+- sudo openssl x509 -req -days 365 -in "$SSL_DIR/mygro.csr" -signkey "$SSL_DIR/mygro.key" -out "$SSL_DIR/mygro.crt"
+- sudo chmod 644 /etc/apache2/sites-available/000-default.conf
+- sudo chmod 644 /etc/apache2/sites-available/default-ssl.conf
+- sudo apachectl configtest
+- sudo service apache2 restart
+- npm install -g gulp-cli
 
 # Add Amasty (2FA) Repo
 - composer config repositories.amasty composer https://composer.amasty.com/enterprise/
