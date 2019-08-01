@@ -1,8 +1,4 @@
-# TODO: Pre-cache composer as much as possible
-#Base image is Google's Optimized Ubuntu Image
-
-
-# TODO: environment switch to test image OR replace env.php file here
+# Base image is Google's Optimized Ubuntu Image
 
 ARG IMAGE=gcr.io/ecommerce-platform-211419/magento-dev-primer:latest
 FROM $IMAGE
@@ -23,8 +19,13 @@ USER magento
 WORKDIR $MAGENTO_DIR
 
 RUN git fetch
-RUN git checkout origin/test app/etc/config.php
+RUN git checkout app/etc/config.php
 RUN git pull
+
+# Move this to primer
+RUN composer config repositories.amasty composer https://composer.amasty.com/enterprise/
+
+RUN composer install
 
 RUN sed -i "s/save.*/save' => 'redis',/" app/etc/env.php
 
@@ -70,8 +71,3 @@ RUN ["chmod", "+x", "/usr/local/bin/entrypoint.sh"]
 
 # The apachectl command is in entrypoint :-)
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
-
-# CMD "exec /usr/sbin/apachectl -DFOREGROUND -k start"
-# CMD /usr/sbin/apachectl -DFOREGROUND 
-
-# Let's generate a new commit hash.
