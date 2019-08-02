@@ -21,6 +21,7 @@ WORKDIR $MAGENTO_DIR
 RUN git fetch
 RUN git checkout app/etc/config.php
 RUN git pull
+RUN gsutil -m rsync -r gs://test_magento_image_repo/media/catalog /var/www/html/magento2/pub/media/catalog
 
 # Move this to primer
 RUN composer config repositories.amasty composer https://composer.amasty.com/enterprise/
