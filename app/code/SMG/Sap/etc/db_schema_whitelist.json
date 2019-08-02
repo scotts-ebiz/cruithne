@@ -1,0 +1,159 @@
+{
+    "sales_order_sap": {
+        "column": {
+            "entity_id": true,
+            "order_id": true,
+            "sap_order_id": true,
+            "order_created_at": true,
+            "sap_order_status": true,
+            "order_status": true,
+            "sap_payer_id": true,
+            "created_at": true,
+            "updated_at": true,
+            "delivery_number": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "SALES_ORDER_SAP_ORDER_ID_SALES_ORDER_ENTITY_ID": true,
+            "SALES_ORDER_SAP_ORDER_STATUS_SALES_ORDER_STATUS_SAP_STATUS": true
+        }
+    },
+    "sales_order_sap_batch": {
+        "column": {
+            "entity_id": true,
+            "order_id": true,
+            "is_capture": true,
+            "capture_process_date": true,
+            "is_shipment": true,
+            "shipment_process_date": true,
+            "is_unauthorized": true,
+            "unauthorized_process_date": true,
+            "is_order": true,
+            "order_process_date": true,
+            "is_invoice_reconciliation": true,
+            "invoice_reconciliation_date": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "SALES_ORDER_SAP_BATCH_ORDER_ID_SALES_ORDER_ENTITY_ID": true
+        }
+    },
+    "sales_order_sap_batch_creditmemo": {
+        "column": {
+            "entity_id": true,
+            "creditmemo_order_id": true,
+            "order_id": true,
+            "order_item_id": true,
+            "sku": true,
+            "is_credit": true,
+            "credit_process_date": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_5B3E7AA60565A650BA2804B8D20FEBC1": true,
+            "SALES_ORDER_SAP_BATCH_CREDITMEMO_ORDER_ID_SALES_ORDER_ENTITY_ID": true,
+            "FK_A06284856DE2410C2A41DE8CA7762C2D": true
+        }
+    },
+    "sales_order_sap_batch_rma": {
+        "column": {
+            "entity_id": true,
+            "rma_id": true,
+            "order_id": true,
+            "order_item_id": true,
+            "sku": true,
+            "is_return": true,
+            "return_process_date": true,
+            "reason_id": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "SALES_ORDER_SAP_BATCH_RMA_RMA_ID_MAGENTO_RMA_ENTITY_ID": true,
+            "SALES_ORDER_SAP_BATCH_RMA_ORDER_ID_SALES_ORDER_ENTITY_ID": true,
+            "SALES_ORDER_SAP_BATCH_RMA_ORDER_ITEM_ID_SALES_ORDER_ITEM_ITEM_ID": true
+        }
+    },
+    "sales_order_sap_history": {
+        "column": {
+            "entity_id": true,
+            "order_sap_id": true,
+            "order_status": true,
+            "order_status_notes": true,
+            "created_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "SALES_ORDER_SAP_HISTORY_ORDER_SAP_ID_SALES_ORDER_SAP_ENTITY_ID": true,
+            "SALES_ORDER_SAP_HISTORY_ORDER_STS_SALES_ORDER_STS_SAP_STS": true
+        }
+    },
+    "sales_order_sap_item": {
+        "column": {
+            "entity_id": true,
+            "order_sap_id": true,
+            "sap_order_status": true,
+            "order_status": true,
+            "fulfillment_location": true,
+            "sku": true,
+            "sku_description": true,
+            "qty": true,
+            "confirmed_qty": true,
+            "ship_tracking_number": true,
+            "sap_billing_doc_number": true,
+            "sap_billing_doc_date": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "SALES_ORDER_SAP_ITEM_ORDER_SAP_ID_SALES_ORDER_SAP_ENTITY_ID": true,
+            "SALES_ORDER_SAP_ITEM_ORDER_STATUS_SALES_ORDER_STATUS_SAP_STATUS": true
+        }
+    },
+    "sales_order_sap_item_history": {
+        "column": {
+            "entity_id": true,
+            "order_sap_item_id": true,
+            "order_status": true,
+            "order_status_notes": true,
+            "created_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_933AE1E77B8CF9DBB0ACAE455FF0027D": true,
+            "SALES_ORDER_SAP_ITEM_HISTORY_ORDER_STS_SALES_ORDER_STS_SAP_STS": true
+        }
+    },
+    "sales_order_sap_shipment": {
+        "column": {
+            "entity_id": true,
+            "order_sap_item_id": true,
+            "ship_tracking_number": true,
+            "qty": true,
+            "confirmed_qty": true,
+            "delivery_number": true,
+            "fulfillment_location": true,
+            "sap_billing_doc_number": true,
+            "sap_billing_doc_date": true,
+            "created_at": true,
+            "updated_at": true
+        },
+        "constraint": {
+            "PRIMARY": true,
+            "FK_056AEAAEB9D83EA737D697BE11CA0A3B": true
+        }
+    },
+    "sales_order_status_sap": {
+        "column": {
+            "status": true,
+            "label": true
+        },
+        "constraint": {
+            "PRIMARY": true
+        }
+    }
+}
