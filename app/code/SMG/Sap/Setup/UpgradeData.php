@@ -139,16 +139,20 @@ class UpgradeData implements UpgradeDataInterface
                 $sapBillingDocNumber = $sapOrderItem->getData('sap_billing_doc_number');
                 $sapBillingDocDate = $sapOrderItem->getData('sap_billing_doc_date');
 
-                $data[] = array(
-                    'order_sap_item_id' => $orderSapItemId,
-                    'ship_tracking_number' => $shipTrackingNumber,
-                    'qty' => $qty,
-                    'confirmed_qty' => $confirmedQty,
-                    'delivery_number' => $deliveryNumber,
-                    'fulfillment_location' => $fulfillmentLocation,
-                    'sap_billing_doc_number' => $sapBillingDocNumber,
-                    'sap_billing_doc_date' => $sapBillingDocDate,
-                );
+                // make sure that there is a order sap item id before adding
+                if (!empty($orderSapItemId))
+                {
+                    $data[] = array(
+                        'order_sap_item_id' => $orderSapItemId,
+                        'ship_tracking_number' => $shipTrackingNumber,
+                        'qty' => $qty,
+                        'confirmed_qty' => $confirmedQty,
+                        'delivery_number' => $deliveryNumber,
+                        'fulfillment_location' => $fulfillmentLocation,
+                        'sap_billing_doc_number' => $sapBillingDocNumber,
+                        'sap_billing_doc_date' => $sapBillingDocDate,
+                    );
+                }
             }
         }
 
