@@ -21,10 +21,13 @@ use SMG\CustomerServiceEmail\Api\OrderManagementInterface;
 use SMG\CustomerServiceEmail\Api\Data\ItemInterface;
 use SMG\Sap\Model\SapOrder;
 use SMG\Sap\Model\SapOrderBatchFactory;
+use SMG\Sap\Model\SapOrderHistoryFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch;
+use SMG\Sap\Model\ResourceModel\SapOrderHistory as SapOrderHistoryResource;
 use SMG\Sap\Model\ResourceModel\SapOrder as SapOrderResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderItem\CollectionFactory as SapOrderItemCollectionFactory;
+use SMG\Sap\Model\ResourceModel\SapOrderShipment\CollectionFactory as SapOrderShipmentCollectionFactory;
 
 class BatchCaptureHelper
 {
@@ -143,6 +146,21 @@ class BatchCaptureHelper
     protected $_salesOrderManagementInterface;
 
     /**
+     * @var SapOrderHistoryFactory
+     */
+    protected $_sapOrderHistoryFactory;
+
+    /**
+     * @var SapOrderHistoryResource
+     */
+    protected $_sapOrderHistoryResource;
+
+    /**
+     * @var SapOrderShipmentCollectionFactory
+     */
+    protected $_sapOrderShipmentCollectionFactory;
+
+    /**
      * BatchCaptureHelper constructor.
      *
      * @param LoggerInterface $logger
@@ -166,6 +184,9 @@ class BatchCaptureHelper
      * @param HistoryFactory $historyFactory
      * @param HistoryResource $historyResource
      * @param SalesOrderManagementInterface $salesOrderManagementInterface
+     * @param SapOrderHistoryFactory $sapOrderHistoryFactory
+     * @param SapOrderHistoryResource $sapOrderHistoryResource
+     * @param SapOrderShipmentCollectionFactory $sapOrderShipmentCollectionFactory
      */
     public function __construct(LoggerInterface $logger,
         ResponseHelper $responseHelper,
@@ -186,7 +207,10 @@ class BatchCaptureHelper
         ItemInterface $itemInterface,
         HistoryFactory $historyFactory,
         HistoryResource $historyResource,
-        SalesOrderManagementInterface $salesOrderManagementInterface)
+        SalesOrderManagementInterface $salesOrderManagementInterface,
+        SapOrderHistoryFactory $sapOrderHistoryFactory,
+        SapOrderHistoryResource $sapOrderHistoryResource,
+        SapOrderShipmentCollectionFactory $sapOrderShipmentCollectionFactory)
     {
         $this->_logger = $logger;
         $this->_responseHelper = $responseHelper;
@@ -208,6 +232,9 @@ class BatchCaptureHelper
         $this->_historyFactory = $historyFactory;
         $this->_historyResource = $historyResource;
         $this->_salesOrderManagementInterface = $salesOrderManagementInterface;
+        $this->_sapOrderHistoryFactory = $sapOrderHistoryFactory;
+        $this->_sapOrderHistoryResource = $sapOrderHistoryResource;
+        $this->_sapOrderShipmentCollectionFactory = $sapOrderShipmentCollectionFactory;
     }
 
     /**
@@ -365,14 +392,28 @@ class BatchCaptureHelper
                     // get the items
                     $sapOrderItems = $this->_sapOrderItemCollectionFactory->create();
                     $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $sapOrder->getId()]);
-                    $sapOrderItems->addFieldToFilter('ship_tracking_number', ['notnull' => true]);
 
-                    // if there is a ship track number then we can set the flag
-                    if ($sapOrderItems->count() > 0)
+                    // loop through the sap order items
+                    foreach ($sapOrderItems as $sapOrderItem)
                     {
-                        $sapBatchOrder->setData('is_shipment', true);
+                        // get the shipment items
+                        $sapOrderShipments = $this->_sapOrderShipmentCollectionFactory->create();
+                        $sapOrderShipments->addFieldToFilter('order_sap_item_id', ['eq' => $sapOrderItem->getId()]);
+                        $sapOrderShipments->addFieldToFilter('ship_tracking_number', ['notnull' => true]);
+
+                        // if there is a ship track number then we can set the flag
+                        if ($sapOrderShipments->count() > 0)
+                        {
+                            $sapBatchOrder->setData('is_shipment', true);
+
+                            // there is no need to keep looping since we found a ship tracking number
+                            break;
+                        }
                     }
                 }
+
+                // update the status
+                $this->updateStatus($orderId, 'order_captured');
             }
             else
             {
@@ -386,6 +427,9 @@ class BatchCaptureHelper
 
                 // update the status on the order screen
                 $this->addOrderHistory($orderId);
+
+                // update the status
+                $this->updateStatus($orderId, 'capture_failed');
             }
 
             // save the data
@@ -513,6 +557,51 @@ class BatchCaptureHelper
         catch (\Exception $e)
         {
             $errorMsg = "Could not add to the order history for order - " . $orderId . " - " . $e->getMessage();
+            $this->_logger->error($errorMsg);
+        }
+    }
+
+    /**
+     * Updates the order status for the desired order
+     *
+     * @param $orderId
+     * @param $orderStatus
+     */
+    public function updateStatus($orderId, $orderStatus)
+    {
+        try
+        {
+            /**
+             * @var \SMG\Sap\Model\SapOrder $sapOrder
+             */
+            $sapOrder = $this->_sapOrderResource->getSapOrderByOrderId($orderId);
+
+            // get the current order status
+            $previousOrderStatus = $sapOrder->getData('order_status');
+
+            // change the status because the capture failure
+            $sapOrder->setData('order_status', $orderStatus);
+
+            // update the sap order
+            $this->_sapOrderResource->save($sapOrder);
+
+            // create a new history
+            /**
+             * @var \SMG\Sap\Model\SapOrderHistory $sapOrderHistory
+             */
+            $sapOrderHistory = $this->_sapOrderHistoryFactory->create();
+            $sapOrderHistory->setData('order_sap_id', $sapOrder->getId());
+            $sapOrderHistory->setData('order_status', $orderStatus);
+
+            // create order status notes
+            $orderStatusNotes = 'Order Status was ' . $previousOrderStatus . ' now ' . $orderStatus . '. ';
+            $sapOrderHistory->setData('order_status_notes', $orderStatusNotes);
+
+            $this->_sapOrderHistoryResource->save($sapOrderHistory);
+        }
+        catch (\Exception $e)
+        {
+            $errorMsg = "Could not update the order status for order - " . $orderId . " - " . $e->getMessage();
             $this->_logger->error($errorMsg);
         }
     }
