@@ -16,7 +16,9 @@ use SMG\OfflineShipping\Model\ShippingConditionCodeFactory;
 use SMG\OfflineShipping\Model\ResourceModel\ShippingConditionCode as ShippingConditionCodeResource;
 use SMG\Sap\Model\ResourceModel\SapOrder as SapOrderResource;
 use SMG\Sap\Model\SapOrderBatchFactory;
+use SMG\Sap\Model\SapOrderStatusFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch as SapOrderBatchResource;
+use SMG\Sap\Model\ResourceModel\SapOrderStatus as SapOrderStatusResource;
 
 class AccountDetailsHelper
 {
@@ -66,6 +68,16 @@ class AccountDetailsHelper
     protected $_sapOrderBatchResource;
 
     /**
+     * @var SapOrderStatusFactory
+     */
+    protected $_sapOrderStatusFactory;
+
+    /**
+     * @var SapOrderStatusResource
+     */
+    protected $_sapOrderStatusResource;
+
+    /**
      * AccountDetailsHelper constructor.
      *
      * @param OrderRepositoryInterface $orderRepository
@@ -77,6 +89,8 @@ class AccountDetailsHelper
      * @param TransactionRepository $transactionRepository
      * @param SapOrderBatchFactory $sapOrderBatchFactory
      * @param SapOrderBatchResource $sapOrderBatchResource
+     * @param SapOrderStatusFactory $sapOrderStatusFactory
+     * @param SapOrderStatusResource $sapOrderStatusResource
      */
     public function __construct(OrderRepositoryInterface $orderRepository,
         SapOrderResource $sapOrderResource,
@@ -86,7 +100,9 @@ class AccountDetailsHelper
         SearchCriteriaBuilder $searchCriteriaBuilder,
         TransactionRepository $transactionRepository,
         SapOrderBatchFactory $sapOrderBatchFactory,
-        SapOrderBatchResource $sapOrderBatchResource)
+        SapOrderBatchResource $sapOrderBatchResource,
+        SapOrderStatusFactory $sapOrderStatusFactory,
+        SapOrderStatusResource $sapOrderStatusResource)
     {
         $this->_orderRepository = $orderRepository;
         $this->_sapOrderResource = $sapOrderResource;
@@ -97,6 +113,9 @@ class AccountDetailsHelper
         $this->_transactionRepository = $transactionRepository;
         $this->_sapOrderBatchFactory = $sapOrderBatchFactory;
         $this->_sapOrderBatchResource = $sapOrderBatchResource;
+        $this->_sapOrderStatusFactory = $sapOrderStatusFactory;
+        $this->_sapOrderStatusResource = $sapOrderStatusResource
+        ;
     }
 
     /**
@@ -111,6 +130,7 @@ class AccountDetailsHelper
         $tracking = [];
         $invoices = [];
         $fulfillmentLocations = [];
+        $deliveryNumbers = [];
 
         // initialize the return array to have empty values for viewing.
         $dataobj['sap_order_id']=NULL;
@@ -141,8 +161,23 @@ class AccountDetailsHelper
          */
         $sapOrder = $this->_sapOrderResource->getSapOrderByOrderId($orderId);
         $dataobj['sap_order_id'] = $sapOrder->getSapOrderId();
-        $dataobj['order_status'] = $sapOrder->getOrderStatus();
-        $dataobj['delivery_number'] = $sapOrder->getDeliveryNumber();
+
+        // get the order status
+        /**
+         * @var \SMG\Sap\Model\SapOrderStatus $sapOrderStatus
+         */
+        $sapOrderStatus = $this->_sapOrderStatusFactory->create();
+        $this->_sapOrderStatusResource->load($sapOrderStatus, $sapOrder->getOrderStatus());
+
+        // make sure that the status was found
+        $statusLabel = $sapOrderStatus->getData('label');
+        if (!isset($statusLabel))
+        {
+            $statusLabel = $sapOrder->getOrderStatus();
+        }
+
+        // set the order status with the appropriate value
+        $dataobj['order_status'] = $statusLabel;
 
         // determine if the order was sent to SAP
         /**
@@ -165,33 +200,53 @@ class AccountDetailsHelper
 
         // get the SAP Order Item info
         $sapOrderItems = $sapOrder->getSapOrderItems();
+        /**
+         * @var \SMG\Sap\Model\SapOrderItem $sapOrderItem
+         */
         foreach($sapOrderItems as $sapOrderItem)
         {
-            // get the desired values
-            $shipTrackingNumber = $sapOrderItem->getData('ship_tracking_number');
-            $invoiceNumber = $sapOrderItem->getData('sap_billing_doc_number');
-            $fulfillmentLocation = $sapOrderItem->getData('fulfillment_location');
+            // get the list of shipments
+            $sapOrderShipments = $sapOrderItem->getSapOrderShipments($sapOrderItem->getId());
 
-            // we don't want duplicates to show
-            if (!in_array($shipTrackingNumber, $tracking))
+            // loop through the shipments for the following information
+            /**
+             * @var \SMG\Sap\Model\SapOrderShipment $sapOrderShipment
+             */
+            foreach ($sapOrderShipments as $sapOrderShipment)
             {
-                $tracking[] = $shipTrackingNumber;
-            }
+                // get the desired values
+                $shipTrackingNumber = $sapOrderShipment->getData('ship_tracking_number');
+                $invoiceNumber = $sapOrderShipment->getData('sap_billing_doc_number');
+                $fulfillmentLocation = $sapOrderShipment->getData('fulfillment_location');
+                $deliveryNumber = $sapOrderShipment->getData('delivery_number');
 
-            if (!in_array($invoiceNumber, $invoices))
-            {
-                $invoices[] = $invoiceNumber;
-            }
+                // we don't want duplicates to show
+                if (!in_array($shipTrackingNumber, $tracking))
+                {
+                    $tracking[] = $shipTrackingNumber;
+                }
 
-            if (!in_array($fulfillmentLocation, $fulfillmentLocations))
-            {
-                $fulfillmentLocations[] = $fulfillmentLocation;
+                if (!in_array($invoiceNumber, $invoices))
+                {
+                    $invoices[] = $invoiceNumber;
+                }
+
+                if (!in_array($fulfillmentLocation, $fulfillmentLocations))
+                {
+                    $fulfillmentLocations[] = $fulfillmentLocation;
+                }
+
+                if (!in_array($deliveryNumber, $deliveryNumbers))
+                {
+                    $deliveryNumbers[] = $deliveryNumber;
+                }
             }
         }
 
         $dataobj['tracking'] = implode(',', $tracking);
         $dataobj['sap_billing_doc_number'] = implode(',', $invoices);
-        $dataobj['fulfillment_location'] = implode(',', $fulfillmentLocations);;
+        $dataobj['fulfillment_location'] = implode(',', $fulfillmentLocations);
+        $dataobj['delivery_number'] = implode(',', $deliveryNumbers);
 
         $shippingCondition = $this->_shippingConditionCodeFactory->create();
         $this->_shippingConditionCodeResource->load($shippingCondition, $order->getShippingMethod(), 'shipping_method');

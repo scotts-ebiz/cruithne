@@ -1,0 +1,239 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="sales_order_sap">
+        <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" padding="10" comment="ID of the record."/>
+        <column name="order_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Entity ID for the sales_order table."/>
+        <column name="sap_order_id" xsi:type="varchar" nullable="false" length="10" comment="SAP Order Id"/>
+        <column name="order_created_at" xsi:type="timestamp" nullable="true" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Order was created at SAP"/>
+        <column name="sap_order_status" xsi:type="varchar" nullable="false" length="1" comment="SAP Order Status"/>
+        <column name="order_status" xsi:type="varchar" nullable="false" length="32" comment="Order Status"/>
+        <column name="sap_payer_id" xsi:type="int" nullable="true" padding="10" comment="SAP Payer ID"/>
+        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
+        <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Updated"/>
+        <column name="delivery_number" xsi:type="text" nullable="true" comment="SAP Delivery Number"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id" />
+        </constraint>
+        <constraint referenceId="SALES_ORDER_SAP_ORDER_ID_SALES_ORDER_ENTITY_ID"
+          xsi:type="foreign"
+          table="sales_order_sap"
+          column="order_id"
+          referenceTable="sales_order"
+          referenceColumn="entity_id"
+          onDelete="NO ACTION" />
+        <constraint referenceId="SALES_ORDER_SAP_ORDER_STATUS_SALES_ORDER_STATUS_SAP_STATUS"
+          xsi:type="foreign"
+          table="sales_order_sap"
+          column="order_status"
+          referenceTable="sales_order_status_sap"
+          referenceColumn="status"
+          onDelete="NO ACTION" />
+    </table>
+    <table name="sales_order_sap_batch">
+        <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" padding="10" comment="ID of the record."/>
+        <column name="order_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Entity ID for the sales_order table."/>
+        <column name="is_capture" xsi:type="boolean" nullable="false" default="false" comment="Is the order ready for capture"/>
+        <column name="capture_process_date" xsi:type="timestamp" nullable="true" comment="Capture Process Run Date"/>
+        <column name="is_shipment" xsi:type="boolean" nullable="false" default="false" comment="Is the order ready for shipment"/>
+        <column name="shipment_process_date" xsi:type="timestamp" nullable="true" comment="Shipment Process Run Date"/>
+        <column name="is_unauthorized" xsi:type="boolean" nullable="false" default="false" comment="Is the order ready for unauthorization"/>
+        <column name="unauthorized_process_date" xsi:type="timestamp" nullable="true" comment="Unauthorization Process Run Date"/>
+        <column name="is_order" xsi:type="boolean" nullable="false" default="false" comment="Is the order ready to send to SAP"/>
+        <column name="order_process_date" xsi:type="timestamp" nullable="true" comment="Order Process Run Date"/>
+        <column name="is_invoice_reconciliation" xsi:type="boolean" nullable="false" default="false" comment="Is the order ready for invoice reconciliation"/>
+        <column name="invoice_reconciliation_date" xsi:type="timestamp" nullable="true" comment="Invoice Reconciliation Process Run Date"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id" />
+        </constraint>
+        <constraint referenceId="SALES_ORDER_SAP_BATCH_ORDER_ID_SALES_ORDER_ENTITY_ID"
+          xsi:type="foreign"
+          table="sales_order_sap_batch"
+          column="order_id"
+          referenceTable="sales_order"
+          referenceColumn="entity_id"
+          onDelete="NO ACTION" />
+    </table>
+    <table name="sales_order_sap_batch_creditmemo">
+        <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
+        <column name="creditmemo_order_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Entity ID for the sales_creditmemo table."/>
+        <column name="order_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Entity ID for the sales_order table."/>
+        <column name="order_item_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Entity ID for the sales_order_item table."/>
+        <column name="sku" xsi:type="varchar" nullable="false" length="255" comment="SKU of the product"/>
+        <column name="is_credit" xsi:type="boolean" nullable="false" default="false" comment="Is the order ready for credit to send to SAP"/>
+        <column name="credit_process_date" xsi:type="timestamp" nullable="true" comment="Credit Order Process Run Date"/>
+        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
+        <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Updated"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id" />
+        </constraint>
+        <constraint referenceId="SALES_ORDER_SAP_BATCH_CREDITMEMO_CREDITMEMO_ORDER_ID_SALES_CREDITMEMO_ENTITY_ID"
+          xsi:type="foreign"
+          table="sales_order_sap_batch_creditmemo"
+          column="creditmemo_order_id"
+          referenceTable="sales_creditmemo"
+          referenceColumn="entity_id"
+          onDelete="NO ACTION" />
+        <constraint referenceId="SALES_ORDER_SAP_BATCH_CREDITMEMO_ORDER_ID_SALES_ORDER_ENTITY_ID"
+          xsi:type="foreign"
+          table="sales_order_sap_batch_creditmemo"
+          column="order_id"
+          referenceTable="sales_order"
+          referenceColumn="entity_id"
+          onDelete="NO ACTION" />
+        <constraint referenceId="SALES_ORDER_SAP_BATCH_CREDITMEMO_ORDER_ITEM_ID_SALES_ORDER_ITEM_ID"
+          xsi:type="foreign"
+          table="sales_order_sap_batch_creditmemo"
+          column="order_item_id"
+          referenceTable="sales_order_item"
+          referenceColumn="item_id"
+          onDelete="NO ACTION" />
+    </table>
+    <table name="sales_order_sap_batch_rma">
+        <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
+        <column name="rma_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Entity ID for the magento_rma table."/>
+        <column name="order_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Entity ID for the sales_order table."/>
+        <column name="order_item_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Entity ID for the sales_order_item table."/>
+        <column name="sku" xsi:type="varchar" nullable="false" length="255" comment="SKU of the product"/>
+        <column name="is_return" xsi:type="boolean" nullable="false" default="false" comment="Is the order ready for RMA to send to SAP"/>
+        <column name="return_process_date" xsi:type="timestamp" nullable="true" comment="RMA Order Process Run Date"/>
+        <column name="reason_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Reason ID for the return."/>
+        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
+        <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Updated"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id" />
+        </constraint>
+        <constraint referenceId="SALES_ORDER_SAP_BATCH_RMA_RMA_ID_MAGENTO_RMA_ENTITY_ID"
+          xsi:type="foreign"
+          table="sales_order_sap_batch_rma"
+          column="rma_id"
+          referenceTable="magento_rma"
+          referenceColumn="entity_id"
+          onDelete="NO ACTION" />
+        <constraint referenceId="SALES_ORDER_SAP_BATCH_RMA_ORDER_ID_SALES_ORDER_ENTITY_ID"
+          xsi:type="foreign"
+          table="sales_order_sap_batch_rma"
+          column="order_id"
+          referenceTable="sales_order"
+          referenceColumn="entity_id"
+          onDelete="NO ACTION" />
+        <constraint referenceId="SALES_ORDER_SAP_BATCH_RMA_ORDER_ITEM_ID_SALES_ORDER_ITEM_ID"
+          xsi:type="foreign"
+          table="sales_order_sap_batch_rma"
+          column="order_item_id"
+          referenceTable="sales_order_item"
+          referenceColumn="item_id"
+          onDelete="NO ACTION" />
+    </table>
+    <table name="sales_order_sap_history">
+        <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
+        <column name="order_sap_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Entity ID for the sales_order_sap table."/>
+        <column name="order_status" xsi:type="varchar" nullable="false" length="32" comment="The Order status of the order"/>
+        <column name="order_status_notes" xsi:type="varchar" nullable="true" length="255" comment="Long Description of the order status"/>
+        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id" />
+        </constraint>
+        <constraint referenceId="SALES_ORDER_SAP_HISTORY_ORDER_SAP_ID_SALES_ORDER_SAP_ENTITY_ID"
+          xsi:type="foreign"
+          table="sales_order_sap_history"
+          column="order_sap_id"
+          referenceTable="sales_order_sap"
+          referenceColumn="entity_id"
+          onDelete="NO ACTION" />
+        <constraint referenceId="SALES_ORDER_SAP_HISTORY_ORDER_STS_SALES_ORDER_STS_SAP_STS"
+          xsi:type="foreign"
+          table="sales_order_sap_history"
+          column="order_status"
+          referenceTable="sales_order_status_sap"
+          referenceColumn="status"
+          onDelete="NO ACTION" />
+    </table>
+    <table name="sales_order_sap_item">
+        <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
+        <column name="order_sap_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Entity ID for the sales_order_sap table."/>
+        <column name="sap_order_status" xsi:type="varchar" nullable="false" length="1" comment="SAP Order Status"/>
+        <column name="order_status" xsi:type="varchar" nullable="false" length="32" comment="Order Status"/>
+        <column name="fulfillment_location" xsi:type="text" nullable="true" comment="Location of Shipment Warehouse"/>
+        <column name="sku" xsi:type="varchar" nullable="false" length="255" comment="SKU of the product"/>
+        <column name="sku_description" xsi:type="text" nullable="false" comment="SKU Description of the product"/>
+        <column name="qty" xsi:type="decimal" nullable="false" unsigned="true" comment="Qty Shipped"/>
+        <column name="confirmed_qty" xsi:type="decimal" nullable="false" unsigned="true" comment="Confirmed Qty Shipped"/>
+        <column name="ship_tracking_number" xsi:type="text" nullable="true" comment="Ship Tracking Numbers"/>
+        <column name="sap_billing_doc_number" xsi:type="longtext" nullable="true" comment="Invoice Id"/>
+        <column name="sap_billing_doc_date" xsi:type="timestamp" nullable="true" comment="Invoice Date"/>
+        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
+        <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Updated"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id" />
+        </constraint>
+        <constraint referenceId="SALES_ORDER_SAP_ITEM_ORDER_SAP_ID_SALES_ORDER_SAP_ENTITY_ID"
+          xsi:type="foreign"
+          table="sales_order_sap_item"
+          column="order_sap_id"
+          referenceTable="sales_order_sap"
+          referenceColumn="entity_id"
+          onDelete="NO ACTION" />
+        <constraint referenceId="SALES_ORDER_SAP_ITEM_ORDER_STATUS_SALES_ORDER_STATUS_SAP_STATUS"
+          xsi:type="foreign"
+          table="sales_order_sap_item"
+          column="order_status"
+          referenceTable="sales_order_status_sap"
+          referenceColumn="status"
+          onDelete="NO ACTION" />
+    </table>
+    <table name="sales_order_sap_item_history">
+        <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
+        <column name="order_sap_item_id" xsi:type="int" nullable="false" unsigned="true" comment="Entity ID for the sales_order_sap_item table."/>
+        <column name="order_status" xsi:type="varchar" nullable="false" length="32" comment="The Order status of the order"/>
+        <column name="order_status_notes" xsi:type="varchar" nullable="true" length="255" comment="Long Description of the order status"/>
+        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id" />
+        </constraint>
+        <constraint referenceId="SALES_ORDER_SAP_ITEM_HISTORY_ORDER_SAP_ITEM_ID_SALES_ORDER_SAP_ITEM_ID"
+          xsi:type="foreign"
+          table="sales_order_sap_item_history"
+          column="order_sap_item_id"
+          referenceTable="sales_order_sap_item"
+          referenceColumn="entity_id"
+          onDelete="NO ACTION" />
+        <constraint referenceId="SALES_ORDER_SAP_ITEM_HISTORY_ORDER_STS_SALES_ORDER_STS_SAP_STS"
+          xsi:type="foreign"
+          table="sales_order_sap_item_history"
+          column="order_status"
+          referenceTable="sales_order_status_sap"
+          referenceColumn="status"
+          onDelete="NO ACTION" />
+    </table>
+    <table name="sales_order_sap_shipment">
+        <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
+        <column name="order_sap_item_id" xsi:type="int" nullable="false" unsigned="true" comment="Entity ID for the sales_order_sap table."/>
+        <column name="ship_tracking_number" xsi:type="text" nullable="true" comment="Ship Tracking Numbers"/>
+        <column name="qty" xsi:type="decimal" nullable="false" unsigned="true" comment="Qty Shipped"/>
+        <column name="confirmed_qty" xsi:type="decimal" nullable="false" unsigned="true" comment="Confirmed Qty Shipped"/>
+        <column name="delivery_number" xsi:type="text" nullable="true" comment="SAP Delivery Number"/>
+        <column name="fulfillment_location" xsi:type="text" nullable="true" comment="Location of Shipment Warehouse"/>
+        <column name="sap_billing_doc_number" xsi:type="longtext" nullable="true" comment="Invoice Id"/>
+        <column name="sap_billing_doc_date" xsi:type="timestamp" nullable="true" comment="Invoice Date"/>
+        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
+        <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Updated"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id" />
+        </constraint>
+        <constraint referenceId="SALES_ORDER_SAP_SHIPMENT_ORDER_SAP_ITEM_ID_TO_SALES_ORDER_SAP_ITEM_ENTITY_ID"
+          xsi:type="foreign"
+          table="sales_order_sap_shipment"
+          column="order_sap_item_id"
+          referenceTable="sales_order_sap_item"
+          referenceColumn="entity_id"
+          onDelete="NO ACTION" />
+    </table>
+    <table name="sales_order_status_sap">
+        <column name="status" xsi:type="varchar" nullable="false" length="32" comment="Status Id of the Status"/>
+        <column name="label" xsi:type="varchar" nullable="false" length="128" comment="Description of the Status"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="status" />
+        </constraint>
+    </table>
+</schema>

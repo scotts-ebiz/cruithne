@@ -32,7 +32,12 @@ function($){
 			});
 			$('.form-shipping-address input:visible').keyup(function() {
 				var str = $(this).val();
-				var nval = str.replace(/[&\/\\#,+()$~%'":*?<>{}@]/g, '');
+				var nval = str.replace(/[&\/\\#,+$~%*?<>{}@!^]/g, '');
+				$(this).val(nval);
+			});
+			$(".form-shipping-address .street input").keyup(function() {
+				var str = $(this).val();
+				var nval = str.replace(/  +/g, ' ');
 				$(this).val(nval);
 			});
 			if ($("input[name='postcode']").val() != '') {
@@ -40,6 +45,20 @@ function($){
 					$('#shipping-method-buttons-container button').prop('disabled', false);
 				}
 			}
+			$("#shipping-new-address-form input[name='telephone']").keyup(function() {
+				var str = $(this).val();
+				var nval = str.replace(/^(\d{3})(\d{3})(\d)+$/, "$1-$2-$3")
+				$(this).val(nval);
+			});
+
+			$(".checkout-billing-address input[name='telephone']").keyup(function() {
+				var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.telephone';
+				var str = $("div[name='"+inpt+"'] input[name='telephone']").val();
+				var nval = str.replace(/^(\d{3})(\d{3})(\d)+$/, "$1-$2-$3")
+				$("div[name='"+inpt+"'] input[name='telephone']").val(nval);
+			});
+
+
 		}, 7000);
 		setTimeout(function(){
 			if ($("input[name='postcode']").val() != '') {
@@ -66,5 +85,10 @@ function($){
 			
 		}
 	});
+
+	/*------- Discount code - toggle --------*/
+	$('#block-discount .title').click(function() {
+		$('#block-discount .content').toggleClass('disc_active');
 });
 
+});
