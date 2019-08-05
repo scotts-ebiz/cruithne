@@ -100,13 +100,13 @@ endif;
         <div class="productCalloutVideo-contentContainer span_6_of_12 <?php echo $block->escapeHtml($block->getData('pcvTextContainerAlignment')); ?>">
             <h2 style="<?php
             $pcvHeadlineStyleValues = explode(',', $pcvHeadlineCustomCssStyle);
-            foreach($pcvHeadlineStyleValues as $pcvHeadlinevalue) {echo /* @noEscape */ $block->escapeHtml($pcvHeadlinevalue);} ?>color:<?php echo $block->escapeHtmlAttr($block->getData('pcvBannerHeadlineColor'));?>;"><?php echo /* @noEscape */ $block->escapeHtml($block->getData('pcvBannerHeadline')); ?></h2>
-            <p style="<?php echo /* @noEscape */ $block->escapeHtml($pcvParagraphTextSize)?>
+            foreach($pcvHeadlineStyleValues as $pcvHeadlinevalue) {echo /* @noEscape */ $pcvHeadlinevalue;} ?>color:<?php echo $block->escapeHtmlAttr($block->getData('pcvBannerHeadlineColor'));?>;"><?php echo /* @noEscape */ $block->getData('pcvBannerHeadline'); ?></h2>
+            <p style="<?php echo /* @noEscape */ $pcvParagraphTextSize?>
               <?php $pcvBannerTextStyleValuesSelected = explode(',', $pcvBannerTextStyleSelected);
                 foreach($pcvBannerTextStyleValuesSelected as $valueOfTextStyle) {
                   /* @noEscape */ echo $valueOfTextStyle;
                 } ?>color:<?php echo $block->escapeHtmlAttr($block->getData('pcvBannerTextColor')); ?>;">
-              <?php echo /* @noEscape */ $block->escapeHtml($block->getData('pcvBannerText'));?>
+              <?php echo /* @noEscape */ $block->getData('pcvBannerText');?>
             </p>
         </div>
         <div id="productCalloutVideo-video-overlay" class="productCalloutVideo-video-overlay"></div>

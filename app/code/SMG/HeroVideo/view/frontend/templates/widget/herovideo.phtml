@@ -77,28 +77,28 @@ endif;
 
 
 <section class="hero-video-widget product-info-container align-top" style="background: url('<?php echo
-$block->escapeUrl($block->getData('videobackgroundimage'))
+$block->getData('videobackgroundimage')
 ; ?>') no-repeat; background-position: center; background-size: cover;">
   <div class="product-info grid col-2 <?php echo $block->escapeHtml($block->getData('textalignclass')) ?> ">
     <h2 class="video-headline"
         style="
-          color:<?php echo $block->escapeCss($block->getData('bannerheadlinecolor')); ?>;
+          color:<?php echo $block->getData('bannerheadlinecolor'); ?>;
         <?php
         $headlinestylevalues = explode(',', $headlineCustomCssStyle);
         foreach($headlinestylevalues as $headlinevalue) {
-          echo $block->escapeHtml($headlinevalue);
+          echo $headlinevalue;
         }
         ?>"
     >
       <?php echo $block->escapeHtml($block->getData('bannerheadline')); ?>
     </h2>
     <p style="
-      color:<?php echo $block->escapeHtmlAttr($block->getData('bannertextlinecolor')); ?>;
+      color:<?php echo $block->getData('bannertextlinecolor'); ?>;
     <?php echo $block->escapeHtml($paragraphTextSize);?>
     <?php
     $selectedTextCustomCssStyles = explode(',', $textCustomCssStyles);
     foreach($selectedTextCustomCssStyles as $textStyleValue) {
-      echo $block->escapeHtml($textStyleValue);
+      echo $textStyleValue;
     }
     ?>"
     >
@@ -107,11 +107,11 @@ $block->escapeUrl($block->getData('videobackgroundimage'))
     <div class="video">
       <?php if($this->getData('iframeVideoLink') != ''): ?>
         <a class="watch-video play heroVideo-video-link" href="#">
-          <i class="icon-play fas fa-play" style="color: <?php echo $block->escapeCss($block->getData('iconcolor')); ?>; background-color: <?php echo $block->escapeCss($block->getData('iconbackgroundcolor')); ?> ;"></i>
+          <i class="icon-play fas fa-play" style="color: <?php echo $block->getData('iconcolor'); ?>; background-color: <?php echo $block->getData('iconbackgroundcolor'); ?> ;"></i>
           <span
             class="productvideotxt"
             style="
-              color:<?php echo $block->escapeCss($block->getData('videotextcolor')); ?>;
+              color:<?php echo $block->getData('videotextcolor'); ?>;
             <?php echo $block->escapeCss($selectedvideotextsize);?>"
           >
                     <?php echo $block->escapeHtml($block->getData('videotext')); ?>
@@ -131,16 +131,16 @@ $block->escapeUrl($block->getData('videobackgroundimage'))
 </section>
 <div class="hero-video-mobileContent">
   <h2 class="mobile-video-headline" style="
-    color:<?php echo $block->escapeCss($bannerheadlineMobileCustomColor)?>;
+    color:<?php echo $bannerheadlineMobileCustomColor?>;
   <?php
   $headlinestylevalues = explode(',', $headlineCustomCssStyle);
   foreach($headlinestylevalues as $headlinevalue) {
-    echo $block->escapeHtml($headlinevalue);
+    echo $headlinevalue;
   }?>">
     <?php echo $block->escapeHtml($block->getData('bannerheadline')); ?>
   </h2>
   <p style="
-    color:<?php echo $block->escapeCss($bannertextlineMobileCustomColor)?>;
+    color:<?php echo $bannertextlineMobileCustomColor?>;
   <?php echo $block->escapeHtml($paragraphTextSize);?>
   <?php
   $selectedTextCustomCssStyles = explode(',', $textCustomCssStyles);

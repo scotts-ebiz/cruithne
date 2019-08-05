@@ -93,10 +93,10 @@
       <?php
       $headlinestylevalues = explode(',', $featuresListHeadlineCustomStyles);
       foreach($headlinestylevalues as $headlinevalue) {
-          echo /* @noEscape */ $block->escapeHtml($headlinevalue);
+          echo /* @noEscape */ $headlinevalue;
       }
-      echo /* @noEscape */ $block->escapeHtml($featuresListHeadlineCustomSize);
+      echo /* @noEscape */ $featuresListHeadlineCustomSize;
       ?>color:<?php echo $block->escapeHtmlAttr($block->getData('featuresListHeadlineColor'));?>;">
-      <?php echo /* @noEscape */ $block->escapeHtml($block->getData('featuresListHeadline')); ?></h2>
-    <?php echo /* @noEscape */ $block->escapeHtml($html); ?>
+      <?php echo /* @noEscape */ $block->getData('featuresListHeadline'); ?></h2>
+    <?php echo /* @noEscape */ $html; ?>
 </section>
