@@ -943,6 +943,7 @@
 		.form-cart .action.update{
 			margin-left: 0;
 			padding-left: 0;
+			cursor: pointer;
 		}
 	} 
 }
@@ -1459,7 +1460,7 @@
 		margin-top: 30px;
 	}
 	#checkout-shipping-method-load{
-		float: left;
+		//float: left;
 	}
 	#shipping-method-buttons-container{
 		float: right;
@@ -2181,7 +2182,7 @@
 		}
 		.actions-toolbar.no-margin{
 			margin-top: 0 !important;
-			margin-bottom: -4px !important;
+			margin-bottom: -25px !important;
 		}
 	} 
 	.cart-container .form-cart .action.update{
@@ -2778,4 +2779,40 @@ button.action{
     .cart-summary._sticky{
         top:0px !important;
     }
+}
+
+#checkout-step-shipping_method{
+    .message.notice{
+        font-size:16px;
+    }
+}
+.modal-inner-wrap {
+	.modal-footer {
+		text-align:right;
+		.action-primary {
+			background: #075534;
+			color: #fff;
+			width: 57px;
+		}
+	}
+}
+
+.cart-parent-summary {
+	.cart-summary-divlink {
+		#block-discount {
+			.content {
+				display: block !important;
+			}
+			.content.disc_active {
+				display: none !important;
+			}
+		}
+	}
+}
+div[name="shippingAddress.postcode"] {
+	.control {
+		.message.warning {
+			display: none;
+		}
+	}
 }

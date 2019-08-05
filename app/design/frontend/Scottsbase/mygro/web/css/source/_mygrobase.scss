@@ -4,8 +4,11 @@ body {
     font-size: 1.2rem;
 
     h2 {
-        font-weight: bold;
         font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
+        font-size: 2.5rem;
+        @media only screen and (max-width: $screen__l) {
+        font-size: 2.1rem;
+        }
     }
 }
 [class^="icon-"],
@@ -310,10 +313,8 @@ body {
             font-size: 16px;
             text-align: center;
             display: inline-block;
-            line-height: 48px;
+            line-height: 0px;
             box-sizing: border-box;
-            width: 100%;
-            max-width: 200px;
             transition: background 0.2s linear;
             letter-spacing: 0.5px;
         }
@@ -336,6 +337,12 @@ body {
             letter-spacing: 0.5px;
             text-align: center;
             display: inline-block;
+        }
+        .button:hover {
+            background: $mygro-dark-green;
+        }
+        .button:active {
+            background: $mygro-light-green;
         }
         .hero-video {
             background: url(../images/bg-hero.jpg) 50% 0% no-repeat;
@@ -438,7 +445,18 @@ body {
     }
 }
 
-// PDP Page Styles
+
+// Base Widget Styles
+.widget-margin {
+    margin: 0 0 150px 0 !important;
+    @media only screen and (max-width: $screen__l) {
+        margin: 0 0 100px 0 !important;
+    }
+}
+
+.widget-margin-mobile {
+    margin: 0 0 100px 0 !important;
+}
 
 
 /*Since only one controller product removing select styling*/
@@ -459,6 +477,7 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
 .product.info.detailed {
   display: none;
 }
+
 
 // PDP Page Styles
 .page-product-grouped {	
@@ -1047,7 +1066,7 @@ width: 48%;
 		top: 20px;
 		right: 0;
 		width: 27.25%;
-		padding: 0px 15px 0px;
+		padding: 0px 30px 0px;
 		.action.primary.checkout{
 			background-color: $color_green_shade;
 			padding: 20px 0;   
@@ -1187,6 +1206,7 @@ width: 48%;
 		.form-cart .action.update{
 			margin-left: 0;
 			padding-left: 0;
+			cursor: pointer;
 		}
 	} 
 }
@@ -1674,7 +1694,7 @@ width: 48%;
 		margin-top: 30px;
 	}
 	#checkout-shipping-method-load{
-		float: left;
+		//float: left;
 	}
 	#shipping-method-buttons-container{
 		float: right;
@@ -2375,7 +2395,7 @@ width: 48%;
 		}
 		.actions-toolbar.no-margin{
 			margin-top: 0 !important;
-			margin-bottom: -4px !important;
+			margin-bottom: -25px !important;
 		}
 	} 
 	.cart-container .form-cart .action.update{
@@ -2963,4 +2983,39 @@ button.action{
     .cart-summary._sticky{
         top:0px !important;
     }
+}
+
+#checkout-step-shipping_method{
+	.message.notice{
+		font-size:16px;
+	}
+}
+.modal-inner-wrap {
+	.modal-footer{
+		text-align:right;
+		.action-primary{
+			background: #075534;
+			color: #fff;
+		}
+	}
+}
+.cart-parent-summary {
+	.cart-summary-divlink {
+		#block-discount {
+			.content {
+				display: block !important;
+			}
+			.content.disc_active {
+				display: none !important;
+			}
+		}
+	}
+}
+
+div[name="shippingAddress.postcode"] {
+	.control {
+		.message.warning {
+			display: none;
+		}
+	}
 }

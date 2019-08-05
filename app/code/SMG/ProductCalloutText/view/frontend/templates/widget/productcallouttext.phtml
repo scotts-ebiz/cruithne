@@ -1,6 +1,6 @@
 <section class="product-info-container align-top">
     <div class="product-info grid col-2">
-	    <h2><?php echo $block->getData('headline'); ?></h2>
-        <p><?php echo $block->getData('callouttext'); ?></p>
+	    <h2><?php echo $block->escapeHtml(getData('headline')); ?></h2>
+        <p><?php echo $block->escapeHtml(getData('callouttext')); ?></p>
     </div>
 </section>

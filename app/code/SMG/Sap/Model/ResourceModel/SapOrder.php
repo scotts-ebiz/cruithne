@@ -57,6 +57,12 @@ class SapOrder extends AbstractDb
         $this->_sapOrderFactory = $sapOrderFactory;
     }
 
+    /**
+     * Return the order from the Order Id
+     *
+     * @param $orderId
+     * @return \Magento\Sales\Model\Order
+     */
     public function getOrder($orderId)
     {
         /**
@@ -66,6 +72,25 @@ class SapOrder extends AbstractDb
 
         // load the data for the order id
         $this->_orderResource->load($order, $orderId);
+
+        return $order;
+    }
+
+    /**
+     * Return the order from the Order Id
+     *
+     * @param $incrementId
+     * @return \Magento\Sales\Model\Order
+     */
+    public function getOrderByIncrementId($incrementId)
+    {
+        /**
+         * @var \Magento\Sales\Model\Order
+         */
+        $order = $this->_orderFactory->create();
+
+        // load the data for the order id
+        $this->_orderResource->load($order, $incrementId, 'increment_id');
 
         return $order;
     }
@@ -102,5 +127,27 @@ class SapOrder extends AbstractDb
         }
 
         return $order;
+    }
+
+    /**
+     * Return the SAP order from the increment Id
+     *
+     * @param $incrementId
+     * @return \SMG\Sap\Model\SapOrder
+     */
+    public function getSapOrderByIncrementId($incrementId)
+    {
+        /**
+         * @var \Magento\Sales\Model\Order
+         */
+        $order = $this->getOrderByIncrementId($incrementId);
+
+        /**
+         * @var \SMG\Sap\Model\SapOrder $sapOrder
+         */
+        $sapOrder = $this->_sapOrderFactory->create();
+        $this->load($sapOrder, $order->getId(), 'order_id');
+
+        return $sapOrder;
     }
 }

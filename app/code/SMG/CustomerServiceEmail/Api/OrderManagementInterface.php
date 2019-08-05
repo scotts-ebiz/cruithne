@@ -21,6 +21,14 @@ interface OrderManagementInterface
     public function notify($id);
 
     /**
+     * Cancellation emails a user a specified orders.
+     *
+     * @param \SMG\CustomerServiceEmail\Api\Data\ItemInterface $item
+     * @return bool
+     */
+    public function notifyCancellations(\SMG\CustomerServiceEmail\Api\Data\ItemInterface $item);
+
+    /**
      * Failed capture transaction email a specified order.
      *
      * @param int $id The order ID.

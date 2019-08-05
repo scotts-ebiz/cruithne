@@ -2,26 +2,32 @@
 
 namespace SMG\Api\Helper;
 
-use Magento\Sales\Api\InvoiceOrderInterface;
 use Magento\Sales\Api\Data\InvoiceItemCreationInterfaceFactory;
+use Magento\Sales\Api\InvoiceOrderInterface;
+use Magento\Sales\Api\OrderManagementInterface as SalesOrderManagementInterface;
+use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\InvoiceFactory;
 use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Model\Order\Item;
-use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Status\HistoryFactory;
 use Magento\Sales\Api\Data\OrderInterfaceFactory;
 use Magento\Sales\Model\ResourceModel\Order\Invoice as InvoiceResource;
 use Magento\Sales\Model\ResourceModel\Order\Invoice\CollectionFactory as InvoiceCollectionFactory;
 use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\CollectionFactory as TransactionCollectionFactory;
+use Magento\Sales\Model\ResourceModel\Order\Status\History as HistoryResource;
 use Magento\Sales\Model\Spi\OrderResourceInterface;
 use Psr\Log\LoggerInterface;
 use SMG\CustomerServiceEmail\Api\OrderManagementInterface;
 use SMG\CustomerServiceEmail\Api\Data\ItemInterface;
 use SMG\Sap\Model\SapOrder;
 use SMG\Sap\Model\SapOrderBatchFactory;
+use SMG\Sap\Model\SapOrderHistoryFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch;
+use SMG\Sap\Model\ResourceModel\SapOrderHistory as SapOrderHistoryResource;
 use SMG\Sap\Model\ResourceModel\SapOrder as SapOrderResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderItem\CollectionFactory as SapOrderItemCollectionFactory;
+use SMG\Sap\Model\ResourceModel\SapOrderShipment\CollectionFactory as SapOrderShipmentCollectionFactory;
 
 class BatchCaptureHelper
 {
@@ -125,6 +131,36 @@ class BatchCaptureHelper
     protected $_itemInterface;
 
     /**
+     * @var HistoryFactory
+     */
+    protected $_historyFactory;
+
+    /**
+     * @var HistoryResource
+     */
+    protected $_historyResource;
+
+    /**
+     * @var SalesOrderManagementInterface
+     */
+    protected $_salesOrderManagementInterface;
+
+    /**
+     * @var SapOrderHistoryFactory
+     */
+    protected $_sapOrderHistoryFactory;
+
+    /**
+     * @var SapOrderHistoryResource
+     */
+    protected $_sapOrderHistoryResource;
+
+    /**
+     * @var SapOrderShipmentCollectionFactory
+     */
+    protected $_sapOrderShipmentCollectionFactory;
+
+    /**
      * BatchCaptureHelper constructor.
      *
      * @param LoggerInterface $logger
@@ -144,6 +180,13 @@ class BatchCaptureHelper
      * @param OrderResourceInterface $orderResource
      * @param OrderManagementInterface $orderManagementInterface
      * @param ItemInterface $itemInterface
+     * @param ItemInterface $itemCancellationsInterface
+     * @param HistoryFactory $historyFactory
+     * @param HistoryResource $historyResource
+     * @param SalesOrderManagementInterface $salesOrderManagementInterface
+     * @param SapOrderHistoryFactory $sapOrderHistoryFactory
+     * @param SapOrderHistoryResource $sapOrderHistoryResource
+     * @param SapOrderShipmentCollectionFactory $sapOrderShipmentCollectionFactory
      */
     public function __construct(LoggerInterface $logger,
         ResponseHelper $responseHelper,
@@ -161,7 +204,13 @@ class BatchCaptureHelper
         OrderInterfaceFactory $orderFactory,
         OrderResourceInterface $orderResource,
         OrderManagementInterface $orderManagementInterface,
-        ItemInterface $itemInterface)
+        ItemInterface $itemInterface,
+        HistoryFactory $historyFactory,
+        HistoryResource $historyResource,
+        SalesOrderManagementInterface $salesOrderManagementInterface,
+        SapOrderHistoryFactory $sapOrderHistoryFactory,
+        SapOrderHistoryResource $sapOrderHistoryResource,
+        SapOrderShipmentCollectionFactory $sapOrderShipmentCollectionFactory)
     {
         $this->_logger = $logger;
         $this->_responseHelper = $responseHelper;
@@ -180,6 +229,12 @@ class BatchCaptureHelper
         $this->_orderResource = $orderResource;
         $this->_orderManagementInterface = $orderManagementInterface;
         $this->_itemInterface = $itemInterface;
+        $this->_historyFactory = $historyFactory;
+        $this->_historyResource = $historyResource;
+        $this->_salesOrderManagementInterface = $salesOrderManagementInterface;
+        $this->_sapOrderHistoryFactory = $sapOrderHistoryFactory;
+        $this->_sapOrderHistoryResource = $sapOrderHistoryResource;
+        $this->_sapOrderShipmentCollectionFactory = $sapOrderShipmentCollectionFactory;
     }
 
     /**
@@ -259,8 +314,8 @@ class BatchCaptureHelper
             }
         }
 
-        // send customer service emails
-        $this->sendCustomerServiceEmails();
+        // send emails
+        $this->sendEmails();
 
         // return
         return $orderStatusResponse;
@@ -307,54 +362,84 @@ class BatchCaptureHelper
      *
      * @param $sapBatchOrder \SMG\Sap\Model\SapOrderBatch
      * @param $invoice Invoice
-     * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
     private function updateSapBatch($sapBatchOrder, $invoice = null)
     {
-        $today = date('Y-m-d H:i:s');
-
-        // set the capture date
-        $sapBatchOrder->setData('capture_process_date', $today);
-
-        // check to see if the $invoice has been set
-        if ($this->wasCaptureSuccessful($invoice))
+        try
         {
-            // check if the ship flag has been set
-            // if it hasn't see if it can be set
-            if (!$sapBatchOrder->getData('is_shipment'))
+            $today = date('Y-m-d H:i:s');
+
+            // set the capture date
+            $sapBatchOrder->setData('capture_process_date', $today);
+
+            // get the order id
+            $orderId = $sapBatchOrder->getData("order_id");
+
+            // check to see if the $invoice has been set
+            if ($this->wasCaptureSuccessful($invoice))
             {
+                // check if the ship flag has been set
+                // if it hasn't see if it can be set
+                if (!$sapBatchOrder->getData('is_shipment'))
+                {
                     // get the items from the sap item table to check
                     // to see if the order is able to be shipped
                     /**
                      * @var SapOrder $sapOrder
-                */
-                $sapOrder = $this->_sapOrderResource->getSapOrderByOrderId($sapBatchOrder->getData("order_id"));
+                     */
+                    $sapOrder = $this->_sapOrderResource->getSapOrderByOrderId($orderId);
 
-                // get the items
-                $sapOrderItems = $this->_sapOrderItemCollectionFactory->create();
-                $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $sapOrder->getId()]);
-                $sapOrderItems->addFieldToFilter('ship_tracking_number', ['notnull' => true]);
+                    // get the items
+                    $sapOrderItems = $this->_sapOrderItemCollectionFactory->create();
+                    $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $sapOrder->getId()]);
 
-                // if there is a ship track number then we can set the flag
-                if ($sapOrderItems->count() > 0)
-                {
-                    $sapBatchOrder->setData('is_shipment', true);
+                    // loop through the sap order items
+                    foreach ($sapOrderItems as $sapOrderItem)
+                    {
+                        // get the shipment items
+                        $sapOrderShipments = $this->_sapOrderShipmentCollectionFactory->create();
+                        $sapOrderShipments->addFieldToFilter('order_sap_item_id', ['eq' => $sapOrderItem->getId()]);
+                        $sapOrderShipments->addFieldToFilter('ship_tracking_number', ['notnull' => true]);
+
+                        // if there is a ship track number then we can set the flag
+                        if ($sapOrderShipments->count() > 0)
+                        {
+                            $sapBatchOrder->setData('is_shipment', true);
+
+                            // there is no need to keep looping since we found a ship tracking number
+                            break;
+                        }
+                    }
                 }
+
+                // update the status
+                $this->updateStatus($orderId, 'order_captured');
             }
+            else
+            {
+                // there was an issue with capturing the payment
+                // so set to unauthorized flag
+                $sapBatchOrder->setData("is_unauthorized", true);
+
+                // add the order id to the array to send email
+                // to customer service
+                $this->_customerServiceEmailIds[] = $orderId;
+
+                // update the status on the order screen
+                $this->addOrderHistory($orderId);
+
+                // update the status
+                $this->updateStatus($orderId, 'capture_failed');
+            }
+
+            // save the data
+            $this->_sapOrderBatchResource->save($sapBatchOrder);
         }
-        else
+        catch (\Exception $e)
         {
-            // there was an issue with capturing the payment
-            // so set to unauthorized flag
-            $sapBatchOrder->setData("is_unauthorized", true);
-
-            // add the order id to the array to send email
-            // to customer service
-            $this->_customerServiceEmailIds[] = $sapBatchOrder->getData('order_id');
+            $errorMsg = "Could not add to the sap batch for order - " . $sapBatchOrder->getData("order_id") . " - " . $e->getMessage();
+            $this->_logger->error($errorMsg);
         }
-
-        // save the data
-        $this->_sapOrderBatchResource->save($sapBatchOrder);
     }
 
     /**
@@ -427,7 +512,7 @@ class BatchCaptureHelper
     /**
      * Sends email to customer service for the orders
      */
-    private function sendCustomerServiceEmails()
+    private function sendEmails()
     {
         // if there is something to send then send the emails
         if (count($this->_customerServiceEmailIds) > 0)
@@ -435,8 +520,89 @@ class BatchCaptureHelper
             // add the items to the item interface
             $this->_itemInterface->setOrderIds($this->_customerServiceEmailIds);
 
-            // send the email
+            // send the email to customer service notifying of the failed capture
             $this->_orderManagementInterface->notifyEmailsServiceTeam($this->_itemInterface);
+        }
+    }
+
+    /**
+     * This function will update the sales_order_status_history.
+     * This table displays on the Order under the comments section.
+     *
+     * @param $orderId
+     */
+    private function addOrderHistory($orderId)
+    {
+        try
+        {
+            // get the date for today with time
+            $today = date('Y-m-d H:i:s');
+
+            // add the error to the history
+            /**
+             * @var \Magento\Sales\Model\Order\Status\History $orderHistory
+             */
+            $orderHistory = $this->_historyFactory->create();
+
+            // set the desired values
+            $orderHistory->setParentId($orderId);
+            $orderHistory->setComment('Capture has failed.');
+            $orderHistory->setStatus('processing');
+            $orderHistory->setCreatedAt($today);
+            $orderHistory->setEntityName('order');
+
+            // save the history for displaying on the order
+            $this->_historyResource->save($orderHistory);
+        }
+        catch (\Exception $e)
+        {
+            $errorMsg = "Could not add to the order history for order - " . $orderId . " - " . $e->getMessage();
+            $this->_logger->error($errorMsg);
+        }
+    }
+
+    /**
+     * Updates the order status for the desired order
+     *
+     * @param $orderId
+     * @param $orderStatus
+     */
+    public function updateStatus($orderId, $orderStatus)
+    {
+        try
+        {
+            /**
+             * @var \SMG\Sap\Model\SapOrder $sapOrder
+             */
+            $sapOrder = $this->_sapOrderResource->getSapOrderByOrderId($orderId);
+
+            // get the current order status
+            $previousOrderStatus = $sapOrder->getData('order_status');
+
+            // change the status because the capture failure
+            $sapOrder->setData('order_status', $orderStatus);
+
+            // update the sap order
+            $this->_sapOrderResource->save($sapOrder);
+
+            // create a new history
+            /**
+             * @var \SMG\Sap\Model\SapOrderHistory $sapOrderHistory
+             */
+            $sapOrderHistory = $this->_sapOrderHistoryFactory->create();
+            $sapOrderHistory->setData('order_sap_id', $sapOrder->getId());
+            $sapOrderHistory->setData('order_status', $orderStatus);
+
+            // create order status notes
+            $orderStatusNotes = 'Order Status was ' . $previousOrderStatus . ' now ' . $orderStatus . '. ';
+            $sapOrderHistory->setData('order_status_notes', $orderStatusNotes);
+
+            $this->_sapOrderHistoryResource->save($sapOrderHistory);
+        }
+        catch (\Exception $e)
+        {
+            $errorMsg = "Could not update the order status for order - " . $orderId . " - " . $e->getMessage();
+            $this->_logger->error($errorMsg);
         }
     }
 }

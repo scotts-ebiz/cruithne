@@ -110,34 +110,34 @@
 
             <!-- Button Customizations -->
             <parameter name="HeroCalloutButtonLabel" visible="true" xsi:type="block">
-                <label>CUSTOMIZE CTA</label>
+                <label>CUSTOMIZE Button</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
             <parameter name="buttontext" visible="true" xsi:type="text">
-                <label>CTA Text</label>
+                <label>Button Text</label>
             </parameter>
             <parameter name="HeroCalloutButtonTextSize" visible="true" xsi:type="select"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutButtonTextSize">
-                <label>CTA Text Size (rem)</label>
+                <label>Button Text Size (rem)</label>
             </parameter>
             <parameter name="HeroCalloutButtonTextStyle" visible="true" xsi:type="multiselect"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutButtonTextStyle">
-                <label>CTA Text Style</label>
+                <label>Button Text Style</label>
             </parameter>
             <parameter name="HeroCalloutButtonTextColor" visible="true" xsi:type="text">
-                <label>CTA Text Color (#xxxxxx)</label>
+                <label>Button Text Color (#xxxxxx)</label>
                 <value>#ffffff</value>
             </parameter>
             <parameter name="HeroCalloutButtonColor" visible="true" xsi:type="text">
-                <label>CTA Color (#xxxxxx)</label>
+                <label>Button Color (#xxxxxx)</label>
                 <value>#4d4d4e</value>
             </parameter>
             <parameter name="HeroCalloutButtonHoverColor" visible="true" xsi:type="text">
-                <label>CTA Color Hover (#xxxxxx)</label>
+                <label>Button Color Hover (#xxxxxx)</label>
                 <value>#4d4d4e</value>
             </parameter>
             <parameter name="buttonlink" visible="true" xsi:type="text">
-                <label>CTA Link (http://www.url.com)</label>
+                <label>Button Link (http://www.url.com)</label>
             </parameter>
 
         </parameters>
