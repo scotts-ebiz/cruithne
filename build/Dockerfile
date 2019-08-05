@@ -20,7 +20,7 @@ WORKDIR $MAGENTO_DIR
 
 RUN git fetch
 RUN git checkout app/etc/config.php
-RUN git pull -ff
+RUN git pull
 
 # Move this to primer
 RUN composer config repositories.amasty composer https://composer.amasty.com/enterprise/
