@@ -6,6 +6,20 @@ class LayoutProcessor
     \Magento\Checkout\Block\Checkout\LayoutProcessor $subject,
     array $result
     ) {
+
+		if(isset($result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
+			['shippingAddress']['children']['shipping-address-fieldset']['children']['street'])){
+
+			$result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
+			['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['0']['validation'] = ['required-entry' => false,'required-entry-street-0' => true];
+
+			$result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
+			['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['1']['validation'] = ['required-entry-street-1' => true];
+
+			$result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
+			['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['2']['validation'] = ['required-entry-street-2' => true];
+		}
+
         if (isset($result['components']['checkout']['children']['steps']['children']['billing-step']['children']
                 ['payment']['children']['payments-list']['children']
             )) {
@@ -13,6 +27,8 @@ class LayoutProcessor
                 foreach ($result['components']['checkout']['children']['steps']['children']['billing-step']['children']
                      ['payment']['children']['payments-list']['children'] as $key => $payment) {
 
+						 $subs = substr($key, 0, -4);
+						 $removeString = str_replace("-", "", $subs);
 						/* Firstname */
 						if (isset($payment['children']['form-fields']['children']['firstname'])) {
 							$result['components']['checkout']['children']['steps']['children']['billing-step']['children']
@@ -27,6 +43,25 @@ class LayoutProcessor
 							['lastname']['validation'] = ['required-entry' => false,'required-entry-blastname' => true];
 						}
 						
+						/* Street */
+						if (isset($payment['children']['form-fields']['children']['street'])) {
+							$result['components']['checkout']['children']['steps']['children']['billing-step']['children']
+							['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
+							['street']['children']['0']['validation'] = ['required-entry' => false,'required-entry-bstreet-0' => true];
+						}
+
+						if (isset($payment['children']['form-fields']['children']['street'])) {
+							$result['components']['checkout']['children']['steps']['children']['billing-step']['children']
+							['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
+							['street']['children']['1']['validation'] = ['required-entry-bstreet-1' => true];
+						}
+
+						if (isset($payment['children']['form-fields']['children']['street'])) {
+							$result['components']['checkout']['children']['steps']['children']['billing-step']['children']
+							['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
+							['street']['children']['2']['validation'] = ['required-entry-bstreet-2' => true];
+						}
+
 						/* Postcode */
 						if (isset($payment['children']['form-fields']['children']['postcode'])) {
 							$result['components']['checkout']['children']['steps']['children']['billing-step']['children']
