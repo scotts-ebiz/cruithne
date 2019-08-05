@@ -1,5 +1,5 @@
 <?php
-namespace SMG\StateFilter\Plugin\Directory\Model\ResourceModel\Region;
+namespace SMG\Directory\Plugin\Directory\Model\ResourceModel\Region;
 
 
 class StateFilter
