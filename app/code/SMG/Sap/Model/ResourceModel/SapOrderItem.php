@@ -14,6 +14,7 @@ use SMG\Sap\Model\SapOrderFactory;
 use SMG\Sap\Model\SapOrderStatusFactory;
 use SMG\Sap\Model\ResourceModel\SapOrder;
 use SMG\Sap\Model\ResourceModel\SapOrderStatus;
+use SMG\Sap\Model\ResourceModel\SapOrderShipment\CollectionFactory as SapOrderShipmentCollectionFactory;
 
 class SapOrderItem extends AbstractDb
 {
@@ -37,6 +38,11 @@ class SapOrderItem extends AbstractDb
      */
     protected $_sapOrderStatus;
 
+    /**
+     * @var SapOrderShipmentCollectionFactory
+     */
+    protected $_sapOrderShipmentCollectionFactory;
+
     protected function _construct()
     {
         $this->_init('sales_order_sap_item', 'entity_id');
@@ -47,6 +53,7 @@ class SapOrderItem extends AbstractDb
         SapOrder $sapOrder,
         SapOrderStatusFactory $sapOrderStatusFactory,
         SapOrderStatus $sapOrderStatus,
+        SapOrderShipmentCollectionFactory $sapOrderShipmentCollectionFactory,
         $connectionName = null)
     {
         parent::__construct($context, $connectionName);
@@ -55,6 +62,7 @@ class SapOrderItem extends AbstractDb
         $this->_sapOrder = $sapOrder;
         $this->_sapOrderStatusFactory = $sapOrderStatusFactory;
         $this->_sapOrderStatus = $sapOrderStatus;
+        $this->_sapOrderShipmentCollectionFactory = $sapOrderShipmentCollectionFactory;
     }
 
     public function getSapOrder($orderSapId)
@@ -81,5 +89,22 @@ class SapOrderItem extends AbstractDb
         $this->_sapOrderStatus->load($sapOrderStatus, $status);
 
         return $sapOrderStatus;
+    }
+
+    /**
+     * Get the collection of the sap order shipments
+     *
+     * @param $orderSapItemId
+     * @return SapOrderShipment\Collection
+     */
+    public function getSapOrderShipments($orderSapItemId)
+    {
+        /**
+         * @var \SMG\Sap\Model\ResourceModel\SapOrderShipment\Collection $sapOrderShipments
+         */
+        $sapOrderShipments = $this->_sapOrderShipmentCollectionFactory->create();
+        $sapOrderShipments->addFieldToFilter('order_sap_item_id', ['eq' => $orderSapItemId]);
+
+        return $sapOrderShipments;
     }
 }

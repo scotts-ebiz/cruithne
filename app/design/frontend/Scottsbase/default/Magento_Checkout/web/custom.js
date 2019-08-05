@@ -35,7 +35,7 @@ function($){
 				var nval = str.replace(/[&\/\\#,+$~%*?<>{}@!^]/g, '');
 				$(this).val(nval);
 			});
-			$(".street input:visible").keyup(function() {
+			$(".form-shipping-address .street input").keyup(function() {
 				var str = $(this).val();
 				var nval = str.replace(/  +/g, ' ');
 				$(this).val(nval);
