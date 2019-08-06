@@ -138,10 +138,10 @@ script:
 #  Move permissions to before script once unit tests are set.
 # Permissions
 - cd vendor/snowdog/frontools/ && yarn install && gulp clean && npm rebuild node-sass && gulp styles --ci
-- sudo chown -R www-data:www-data /var/www/
-- sudo chmod -R 666 /var/www/
-- sudo find /var/www/ -type f -exec chmod ug+rw {} \;
-- sudo find /var/www/ -type d -exec chmod ug+rwxs {} \;
+- sudo find /var/www/ | xargs chown -R www-data:www-data
+- sudo find /var/www/ | xargs chmod -R 666
+- sudo find /var/www/ -type f | xargs chmod ug+rw
+- sudo find /var/www/ -type d | xargs chmod ug+rwxs
 
 #deploy:
 #  provider: gae
