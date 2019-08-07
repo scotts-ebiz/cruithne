@@ -206,13 +206,10 @@ define([
 
 				if ($("input[name='postcode']").val() != '') {
 					if(value.length < 5){
-						//$('#shipping-method-buttons-container button').prop('disabled', true);
 						return false;
 					}
-					//$('#shipping-method-buttons-container button').prop('disabled', false);
 					return true;
 				} else {
-					//$('#shipping-method-buttons-container button').prop('disabled', true);
 					return !$.mage.isEmpty(value);
 				}
 			},
