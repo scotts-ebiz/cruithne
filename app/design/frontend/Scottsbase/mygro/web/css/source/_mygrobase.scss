@@ -3019,3 +3019,13 @@ div[name="shippingAddress.postcode"] {
 		}
 	}
 }
+@media screen and (max-width: $screen_768) {
+	.checkout-index-index{
+		.modal-custom{
+			.action-close{
+				background: none !important;
+				padding: 0 !important;
+			}
+		}
+	}
+}
