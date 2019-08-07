@@ -323,7 +323,7 @@ body {
             border-radius: 4px;
             color: $white;
             font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
-            font-size: 16px;
+            font-size: 15px;
             text-align: center;
             display: inline-block;
             line-height: 0px;
@@ -344,7 +344,7 @@ body {
             border-radius: 4px;
             color: $white;
             font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
-            font-size: 16px;
+            font-size: 15px;
             line-height: 0;
             transition: background 0.2s linear;
             letter-spacing: 0.5px;
@@ -641,15 +641,13 @@ width: 48%;
                             position: relative;	
                             width: 100%;	
                             padding-top: 0;	
-                            button {	
-                                display: inline-block;	
+                            button {
                                 position: relative;	
-                                width: 100%;	
-
+                                width: 100%;
                                 max-width: inherit;	
                                 padding: 35px 0;	
-                                height: inherit;	
-                                line-height: 0;	
+                                height: inherit;
+                                line-height: 0;
                                 @media only screen and (max-width: $screen_768){	
                                     padding: 30px 0;	
                                 }	
@@ -812,18 +810,12 @@ width: 48%;
 							}
 							div.upd-cust-btn{
 								.action.checkout{
-									padding: 20px 0;
-									color: white;
+									padding: 25px 45px;
 									text-transform: uppercase;
-									font-weight: 500;
-									border: none;
-									font-size: 0.875rem;
-									line-height: 1;
+									font-size: 16px;
+									line-height: 0px;
 									font-family: Lato, Arial, sans-serif;
-									border-radius: 3px;
-									width: 100%;
-									background: #075534;
-									text-align:center;
+									width: inherit;
 								}
 							}
                         }
@@ -1078,22 +1070,10 @@ width: 48%;
 		width: 27.25%;
 		padding: 0px 30px 0px;
 		.action.primary.checkout{
-			background-color: $color_green_shade;
-			padding: 20px 0;   
-			color: white;
 			text-transform: uppercase;
-			font-weight: 500;
-			border: none;
-			font-size: 0.875rem;
-			line-height: 1;
 			font-family: Lato, Arial, sans-serif;
-			border-radius: 3px;
 			width:100%;
-			opacity:1 !important;
-			text-align:center;
-			&:hover{
-				background-color: $color_green_shade;
-			}
+            padding: 25px 0;
 		}
 	}
 	#maincontent{
@@ -2229,7 +2209,8 @@ width: 48%;
 @media screen and (max-width: $screen_768) {
 	.checkout-cart-index{
 		.custom-checkout-btn-wrap{
-			width: 45%;
+			//width: 45%;
+            display: none;
 		}
 		#shopping-cart-table td,
 		#theme__responsive .cart-table td{
