@@ -7,7 +7,7 @@ define([
 'use strict';
 
 	return function (validator) {
- 
+
 		validator.addRule(
 			'required-entry-firstname',
 			function (value) {
@@ -20,7 +20,7 @@ define([
 					}else{
 						return false;
 					}
-					
+
 				} else {
 					return !$.mage.isEmpty(value);
 				}
@@ -41,7 +41,7 @@ define([
 					}else{
 						return false;
 					}
-					
+
 				} else {
 					return !$.mage.isEmpty(value);
 				}
@@ -203,16 +203,16 @@ define([
 		validator.addRule(
 			'required-entry-pcode',
 			function (value) {
-				
+
 				if ($("input[name='postcode']").val() != '') {
 					if(value.length < 5){
-						$('#shipping-method-buttons-container button').prop('disabled', true);
+						//$('#shipping-method-buttons-container button').prop('disabled', true);
 						return false;
 					}
-					$('#shipping-method-buttons-container button').prop('disabled', false);
+					//$('#shipping-method-buttons-container button').prop('disabled', false);
 					return true;
 				} else {
-					$('#shipping-method-buttons-container button').prop('disabled', true);
+					//$('#shipping-method-buttons-container button').prop('disabled', true);
 					return !$.mage.isEmpty(value);
 				}
 			},
@@ -227,7 +227,7 @@ define([
 						return false;
 					}
 					return true;
-				} 
+				}
 			},
 			$.mage.__('Please enter a valid zip code.')
 		);
@@ -248,9 +248,9 @@ define([
 					}else {
 						return false;
 					}
-					
 
-				} else { 
+
+				} else {
 					return !$.mage.isEmpty(value);
 				}
 			},
@@ -274,7 +274,7 @@ define([
 					}else {
 						return false;
 					}
-					
+
 
 				} else {
 					return !$.mage.isEmpty(value);
@@ -282,7 +282,7 @@ define([
 			},
 			$.mage.__('Please enter a valid phone number.')
 		);
-		
+
 		return validator;
 	};
 });
