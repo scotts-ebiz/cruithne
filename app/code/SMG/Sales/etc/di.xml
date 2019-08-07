@@ -1,4 +1,12 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <preference for="Magento\Sales\Block\Adminhtml\Order\Creditmemo\Create\Items" type="SMG\Sales\Block\Adminhtml\Order\Creditmemo\Create\Items" />
     <preference for="Magento\Sales\Block\Adminhtml\Order\View\Info" type="SMG\Sales\Block\Adminhtml\Order\View\Info" />
+
+    <type name="Magento\Sales\Model\Order\Creditmemo">
+        <plugin name="smg_plugin_order_creditmemo" type="SMG\Sales\Plugin\Model\Order\Creditmemo" />
+    </type>
+    <type name="Magento\Sales\Model\Order\Payment">
+        <plugin name="smg_plugin_order_payment" type="SMG\Sales\Plugin\Model\Order\Payment" />
+    </type>
 </config>
