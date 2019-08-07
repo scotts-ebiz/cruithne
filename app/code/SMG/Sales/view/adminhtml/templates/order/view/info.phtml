@@ -277,7 +277,7 @@ $customerUrl = $block->getCustomerViewUrl();
                                     foreach ($trackingNumbers as $trackingNumber)
                                     {
                                         ?>
-                                        <li><?php echo $block->escapeHtml(__($trackingNumber)); ?></li>
+                                        <li><a href="<?php echo "https://www.fedex.com/apps/fedextrack/index.html?trackingnumber=" . $block->escapeHtml(__($trackingNumber)); ?>" target="_Blank"><?php echo $block->escapeHtml($trackingNumber); ?></a></li>
                                         <?php
                                     }
                                 }
