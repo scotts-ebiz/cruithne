@@ -18,7 +18,8 @@
             <parameter name="bannerheadline" visible="true" xsi:type="text" required="true">
                 <label>Headline Text</label>
             </parameter>
-            <parameter name="HeroCalloutBannerHeadlineSize" visible="true" xsi:type="select"
+            <!-- Hiding this at this time and not using -->
+            <parameter name="HeroCalloutBannerHeadlineSize" visible="false" xsi:type="select"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerHeadlineSize">
                 <label>Headline Size (rem)</label>
             </parameter>

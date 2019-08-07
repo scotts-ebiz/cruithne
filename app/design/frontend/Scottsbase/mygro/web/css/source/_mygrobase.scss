@@ -6,9 +6,22 @@ body {
     h2 {
         font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
         font-size: 2.5rem;
+        letter-spacing: 0.5px;
         @media only screen and (max-width: $screen__l) {
         font-size: 2.1rem;
         }
+    }
+    h3 {
+        font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
+        font-size: 1.8rem;
+        letter-spacing: 0.5px;
+        @media only screen and (max-width: $screen__l) {
+            font-size: 1.5rem;
+        }
+    }
+    p {
+      @include font-hellix-regular();
+      font-size: 1.0rem;
     }
 }
 [class^="icon-"],
@@ -509,12 +522,9 @@ width: 48%;
                     h2.grouped-product-header {	
                         color: #000000;	
                         margin-top: 1.0rem;	
-                        margin-bottom: 1.0rem;	
-                        font-size: 2.5rem;	
-                        letter-spacing: 0.5px;	
+                        margin-bottom: 1.0rem;
                         @media only screen and (max-width: $screen_768){	
-                            text-align: center;	
-                            font-size: 2.0rem;	
+                            text-align: center;
                         }	
                     }	
                     p {	
@@ -2763,6 +2773,7 @@ button.action{
 .page-title-wrapper{
     h1.page-title{
         font-size: 1em;
+        display: none;
     }
 }
 
