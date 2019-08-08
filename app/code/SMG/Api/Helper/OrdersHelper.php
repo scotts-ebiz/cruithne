@@ -399,9 +399,6 @@ class OrdersHelper
         $shippingCondition = $this->_shippingConditionCodeFactory->create();
         $this->_shippingConditionCodeResource->load($shippingCondition, $order->getShippingMethod(), 'shipping_method');
 
-        // get the shipping address
-        $address = $order->getShippingAddress();
-
         // check to see if there was a value
         $invoiceAmount = $order->getData('total_invoiced');
         if (empty($invoiceAmount))
@@ -417,23 +414,22 @@ class OrdersHelper
         $hdrDiscPerc = '';
         $hdrDiscCondCode = '';
 
-        // get the customer name
-        $customerName = '';
-        $customerFirstName = $order->getData('customer_firstname');
-        $customerLastName = $order->getData('customer_lastname');
-        if (!empty($customerFirstName) && !empty($customerLastName))
+        // get the shipping address
+        /**
+         * @var \Magento\Sales\Model\Order\Address $shippingAddress
+         */
+        $shippingAddress = $order->getShippingAddress();
+        $customerFirstName = $shippingAddress->getFirstname();
+        $customerLastName = $shippingAddress->getLastname();
+        if (empty($customerFirstName) && empty($customerLastName))
         {
-            $customerName = $order->getData('customer_firstname') . ' ' . $order->getData('customer_lastname');
+            $customerFirstName = $order->getData('customer_firstname');
+            $customerLastName = $order->getData('customer_lastname');
         }
-        else
-        {
-            /**
-             * @var \Magento\Sales\Model\Order\Address $shippingAddress
-             */
-            $shippingAddress = $order->getShippingAddress();
 
-            $customerName = $shippingAddress->getFirstname() . ' ' . $shippingAddress->getLastname();
-        }
+        // get the customer name
+        // SAP requires the shipping name not the customer/billing name
+        $customerName = $customerFirstName . ' ' . $customerLastName;
 
         if(!empty($order->getData('coupon_code'))){
             $orderDiscount = $this->_discountHelper->DiscountCode($order->getData('coupon_code'));
@@ -552,10 +548,10 @@ class OrdersHelper
             self::DATE_PLACED => $order->getData('created_at'),
             self::SAP_DELIVERY_DATE => $tomorrow,
             self::CUSTOMER_NAME => $customerName,
-            self::ADDRESS_STREET => $address->getStreetLine(1),
-            self::ADDRESS_CITY => $address->getCity(),
-            self::ADDRESS_STATE => $address->getRegion(),
-            self::ADDRESS_ZIP => $address->getPostcode(),
+            self::ADDRESS_STREET => $shippingAddress->getStreetLine(1),
+            self::ADDRESS_CITY => $shippingAddress->getCity(),
+            self::ADDRESS_STATE => $shippingAddress->getRegion(),
+            self::ADDRESS_ZIP => $shippingAddress->getPostcode(),
             self::SMG_SKU => $orderItem->getSku(),
             self::WEB_SKU => $orderItem->getSku(),
             self::QUANTITY => $quantity,
@@ -577,7 +573,7 @@ class OrdersHelper
             self::INVOICE_AMOUNT => $invoiceAmount,
             self::DELIVERY_LOCATION => '',
             self::EMAIL => $order->getData('customer_email'),
-            self::PHONE => $address->getTelephone(),
+            self::PHONE => $shippingAddress->getTelephone(),
             self::DELIVERY_WINDOW => '',
             self::SHIPPING_CONDITION => $shippingCondition->getData('sap_shipping_method'),
             self::WEBSITE_URL => $urlParts['host'],
