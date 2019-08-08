@@ -1,7 +1,7 @@
 require([
-	'jquery', 
-    'jquery/ui', 
-    'jquery/validate', 
+	'jquery',
+    'jquery/ui',
+    'jquery/validate',
     'mage/translate'
 	],
 function($){
@@ -9,14 +9,14 @@ function($){
 	$(function() {
 
 		setTimeout(function(){
-			
+
 			$(".street > .control").append("<a class='cust-btn-add' href='javascript:void(0)'>Add New Line</a>");
-			
+
 			$("input[name='postcode']").attr('pattern', '[0-9]*');
 			$("input[name='postcode']").attr('inputmode', 'numeric');
 			$("input[name='telephone']").attr('pattern', '[0-9]*');
 			$("input[name='telephone']").attr('inputmode', 'numeric');
-		
+
 			var count = 0;
 			$('.cust-btn-add').on("click", function(){
 				count += 1;
@@ -26,7 +26,7 @@ function($){
 					$("div[name='shippingAddress.street.2']").css('display','block');
 					$('.cust-btn-add').css({"pointer-events": "none", "color": "#c2c2c2"});
 				}
-				else{ 
+				else{
 					$('.cust-btn-add').css({"pointer-events": "none", "color": "#c2c2c2"});
 				}
 			});
@@ -35,16 +35,23 @@ function($){
 				var nval = str.replace(/[&\/\\#,+$~%*?<>{}@!^]/g, '');
 				$(this).val(nval);
 			});
-			$(".street input:visible").keyup(function() {
+			$(".form-shipping-address .street input").keyup(function() {
 				var str = $(this).val();
 				var nval = str.replace(/  +/g, ' ');
 				$(this).val(nval);
 			});
-			if ($("input[name='postcode']").val() != '') {
-				if($("input[name='postcode']").val() >= 5){
+
+			if ($("input[name='username']").val() != '' && $("select[name='region_id']").val() != '' && $("input[name='firstname']").val() != '' && $("input[name='lastname']").val() != '' && $("input[name='street[0]']").val() != '' && $("input[name='city']").val() != '' && $("input[name='postcode']").val() != '' && $("input[name='telephone']").val() != '') {
+					$("select[name='region_id']").click();
+					$('#shipping-method-buttons-container button').prop('disabled', false);
+			}
+
+			$(".checkout-shipping-address input:visible, select[name='region_id']").on('keyup change', function(e) {
+				$('#shipping-method-buttons-container button').prop('disabled', true);
+				if ($("input[name='username']").val() != '' && $("select[name='region_id']").val() != '' && $("input[name='firstname']").val() != '' && $("input[name='lastname']").val() != '' && $("input[name='street[0]']").val() != '' && $("input[name='city']").val() != '' && $("input[name='postcode']").val() != '' && $("input[name='telephone']").val() != '') {
 					$('#shipping-method-buttons-container button').prop('disabled', false);
 				}
-			}
+			});
 			$("#shipping-new-address-form input[name='telephone']").keyup(function() {
 				var str = $(this).val();
 				var nval = str.replace(/^(\d{3})(\d{3})(\d)+$/, "$1-$2-$3")
@@ -60,29 +67,22 @@ function($){
 
 
 		}, 7000);
-		setTimeout(function(){
-			if ($("input[name='postcode']").val() != '') {
-				if($("input[name='postcode']").val() >= 5){
-					$('#shipping-method-buttons-container button').prop('disabled', false);
-				}
-			}
-		}, 12000);
 	});
 	/*------- Sticky Header --------*/
 	$(window).scroll(function(){
 		var sticky = $('.custom-checkout-btn-wrap');
-		
+
 		if(typeof  sticky != "undefined" && sticky){
-			
+
 			if ($(window).scrollTop() >= 200) {
 				$('.custom-checkout-btn-wrap').addClass('stickyCart');
 				$('.custom-checkout-btn-wrap').removeClass('slide-up');
 			}
-			else { 
+			else {
 				$('.custom-checkout-btn-wrap').removeClass('stickyCart');
 				$('.custom-checkout-btn-wrap').addClass('slide-up');
 			}
-			
+
 		}
 	});
 

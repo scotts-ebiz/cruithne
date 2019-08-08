@@ -7,7 +7,7 @@ define([
 'use strict';
 
 	return function (validator) {
- 
+
 		validator.addRule(
 			'required-entry-firstname',
 			function (value) {
@@ -15,12 +15,12 @@ define([
 					if (!isNaN(value)) {
 						return false;
 					}
-					if( value.match( /^[a-zA-Z\. ]*$/) ) {
+					if( value.match( /^[a-zA-Z\.\- ]*$/) ) {
 						 return true
 					}else{
 						return false;
 					}
-					
+
 				} else {
 					return !$.mage.isEmpty(value);
 				}
@@ -36,12 +36,12 @@ define([
 					if (!isNaN(value)) {
 						return false;
 					}
-					if( value.match( /^[a-zA-Z\. ]*$/) ) {
+					if( value.match( /^[a-zA-Z\.\- ]*$/) ) {
 						 return true
 					}else{
 						return false;
 					}
-					
+
 				} else {
 					return !$.mage.isEmpty(value);
 				}
@@ -103,19 +103,113 @@ define([
 			},
 			$.mage.__('Please enter a valid city')
 		);
+
+		/* Start shipping and billing street address validation */
+		validator.addRule(
+			'required-entry-street-0',
+			function (value) {
+				if ($("input[name='street[0]']").val() != '') {
+					if (!isNaN(value)) {
+						return false;
+					}
+					if(/^([a-zA-Z0-9()":;'-]+ )+[A-Za-z0-9()":;'-]+$|^[A-Za-z0-9()":;'-]*$/.test(value)){
+						return true
+					} else {
+						return false;
+					}
+
+				} else {
+					return !$.mage.isEmpty(value);
+				}
+			},
+			$.mage.__('Please Enter Valid Street.')
+		);
+
+		validator.addRule(
+			'required-entry-street-1',
+			function (value) {
+
+					if(/^([a-zA-Z0-9()":;'-]+ )+[A-Za-z0-9()":;'-]+$|^[A-Za-z0-9()":;'-]*$/.test(value)){
+						return true
+					} else {
+						return false;
+					}
+			},
+			$.mage.__('Please Enter Valid Street.')
+		);
+
+		validator.addRule(
+			'required-entry-street-2',
+			function (value) {
+
+					if(/^([a-zA-Z0-9()":;'-]+ )+[A-Za-z0-9()":;'-]+$|^[A-Za-z0-9()":;'-]*$/.test(value)){
+						return true
+					} else {
+						return false;
+					}
+			},
+			$.mage.__('Please Enter Valid Street.')
+		);
+
+		validator.addRule(
+			'required-entry-bstreet-0',
+			function (value) {
+				var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.street.0';
+				if ($("div[name='"+inpt+"'] input[name='street[0]']").val() != '') {
+					if (!isNaN(value)) {
+						return false;
+					}
+					if(/^([a-zA-Z0-9()":;'-]+ )+[A-Za-z0-9()":;'-]+$|^[A-Za-z0-9()":;'-]*$/.test(value)){
+						return true
+					} else {
+						return false;
+					}
+
+				} else {
+					return !$.mage.isEmpty(value);
+				}
+			},
+			$.mage.__('Please Enter Valid Street.')
+		);
+
+		validator.addRule(
+			'required-entry-bstreet-1',
+			function (value) {
+
+					if(/^([a-zA-Z0-9()":;'-]+ )+[A-Za-z0-9()":;'-]+$|^[A-Za-z0-9()":;'-]*$/.test(value)){
+						return true
+					} else {
+						return false;
+					}
+			},
+			$.mage.__('Please Enter Valid Street.')
+		);
+
+		validator.addRule(
+			'required-entry-bstreet-2',
+			function (value) {
+
+					if(/^([a-zA-Z0-9()":;'-]+ )+[A-Za-z0-9()":;'-]+$|^[A-Za-z0-9()":;'-]*$/.test(value)){
+						return true
+					} else {
+						return false;
+					}
+			},
+			$.mage.__('Please Enter Valid Street.')
+		);
+
+		/* End street address validation */
+
 		validator.addRule(
 			'required-entry-pcode',
 			function (value) {
-				
+
 				if ($("input[name='postcode']").val() != '') {
 					if(value.length < 5){
-						$('#shipping-method-buttons-container button').prop('disabled', true);
 						return false;
 					}
-					$('#shipping-method-buttons-container button').prop('disabled', false);
 					return true;
 				} else {
-					$('#shipping-method-buttons-container button').prop('disabled', true);
 					return !$.mage.isEmpty(value);
 				}
 			},
@@ -130,7 +224,7 @@ define([
 						return false;
 					}
 					return true;
-				} 
+				}
 			},
 			$.mage.__('Please enter a valid zip code.')
 		);
@@ -151,9 +245,9 @@ define([
 					}else {
 						return false;
 					}
-					
 
-				} else { 
+
+				} else {
 					return !$.mage.isEmpty(value);
 				}
 			},
@@ -177,7 +271,7 @@ define([
 					}else {
 						return false;
 					}
-					
+
 
 				} else {
 					return !$.mage.isEmpty(value);
@@ -185,7 +279,7 @@ define([
 			},
 			$.mage.__('Please enter a valid phone number.')
 		);
-		
+
 		return validator;
 	};
 });

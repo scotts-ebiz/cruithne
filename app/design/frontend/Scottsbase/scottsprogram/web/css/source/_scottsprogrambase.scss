@@ -2119,6 +2119,28 @@
 			}
 		}
 	}
+
+	.checkout-index-index{
+		.page-wrapper{
+			.page-main{
+				.columns{
+					.column.main{
+						.checkout-container{
+							.opc-sidebar.custom-slide{
+								z-index: 99999 !important;
+							}
+						}
+					}
+				}
+			}
+		}
+		.modal-custom{
+			.action-close:before{
+				 position: absolute;
+				 right: 0;
+			}
+		}
+	}
 }
 @media screen and (max-width: $screen_568) {
 	.checkout-cart-index {
