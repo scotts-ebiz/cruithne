@@ -60,8 +60,8 @@ EXPOSE 80/tcp 443/tcp
 
 USER root
 
-RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -exec chown magento:www-data {} \;
-RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -exec chmod 777 {} \;
+RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated | xargs chown magento:www-data
+RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated | xargs chmod 777
 
 # Run entrypoint file
 COPY ondemand-entrypoint.sh /usr/local/bin/entrypoint.sh
