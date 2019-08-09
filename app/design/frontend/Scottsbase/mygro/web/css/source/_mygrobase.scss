@@ -323,7 +323,7 @@ body {
             border-radius: 4px;
             color: $white;
             font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
-            font-size: 16px;
+            font-size: 15px;
             text-align: center;
             display: inline-block;
             line-height: 0px;
@@ -344,7 +344,7 @@ body {
             border-radius: 4px;
             color: $white;
             font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
-            font-size: 16px;
+            font-size: 15px;
             line-height: 0;
             transition: background 0.2s linear;
             letter-spacing: 0.5px;
@@ -641,15 +641,13 @@ width: 48%;
                             position: relative;	
                             width: 100%;	
                             padding-top: 0;	
-                            button {	
-                                display: inline-block;	
+                            button {
                                 position: relative;	
-                                width: 100%;	
-
+                                width: 100%;
                                 max-width: inherit;	
                                 padding: 35px 0;	
-                                height: inherit;	
-                                line-height: 0;	
+                                height: inherit;
+                                line-height: 0;
                                 @media only screen and (max-width: $screen_768){	
                                     padding: 30px 0;	
                                 }	
@@ -812,18 +810,12 @@ width: 48%;
 							}
 							div.upd-cust-btn{
 								.action.checkout{
-									padding: 20px 0;
-									color: white;
+									padding: 25px 0;
 									text-transform: uppercase;
-									font-weight: 500;
-									border: none;
-									font-size: 0.875rem;
-									line-height: 1;
+									font-size: 15px;
+									line-height: 0px;
 									font-family: Lato, Arial, sans-serif;
-									border-radius: 3px;
 									width: 100%;
-									background: #075534;
-									text-align:center;
 								}
 							}
                         }
@@ -1017,6 +1009,9 @@ width: 48%;
 				}
 				.cart-summary{
 					width: 30%;
+                    @media screen and (max-width: $screen__l) {
+                    width: 35%;
+                    }
 					 .block > .title{
 						padding: 7px 20px 5px 17px !important;
 					}
@@ -1077,23 +1072,14 @@ width: 48%;
 		right: 0;
 		width: 27.25%;
 		padding: 0px 30px 0px;
+        @media screen and (max-width: $screen__l) {
+            width: 32%;
+        }
 		.action.primary.checkout{
-			background-color: $color_green_shade;
-			padding: 20px 0;   
-			color: white;
 			text-transform: uppercase;
-			font-weight: 500;
-			border: none;
-			font-size: 0.875rem;
-			line-height: 1;
 			font-family: Lato, Arial, sans-serif;
-			border-radius: 3px;
 			width:100%;
-			opacity:1 !important;
-			text-align:center;
-			&:hover{
-				background-color: $color_green_shade;
-			}
+            padding: 25px 0;
 		}
 	}
 	#maincontent{
@@ -1140,18 +1126,12 @@ width: 48%;
 		#discount-coupon-form{
 			.action.apply.primary{
 				height:30px;
-				background: none;
-				border: 0;
-				display: inline-block;
 				font-size: $font14;
-				color: $color_green_shade !important;
-				font-weight: 700 !important;
-				background-color: unset !important;
-				padding: 0 !important;
-				text-align: center;
+                font-family: Lato, Arial, sans-serif;
+                //text-transform: uppercase;
 				padding: 5px 10px 5px 10px !important;
-				background: #075534 !important;
-				color: #fff !important;
+                background: #4d4d4e;
+                line-height: 0;
 				margin-left: 20px;
                 @include max-screen($screen__s){
                     margin-left:0px;
@@ -1287,7 +1267,17 @@ width: 48%;
                         .opc-estimated-wrapper {
                             .minicart-wrapper {
                                 .action.showcart {
+                                    @include max-screen($screen__l) {
+                                        background: #fff;
+                                        &:hover {
+                                            background: #fff;
+                                        }
+                                    }
                                     .counter.qty {
+                                        @include max-screen($screen__l) {
+                                            background: #fff;
+                                            color: #4d4d4e;
+                                        }
                                         background: $mygro-green;
                                     }
                                 }
@@ -1333,9 +1323,13 @@ width: 48%;
                                                 .actions-toolbar {
                                                     .primary {
                                                         .action.primary {
-                                                            @include font-hellix-heavy(1.2rem, $white, 400);
-                                                            line-height: 0;
-                                                            padding: 1rem 2rem;
+                                                            //@include font-hellix-heavy(1.2rem, $white, 400);
+                                                            //line-height: 0;
+                                                            font-family: Lato, Arial, sans-serif;
+                                                            text-transform: uppercase;
+                                                            font-size: 15px;
+                                                            padding: 25px 45px;
+                                                            background: $mygro-green;
                                                         }
                                                     }
                                                 }
@@ -1350,6 +1344,7 @@ width: 48%;
 										margin-top: 15px;
 										font-size: $font15;
 										padding: 0px 40px;
+                                        line-height: 0;
 										@include transition(all 0.2s ease);
 										&:hover{
 											background:$color_black15_shade;	
@@ -1376,16 +1371,20 @@ width: 48%;
                                                                     .actions-toolbar {
                                                                         .primary {
                                                                             .action.primary.checkout {
-                                                                                @include font-hellix-regular(1.4rem, $white);
+                                                                                //@include font-hellix-regular(1.4rem, $white);
                                                                                 -webkit-transition: background 0.2s;
                                                                                 -moz-transition: background 0.2s;
                                                                                 -ms-transition: background 0.2s;
                                                                                 -o-transition: background 0.2s;
                                                                                 transition: background 0.2s;
+                                                                                font-family: Lato, Arial, sans-serif;
+                                                                                font-size: 15px;
+                                                                                text-transform: uppercase;
                                                                                 background: $mygro-green;
+                                                                                padding: 25px 45px;
+                                                                                line-height: 0;
                                                                                 border: none;
 																				display: inline-block;
-																				font-size: $font20;
 																				height: auto;
                                                                                 &:hover {
                                                                                     -webkit-transition: background 0.2s;
@@ -1492,6 +1491,12 @@ width: 48%;
                         .opc-sidebar.custom-slide {
                             left: 0;
                             .modal-inner-wrap {
+                                .modal-header {
+                                    button.action-close {
+                                        background: #f4f4f4;
+
+                                    }
+                                }
                                 .modal-content {
                                     #opc-sidebar {
                                         .opc-block-summary {
@@ -1978,22 +1983,19 @@ width: 48%;
 		 }
 		
 	}
-	#payment #checkout-step-payment {
+	// Apply Discount - Button on Payment Page
+    #payment #checkout-step-payment {
 		.payment-option .payment-option-content {
 			#discount-form .primary .action.action-apply {
-				background: none;
 				border: 0;
 				display: inline-block;
 				font-size: 14px;
-				color: #075534 !important;
-				font-weight: 700 !important;
-				background-color: unset !important;
-				padding: 0 !important;
-				text-align: center;
-				
-				padding: 10px !important;
-				background: $mygro-dark-gray !important;
+                font-family: Lato, Arial, sans-serif;
+                padding: 5px 10px 5px 10px !important;
+				background: #4d4d4e !important;
 				color: #fff !important;
+                line-height: 0;
+                height: 30px;
 			}
 			#discount-form {
 				.actions-toolbar {
@@ -2229,7 +2231,8 @@ width: 48%;
 @media screen and (max-width: $screen_768) {
 	.checkout-cart-index{
 		.custom-checkout-btn-wrap{
-			width: 45%;
+			//width: 45%;
+            display: none;
 		}
 		#shopping-cart-table td,
 		#theme__responsive .cart-table td{
@@ -2957,7 +2960,8 @@ button.action{
 	.payment-method-content{
 		.actions-toolbar{
 			@include max-screen($screen__s){
-				width:50%;
+			  //Following other standards where going full width
+              //width:50%;
 			}
 			.primary{
 				.action.primary.checkout{
