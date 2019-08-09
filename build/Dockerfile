@@ -22,11 +22,6 @@ RUN git fetch
 RUN git checkout app/etc/config.php
 RUN git pull
 
-# Move this to primer
-RUN composer config repositories.amasty composer https://composer.amasty.com/enterprise/
-
-RUN composer install
-
 RUN sed -i "s/save.*/save' => 'redis',/" app/etc/env.php
 
 RUN date
