@@ -2773,7 +2773,8 @@ button.action{
 				tr{
 					td:first-child{
 						@media (max-width: 639px){
-							width:85%;
+						  //Commented out width for PDP styling / Still needed?
+                          //width:85%;
 						}
 					}
 					td.qty:last-child{
