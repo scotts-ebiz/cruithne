@@ -652,17 +652,25 @@ width: 48%;
                                     @media only screen and (max-width: $screen__l){
                                       width: 55%;
                                     }
+                                    @media only screen and (max-width: $screen__xs){
+                                      width: 100%;
+                                    }
                                 }	
                                 td.product-qty-td {	
                                     width: 30%;	
                                     text-align: right;
                                     float: right;
-                                    padding: 0;	
+                                    padding: 0;
+                                    margin: 0;
                                     &:before{	
                                         content: none;	
                                     }
                                     @media only screen and (max-width: $screen__l){
                                         width: 40%;
+                                    }
+                                    @media only screen and (max-width: $screen__xs){
+                                        width: 100%;
+                                        text-align: left;
                                     }
                                 }	
                             }
@@ -2773,13 +2781,14 @@ button.action{
 				tr{
 					td:first-child{
 						@media (max-width: 639px){
-						  //Commented out width for PDP styling / Still needed?
+						  //2019-08-10 Commented out for PDP styling / Break anything?
                           //width:85%;
 						}
 					}
 					td.qty:last-child{
 						@media (max-width: 639px){
-							margin-top:10px;
+							//2019-08-10 - Commented out for PDP styling / Break anything?
+                            //margin-top:10px;
 						}
 					}
 				}
