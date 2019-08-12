@@ -300,6 +300,7 @@ return [
         'SMG_Sales' => 1,
         'SMG_OrderDiscount' => 1,
         'SMG_ShipTracking' => 1,
+        'SMG_Shipping' => 1,
         'SMG_ShippingRestrict' => 1,
         'SMG_SpecsList' => 1,
         'Vantiv_Payment' => 1,

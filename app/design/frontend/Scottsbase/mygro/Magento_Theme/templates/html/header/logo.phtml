@@ -11,7 +11,10 @@
  */
 ?>
 <?php $storeName = $block->getThemeName() ? $block->getThemeName() : $block->getLogoAlt();?>
-
+<span data-action="toggle-nav" class="action nav-toggle"><span><?= /* @escapeNotVerified */ __('Toggle Nav') ?></span></span>
+<?php if ($block->isHomePage()):?>
+    <strong class="logo">
+<?php endif ?>
     <a class="logo" href="<?= $block->getUrl('') ?>" title="<?= /* @escapeNotVerified */ $storeName ?>">
         <img src="<?= /* @escapeNotVerified */ $block->getLogoSrc() ?>"
              title="<?= /* @escapeNotVerified */ $block->getLogoAlt() ?>"
@@ -19,4 +22,7 @@
              <?= $block->getLogoWidth() ? 'width="' . $block->getLogoWidth() . '"' : '' ?>
              <?= $block->getLogoHeight() ? 'height="' . $block->getLogoHeight() . '"' : '' ?>
         />
+<?php if ($block->isHomePage()):?>
+    </strong>
+<?php endif?>
     </a>
