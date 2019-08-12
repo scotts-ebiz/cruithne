@@ -582,7 +582,41 @@ width: 48%;
                             }	
 
                             tr.grouped-row.active {	
-                                display: table-row;	
+                                display: table-row;
+                                td.product-qty-td {
+                                    .qtyminus {
+                                        width: 32px;
+                                        height: 32px;
+                                        padding: 0px;
+                                        margin: 0px;
+                                        border: 0px;
+                                        font-size: 20px;
+                                        &:focus {
+                                            box-shadow: 0 0;
+                                            font-size: 22px;
+                                            color: $mygro-green;
+                                        }
+                                    }
+                                    .input-text {
+                                        width: 32px;
+                                        height: 32px;
+                                        padding: 0;
+                                        margin: 0;
+                                    }
+                                    .qtyplus {
+                                        width: 32px;
+                                        height: 32px;
+                                        font-size: 16px;
+                                        padding: 0;
+                                        margin: 0;
+                                        border: 0;
+                                        &:focus {
+                                            box-shadow: 0 0;
+                                            font-size: 18px;
+                                            color: $mygro-green;
+                                        }
+                                    }
+                                }
                             }	
                             tr.grouped-row {	
                                 display: none;	
@@ -614,20 +648,32 @@ width: 48%;
                                     padding: 0;	
                                     &:before{	
                                         content: none;	
-                                    }	
+                                    }
+                                    @media only screen and (max-width: $screen__l){
+                                      width: 55%;
+                                    }
+                                    @media only screen and (max-width: $screen__xs){
+                                      width: 100%;
+                                    }
                                 }	
                                 td.product-qty-td {	
                                     width: 30%;	
-                                    text-align: right;	
-                                    padding: 0;	
+                                    text-align: right;
+                                    float: right;
+                                    padding: 0;
+                                    margin: 0;
                                     &:before{	
                                         content: none;	
-                                    }	
+                                    }
+                                    @media only screen and (max-width: $screen__l){
+                                        width: 40%;
+                                    }
+                                    @media only screen and (max-width: $screen__xs){
+                                        width: 100%;
+                                        text-align: left;
+                                    }
                                 }	
-                            }	
-                            tr.grouped-row.active {	
-                                display: table-row;	
-                            }	
+                            }
                         }	
                     }	
                 }	
@@ -2735,12 +2781,14 @@ button.action{
 				tr{
 					td:first-child{
 						@media (max-width: 639px){
-							width:85%;
+						  //2019-08-10 Commented out for PDP styling / Break anything?
+                          //width:85%;
 						}
 					}
 					td.qty:last-child{
 						@media (max-width: 639px){
-							margin-top:10px;
+							//2019-08-10 - Commented out for PDP styling / Break anything?
+                            //margin-top:10px;
 						}
 					}
 				}
