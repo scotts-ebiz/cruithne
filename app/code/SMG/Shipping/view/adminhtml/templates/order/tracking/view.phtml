@@ -55,7 +55,7 @@
                 <td class="col-number">
                     <?php if ($_track->isCustom()): ?>
                     <?= $block->escapeHtml($_track->getNumber()) ?>
-                    <?php elseif ($_track->getCarrierCode()): ?>
+                    <?php elseif ($_track->getCarrierCode() === 'fedex'): ?>
                     <a href="<?php echo "https://www.fedex.com/apps/fedextrack/index.html?trackingnumber=" . $block->escapeHtml($_track->getNumber()); ?>" target="_Blank"><?php echo $block->escapeHtml($_track->getNumber()); ?></a>
                     <div id="shipment_tracking_info_response_<?= /* @escapeNotVerified */ $_track->getId() ?>"></div>
                     <?php else: ?>
