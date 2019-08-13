@@ -100,7 +100,8 @@ body {
                     text-align: right;
                     width: 85px;
                     @include max-screen($screen__l) {
-                        margin: 0.8rem 0.5rem 0 0;
+                        //margin: 0.8rem 0.5rem 0 0;
+                        margin: 0.8rem 0 0 0;
                     }
                     &:before {
                         display: none;
@@ -108,12 +109,13 @@ body {
                     }
                     .icon-bag {
                         position: relative;
-                        top: -7px;
+                        top: -2px;
                         left: 0;
                         font-size: inherit;
                         margin: auto;
                         &:before {
                             content: '\e902';
+                            font-size: 1.5rem;
                         }
                         @include max-screen($screen__s) {
                             top: 0px;
@@ -420,18 +422,25 @@ body {
             .col.span_4_of_12 {
                 div {
                     @include max-screen($screen__m) {
-                        text-align: left !important;
+                        //text-align: left !important;
                     }
                 }
             }
+            .mygro-footer-contact {
+                float: right;
+            }
             h3 {
-                @include font-hellix-heavy(1.2rem, $mygro-black-alt, false, 34px, 0.5px);
+                font-size: 1.2rem;
+                color: $mygro-black-alt;
+                margin-bottom: 0.25rem;
+                //@include font-hellix-heavy(1.2rem, $mygro-black-alt, false, 34px, 0.5px);
             }
             ul {
                 list-style-type: none;
                 margin: 0;
                 padding: 0;
                 li {
+                    text-align: left;
                     @include font-hellix-regular(0.875rem, $mygro-gray);
                     a {
                         @include font-hellix-regular(0.875rem, $mygro-gray);
@@ -443,16 +452,6 @@ body {
                 border-top: 1px solid #f0f2f5;
                 clear: both;
                 padding: 2rem 0;
-                P {
-                    @media only screen and (max-width: $screen_768) {
-                        text-align: left !important;
-                    }
-                    img {
-                        @media only screen and (max-width: $screen_768) {
-                            margin-left: 0px !important;
-                        }
-                    }
-                }
             }
         }
     }
@@ -499,9 +498,12 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
     }	
 
     .product-info-main {	
-width: 48%;
+        width: 48%;
         margin-right: auto;
         margin-left: auto;
+        @media only screen and (max-width: $screen__l){
+          margin-bottom: 100px;
+        }
         @media only screen and (max-width: $screen_768){
           width: 90%;
         }
@@ -2617,7 +2619,7 @@ width: 48%;
 .page-wrapper{
 	.page-header {
 			.shipping-message-pl{
-				background: #075534;
+				background: $mygro-green;
 				padding: 10px;
 				text-align: center;
 				color: white;
