@@ -277,7 +277,6 @@ return [
         'SMG_CustomerServiceEmail' => 1,
         'SMG_Directory' => 1,
         'SMG_Dtm' => 1,
-        'SMG_EmailCancellation' => 1,
         'SMG_FeaturesList' => 1,
         'SMG_GroupedAssociatedProducts' => 1,
         'SMG_HeroCallout' => 1,
