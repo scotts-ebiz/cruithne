@@ -144,8 +144,7 @@ endif;
 <section class="hero-callout col-2 span_12_of_12 widget-margin" style="background-image: url('<?php echo $block->escapeUrl
 ($selectedBannerImage); ?>')">
     <div class="heroCallout-desktopContent">
-        <h2 style="<?php echo $block->escapeHtmlAttr($HeroCalloutBannerHeadlineCustomSize);?> color:<?php echo
-        $block->escapeHtmlAttr($HeroCalloutBannerHeadlineCustomColor);?>; <?php echo $block->escapeHtmlAttr($HeroCalloutBannerHeadlineCustomStyles);?>">
+        <h2 style="color:<?php echo $block->escapeHtmlAttr($HeroCalloutBannerHeadlineCustomColor);?>; <?php echo $block->escapeHtmlAttr($HeroCalloutBannerHeadlineCustomStyles);?>">
           <?php echo $block->escapeHtml($block->getData('bannerheadline')); ?></h2>
 
         <?php if($block->getData('bannertext') != ''): ?>
@@ -186,8 +185,7 @@ endif;
         <img src="<?php echo $block->escapeUrl($selectedBannerImage); ?>">
     <?php endif; ?>
 
-    <h2 style="<?php echo $block->escapeHtmlAttr($HeroCalloutBannerHeadlineCustomSize);?> color:<?php echo
-    $block->escapeHtmlAttr($selectedHeadlineMobileColor);?>; <?php echo $block->escapeHtmlAttr($HeroCalloutBannerHeadlineCustomStyles);?>">
+    <h2 style="color:<?php echo $block->escapeHtmlAttr($selectedHeadlineMobileColor);?>; <?php echo $block->escapeHtmlAttr($HeroCalloutBannerHeadlineCustomStyles);?>">
       <?php echo $block->escapeHtml($block->getData('bannerheadline')); ?></h2>
 
   <?php if($block->getData('bannertext') != ''): ?>
