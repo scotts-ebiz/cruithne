@@ -321,7 +321,7 @@ body {
         button {
             background: $mygro-green;
             border: 0;
-            padding: 25px 45px;
+            padding: 23px 35px;
             border-radius: 4px;
             color: $white;
             font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
@@ -342,7 +342,7 @@ body {
         .button {
             background: $mygro-green;
             border: 0;
-            padding: 25px 45px;
+            padding: 23px 35px;
             border-radius: 4px;
             color: $white;
             font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
@@ -888,7 +888,7 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
 							}
 							div.upd-cust-btn{
 								.action.checkout{
-									padding: 25px 0;
+									padding: 23px 0;
 									text-transform: uppercase;
 									font-size: 15px;
 									line-height: 0px;
@@ -1157,7 +1157,7 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
 			text-transform: uppercase;
 			font-family: Lato, Arial, sans-serif;
 			width:100%;
-            padding: 25px 0;
+            padding: 23px 0;
 		}
 	}
 	#maincontent{
@@ -1393,9 +1393,6 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
                                 }
                                 .checkout-shipping-method {
                                     .checkout-shipping-method {
-                                        .step-title {
-                                            font-size: 2rem;
-                                        }
                                         .step-content {
                                             .methods-shipping {
                                                 .actions-toolbar {
@@ -1406,7 +1403,7 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
                                                             font-family: Lato, Arial, sans-serif;
                                                             text-transform: uppercase;
                                                             font-size: 15px;
-                                                            padding: 25px 45px;
+                                                            padding: 23px 35px;
                                                             background: $mygro-green;
                                                         }
                                                     }
@@ -1428,6 +1425,24 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
 											background:$color_black15_shade;	
 										}
 									}
+                                }
+                                .checkout-validate-address {
+                                    .step-content {
+                                        .instructions.noError {
+                                            display: inline-block;
+                                            position: relative;
+                                            margin: 15px 0 15px 0;
+                                            color: $mygro-green;
+                                        }
+                                        .errorMessageContainer {
+                                            .instructions {
+                                                color: #e02b27;
+                                                margin: 15px 0;
+                                                border: 1px solid;
+                                                padding: 10px;
+                                            }
+                                        }
+                                    }
                                 }
                                 .checkout-payment-method {
                                     .step-content {
@@ -1459,7 +1474,7 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
                                                                                 font-size: 15px;
                                                                                 text-transform: uppercase;
                                                                                 background: $mygro-green;
-                                                                                padding: 25px 45px;
+                                                                                padding: 23px 35px;
                                                                                 line-height: 0;
                                                                                 border: none;
 																				display: inline-block;
@@ -1640,23 +1655,7 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
                                             }
                                         }
                                         .opc-block-shipping-information {
-                                            .shipping-information {
-                                                .ship-to {
-                                                    .shipping-information-title {
-                                                        span {
-                                                            font-size: 2rem;
-                                                        }
-                                                    }
-                                                }
-                                                .ship-via {
-                                                    .shipping-information-title {
-                                                        span {
-                                                            font-size: 2rem;
-                                                        }
-                                                    }
-                                                }
-                                            }
-											.shipping-information-title{
+											.shipping-information-title {
 												.action-edit{
 													&:before{
 														content:'Edit';
@@ -1874,6 +1873,14 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
 		color: $color_black20_shade;
 	}
 	.checkout-billing-address {
+        button {
+            background: #4d4d4e;
+            text-transform: uppercase;
+            font-family: Lato, Arial, sans-serif;
+            &:hover {
+                background: #262626;
+            }
+        }
 		.fieldset .actions-toolbar{
 			margin-left: 0;
 		}
@@ -1884,7 +1891,13 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
 		.primary .action.action-cancel{
 			width: auto;
 			margin: 0;
+            border-radius: 4px;
+            padding: 23px 35px;
+            line-height: 0;
 			float: left;
+            &:hover {
+                text-decoration: none;
+            }
 		}
 	}
 	.payment-method-billing-address{
@@ -2074,6 +2087,9 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
 				color: #fff !important;
                 line-height: 0;
                 height: 30px;
+                &:hover {
+                  background: #262626;
+                }
 			}
 			#discount-form {
 				.actions-toolbar {
