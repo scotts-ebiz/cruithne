@@ -18,7 +18,6 @@
 <?php $_product = $block->getProduct(); ?>
 <?php $_associatedProducts = $block->getAssociatedProducts(); ?>
 <?php $_hasAssociatedProducts = count($_associatedProducts) > 0; ?>
-<?php $smghelper = $this->helper('SMG\Launch\Helper\Data'); ?>
 
 <!-- Define Variables -->
 <?php
@@ -45,15 +44,10 @@
 
 <!-- Product Select Wrapper -->
 <div class="grouped-product-wrapper">
-<?php //if($_hasAssociatedProducts):  ?>
         <h5>Choose an Option</h5>
         <select name="selectProduct" id="product_selector">
             <?php foreach ($_associatedProducts as $_values): ?>
-			<?php
-				$priceHelper = $smghelper->getObjectmanager()->create('Magento\Framework\Pricing\Helper\Data');
-				$formattedPrice = $priceHelper->currency($_values->getPrice(), true, false);
-			?>
-                <option class="product-item-name" price="<?php echo $formattedPrice; ?>" value="<?php echo $_values->getId() ?>" name="<?= /* @escapeNotVerified */
+                <option class="product-item-name" value=product_item_id__<? echo $x;?>" name="<?= /* @escapeNotVerified */
                 $_values->getData
                 ('entity_id');
                 ?>">
@@ -63,7 +57,6 @@
          </option>
         <?php endforeach; ?>
       </select>
-<?php //endif: ?>
 </div>
 
 <!-- Grouped Table -->
@@ -81,7 +74,7 @@
         </tr>
         </thead>
       <?php if ($_hasAssociatedProducts): ?>
-        <?php //foreach ($_associatedProducts as $_item): ?>
+        <?php foreach ($_associatedProducts as $_item): ?>
               <tbody>
               <!-- If ID has a 1 then set $active to 'active'-->
               <?php $active = ($i == 1) ? ' active' : '';?>
@@ -89,41 +82,59 @@
                     <?php $i++;?>
                     <td class="col item product-detail-td">
                       <!-- Simple Product Short Description -->
-                      <?php  //$_item->getData('short_description');?>
+                      <?= /* @escapeNotVerified */ $_item->getData('short_description');?>
 
 
                       <!-- Insert Product Price -->
                     <?php if ($block->getCanShowProductPrice($_product)): ?>
-                      <?php //if ($block->getCanShowProductPrice($_item)): ?>
-                        <?= /* @escapeNotVerified */ $block->getProductPrice($_product) ?>
-                      <?php //endif; ?>
+                      <?php if ($block->getCanShowProductPrice($_item)): ?>
+                        <?= /* @escapeNotVerified */ $block->getProductPrice($_item) ?>
+                      <?php endif; ?>
                     <?php endif; ?>
                   </td>
                 <?php if ($_product->isSaleable()): ?>
                     <td class="col qty product-qty-td">
-                      <?php //if ($_item->isSaleable()) : ?>
+                      <?php if ($_item->isSaleable()) : ?>
                           <div class="control qty">
-                              <input type="button" value="-" class="qtyminus box_down<?php //echo $_item->getId(); ?>" id="qtyminus" field="quantity"/>
+                              <input type="button" value="-" class="qtyminus box_down<?php echo $_item->getId(); ?>" id="qtyminus" field="quantity"
+                                     data-mage-init='{ "Magento_GroupedProduct/js/quantity-changer": {"id": <?php echo $_item->getId(); ?>} }' />
                               <input type="number"
-                                     id=""
-                                     name=""
-                                     data-selector=""
-                                     value="<?= /* @escapeNotVerified */ $_product->getQty() * 1 ?>"
+                                     id="super_group[<?= /* @escapeNotVerified */ $_item->getId() ?>]"
+                                     name="super_group[<?= /* @escapeNotVerified */ $_item->getId() ?>]"
+                                     data-selector="super_group[<?= /* @escapeNotVerified */ $_item->getId() ?>]"
+                                     value="<?= /* @escapeNotVerified */ $_item->getQty() * 1 ?>"
                                      title="<?= /* @escapeNotVerified */ __('Qty') ?>"
-                                     class="input-text qty qty-group"
+                                     class="input-text qty"
                                      data-validate="{'validate-grouped-qty':'#super-product-table'}"
                                      data-errors-message-box="#validation-message-box"/>
-                              <input type="button" value="+" id="qtyplus" class="qtyplus" field="quantity"/>
+                              <input type="button" value="+" id="qtyplus" class="qtyplus" field="quantity"
+                                     data-mage-init='{ "Magento_GroupedProduct/js/quantity-changer": {"id": <?php echo $_item->getId(); ?>} }' />
                           </div>
-                      <?php //else: ?>
-
-                      <?php //endif; ?>
+                      <?php else: ?>
+                          <div class="stock unavailable" title="<?= /* @escapeNotVerified */ __('Availability') ?>">
+                              <span><?= /* @escapeNotVerified */ __('Out of stock') ?></span>
+                          </div>
+                      <?php endif; ?>
                     </td>
                 <?php endif; ?>
               </tr>
-
+              <?php if ($block->getCanShowProductPrice($_product)
+                && $block->getCanShowProductPrice($_item)
+                && trim($block->getProductPriceHtml(
+                  $_item,
+                  \Magento\Catalog\Pricing\Price\TierPrice::PRICE_CODE
+                ))): ?>
+                  <tr class="row-tier-price">
+                      <td colspan="2">
+                        <?= $block->getProductPriceHtml(
+                          $_item,
+                          \Magento\Catalog\Pricing\Price\TierPrice::PRICE_CODE
+                        ) ?>
+                      </td>
+                  </tr>
+              <?php endif; ?>
               </tbody>
-        <?php //endforeach; ?>
+        <?php endforeach; ?>
       <?php else: ?>
           <tbody>
           <tr>
@@ -137,11 +148,3 @@
     </table>
 </div>
 <div id="validation-message-box"></div>
-
-<script type="text/x-magento-init">
-{
-    "*": {
-        "Magento_GroupedProduct/group": {}
-    }
-}
-</script>
