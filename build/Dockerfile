@@ -13,6 +13,7 @@ LABEL company="The Scotts MiracleGro Company"
 LABEL maintainer="rick.feldschau@scotts.com"
 
 USER root
+WORKDIR $MAGENTO_DIR
 RUN chown -R magento:www-data .git
 
 USER magento
