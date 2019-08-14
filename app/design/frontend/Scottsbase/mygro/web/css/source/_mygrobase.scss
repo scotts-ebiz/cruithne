@@ -414,34 +414,64 @@ body {
             padding: 0 10rem;
             text-align: center;
             @include max-screen($screen__l) {
-                padding: 0;
+                padding: 0 5rem;
             }
             @include max-screen($screen__m) {
                 padding: 0 2rem;
             }
-            .col.span_4_of_12 {
+            .span_4_of_12 {
+                @media only screen and (max-width: $screen__l){
+                    width: 32.26%;
+                }
+                @media only screen and (max-width: $screen__s){
+                    width: 100%;
+                }
+            }
+            .mygro-footer-support {
+              div {
+                  float: left;
+                  display: inline-block;
+                  position: relative;
+                  @media only screen and (max-width: $screen__s){
+                      float: none;
+                  }
+              }
+            }
+            .mygro-footer-tc {
                 div {
-                    @include max-screen($screen__m) {
-                        //text-align: left !important;
+                    margin-right: auto;
+                    margin-left: auto;
+                    text-align: center;
+                    @media only screen and (max-width: $screen__s){
+                        float: none;
                     }
                 }
             }
             .mygro-footer-contact {
-                float: right;
+                div {
+                    float: right;
+                    @media only screen and (max-width: $screen__s){
+                        float: none;
+                    }
+                }
             }
             h3 {
                 font-size: 1.2rem;
                 color: $mygro-black-alt;
                 margin-bottom: 0.25rem;
-                //@include font-hellix-heavy(1.2rem, $mygro-black-alt, false, 34px, 0.5px);
             }
             ul {
                 list-style-type: none;
                 margin: 0;
                 padding: 0;
+                display: inline-block;
                 li {
                     text-align: left;
+                  @media only screen and (max-width: $screen__s){
+                    text-align: center;
+                  }
                     @include font-hellix-regular(0.875rem, $mygro-gray);
+
                     a {
                         @include font-hellix-regular(0.875rem, $mygro-gray);
                     }
@@ -3031,16 +3061,6 @@ button.action{
             margin-top:0px;            
             margin-left:15px;
        }
-    }
-}
-
-.page-footer{
-    .inner-footer-container{
-        .span_4_of_12 {
-            @media only screen and (max-width: 1024px){
-                width: 32.26%;
-            }
-        }
     }
 }
 
