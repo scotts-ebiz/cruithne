@@ -275,13 +275,16 @@ class ShipmentHelper
                                 // add the ship tracking number to the array
                                 $shipTrackingNumbers[] = $shipTrackingNumber;
 
+                                // create the title
+                                $shippingTitle = "Federal Express - " . $order->getShippingDescription();
+
                                 /**
                                  * @var \Magento\Sales\Api\Data\ShipmentTrackCreationInterface @$shipmentTrackItemCreation
                                  */
                                 $shipmentTrackItemCreation = $this->_shipmentTrackCreationInterfaceFactory->create();
                                 $shipmentTrackItemCreation->setTrackNumber($shipTrackingNumber);
-                                $shipmentTrackItemCreation->setTitle($order->getShippingDescription());
-                                $shipmentTrackItemCreation->setCarrierCode("Federal Express");
+                                $shipmentTrackItemCreation->setTitle($shippingTitle);
+                                $shipmentTrackItemCreation->setCarrierCode("fedex");
                                 $tracks[] = $shipmentTrackItemCreation;
                             }
                         }

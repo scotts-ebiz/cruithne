@@ -4,8 +4,6 @@ ARG IMAGE=gcr.io/ecommerce-platform-211419/magento-dev-primer:latest
 FROM $IMAGE
 ENTRYPOINT []
 
-RUN date
-
 ENV NVM_DIR /home/magento/.nvm
 ENV MAGENTO_DIR /var/www/html/magento2
 
@@ -13,6 +11,7 @@ LABEL company="The Scotts MiracleGro Company"
 LABEL maintainer="rick.feldschau@scotts.com"
 
 USER root
+WORKDIR $MAGENTO_DIR
 RUN chown -R magento:www-data .git
 
 USER magento
@@ -22,14 +21,7 @@ RUN git fetch
 RUN git checkout app/etc/config.php
 RUN git pull
 
-# Move this to primer
-RUN composer config repositories.amasty composer https://composer.amasty.com/enterprise/
-
-RUN composer install
-
 RUN sed -i "s/save.*/save' => 'redis',/" app/etc/env.php
-
-RUN date
 
 # for icons to stick need paths and permissions
 RUN mkdir -p pub/media/tmp/design/file/
@@ -60,8 +52,8 @@ EXPOSE 80/tcp 443/tcp
 
 USER root
 
-RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -exec chown magento:www-data {} \;
-RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -exec chmod 777 {} \;
+RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated | xargs chown magento:www-data
+RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated | xargs chmod 777
 
 # Run entrypoint file
 COPY ondemand-entrypoint.sh /usr/local/bin/entrypoint.sh

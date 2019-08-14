@@ -15,10 +15,7 @@ section.feature-list {
         }
     }
     h3 {
-        font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
-        letter-spacing: 0.5px;
-        font-size: 28px;
-        color: #000000; //$black
+        color: #000000;
         margin-bottom: 15px;
     }
     div.item {
@@ -50,7 +47,6 @@ section.feature-list {
         p {
             margin-right: auto;
             margin-left: auto;
-            font-size: 16px;
             line-height: 26px;
             color: #909090;
         }

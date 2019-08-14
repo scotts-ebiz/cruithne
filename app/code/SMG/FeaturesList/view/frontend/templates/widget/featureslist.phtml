@@ -94,9 +94,7 @@
       $headlinestylevalues = explode(',', $featuresListHeadlineCustomStyles);
       foreach($headlinestylevalues as $headlinevalue) {
           echo /* @noEscape */ $headlinevalue;
-      }
-      echo /* @noEscape */ $featuresListHeadlineCustomSize;
-      ?>color:<?php echo $block->escapeHtmlAttr($block->getData('featuresListHeadlineColor'));?>;">
+      } ?>color:<?php echo $block->escapeHtmlAttr($block->getData('featuresListHeadlineColor'));?>;">
       <?php echo /* @noEscape */ $block->getData('featuresListHeadline'); ?></h2>
     <?php echo /* @noEscape */ $html; ?>
 </section>

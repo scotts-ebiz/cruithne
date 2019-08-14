@@ -10,4 +10,5 @@
                 type="SMG\CustomerServiceEmail\Model\Service\OrderService"/>
     <preference for="SMG\CustomerServiceEmail\Api\Data\ItemInterface"
                 type="SMG\CustomerServiceEmail\Model\Order\Item"/>
+    <preference for="Magento\Sales\Controller\Adminhtml\Order\Cancel" type="SMG\CustomerServiceEmail\Controller\Adminhtml\Order\Cancel" />                
 </config>
