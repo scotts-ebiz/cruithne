@@ -255,7 +255,7 @@ HTML;
 	public function getCatalogSession(){
 		return $this->_CatalogSession;
 	}
-	public function getObjecmanager(){
+	public function getObjectmanager(){
 		return $this->_objectManager;
 	}
 }
