@@ -21,7 +21,6 @@ COMMAND="$@"
 service collector start
 
 # We're disabling ImageGallery by default so builds pass. We enable here so it works on the server
-su - magento -c '/var/www/html/magento2/bin/magento module:enable SMG_ImageGallery'
 su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade'
 su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile' 
 
