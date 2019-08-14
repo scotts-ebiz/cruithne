@@ -46,8 +46,6 @@ class Data extends AbstractHelper{
 	
 	protected $_CatalogSession;
 
-	protected $_objectManager;
-
 	public function __construct(
 		\Magento\Checkout\Model\Session $CheckoutSession,
 		\Magento\Sales\Model\OrderFactory $orderFactory,
@@ -64,8 +62,7 @@ class Data extends AbstractHelper{
 		\Magento\Framework\Registry $Registry,
 		\Magento\Catalog\Model\Category $CatalogCategory,
 		\Magento\Catalog\Model\Session $CatalogSession,
-		\SMG\Launch\Model\Session $fbPixelSession,
-		\Magento\Framework\ObjectManagerInterface $objectManager
+		\SMG\Launch\Model\Session $fbPixelSession
 	) {
 		$this->_checkoutSession = $CheckoutSession;
 		$this->_orderFactory = $orderFactory;
@@ -83,7 +80,6 @@ class Data extends AbstractHelper{
 		$this->_CatalogCategory = $CatalogCategory;
 		$this->_CatalogSession = $CatalogSession;
 		$this->_fbPixelSession = $fbPixelSession;
-		$this->_objectManager = $objectManager;
 
 		parent::__construct( $context );
 	}
@@ -254,8 +250,5 @@ HTML;
 	}
 	public function getCatalogSession(){
 		return $this->_CatalogSession;
-	}
-	public function getObjectmanager(){
-		return $this->_objectManager;
 	}
 }
