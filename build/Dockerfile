@@ -4,8 +4,6 @@ ARG IMAGE=gcr.io/ecommerce-platform-211419/magento-dev-primer:latest
 FROM $IMAGE
 ENTRYPOINT []
 
-RUN date
-
 ENV NVM_DIR /home/magento/.nvm
 ENV MAGENTO_DIR /var/www/html/magento2
 
@@ -24,8 +22,6 @@ RUN git checkout app/etc/config.php
 RUN git pull
 
 RUN sed -i "s/save.*/save' => 'redis',/" app/etc/env.php
-
-RUN date
 
 # for icons to stick need paths and permissions
 RUN mkdir -p pub/media/tmp/design/file/
