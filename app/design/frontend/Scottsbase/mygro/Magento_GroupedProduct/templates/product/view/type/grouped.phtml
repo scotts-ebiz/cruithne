@@ -50,7 +50,7 @@
         <select name="selectProduct" id="product_selector">
             <?php foreach ($_associatedProducts as $_values): ?>
 			<?php
-				$priceHelper = $smghelper->getObjecmanager()->create('Magento\Framework\Pricing\Helper\Data');
+				$priceHelper = $smghelper->getObjectmanager()->create('Magento\Framework\Pricing\Helper\Data');
 				$formattedPrice = $priceHelper->currency($_values->getPrice(), true, false);
 			?>
                 <option class="product-item-name" price="<?php echo $formattedPrice; ?>" value="<?php echo $_values->getId() ?>" name="<?= /* @escapeNotVerified */
