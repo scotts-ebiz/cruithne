@@ -1874,9 +1874,11 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
 	}
 	.checkout-billing-address {
         button {
-            background: #4d4d4e;
+            color: #4d4d4e;
             text-transform: uppercase;
+            text-decoration: underline;
             font-family: Lato, Arial, sans-serif;
+            padding: 0;
             &:hover {
                 background: #262626;
             }
@@ -1885,18 +1887,39 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
 			margin-left: 0;
 		}
 		.primary .action-update{
-			width: auto;
-			float: right;
+            width: auto;
+            border-radius: 4px;
+            padding: 15px 25px;
+            font-size: 12px;
+            line-height: 0;
+            float: left;
+            height: auto;
+            background: #4d4e4e;
+            text-transform: inherit;
+            color:#fff;
+            text-decoration: none;
+            &:hover {
+              text-decoration: none;
+              background: #262626;;
+            }
 		}
 		.primary .action.action-cancel{
 			width: auto;
-			margin: 0;
+			margin: 0 0 0 15px;
             border-radius: 4px;
-            padding: 23px 35px;
+            padding: 15px 25px;
+            font-size: 12px;
             line-height: 0;
 			float: left;
+            height: auto;
+            margin-top: 0 !important;
+            text-transform: inherit;
+            background: #4d4e4e;
+            color:#fff;
+            text-decoration: none;
             &:hover {
                 text-decoration: none;
+                background: #262626;;
             }
 		}
 	}
@@ -3127,13 +3150,6 @@ div[name="shippingAddress.postcode"] {
 				background: none !important;
 				padding: 0 !important;
 			}
-		}
-	}
-}
-.page-product-grouped{
-	.grouped-row{
-		.price-label{
-			display:none;
 		}
 	}
 }
