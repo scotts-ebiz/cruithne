@@ -100,7 +100,8 @@ body {
                     text-align: right;
                     width: 85px;
                     @include max-screen($screen__l) {
-                        margin: 0.8rem 0.5rem 0 0;
+                        //margin: 0.8rem 0.5rem 0 0;
+                        margin: 0.8rem 0 0 0;
                     }
                     &:before {
                         display: none;
@@ -108,12 +109,13 @@ body {
                     }
                     .icon-bag {
                         position: relative;
-                        top: -7px;
+                        top: -2px;
                         left: 0;
                         font-size: inherit;
                         margin: auto;
                         &:before {
                             content: '\e902';
+                            font-size: 1.5rem;
                         }
                         @include max-screen($screen__s) {
                             top: 0px;
@@ -319,7 +321,7 @@ body {
         button {
             background: $mygro-green;
             border: 0;
-            padding: 25px 45px;
+            padding: 23px 35px;
             border-radius: 4px;
             color: $white;
             font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
@@ -340,7 +342,7 @@ body {
         .button {
             background: $mygro-green;
             border: 0;
-            padding: 25px 45px;
+            padding: 23px 35px;
             border-radius: 4px;
             color: $white;
             font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
@@ -412,27 +414,64 @@ body {
             padding: 0 10rem;
             text-align: center;
             @include max-screen($screen__l) {
-                padding: 0;
+                padding: 0 5rem;
             }
             @include max-screen($screen__m) {
                 padding: 0 2rem;
             }
-            .col.span_4_of_12 {
+            .span_4_of_12 {
+                @media only screen and (max-width: $screen__l){
+                    width: 32.26%;
+                }
+                @media only screen and (max-width: $screen__s){
+                    width: 100%;
+                }
+            }
+            .mygro-footer-support {
+              div {
+                  float: left;
+                  display: inline-block;
+                  position: relative;
+                  @media only screen and (max-width: $screen__s){
+                      float: none;
+                  }
+              }
+            }
+            .mygro-footer-tc {
                 div {
-                    @include max-screen($screen__m) {
-                        text-align: left !important;
+                    margin-right: auto;
+                    margin-left: auto;
+                    text-align: center;
+                    @media only screen and (max-width: $screen__s){
+                        float: none;
+                    }
+                }
+            }
+            .mygro-footer-contact {
+                div {
+                    float: right;
+                    @media only screen and (max-width: $screen__s){
+                        float: none;
                     }
                 }
             }
             h3 {
-                @include font-hellix-heavy(1.2rem, $mygro-black-alt, false, 34px, 0.5px);
+                font-size: 1.2rem;
+                color: $mygro-black-alt;
+                margin-bottom: 0.25rem;
             }
             ul {
                 list-style-type: none;
                 margin: 0;
                 padding: 0;
+                display: inline-block;
                 li {
+                    text-align: left;
+                  @media only screen and (max-width: $screen__s){
+                    text-align: center;
+                  }
                     @include font-hellix-regular(0.875rem, $mygro-gray);
+
                     a {
                         @include font-hellix-regular(0.875rem, $mygro-gray);
                     }
@@ -443,16 +482,6 @@ body {
                 border-top: 1px solid #f0f2f5;
                 clear: both;
                 padding: 2rem 0;
-                P {
-                    @media only screen and (max-width: $screen_768) {
-                        text-align: left !important;
-                    }
-                    img {
-                        @media only screen and (max-width: $screen_768) {
-                            margin-left: 0px !important;
-                        }
-                    }
-                }
             }
         }
     }
@@ -499,9 +528,12 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
     }	
 
     .product-info-main {	
-width: 48%;
+        width: 48%;
         margin-right: auto;
         margin-left: auto;
+        @media only screen and (max-width: $screen__l){
+          margin-bottom: 100px;
+        }
         @media only screen and (max-width: $screen_768){
           width: 90%;
         }
@@ -582,7 +614,41 @@ width: 48%;
                             }	
 
                             tr.grouped-row.active {	
-                                display: table-row;	
+                                display: table-row;
+                                td.product-qty-td {
+                                    .qtyminus {
+                                        width: 32px;
+                                        height: 32px;
+                                        padding: 0px;
+                                        margin: 0px;
+                                        border: 0px;
+                                        font-size: 20px;
+                                        &:focus {
+                                            box-shadow: 0 0;
+                                            font-size: 22px;
+                                            color: $mygro-green;
+                                        }
+                                    }
+                                    .input-text {
+                                        width: 32px;
+                                        height: 32px;
+                                        padding: 0;
+                                        margin: 0;
+                                    }
+                                    .qtyplus {
+                                        width: 32px;
+                                        height: 32px;
+                                        font-size: 16px;
+                                        padding: 0;
+                                        margin: 0;
+                                        border: 0;
+                                        &:focus {
+                                            box-shadow: 0 0;
+                                            font-size: 18px;
+                                            color: $mygro-green;
+                                        }
+                                    }
+                                }
                             }	
                             tr.grouped-row {	
                                 display: none;	
@@ -614,20 +680,32 @@ width: 48%;
                                     padding: 0;	
                                     &:before{	
                                         content: none;	
-                                    }	
+                                    }
+                                    @media only screen and (max-width: $screen__l){
+                                      width: 55%;
+                                    }
+                                    @media only screen and (max-width: $screen__xs){
+                                      width: 100%;
+                                    }
                                 }	
                                 td.product-qty-td {	
                                     width: 30%;	
-                                    text-align: right;	
-                                    padding: 0;	
+                                    text-align: right;
+                                    float: right;
+                                    padding: 0;
+                                    margin: 0;
                                     &:before{	
                                         content: none;	
-                                    }	
+                                    }
+                                    @media only screen and (max-width: $screen__l){
+                                        width: 40%;
+                                    }
+                                    @media only screen and (max-width: $screen__xs){
+                                        width: 100%;
+                                        text-align: left;
+                                    }
                                 }	
-                            }	
-                            tr.grouped-row.active {	
-                                display: table-row;	
-                            }	
+                            }
                         }	
                     }	
                 }	
@@ -810,7 +888,7 @@ width: 48%;
 							}
 							div.upd-cust-btn{
 								.action.checkout{
-									padding: 25px 0;
+									padding: 23px 0;
 									text-transform: uppercase;
 									font-size: 15px;
 									line-height: 0px;
@@ -1079,7 +1157,7 @@ width: 48%;
 			text-transform: uppercase;
 			font-family: Lato, Arial, sans-serif;
 			width:100%;
-            padding: 25px 0;
+            padding: 23px 0;
 		}
 	}
 	#maincontent{
@@ -1315,9 +1393,6 @@ width: 48%;
                                 }
                                 .checkout-shipping-method {
                                     .checkout-shipping-method {
-                                        .step-title {
-                                            font-size: 2rem;
-                                        }
                                         .step-content {
                                             .methods-shipping {
                                                 .actions-toolbar {
@@ -1328,7 +1403,7 @@ width: 48%;
                                                             font-family: Lato, Arial, sans-serif;
                                                             text-transform: uppercase;
                                                             font-size: 15px;
-                                                            padding: 25px 45px;
+                                                            padding: 23px 35px;
                                                             background: $mygro-green;
                                                         }
                                                     }
@@ -1350,6 +1425,24 @@ width: 48%;
 											background:$color_black15_shade;	
 										}
 									}
+                                }
+                                .checkout-validate-address {
+                                    .step-content {
+                                        .instructions.noError {
+                                            display: inline-block;
+                                            position: relative;
+                                            margin: 15px 0 15px 0;
+                                            color: $mygro-green;
+                                        }
+                                        .errorMessageContainer {
+                                            .instructions {
+                                                color: #e02b27;
+                                                margin: 15px 0;
+                                                border: 1px solid;
+                                                padding: 10px;
+                                            }
+                                        }
+                                    }
                                 }
                                 .checkout-payment-method {
                                     .step-content {
@@ -1381,7 +1474,7 @@ width: 48%;
                                                                                 font-size: 15px;
                                                                                 text-transform: uppercase;
                                                                                 background: $mygro-green;
-                                                                                padding: 25px 45px;
+                                                                                padding: 23px 35px;
                                                                                 line-height: 0;
                                                                                 border: none;
 																				display: inline-block;
@@ -1562,23 +1655,7 @@ width: 48%;
                                             }
                                         }
                                         .opc-block-shipping-information {
-                                            .shipping-information {
-                                                .ship-to {
-                                                    .shipping-information-title {
-                                                        span {
-                                                            font-size: 2rem;
-                                                        }
-                                                    }
-                                                }
-                                                .ship-via {
-                                                    .shipping-information-title {
-                                                        span {
-                                                            font-size: 2rem;
-                                                        }
-                                                    }
-                                                }
-                                            }
-											.shipping-information-title{
+											.shipping-information-title {
 												.action-edit{
 													&:before{
 														content:'Edit';
@@ -1796,17 +1873,54 @@ width: 48%;
 		color: $color_black20_shade;
 	}
 	.checkout-billing-address {
+        button {
+            color: #4d4d4e;
+            text-transform: uppercase;
+            text-decoration: underline;
+            font-family: Lato, Arial, sans-serif;
+            padding: 0;
+            &:hover {
+                background: #262626;
+            }
+        }
 		.fieldset .actions-toolbar{
 			margin-left: 0;
 		}
 		.primary .action-update{
-			width: auto;
-			float: right;
+            width: auto;
+            border-radius: 4px;
+            padding: 15px 25px;
+            font-size: 12px;
+            line-height: 0;
+            float: left;
+            height: auto;
+            background: #4d4e4e;
+            text-transform: inherit;
+            color:#fff;
+            text-decoration: none;
+            &:hover {
+              text-decoration: none;
+              background: #262626;;
+            }
 		}
 		.primary .action.action-cancel{
 			width: auto;
-			margin: 0;
+			margin: 0 0 0 15px;
+            border-radius: 4px;
+            padding: 15px 25px;
+            font-size: 12px;
+            line-height: 0;
 			float: left;
+            height: auto;
+            margin-top: 0 !important;
+            text-transform: inherit;
+            background: #4d4e4e;
+            color:#fff;
+            text-decoration: none;
+            &:hover {
+                text-decoration: none;
+                background: #262626;;
+            }
 		}
 	}
 	.payment-method-billing-address{
@@ -1996,6 +2110,9 @@ width: 48%;
 				color: #fff !important;
                 line-height: 0;
                 height: 30px;
+                &:hover {
+                  background: #262626;
+                }
 			}
 			#discount-form {
 				.actions-toolbar {
@@ -2571,7 +2688,7 @@ width: 48%;
 .page-wrapper{
 	.page-header {
 			.shipping-message-pl{
-				background: #075534;
+				background: $mygro-green;
 				padding: 10px;
 				text-align: center;
 				color: white;
@@ -2735,12 +2852,14 @@ button.action{
 				tr{
 					td:first-child{
 						@media (max-width: 639px){
-							width:85%;
+						  //2019-08-10 Commented out for PDP styling / Break anything?
+                          //width:85%;
 						}
 					}
 					td.qty:last-child{
 						@media (max-width: 639px){
-							margin-top:10px;
+							//2019-08-10 - Commented out for PDP styling / Break anything?
+                            //margin-top:10px;
 						}
 					}
 				}
@@ -2981,16 +3100,6 @@ button.action{
             margin-top:0px;            
             margin-left:15px;
        }
-    }
-}
-
-.page-footer{
-    .inner-footer-container{
-        .span_4_of_12 {
-            @media only screen and (max-width: 1024px){
-                width: 32.26%;
-            }
-        }
     }
 }
 

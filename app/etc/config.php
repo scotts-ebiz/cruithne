@@ -284,7 +284,7 @@ return [
         'SMG_HeroVideoBtnWidget' => 1,
         'SMG_HeroZip' => 1,
         'SMG_IconList' => 1,
-        'SMG_ImageGallery' => 0, //PLEASE MAKE SURE TO LEAVE THIS DISABLED IN GITHUB UNTIL 2.3.3
+        'SMG_ImageGallery' => 0,
         'SMG_LandingPage' => 1,
         'SMG_Launch' => 1,
         'SMG_OfflineShipping' => 1,
@@ -300,6 +300,7 @@ return [
         'SMG_Sales' => 1,
         'SMG_OrderDiscount' => 1,
         'SMG_ShipTracking' => 1,
+        'SMG_Shipping' => 1,
         'SMG_ShippingRestrict' => 1,
         'SMG_SpecsList' => 1,
         'Vantiv_Payment' => 1,
