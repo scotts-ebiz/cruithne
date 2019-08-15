@@ -13,7 +13,6 @@ class StateFilter
     'Armed Forces Europe',
     'Armed Forces Middle East',
     'Armed Forces Pacific',
-    'District of Columbia',
     'Federated States Of Micronesia',
     'Guam',
     'Hawaii',
