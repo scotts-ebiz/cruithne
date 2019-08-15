@@ -27,10 +27,8 @@ curl -X POST --data-urlencode "payload={\"channel\": \"#magento2-botalerts\", \"
 service collector start
 
 # always start elasticsearch for fulltext catalog search indexer
-service elasticsearch start
-
-# Activate SumoLogic
-service collector start
+# Having a problem with elasticsearch, disabling for now
+# service elasticsearch start
 
 # always start cron
 service cron start
