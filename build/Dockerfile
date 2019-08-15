@@ -4,8 +4,6 @@ ARG IMAGE=gcr.io/ecommerce-platform-211419/magento-dev-primer:latest
 FROM $IMAGE
 ENTRYPOINT []
 
-RUN date
-
 ENV NVM_DIR /home/magento/.nvm
 ENV MAGENTO_DIR /var/www/html/magento2
 
@@ -13,6 +11,7 @@ LABEL company="The Scotts MiracleGro Company"
 LABEL maintainer="rick.feldschau@scotts.com"
 
 USER root
+WORKDIR $MAGENTO_DIR
 RUN chown -R magento:www-data .git
 
 USER magento
@@ -23,8 +22,6 @@ RUN git checkout app/etc/config.php
 RUN git pull
 
 RUN sed -i "s/save.*/save' => 'redis',/" app/etc/env.php
-
-RUN date
 
 # for icons to stick need paths and permissions
 RUN mkdir -p pub/media/tmp/design/file/
