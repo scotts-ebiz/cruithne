@@ -1,5 +1,5 @@
 <?php
-namespace SMG\Directory\Rewrite\Directory\Helper;
+namespace SMG\Directory\Helper;
 
 
 class Data extends \Magento\Directory\Helper\Data

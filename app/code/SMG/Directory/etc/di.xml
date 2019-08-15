@@ -3,5 +3,5 @@
     <type name="Magento\Directory\Model\ResourceModel\Region\Collection">
    <plugin name="smg_directory_info" type="SMG\Directory\Plugin\Directory\Model\ResourceModel\Region\StateFilter" sortOrder="1" disabled="false"/>
   </type>
-    <preference for="Magento\Directory\Helper\Data" type="SMG\Directory\Rewrite\Directory\Helper\Data" />
+    <preference for="Magento\Directory\Helper\Data" type="SMG\Directory\Helper\Data" />
 </config>
