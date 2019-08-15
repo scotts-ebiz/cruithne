@@ -21,22 +21,7 @@ RUN git fetch
 RUN git checkout app/etc/config.php
 RUN git pull
 
-RUN sed -i "s/save.*/save' => 'redis',/" app/etc/env.php
-
-# for icons to stick need paths and permissions
-RUN mkdir -p pub/media/tmp/design/file/
-RUN chmod 0755 pub/media/tmp/design/file/
-
 USER root
-
-# Magento 2.3 fix that will fix catalog rules to be applied
-# https://magento.stackexchange.com/questions/152101/catalog-price-rule-not-applied-working-in-magento-2-ee-v2-1-2
-RUN sed -i '22s/.*/                <visible>true<\/visible>/' $MAGENTO_DIR/vendor/magento/module-catalog-rule-staging/view/adminhtml/ui_component/catalog_rule_form.xml 
-
-RUN git apply $MAGENTO_DIR/build/magento_security_patches/PRODSECBUG-2198-2.3-EE.composer-2019-03-27-06-10-53.patch
-
-RUN sed 's/newrelic\.license/;newrelic\.license/' /etc/php/7.2/apache2/conf.d/20-newrelic.ini
-RUN echo "newrelic.license = 'eeaa206f88996c7640153d2c3ba77c0d3522d942'" >> /etc/php/7.2/apache2/conf.d/20-newrelic.ini
 
 RUN REV=$(git rev-parse HEAD)
 
@@ -49,8 +34,6 @@ RUN \
 
 # Expose Ports for Apache
 EXPOSE 80/tcp 443/tcp
-
-USER root
 
 RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated | xargs chown magento:www-data
 RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated | xargs chmod 777
