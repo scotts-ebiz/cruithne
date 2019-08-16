@@ -18,5 +18,12 @@
     "stylesDir": "web/css",
     "locale": ["en_US"],
     "parent": "default"
+  },
+  "drupal": {
+    "src": "app/design/frontend/Scottsbase/drupal",
+    "dest": "pub/static/frontend/Scottsbase/drupal",
+    "stylesDir": "web/css",
+    "locale": ["en_US"],
+    "parent": "default"
   }
 }
