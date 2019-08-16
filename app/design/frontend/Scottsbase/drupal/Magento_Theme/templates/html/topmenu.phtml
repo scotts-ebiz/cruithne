@@ -1,0 +1,40 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php
+/**
+ * Top menu for store
+ *
+ * @var $block \Magento\Theme\Block\Html\Topmenu
+ */
+?>
+<?php $columnsLimit = $block->getColumnsLimit() ?: 0; ?>
+<?php $_menu = $block->getHtml('level-top', 'submenu', $columnsLimit) ?>
+
+<nav class="navigation" data-action="navigation">
+  <ul data-mage-init='{"menu":{"responsive":true, "expanded":true, "position":{"my":"left top","at":"left bottom"}}}'>
+      <li class="level0 level-top">
+          <a href="<?php echo $block->getBaseUrl(); ?>" class="level-top" id="drupal-home-page">Home</a>
+      </li>
+      <li class="level0 level-top">
+          <a href="controller.html" class="level-top" id="drupal-controllers-page">Controller</a>
+      </li>
+      <li class="level0 level-top">
+          <a href="sensors.html" class="level-top" id="drupal-sensors-page">Sensors</a>
+      </li>
+  </ul>
+</nav>
+<!-- Calling Quick Info JS -->
+<script type="text/x-magento-init">
+{
+    "*": {
+        "js/set-active-nav": {}
+    }
+}
+</script>
