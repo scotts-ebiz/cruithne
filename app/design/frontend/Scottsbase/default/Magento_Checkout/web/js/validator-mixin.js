@@ -55,7 +55,7 @@ define([
 					if (!isNaN(value)) {
 						return false;
 					}
-					if( value.match( /^[a-zA-Z ]*$/) ) {
+					if( value.match( /^[a-zA-Z\.\- ]*$/) ) {
 						 return true
 					}else{
 						return false;
@@ -74,7 +74,7 @@ define([
 					if (!isNaN(value)) {
 						return false;
 					}
-					if( value.match( /^[a-zA-Z ]*$/) ) {
+					if( value.match( /^[a-zA-Z\.\- ]*$/) ) {
 						 return true
 					}else{
 						return false;
@@ -235,11 +235,11 @@ define([
 					var str = $("input[name='telephone']").val();
 					if(str){
 						var mob = str.replace(/\-/g, '');
-						if(mob.length < 10){
+						if(mob.length < 10 || mob.length > 10){
 							return false;
 						}
 					}
-					var filter = /\d{3}-\d{3}-\d{4}$/;
+					var filter = /(\d{3})\-?(\d{3})\-?(\d{4})/;
 					if (value.length > 9 && filter.test(value)) {
 						return true;
 					}else {
@@ -261,11 +261,11 @@ define([
 					var str = $("div[name='"+inpt+"'] input[name='telephone']").val();
 					if(str){
 						var mob = str.replace(/\-/g, '');
-						if(mob.length < 10){
+						if(mob.length < 10 || mob.length > 10){
 							return false;
 						}
 					}
-					var filter = /\d{3}-\d{3}-\d{4}$/;
+					var filter = /(\d{3})\-?(\d{3})\-?(\d{4})/;
 					if (value.length > 9 && filter.test(value)) {
 						return true;
 					}else {
