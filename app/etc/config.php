@@ -309,6 +309,7 @@ return [
         'SMG_ZipToAvalara' => 1,
         'Temando_Shipping' => 1,
         'SMG_Vantiv' => 1,
-        'Vertex_Tax' => 1
+        'Vertex_Tax' => 1, 
+        'MagePal_GoogleTagManager' => 1
     ]
 ];
