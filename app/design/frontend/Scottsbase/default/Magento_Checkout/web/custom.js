@@ -52,19 +52,6 @@ function($){
 					$('#shipping-method-buttons-container button').prop('disabled', false);
 				}
 			});
-			$("#shipping-new-address-form input[name='telephone']").keyup(function() {
-				var str = $(this).val();
-				var nval = str.replace(/^(\d{3})(\d{3})(\d)+$/, "$1-$2-$3")
-				$(this).val(nval);
-			});
-
-			$(".checkout-billing-address input[name='telephone']").keyup(function() {
-				var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.telephone';
-				var str = $("div[name='"+inpt+"'] input[name='telephone']").val();
-				var nval = str.replace(/^(\d{3})(\d{3})(\d)+$/, "$1-$2-$3")
-				$("div[name='"+inpt+"'] input[name='telephone']").val(nval);
-			});
-
 
 		}, 7000);
 	});
