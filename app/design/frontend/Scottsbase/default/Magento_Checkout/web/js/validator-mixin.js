@@ -46,7 +46,7 @@ define([
 					return !$.mage.isEmpty(value);
 				}
 			},
-			$.mage.__('Please enter your first name')
+			$.mage.__('Please enter your first name.')
 		);
 		validator.addRule(
 			'required-entry-lastname',
@@ -64,7 +64,7 @@ define([
 					return !$.mage.isEmpty(value);
 				}
 			},
-			$.mage.__('Please enter a valid name.')
+			$.mage.__('Please enter your last name.')
 		);
 		validator.addRule(
 			'required-entry-blastname',
@@ -213,7 +213,7 @@ define([
 					return !$.mage.isEmpty(value);
 				}
 			},
-			$.mage.__('Please enter a valid zip code.')
+			$.mage.__('Please enter a valid ZIP code.')
 		);
 		validator.addRule(
 			'required-entry-bpcode',
@@ -226,7 +226,7 @@ define([
 					return true;
 				}
 			},
-			$.mage.__('Please enter a valid zip code.')
+			$.mage.__('Please enter a valid ZIP code.')
 		);
 		validator.addRule(
 			'required-entry-telephone',
