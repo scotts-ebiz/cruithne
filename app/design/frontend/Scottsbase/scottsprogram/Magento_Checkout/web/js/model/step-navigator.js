@@ -8,8 +8,27 @@
  */
 define([
     'jquery',
-    'ko'
-], function ($, ko) {
+    'ko',
+    'Magento_Checkout/js/model/quote',
+    'Magento_Checkout/js/model/url-builder',
+    'mage/storage',
+    'Magento_Customer/js/model/customer',
+    'Magento_Checkout/js/model/full-screen-loader',
+    'Magento_Checkout/js/model/address-converter',
+    'Magento_Checkout/js/checkout-data',
+    'Magento_Checkout/js/action/select-billing-address',
+    'Magento_Checkout/js/action/select-shipping-address'
+], function ($,
+             ko,
+             quote,
+             urlBuilder,
+             storage,
+             customer,
+             fullScreenLoader,
+             addressConverter,
+             checkoutData,
+             selectBillingAddress,
+             selectShippingAddress) {
     'use strict';
 
     var steps = ko.observableArray();
@@ -231,6 +250,9 @@ define([
             var activeIndex = 0,
                 code;
 
+            // refresh the address data from the database
+            this.refreshFromServer();
+
             steps().sort(this.sortItems).forEach(function (element, index) {
                 if (element.isVisible()) {
                     element.isVisible(false);
@@ -244,6 +266,63 @@ define([
                 this.setHash(code);
                 document.body.scrollTop = document.documentElement.scrollTop = 0;
             }
+        },
+
+        refreshFromServer: function () {
+            var serviceUrl,
+                payload;
+
+            /**
+             * Checkout for guest and registered customer.
+             */
+            if (!customer.isLoggedIn()) {
+                serviceUrl = urlBuilder.createUrl('/guest-carts/:cartId', {
+                    cartId: quote.getQuoteId()
+                });
+                payload = {
+                    cartId: quote.getQuoteId()
+                };
+            } else {
+                serviceUrl = urlBuilder.createUrl('/carts/mine', {});
+                payload = {
+                    cartId: quote.getQuoteId()
+                };
+            }
+
+            // start the loader image
+            fullScreenLoader.startLoader();
+
+            // make a call to retrieve the desired data
+            return storage.get(
+                serviceUrl, JSON.stringify(payload)
+            ).done(
+                function (response) {
+                    var shippingAddress,
+                        newShippingAddress;
+
+                    // get the shipping address from the database
+                    shippingAddress = response['extension_attributes']['shipping_assignments'][0]['shipping']['address'];
+
+                    // update the Shipping values with the new values
+                    checkoutData.setShippingAddressFromData(shippingAddress);
+                    newShippingAddress = addressConverter.formAddressDataToQuoteAddress(checkoutData.getShippingAddressFromData());
+                    selectShippingAddress(newShippingAddress);
+
+                    // // update the Billing values with the new values
+                    selectBillingAddress(newShippingAddress);
+
+                    // stop the loader image
+                    fullScreenLoader.stopLoader();
+                }
+            ).fail(
+                function (response) {
+                    console.log("Failed to update address from database.");
+                    console.log(response);
+
+                    // stop the loader image
+                    fullScreenLoader.stopLoader();
+                }
+            );
         }
     };
 });
