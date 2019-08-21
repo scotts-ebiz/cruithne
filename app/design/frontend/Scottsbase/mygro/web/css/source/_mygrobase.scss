@@ -1870,7 +1870,7 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
 	.shipping-address-item.selected-item a{
 		cursor: text;
 		pointer-events: none;
-		color: $color_black20_shade;
+		color: #909090;
 	}
 	.checkout-billing-address {
         button {
@@ -2895,7 +2895,6 @@ button.action{
 .page-title-wrapper{
     h1.page-title{
         font-size: 1em;
-        display: none;
     }
 }
 
