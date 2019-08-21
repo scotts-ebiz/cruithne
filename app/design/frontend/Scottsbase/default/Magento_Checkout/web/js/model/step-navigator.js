@@ -149,13 +149,11 @@ define([
 								$('.cust-btn-add').on("click", function(){
 									count += 1;
 									if (count == 1) {
-										$("div[name='shippingAddress.street.1']").css('display','block');
 										$("div[name='billingAddressauthorizenet_directpost.street.1']").css('display','block');
 										$("div[name='billingAddresscheckmo.street.1']").css('display','block');
 										$("div[name='billingAddressvantiv_cc.street.1']").css('display','block');
 										$("div[name='billingAddresscashondelivery.street.1']").css('display','block');
 									}else if(count == 2){
-										$("div[name='shippingAddress.street.2']").css('display','block');
 										$("div[name='billingAddressauthorizenet_directpost.street.2']").css('display','block');
 										$("div[name='billingAddresscheckmo.street.2']").css('display','block');
 										$("div[name='billingAddressvantiv_cc.street.2']").css('display','block');
@@ -167,10 +165,29 @@ define([
 									}
 								});
 							}
+							$(".checkout-billing-address .street input").keyup(function() {
+								var str = $(this).val();
+								var nval = str.replace(/  +/g, ' ');
+								$(this).val(nval);
+							});
+							
+							$(".checkout-billing-address input[name='telephone']").keyup(function() {
+								var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.telephone';
+								var str = $("div[name='"+inpt+"'] input[name='telephone']").val();
+								var nval = str.replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, "$1-$2-$3")
+								$("div[name='"+inpt+"'] input[name='telephone']").val(nval);
+							});
+							
 						}, 7000);
 					} 
 					else {
 					    $('.custom-checkout-nav-btns').css("display", "block");
+						
+						$("#shipping-new-address-form input[name='telephone']").keyup(function() {
+							var str = $(this).val();
+							var nval = str.replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3')
+							$(this).val(nval);
+						});
 					}
 
                     return true;
@@ -268,6 +285,12 @@ define([
             }
         },
 
+        /**
+         * Gets the updated address from the server after
+         * Avalara has updated the data.
+         *
+         * @returns {*}
+         */
         refreshFromServer: function () {
             var serviceUrl,
                 payload;
