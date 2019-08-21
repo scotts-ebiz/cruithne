@@ -102,7 +102,7 @@
                                      id="super_group[<?= /* @escapeNotVerified */ $_item->getId() ?>]"
                                      name="super_group[<?= /* @escapeNotVerified */ $_item->getId() ?>]"
                                      data-selector="super_group[<?= /* @escapeNotVerified */ $_item->getId() ?>]"
-                                     value="<?= /* @escapeNotVerified */ $_item->getQty() * 1 ?>"
+                                     value="<?= ($active == '') ? 0 : /* @escapeNotVerified */ $_item->getQty() * 1 ?>"
                                      title="<?= /* @escapeNotVerified */ __('Qty') ?>"
                                      class="input-text qty"
                                      data-validate="{'validate-grouped-qty':'#super-product-table'}"
