@@ -20,6 +20,7 @@ WORKDIR $MAGENTO_DIR
 RUN git fetch
 RUN git checkout app/etc/config.php
 RUN git pull
+RUN composer install
 
 USER root
 

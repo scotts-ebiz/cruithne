@@ -794,7 +794,7 @@ define([
             function () {
                 return true;
             },
-            $.mage.__('Please enter a valid zip code.')
+            $.mage.__('Please enter a valid ZIP code.')
         ],
         'validate-state': [
             function (value) {

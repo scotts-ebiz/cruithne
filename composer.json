@@ -14,6 +14,7 @@
         "avalara/avatax-magento": "^1.5",
         "composer/composer": "@alpha",
         "magento/product-enterprise-edition": "2.3.0",
+        "magepal/magento2-googletagmanager": "^2.3",
         "mageplaza/module-smtp": "^1.2",
         "snowdog/frontools": "^1.6",
         "zaius/zaius-magento-2": "^1.0"
