@@ -5,7 +5,4 @@
 	 <type name="Magento\Checkout\Block\Checkout\LayoutProcessor">
 		<plugin  name="SMG_Checkout_Block_Checkout_LayoutProcessor" type="SMG\Checkout\Plugin\Block\Checkout\LayoutProcessor"/>
 	</type>
-	<type name="Magento\Directory\Model\ResourceModel\Region\Collection">
-		<plugin name="SMG_Checkout_Limit_State_Filter_Plugin" type="SMG\Checkout\Block\Checkout\StateFilter"/>
-	</type>
 </config>
