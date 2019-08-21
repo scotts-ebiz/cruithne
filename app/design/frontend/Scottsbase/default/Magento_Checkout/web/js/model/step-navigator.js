@@ -326,12 +326,14 @@ define([
                     // get the shipping address from the database
                     shippingAddress = response['extension_attributes']['shipping_assignments'][0]['shipping']['address'];
 
-                    // update the Shipping values with the new values
-                    checkoutData.setShippingAddressFromData(shippingAddress);
-                    newShippingAddress = addressConverter.formAddressDataToQuoteAddress(checkoutData.getShippingAddressFromData());
+                    // convert the database data to form data
+                    newShippingAddress = addressConverter.formAddressDataToQuoteAddress(shippingAddress);
+
+                    // update the Shipping Address with the database address
                     selectShippingAddress(newShippingAddress);
 
-                    // // update the Billing values with the new values
+                    // update the Billing Address with the shipping address
+                    // this works because we always default the billing address to the shipping address
                     selectBillingAddress(newShippingAddress);
 
                     // stop the loader image
