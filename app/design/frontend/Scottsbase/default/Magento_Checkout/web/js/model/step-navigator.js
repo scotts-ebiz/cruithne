@@ -144,7 +144,7 @@ define([
 						setTimeout(function(){
 							if($('.checkout-billing-address .cust-btn-add').length < 1){
 								$(".checkout-billing-address .street > .control").append("<a class='cust-btn-add' href='javascript:void(0)'>Add New Line</a>");
-								
+
 								var count = 0;
 								$('.cust-btn-add').on("click", function(){
 									count += 1;
@@ -160,7 +160,7 @@ define([
 										$("div[name='billingAddresscashondelivery.street.2']").css('display','block');
 										$('.cust-btn-add').css({"pointer-events": "none", "color": "#c2c2c2"});
 									}
-									else{ 
+									else{
 										$('.cust-btn-add').css({"pointer-events": "none", "color": "#c2c2c2"});
 									}
 								});
@@ -170,24 +170,25 @@ define([
 								var nval = str.replace(/  +/g, ' ');
 								$(this).val(nval);
 							});
-							
+
 							$(".checkout-billing-address input[name='telephone']").keyup(function() {
 								var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.telephone';
 								var str = $("div[name='"+inpt+"'] input[name='telephone']").val();
 								var nval = str.replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, "$1-$2-$3")
 								$("div[name='"+inpt+"'] input[name='telephone']").val(nval);
 							});
-							
+
 						}, 7000);
-					} 
+					}
 					else {
 					    $('.custom-checkout-nav-btns').css("display", "block");
-						
+						setTimeout(function(){
 						$("#shipping-new-address-form input[name='telephone']").keyup(function() {
 							var str = $(this).val();
 							var nval = str.replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3')
 							$(this).val(nval);
 						});
+						}, 7000);
 					}
 
                     return true;
@@ -206,7 +207,7 @@ define([
         isProcessed: function (code) {
             var activeItemIndex = this.getActiveItemIndex(),
                 sortedItems = steps().sort(this.sortItems),
-                requestedItemIndex = -1; 
+                requestedItemIndex = -1;
 
             sortedItems.forEach(function (element, index) {
                 if (element.code == code) { //eslint-disable-line eqeqeq
