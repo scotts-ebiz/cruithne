@@ -37,10 +37,11 @@ body {
     -moz-osx-font-smoothing: grayscale;
 }
 
-// Base Page Styles
 .skip-content-header{
     display:none;
 }
+
+
 .page-wrapper {
     .page-header {
         border-bottom: 1px solid #dcdcdc;
@@ -712,34 +713,6 @@ button.action{
     }
 }
 
-.page-title-wrapper{
-    h1.page-title{
-        font-size: 1em;
-        display: none;
-    }
-}
-
-.cart-container{
-    .cart-summary-divlink{
-        #discount-coupon-form{
-            .field{
-                float:left;
-                 @include max-screen($screen__s){
-                    float:none;
-                }
-                .label{
-                    width:unset;
-                }
-                .control{
-                    div.mage-error{
-                        font-size:1rem;
-                    }
-                }
-            }
-        }
-    }
-}
-
 .field{
     .control{
         .field-error{
@@ -747,17 +720,6 @@ button.action{
             bottom: 0;
         }
     }
-}
-.form-shipping-address{
-	.control{
-		height:85px;
-		@include max-screen($screen__s){
-			height:54px;
-		}
-	}
-	._error {
-    	padding-bottom: 0;
-	}
 }
 
 .cms-the-groconnect-app{
@@ -779,130 +741,13 @@ button.action{
         }
     }
 }
-.checkout-onepage-success{
-    .page-wrapper{
-        #maincontent{
-            margin-left: 16rem;
-            @include max-screen($screen__s){
-                margin-left:0rem;
-            }
-            .page-title-wrapper{
-                margin-top: 9.5rem;
-                .page-title{
-                    font-size: 16px;
-                    color: #000;
-                    font-weight: bold;
-                }
-            }
-            .checkout-success{
-                color: #000;
-                font-weight: 400;
-                width: 700px;
-                @include max-screen($screen__s){
-                    width:auto;
-                }
-                .actions-toolbar{
-                    width: 100%;
-                    padding-top: 20px;
-                    border-top: 1px solid #ccc;
-                    text-align: right;
-                    .primary{
-                        float: right;
-                        width: 100%;
-                        .action.primary.continue{
-                            color: #fff;
-                            padding: 10px 25px 10px 25px;
-                            display: inline-block;
-                            background: #075534;
-                            margin: 0;
-                            float: right;
-                            width: auto;
-                        }
-                    }
-                }
-            }
-            #registration{
-                display:none;
-            }
-        }
-    }
-}
 
-.opc-payment{
-	.payment-method-content{
-		.actions-toolbar{
-			@include max-screen($screen__s){
-			  //Following other standards where going full width
-              //width:50%;
-			}
-			.primary{
-				.action.primary.checkout{
-					@include max-screen($screen__s){
-						padding: 0px 0px;
-						font-size:16px;
-					}
-				}
-			}
-		}
-	}
-}
-
-.checkout-cart-index{
-    .columns{
-        .block.crosssell{
-            margin-top:0px;            
-            margin-left:15px;
-       }
-    }
-}
-
-.cart-parent-summary{
-    .cart-summary._sticky{
-        top:0px !important;
-    }
-}
-
-#checkout-step-shipping_method{
-	.message.notice{
-		font-size:16px;
-	}
-}
 .modal-inner-wrap {
 	.modal-footer{
 		text-align:right;
 		.action-primary{
 			background: #075534;
 			color: #fff;
-		}
-	}
-}
-.cart-parent-summary {
-	.cart-summary-divlink {
-		#block-discount {
-			.content {
-				display: block !important;
-			}
-			.content.disc_active {
-				display: none !important;
-			}
-		}
-	}
-}
-
-div[name="shippingAddress.postcode"] {
-	.control {
-		.message.warning {
-			display: none;
-		}
-	}
-}
-@media screen and (max-width: $screen_768) {
-	.checkout-index-index{
-		.modal-custom{
-			.action-close{
-				background: none !important;
-				padding: 0 !important;
-			}
 		}
 	}
 }
