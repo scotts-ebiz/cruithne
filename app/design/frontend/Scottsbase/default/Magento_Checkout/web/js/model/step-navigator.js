@@ -8,8 +8,27 @@
  */
 define([
     'jquery',
-    'ko'
-], function ($, ko) {
+    'ko',
+    'Magento_Checkout/js/model/quote',
+    'Magento_Checkout/js/model/url-builder',
+    'mage/storage',
+    'Magento_Customer/js/model/customer',
+    'Magento_Checkout/js/model/full-screen-loader',
+    'Magento_Checkout/js/model/address-converter',
+    'Magento_Checkout/js/checkout-data',
+    'Magento_Checkout/js/action/select-billing-address',
+    'Magento_Checkout/js/action/select-shipping-address'
+], function ($,
+             ko,
+             quote,
+             urlBuilder,
+             storage,
+             customer,
+             fullScreenLoader,
+             addressConverter,
+             checkoutData,
+             selectBillingAddress,
+             selectShippingAddress) {
     'use strict';
 
     var steps = ko.observableArray();
@@ -125,7 +144,7 @@ define([
 						setTimeout(function(){
 							if($('.checkout-billing-address .cust-btn-add').length < 1){
 								$(".checkout-billing-address .street > .control").append("<a class='cust-btn-add' href='javascript:void(0)'>Add New Line</a>");
-								
+
 								var count = 0;
 								$('.cust-btn-add').on("click", function(){
 									count += 1;
@@ -141,7 +160,7 @@ define([
 										$("div[name='billingAddresscashondelivery.street.2']").css('display','block');
 										$('.cust-btn-add').css({"pointer-events": "none", "color": "#c2c2c2"});
 									}
-									else{ 
+									else{
 										$('.cust-btn-add').css({"pointer-events": "none", "color": "#c2c2c2"});
 									}
 								});
@@ -151,24 +170,25 @@ define([
 								var nval = str.replace(/  +/g, ' ');
 								$(this).val(nval);
 							});
-							
+
 							$(".checkout-billing-address input[name='telephone']").keyup(function() {
 								var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.telephone';
 								var str = $("div[name='"+inpt+"'] input[name='telephone']").val();
 								var nval = str.replace(/(\d{3})\-?(\d{3})\-?(\d{4})/, "$1-$2-$3")
 								$("div[name='"+inpt+"'] input[name='telephone']").val(nval);
 							});
-							
+
 						}, 7000);
-					} 
+					}
 					else {
 					    $('.custom-checkout-nav-btns').css("display", "block");
-						
+						setTimeout(function(){
 						$("#shipping-new-address-form input[name='telephone']").keyup(function() {
 							var str = $(this).val();
 							var nval = str.replace(/(\d{3})\-?(\d{3})\-?(\d{4})/,'$1-$2-$3')
 							$(this).val(nval);
 						});
+						}, 7000);
 					}
 
                     return true;
@@ -187,7 +207,7 @@ define([
         isProcessed: function (code) {
             var activeItemIndex = this.getActiveItemIndex(),
                 sortedItems = steps().sort(this.sortItems),
-                requestedItemIndex = -1; 
+                requestedItemIndex = -1;
 
             sortedItems.forEach(function (element, index) {
                 if (element.code == code) { //eslint-disable-line eqeqeq
@@ -248,6 +268,9 @@ define([
             var activeIndex = 0,
                 code;
 
+            // refresh the address data from the database
+            this.refreshFromServer();
+
             steps().sort(this.sortItems).forEach(function (element, index) {
                 if (element.isVisible()) {
                     element.isVisible(false);
@@ -261,6 +284,71 @@ define([
                 this.setHash(code);
                 document.body.scrollTop = document.documentElement.scrollTop = 0;
             }
+        },
+
+        /**
+         * Gets the updated address from the server after
+         * Avalara has updated the data.
+         *
+         * @returns {*}
+         */
+        refreshFromServer: function () {
+            var serviceUrl,
+                payload;
+
+            /**
+             * Checkout for guest and registered customer.
+             */
+            if (!customer.isLoggedIn()) {
+                serviceUrl = urlBuilder.createUrl('/guest-carts/:cartId', {
+                    cartId: quote.getQuoteId()
+                });
+                payload = {
+                    cartId: quote.getQuoteId()
+                };
+            } else {
+                serviceUrl = urlBuilder.createUrl('/carts/mine', {});
+                payload = {
+                    cartId: quote.getQuoteId()
+                };
+            }
+
+            // start the loader image
+            fullScreenLoader.startLoader();
+
+            // make a call to retrieve the desired data
+            return storage.get(
+                serviceUrl, JSON.stringify(payload)
+            ).done(
+                function (response) {
+                    var shippingAddress,
+                        newShippingAddress;
+
+                    // get the shipping address from the database
+                    shippingAddress = response['extension_attributes']['shipping_assignments'][0]['shipping']['address'];
+
+                    // convert the database data to form data
+                    newShippingAddress = addressConverter.formAddressDataToQuoteAddress(shippingAddress);
+
+                    // update the Shipping Address with the database address
+                    selectShippingAddress(newShippingAddress);
+
+                    // update the Billing Address with the shipping address
+                    // this works because we always default the billing address to the shipping address
+                    selectBillingAddress(newShippingAddress);
+
+                    // stop the loader image
+                    fullScreenLoader.stopLoader();
+                }
+            ).fail(
+                function (response) {
+                    console.log("Failed to update address from database.");
+                    console.log(response);
+
+                    // stop the loader image
+                    fullScreenLoader.stopLoader();
+                }
+            );
         }
     };
 });
