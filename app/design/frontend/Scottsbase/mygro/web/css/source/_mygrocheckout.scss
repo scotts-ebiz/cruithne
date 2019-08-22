@@ -2,6 +2,9 @@
 .checkout-cart-index {
   .page-main {
     .page-title-wrapper {
+        display: block;
+        margin-top: 0rem;
+        //font-size:2rem !important;
       .cart-total-container {
         float: none;
         text-transform: uppercase;
@@ -16,10 +19,10 @@
       border-bottom:0;
       .page-title {
         font-weight: bold;
-        font-size: 1.313rem;
-        padding: 0 1rem;
-        color: #636363;
-        border-bottom: 1px solid #ededed;
+        font-size: 1.6rem;
+        padding: 0 0 10px 0;
+        color: #333;
+        border-bottom: 1px solid #ccc;
       }
     }
     .columns {
@@ -1164,7 +1167,7 @@
   .opc-block-summary > .title,
   .checkout-agreements-items .checkout-agreements-item-title{
     font-weight: 500;
-    font-size: $font25;
+    font-size: 1.6rem;
   }
   .cust-btn-add {
     font-size: $font14;

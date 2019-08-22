@@ -266,10 +266,6 @@ body {
         font-size: 1rem;
         margin-top: 6rem;
 
-        .page-title-wrapper {
-            //display: none;
-        }
-
         a:active,
         .alink:active {
             text-decoration: none;
@@ -648,6 +644,9 @@ body {
   margin: 120px auto 20px !important;
 }
 
+//Causing Title Section to appear on all pages commenting out for now
+// Don't know what the design reason was for this
+/*
 .page-wrapper {
     .page-main {
         .page-title-wrapper{
@@ -657,6 +656,8 @@ body {
         }
     }
 }
+*/
+
 
 .actions-toolbar{
     .primary{

@@ -2,12 +2,15 @@
   .page-main {
     .page-title-wrapper {
       border-bottom:0;
+      display: block;
+      margin-top: 0rem;
+      //font-size:2rem !important;
       .page-title {
         color: #636363;
         text-transform: uppercase;
         font-size: 1.313rem !important;
         width: 100%;
-        border-bottom: 1px solid #ededed;
+        border-bottom: 1px solid #ccc;
         padding: 0 1rem;
         letter-spacing:0.5px;
       }
