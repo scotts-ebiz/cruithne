@@ -4,7 +4,7 @@
 
 	<widget class="SMG\ZipCodeList\Block\Widget\Zipcodelist" id="smg_zipcodelist_zipcodelist">
 
-		<label>Zip Code Lists</label>
+		<label>ZIP Code Lists</label>
 
 		<description>Zip codes and their respective segments.</description>
 
@@ -12,7 +12,7 @@
 
 			<parameter name="zipcodes" visible="true" xsi:type="block" required="true">
 
-				<label>Zip Codes</label>
+				<label>ZIP Codes</label>
 
 				<block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
 
@@ -20,7 +20,7 @@
 
 			<parameter name="zipcodesegment" visible="true" xsi:type="select" required="true" source_model="SMG\ZipCodeList\Model\Source\ZipCodeSegmentSelect">
 
-				<label>Zip Code Segment</label>
+				<label>ZIP Code Segment</label>
 
 			</parameter>
 

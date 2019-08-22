@@ -77,6 +77,15 @@ class LayoutProcessor
 						}
 					}
                 }
+                $result['components']['checkout']['children']['steps']['children']['shipping-step']
+            ['children']['shippingAddress']['children']['shipping-address-fieldset']['children']['region_id']['label'] = __('State');
+            $result['components']['checkout']['children']['steps']['children']['shipping-step']
+            ['children']['shippingAddress']['children']['shipping-address-fieldset']['children']['postcode']['label'] = __('ZIP Code');
+            $result['components']['checkout']['children']['steps']['children']['billing-step']['children']
+                ['payment']['children']['afterMethods']['children']['billing-address-form']['children']['form-fields']
+                ['children']['region_id']['label'] = __('State');
+            $result['components']['checkout']['children']['steps']['children']['billing-step']
+            ['children']['billingAddress']['children']['billing-address-fieldset']['children']['postcode']['label'] = __('ZIP Code');
 				return $result;
             }
     }

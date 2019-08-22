@@ -15,7 +15,7 @@ define([
 					if (!isNaN(value)) {
 						return false;
 					}
-					if( value.match( /^[a-zA-Z\.\- ]*$/) ) {
+					if( value.match( /^[a-zA-Z\.\-\' ]*$/) ) {
 						 return true
 					}else{
 						return false;
@@ -36,7 +36,7 @@ define([
 					if (!isNaN(value)) {
 						return false;
 					}
-					if( value.match( /^[a-zA-Z\.\- ]*$/) ) {
+					if( value.match( /^[a-zA-Z\.\-\' ]*$/) ) {
 						 return true
 					}else{
 						return false;
@@ -55,7 +55,7 @@ define([
 					if (!isNaN(value)) {
 						return false;
 					}
-					if( value.match( /^[a-zA-Z\.\- ]*$/) ) {
+					if( value.match( /^[a-zA-Z\.\-\' ]*$/) ) {
 						 return true
 					}else{
 						return false;
@@ -74,7 +74,7 @@ define([
 					if (!isNaN(value)) {
 						return false;
 					}
-					if( value.match( /^[a-zA-Z\.\- ]*$/) ) {
+					if( value.match( /^[a-zA-Z\.\-\' ]*$/) ) {
 						 return true
 					}else{
 						return false;
@@ -83,7 +83,7 @@ define([
 					return !$.mage.isEmpty(value);
 				}
 			},
-			$.mage.__('Please enter your last name')
+			$.mage.__('Please enter your last name.')
 		);
 		validator.addRule(
 			'required-entry-bcity',
