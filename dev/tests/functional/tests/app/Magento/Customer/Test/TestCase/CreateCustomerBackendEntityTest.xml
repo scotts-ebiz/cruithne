@@ -128,7 +128,7 @@
                 <item name="2" xsi:type="string">Street Address</item>
                 <item name="3" xsi:type="string">City</item>
                 <item name="4" xsi:type="string">Country</item>
-                <item name="5" xsi:type="string">Zip/Postal Code</item>
+                <item name="5" xsi:type="string">ZIP Code</item>
                 <item name="6" xsi:type="string">Phone Number</item>
             </data>
             <constraint name="Magento\Customer\Test\Constraint\AssertCustomerBackendRequiredFields" />
