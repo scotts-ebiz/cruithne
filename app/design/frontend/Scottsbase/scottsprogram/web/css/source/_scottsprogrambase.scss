@@ -1,6 +1,11 @@
 // Scotts Program Base
 // HP Only Style 
 @import 'mixins/media-queries';
+
+.cms-return-policy .page-title-wrapper {
+    display: none;
+}
+
 .page-wrapper {
     .page-header {
         background: $primary-green;
