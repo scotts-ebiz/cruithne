@@ -31,7 +31,7 @@ define([
             validationResult = postcodeValidator.validate(postcodeElement.value(), countryId);
 
             if (!validationResult) {
-                warnMessage = $t('Provided Zip/Postal Code seems to be invalid.');
+                warnMessage = $t('Provided ZIP Code seems to be invalid.');
 
                 if (postcodeValidator.validatedPostCodeExample.length) {
                     warnMessage += $t(' Example: ') + postcodeValidator.validatedPostCodeExample.join('; ') + '. ';
