@@ -6,7 +6,13 @@
     display: none;
 }
 
-.page-wrapper {
+body {
+    h1 {
+      color: $scottsprogram-gray;
+    }
+}
+
+  .page-wrapper {
     .page-header {
         background: $primary-green;
         height: 3.25rem;
@@ -139,7 +145,7 @@
                     }
                 }
                 .footer__section--header {
-                    @include font-roboto(0.75rem, #636363, 700, 1.2rem);
+                    @include font-roboto(0.75rem, $scottsprogram-gray, 700, 1.2rem);
                     letter-spacing: 1.2px;
                     margin: 1rem 0;
                     text-transform: uppercase;
