@@ -6,7 +6,13 @@
     display: none;
 }
 
-.page-wrapper {
+body {
+    h1 {
+      color: $scottsprogram-gray;
+    }
+}
+
+  .page-wrapper {
     .page-header {
         background: $primary-green;
         height: 3.25rem;
@@ -139,7 +145,7 @@
                     }
                 }
                 .footer__section--header {
-                    @include font-roboto(0.75rem, #636363, 700, 1.2rem);
+                    @include font-roboto(0.75rem, $scottsprogram-gray, 700, 1.2rem);
                     letter-spacing: 1.2px;
                     margin: 1rem 0;
                     text-transform: uppercase;
@@ -626,13 +632,15 @@ a#totop {
 }
 
 
-
+//Causing Title Section to appear on all pages commenting out for now
+// Don't know what the design reason was for this
+/*
 .page-wrapper .page-main .page-title-wrapper{
   display: block;
   margin-top: 0rem;
   font-size:2rem !important;
 }
-
+*/
 
 .column.main{
     .landingPageOptions-container{
