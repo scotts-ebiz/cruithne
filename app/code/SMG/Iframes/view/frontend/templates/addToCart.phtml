@@ -1,0 +1,215 @@
+<html>
+<head>
+  <title></title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+  <!-- Quick and Dirty get jquery. todo: If time come back and find a way via requireJS     -->
+  <script type="text/javascript" src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+  <script>
+      function setLocation(url) {
+          window.location.href = url;
+      }
+  </script>
+</head>
+<body class="system-m product--cta <? if ($this->getData('desktop')) { ?>desktop<? } ?>">
+
+<div class="cta__container">
+
+  <div class="cta__container--price">
+            <span class="regular-price" id="product-price-13_clone">
+              <?php if ($this->getData('children_price')): ?>
+                $<span id="list-price"><?php echo sprintf("%.02f", $this->getData('children_price')); ?></span>
+              <?php else: ?>
+                $<span id="list-price"><?php echo sprintf("%.02f", $this->getData('base_price', 0)); ?></span>
+              <?php endif; ?>
+                <input type="hidden" id="base-product-id"
+                       value=<?php echo '"' . $this->getData('base_product_id') . '"' ?>/>
+            </span>
+  </div>
+
+  <div class="cta__container--options">
+    <div class="block__item">
+      <button type="button" title="Add to Cart" class="button button--cart" id="cart-add"
+              data-size_id="<?php echo str_replace(' ', '', trim(strtolower($this->getData('size')))); ?>"
+              data-sku_id="<?php echo $this->getData('sku'); ?>"
+              data-drupal-sku="<? echo $this->getData('drupalProductId'); ?>">
+        <span>Add to Cart</span>
+      </button>
+    </div><!-- .block__item -->
+
+    <?php $child_products = $this->getData('child_products'); ?>
+
+    <div class="block__item">
+      <div class="block__subblock">
+        <?php if (count($child_products) != 0 && !$this->getData('children_price')): ?>
+          <label class="block__subblock--label size-label" for="child-products">Size</label>
+          <select name="product_id" id="child-products"
+            <?php if ($this->getData('children_price')): ?>
+              data-price="<?php echo sprintf("%.02f", $this->getData('children_price')); ?>"
+            <?php endif; ?>
+          >
+            <?php foreach ($child_products as $prod): ?>
+              <option value="<? echo $prod->getId(); ?>"
+                <?php if ($this->getData('selected_product') == $prod->getId()): ?> selected<?php endif; ?>
+                      data-price="<?php echo sprintf("%.02f", $prod->getPrice()); ?>"
+                      data-size="<?php echo str_replace(' ', '', trim(strtolower($prod->getAttributeText('product_sizes')))); ?>"
+                      data-sku="<?php echo $prod->getSku(); ?>"
+                      data-drupal-sku="<?php echo $prod->getdrupalproductid(); ?>" >
+                <?php echo $prod->getAttributeText('product_sizes'); ?>
+              </option>
+            <?php endforeach; ?>
+          </select>
+          <div class="product__select">
+            <div name="product_id" id="size-options"
+              <?php if ($this->getData('children_price')): ?>
+                data-price="<?php echo sprintf("%.02f", $this->getData('children_price')); ?>"
+              <?php endif; ?>
+            >
+              <?php foreach ($child_products as $prod): ?>
+                <label for="465" data-price="">
+                  <input type="radio"
+                         name="size"
+                         value="<? echo $prod->getId(); ?>"
+                    <?php if ($this->getData('selected_product') == $prod->getId()): ?> checked<?php endif; ?>
+                         data-price="<?php echo sprintf("%.02f", $prod->getPrice()); ?>"
+                         data-size="<?php echo str_replace(' ', '', trim(strtolower($prod->getAttributeText('product_sizes')))); ?>"
+                         data-sku="<?php echo $prod->getSku(); ?>"
+                         data-drupal-sku="<? echo $prod->getdrupalproductid(); ?>" />
+                  <span><?php echo $prod->getAttributeText('product_sizes'); ?></span>
+                </label>
+              <?php endforeach; ?>
+            </div>
+          </div>
+        <?php endif; ?>
+      </div>
+
+      <div class="block__subblock">
+        <label class="block__subblock--label" for="qty">Quantity</label>
+
+        <label id="qty-wrap">
+          <input type="text" pattern="\d*" name="quantity" id="qty" maxlength="12" value="1" title="Qty"
+                 class="block__subblock--input" size="3"/>
+          <button class="minus">-</button>
+          <button class="plus">+</button>
+        </label>
+      </div>
+    </div><!-- .block__item -->
+
+    <script>
+      <?php
+      $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+      $storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
+      $urlBase = $storeManager->getStore()->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_WEB);
+      $url = $urlBase . "iframes/addtocart/add";
+      ?>
+      (function ($) {
+          $(document).ready(function () {
+              var childId = $('#child-products').find(":selected").val();
+              if (childId) {
+                  $('#cart-add').attr('data-size_id', $('#child-products').find(":selected").attr('data-size'));
+                  $('#cart-add').attr('data-sku_id', $('#child-products').find(":selected").attr('data-sku'));
+                  $('#cart-add').attr('data-drupal-sku', $('#child-products').find(":selected").attr('data-drupal-sku'));
+              }
+
+              $(document).on('change', "#child-products", function () {
+                  var price = $('#child-products').attr('data-price');
+                  if (!price) {
+                      price = $('#child-products').find(":selected").attr('data-price');
+                  }
+
+                  $('#list-price').text(price);
+                  $('#cart-add').attr('data-size_id', $('#child-products').find(":selected").attr('data-size'));
+                  $('#cart-add').attr('data-sku_id', $('#child-products').find(":selected").attr('data-sku'));
+                  $('#cart-add').attr('data-drupal-sku', $('#child-products').find(":selected").attr('data-drupal-sku'));
+
+                  var skuSize = $('#cart-add').attr('data-size_id');
+                  var magentoSku = $('#cart-add').attr('data-sku_id');
+                  var drupalSku =$('#cart-add').attr('data-drupal-sku');
+
+                  // Notify parent page that we have changed the product size.
+                  window.parent.postMessage(
+                      {
+                          event: 'sizeChange',
+                          data: {
+                              size: skuSize,
+                              magentoSku: magentoSku,
+                              drupalSku: drupalSku
+                          }
+                      }, "*");
+              });
+
+              $('#child-products').trigger('change');
+              $('#cart-add').on('click', function () {
+                  var productId = $('#child-products').find(":selected").val();
+                  if (!productId) {
+                      productId = $('#base-product-id').val();
+
+                  }
+                  var drupalId = $('#cart-add').attr('data-drupal-sku');
+                  var magentoSku = $('#cart-add').attr('data-sku_id');
+                  var quantity = $('#qty').val();
+                  var cartUrl = "<?php echo $url; ?>" + "?product_id=" + productId + "&quantity=" + quantity;
+                  $.get(cartUrl, function (data) {
+
+                      //Do not track Magento products that do not have a drupalId.
+                      if (!drupalId) {
+                          return;
+                      }
+
+                      // BazaarVoice track add to cart.
+                      window.bvCallback = function (BV) {
+                          BV.pixel.trackConversion({
+                              "type": "AddToCart",
+                              "label": "AddToCart_SKU",
+                              "value": drupalId,
+                              "items" : [
+                                  { "sku": drupalId, "quantity": quantity }
+                              ]
+                          });
+                      };
+
+                  }).done(function (e) {
+                      window.parent.postMessage('productAdded', '*');
+                  });
+              });
+
+              // Grab the default selected sku and update the radio option state for that sku.
+              $('#size-options > label > input[value=' + childId + ']').attr('checked', true);
+
+              // Change the radio option state when clicking on the size label.
+              $("#size-options label").on('click', function () {
+                  $('#size-options input').removeAttr('checked');
+                  $(this).find('input').attr('checked', true).trigger('change');
+              });
+
+              // Update the original <select> dropdown whenever the radio option changes.
+              $("#size-options > label > input").change(function () {
+                  var productId = $(this).val();
+                  $("#child-products").val(productId);
+                  $("#child-products").trigger('change');
+              });
+
+              $("#qty-wrap button").click(function (t) {
+                  $(this).hasClass("minus") ?
+                      $("#qty").val() > 1 && $("#qty").val(parseInt($("#qty").val()) - 1) :
+                      $(this).hasClass("plus") && $("#qty").val() < 99 && $("#qty").val(parseInt($("#qty").val()) + 1)
+              });
+
+              $('#qty').on('input', function () {
+                  var quantity = this.value;
+
+                  if (quantity < 1) {
+                      $("#qty").val(1);
+                  }
+                  else if (quantity > 99) {
+                      $("#qty").val(99);
+                  }
+              })
+
+          });
+      })(jQuery);
+    </script>
+
+  </div><!-- .atc__block -->
+</div>
+</body>
+</html>

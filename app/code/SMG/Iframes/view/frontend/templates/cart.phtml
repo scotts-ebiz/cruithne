@@ -1,0 +1,15 @@
+<div class="nav__cart">
+    <a id="cart-checkout" data-target-element="#header-cart" class="nav__cart--wrapper" target="_parent">
+        <span class="nav__cart--icon"></span>
+      <? if ($this->getData('cartCount') != 0 ) : ?>
+          <span class="nav__cart--label">Cart <span class="count"><?php echo $this->getData('cartCount'); ?></span></span>
+          <span class="checkout-now">Checkout Now</span>
+      <? endif; ?>
+    </a>
+</div>
+
+<script>
+    document.getElementById('cart-checkout').addEventListener('click', function() {
+        window.parent.postMessage('cartClicked', '*');
+    });
+</script>
