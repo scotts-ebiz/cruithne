@@ -1,10 +1,10 @@
+
 // Cart Styles
 .checkout-cart-index {
   .page-main {
     .page-title-wrapper {
         display: block;
         margin-top: 0rem;
-        //font-size:2rem !important;
       .cart-total-container {
         float: none;
         text-transform: uppercase;
@@ -447,10 +447,6 @@
     vertical-align: top;
     width: 80%;
     text-align: left;
-  }
-  .cart-totals .grand .amount,
-  .cart-container .cart-totals .grand.totals .mark strong{
-    color: $color_black;
   }
   tr.item-actions .actions-toolbar .action.action-delete{
     display:none;
@@ -1164,9 +1160,11 @@
   .opc-block-shipping-information .shipping-information-title,
   .opc-block-summary > .title,
   .checkout-agreements-items .checkout-agreements-item-title{
-    font-weight: 500;
-    font-size: 1.6rem;
+      font-weight: 500;
+      font-size: 1.6rem;
+      color: $color_black20_shade;
   }
+
   .cust-btn-add {
     font-size: $font14;
     float: right;

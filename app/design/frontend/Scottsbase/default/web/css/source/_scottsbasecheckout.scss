@@ -54,7 +54,7 @@
 .cart-summary > .pop-cust-click.title {
     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 0.8rem;
-    color: #000;
+    color: #333333;
     text-decoration: underline;
     cursor: pointer;
     margin-left: 5px;
@@ -64,6 +64,16 @@
         -ms-transition: background 0.2s;
         -o-transition: background 0.2s;
         transition: background 0.2s;
-        color: #000;
+        color: $color_black;
     }
+}
+
+//Default styling for Order Summary Total
+.cart-totals .grand .amount strong,
+.cart-container .cart-totals .grand.totals .mark strong,
+.opc-block-summary .table-totals .mark strong,
+.opc-block-summary .table-totals .grand .amount strong,
+.cart-container .cart-totals .grand.totals .mark strong {
+    color: #333333;
+    font-weight: 700 !important;
 }
