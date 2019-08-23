@@ -2117,3 +2117,30 @@ div[name="shippingAddress.postcode"] {
     }
   }
 }
+
+.checkout-index-index{
+  .step-content{
+    .methods-shipping{
+      .actions-toolbar{
+        .primary{
+          .action.primary:disabled{
+            background: #4d4e4e !important;
+          }
+        }
+      }
+    }
+    .form.payments{
+      .opc-payment{
+        .payment-method._active{
+          .actions-toolbar{
+            .primary{
+              .action.primary.disabled{
+                background: #4d4e4e !important;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
