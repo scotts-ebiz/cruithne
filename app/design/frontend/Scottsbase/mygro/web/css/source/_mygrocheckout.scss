@@ -1,7 +1,10 @@
+
 // Cart Styles
 .checkout-cart-index {
   .page-main {
     .page-title-wrapper {
+        display: block;
+        margin-top: 0rem;
       .cart-total-container {
         float: none;
         text-transform: uppercase;
@@ -14,13 +17,6 @@
         margin: auto;
       }
       border-bottom:0;
-      .page-title {
-        font-weight: bold;
-        font-size: 1.313rem;
-        padding: 0 1rem;
-        color: #636363;
-        border-bottom: 1px solid #ededed;
-      }
     }
     .columns {
       .column {
@@ -61,7 +57,7 @@
                     -ms-transition: background 0.2s;
                     -o-transition: background 0.2s;
                     transition: background 0.2s;
-                    background: #005d49;
+                    background: $mygro-dark-green;
                   }
                 }
                 .action.multicheckout {
@@ -310,10 +306,10 @@
     box-shadow: none;
   }
   .pop-cust-click.title{
-    font-size: $font14;
-    cursor: pointer;
-    margin-left: 5px;
-    color: $color_green_shade;
+    color: $color_dark_green_shade;
+    &:hover {
+      color: $mygro-dark-green;
+    }
   }
   .update_cust_btn{
     background: none;
@@ -452,19 +448,20 @@
     width: 80%;
     text-align: left;
   }
-  .cart-totals .grand .amount,
-  .cart-container .cart-totals .grand.totals .mark strong{
-    color: $color_black;
-  }
   tr.item-actions .actions-toolbar .action.action-delete{
     display:none;
   }
   .cart-container{
-    .form-cart .action.update{
-      margin-left: 0;
-      padding-left: 0;
-      cursor: pointer;
-    }
+      .form-cart .action.update{
+          color: $mygro-accent-blue;
+          span {
+              .actions-toolbar {
+                  a.action-delete {
+                      color: $mygro-accent-blue;
+                  }
+              }
+          }
+      }
   }
 }
 
@@ -676,7 +673,7 @@
                                           -ms-transition: background 0.2s;
                                           -o-transition: background 0.2s;
                                           transition: background 0.2s;
-                                          background: #005d49;
+                                          background: $mygro-dark-green;
                                         }
                                       }
                                     }
@@ -1163,9 +1160,11 @@
   .opc-block-shipping-information .shipping-information-title,
   .opc-block-summary > .title,
   .checkout-agreements-items .checkout-agreements-item-title{
-    font-weight: 500;
-    font-size: $font25;
+      font-weight: 500;
+      font-size: 1.6rem;
+      color: $color_black20_shade;
   }
+
   .cust-btn-add {
     font-size: $font14;
     float: right;

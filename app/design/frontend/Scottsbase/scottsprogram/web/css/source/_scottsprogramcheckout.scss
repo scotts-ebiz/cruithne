@@ -2,14 +2,10 @@
   .page-main {
     .page-title-wrapper {
       border-bottom:0;
+      display: block;
+      margin-top: 0rem;
       .page-title {
-        color: #636363;
-        text-transform: uppercase;
-        font-size: 1.313rem !important;
-        width: 100%;
-        border-bottom: 1px solid #ededed;
-        padding: 0 1rem;
-        letter-spacing:0.5px;
+        color: $scottsprogram-gray;
       }
     }
     .columns {
@@ -304,10 +300,10 @@
     box-shadow: none;
   }
   .pop-cust-click.title{
-    font-size: $font14;
-    cursor: pointer;
-    margin-left: 5px;
     color: $color_green_shade;
+    &:hover {
+        color: $color_black20_shade;
+    }
   }
   .update_cust_btn{
     background: none;
@@ -464,18 +460,20 @@
     width: 80%;
     text-align: left;
   }
-  .cart-totals .grand .amount,
-  .cart-container .cart-totals .grand.totals .mark strong{
-    color: $color_black;
-  }
   tr.item-actions .actions-toolbar .action.action-delete{
     display:none;
   }
   .cart-container{
     .form-cart .action.update{
-      margin-left: 0;
-      padding-left: 0;
-      cursor: pointer;
+      color: $scottsprogram-orange;
+      span {
+        .actions-toolbar {
+          a.action-delete {
+            color: $scottsprogram-orange;
+          }
+        }
+      }
+
     }
   }
 }
@@ -611,9 +609,6 @@
                 }
                 .checkout-shipping-method {
                   .checkout-shipping-method {
-                    .step-title {
-                      font-size: 2rem;
-                    }
                     .step-content {
                       .methods-shipping {
                         .actions-toolbar {
@@ -845,22 +840,6 @@
                       }
                     }
                     .opc-block-shipping-information {
-                      .shipping-information {
-                        .ship-to {
-                          .shipping-information-title {
-                            span {
-                              font-size: 2rem;
-                            }
-                          }
-                        }
-                        .ship-via {
-                          .shipping-information-title {
-                            span {
-                              font-size: 2rem;
-                            }
-                          }
-                        }
-                      }
                       .shipping-information-title{
                         .action-edit{
                           &:before{
@@ -1138,12 +1117,12 @@
     }
   }
   .abs-checkout-title,
-  .opc-wrapper .step-title,
   .opc-block-shipping-information .shipping-information-title,
   .opc-block-summary > .title,
   .checkout-agreements-items .checkout-agreements-item-title{
     font-weight: 500;
-    font-size: $font25;
+    font-size: 1.6rem;
+    color: $scottsprogram-gray;
   }
   .cust-btn-add {
     font-size: $font14;
