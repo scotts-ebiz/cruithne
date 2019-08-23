@@ -12,7 +12,7 @@
 
             <parameter name="requireszipcodelookup" visible="true" xsi:type="select" source_model="SMG\ParameterTypes\Model\Source\YesNoSelect">
 
-                <label>Requires Zip Code Lookup</label>
+                <label>Requires ZIP Code Lookup</label>
 
             </parameter>
 
