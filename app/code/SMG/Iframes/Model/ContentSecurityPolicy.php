@@ -18,8 +18,6 @@ class ContentSecurityPolicy
             list($subdomain, $domain, $extension) = explode('.', $_SERVER['HTTP_HOST']);
         }
 
-        $domain = 'scotts';
-
         if(!headers_sent()) {
 
             // FF 23+ Chrome 25+ Safari 7+ Opera 19+
