@@ -727,3 +727,20 @@ button.action{
 		}
 	}
 }
+
+@media screen and (max-width: $screen_768) {
+	.cms-page-view{
+		.message.success{
+			 margin: 73px 0 0px !important;
+			 font-size: 1.0rem !important;
+		}
+		.message.error{
+			 margin: 73px 0 0px !important;
+		}
+		.page-wrapper{
+			.page-header {
+				height: 3.75rem !important;
+			}
+		}
+	}
+}
