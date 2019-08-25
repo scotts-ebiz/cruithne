@@ -5,4 +5,5 @@
 	 <type name="Magento\Checkout\Block\Checkout\LayoutProcessor">
 		<plugin  name="SMG_Checkout_Block_Checkout_LayoutProcessor" type="SMG\Checkout\Plugin\Block\Checkout\LayoutProcessor"/>
 	</type>
+	<preference for="Magento\Checkout\Controller\Cart\Add" type="SMG\Checkout\Controller\Cart\Add" />
 </config>
