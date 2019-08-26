@@ -85,7 +85,6 @@
 
 
 //Cart Page Styles
-
 .cart-summary-divlink {
     width: 60%;
     float: left;
@@ -93,34 +92,78 @@
     position: relative;
 }
 
+
 @media screen and (max-width: $screen__m) {
-  .checkout-cart-index #shopping-cart-table .col.item .product-item-details {
-    width: 100%;
-    text-align: left;
-    display: inline-block;
-    position: relative;
-  }
+    .checkout-cart-index .custom-checkout-btn-wrap {
+        display: none;
+    }
 
-  .checkout-cart-index #shopping-cart-table td .product-item-name {
-    font-size: 1.1rem;
-  }
+    .checkout-cart-index #shopping-cart-table .col.item .product-item-details {
+        width: 100%;
+        text-align: left;
+        display: inline-block;
+        position: relative;
+    }
 
-  .checkout-cart-index #shopping-cart-table td, .checkout-cart-index #shopping-cart-table td.col.price {
-    padding: 0;
-  }
+    .checkout-cart-index #shopping-cart-table td .product-item-name {
+        font-size: 1.1rem;
+    }
 
-  .checkout-cart-index #shopping-cart-table td.subtotal {
-    display: none;
-  }
+    .checkout-cart-index #shopping-cart-table td, .checkout-cart-index #shopping-cart-table td.col.price {
+        padding: 0;
+    }
 
-  .checkout-cart-index #shopping-cart-table thead {
-    display: none;
-  }
+    .checkout-cart-index #shopping-cart-table td.subtotal {
+        display: none;
+    }
 
-  .checkout-cart-index .cart-summary-divlink #discount-coupon-form .action.apply.primary {
-    margin: 0 0 25px 0;
-    margin-left: 0 !important;
-  }
+    .checkout-cart-index #shopping-cart-table thead {
+        display: none;
+    }
+
+    .checkout-cart-index .cart-summary-divlink #discount-coupon-form .action.apply.primary {
+        margin: 0 0 25px 0;
+        margin-left: 0 !important;
+    }
+
+
+    //Shipping Page Styles - Start
+    .checkout-index-index #shipping-method-buttons-container {
+        width: 100%;
+    }
+
+    .checkout-index-index .page-wrapper .page-main .columns .column.main .checkout-container .opc-estimated-wrapper .minicart-wrapper .action.showcart {
+        background: #fff;
+        border: 1px solid #ccc;
+        padding: 10px;
+        &:hover {
+            background: #fff;
+        }
+    }
+
+    .opc-estimated-wrapper {
+      .minicart-wrapper {
+        .action.showcart {
+          .counter.qty {
+            @include max-screen($screen__l) {
+              background: #fff;
+              color: #4d4d4e;
+            }
+            background: $mygro-green;
+          }
+        }
+      }
+    }
+
+    .opc-estimated-wrapper .minicart-wrapper .action.showcart:before {
+        color: #333;
+    }
+    //Shipping Page Styles - End
+
+    .checkout-index-index .checkout-billing-address .fieldset .actions-toolbar{
+      margin-top: 10px;
+    }
+
 }
 
 @media screen and (max-width: $screen__l) {
@@ -143,5 +186,29 @@
   }
   .cart-summary {
     width: 100% !important;
+  }
+  .checkout-payment-method .payment-option-title {
+    padding-left: 0;
+  }
+  .checkout-payment-method .payment-option-content {
+    padding: 0;
+  }
+  .checkout-index-index #payment #checkout-step-payment .payment-option .payment-option-content #discount-form .primary {
+    width: 100%;
+    margin-left:0 !important;
+
+  }
+  .checkout-index-index #discount-form .payment-option-inner {
+    margin: 0 0 0 0;
+  }
+  .checkout-index-index #discount-form label {
+    padding: 6px 10px 0 0;
+  }
+
+  .checkout-index-index #payment #checkout-step-payment .payment-option .payment-option-content #discount-form .actions-toolbar {
+    margin-left: 0 !important;
+    margin-top: 10px !important;
+    display: inline-block;
+    width: 100%;
   }
 }

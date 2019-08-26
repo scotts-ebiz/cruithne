@@ -536,18 +536,9 @@
             .opc-estimated-wrapper {
               .minicart-wrapper {
                 .action.showcart {
-                  @include max-screen($screen__l) {
-                    background: #fff;
-                    &:hover {
-                      background: #fff;
-                    }
-                  }
                   .counter.qty {
-                    @include max-screen($screen__l) {
-                      background: #fff;
-                      color: #4d4d4e;
-                    }
-                    background: $mygro-green;
+                    //Don't think this is needed
+                    //background: $mygro-green;
                   }
                 }
               }
@@ -1511,11 +1502,7 @@
 
 
 @media screen and (max-width: $screen_768) {
-  .checkout-cart-index{
-    .custom-checkout-btn-wrap{
-      //width: 45%;
-      display: none;
-    }
+  .checkout-cart-index {
     #shopping-cart-table td,
     #theme__responsive .cart-table td{
       width: 100%;

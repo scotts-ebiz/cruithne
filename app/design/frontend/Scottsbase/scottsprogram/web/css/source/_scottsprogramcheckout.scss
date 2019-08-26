@@ -565,15 +565,6 @@
                 }
               }
             }
-            .opc-estimated-wrapper {
-              .minicart-wrapper {
-                .action.showcart {
-                  .counter.qty {
-                    background: $primary-green;
-                  }
-                }
-              }
-            }
             .opc-wrapper {
               @include max-screen($screen__m) {
                 padding: 1rem;
@@ -1480,6 +1471,8 @@
       }
     }
   }
+
+
 }
 
 @media screen and (max-width: $screen_768) and (min-width: $screen_569) {
@@ -1494,9 +1487,6 @@
 
 @media screen and (max-width: $screen_768) {
   .checkout-cart-index{
-    .custom-checkout-btn-wrap{
-      width: 45%;
-    }
     #shopping-cart-table td,
     #theme__responsive .cart-table td{
       width: 100%;
@@ -2096,6 +2086,7 @@
   }
 }
 
+/*
 .checkout-index-index{
   .opc-estimated-wrapper{
     .minicart-wrapper{
@@ -2105,7 +2096,7 @@
     }
   }
 }
-
+*/
 .form.form-cart{
   .cart.table-wrapper{
     .product-item-photo{
