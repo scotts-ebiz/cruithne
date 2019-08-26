@@ -12,4 +12,5 @@
 	<type name="Magento\Checkout\Model\ShippingInformationManagement">
 		<plugin name="SMG_Checkout_Model_ShippingInformationManagement" type="SMG\Checkout\Plugin\Model\ShippingInformationManagement" sortOrder="1"/>
 	</type>
+	<preference for="Magento\Checkout\Controller\Cart\Add" type="SMG\Checkout\Controller\Cart\Add" />
 </config>
