@@ -1561,6 +1561,10 @@
     }
     .field-tooltip {
       top: 0%;
+      .field-tooltip-content:before,
+      .field-tooltip-content:after {
+        top: 1px;
+      }
     }
     .opc-progress-bar {
       padding: 0 15px;
@@ -1745,13 +1749,6 @@
     }
     .opc-progress-bar {
       padding: 0 15px;
-    }
-  }
-  .checkout-index-index {
-    .field-tooltip{
-      .field-tooltip-content{
-        padding: 12px 5px;
-      }
     }
   }
 }
@@ -2092,16 +2089,6 @@ div[name="shippingAddress.postcode"] {
             }
           }
         }
-      }
-    }
-  }
-}
-@media screen and (max-width: 767px) {
-  .checkout-index-index {
-    .field-tooltip {
-      .field-tooltip-content:before,
-      .field-tooltip-content:after {
-        top: 1px;
       }
     }
   }
