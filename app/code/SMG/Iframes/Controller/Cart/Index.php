@@ -32,9 +32,9 @@ class Index extends Action
 
     $resultPage = $this->_resultPageFactory->create();
     $block = $resultPage->getLayout()
-      ->createBlock('SMG\Iframes\Block\Cart')
-      ->setData( 'cartCount' , $totalItems)
-      ->setTemplate('SMG_Iframes::cart.phtml');
+      ->getBlock('SMG_cart_index')
+      ->setData( 'cartCount' , $totalItems);
+
     echo $block->toHtml();
   }
 }
