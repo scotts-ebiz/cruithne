@@ -1846,6 +1846,9 @@
     position:relative;
     .field-error{
       position:absolute;
+      @media only screen and (max-width: $screen__s) {
+          position: relative;
+      }
     }
   }
 }
@@ -1941,7 +1944,7 @@
   .control{
     height:85px;
     @include max-screen($screen__s){
-      height:54px;
+      height:75px;
     }
   }
   ._error {
