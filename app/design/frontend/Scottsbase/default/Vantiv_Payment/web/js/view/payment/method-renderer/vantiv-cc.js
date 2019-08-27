@@ -156,7 +156,7 @@ define(
                     this.placeOrder();
                 } else {
                     alert({
-                        title: $t('Credit and debit card payment method.'),
+                        title: $t('Unable to place order.'),
                         content: $t('An error occurred') + ': ' + $t(responseData.message)
                     });
                 }
