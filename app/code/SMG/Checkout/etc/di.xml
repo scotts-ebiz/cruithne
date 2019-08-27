@@ -1,9 +1,16 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Magento\Checkout\Controller\Cart\Index" type="SMG\Checkout\Controller\Cart\Index" />
+	<preference for="Magento\Checkout\Controller\Cart\Index" type="SMG\Checkout\Controller\Cart\Index" />
 	<preference for="Magento\Checkout\CustomerData\Cart" type="SMG\Checkout\CustomerData\Cart" />
-	 <type name="Magento\Checkout\Block\Checkout\LayoutProcessor">
-		<plugin  name="SMG_Checkout_Block_Checkout_LayoutProcessor" type="SMG\Checkout\Plugin\Block\Checkout\LayoutProcessor"/>
+
+	<type name="Magento\Checkout\Api\GuestPaymentInformationManagementInterface">
+		<plugin  name="SMG_Checkout_Api_GuestPaymentInformationManagementInterface" type="SMG\Checkout\Plugin\Api\GuestPaymentInformationManagementInterface" sortOrder="1" />
+	</type>
+	<type name="Magento\Checkout\Block\Checkout\LayoutProcessor">
+		<plugin  name="SMG_Checkout_Block_Checkout_LayoutProcessor" type="SMG\Checkout\Plugin\Block\Checkout\LayoutProcessor" />
+	</type>
+	<type name="Magento\Checkout\Model\ShippingInformationManagement">
+		<plugin name="SMG_Checkout_Model_ShippingInformationManagement" type="SMG\Checkout\Plugin\Model\ShippingInformationManagement" sortOrder="1"/>
 	</type>
 	<preference for="Magento\Checkout\Controller\Cart\Add" type="SMG\Checkout\Controller\Cart\Add" />
 </config>

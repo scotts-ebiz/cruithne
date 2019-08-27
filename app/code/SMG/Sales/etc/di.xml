@@ -3,6 +3,9 @@
     <preference for="Magento\Sales\Block\Adminhtml\Order\Creditmemo\Create\Items" type="SMG\Sales\Block\Adminhtml\Order\Creditmemo\Create\Items" />
     <preference for="Magento\Sales\Block\Adminhtml\Order\View\Info" type="SMG\Sales\Block\Adminhtml\Order\View\Info" />
 
+    <type name="Magento\Sales\Api\OrderRepositoryInterface">
+        <plugin name="smg_plugin_orderrepositoryinterface" type="SMG\Sales\Plugin\Api\OrderRepositoryInterface" sortOrder="1" />
+    </type>
     <type name="Magento\Sales\Model\Order\Creditmemo">
         <plugin name="smg_plugin_order_creditmemo" type="SMG\Sales\Plugin\Model\Order\Creditmemo" />
     </type>
