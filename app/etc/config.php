@@ -195,7 +195,7 @@ return [
         'Magento_Persistent' => 1,
         'Magento_PersistentHistory' => 1,
         'Magento_PricePermissions' => 1,
-        'Magento_SendFriend' => 1,
+        'Magento_SendFriend' => 0,
         'Magento_ProductVideo' => 1,
         'Magento_CatalogStaging' => 1,
         'Magento_PromotionPermissions' => 1,

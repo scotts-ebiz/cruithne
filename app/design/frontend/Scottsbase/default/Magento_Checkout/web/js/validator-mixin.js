@@ -15,7 +15,7 @@ define([
 					if (!isNaN(value)) {
 						return false;
 					}
-					if( value.match( /^[a-zA-Z\.\- ]*$/) ) {
+					if( value.match( /^[a-zA-Z\.\-\' ]*$/) ) {
 						 return true
 					}else{
 						return false;
@@ -36,7 +36,7 @@ define([
 					if (!isNaN(value)) {
 						return false;
 					}
-					if( value.match( /^[a-zA-Z\.\- ]*$/) ) {
+					if( value.match( /^[a-zA-Z\.\-\' ]*$/) ) {
 						 return true
 					}else{
 						return false;
@@ -55,7 +55,7 @@ define([
 					if (!isNaN(value)) {
 						return false;
 					}
-					if( value.match( /^[a-zA-Z\.\- ]*$/) ) {
+					if( value.match( /^[a-zA-Z\.\-\' ]*$/) ) {
 						 return true
 					}else{
 						return false;
@@ -74,7 +74,7 @@ define([
 					if (!isNaN(value)) {
 						return false;
 					}
-					if( value.match( /^[a-zA-Z\.\- ]*$/) ) {
+					if( value.match( /^[a-zA-Z\.\-\' ]*$/) ) {
 						 return true
 					}else{
 						return false;
@@ -83,7 +83,7 @@ define([
 					return !$.mage.isEmpty(value);
 				}
 			},
-			$.mage.__('Please enter your last name')
+			$.mage.__('Please enter your last name.')
 		);
 		validator.addRule(
 			'required-entry-bcity',
@@ -122,7 +122,7 @@ define([
 					return !$.mage.isEmpty(value);
 				}
 			},
-			$.mage.__('Please Enter Valid Street.')
+			$.mage.__('Please enter a valid street address.')
 		);
 
 		validator.addRule(
@@ -135,7 +135,7 @@ define([
 						return false;
 					}
 			},
-			$.mage.__('Please Enter Valid Street.')
+			$.mage.__('Please enter a valid street address.')
 		);
 
 		validator.addRule(
@@ -148,7 +148,7 @@ define([
 						return false;
 					}
 			},
-			$.mage.__('Please Enter Valid Street.')
+			$.mage.__('Please enter a valid street address.')
 		);
 
 		validator.addRule(
@@ -169,7 +169,7 @@ define([
 					return !$.mage.isEmpty(value);
 				}
 			},
-			$.mage.__('Please Enter Valid Street.')
+			$.mage.__('Please enter a valid street address.')
 		);
 
 		validator.addRule(
@@ -182,7 +182,7 @@ define([
 						return false;
 					}
 			},
-			$.mage.__('Please Enter Valid Street.')
+			$.mage.__('Please enter a valid street address.')
 		);
 
 		validator.addRule(
@@ -195,7 +195,7 @@ define([
 						return false;
 					}
 			},
-			$.mage.__('Please Enter Valid Street.')
+			$.mage.__('Please enter a valid street address.')
 		);
 
 		/* End street address validation */
@@ -251,7 +251,7 @@ define([
 					return !$.mage.isEmpty(value);
 				}
 			},
-			$.mage.__('Please enter a valid phone.')
+			$.mage.__('Please enter a valid phone number.')
 		);
 		validator.addRule(
 			'required-entry-btelephone',

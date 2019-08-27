@@ -305,7 +305,7 @@
 						</block>
 					</block>
 				</container>
-				<container name="checkout.cart.noitems" as="no-items">
+				<container name="checkout.cart.noitems" as="no-items" htmlTag="div" htmlClass="empty-cart-content">
 					<block class="Magento\Checkout\Block\Cart" name="checkout.cart.empty" before="-" template="Magento_Checkout::cart/noItems.phtml">
 						<container name="checkout.cart.empty.widget" as="checkout_cart_empty_widget" label="Empty Shopping Cart Content Before"/>
 					</block>
