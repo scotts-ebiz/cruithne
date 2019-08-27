@@ -11,7 +11,7 @@
     <div class="title" data-role="title">
         <strong id="block-discount-heading" role="heading" aria-level="2"><?= /* @escapeNotVerified */ __('Apply Discount Code') ?></strong>
     </div>
-    <div class="content" data-role="content" aria-labelledby="block-discount-heading">
+    <div class="content disc_active" data-role="content" aria-labelledby="block-discount-heading">
         <form id="discount-coupon-form"
               action="<?= /* @escapeNotVerified */ $block->getUrl('checkout/cart/couponPost') ?>"
               method="post"

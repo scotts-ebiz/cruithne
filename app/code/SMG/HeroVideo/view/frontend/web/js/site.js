@@ -14,5 +14,11 @@ define([
         $("body").toggleClass("heroVideo-video-open");
         $("#heroVideo-video-container .video-frame").html('');
     });
+    $(document).keyup(function(e) {
+     if (e.key === "Escape") { // escape key maps to keycode `27`
+         $("body").toggleClass("heroVideo-video-open");
+        $("#heroVideo-video-container .video-frame").html('');
+     }
+    });
     /* Video Widget Code: End */
 });
