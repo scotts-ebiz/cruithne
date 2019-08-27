@@ -6,7 +6,7 @@
  * Time: 12:09 PM
  */
 
-namespace SMG\ShippingRestrict\Plugin\Api;
+namespace SMG\Sales\Plugin\Api;
 
 use Magento\Catalog\Model\ProductFactory;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
@@ -43,6 +43,15 @@ class OrderRepositoryInterface
      */
     protected $_productResource;
 
+    /**
+     * OrderRepositoryInterface constructor.
+     *
+     * @param LoggerInterface $logger
+     * @param QuoteFactory $quoteFactory
+     * @param QuoteResource $quoteResource
+     * @param ProductFactory $productFactory
+     * @param ProductResource $productResource
+     */
     public function __construct(LoggerInterface $logger,
         QuoteFactory $quoteFactory,
         QuoteResource $quoteResource,
@@ -147,8 +156,8 @@ class OrderRepositoryInterface
                 }
             }
 
-             if($validate)
-             {
+            if($validate)
+            {
                 echo $message = "Unfortunately one or more of the selected products is restricted from shipping to " . $state . ".";
                 throw new InputException(__($message));
                 die();
