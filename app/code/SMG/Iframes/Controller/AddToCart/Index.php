@@ -6,22 +6,26 @@ use \Magento\Framework\App\Action\Context;
 use \Magento\Catalog\Model\ProductRepository;
 use \Magento\Framework\View\Result\PageFactory;
 use \SMG\Iframes\Model\ContentSecurityPolicy;
+use \Magento\Store\Model\StoreManagerInterface;
 
 class Index extends Action
 {
   protected $_resultPageFactory;
   protected $_productRepository;
   protected $_contentSecurityPolicy;
+  protected $_storeManager;
 
   public function __construct(
     Context $context,
     ProductRepository $productRepository,
     PageFactory $resultPageFactory,
-    ContentSecurityPolicy $contentSecurityPolicy) {
+    ContentSecurityPolicy $contentSecurityPolicy,
+    StoreManagerInterface $storeManager) {
 
     $this->_resultPageFactory = $resultPageFactory;
     $this->_productRepository = $productRepository;
     $this->_contentSecurityPolicy = $contentSecurityPolicy;
+    $this->_storeManager = $storeManager;
     parent::__construct($context);
   }
 
@@ -75,7 +79,7 @@ class Index extends Action
     if( $product ) {
       $resultPage = $this->_resultPageFactory->create();
       $block = $resultPage->getLayout()
-        ->createBlock("SMG\Iframes\Block\AddToCart")
+        ->getBlock('SMG_addtocart_index')
         ->setData("product_id", $product->getId())
         ->setData("selected_product", $selectedProductId)
         ->setData("child_products", $childProducts)
@@ -85,9 +89,12 @@ class Index extends Action
         ->setData("base_product_id", $product->getId())
         ->setData("sku", $product->getSku())
         ->setData("drupalProductId", $product->getdrupalproductid())
-        ->setData("desktop", $desktop)
-        ->setTemplate("SMG_Iframes::addToCart.phtml");
+        ->setData("desktop", $desktop);
       echo $block->toHtml();
     }
+  }
+
+  public function getBaseUrl() {
+    return $this->_storeManager->getStore()->getBaseUrl();
   }
 }
