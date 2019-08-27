@@ -1590,6 +1590,21 @@
   .cart.table-wrapper thead .col:not(.item) {
     display: none !important;
   }
+  .cart-parent-summary{
+      display: -webkit-box;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-flex-wrap: wrap;
+      flex-wrap: wrap;
+      .cart-summary-divlink{
+        order:2;
+      }
+      .cart-summary{
+        order:1;
+      }
+  }
   .return-policy-content{
     margin-bottom:-50px;
   }
@@ -1670,22 +1685,6 @@
   .checkout-cart-index{
     .cart.table-wrapper .table .col.price{
       padding: 0 0.625rem !important;
-    }
-    .cart-parent-summary{
-      display: -webkit-box;
-      display: -moz-box;
-      display: -ms-flexbox;
-      display: -webkit-flex;
-      display: flex;
-      -webkit-flex-wrap: wrap;
-      flex-wrap: wrap;
-
-      .cart-summary-divlink{
-        order:2;
-      }
-      .cart-summary{
-        order:1;
-      }
     }
   }
   .checkout-cart-index{
