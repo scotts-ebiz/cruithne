@@ -16,8 +16,10 @@ define([
     });
     $(document).keyup(function(e) {
      if (e.key === "Escape") { // escape key maps to keycode `27`
+          if ($("body").hasClass("heroVideo-video-open")) {
          $("body").toggleClass("heroVideo-video-open");
         $("#heroVideo-video-container .video-frame").html('');
+        }
      }
     });
     /* Video Widget Code: End */
