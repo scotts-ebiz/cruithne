@@ -1593,6 +1593,21 @@
   .cart.table-wrapper thead .col:not(.item) {
     display: none !important;
   }
+  .cart-parent-summary{
+      display: -webkit-box;
+      display: -moz-box;
+      display: -ms-flexbox;
+      display: -webkit-flex;
+      display: flex;
+      -webkit-flex-wrap: wrap;
+      flex-wrap: wrap;
+      .cart-summary-divlink{
+        order:2;
+      }
+      .cart-summary{
+        order:1;
+      }
+  }
   .return-policy-content{
     margin-bottom:-50px;
   }
@@ -1674,22 +1689,6 @@
     .cart.table-wrapper .table .col.price{
       padding: 0 0.625rem !important;
     }
-    .cart-parent-summary{
-      display: -webkit-box;
-      display: -moz-box;
-      display: -ms-flexbox;
-      display: -webkit-flex;
-      display: flex;
-      -webkit-flex-wrap: wrap;
-      flex-wrap: wrap;
-
-      .cart-summary-divlink{
-        order:2;
-      }
-      .cart-summary{
-        order:1;
-      }
-    }
   }
   .checkout-cart-index{
     .cart.table-wrapper{
@@ -1748,6 +1747,13 @@
     }
     .opc-progress-bar {
       padding: 0 15px;
+    }
+  }
+  .checkout-index-index {
+    .field-tooltip{
+      .field-tooltip-content{
+        padding: 12px 5px;
+      }
     }
   }
 }
@@ -1843,6 +1849,9 @@
     position:relative;
     .field-error{
       position:absolute;
+      @media only screen and (max-width: $screen__s) {
+          position: relative;
+      }
     }
   }
 }
@@ -1938,7 +1947,7 @@
   .control{
     height:85px;
     @include max-screen($screen__s){
-      height:54px;
+      height:75px;
     }
   }
   ._error {
@@ -2088,6 +2097,16 @@ div[name="shippingAddress.postcode"] {
             }
           }
         }
+      }
+    }
+  }
+}
+@media screen and (max-width: 767px) {
+  .checkout-index-index {
+    .field-tooltip {
+      .field-tooltip-content:before,
+      .field-tooltip-content:after {
+        top: 1px;
       }
     }
   }
