@@ -7,11 +7,25 @@
 // @codingStandardsIgnoreFile
 
 ?>
+<?php
+    $isDiscActive = '';
+    $isCouponValid = $block->isCouponValid();
+
+    // we want to have the coupon collapse unless there is an error message
+    // or we have a valid coupon code
+    if ($isCouponValid)
+    {
+        if (!strlen($block->getCouponCode()))
+        {
+            $isDiscActive = ' disc_active';
+        }
+    }
+?>
 <div class="block discount" id="block-discount" data-mage-init='{"collapsible":{"openedState": "active", "saveState": false}}'>
     <div class="title" data-role="title">
         <strong id="block-discount-heading" role="heading" aria-level="2"><?= /* @escapeNotVerified */ __('Apply Discount Code') ?></strong>
     </div>
-    <div class="content" data-role="content" aria-labelledby="block-discount-heading">
+    <div class="content<?= $isDiscActive ?>" data-role="content" aria-labelledby="block-discount-heading">
         <form id="discount-coupon-form"
               action="<?= /* @escapeNotVerified */ $block->getUrl('checkout/cart/couponPost') ?>"
               method="post"
@@ -24,7 +38,16 @@
                 <div class="field">
                     <label for="coupon_code" class="label"><span><?= /* @escapeNotVerified */ __('Enter discount code') ?></span></label>
                     <div class="control">
-                        <input type="text" class="input-text" id="coupon_code" name="coupon_code" value="<?= $block->escapeHtml($block->getCouponCode()) ?>" placeholder="<?= $block->escapeHtml(__('Enter discount code')) ?>" <?php if (strlen($block->getCouponCode())): ?> disabled="disabled" <?php endif; ?> />
+                        <input type="text" class="input-text<?= ($isCouponValid) ? '' : ' mage-error' ?>" id="coupon_code" name="coupon_code" value="<?= $block->escapeHtml($block->getCouponCode()) ?>" placeholder="<?= $block->escapeHtml(__('Enter discount code')) ?>" <?php if
+                        (strlen($block->getCouponCode())): ?> disabled="disabled" <?php endif; ?> />
+                        <?php
+                        if (!$isCouponValid)
+                        {
+                            ?>
+                            <div for="coupon_code" generated="true" class="mage-error" id="coupon_code-error">Please enter a valid discount code.</div>
+                            <?php
+                        }
+                        ?>
                     </div>
                 </div>
                 <div class="actions-toolbar">
