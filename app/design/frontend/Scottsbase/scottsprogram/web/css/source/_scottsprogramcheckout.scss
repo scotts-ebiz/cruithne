@@ -1545,10 +1545,6 @@
     }
     .field-tooltip {
       top: 0%;
-      .field-tooltip-content:before,
-      .field-tooltip-content:after {
-        top: 1px;
-      }
     }
     .opc-progress-bar {
       padding: 0 15px;
@@ -1788,6 +1784,13 @@
       padding: 0 15px;
     }
   }
+  .checkout-index-index {
+    .field-tooltip{
+      .field-tooltip-content{
+        padding: 12px 5px;
+      }
+    }
+  }
 }
 
 @media screen and (max-width: $screen_768) {
@@ -1929,6 +1932,9 @@
     position:relative;
     .field-error{
       position:absolute;
+      @media only screen and (max-width: $screen__s) {
+        position: relative;
+      }
     }
   }
 }
@@ -2040,7 +2046,7 @@
   .control{
     height:85px;
     @include max-screen($screen__s){
-      height:54px;
+      height:75px;
     }
   }
   ._error {
@@ -2181,3 +2187,15 @@ div[name="shippingAddress.postcode"] {
     }
   }
 }
+
+@media screen and (max-width: 767px) {
+  .checkout-index-index {
+    .field-tooltip {
+      .field-tooltip-content:before,
+      .field-tooltip-content:after {
+        top: 1px;
+      }
+    }
+  }
+}
+
