@@ -17,9 +17,8 @@ RUN chown -R magento:www-data .git
 USER magento
 WORKDIR $MAGENTO_DIR
 
-RUN git fetch
-RUN git checkout app/etc/config.php
-RUN git pull
+RUN git fetch --all
+RUN git reset --hard
 RUN composer install
 
 USER root
