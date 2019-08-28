@@ -19,6 +19,7 @@ WORKDIR $MAGENTO_DIR
 
 RUN git fetch --all
 RUN git reset --hard
+RUN git pull
 RUN composer install
 
 USER root
