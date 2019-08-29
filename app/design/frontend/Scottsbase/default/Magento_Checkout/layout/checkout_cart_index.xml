@@ -10,10 +10,10 @@
 			<block class="Magento\Checkout\Block\Cart" name="checkout.cart" template="Magento_Checkout::cart.phtml" cacheable="false">
 				<container name="checkout.cart.items" as="with-items">
 					<container name="checkout.cart.container" htmlTag="div" htmlClass="cart-container" before="-">
-					
+
 					<container name="custom-checkout-btn-wrap" htmlTag="div" htmlClass="custom-checkout-btn-wrap">
 							<block class="Magento\Checkout\Block\Onepage\Link" name="custom-checkout-btn" template="Magento_Checkout::onepage/link.phtml" />
-					</container> 
+					</container>
 						<container name="checkout.cart.form.before" as="form_before" label="Shopping Cart Items Before" htmlTag="div" htmlClass="rewards"/>
 						<block class="Magento\Checkout\Block\Cart\Grid" name="checkout.cart.form" as="cart-items" template="Magento_Checkout::cart/form.phtml" after="-">
 							<block class="Magento\Framework\View\Element\RendererList" name="checkout.cart.item.renderers" as="renderer.list"/>
@@ -309,8 +309,6 @@
 					</block>
 				</container>
 				<container name="checkout.cart.noitems" as="no-items" htmlTag="div" htmlClass="empty-cart-content">
-					<!-- <action method="addBodyClass"><classname>cart-empty</classname></action> -->
-					<!-- <attribute name="class" value="empty-cart"/> -->
 					<block class="Magento\Checkout\Block\Cart" name="checkout.cart.empty" before="-" template="Magento_Checkout::cart/noItems.phtml" >
 						<container name="checkout.cart.empty.widget" as="checkout_cart_empty_widget" label="Empty Shopping Cart Content Before"/>
 					</block>
