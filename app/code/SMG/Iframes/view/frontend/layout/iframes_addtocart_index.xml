@@ -1,6 +1,11 @@
 <?xml version="1.0"?>
 <page layout="empty" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <container name="iframe_content">
-        <block class="Magento\Framework\View\Element\Template" name="SMG_addtocart_index" template="SMG_Iframes::addToCart.phtml" />
-    </container>
+    <head>
+        <script src="SMG_Iframes::js/addToCart.js"/>
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="SMG\Iframes\Block\AddToCart" name="SMG_block_addtocart" template="SMG_Iframes::addToCart.phtml" />
+        </referenceContainer>
+    </body>
 </page>
