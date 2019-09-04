@@ -182,6 +182,20 @@ SetEnvIf Request_URI !^test.scottsprogram\.com$ [NC] ROBOTS_NOINDEX
     RewriteCond %{REQUEST_FILENAME} !-l
 
 ############################################
+## rewrite everything to https
+
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,QSA,L]
+
+
+############################################
+## rewrite everything to https
+
+RewriteCond %{HTTP_HOST} ^mygro\.com$ [NC]
+RewriteRule ^(.*)$   https://www.mygro.com/$1 [R=301,L,QSA]
+
+############################################
 ## rewrite everything else to index.php
 
     RewriteRule .* index.php [L]
