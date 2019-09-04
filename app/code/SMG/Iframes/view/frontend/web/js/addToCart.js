@@ -1,5 +1,4 @@
 requirejs(['catalogAddToCart'], function(catalogAddToCart) {
-    alert ('hello');
     (function ($) {
         $(document).ready(function () {
 
