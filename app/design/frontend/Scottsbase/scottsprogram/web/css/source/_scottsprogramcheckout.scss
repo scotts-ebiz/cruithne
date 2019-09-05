@@ -1252,7 +1252,7 @@
     }
   }
   .field-tooltip {
-    top: 50%;
+    display: contents;
   }
   [type="radio"]:checked ,
   [type="radio"]:not(:checked){
@@ -1544,7 +1544,10 @@
       left: auto;
     }
     .field-tooltip {
-      top: 0%;
+      .field-tooltip-content:before,
+      .field-tooltip-content:after {
+        top: 1px;
+      }
     }
     .opc-progress-bar {
       padding: 0 15px;
