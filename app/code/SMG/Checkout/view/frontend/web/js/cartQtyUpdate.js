@@ -20,7 +20,7 @@ define([
 					
 					$(".messages").replaceWith(messages);
                     $("#form-validate").replaceWith(result);
-					
+					$("#ajax_event").html($(res).find("#ajax_event").html());
 					/* Minicart reloading */
                     customerData.reload(sections, true);
  
