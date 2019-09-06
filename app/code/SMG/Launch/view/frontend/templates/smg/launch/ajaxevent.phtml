@@ -4,16 +4,10 @@
 $helper = $block->getHelper();
 $smghelper = $this->helper('SMG\Launch\Helper\Data');
 
-?>
+$updateditems = $smghelper->getCheckoutSession()->getUpdateqty();
 
-
-<?php /*update qty event*/ ?>
-
-<?php $updateditems = $smghelper->getCheckoutSession()->getUpdateqty(); ?>
-
-<?php if ($updateditems) : ?>
-
-    <?php foreach($updateditems as $pro){ ?>
+if ($updateditems) :
+    foreach($updateditems as $pro){ ?>
 
         <script>
 
@@ -33,9 +27,7 @@ $smghelper = $this->helper('SMG\Launch\Helper\Data');
 
         </script>
 
-    <?php } ?>
-
-    <?php $smghelper->getCheckoutSession()->unsUpdateqty(); ?>
-
-<?php endif; ?>
+    <?php }
+    $smghelper->getCheckoutSession()->unsUpdateqty();
+endif; ?>
 </div>
