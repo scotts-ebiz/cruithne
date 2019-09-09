@@ -12054,4 +12054,9 @@ body {
       speak: none;
       text-align: center; }
 
+td#label_method_fedex-2ndday_flatrate {
+    padding-left: 0px;
+}
+td#label_method_fedex-nextday_flatrate {
+    padding-left: 0px;
 /*# sourceMappingURL=styles.css.map */
