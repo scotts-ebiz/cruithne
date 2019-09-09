@@ -30,7 +30,9 @@
             "is_order": true,
             "order_process_date": true,
             "is_invoice_reconciliation": true,
-            "invoice_reconciliation_date": true
+            "invoice_reconciliation_date": true,
+            "is_consumer_data": true,
+            "consumer_data_date": true
         },
         "constraint": {
             "PRIMARY": true,

@@ -64,4 +64,6 @@ At this point other developers will review your code, please respond accordingly
 
 We also have TravisCI creating an adhoc sample build of Magento every time a new PR is created. Monitor this check to make sure it passes. If it fails, we may not be able to send it through. 
 
+
+
 Lastly, look out for conflicts. Not just at PR creation time, but as new PRs go in. Sometimes code affects each other and you may be responsible to update any conficts that arrise. 
