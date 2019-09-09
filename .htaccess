@@ -166,6 +166,11 @@ Options -Indexes
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
 
 ############################################
+## MyGro Exapnsion page redirect
+
+    RewriteRule ^https://(.*).mygro.com/expansion$ https://www.scotts.com/en-us/products/gro-watering-solutions [R=301,QSA,L]
+
+############################################
 ## TRACE and TRACK HTTP methods disabled to prevent XSS attacks
 
     RewriteCond %{REQUEST_METHOD} ^TRAC[EK]
