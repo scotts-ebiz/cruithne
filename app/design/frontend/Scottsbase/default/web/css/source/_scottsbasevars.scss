@@ -9,6 +9,17 @@ $secondary-light-gray: #959393;
 $secondary-lighter-gray: #F3F3F3;
 $accent-orange: #FCAF19;
 
+
+//Scotts Colors
+$scotts-green: #075534;
+$scotts-secondary-green: #138E51;
+$scotts-black: #2A2A2A;
+$scotts-gray: #4d4d4e;
+$scotts-light-gray: #959393;
+$scotts-white: #f3f3f3;
+$scotts-accent-orange: #fcaf19;
+
+
 // ScottsProgram Colors
 $primary-green: #075534;
 $primary-light-green: #138e51;
@@ -19,6 +30,7 @@ $secondary-lighter-gray: #f3f3f3;
 $accent-orange: #fcaf19;
 $scottsprogram-gray: #636363;
 $scottsprogram-orange: #ed9016;
+
 
 // MyGro Colors
 $mygro-green: #008065;
@@ -36,3 +48,8 @@ $lato: 'Lato', sans-serif;
 $opensans: 'Open Sans', sans-serif;
 $oswald: 'Oswald', sans-serif;
 $rokkitt: 'Rokkitt', serif;
+
+
+//Magento UI Variables
+$primary__color: $scotts-green;
+$secondary__color: $scotts-secondary-green;
