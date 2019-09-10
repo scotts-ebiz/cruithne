@@ -9,7 +9,6 @@ use Psr\Log\LoggerInterface;
 use SMG\OfflineShipping\Model\ShippingConditionCodeFactory;
 use SMG\OfflineShipping\Model\ResourceModel\ShippingConditionCode as ShippingConditionCodeResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
-use SMG\OrderDiscount\Helper\Data as DiscountHelper;
 
 class ConsumerDataHelper
 {
@@ -88,11 +87,6 @@ class ConsumerDataHelper
     protected $_shippingConditionCodeResource;
 
     /**
-     * @var DiscountHelper
-     */
-    protected $_discountHelper;
-
-    /**
      * OrdersHelper constructor.
      *
      * @param LoggerInterface $logger
@@ -103,7 +97,6 @@ class ConsumerDataHelper
      * @param OrderItemCollectionFactory $orderItemCollectionFactory
      * @param ShippingConditionCodeFactory $shippingConditionCodeFactory
      * @param ShippingConditionCodeResource $shippingConditionCodeResource
-     * @param DiscountHelper $discountHelper
      */
     public function __construct(LoggerInterface $logger,
         ResponseHelper $responseHelper,
@@ -112,8 +105,7 @@ class ConsumerDataHelper
         OrderResource $orderResource,
         OrderItemCollectionFactory $orderItemCollectionFactory,
         ShippingConditionCodeFactory $shippingConditionCodeFactory,
-        ShippingConditionCodeResource $shippingConditionCodeResource,
-        DiscountHelper $discountHelper)
+        ShippingConditionCodeResource $shippingConditionCodeResource)
     {
         $this->_logger = $logger;
         $this->_responseHelper = $responseHelper;
@@ -123,7 +115,6 @@ class ConsumerDataHelper
         $this->_orderItemCollectionFactory = $orderItemCollectionFactory;
         $this->_shippingConditionCodeFactory = $shippingConditionCodeFactory;
         $this->_shippingConditionCodeResource = $shippingConditionCodeResource;
-        $this->_discountHelper = $discountHelper;
     }
 
     /**
@@ -228,12 +219,6 @@ class ConsumerDataHelper
         $shippingCondition = $this->_shippingConditionCodeFactory->create();
         $this->_shippingConditionCodeResource->load($shippingCondition, $order->getShippingMethod(), 'shipping_method');
 
-        // get the discount if there is one applied
-        $orderDiscount = '';
-        if(!empty($order->getData('coupon_code'))){
-            $orderDiscount = $this->_discountHelper->DiscountCode($order->getData('coupon_code'));
-        }
-
         // get the shipping address to be used for the customer first and last name
         /**
          * @var \Magento\Sales\Model\Order\Address $shippingAddress
@@ -264,7 +249,7 @@ class ConsumerDataHelper
             self::SHIPPING => $order->getData('shipping_amount'),
             self::TAX => $order->getData('tax_amount'),
             self::SUBTOTAL => $order->getData('subtotal'),
-            self::DISCOUNTS => $orderDiscount,
+            self::DISCOUNTS => $order->getData("discount_amount"),
             self::GRAND_TOTAL => $order->getData('grand_total'),
             self::SHIPPING_METHOD => $shippingCondition->getData('sap_shipping_method'),
             self::BILLING_FIRSTNAME => '',
