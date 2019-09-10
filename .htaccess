@@ -2,6 +2,10 @@
 # set the var ROBOTS_NOINDEX 
 SetEnvIf Request_URI !^test.scottsprogram\.com$ [NC] ROBOTS_NOINDEX
 
+############################################
+## hide directory listings
+
+Options -Indexes
 
 ############################################
 ## overrides deployment configuration mode value
@@ -160,6 +164,11 @@ SetEnvIf Request_URI !^test.scottsprogram\.com$ [NC] ROBOTS_NOINDEX
 ## in CGI environment
 
     RewriteRule .* - [E=HTTP_AUTHORIZATION:%{HTTP:Authorization}]
+
+############################################
+## MyGro Exapnsion page redirect
+
+    RewriteRule ^https://(.*).mygro.com/expansion$ https://www.scotts.com/en-us/products/gro-watering-solutions [R=301,QSA,L]
 
 ############################################
 ## TRACE and TRACK HTTP methods disabled to prevent XSS attacks
