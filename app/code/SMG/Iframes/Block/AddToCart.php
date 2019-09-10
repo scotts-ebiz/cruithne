@@ -1,6 +1,15 @@
 <?php
 namespace SMG\Iframes\Block ;
 
+use Magento\Catalog\Block\Product\Context;
+use Magento\Catalog\Helper\Product;
+use Magento\Catalog\Model\ProductTypes\ConfigInterface;
+use Magento\Customer\Model\Session;
+use Magento\Framework\Json\EncoderInterface as jsonEncoderInterface;
+use Magento\Framework\Locale\FormatInterface;
+use Magento\Framework\Pricing\PriceCurrencyInterface;
+use Magento\Framework\Stdlib\StringUtils;
+use Magento\Framework\Url\EncoderInterface;
 use \SMG\Iframes\Model\ContentSecurityPolicy;
 use \Magento\Catalog\Block\Product\View;
 use \Magento\Catalog\Api\ProductRepositoryInterface;
@@ -13,16 +22,16 @@ class AddToCart extends View
     protected $_storeManager;
 
     public function __construct(
-        \Magento\Catalog\Block\Product\Context $context,
-        \Magento\Framework\Url\EncoderInterface $urlEncoder,
-        \Magento\Framework\Json\EncoderInterface $jsonEncoder,
-        \Magento\Framework\Stdlib\StringUtils $string,
-        \Magento\Catalog\Helper\Product $productHelper,
-        \Magento\Catalog\Model\ProductTypes\ConfigInterface $productTypeConfig,
-        \Magento\Framework\Locale\FormatInterface $localeFormat,
-        \Magento\Customer\Model\Session $customerSession,
+        Context $context,
+        EncoderInterface $urlEncoder,
+        jsonEncoderInterface $jsonEncoder,
+        StringUtils $string,
+        Product $productHelper,
+        ConfigInterface $productTypeConfig,
+        FormatInterface $localeFormat,
+        Session $customerSession,
         ProductRepositoryInterface $productRepository,
-        \Magento\Framework\Pricing\PriceCurrencyInterface $priceCurrency,
+        PriceCurrencyInterface $priceCurrency,
         StoreManagerInterface $storeManager,
         array $data = [],
         ContentSecurityPolicy $contentSecurityPolicy) {
@@ -46,52 +55,14 @@ class AddToCart extends View
         $sku = $this->getRequest()->getParam('sku');
         $qty = $this->getRequest()->getParam('quantity',1);
         $desktop = $this->getRequest()->getParam('desktop', false);
+        $storeId = $this->_storeManager->getStore()->getId();
 
         $this->_skuFromUrl = $sku;
-
-        $storeId = $this->_storeManager->getStore()->getId();
-        $product = $this->productRepository->get($sku);
+        $product = $this->getProduct();
 
         if ($product === NULL) {
             return;
         }
-
-
-
-        // TODO: bundles
-
-//        $selectedProductId = $product->getId();
-//
-//        $childProductIds = $product->getTypeInstance(true)
-//            ->getChildrenIds($selectedProductId);
-//
-//        if ($childProductIds != NULL) {
-//            $childProductIds = $childProductIds[0];
-//        }
-//        else {
-//            $childProductIds = [];
-//        }
-//
-//        $childProducts = [];
-//        $priceOfChildren = 0.0;
-//        if ("bundle" == $product->getTypeId()) {
-//            $optionCollection = $product->getTypeInstance()->getOptionsCollection();
-//            $optionsIds = $product->getTypeInstance()->getOptionsIds();
-//            $selectionCollection = $product->getTypeInstance()->getSelectionsCollection($optionsIds);
-//            $options = $optionCollection->appendSelections($selectionCollection);
-//            foreach ($options as $option) {
-//                $selections = $option->getSelections();
-//                foreach ($selections as $selection) {
-//                    $childPrice = $selection->getSelectionPriceValue();
-//                    $childQty = $selection->getSelectionQty();
-//                    $priceOfChildren += $childPrice * $childQty;
-//                }
-//            }
-//        }
-//        foreach( $childProductIds as $id ) {
-//            $child = $this->productRepository->get( $id );
-//            $childProducts[] = $child;
-//        }
 
         if( $product ) {
             $this->setData("store_id", $storeId)
@@ -121,7 +92,9 @@ class AddToCart extends View
         if (!$this->_coreRegistry->registry('product') && $this->_skuFromUrl) {
             $product = $this->productRepository->get($this->_skuFromUrl);
             $this->_coreRegistry->register('product', $product);
+            $this->_coreRegistry->register('current_product', $product);
         }
+
         return $this->_coreRegistry->registry('product');
     }
 

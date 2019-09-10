@@ -1,17 +1,4 @@
 <?php
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
-
-// @codingStandardsIgnoreFile
-
-/**
- * Product view template
- *
- * @var $block \Magento\Catalog\Block\Product\View
- */
-
 $iframeProductId = $this->getData('product_id');
 $iframeSelectedProduct = $this->getData('selected_product');
 $iframeChildProducts = $this->getData('child_products');
@@ -24,7 +11,6 @@ $iframeDrupalProductId = $this->getData('drupalProductId');
 $iframeDesktop = $this->getData('desktop');
 $baseUrl = $block->getBaseUrl();
 $url = $baseUrl . "iframes/addtocart/add";
-
 ?>
 <?php $_helper = $this->helper('Magento\Catalog\Helper\Output'); ?>
 <?php $_product = $block->getProduct(); ?>
@@ -40,17 +26,36 @@ $url = $baseUrl . "iframes/addtocart/add";
             <input type="hidden" id="base-product-id" value=<?php echo '"' . $this->escapeHtml($iframeBaseProductId) . '"' ?>/>
         </span>
     </div>
-
     <div class="cta__container--options">
-        <div class="block__item">
-            <form data-product-sku="<?= $block->escapeHtml($_product->getSku()) ?>"
-                  action="<?= /* @NoEscape */ $block->getSubmitUrl($_product) ?>" method="post"
-                  id="product_addtocart_form"<?php if ($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
-                <input type="hidden" name="product" value="<?= /* @escapeNotVerified */ $_product->getId() ?>" />
-                <input type="hidden" name="selected_configurable_option" value="" />
-                <input type="hidden" name="related_product" id="related-products-field" value="" />
-                <input type="hidden" name="item"  value="<?= /* @noEscape */ $block->getRequest()->getParam('id') ?>" />
-                <?= $block->getBlockHtml('formkey') ?>
+        <form data-product-sku="<?= $block->escapeHtml($_product->getSku()) ?>"
+              action="<?= /* @NoEscape */ $block->getSubmitUrl($_product) ?>" method="post"
+              id="product_addtocart_form"<?php if ($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+            <input type="hidden" name="product" value="<?= /* @escapeNotVerified */ $_product->getId() ?>" />
+            <input type="hidden" name="selected_configurable_option" value="" />
+            <input type="hidden" name="related_product" id="related-products-field" value="" />
+            <input type="hidden" name="item"  value="<?= /* @noEscape */ $block->getRequest()->getParam('id') ?>" />
+            <?= $block->getBlockHtml('formkey') ?>
+            <div class="block__item">
+
+            </div><!-- .block__item -->
+            <div class="block__item">
+                <?php if ($_product->isSaleable()):?>
+                    <?= $block->getChildHtml('options_configurable') ?>
+                <?php endif;?>
+            </div>
+            <?php $child_products = $iframeChildProducts; ?>
+
+            <div class="block__item">
+                <div class="block__subblock">
+                    <label class="block__subblock--label" for="qty">Quantity</label>
+
+                    <label id="qty-wrap">
+                        <input type="text" pattern="\d*" name="quantity" id="qty" maxlength="12" value="1" title="Qty"
+                               class="block__subblock--input" size="3"/>
+                        <button class="minus">-</button>
+                        <button class="plus">+</button>
+                    </label>
+                </div>
                 <button type="submit" title="Add to Cart" class="button button--cart" id="cart-add"
                         data-size_id="<?php echo str_replace(' ', '', trim(strtolower($this->getData('size')))); ?>"
                         data-sku_id="<?php echo $this->escapeHtml($iframeSku); ?>"
@@ -58,67 +63,9 @@ $url = $baseUrl . "iframes/addtocart/add";
                         data-magento-add-url="<? echo $this->escapeUrl($url); ?>">
                     <span>Add to Cart</span>
                 </button>
-            </form>
-        </div><!-- .block__item -->
-
-        <?php $child_products = $this->escapeHtml($iframeChildProducts); ?>
-
-        <div class="block__item">
-            <div class="block__subblock">
-<!--                --><?php //if (count($child_products) != 0 && !$this->escapeHtml($iframeChildrenPrice)): ?>
-<!--                    <label class="block__subblock--label size-label" for="child-products">Size</label>-->
-<!--                    <select name="product_id" id="child-products"-->
-<!--                        --><?php //if ($this->escapeHtml($iframeChildrenPrice)): ?>
-<!--                            data-price="--><?php //echo sprintf("%.02f", $this->escapeHtml($iframeChildrenPrice)); ?><!--"-->
-<!--                        --><?php //endif; ?>
-<!--                    >-->
-<!--                        --><?php //foreach ($child_products as $prod): ?>
-<!--                            <option value="--><?// echo $prod->getId(); ?><!--"-->
-<!--                                --><?php //if ($this->escapeHtml($iframeSelectedProduct) == $prod->getId()): ?><!-- selected--><?php //endif; ?>
-<!--                                    data-price="--><?php //echo sprintf("%.02f", $prod->getPrice()); ?><!--"-->
-<!--                                    data-size="--><?php //echo str_replace(' ', '', trim(strtolower($prod->getAttributeText('product_sizes')))); ?><!--"-->
-<!--                                    data-sku="--><?php //echo $prod->getSku(); ?><!--"-->
-<!--                                    data-drupal-sku="--><?php //echo $prod->getdrupalproductid(); ?><!--" >-->
-<!--                                --><?php //echo $prod->getAttributeText('product_sizes'); ?>
-<!--                            </option>-->
-<!--                        --><?php //endforeach; ?>
-<!--                    </select>-->
-<!--                    <div class="product__select">-->
-<!--                        <div name="product_id" id="size-options"-->
-<!--                            --><?php //if ($this->escapeHtml($iframeChildrenPrice)): ?>
-<!--                                data-price="--><?php //echo sprintf("%.02f", $this->escapeHtml($iframeChildrenPrice)); ?><!--"-->
-<!--                            --><?php //endif; ?>
-<!--                        >-->
-<!--                            --><?php //foreach ($child_products as $prod): ?>
-<!--                                <label for="465" data-price="">-->
-<!--                                    <input type="radio"-->
-<!--                                           name="size"-->
-<!--                                           value="--><?// echo $prod->getId(); ?><!--"-->
-<!--                                        --><?php //if ($this->escapeHtml($iframeSelectedProduct) == $prod->getId()): ?><!-- checked--><?php //endif; ?>
-<!--                                           data-price="--><?php //echo sprintf("%.02f", $prod->getPrice()); ?><!--"-->
-<!--                                           data-size="--><?php //echo str_replace(' ', '', trim(strtolower($prod->getAttributeText('product_sizes')))); ?><!--"-->
-<!--                                           data-sku="--><?php //echo $prod->getSku(); ?><!--"-->
-<!--                                           data-drupal-sku="--><?// echo $prod->getdrupalproductid(); ?><!--" />-->
-<!--                                    <span>--><?php //echo $prod->getAttributeText('product_sizes'); ?><!--</span>-->
-<!--                                </label>-->
-<!--                            --><?php //endforeach; ?>
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                --><?php //endif; ?>
-            </div>
-
-            <div class="block__subblock">
-                <label class="block__subblock--label" for="qty">Quantity</label>
-
-                <label id="qty-wrap">
-                    <input type="text" pattern="\d*" name="quantity" id="qty" maxlength="12" value="1" title="Qty"
-                           class="block__subblock--input" size="3"/>
-                    <button class="minus">-</button>
-                    <button class="plus">+</button>
-                </label>
-            </div>
-        </div><!-- .block__item -->
-    </div><!-- .atc__block -->
+            </div><!-- .block__item -->
+        </form>
+    </div><!-- .cta__block -->
 </div>
 <script>
     require([
@@ -136,18 +83,4 @@ $url = $baseUrl . "iframes/addtocart/add";
         priceBoxes.priceBox({'priceConfig': <?= /* @escapeNotVerified */ $block->getJsonConfig() ?>});
     });
 </script>
-
-<?//= $block->getChildHtml('form_top') ?>
-<?php //if (!$block->hasOptions()):?>
-<!--    --><?//= $block->getChildHtml('product_info_form_content') ?>
-<?php //else:?>
-<!--    --><?php //if ($_product->isSaleable() && $block->getOptionsContainer() == 'container1'):?>
-<!--        --><?//= $block->getChildChildHtml('options_container') ?>
-<!--    --><?php //endif;?>
-<?php //endif; ?>
-<!---->
-<?php //if ($_product->isSaleable() && $block->hasOptions() && $block->getOptionsContainer() == 'container2'):?>
-<!--    --><?//= $block->getChildChildHtml('options_container') ?>
-<?php //endif;?>
-<?//= $block->getChildHtml('form_bottom') ?>
 
