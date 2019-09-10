@@ -1,7 +1,6 @@
 <?php
 $iframeProductId = $this->getData('product_id');
 $iframeSelectedProduct = $this->getData('selected_product');
-$iframeChildProducts = $this->getData('child_products');
 $iframeQuantity = $this->getData('quantity');
 $iframeChildrenPrice = $this->getData('children_price');
 $iframeBasePrice = $this->getData('base_price');
@@ -18,7 +17,7 @@ $url = $baseUrl . "iframes/addtocart/add";
 <div class="cta__container">
     <div class="cta__container--price">
         <span class="regular-price" id="product-price-13_clone">
-            <?php if ($this->escapeHtml($iframeChildrenPrice)): ?>
+            <?php if ($iframeChildrenPrice): ?>
                 $<span id="list-price"><?php echo sprintf("%.02f", $this->escapeHtml($iframeChildrenPrice)); ?></span>
             <?php else: ?>
                 $<span id="list-price"><?php echo sprintf("%.02f", $this->escapeHtml($iframeBasePrice)); ?></span>
@@ -28,12 +27,12 @@ $url = $baseUrl . "iframes/addtocart/add";
     </div>
     <div class="cta__container--options">
         <form data-product-sku="<?= $block->escapeHtml($_product->getSku()) ?>"
-              action="<?= /* @NoEscape */ $block->getSubmitUrl($_product) ?>" method="post"
+              action="<?= $block->getSubmitUrl($_product) ?>" method="post"
               id="product_addtocart_form"<?php if ($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
-            <input type="hidden" name="product" value="<?= /* @escapeNotVerified */ $_product->getId() ?>" />
+            <input type="hidden" name="product" value="<?= $this->escapeHtml($_product->getId()) ?>" />
             <input type="hidden" name="selected_configurable_option" value="" />
             <input type="hidden" name="related_product" id="related-products-field" value="" />
-            <input type="hidden" name="item"  value="<?= /* @noEscape */ $block->getRequest()->getParam('id') ?>" />
+            <input type="hidden" name="item"  value="<?= $this->escapeHtml($block->getRequest()->getParam('id')) ?>" />
             <?= $block->getBlockHtml('formkey') ?>
             <div class="block__item">
 
@@ -43,7 +42,6 @@ $url = $baseUrl . "iframes/addtocart/add";
                     <?= $block->getChildHtml('options_configurable') ?>
                 <?php endif;?>
             </div>
-            <?php $child_products = $iframeChildProducts; ?>
 
             <div class="block__item">
                 <div class="block__subblock">
@@ -57,7 +55,7 @@ $url = $baseUrl . "iframes/addtocart/add";
                     </label>
                 </div>
                 <button type="submit" title="Add to Cart" class="button button--cart" id="cart-add"
-                        data-size_id="<?php echo str_replace(' ', '', trim(strtolower($this->getData('size')))); ?>"
+                        data-size_id="<?php echo $this->escapeHtml(str_replace(' ', '', trim(strtolower($this->getData('size'))))); ?>"
                         data-sku_id="<?php echo $this->escapeHtml($iframeSku); ?>"
                         data-drupal-sku="<? echo $this->escapeHtml($iframeDrupalProductId); ?>"
                         data-magento-add-url="<? echo $this->escapeUrl($url); ?>">
