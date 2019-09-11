@@ -1,4 +1,4 @@
-//Scotts Colors
+//Scotts Colors //
 $scotts-green: #075534;
 $scotts-secondary-green: #138E51;
 $scotts-black: #2A2A2A;
@@ -8,13 +8,15 @@ $scotts-white: #f3f3f3;
 $scotts-accent-orange: #fcaf19;
 
 
-// Fonts
+// Fonts //
 $lato: 'Lato', sans-serif;
 $opensans: 'Open Sans', sans-serif;
 $oswald: 'Oswald', sans-serif;
 $rokkitt: 'Rokkitt', serif;
 
 
-//Magento UI Variables
+// Magento UI Variables //
 $primary__color: $scotts-green;
 $secondary__color: $scotts-secondary-green;
+$active__color: $scotts-accent-orange;
+//$error__color: *Set as Magento default red*
