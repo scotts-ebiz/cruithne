@@ -9,7 +9,7 @@ use Psr\Log\LoggerInterface;
 use SMG\Sap\Model\SapOrderBatchFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch as SapOrderBatchResource;
 
-class InvoiceReconciliationSentHelper
+class ConsumerDataSentHelper
 {
     /**
      * @var LoggerInterface
@@ -81,8 +81,8 @@ class InvoiceReconciliationSentHelper
     }
 
     /**
-     * Update the orders to notify that the invoice
-     * reconciliation was sent to SAP successfully
+     * Update the orders to notify that the consumer
+     * data was sent successfully
      *
      * @param $requestData
      * @return string
@@ -91,7 +91,7 @@ class InvoiceReconciliationSentHelper
     public function updateOrders($requestData)
     {
         // variables
-        $invoiceReconciliationSentResponse = $this->_responseHelper->createResponse(true, "The invoice reconciliation  sent process completed successfully.");
+        $consumerDataSentResponse = $this->_responseHelper->createResponse(true, "The consumer data sent process completed successfully.");
 
         // make sure that we were given something from the request
         if (!empty($requestData))
@@ -103,7 +103,7 @@ class InvoiceReconciliationSentHelper
             foreach ($requestData as $inputOrder)
             {
                 // get the values from the input JSON
-                $orderIncrementId = $inputOrder['MagentoOrderNum'];
+                $orderIncrementId = $inputOrder['IncrementId'];
 
                 if (!empty($orderIncrementId))
                 {
@@ -117,10 +117,10 @@ class InvoiceReconciliationSentHelper
 
                     // since the order response will be sending a record for each item that is in
                     // the orders file but only need one then check to see if the date was already set
-                    if (empty($sapOrderBatch->getData('invoice_reconciliation_date')))
+                    if (empty($sapOrderBatch->getData('consumer_data_date')))
                     {
                         // set the process date for this order
-                        $sapOrderBatch->setData('invoice_reconciliation_date', $today);
+                        $sapOrderBatch->setData('consumer_data_date', $today);
 
                         // save
                         $this->_sapOrderBatchResource->save($sapOrderBatch);
@@ -138,10 +138,10 @@ class InvoiceReconciliationSentHelper
             // log the error
             $this->_logger->error("SMG\Api\Helper\InvoiceReconciliationSentHelper - Nothing was provided to process.");
 
-            $invoiceReconciliationSentResponse = $this->_responseHelper->createResponse(false, 'Nothing was provided to process.');
+            $consumerDataSentResponse = $this->_responseHelper->createResponse(false, 'Nothing was provided to process.');
         }
 
         // return
-        return $invoiceReconciliationSentResponse;
+        return $consumerDataSentResponse;
     }
 }
