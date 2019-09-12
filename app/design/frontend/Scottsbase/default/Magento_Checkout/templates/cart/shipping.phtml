@@ -11,7 +11,8 @@
 
 <div class="pop-cust-click title" data-role="title">
 	<strong id="block-shipping-heading" role="heading" aria-level="2">
-		<?= /* @escapeNotVerified */ $block->getQuote()->isVirtual() ? __('Estimate Tax') : __('Estimate Taxes') ?>
+		<?= /* @escapeNotVerified */ $block->getQuote()->isVirtual() ? __('Estimate Shipping') : __('Estimate 
+		Shipping') ?>
 	</strong>
 </div>
 <div id="ac-wrapper" style='display:none'>
@@ -20,14 +21,14 @@
 			   <div id="block-shipping" class="block shipping custshipblk" data-mage-init='{"collapsible":{"openedState": "active", "saveState": true}}'>
 				<div class="title" data-role="title">
 					<strong id="block-shipping-heading" role="heading" aria-level="2">
-						<?= /* @escapeNotVerified */ $block->getQuote()->isVirtual() ? __('Estimate Tax') : __('Estimate Shipping and Tax') ?>
+						<?= /* @escapeNotVerified */ $block->getQuote()->isVirtual() ? __('Estimate Shipping') : __('Estimate Shipping') ?>
 					</strong>
 				</div>
 				<div id="block-summary" data-bind="scope:'block-summary'" class="content" data-role="content" aria-labelledby="block-shipping-heading">
 					<!-- ko template: getTemplate() --><!-- /ko -->
 					<script type="text/x-magento-init">
 						{
-							"#block-summary": { 
+							"#block-summary": {
 								"Magento_Ui/js/core/app": <?= /* @escapeNotVerified */ $block->getJsLayout() ?>
 							}
 						}
