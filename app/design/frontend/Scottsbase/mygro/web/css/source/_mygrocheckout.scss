@@ -43,7 +43,7 @@
             .checkout-methods-items {
               .item {
                 .action.checkout {
-                  @include font-hellix-regular(1.4rem, $white);
+                  @include font-hellix-regular(1.4rem, $color-white);
                   -webkit-transition: background 0.2s;
                   -moz-transition: background 0.2s;
                   -ms-transition: background 0.2s;
@@ -157,7 +157,7 @@
                       -o-transition: background 0.2s;
                       transition: background 0.2s;
                       background: $mygro-black-alt;
-                      color: $white;
+                      color: $color-white;
                       font-size: 0.85rem;
                       padding: 0.25rem 1rem;
                       border-radius: 5px;
@@ -250,9 +250,9 @@
                 text-align: right;
               }
               input.btn-popup {
-                background-color: $color_green_shade;
+                background-color: $scotts-green;
                 color: $color_white;
-                border-radius: 3px;
+                border-radius: 13px;
                 padding: 8px 13px;
                 margin-bottom: 15px;
                 margin-left: 23px;
@@ -292,7 +292,7 @@
   .field-tooltip {
     .field-tooltip-action:before{
       opacity: 1;
-      color: $color_dark_green_shade;
+      color: $mygro-green;
     }
   }
   .qtyminus,
@@ -303,7 +303,7 @@
     box-shadow: none;
   }
   .pop-cust-click.title{
-    color: $color_dark_green_shade;
+    color: $mygro-green;
     &:hover {
       color: $mygro-dark-green;
     }
@@ -694,7 +694,7 @@
                             .actions-toolbar {
                               .primary {
                                 button {
-                                  @include font-hellix-regular(1rem, $white);
+                                  @include font-hellix-regular(1rem, $color-white);
                                   -webkit-transition: background 0.2s;
                                   -moz-transition: background 0.2s;
                                   -ms-transition: background 0.2s;
@@ -719,7 +719,7 @@
                               .primary {
                                 margin-left: 1rem;
                                 .action-add.primary {
-                                  @include font-hellix-regular(1rem, $white);
+                                  @include font-hellix-regular(1rem, $color-white);
                                   -webkit-transition: background 0.2s;
                                   -moz-transition: background 0.2s;
                                   -ms-transition: background 0.2s;
@@ -740,7 +740,7 @@
                               }
                               .secondary {
                                 .action-check {
-                                  @include font-hellix-regular(1rem, $white);
+                                  @include font-hellix-regular(1rem, $color-white);
                                   -webkit-transition: background 0.2s;
                                   -moz-transition: background 0.2s;
                                   -ms-transition: background 0.2s;
@@ -867,7 +867,7 @@
   }
   .field-tooltip .field-tooltip-action:before{
     opacity: 1;
-    color: $color_dark_green_shade;
+    color: $mygro-green;
   }
   .abs-field-tooltip,
   .field .control._with-tooltip{
