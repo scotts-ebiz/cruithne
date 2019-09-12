@@ -42,27 +42,6 @@ $item = $smghelper->getCheckoutSession()->getDtmAddToCart();
 
 <?php /*update qty event*/ ?>
 
-<?php $updateditems = $smghelper->getCheckoutSession()->getUpdateqty(); ?>
-<?php if ($updateditems) : ?>
-    <?php foreach($updateditems as $pro){ ?>
-        <script>
-            window.dtmData.events.push({
-                name: 'cartUpdate',
-                product: {
-			id: '<?php echo $block->escapeHtml($pro["id"]);?>',
-			name: '<?php $p_name = $pro["name"]; echo $block->escapeHtml(str_replace("™","",$p_name)); ?>',
-			category: [<?php echo $block->escapeHtml($pro["category"]);?>],
-            currency: '<?php echo $block->escapeHtml($block->getCurrencyCode());?>',
-			unitPrice: <?php echo $block->escapeHtml($pro["unitPrice"]);?>,
-			sku: '<?php echo $block->escapeHtml($pro["sku"]);?>',
-			quantity: <?php echo $block->escapeHtml($pro["quantity"]);?>,
-			previousQuantity: <?php echo $block->escapeHtml($pro["previousQuantity"]);?>
-                }
-            });
-        </script>
-    <?php } ?>
-    <?php $smghelper->getCheckoutSession()->unsUpdateqty(); ?>
-<?php endif; ?>
 
 
 <?php /*delete item event*/ ?>
@@ -74,7 +53,7 @@ $item = $smghelper->getCheckoutSession()->getDtmAddToCart();
             product: {
 			id: '<?php echo $block->escapeHtml($deleteitem["id"]);?>',
 			name: '<?php $p_name = $deleteitem["name"]; echo $block->escapeHtml(str_replace("™","",$p_name)); ?>',
-			category: [<?php echo $block->escapeHtml($deleteitem["category"]);?>],
+			category: '<?php echo $block->escapeHtml($deleteitem["category"]);?>',
                 currency: '<?php echo $block->escapeHtml($block->getCurrencyCode());?>',
 			unitPrice: <?php echo $block->escapeHtml($deleteitem["unitPrice"]);?>,
 			sku: '<?php echo $block->escapeHtml($deleteitem["sku"]);?>',
