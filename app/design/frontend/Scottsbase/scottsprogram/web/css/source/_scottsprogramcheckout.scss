@@ -461,17 +461,14 @@
     display:none;
   }
   .cart-container{
-    .form-cart .action.update{
-      color: $scottsprogram-orange;
-      span {
-        .actions-toolbar {
+      .form-cart .action.update{
+          color: $scottsprogram-orange;
+      }
+      .actions-toolbar {
           a.action-delete {
             color: $scottsprogram-orange;
           }
-        }
       }
-
-    }
   }
 }
 

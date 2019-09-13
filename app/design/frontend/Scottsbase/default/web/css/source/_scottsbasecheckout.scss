@@ -26,29 +26,29 @@
 }
 
 //Style Update Cart and Remove Item link
-.checkout-cart-index .cart-container .form-cart .action.update {
-    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    text-decoration: underline;
-    text-align: left;
-    font-size: 0.8rem;
-    color: #2c5999;
-    margin-left: 0;
-    padding-left: 0;
-    cursor: pointer;
-    &:before {
-        display: none;
+.checkout-cart-index .cart-container .form-cart {
+    .action.update {
+        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        text-decoration: underline;
+        text-align: left;
+        font-size: 0.8rem;
+        margin-left: 0;
+        padding-left: 0;
+        cursor: pointer;
+        &:before {
+            display: none;
+        }
     }
-    span {
-        .actions-toolbar {
-            a.action-delete {
-                font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                text-decoration: underline;
-                font-size: 0.8rem;
-                color: #2c5999;
-            }
+    .actions-toolbar {
+        a.action-delete {
+            font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            text-decoration: underline;
+            font-size: 0.8rem;
         }
     }
 }
+
+
 
 //Estimate Shipping link on summary div
 .cart-summary > .pop-cust-click.title {
