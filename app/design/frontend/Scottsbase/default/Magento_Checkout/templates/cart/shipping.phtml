@@ -58,9 +58,12 @@
 			$('.btn-popup').click(function () {
 				var pop = $('input[name="postcode"]').val();
 				if(pop == ''){
-					$('input[name="postcode"]').css("border-color", "red");
-					//$("div[name='shippingAddress.postcode']").append("<span class='cust-btn-add' >Please Enter Postcode</span>");
-					return false;
+					if($('.cust-btn-add').length < 1){
+						$('input[name="postcode"]').css("border-color", "red");
+						$("div[name='shippingAddress.postcode']").append("<span class='cust-btn-add' >Please Enter Postcode</span>");
+						$(".cust-btn-add").css("color", "red");
+						return false;
+					}
 				} else {
 					$('#ac-wrapper').hide();
 					$('#popup').hide();
