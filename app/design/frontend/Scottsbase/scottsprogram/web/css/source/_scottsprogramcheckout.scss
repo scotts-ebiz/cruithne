@@ -17,7 +17,7 @@
           .cart-summary {
             background: #dfe6ee;
             .summary.title {
-              @include font-roboto(1.6rem, $secondary-dark-gray);
+              @include font-roboto(1.6rem, $scotts-black);
             }
             .block.shipping,
             .block.discount,
@@ -26,20 +26,20 @@
                 #block-shipping-heading,
                 #block-discount-heading,
                 #block-giftcard-heading {
-                  @include font-roboto(1rem, $secondary-dark-gray);
+                  @include font-roboto(1rem, $scotts-black);
                 }
               }
             }
             .checkout-methods-items {
               .item {
                 .action.checkout {
-                  @include font-roboto(1.4rem, $white);
+                  @include font-roboto(1.4rem, $color-white);
                   -webkit-transition: background 0.2s;
                   -moz-transition: background 0.2s;
                   -ms-transition: background 0.2s;
                   -o-transition: background 0.2s;
                   transition: background 0.2s;
-                  background: $primary-green;
+                  background: $scotts-green;
                   border: none;
                   &:hover {
                     -webkit-transition: background 0.2s;
@@ -51,7 +51,7 @@
                   }
                 }
                 .action.multicheckout {
-                  color: $primary-green;
+                  color: $scotts-green;
                   text-decoration: underline;
                   &:hover {
                     text-decoration: none;
@@ -116,7 +116,7 @@
                       }
                       .product-item-name {
                         a {
-                          color: $secondary-dark-gray;
+                          color: $scotts-black;
                         }
                       }
                     }
@@ -124,13 +124,13 @@
                   .qty {
                     .control.qty {
                       .qty {
-                        border: 1px solid $secondary-dark-gray;
+                        border: 1px solid $scotts-black;
                       }
                     }
                   }
                   .price-including-tax,
                   .price-excluding-tax {
-                    color: $secondary-dark-gray;
+                    color: $scotts-black;
                     font-size:16px;
                     @include max-screen($screen__m) {
                       font-size: 1rem;
@@ -153,8 +153,8 @@
                       -ms-transition: background 0.2s;
                       -o-transition: background 0.2s;
                       transition: background 0.2s;
-                      background: $secondary-dark-gray;
-                      color: $white;
+                      background: $scotts-black;
+                      color: $color-white;
                       font-size: 0.85rem;
                       padding: 0.25rem 1rem;
                       border-radius: 5px;
@@ -182,7 +182,7 @@
               .action.continue,
               .action.clear,
               .action.update {
-                @include font-roboto(1rem, $secondary-dark-gray, 400);
+                @include font-roboto(1rem, $scotts-black, 400);
               }
               .action.continue {
                 &:before {
@@ -213,7 +213,7 @@
             .cart-gift-item {
               .gift-item-block {
                 .title {
-                  @include font-roboto(1rem, $secondary-dark-gray, 400);
+                  @include font-roboto(1rem, $scotts-black, 400);
                 }
               }
             }
@@ -230,7 +230,7 @@
             #popup{
               width: 487px;
               height: auto;
-              background: $color_white;
+              background: $color-white;
               box-shadow: $color_grey_shade 0px 0px 3px 3px;
               -moz-box-shadow: $color_grey_shade 0px 0px 3px 3px;
               -webkit-box-shadow: $color_grey_shade 0px 0px 3px 3px;
@@ -248,8 +248,8 @@
                 text-align: right;
               }
               input.btn-popup {
-                background-color: $color_green_shade;
-                color: $color_white;
+                background-color: $scotts-green;
+                color: $color-white;
                 border-radius: 3px;
                 padding: 8px 13px;
                 margin-bottom: 15px;
@@ -298,7 +298,7 @@
     box-shadow: none;
   }
   .pop-cust-click.title{
-    color: $color_green_shade;
+    color: $scotts-green;
     &:hover {
         color: $color_black20_shade;
     }
@@ -623,7 +623,7 @@
                     height: 45px;
                     line-height: $font_normal;
                     background: $color_dark30_green_shade;
-                    color: $color_white;
+                    color: $color-white;
                     margin-top: 15px;
                     font-size: $font15;
                     padding: 0px 40px;
@@ -688,7 +688,7 @@
                       .opc-payment-additional {
                         .payment-option-title {
                           .action-toggle {
-                            color: $primary-green;
+                            color: $scotts-green;
                           }
                         }
                         .payment-option-content {
@@ -696,13 +696,13 @@
                             .actions-toolbar {
                               .primary {
                                 button {
-                                  @include font-roboto(1rem, $white);
+                                  @include font-roboto(1rem, $color-white);
                                   -webkit-transition: background 0.2s;
                                   -moz-transition: background 0.2s;
                                   -ms-transition: background 0.2s;
                                   -o-transition: background 0.2s;
                                   transition: background 0.2s;
-                                  background: $secondary-dark-gray;
+                                  background: $scotts-black;
                                   border: none;
                                   &:hover {
                                     -webkit-transition: background 0.2s;
@@ -710,7 +710,7 @@
                                     -ms-transition: background 0.2s;
                                     -o-transition: background 0.2s;
                                     transition: background 0.2s;
-                                    background: $secondary-dark-gray;
+                                    background: $scotts-black;
                                   }
                                 }
                               }
@@ -721,13 +721,13 @@
                               .primary {
                                 margin-left: 1rem;
                                 .action-add.primary {
-                                  @include font-roboto(1rem, $white);
+                                  @include font-roboto(1rem, $color-white);
                                   -webkit-transition: background 0.2s;
                                   -moz-transition: background 0.2s;
                                   -ms-transition: background 0.2s;
                                   -o-transition: background 0.2s;
                                   transition: background 0.2s;
-                                  background: $secondary-dark-gray;
+                                  background: $scotts-black;
                                   border: none;
                                   margin-top: 0;
                                   &:hover {
@@ -736,19 +736,19 @@
                                     -ms-transition: background 0.2s;
                                     -o-transition: background 0.2s;
                                     transition: background 0.2s;
-                                    background: $secondary-dark-gray;
+                                    background: $scotts-black;
                                   }
                                 }
                               }
                               .secondary {
                                 .action-check {
-                                  @include font-roboto(1rem, $white);
+                                  @include font-roboto(1rem, $color-white);
                                   -webkit-transition: background 0.2s;
                                   -moz-transition: background 0.2s;
                                   -ms-transition: background 0.2s;
                                   -o-transition: background 0.2s;
                                   transition: background 0.2s;
-                                  background: $secondary-dark-gray;
+                                  background: $scotts-black;
                                   border: none;
                                   margin-top: 0;
                                   &:hover {
@@ -757,7 +757,7 @@
                                     -ms-transition: background 0.2s;
                                     -o-transition: background 0.2s;
                                     transition: background 0.2s;
-                                    background: $secondary-dark-gray;
+                                    background: $scotts-black;
                                   }
                                 }
                               }
@@ -981,7 +981,7 @@
     height: 42px;
     line-height: $font_normal;
     background: $color_dark30_green_shade;
-    color: $color_white;
+    color: $color-white;
     margin-top: 15px;
     font-size: $font15;
     padding: 0px 40px;
@@ -1014,7 +1014,7 @@
     width: 8px;
     height: 8px;
     border-radius: 100%;
-    background: $color_white;
+    background: $color-white;
     border: 3px solid $color_blue54_shade;
   }
   [type="radio"]:checked + label:after,
@@ -1248,9 +1248,9 @@
       }
     }
   }
-  .field-tooltip {
+  /*.field-tooltip {
     display: contents;
-  }
+  }*/
   [type="radio"]:checked ,
   [type="radio"]:not(:checked){
     + label.cust-radio:before{
@@ -2152,13 +2152,14 @@
     }
   }
 }
-
+.checkout-shipping-address{
 div[name="shippingAddress.postcode"] {
   .control {
     .message.warning {
       display: none;
     }
   }
+}
 }
 
 .checkout-index-index{
@@ -2196,6 +2197,71 @@ div[name="shippingAddress.postcode"] {
         top: 1px;
       }
     }
+	.checkout-shipping-method {
+		position: unset;
+	}
   }
 }
+.cart-parent-summary{
+	.cart-summary-divlink{
+		#block-discount{
+			.content.disc_active{
+				display:block !important;
+  }
+			.content{
+				display:none !important;
+			}
+		}
+	}
+}
+.checkout-index-index{
+	.table-checkout-shipping-method{
+			tbody{
+				td.col.col-price{
+					width: 10%;
+}
+			}
+		}
+	}
+.checkout-index-index{
+	.checkout-shipping-address{
+		.control._with-tooltip{
+			float: left !important;
+			width:100% !important;
+		}
+	}
+}
+#block-summary {
+	div[name="shippingAddress.postcode"] {
+		.control {
+			.message.warning {
+				background: #fae5e5;
+				padding-left: 6px;
+				color: rgb(255, 0, 0);
+				font-size: 16px;
 
+				> *:first-child:before {
+					color: #b30000;
+				}
+			}
+		}
+	}
+}
+.checkout-cart-index{
+	.cart-container{
+		.form-cart{
+			.action.update.update_cust_btn {
+				text-decoration: none;
+				text-align: unset;
+				text-transform: capitalize;
+			}
+			.action.action-delete{
+				span{
+					font-size: 0.8rem;
+					color: #ed9016;
+					text-transform: capitalize;
+				}
+			}
+		}
+	}
+}
