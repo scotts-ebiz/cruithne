@@ -1,31 +1,32 @@
-// Colors
-$white: #fff;
-$black: #000;
-$primary-green: #075534;
-$primary-light-green: #138e51;
-$secondary-dark-gray: #2a2a2a;
-$secondary-gray: #4d4d4e;
-$secondary-light-gray: #959393;
-$secondary-lighter-gray: #f3f3f3;
-$accent-orange: #fcaf19;
-
+// ScottsProgram Brand Colors //
 $scottsprogram-gray: #636363;
 $scottsprogram-orange: #ed9016;
 
 
-/*------- 11042019 Custom Changes - Start --------*/
-$font_normal: normal;
-$color_white: #FFFFFF; 
+// Scotts Brand Colors //
+$scotts-green: #075534;
+$scotts-secondary-green: #138E51;
+$scotts-black: #2A2A2A;
+$scotts-gray: #4d4d4e;
+$scotts-light-gray: #959393;
+$scotts-white: #f3f3f3;
+$scotts-accent-orange: #fcaf19;
+
+
+// Additional Colors //
 $color_grey_shade: #64686e;
-$color_green_shade: #075534; 
 $color_dark_green_shade: #008065;
 $color_dark30_green_shade: #4d4e4e;
 $color_black15_shade: #262626;
 $color_black20_shade: #333333;
 $color_blue54_shade: #2196F3;
 $color_lightyellow_shade: #ffc;
-$color_black: #000000;
 
+
+$font_normal: normal;
+
+
+// Font Sizes //
 $font12: 12px;
 $font14: 14px;
 $font15: 15px;
@@ -36,13 +37,15 @@ $font25: 25px;
 $font27: 27px;
 $font32: 32px;
 
+
+// Screen Sizes //
 $screen_1024: 1024px;
 $screen_769: 769px;
 $screen_768: 768px;
 $screen_569: 569px;
 $screen_568: 568px;
-/*------- 11042019 Custom Changes - End --------*/
 
-// Fonts
+
+// Fonts //
 $roboto: 'Roboto', sans-serif;
 $roboto-condensed: 'Roboto Condensed', sans-serif;
