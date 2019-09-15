@@ -14,7 +14,7 @@ body {
 
   .page-wrapper {
     .page-header {
-        background: $primary-green;
+        background: $scotts-green;
         height: 3.25rem;
         @include max-screen($screen_m){
         	position: fixed;
@@ -266,7 +266,7 @@ body {
                                     }
                                     &.active,
                                     &:hover {
-                                        background-color: $primary-green;
+                                        background-color: $scotts-green;
                                         box-shadow: 0 0 5px 0 rgba(182,92,0,0.18);
                                         color: #fff;
                                     }
@@ -422,7 +422,7 @@ body {
                                         opacity: 0;
                                         visibility: hidden;
                                         &:checked {
-                                            border: 1px solid $primary-green;
+                                            border: 1px solid $scotts-green;
                                         }
                                     }
                                     .tabs__radio:checked + .tabpanel {
@@ -454,11 +454,11 @@ body {
                             text-align: center;
                         }
                         .turfbuilder--headline {
-                            @include font-roboto-condensed(2rem, $white, 600);
+                            @include font-roboto-condensed(2rem, $color-white, 600);
                             text-transform: uppercase;
                         }
                         p {
-                            @include font-roboto(0.875rem, $white, 100);
+                            @include font-roboto(0.875rem, $color-white, 100);
                         }
                         .section__app--links {
                             p {
