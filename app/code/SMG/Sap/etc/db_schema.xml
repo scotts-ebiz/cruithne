@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
-    <table name="sales_order_sap">
+    <table name="sales_order_sap" engine="innodb" resource="default" comment="Sales Order Sap">
         <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" padding="10" comment="ID of the record."/>
         <column name="order_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Entity ID for the sales_order table."/>
         <column name="sap_order_id" xsi:type="varchar" nullable="false" length="10" comment="SAP Order Id"/>
@@ -11,7 +11,6 @@
         <column name="sap_payer_id" xsi:type="int" nullable="true" padding="10" comment="SAP Payer ID"/>
         <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
         <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Updated"/>
-        <column name="delivery_number" xsi:type="text" nullable="true" comment="SAP Delivery Number"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id" />
         </constraint>
@@ -30,7 +29,7 @@
           referenceColumn="status"
           onDelete="NO ACTION" />
     </table>
-    <table name="sales_order_sap_batch">
+    <table name="sales_order_sap_batch" engine="innodb" resource="default" comment="Sales Order Sap Batch">
         <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" padding="10" comment="ID of the record."/>
         <column name="order_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Entity ID for the sales_order table."/>
         <column name="is_capture" xsi:type="boolean" nullable="false" default="false" comment="Is the order ready for capture"/>
@@ -43,6 +42,8 @@
         <column name="order_process_date" xsi:type="timestamp" nullable="true" comment="Order Process Run Date"/>
         <column name="is_invoice_reconciliation" xsi:type="boolean" nullable="false" default="false" comment="Is the order ready for invoice reconciliation"/>
         <column name="invoice_reconciliation_date" xsi:type="timestamp" nullable="true" comment="Invoice Reconciliation Process Run Date"/>
+        <column name="is_consumer_data" xsi:type="boolean" nullable="false" default="false" comment="Is the order ready for Consumer Database"/>
+        <column name="consumer_data_date" xsi:type="timestamp" nullable="true" comment="Consumer Database Run Date"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id" />
         </constraint>
@@ -54,7 +55,7 @@
           referenceColumn="entity_id"
           onDelete="NO ACTION" />
     </table>
-    <table name="sales_order_sap_batch_creditmemo">
+    <table name="sales_order_sap_batch_creditmemo" engine="innodb" resource="default" comment="Sales Order Sap Batch Credit Memo">
         <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
         <column name="creditmemo_order_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Entity ID for the sales_creditmemo table."/>
         <column name="order_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Entity ID for the sales_order table."/>
@@ -89,7 +90,7 @@
           referenceColumn="item_id"
           onDelete="NO ACTION" />
     </table>
-    <table name="sales_order_sap_batch_rma">
+    <table name="sales_order_sap_batch_rma" engine="innodb" resource="default" comment="Sales Order Sap Batch RMA">
         <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
         <column name="rma_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Entity ID for the magento_rma table."/>
         <column name="order_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Entity ID for the sales_order table."/>
@@ -125,7 +126,7 @@
           referenceColumn="item_id"
           onDelete="NO ACTION" />
     </table>
-    <table name="sales_order_sap_history">
+    <table name="sales_order_sap_history" engine="innodb" resource="default" comment="Sales Order Sap History">
         <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
         <column name="order_sap_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Entity ID for the sales_order_sap table."/>
         <column name="order_status" xsi:type="varchar" nullable="false" length="32" comment="The Order status of the order"/>
@@ -149,19 +150,15 @@
           referenceColumn="status"
           onDelete="NO ACTION" />
     </table>
-    <table name="sales_order_sap_item">
+    <table name="sales_order_sap_item" engine="innodb" resource="default" comment="Sales Order Sap Item">
         <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
         <column name="order_sap_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Entity ID for the sales_order_sap table."/>
         <column name="sap_order_status" xsi:type="varchar" nullable="false" length="1" comment="SAP Order Status"/>
         <column name="order_status" xsi:type="varchar" nullable="false" length="32" comment="Order Status"/>
-        <column name="fulfillment_location" xsi:type="text" nullable="true" comment="Location of Shipment Warehouse"/>
         <column name="sku" xsi:type="varchar" nullable="false" length="255" comment="SKU of the product"/>
         <column name="sku_description" xsi:type="text" nullable="false" comment="SKU Description of the product"/>
         <column name="qty" xsi:type="decimal" nullable="false" unsigned="true" comment="Qty Shipped"/>
         <column name="confirmed_qty" xsi:type="decimal" nullable="false" unsigned="true" comment="Confirmed Qty Shipped"/>
-        <column name="ship_tracking_number" xsi:type="text" nullable="true" comment="Ship Tracking Numbers"/>
-        <column name="sap_billing_doc_number" xsi:type="longtext" nullable="true" comment="Invoice Id"/>
-        <column name="sap_billing_doc_date" xsi:type="timestamp" nullable="true" comment="Invoice Date"/>
         <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
         <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Updated"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
@@ -182,7 +179,7 @@
           referenceColumn="status"
           onDelete="NO ACTION" />
     </table>
-    <table name="sales_order_sap_item_history">
+    <table name="sales_order_sap_item_history" engine="innodb" resource="default" comment="Sales Order Sap Item History">
         <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
         <column name="order_sap_item_id" xsi:type="int" nullable="false" unsigned="true" comment="Entity ID for the sales_order_sap_item table."/>
         <column name="order_status" xsi:type="varchar" nullable="false" length="32" comment="The Order status of the order"/>
@@ -206,7 +203,7 @@
           referenceColumn="status"
           onDelete="NO ACTION" />
     </table>
-    <table name="sales_order_sap_shipment">
+    <table name="sales_order_sap_shipment" engine="innodb" resource="default" comment="Sales Order Sap Shipment">
         <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
         <column name="order_sap_item_id" xsi:type="int" nullable="false" unsigned="true" comment="Entity ID for the sales_order_sap table."/>
         <column name="ship_tracking_number" xsi:type="text" nullable="true" comment="Ship Tracking Numbers"/>
@@ -229,7 +226,7 @@
           referenceColumn="entity_id"
           onDelete="NO ACTION" />
     </table>
-    <table name="sales_order_status_sap">
+    <table name="sales_order_status_sap" engine="innodb" resource="default" comment="Sales Order Sap Status">
         <column name="status" xsi:type="varchar" nullable="false" length="32" comment="Status Id of the Status"/>
         <column name="label" xsi:type="varchar" nullable="false" length="128" comment="Description of the Status"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">

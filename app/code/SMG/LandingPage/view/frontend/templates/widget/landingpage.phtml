@@ -152,7 +152,7 @@ $large_bundle_price = '';
                                 $show_error_class = (isset($_GET['no_zip_results'])) ? 'show-errors' : '';
                                 $zip_value = (isset($_GET['zip'])) ? intval($_GET['zip']) : '';
                                 $zip_input_type = ($zip_value) ? 'hidden' : 'text';
-                                $zip_instructions = ($zip_value) ? 'Now Select Your Grass Type' : 'Enter Your Zip Code To Get Started';
+                                $zip_instructions = ($zip_value) ? 'Now Select Your Grass Type' : 'Enter Your ZIP Code To Get Started';
                                 $zip_code_action = $block->getUrl('zip/zip');
                         ?>
                             <h4><?php echo $block->escapeHtml($zip_instructions); ?></h4>

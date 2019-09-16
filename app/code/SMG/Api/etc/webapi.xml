@@ -13,6 +13,18 @@
             <resource ref="self" />
         </resources>
     </route>
+    <route url="/V1/smg/consumerData" method="POST">
+        <service class="SMG\Api\Model\ConsumerDataManagementInterface" method="getConsumerData" />
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
+    <route url="/V1/smg/consumerDataSent" method="POST">
+        <service class="SMG\Api\Model\ConsumerDataSentManagementInterface" method="updateOrders" />
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
     <route url="/V1/smg/invoiceReconciliation" method="POST">
         <service class="SMG\Api\Model\InvoiceReconciliationManagementInterface" method="getOrders" />
         <resources>

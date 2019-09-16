@@ -1,7 +1,5 @@
+#!/bin/bash
 # Pulled this from: https://gist.github.com/mnadel/4ddcc0ba07d398b35dad89b4dfdc8308
-
-
-#!/usr/bin/env bash
 
 PROGNAME=$(basename $0)
 

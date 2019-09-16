@@ -568,7 +568,7 @@ define([
                 return utils.isEmptyNoTrim(value) || /(^\d{5}$)|(^\d{5}-\d{4}$)/.test(value);
 
             },
-            $.mage.__('Please enter a valid zip code (Ex: 90602.')
+            $.mage.__('Please enter a valid ZIP code (Ex: 90602.')
         ],
         'validate-date-au': [
             function (value) {
@@ -794,7 +794,7 @@ define([
             function () {
                 return true;
             },
-            $.mage.__('Please enter a valid zip code.')
+            $.mage.__('Please enter a valid ZIP code.')
         ],
         'validate-state': [
             function (value) {
