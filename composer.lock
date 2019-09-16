@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c5ce9d9b0897f0f94c0ca2ec4c04b423",
+    "content-hash": "31f7b5034f2b6e6871258af6d7b5833f",
     "packages": [
         {
             "name": "amasty/base",
@@ -12804,6 +12804,62 @@
             "time": "2018-08-09T15:03:40+00:00"
         },
         {
+            "name": "magepal/magento2-googletagmanager",
+            "version": "2.3.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/magepal/magento2-google-tag-manager.git",
+                "reference": "52b10d86b0da5c935285c11af41c364b6474ba4e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/magepal/magento2-google-tag-manager/zipball/52b10d86b0da5c935285c11af41c364b6474ba4e",
+                "reference": "52b10d86b0da5c935285c11af41c364b6474ba4e",
+                "shasum": ""
+            },
+            "require": {
+                "magento/framework": "100.0.*|100.1.*|101.0.*|102.0.*",
+                "magento/module-backend": "100.0.*|100.1.*|100.2.*|101.0.*",
+                "php": "~5.6.0|7.0.2|7.0.4|~7.0.6|~7.1.0|~7.1.3|~7.2.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "MagePal\\GoogleTagManager\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "proprietary"
+            ],
+            "authors": [
+                {
+                    "name": "Renon Stewart",
+                    "role": "Leader",
+                    "email": "renon@magepal.com",
+                    "homepage": "http://www.magepal.com/"
+                }
+            ],
+            "description": "Google Tag Manager (GTM) for Magento 2 with Advance Data Layer",
+            "homepage": "http://www.magepal.com/",
+            "keywords": [
+                "Google Tag Manager",
+                "data layer",
+                "ga",
+                "google analytics",
+                "gtm",
+                "magento 2",
+                "magento gtm",
+                "magento2",
+                "magento2 analytics",
+                "tag manager"
+            ],
+            "time": "2019-07-15T14:30:01+00:00"
+        },
+        {
             "name": "mageplaza/module-core",
             "version": "1.4.4",
             "source": {
@@ -12833,9 +12889,9 @@
             "authors": [
                 {
                     "name": "Mageplaza",
+                    "role": "Technical Support",
                     "email": "support@mageplaza.com",
-                    "homepage": "https://www.mageplaza.com",
-                    "role": "Technical Support"
+                    "homepage": "https://www.mageplaza.com"
                 }
             ],
             "description": "Mageplaza Core for Magento 2",
@@ -13624,28 +13680,28 @@
             "authors": [
                 {
                     "name": "Jim Wigginton",
-                    "email": "terrafrost@php.net",
-                    "role": "Lead Developer"
+                    "role": "Lead Developer",
+                    "email": "terrafrost@php.net"
                 },
                 {
                     "name": "Patrick Monnerat",
-                    "email": "pm@datasphere.ch",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "pm@datasphere.ch"
                 },
                 {
                     "name": "Andreas Fischer",
-                    "email": "bantu@phpbb.com",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "bantu@phpbb.com"
                 },
                 {
                     "name": "Hans-Jürgen Petrich",
-                    "email": "petrich@tronic-media.com",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "petrich@tronic-media.com"
                 },
                 {
                     "name": "Graham Campbell",
-                    "email": "graham@alt-three.com",
-                    "role": "Developer"
+                    "role": "Developer",
+                    "email": "graham@alt-three.com"
                 }
             ],
             "description": "PHP Secure Communications Library - Pure-PHP implementations of RSA, AES, SSH2, SFTP, X.509 etc.",
@@ -20006,20 +20062,20 @@
             "authors": [
                 {
                     "name": "Manuel Pichler",
+                    "role": "Project Founder",
                     "email": "github@manuel-pichler.de",
-                    "homepage": "https://github.com/manuelpichler",
-                    "role": "Project Founder"
+                    "homepage": "https://github.com/manuelpichler"
                 },
                 {
                     "name": "Other contributors",
-                    "homepage": "https://github.com/phpmd/phpmd/graphs/contributors",
-                    "role": "Contributors"
+                    "role": "Contributors",
+                    "homepage": "https://github.com/phpmd/phpmd/graphs/contributors"
                 },
                 {
                     "name": "Marc Würth",
+                    "role": "Project Maintainer",
                     "email": "ravage@bluewin.ch",
-                    "homepage": "https://github.com/ravage84",
-                    "role": "Project Maintainer"
+                    "homepage": "https://github.com/ravage84"
                 }
             ],
             "description": "PHPMD is a spin-off project of PHP Depend and aims to be a PHP equivalent of the well known Java tool PMD.",

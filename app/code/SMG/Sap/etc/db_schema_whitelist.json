@@ -9,8 +9,7 @@
             "order_status": true,
             "sap_payer_id": true,
             "created_at": true,
-            "updated_at": true,
-            "delivery_number": true
+            "updated_at": true
         },
         "constraint": {
             "PRIMARY": true,
@@ -31,7 +30,9 @@
             "is_order": true,
             "order_process_date": true,
             "is_invoice_reconciliation": true,
-            "invoice_reconciliation_date": true
+            "invoice_reconciliation_date": true,
+            "is_consumer_data": true,
+            "consumer_data_date": true
         },
         "constraint": {
             "PRIMARY": true,
@@ -97,14 +98,10 @@
             "order_sap_id": true,
             "sap_order_status": true,
             "order_status": true,
-            "fulfillment_location": true,
             "sku": true,
             "sku_description": true,
             "qty": true,
             "confirmed_qty": true,
-            "ship_tracking_number": true,
-            "sap_billing_doc_number": true,
-            "sap_billing_doc_date": true,
             "created_at": true,
             "updated_at": true
         },
