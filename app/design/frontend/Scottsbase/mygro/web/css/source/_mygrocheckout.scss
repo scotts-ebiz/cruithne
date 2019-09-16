@@ -457,12 +457,10 @@
   .cart-container{
       .form-cart .action.update{
           color: $mygro-accent-blue;
-          span {
-              .actions-toolbar {
-                  a.action-delete {
-                      color: $mygro-accent-blue;
-                  }
-              }
+      }
+      .actions-toolbar {
+          a.action-delete {
+          color: $mygro-accent-blue;
           }
       }
   }
