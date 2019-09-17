@@ -11,8 +11,7 @@
 
 <div class="pop-cust-click title" data-role="title">
 	<strong id="block-shipping-heading" role="heading" aria-level="2">
-		<?= /* @escapeNotVerified */ $block->getQuote()->isVirtual() ? __('Estimate Shipping') : __('Estimate 
-		Shipping') ?>
+		<?= /* @escapeNotVerified */ $block->getQuote()->isVirtual() ? __('Estimate Tax') : __('Estimate Taxes') ?>
 	</strong>
 </div>
 <div id="ac-wrapper" style='display:none'>
@@ -21,14 +20,14 @@
 			   <div id="block-shipping" class="block shipping custshipblk" data-mage-init='{"collapsible":{"openedState": "active", "saveState": true}}'>
 				<div class="title" data-role="title">
 					<strong id="block-shipping-heading" role="heading" aria-level="2">
-						<?= /* @escapeNotVerified */ $block->getQuote()->isVirtual() ? __('Estimate Shipping') : __('Estimate Shipping') ?>
+						<?= /* @escapeNotVerified */ $block->getQuote()->isVirtual() ? __('Estimate Tax') : __('Estimate Shipping and Tax') ?>
 					</strong>
 				</div>
 				<div id="block-summary" data-bind="scope:'block-summary'" class="content" data-role="content" aria-labelledby="block-shipping-heading">
 					<!-- ko template: getTemplate() --><!-- /ko -->
 					<script type="text/x-magento-init">
 						{
-							"#block-summary": {
+							"#block-summary": { 
 								"Magento_Ui/js/core/app": <?= /* @escapeNotVerified */ $block->getJsLayout() ?>
 							}
 						}
@@ -58,15 +57,18 @@
 			$('.btn-popup').click(function () {
 				var pop = $('input[name="postcode"]').val();
 				if(pop == ''){
-					$('input[name="postcode"]').css("border-color", "red");
-					//$("div[name='shippingAddress.postcode']").append("<span class='cust-btn-add' >Please Enter Postcode</span>");
-					return false;
+					if($('.cust-btn-add').length < 1){
+						$('input[name="postcode"]').css("border-color", "red");
+						$("div[name='shippingAddress.postcode']").append("<span class='cust-btn-add' >Please enter a valid ZIP Code</span>");
+						$(".cust-btn-add").css("color", "red");
+						return false;
+					}
 				} else {
 					$('#ac-wrapper').hide();
 					$('#popup').hide();
 				}
 			});
-			
+			 
 			$('.closes').click(function () {
 				$('#ac-wrapper').hide();
 				$('#popup').hide();
