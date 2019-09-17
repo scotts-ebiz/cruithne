@@ -459,7 +459,10 @@
           color: $mygro-accent-blue;
       }
       .actions-toolbar {
+<<<<<<< HEAD
           margin-top: 0 !important;
+=======
+>>>>>>> test
           a.action-delete {
           color: $mygro-accent-blue;
           }
@@ -1251,9 +1254,9 @@
       }
     }
   }
-  /*.field-tooltip {
+  .field-tooltip {
     display: contents;
-  }*/
+  }
   [type="radio"]:checked ,
   [type="radio"]:not(:checked){
     + label.cust-radio:before{
@@ -2055,14 +2058,13 @@
     }
   }
 }
-.checkout-shipping-address{
+
 div[name="shippingAddress.postcode"] {
   .control {
     .message.warning {
       display: none;
     }
   }
-}
 }
 @media screen and (max-width: $screen_768) {
   .checkout-index-index{
@@ -2109,11 +2111,9 @@ div[name="shippingAddress.postcode"] {
         top: 1px;
       }
     }
-	.checkout-shipping-method {
-		position: unset;
-	}
   }
 }
+<<<<<<< HEAD
 .cart-parent-summary{
 	.cart-summary-divlink{
 		#block-discount{
@@ -2175,3 +2175,5 @@ div[name="shippingAddress.postcode"] {
 		}
 	}
 }
+=======
+>>>>>>> test
