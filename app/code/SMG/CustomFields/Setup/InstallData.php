@@ -166,7 +166,7 @@ class InstallData implements InstallDataInterface
          
         $eavSetup->addAttribute(
 	             \Magento\Catalog\Model\Product::ENTITY,
-	             'states_not_allowed', [
+	             'state_not_allowed', [
 	            'type' => 'int',
 	            'backend' => '',
 	            'frontend' => '',
@@ -174,7 +174,7 @@ class InstallData implements InstallDataInterface
 	            'input' => 'select',
 	            'group' => 'Custom Fields',
 	            'class' => 'shipping',
-	            'source' => 'Magento\Customer\Model\ResourceModel\Address\Attribute\Source\Region',	            
+	            'source' => 'Magento\Customer\Model\ResourceModel\Address\Attribute\Source\Region',
 	            'global' => \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
 	            'visible' =>    true,
 	            'required' => false,
