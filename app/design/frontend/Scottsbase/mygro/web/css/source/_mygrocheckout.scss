@@ -459,6 +459,7 @@
           color: $mygro-accent-blue;
       }
       .actions-toolbar {
+          margin-top: 0 !important;
           a.action-delete {
           color: $mygro-accent-blue;
           }
@@ -1676,8 +1677,7 @@
       padding-bottom:0;
     }
     .actions-toolbar.no-margin{
-      margin-top: 0 !important;
-      margin-bottom: -25px !important;
+      margin-top: 5px !important;
     }
   }
   .cart-container .form-cart .action.update{
