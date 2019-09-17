@@ -465,7 +465,6 @@
           color: $scottsprogram-orange;
       }
       .actions-toolbar {
-          margin-top: 0 !important;
           a.action-delete {
             color: $scottsprogram-orange;
           }
@@ -1701,8 +1700,8 @@
       padding-bottom:0;
     }
     .actions-toolbar.no-margin{
-      margin-top: 10px !important;
-      //margin-bottom: -25px !important;
+      margin-top: 0 !important;
+      margin-bottom: -25px !important;
     }
   }
   .cart-container .form-cart .action.update{
@@ -2212,7 +2211,9 @@ div[name="shippingAddress.postcode"] {
 	.cart-container{
 		.form-cart{
 			.action.update.update_cust_btn {
-				//text-align: unset;
+				text-decoration: none;
+				text-align: unset;
+				text-transform: capitalize;
 			}
 			.action.action-delete{
 				span{
