@@ -2,6 +2,10 @@
 # set the var ROBOTS_NOINDEX 
 SetEnvIf Request_URI !^test.scottsprogram\.com$ [NC] ROBOTS_NOINDEX
 
+############################################
+## hide directory listings
+
+Options -Indexes
 
 ############################################
 ## overrides deployment configuration mode value
