@@ -296,5 +296,12 @@ class UpgradeData implements UpgradeDataInterface
             );
 
         }
+        if (version_compare($context->getVersion(), '1.0.3', '<')) {
+            $eavSetup = $this->eavSetupFactory->create(['setup' => $setup]);
+            $eavSetup->removeAttribute(
+                \Magento\Catalog\Model\Product::ENTITY,
+                'product_sizes'/* Custom Attribute Code */
+            );
+        }
     }
 }
