@@ -1,3 +1,28 @@
+// Checkout Main Components //
+.checkout-cart-index {
+    .page-main {
+        .page-title-wrapper {
+            display: block;
+            border-bottom:0;
+            margin-top: 0rem;
+        }
+        .columns {
+            .column {
+                .cart-container {
+                    padding-left: 15px;
+                    padding-right: 15px;
+                    position: relative;
+                    .cart-summary {
+                        background: #dfe6ee;
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
 
 //Style Titles / Steps
 .checkout-cart-index {
