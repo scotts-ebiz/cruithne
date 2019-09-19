@@ -18,7 +18,7 @@ body {
         height: 3.25rem;
         @include max-screen($screen_m){
         	position: fixed;
-    		z-index: 99999;
+    		z-index: 500;
     		width: 100%;
     		top: 0;
         }
