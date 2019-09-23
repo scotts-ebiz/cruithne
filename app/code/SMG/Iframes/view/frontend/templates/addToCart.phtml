@@ -1,32 +1,13 @@
 <?php
-$iframeProductId = $this->getData('product_id');
-$iframeSelectedProduct = $this->getData('selected_product');
-$iframeQuantity = $this->getData('quantity');
-$iframeChildrenPrice = $this->getData('children_price');
-$iframeBasePrice = $this->getData('base_price');
-$iframeBaseProductId = $this->getData('base_product_id');
-$iframeSku = $this->getData('sku');
-$iframeDrupalProductId = $this->getData('drupalProductId');
-$iframeDesktop = $this->getData('desktop');
-$baseUrl = $block->getBaseUrl();
-$url = $baseUrl . "iframes/addtocart/add";
+$iFrameSkusById = $this->getData('skusById');
+$iFrameDrupalIdsById = $this->getData('drupalIdsById');
 ?>
 <?php $_helper = $this->helper('Magento\Catalog\Helper\Output'); ?>
 <?php $_product = $block->getProduct(); ?>
 
 <div class="cta__container">
-    <div class="cta__container--price">
-        <span class="regular-price" id="product-price-13_clone">
-            <?php if ($iframeChildrenPrice): ?>
-                $<span id="list-price"><?php echo sprintf("%.02f", $this->escapeHtml($iframeChildrenPrice)); ?></span>
-            <?php else: ?>
-                $<span id="list-price"><?php echo sprintf("%.02f", $this->escapeHtml($iframeBasePrice)); ?></span>
-            <?php endif; ?>
-            <input type="hidden" id="base-product-id" value=<?php echo '"' . $this->escapeHtml($iframeBaseProductId) . '"' ?>/>
-        </span>
-    </div>
     <div class="cta__container--options">
-        <form data-product-sku="<?= $block->escapeHtml($_product->getSku()) ?>"
+        <form data-skus-by-id='<?=$this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode($iFrameSkusById)?>' data-drupal-ids-by-id='<?=$this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode($iFrameDrupalIdsById)?>' id="product_addtocart_form" data-product-sku="<?= $block->escapeHtml($_product->getSku()) ?>"
               action="<?= $block->getSubmitUrl($_product) ?>" method="post"
               id="product_addtocart_form"<?php if ($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
             <input type="hidden" name="product" value="<?= $this->escapeHtml($_product->getId()) ?>" />
@@ -48,17 +29,16 @@ $url = $baseUrl . "iframes/addtocart/add";
                     <label class="block__subblock--label" for="qty">Quantity</label>
 
                     <label id="qty-wrap">
-                        <input type="text" pattern="\d*" name="quantity" id="qty" maxlength="12" value="1" title="Qty"
+                        <input type="text" name="quantity" id="qty" maxlength="12" value="1" title="Qty"
                                class="block__subblock--input" size="3"/>
-                        <button class="minus">-</button>
-                        <button class="plus">+</button>
+                        <button type="button" class="minus">-</button>
+                        <button type="button" class="plus">+</button>
                     </label>
                 </div>
                 <button type="submit" title="Add to Cart" class="button button--cart" id="cart-add"
-                        data-size_id="<?php echo $this->escapeHtml(str_replace(' ', '', trim(strtolower($this->getData('size'))))); ?>"
-                        data-sku_id="<?php echo $this->escapeHtml($iframeSku); ?>"
-                        data-drupal-sku="<? echo $this->escapeHtml($iframeDrupalProductId); ?>"
-                        data-magento-add-url="<? echo $this->escapeUrl($url); ?>">
+                        data-size_id="<?php echo $this->escapeHtml(str_replace(' ', '', trim(strtolower($_product->getData('size'))))); ?>"
+                        data-sku_id="<?php echo $this->escapeHtml($_product->getData('sku')); ?>"
+                        data-drupal-sku="<? echo $this->escapeHtml($_product->getData('drupalproductid')); ?>">
                     <span>Add to Cart</span>
                 </button>
             </div><!-- .block__item -->
@@ -80,5 +60,12 @@ $url = $baseUrl . "iframes/addtocart/add";
 
         priceBoxes.priceBox({'priceConfig': <?= /* @escapeNotVerified */ $block->getJsonConfig() ?>});
     });
+</script>
+<script type="text/x-magento-init">
+    {
+        "#product_addtocart_form": {
+            "Magento_Catalog/js/validate-product": {}
+        }
+    }
 </script>
 
