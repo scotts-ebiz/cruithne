@@ -1,0 +1,94 @@
+.iframes-addtocart-index {
+  .page-wrapper .page-main {
+    margin: .5rem 0;
+    padding: 0;
+  }
+
+  // Price
+  .price-box {
+    .price-label, .price {
+      font-size: 1.375rem;
+    }
+  }
+
+  // Iframe Container.
+  .cta__container {
+
+    // Contains Size, Quantity, and Button.
+    .cta__container--options {
+      .block__item {
+        margin-top: 10px;
+
+        // Format Labels.
+        label {
+          color: $color-black;
+          margin-right: 10px;
+          font-size: 0.875rem;
+        }
+
+        // Size.
+        .configurable{
+          display: -ms-flexbox;
+          display: flex;
+          -ms-flex-align: center;
+          align-items: center;
+
+          select {
+            min-width: 155px;
+            border-radius: 0;
+          }
+        }
+
+        // Quantity.
+        .block__subblock {
+          display: -ms-flexbox;
+          display: flex;
+          -ms-flex-align: center;
+          align-items: center;
+
+          #qty-wrap {
+            display: flex;
+            border: 1px solid $color-gray-light2;
+            width: 126px;
+            box-shadow: 0 1px 1px $color-gray82;
+
+            .block__subblock--input{
+              border: none;
+              padding: 0;
+              font-size: 14px;
+              width: 100%;
+              text-align: center;
+              border-radius: 0;
+              box-shadow: none;
+            }
+
+            // Plus and Minus Sign buttons.
+            .minus, .plus {
+              color: $color-gray19;
+              font-size: 20px;
+              padding: 10px 15px;
+              background-color: $color-gray-light0;
+              border: none;
+              border-radius: 0;
+              border-left: 1px solid $color-gray-light2;
+            }
+          }
+
+        }
+
+        // "Add to Cart" Button.
+        .button--cart {
+          @include lib-button(
+                  $_button-margin:           10px 0 0 0,
+                  $_button-border:           $iframe-addtocart-btn-border,
+                  $_button-color:            $iframe-addtocart-btn-color,
+                  $_button-color-hover:      $iframe-addtocart-btn-color-hover,
+                  $_button-background:       $iframe-addtocart-btn-background,
+                  $_button-background-hover: $iframe-addtocart-btn-background-hover,
+                  $_button-icon-font-size:   18px
+          );
+        }
+      }
+    }
+  }
+}
