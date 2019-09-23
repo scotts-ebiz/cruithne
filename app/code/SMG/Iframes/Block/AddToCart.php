@@ -63,19 +63,19 @@ class AddToCart extends View
 
         $skusById = array();
         $drupalIdsById = array();
+        $skusById[$product->getID()] = $product->getData("sku");
+        $drupalIdsById[$product->getID()] = $product->getData("drupalproductid");
 
-        if($product->getTypeId() == Configurable::TYPE_CODE){
+        if ($product->getTypeId() == Configurable::TYPE_CODE) {
             $children = $product->getTypeInstance()->getUsedProducts($product);
-            $skusById[$product->getID()] = $product->getData("sku");
-            $drupalIdsById[$product->getID()] = $product->getData("drupalproductid");
 
-            foreach ($children as $child){
+            foreach ($children as $child) {
                 $skusById[$child->getID()] = $child->getData("sku");
                 $drupalIdsById[$child->getID()] = $child->getData("drupalproductid");
             }
         }
 
-        if( $product ) {
+        if ($product) {
             $this->setData("skusById", $skusById)
                 ->setData("drupalIdsById", $drupalIdsById);
         }
