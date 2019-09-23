@@ -14,6 +14,7 @@ use \SMG\Iframes\Model\ContentSecurityPolicy;
 use \Magento\Catalog\Block\Product\View;
 use \Magento\Catalog\Api\ProductRepositoryInterface;
 use \Magento\Store\Model\StoreManagerInterface;
+use \Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 
 class AddToCart extends View
 {
@@ -51,11 +52,7 @@ class AddToCart extends View
         $this->_storeManager = $storeManager;
         $this->_contentSecurityPolicy->setContentSecurityPolicy();
 
-
         $sku = $this->getRequest()->getParam('sku');
-        $qty = $this->getRequest()->getParam('quantity',1);
-        $desktop = $this->getRequest()->getParam('desktop', false);
-        $storeId = $this->_storeManager->getStore()->getId();
 
         $this->_skuFromUrl = $sku;
         $product = $this->getProduct();
@@ -64,38 +61,25 @@ class AddToCart extends View
             return;
         }
 
+        $skusById = array();
+        $drupalIdsById = array();
+
+        if($product->getTypeId() == Configurable::TYPE_CODE){
+            $children = $product->getTypeInstance()->getUsedProducts($product);
+            $skusById[$product->getID()] = $product->getData("sku");
+            $drupalIdsById[$product->getID()] = $product->getData("drupalproductid");
+
+            foreach ($children as $child){
+                $skusById[$child->getID()] = $child->getData("sku");
+                $drupalIdsById[$child->getID()] = $child->getData("drupalproductid");
+            }
+        }
+
         if( $product ) {
-            $this->setData("store_id", $storeId)
-                ->setData("product_id", $product->getId())
-                ->setData("selected_product", $product)
-                //->setData("child_products", $childProducts)
-                ->setData("child_products", null)
-                ->setData("quantity", $qty)
-                //->setData("children_price", $priceOfChildren)
-                ->setData("children_price", null)
-                ->setData("base_price", $product->getData("price"))
-                ->setData("base_product_id", $product->getId())
-                ->setData("sku", $product->getData("sku"))
-                ->setData("drupalProductId", $product->getData("drupalproductid"))
-                ->setData("desktop", $desktop);
+            $this->setData("skusById", $skusById)
+                ->setData("drupalIdsById", $drupalIdsById);
         }
 
-    }
-
-    /**
-     * Retrieve current product model
-     *
-     * @return \Magento\Catalog\Model\Product
-     */
-    public function getProduct()
-    {
-        if (!$this->_coreRegistry->registry('product') && $this->_skuFromUrl) {
-            $product = $this->productRepository->get($this->_skuFromUrl);
-            $this->_coreRegistry->register('product', $product);
-            $this->_coreRegistry->register('current_product', $product);
-        }
-
-        return $this->_coreRegistry->registry('product');
     }
 
     public function getBaseUrl() {
