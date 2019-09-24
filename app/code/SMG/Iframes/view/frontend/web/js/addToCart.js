@@ -10,9 +10,9 @@ requirejs(['catalogAddToCart'], function(catalogAddToCart) {
                 var childId = $('input[name="selected_configurable_option"]').val();
                 if (!childId) {
                     childId = $('input[name="product"]').val();
-                }
-
-                if (childId) {
+                    currentSku = JSON.parse($('#product_addtocart_form').attr('data-skus-by-id'))[childId];
+                    currentDrupalProductId = JSON.parse($('#product_addtocart_form').attr('data-drupal-ids-by-id'))[childId];
+                } else {
                     currentSku = JSON.parse($('#product_addtocart_form').attr('data-skus-by-id'))[childId];
                     currentDrupalProductId = JSON.parse($('#product_addtocart_form').attr('data-drupal-ids-by-id'))[childId];
                     currentSize = $('select.super-attribute-select').val().replace(' ', '').toLowerCase();
@@ -42,11 +42,11 @@ requirejs(['catalogAddToCart'], function(catalogAddToCart) {
 
                 if (c.url.indexOf('/checkout/cart/add/') != -1) {
 
-                    var drupalId = $('#cart-add').attr('data-drupal-sku');
-                    var magentoSku = $('#cart-add').attr('data-sku_id');
+                    window.parent.postMessage('productAdded', '*');
                     var quantity = $('#qty').val();
+
                     //Do not track Magento products that do not have a drupalId.
-                    if (!drupalId) {
+                    if (!currentDrupalProductId) {
                         return;
                     }
 
@@ -55,13 +55,12 @@ requirejs(['catalogAddToCart'], function(catalogAddToCart) {
                         BV.pixel.trackConversion({
                             "type": "AddToCart",
                             "label": "AddToCart_SKU",
-                            "value": drupalId,
+                            "value": currentDrupalProductId,
                             "items": [
-                                {"sku": drupalId, "quantity": quantity}
+                                {"sku": currentDrupalProductId, "quantity": quantity}
                             ]
                         });
                     };
-                    window.parent.postMessage('productAdded', '*');
                 }
             });
 
