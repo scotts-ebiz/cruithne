@@ -27,8 +27,6 @@ class HeaderCart extends Template
   {
     $totalItems = $this->_cart->getQuote()->getItemsSummaryQty();
 
-    $totalItems = '2';
-
     return $totalItems;
   }
 }
