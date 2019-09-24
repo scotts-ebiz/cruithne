@@ -1,4 +1,7 @@
 // Checkout Main Components //
+
+
+// Cart Page - Start //
 .checkout-cart-index {
     .page-main {
         .page-title-wrapper {
@@ -105,6 +108,9 @@
                                 .item-actions {
                                     td {
                                         padding: 0;
+                                        .actions-toolbar > .action.action-edit {
+                                            display: none;
+                                        }
                                         .actions-toolbar > .action {
                                             display: none;
                                             visibility: hidden;
@@ -138,7 +144,7 @@
         }
     }
 }
-
+// Cart Page - End //
 
 
 
