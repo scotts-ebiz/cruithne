@@ -62,8 +62,7 @@ define([
         }).always(function () {
             // Stop loader for totals block
 			var totals = quote.getTotals()();
-			var grandtotal = jQuery('.grand.totals .amount .price').html();
-			jQuery('.minicart-wrapper .total-amt .price').html(grandtotal);
+			jQuery('.minicart-wrapper .total-amt .price').html(priceUtils.formatPrice(totals['grand_total'], quote.getPriceFormat()));
             totalsService.isLoading(false);
         });
     };
@@ -100,8 +99,7 @@ define([
             ) {
                 quote.setTotals(cartCache.get('totals'));
 				var totals = quote.getTotals()();
-				var grandtotal = jQuery('.grand.totals .amount .price').html();
-				jQuery('.minicart-wrapper .total-amt .price').html(grandtotal);
+				jQuery('.minicart-wrapper .total-amt .price').html(priceUtils.formatPrice(totals['grand_total'], quote.getPriceFormat()));
             } else {
                 return loadFromServer(address);
             }
