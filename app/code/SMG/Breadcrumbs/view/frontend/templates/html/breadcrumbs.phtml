@@ -1,0 +1,53 @@
+<?php
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+// @codingStandardsIgnoreFile
+
+?>
+<?php
+$brmhelper = $this->helper('SMG\Breadcrumbs\Helper\Data');
+$currentcmspage = $brmhelper->getCmsPageManager()->getIdentifier();
+$currentcmspageaction = $brmhelper->getCmsPageAction();
+$cmspagebreadcumb = $brmhelper->isCmsBreadcrumb();
+
+$canshowBreadcrumbs = false;
+if($currentcmspageaction == 'cms_index_index'){
+	$restrictedAction = explode(',', $cmspagebreadcumb);
+	if(in_array($currentcmspage, $restrictedAction)){
+		$canshowBreadcrumbs = true;
+	} 
+}
+?>
+<?php if($canshowBreadcrumbs){ ?>
+<div class="breadcrumbs">
+    <ul class="items">
+		<li class="item home">
+			<a href="/" title=""><?php echo __('Home'); ?></a>
+		</li>
+		 <li class="item home">
+		   <strong><?php echo __('Home'); ?></strong>
+		</li>
+    </ul>
+</div>
+<?php } ?>
+
+<?php if ($crumbs && is_array($crumbs)) : ?>
+<div class="breadcrumbs">
+    <ul class="items">
+        <?php foreach ($crumbs as $crumbName => $crumbInfo) : ?>
+            <li class="item <?= /* @escapeNotVerified */ $crumbName ?>">
+            <?php if ($crumbInfo['link']) : ?>
+                <a href="<?= /* @escapeNotVerified */ $crumbInfo['link'] ?>" title="<?= $block->escapeHtml($crumbInfo['title']) ?>"><?= $block->escapeHtml($crumbInfo['label']) ?></a>
+            <?php elseif ($crumbInfo['last']) : ?>
+                <strong><?= $block->escapeHtml($crumbInfo['label']) ?></strong>
+            <?php else: ?>
+                <?= $block->escapeHtml($crumbInfo['label']) ?>
+            <?php endif; ?>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+</div>
+<?php endif; ?>
