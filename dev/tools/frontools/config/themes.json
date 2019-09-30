@@ -20,10 +20,45 @@
     "parent": "default"
   },
   "drupal": {
-    "src": "app/design/frontend/Scottsbase/drupal",
-    "dest": "pub/static/frontend/Scottsbase/drupal",
+    "src": "app/design/frontend/Drupal/default",
+    "dest": "pub/static/frontend/Drupal/default",
     "stylesDir": "web/css",
     "locale": ["en_US"],
-    "parent": "default"
+    "parent": "mygro"
+  },
+  "roundup": {
+    "src": "app/design/frontend/Drupal/roundup",
+    "dest": "pub/static/frontend/Drupal/roundup",
+    "stylesDir": "web/css",
+    "locale": ["en_US"],
+    "parent": "drupal"
+  },
+  "scotts": {
+    "src": "app/design/frontend/Drupal/scotts",
+    "dest": "pub/static/frontend/Drupal/scotts",
+    "stylesDir": "web/css",
+    "locale": ["en_US"],
+    "parent": "drupal"
+  },
+  "tomcat": {
+    "src": "app/design/frontend/Drupal/tomcat",
+    "dest": "pub/static/frontend/Drupal/tomcat",
+    "stylesDir": "web/css",
+    "locale": ["en_US"],
+    "parent": "drupal"
+  },
+  "miraclegro": {
+    "src": "app/design/frontend/Drupal/miraclegro",
+    "dest": "pub/static/frontend/Drupal/miraclegro",
+    "stylesDir": "web/css",
+    "locale": ["en_US"],
+    "parent": "drupal"
+  },
+  "ortho": {
+    "src": "app/design/frontend/Drupal/ortho",
+    "dest": "pub/static/frontend/Drupal/ortho",
+    "stylesDir": "web/css",
+    "locale": ["en_US"],
+    "parent": "drupal"
   }
 }

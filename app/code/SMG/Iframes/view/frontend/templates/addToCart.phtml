@@ -11,7 +11,7 @@ $iFrameDrupalIdsById = $this->getData('drupalIdsById');
               data-drupal-ids-by-id='<?=$this->escapeHtml($this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode($iFrameDrupalIdsById))?>'
               id="product_addtocart_form"
               data-product-sku="<?= $block->escapeHtml($_product->getSku()) ?>"
-              action="<?= $block->getSubmitUrl($_product) ?>" method="post"
+              action="<?= $block->escapeUrl($block->getSubmitUrl($_product)) ?>" method="post"
               id="product_addtocart_form"<?php if ($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
             <input type="hidden" name="product" value="<?= $this->escapeHtml($_product->getId()) ?>" />
             <input type="hidden" name="selected_configurable_option" value="" />
