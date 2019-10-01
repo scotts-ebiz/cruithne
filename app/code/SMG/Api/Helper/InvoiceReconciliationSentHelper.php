@@ -91,7 +91,7 @@ class InvoiceReconciliationSentHelper
     public function updateOrders($requestData)
     {
         // variables
-        $invoiceReconciliationSentResponse = $this->_responseHelper->createResponse(true, "The order sent process completed successfully.");
+        $invoiceReconciliationSentResponse = $this->_responseHelper->createResponse(true, "The invoice reconciliation  sent process completed successfully.");
 
         // make sure that we were given something from the request
         if (!empty($requestData))

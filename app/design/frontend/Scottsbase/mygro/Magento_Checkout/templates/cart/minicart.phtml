@@ -18,7 +18,7 @@
             <span class="total-amt" data-bind="html: getCartParam('subtotal')"></span>
         </span>
     </a>
-    <?php if ($block->getIsNeedToDisplaySideBar()): ?>
+    <?php /*if ($block->getIsNeedToDisplaySideBar()): ?>
         <div class="block block-minicart"
              data-role="dropdownDialog"
              data-mage-init='{"dropdownDialog":{
@@ -35,7 +35,7 @@
             </div>
             <?= $block->getChildHtml('minicart.addons') ?>
         </div>
-    <?php endif ?>
+    <?php endif */ ?>
     <script>
         window.checkout = <?= /* @escapeNotVerified */ $block->getSerializedConfig() ?>;
     </script>

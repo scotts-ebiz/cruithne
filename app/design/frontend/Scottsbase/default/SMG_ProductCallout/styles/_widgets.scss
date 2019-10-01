@@ -3,8 +3,9 @@
 .product-callout-widget.product-info-container {
     display: inline-block;
     position: relative;
-    @media only screen and (max-width: $screen__m) {
-        background: none !important;
+    margin: 0 0 100px 0 !important;
+    @media only screen and (max-width: $screen__l) {
+      margin: 0 0 85px 0 !important;
     }
     .product-info {
         .productCallout-imageContainer {
@@ -14,7 +15,13 @@
             img {
                 width: 80%;
                 max-width: inherit;
-                @media only screen and (max-width: $screen__m) {
+                @media only screen and (max-width: 1200px) {
+                    width: 90%;
+                }
+                @media only screen and (max-width: $screen__l) {
+                    width: 55%;
+                }
+                @media only screen and (max-width: $screen__s) {
                     width: 65%;
                 }
             }
@@ -73,16 +80,11 @@
                 @media only screen and (max-width: $screen__l) {
                     width: 80%;
                     margin-bottom: 0.5rem;
-                }
-                @media only screen and (max-width: $screen__m) {
                     text-align: center;
                 }
                 img {
                     width: 30%;
                     @media only screen and (max-width: $screen__l) {
-                        width: 35%;
-                    }
-                    @media only screen and (max-width: $screen__m) {
                         width: 25%;
                     }
                     @media only screen and (max-width: $screen__m) {

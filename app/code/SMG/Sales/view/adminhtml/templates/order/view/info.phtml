@@ -277,7 +277,7 @@ $customerUrl = $block->getCustomerViewUrl();
                                     foreach ($trackingNumbers as $trackingNumber)
                                     {
                                         ?>
-                                        <li><?php echo $block->escapeHtml(__($trackingNumber)); ?></li>
+                                        <li><a href="<?php echo "https://www.fedex.com/apps/fedextrack/index.html?trackingnumber=" . $block->escapeHtml(__($trackingNumber)); ?>" target="_Blank"><?php echo $block->escapeHtml($trackingNumber); ?></a></li>
                                         <?php
                                     }
                                 }
@@ -287,11 +287,27 @@ $customerUrl = $block->getCustomerViewUrl();
                     </tr>
                     <tr>
                         <th><?= $block->escapeHtml(__('Delivery Number')) ?></th>
-                        <td><?php if(!empty($orderAdd['delivery_number'])) echo $block->escapeHtml(__($orderAdd['delivery_number'])) ?></td>
+                        <td>
+                            <ul class="smg_additional_details">
+                                <?php
+                                if(!empty($orderAdd['delivery_number']))
+                                {
+                                    $deliveryNumbers = explode(",", $orderAdd['delivery_number']);
+
+                                    // loop through the invoices
+                                    foreach ($deliveryNumbers as $deliveryNumber)
+                                    {
+                                        ?>
+                                        <li><?php echo $block->escapeHtml(__($deliveryNumber)); ?></li>
+                                        <?php
+                                    }
+                                }
+                                ?>
+                            </ul>
+                        </td>
                     </tr>
                 </table>
             </div>
-        
     </div>
 </section>
 <?php } ?>

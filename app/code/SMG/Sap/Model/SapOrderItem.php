@@ -64,4 +64,15 @@ class SapOrderItem extends AbstractModel
             $this->_sapOrderStatus = $this->_resourceModel->getStatus($this->getStatus());
         }
     }
+
+    /**
+     * Get the collection of the sap order shipments
+     *
+     * @param $orderSapItemId
+     * @return \SMG\Sap\Model\ResourceModel\SapOrderShipment\Collection
+     */
+    public function getSapOrderShipments($orderSapItemId)
+    {
+        return $this->_resourceModel->getSapOrderShipments($orderSapItemId);
+    }
 }

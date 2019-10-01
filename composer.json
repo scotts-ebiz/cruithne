@@ -10,11 +10,14 @@
         "sort-packages": true
     },
     "require": {
+        "amasty/securityauth": "^1.1",
         "avalara/avatax-magento": "^1.5",
         "composer/composer": "@alpha",
         "magento/product-enterprise-edition": "2.3.0",
+        "magepal/magento2-googletagmanager": "^2.3",
         "mageplaza/module-smtp": "^1.2",
-        "snowdog/frontools": "^1.6"
+        "snowdog/frontools": "^1.6",
+        "zaius/zaius-magento-2": "^1.0"
     },
     "require-dev": {
         "friendsofphp/php-cs-fixer": "~2.12.0",
@@ -25,7 +28,16 @@
         "phpmd/phpmd": "@stable",
         "phpunit/phpunit": "~6.5.0",
         "sebastian/phpcpd": "~3.0.0",
-        "squizlabs/php_codesniffer": "3.4.0"
+        "squizlabs/php_codesniffer": "^3.0.0"
+    },
+    "scripts": {
+        "post-install-cmd": [
+            "[ $COMPOSER_DEV_MODE -eq 1 ] && vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/"
+        ],
+        "post-update-cmd": [
+            "[ $COMPOSER_DEV_MODE -eq 1 ] && vendor/bin/phpcs --config-set installed_paths ../../magento/magento-coding-standard/"
+        ]
+>>>>>>> staging
     },
     "scripts": {
     	"post-install-cmd": [
@@ -69,12 +81,16 @@
     "prefer-stable": true,
     "version": "2.3.0",
     "minimum-stability": "alpha",
-    "repositories": [
-        {
+    "repositories": {
+        "0": {
             "type": "composer",
             "url": "https://repo.magento.com/"
+        },
+        "amasty": {
+            "type": "composer",
+            "url": "https://composer.amasty.com/enterprise/"
         }
-    ],
+    },
     "extra": {
         "magento-force": "override"
     }

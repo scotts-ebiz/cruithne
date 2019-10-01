@@ -4,11 +4,7 @@ section.feature-list {
     flex-direction: row;
     flex-wrap: wrap;
     justify-content: space-around;
-    padding: 90px 0;
     text-align: center;
-    @include max-screen($screen__l) {
-        padding: 50px 0;
-    }
     h2 {
         width: 100%;
         text-align: center;
@@ -19,10 +15,7 @@ section.feature-list {
         }
     }
     h3 {
-        font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
-        letter-spacing: 0.5px;
-        font-size: 28px;
-        color: #000000; //$black
+        color: #000000;
         margin-bottom: 15px;
     }
     div.item {
@@ -30,12 +23,18 @@ section.feature-list {
         padding: 5px 5px;
         text-align: center;
         max-width: 300px;
+        @media only screen and (max-width: $screen__m) {
+            margin-bottom: 25px;
+        }
+        @media only screen and (max-width: $screen__s) {
+            margin-bottom: 0px;
+        }
         .image-container {
             height: 125px;
             width: 125px;
-            background: #ffffff; //$white
+            background: $color-white;
             border-radius: 50%;
-            color: #008065; //$mygro-green
+            color: #008065;
             box-shadow: 0 6px 24px 0 rgba(0, 0, 0, 0.04);
             display: block;
             margin: 0 auto;
@@ -48,7 +47,6 @@ section.feature-list {
         p {
             margin-right: auto;
             margin-left: auto;
-            font-size: 16px;
             line-height: 26px;
             color: #909090;
         }

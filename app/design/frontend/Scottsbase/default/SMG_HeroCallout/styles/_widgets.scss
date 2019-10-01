@@ -1,57 +1,64 @@
 /* Widget Start - Location - App / design / frontend / Scottsbase / default / SMG_ProdcutCallout / styles */
-.hero-callout {
-    max-width: 1440px;
-    background-size: 100% auto;
+.page-wrapper .page-main .column.main section.hero-callout {
+    height: 600px;
+    background-position: center;
+    background-size: cover;
     background-repeat: no-repeat;
-    height: 655px;
     position: relative;
     display: inline-block;
-    margin: 65px 0 0 0;
-    @media (max-width: 1200px) {
-        height: 550px;
-    }
     @include max-screen($screen__l) {
-        height: auto;
-        background-position: top;
-        background-size: 95%;
-        margin: 40px 0 0 0;
+        display: none;
     }
-    .content {
+    .heroCallout-bannerText {
+        margin: 0 0 0.8rem 0;
+    }
+    .heroCallout-bannerTextHighlight {
+        margin: 0 0 0.8rem 0;
+    }
+    .heroCallout-desktopContent {
         max-width: 500px;
         padding-left: 50px;
         position: relative;
         display: inline-block;
-        margin: 5% 0 18% 0;
-        @include max-screen($screen__l) {
-            max-width: 1000px;
-            top: 0;
-            padding: 0;
-            text-align: left;
-            margin: 55% 0 0 2%;
+        margin: 4% 0 18% 0;
+        h2 {
+            margin-bottom: 25px;
+            width: 75%;
+        }
+        .heroCallout-bannerText {
+            width: 85%;
+        }
+        .heroCallout-bannerTextHighlight {
+            width: 85%;
         }
     }
     @media screen and (max-width: 1399px) and (min-width: 1024px) {
-        .content {
+        .heroCallout-desktopContent {
             width: 34%;
             padding-left: 40px;
         }
     }
+}
+
+.heroCallout-mobileContent {
+    @media only screen and (min-width: $screen__l) {
+        display: none;
+    }
+    @media only screen and (max-width: $screen__l) {
+        display: inline-block;
+        position: relative;
+    }
     h2 {
-        margin-bottom: 25px;
-        width: 75%;
-        @include max-screen($screen__l) {
-            width: 100%;
-            line-height: 35px;
-        }
+        width: 90%;
+        margin: 0 0 1.0rem 0;
     }
     .heroCallout-bannerText {
-        width: 85%;
-        @include max-screen($screen__l) {
-            width: 100%;
-        }
+        width: 90%;
+        margin: 0 0 0.8rem 0;
     }
-    p {
-        line-height: 34px;
+    .heroCallout-bannerTextHighlight {
+        width: 90%;
+        margin: 0 0 0.8rem 0;
     }
 }
 

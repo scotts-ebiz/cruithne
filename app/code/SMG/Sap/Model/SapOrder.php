@@ -62,9 +62,19 @@ class SapOrder extends AbstractModel
         return $this->_order;
     }
 
+    public function getOrderByIncrementId($incrementId)
+    {
+        return $this->_resourceModel->getOrderByIncrementId($incrementId);
+    }
+
     public function getSapOrderByOrderId($orderId)
     {
         return $this->_resourceModel->getSapOrderByOrderId($orderId);
+    }
+
+    public function getSapOrderByIncrementId($incrementId)
+    {
+        return $this->_resourceModel->getSapOrderByIncrementId($incrementId);
     }
 
     /**

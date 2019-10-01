@@ -29,9 +29,11 @@ env:
   - MYGRO_SUBJ="/C=$COUNTRY/ST=$STATE/O=$ORGANIZATION/localityName=$CITY/commonName=$MYGRO_COMMON/organizationalUnitName=$ORGNAME/emailAddress=$EMAIL"
   - secure: 1buG9UEWgLrrQmgiCMyz9s5B5rvI4wtI/41VXkZEF02cUKQueFRFTSSEV8bqLR6KOkZcSHsyG6PHn1aIYFlOnsVCxhEYiYpbTdbJtLJqIK9SWaIZJKtWrUiO5uW0W1E5ElYzXG/utnYInfXBzrX8lMbXE+vzk4cBzn2SnxM2sQwwLVG6c3tq7/DpfLunHawgMycmkw6YU2DYiRcAA/GRkiO1Zz7h26te7QD5W4ntFr0+Brup8gh/dPEDkfI9JtmUjPpBcSMkDBoLDD22cNAZ00BrTZwUXZwDWkVE1M7TfnssXdUJEfXZJ4tRZVLtkA8wixEIlzCBsIYdpK0lOy36mT5APKH7NVzWgVZ5MkqvP78x/YhBZT44cs/8eddooiikXRhD+mkpR+VGGQ3P4DzsbDa3pQSYPvGt/pEI+UW5ujQy/jg3eKv5MItgbdZpotVxXu8yqbfOnYh3WkLFXAq0Bq04uQTlvBGPNVhyxEg+9YIjPnlzwAxhUDJGH7ocK82BNsGck1lzjQ9MLlMtvmPXUtQwu/CoPBCZpyZ2vT2YBzW7kia+iFKTjsxvbuAy/MHvT7NP/M8F3XrV1hFO2W9cx/LSMmVQfgUsnhZuhJXxF5CQ6aAJUfL/cfVUU0kOx0l+TWk/UZgdBM8MHRP4m+VItEilcnV6QLDZIoaXyLD3d44=
   - secure: EPEVWgFDI8pQ4rqEEtz4F5hCIwGzxpBtrSehHTEAiXj4n32ZtthZPbi4x9NRRZK3rHDTbIPKQcCCbgZ8BY4rmrt/ljZH19wNpka7yyzizcnTAci/QQGi5Sx3X9Q+7MzhIxdG/H0bJz9g99BsPo2gh9JddiaaqLMbJsYIeNJW8oGCqPrJND7MWoYXOjg27/XfUsh6LBdwR9tUDut4slE0BqLieSf6LCz0mY1mhdXmaMXy63hcHb5E5SWs+wKAdQjULYH+8OLwyjCSafTCYcPgoyEWzxACHNoB75QbTFyXNsSzGQ8saunwo7dIZkRBs+mRRNtIn5BeRflKIPVZTjh1mONJygQg85YCR9G1VjNmDpWAE/7fSczOLnNU5TO+QC/O6bcfU4p1AwaHLqo8DG1TJ5LbhSPreDJLcVbKHTJAF6/I2Vjreoyqd+Tj2ozDKI1ufpVbz2FauBifjsaK2Q5Avb79oGF9od3FAL30Yrvw73MX20TIM5uzPj9+ZRSTB4Wxb16Danbmh0/dykxYxNoXZLv4k8tSYatr9hXnq1lyydyVnjOiaurMqyft5vWl+KK53HK3L5cweX9IJUVZ8fZ/cMPMrHe9HP2WciID6BiGyuTKq3wJWmpDuqQyczCGsTjJKPZAbZAHbkZVAlTLPHvQMjWHPguyV6Z3/BSLC9wV0B4=
+  - secure: v9N5bJSgDDf9TUmtakuk4acl5CGZvkeQTIWp5FAPXFVAAW/iR777p9wFUrA4cZV3YsoOAUY3mlx0FQmk59r0bo3IHtjVgKGd/d6FQwh5gBAB0CRPpdyQw1l9dEvKrAf6eC/psDtKzNfAQ5wUYLRJ5uI+me46cvsgdnXfuenwspKyOyJXyGLWnc7r63kJnRUzOYIBgf7a3m6qHs1CoMgS8ZmAT6MrUZ1xhhLF2tKne4L5BtEMaLfcVpttl+Kb11246SC6fmYLrtllt5jS6FQiiaMAvrMUwV0NnVc1MkFKJpNpnZTRXo7nG4h+7Iq2OKlra3UpXSQvFYP0TSqB1IQPS+ijIT8St/JxVOkw6CwTTBFsx8hyt6+UiaVeWj8uaSVX7MZE0eeU6G2Y0tpYZIxBXfnTWdaAsGOG0pz35FDQKzmCjpDVlOVOdyrErPDmOkLUVxgEhJHi4TwrTgAuyxhmusxXD2bkG7rMjguO15lTTEHdHJFZLaI6tZQZ30ls31tIo/Bjm/+gfNEB4eA3612t9rDpcDALH2QOFzg0Ole5IcubNZwQTfKzfay1F+ybq/RP/4Kgzrk1cpsNQlYj45AJvnt09qvUOZcc3uGxUwq8xuZlZA9QlVesyiGABo2C+ytf4Guf5TF5F2GPoDkcG/owpR7E3oNX0aWXW2TOlg3AY6Y=
+  - secure: qnerD5GJ+rEhi2PJazHaemwHy3z6kDTYAyl69xm/sPczOa+Zc0FM9GwjUHT7mq1JdW5zq29fj0KMHcsPK5N9kzrwP51PcHeRU7LcnrMD8HYrNi/JYD2Uk6iY4uvff8Vb5uGJbR6c1IgLYpsOICHjk/aKudtbJEo7jEPVpZ9KK9AaRIKmZGsSqcvyzuHTw5f7rwbqshZl8ltNCBlvTQLfhcwd46uww7qcx5OL/sgdEigmpnKmglClzShKzNGk+7/6CG1IYz1QMnET2rL5Etky1RZpNkryaKbcHfzTVD85iSpSwDRN5OU0UgZDygwdbnNNxyeDp00tFpsw59ZgQDGhchQ3vODNO7wrcasxyiA3NfW5YpNUuCejotvN7UU2ZqdrlQ0wbYY6WOs2D8hHA4/5g3TGhFrPsj6SsVuA85USiLnm862l6O29kQI4N71Q21BrZv57s8Jaab8Odo0RBXgFMOc+C9hpI4R3l9kE8mLY06SM4TjBh43VGfn7EauUennlEuaY6Zv2cUEzihRMW7OaA04jB5t9jfZrt9ZgGF9FBlTj+BDJjg9yVCrUfrAsOejHc9rv6ULw+Ddq94yRtDE+ffpQttlvtT5IarFe8H6H0mx/rFPLhVQ4JEi/3i6vgPJ2UFZPnzpbIW8cWOm6hhIZolwgPnh7plG3GVmzengHpCU=
 
 php:
-- 7.1
+- 7.2
 
 addons:
   apt:
@@ -86,6 +88,9 @@ before_install:
 - sudo service apache2 restart
 - npm install -g gulp-cli
 
+# Add Amasty (2FA) Repo
+- composer config repositories.amasty composer https://composer.amasty.com/enterprise/
+
 # Travis Env
 - shopt -s expand_aliases
 - composer selfupdate
@@ -110,8 +115,7 @@ before_install:
 - php -m
 install:
 # Set Magento Enterprise Creds
-- echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGENTO_USER}\",\"password\":\"${MAGENTO_PASSWORD}\"}}}"
-    > auth.json
+- echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${MAGENTO_USER}\",\"password\":\"${MAGENTO_PASSWORD}\"},\"composer.amasty.com\":{\"username\":\"${AMASTY_USER}\",\"password\":\"${AMASTY_PASSWORD}\"}}}" > auth.json
 - composer install --prefer-dist
 
 before_script:
@@ -134,10 +138,10 @@ script:
 #  Move permissions to before script once unit tests are set.
 # Permissions
 - cd vendor/snowdog/frontools/ && yarn install && gulp clean && npm rebuild node-sass && gulp styles --ci
-- sudo chown -R www-data:www-data /var/www/
-- sudo chmod -R 666 /var/www/
-- sudo find /var/www/ -type f -exec chmod ug+rw {} \;
-- sudo find /var/www/ -type d -exec chmod ug+rwxs {} \;
+# - sudo chown -R www-data:www-data /var/www/
+# - sudo chmod -R 666 /var/www/
+# - sudo find /var/www/ -type f -exec chmod ug+rw {} \;
+# - sudo find /var/www/ -type d -exec chmod ug+rwxs {} \;
 
 #deploy:
 #  provider: gae

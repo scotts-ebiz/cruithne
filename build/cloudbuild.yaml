@@ -22,7 +22,4 @@ steps:
     - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
     - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
 
-# kubectl rolling-update test-magento --image=gcr.io/ecommerce-platform-211419/test-magento:20190207211618
-
-
 timeout: 6000s

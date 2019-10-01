@@ -2,6 +2,10 @@
 # set the var ROBOTS_NOINDEX 
 SetEnvIf Request_URI !^test.scottsprogram\.com$ [NC] ROBOTS_NOINDEX
 
+############################################
+## hide directory listings
+
+Options -Indexes
 
 ############################################
 ## overrides deployment configuration mode value
@@ -43,6 +47,12 @@ SetEnvIf Request_URI !^test.scottsprogram\.com$ [NC] ROBOTS_NOINDEX
 
     php_value memory_limit 4000M
     php_value max_execution_time 18000
+
+###########################################
+## Set secure PHPSESSID attribute
+
+    php_value session.cookie_httponly 1
+    php_value session.cookie_secure 1
 
 ############################################
 ## disable automatic session start
@@ -174,6 +184,20 @@ SetEnvIf Request_URI !^test.scottsprogram\.com$ [NC] ROBOTS_NOINDEX
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-l
+
+############################################
+## rewrite everything to https
+
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,QSA,L]
+
+
+############################################
+## rewrite everything to https
+
+RewriteCond %{HTTP_HOST} ^mygro\.com$ [NC]
+RewriteRule ^(.*)$   https://www.mygro.com/$1 [R=301,L,QSA]
 
 ############################################
 ## rewrite everything else to index.php

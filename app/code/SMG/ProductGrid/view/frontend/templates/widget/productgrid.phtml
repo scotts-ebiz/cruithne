@@ -104,45 +104,42 @@
 
 <section class="product-grid products grid">
     <?php if($block->getData('prodnameone') != ''): ?>
-    <div class="item" style="background-image: url('<?php echo $block->getData('prodbgimageone'); ?>');">
-        <h2><a style="color:<?php echo $productNameCustomColor?>; <?php echo $productNameTextCustomSize?><?php echo trim($productNameTextCustomStyle)?>" href="<?php echo $block->getData('prodbuttonlinkone');?>"><?php echo $block->getData('prodnameone');?></a></h2>
-        <h4 style="color:<?php echo $productHeadlineCustomColor?>; <?php echo $productHeadlineTextCustomSize?><?php echo trim($productHeadlineTextCustomStyle)?>"><?php echo $block->getData
-        ('prodheadlineone');?></h4>
-        <a class="prodGrid-imgLink" href="<?php echo $block->getData('prodbuttonlinkone'); ?>"><img src="<?php echo $block->getData('prodimageone'); ?>" /></a>
+    <div class="item" style="background-image: url('<?php echo $block->escapeUrl(getData('prodbgimageone')); ?>');">
+        <h2><a style="color:<?php echo $block->escapeHTMLAttr($productNameCustomColor) ?>; <?php echo $block->escapeHTMLAttr($productNameTextCustomSize) ?><?php echo $block->escapeHTMLAttr(trim($productNameTextCustomStyle)) ?>" href="<?php echo $block->escapeUrl(getData('prodbuttonlinkone'));?>"><?php echo $block->escapeHtml(getData('prodnameone'));?></a></h2>
+        <h4 style="color:<?php echo $block->escapeCss($productHeadlineCustomColor) ?>; <?php echo $block->escapeCss($productHeadlineTextCustomSize) ?><?php echo $block->escapeCss(trim($productHeadlineTextCustomStyle)) ?>"><?php echo $block->escapeHtml(getData('prodheadlineone'));?></h4>
+        <a class="prodGrid-imgLink" href="<?php echo $block->escapeUrl(getData('prodbuttonlinkone')); ?>"><img src="<?php echo $block->escapeUrl(getData('prodimageone')); ?>" /></a>
         <div class="shop-cta">
-            <a class="button" href="<?php echo $block->getData('prodbuttonlinkone'); ?>"><?php echo $block->getData('prodbuttontextone'); ?></a>
+            <a class="button" href="<?php echo $block->escapeUrl(getData('prodbuttonlinkone')); ?>"><?php echo $block->escapeHtml(getData('prodbuttontextone')); ?></a>
             <?php if($this->getData('productSubTextOne') != ''): ?>
-            <aside style="color:<?php echo $productSubTextCustomColor?>;<?php echo $productSubTextCustomSize?><?php echo trim($productSubTextCustomStyle)?>"><?php echo $block->getData('productSubTextOne');?></aside>
+            <aside style="color:<?php echo $block->escapeCss($productSubTextCustomColor) ?>;<?php echo $block->escapeCss($productSubTextCustomSize) ?><?php echo $block->escapeCss(trim($productSubTextCustomStyle)) ?>"><?php echo $block->escapeHtml(getData('productSubTextOne'));?></aside>
             <?php endif; ?>
         </div>
     </div>
     <?php endif; ?>
 
     <?php if($this->getData('prodnametwo') != ''): ?>
-    <div class="item" style="background-image: url('<?php echo $block->getData('prodbgimagetwo'); ?>');">
-        <h2><a style="color:<?php echo $productNameCustomColor?>; <?php echo $productNameTextCustomSize?> <?php echo trim($productNameTextCustomStyle)?>" href="<?php echo $block->getData('prodbuttonlinktwo'); ?>"><?php echo $block->getData('prodnametwo'); ?></a></h2>
-        <h4 style="color:<?php echo $productHeadlineCustomColor?>; <?php echo $productHeadlineTextCustomSize?> <?php echo trim($productHeadlineTextCustomStyle)?>
-          "><?php echo $block->getData('prodheadlinetwo');
-          ?></h4>
-        <a class="prodGrid-imgLink" href="<?php echo $block->getData('prodbuttonlinktwo');?>"><img src="<?php echo $block->getData('prodimagetwo'); ?>" /></a>
+    <div class="item" style="background-image: url('<?php echo $block->escapeUrl(getData('prodbgimagetwo')); ?>');">
+        <h2><a style="color:<?php echo $block->escapeCss($productNameCustomColor) ?>; <?php echo $block->escapeCss($productNameTextCustomSize) ?> <?php echo $block->escapeCss(trim($productNameTextCustomStyle))?>" href="<?php echo $block->escapeUrl(getData('prodbuttonlinktwo')); ?>"><?php echo $block->escapeHtml(getData('prodnametwo')); ?></a></h2>
+        <h4 style="color:<?php echo $block->escapeCss($productHeadlineCustomColor)?>; <?php echo $block->escapeCss($productHeadlineTextCustomSize) ?> <?php echo $block->escapeCss(trim($productHeadlineTextCustomStyle)) ?>"><?php echo $block->escapeHtml(getData('prodheadlinetwo')); ?></h4>
+        <a class="prodGrid-imgLink" href="<?php echo $block->escapeUrl(getData('prodbuttonlinktwo'));?>"><img src="<?php echo $block->escapeUrl(getData('prodimagetwo')); ?>" /></a>
         <div class="shop-cta">
-            <a class="button" href="<?php echo $block->getData('prodbuttonlinktwo');?>"><?php echo $block->getData('prodbuttontexttwo');?></a>
+            <a class="button" href="<?php echo $block->escapeUrl(getData('prodbuttonlinktwo'));?>"><?php echo $block->escapeHtml(getData('prodbuttontexttwo'));?></a>
             <?php if($this->getData('productSubTextTwo') != ''): ?>
-            <aside style="color:<?php echo $productSubTextCustomColor?>;<?php echo $productSubTextCustomSize?><?php echo trim($productSubTextCustomStyle)?>"><?php echo $block->getData('productSubTextTwo'); ?></aside>
+            <aside style="color:<?php echo $block->escapeCss($productSubTextCustomColor)?>;<?php echo $block->escapeCss($productSubTextCustomSize)?><?php echo $block->escapeCss(trim($productSubTextCustomStyle))?>"><?php echo $block->escapeHtml(getData('productSubTextTwo')); ?></aside>
             <?php endif; ?>
         </div>
     </div>
     <?php endif; ?>
 
     <?php if($this->getData('prodnamethree') != ''): ?>
-    <div class="item" style="background-image: url('<?php echo $block->getData('prodbgimagethree'); ?>');">
-        <h2><a style="color:<?php echo $productNameCustomColor?>; <?php echo $productNameTextCustomSize?> <?php echo trim($productNameTextCustomStyle)?>" href="<?php echo $block->getData('prodbuttonlinkthree'); ?>"><?php echo $block->getData('prodnamethree'); ?></a></h2>
-        <h4 style="color:<?php echo $productHeadlineCustomColor?>; <?php echo $productHeadlineTextCustomSize?> <?php echo trim($productHeadlineTextCustomStyle) ?>"><?php echo $block->getData('prodheadlinethree'); ?></h4>
-        <a class="prodGrid-imgLink" href="<?php echo $block->getData('prodbuttonlinkthree'); ?>"><img src="<?php echo $block->getData('prodimagethree'); ?>" /></a>
+    <div class="item" style="background-image: url('<?php echo $block->escapeUrl(getData('prodbgimagethree')); ?>');">
+        <h2><a style="color:<?php echo $block->escapeCss($productNameCustomColor) ?>; <?php echo $block->escapeCss($productNameTextCustomSize) ?> <?php echo $block->escapeCss(trim($productNameTextCustomStyle)) ?>" href="<?php echo $block->escapeUrl(getData('prodbuttonlinkthree')); ?>"><?php echo $block->escapeHtml(getData('prodnamethree')); ?></a></h2>
+        <h4 style="color:<?php echo $block->escapeCss($productHeadlineCustomColor) ?>; <?php echo $block->escapeCss($productHeadlineTextCustomSize) ?> <?php echo $block->escapeCss(trim($productHeadlineTextCustomStyle)) ?>"><?php echo $block->escapeHtml(getData('prodheadlinethree')); ?></h4>
+        <a class="prodGrid-imgLink" href="<?php echo $block->escapeUrl(getData('prodbuttonlinkthree')); ?>"><img src="<?php echo $block->escapeUrl(getData('prodimagethree')); ?>" /></a>
         <div class="shop-cta">
-            <a class="button" href="<?php echo $block->getData('prodbuttonlinkthree'); ?>"><?php echo $block->getData('prodbuttontextthree'); ?></a>
+            <a class="button" href="<?php echo $block->escapeUrl(getData('prodbuttonlinkthree')); ?>"><?php echo $block->escapeUrl(getData('prodbuttontextthree')); ?></a>
             <?php if($this->getData('productSubTextThree') != ''): ?>
-            <aside style="color:<?php echo $productSubTextCustomColor?>;<?php echo $productSubTextCustomSize?><?php echo trim($productSubTextCustomStyle)?>"><?php echo $block->getData('productSubTextThree'); ?></aside>
+            <aside style="color:<?php echo $block->escapeUrl($productSubTextCustomColor)?>;<?php echo $block->escapeUrl($productSubTextCustomSize) ?><?php echo $block->escapeUrl(trim($productSubTextCustomStyle)) ?>"><?php echo $block->getHtml(getData('productSubTextThree')); ?></aside>
             <?php endif; ?>
         </div>
     </div>

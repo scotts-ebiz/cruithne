@@ -124,19 +124,12 @@ foreach($selections as $selc){
                            size="4"
                            title="<?= $block->escapeHtml(__('Qty')) ?>"
                            class="input-text qty "
-                           data-validate="{required:true,'validate-greater-than-zero':true}"
+                           data-validate="{required:true}"
                            data-role="cart-item-qty"/>
                             <input type="button" value="+" id="qtyplus" class="qtyplus" field="quantity" onclick="qtyUp(<?php echo $_item->getId(); ?>)" />
                 </div>                
             </div>
-			<button type="submit"
-                name="update_cart_action"
-                data-cart-item-update=""
-                value="update_qty"
-                title="<?= $block->escapeHtml(__('Update Cart')) ?>"
-                class="action update update_cust_btn">
-            <span><?= /* @escapeNotVerified */ __('Update Cart') ?></span>
-			</button>
+			<span class="action update update_cust_btn"><?= /* @escapeNotVerified */ __('Update Cart') ?></span>
 			<div class="actions-toolbar no-margin" style="margin:0px;margin-top:10px;">
                     <?= /* @escapeNotVerified */ $block->getActions($_item) ?>
             </div>
@@ -166,7 +159,7 @@ foreach($selections as $selc){
 			var qty = qty_el.value; 
 			if( qty == 2) {
 				jQuery('.box_down' + id).css({
-					'visibility' : 'hidden'
+					'visibility' : 'visible'
 				});
 			}
 			  if( !isNaN( qty ) && qty > 0 ){
