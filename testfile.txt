@@ -1,5 +1,4 @@
-Here's the first change.
-And here's change two.
+Here's the first commit.
 
 
 
