@@ -23,11 +23,19 @@ spec:
         app: magento-local
     spec:
       containers:
-      - image:  magento-test:0.0.1
+      - image:  magento-local:0.0.34
         imagePullPolicy: IfNotPresent
         name: local-magento
         ports:
         - containerPort: 80
+        env:
+        - name: MAGENTO_DB_HOST
+          value: local-magento-mysql
+        - name: MAGENTO_DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: mysql-pass-tkbg6h6bkh
+              key: password
         # readinessProbe:
         #   failureThreshold: 3
         #   httpGet:
@@ -53,6 +61,7 @@ spec:
       securityContext: {}
       terminationGracePeriodSeconds: 30
 
+
 ---
 apiVersion: v1
 kind: PersistentVolumeClaim
@@ -68,66 +77,58 @@ spec:
       storage: 20Gi
 ---
 #MySQL
-apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
-kind: Deployment
-metadata:
-  name: magento-mysql
-  labels:
-    app: magento-local-mysql
-spec:
-  selector:
-    matchLabels:
-      app: magento-mysql
-      tier: mysql
-  strategy:
-    type: Recreate
-  template:
-    metadata:
-      labels:
-        app: magento-mysql
-        tier: mysql
-    spec:
-      containers:
-      - image: mysql:5.7
-        name: mysql
-        env:
-        - name: MYSQL_ROOT_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: mysql-pass
-              key: password
-        ports:
-        - containerPort: 3306
-          name: mysql
-        volumeMounts:
-        - name: mysql-persistent-storage
-          mountPath: /var/lib/mysql
-      volumes:
-      - name: mysql-persistent-storage
-        persistentVolumeClaim:
-          claimName: mysql-pv-claim
+# apiVersion: apps/v1 # for versions before 1.9.0 use apps/v1beta2
+# kind: Deployment
+# metadata:
+#   name: magento-mysql
+#   labels:
+#     app: magento-local-mysql
+# spec:
+#   selector:
+#     matchLabels:
+#       app: magento-mysql
+#       tier: mysql
+#   strategy:
+#     type: Recreate
+#   template:
+#     metadata:
+#       labels:
+#         app: magento-mysql
+#         tier: mysql
+#     spec:
+#       containers:
+#       - image: mysql:5.7
+#         name: mysql
+#         env:
+#         - name: MYSQL_ROOT_PASSWORD
+#           valueFrom:
+#             secretKeyRef:
+#               name: mysql-pass
+#               key: password
+#         ports:
+#         - containerPort: 3306
+#           name: mysql
+#         volumeMounts:
+#         - name: mysql-persistent-storage
+#           mountPath: /var/lib/mysql
+#       volumes:
+#       - name: mysql-persistent-storage
+#         persistentVolumeClaim:
+#           claimName: mysql-pv-claim
 ---
 apiVersion: v1
 kind: Service
 metadata:
   labels:
     app: magento-local
-  name: magento-local-lb
+  name: magento-local-np
   namespace: default
 spec:
-  externalTrafficPolicy: Cluster
+  type: NodePort
   ports:
-  - name: 80-to-80-tcp
-    nodePort: 30460
-    port: 80
-    protocol: TCP
+  - port: 80
     targetPort: 80
-  - name: 443-to-443-tcp
-    nodePort: 31247
-    port: 443
+    nodePort: 80
     protocol: TCP
-    targetPort: 443
   selector:
     app: magento-local
-  sessionAffinity: None
-  type: LoadBalancer

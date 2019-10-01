@@ -1,4 +1,8 @@
 secretGenerator:
 - name: mysql-pass
   literals:
-  - password=YOUR_PASSWORD
+  - password=magento
+
+resources:
+- mysql-deployment.yaml
+- local_env.yaml
