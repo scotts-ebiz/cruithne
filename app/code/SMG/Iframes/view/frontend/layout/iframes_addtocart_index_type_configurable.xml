@@ -4,7 +4,6 @@
         <script src="SMG_Iframes::js/addToCart.js"/>
     </head>
     <body>
-        <referenceBlock name="page.main.title" display="false" />
         <referenceContainer name="content">
             <block class="Magento\Catalog\Pricing\Render" as="iframe_pricing" name="product.price.final" before="-">
                 <arguments>
