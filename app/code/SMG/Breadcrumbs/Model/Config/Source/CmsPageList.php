@@ -10,28 +10,28 @@ class CmsPageList implements \Magento\Framework\Option\ArrayInterface
 	/**
      * @var array
      */
-    protected $options;
+    protected $_options;
 
     /**
      * @var CollectionFactory
      */
-    protected $collectionFactory;
+    protected $_collectionFactory;
 
-    /**
+    /** 
      * @param CollectionFactory $collectionFactory
      */
     public function __construct(
         CollectionFactory $collectionFactory
     ) {
-        $this->collectionFactory = $collectionFactory;
+        $this->_collectionFactory = $collectionFactory;
     }
 	
     public function toOptionArray()
     {
-        if (!$this->options) {
-            $this->options = $this->collectionFactory->create()->toOptionIdArray();
+        if (!$this->_options) {
+            $this->_options = $this->_collectionFactory->create()->toOptionIdArray();
         }
-        return $this->options;
+        return $this->_options;
     }
 }
 ?>

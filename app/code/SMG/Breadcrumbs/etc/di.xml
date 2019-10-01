@@ -1,5 +1,6 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-	<preference for="Magento\Theme\Block\Html\Breadcrumbs" type="SMG\Breadcrumbs\Block\Html\Breadcrumbs" />
-	<preference for="Magento\Catalog\ViewModel\Product\Breadcrumbs" type="SMG\Breadcrumbs\ViewModel\Product\Breadcrumbs" />
-</config>
+	<type name="Magento\Theme\Block\Html\Breadcrumbs">
+        <plugin name="smg_breadcrumbs_modification" type="SMG\Breadcrumbs\Plugin\Block\Html\BreadcrumbsPlugin"/>
+    </type>
+</config> 

@@ -20,15 +20,15 @@ if($currentcmspageaction == 'cms_index_index'){
 		$canshowBreadcrumbs = true;
 	} 
 }
-?>
+?> 
 <?php if($canshowBreadcrumbs){ ?>
 <div class="breadcrumbs">
     <ul class="items">
 		<li class="item home">
-			<a href="/" title=""><?php echo __('Home'); ?></a>
+			<a href="/" title=""><?= $block->escapeHtml('Home') ?></a>
 		</li>
 		 <li class="item home">
-		   <strong><?php echo __('Home'); ?></strong>
+		   <strong><?= $block->escapeHtml('Home') ?></strong>
 		</li>
     </ul>
 </div>
