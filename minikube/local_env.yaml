@@ -23,7 +23,7 @@ spec:
         app: magento-local
     spec:
       containers:
-      - image:  magento-local:0.0.34
+      - image:  magento-local:0.0.37
         imagePullPolicy: IfNotPresent
         name: local-magento
         ports:

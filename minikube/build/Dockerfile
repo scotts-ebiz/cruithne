@@ -17,6 +17,9 @@ RUN chmod -R 777 /var/lib/php/sessions
 RUN curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | apt-key add -
 RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
 RUN echo "deb https://dl.yarnpkg.com/debian/ stable main" | tee /etc/apt/sources.list.d/yarn.list
+
+# I was reinstalling the nodejs and yarn (will fix in main Dockerfile soon)
+# Removed php-redis so local doesn't try to use it for
 RUN apt-get update && apt-get remove -y nodejs yarn php-redis && apt-get install -y nodejs yarn
 
 RUN cd $MAGENTO_DIR/tools/ && yarn install
@@ -29,29 +32,27 @@ RUN git reset --hard origin/staging
 RUN git checkout staging
 RUN composer install
 
-COPY phpinfo.php $MAGENTO_DIR/pub/phpinfo.php
+COPY local.phpinfo.php $MAGENTO_DIR/pub/phpinfo.php
 
-# Add Correct .htaccess
+# Using the local.htacess and php.ini to overwride the repo
 COPY local.htaccess $MAGENTO_DIR/.htaccess
-
-# Add Correct php.ini
 COPY local.php.ini $MAGENTO_DIR/php.ini
 
 USER root
-# Add Correct Local Magento Environment Config
-COPY env.local.php $MAGENTO_DIR/app/etc/env.php
+
+# Using the local.env.php to overwride the repo
+COPY local.env.php $MAGENTO_DIR/app/etc/env.php
+
+# Chaning permissions for some files to make sure permissions are correct
 RUN chown -R magento:www-data $MAGENTO_DIR/.git /var/lib/php/sessions $MAGENTO_DIR/app/etc/env.php
-COPY 00_magento.local.ini  /etc/php/7.2/cli/conf.d/00_magento.ini 
-COPY 00_magento.local.ini  /etc/php/7.2/apache2/conf.d/00_magento.ini 
+COPY local.00_magento.ini  /etc/php/7.2/cli/conf.d/00_magento.ini 
+COPY local.00_magento.ini  /etc/php/7.2/apache2/conf.d/00_magento.ini 
 
 # Expose Ports for Apache
 EXPOSE 80/tcp 443/tcp
 
-#RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated | xargs chown magento:www-data
-#RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated | xargs chmod 777
-
 # Run entrypoint file
-COPY ondemand-entrypoint.sh /usr/local/bin/entrypoint.sh
+COPY local.entrypoint.sh /usr/local/bin/entrypoint.sh
 
 # Make executable
 RUN ["chmod", "+x", "/usr/local/bin/entrypoint.sh"]
