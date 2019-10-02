@@ -36,6 +36,10 @@
                 <field id="default_terminal_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Default Terminal ID</label>
                 </field>
+               <field id="output_type" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Output Type</label>
+                    <source_model>SMG\Vantiv\Model\Config\Source\ListMode</source_model>
+                </field>
                 </group>
             </group>
         </section>
