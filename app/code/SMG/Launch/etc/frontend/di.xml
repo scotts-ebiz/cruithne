@@ -7,4 +7,8 @@
             </argument>
         </arguments>
     </type>
+	<type name="Magento\Framework\Controller\ResultInterface">
+		<plugin name="SMG_Launch_Controller_Result_MessagePlugin" type="SMG\Launch\Controller\Result\MessagePlugin"/>
+	</type>
+	<preference for="Magento\Theme\CustomerData\Messages" type="SMG\Launch\CustomerData\Messages" />
 </config>
