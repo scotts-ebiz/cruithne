@@ -4,5 +4,5 @@ secretGenerator:
   - password=magento
 
 resources:
-- mysql-deployment.yaml
-- local_env.yaml
+- magento.deployment.yaml
+- mysql.deployment.yaml

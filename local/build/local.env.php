@@ -6,7 +6,7 @@ return [
     'db' => [
         'connection' => [
             'indexer' => [
-                'host' => 'local-magento-mysql',
+                'host' => 'local-mysql-service',
                 'dbname' => 'magento',
                 'username' => 'root',
                 'password' => 'magento',
@@ -17,7 +17,7 @@ return [
                 'persistent' => NULL
             ],
             'default' => [
-                'host' => 'local-magento-mysql',
+                'host' => 'local-mysql-service',
                 'dbname' => 'magento',
                 'username' => 'root',
                 'password' => 'magento',
