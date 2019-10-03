@@ -13,17 +13,32 @@
                     <label>Title</label>
                     <config_path>payment/vantiv_keypadpayment/title</config_path>
                 </field>
-                <field id="account_token" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>Account Token</label>
-                </field>
                 <field id="account_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Account ID</label>
+                </field>
+                <field id="account_token" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Account Token</label>
                 </field>
                 <field id="acceptor_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Acceptor ID</label>
                 </field>
+                <field id="application_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Application ID</label>
+                </field>
+                <field id="application_name" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Application Name</label>
+                    <config_path>payment/vantiv_keypadpayment/application_name</config_path>
+                </field>
+                <field id="application_version" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Application Version</label>
+                    <config_path>payment/vantiv_keypadpayment/application_version</config_path>
+                </field>
                 <field id="default_terminal_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Default Terminal ID</label>
+                </field>
+               <field id="output_type" translate="label" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Output Type</label>
+                    <source_model>SMG\Vantiv\Model\Config\Source\ListMode</source_model>
                 </field>
                 </group>
             </group>
