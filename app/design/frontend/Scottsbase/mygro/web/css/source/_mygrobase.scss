@@ -720,30 +720,19 @@ button.action{
 	}
 }
 div.breadcrumbs {
-	margin-top: 105px;
+	/*margin-top: 105px;*/
+	margin-top: 6px;
 
 	.item:not(:last-child):after {
 		line-height: 24px;
 	}
 }
-.catalog-category-view{
-	.page-wrapper{
-		 .page-main{
-			margin-top: 0;
-		 }
-	}
-}
-.catalog-product-view{
-	.page-wrapper{
-		 .page-main{
-			margin-top: 0;
-		 }
-	}
-}
-.cms-page-view{
-	.page-wrapper{
-		 .page-main{
-			margin-top: 0;
-		 }
+.sticky-header{
+	position: fixed;
+	transition: all 0.2s ease-in-out;
+
+
+	+ .page-main {
+		margin-top: 120px;
 	}
 }

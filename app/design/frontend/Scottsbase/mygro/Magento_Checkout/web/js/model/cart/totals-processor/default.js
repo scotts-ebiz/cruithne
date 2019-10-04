@@ -62,7 +62,6 @@ define([
         }).always(function () {
             // Stop loader for totals block
 			var totals = quote.getTotals()();
-			jQuery('.minicart-wrapper .total-amt .price').html(priceUtils.formatPrice(totals['grand_total'], quote.getBasePriceFormat()),priceUtils.formatPrice(totals, quote.getBasePriceFormat()));
 			var grandtotal = jQuery('.grand.totals .amount .price').html();
 			jQuery('.minicart-wrapper .total-amt .price').html(grandtotal);
             totalsService.isLoading(false);
@@ -101,7 +100,6 @@ define([
             ) {
                 quote.setTotals(cartCache.get('totals'));
 				var totals = quote.getTotals()();
-				jQuery('.minicart-wrapper .total-amt .price').html(priceUtils.formatPrice(totals['grand_total'], quote.getBasePriceFormat()),priceUtils.formatPrice(totals, quote.getBasePriceFormat()));
 				var grandtotal = jQuery('.grand.totals .amount .price').html();
 				jQuery('.minicart-wrapper .total-amt .price').html(grandtotal);
             } else {
