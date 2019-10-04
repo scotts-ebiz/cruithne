@@ -744,3 +744,21 @@ button.action{
 		}
 	}
 }
+.cms-page-view{
+	.page-main{
+		margin-top: 10px;
+	}
+}
+.catalog-category-view{
+	.page-main{
+		margin-top: 10px;
+	}
+}
+.breadcrumbs{
+	.item:not(:last-child):after{
+		vertical-align: middle !important;
+	}
+	.items > li{
+		vertical-align: middle !important;
+	}
+}

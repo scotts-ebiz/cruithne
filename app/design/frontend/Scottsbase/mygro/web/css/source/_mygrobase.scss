@@ -749,4 +749,20 @@ button.action{
 		}
 	}
 }
+div.breadcrumbs {
+	/*margin-top: 105px;*/
+	margin-top: 6px;
 
+	.item:not(:last-child):after {
+		line-height: 24px;
+	}
+}
+.sticky-header{
+	position: fixed;
+	transition: all 0.2s ease-in-out;
+
+
+	+ .page-main {
+		margin-top: 120px;
+	}
+}
