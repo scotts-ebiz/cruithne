@@ -4,6 +4,7 @@
         <script src="SMG_Iframes::js/addToCart.js"/>
     </head>
     <body>
+        <referenceBlock name="page.main.title" display="false" />
         <referenceContainer name="content">
             <block class="SMG\Iframes\Block\AddToCart" name="SMG_block_addtocart" template="SMG_Iframes::addToCart.phtml" >
                 <block class="Magento\Framework\View\Element\Template" name="product.info.form.options" as="options_container">
