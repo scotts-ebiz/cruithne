@@ -108,9 +108,6 @@
                                 .item-actions {
                                     td {
                                         padding: 0;
-                                        .actions-toolbar > .action.action-edit {
-                                            display: none;
-                                        }
                                         .actions-toolbar > .action {
                                             display: none;
                                             visibility: hidden;
@@ -130,8 +127,12 @@
                             }
 
                         }
+
+                        .actions-toolbar > .action.action-edit  {
+                            display: none;
+                        }
                         .cart.main.actions {
-                          display: none;
+                            display: none;
                         }
                         div.cart.table-wrapper .cart.item .item-info .col.item,
                         .cart.table-wrapper thead tr .col.item {
