@@ -127,19 +127,48 @@
                             }
 
                         }
+                        .product-item-photo {
+                            width:138px;
+                        }
 
+
+
+
+                        //Can you vet this?
                         .actions-toolbar > .action.action-edit  {
                             display: none;
                         }
+
+                        //Can you vet this?
                         .cart.main.actions {
                             display: none;
                         }
+
+                        //Can you vet this?
                         div.cart.table-wrapper .cart.item .item-info .col.item,
                         .cart.table-wrapper thead tr .col.item {
                             width: 53%;
                         }
 
                     }
+                    #gift-options-cart {
+                        .cart-gift-item {
+                            .gift-item-block {
+                                .title {
+                                    font-family: $lato;
+                                    font-weight: 400;
+                                    color: $scotts-black;
+                                    font-size: 1rem;
+                                }
+                            }
+                        }
+                    }
+
+                  //Pick up from here, you're going to place #ac-wrapper here. Should be outside of .form-cart
+
+
+
+
                 }
             }
         }

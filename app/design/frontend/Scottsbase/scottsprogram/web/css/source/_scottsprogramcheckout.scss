@@ -72,11 +72,6 @@
                                 }
                             }
                         }
-
-                        //Continue Here
-                        .product-item-photo{
-                            width:138px;
-                        }
                     }
                     #gift-options-cart {
                         .cart-gift-item {
@@ -87,6 +82,9 @@
                             }
                         }
                     }
+
+
+                  //Pick up from here, make sure #ac-wrapper should be outside of .form-cart
                     #ac-wrapper {
                         position: fixed;
                         top: 0;
@@ -125,6 +123,9 @@
                             }
                         }
                     }
+
+
+
                 }
                 #block-shipping.custshipblk {
                     #block-summary {
