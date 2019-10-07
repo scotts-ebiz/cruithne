@@ -112,7 +112,7 @@ define([
 					if (!isNaN(value)) {
 						return false;
 					}
-					if(/^([a-zA-Z0-9()":;'-]+ )+[A-Za-z0-9()":;'-]+$|^[A-Za-z0-9()":;'-]*$/.test(value)){
+					if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
 						return true
 					} else {
 						return false;
@@ -129,7 +129,7 @@ define([
 			'required-entry-street-1',
 			function (value) {
 
-					if(/^([a-zA-Z0-9()":;'-]+ )+[A-Za-z0-9()":;'-]+$|^[A-Za-z0-9()":;'-]*$/.test(value)){
+					if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
 						return true
 					} else {
 						return false;
@@ -142,7 +142,7 @@ define([
 			'required-entry-street-2',
 			function (value) {
 
-					if(/^([a-zA-Z0-9()":;'-]+ )+[A-Za-z0-9()":;'-]+$|^[A-Za-z0-9()":;'-]*$/.test(value)){
+					if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
 						return true
 					} else {
 						return false;
