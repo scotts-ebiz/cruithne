@@ -281,6 +281,7 @@ return [
         'Mageplaza_Core' => 1,
         'Mageplaza_Smtp' => 1,
         'SMG_Api' => 1,
+        'SMG_Breadcrumbs' => 1,
         'SMG_Bundleprouct' => 1,
         'SMG_Checkout' => 1,
         'SMG_CreditReason' => 1,
