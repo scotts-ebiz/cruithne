@@ -3,18 +3,18 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-namespace SMG\Launch\Controller\Result;
+namespace SMG\Launch\Plugin\Controller;
 
 use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Controller\Result\Json;
-use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Controller\ResultInterface as MagentoResultInterface;
 use Magento\Framework\Message\MessageInterface;
 use Magento\Framework\Translate\Inline\ParserInterface;
 use Magento\Framework\Translate\InlineInterface;
 /**
  * Plugin for putting messages to cookies
  */
-class MessagePlugin
+class ResultInterface
 {
     /**
      * Cookies name for messages
@@ -24,32 +24,32 @@ class MessagePlugin
     /**
      * @var \Magento\Framework\Stdlib\CookieManagerInterface
      */
-    private $cookieManager;
+    private $_cookieManager;
 
     /**
      * @var \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory
      */
-    private $cookieMetadataFactory;
+    private $_cookieMetadataFactory;
 
     /**
      * @var \Magento\Framework\Message\ManagerInterface
      */
-    private $messageManager;
+    private $_messageManager;
 
     /**
      * @var \Magento\Framework\View\Element\Message\InterpretationStrategyInterface
      */
-    private $interpretationStrategy;
+    private $_interpretationStrategy;
 
     /**
      * @var \Magento\Framework\Serialize\Serializer\Json
      */
-    private $serializer;
+    private $_serializer;
 	protected $_logger;
     /**
      * @var InlineInterface
      */
-    private $inlineTranslate;
+    private $_inlineTranslate;
 
 	protected $_checkoutSession;
     /**
@@ -68,13 +68,13 @@ class MessagePlugin
         \Magento\Framework\Serialize\Serializer\Json $serializer = null,
         InlineInterface $inlineTranslate = null
     ) {
-        $this->cookieManager = $cookieManager;
-        $this->cookieMetadataFactory = $cookieMetadataFactory;
-        $this->messageManager = $messageManager;
-        $this->serializer = $serializer ?: ObjectManager::getInstance()
+        $this->_cookieManager = $cookieManager;
+        $this->_cookieMetadataFactory = $cookieMetadataFactory;
+        $this->_messageManager = $messageManager;
+        $this->_serializer = $serializer ?: ObjectManager::getInstance()
             ->get(\Magento\Framework\Serialize\Serializer\Json::class);
-        $this->interpretationStrategy = $interpretationStrategy;
-        $this->inlineTranslate = $inlineTranslate ?: ObjectManager::getInstance()->get(InlineInterface::class);
+        $this->_interpretationStrategy = $interpretationStrategy;
+        $this->_inlineTranslate = $inlineTranslate ?: ObjectManager::getInstance()->get(InlineInterface::class);
     }
 
     /**
@@ -88,28 +88,28 @@ class MessagePlugin
      * @return ResultInterface
      */
     public function afterRenderResult(
-        ResultInterface $subject,
-        ResultInterface $result
+        MagentoResultInterface $subject,
+        MagentoResultInterface $result
     ) {
         $messages = $this->getCookiesMessages();
         /** @var MessageInterface $message */
 		if(count($messages) > 0){
 			$emsg = array();
-			foreach ($this->messageManager->getMessages(true)->getItems() as $message) {
+			foreach ($this->_messageManager->getMessages(true)->getItems() as $message) {
 				if($message->getType() == 'error'){
-					$emsg[] = $this->interpretationStrategy->interpret($message);	
+					$emsg[] = $this->_interpretationStrategy->interpret($message);	
 				}
 			}
 		
 			if(count($emsg) > 0){
-				$publicCookieMetadata = $this->cookieMetadataFactory->createPublicCookieMetadata();
+				$publicCookieMetadata = $this->_cookieMetadataFactory->createPublicCookieMetadata();
 				$publicCookieMetadata->setDurationOneYear();
 				$publicCookieMetadata->setPath('/');
 				$publicCookieMetadata->setHttpOnly(false);
 
-				$this->cookieManager->setPublicCookie(
+				$this->_cookieManager->setPublicCookie(
 					self::ERRORMESSAGES_COOKIES_NAME,
-					$this->serializer->serialize($emsg),
+					$this->_serializer->serialize($emsg),
 					$publicCookieMetadata
 				);
 			}
@@ -118,11 +118,11 @@ class MessagePlugin
     }
 	protected function getCookiesMessages()
     {
-        $messages = $this->cookieManager->getCookie(self::MESSAGES_COOKIES_NAME);
+        $messages = $this->_cookieManager->getCookie(self::MESSAGES_COOKIES_NAME);
         if (!$messages) {
             return [];
         }
-        $messages = $this->serializer->unserialize($messages);
+        $messages = $this->_serializer->unserialize($messages);
         if (!is_array($messages)) {
             $messages = [];
         }
