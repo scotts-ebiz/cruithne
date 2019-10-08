@@ -25,26 +25,26 @@ class Messages implements SectionSourceInterface
     /**
      * @var \Magento\Framework\Stdlib\CookieManagerInterface
      */
-    private $cookieManager;
+    private $_cookieManager;
 
     /**
      * @var \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory
      */
-    private $cookieMetadataFactory;
+    private $_cookieMetadataFactory;
 	
-	 private $serializer;
+	 private $_serializer;
 
    /**
      * Manager messages
      *
      * @var MessageManager
      */ 
-    protected $messageManager;
+    protected $_messageManager;
 
     /**
      * @var InterpretationStrategyInterface
      */
-    private $interpretationStrategy;
+    private $_interpretationStrategy;
 
     /**
      * Constructor
@@ -59,12 +59,12 @@ class Messages implements SectionSourceInterface
         MessageManager $messageManager,
         InterpretationStrategyInterface $interpretationStrategy
     ) {
-		$this->cookieManager = $cookieManager;
-        $this->cookieMetadataFactory = $cookieMetadataFactory;
-		$this->serializer = $serializer ?: ObjectManager::getInstance()
+		$this->_cookieManager = $cookieManager;
+        $this->_cookieMetadataFactory = $cookieMetadataFactory;
+		$this->_serializer = $serializer ?: ObjectManager::getInstance()
             ->get(\Magento\Framework\Serialize\Serializer\Json::class);
-        $this->messageManager = $messageManager;
-        $this->interpretationStrategy = $interpretationStrategy;
+        $this->_messageManager = $messageManager;
+        $this->_interpretationStrategy = $interpretationStrategy;
     }
 
     /**
@@ -72,25 +72,25 @@ class Messages implements SectionSourceInterface
      */
     public function getSectionData()
     {	
-        $messages = $this->messageManager->getMessages(true);
+        $messages = $this->_messageManager->getMessages(true);
 		
 		if(count($messages) > 0){
 			$emsg = array();
 			foreach ($messages->getItems() as $message) {
 				if($message->getType() == 'error'){
-					$emsg[] = $this->interpretationStrategy->interpret($message);	
+					$emsg[] = $this->_interpretationStrategy->interpret($message);
 				}
 			}
 		
 			if(count($emsg) > 0){
-				$publicCookieMetadata = $this->cookieMetadataFactory->createPublicCookieMetadata();
+				$publicCookieMetadata = $this->_cookieMetadataFactory->createPublicCookieMetadata();
 				$publicCookieMetadata->setDurationOneYear();
 				$publicCookieMetadata->setPath('/');
 				$publicCookieMetadata->setHttpOnly(false);
 
-				$this->cookieManager->setPublicCookie(
+				$this->_cookieManager->setPublicCookie(
 					self::ERRORMESSAGES_COOKIES_NAME,
-					$this->serializer->serialize($emsg),
+					$this->_serializer->serialize($emsg),
 					$publicCookieMetadata
 				);
 			}
@@ -102,7 +102,7 @@ class Messages implements SectionSourceInterface
                 function (array $result, MessageInterface $message) {
                     $result[] = [
                         'type' => $message->getType(),
-                        'text' => $this->interpretationStrategy->interpret($message)
+                        'text' => $this->_interpretationStrategy->interpret($message)
                     ];
                     return $result;
                 },
