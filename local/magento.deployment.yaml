@@ -54,6 +54,9 @@ spec:
         name: magento
         ports:
         - containerPort: 80
+        volumeMounts:
+        - name: magento-mount
+          mountPath: /var/www/html/magento2
         env:
         - name: MAGENTO_DB_HOST
           value: local-mysql-service
@@ -86,3 +89,8 @@ spec:
       schedulerName: default-scheduler
       securityContext: {}
       terminationGracePeriodSeconds: 30
+      volumes:
+      - name: magento-mount
+        hostPath:
+          path: "/magento2"
+

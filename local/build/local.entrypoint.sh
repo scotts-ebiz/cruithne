@@ -1,36 +1,28 @@
 #!/bin/bash
 # This entrypoint does some last minute magento calls before the image is ready
-# works for both test and production
-# Rick got his inspiration from: https://github.com/sensson/docker-magento2/blob/master/entrypoint.sh and we should probably look into it a little more
 
 # This helps with debugging especially with Docker
 set -euxo pipefail
 COMMAND="$@"
 
+# su - magento -c 'cp /tmp/local_build/env.php /var/www/html/magento2/app/etc/env.php'
+
 # Run Setup Upgrade
-su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade'
-su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile' 
+# su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade'
+# su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile' 
 
 # Set Styles
-su - magento -c 'cd /var/www/html/magento2/tools && gulp clean && gulp styles'
-su - magento -c '/var/www/html/magento2/bin/magento setup:static-content:deploy'
+# su - magento -c 'cd /var/www/html/magento2/tools && gulp clean && gulp styles'
+# su - magento -c '/var/www/html/magento2/bin/magento setup:static-content:deploy'
 # 
 # Reindex and Cache Flush
-su - magento -c '/var/www/html/magento2/bin/magento -v index:reindex'
-su - magento -c '/var/www/html/magento2/bin/magento -v cache:flush'
+# su - magento -c '/var/www/html/magento2/bin/magento -v index:reindex'
+# su - magento -c '/var/www/html/magento2/bin/magento -v cache:flush'
 
-# Notify of deploy
-# curl -X POST --data-urlencode "payload={\"channel\": \"#magento2-botalerts\", \"username\": \"m2deploybot\", \"text\": \"The most recent commit below has been deployed to the $(git rev-parse --abbrev-ref HEAD) environment $(git show | head -n 10)\", \"icon_emoji\": \":rocket:\"}" https://hooks.slack.com/services/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
 
-# Activate Sumologic
-# service collector start
-
-# always start elasticsearch for fulltext catalog search indexer
-# Having a problem with elasticsearch, disabling for now
-# service elasticsearch start
-
-# always start cron
-# service cron start
+# su - magento -c 'cp /tmp/local_build/.htaccess /var/www/html/magento2/.htaccess'
+# su - magento -c 'cp /tmp/local_build/phpinfo.php /var/www/html/magento2/pub/phpinfo.php'
+# su - magento -c 'cp /tmp/local_build/php.ini /var/www/html/magento2/php.ini'
 
 # CMD "exec /usr/sbin/apachectl -DFOREGROUND -k start"
 exec /usr/sbin/apachectl -DFOREGROUND

@@ -27,24 +27,28 @@ RUN cd $MAGENTO_DIR/tools/ && yarn install
 USER magento
 WORKDIR $MAGENTO_DIR
 
-RUN git fetch --all
-RUN git reset --hard origin/staging
-RUN git checkout staging
-RUN composer install
+RUN git fetch --all && git reset --hard origin/staging && git checkout staging && composer install
 
-COPY local.phpinfo.php $MAGENTO_DIR/pub/phpinfo.php
+# $MAGENTO_DIR/pub/phpinfo.php
+COPY local.phpinfo.php /tmp/local_build/phpinfo.php 
+
 
 # Using the local.htacess and php.ini to overwride the repo
-COPY local.htaccess $MAGENTO_DIR/.htaccess
-COPY local.php.ini $MAGENTO_DIR/php.ini
+
+#$MAGENTO_DIR/.htaccess
+COPY local.htaccess /tmp/local_build/.htaccess 
+
+#$MAGENTO_DIR/php.ini
+COPY local.php.ini /tmp/local_build/php.ini
 
 USER root
 
 # Using the local.env.php to overwride the repo
-COPY local.env.php $MAGENTO_DIR/app/etc/env.php
+#$MAGENTO_DIR/app/etc/env.php
+COPY local.env.php /tmp/local_build/env.php
 
 # Chaning permissions for some files to make sure permissions are correct
-RUN chown -R magento:www-data $MAGENTO_DIR/.git /var/lib/php/sessions $MAGENTO_DIR/app/etc/env.php
+RUN chown -R magento:www-data $MAGENTO_DIR/.git /var/lib/php/sessions /tmp/local_build/env.php
 COPY local.00_magento.ini  /etc/php/7.2/cli/conf.d/00_magento.ini 
 COPY local.00_magento.ini  /etc/php/7.2/apache2/conf.d/00_magento.ini 
 
