@@ -1,0 +1,153 @@
+.sp-footer {
+  background-color: $green-1;
+  color: $white;
+  overflow: hidden;
+  padding: 6rem 2rem;
+  text-align: center;
+
+  a, a:hover {
+    color: $white;
+  }
+
+  @media (min-width: $screen-sm) {
+    padding: 6rem 6rem;
+  }
+
+  @media (min-width: $screen-md) {
+    padding: 6rem 0;
+    text-align: left;
+  }
+}
+
+.sp-footer__grid {
+  display: flex;
+  flex-direction: column;
+
+  @media (min-width: $screen-md) {
+    flex-direction: row;
+  }
+}
+
+.sp-footer__brand {
+  order: 1;
+}
+
+.sp-footer__logo {
+  height: 40px;
+  margin: 0 auto;
+  width: 80px;
+
+  img {
+    display: block;
+    height: auto;
+    width: 100%;
+  }
+
+  @media (min-width: $screen-md) {
+    margin-left: 0;
+    margin-right: .5rem;
+  }
+}
+
+.sp-footer__title {
+  margin-bottom: 2rem;
+
+  @media (min-width: $screen-md) {
+    margin-bottom: 0;
+    margin-top: 0;
+  }
+}
+
+.sp-footer__social {
+  margin-bottom: 2rem;
+  order: 4;
+
+  .sp-footer__nav-list {
+    justify-content: center;
+
+    @media (min-width: $screen-md) {
+      justify-content: start;
+    }
+  }
+
+  a {
+    color: $white;
+
+    &:hover {
+      color: $white;
+    }
+  }
+
+  @media (min-width: $screen-md) {
+    align-self: center;
+    margin-bottom: 0;
+    max-width: 28rem;
+    order: 2;
+  }
+}
+
+.sp-footer__divider {
+  border-color: $white;
+  margin: 2rem 0;
+  order: 3;
+  width: 100%;
+}
+
+.sp-footer__company {
+  order: 2;
+
+  @media (min-width: $screen-md) {
+    order: 4;
+  }
+}
+
+.sp-footer__content {
+  order: 5;
+
+  @media (min-width: $screen-md) {
+    max-width: 28rem;
+  }
+}
+
+.sp-footer__phone {
+  display: inline-block;
+  margin-bottom: 3rem;
+
+  @media (min-width: $screen-md) {
+    margin-bottom: 0;
+  }
+}
+
+.sp-footer__nav {
+  padding: 0 2rem;
+  margin-bottom: 2rem;
+
+  .sp-footer__nav-list {
+    justify-content: center;
+
+    @media (min-width: $screen-md) {
+      flex-wrap: nowrap;
+      justify-content: start;
+    }
+  }
+
+  li {
+    padding: 0 1rem 1rem 1rem;
+    
+    @media (min-width: $screen-md) {
+      padding: 0 1rem;
+    }
+  }
+
+  @media (min-width: $screen-md) {
+    margin-bottom: 0;
+    padding: 0;
+  }
+}
+
+.sp-footer__address {
+  @extend .sp-p1;
+
+  font-style: normal;
+  margin-bottom: 1rem;
+}
