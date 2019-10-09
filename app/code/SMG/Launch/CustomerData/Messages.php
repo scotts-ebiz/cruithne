@@ -32,7 +32,17 @@ class Messages implements SectionSourceInterface
      */
     private $_cookieMetadataFactory;
 	
-	 private $_serializer;
+	/**
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+	
+	private $_objectManager;
+	
+	/**
+     * @var \Magento\Framework\Serialize\Serializer\Json
+     */
+	
+	private $_serializer;
 
    /**
      * Manager messages
@@ -45,6 +55,7 @@ class Messages implements SectionSourceInterface
      * @var InterpretationStrategyInterface
      */
     private $_interpretationStrategy;
+	
 
     /**
      * Constructor
@@ -55,13 +66,16 @@ class Messages implements SectionSourceInterface
     public function __construct(
 		\Magento\Framework\Stdlib\CookieManagerInterface $cookieManager,
         \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory $cookieMetadataFactory,
+		\Magento\Framework\ObjectManagerInterface $objectmanager,
 		\Magento\Framework\Serialize\Serializer\Json $serializer = null,
         MessageManager $messageManager,
         InterpretationStrategyInterface $interpretationStrategy
+		
     ) {
 		$this->_cookieManager = $cookieManager;
         $this->_cookieMetadataFactory = $cookieMetadataFactory;
-		$this->_serializer = $serializer ?: ObjectManager::getInstance()
+		$this->_objectManager = $objectmanager;
+		$this->_serializer = $serializer ?: $this->_objectManager
             ->get(\Magento\Framework\Serialize\Serializer\Json::class);
         $this->_messageManager = $messageManager;
         $this->_interpretationStrategy = $interpretationStrategy;
@@ -78,7 +92,7 @@ class Messages implements SectionSourceInterface
 			$emsg = array();
 			foreach ($messages->getItems() as $message) {
 				if($message->getType() == 'error'){
-					$emsg[] = $this->_interpretationStrategy->interpret($message);
+					$emsg[] = $this->_interpretationStrategy->interpret($message);	
 				}
 			}
 		
@@ -94,7 +108,7 @@ class Messages implements SectionSourceInterface
 					$publicCookieMetadata
 				);
 			}
-		}
+		} 
 		
         return [
             'messages' => array_reduce(
