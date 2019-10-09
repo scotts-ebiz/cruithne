@@ -92,5 +92,5 @@ spec:
       volumes:
       - name: magento-mount
         hostPath:
-          path: "/magento2"
+          path: "/Users/tcasper/Development/cruithne/"
 
