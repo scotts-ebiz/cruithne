@@ -1,0 +1,108 @@
+html {
+  font-family: hellix, sans-serif;
+  font-size: $font-size-base--mobile;
+
+  @media (min-width: $screen-sm) {
+    font-size: $font-size-base;
+  }
+}
+
+body {
+  font-size: 1rem;
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+.sp-h0 {
+  font-size: $font-size-h0;
+  font-weight: 700;
+}
+
+.sp-h1 {
+  font-size: $font-size-h1--mobile;
+  font-weight: 700;
+
+  @media (min-width: $screen-sm) {
+    font-size: $font-size-h1;
+  }
+}
+
+.sp-h1--long {
+  font-size: $font-size-h1--long--mobile;
+
+  @media (min-width: $screen-sm) {
+    font-size: $font-size-h1--long;
+  }
+}
+
+.sp-h2 {
+  font-size: $font-size-h2--mobile;
+  font-weight: 700;
+
+  @media (min-width: $screen-sm) {
+    font-size: $font-size-h2;
+  }
+}
+
+.sp-h2--long {
+  font-size: $font-size-h2--long--mobile;
+
+  @media (min-width: $screen-sm) {
+    font-size: $font-size-h2--long;
+  }
+}
+
+.sp-h3 {
+  font-size: $font-size-h3--mobile;
+
+  @media (min-width: $screen-sm) {
+    font-size: $font-size-h3;
+  }
+}
+
+.sp-h4 {
+  font-size: $font-size-h4--mobile;
+  font-weight: 700;
+
+  @media (min-width: $screen-sm) {
+    font-size: $font-size-h4;
+  }
+}
+
+.sp-h4--long {
+  font-size: $font-size-h4--long--mobile;
+  font-weight: 700;
+
+  @media (min-width: $screen-sm) {
+    font-size: $font-size-h4--long;
+  }
+}
+
+.sp-p1 {
+  font-size: $font-size-p1--mobile;
+
+  @media (min-width: $screen-sm) {
+    font-size: $font-size-p1;
+  }
+}
+
+.sp-p2 {
+  font-size: $font-size-p2--mobile;
+
+  @media (min-width: $screen-sm) {
+    font-size: $font-size-p2;
+  }
+}
+
+.sp-label {
+  font-size: $font-size-label;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.sp-form-label,
+.sp-text-sm {
+  font-size: $font-size-form-label;
+}

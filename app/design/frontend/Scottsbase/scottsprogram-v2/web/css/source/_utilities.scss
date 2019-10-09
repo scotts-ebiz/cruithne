@@ -1,0 +1,158 @@
+$colors: (
+  "green-1": $green-1,
+  "green-2": $green-2,
+  "green-3": $green-3,
+  "green-4": $green-4,
+  "yellow-1": $yellow-1,
+  "yellow-2": $yellow-2,
+  "red-1": $red-1,
+  "gray-1": $gray-1,
+  "gray-2": $gray-2,
+  "white": $white,
+  "black": $black,
+  "transparent": transparent
+);
+
+@each $name, $color in $colors {
+  .sp-bg-#{$name} {
+    background-color: $color;
+  }
+
+  .sp-text-#{$name} {
+    color: $color;
+  }
+}
+
+// Alignment
+@each $size in $breakpoints {
+  @include breakpoint($size) {
+    @if $size {
+      $size: #{$size}\:
+    }
+
+    .#{$size}sp-text-left {
+      text-align: left;
+    }
+    .#{$size}sp-text-center {
+      text-align: center;
+    }
+    .#{$size}sp-text-right {
+      text-align: right;
+    }
+  }
+}
+
+// Display
+@each $size in $breakpoints {
+  @include breakpoint($size) {
+    @if $size {
+      $size: #{$size}\:;
+    }
+
+    .#{$size}sp-block {
+      display: block;
+    }
+    .#{$size}sp-inline-block {
+      display: inline-block;
+    }
+    .#{$size}sp-flex {
+      display: flex;
+    }
+    .#{$size}sp-inline-flex {
+      display: inline-flex;
+    }
+    .#{$size}sp-hide {
+      display: none;
+    }
+  }
+}
+
+// Flex
+@each $size in $breakpoints {
+  @include breakpoint($size) {
+    @if $size {
+      $size: #{$size}\:;
+    }
+
+    .#{$size}sp-items-center {
+        align-items: center;
+    }
+    .#{$size}sp-items-baseline {
+      align-items: baseline;
+    }
+    .#{$size}sp-justify-between {
+      justify-content: space-between;
+    }
+    .#{$size}sp-justify-center {
+      justify-content: center;
+    }
+    .#{$size}sp-justify-start {
+      justify-content: flex-start;
+    }
+  }
+}
+
+// Spacing
+@each $size in $breakpoints {
+  @include breakpoint($size) {
+    @if $size {
+      $size: #{$size}\:;
+    }
+
+    @each $increment in $spacing {
+      @each $key, $value in ("": null, "x": null, "y": null, "t": "top", "b": "bottom", "l": "left", "r": "right") {
+        @if $value {
+          $value: -#{$value};
+        }
+
+        @if $value == "x" {
+          .#{$size}sp-m#{$key}-#{$increment} {
+            margin-left: spacing($increment);
+            margin-right: spacing($increment);
+          }
+          .#{$size}sp-p#{$key}-#{$increment} {
+            padding-left: spacing($increment);
+            padding-right: spacing($increment);
+          }
+        } @else if $value == "y" {
+          .#{$size}sp-m#{$key}-#{$increment} {
+            margin-bottom: spacing($increment);
+            margin-top: spacing($increment);
+          }
+          .#{$size}sp-p#{$key}-#{$increment} {
+            padding-bottom: spacing($increment);
+            padding-top: spacing($increment);
+          }
+        } @else {
+          .#{$size}sp-m#{$key}-#{$increment} {
+            margin#{$value}: spacing($increment);
+          }
+          .#{$size}sp-p#{$key}-#{$increment} {
+            padding#{$value}: spacing($increment);
+          }
+        }
+      }
+    }
+  }
+}
+
+// Shadows
+.sp-shadow {
+  box-shadow: $shadow;
+}
+
+.sp-shadow-md {
+  box-shadow: $shadow-md;
+}
+
+.sp-shadow-lg {
+  box-shadow: $shadow-lg;
+}
+
+.sp-shadow-xl {
+  box-shadow: $shadow-xl;
+}
+
+.sp-shadow-inner {
+  box-shadow: $shadow-inner;
+}
