@@ -10,7 +10,7 @@ class PaymentMethod extends \Magento\Payment\Model\Method\AbstractMethod
      * @var string
      */
     protected $_code = 'vantiv_keypadpayment';
- 
+    protected $_formBlockType = \SMG\Vantiv\Block\Form\Keypad::class;
     /**
      * Availability option
      *
