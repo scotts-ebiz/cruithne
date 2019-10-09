@@ -7,6 +7,8 @@
 /.project
 /.settings
 /.vscode
+/.htaccess
+/php.ini
 atlassian*
 /nbproject
 /robots.txt
