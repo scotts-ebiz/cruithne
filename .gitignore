@@ -9,6 +9,8 @@
 /.vscode
 /.htaccess
 /php.ini
+php.ini
+.htaccess
 atlassian*
 /nbproject
 /robots.txt
