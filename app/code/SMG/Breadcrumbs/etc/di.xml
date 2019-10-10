@@ -4,4 +4,3 @@
         <plugin name="SMG_Breadcrumbs_Plugin_Block_Html_Breadcrumbs" type="SMG\Breadcrumbs\Plugin\Block\Html\Breadcrumbs"/>
     </type>
 </config> 
-git
