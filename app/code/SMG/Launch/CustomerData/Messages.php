@@ -67,18 +67,17 @@ class Messages implements SectionSourceInterface
 		\Magento\Framework\Stdlib\CookieManagerInterface $cookieManager,
         \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory $cookieMetadataFactory,
 		\Magento\Framework\ObjectManagerInterface $objectmanager,
-		\Magento\Framework\Serialize\Serializer\Json $serializer = null,
-        MessageManager $messageManager,
-        InterpretationStrategyInterface $interpretationStrategy
+		MessageManager $messageManager,
+        InterpretationStrategyInterface $interpretationStrategy,
+		\Magento\Framework\Serialize\Serializer\Json $serializer = null
 		
     ) {
 		$this->_cookieManager = $cookieManager;
         $this->_cookieMetadataFactory = $cookieMetadataFactory;
 		$this->_objectManager = $objectmanager;
-		$this->_serializer = $serializer ?: $this->_objectManager
-            ->get(\Magento\Framework\Serialize\Serializer\Json::class);
         $this->_messageManager = $messageManager;
         $this->_interpretationStrategy = $interpretationStrategy;
+		$this->_serializer = $serializer ?: $this->_objectManager->get(\Magento\Framework\Serialize\Serializer\Json::class);
     }
 
     /**
