@@ -62,6 +62,12 @@
   margin-bottom: 2rem;
   order: 4;
 
+  li {
+    @media (min-width: $screen-md) {
+      margin-bottom: 0;
+    }
+  }
+
   .sp-footer__nav-list {
     justify-content: center;
 
