@@ -316,40 +316,43 @@ class IndexTest extends \PHPUnit\Framework\TestCase
         );
         $registry->register('current_category', $category);
 
-        $this->product->load('12345-1', 'sku');
+        $product = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(
+            \Magento\Catalog\Api\ProductRepositoryInterface::class
+        )->get('12345-1');
 
-        $this->index->addIndexToProduct($this->product, 0);
-        $this->assertArrayNotHasKey('grant_catalog_category_view', $this->product->getData());
-        $this->assertArrayNotHasKey('grant_catalog_product_price', $this->product->getData());
-        $this->assertArrayNotHasKey('grant_checkout_items', $this->product->getData());
+        $this->index->addIndexToProduct($product, 0);
+        $this->assertArrayNotHasKey('grant_catalog_category_view', $product->getData());
+        $this->assertArrayNotHasKey('grant_catalog_product_price', $product->getData());
+        $this->assertArrayNotHasKey('grant_checkout_items', $product->getData());
 
-        $this->index->addIndexToProduct($this->product, 1);
-        $this->assertArrayNotHasKey('grant_catalog_category_view', $this->product->getData());
-        $this->assertArrayNotHasKey('grant_catalog_product_price', $this->product->getData());
-        $this->assertArrayNotHasKey('grant_checkout_items', $this->product->getData());
+        $this->index->addIndexToProduct($product, 1);
+        $this->assertArrayNotHasKey('grant_catalog_category_view', $product->getData());
+        $this->assertArrayNotHasKey('grant_catalog_product_price', $product->getData());
+        $this->assertArrayNotHasKey('grant_checkout_items', $product->getData());
 
         $this->indexer->reindexAll();
 
-        $this->index->addIndexToProduct($this->product, 0);
-        $this->assertArrayNotHasKey('grant_catalog_category_view', $this->product->getData());
-        $this->assertArrayNotHasKey('grant_catalog_product_price', $this->product->getData());
-        $this->assertArrayNotHasKey('grant_checkout_items', $this->product->getData());
+        $this->index->addIndexToProduct($product, 0);
+        $this->assertArrayNotHasKey('grant_catalog_category_view', $product->getData());
+        $this->assertArrayNotHasKey('grant_catalog_product_price', $product->getData());
+        $this->assertArrayNotHasKey('grant_checkout_items', $product->getData());
 
-        $this->index->addIndexToProduct($this->product, 1);
-        $this->assertArrayHasKey('grant_catalog_category_view', $this->product->getData());
+        $this->index->addIndexToProduct($product, 1);
+
+        $this->assertArrayHasKey('grant_catalog_category_view', $product->getData());
         $this->assertEquals(
             \Magento\CatalogPermissions\Model\Permission::PERMISSION_DENY,
-            $this->product->getData('grant_catalog_category_view')
+            $product->getData('grant_catalog_category_view')
         );
-        $this->assertArrayHasKey('grant_catalog_product_price', $this->product->getData());
+        $this->assertArrayHasKey('grant_catalog_product_price', $product->getData());
         $this->assertEquals(
             \Magento\CatalogPermissions\Model\Permission::PERMISSION_DENY,
-            $this->product->getData('grant_catalog_product_price')
+            $product->getData('grant_catalog_product_price')
         );
-        $this->assertArrayHasKey('grant_checkout_items', $this->product->getData());
+        $this->assertArrayHasKey('grant_checkout_items', $product->getData());
         $this->assertEquals(
             \Magento\CatalogPermissions\Model\Permission::PERMISSION_DENY,
-            $this->product->getData('grant_checkout_items')
+            $product->getData('grant_checkout_items')
         );
     }
 
