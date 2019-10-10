@@ -1,0 +1,80 @@
+.sp-button {
+  @extend .sp-label;
+
+  border: none;
+  border-radius: .25rem;
+  font-weight: 400;
+  padding: 1rem;
+  text-transform: uppercase;
+  transition: background-color .25s ease-in-out, box-shadow .25s ease-in-out, transform .25s ease-in-out;
+  white-space: nowrap;
+
+  &:hover {
+    box-shadow: $shadow-md;
+    transform: translateY(-1px);
+  }
+
+  &:focus {
+    outline: 2px auto;
+    outline-offset: 1px;
+  }
+}
+
+.sp-button--primary {
+  background-color: $green-1;
+  color: $white;
+
+  &:active {
+    background-color: $black;
+  }
+
+  &:focus {
+    outline-color: $green-1;
+  }
+}
+
+.sp-button--secondary {
+  background-color: $black;
+  color: $white;
+
+  &:active {
+    background-color: $gray-1;
+  }
+
+  &:focus {
+    outline-color: $black;
+  }
+}
+
+.sp-button--inverted {
+  background-color: $white;
+  color: $black;
+
+  &:active {
+    background-color: $green-4;
+  }
+
+  &:focus {
+    outline-color: $white;
+  }
+}
+
+.sp-button--inactive {
+  background-color: $gray-2;
+  color: $gray-1;
+  cursor: not-allowed;
+
+  &:hover {
+    background-color: $gray-2;
+    transform: none;
+    box-shadow: none;
+  }
+
+  &:focus {
+    outline-color: $gray-1;
+  }
+}
+
+.sp-button--get-started {
+  width: 250px;
+}

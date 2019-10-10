@@ -1,0 +1,27 @@
+a {
+  @extend .sp-p1;
+  color: $green-1;
+  text-decoration: none;
+  transition: color .25s ease-in-out;
+
+  &:active,
+  &:hover {
+    color: $gray-1;
+    text-decoration: underline;
+  }
+
+  &:focus {
+    outline: 2px auto $gray-1;
+    outline-offset: 1px;
+    text-decoration: underline;
+  }
+}
+
+.sp-link {
+  @extend .sp-label;
+  text-transform: uppercase;
+
+  &:focus {
+    outline-color: $green-1;
+  }
+}
