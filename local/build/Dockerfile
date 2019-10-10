@@ -52,6 +52,8 @@ RUN chown -R magento:www-data $MAGENTO_DIR/.git /var/lib/php/sessions /tmp/local
 COPY local.00_magento.ini  /etc/php/7.2/cli/conf.d/00_magento.ini 
 COPY local.00_magento.ini  /etc/php/7.2/apache2/conf.d/00_magento.ini 
 
+RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated | xargs chown magento:www-data && find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated | xargs chmod 777
+
 # Expose Ports for Apache
 EXPOSE 80/tcp 443/tcp
 
