@@ -32,20 +32,6 @@
 		</referenceContainer>
 		<referenceContainer name="header.container" htmlId="sp-header" htmlClass="sp-header">
 			<container name="header.panel.wrapper" htmlClass="panel wrapper" htmlTag="div" before="-">
-				<!-- <container name="header.panel" label="Page Header Panel" htmlTag="div" htmlClass="panel header">
-					 <block class="Magento\Framework\View\Element\Template" name="skip_to_content" template="Magento_Theme::html/skip.phtml">
-						 <arguments>
-							 <argument name="target" xsi:type="string">contentarea</argument>
-							 <argument name="label" translate="true" xsi:type="string">Skip to Content</argument>
-						 </arguments>
-					 </block>
-					 <block class="Magento\Store\Block\Switcher" name="store_language" as="store_language" template="Magento_Store::switch/languages.phtml"/>
-					 <block class="Magento\Customer\Block\Account\Navigation" name="top.links">
-						 <arguments>
-							 <argument name="css_class" xsi:type="string">header links</argument>
-						 </arguments>
-					 </block>
-				 </container>-->
 			</container>
 			<container name="header-wrapper" label="Page Header" as="header-wrapper" htmlTag="div" htmlClass="sp-container">
 				<block class="Magento\Theme\Block\Html\Header\Logo" name="logo">
@@ -93,7 +79,6 @@
 				</block>
 			</block>
 			<container name="top.container" as="topContainer" label="After Page Header Top" htmlTag="div" htmlClass="top-container"/>
-			<!--<block class="Magento\Theme\Block\Html\Breadcrumbs" name="breadcrumbs" as="breadcrumbs"/>-->
 		</referenceContainer>
 		<referenceContainer name="columns.top">
 			<block class="Magento\Theme\Block\Html\Title" name="page.main.title" template="Magento_Theme::html/title.phtml"/>
@@ -103,10 +88,7 @@
 			</container>
 		</referenceContainer>
 		<referenceContainer name="main" htmlClass="sp-container">
-			<!--<container name="content.top" label="Main Content Top"/>-->
 			<container name="content" label="Main Content Area" />
-			<!--<container name="content.aside" label="Main Content Aside"/>-->
-			<!--<container name="content.bottom" label="Main Content Bottom"/>-->
 		</referenceContainer>
 		<referenceContainer name="page.bottom.container">
 			<container name="page.bottom" label="Before Page Footer" htmlTag="div" htmlClass="content"/>
@@ -114,16 +96,6 @@
 		<referenceContainer name="footer-container" htmlClass="sp-footer" >
 			<container name="footer" as="footer" label="Page Footer" htmlTag="div" htmlClass="sp-container">
 				<block class="Magento\Theme\Block\Html\Footer" name="footer-content" template="Magento_Theme::html/footer.phtml"/>
-				<!--
-				<block class="Magento\Store\Block\Switcher" name="store_switcher" as="store_switcher" template="Magento_Store::switch/stores.phtml"/>
-				<block class="Magento\Framework\View\Element\Html\Links" name="footer_links">
-					<arguments>
-						<argument name="css_class" xsi:type="string">footer links</argument>
-					</arguments>
-				</block>
-				<block class="Magento\Theme\Block\Html\Footer" name="copyright" template="Magento_Theme::html/copyright.phtml"/>
-				<block class="Magento\Framework\View\Element\Template" name="report.bugs" template="Magento_Theme::html/bugreport.phtml" />
-				-->
 			</container>
 		</referenceContainer>
 		<referenceContainer name="before.body.end">
