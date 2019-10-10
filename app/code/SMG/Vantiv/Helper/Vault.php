@@ -20,11 +20,14 @@ use Vantiv\Payment\Gateway\Cc\Config\VantivCcConfig;
 use Vantiv\Payment\Gateway\Androidpay\Config\VantivAndroidpayConfig;
 use Vantiv\Payment\Gateway\Applepay\Config\VantivApplepayConfig;
 
+use Psr\Log\LoggerInterface;
+
 /**
  * Class Vault
  */
 class Vault extends \Vantiv\Payment\Helper\Vault
 {
+    protected $_logger;
     /**
      * Store manager
      *
@@ -76,9 +79,12 @@ class Vault extends \Vantiv\Payment\Helper\Vault
         PaymentDataHelper $paymentDataHelper,
         EncryptorInterface $encryptor,
         PaymentTokenManagementInterface $tokenManager,
-        PaymentTokenRepositoryInterface $tokenRepository)
+        PaymentTokenRepositoryInterface $tokenRepository,
+        LoggerInterface $logger)
     {
         parent::__construct($context, $storeManager, $paymentDataHelper, $encryptor, $tokenManager, $tokenRepository);
+
+        $this->_logger = $logger;
     }
 
     /**
@@ -89,6 +95,8 @@ class Vault extends \Vantiv\Payment\Helper\Vault
      */
     private function getVaultPayment($methodCode)
     {
+        $this->_logger->debug("I am in Vault->getVaultPayment");
+        $this->_logger->debug("MethodCode: " . $methodCode);
         return $this->paymentDataHelper->getMethodInstance($methodCode);
     }
 
