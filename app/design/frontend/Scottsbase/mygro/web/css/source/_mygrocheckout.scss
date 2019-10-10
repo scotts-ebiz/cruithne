@@ -284,33 +284,6 @@
             }
         }
     }
-  }
-  .cust-simple-image{
-    display: inline-block;
-    width: 50px;
-    margin-right: 8px;
-  }
-  .options-cont-wrp{
-    display: inline-block;
-    float: none;
-    vertical-align: top;
-    width: 80%;
-    text-align: left;
-  }
-  tr.item-actions .actions-toolbar .action.action-delete{
-    display:none;
-  }
-  .cart-container{
-      .form-cart .action.update{
-          color: $mygro-accent-blue;
-      }
-      .actions-toolbar {
-          margin-top: 0 !important;
-          a.action-delete {
-          color: $mygro-accent-blue;
-          }
-      }
-  }
 }
 
 
