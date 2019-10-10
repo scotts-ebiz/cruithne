@@ -1,11 +1,11 @@
 <?php
 namespace SMG\Breadcrumbs\Plugin\Block\Html;
 
-use Magento\Theme\Block\Html\Breadcrumbs;
+use Magento\Theme\Block\Html\Breadcrumbs as MagentoBreadcrumbs;
 use Magento\Framework\View\Element\Template;
 use Magento\Store\Model\ScopeInterface;
 
-class BreadcrumbsPlugin
+class Breadcrumbs
 {
 	/**
      * Store manager
@@ -49,7 +49,7 @@ class BreadcrumbsPlugin
 		$this->_cmspageManager = $cmspageManager;
     }
 	
-    public function aroundAddCrumb(Breadcrumbs $breadcrumbs, callable $proceed, $crumbName, $crumbInfo)
+    public function aroundAddCrumb(MagentoBreadcrumbs $breadcrumbs, callable $proceed, $crumbName, $crumbInfo)
     {
 		$categoryBreadcrumbs = $this->_scopeConfig->getValue('web/default/show_category_breadcrumbs', ScopeInterface::SCOPE_STORE);
 		$cmsBreadcrumbs = $this->_scopeConfig->getValue('web/default/show_particularly_cms_breadcrumbs', ScopeInterface::SCOPE_STORE);
