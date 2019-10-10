@@ -13,7 +13,8 @@
         "amasty/securityauth": "^1.1",
         "avalara/avatax-magento": "^1.5",
         "composer/composer": "@alpha",
-        "magento/product-enterprise-edition": "2.3.0",
+        "magento/composer-root-update-plugin": "~0.1",
+        "magento/product-enterprise-edition": "2.3.1",
         "magepal/magento2-googletagmanager": "^2.3",
         "mageplaza/module-smtp": "^1.2",
         "snowdog/frontools": "^1.6",
@@ -22,8 +23,9 @@
     "require-dev": {
         "friendsofphp/php-cs-fixer": "~2.12.0",
         "lusitanian/oauth": "~0.8.10",
+        "allure-framework/allure-phpunit": "~1.2.0",
         "magento/magento-coding-standard": "^2.0",
-        "magento/magento2-functional-testing-framework": "2.3.3",
+        "magento/magento2-functional-testing-framework": "~2.3.13",
         "pdepend/pdepend": "2.5.2",
         "phpmd/phpmd": "@stable",
         "phpunit/phpunit": "~6.5.0",
@@ -47,7 +49,8 @@
         },
         "psr-0": {
             "": [
-                "app/code/"
+                "app/code/",
+                "generated/code/"
             ]
         },
         "files": [
@@ -70,7 +73,7 @@
         }
     },
     "prefer-stable": true,
-    "version": "2.3.0",
+    "version": "2.3.1",
     "minimum-stability": "alpha",
     "repositories": {
         "0": {
@@ -84,5 +87,8 @@
     },
     "extra": {
         "magento-force": "override"
+    },
+    "conflict": {
+        "gene/bluefoot": "*"
     }
 }
