@@ -16,6 +16,7 @@ su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade'
 su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile' 
 
 # Set Styles
+su - magento -c 'ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools'
 su - magento -c 'cd /var/www/html/magento2/tools && yarn install && gulp clean && gulp styles'
 su - magento -c '/var/www/html/magento2/bin/magento setup:static-content:deploy'
  
