@@ -184,6 +184,7 @@
 
 .sp-header__social,
 .sp-header__nav-secondary {
+  align-items: center;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -210,3 +211,13 @@
   margin-bottom: 1rem;
 }
 
+.sp-social-icon {
+  display: block;
+  height: auto;
+  margin: 0 auto;
+  width: 2rem;
+
+  &:hover {
+    opacity: .8;
+  }
+}
