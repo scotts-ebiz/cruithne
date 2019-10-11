@@ -3,6 +3,7 @@
 
   border: none;
   border-radius: .25rem;
+  display: inline-block;
   font-weight: 400;
   padding: 1rem;
   text-transform: uppercase;
@@ -11,12 +12,16 @@
 
   &:hover {
     box-shadow: $shadow-md;
+    color: $white;
+    text-decoration: none;
     transform: translateY(-1px);
   }
 
   &:focus {
+    color: $white;
     outline: 2px auto;
     outline-offset: 1px;
+    text-decoration: none;
   }
 }
 
@@ -26,9 +31,11 @@
 
   &:active {
     background-color: $black;
+    color: $white;
   }
 
   &:focus {
+    color: $white;
     outline-color: $green-1;
   }
 }
@@ -39,9 +46,11 @@
 
   &:active {
     background-color: $gray-1;
+    color: $white;
   }
 
   &:focus {
+    color: $white;
     outline-color: $black;
   }
 }
@@ -50,11 +59,17 @@
   background-color: $white;
   color: $black;
 
+  &:hover {
+    color: $black;
+  }
+
   &:active {
     background-color: $green-4;
+    color: $black;
   }
 
   &:focus {
+    color: $black;
     outline-color: $white;
   }
 }
@@ -66,11 +81,13 @@
 
   &:hover {
     background-color: $gray-2;
-    transform: none;
+    color: $gray-1;
     box-shadow: none;
+    transform: none;
   }
 
   &:focus {
+    color: $gray-1;
     outline-color: $gray-1;
   }
 }

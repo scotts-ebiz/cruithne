@@ -18,6 +18,7 @@ require(['jquery'], function($){
 			event.preventDefault();
 
 			self.$header.toggleClass('sp-is-active');
+			$('body').toggleClass('sp-menu-active');
 
 			if (self.$toggle.attr('aria-expanded') === 'true') {
 				self.$toggle.attr('aria-expanded', false);

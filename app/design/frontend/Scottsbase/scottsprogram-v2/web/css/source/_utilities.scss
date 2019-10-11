@@ -74,6 +74,13 @@ $colors: (
       $size: #{$size}\:;
     }
 
+    .#{$size}sp-flex-row {
+      flex-direction: row;
+    }
+    .#{$size}sp-flex-column {
+      flex-direction: column;
+    }
+
     .#{$size}sp-items-center {
         align-items: center;
     }
@@ -92,6 +99,35 @@ $colors: (
   }
 }
 
+// Order
+@each $size in $breakpoints {
+  @include breakpoint($size) {
+    @if $size {
+      $size: #{$size}\:;
+    }
+
+    .#{$size}sp-order-0 {
+      order: 0;
+    }
+
+    .#{$size}sp-order-1 {
+      order: 1;
+    }
+
+    .#{$size}sp-order-2 {
+      order: 2;
+    }
+
+    .#{$size}sp-order-3 {
+      order: 3;
+    }
+
+    .#{$size}sp-order-4 {
+      order: 4;
+    }
+  }
+}
+
 // Spacing
 @each $size in $breakpoints {
   @include breakpoint($size) {
@@ -99,13 +135,14 @@ $colors: (
       $size: #{$size}\:;
     }
 
+    .#{$size}sp-mx-auto {
+      margin-left: auto;
+      margin-right: auto;
+    }
+
     @each $increment in $spacing {
       @each $key, $value in ("": null, "x": null, "y": null, "t": "top", "b": "bottom", "l": "left", "r": "right") {
-        @if $value {
-          $value: -#{$value};
-        }
-
-        @if $value == "x" {
+        @if $key == "x" {
           .#{$size}sp-m#{$key}-#{$increment} {
             margin-left: spacing($increment);
             margin-right: spacing($increment);
@@ -114,7 +151,7 @@ $colors: (
             padding-left: spacing($increment);
             padding-right: spacing($increment);
           }
-        } @else if $value == "y" {
+        } @else if $key == "y" {
           .#{$size}sp-m#{$key}-#{$increment} {
             margin-bottom: spacing($increment);
             margin-top: spacing($increment);
@@ -123,17 +160,42 @@ $colors: (
             padding-bottom: spacing($increment);
             padding-top: spacing($increment);
           }
-        } @else {
+        } @else if $value == null {
+        .#{$size}sp-m#{$key}-#{$increment} {
+          margin: spacing($increment);
+        }
+
+        .#{$size}sp-p#{$key}-#{$increment} {
+          padding: spacing($increment);
+        }
+      } @else {
           .#{$size}sp-m#{$key}-#{$increment} {
-            margin#{$value}: spacing($increment);
+            margin-#{$value}: spacing($increment);
           }
           .#{$size}sp-p#{$key}-#{$increment} {
-            padding#{$value}: spacing($increment);
+            padding-#{$value}: spacing($increment);
           }
         }
       }
     }
   }
+}
+
+// Position
+.sp-absolute {
+  position: absolute;
+}
+
+.sp-fixed {
+  position: fixed;
+}
+
+.sp-relative {
+  position: relative;
+}
+
+.sp-static {
+  position: static;
 }
 
 // Shadows
@@ -155,4 +217,24 @@ $colors: (
 
 .sp-shadow-inner {
   box-shadow: $shadow-inner;
+}
+
+.sp-max-w-xs {
+  max-width: 320px;
+}
+
+.sp-max-w-sm {
+  max-width: 480px;
+}
+
+.sp-max-w-md {
+  max-width: 640px;
+}
+
+.sp-max-w-lg {
+  max-width: 768px;
+}
+
+.sp-max-w-xl {
+  max-width: 1024px;
 }

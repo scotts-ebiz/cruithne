@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+	<widget class="SMG\ScottsProgramV2Theme\Block\Widget\HomePage" id="smg_scottsprogram_homepage">
+		<label>Scotts Program Home Page</label>
+		<description>Custom fields for the home page.</description>
+		<parameters>
+			<parameter name="heroImage" visible="true" xsi:type="block">
+				<label>Hero Image</label>
+				<block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+			</parameter>
+
+			<parameter name="heroMobileImage" visible="true" xsi:type="block">
+				<label>Hero Mobile Image</label>
+				<block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+			</parameter>
+
+			<parameter name="heroHeadline" visible="true" xsi:type="text">
+				<label>Hero Headline</label>
+				<value></value>
+			</parameter>
+		</parameters>
+	</widget>
+</widgets>

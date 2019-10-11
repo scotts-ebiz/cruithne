@@ -2,6 +2,15 @@
   padding: 1rem 0;
 }
 
+.sp-menu-active {
+  height: 100%;
+  overflow: hidden;
+
+  @media (min-width: $screen-md) {
+    overflow: auto;
+  }
+}
+
 .sp-header__home:hover {
   text-decoration: none;
 }
@@ -30,7 +39,7 @@
   padding: 6rem 4rem;
   position: fixed;
   flex: 1 1 auto;
-  justify-content: center;
+  overflow: auto;
   text-align: center;
   left: 0;
   right: 0;
@@ -46,6 +55,7 @@
   @media (min-width: $screen-md) {
     flex-direction: row;
     justify-content: flex-end;
+    overflow: hidden;
     padding: 0;
   }
 
