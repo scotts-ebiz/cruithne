@@ -1,20 +1,22 @@
 <style>
-	<?php if ($block->getData('heroMobileImage') || $block->getData('heroImage')) { ?>
 	.sp-hero__background {
-	<?php if ($block->getData('heroMobileImage')) { ?>
-		background-image: url('<?php echo $block->escapeUrl($block->getData('heroMobileImage')); ?>') !important;
-	<?php } else { ?>
-		background-image: url('<?php echo $block->escapeUrl($block->getData('heroImage')); ?>') !important;
+		<?php if ($block->getData('heroMobileImage') || $block->getData('heroImage')) { ?>
+			<?php if ($block->getData('heroMobileImage')) { ?>
+				background-image: url('<?php echo $block->escapeUrl($block->getData('heroMobileImage')); ?>') !important;
+			<?php } else { ?>
+				background-image: url('<?php echo $block->escapeUrl($block->getData('heroImage')); ?>') !important;
+			<?php } ?>
+		<?php } else { ?>
+			background-image: url('https://test_magento_image_repo.storage.googleapis.com/homePageHero.jpg') !important;
 	<?php } ?>
 	}
-	<?php } ?>
 
 	<?php if ($block->getData('heroImage')) { ?>
-	@media (min-width: 768px) {
-		.sp-hero__background {
-			background-image: url('<?php echo $block->escapeUrl($block->getData('heroImage')); ?>') !important;
+		@media (min-width: 768px) {
+			.sp-hero__background {
+				background-image: url('<?php echo $block->escapeUrl($block->getData('heroImage')); ?>') !important;
+			}
 		}
-	}
 	<?php } ?>
 
 	/* What to expect section */
