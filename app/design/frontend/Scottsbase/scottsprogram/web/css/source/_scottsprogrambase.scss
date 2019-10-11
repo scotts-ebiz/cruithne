@@ -6,6 +6,51 @@
     display: none;
 }
 
+
+//CTA Styles
+button {
+    background: $scotts-green;
+    border: 0;
+    padding: 23px 35px;
+    border-radius: 4px;
+    color: $color-white;
+    font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    text-align: center;
+    display: inline-block;
+    line-height: 0px;
+    box-sizing: border-box;
+    transition: background 0.2s linear;
+    letter-spacing: 0.5px;
+}
+button:hover {
+    background: $scotts-black;
+}
+button:active {
+    background: $scotts-secondary-green;
+}
+.button {
+    background: $scotts-green;
+    border: 0;
+    padding: 23px 35px;
+    border-radius: 4px;
+    color: $color-white;
+    font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    line-height: 0;
+    transition: background 0.2s linear;
+    letter-spacing: 0.5px;
+    text-align: center;
+    display: inline-block;
+}
+.button:hover {
+    background: $scotts-black;
+}
+.button:active {
+    background: $scotts-secondary-green;
+}
+
+
 body {
     h1 {
       color: $scottsprogram-gray;

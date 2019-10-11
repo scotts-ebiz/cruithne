@@ -15,47 +15,37 @@
                     padding-left: 15px;
                     padding-right: 15px;
                     position: relative;
-                    .cart-summary {
-                        width: 30%;
-                        background: #dfe6ee;
-                        .block > .title {
-                            padding: 7px 20px 5px 17px !important;
-                        }
-                        .checkout-methods-items {
-                            .item {
-                                .action.checkout {
-                                    -webkit-transition: background 0.2s;
-                                    -moz-transition: background 0.2s;
-                                    -ms-transition: background 0.2s;
-                                    -o-transition: background 0.2s;
-                                    transition: background 0.2s;
-                                    border: none;
-                                    &:hover {
-                                        -webkit-transition: background 0.2s;
-                                        -moz-transition: background 0.2s;
-                                        -ms-transition: background 0.2s;
-                                        -o-transition: background 0.2s;
-                                        transition: background 0.2s;
-                                    }
-                                }
-                            }
-                            .upd-cust-btn {
-                                .action.checkout{
-                                    padding: 23px 0;
-                                    text-transform: uppercase;
-                                    font-size: 15px;
-                                    line-height: 0px;
-                                    font-family: Lato, Arial, sans-serif;
-                                    width: 100%;
-                                    border-radius: 0.313rem;
-                                    transition: background 0.2s linear;
-                                    -webkit-transition: background 0.2s;
-                                    -moz-transition: background 0.2s;
-                                    -ms-transition: background 0.2s;
-                                    -o-transition: background 0.2s;
-                                    letter-spacing: 0.5px;
-                                }
-                            }
+                    .custom-checkout-btn-wrap {
+                      position: absolute;
+                      top: 20px;
+                      right: 0;
+                      width: 27.25%;
+                      padding: 0px 30px 0px;
+                      @media screen and (max-width: $screen__l) {
+                          width: 100% !important;
+                          padding: 0 !important;
+                      }
+                      @media screen and (max-width: $screen__m) {
+                          display: none;
+                      }
+                      .action.primary.checkout {
+                        text-transform: uppercase;
+                        font-family: Lato, Arial, sans-serif;
+                        width: 100%;
+                        padding: 23px 0;
+                      }
+                    }
+                    .custom-checkout-btn-wrap.stickyCart{
+                        position: fixed;
+                        top: 90px;
+                        right: 0;
+                        width: 100%;
+                        padding: 0;
+                        z-index: 9999;
+                        display:block;
+                        @include transition(all 0.2s ease-in-out);
+                        .action.primary.checkout{
+                            border-radius: 0px;
                         }
                     }
                     .form-cart {
@@ -95,9 +85,35 @@
                                         }
                                     }
                                     .qty {
-                                        .control.qty {
-                                            .qty {
-                                                border: 1px solid $scotts-black;
+                                        .field.qty {
+                                            .control.qty {
+                                                .qty {
+                                                    border: 1px solid $scotts-black;
+                                                }
+                                            }
+                                        }
+                                        .action.update {
+                                            font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                                            text-decoration: underline;
+                                            text-align: left;
+                                            color: $scotts-accent-orange;
+                                            font-size: 0.8rem;
+                                            margin-left: 0;
+                                            margin-top: 10px;
+                                            margin-bottom: 0;
+                                            padding-left: 0;
+                                            cursor: pointer;
+                                            &:before {
+                                              display: none;
+                                            }
+                                        }
+                                        .actions-toolbar {
+                                            margin-top: 0!important;
+                                            a.action-delete {
+                                                font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                                                text-decoration: underline;
+                                                font-size: 0.8rem;
+                                                color: $scotts-accent-orange;
                                             }
                                         }
                                     }
@@ -135,9 +151,6 @@
                             width:138px;
                         }
 
-
-
-
                         //Can you vet this?
                         .actions-toolbar > .action.action-edit  {
                             display: none;
@@ -154,6 +167,51 @@
                             width: 53%;
                         }
 
+                    }
+                    .cart-parent-summary {
+                        .cart-summary {
+                            width: 30%;
+                            background: #dfe6ee;
+                            .block > .title {
+                              padding: 7px 20px 5px 17px !important;
+                            }
+                            .checkout-methods-items {
+                                .item {
+                                  .action.checkout {
+                                    -webkit-transition: background 0.2s;
+                                    -moz-transition: background 0.2s;
+                                    -ms-transition: background 0.2s;
+                                    -o-transition: background 0.2s;
+                                    transition: background 0.2s;
+                                    border: none;
+                                    &:hover {
+                                      -webkit-transition: background 0.2s;
+                                      -moz-transition: background 0.2s;
+                                      -ms-transition: background 0.2s;
+                                      -o-transition: background 0.2s;
+                                      transition: background 0.2s;
+                                    }
+                                  }
+                                }
+                                .upd-cust-btn {
+                                    .action.checkout {
+                                      padding: 23px 0;
+                                      text-transform: uppercase;
+                                      font-size: 15px;
+                                      line-height: 0px;
+                                      font-family: Lato, Arial, sans-serif;
+                                      width: 100%;
+                                      border-radius: 0.313rem;
+                                      transition: background 0.2s linear;
+                                      -webkit-transition: background 0.2s;
+                                      -moz-transition: background 0.2s;
+                                      -ms-transition: background 0.2s;
+                                      -o-transition: background 0.2s;
+                                      letter-spacing: 0.5px;
+                                    }
+                                }
+                            }
+                        }
                     }
                     #gift-options-cart {
                         .cart-gift-item {
@@ -254,31 +312,6 @@
           color: $color_black;
         }
     }
-
-  //Pick it up here!
-    .update_cust_btn {
-        background: none;
-        border: 0;
-        //display: inline-block;
-        //font-size: 14px;
-        color: #075534;
-        //text-align: center;
-        padding: 0;
-        margin: 0;
-        margin-top: 10px;
-
-        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-        text-decoration: underline;
-        text-align: left;
-        font-size: 0.8rem;
-        margin-left: 0;
-        padding-left: 0;
-        cursor: pointer;
-        &:before {
-          display: none;
-        }
-
-    }
 }
 // Cart Page - End //
 
@@ -307,29 +340,6 @@
         font-weight: 500;
         padding: 0 0 10px 0;
         border-bottom: 1px solid #ccc;
-    }
-}
-
-//Style Update Cart and Remove Item link
-.checkout-cart-index .cart-container .form-cart {
-    .action.update {
-        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-        text-decoration: underline;
-        text-align: left;
-        font-size: 0.8rem;
-        margin-left: 0;
-        padding-left: 0;
-        cursor: pointer;
-        &:before {
-            display: none;
-        }
-    }
-    .actions-toolbar {
-        a.action-delete {
-            font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-            text-decoration: underline;
-            font-size: 0.8rem;
-        }
     }
 }
 
@@ -367,10 +377,6 @@ td#label_carrier_flat-rate-shipping_flatrate, td#label_carrier_fedex-2ndday_flat
 
 
 @media screen and (max-width: $screen__m) {
-    .checkout-cart-index .custom-checkout-btn-wrap {
-        display: none;
-    }
-
     .checkout-cart-index #shopping-cart-table .col.item .product-item-details {
         width: 100%;
         text-align: left;
@@ -440,10 +446,6 @@ td#label_carrier_flat-rate-shipping_flatrate, td#label_carrier_fedex-2ndday_flat
 }
 
 @media screen and (max-width: $screen__l) {
-  .custom-checkout-btn-wrap {
-      width: 100% !important;
-      padding: 0 !important;
-  }
   .fieldset > .field:not(.choice) > .label {
         padding: 6px 15px 0 0;
         text-align: right;

@@ -59,10 +59,18 @@
                                         }
                                     }
                                     .qty {
-                                        .control.qty {
-                                            .qty {
-                                                border: 1px solid $scotts-black;
+                                        .field.qty {
+                                            .control.qty {
+                                                .qty {
+                                                  border: 1px solid $scotts-black;
+                                                }
                                             }
+                                        }
+                                        .action.update {
+                                            color: $scottsprogram-orange;
+                                        }
+                                        a.action-delete {
+                                            color: $scottsprogram-orange;
                                         }
                                     }
                                     .price-including-tax,
@@ -98,46 +106,6 @@
         color: $scotts-green;
         &:hover {
             color: $color_black20_shade;
-        }
-    }
-
-//Pick it up here!
-    .update_cust_btn {
-        background: none;
-        border: 0;
-        display: inline-block;
-        font-size: $font14;
-        color: #075534;
-        text-align: center;
-        padding: 0;
-        margin: 0;
-      margin-top: 10px;
-    }
-
-
-    .update_cust_btn:before {
-        vertical-align: middle !important;
-    }
-    .custom-checkout-btn-wrap {
-        position: absolute;
-        top: 20px;
-        right: 0;
-        width: 27.25%;
-        padding: 0px 15px 0px;
-        .action.primary.checkout {
-            padding: 23px 0;
-            text-transform: uppercase;
-            font-size: 15px;
-            line-height: 0px;
-            font-family: Lato, Arial, sans-serif;
-            width: 100%;
-            background: #075534;
-            border-radius: 0.313rem;
-            transition: background 0.2s linear;
-            letter-spacing: 0.5px;
-            &:hover {
-                background: #04321e;
-            }
         }
     }
     #maincontent {
@@ -253,17 +221,6 @@
         vertical-align: top;
         width: 80%;
         text-align: left;
-    }
-    .cart-container {
-        .form-cart .action.update {
-            color: $scottsprogram-orange;
-        }
-        .actions-toolbar {
-            margin-top: 0 !important;
-            a.action-delete {
-              color: $scottsprogram-orange;
-            }
-        }
     }
 }
 
@@ -1180,11 +1137,6 @@
       }
     }
   }
-  .checkout-cart-index {
-    .update_cust_btn {
-      font-size: 13px;
-    }
-  }
   .checkout-index-index {
     .field-tooltip{
       .field-tooltip-content{
@@ -1302,9 +1254,6 @@
       .items thead + .item {
         border-top: 0;
       }
-    }
-    .cart.table-wrapper .action.update_cust_btn{
-      margin:0;
     }
     .cart-summary {
       width: 100% !important;
