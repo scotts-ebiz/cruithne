@@ -1,0 +1,16 @@
+// Magento UI Variables //
+$primary__color:   #ED1B2B; // red
+$secondary__color: $color-black;
+$button__border-radius: 15px 0;
+
+//  Ortho Var Overrides
+//  ---------------------------------------------
+
+// Iframes //
+$iframe-addtocart-btn-border: 2px solid $primary__color;
+$iframe-addtocart-btn-color: $color_white;
+$iframe-addtocart-btn-color-hover: $primary__color;
+$iframe-addtocart-btn-background: $primary__color;
+$iframe-addtocart-btn-background-hover: $color-white;
+
+$iframe-cart-checkout-now-txt: $primary__color;
