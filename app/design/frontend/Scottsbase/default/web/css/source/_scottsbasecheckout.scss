@@ -16,7 +16,11 @@
                     padding-right: 15px;
                     position: relative;
                     .cart-summary {
+                        width: 30%;
                         background: #dfe6ee;
+                        .block > .title {
+                            padding: 7px 20px 5px 17px !important;
+                        }
                         .checkout-methods-items {
                             .item {
                                 .action.checkout {
@@ -208,10 +212,72 @@
                         padding: 0px 25px;
                     }
                 }
-                //Pick up work from here!
-
             }
         }
+    }
+    div[name="shippingAddress.region_id"],
+    div[name="shippingAddress.country_id"] {
+        display: none !important;
+    }
+    #popup div[name="shippingAddress.postcode"] {
+        .input-text {
+            height: 30px;
+            width: 200px !important;
+        }
+    }
+    .field-tooltip {
+        .field-tooltip-action:before {
+            opacity: 1;
+            color: $scotts-green;
+        }
+    }
+    .qtyminus,
+    .qtyplus {
+        background: transparent;
+        border: 0;
+        outline: 0;
+        box-shadow: none;
+    }
+    .pop-cust-click.title {
+        color: $scotts-green;
+        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        font-size: 0.8rem;
+        text-decoration: underline;
+        cursor: pointer;
+        margin-left: 5px;
+        &:hover {
+          -webkit-transition: background 0.2s;
+          -moz-transition: background 0.2s;
+          -ms-transition: background 0.2s;
+          -o-transition: background 0.2s;
+          transition: background 0.2s;
+          color: $color_black;
+        }
+    }
+
+  //Pick it up here!
+    .update_cust_btn {
+        background: none;
+        border: 0;
+        //display: inline-block;
+        //font-size: 14px;
+        color: #075534;
+        //text-align: center;
+        padding: 0;
+        margin: 0;
+        margin-top: 10px;
+
+        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        text-decoration: underline;
+        text-align: left;
+        font-size: 0.8rem;
+        margin-left: 0;
+        padding-left: 0;
+        cursor: pointer;
+        &:before {
+          display: none;
+        }
+
     }
 }
 // Cart Page - End //
@@ -267,25 +333,6 @@
     }
 }
 
-
-
-//Estimate Shipping link on summary div
-.cart-summary > .pop-cust-click.title {
-    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-    font-size: 0.8rem;
-    color: #333333;
-    text-decoration: underline;
-    cursor: pointer;
-    margin-left: 5px;
-    &:hover {
-        -webkit-transition: background 0.2s;
-        -moz-transition: background 0.2s;
-        -ms-transition: background 0.2s;
-        -o-transition: background 0.2s;
-        transition: background 0.2s;
-        color: $color_black;
-    }
-}
 
 //Default styling for Order Summary Total
 .cart-totals .grand .amount strong,

@@ -91,28 +91,7 @@
                         }
                     }
                 }
-
-                //Continue here
-                .cart-summary {
-                    width: 30%;
-                    @media screen and (max-width: $screen__l) {
-                        width: 35%;
-                    }
-                    .block > .title {
-                        padding: 7px 20px 5px 17px !important;
-                    }
-                }
             }
-        }
-    }
-    div[name="shippingAddress.region_id"],
-    div[name="shippingAddress.country_id"] {
-        display: none !important;
-    }
-    #popup div[name="shippingAddress.postcode"] {
-        .input-text {
-            height: 30px;
-            width: 200px !important;
         }
     }
     .field-tooltip {
@@ -121,19 +100,15 @@
             color: $mygro-green;
         }
     }
-    .qtyminus,
-    .qtyplus {
-        background: transparent;
-        border: 0;
-        outline: 0;
-        box-shadow: none;
-    }
     .pop-cust-click.title {
         color: $mygro-green;
         &:hover {
             color: $mygro-dark-green;
         }
     }
+
+  //Pick it up here!
+/*
     .update_cust_btn {
         background: none;
         border: 0;
@@ -145,6 +120,10 @@
         margin: 0;
         margin-top: 10px;
     }
+*/
+
+
+
     .update_cust_btn:before {
         vertical-align: middle !important;
     }
