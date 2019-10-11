@@ -36,16 +36,18 @@
                       }
                     }
                     .custom-checkout-btn-wrap.stickyCart{
-                        position: fixed;
-                        top: 90px;
-                        right: 0;
-                        width: 100%;
-                        padding: 0;
-                        z-index: 9999;
-                        display:block;
-                        @include transition(all 0.2s ease-in-out);
-                        .action.primary.checkout{
-                            border-radius: 0px;
+                        @media screen and (max-width: $screen__m) {
+                            position: fixed;
+                            top: 90px;
+                            right: 0;
+                            width: 100%;
+                            padding: 0;
+                            z-index: 9999;
+                            display:block;
+                            @include transition(all 0.2s ease-in-out);
+                            .action.primary.checkout{
+                              border-radius: 0px;
+                            }
                         }
                     }
                     .form-cart {
@@ -312,6 +314,92 @@
           color: $color_black;
         }
     }
+    #maincontent {
+      .columns .column {
+        .cart-container {
+          form#form-validate {
+            border:0;
+            width: 100%;
+          }
+        }
+      }
+    }
+
+    .cart-summary-divlink {
+        width: 60%;
+        float: left;
+        padding: 1px 20px 25px;
+        position: relative;
+        color: $scotts-light-gray;
+        @media screen and (max-width: $screen__l) {
+            width: 100%;
+            padding: 1px 0;
+        }
+        @media screen and (max-width: $screen__m) {
+            order:2;
+        }
+        .block.discount {
+            .title {
+                &:after {
+                    -webkit-font-smoothing: antialiased;
+                    -moz-osx-font-smoothing: grayscale;
+                    font-size: 32px;
+                    line-height: 16px;
+                    color: $scotts-light-gray;
+                    content: "";
+                    font-family: "icons-blank-theme";
+                    margin: 0;
+                    vertical-align: middle;
+                    display: inline-block;
+                    font-weight: 400;
+                    overflow: hidden;
+                    speak: none;
+                    text-align: center;
+                }
+            }
+            &.active {
+                .title:after {
+                    content: "";
+                }
+            }
+        }
+
+
+        //2019-10-11 Still need to vet this section. Need it?
+        #discount-coupon-form {
+          .action.apply.primary {
+            height:30px;
+            font-size: 0.8rem;
+            font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            padding: 5px 10px 5px 10px !important;
+            background: #4d4d4e;
+            line-height: 0;
+            margin-left: 20px;
+            &:hover {
+              background: #333333;
+            }
+          }
+          .action.cancel.primary {
+            height:30px;
+            font-size: 0.8rem;
+            font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            padding: 5px 10px 5px 10px !important;
+            background: #4d4d4e;
+            line-height: 0;
+            margin-left: 20px;
+            @include max-screen($screen__s) {
+              margin-left:0px;
+            }
+            &:hover {
+              background: #333333;
+            }
+          }
+        }
+
+
+    }
+
+
 }
 // Cart Page - End //
 
@@ -361,12 +449,12 @@
 
 
 //Cart Page Styles
-.cart-summary-divlink {
-    width: 60%;
-    float: left;
-    padding: 1px 20px 25px;
-    position: relative;
-}
+//.cart-summary-divlink {
+//    width: 60%;
+//    float: left;
+//    padding: 1px 20px 25px;
+//    position: relative;
+//}
 
 
 td#label_method_fedex-nextday_flatrate, td#label_method_fedex-2ndday_flatrate {
@@ -455,10 +543,10 @@ td#label_carrier_flat-rate-shipping_flatrate, td#label_carrier_fedex-2ndday_flat
     .fieldset > .field:not(.choice) > .control {
         float: left;
     }
-  .checkout-cart-index .cart-summary-divlink {
-    width: 100% !important;
-    padding: 1px 0;
-  }
+  //.checkout-cart-index .cart-summary-divlink {
+  //  width: 100% !important;
+  //  padding: 1px 0;
+  //}
   .cart-summary {
     width: 100% !important;
   }

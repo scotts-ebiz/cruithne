@@ -108,42 +108,9 @@
             color: $color_black20_shade;
         }
     }
-    #maincontent {
-        .columns .column {
-            .cart-container {
-                form#form-validate {
-                  border:0;
-                  width: 100%;
-                }
-            }
-        }
-    }
+
     .cart-summary-divlink {
-        .block.discount {
-            .title {
-                &:after {
-                    -webkit-font-smoothing: antialiased;
-                    -moz-osx-font-smoothing: grayscale;
-                    font-size: $font32;
-                    line-height: 16px;
-                    color: #8f8f8f;
-                    content: "";
-                    font-family: "icons-blank-theme";
-                    margin: 0;
-                    vertical-align: middle;
-                    display: inline-block;
-                    font-weight: $font_normal;
-                    overflow: hidden;
-                    speak: none;
-                    text-align: center;
-                }
-            }
-            &.active {
-                .title:after {
-                    content: "";
-                }
-            }
-        }
+
         #discount-coupon-form {
             .action.apply.primary {
                 height:30px;
@@ -1374,24 +1341,6 @@
 
 @media screen and (max-width: $screen_568) {
   .checkout-cart-index {
-    .custom-checkout-btn-wrap{
-      display: none;
-    }
-    .custom-checkout-btn-wrap.stickyCart{
-      position: fixed;
-      top: 0;
-      right: 0;
-      width: 100%;
-      padding: 0;
-      z-index: 9990;
-      display:block;
-      @include transition(all 0.2s ease-in-out);
-      .action.primary.checkout{
-        border-radius: 0px;
-        margin-top: 53px;
-        padding-top: 34px;
-      }
-    }
     .cart-parent-summary{
       .cart-summary-divlink{
         float: none;
