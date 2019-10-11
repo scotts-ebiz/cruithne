@@ -11,15 +11,12 @@
 $_item = $block->getItem();
 $product = $_item->getProduct();
 
-
 $isVisibleProduct = $product->isVisibleInSiteVisibility();
+
 /** @var \Magento\Msrp\Helper\Data $helper */
 $helper = $this->helper('Magento\Msrp\Helper\Data');
 $canApplyMsrp = $helper->isShowBeforeOrderConfirm($product) && $helper->isMinimalPriceLessMsrp($product);
-
 $checkhelper = $this->helper('SMG\Checkout\Helper\Data');
-$productShortDescription = $product->getShortDescription();
-
 $selections = $checkhelper->getBundleProductType()->getSelectionsCollection($checkhelper->getBundleProductType()->getOptionsIds($product), $product);
 
 $arrayop = array();
@@ -53,9 +50,6 @@ foreach($selections as $selc){
                     <?= $block->escapeHtml($block->getProductName()) ?>
                 <?php endif; ?>
             </strong>
-            <div class="product-short-description">
-                <?php $productShortDescription ?>
-            </div>
             <?php if ($_options = $block->getOptionList()):?>
                 <dl class="item-options">
                     <dd><i><?php //echo $_item->getSku() ?></i></dd>
@@ -66,7 +60,7 @@ foreach($selections as $selc){
                             <?php if ($product->getData("type_id") == "bundle"):?>
                                 <?php $helper = $this->helper('Magento\Catalog\Helper\Image')->init($arrayop[$key],'cart_page_product_thumbnail') ->constrainOnly(true)->keepAspectRatio(true)->keepFrame(false)->setImageFile($arrayop[$key])->getUrl(); ?>
                                 <div class="cust-simple-image">
-                                    <dd><img src="<?php echo $helper; ?>"/><dd>
+                                    <dd><img src="<?= $block->escapeUrl($helper) ?>"/><dd>
                                 </div>
                             <?php endif; ?>
                             <div class="options-cont-wrp">
@@ -118,18 +112,18 @@ foreach($selections as $selc){
                 <span><?= /* @escapeNotVerified */ __('Qty') ?></span>
             </label>
             <div class="control qty">
-                <input type="button" value="-" class="qtyminus box_down<?php echo $_item->getId(); ?>" id="qtyminus" field="quantity" onclick="qtyDown(<?php echo $_item->getId(); ?>)" />
-                <input id="cart-<?= /* @escapeNotVerified */ $_item->getId() ?>-qty"
-                       name="cart[<?= /* @escapeNotVerified */ $_item->getId() ?>][qty]"
+                <input type="button" value="-" class="qtyminus box_down<?php echo $_item->getId(); ?>" data-item-id="<?php echo $_item->getId(); ?>" />
+                <input id="cart-<?= $block->escapeHtml($_item->getId()) ?>-qty"
+                       name="cart[<?= $block->escapeHtml($_item->getId()) ?>][qty]"
                        data-cart-item-id="<?= $block->escapeHtml($_item->getSku()) ?>"
-                       value="<?= /* @escapeNotVerified */ $block->getQty() ?>"
+                       value="<?= $block->escapeHtml($block->getQty()) ?>"
                        type="number"
                        size="4"
                        title="<?= $block->escapeHtml(__('Qty')) ?>"
                        class="input-text qty "
                        data-validate="{required:true}"
                        data-role="cart-item-qty"/>
-                <input type="button" value="+" id="qtyplus" class="qtyplus" field="quantity" onclick="qtyUp(<?php echo $_item->getId(); ?>)" />
+                <input type="button" value="+" class="qtyplus" data-item-id="<?php echo $_item->getId(); ?>" />
             </div>
         </div>
         <span class="action update update_cust_btn"><?= /* @escapeNotVerified */ __('Update Cart') ?></span>
@@ -156,37 +150,11 @@ foreach($selections as $selc){
 </tr>
 </tbody>
 
-<script type="text/javascript">
-    function qtyDown(id){
-        var qty_el = document.getElementById('cart-' + id + '-qty');
-        var qty = qty_el.value;
-        if( qty == 2) {
-            jQuery('.box_down' + id).css({
-                'visibility' : 'visible'
-            });
-        }
-        if( !isNaN( qty ) && qty > 0 ){
-            qty_el.value--;
-        }
-        return false;
-    }
-
-    function qtyUp(id){
-        var qty_el = document.getElementById('cart-' + id + '-qty');
-        var qty = qty_el.value;
-        if( !isNaN( qty )) {
-            qty_el.value++;
-        }
-        jQuery('.box_down' + id).css({
-            'visibility' : 'visible'
-        });
-        return false;
-    }
-</script>
 <script type="text/x-magento-init">
 {
     "*": {
-        "Magento_Checkout/custom": {}
+        "Magento_Checkout/custom": {},
+        "Magento_Checkout/js/custom-quantity": {}
     }
 }
 </script>
