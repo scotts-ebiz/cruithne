@@ -473,6 +473,44 @@ class IndexTest extends \PHPUnit\Framework\TestCase
      * @magentoConfigFixture current_store catalog/magento_catalogpermissions/grant_catalog_product_price 1
      * @magentoConfigFixture current_store catalog/magento_catalogpermissions/grant_checkout_items 1
      */
+    public function testGetIndexForProductWithSeveralCustomerGroups()
+    {
+        $productId = $this->product->getIdBySku('12345-1');
+        $storeId = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(
+            \Magento\Store\Model\StoreManagerInterface::class
+        )->getStore()->getId();
+
+        $deny = \Magento\CatalogPermissions\Model\Permission::PERMISSION_DENY;
+
+        $permissions = $this->index->getIndexForProduct($productId, null, $storeId);
+        $this->assertCount(0, $permissions);
+
+        $this->indexer->reindexAll();
+
+        $permissions = $this->index->getIndexForProduct($productId, null, $storeId);
+        $this->assertCount(2, $permissions);
+        $this->assertArrayHasKey('grant_catalog_category_view', $permissions[0]);
+        $this->assertEquals($deny, $permissions[0]['grant_catalog_category_view']);
+        $this->assertArrayHasKey('grant_catalog_product_price', $permissions[0]);
+        $this->assertEquals($deny, $permissions[0]['grant_catalog_product_price']);
+        $this->assertArrayHasKey('grant_checkout_items', $permissions[0]);
+        $this->assertEquals($deny, $permissions[0]['grant_checkout_items']);
+        $this->assertArrayHasKey('grant_catalog_category_view', $permissions[1]);
+        $this->assertEquals($deny, $permissions[1]['grant_catalog_category_view']);
+        $this->assertArrayHasKey('grant_catalog_product_price', $permissions[1]);
+        $this->assertEquals($deny, $permissions[1]['grant_catalog_product_price']);
+        $this->assertArrayHasKey('grant_checkout_items', $permissions[1]);
+        $this->assertEquals($deny, $permissions[1]['grant_checkout_items']);
+    }
+
+    /**
+     * @magentoDataFixture Magento/Catalog/_files/categories.php
+     * @magentoDataFixture Magento/CatalogPermissions/_files/permission.php
+     * @magentoConfigFixture current_store catalog/magento_catalogpermissions/enabled true
+     * @magentoConfigFixture current_store catalog/magento_catalogpermissions/grant_catalog_category_view 1
+     * @magentoConfigFixture current_store catalog/magento_catalogpermissions/grant_catalog_product_price 1
+     * @magentoConfigFixture current_store catalog/magento_catalogpermissions/grant_checkout_items 1
+     */
     public function testGetIndexForProductWithDefaultAllow()
     {
         $productId = $this->product->getIdBySku('12345-1');
