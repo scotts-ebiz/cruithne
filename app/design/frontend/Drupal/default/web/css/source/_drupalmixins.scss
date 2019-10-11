@@ -1,5 +1,15 @@
 // Drupal Mixins
 
+// Fonts //
+@mixin font-iframe($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
+  font-family: $lato;
+  @if $size { font-size: $size; }
+  @if $color { color: $color; }
+  @if $weight { font-weight: $weight; }
+  @if $lh { line-height: $lh; }
+  @if $ls { letter-spacing: $ls; }
+}
+
 //  Iframe 'Add to Cart' Button //
 @mixin lib-button-iframe-addtocart(
   $_button-border-radius: $button__border-radius
@@ -14,7 +24,8 @@
           $_button-background-hover: $iframe-addtocart-btn-background-hover,
           $_button-font-size:        1rem,
           $_button-font-weight:      400,
-          $_button-font-family:      $button__font-family
+          $_button-font-family:      $lato
   );
   border-radius: $_button-border-radius;
+  width: 194px;
 }

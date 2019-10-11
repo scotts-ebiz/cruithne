@@ -1,15 +1,14 @@
 .iframes-addtocart-index {
   .page-wrapper .page-main {
+    @include font-iframe(0.875rem, $color-black);
     margin: .5rem 0;
     padding: 0;
   }
 
   // Price
   .price-box {
-    color: $color-black;
-
     .price-label, .price {
-      font-size: 1.375rem;
+      @include font-iframe(1.375rem);
     }
   }
 
@@ -23,9 +22,9 @@
 
         // Format Labels.
         label {
-          color: $color-black;
           margin-right: 10px;
-          font-size: 0.875rem;
+          text-transform: capitalize;
+          @include font-iframe(0.875rem);
         }
 
         // Size.
@@ -36,7 +35,7 @@
           align-items: center;
 
           select {
-            min-width: 155px;
+            min-width: 159px;
             border-radius: 0;
           }
         }
