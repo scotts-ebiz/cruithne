@@ -109,46 +109,9 @@
         }
     }
 
-    .cart-summary-divlink {
 
-        #discount-coupon-form {
-            .action.apply.primary {
-                height:30px;
-                font-size: 0.8rem;
-                font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                padding: 5px 10px 5px 10px !important;
-                background: #4d4d4e;
-                line-height: 0;
-                margin-left: 20px;
-                text-transform: none;
-                &:hover {
-                    background: #333333;
-                }
-            }
-            .action.cancel.primary {
-                height:30px;
-                font-size: 0.8rem;
-                font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                padding: 5px 10px 5px 10px !important;
-                background: #4d4d4e;
-                line-height: 0;
-                margin-left: 20px;
-                text-transform: none;
-                @include max-screen($screen__s) {
-                    margin-left:0px;
-                }
-                &:hover {
-                    background: #333333;
-                }
-            }
-        }
-    }
-    .abs-discount-block,
-    .cart-summary .block {
-        > .title:after {
-            display:none;
-        }
-    }
+    //Continue here.
+
     .fieldset.coupon > .field:not(.choice) > .control {
         width: auto;
     }
@@ -1286,21 +1249,6 @@
   .cart.table-wrapper thead .col:not(.item) {
     display: none !important;
   }
-  .cart-parent-summary{
-    display: -webkit-box;
-    display: -moz-box;
-    display: -ms-flexbox;
-    display: -webkit-flex;
-    display: flex;
-    -webkit-flex-wrap: wrap;
-    flex-wrap: wrap;
-    .cart-summary-divlink{
-      order:2;
-    }
-    .cart-summary{
-      order:1;
-    }
-  }
   .return-policy-content{
     margin-bottom:-50px;
     padding-right: 38px;
@@ -1390,22 +1338,6 @@
   .checkout-cart-index{
     .cart.table-wrapper .table .col.price{
       padding: 0 0.625rem !important;
-    }
-    .cart-parent-summary{
-      display: -webkit-box;
-      display: -moz-box;
-      display: -ms-flexbox;
-      display: -webkit-flex;
-      display: flex;
-      -webkit-flex-wrap: wrap;
-      flex-wrap: wrap;
-
-      .cart-summary-divlink{
-        order:2;
-      }
-      .cart-summary{
-        order:1;
-      }
     }
   }
   .checkout-cart-index{

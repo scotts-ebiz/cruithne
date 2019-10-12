@@ -53,101 +53,128 @@
                     .form-cart {
                         margin-top: 100px;
                         .cart.table-wrapper {
-                            thead {
-                                tr {
-                                    .col {
-                                        margin: 0;
-                                        padding: 0;
-                                        @include max-screen($screen__m) {
-                                            padding: 0.5rem;
+                            #shopping-cart-table {
+                                thead {
+                                    //border-bottom: 1px solid #ededed;
+                                    tr {
+                                        .col {
+                                            margin: 0;
+                                            padding: 0;
+                                            @include max-screen($screen__m) {
+                                              padding: 0.5rem;
+                                            }
                                         }
                                     }
                                 }
-                            }
-                            .cart.item {
-                                .item-info {
-                                    .col {
-                                        margin: 0;
-                                        padding: 1rem 0;
-                                    }
-                                    .item {
-                                        .product-item-photo {
-                                            @include max-screen($screen__m) {
-                                              max-width: none;
-                                              position: static;
-                                              text-align: center;
-                                            }
+                                .cart.item {
+                                    .item-info {
+                                        .col {
+                                          margin: 0;
+                                          padding: 1rem 0;
                                         }
-                                        .product-item-details {
-                                            .product-item-name {
-                                                a {
-                                                    color: $scotts-black;
+                                        .item {
+                                            .product-item-photo {
+                                                @include max-screen($screen__m) {
+                                                  max-width: none;
+                                                  position: static;
+                                                  text-align: center;
+                                                }
+                                            }
+                                            .product-item-details {
+                                                width:65%;
+                                                .product-item-name {
+                                                    a {
+                                                      color: $scotts-black;
+                                                    }
                                                 }
                                             }
                                         }
-                                    }
-                                    .qty {
-                                        .field.qty {
-                                            .control.qty {
-                                                .qty {
-                                                    border: 1px solid $scotts-black;
+
+                                        // 2019-10-12 Commented out. Doesn't seem to being used. Tested and can't find. If nothing broken on prod remove. ECOM-1245
+                                        //.item-options {
+                                        //    dd {
+                                        //        font-weight: bold;
+                                        //        i {
+                                        //            font-style: unset;
+                                        //        }
+                                        //    }
+                                        //}
+                                        //.item-options dt {
+                                        //    display: block;
+                                        //    width: 100%;
+                                        //}
+                                        //.item-options dt,
+                                        //.item-options dt + dd {
+                                        //    font-weight: 400;
+                                        //}
+
+                                        .qty {
+                                            .field.qty {
+                                                .control.qty {
+                                                    .qty {
+                                                      border: 1px solid $scotts-black;
+                                                    }
                                                 }
                                             }
-                                        }
-                                        .action.update {
-                                            font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                                            text-decoration: underline;
-                                            text-align: left;
-                                            color: $scotts-accent-orange;
-                                            font-size: 0.8rem;
-                                            margin-left: 0;
-                                            margin-top: 10px;
-                                            margin-bottom: 0;
-                                            padding-left: 0;
-                                            cursor: pointer;
-                                            &:before {
-                                              display: none;
-                                            }
-                                        }
-                                        .actions-toolbar {
-                                            margin-top: 0!important;
-                                            a.action-delete {
+                                            .action.update {
                                                 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
                                                 text-decoration: underline;
-                                                font-size: 0.8rem;
+                                                text-align: left;
                                                 color: $scotts-accent-orange;
+                                                font-size: 0.8rem;
+                                                margin-left: 0;
+                                                margin-top: 10px;
+                                                margin-bottom: 0;
+                                                padding-left: 0;
+                                                cursor: pointer;
+                                                &:before {
+                                                  display: none;
+                                                }
+                                            }
+                                            .actions-toolbar {
+                                                margin-top: 0!important;
+                                                a.action-delete {
+                                                    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                                                    text-decoration: underline;
+                                                    font-size: 0.8rem;
+                                                    color: $scotts-accent-orange;
+                                                }
+                                            }
+                                        }
+                                        .price-including-tax,
+                                        .price-excluding-tax {
+                                            font-size:16px;
+                                            @include max-screen($screen__m) {
+                                              font-size: 1rem;
+                                            }
+                                        }
+                                        &:last-child {
+                                          border:0;
+                                        }
+                                    }
+
+                                    .item-actions {
+                                        td {
+                                            padding: 0;
+                                            .actions-toolbar > .action {
+                                                display: none;
+                                                visibility: hidden;
+                                            }
+                                            .actions-toolbar {
+                                                height: 3rem;
                                             }
                                         }
                                     }
-                                    .price-including-tax,
-                                    .price-excluding-tax {
-                                        font-size:16px;
-                                        @include max-screen($screen__m) {
-                                            font-size: 1rem;
-                                        }
-                                    }
                                 }
-                                .item-actions {
-                                    td {
-                                        padding: 0;
-                                        .actions-toolbar > .action {
-                                            display: none;
-                                            visibility: hidden;
-                                        }
-                                        .actions-toolbar {
-                                            height: 3rem;
-                                        }
-                                    }
+                                .cart.item .item-info .col.price,
+                                .cart.item .item-info .col.subtotal,
+                                thead tr .col.price,
+                                thead tr .col.subtotal {
+                                    width: 14%;
+                                    text-align: center;
                                 }
-                            }
-                            .cart.item .item-info .col.price,
-                            .cart.item .item-info .col.subtotal,
-                            thead tr .col.price,
-                            thead tr .col.subtotal {
-                                width: 14%;
-                                text-align: center;
-                            }
 
+                            }
                         }
                         .product-item-photo {
                             width:138px;
@@ -171,9 +198,109 @@
 
                     }
                     .cart-parent-summary {
+
+                        @media screen and (max-width: $screen__m) {
+                            display: -webkit-box;
+                            display: -moz-box;
+                            display: -ms-flexbox;
+                            display: -webkit-flex;
+                            display: flex;
+                            -webkit-flex-wrap: wrap;
+                            flex-wrap: wrap;
+                        }
+
+                        .cart-summary-divlink {
+                            width: 60%;
+                            float: left;
+                            padding: 1px 20px 25px;
+                            position: relative;
+                            color: $scotts-light-gray;
+                            @media screen and (max-width: $screen__l) {
+                              width: 100%;
+                              padding: 1px 0;
+                            }
+                            @media screen and (max-width: $screen__m) {
+                              order:1;
+                            }
+                            .block.discount {
+                                .title {
+                                    &:after {
+                                        -webkit-font-smoothing: antialiased;
+                                        -moz-osx-font-smoothing: grayscale;
+                                        font-size: 32px;
+                                        line-height: 16px;
+                                        color: $scotts-light-gray;
+                                        content: "";
+                                        font-family: "icons-blank-theme";
+                                        margin: 0;
+                                        vertical-align: middle;
+                                        display: inline-block;
+                                        font-weight: 400;
+                                        overflow: hidden;
+                                        speak: none;
+                                        text-align: center;
+                                    }
+                                }
+                                .content {
+                                    display: block !important;
+                                }
+                                .content.disc_active {
+                                    display: none !important;
+                                }
+                                &.active {
+                                    .title:after {
+                                      content: "";
+                                    }
+                                }
+                            }
+                            #discount-coupon-form {
+                                .fieldset.coupon {
+                                    .action.apply.primary {
+                                        height:30px;
+                                        font-size: 0.8rem;
+                                        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                                        padding: 5px 10px 5px 10px !important;
+                                        background: #4d4d4e;
+                                        line-height: 0;
+                                        margin-left: 20px;
+                                        &:hover {
+                                          background: #333333;
+                                        }
+                                    }
+                                    .action.cancel.primary {
+                                        height:30px;
+                                        font-size: 0.8rem;
+                                        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                                        padding: 5px 10px 5px 10px !important;
+                                        background: #4d4d4e;
+                                        line-height: 0;
+                                        margin-left: 20px;
+                                        @include max-screen($screen__s) {
+                                          margin-left:0px;
+                                        }
+                                        &:hover {
+                                          background: #333333;
+                                        }
+                                    }
+                                }
+                                .fieldset.coupon > .field:not(.choice) > .control {
+                                    width: auto;
+                                }
+
+
+                            }
+                        }
+
+
+
                         .cart-summary {
                             width: 30%;
                             background: #dfe6ee;
+
+                            @media screen and (max-width: $screen__m) {
+                                order:2;
+                            }
+
                             .block > .title {
                               padding: 7px 20px 5px 17px !important;
                             }
@@ -214,6 +341,10 @@
                                 }
                             }
                         }
+                        // 2019-10-12 Commented out as seems not needed. If nothing breaks remove! ECOM-1245
+                        //.cart-summary._sticky{
+                        //    top:0px !important;
+                        //}
                     }
                     #gift-options-cart {
                         .cart-gift-item {
@@ -325,79 +456,13 @@
       }
     }
 
-    .cart-summary-divlink {
-        width: 60%;
-        float: left;
-        padding: 1px 20px 25px;
-        position: relative;
-        color: $scotts-light-gray;
-        @media screen and (max-width: $screen__l) {
-            width: 100%;
-            padding: 1px 0;
-        }
-        @media screen and (max-width: $screen__m) {
-            order:2;
-        }
-        .block.discount {
-            .title {
-                &:after {
-                    -webkit-font-smoothing: antialiased;
-                    -moz-osx-font-smoothing: grayscale;
-                    font-size: 32px;
-                    line-height: 16px;
-                    color: $scotts-light-gray;
-                    content: "";
-                    font-family: "icons-blank-theme";
-                    margin: 0;
-                    vertical-align: middle;
-                    display: inline-block;
-                    font-weight: 400;
-                    overflow: hidden;
-                    speak: none;
-                    text-align: center;
-                }
-            }
-            &.active {
-                .title:after {
-                    content: "";
-                }
-            }
-        }
-
-
-        //2019-10-11 Still need to vet this section. Need it?
-        #discount-coupon-form {
-          .action.apply.primary {
-            height:30px;
-            font-size: 0.8rem;
-            font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-            padding: 5px 10px 5px 10px !important;
-            background: #4d4d4e;
-            line-height: 0;
-            margin-left: 20px;
-            &:hover {
-              background: #333333;
-            }
-          }
-          .action.cancel.primary {
-            height:30px;
-            font-size: 0.8rem;
-            font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-            padding: 5px 10px 5px 10px !important;
-            background: #4d4d4e;
-            line-height: 0;
-            margin-left: 20px;
-            @include max-screen($screen__s) {
-              margin-left:0px;
-            }
-            &:hover {
-              background: #333333;
-            }
-          }
-        }
-
-
-    }
+    // 2019-10-12 Commented out as seems not needed. If nothing breaks remove! ECOM-1245
+    //.abs-discount-block,
+    //.cart-summary .block {
+    //  > .title:after {
+    //    display:none;
+    //  }
+    //}
 
 
 }
@@ -446,15 +511,6 @@
 .checkout-index-index .page-wrapper .page-main .columns .column.main .checkout-container .opc-wrapper .opc .checkout-validate-address .step-content .instructions.noError a.edit-address {
   text-decoration: underline;
 }
-
-
-//Cart Page Styles
-//.cart-summary-divlink {
-//    width: 60%;
-//    float: left;
-//    padding: 1px 20px 25px;
-//    position: relative;
-//}
 
 
 td#label_method_fedex-nextday_flatrate, td#label_method_fedex-2ndday_flatrate {
@@ -543,10 +599,6 @@ td#label_carrier_flat-rate-shipping_flatrate, td#label_carrier_fedex-2ndday_flat
     .fieldset > .field:not(.choice) > .control {
         float: left;
     }
-  //.checkout-cart-index .cart-summary-divlink {
-  //  width: 100% !important;
-  //  padding: 1px 0;
-  //}
   .cart-summary {
     width: 100% !important;
   }
