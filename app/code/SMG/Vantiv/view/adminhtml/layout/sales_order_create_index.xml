@@ -1,10 +1,19 @@
 <?xml version="1.0"?>
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+	<head>
+        <script src="SMG_Vantiv::js/keypad.js"/>
+    </head>
     <body>
         <referenceBlock name="order_create_billing_form">
             <action method="setMethodFormTemplate">
                 <argument name="method" xsi:type="string">vantiv_cc</argument>
                 <argument name="template" xsi:type="string">SMG_Vantiv::form/cc.phtml</argument>
+            </action>
+        </referenceBlock>
+        <referenceBlock name="order_create_billing_form">
+            <action method="setMethodFormTemplate">
+                <argument name="method" xsi:type="string">vantiv_keypadpayment</argument>
+                <argument name="template" xsi:type="string">SMG_Vantiv::form/keypad.phtml</argument>
             </action>
         </referenceBlock>
     </body>

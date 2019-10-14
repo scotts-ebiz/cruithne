@@ -12,7 +12,7 @@ Vagrant.configure("2") do |config|
     #config.vm.synced_folder "", "/var/www/cruithne", owner:"vagrant", group:"vagrant", :mount_options => ["dmode=777","fmode=666"]
     config.vm.synced_folder "", "/var/www/cruithne", :nfs => { :mount_options => ["dmode=777","fmode=666"] }
     if Vagrant.has_plugin?('vagrant-hostsupdater')
-        config.hostsupdater.aliases = ['cruithne.scottsprogram.local']
+        config.hostsupdater.aliases = ['cruithne.scottsprogram.local', 'cruithne.roundup.local']
     end
     config.vm.provision "shell", path: "environment/scripts/provisioner.sh"
 
