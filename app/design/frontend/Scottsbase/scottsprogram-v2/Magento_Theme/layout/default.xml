@@ -43,7 +43,7 @@
 				</block>
 			</container>
 		</referenceContainer>
-		<referenceContainer name="page.top">
+		<referenceContainer name="page.top" remove="true">
 			<block class="Magento\Framework\View\Element\Template" name="navigation.sections" before="-" template="Magento_Theme::html/sections.phtml">
 				<arguments>
 					<argument name="group_name" xsi:type="string">navigation-sections</argument>
@@ -87,7 +87,7 @@
 				<block class="Magento\Framework\View\Element\Messages" name="messages" as="messages" template="Magento_Theme::messages.phtml"/>
 			</container>
 		</referenceContainer>
-		<referenceContainer name="main" htmlClass="sp-container">
+		<referenceContainer name="main" htmlClass="sp-content">
 			<container name="content" label="Main Content Area" />
 		</referenceContainer>
 		<referenceContainer name="page.bottom.container">

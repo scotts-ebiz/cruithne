@@ -102,7 +102,38 @@ p {
   text-transform: uppercase;
 }
 
-.sp-form-label,
+.sp-form-label {
+  font-size: $font-size-form-label;
+}
+
+.sp-text-3xl {
+  font-size: $font-size-h1;
+}
+
+.sp-text-2xl {
+  font-size: $font-size-h2;
+}
+
+.sp-text-xl {
+  font-size: $font-size-h3;
+}
+
+.sp-text-lg {
+  font-size: $font-size-h4;
+}
+
+.sp-text-base {
+  font-size: $font-size-base;
+}
+
 .sp-text-sm {
+  font-size: $font-size-p2;
+}
+
+.sp-text-xs {
+  font-size: $font-size-label;
+}
+
+.sp-text-xxs {
   font-size: $font-size-form-label;
 }

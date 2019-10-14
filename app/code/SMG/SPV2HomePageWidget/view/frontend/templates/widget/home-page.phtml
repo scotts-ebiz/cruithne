@@ -1,0 +1,243 @@
+<style>
+	.sp-hero__background {
+		<?php if ($block->getData('heroMobileImage') || $block->getData('heroImage')) { ?>
+			<?php if ($block->getData('heroMobileImage')) { ?>
+				background-image: url('<?php echo $block->escapeUrl($block->getData('heroMobileImage')); ?>') !important;
+			<?php } else { ?>
+				background-image: url('<?php echo $block->escapeUrl($block->getData('heroImage')); ?>') !important;
+			<?php } ?>
+		<?php } else { ?>
+			background-image: url('https://test_magento_image_repo.storage.googleapis.com/homePageHero.jpg') !important;
+	<?php } ?>
+	}
+
+	<?php if ($block->getData('heroImage')) { ?>
+		@media (min-width: 768px) {
+			.sp-hero__background {
+				background-image: url('<?php echo $block->escapeUrl($block->getData('heroImage')); ?>') !important;
+			}
+		}
+	<?php } ?>
+
+	/* What to expect section */
+	.sp-home__what-to-expect-img {
+		height: 0;
+		margin-bottom: 25.625%;
+		margin-top: -25.625%;
+		padding-bottom: 56.25%;
+		transform: translateY(50%);
+	}
+
+	.sp-home__what-to-expect-img img {
+		bottom: 0;
+		height: 100%;
+		left: 0;
+		position: absolute;
+		right: 0;
+		top: 0;
+		width: 100%;
+		z-index: 1;
+	}
+
+	/* History section */
+	.sp-home__history-container {
+		flex-direction: column;
+	}
+
+	.sp-home__history-date {
+		margin-top: -168px;
+		order: 0;
+	}
+
+	.sp-home__history-image {
+		order: 1;
+	}
+
+	.sp-home__history-description {
+		order: 2;
+	}
+
+	@media (min-width: 768px) {
+		.sp-home__history-container {
+			flex-direction: row;
+		}
+
+		.sp-home__history-date,
+		.sp-home__history-description {
+			padding: 2rem;
+		}
+
+		.sp-home__history-date {
+			flex: 0 0 auto;
+			margin-top: 0;
+			order: 1;
+		}
+
+		.sp-home__history-description {
+			flex: 1;
+			order: 0;
+		}
+
+		.sp-home__history-image {
+			flex: 1;
+			order: 2
+		}
+
+		.sp-home__history-description {
+			order: 0;
+		}
+	}
+
+	.sp-app-image {
+		max-width: 10rem;
+	}
+</style>
+
+<div class="sp-home-page">
+	<div class="sp-hero sp-hero--full sp-mb-12">
+		<div class="sp-hero__background"></div>
+		<div class="sp-hero__overlay"></div>
+		<div class="sp-hero__headline sp-container">
+			<h1 class="sp-h1 sp-relative sp-text-white sp-text-center"><?php echo $block->escapeHtml($block->getData('heroHeadline')) ?></h1>
+		</div>
+		<a href="<?php echo $block->escapeUrl($block->getUrl('quiz')) ?>" class="sp-button sp-button--inverted sp-button--get-started sp-mb-12 sp-relative sp-text-center">Get Started</a>
+	</div>
+
+	<div class="sp-home__how-it-works sp-container sp-my-20">
+		<h2 class="sp-h2 sp-max-w-lg sp-mx-auto sp-text-center sp-text-green-1">
+			A Subscription Lawn Care Plan Made Just for Your Yard
+		</h2>
+
+		<div class="md:sp-grid">
+			<div class="sp-home__how-it-works-step md:sp-col-1/3 sp-mb-4 sp-text-center">
+				<img src="https://test_magento_image_repo.storage.googleapis.com/size.png" alt="Tell us about your lawn">
+				<h3 class="sp-h3">Tell us about your lawn</h3>
+				<p class="sp-text-sm">We’ll ask a few questions about your lawn—things like region, grass type, and lawn condition. Don’t worry if you’re not exactly sure, we’ve got helpful guides and tools to help you provide accurate info.</p>
+			</div>
+			<div class="sp-home__how-it-works-step md:sp-col-1/3 sp-mb-4 sp-text-center">
+				<img src="https://test_magento_image_repo.storage.googleapis.com/mobile.png" alt="Personalized plan">
+				<h3 class="sp-h3">Get a personalized plan.</h3>
+				<p class="sp-text-sm">We’ll provide you with an easy-to-follow personalized lawn care plan that will help you grow the thickest, greenest lawn in the neighborhood.</p>
+			</div>
+			<div class="sp-home__how-it-works-step md:sp-col-1/3 sp-mb-4 sp-text-center">
+				<img src="https://test_magento_image_repo.storage.googleapis.com/calendar.png" alt="Products arrive">
+				<h3 class="sp-h3">Apply when it arrives.</h3>
+				<p class="sp-text-sm">Finally, the lawn care products you need will arrive at your door right when it’s time to apply them.</p>
+			</div>
+		</div>
+
+		<div class="sp-text-center">
+			<a href="<?php echo $block->escapeUrl($block->getUrl('quiz')) ?>" class="sp-button sp-button--primary">Learn How It Works</a>
+		</div>
+	</div>
+
+	<div class="sp-home__what-to-expect sp-my-20 sp-pb-12 md:sp-mx-4">
+		<div class="sp-bg-green-4">
+			<div class="sp-container sp-py-8">
+				<h2 class="sp-h2 sp-max-w-md sp-mx-auto sp-text-center sp-text-green-1">Everything You Need, When You Need It</h2>
+
+				<div class="md:sp-grid sp-items-center">
+					<div class="md:sp-col-1/2 sp-text-center">
+						<img
+							alt="Season Animation"
+							class="sp-block sp-mx-auto"
+							src="https://test_magento_image_repo.storage.googleapis.com/Animation.png"
+						/>
+					</div>
+					<div class="md:sp-col-1/2">
+						<p class="sp-h3">If you’re like most people, you only think about caring for your lawn when it’s time to enjoy it. But the truth is, your lawn has needs throughout the whole year.</p>
+						<p class="sp-p1">We’ve developed this subscription to give your lawn a professional level of care in a DIY package that only takes 10 minutes a few times a year. Simply put, it’s the easiest way to grow a thicker, greener lawn with deeper roots, and fewer weeds and insects.</p>
+					</div>
+				</div>
+			</div>
+			<div class="sp-max-w-lg sp-mx-auto sp-px-4 md:sp-px-0">
+				<div class="sp-relative sp-home__what-to-expect-img">
+					<img
+						alt="What To Expect"
+						class="sp-block sp-mx-auto"
+						src="https://test_magento_image_repo.storage.googleapis.com/WhatToExpect-Img.png"
+					/>
+				</div>
+			</div>
+		</div>
+		<div class="sp-container sp-py-8 sp-text-center">
+			<h3 class="sp-h3">What You Can Expect</h3>
+			<p class="sp-p1 sp-max-w-md sp-mx-auto">When you sign up for our lawn care subscription, you’ll receive the product(s) your lawn needs when it’s time to apply. We do all the planning, all you have to do is apply the product and enjoy a healthier-looking lawn.</p>
+			<a href="<?php echo $block->escapeUrl($block->getUrl('quiz')) ?>" class="sp-button sp-button--primary sp-button--get-started sp-relative sp-text-center">Get Started</a>
+		</div>
+	</div>
+
+	<div class="sp-home__history sp-bg-green-4 sp-mb-24 sp-mt-24 md:sp-mt-0">
+		<div class="sp-container sp-py-16">
+			<div class="sp-home__history-container sp-flex sp-items-center">
+				<div class="sp-home__history-description md:sp-col-1/2 sp-text-center md:sp-text-left">
+					<h3 class="sp-h3 sp-max-w-xs sp-mx-auto sp-text-center">Over 150 Years of Lawn Care Innovation</h3>
+					<p> We've been your trusted partner in lawn care for over 150 years, that’s why we know we can stand by our products with our exclusive No Quibble Guarantee.</p>
+					<p>We pair all of that knowledge and expertise with our innovative spirit to build a customized lawn care plan for you based on historical conditions.</p>
+					<div class="sp-mt-8 sp-text-center">
+						<a href="<?php echo $block->escapeUrl($block->getUrl('quiz')) ?>" class="sp-button sp-button--primary sp-button--get-started sp-mb-12 sp-relative">Get Started</a>
+					</div>
+				</div>
+				<div class="sp-home__history-date sp-mb-8 md:sp-mb-0">
+					<img
+						alt="Timeline"
+						class="sp-hide md:sp-block sp-mx-auto"
+						src="https://test_magento_image_repo.storage.googleapis.com/Line Animation.png"
+					/>
+					<img
+						alt="Timeline"
+						class="md:sp-hide sp-mx-auto"
+						src="https://test_magento_image_repo.storage.googleapis.com/Line Animation Mobile.png"
+					/>
+				</div>
+				<div class="sp-home__history-image md:sp-col-1/2">
+					<div>
+						<img
+							alt="History"
+							class="sp-block sp-mx-auto"
+							src="https://test_magento_image_repo.storage.googleapis.com/History-Img.png"
+						/>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="sp-home__apps sp-mt-12">
+		<div class="sp-container">
+			<div class="sp-flex sp-flex-column md:sp-flex-row md:sp-grid sp-items-center">
+				<div class="sp-order-1 md:sp-order-0 md:sp-col-1/2 sp-px-8">
+					<div>
+						<img
+							alt="Mobile Apps"
+							class="sp-block sp-max-w-xs sp-mx-auto"
+							src="https://test_magento_image_repo.storage.googleapis.com/Apps-img.jpg"
+						/>
+					</div>
+				</div>
+				<div class="sp-order-0 md:sp-order-1 md:sp-col-1/2 sp-pb-8 md:sp-pb-0 sp-px-8">
+					<div class="sp-inline-block sp-mx-auto sp-text-center md:sp-text-left">
+						<h3 class="sp-h3">MyLawn Companion App</h3>
+						<p>If you want to monitor your lawn care even more closely, we've got an app that allows you to manage your lawn care plan at any time.</p>
+						<div class="sp-flex sp-justify-center md:sp-justify-start">
+							<a href="https://apps.apple.com/us/app/my-lawn-a-guide-to-lawn-care/id372269879?mt=8" target="_blank">
+								<img
+									alt="App Store"
+									class="sp-app-image sp-mr-4"
+									src="https://test_magento_image_repo.storage.googleapis.com/badge--appstore.png"
+								/>
+							</a>
+							<a href="https://play.google.com/store/apps/details?id=com.scotts.lawnapp" target="_blank">
+								<img
+									alt="Google Play"
+									class="sp-app-image"
+									src="https://test_magento_image_repo.storage.googleapis.com/badge--googleplay.png"
+								/>
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+    </div>
+</div>
