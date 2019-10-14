@@ -97,7 +97,7 @@
 	<div class="sp-hero sp-hero--full sp-mb-12">
 		<div class="sp-hero__background"></div>
 		<div class="sp-hero__overlay"></div>
-		<div class="sp-hero__headline">
+		<div class="sp-hero__headline sp-container">
 			<h1 class="sp-h1 sp-relative sp-text-white sp-text-center"><?php echo $block->escapeHtml($block->getData('heroHeadline')) ?></h1>
 		</div>
 		<a href="<?php echo $block->escapeUrl($block->getUrl('quiz')) ?>" class="sp-button sp-button--inverted sp-button--get-started sp-mb-12 sp-relative sp-text-center">Get Started</a>
@@ -160,7 +160,7 @@
 				</div>
 			</div>
 		</div>
-		<div class="sp-py-8 sp-text-center">
+		<div class="sp-container sp-py-8 sp-text-center">
 			<h3 class="sp-h3">What You Can Expect</h3>
 			<p class="sp-p1 sp-max-w-md sp-mx-auto">When you sign up for our lawn care subscription, you’ll receive the product(s) your lawn needs when it’s time to apply. We do all the planning, all you have to do is apply the product and enjoy a healthier-looking lawn.</p>
 			<a href="<?php echo $block->escapeUrl($block->getUrl('quiz')) ?>" class="sp-button sp-button--primary sp-button--get-started sp-relative sp-text-center">Get Started</a>
@@ -239,5 +239,5 @@
 				</div>
 			</div>
 		</div>
-</div>
+    </div>
 </div>
