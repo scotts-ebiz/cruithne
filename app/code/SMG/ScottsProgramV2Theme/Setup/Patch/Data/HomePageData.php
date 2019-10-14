@@ -16,13 +16,9 @@ use Magento\Framework\Setup\Patch\DataPatchInterface;
  */
 class HomePageData implements DataPatchInterface
 {
-    /**
-     * @var ModuleDataSetupInterface
-     */
-    private $moduleDataSetup;
-
-    private $pageCollection;
-    private $pageRepository;
+    private $_moduleDataSetup;
+    private $_pageRepository;
+    private $_pageCollection;
 
     /**
      * @param  ModuleDataSetupInterface  $moduleDataSetup
@@ -31,30 +27,29 @@ class HomePageData implements DataPatchInterface
      */
     public function __construct(
         ModuleDataSetupInterface $moduleDataSetup,
-        PageRepository $pageRepository,
-        PageCollection $pageCollection
+        PageCollection $pageCollection,
+        PageRepository $pageRepository
     ) {
         /**
          * If before, we pass $setup as argument in install/upgrade function, from now we start
          * inject it with DI. If you want to use setup, you can inject it, with the same way as here
          */
-        $this->moduleDataSetup = $moduleDataSetup;
-        $this->pageCollection = $pageCollection;
-        $this->pageRepository = $pageRepository;
+        $this->_moduleDataSetup = $moduleDataSetup;
+        $this->_pageCollection = $pageCollection;
+        $this->_pageRepository = $pageRepository;
     }
 
-    /**
-     * {@inheritdoc}
-     */
     public function apply()
     {
-        $this->moduleDataSetup->getConnection()->startSetup();
-        $homePage = $this->pageCollection->getItemByColumnValue('identifier', 'home');
+        $this->_moduleDataSetup->getConnection()->startSetup();
+
+        $homePage = $this->_pageCollection->getItemByColumnValue('identifier', 'home');
         if ($homePage) {
             $homePage->setData('content', '{{widget type="SMG\ScottsProgramV2Theme\Block\Widget\HomePage" heroHeadline="Personalized Lawn Care, Delivered to Your Door" type_name="Scotts Program Home Page"}}');
-            $this->pageRepository->save($homePage);
+            $this->_pageRepository->save($homePage);
         }
-        $this->moduleDataSetup->getConnection()->endSetup();
+
+        $this->_moduleDataSetup->getConnection()->endSetup();
     }
 
     public static function getDependencies()
