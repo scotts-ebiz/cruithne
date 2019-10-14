@@ -9,7 +9,7 @@
 ?>
 
 <div class="sp-footer__grid md:sp-grid">
-	<a class="sp-footer__brand md:sp-flex sp-items-center sp-justify-start md:sp-col-1/2" href="<?= $block->getUrl('') ?>">
+	<a class="sp-footer__brand md:sp-flex sp-items-center sp-justify-start md:sp-col-1/2" href="<?= $block->escapeUrl($block->getBaseUrl()) ?>">
         <div class="sp-footer__logo">
             <img src="https://test_magento_image_repo.storage.googleapis.com/scotts_logo@2x.png" alt="Scotts">
         </div>
@@ -51,19 +51,19 @@
 		<nav class="sp-footer__nav">
 			<ul class="sp-nav-list sp-footer__nav-list">
                 <li>
-                    <a class="sp-link" href="<?php echo $block->getUrl('faq') ?>">FAQ</a>
+                    <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('faq')) ?>">FAQ</a>
                 </li>
                 <li>
-                    <a class="sp-link" href="<?php echo $block->getUrl('terms-and-conditions') ?>">Terms</a>
+                    <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('terms-and-conditions')) ?>">Terms</a>
                 </li>
                 <li>
-                    <a class="sp-link" href="<?php echo $block->getUrl('privacy-policy-cookie-restriction-mode') ?>">Privacy</a>
+                    <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('privacy-policy-cookie-restriction-mode')) ?>">Privacy</a>
                 </li>
                 <li>
-                    <a class="sp-link" href="<?php echo $block->getUrl('returns') ?>">Returns</a>
+                    <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('returns')) ?>">Returns</a>
                 </li>
                 <li>
-                    <a class="sp-link" href="<?php echo $block->getUrl('contact') ?>">Contact</a>
+                    <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('contact')) ?>">Contact</a>
                 </li>
 			</ul>
 		</nav>

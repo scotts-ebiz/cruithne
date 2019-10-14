@@ -12,7 +12,7 @@
 ?>
 <?php $storeName = $block->getThemeName() ? $block->getThemeName() : $block->getLogoAlt();?>
 <div class="sp-flex sp-items-center sp-justify-between">
-		<a class="sp-header__home sp-flex sp-items-center" href="<?= $block->getUrl('') ?>" title="<?= $block->escapeHtml($storeName) ?>">
+		<a class="sp-header__home sp-flex sp-items-center" href="<?= $block->escapeUrl($block->getBaseUrl()) ?>" title="<?= $block->escapeHtml($storeName) ?>">
 			<div class="sp-header__logo">
 				<img src="<?= $block->escapeUrl($block->getLogoSrc()) ?>"
 					 title="<?= $block->escapeHtml($block->getLogoAlt()) ?>"
@@ -35,19 +35,19 @@
 	<nav id="sp-main-nav" class="sp-header__nav">
 		<ul class="sp-nav-list sp-header__nav-list sp-header__nav-list--left">
 			<li>
-				<a class="sp-link" href="<?php echo $block->getUrl('quiz') ?>">
+				<a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('quiz')) ?>">
 					Get Started
 				</a>
 			</li>
 			<li>
-				<a class="sp-link" href="<?php echo $block->getUrl('how-it-works') ?>">
+				<a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('how-it-works')) ?>">
 					How It Works
 				</a>
 			</li>
 		</ul>
 		<ul class="sp-nav-list sp-header__nav-list sp-header__nav-list--right">
 			<li>
-				<a class="sp-link" href="<?php echo $block->getUrl('customer/account/login') ?>">Log In</a>
+				<a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('customer/account/login')) ?>">Log In</a>
 			</li>
 		</ul>
 		<address class="sp-header__address">
@@ -79,19 +79,19 @@
 		</ul>
 		<ul class="sp-header__nav-secondary">
 			<li>
-				<a class="sp-link" href="<?php echo $block->getUrl('faq') ?>">FAQ</a>
+				<a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('faq')) ?>">FAQ</a>
 			</li>
 			<li>
-				<a class="sp-link" href="<?php echo $block->getUrl('terms-and-conditions') ?>">Terms</a>
+				<a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('terms-and-conditions')) ?>">Terms</a>
 			</li>
 			<li>
-				<a class="sp-link" href="<?php echo $block->getUrl('privacy-policy-cookie-restriction-mode') ?>">Privacy</a>
+				<a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('privacy-policy-cookie-restriction-mode')) ?>">Privacy</a>
 			</li>
 			<li>
-				<a class="sp-link" href="<?php echo $block->getUrl('returns') ?>">Returns</a>
+				<a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('returns')) ?>">Returns</a>
 			</li>
 			<li>
-				<a class="sp-link" href="<?php echo $block->getUrl('contact') ?>">Contact</a>
+				<a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('contact')) ?>">Contact</a>
 			</li>
 		</ul>
 	</nav>
