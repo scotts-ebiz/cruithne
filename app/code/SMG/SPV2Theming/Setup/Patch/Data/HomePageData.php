@@ -1,11 +1,12 @@
 <?php
 
-namespace SMG\ScottsProgramV2Theme\Setup\Patch\Data;
+namespace SMG\SPV2Theming\Setup\Patch\Data;
 
 use Magento\Cms\Model\PageRepository;
 use Magento\Cms\Model\ResourceModel\Page\Collection as PageCollection;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\Patch\DataPatchInterface;
+use Magento\Framework\Setup\Patch\PatchRevertableInterface;
 
 /**
  * Class HomePageData
@@ -14,7 +15,7 @@ use Magento\Framework\Setup\Patch\DataPatchInterface;
  *
  * @package Magento\DummyModule\Setup\Patch\Data
  */
-class HomePageData implements DataPatchInterface
+class HomePageData implements DataPatchInterface, PatchRevertableInterface
 {
     private $_moduleDataSetup;
     private $_pageRepository;
@@ -45,10 +46,18 @@ class HomePageData implements DataPatchInterface
 
         $homePage = $this->_pageCollection->getItemByColumnValue('identifier', 'home');
         if ($homePage) {
-            $homePage->setData('content', '{{widget type="SMG\ScottsProgramV2Theme\Block\Widget\HomePage" heroHeadline="Personalized Lawn Care, Delivered to Your Door" type_name="Scotts Program Home Page"}}');
+            $homePage->setData('content', '{{widget type="SMG\SPV2HomePageWidget\Block\Widget\HomePage" heroHeadline="Personalized Lawn Care, Delivered to Your Door" type_name="Scotts Program Home Page"}}');
             $this->_pageRepository->save($homePage);
         }
 
+        $this->_moduleDataSetup->getConnection()->endSetup();
+    }
+
+    public function revert()
+    {
+        $this->_moduleDataSetup->getConnection()->startSetup();
+        // Nothing needs to be revert, but it will allow this change to be
+        // applied again each install.
         $this->_moduleDataSetup->getConnection()->endSetup();
     }
 

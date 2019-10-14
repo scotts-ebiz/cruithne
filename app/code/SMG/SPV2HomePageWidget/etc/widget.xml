@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
-	<widget class="SMG\ScottsProgramV2Theme\Block\Widget\HomePage" id="smg_scottsprogram_homepage">
+	<widget class="SMG\SPV2HomePageWidget\Block\Widget\HomePage" id="smg_scottsprogram_homepage">
 		<label>Scotts Program Home Page</label>
 		<description>Custom fields for the home page.</description>
 		<parameters>

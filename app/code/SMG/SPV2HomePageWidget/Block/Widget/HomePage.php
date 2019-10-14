@@ -1,6 +1,6 @@
 <?php
 
-namespace SMG\ScottsProgramV2Theme\Block\Widget;
+namespace SMG\SPV2HomePageWidget\Block\Widget;
 
 use Magento\Widget\Block\BlockInterface;
 use Magento\Framework\View\Element\Template;
