@@ -218,7 +218,7 @@ class InstallData implements InstallDataInterface
         );
 	    $eavSetup->addAttribute(
 			\Magento\Catalog\Model\Product::ENTITY,
-			'Product_Weight_UOM',
+			'product_weight_uom',
 			[
 				'type' 		=> 'text',
 				'backend' 	=> '',
@@ -244,7 +244,7 @@ class InstallData implements InstallDataInterface
 		);
 		 $eavSetup->addAttribute(
 			\Magento\Catalog\Model\Product::ENTITY,
-			'Product_Volume',
+			'product_volume',
 			[
 				'type' 		=> 'text',
 				'backend' 	=> '',
@@ -270,7 +270,7 @@ class InstallData implements InstallDataInterface
 		);
 		 $eavSetup->addAttribute(
 			\Magento\Catalog\Model\Product::ENTITY,
-			'Product_Volume_UOM',
+			'product_volume_uom',
 			[
 				'type' 		=> 'text',
 				'backend' 	=> '',
@@ -296,7 +296,7 @@ class InstallData implements InstallDataInterface
 		);
 		 $eavSetup->addAttribute(
 			\Magento\Catalog\Model\Product::ENTITY,
-			'Product_Length',
+			'product_length',
 			[
 				'type' 		=> 'text',
 				'backend' 	=> '',
