@@ -28,6 +28,20 @@
     @if $ls { letter-spacing: $ls; }
 }
 
+
+@mixin body-text($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
+  font-family: 'Hellix-Heavy', Lucida Grande, Arial, Helvetica, sans-serif;
+  @if $size { font-size: $size; }
+  @if $color { color: $color; }
+  @if $weight { font-weight: $weight; }
+  @if $lh { line-height: $lh; }
+  @if $ls { letter-spacing: $ls; }
+}
+
+
+
+$opensans
+
 @mixin transform($transforms) {
 	-moz-transform: $transforms;
 	-o-transform: $transforms;
