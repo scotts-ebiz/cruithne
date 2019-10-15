@@ -52,12 +52,12 @@ $container-width: 1280px;
 
 // Grid
 $columns: 8;
-$gutter: .5rem;
+$gutter: 1rem;
 
 // Spacing
 // This is used to generate margin and padding utility classes.
 // Each value is multiplied by 0.25rem to determine the size of the spacing.
-$spacing: 0, 1, 2, 4, 8, 12, 16, 20, 24;
+$spacing: 0, 1, 2, 4, 6, 8, 12, 16, 20, 24;
 
 // Shadows
 $shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.26);
@@ -78,4 +78,3 @@ $product-name-link__text-decoration                           : none !default;
 $product-name-link__text-decoration__active                   : $link__hover__text-decoration !default;
 $product-name-link__text-decoration__hover                    : $link__hover__text-decoration !default;
 $product-name-link__text-decoration__visited                  : $link__hover__text-decoration !default;
-
