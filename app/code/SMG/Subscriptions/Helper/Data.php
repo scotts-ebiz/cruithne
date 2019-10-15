@@ -9,17 +9,17 @@ class Data extends AbstractHelper {
 	/**
      * Active flag
      */
-    const XML_PATH_ACTIVE = 'smg/general/active';
+    const XML_PATH_ACTIVE = 'recurly/general/active';
 
     /**
      * API Key
      */
-    const XML_PATH_APIKEY = 'smg/general/apikey';
+    const XML_PATH_APIKEY = 'recurly/general/apikey';
 
     /**
      * Subdomain
      */
-    const XML_PATH_SUBDOMAIN = 'smg/general/subdomain';
+    const XML_PATH_SUBDOMAIN = 'recurly/general/subdomain';
 
     /**
      * Whether Recurly is ready to use
