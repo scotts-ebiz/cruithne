@@ -9,17 +9,17 @@ class Data extends AbstractHelper {
 	/**
      * Active flag
      */
-    const XML_PATH_ACTIVE = 'googletagmanager/general/active';
+    const XML_PATH_ACTIVE = 'smg/general/active';
 
     /**
      * API Key
      */
-    const XML_PATH_APIKEY = 'googletagmanager/general/apikey';
+    const XML_PATH_APIKEY = 'smg/general/apikey';
 
     /**
      * Subdomain
      */
-    const XML_PATH_SUBDOMAIN = 'googletagmanager/general/subdomain';
+    const XML_PATH_SUBDOMAIN = 'smg/general/subdomain';
 
     /**
      * Whether Recurly is ready to use
