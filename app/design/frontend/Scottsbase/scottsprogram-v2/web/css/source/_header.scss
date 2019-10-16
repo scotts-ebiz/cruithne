@@ -11,8 +11,14 @@
   }
 }
 
-.sp-header__home:hover {
-  text-decoration: none;
+.sp-header__home-link {
+  &:hover {
+    text-decoration: none;
+  }
+
+  &:focus {
+    outline: none;
+  }
 }
 
 .sp-header__logo {
