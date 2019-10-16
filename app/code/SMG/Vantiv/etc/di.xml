@@ -2,6 +2,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Vantiv\Payment\Model\Ui\CcConfigProvider" type="SMG\Vantiv\Model\Ui\CcConfigProvider" />
     <preference for="Vantiv\Payment\Helper\Vault" type="SMG\Vantiv\Helper\Vault" />
+    <preference for="Vantiv\Payment\Gateway\Cc\Builder\TokenBuilder" type="SMG\Vantiv\Gateway\Cc\Builder\TokenBuilder" />
 
     <!-- Vantiv KeyPad Facade -->
     <virtualType name="SMG\Vantiv\Model\VantivKeyPadFacade" type="Vantiv\Payment\Model\Method\Adapter">
@@ -35,7 +36,7 @@
     <type name="Magento\Payment\Gateway\Command\CommandManagerPool">
         <arguments>
             <argument name="executors" xsi:type="array">
-                <item name="vantiv_cc" xsi:type="string">SMG\Vantiv\Gateway\KeyPad\CommandManager</item>
+                <item name="vantiv_keypadpayment" xsi:type="string">SMG\Vantiv\Gateway\KeyPad\CommandManager</item>
             </argument>
         </arguments>
     </type>
@@ -47,17 +48,17 @@
     <virtualType name="SMG\Vantiv\Gateway\KeyPad\CommandPool" type="Magento\Payment\Gateway\Command\CommandPool">
         <arguments>
             <argument name="commands" xsi:type="array">
-                <item name="authorize" xsi:type="string">SMG\Vantiv\Gateway\KeyPad\AuthorizeCommand</item>
-                <item name="void" xsi:type="string">SMG\Vantiv\Payment\Gateway\KeyPad\VoidCommand</item>
-                <item name="capture" xsi:type="string">SMG\Vantiv\Payment\Gateway\KeyPad\CaptureCommand</item>
-                <item name="sale" xsi:type="string">SMG\Vantiv\Payment\Gateway\KeyPad\SaleCommand</item>
-                <item name="refund" xsi:type="string">SMG\Vantiv\Payment\Gateway\KeyPad\RefundCommand</item>
-                <item name="cancel" xsi:type="string">SMG\Vantiv\Payment\Gateway\KeyPad\CancelCommand</item>
-                <item name="accept_payment" xsi:type="string">SMG\Vantiv\Payment\Gateway\KeyPad\AcceptCommand</item>
-                <item name="deny_payment" xsi:type="string">SMG\Vantiv\Payment\Gateway\KeyPad\DenyCommand</item>
-                <item name="vault_authorize" xsi:type="string">SMG\Vantiv\Payment\Gateway\KeyPad\VaultAuthorizeCommand</item>
-                <item name="vault_sale" xsi:type="string">SMG\Vantiv\Payment\Gateway\KeyPad\VaultSaleCommand</item>
-                <item name="register_token" xsi:type="string">SMG\Vantiv\Payment\Gateway\KeyPad\RegisterTokenCommand</item>
+                <item name="authorize" xsi:type="string">Vantiv\Payment\Gateway\Cc\VaultAuthorizeCommand</item>
+                <item name="void" xsi:type="string">Vantiv\Payment\Gateway\Cc\VoidCommand</item>
+                <item name="capture" xsi:type="string">Vantiv\Payment\Gateway\Cc\CaptureCommand</item>
+                <item name="sale" xsi:type="string">Vantiv\Payment\Gateway\Cc\VaultSaleCommand</item>
+                <item name="refund" xsi:type="string">Vantiv\Payment\Gateway\Cc\RefundCommand</item>
+                <item name="cancel" xsi:type="string">Vantiv\Payment\Gateway\Cc\CancelCommand</item>
+                <item name="accept_payment" xsi:type="string">Vantiv\Payment\Gateway\Cc\AcceptCommand</item>
+                <item name="deny_payment" xsi:type="string">Vantiv\Payment\Gateway\Cc\DenyCommand</item>
+                <item name="vault_authorize" xsi:type="string">Vantiv\Payment\Gateway\Cc\VaultAuthorizeCommand</item>
+                <item name="vault_sale" xsi:type="string">Vantiv\Payment\Gateway\Cc\VaultSaleCommand</item>
+                <item name="register_token" xsi:type="string">Vantiv\Payment\Gateway\Cc\RegisterTokenCommand</item>
             </argument>
         </arguments>
     </virtualType>

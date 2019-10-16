@@ -6,9 +6,10 @@
 namespace SMG\Vantiv\Model\Ui;
 
 use Magento\Checkout\Model\ConfigProviderInterface;
+use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Payment\Model\MethodInterface;
 use SMG\Vantiv\Gateway\KeyPad\Config\VantivKeyPadConfig as Config;
 use Vantiv\Payment\Model\Config\Source\VantivEnvironment;
-use Magento\Payment\Model\MethodInterface;
 
 /**
  * KeyPad configuration provider.
@@ -20,14 +21,22 @@ class KeyPadConfigProvider implements ConfigProviderInterface
      *
      * @var MethodInterface
      */
-    private $method = null;
+    private $_method = null;
+
+    /**
+     * @var ScopeConfigInterface
+     */
+    protected $_scopeConfig;
 
     /**
      * @param MethodInterface $method
+     * @param ScopeConfigInterface $scopeConfig
      */
-    public function __construct(MethodInterface $method)
+    public function __construct(MethodInterface $method,
+        ScopeConfigInterface $scopeConfig)
     {
-        $this->method = $method;
+        $this->_method = $method;
+        $this->_scopeConfig = $scopeConfig;
     }
 
     /**
@@ -37,7 +46,7 @@ class KeyPadConfigProvider implements ConfigProviderInterface
      */
     private function getMethod()
     {
-        return $this->method;
+        return $this->_method;
     }
 
     /**

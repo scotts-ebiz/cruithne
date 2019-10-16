@@ -16,9 +16,9 @@ define([
             $('#keypad-error').css('display', 'none');
 
             // initialize the input fields
-            $('#accountNumber').val('');
-            $('#expMonth').val('');
-            $('#expYear').val('');
+            $('#keypadAccountNumber').val('');
+            $('#keypadExpMonth').val('');
+            $('#keypadExpYear').val('');
 
             // initialize vantiv values
             $('#payment-vantiv-keypadpayment-ecdata').val('');
@@ -150,9 +150,9 @@ define([
             var serialNumber = data.substring(nullHashIndex + 60, nullHashIndex + 80);
 
             // set the input fields for displaying to the admin user
-            $('#accountNumber').val(accountNumber);
-            $('#expMonth').val(expMonth);
-            $('#expYear').val(expYear);
+            $('#keypadAccountNumber').val(accountNumber);
+            $('#keypadExpMonth').val(expMonth);
+            $('#keypadExpYear').val(expYear);
 
             // set vantiv values
             $('#payment-vantiv-keypadpayment-ecdata').val(data);
@@ -190,9 +190,9 @@ define([
             var serialNumber = $(card).attr('CDataKSN');
 
             // set the input fields for displaying to the admin user
-            $('#accountNumber').val(accountNumber);
-            $('#expMonth').val(expMonth);
-            $('#expYear').val(expYear);
+            $('#keypadAccountNumber').val(accountNumber);
+            $('#keypadExpMonth').val(expMonth);
+            $('#keypadExpYear').val(expYear);
 
             // set vantiv values
             $('#payment-vantiv-keypadpayment-ecdata').val(ecData);
