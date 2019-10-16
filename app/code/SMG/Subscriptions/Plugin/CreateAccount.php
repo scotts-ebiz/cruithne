@@ -20,8 +20,8 @@ class CreateAccount
 	public function afterExecute(\Magento\Customer\Controller\Account\CreatePost $subject, $proceed)
 	{
 
-		Recurly_Client::$apiKey = $this->helperData->getApiKey();//'02ea0cb107d8469c9d7159e4cc0cc77d';
-		Recurly_Client::$subdomain = $this->helperData->getSubdomain();//'smgdev';
+		Recurly_Client::$apiKey = $this->helperData->getApiKey();
+		Recurly_Client::$subdomain = $this->helperData->getSubdomain();
 
 		try {
 			$account = new Recurly_Account($_POST['email']);
