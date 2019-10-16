@@ -55,7 +55,6 @@
                         .cart.table-wrapper {
                             #shopping-cart-table {
                                 thead {
-                                    //border-bottom: 1px solid #ededed;
                                     tr {
                                         .col {
                                             margin: 0;
@@ -89,25 +88,6 @@
                                                 }
                                             }
                                         }
-
-                                        // 2019-10-12 Commented out. Doesn't seem to being used. Tested and can't find. If nothing broken on prod remove. ECOM-1245
-                                        //.item-options {
-                                        //    dd {
-                                        //        font-weight: bold;
-                                        //        i {
-                                        //            font-style: unset;
-                                        //        }
-                                        //    }
-                                        //}
-                                        //.item-options dt {
-                                        //    display: block;
-                                        //    width: 100%;
-                                        //}
-                                        //.item-options dt,
-                                        //.item-options dt + dd {
-                                        //    font-weight: 400;
-                                        //}
-
                                         .qty {
                                             .field.qty {
                                                 .control.qty {
@@ -290,9 +270,6 @@
 
                             }
                         }
-
-
-
                         .cart-summary {
                             width: 30%;
                             background: #dfe6ee;
@@ -341,10 +318,6 @@
                                 }
                             }
                         }
-                        // 2019-10-12 Commented out as seems not needed. If nothing breaks remove! ECOM-1245
-                        //.cart-summary._sticky{
-                        //    top:0px !important;
-                        //}
                     }
                     #gift-options-cart {
                         .cart-gift-item {
@@ -455,32 +428,6 @@
         }
       }
     }
-
-    // 2019-10-12 Commented out as seems not needed. If nothing breaks remove! ECOM-1245
-    //.abs-discount-block,
-    //.cart-summary .block {
-    //  > .title:after {
-    //    display:none;
-    //  }
-    //}
-
-    // 2019-10-12 Commented out as seems not needed. If nothing breaks remove! ECOM-1245
-    //.cust-simple-image  {
-    //    display: inline-block;
-    //    width: 50px;
-    //    margin-right: 8px;
-    //}
-
-    // 2019-10-12 Commented out as seems not needed. If nothing breaks remove! ECOM-1245
-    //.options-cont-wrp {
-    //    display: inline-block;
-    //    float: none;
-    //    vertical-align: top;
-    //    width: 80%;
-    //    text-align: left;
-    //}
-
-
 }
 // Cart Page - End //
 
