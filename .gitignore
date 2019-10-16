@@ -7,6 +7,10 @@
 /.project
 /.settings
 /.vscode
+/.htaccess
+/php.ini
+php.ini
+.htaccess
 atlassian*
 /nbproject
 /robots.txt
@@ -40,6 +44,7 @@ node_modules/
 /grunt-config.json
 /dev/tools/grunt/configs/local-themes.js
 /pub/media/*.*
+/pub/phpinfo.php
 !/pub/media/.htaccess
 /pub/media/attribute/*
 !/pub/media/attribute/.htaccess
