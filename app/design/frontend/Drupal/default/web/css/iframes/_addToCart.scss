@@ -2,6 +2,11 @@
   .page-wrapper .page-main {
     margin: .5rem 0;
     padding: 0;
+
+    // Turn off messages for iframe.
+    .messages {
+      display: none;
+    }
   }
 
   // Price
