@@ -1,8 +1,0 @@
-secretGenerator:
-- name: mysql-pass
-  literals:
-  - password=magento
-
-resources:
-- magento.deployment.yaml
-- mysql.deployment.yaml
