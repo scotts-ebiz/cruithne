@@ -14,7 +14,7 @@
         "avalara/avatax-magento": "^1.5",
         "composer/composer": "@alpha",
         "magento/composer-root-update-plugin": "~0.1",
-        "magento/product-enterprise-edition": "2.3.2",
+        "magento/product-enterprise-edition": "2.3.3",
         "magepal/magento2-googletagmanager": "^2.3",
         "mageplaza/module-smtp": "^1.2",
         "snowdog/frontools": "^1.6",
@@ -24,8 +24,8 @@
         "allure-framework/allure-phpunit": "~1.2.0",
         "friendsofphp/php-cs-fixer": "~2.12.0",
         "lusitanian/oauth": "~0.8.10",
-        "magento/magento-coding-standard": "~1.0.0",
-        "magento/magento2-functional-testing-framework": "~2.3.14",
+        "magento/magento-coding-standard": "~3.0.0",
+        "magento/magento2-functional-testing-framework": "2.4.5",
         "pdepend/pdepend": "2.5.2",
         "phpmd/phpmd": "@stable",
         "phpunit/phpunit": "~6.5.0",
@@ -73,7 +73,7 @@
         }
     },
     "prefer-stable": true,
-    "version": "2.3.1",
+    "version": "2.3.3",
     "minimum-stability": "alpha",
     "repositories": {
         "0": {

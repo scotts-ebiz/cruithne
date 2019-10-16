@@ -8,7 +8,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../vendor/magento/mtf/etc/variations.xsd">
     <testCase name="Magento\Checkout\Test\TestCase\OnePageCheckoutTest" summary="OnePageCheckout within Offline Payment Methods" ticketId="MAGETWO-27485">
         <variation name="OnePageCheckoutTestVariationWithGiftCard" summary="One Page Checkout with all product types" ticketId="MAGETWO-17475">
-            <data name="tag" xsi:type="string">severity:S0</data>
+            <data name="tag" xsi:type="string">severity:S0, mftf_migrated:yes</data>
             <data name="products/0" xsi:type="string">catalogProductVirtual::default</data>
             <data name="products/1" xsi:type="string">downloadableProduct::with_two_separately_links</data>
             <data name="products/2" xsi:type="string">configurableProduct::with_one_option</data>
