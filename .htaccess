@@ -187,10 +187,10 @@ Options -Indexes
 
 ############################################
 ## rewrite everything to https
-# Commenting the below for local environment
-# RewriteCond %{HTTPS} off
-# RewriteCond %{HTTP:X-Forwarded-Proto} !https
-# RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,QSA,L]
+
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,QSA,L]
 
 
 ############################################
