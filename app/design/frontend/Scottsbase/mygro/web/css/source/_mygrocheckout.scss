@@ -905,8 +905,10 @@
       }
     }
   }
-  .field-tooltip {
-    display: contents;
+  .checkout-index-index {
+    .field-tooltip {
+      top: 30px;
+    }
   }
   [type="radio"]:checked ,
   [type="radio"]:not(:checked){
