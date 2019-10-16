@@ -1,0 +1,24 @@
+<!-- Template for FAQ View Model: /SMG_SPV2FAQPageWidget/js/faq -->
+<div class="sp-faq-categories sp-tabs sp-max-w-lg sp-mb-12 sp-mx-auto">
+    <button
+        class="sp-faq-category-btn sp-tab"
+        data-bind="
+            click: setCategory.bind($data, 'faq_1'),
+            css: { 'active': category() === 'faq_1' }
+        "
+        type="button"
+    >
+        Category 1
+    </button>
+
+    <button
+        class="sp-faq-category-btn sp-tab"
+        data-bind="
+            click: setCategory.bind($data, 'faq_2'),
+            css: { 'active': category() === 'faq_2' }
+        "
+        type="button"
+    >
+        Category 2
+    </button>
+</div>
