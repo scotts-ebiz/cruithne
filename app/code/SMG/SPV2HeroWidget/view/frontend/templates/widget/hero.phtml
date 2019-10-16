@@ -1,0 +1,40 @@
+<style>
+    .sp-hero__background {
+        <?php if ($block->getData('heroMobileImage') || $block->getData('heroImage')) { ?>
+            <?php if ($block->getData('heroMobileImage')) { ?>
+                background-image: url('<?php echo $block->escapeUrl($block->getData('heroMobileImage')); ?>') !important;
+            <?php } else { ?>
+                background-image: url('<?php echo $block->escapeUrl($block->getData('heroImage')); ?>') !important;
+            <?php } ?>
+        <?php } else { ?>
+            background-image: url('https://test_magento_image_repo.storage.googleapis.com/homePageHero.jpg') !important;
+    <?php } ?>
+    }
+
+    <?php if ($block->getData('heroImage')) { ?>
+        @media (min-width: 768px) {
+            .sp-hero__background {
+                background-image: url('<?php echo $block->escapeUrl($block->getData('heroImage')); ?>') !important;
+            }
+        }
+    <?php } ?>
+</style>
+
+<div class="sp-hero <?php echo $block->getData('heroFullScreen') ? 'sp-hero--full' : '' ?> sp-mb-12">
+    <div class="sp-hero__background <?php echo $block->escapeHtml($block->getData('heroImageClass')) ?>"></div>
+    <div class="sp-hero__overlay"></div>
+    <?php if ($block->getData('heroHeadline')) { ?>
+        <div class="sp-hero__headline sp-container">
+            <h1 class="sp-h1 sp-relative sp-text-white sp-text-center"><?php echo $block->escapeHtml($block->getData('heroHeadline')) ?></h1>
+        </div>
+    <?php } ?>
+
+    <?php if ($block->getData('heroCallToActionText') && $block->getData('heroCallToActionLink')) { ?>
+        <a
+            href="<?php echo $block->escapeUrl($block->getData('heroCallToActionLink')) ?>"
+            class="sp-button sp-button--inverted sp-button--get-started sp-mb-12 sp-relative sp-text-center"
+        >
+            <?php echo $block->escapeHtml($block->getData('heroCallToActionText')) ?>
+        </a>
+    <?php } ?>
+</div>

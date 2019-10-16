@@ -42,6 +42,43 @@ $colors: (
   }
 }
 
+// Background Position
+.sp-bg-bottom {
+  background-position: bottom;
+}
+
+.sp-bg-center {
+  background-position: center;
+}
+
+.sp-bg-left {
+  background-position: left;
+}
+
+.sp-bg-left-bottom {
+  background-position: left bottom;
+}
+
+.sp-bg-left-top {
+  background-position: left top;
+}
+
+.sp-bg-right {
+  background-position: right;
+}
+
+.sp-bg-right-bottom {
+  background-position: right bottom;
+}
+
+.sp-bg-right-top {
+  background-position: right top;
+}
+
+.sp-bg-top {
+  background-position: top;
+}
+
 // Border Radius
 .sp-rounded {
   border-radius: $border-radius;
