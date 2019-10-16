@@ -56,6 +56,7 @@ body {
         text-align: center;
         .header.content {
             @include max-screen($screen__l) {
+                display: block;
                 .nav-toggle {
                     float: left;
                     position: relative;
@@ -64,6 +65,9 @@ body {
                     display: block;
                 }
             }
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             position: relative;
             box-sizing: border-box;
             padding: 0 22px 0 22px;
@@ -82,9 +86,12 @@ body {
                     left: 1.25rem;
                     top: 0.5rem;
                 }
+                img {
+                    display: block;
+                }
             }
             .minicart-wrapper {
-                float: right;
+                order: 4;
                 @include max-screen($screen__l) {
                     display: block;
                     float: right;
