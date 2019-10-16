@@ -1,5 +1,7 @@
 // MyGro Mixins
 
+$test: 'Hellix-Heavy', Lucida Grande, Arial, Helvetica, sans-serif;
+
 // Fonts //
 @mixin font-hellix-regular($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
     font-family: 'Hellix-Regular', Lucida Grande, Arial, Helvetica, sans-serif;
@@ -10,6 +12,7 @@
     @if $ls { letter-spacing: $ls; }
 }
 
+
 @mixin font-hellix-heavy($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
     font-family: 'Hellix-Heavy', Lucida Grande, Arial, Helvetica, sans-serif;
     @if $size { font-size: $size; }
@@ -18,6 +21,7 @@
     @if $lh { line-height: $lh; }
     @if $ls { letter-spacing: $ls; }
 }
+
 
 @mixin font-gro($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
     font-family: 'Gro', serif;
@@ -29,18 +33,15 @@
 }
 
 
-@mixin body-text($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
-  font-family: 'Hellix-Heavy', Lucida Grande, Arial, Helvetica, sans-serif;
-  @if $size { font-size: $size; }
-  @if $color { color: $color; }
-  @if $weight { font-weight: $weight; }
-  @if $lh { line-height: $lh; }
-  @if $ls { letter-spacing: $ls; }
+@mixin h2-heading($_family: $h2__font-family) {
+  font-size: 18px;
+  @include lib-css(font-family, $_family);
+  //color: $h2__font-color;
+  //font-weight: $h2__font-weight;
+  //line-height: $h2__line-height;
+  //letter-spacing: $h2__letter-spacing;
 }
 
-
-
-$opensans
 
 @mixin transform($transforms) {
 	-moz-transform: $transforms;
