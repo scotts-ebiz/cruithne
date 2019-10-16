@@ -1,6 +1,6 @@
 # Base image is Google's Optimized Ubuntu Image
 
-ARG IMAGE=gcr.io/ecommerce-platform-211419/magento-dev-primer:latest
+ARG IMAGE=gcr.io/ecommerce-platform-211419/magento-stage-primer:latest
 FROM $IMAGE
 ENTRYPOINT []
 
@@ -21,6 +21,9 @@ RUN git fetch --all
 RUN git reset --hard
 RUN git pull
 RUN composer install
+
+COPY .htaccess $MAGENTO_DIR/.htaccess
+COPY php.ini $MAGENTO_DIR/php.ini
 
 USER root
 
