@@ -1,15 +1,10 @@
 <?php
 /**
- * Copyright Â© Magento, Inc. All rights reserved.
+ * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 namespace SMG\Launch\Plugin\Controller;
 
-use Magento\Framework\Controller\Result\Json;
-use Magento\Framework\Controller\ResultInterface as MagentoResultInterface;
-use Magento\Framework\Message\MessageInterface;
-use Magento\Framework\Translate\Inline\ParserInterface;
-use Magento\Framework\Translate\InlineInterface;
 /**
  * Plugin for putting messages to cookies
  */
@@ -44,35 +39,27 @@ class ResultInterface
      * @var \Magento\Framework\Serialize\Serializer\Json
      */
     private $_serializer;
-	protected $_logger;
-    /**
-     * @var InlineInterface
-     */
-    private $_inlineTranslate;
 
-	protected $_checkoutSession;
     /**
      * @param \Magento\Framework\Stdlib\CookieManagerInterface $cookieManager
      * @param \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory $cookieMetadataFactory
      * @param \Magento\Framework\Message\ManagerInterface $messageManager
      * @param \Magento\Framework\View\Element\Message\InterpretationStrategyInterface $interpretationStrategy
      * @param \Magento\Framework\Serialize\Serializer\Json|null $serializer
-     * @param InlineInterface|null $inlineTranslate
+
      */
     public function __construct(
         \Magento\Framework\Stdlib\CookieManagerInterface $cookieManager,
         \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory $cookieMetadataFactory,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Framework\View\Element\Message\InterpretationStrategyInterface $interpretationStrategy,
-        \Magento\Framework\Serialize\Serializer\Json $serializer,
-        InlineInterface $inlineTranslate
+        \Magento\Framework\Serialize\Serializer\Json $serializer
     ) {
         $this->_cookieManager = $cookieManager; 
         $this->_cookieMetadataFactory = $cookieMetadataFactory;
         $this->_messageManager = $messageManager;
         $this->_serializer = $serializer;
         $this->_interpretationStrategy = $interpretationStrategy;
-        $this->_inlineTranslate = $inlineTranslate;
     }
 
     /**
@@ -86,8 +73,8 @@ class ResultInterface
      * @return ResultInterface
      */
     public function afterRenderResult(
-        MagentoResultInterface $subject,
-        MagentoResultInterface $result
+        \Magento\Framework\Controller\ResultInterface $subject,
+        \Magento\Framework\Controller\ResultInterface $result
     ) {
         $messages = $this->getCookiesMessages();
         /** @var MessageInterface $message */
