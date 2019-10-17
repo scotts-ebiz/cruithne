@@ -1,11 +1,10 @@
 <?php
 /**
- * Copyright © Magento, Inc. All rights reserved.
+ * Copyright Â© Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
 namespace SMG\Launch\Plugin\Controller;
 
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Controller\Result\Json;
 use Magento\Framework\Controller\ResultInterface as MagentoResultInterface;
 use Magento\Framework\Message\MessageInterface;
@@ -41,12 +40,6 @@ class ResultInterface
      */
     private $_interpretationStrategy;
 	
-	/**
-     * @var \Magento\Framework\ObjectManagerInterface
-     */
-	
-	private $_objectManager;
-
     /**
      * @var \Magento\Framework\Serialize\Serializer\Json
      */
@@ -71,14 +64,12 @@ class ResultInterface
         \Magento\Framework\Stdlib\Cookie\CookieMetadataFactory $cookieMetadataFactory,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Framework\View\Element\Message\InterpretationStrategyInterface $interpretationStrategy,
-		\Magento\Framework\ObjectManagerInterface $objectmanager,
         \Magento\Framework\Serialize\Serializer\Json $serializer,
         InlineInterface $inlineTranslate
     ) {
         $this->_cookieManager = $cookieManager; 
         $this->_cookieMetadataFactory = $cookieMetadataFactory;
         $this->_messageManager = $messageManager;
-		$this->_objectManager = $objectmanager; 
         $this->_serializer = $serializer;
         $this->_interpretationStrategy = $interpretationStrategy;
         $this->_inlineTranslate = $inlineTranslate;
