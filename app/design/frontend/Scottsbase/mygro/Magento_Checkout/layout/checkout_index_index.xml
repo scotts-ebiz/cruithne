@@ -16,7 +16,8 @@
                                                             <item name="component" xsi:type="string">Magento_Checkout/js/view/form/element/email</item>
                                                             <item name="displayArea" xsi:type="string">customer-email</item>
                                                             <item name="tooltip" xsi:type="array">
-                                                                <item name="description" xsi:type="string" translate="true">We'll send your order confirmation here.</item>
+                                                                <item name="visible" xsi:type="boolean">false</item>
+                                                                <!--<item name="description" xsi:type="string" translate="true">We'll send your order confirmation here.</item>-->
                                                             </item>
                                                             <item name="children" xsi:type="array">
                                                                 <item name="before-login-form" xsi:type="array">
