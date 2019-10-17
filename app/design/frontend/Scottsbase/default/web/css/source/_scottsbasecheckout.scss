@@ -277,9 +277,8 @@
                             @media screen and (max-width: $screen__m) {
                                 order:2;
                             }
-
-                            .block > .title {
-                              padding: 7px 20px 5px 17px !important;
+                            .cart-totals {
+                                border-top: 0;
                             }
                             .checkout-methods-items {
                                 .item {
@@ -357,15 +356,6 @@
                                 display: inline-block;
                                 width: 100%;
                                 text-align: right;
-                            }
-                            input.btn-popup {
-                                background-color: $scotts-green;
-                                color: $color-white;
-                                border-radius: 13px;
-                                padding: 8px 13px;
-                                margin-bottom: 15px;
-                                margin-left: 23px;
-                                border: 0;
                             }
                         }
                     }
