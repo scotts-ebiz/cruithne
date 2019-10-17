@@ -27,24 +27,21 @@
 
         // Format Labels.
         label {
-          display: none;
+          margin-right: 10px;
+          text-transform: capitalize;
+          @include font-iframe(0.875rem);
         }
 
         // Size.
         .configurable{
+          display: -ms-flexbox;
+          display: flex;
+          -ms-flex-align: center;
+          align-items: center;
 
           select {
+            min-width: 159px;
             border-radius: 0;
-
-            // Chrome does not support border-radius with Select.
-            border: 0;
-            outline: 1px solid #bbb;
-            outline-offset: -1px;
-
-            &:focus {
-
-              box-shadow: none;
-            }
           }
         }
 
@@ -52,18 +49,20 @@
         .block__subblock {
           display: -ms-flexbox;
           display: flex;
-          width: 30%;
-          margin-left: 5px;
+          -ms-flex-align: center;
+          align-items: center;
 
           #qty-wrap {
             display: flex;
             border: 1px solid $color-gray-light2;
-            width: 100%;
+            width: 126px;
+            box-shadow: 0 1px 1px $color-gray82;
 
             .block__subblock--input{
               border: none;
               padding: 0;
               font-size: 14px;
+              width: 100%;
               text-align: center;
               border-radius: 0;
               box-shadow: none;
@@ -73,7 +72,7 @@
             .minus, .plus {
               color: $color-gray19;
               font-size: 20px;
-              padding: 10px;
+              padding: 10px 15px;
               background-color: $color-gray-light0;
               border: none;
               border-radius: 0;
@@ -84,18 +83,9 @@
         }
 
         // "Add to Cart" Button.
-        .button-container {
-          margin-right: 5px;
-          width: 70%;
-
-          .button--cart {
-            @include lib-button-iframe-addtocart();
-          }
+        .button--cart {
+          @include lib-button-iframe-addtocart();
         }
-      }
-
-      .btn-qty-cols {
-        display: flex;
       }
     }
   }
