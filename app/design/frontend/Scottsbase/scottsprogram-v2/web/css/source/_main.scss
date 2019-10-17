@@ -3,10 +3,10 @@
 @import 'layout';
 @import 'grid';
 @import 'typography';
+@import 'links';
 @import 'buttons';
 @import 'forms';
 @import 'icons';
-@import 'links';
 @import 'navs';
 @import 'header';
 @import 'footer';
@@ -14,4 +14,4 @@
 @import 'utilities';
 
 // Import _extend.scss to extend base themes.
-@import '_extend.scss';
+@import 'extend';

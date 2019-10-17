@@ -42,6 +42,11 @@ $colors: (
   }
 }
 
+// Border Radius
+.sp-rounded {
+  border-radius: $border-radius;
+}
+
 // Display
 @each $size in $breakpoints {
   @include breakpoint($size) {
@@ -74,6 +79,14 @@ $colors: (
       $size: #{$size}\:;
     }
 
+    .#{$size}sp-flex-auto {
+      flex: 1 1 auto;
+    }
+
+    .#{$size}sp-flex-none {
+      flex: none;
+    }
+
     .#{$size}sp-flex-row {
       flex-direction: row;
     }
@@ -96,7 +109,20 @@ $colors: (
     .#{$size}sp-justify-start {
       justify-content: flex-start;
     }
+    .#{$size}sp-justify-end {
+      justify-content: flex-end;
+    }
   }
+}
+
+// Height
+.sp-h-full {
+  height: 100%;
+}
+
+// List
+.sp-list-none {
+  list-style-type: none;
 }
 
 // Order
@@ -124,6 +150,10 @@ $colors: (
 
     .#{$size}sp-order-4 {
       order: 4;
+    }
+
+    .#{$size}sp-order-5 {
+      order: 5;
     }
   }
 }
@@ -237,4 +267,34 @@ $colors: (
 
 .sp-max-w-xl {
   max-width: 1024px;
+}
+
+// Text Transform
+.sp-uppercase {
+  text-transform: uppercase;
+}
+
+// Z-Index
+.sp-z-0 {
+  z-index: 0;
+}
+
+.sp-z-1 {
+  z-index: 10;
+}
+
+.sp-z-2 {
+  z-index: 20;
+}
+
+.sp-z-3 {
+  z-index: 30;
+}
+
+.sp-z-4 {
+  z-index: 40;
+}
+
+.sp-z-5 {
+  z-index: 50;
 }

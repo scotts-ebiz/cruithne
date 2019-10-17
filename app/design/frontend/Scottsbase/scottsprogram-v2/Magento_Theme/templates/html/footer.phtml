@@ -1,20 +1,12 @@
-<?php
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
-
-// @codingStandardsIgnoreFile
-
-?>
-
 <div class="sp-footer__grid md:sp-grid">
-	<a class="sp-footer__brand md:sp-flex sp-items-center sp-justify-start md:sp-col-1/2" href="<?= $block->escapeUrl($block->getBaseUrl()) ?>">
-        <div class="sp-footer__logo">
-            <img src="https://test_magento_image_repo.storage.googleapis.com/scotts_logo@2x.png" alt="Scotts">
-        </div>
-        <h1 class="sp-footer__title sp-label">Program</h1>
-	</a>
+    <div class="sp-footer__brand md:sp-col-1/2">
+        <a class="sp-footer__home-link sp-inline-block md:sp-inline-flex sp-items-center sp-justify-start" href="<?= $block->escapeUrl($block->getBaseUrl()) ?>">
+            <div class="sp-footer__logo">
+                <img src="https://test_magento_image_repo.storage.googleapis.com/scotts_logo@2x.png" alt="Scotts">
+            </div>
+            <h1 class="sp-footer__title sp-label">Program</h1>
+        </a>
+    </div>
 	<nav class="sp-footer__social md:sp-col-1/2">
 		<ul class="sp-nav-list sp-footer__nav-list sp-footer__nav-list--left">
 			<li>

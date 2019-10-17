@@ -1,14 +1,18 @@
 .sp-button {
-  @extend .sp-label;
-
   border: none;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
   display: inline-block;
-  font-weight: 400;
+  font-size: $font-size-label;
+  font-weight: 700;
   padding: 1rem;
+  text-align: center;
   text-transform: uppercase;
   transition: background-color .25s ease-in-out, box-shadow .25s ease-in-out, transform .25s ease-in-out;
   white-space: nowrap;
+
+  &:active {
+    color: $white;
+  }
 
   &:hover {
     box-shadow: $shadow-md;
