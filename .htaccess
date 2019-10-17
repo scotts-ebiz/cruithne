@@ -93,10 +93,10 @@ Options -Indexes
 
     php_flag suhosin.session.cryptua off
 </IfModule>
-
 <IfModule mod_security.c>
 ###########################################
 ## disable POST processing to not break multiple image upload
+
     SecFilterEngine Off
     SecFilterScanPOST Off
 </IfModule>
@@ -246,18 +246,19 @@ Options -Indexes
 ############################################
 ## rewrite everything to https
 
-    RewriteCond %{HTTPS} off
-    RewriteCond %{HTTP:X-Forwarded-Proto} !https
-    RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,QSA,L]
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,QSA,L]
 
 ############################################
 ## rewrite everything to https
 
-    RewriteCond %{HTTP_HOST} ^mygro\.com$ [NC]
-    RewriteRule ^(.*)$   https://www.mygro.com/$1 [R=301,L,QSA]
+RewriteCond %{HTTP_HOST} ^mygro\.com$ [NC]
+RewriteRule ^(.*)$   https://www.mygro.com/$1 [R=301,L,QSA]
 
 ############################################
 ## rewrite everything else to index.php
+
     RewriteRule .* index.php [L]
 
 </IfModule>
