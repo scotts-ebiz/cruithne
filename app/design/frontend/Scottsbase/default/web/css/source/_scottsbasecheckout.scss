@@ -3,6 +3,16 @@
 
 // Cart Page - Start //
 .checkout-cart-index {
+    .page-header {
+        .header.content {
+            .minicart-wrapper {
+                display: none;
+            }
+            .nav-sections {
+                display: none !important;
+            }
+        }
+    }
     .page-main {
         .page-title-wrapper {
             display: block;
@@ -437,6 +447,23 @@
         }
     }
 }
+
+
+// Checkout Page - Start //
+.checkout-index-index {
+    .page-header {
+        .header.content {
+            .minicart-wrapper {
+                display: none;
+            }
+            .nav-sections {
+                display: none !important;
+            }
+        }
+    }
+}
+// Checkout Page - End //
+
 
 //Style Titles / Steps
 .opc-wrapper {
