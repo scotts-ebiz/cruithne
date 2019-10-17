@@ -206,6 +206,9 @@
                     .form-login {
                       border-bottom: 1px solid #c2c2c2;
                       padding-bottom: 1rem;
+                      .field-tooltip {
+                        display: none;
+                      }
                     }
                     .form-login,
                     .form-shipping-address {
