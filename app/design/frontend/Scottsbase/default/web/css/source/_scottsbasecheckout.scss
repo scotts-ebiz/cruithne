@@ -297,6 +297,14 @@
     font-weight: 700 !important;
 }
 
+
+//Checkout - Hide Country Field in Checkout Shipping Page (Will need to be nested correctly):
+.opc-wrapper .fieldset > .field.required, .opc-wrapper .fieldset > .field._required[name="shippingAddress.country_id"] {
+  display: none;
+}
+
+
+
 //Avalara "Change your Address" Message stying
 .checkout-index-index .page-wrapper .page-main .columns .column.main .checkout-container .opc-wrapper .opc .checkout-validate-address .step-content .instructions.noError a.edit-address {
   text-decoration: underline;
