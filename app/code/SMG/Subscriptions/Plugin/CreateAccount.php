@@ -2,26 +2,47 @@
 
 namespace SMG\Subscriptions\Plugin;
 
+use SMG\Subscriptions\Config\RecurlyConfig;
 use Recurly_Account;
 use Recurly_Client;
 
 class CreateAccount
 {
 
-	protected $_helperData;
+	/**
+     * Payment configuration instance.
+     *
+     * @var RecurlyConfig
+     */
+    private $config = null;
 
 	public function __construct(
-		\SMG\Subscriptions\Helper\Data $helperData
+		RecurlyConfig $config
 	)
 	{
-		$this->helperData = $helperData;
+		$this->config = $config;
 	}
 
+	/**
+     * Get payment configuration instance.
+     *
+     * @return RecurlyConfig
+     */
+    private function getConfig()
+    {
+        return $this->config;
+    }
+
+    /**
+     * Register a Recurly account after a
+     * successfull customer registration
+     * 
+     */
 	public function afterExecute(\Magento\Customer\Controller\Account\CreatePost $subject, $proceed)
 	{
 
-		Recurly_Client::$apiKey = $this->helperData->getApiKey();
-		Recurly_Client::$subdomain = $this->helperData->getSubdomain();
+		Recurly_Client::$apiKey = $this->getConfig()->getValue('apikey');
+		Recurly_Client::$subdomain = $this->getConfig()->getValue('subdomain');
 
 		try {
 			$account = new Recurly_Account($_POST['email']);
