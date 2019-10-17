@@ -28,7 +28,7 @@
 }
 
 .sp-vertical-divider {
-  border-color: $green-1;
+  border-color: #1d5632;
   border-width: 2px;
   width: 6rem;
   transform: rotate(90deg);
@@ -36,7 +36,7 @@
 }
 
 .sp-quiz-preview {
-  background-color: $green-4;
+  background-color: #edf4e1;
   padding: 2rem;
 }
 
