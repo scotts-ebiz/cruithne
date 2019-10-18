@@ -14,13 +14,13 @@ class CreateAccount
      *
      * @var RecurlyConfig
      */
-    private $config = null;
+    private $_config = null;
 
 	public function __construct(
 		RecurlyConfig $config
 	)
 	{
-		$this->config = $config;
+		$this->_config = $config;
 	}
 
 	/**
@@ -30,7 +30,7 @@ class CreateAccount
      */
     private function getConfig()
     {
-        return $this->config;
+        return $this->_config;
     }
 
     /**

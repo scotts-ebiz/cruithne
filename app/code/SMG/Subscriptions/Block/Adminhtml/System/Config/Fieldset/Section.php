@@ -1,8 +1,4 @@
 <?php
-/**
- * Copyright © 2018 Vantiv, LLC. All rights reserved.
- * See LICENSE.txt for license details.
- */
 namespace SMG\Subscriptions\Block\Adminhtml\System\Config\Fieldset;
 
 use Magento\Config\Block\System\Config\Form\Fieldset;
@@ -13,22 +9,6 @@ use Magento\Framework\View\Helper\Js;
 
 class Section extends Fieldset
 {
-    /**
-     * Section constructor
-     *
-     * @param Context $context
-     * @param Session $authSession
-     * @param Js $jsHelper
-     * @param array $data
-     */
-    public function __construct(
-        Context $context,
-        Session $authSession,
-        Js $jsHelper,
-        array $data = []
-    ) {
-        parent::__construct($context, $authSession, $jsHelper, $data);
-    }
 
     /**
      * Return header title part of html for payment solution
