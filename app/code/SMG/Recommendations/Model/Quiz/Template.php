@@ -31,6 +31,6 @@ class Template implements TemplateInterface
     		$_SESSION['quiz_template_id'] = $data['id'];
     	}
     	
-    	return json_decode($response, true);
+    	return $data;
 	}
 }
