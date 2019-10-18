@@ -27,23 +27,27 @@ $iFrameDrupalIdsById = $this->getData('drupalIdsById');
                 <?php endif;?>
             </div>
 
-            <div class="block__item">
+            <div class="block__item btn-qty-cols">
+                <div class="button-container">
+                    <button type="submit" title="Add to Cart" class="button button--cart" id="cart-add"
+                            data-size_id="<?php echo $this->escapeHtml(str_replace(' ', '', trim(strtolower($_product->getData('size'))))); ?>"
+                            data-sku_id="<?php echo $this->escapeHtml($_product->getData('sku')); ?>"
+                            data-drupal-sku="<? echo $this->escapeHtml($_product->getData('drupalproductid')); ?>">
+                        <span>Add to Cart</span>
+                    </button>
+                </div>
+
                 <div class="block__subblock">
                     <label class="block__subblock--label" for="qty">Quantity</label>
 
                     <label id="qty-wrap">
                         <input type="text" name="quantity" id="qty" maxlength="12" value="1" title="Qty"
                                class="block__subblock--input" size="3"/>
-                        <button type="button" class="minus">-</button>
-                        <button type="button" class="plus">+</button>
+                        <!-- Use special HTML character code so they have the same width -->
+                        <button type="button" class="minus">&#8722;</button>
+                        <button type="button" class="plus">&#43;</button>
                     </label>
                 </div>
-                <button type="submit" title="Add to Cart" class="button button--cart" id="cart-add"
-                        data-size_id="<?php echo $this->escapeHtml(str_replace(' ', '', trim(strtolower($_product->getData('size'))))); ?>"
-                        data-sku_id="<?php echo $this->escapeHtml($_product->getData('sku')); ?>"
-                        data-drupal-sku="<? echo $this->escapeHtml($_product->getData('drupalproductid')); ?>">
-                    <span>Add to Cart</span>
-                </button>
             </div><!-- .block__item -->
         </form>
     </div><!-- .cta__block -->
