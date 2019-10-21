@@ -1,0 +1,23 @@
+<div class="sp-quiz sp-bg-green-1 sp-flex sp-text-white">
+    <div
+        class="sp-quiz__wrapper sp-flex sp-flex-column sp-h-full sp-w-full"
+        data-bind="scope: 'sp-quiz'"
+    >
+        <!-- ko template: getTemplate() --><!-- /ko -->
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+   {
+        "*": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "sp-quiz": {
+                        "component": "SMG_Quiz/js/quiz",
+                        "template" : "SMG_Quiz/quiz"
+                    }
+                }
+            }
+        }
+    }
+</script>

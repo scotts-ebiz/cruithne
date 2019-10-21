@@ -1,0 +1,43 @@
+<div class="sp-quiz__content sp-flex-auto sp-py-12">
+    <div
+        class="sp-quiz__question sp-container"
+        data-bind="if: quiz()"
+    >
+        <h2
+            class="sp-quiz__question-title sp-h2 sp-max-w-md sp-mt-0 sp-mx-auto sp-text-center"
+            data-bind="text: quiz().title"
+        >
+        </h2>
+
+        <p class="sp-text-center" data-bind="text: quiz().subtitle"></p>
+
+        <div
+            class="sp-quiz__options sp-grid sp-flex sp-flex-wrap"
+            data-bind="foreach: options"
+        >
+            <label class="sp-quiz__option sp-col-1/2 lg:sp-col-1/4 sp-text-center sp-p-4">
+                <div class="sp-quiz__option-content sp-bg-white sp-h-full sp-p-4">
+                    <div class="sp-my-4">
+                        <img
+                            alt="Quiz Option"
+                            class="sp-quiz__option-image"
+                            data-bind="attr: { src: imageUrl }"
+                        />
+                    </div>
+                    <p class="sp-text-black sp-mb-0" data-bind="text: label"></p>
+                </div>
+            </label>
+        </div>
+    </div>
+</div>
+
+<div class="sp-quiz__progress sp-bg-white sp-text-right">
+    <div class="sp-container sp-py-6">
+        <button
+            class="sp-quiz__next sp-button sp-button--primary"
+            type="button"
+        >
+            Next
+        </button>
+    </div>
+</div>

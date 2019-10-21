@@ -12,7 +12,11 @@
 @import 'footer';
 @import 'hero';
 @import 'tabs';
-@import 'utilities';
+@import 'quiz';
 
 // Import _extend.scss to extend base themes.
 @import 'extend';
+
+// Import the utilities.
+@import 'utilities';
+

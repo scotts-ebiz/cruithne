@@ -1,0 +1,15 @@
+.sp-quiz__content {
+  overflow: auto;
+}
+
+.sp-quiz__next {
+  width: 100px;
+}
+
+.sp-quiz__option-image {
+  display: block;
+  height: auto;
+  max-width: 120px;
+  margin: 0 auto;
+  width: 100%;
+}

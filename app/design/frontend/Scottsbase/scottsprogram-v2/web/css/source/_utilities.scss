@@ -124,6 +124,14 @@ $colors: (
       flex: none;
     }
 
+    .#{$size}sp-flex-wrap {
+      flex-wrap: wrap;
+    }
+
+    .#{$size}sp-flex-no-wrap {
+      flex-wrap: nowrap;
+    }
+
     .#{$size}sp-flex-row {
       flex-direction: row;
     }
@@ -134,6 +142,7 @@ $colors: (
     .#{$size}sp-items-center {
         align-items: center;
     }
+
     .#{$size}sp-items-baseline {
       align-items: baseline;
     }
@@ -309,6 +318,11 @@ $colors: (
 // Text Transform
 .sp-uppercase {
   text-transform: uppercase;
+}
+
+// Widths
+.sp-w-full {
+  width: 100%;
 }
 
 // Z-Index
