@@ -223,6 +223,12 @@ $colors: (
             margin-left: spacing($increment);
             margin-right: spacing($increment);
           }
+
+          .#{$size}sp--m#{$key}-#{$increment} {
+            margin-left: spacing(-$increment);
+            margin-right: spacing(-$increment);
+          }
+
           .#{$size}sp-p#{$key}-#{$increment} {
             padding-left: spacing($increment);
             padding-right: spacing($increment);
@@ -232,22 +238,37 @@ $colors: (
             margin-bottom: spacing($increment);
             margin-top: spacing($increment);
           }
+
+          .#{$size}sp--m#{$key}-#{$increment} {
+            margin-bottom: spacing(-$increment);
+            margin-top: spacing(-$increment);
+          }
+
           .#{$size}sp-p#{$key}-#{$increment} {
             padding-bottom: spacing($increment);
             padding-top: spacing($increment);
           }
         } @else if $value == null {
-        .#{$size}sp-m#{$key}-#{$increment} {
-          margin: spacing($increment);
-        }
+          .#{$size}sp-m#{$key}-#{$increment} {
+            margin: spacing($increment);
+          }
 
-        .#{$size}sp-p#{$key}-#{$increment} {
-          padding: spacing($increment);
-        }
+          .#{$size}sp--m#{$key}-#{$increment} {
+            margin: spacing(-$increment);
+          }
+
+          .#{$size}sp-p#{$key}-#{$increment} {
+            padding: spacing($increment);
+          }
       } @else {
           .#{$size}sp-m#{$key}-#{$increment} {
             margin-#{$value}: spacing($increment);
           }
+
+          .#{$size}sp--m#{$key}-#{$increment} {
+            margin-#{$value}: spacing(-$increment);
+          }
+
           .#{$size}sp-p#{$key}-#{$increment} {
             padding-#{$value}: spacing($increment);
           }
@@ -323,6 +344,42 @@ $colors: (
 // Widths
 .sp-w-full {
   width: 100%;
+}
+
+@each $size in $breakpoints {
+  @include breakpoint($size) {
+    @if $size {
+      $size: #{$size}\:;
+    }
+
+    .#{$size}sp-w-1\/2 {
+      width: 1/2 * 100%;
+    }
+
+    .#{$size}sp-w-1\/3 {
+      width: 1/3 * 100%;
+    }
+
+    .#{$size}sp-w-2\/3 {
+      width: 2/3 * 100%;
+    }
+
+    .#{$size}sp-w-1\/4 {
+      width: 1/4 * 100%;
+    }
+
+    .#{$size}sp-w-3\/4 {
+      width: 3/4 * 100%;
+    }
+
+    .#{$size}sp-w-1\/8 {
+      width: 1/8 * 100%;
+    }
+
+    .#{$size}sp-w-7\/8 {
+      width: 7/8 * 100%;
+    }
+  }
 }
 
 // Z-Index
