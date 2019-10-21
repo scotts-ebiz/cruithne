@@ -44,7 +44,7 @@ class HowItWorksPageData implements DataPatchInterface, PatchRevertableInterface
             'page_layout' => '1column',
             'identifier' => 'how-it-works',
             'content_heading' => 'How It Works',
-            'content' => '{{widget type="SMG\SPV2HowItWorksPageWidget\Block\Widget\HowItWorksPage" type_name="Scotts Program How It Works Page"}}',
+            'content' => '<div>{{widget type="SMG\SPV2HowItWorksPageWidget\Block\Widget\HowItWorksPage" type_name="Scotts Program How It Works Page"}}</div>',
             'is_active' => 1,
             'website_root' => 1,
         ]);

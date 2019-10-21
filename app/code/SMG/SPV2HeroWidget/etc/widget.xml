@@ -1,0 +1,39 @@
+<?xml version="1.0"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+	<widget class="SMG\SPV2HeroWidget\Block\Widget\HeroWidget" id="smg_scottsprogram_herowidget">
+		<label>Scotts Program Hero Widget</label>
+		<description>Custom fields for the hero widget.</description>
+		<parameters>
+			<parameter name="heroImage" visible="true" xsi:type="block">
+				<label>Hero Image</label>
+				<block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+			</parameter>
+
+			<parameter name="heroMobileImage" visible="true" xsi:type="block">
+				<label>Hero Mobile Image</label>
+				<block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+			</parameter>
+
+			<parameter name="heroHeadline" visible="true" xsi:type="text">
+				<label>Hero Headline</label>
+			</parameter>
+
+            <parameter name="heroCallToActionText" visible="true" xsi:type="text">
+                <label>Call to Action Text</label>
+            </parameter>
+
+			<parameter name="heroCallToActionLink" visible="true" xsi:type="text">
+				<label>Call to Action Link (Page Identifier)</label>
+			</parameter>
+
+			<parameter name="heroFullScreen" visible="true" xsi:type="select" source_model="SMG\ParameterTypes\Model\Source\YesNoSelect">
+				<label>Full Screen Hero</label>
+			</parameter>
+
+			<parameter name="heroImageClass" visible="true" xsi:type="text">
+				<label>Image Position Class</label>
+				<value>sp-bg-center</value>
+			</parameter>
+		</parameters>
+	</widget>
+</widgets>
