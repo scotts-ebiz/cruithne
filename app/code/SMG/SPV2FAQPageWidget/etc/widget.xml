@@ -4,8 +4,19 @@
 		<label>Scotts Program FAQ Page</label>
 		<description>A widget for the Scotts Program FAQ page</description>
         <parameters>
-			<parameter name="faqHasCategories" visible="true" xsi:type="select" source_model="SMG\ParameterTypes\Model\Source\YesNoSelect">
-				<label>Has Categories</label>
+			<parameter name="faqCategory1Name" visible="true" xsi:type="text">
+				<label>Category 1 Name</label>
+			</parameter>
+			<parameter name="faqCategory1Block" visible="true" xsi:type="text">
+				<label>Category 1 Block Identifier</label>
+				<value>faq_1</value>
+			</parameter>
+			<parameter name="faqCategory2Name" visible="true" xsi:type="text">
+				<label>Category 2 Name (leave empty to disable)</label>
+			</parameter>
+			<parameter name="faqCategory2Block" visible="true" xsi:type="text">
+				<label>Category 2 Block Identifier</label>
+				<value>faq_2</value>
 			</parameter>
 		</parameters>
 	</widget>

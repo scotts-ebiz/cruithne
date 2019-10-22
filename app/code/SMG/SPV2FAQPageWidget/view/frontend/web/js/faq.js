@@ -7,12 +7,22 @@ define([
     return Component.extend({
         category: ko.observable('faq_1'),
 
-        initialize: function () {
+        initialize: function (config) {
             this._super();
+
+            this.category1Name = config.category1Name;
+            this.category2Name = config.category2Name;
         },
 
         setupAccordion() {
             $('#faq_1').accordion({
+                active: false,
+                collapsible: true,
+                multipleCollapsible: false,
+                openedState: 'active',
+            });
+
+            $('#faq_2').accordion({
                 active: false,
                 collapsible: true,
                 multipleCollapsible: false,

@@ -4,23 +4,27 @@
 
         <div
             id="faq_list"
-            data-bind="afterRender: setupAccordion"
+            data-bind="afterRender: setupAccordion, css: { 'mt-24': category1Name && category2Name }"
         >
-            <div
-                id="faq_1"
-                class="sp-faq-list"
-                data-bind="visible: category() == 'faq_1'"
-            >
-                <?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('faq_1')->toHtml();?>
-            </div>
+            <?php if ($this->getData('faqCategory1Block')) { ?>
+                <div
+                    id="faq_1"
+                    class="sp-faq-list"
+                    data-bind="visible: category() == 'faq_1'"
+                >
+                    <?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId($this->getData('faqCategory1Block'))->toHtml();?>
+                </div>
+            <?php } ?>
 
-            <div
-                id="faq_2"
-                class="sp-faq-list"
-                data-bind="visible: category() == 'faq_2'"
-            >
-                <?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('faq_2')->toHtml();?>
-            </div>
+            <?php if ($this->getData('faqCategory2Block')) { ?>
+                <div
+                    id="faq_2"
+                    class="sp-faq-list"
+                    data-bind="visible: category() == 'faq_2'"
+                >
+                    <?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId($this->getData('faqCategory2Block'))->toHtml();?>
+                </div>
+            <?php } ?>
         </div>
     </div>
 </div>
@@ -32,7 +36,9 @@
                 "components": {
                     "sp-faq": {
                         "component": "SMG_SPV2FAQPageWidget/js/faq",
-                        "template" : "SMG_SPV2FAQPageWidget/faq"
+                        "template" : "SMG_SPV2FAQPageWidget/faq",
+                        "category1Name": "<?php echo $this->escapeHtml($this->getData('faqCategory1Name')) ?>",
+                        "category2Name": "<?php echo $this->escapeHtml($this->getData('faqCategory2Name')) ?>"
                     }
                 }
             }
