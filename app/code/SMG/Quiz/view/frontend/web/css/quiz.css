@@ -2,6 +2,27 @@
   overflow: auto;
 }
 
+.sp-quiz__previous {
+  background-color: transparent;
+  border: none;
+  margin: 0;
+  padding: 0;
+  text-decoration: underline;
+}
+
+.sp-quiz__previous:active,
+.sp-quiz__previous:hover {
+  background-color: transparent;
+  border: none;
+  color: #454545;
+}
+
+.sp-quiz__previous:focus {
+  outline: 2px auto #454545;
+  outline-offset: 1px;
+  text-decoration: underline;
+}
+
 .sp-quiz__next {
   width: 100px;
 }

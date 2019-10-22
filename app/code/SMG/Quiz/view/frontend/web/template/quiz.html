@@ -1,18 +1,20 @@
 <div class="sp-quiz__content sp-flex-auto sp-py-12">
     <div
         class="sp-quiz__question sp-container"
-        data-bind="if: quiz()"
+        data-bind="if: questionGroup()"
     >
+        <p class="sp-label sp-text-center" data-bind="text: questionGroup().label"></p>
+
         <h2
             class="sp-quiz__question-title sp-h2 sp-max-w-md sp-mt-0 sp-mx-auto sp-text-center"
-            data-bind="text: quiz().title"
+            data-bind="text: questionGroup().title"
         >
         </h2>
 
-        <p class="sp-text-center" data-bind="text: quiz().subtitle"></p>
+        <p class="sp-text-center" data-bind="text: questionGroup().subtitle"></p>
 
         <div
-            class="sp-quiz__options sp-flex sp-flex-wrap sp--mx-4"
+            class="sp-quiz__options sp-flex sp-flex-wrap sp-justify-center sp--mx-4"
             data-bind="foreach: options"
         >
             <label class="sp-quiz__option sp-w-1/2 lg:sp-w-1/4 sp-text-center sp-p-4">
@@ -31,13 +33,33 @@
     </div>
 </div>
 
-<div class="sp-quiz__progress sp-bg-white sp-text-right">
-    <div class="sp-container sp-py-6">
-        <button
-            class="sp-quiz__next sp-button sp-button--primary"
-            type="button"
-        >
-            Next
-        </button>
+<div
+    class="sp-quiz__progress sp-bg-white sp-text-black sp-text-right"
+    data-bind="if: questionGroup()"
+>
+    <div class="sp-container sp-flex sp-items-center sp-justify-between sp-py-6">
+        <div class="lg:sp-w-1/8">
+            <button
+                class="sp-quiz__previous sp-label sp-text-green-1"
+                type="button"
+                data-bind="visible: previousGroups().length, click: previousQuestionGroup"
+            >
+                Previous
+            </button>
+        </div>
+
+        <div class="sp-quiz__progress-bar lg:sp-w-3/4">
+            <p class="sp-label sp-mb-0 sp-text-center" data-bind="text: questionGroup().label"></p>
+        </div>
+
+        <div class="lg:sp-w-1/8">
+            <button
+                class="sp-quiz__next sp-button sp-button--primary"
+                type="button"
+                data-bind="click: validateResponse"
+            >
+                Next
+            </button>
+        </div>
     </div>
 </div>
