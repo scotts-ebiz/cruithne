@@ -109,6 +109,15 @@ $colors: (
   }
 }
 
+.sp-hidden {
+  clip: rect(1px, 1px, 1px, 1px); /* IE */
+  clip-path: polygon(0 0, 0 0, 0 0);
+  height: 1px;
+  overflow: hidden !important;
+  position: absolute;
+  width: 1px;
+}
+
 // Flex
 @each $size in $breakpoints {
   @include breakpoint($size) {

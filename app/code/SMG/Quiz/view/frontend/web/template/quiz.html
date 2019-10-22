@@ -1,55 +1,74 @@
-<div class="sp-quiz__content sp-flex-auto sp-py-12">
+<div data-bind="if: quiz" class="sp-quiz__content sp-flex-auto sp-py-12">
     <div
         class="sp-quiz__question sp-container"
-        data-bind="if: questionGroup()"
+        data-bind="if: quiz.currentGroup()"
     >
-        <p class="sp-label sp-text-center" data-bind="text: questionGroup().label"></p>
+        <p class="sp-label sp-text-center" data-bind="text: quiz.currentGroup().label"></p>
 
         <h2
             class="sp-quiz__question-title sp-h2 sp-max-w-md sp-mt-0 sp-mx-auto sp-text-center"
-            data-bind="text: questionGroup().title"
+            data-bind="text: quiz.currentGroup().title"
         >
         </h2>
 
-        <p class="sp-text-center" data-bind="text: questionGroup().subtitle"></p>
+        <p class="sp-text-center" data-bind="text: quiz.currentGroup().subtitle"></p>
 
         <div
-            class="sp-quiz__options sp-flex sp-flex-wrap sp-justify-center sp--mx-4"
-            data-bind="foreach: options"
+            class="sp-mx-auto lg:sp-w-3/4"
+            data-bind="foreach: { data: quiz.currentGroup().questions, as: 'question', noChildContext: true }"
         >
-            <label class="sp-quiz__option sp-w-1/2 lg:sp-w-1/4 sp-text-center sp-p-4">
-                <div class="sp-quiz__option-content sp-bg-white sp-h-full sp-p-4">
-                    <div class="sp-my-4">
-                        <img
-                            alt="Quiz Option"
-                            class="sp-quiz__option-image"
-                            data-bind="attr: { src: imageUrl }"
-                        />
-                    </div>
-                    <p class="sp-text-black sp-mb-0" data-bind="text: label"></p>
+            <div
+                class="sp-quiz__options sp-flex sp-flex-wrap sp-justify-center sp--mx-1"
+                data-bind="foreach: { data: question.options, as: 'option', noChildContext: true }"
+            >
+                <div
+                    class="sp-quiz-option sp-w-1/2 lg:sp-w-1/4 sp-text-center sp-p-1"
+                    data-bind="css: { 'sp-quiz-option--multiple': question.questionType === 2 }"
+                >
+                    <input
+                        class="sp-quiz-option__input sp-quiz-checkbox sp-hidden"
+                        data-bind="attr: { id: option.id, name: question.id, value: option.id }"
+                        type="checkbox"
+                    />
+
+                    <label
+                        class="sp-quiz__option-label sp-block sp-h-full"
+                        data-bind="attr: { for: option.id }, click: $parent.setAnswer"
+                    >
+                        <span class="sp-quiz__option-content sp-bg-white sp-block sp-p-4 sp-rounded sp-shadow-md">
+                            <span class="sp-block sp-my-4">
+                                <img
+                                    alt="Quiz Option"
+                                    class="sp-quiz__option-image"
+                                    data-bind="attr: { src: option.imageUrl }"
+                                />
+                            </span>
+                            <span class="sp-block sp-mb-0 sp-text-black" data-bind="text: option.label"></span>
+                        </span>
+                    </label>
                 </div>
-            </label>
+            </div>
         </div>
     </div>
 </div>
 
 <div
     class="sp-quiz__progress sp-bg-white sp-text-black sp-text-right"
-    data-bind="if: questionGroup()"
+    data-bind="if: quiz.currentGroup()"
 >
     <div class="sp-container sp-flex sp-items-center sp-justify-between sp-py-6">
         <div class="lg:sp-w-1/8">
             <button
                 class="sp-quiz__previous sp-label sp-text-green-1"
                 type="button"
-                data-bind="visible: previousGroups().length, click: previousQuestionGroup"
+                data-bind="visible: quiz.previousGroups().length, click: previousQuestionGroup"
             >
                 Previous
             </button>
         </div>
 
         <div class="sp-quiz__progress-bar lg:sp-w-3/4">
-            <p class="sp-label sp-mb-0 sp-text-center" data-bind="text: questionGroup().label"></p>
+            <p class="sp-label sp-mb-0 sp-text-center" data-bind="text: quiz.currentGroup().label"></p>
         </div>
 
         <div class="lg:sp-w-1/8">

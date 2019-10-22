@@ -24,13 +24,34 @@
 }
 
 .sp-quiz__next {
-  width: 100px;
+  width: 80px;
+}
+
+.sp-quiz__option-label {
+  border-radius: 0.5rem;
+  padding: 6px; /** Padding used to generate border around option content **/
+  transition: background-color 0.25s ease;
+}
+
+.sp-quiz__option-content {
+  height: 100%;
+  transition: background-color 0.25s ease;
+}
+
+.sp-quiz-checkbox:checked + .sp-quiz__option-label {
+  background-color: #028c45;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.26);
+}
+
+.sp-quiz-checkbox:checked + .sp-quiz__option-label .sp-quiz__option-content {
+  background-color: #edf4e1;
+  box-shadow: none;
 }
 
 .sp-quiz__option-image {
   display: block;
   height: auto;
-  max-width: 120px;
+  max-width: 100px;
   margin: 0 auto;
   width: 100%;
 }

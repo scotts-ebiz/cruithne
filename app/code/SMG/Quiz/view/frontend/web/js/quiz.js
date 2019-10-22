@@ -3,30 +3,150 @@ define([
     'ko',
     'jquery',
 ], function (Component, ko, $) {
+    /**
+     * Question Group View Model
+     *
+     * @param questionGroup
+     * @constructor
+     */
+    function QuestionGroup(questionGroup) {
+        var self = this;
+
+        self.id = questionGroup.id;
+
+        self.questions = questionGroup.questions;
+        self.answers = ko.observable({});
+    }
+
+    /**
+     * Question Result View Model
+     *
+     * @param questionId
+     * @param optionId
+     * @param optionalValue
+     * @constructor
+     */
+    function QuestionResult(questionId, optionId, optionalValue) {
+        var self = this;
+
+        self.questionId = questionId;
+        self.optionId = optionId;
+        self.optionalValue = optionalValue;
+    }
+
+    /**
+     * Quiz View Model
+     *
+     * @param data
+     * @constructor
+     */
+    function Quiz(data) {
+        var self = this;
+
+        self.template = null;
+        self.previousGroups = ko.observableArray([]);
+        self.currentGroup = ko.observable(null);
+
+        self.initialize = function (data) {
+            self.template = new QuizTemplate(data);
+            self.loadNextGroup();
+        };
+
+        self.loadNextGroup = function (group) {
+            // No group specified so load the first group.
+            if (!group) {
+                self.currentGroup(self.template.questionGroups[0]);
+
+                return;
+            }
+
+            self.previousGroups.push(self.currentGroup());
+
+            self.setGroup(group);
+        };
+
+        self.loadPreviousGroup = function () {
+            if (!self.previousGroups().length) {
+                return;
+            }
+
+            self.setGroup(self.previousGroups.pop());
+        };
+
+        self.setGroup = function (group) {
+            self.currentGroup(group);
+
+            var results = {};
+
+            for (question of group.questions) {
+                for (option of question.options) {
+                    results[option.id] = '';
+                }
+            }
+        };
+
+        self.validateGroup = function () {
+            // TODO: Validate responses
+            var valid = true;
+
+            if (!valid) {
+                return;
+            }
+
+            // Get the transitions for the current group.
+            var transitions = self.currentGroup().transitions;
+
+            if (transitions.length === 1) {
+                // There is only one transition, so pull that questionGroup.
+                var id = transitions[0].destinationQuestionGroupId;
+                self.loadNextGroup(self.findQuestionGroup(id));
+            }
+        };
+
+        /**
+         * Find the question group with the given ID.
+         *
+         * @param id
+         */
+        self.findQuestionGroup = function (id) {
+            if (!id) {
+                return false;
+            }
+
+            for (var i = 0; i < self.template.questionGroups.length; i++) {
+                if (self.template.questionGroups[i].id === id) {
+                    return self.template.questionGroups[i];
+                }
+            }
+
+            return false;
+        };
+    }
+
+    /**
+     * Quiz Template View Model
+     *
+     * @param data
+     * @constructor
+     */
+    function QuizTemplate(data) {
+       var self = this;
+
+       self.id = data.id;
+       self.questionGroups = data.questionGroups;
+       self.zipCodesOptionMappings = data.zipCodesOptionMappings;
+    }
+
     return Component.extend({
-        quizTemplate: {
-            id: ko.observable(''),
-            questionGroups: ko.observableArray([]),
-            zipCodesOptionMappings: ko.observableArray([]),
-        },
         questionGroup: ko.observable(null),
         questions: ko.observable({}),
-        options: ko.observableArray([]),
-        results: ko.observable({}),
+        answers: ko.observable({}),
         previousGroups: ko.observableArray([]),
-
 
         initialize: function () {
             this._super();
-
+            this.quiz = new Quiz();
             this.loadTemplate();
-            this.questionGroup.subscribe(function (newValue) {
-                try {
-                    this.options(newValue.questions[0].options);
-                } catch (error) {
-                    this.options([]);
-                }
-            }.bind(this));
         },
 
         /**
@@ -41,86 +161,29 @@ define([
                     dataType: 'json',
                     method: 'get',
                     success: function (data) {
-                        this.quizTemplate.id(data.id);
-                        this.quizTemplate.questionGroups(data.questionGroups);
-                        this.quizTemplate.zipCodesOptionMappings(data.zipCodesOptionMappings);
-                        this.initializeQuiz();
+                        // Initialize the quiz with the template data.
+                        self.quiz.initialize(data);
                     }.bind(self),
                 },
             );
         },
 
         /**
-         * Get the first question group and start the quiz.
-         */
-        initializeQuiz: function () {
-            // Pull the first question group from the template.
-            this.setQuestionGroup(this.quizTemplate.questionGroups()[0]);
-        },
-
-        /**
-         * Set the current question group.
-         *
-         * @param questionGroup
-         * @param previous
-         */
-        setQuestionGroup: function (questionGroup, previous) {
-            if (this.questionGroup() && !previous) {
-                this.previousGroups.push(this.questionGroup());
-            }
-
-            var questions = {};
-
-            // Set the question group
-            this.questionGroup(questionGroup);
-
-            // Create an ID keyed object of the questions for this group.
-            questionGroup.questions.forEach(function (question) {
-                questions[question.id] = question;
-            });
-
-            this.questions(questions);
-        },
-
-        /**
          * Go back to the previous question.
          */
         previousQuestionGroup() {
-            if (this.previousGroups().length) {
-                this.setQuestionGroup(this.previousGroups.pop(), true);
-            }
+            this.quiz.loadPreviousGroup();
         },
 
         /**
          * Validate the responses and move to the appropriate question.
          */
         validateResponse: function () {
-            // Get the transitions for the current group.
-            var transitions = this.questionGroup().transitions;
-
-            if (transitions.length === 1) {
-                // There is only one transition, so pull that questionGroup.
-                var id = transitions[0].destinationQuestionGroupId;
-                var questionGroup = this.findQuestionGroup(id);
-                console.log(questionGroup);
-
-                this.setQuestionGroup(questionGroup);
-            }
-
+            this.quiz.validateGroup();
         },
 
-        /**
-         * Find the question group with the given ID.
-         *
-         * @param id
-         */
-        findQuestionGroup: function (id) {
-            console.log(id);
-            for (var i = 0; i < this.quizTemplate.questionGroups().length; i++) {
-                if (this.quizTemplate.questionGroups()[i].id === id) {
-                    return this.quizTemplate.questionGroups()[i];
-                }
-            }
-        },
+        setAnswer: function (data, event) {
+            console.log(data, event);
+        }
     })
 });
