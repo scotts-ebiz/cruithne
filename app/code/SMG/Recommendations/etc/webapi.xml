@@ -6,10 +6,4 @@
             <resource ref="anonymous" />
         </resources>
     </route>
-    <route url="/V1/lawnzones" method="GET">
-    	<service class="SMG\Recommendations\Api\Quiz\LawnZoneInterface" method="get" />
-    	<resources>
-    		<resource ref="anonymous" />
-    	</resources>
-    </route>
 </routes>
