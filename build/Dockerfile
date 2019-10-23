@@ -17,10 +17,13 @@ RUN chown -R magento:www-data .git
 USER magento
 WORKDIR $MAGENTO_DIR
 
+RUN ls -la /var/www/html/magento2/vendor/snowdog/frontools/
 RUN git fetch --all
 RUN git reset --hard
 RUN git pull
+RUN ls -la /var/www/html/magento2/vendor/snowdog/frontools/
 RUN composer install
+RUN ls -la /var/www/html/magento2/vendor/snowdog/frontools/
 
 USER root
 
