@@ -491,7 +491,11 @@ td#label_carrier_fedex-nextday_flatrate {
 
 .checkout-index-index {
     .table-checkout-shipping-method tbody td {
-        border:0;
+        border: 0;
+
+        &.col-price {
+            width: 48px;
+        }
     }
     .table-checkout-shipping-method tbody tr {
         border-top: 1px solid #ccc;
