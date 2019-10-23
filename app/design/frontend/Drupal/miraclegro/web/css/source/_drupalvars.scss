@@ -1,9 +1,16 @@
-//  Iframe Vars
-//  ---------------------------------------------
-$iframe-addtocart-btn-border: none;
-$iframe-addtocart-btn-color: #fff;
-$iframe-addtocart-btn-color-hover: #fff;
-$iframe-addtocart-btn-background: #509643;
-$iframe-addtocart-btn-background-hover: #5fb061;
+// Magento UI Variables //
+$primary__color:   #509643; // medium green
+$secondary__color: #5fb061; // light green
 
-$iframe-cart-checkout-now-txt: #509643;
+//  Miraclegro Var Overrides
+//  ---------------------------------------------
+
+// Iframes //
+$iframe-addtocart-btn-border: none;
+$iframe-addtocart-btn-border-radius: 0;
+$iframe-addtocart-btn-color: $color_white;
+$iframe-addtocart-btn-color-hover: $color_white;
+$iframe-addtocart-btn-background: $primary__color;
+$iframe-addtocart-btn-background-hover: #959393;
+
+$iframe-cart-checkout-now-txt: $primary__color;

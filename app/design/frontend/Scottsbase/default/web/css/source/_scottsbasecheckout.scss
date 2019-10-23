@@ -489,7 +489,7 @@
 
 
 //Checkout - Hide Country Field in Checkout Shipping Page (Will need to be nested correctly):
-.opc-wrapper .fieldset > .field.required, .opc-wrapper .fieldset > .field._required[name="shippingAddress.country_id"] {
+.opc-wrapper .fieldset > .field._required[name="shippingAddress.country_id"] {
   display: none;
 }
 
