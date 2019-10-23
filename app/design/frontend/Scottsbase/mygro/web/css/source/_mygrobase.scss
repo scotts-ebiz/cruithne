@@ -79,8 +79,10 @@ body {
                         color: #075534!important;
                     }
                 }
+                img {
+                    display: block;
+                }
             }
-
             .logo {
                 @include max-screen($screen__l) {
                     max-width: 6rem;

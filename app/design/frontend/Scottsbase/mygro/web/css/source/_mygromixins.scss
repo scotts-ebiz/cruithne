@@ -28,7 +28,6 @@
     @if $ls { letter-spacing: $ls; }
 }
 
-/*------- 11042019 Custom Changes - Start --------*/
 @mixin transform($transforms) {
 	-moz-transform: $transforms;
 	-o-transform: $transforms;
@@ -46,4 +45,3 @@
 	-o-transition: $x;
 	transition: $x;
 }
-/*------- 11042019 Custom Changes - End --------*/

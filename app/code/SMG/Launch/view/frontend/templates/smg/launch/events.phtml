@@ -6,9 +6,7 @@ $item = $smghelper->getCheckoutSession()->getDtmAddToCart();
 <?php if ($item) : ?>
     <script>
         window.dtmData.events.push({
-
             name: 'cartAdd',
-
             product: {
                 <?php foreach($smghelper->getCheckoutSession()->getDtmAddToCart() as $pro){ ?>
 		id: '<?php echo $block->escapeHtml($pro["id"]);?>',
@@ -19,9 +17,7 @@ $item = $smghelper->getCheckoutSession()->getDtmAddToCart();
 		sku: '<?php echo $block->escapeHtml($pro["sku"]);?>',
 		quantity: <?php echo $block->escapeHtml($pro["quantity"]);?>
                 <?php } ?>
-
             }
-
         });
     </script>
     <?php $smghelper->getCheckoutSession()->unsDtmAddToCart();?>
@@ -89,12 +85,26 @@ $item = $smghelper->getCheckoutSession()->getDtmAddToCart();
     <?php $smghelper->getCheckoutSession()->unsContactError(); ?>
 <?php endif;  ?>
 
-<?php /* Product Page Tab */ ?>
-<script type="text/x-magento-init">
-{
-	"*": {
-			"SMG_Launch/launch": {}
-		}
-}
-</script>
 
+<?php
+/*all general error message */
+$errormessages = $smghelper->getCookieManager()->getCookie('mage-dtmerror-messages');
+if ($errormessages) {
+	$errormessages = $smghelper->getSerializer()->unserialize($errormessages);
+	if (!is_array($errormessages)) {
+		$errormessages = [];
+		}
+?>
+	<?php if(count($errormessages) > 0):?>
+		<script>
+			window.dtmData.events.push({
+				name: 'errorMessage',
+				errorMessage:'<?php echo implode(",",$errormessages); ?>'
+			});
+</script>
+		<?php $smghelper->getCookieManager()->deleteCookie('mage-dtmerror-messages'); ?>
+	<?php endif;  ?>
+<?php }?>
+
+<?php /* Product Page Tab */ ?>
+<script type="text/x-magento-init">{	"*": {			"SMG_Launch/launch": {}		}}</script>
