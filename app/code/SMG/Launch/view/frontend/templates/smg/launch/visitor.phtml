@@ -12,6 +12,9 @@ $script = $helper->getScript($store);
 $request = $smghelper->getActionContext()->getRequest();
 $currentPage = $request->getFullActionName();
 
+$cmsPage = $smghelper->getCmspagemanager();
+$currentcmspage = $cmsPage->getIdentifier();
+
 $subTotal = $smghelper->getCheckoutCart()->getQuote()->getSubtotal();
 $items = $smghelper->getCheckoutCart()->getQuote()->getAllItems();
 
@@ -43,7 +46,7 @@ if($currentPage == 'cms_index_index'){
 }else if($currentPage == 'wishlist_index_share'){
     $type = 'wishlist_share';
 }else if($currentPage == 'sales_order_history'){
-    $type = 'downloadable_product';
+    $type = 'order_history';
 }else if($currentPage == 'customer_address_form'){
     $type = 'new_address';
 }else if($currentPage == 'customer_account_edit'){
@@ -53,7 +56,7 @@ if($currentPage == 'cms_index_index'){
 }else if($currentPage == 'vantiv_recurring_index'){
     $type = 'vantive_recurring';
 }else if($currentPage == 'downloadable_customer_products'){
-    $type = 'order_history';
+    $type = 'downloadable_product';
 }else if($currentPage == 'catalog_product_compare_index'){
     $type = 'compare';
 }else if($currentPage == 'checkout_onepage_success'){
@@ -63,11 +66,32 @@ if($currentPage == 'cms_index_index'){
 }else if($currentPage == 'cms_noroute_index'){
     $type = '404';
 }
-
-
+/*--- cms page ---*/
+if($currentcmspage == 'warranty'){
+	$type = 'warranty';
+	$name = $cmsPage->getTitle();
+}else if($currentcmspage == 'groconnect'){
+	$type = 'groconnect';
+	$name = $cmsPage->getTitle();
+}else if($currentcmspage == 'integrations'){
+	$type = 'integrations';
+	$name = $cmsPage->getTitle();
+}else if($currentcmspage == 'privacy-policy'){
+	$type = 'privacy-policy';
+	$name = $cmsPage->getTitle();
+}else if($currentcmspage == 'terms-and-conditions'){
+	$type = 'terms-and-conditions';
+	$name = $cmsPage->getTitle();
+}else if($currentcmspage == 'mygro-rebates'){
+	$type = 'mygro-rebates';
+	$name = $cmsPage->getTitle();
+}else if($currentcmspage == 'return-policy'){
+	$type = 'return-policy';
+	$name = $cmsPage->getTitle();
+}
 ?>
 <!-- Adobe Launch Code -->
-<script src="<?php echo $block->escapeJs($script)?>"></script>
+<script src="<?php echo $script?>"></script>
 <script>
     window.dtmData = {
         events: [],
@@ -116,6 +140,10 @@ if($currentPage == 'cms_index_index'){
             promoCode: '<?php echo $block->escapeHtml($smghelper->getCheckoutCart()->getQuote()->getCouponCode());?>',
             lineItems: [
                 <?php foreach($items as $item) {
+						if($item->getParentItem()){
+							continue;
+						}
+
                 $product = $smghelper->getProduct()->load($item->getProductId());
                 $store = $smghelper->getStoremangerInterface()->getStore();
                 $productImageUrl = '';

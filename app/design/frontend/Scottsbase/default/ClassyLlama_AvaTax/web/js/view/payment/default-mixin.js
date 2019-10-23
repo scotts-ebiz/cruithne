@@ -1,5 +1,6 @@
 
 define([
+    'jquery',
     'ko',
     'underscore',
     'ClassyLlama_AvaTax/js/model/address-model',
@@ -8,7 +9,7 @@ define([
     'Magento_Checkout/js/model/quote',
     'Magento_Checkout/js/model/checkout-data-resolver',
     'uiRegistry',
-], function (ko, _, addressModel, paymentService, checkoutData, quote, checkoutDataResolver, registry) {
+], function ($, ko, _, addressModel, paymentService, checkoutData, quote, checkoutDataResolver, registry) {
     'use strict';
 
     return function (target) {

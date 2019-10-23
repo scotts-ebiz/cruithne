@@ -3,6 +3,13 @@ html,
 body {
     font-size: 16px;
 }
+
+.page-wrapper{
+    .page-title-wrapper {
+      display: none;
+    }
+}
+
 .checkout-index-index {
     .page-wrapper {
         .page-main {
@@ -12,7 +19,7 @@ body {
                         .actions {
                             float: right;
                             .action.continue {
-                                color: $secondary-dark-gray;
+                                color: $scotts-black;
                                 &:before {
                                     -webkit-font-smoothing: antialiased;
                                     -moz-osx-font-smoothing: grayscale;
@@ -36,3 +43,4 @@ body {
         }
     }
 }
+
