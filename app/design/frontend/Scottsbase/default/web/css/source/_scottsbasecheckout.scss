@@ -516,7 +516,6 @@ td#label_carrier_fedex-nextday_flatrate {
         cursor: pointer;
         line-height: 20px;
         display: inline-block;
-        color: #666;
     }
 
     [type="radio"]:checked + label:before,
@@ -528,7 +527,7 @@ td#label_carrier_fedex-nextday_flatrate {
         width: 10px;
         height: 10px;
         border-radius: 100%;
-        background: $scotts-white;
+        background: $color_white;
         border: 2px solid $scotts-secondary-green;
     }
 
