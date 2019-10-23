@@ -45,5 +45,7 @@ COPY ondemand-entrypoint.sh /usr/local/bin/entrypoint.sh
 # Make executable
 RUN ["chmod", "+x", "/usr/local/bin/entrypoint.sh"]
 
+RUN ls -la /var/www/html/magento/tools
+RUN ls -la /var/www/html/magento2/vendor/snowdog/frontools/
 # The apachectl command is in entrypoint :-)
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
