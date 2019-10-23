@@ -469,20 +469,6 @@
   text-decoration: underline;
 }
 
-
-//Cart Page Styles
-.cart-summary-divlink {
-    width: 60%;
-    float: left;
-    padding: 1px 20px 25px;
-    position: relative;
-}
-
-
-td#label_method_fedex-nextday_flatrate, td#label_method_fedex-2ndday_flatrate {
-    padding-left: 0px;
-}
-
 td#label_carrier_flat-rate-shipping_flatrate,
 td#label_carrier_fedex-2ndday_flatrate,
 td#label_carrier_fedex-nextday_flatrate {
