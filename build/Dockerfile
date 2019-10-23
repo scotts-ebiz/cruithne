@@ -17,13 +17,11 @@ RUN chown -R magento:www-data .git
 USER magento
 WORKDIR $MAGENTO_DIR
 
-RUN ls -la /var/www/html/magento2/vendor/snowdog/frontools/
 RUN git fetch --all
 RUN git reset --hard
 RUN git pull
-RUN ls -la /var/www/html/magento2/vendor/snowdog/frontools/
 RUN composer install
-RUN ls -la /var/www/html/magento2/vendor/snowdog/frontools/
+RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools
 
 USER root
 
@@ -48,7 +46,5 @@ COPY ondemand-entrypoint.sh /usr/local/bin/entrypoint.sh
 # Make executable
 RUN ["chmod", "+x", "/usr/local/bin/entrypoint.sh"]
 
-RUN ls -la /var/www/html/magento/tools
-RUN ls -la /var/www/html/magento2/vendor/snowdog/frontools/
 # The apachectl command is in entrypoint :-)
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
