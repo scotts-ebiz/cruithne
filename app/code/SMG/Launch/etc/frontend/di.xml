@@ -6,12 +6,5 @@
                 <item name="smg-launch-fpc" xsi:type="string">SMG\Launch\CustomerData\Fpc</item>
             </argument>
         </arguments>
-    </type>		
-	<type name="Magento\Framework\Controller\ResultInterface">        				
-		<plugin name="result-messages" type="SMG\Launch\Plugin\Controller\ResultInterface"/>	
-	</type>
-	<type name="Magento\Theme\CustomerData\Messages">        				
-		<plugin name="SMG_Launch_Plugin_CustomerData_Messages" type="SMG\Launch\Plugin\CustomerData\Messages"/>	
-	</type>
-</config> 
- 
+    </type>
+</config>
