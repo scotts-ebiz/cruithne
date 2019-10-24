@@ -12,8 +12,6 @@ su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade'
 su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile' 
 
 # Set Styles
-which npm 
-su - magento -c 'which npm'
 su - magento -c 'rm /var/www/html/magento2/tools/yarn.lock'
 su - magento -c 'rm /var/www/html/magento2/tools/npm-shrinkwrap.json'
 su - magento -c 'cd /var/www/html/magento2/tools/ && ls -la'
