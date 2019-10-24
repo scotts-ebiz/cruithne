@@ -21,7 +21,7 @@ class LayoutProcessor
 
 			/* State/Provision label change*/
 			$result['components']['checkout']['children']['steps']['children']['shipping-step']
-            ['children']['shippingAddress']['children']['shipping-address-fieldset']['children']['region_id']['label'] = __('State');
+            ['children']['shippingAddress']['children']['shipping-address-fieldset']['children']['region_id']['label'] = __('State');						/* Shipping address State validation change*/			$result['components']['checkout']['children']['steps']['children']['shipping-step']            ['children']['shippingAddress']['children']['shipping-address-fieldset']['children']['region_id']['validation'] = ['required-entry-regionid' => true,'required-entry' => false];
 
 			/* zip lable change*/
 			$result['components']['checkout']['children']['steps']['children']['shipping-step']

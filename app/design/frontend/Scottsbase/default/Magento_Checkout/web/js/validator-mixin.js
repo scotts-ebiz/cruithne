@@ -112,7 +112,7 @@ define([
 					if (!isNaN(value)) {
 						return false;
 					}
-					if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
+					if(/^([a-zA-Z0-9()":;'-]+ )+[A-Za-z0-9()":;'-]+$|^[A-Za-z0-9()":;'-]*$/.test(value)){
 						return true
 					} else {
 						return false;
@@ -129,7 +129,7 @@ define([
 			'required-entry-street-1',
 			function (value) {
 
-					if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
+					if(/^([a-zA-Z0-9()":;'-]+ )+[A-Za-z0-9()":;'-]+$|^[A-Za-z0-9()":;'-]*$/.test(value)){
 						return true
 					} else {
 						return false;
@@ -142,7 +142,7 @@ define([
 			'required-entry-street-2',
 			function (value) {
 
-					if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
+					if(/^([a-zA-Z0-9()":;'-]+ )+[A-Za-z0-9()":;'-]+$|^[A-Za-z0-9()":;'-]*$/.test(value)){
 						return true
 					} else {
 						return false;
@@ -159,7 +159,7 @@ define([
 					if (!isNaN(value)) {
 						return false;
 					}
-					if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
+					if(/^([a-zA-Z0-9()":;'-]+ )+[A-Za-z0-9()":;'-]+$|^[A-Za-z0-9()":;'-]*$/.test(value)){
 						return true
 					} else {
 						return false;
@@ -176,7 +176,7 @@ define([
 			'required-entry-bstreet-1',
 			function (value) {
 
-					if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
+					if(/^([a-zA-Z0-9()":;'-]+ )+[A-Za-z0-9()":;'-]+$|^[A-Za-z0-9()":;'-]*$/.test(value)){
 						return true
 					} else {
 						return false;
@@ -189,7 +189,7 @@ define([
 			'required-entry-bstreet-2',
 			function (value) {
 
-					if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
+					if(/^([a-zA-Z0-9()":;'-]+ )+[A-Za-z0-9()":;'-]+$|^[A-Za-z0-9()":;'-]*$/.test(value)){
 						return true
 					} else {
 						return false;
@@ -199,7 +199,30 @@ define([
 		);
 
 		/* End street address validation */
+		validator.addRule(
+			'required-entry-regionid',
+			function (value) {
 
+				if ($("select[name='region_id']").val() != '') {
+					return true;
+				} else {
+					return !$.mage.isEmpty(value);
+				}
+			},
+			$.mage.__('Please select a State.')
+		);
+		validator.addRule(
+			'required-entry-bregionid',
+			function (value) {
+				var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.region_id';
+				if ($("div[name='"+inpt+"'] select[name='region_id']").val() != '') {
+					return true;
+				} else {
+					return !$.mage.isEmpty(value);
+				}
+			},
+			$.mage.__('Please select a State.')
+		);
 		validator.addRule(
 			'required-entry-pcode',
 			function (value) {
@@ -232,14 +255,7 @@ define([
 			'required-entry-telephone',
 			function (value) {
 				if ($("input[name='telephone']").val() != '') {
-					var str = $("input[name='telephone']").val();
-					if(str){
-						var mob = str.replace(/\-/g, '');
-						if(mob.length < 10 || mob.length > 10){
-							return false;
-						}
-					}
-					var filter = /(\d{3})\-?(\d{3})\-?(\d{4})/;
+					var filter = /^[(]?(\d{3})[)]?[-|\s]?(\d{3})[-|\s]?(\d{4})$/;
 					if (value.length > 9 && filter.test(value)) {
 						return true;
 					}else {
@@ -258,14 +274,7 @@ define([
 			function (value) {
 				var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.telephone';
 				if ($("div[name='"+inpt+"'] input[name='telephone']").val() != '') {
-					var str = $("div[name='"+inpt+"'] input[name='telephone']").val();
-					if(str){
-						var mob = str.replace(/\-/g, '');
-						if(mob.length < 10 || mob.length > 10){
-							return false;
-						}
-					}
-					var filter = /(\d{3})\-?(\d{3})\-?(\d{4})/;
+					var filter = /^[(]?(\d{3})[)]?[-|\s]?(\d{3})[-|\s]?(\d{4})$/;
 					if (value.length > 9 && filter.test(value)) {
 						return true;
 					}else {
