@@ -12,7 +12,12 @@ su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade'
 su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile' 
 
 # Set Styles
-su - magento -c 'cd /var/www/html/magento2/tools && npm install && npm rebuild node-sass && gulp clean -f /var/www/html/magento2/tools/gulpfile.js && gulp styles -f /var/www/html/magento2/tools/gulpfile.js'
+which npm 
+su - magento -c 'which npm'
+su - magento -c 'rm /var/www/html/magento2/tools/yarn.lock'
+su - magento -c 'rm /var/www/html/magento2/tools/npm-shrinkwrap.json'
+su - magento -c 'cd /var/www/html/magento2/tools/ && ls -la'
+su - magento -c 'cd /var/www/html/magento2/tools && npm install --verbose && npm rebuild node-sass && gulp clean -f /var/www/html/magento2/tools/gulpfile.js && gulp styles -f /var/www/html/magento2/tools/gulpfile.js'
 su - magento -c '/var/www/html/magento2/bin/magento setup:static-content:deploy'
 
 # Reindex and Cache Flush
