@@ -29,4 +29,11 @@ interface QuizInterface
 	 * @return string
 	 */
 	public function getResult($quiz_id);
+
+	/**
+	 * Get completed quizzes
+	 * 
+	 * @return string
+	 */
+	public function getCompleted();
 }

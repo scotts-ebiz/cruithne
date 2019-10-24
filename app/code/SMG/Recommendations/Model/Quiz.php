@@ -73,6 +73,29 @@ class Quiz implements QuizInterface
     }
 
     /**
+     * Return completed quizzes
+     * 
+     * @return array
+     * 
+     * @api
+     */
+    public function getCompleted()
+    {
+        $url = 'https://lspaasdraft.azurewebsites.net/api/completedQuizzes';
+        $data = '';
+        $method = 'GET';
+
+        $response = $this->request( $url, $data, $method );
+
+        if( ! empty( $response ) ) {
+            return $response;
+        }
+
+        return;
+    }
+
+    /**
+     * cURL wrapper
      * 
      * @param string $url
      * @param string $method
