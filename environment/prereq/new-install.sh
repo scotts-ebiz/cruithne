@@ -21,14 +21,14 @@ echo ">>> Installing Node & NPM..."
 brew install node
 echo ">>> Node & NPM Installed!"
 
-echo ">>> Installing PHP 7.1..."
+echo ">>> Installing PHP 7.2..."
 brew tap homebrew/homebrew-php
-brew install php71
+brew install php@7.2
 # Add path to bash_profile if it does not exist
-sudo grep -q -F 'export PATH="/usr/local/opt/php@7.1/bin:$PATH"' ~/.bash_profile || echo -e '\nexport PATH="/usr/local/opt/php@7.1/bin:$PATH"' >> ~/.bash_profile
-sudo grep -q -F 'export PATH="/usr/local/opt/php@7.1/sbin:$PATH"' ~/.bash_profile || echo -e '\nexport PATH="/usr/local/opt/php@7.1/sbin:$PATH"' >> ~/.bash_profile
+sudo grep -q -F 'export PATH="/usr/local/opt/php@7.2/bin:$PATH"' ~/.bash_profile || echo -e '\nexport PATH="/usr/local/opt/php@7.2/bin:$PATH"' >> ~/.bash_profile
+sudo grep -q -F 'export PATH="/usr/local/opt/php@7.2/sbin:$PATH"' ~/.bash_profile || echo -e '\nexport PATH="/usr/local/opt/php@7.2/sbin:$PATH"' >> ~/.bash_profile
 source ~/.bash_profile
-echo ">>> PHP 7.1 Installed!"
+echo ">>> PHP 7.2 Installed!"
 
 echo ">>> Installing PHP Mcrypt via Pecl..."
 pecl install mcrypt-1.0.0
