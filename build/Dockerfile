@@ -10,10 +10,8 @@ ENV MAGENTO_DIR /var/www/html/magento2
 LABEL company="The Scotts MiracleGro Company"
 LABEL maintainer="rick.feldschau@scotts.com"
 
-RUN which npm
 USER magento 
-RUN which npm
-USER root
+RUN npm
 
 USER root
 WORKDIR $MAGENTO_DIR
