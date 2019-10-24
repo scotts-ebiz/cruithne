@@ -59,6 +59,8 @@ class Quiz implements QuizInterface
             return;
         }
 
+        $quiz_id = filter_var( $quiz_id, FILTER_SANITIZE_SPECIAL_CHARS );
+
         $url = 'https://lspaasdraft.azurewebsites.net/api/completedQuizzes/cdaf7de7-115c-41be-a7e4-3259d2f511f8';
         $data = '';
         $method = 'GET';
