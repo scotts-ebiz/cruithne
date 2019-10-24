@@ -21,4 +21,12 @@ interface QuizInterface
 	 * @return array
 	 */
 	public function save($ids);
+
+	/**
+	 * Get results by quiz id.
+	 * 
+	 * @param string $quiz_id
+	 * @return string
+	 */
+	public function getResult($quiz_id);
 }

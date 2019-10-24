@@ -18,10 +18,10 @@ class Quiz implements QuizInterface
         $data = '';
         $method = 'GET';
 
-        if( ! empty( $this->request( $url, $data, 'GET' ) ) )
-        {
-            $response = $this->request( $url, $data, 'GET' );
+        $response = $this->request( $url, $data, $method );
 
+        if( ! empty( $response ) )
+        {
             if( ! isset( $_SESSION['quiz_template_id'] ) ) {
                 $_SESSION['quiz_template_id'] = $response['id'];
             }
@@ -42,6 +42,34 @@ class Quiz implements QuizInterface
     public function save($ids)
     {
         return array( array( 'status' => 200 ) );
+    }
+
+    /**
+     * Returns quiz data by id.
+     * 
+     * @param string $quiz_id
+     * @return array
+     * 
+     * @api
+     */
+    public function getResult($quiz_id)
+    {
+
+        if( empty( $quiz_id ) ) {
+            return;
+        }
+
+        $url = 'https://lspaasdraft.azurewebsites.net/api/completedQuizzes/cdaf7de7-115c-41be-a7e4-3259d2f511f8';
+        $data = '';
+        $method = 'GET';
+
+        $response = $this->request( $url, $data, $method );
+
+        if( ! empty( $response ) ) {
+            return $response;
+        }
+
+        return;
     }
 
     /**
