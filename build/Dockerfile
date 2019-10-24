@@ -10,6 +10,11 @@ ENV MAGENTO_DIR /var/www/html/magento2
 LABEL company="The Scotts MiracleGro Company"
 LABEL maintainer="rick.feldschau@scotts.com"
 
+RUN which npm
+USER magento 
+RUN which npm
+USER root
+
 USER root
 WORKDIR $MAGENTO_DIR
 RUN chown -R magento:www-data .git
@@ -45,6 +50,11 @@ COPY ondemand-entrypoint.sh /usr/local/bin/entrypoint.sh
 
 # Make executable
 RUN ["chmod", "+x", "/usr/local/bin/entrypoint.sh"]
+
+RUN which npm
+USER magento 
+RUN which npm
+USER root
 
 # The apachectl command is in entrypoint :-)
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
