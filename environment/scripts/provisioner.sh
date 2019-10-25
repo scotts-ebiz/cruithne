@@ -31,26 +31,26 @@ echo ">>> docroot directory created!"
 echo ">>> Restarting apache..."
 service apache2 restart
 
-echo ">>> Installing and configuring php 7.2..."
+echo ">>> Installing and configuring php 7.1..."
 add-apt-repository ppa:ondrej/php
 apt-get -y update
-apt-get -y install php7.2 libapache2-mod-php7.2 php7.2-common php7.2-gd php7.2-mysql php7.2-curl php7.2-intl php7.2-xsl php7.2-mbstring php7.2-zip php7.2-bcmath php7.2-iconv php7.2-soap php7.2-mcrypt
-sed -i "s/;date\.timezone =$/date\.timezone = 'America\/New_York'/" /etc/php/7.2/cli/php.ini
-sed -i "s/;date\.timezone =$/date\.timezone = 'America\/New_York'/" /etc/php/7.2/apache2/php.ini
-sed -i 's/;opcache\.save_comments/opcache\.save_comments/' /etc/php/7.2/cli/php.ini
-sed -i 's/;opcache\.save_comments/opcache\.save_comments/' /etc/php/7.2/apache2/php.ini
-sed -i 's/short_open_tag = Off/short_open_tag = On/' /etc/php/7.2/cli/php.ini
-sed -i 's/short_open_tag = Off/short_open_tag = On/' /etc/php/7.2/apache2/php.ini
-sed -i 's/memory_limit = [0-9]+M/memory_limit = 1G/' /etc/php/7.2/apache2/php.ini
+apt-get -y install php7.1 libapache2-mod-php7.1 php7.1-common php7.1-gd php7.1-mysql php7.1-curl php7.1-intl php7.1-xsl php7.1-mbstring php7.1-zip php7.1-bcmath php7.1-iconv php7.1-soap php7.1-mcrypt
+sed -i "s/;date\.timezone =$/date\.timezone = 'America\/New_York'/" /etc/php/7.1/cli/php.ini
+sed -i "s/;date\.timezone =$/date\.timezone = 'America\/New_York'/" /etc/php/7.1/apache2/php.ini
+sed -i 's/;opcache\.save_comments/opcache\.save_comments/' /etc/php/7.1/cli/php.ini
+sed -i 's/;opcache\.save_comments/opcache\.save_comments/' /etc/php/7.1/apache2/php.ini
+sed -i 's/short_open_tag = Off/short_open_tag = On/' /etc/php/7.1/cli/php.ini
+sed -i 's/short_open_tag = Off/short_open_tag = On/' /etc/php/7.1/apache2/php.ini
+sed -i 's/memory_limit = [0-9]+M/memory_limit = 1G/' /etc/php/7.1/apache2/php.ini
 phpenmod mcrypt
-echo ">>> php 7.2 installed and configured!"
+echo ">>> php 7.1 installed and configured!"
 
 echo ">>> Installing and configuring xdebug..."
-# For PHP 7.2 it looks like there is not xdebug 7.2 specific package.
-# START XDEBUG - PHP 7.2 SPECIFIC BUILDING FROM SOURCE
+# For PHP 7.1 it looks like there is not xdebug 7.1 specific package.
+# START XDEBUG - PHP 7.1 SPECIFIC BUILDING FROM SOURCE
 
 # Download stable release of xdebug from https://xdebug.org/download.php
-apt-get -y install php7.2-dev
+apt-get -y install php7.1-dev
 wget -c "https://xdebug.org/files/xdebug-2.5.3.tgz"
 # Extract archive
 tar -xf xdebug-2.5.3.tgz
@@ -59,18 +59,18 @@ cd xdebug-2.5.3/
 phpize
 ./configure
 make && make install
-ln -sf /etc/php/7.2/mods-available/xdebug.ini /etc/php/7.2/cli/conf.d/20-xdebug.ini
-# END XDEBUG - PHP 7.2 SPECIFIC BUILDING FROM SOURCE
+ln -sf /etc/php/7.1/mods-available/xdebug.ini /etc/php/7.1/cli/conf.d/20-xdebug.ini
+# END XDEBUG - PHP 7.1 SPECIFIC BUILDING FROM SOURCE
 
-echo "[xdebug]" | sudo tee -a /etc/php/7.2/apache2/php.ini
-echo "zend_extension=xdebug.so" > /etc/php/7.2/mods-available/xdebug.ini
-echo "xdebug.remote_autostart=0" | sudo tee -a /etc/php/7.2/apache2/php.ini
-echo "xdebug.remote_enable=1" | sudo tee -a /etc/php/7.2/apache2/php.ini
-echo "xdebug.remote_port=9000" | sudo tee -a /etc/php/7.2/apache2/php.ini
-echo "xdebug.remote_connect_back=1" | sudo tee -a /etc/php/7.2/apache2/php.ini
-echo "xdebug.remote_handler=dbgp" | sudo tee -a /etc/php/7.2/apache2/php.ini
-echo "xdebug.remote_host=127.0.0.1" | sudo tee -a /etc/php/7.2/apache2/php.ini
-echo "xdebug.remote_log = 1" | sudo tee -a /etc/php/7.2/apache2/php.ini
+echo "[xdebug]" | sudo tee -a /etc/php/7.1/apache2/php.ini
+echo "zend_extension=xdebug.so" > /etc/php/7.1/mods-available/xdebug.ini
+echo "xdebug.remote_autostart=0" | sudo tee -a /etc/php/7.1/apache2/php.ini
+echo "xdebug.remote_enable=1" | sudo tee -a /etc/php/7.1/apache2/php.ini
+echo "xdebug.remote_port=9000" | sudo tee -a /etc/php/7.1/apache2/php.ini
+echo "xdebug.remote_connect_back=1" | sudo tee -a /etc/php/7.1/apache2/php.ini
+echo "xdebug.remote_handler=dbgp" | sudo tee -a /etc/php/7.1/apache2/php.ini
+echo "xdebug.remote_host=127.0.0.1" | sudo tee -a /etc/php/7.1/apache2/php.ini
+echo "xdebug.remote_log = 1" | sudo tee -a /etc/php/7.1/apache2/php.ini
 echo ">>> xdebug installed and configured!"
 
 echo ">>> Installing Composer..."
