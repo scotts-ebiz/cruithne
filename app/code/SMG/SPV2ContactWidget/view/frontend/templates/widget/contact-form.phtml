@@ -1,0 +1,5 @@
+<div>
+	<h1 class="sp sp-h1 sp-text-green-1"><?= $block->escapeHtml($block->getData('contactFormHeading')) ?></h1>
+    <p class="sp-text-base"><?= $block->escapeHtml($block->getData('contactFormText')) ?></p>
+	<?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('contact_form')->toHtml(); ?>	
+</div>
