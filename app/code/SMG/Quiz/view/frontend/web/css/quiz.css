@@ -55,3 +55,19 @@
   margin: 0 auto;
   width: 100%;
 }
+
+.sp-quiz__progress-container {
+  width: 400px;
+  height: 30px;
+  border: 1px solid black;
+  position: relative;
+}
+
+.sp-quiz__progress-fill {
+  left:0;
+  top:0;
+  background:#1D5632;
+  width: 0;
+  height: 100%;
+  overflow:hidden;
+}

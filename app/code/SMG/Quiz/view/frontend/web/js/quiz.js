@@ -42,10 +42,18 @@ define([
      */
     function Quiz(data) {
         var self = this;
-
+        var progressCategories = [
+            "Goals", 
+            "Routine",
+            "Tools",
+            "Condition",
+            "Lawn", 
+            "Details"
+        ];
         self.template = null;
         self.previousGroups = ko.observableArray([]);
         self.currentGroup = ko.observable(null);
+        self.progressBar = ko.observable(null);
 
         self.initialize = function (data) {
             self.template = new QuizTemplate(data);
@@ -91,6 +99,8 @@ define([
 
             if (!valid) {
                 return;
+            } else {
+                // self.quizProgress += 1
             }
 
             // Get the transitions for the current group.
@@ -99,7 +109,19 @@ define([
             if (transitions.length === 1) {
                 // There is only one transition, so pull that questionGroup.
                 var id = transitions[0].destinationQuestionGroupId;
+                var num = ko.pureComputed(function() {
+                   return Math.round(
+                    Math.min(
+                        ko.unwrap(params.value), 1
+                    ) * 100) + '%';
+                });
                 self.loadNextGroup(self.findQuestionGroup(id));
+                self.progressBar({
+                    num: 0,
+                    // transform: "translateX:" + " (calc(questionGroups.length / 5) * 100}" + "%);"
+                    transform: "translateX: {num}"
+                });
+                console.log('progressBar = potato')
             }
         };
 
@@ -113,7 +135,7 @@ define([
                 return false;
             }
 
-            for (var i = 0; i < self.template.questionGroups.length; i++) {
+            for (var i = 0; i < self.template.questionGroups.length; i += 1) {
                 if (self.template.questionGroups[i].id === id) {
                     return self.template.questionGroups[i];
                 }
@@ -142,6 +164,7 @@ define([
         questions: ko.observable({}),
         answers: ko.observable({}),
         previousGroups: ko.observableArray([]),
+        // quizProgress: ko.observable({}),
 
         initialize: function () {
             this._super();

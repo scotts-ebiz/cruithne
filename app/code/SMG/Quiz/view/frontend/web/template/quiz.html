@@ -56,7 +56,14 @@
     class="sp-quiz__progress sp-bg-white sp-text-black sp-text-right"
     data-bind="if: quiz.currentGroup()"
 >
+    <!-- Progress bar -->    
+    <div class="sp-quiz__progress-container">
+        <div class="sp-quiz__progress-fill" data-bind="style={transform: 'translateX: ' + quiz.progressBar()}">
+        </div>
+    </div>
+
     <div class="sp-container sp-flex sp-items-center sp-justify-between sp-py-6">
+        <!-- Previous button -->    
         <div class="lg:sp-w-1/8">
             <button
                 class="sp-quiz__previous sp-label sp-text-green-1"
@@ -71,6 +78,7 @@
             <p class="sp-label sp-mb-0 sp-text-center" data-bind="text: quiz.currentGroup().label"></p>
         </div>
 
+        <!-- Next button -->    
         <div class="lg:sp-w-1/8">
             <button
                 class="sp-quiz__next sp-button sp-button--primary"
