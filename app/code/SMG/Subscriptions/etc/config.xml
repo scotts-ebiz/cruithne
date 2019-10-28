@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Store/etc/config.xsd">
+    <default>
+        <payment>
+            <paymentmethod>
+                <active>1</active>
+                <title>Recurly</title>
+                <order_status>pending_payment</order_status>
+                <payment_action>true</payment_action>
+                <model>SMG\Subscriptions\Model\RecurlyPayment</model>
+                <group>offline</group>
+            </paymentmethod>
+        </payment>
+    </default>
+</config>
