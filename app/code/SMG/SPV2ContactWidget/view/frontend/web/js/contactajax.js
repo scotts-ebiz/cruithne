@@ -6,34 +6,34 @@ define([
     'use strict';
 
     function main(config, element) {
-
+        var $element = $(element);
         var dataForm = $('#contact-form');
         dataForm.mage('validation', {});
 
         $(document).on('submit', '#contact-form', function() {
             event.preventDefault();
 
-            $.ajax({
-                type: 'POST',
-                url: config.AjaxUrl,
-                contentType: 'application/json',
-                dataType: 'json',
-                data: dataForm.serialize(),
-                success: function(response) {
-                    if( response.status == 200 ) {
-                        var options = {
-                            type: 'popup',
-                            responsive: true,
-                            innerScroll: true,
-                            buttons: false,
-                        };
+            if( dataForm.valid() ) {
+                $.ajax({
+                    type: 'POST',
+                    url: config.AjaxUrl,
+                    data: dataForm.serialize(),
+                    success: function(response) {
+                        if( response.success == true ) {
+                            var options = {
+                                type: 'popup',
+                                responsive: true,
+                                innerScroll: true,
+                                buttons: false,
+                            };
 
-                        var popup = modal(options, $('#popup-modal'));
-                        $('#popup-modal').modal('openModal');
-
+                            var popup = modal(options, $('#popup-modal'));
+                            $('#popup-modal').modal('openModal');
+                        }
                     }
-                }
-            })
+                })
+            }
+
         });
     }
 

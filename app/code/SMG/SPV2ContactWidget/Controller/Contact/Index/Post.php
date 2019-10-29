@@ -9,32 +9,38 @@ use Magento\Contact\Model\ConfigInterface;
 use Magento\Contact\Model\MailInterface;
 use Psr\Log\LoggerInterface;
 use \Magento\Framework\Translate\Inline\StateInterface;
+use Magento\Framework\App\Action\Action;
+use Magento\Framework\DataObject;
 
 class Post extends \Magento\Contact\Controller\Index\Post {
 
      /**
      * @var DataPersistorInterface
      */
-    private $dataPersistor;
+    private $_dataPersistor;
 
     /**
      * @var Context
      */
-    private $context;
+    private $_context;
 
     /**
      * @var MailInterface
      */
-    private $mail;
+    private $_mail;
 
-    protected $resultJsonFactory;
+    /**
+     * @var \Magento\Framework\Controller\Result\JsonFactory
+     */
+    protected $_resultJsonFactory;
 
     /**
      * @var LoggerInterface
      */
-    private $logger;
+    private $_logger;
 
-    protected $inlineTranslation;
+    protected $_inlineTranslation;
+
     public function __construct(
         Context $context,
         ConfigInterface $contactsConfig,
@@ -45,35 +51,74 @@ class Post extends \Magento\Contact\Controller\Index\Post {
         \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
     ) {
         parent::__construct($context, $contactsConfig,$mail,$dataPersistor);
-        $this->inlineTranslation = $inlineTranslation;
-        $this->context = $context;
-        $this->mail = $mail;
-        $this->dataPersistor = $dataPersistor;
-        $this->logger = $logger ?: ObjectManager::getInstance()->get(LoggerInterface::class);
-        $this->resultJsonFactory = $resultJsonFactory;
+        $this->_context = $context;
+        $this->_mail = $mail;
+        $this->_dataPersistor = $dataPersistor;
+        $this->_logger = $logger ?: ObjectManager::getInstance()->get(LoggerInterface::class);
+        $this->_resultJsonFactory = $resultJsonFactory;
     }
 
-     
+    
+    /**
+     * Post user data from the contact form
+     * 
+     * @return json $result
+     */
     public function execute()
     {
 
-        $post = $this->getRequest()->getPostValue();
-        $result = $this->resultJsonFactory->create();
+        $result = $this->_resultJsonFactory->create();
 
-        $result->setData(['status' => 200]);
-        return $result; 
-
-        
-    }
-
-     private function getDataPersistor()
-    {
-        if ($this->dataPersistor === null) {
-            $this->dataPersistor = ObjectManager::getInstance()
-                ->get(DataPersistorInterface::class);
+        if( ! $this->getRequest()->isPost() ) {
+            $result->setData( [ 'success' => false, 'message' => 'Not a POST request' ] );
+            return $result;
         }
 
-        return $this->dataPersistor;
+        try {
+            $this->sendEmail($this->validatedParams());
+            $result->setData( [ 'success' => true, 'message' => __('We received your email. Now we\'ll go to work as quickly as possible to respond. Look for a reply from us within a day or two.') ]);
+        } catch(\Exception $e) {
+            $this->_logger->critical($e);
+
+            $result->setData( [ 'success' => false, 'message' => __('An error occurred while processing your form. Please try again later.') ]);
+        }
+
+        return $result;
+    }
+
+    /**
+     * @param array $post Post data from contact form
+     * @return void
+     */
+    private function sendEmail($post)
+    {
+        $this->_mail->send(
+            $post['email'],
+            ['data' => new DataObject($post)]
+        );
+    }
+
+    /**
+     * @return array
+     * @throws \Exception
+     */
+    private function validatedParams()
+    {
+        $request = $this->getRequest();
+        if (trim($request->getParam('name')) === '') {
+            throw new LocalizedException(__('Enter the Name and try again.'));
+        }
+        if (trim($request->getParam('comment')) === '') {
+            throw new LocalizedException(__('Enter the comment and try again.'));
+        }
+        if (false === \strpos($request->getParam('email'), '@')) {
+            throw new LocalizedException(__('The email address is invalid. Verify the email address and try again.'));
+        }
+        if (trim($request->getParam('hideit')) !== '') {
+            throw new \Exception();
+        }
+
+        return $request->getParams();
     }
 
 }  
