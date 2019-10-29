@@ -35,3 +35,21 @@
         </div>
     </div>
 </form>
+
+<div id="popup-modal" style="display:none;">
+    <h1>Success</h1>
+    <div class="content">
+        <p>We received your email. Now we'll go to work as quickly as possible to respond. Look for a reply from us within a day or two.</p>
+    </div>
+</div>
+
+<?php $ajaxurl = $block->getFormAction(); ?>
+<script type="text/x-magento-init">
+        {
+            "*": {
+                "SMG_SPV2ContactWidget/js/contactajax": {
+                    "AjaxUrl": "<?php echo $ajaxurl; ?>"
+                }
+            }
+        }
+</script>
