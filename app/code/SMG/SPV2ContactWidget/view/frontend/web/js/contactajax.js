@@ -19,17 +19,25 @@ define([
                     url: config.AjaxUrl,
                     data: dataForm.serialize(),
                     success: function(response) {
-                        if( response.success == true ) {
+                       // if( response.success == true ) {
                             var options = {
                                 type: 'popup',
                                 responsive: true,
                                 innerScroll: true,
-                                buttons: false,
+                                buttons: [
+                                    {
+                                        text: $.mage.__( 'Close' ),
+                                        class: 'sp-button sp-button--primary',
+                                        click: function() {
+                                            this.closeModal();
+                                        }
+                                    }
+                                ]
                             };
 
                             var popup = modal(options, $('#popup-modal'));
                             $('#popup-modal').modal('openModal');
-                        }
+                      //  }
                     }
                 })
             }
