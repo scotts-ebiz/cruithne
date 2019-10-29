@@ -2,7 +2,19 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="2columns-right" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <referenceBlock name='contactForm'>
         <action method='setTemplate'>
-        <argument name='template' xsi:type='string'>SMG_SPV2ContactWidget::form.phtml</argument>
+        	<argument name='template' xsi:type='string'>SMG_SPV2ContactWidget::form.phtml</argument>
         </action>
     </referenceBlock>
+    <body>
+    	<referenceContainer name="sidebar.additional">
+    		<!-- Display contact_address block in sidebar -->
+   			<block class="Magento\Cms\Block\Block" name="contact_address">
+	       		<arguments>
+	            	<argument name="block_id" xsi:type="string">contact_address</argument>
+	       		</arguments>
+   			</block>
+		</referenceContainer>
+		<!-- Remove Compare Products from Sidebar -->
+		<referenceBlock name="catalog.compare.sidebar" remove="true"/> 
+    </body>
 </page>
