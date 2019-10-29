@@ -19,7 +19,7 @@ define([
                     url: config.AjaxUrl,
                     data: dataForm.serialize(),
                     success: function(response) {
-                       // if( response.success == true ) {
+                        if( response.success == true ) {
                             var options = {
                                 type: 'popup',
                                 responsive: true,
@@ -37,7 +37,7 @@ define([
 
                             var popup = modal(options, $('#popup-modal'));
                             $('#popup-modal').modal('openModal');
-                      //  }
+                        }
                     }
                 })
             }
