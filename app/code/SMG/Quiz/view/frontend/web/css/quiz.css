@@ -57,17 +57,47 @@
 }
 
 .sp-quiz__progress-container {
-  width: 400px;
-  height: 30px;
-  border: 1px solid black;
+  width: auto;
+  height: auto;
   position: relative;
+  color: black;
 }
 
-.sp-quiz__progress-fill {
+.sp-quiz__progress-list {
+  display: inline-flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+  padding: 0;
+  text-transform: uppercase;
+  margin-bottom: 0;
+}
+
+.sp-quiz__progress-label {
+  list-style-type: none;
+  margin: 10px;
+}
+
+.sp-quiz__progress-label:first-child {
+  margin-left: 0;
+}
+
+.sp-quiz__progress-label:last-child {
+  margin-right: 0;
+}
+
+.sp-quiz__progress-visited {
+  text-decoration: underline;
+}
+
+.sp-quiz__progress-visited {
   left:0;
   top:0;
   background:#1D5632;
   width: 0;
   height: 100%;
   overflow:hidden;
+}
+
+.sp-quiz__progress-fill-active {
+  background:hotpink;
 }

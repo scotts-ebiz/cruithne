@@ -42,18 +42,17 @@ define([
      */
     function Quiz(data) {
         var self = this;
-        var progressCategories = [
-            "Goals", 
-            "Routine",
-            "Tools",
-            "Condition",
-            "Lawn", 
-            "Details"
-        ];
+        self.progressBarCategories = ko.observableArray([
+            {label: "Goals"}, 
+            {label: "Routine"},
+            {label: "Tools"},
+            {label: "Condition"},
+            {label: "Lawn Details"}
+        ]);
         self.template = null;
         self.previousGroups = ko.observableArray([]);
-        self.currentGroup = ko.observable(null);
-        self.progressBar = ko.observable(null);
+        self.currentGroup = ko.observable(null);                            
+        // self.progressBar = ko.observable(null);
 
         self.initialize = function (data) {
             self.template = new QuizTemplate(data);
@@ -93,15 +92,53 @@ define([
             }
         };
 
+        self.updateProgressBar = function (group) {
+            // Option 1
+            function checkLabel() {
+                for (var i = 0; i < self.progressBarCategories.length; i += 1) {
+                    if (quiz.currentGroup().label.toLowerCase === progressBarCategories[i].toLowerCase) {
+                        return 
+                            self.progressBarCategories[i]
+                        
+                    } else {
+                        return self.progressBarCategories[0];
+                    }
+                }
+            };  
+
+            // Option 2
+            var labelValue = $(".sp-quiz__progress-list li").get("value");
+            if (self.labelValue === self.progressBarCategories[i]) {
+                labelValue.addClass(".sp-quiz__progress-active");
+            }
+
+            // No group specified so load the first group
+            if (!group) {
+                // self.currentGroup(self.template.questionGroups[0]);
+                $("sp-quiz__progress-label li:first").addClass(".sp-quiz__progress-active");
+                return;
+            } else {
+                checkLabel();
+            };
+
+            self.previousGroups.push(self.currentGroup());
+
+            self.setGroup(group);
+        };
+
         self.validateGroup = function () {
             // TODO: Validate responses
             var valid = true;
 
+            // Store answers to local storage on validation
             if (!valid) {
                 return;
             } else {
-                // self.quizProgress += 1
+                return;
             }
+
+            // Move the progress bar to next question
+            self.updateProgressBar();
 
             // Get the transitions for the current group.
             var transitions = self.currentGroup().transitions;
@@ -109,19 +146,24 @@ define([
             if (transitions.length === 1) {
                 // There is only one transition, so pull that questionGroup.
                 var id = transitions[0].destinationQuestionGroupId;
-                var num = ko.pureComputed(function() {
-                   return Math.round(
-                    Math.min(
-                        ko.unwrap(params.value), 1
-                    ) * 100) + '%';
-                });
+                
+                // Move progress bar to next category when the next question appears on 'Next' button click
+                
+
+                // Possibly unneeded: Calculate how much to fill in the progress bar
+                // var num = ko.pureComputed(function() {
+                //    return Math.round(
+                //     Math.min(
+                //         ko.unwrap(params.value), 1
+                //     ) * 100) + '%';
+                // });
                 self.loadNextGroup(self.findQuestionGroup(id));
-                self.progressBar({
-                    num: 0,
-                    // transform: "translateX:" + " (calc(questionGroups.length / 5) * 100}" + "%);"
-                    transform: "translateX: {num}"
-                });
-                console.log('progressBar = potato')
+                // self.progressBar({
+                //     num: 0,
+                //     // transform: "translateX:" + " (calc(questionGroups.length / 5) * 100}" + "%);"
+                //     transform: "translateX: {num}"
+                // });
+                // console.log('progressBar = potato')
             }
         };
 

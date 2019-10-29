@@ -57,9 +57,13 @@
     data-bind="if: quiz.currentGroup()"
 >
     <!-- Progress bar -->    
-    <div class="sp-quiz__progress-container">
-        <div class="sp-quiz__progress-fill" data-bind="style={transform: 'translateX: ' + quiz.progressBar()}">
-        </div>
+    <div class="sp-flex sp-quiz__progress-container sp-mx-auto lg:sp-w-3/4">
+        <ul class="sp-quiz__progress-list sp-mx-auto lg:sp-w-3/4" data-bind="foreach: quiz.progressBarCategories">
+            <li 
+                data-bind="text: label, value: $index, style: { color: updateProgressBar() < 0 ? 'red' : 'black' }" 
+                class="sp-quiz__progress-label"
+            ></li>
+        </ul>
     </div>
 
     <div class="sp-container sp-flex sp-items-center sp-justify-between sp-py-6">
