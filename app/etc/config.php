@@ -324,6 +324,7 @@ return [
         'SMG_ShipTracking' => 1,
         'SMG_Shipping' => 1,
         'SMG_SpecsList' => 1,
+        'SMG_Theme' => 1,
         'Vantiv_Payment' => 1,
         'SMG_Zip' => 1,
         'SMG_ZipCodeList' => 1,
