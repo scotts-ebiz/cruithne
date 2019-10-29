@@ -1,4 +1,8 @@
-<?php $storeName = $block->getThemeName() ? $block->getThemeName() : $block->getLogoAlt();?>
+<?php
+    $storeName = $block->getThemeName() ? $block->getThemeName() : $block->getLogoAlt();
+    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
+    $customerSession = $objectManager->create('Magento\Customer\Model\Session');
+?>
 <div class="sp-flex sp-items-center sp-justify-between">
 		<a class="sp-header__home sp-header__home-link sp-flex sp-items-center" href="<?= $block->escapeUrl($block->getBaseUrl()) ?>" title="<?= $block->escapeHtml($storeName) ?>">
 			<div class="sp-header__logo">
@@ -35,7 +39,11 @@
 		</ul>
 		<ul class="sp-nav-list sp-header__nav-list sp-header__nav-list--right">
 			<li>
-				<a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('customer/account/login')) ?>">Log In</a>
+                <?php if ( $customerSession->isLoggedIn() ) { ?>
+                    <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('customer/account/logout')) ?>">Log Out</a>
+                <?php } else { ?>
+                    <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('customer/account/login')) ?>">Log In</a>
+                <?php } ?>
 			</li>
 		</ul>
 		<address class="sp-header__address">
