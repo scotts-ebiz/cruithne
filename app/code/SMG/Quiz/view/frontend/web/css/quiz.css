@@ -2,6 +2,10 @@
   overflow: auto;
 }
 
+.sp-quiz__banner {
+  padding: 70px 0 20px 0px;
+}
+
 .sp-quiz__previous {
   background-color: transparent;
   border: none;
