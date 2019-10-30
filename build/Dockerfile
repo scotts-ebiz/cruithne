@@ -13,10 +13,13 @@ LABEL maintainer="rick.feldschau@scotts.com"
 USER root
 WORKDIR $MAGENTO_DIR
 RUN chown -R magento:www-data .git
-RUN crontab -r
+RUN crontab -r; exit 0
 
 USER magento
 WORKDIR $MAGENTO_DIR
+
+# Temporary add to test mass import of images
+RUN mkdir -p $MAGENTO_DIR/var/import/images && gsutil -q -m rsync -r -u gs://magento-image-repo/import/ $MAGENTO_DIR/var/import/images ; exit 0
 
 RUN git fetch --all
 RUN git reset --hard
