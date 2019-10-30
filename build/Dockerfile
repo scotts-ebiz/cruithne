@@ -13,6 +13,7 @@ LABEL maintainer="rick.feldschau@scotts.com"
 USER root
 WORKDIR $MAGENTO_DIR
 RUN chown -R magento:www-data .git
+RUN crontab -r
 
 USER magento
 WORKDIR $MAGENTO_DIR
