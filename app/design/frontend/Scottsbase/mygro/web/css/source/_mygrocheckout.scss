@@ -1463,6 +1463,12 @@
   ._error {
     padding-bottom: 0;
   }
+  .control._with-tooltip{
+	.field-error{
+		position: relative;
+		margin-top: 5px;
+	}
+  }
 }
 
 .checkout-onepage-success{
@@ -1590,6 +1596,15 @@ div[name="shippingAddress.postcode"] {
           }
         }
       }
+    }
+  }
+  #customer-email-error{
+    font-size: 15px;
+  }
+  div[name="shippingAddress.region_id"]{
+    .field-error{
+      position: relative;
+      margin-top: 3px;
     }
   }
 }

@@ -476,6 +476,49 @@
     }
 }
 
+//Style Update Cart and Remove Item link
+.checkout-cart-index .cart-container .form-cart {
+    .action.update {
+        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+        text-decoration: underline;
+        text-align: left;
+        font-size: 0.8rem;
+        margin-left: 0;
+        padding-left: 0;
+        cursor: pointer;
+        &:before {
+            display: none;
+        }
+    }
+    .actions-toolbar {
+        a.action-delete {
+            font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+            text-decoration: underline;
+            font-size: 0.8rem;
+        }
+    }
+}
+
+
+
+//Estimate Shipping link on summary div
+.cart-summary > .pop-cust-click.title {
+    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-size: 0.8rem;
+    color: #333333;
+    text-decoration: underline;
+    cursor: pointer;
+    margin-left: 5px;
+    &:hover {
+        -webkit-transition: background 0.2s;
+        -moz-transition: background 0.2s;
+        -ms-transition: background 0.2s;
+        -o-transition: background 0.2s;
+        transition: background 0.2s;
+        color: $color_black;
+    }
+}
+>>>>>>> master
 
 //Default styling for Order Summary Total
 .cart-totals .grand .amount strong,
