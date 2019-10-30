@@ -18,6 +18,14 @@ class LayoutProcessor
 
 			$result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
 			['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['2']['validation'] = ['required-entry-street-2' => true];
+
+			/* State/Provision label change*/
+			$result['components']['checkout']['children']['steps']['children']['shipping-step']
+            ['children']['shippingAddress']['children']['shipping-address-fieldset']['children']['region_id']['label'] = __('State');
+
+			/* zip lable change*/
+			$result['components']['checkout']['children']['steps']['children']['shipping-step']
+            ['children']['shippingAddress']['children']['shipping-address-fieldset']['children']['postcode']['label'] = __('ZIP Code');
 		}
 
         if (isset($result['components']['checkout']['children']['steps']['children']['billing-step']['children']
@@ -75,8 +83,23 @@ class LayoutProcessor
 							['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
 							['telephone']['validation'] = ['required-entry' => false,'required-entry-btelephone' => true];
 						}
+
+						/* State/Provision label change*/
+						if (isset($payment['children']['form-fields']['children']['region_id'])) {
+							$result['components']['checkout']['children']['steps']['children']['billing-step']['children']
+							['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
+							['region_id']['label'] = __('State');
+					}
+
+						/* ZIP label change*/
+						if (isset($payment['children']['form-fields']['children']['postcode'])) {
+            $result['components']['checkout']['children']['steps']['children']['billing-step']['children']
+							['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
+							['postcode']['label'] = __('ZIP Code');
+						}
 					}
                 }
+
 				return $result;
             }
     }

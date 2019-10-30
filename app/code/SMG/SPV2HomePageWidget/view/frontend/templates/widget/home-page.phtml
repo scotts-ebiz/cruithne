@@ -1,108 +1,4 @@
-<style>
-	.sp-hero__background {
-		<?php if ($block->getData('heroMobileImage') || $block->getData('heroImage')) { ?>
-			<?php if ($block->getData('heroMobileImage')) { ?>
-				background-image: url('<?php echo $block->escapeUrl($block->getData('heroMobileImage')); ?>') !important;
-			<?php } else { ?>
-				background-image: url('<?php echo $block->escapeUrl($block->getData('heroImage')); ?>') !important;
-			<?php } ?>
-		<?php } else { ?>
-			background-image: url('https://test_magento_image_repo.storage.googleapis.com/homePageHero.jpg') !important;
-	<?php } ?>
-	}
-
-	<?php if ($block->getData('heroImage')) { ?>
-		@media (min-width: 768px) {
-			.sp-hero__background {
-				background-image: url('<?php echo $block->escapeUrl($block->getData('heroImage')); ?>') !important;
-			}
-		}
-	<?php } ?>
-
-	/* What to expect section */
-	.sp-home__what-to-expect-img {
-		height: 0;
-		margin-bottom: 25.625%;
-		margin-top: -25.625%;
-		padding-bottom: 56.25%;
-		transform: translateY(50%);
-	}
-
-	.sp-home__what-to-expect-img img {
-		bottom: 0;
-		height: 100%;
-		left: 0;
-		position: absolute;
-		right: 0;
-		top: 0;
-		width: 100%;
-		z-index: 1;
-	}
-
-	/* History section */
-	.sp-home__history-container {
-		flex-direction: column;
-	}
-
-	.sp-home__history-date {
-		margin-top: -168px;
-		order: 0;
-	}
-
-	.sp-home__history-image {
-		order: 1;
-	}
-
-	.sp-home__history-description {
-		order: 2;
-	}
-
-	@media (min-width: 768px) {
-		.sp-home__history-container {
-			flex-direction: row;
-		}
-
-		.sp-home__history-date,
-		.sp-home__history-description {
-			padding: 2rem;
-		}
-
-		.sp-home__history-date {
-			flex: 0 0 auto;
-			margin-top: 0;
-			order: 1;
-		}
-
-		.sp-home__history-description {
-			flex: 1;
-			order: 0;
-		}
-
-		.sp-home__history-image {
-			flex: 1;
-			order: 2
-		}
-
-		.sp-home__history-description {
-			order: 0;
-		}
-	}
-
-	.sp-app-image {
-		max-width: 10rem;
-	}
-</style>
-
 <div class="sp-home-page">
-	<div class="sp-hero sp-hero--full sp-mb-12">
-		<div class="sp-hero__background"></div>
-		<div class="sp-hero__overlay"></div>
-		<div class="sp-hero__headline sp-container">
-			<h1 class="sp-h1 sp-relative sp-text-white sp-text-center"><?php echo $block->escapeHtml($block->getData('heroHeadline')) ?></h1>
-		</div>
-		<a href="<?php echo $block->escapeUrl($block->getUrl('quiz')) ?>" class="sp-button sp-button--inverted sp-button--get-started sp-mb-12 sp-relative sp-text-center">Get Started</a>
-	</div>
-
 	<div class="sp-home__how-it-works sp-container sp-my-20">
 		<h2 class="sp-h2 sp-max-w-lg sp-mx-auto sp-text-center sp-text-green-1">
 			A Subscription Lawn Care Plan Made Just for Your Yard
@@ -127,7 +23,7 @@
 		</div>
 
 		<div class="sp-text-center">
-			<a href="<?php echo $block->escapeUrl($block->getUrl('quiz')) ?>" class="sp-button sp-button--primary">Learn How It Works</a>
+			<a href="<?php echo $block->escapeUrl($block->getUrl('how-it-works')) ?>" class="sp-button sp-button--primary">Learn How It Works</a>
 		</div>
 	</div>
 

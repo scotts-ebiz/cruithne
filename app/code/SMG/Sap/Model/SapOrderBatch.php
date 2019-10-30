@@ -84,7 +84,7 @@ class SapOrderBatch extends AbstractModel
          * @var \SMG\Sap\Model\SapOrder $sapOrder
          */
         $sapOrder = $this->_sapOrderFactory->create();
-        $this->_sapOrderResource->load($sapOrder, $this->getOrderId());
+        $this->_sapOrderResource->load($sapOrder, $this->getOrderId(), 'order_id');
 
         return $sapOrder;
     }

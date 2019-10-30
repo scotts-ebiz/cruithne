@@ -1,16 +1,21 @@
 .sp-button {
-  @extend .sp-label;
-
   border: none;
-  border-radius: .25rem;
+  border-radius: 0.25rem;
   display: inline-block;
-  font-weight: 400;
+  font-size: $font-size-label;
+  font-weight: 700;
   padding: 1rem;
+  text-align: center;
   text-transform: uppercase;
   transition: background-color .25s ease-in-out, box-shadow .25s ease-in-out, transform .25s ease-in-out;
   white-space: nowrap;
 
+  &:active {
+    color: $white;
+  }
+
   &:hover {
+    border: none;
     box-shadow: $shadow-md;
     color: $white;
     text-decoration: none;
@@ -29,12 +34,18 @@
   background-color: $green-1;
   color: $white;
 
+  &:hover {
+    background-color: $green-1;
+    color: $white;
+  }
+
   &:active {
     background-color: $black;
     color: $white;
   }
 
   &:focus {
+    background-color: $green-1;
     color: $white;
     outline-color: $green-1;
   }
@@ -43,6 +54,11 @@
 .sp-button--secondary {
   background-color: $black;
   color: $white;
+
+  &:hover {
+    background-color: $black;
+    color: $white;
+  }
 
   &:active {
     background-color: $gray-1;
@@ -60,6 +76,7 @@
   color: $black;
 
   &:hover {
+    background-color: $white;
     color: $black;
   }
 
@@ -93,5 +110,5 @@
 }
 
 .sp-button--get-started {
-  width: 250px;
+  min-width: 250px;
 }

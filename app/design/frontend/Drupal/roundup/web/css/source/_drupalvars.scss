@@ -1,0 +1,16 @@
+// Magento UI Variables //
+$primary__color:   #5FB061; // green
+$secondary__color: #005a97; // blue
+
+//  Roundup Var Overrides
+//  ---------------------------------------------
+
+// Iframes //
+$iframe-addtocart-btn-border: none;
+$iframe-addtocart-btn-border-radius: 0;
+$iframe-addtocart-btn-color: $color_white;
+$iframe-addtocart-btn-color-hover: $color_white;
+$iframe-addtocart-btn-background: $secondary__color;
+$iframe-addtocart-btn-background-hover: $primary__color;
+
+$iframe-cart-checkout-now-txt: $primary__color;

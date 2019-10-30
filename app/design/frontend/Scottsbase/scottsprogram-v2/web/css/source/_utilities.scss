@@ -42,6 +42,48 @@ $colors: (
   }
 }
 
+// Background Position
+.sp-bg-bottom {
+  background-position: bottom;
+}
+
+.sp-bg-center {
+  background-position: center;
+}
+
+.sp-bg-left {
+  background-position: left;
+}
+
+.sp-bg-left-bottom {
+  background-position: left bottom;
+}
+
+.sp-bg-left-top {
+  background-position: left top;
+}
+
+.sp-bg-right {
+  background-position: right;
+}
+
+.sp-bg-right-bottom {
+  background-position: right bottom;
+}
+
+.sp-bg-right-top {
+  background-position: right top;
+}
+
+.sp-bg-top {
+  background-position: top;
+}
+
+// Border Radius
+.sp-rounded {
+  border-radius: $border-radius;
+}
+
 // Display
 @each $size in $breakpoints {
   @include breakpoint($size) {
@@ -74,6 +116,14 @@ $colors: (
       $size: #{$size}\:;
     }
 
+    .#{$size}sp-flex-auto {
+      flex: 1 1 auto;
+    }
+
+    .#{$size}sp-flex-none {
+      flex: none;
+    }
+
     .#{$size}sp-flex-row {
       flex-direction: row;
     }
@@ -96,7 +146,20 @@ $colors: (
     .#{$size}sp-justify-start {
       justify-content: flex-start;
     }
+    .#{$size}sp-justify-end {
+      justify-content: flex-end;
+    }
   }
+}
+
+// Height
+.sp-h-full {
+  height: 100%;
+}
+
+// List
+.sp-list-none {
+  list-style-type: none;
 }
 
 // Order
@@ -124,6 +187,10 @@ $colors: (
 
     .#{$size}sp-order-4 {
       order: 4;
+    }
+
+    .#{$size}sp-order-5 {
+      order: 5;
     }
   }
 }
@@ -237,4 +304,34 @@ $colors: (
 
 .sp-max-w-xl {
   max-width: 1024px;
+}
+
+// Text Transform
+.sp-uppercase {
+  text-transform: uppercase;
+}
+
+// Z-Index
+.sp-z-0 {
+  z-index: 0;
+}
+
+.sp-z-1 {
+  z-index: 10;
+}
+
+.sp-z-2 {
+  z-index: 20;
+}
+
+.sp-z-3 {
+  z-index: 30;
+}
+
+.sp-z-4 {
+  z-index: 40;
+}
+
+.sp-z-5 {
+  z-index: 50;
 }

@@ -3,6 +3,8 @@
   xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="SMG\Api\Model\AuthReversalManagementInterface" type="SMG\Api\Model\Api\AuthReversalManagement" />
     <preference for="SMG\Api\Model\BatchCaptureManagementInterface" type="SMG\Api\Model\Api\BatchCaptureManagement" />
+    <preference for="SMG\Api\Model\ConsumerDataManagementInterface" type="SMG\Api\Model\Api\ConsumerDataManagement" />
+    <preference for="SMG\Api\Model\ConsumerDataSentManagementInterface" type="SMG\Api\Model\Api\ConsumerDataSentManagement" />
     <preference for="SMG\Api\Model\InvoiceReconciliationManagementInterface" type="SMG\Api\Model\Api\InvoiceReconciliationManagement" />
     <preference for="SMG\Api\Model\InvoiceReconciliationSentManagementInterface" type="SMG\Api\Model\Api\InvoiceReconciliationSentManagement" />
     <preference for="SMG\Api\Model\OrdersManagementInterface" type="SMG\Api\Model\Api\OrdersManagement" />

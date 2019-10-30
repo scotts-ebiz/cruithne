@@ -19,6 +19,16 @@
   }
 }
 
+.sp-footer__home-link {
+  &:hover {
+    text-decoration: none;
+  }
+
+  &:focus {
+    outline: none;
+  }
+}
+
 .sp-footer__grid {
   display: flex;
   flex-direction: column;

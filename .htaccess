@@ -2,6 +2,10 @@
 # set the var ROBOTS_NOINDEX 
 SetEnvIf Request_URI !^test.scottsprogram\.com$ [NC] ROBOTS_NOINDEX
 
+############################################
+## hide directory listings
+
+Options -Indexes
 
 ############################################
 ## overrides deployment configuration mode value
@@ -168,6 +172,64 @@ SetEnvIf Request_URI !^test.scottsprogram\.com$ [NC] ROBOTS_NOINDEX
     RewriteRule .* - [L,R=405]
 
 ############################################
+## GOM1-118 Redirect STORE roots (used by keep-shopping links) to brand sites.
+## PROD
+    RewriteCond %{HTTP_HOST} ^(store\.|shop\.)?roundup\.com$ [NC]
+    RewriteRule ^$   https://www.roundup.com/ [R=301,L,QSA]
+    RewriteCond %{HTTP_HOST} ^(store\.|shop\.)?scotts\.com$ [NC]
+    RewriteRule ^$   https://www.scotts.com/ [R=301,L,QSA]
+    RewriteCond %{HTTP_HOST} ^(store\.|shop\.)?miraclegro\.com$ [NC]
+    RewriteRule ^$   https://www.miraclegro.com/ [R=301,L,QSA]
+    RewriteCond %{HTTP_HOST} ^(store\.|shop\.)?ortho\.com$ [NC]
+    RewriteRule ^$   https://www.ortho.com/ [R=301,L,QSA]
+    RewriteCond %{HTTP_HOST} ^(store\.|shop\.)?tomcatbrand\.com$ [NC]
+    RewriteRule ^$   https://www.tomcatbrand.com/ [R=301,L,QSA]
+## STAGE
+    RewriteCond %{HTTP_HOST} ^staging\.roundup\.com$ [NC]
+    RewriteRule ^$   https://acsftest.roundup.com/ [R=301,L,QSA]
+    RewriteCond %{HTTP_HOST} ^staging\.scotts\.com$ [NC]
+    RewriteRule ^$   https://acsftest.scotts.com/ [R=301,L,QSA]
+    RewriteCond %{HTTP_HOST} ^staging\.miraclegro\.com$ [NC]
+    RewriteRule ^$   https://acsftest.miraclegro.com/ [R=301,L,QSA]
+    RewriteCond %{HTTP_HOST} ^staging\.ortho\.com$ [NC]
+    RewriteRule ^$   https://acsftest.ortho.com/ [R=301,L,QSA]
+    RewriteCond %{HTTP_HOST} ^staging\.tomcatbrand\.com$ [NC]
+    RewriteRule ^$   https://acsftest.tomcatbrand.com/ [R=301,L,QSA]
+## TEST
+    RewriteCond %{HTTP_HOST} ^test\.roundup\.com$ [NC]
+    RewriteRule ^$   https://acsfdev.roundup.com/ [R=301,L,QSA]
+    RewriteCond %{HTTP_HOST} ^test\.scotts\.com$ [NC]
+    RewriteRule ^$   https://acsfdev.scotts.com/ [R=301,L,QSA]
+    RewriteCond %{HTTP_HOST} ^test\.miraclegro\.com$ [NC]
+    RewriteRule ^$   https://acsfdev.miraclegro.com/ [R=301,L,QSA]
+    RewriteCond %{HTTP_HOST} ^test\.ortho\.com$ [NC]
+    RewriteRule ^$   https://acsfdev.ortho.com/ [R=301,L,QSA]
+    RewriteCond %{HTTP_HOST} ^test\.tomcatbrand\.com$ [NC]
+    RewriteRule ^$   https://acsfdev.tomcatbrand.com/ [R=301,L,QSA]
+## DEV
+    RewriteCond %{HTTP_HOST} ^dev\.roundup\.com$ [NC]
+    RewriteRule ^$   https://acsfdev.roundup.com/ [R=301,L,QSA]
+    RewriteCond %{HTTP_HOST} ^dev\.scotts\.com$ [NC]
+    RewriteRule ^$   https://acsfdev.scotts.com/ [R=301,L,QSA]
+    RewriteCond %{HTTP_HOST} ^dev\.miraclegro\.com$ [NC]
+    RewriteRule ^$   https://acsfdev.miraclegro.com/ [R=301,L,QSA]
+    RewriteCond %{HTTP_HOST} ^dev\.ortho\.com$ [NC]
+    RewriteRule ^$   https://acsfdev.ortho.com/ [R=301,L,QSA]
+    RewriteCond %{HTTP_HOST} ^dev\.tomcatbrand\.com$ [NC]
+    RewriteRule ^$   https://acsfdev.tomcatbrand.com/ [R=301,L,QSA]
+## LOCAL
+    RewriteCond %{HTTP_HOST} ^cruithne\.roundup\.local$ [NC]
+    RewriteRule ^$   https://roundup.test/ [R=301,L,QSA]
+    RewriteCond %{HTTP_HOST} ^cruithne\.scotts\.local$ [NC]
+    RewriteRule ^$   https://scotts.test/ [R=301,L,QSA]
+    RewriteCond %{HTTP_HOST} ^cruithne\.miraclegro\.local$ [NC]
+    RewriteRule ^$   https://miraclegro.test/ [R=301,L,QSA]
+    RewriteCond %{HTTP_HOST} ^cruithne\.ortho\.local$ [NC]
+    RewriteRule ^$   https://ortho.test/ [R=301,L,QSA]
+    RewriteCond %{HTTP_HOST} ^cruithne\.tomcatbrand\.local$ [NC]
+    RewriteRule ^$   https://tomcatbrand.test/ [R=301,L,QSA]
+
+############################################
 ## redirect for mobile user agents
 
     #RewriteCond %{REQUEST_URI} !^/mobiledirectoryhere/.*$
@@ -180,6 +242,20 @@ SetEnvIf Request_URI !^test.scottsprogram\.com$ [NC] ROBOTS_NOINDEX
     RewriteCond %{REQUEST_FILENAME} !-f
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-l
+
+############################################
+## rewrite everything to https
+
+RewriteCond %{HTTPS} off
+RewriteCond %{HTTP:X-Forwarded-Proto} !https
+RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,QSA,L]
+
+
+############################################
+## rewrite everything to https
+
+RewriteCond %{HTTP_HOST} ^mygro\.com$ [NC]
+RewriteRule ^(.*)$   https://www.mygro.com/$1 [R=301,L,QSA]
 
 ############################################
 ## rewrite everything else to index.php

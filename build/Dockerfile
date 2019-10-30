@@ -17,10 +17,11 @@ RUN chown -R magento:www-data .git
 USER magento
 WORKDIR $MAGENTO_DIR
 
-RUN git fetch
-RUN git checkout app/etc/config.php
+RUN git fetch --all
+RUN git reset --hard
 RUN git pull
 RUN composer install
+RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools
 
 USER root
 
@@ -36,8 +37,8 @@ RUN \
 # Expose Ports for Apache
 EXPOSE 80/tcp 443/tcp
 
-RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated | xargs chown magento:www-data
-RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated | xargs chmod 777
+RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -print0 | xargs -0 chown magento:www-data
+RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -print0 | xargs -0 chmod 777
 
 # Run entrypoint file
 COPY ondemand-entrypoint.sh /usr/local/bin/entrypoint.sh

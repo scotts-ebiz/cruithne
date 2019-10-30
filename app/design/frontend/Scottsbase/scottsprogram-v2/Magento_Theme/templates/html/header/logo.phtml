@@ -1,18 +1,6 @@
-<?php
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
-
-// @codingStandardsIgnoreFile
-
-/**
- * @var \Magento\Theme\Block\Html\Header\Logo $block
- */
-?>
 <?php $storeName = $block->getThemeName() ? $block->getThemeName() : $block->getLogoAlt();?>
 <div class="sp-flex sp-items-center sp-justify-between">
-		<a class="sp-header__home sp-flex sp-items-center" href="<?= $block->escapeUrl($block->getBaseUrl()) ?>" title="<?= $block->escapeHtml($storeName) ?>">
+		<a class="sp-header__home sp-header__home-link sp-flex sp-items-center" href="<?= $block->escapeUrl($block->getBaseUrl()) ?>" title="<?= $block->escapeHtml($storeName) ?>">
 			<div class="sp-header__logo">
 				<img src="<?= $block->escapeUrl($block->getLogoSrc()) ?>"
 					 title="<?= $block->escapeHtml($block->getLogoAlt()) ?>"
