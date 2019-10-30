@@ -63,9 +63,12 @@ define([
             // No group specified so load the first group.
             if (!group) {
                 self.currentGroup(self.template.questionGroups[0]);
+                console.log(self.template.questionGroups[0]);
 
                 return;
             }
+
+            console.log(group);
 
             self.previousGroups.push(self.currentGroup());
 
@@ -237,6 +240,7 @@ define([
          * Go back to the previous question.
          */
         previousQuestionGroup() {
+            console.log('previousQuestionGroup');
             this.quiz.loadPreviousGroup();
         },
 
@@ -244,11 +248,12 @@ define([
          * Validate the responses and move to the appropriate question.
          */
         validateResponse: function () {
+            console.log('validateResponse');
             this.quiz.validateGroup();
         },
 
         setAnswer: function (data, event) {
-            console.log(data, event);
+            console.log('setAnswer');
         }
     })
 });
