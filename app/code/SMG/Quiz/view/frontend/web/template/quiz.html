@@ -58,11 +58,14 @@
 >
     <!-- Progress bar -->    
     <div class="sp-flex sp-quiz__progress-container sp-mx-auto lg:sp-w-3/4">
-        <ul class="sp-quiz__progress-list sp-mx-auto lg:sp-w-3/4" data-bind="foreach: quiz.progressBarCategories">
+        <ul class="sp-quiz__progress-list sp-mx-auto lg:sp-w-3/4" data-bind="foreach: { data: quiz.progressBarCategories, noChildContext: true } ">
             <li 
-                data-bind="text: label, value: $index, style: { color: updateProgressBar() < 0 ? 'red' : 'black' }" 
-                class="sp-quiz__progress-label"
-            ></li>
+                data-bind="css: { progressBarSelected: $parent.quiz.previousGroups().length === $index(), progressBarVisited: $parent.quiz.previousGroups().length > $index() }" 
+                class="sp-quiz__progress-item"
+            >
+            <span class="sp-quiz__progress-item-label sp-label" data-bind="text: label"></span>
+            <span class="sp-quiz__progress-item-dot"></span>
+        </li>
         </ul>
     </div>
 

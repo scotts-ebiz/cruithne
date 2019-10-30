@@ -92,53 +92,53 @@ define([
             }
         };
 
-        self.updateProgressBar = function (group) {
-            // Option 1
-            function checkLabel() {
-                for (var i = 0; i < self.progressBarCategories.length; i += 1) {
-                    if (quiz.currentGroup().label.toLowerCase === progressBarCategories[i].toLowerCase) {
-                        return 
-                            self.progressBarCategories[i]
-                        
-                    } else {
-                        return self.progressBarCategories[0];
-                    }
-                }
-            };  
+        // self.updateProgressBar = function (group) {
+        //     var labelValue = $(".sp-quiz__progress-list li").get("value");
+        //     function checkLabel() {
+        //         for (var i = 0; i < self.progressBarCategories.length; i += 1) {
+        //             if (self.labelValue === self.progressBarCategories[i]) {
+        //             $(".sp-quiz__progress-list li").css("background-color", "hotpink");
+        //             $(".sp-quiz__progress-list li").append(".sp-quiz__progress-fill-active");
+        //         }
+        //     }
+        //         if (quiz.currentGroup().label.toLowerCase === progressBarCategories[i].toLowerCase) {
+        //             return 
+        //                 self.progressBarCategories[i].css("background-color", "hotpink");
+        //             if (self.labelValue === self.quiz.currentGroup().label) {
+        //             } 
+        //         } else {
+        //             return self.labelValue.css("background-color", "hotpink");
+        //         }
+        //     } 
 
-            // Option 2
-            var labelValue = $(".sp-quiz__progress-list li").get("value");
-            if (self.labelValue === self.progressBarCategories[i]) {
-                labelValue.addClass(".sp-quiz__progress-active");
-            }
+        //     // No group specified so load the first group
+        //     if (!group) {
+        //         self.currentGroup(self.template.questionGroups[0]);
+        //         // $(".sp-quiz__progress-label li:first").css("background-color", "hotpink");
+        //         return;
+        //     // } else {
+        //         // checkLabel();
+        //     };
 
-            // No group specified so load the first group
-            if (!group) {
-                // self.currentGroup(self.template.questionGroups[0]);
-                $("sp-quiz__progress-label li:first").addClass(".sp-quiz__progress-active");
-                return;
-            } else {
-                checkLabel();
-            };
+        //     self.previousGroups.push(self.currentGroup());
 
-            self.previousGroups.push(self.currentGroup());
-
-            self.setGroup(group);
-        };
+        //     self.setGroup(group);
+        
+        // };
 
         self.validateGroup = function () {
-            // TODO: Validate responses
+            // @todo: Validate responses
             var valid = true;
 
             // Store answers to local storage on validation
             if (!valid) {
                 return;
-            } else {
-                return;
+            // } else {
+            //     return;
             }
 
             // Move the progress bar to next question
-            self.updateProgressBar();
+            // self.updateProgressBar();
 
             // Get the transitions for the current group.
             var transitions = self.currentGroup().transitions;
