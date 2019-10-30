@@ -23,5 +23,5 @@ class RecurlyPayment extends \Magento\Payment\Model\Method\AbstractMethod
      *
      * @var bool
      */
-    protected $_isOffline = false;
+    protected $_isOffline = true;
 }

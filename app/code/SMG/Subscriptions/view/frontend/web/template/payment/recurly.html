@@ -18,8 +18,13 @@
         <!-- Recurly form -->
         <div class="">
             <form class="recurly-form">
-                <input type="text" data-recurly="first_name" placeholder="first name">
-                <input type="text" data-recurly="last_name" placeholder="last name">
+                <input type="text" data-recurly="first_name" placeholder="first name" value="boris">
+                <input type="text" data-recurly="last_name" placeholder="last name" value="kuzmanov">
+                <input type="text" data-recurly="address1" placeholder="address" value="1313 Main St.">
+                <input type="text" data-recurly="city" placeholder="city" value="Hope">
+                <input type="text" data-recurly="country" placeholder="country" value="US">
+                <input type="text" data-recurly="state" placeholder="state" value="WA">
+                <input type="text" data-recurly="postal_code" value="98552">
                 <div data-recurly="card"></div>
                 <input type="hidden" name="recurly-token" data-recurly="token">
                 <button>Submit</button>

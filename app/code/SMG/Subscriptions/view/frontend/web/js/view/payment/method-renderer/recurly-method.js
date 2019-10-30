@@ -1,19 +1,23 @@
 define(
     [
+        'jquery',
         'Magento_Checkout/js/view/payment/default',
-        'recurly'
     ],
-    function(Component) {
+    function($, Component) {
         'use strict';
 
-        // recurly.configure('PUBLIC_KEY');
+        setTimeout(function() {
+            console.log('ready');
+            recurly.configure('ewr1-aefvtq9Ri3MILWsXFPHyv2');
+
+        }, 100)
 
         return Component.extend({
             defaults: {
                 template: 'SMG_Subscriptions/payment/recurly'
             },
  
-            placeOrder: function(event) {
+            placeOrder: function() {
                 event.preventDefault();
                 var form = document.querySelector('.recurly-form');
                 recurly.token(form, function(err, token) {
@@ -21,6 +25,7 @@ define(
                         console.log( err );
                     } else {
                         console.log(token);
+                        //recurly.token(form, tokenHandler)
                         form.submit();
                     }
                 })
@@ -28,5 +33,7 @@ define(
  
  
         });
+    return recurltconf;
     }
+
 );

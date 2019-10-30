@@ -2,7 +2,6 @@ define(
     [
         'uiComponent',
         'Magento_Checkout/js/model/payment/renderer-list',
-        'recurly'
     ],
     function (
         Component,
@@ -12,7 +11,7 @@ define(
 
         rendererList.push(
             {
-                type: 'paymentmethod',
+                type: 'recurly',
                 component: 'SMG_Subscriptions/js/view/payment/method-renderer/recurly-method'
             }
         );
