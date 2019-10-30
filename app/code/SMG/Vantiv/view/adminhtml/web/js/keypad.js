@@ -9,7 +9,6 @@ define([
         'use strict';
 
         const MANUAL_DEFAULT_FORMAT_SIZE = 198;
-        const MANUAL_XML_FORMAT_SIZE = 358;
 
         $('#p_method_vantiv_keypadpayment').click(function() {
             // initialize the error to not display
@@ -27,12 +26,13 @@ define([
             $("#payment-vantiv-keypadpayment-exp-year").val('');
             $("#payment-vantiv-keypadpayment-serial-number").val('');
 
-            // start spinner
-            jQuery('#edit_form').trigger('processStart');
-
             var keyPadInput = [];
             var keyPadOutputType = '';
             var keypadInputValue = '';
+            var n;
+
+            // start spinner
+            jQuery('#edit_form').trigger('processStart');
 
             // gather the keypad data from the keypress event
             $(document).keypress(function (event) {
@@ -49,17 +49,17 @@ define([
                 // if this is the start of original or enhanced format then
                 // we should see 02 as the first two values
                 // if (keyPressCount == 2)
-                if (keyPadInput.length == 2)
+                if (keyPadInput.length === 2)
                 {
                     // get the first two from the string
                     var firsttwo = keyPadInput.toString().replace(/,/g, '');
-                    if (firsttwo == '02')
+                    if (firsttwo === '02')
                     {
                         keyPadOutputType = 1;
                         $('#payment-vantiv-keypadpayment-ecdata-type').val('default');
 
                     }
-                    else if (firsttwo == '<D')
+                    else if (firsttwo === '<D')
                     {
                         keyPadOutputType = 2;
                         $('#payment-vantiv-keypadpayment-ecdata-type').val('xml');
@@ -81,7 +81,7 @@ define([
                     // Default Output
                     case 1:
                         // determine if we are at the end
-                        if (keyPadInput.length == MANUAL_DEFAULT_FORMAT_SIZE)
+                        if (keyPadInput.length === MANUAL_DEFAULT_FORMAT_SIZE)
                         {
                             // get the keypad output as a string with no commas
                             keypadInputValue = keyPadInput.toString().replace(/,/g, '');
@@ -92,6 +92,11 @@ define([
                             // stop spinner
                             jQuery('#edit_form').trigger('processStop');
 
+                            // reset these values for correct processing
+                            keyPadInput = [];
+                            keyPadOutputType = '';
+                            keypadInputValue = '';
+
                             // this stops the keypress event
                             event.preventDefault();
                         }
@@ -99,17 +104,22 @@ define([
 
                     // XML Output
                     case 2:
-                        // determine if we are at the end
-                        if (keyPadInput.length == MANUAL_XML_FORMAT_SIZE)
-                        {
-                            // get the keypad output as a string with no commas
-                            keypadInputValue = keyPadInput.toString().replace(/,/g, '');
+                        // get the keypad output as a string with no commas
+                        keypadInputValue = keyPadInput.toString().replace(/,/g, '');
 
+                        // determine if we are at the end
+                        if (keypadInputValue.indexOf('</DvcMsg>') > -1)
+                        {
                             // parse the data format for displaying purposes
                             parseXmlFormat(keypadInputValue);
 
                             // stop spinner
                             jQuery('#edit_form').trigger('processStop');
+
+                            // reset these values for correct processing
+                            keyPadInput = [];
+                            keyPadOutputType = '';
+                            keypadInputValue = '';
 
                             // this stops the keypress event
                             event.preventDefault();
@@ -165,41 +175,57 @@ define([
         // This function is used to parse the XML format
         // from the secure keypad output
         function parseXmlFormat(data) {
-            // find the XML tag Card
-            var card = $(data).find('Card');
+            // find the XML tag DVC to determine if manual or swipe
+            var dvc = $(data).find('Dvc');
+            var entry = $(dvc).attr('Entry');
 
-            // get the account number
-            var accountNumber = $(card).attr('MskPAN');
+            // make sure that the user didn't swipe the card
+            if (entry === 'SWIPE')
+            {
+                // set the error to display as we shouldn't be doing a swipe of the card
+                $('#keypad-error').css('display', 'block');
+            }
+            else
+            {
+                // find the XML tag Card
+                var card = $(data).find('Card');
 
-            // get the last4 digits
-            var last4 = accountNumber.substring(accountNumber.length - 4);
+                // get the account number
+                var accountNumber = $(card).attr('MskPAN');
 
-            // get the expiration date
-            var expDate = $(card).attr('Exp');
+                // get the last4 digits
+                var last4 = accountNumber.substring(accountNumber.length - 4);
 
-            // get the expiration year
-            var expYear = expDate.substring(0, 2);
+                // get the expiration date
+                var expDate = $(card).attr('Exp');
 
-            // get the expiration month
-            var expMonth = expDate.substring(2, 4);
+                // get the expiration year
+                var expYear = expDate.substring(0, 2);
 
-            // get the encrypted card data
-            var ecData = $(card).attr('ECData');
+                // get the expiration month
+                var expMonth = expDate.substring(2, 4);
 
-            // get the serial number
-            var serialNumber = $(card).attr('CDataKSN');
+                // get the encrypted card data
+                var ecData = $(card).attr('ECData');
 
-            // set the input fields for displaying to the admin user
-            $('#keypadAccountNumber').val(accountNumber);
-            $('#keypadExpMonth').val(expMonth);
-            $('#keypadExpYear').val(expYear);
+                // get the serial number
+                var serialNumber = $(card).attr('CDataKSN');
 
-            // set vantiv values
-            $('#payment-vantiv-keypadpayment-ecdata').val(ecData);
-            $("#payment-vantiv-keypadpayment-last-four").val(last4);
-            $("#payment-vantiv-keypadpayment-exp-month").val(expMonth);
-            $("#payment-vantiv-keypadpayment-exp-year").val(expYear);
-            $("#payment-vantiv-keypadpayment-serial-number").val(serialNumber);
+                // initialize the error to not display
+                $('#keypad-error').css('display', 'none');
+
+                // set the input fields for displaying to the admin user
+                $('#keypadAccountNumber').val(accountNumber);
+                $('#keypadExpMonth').val(expMonth);
+                $('#keypadExpYear').val(expYear);
+
+                // set vantiv values
+                $('#payment-vantiv-keypadpayment-ecdata').val(ecData);
+                $("#payment-vantiv-keypadpayment-last-four").val(last4);
+                $("#payment-vantiv-keypadpayment-exp-month").val(expMonth);
+                $("#payment-vantiv-keypadpayment-exp-year").val(expYear);
+                $("#payment-vantiv-keypadpayment-serial-number").val(serialNumber);
+            }
         };
     }
 );

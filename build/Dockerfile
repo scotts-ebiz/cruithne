@@ -13,14 +13,19 @@ LABEL maintainer="rick.feldschau@scotts.com"
 USER root
 WORKDIR $MAGENTO_DIR
 RUN chown -R magento:www-data .git
+RUN crontab -r; exit 0
 
 USER magento
 WORKDIR $MAGENTO_DIR
+
+# Temporary add to test mass import of images
+RUN mkdir -p $MAGENTO_DIR/var/import/images && gsutil -q -m rsync -r -u gs://magento-image-repo/import/ $MAGENTO_DIR/var/import/images ; exit 0
 
 RUN git fetch --all
 RUN git reset --hard
 RUN git pull
 RUN composer install
+RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools
 
 USER root
 
@@ -36,8 +41,8 @@ RUN \
 # Expose Ports for Apache
 EXPOSE 80/tcp 443/tcp
 
-RUN find var generated pub/static pub/media app/etc -type f -exec chmod g+w {} + 
-RUN find var generated pub/static pub/media app/etc -type d -exec chmod g+ws {} +
+RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -print0 | xargs -0 chown magento:www-data
+RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -print0 | xargs -0 chmod 777
 
 # Run entrypoint file
 COPY ondemand-entrypoint.sh /usr/local/bin/entrypoint.sh
