@@ -4,7 +4,7 @@ define(
         'Magento_Checkout/js/view/payment/default',
         'Magento_Checkout/js/action/place-order',
         'Magento_Checkout/js/action/redirect-on-success',
-        'domReady!'
+        'domReady!',
     ],
     function($, Component) {
         'use strict';
@@ -16,6 +16,7 @@ define(
 
             initialize: function() {
                 this._super();
+                
                 setTimeout(function() {
                     recurly.configure('ewr1-aefvtq9Ri3MILWsXFPHyv2');
                     $('input[data-recurly="first_name"]').val(customerData.firstname);
@@ -42,7 +43,7 @@ define(
                         
                         $.ajax({
                             type: 'POST',
-                            url: 'https://cruithne.scottsprogram.local/rest/V1/subscriptions/new',
+                            url: window.location.origin + '/rest/V1/subscriptions/new',
                             dataType: 'json',
                             contentType: 'application/json',
                             processData: false,
