@@ -86,8 +86,6 @@ class RecurlySubscription implements RecurlyInterface
 
 				return array( array( 'success' => true, 'message' => 'Subscription created.' ) );
 			} catch(Recurly_ValidationError $e) {
-				print_r("Invalid account");
-				print_r( $e );
 				return array( array( 'success' => false, 'message' => $e ) );
 			}
 		}

@@ -38,7 +38,7 @@ define(
                 var orderForm = document.querySelector('#co-payment-form');
                 recurly.token(form, function(err, token) {
                     if( err ) {
-                        console.log( err );
+                        alert( err.message );
                     } else {
                         
                         $.ajax({
@@ -52,7 +52,7 @@ define(
                                 if( response[0].success == true ) {
                                     self.placeOrder();
                                 } else {
-                                    console.log(response);
+                                    alert( response[0].message );
                                 }
                             }
                         });
