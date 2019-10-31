@@ -19,9 +19,6 @@ class RecurlySubscription implements RecurlyInterface
 
 	protected $_customerFactory;
 
-	/**
-	 * @var \SMG\Subscriptions\Config\RecurlyConfig
-	 */
 	protected $_recurlyConfig;
 
 	public function __construct(
@@ -37,13 +34,6 @@ class RecurlySubscription implements RecurlyInterface
 		$this->_recurlyConfig = $recurlyConfig;
 	}
 
-	private function checkRecurlyAccount($recurly_account_code)
-	{
-		Recurly_Client::$apiKey = $this->_recurlyConfig->getValue('apikey');
-		Recurly_Client::$subdomain = $this->_recurlyConfig->getValue('subdomain');
-
-		return false;
-	}
 
 	/**
 	 * Create new recurlt subscription
