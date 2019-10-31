@@ -6,7 +6,7 @@
                 <h2 class="section__hero--subhead"><?php echo $block->escapeHTML(getData('heroheadline')); ?></h2>
                 <div class="section__hero--select">
                     <form action="/ziplookup/" method="get" class="">
-                        <input type="text" name="zip" pattern="[0-9]{5}" value="" placeholder="Enter Your Zip Code" required="" title="Zip code must be 5 numbers">';
+                        <input type="text" name="zip" pattern="[0-9]{5}" value="" placeholder="Enter Your ZIP Code" required="" title="Zip code must be 5 numbers">';
                         <?php if(isset($_GET['no_zip_results'])): ?>
                         <p class="error-msg">Scotts Big Bag Home Delivery is currently not available in your area.</p>
                         <?php endif; ?>

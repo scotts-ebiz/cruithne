@@ -60,7 +60,7 @@
 
             <parameter name="validzipcodes" visible="true" xsi:type="block" required="true">
 
-                <label>Valid Zip Codes</label>
+                <label>Valid ZIP Codes</label>
 
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
 

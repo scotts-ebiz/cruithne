@@ -173,7 +173,7 @@ return [
         'Magento_Multishipping' => 1,
         'Magento_MysqlMq' => 1,
         'Magento_NewRelicReporting' => 1,
-        'Magento_SendFriend' => 1,
+        'Magento_SendFriend' => 0,
         'Magento_OfflinePayments' => 1,
         'Magento_OfflineShipping' => 1,
         'Magento_Banner' => 1,
@@ -266,8 +266,6 @@ return [
         'Magento_ProductVideoStaging' => 1,
         'Magento_WishlistAnalytics' => 1,
         'Magento_Worldpay' => 1,
-        'Mageplaza_Core' => 1,
-        'Mageplaza_Smtp' => 1,
         'SMG_Api' => 1,
         'SMG_Bundleprouct' => 1,
         'SMG_Checkout' => 1,
@@ -284,6 +282,7 @@ return [
         'SMG_HeroVideoBtnWidget' => 1,
         'SMG_HeroZip' => 1,
         'SMG_IconList' => 1,
+        'SMG_Iframes' => 1,
         'SMG_ImageGallery' => 0,
         'SMG_LandingPage' => 1,
         'SMG_Launch' => 1,
@@ -301,7 +300,6 @@ return [
         'SMG_OrderDiscount' => 1,
         'SMG_ShipTracking' => 1,
         'SMG_Shipping' => 1,
-        'SMG_ShippingRestrict' => 1,
         'SMG_SpecsList' => 1,
         'Vantiv_Payment' => 1,
         'SMG_Zip' => 1,
@@ -309,7 +307,6 @@ return [
         'SMG_ZipToAvalara' => 1,
         'Temando_Shipping' => 1,
         'SMG_Vantiv' => 1,
-        'Vertex_Tax' => 1, 
-        'MagePal_GoogleTagManager' => 1
+        'Vertex_Tax' => 1
     ]
 ];
