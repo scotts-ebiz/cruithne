@@ -9,11 +9,14 @@ define([
         'use strict';
 
         const MANUAL_DEFAULT_FORMAT_SIZE = 198;
+        var keyPadInput = [];
+        var keyPadOutputType = '';
+        var keypadInputValue = '';
+        var n;
 
         $('#p_method_vantiv_keypadpayment').click(function() {
             // initialize the error to not display
             $('#keypad-error').css('display', 'none');
-
             // initialize the input fields
             $('#keypadAccountNumber').val('');
             $('#keypadExpMonth').val('');
@@ -26,19 +29,15 @@ define([
             $("#payment-vantiv-keypadpayment-exp-year").val('');
             $("#payment-vantiv-keypadpayment-serial-number").val('');
 
-            var keyPadInput = [];
-            var keyPadOutputType = '';
-            var keypadInputValue = '';
-            var n;
-
             // start spinner
-            jQuery('#edit_form').trigger('processStart');
-
             // gather the keypad data from the keypress event
-            $(document).keypress(function (event) {
+           
+        });
+        
+         $(document).keypress(function (event) {
+         if(jQuery("#p_method_vantiv_keypadpayment")[0].checked){
                 // get the keycode
                 var keyCode = event.keyCode || event.which;
-
                 // get the value
                 var keyValue = String.fromCharCode(keyCode);
 
@@ -126,8 +125,9 @@ define([
                         }
                         break;
                 }
+             }  
             });
-        });
+
 
         // This function is used to parse the Default format
         // from the secure keypad output

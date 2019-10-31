@@ -14,7 +14,7 @@ $code = $block->escapeHtml($block->getMethodCode());
 <fieldset
     class="admin__fieldset payment-method"
     id="payment_form_<?php echo $block->escapeHtmlAttr($code); ?>"
-    style="display: none;">
+    style="display: none;" >
     <div class="admin__field field field-accountNumber">
         <label class="label admin__field-label" for="accountNumber">
             <span id="accountNumberLabelText">Card number</span>
@@ -28,11 +28,9 @@ $code = $block->escapeHtml($block->getMethodCode());
             <span id="expDateLabelText">Card Expiration Date</span>
         </label>
         <div class="admin__field-control control" id="expDate">
-            <input class="input-text admin__control-text" id="keypadExpMonth" placeholder="Month" maxlength="2" style="width:auto;" /> <span id="expDividerText"> / </span> <input class="input-text admin__control-text" id="keypadExpYear"
-                                                                                                                                                                              placeholder="Year" maxlength="2" style="width:auto;" />
+            <input class="input-text admin__control-text" id="keypadExpMonth" placeholder="Month" maxlength="2" style="width:auto;" /> <span id="expDividerText"> / </span> <input class="input-text admin__control-text" id="keypadExpYear" placeholder="Year" maxlength="2" style="width:auto;" />
         </div>
     </div>
-
     <input id="payment-vantiv-keypadpayment-type" name="payment[cc_type]" type="hidden" />
     <input id="payment-vantiv-keypadpayment-last-four" name="payment[additional_information][last_four]" type="hidden" />
     <input id="payment-vantiv-keypadpayment-exp-month" name="payment[additional_information][exp_month]" type="hidden" />
@@ -41,10 +39,28 @@ $code = $block->escapeHtml($block->getMethodCode());
     <input id="payment-vantiv-keypadpayment-ecdata" name="payment-vantiv-keypadpayment-ecdata" type="hidden" />
     <input id="payment-vantiv-keypadpayment-serial-number" name="payment-vantiv-keypadpayment-serial-number" type="hidden" />
 </fieldset>
-<script type="text/x-magento-init">
-    {
-        "*": {
-            "SMG_Vantiv/js/keypad": {}
-        }
+<script type="text/javascript">
+    require(['keypad'], function () {});
+    var time;
+    jQuery( document ).ready(function() {
+        time = setInterval(function () {
+                autorefresh();
+        }, 1000);
+    });
+
+function autorefresh() {
+    var isChecked = document.getElementById("p_method_vantiv_keypadpayment").checked;
+    if (isChecked == true && jQuery('#keypadAccountNumber').val()=='') {
+        jQuery('#edit_form').trigger('processStart');
+    } else if (isChecked == false) {
+        jQuery('#edit_form').trigger('processStop');
+        //clearInterval(time);
     }
+     else if (isChecked == true && jQuery('#keypadAccountNumber').val()!='') {
+        jQuery('#edit_form').trigger('processStop');
+         setTimeout(function() {
+            jQuery('body').trigger('processStop');
+        }, 1000);
+    }
+}
 </script>
