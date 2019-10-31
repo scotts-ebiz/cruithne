@@ -1,5 +1,5 @@
 <?php
-namespace SMG\Recommendations\Api;
+namespace SMG\Api\Model;
 
 /**
  * @api
