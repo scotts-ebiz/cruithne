@@ -18,16 +18,16 @@
         <!-- Recurly form -->
         <div class="">
             <form class="recurly-form">
-                <input type="text" data-recurly="first_name" placeholder="first name" value="boris">
-                <input type="text" data-recurly="last_name" placeholder="last name" value="kuzmanov">
-                <input type="text" data-recurly="address1" placeholder="address" value="1313 Main St.">
-                <input type="text" data-recurly="city" placeholder="city" value="Hope">
-                <input type="text" data-recurly="country" placeholder="country" value="US">
-                <input type="text" data-recurly="state" placeholder="state" value="WA">
-                <input type="text" data-recurly="postal_code" value="98552">
+                <input type="text" data-recurly="first_name" placeholder="first name" value="" style="display: none;">
+                <input type="text" data-recurly="last_name" placeholder="last name" value="" style="display: none;">
+                <input type="text" data-recurly="address1" placeholder="address" value="" style="display: none;">
+                <input type="text" data-recurly="city" placeholder="city" value="" style="display: none;">
+                <input type="text" data-recurly="country" placeholder="country" value="" style="display: none;">
+                <input type="text" data-recurly="state" placeholder="state" value="" style="display: none;">
+                <input type="text" data-recurly="postal_code" value="" style="display: none;">
                 <div data-recurly="card"></div>
                 <input type="hidden" name="recurly-token" data-recurly="token">
-                <button>Submit</button>
+                <button style="display: none;">Submit</button>
             </form>
         </div>
         <div class="checkout-agreements-block">
@@ -40,7 +40,7 @@
                 <button class="action primary checkout"
                         type="submit"
                         data-bind="
-                        click: placeOrder,
+                        click: myPlaceOrder,
                         attr: {title: $t('Place Order')},
                         css: {disabled: !isPlaceOrderActionAllowed()},
                         enable: (getCode() == isChecked())
