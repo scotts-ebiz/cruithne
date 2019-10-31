@@ -1,6 +1,6 @@
 <?php
 
-namespace SMG\Api\Helper;
+namespace SMG\Recommendations\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Store\Model\ScopeInterface;

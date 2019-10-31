@@ -1,8 +1,8 @@
 <?php
 
-namespace SMG\Api\Model\Api;
+namespace SMG\Recommendations\Model;
 
-use SMG\Api\Model\QuizInterface;
+use SMG\Recommendations\Api\QuizInterface;
 
 class Quiz implements QuizInterface
 {
@@ -13,7 +13,7 @@ class Quiz implements QuizInterface
     protected $_helper;
 
     public function __construct(
-        \SMG\Api\Helper\QuizHelper $helper
+        \SMG\Recommendations\Helper\QuizHelper $helper
     )
     {
         $this->_helper = $helper;
