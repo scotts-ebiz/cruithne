@@ -42,10 +42,17 @@ define([
      */
     function Quiz(data) {
         var self = this;
-
+        self.progressBarCategories = ko.observableArray([
+            {label: "Goals"}, 
+            {label: "Routine"},
+            {label: "Tools"},
+            {label: "Condition"},
+            {label: "Lawn Details"}
+        ]);
         self.template = null;
         self.previousGroups = ko.observableArray([]);
-        self.currentGroup = ko.observable(null);
+        self.currentGroup = ko.observable(null);                            
+        // self.progressBar = ko.observable(null);
 
         self.initialize = function (data) {
             self.template = new QuizTemplate(data);
@@ -88,13 +95,53 @@ define([
             }
         };
 
+        // self.updateProgressBar = function (group) {
+        //     var labelValue = $(".sp-quiz__progress-list li").get("value");
+        //     function checkLabel() {
+        //         for (var i = 0; i < self.progressBarCategories.length; i += 1) {
+        //             if (self.labelValue === self.progressBarCategories[i]) {
+        //             $(".sp-quiz__progress-list li").css("background-color", "hotpink");
+        //             $(".sp-quiz__progress-list li").append(".sp-quiz__progress-fill-active");
+        //         }
+        //     }
+        //         if (quiz.currentGroup().label.toLowerCase === progressBarCategories[i].toLowerCase) {
+        //             return 
+        //                 self.progressBarCategories[i].css("background-color", "hotpink");
+        //             if (self.labelValue === self.quiz.currentGroup().label) {
+        //             } 
+        //         } else {
+        //             return self.labelValue.css("background-color", "hotpink");
+        //         }
+        //     } 
+
+        //     // No group specified so load the first group
+        //     if (!group) {
+        //         self.currentGroup(self.template.questionGroups[0]);
+        //         // $(".sp-quiz__progress-label li:first").css("background-color", "hotpink");
+        //         return;
+        //     // } else {
+        //         // checkLabel();
+        //     };
+
+        //     self.previousGroups.push(self.currentGroup());
+
+        //     self.setGroup(group);
+        
+        // };
+
         self.validateGroup = function () {
-            // TODO: Validate responses
+            // @todo: Validate responses
             var valid = true;
 
+            // Store answers to local storage on validation
             if (!valid) {
                 return;
+            // } else {
+            //     return;
             }
+
+            // Move the progress bar to next question
+            // self.updateProgressBar();
 
             // Get the transitions for the current group.
             var transitions = self.currentGroup().transitions;
@@ -102,7 +149,24 @@ define([
             if (transitions.length === 1) {
                 // There is only one transition, so pull that questionGroup.
                 var id = transitions[0].destinationQuestionGroupId;
+                
+                // Move progress bar to next category when the next question appears on 'Next' button click
+                
+
+                // Possibly unneeded: Calculate how much to fill in the progress bar
+                // var num = ko.pureComputed(function() {
+                //    return Math.round(
+                //     Math.min(
+                //         ko.unwrap(params.value), 1
+                //     ) * 100) + '%';
+                // });
                 self.loadNextGroup(self.findQuestionGroup(id));
+                // self.progressBar({
+                //     num: 0,
+                //     // transform: "translateX:" + " (calc(questionGroups.length / 5) * 100}" + "%);"
+                //     transform: "translateX: {num}"
+                // });
+                // console.log('progressBar = potato')
             }
         };
 
@@ -116,7 +180,7 @@ define([
                 return false;
             }
 
-            for (var i = 0; i < self.template.questionGroups.length; i++) {
+            for (var i = 0; i < self.template.questionGroups.length; i += 1) {
                 if (self.template.questionGroups[i].id === id) {
                     return self.template.questionGroups[i];
                 }
@@ -145,6 +209,7 @@ define([
         questions: ko.observable({}),
         answers: ko.observable({}),
         previousGroups: ko.observableArray([]),
+        // quizProgress: ko.observable({}),
 
         initialize: function () {
             this._super();
