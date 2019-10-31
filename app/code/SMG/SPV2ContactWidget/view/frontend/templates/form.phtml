@@ -43,7 +43,7 @@
     </div>
 </div>
 
-<?php $ajaxurl = $block->getFormAction(); ?>
+<?php $ajaxurl = $block->escapeurl( $block->getFormAction() ); ?>
 <script type="text/x-magento-init">
         {
             "*": {

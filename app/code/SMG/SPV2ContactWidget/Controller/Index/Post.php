@@ -1,6 +1,6 @@
 <?php
  
-namespace SMG\SPV2ContactWidget\Controller\Contact\Index;
+namespace SMG\SPV2ContactWidget\Controller\Index;
  
 use Magento\Framework\App\Request\DataPersistorInterface;
 use Magento\Framework\App\ObjectManager;
@@ -50,15 +50,14 @@ class Post extends \Magento\Contact\Controller\Index\Post {
         \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation,
         \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
     ) {
-        parent::__construct($context, $contactsConfig,$mail,$dataPersistor);
+        parent::__construct($context, $contactsConfig, $mail, $dataPersistor);
         $this->_context = $context;
         $this->_mail = $mail;
         $this->_dataPersistor = $dataPersistor;
-        $this->_logger = $logger ?: ObjectManager::getInstance()->get(LoggerInterface::class);
+        $this->_logger = $logger;
         $this->_resultJsonFactory = $resultJsonFactory;
     }
 
-    
     /**
      * Post user data from the contact form
      * 
