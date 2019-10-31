@@ -13,6 +13,7 @@
         "amasty/securityauth": "^1.1",
         "avalara/avatax-magento": "^1.5",
         "composer/composer": "@alpha",
+        "gigya/magento2-im": "^5.4",
         "magento/product-enterprise-edition": "2.3.0",
         "magepal/magento2-googletagmanager": "^2.3",
         "mageplaza/module-smtp": "^1.2",
@@ -80,6 +81,10 @@
         "amasty": {
             "type": "composer",
             "url": "https://composer.amasty.com/enterprise/"
+        },
+        "gigya-im": {
+            "type": "git",
+            "url": "https://github.com/gigya/Magento-2"
         }
     },
     "extra": {
