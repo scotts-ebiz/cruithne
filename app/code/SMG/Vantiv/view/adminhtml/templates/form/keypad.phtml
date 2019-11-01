@@ -15,21 +15,23 @@ $code = $block->escapeHtml($block->getMethodCode());
     class="admin__fieldset payment-method"
     id="payment_form_<?php echo $block->escapeHtmlAttr($code); ?>"
     style="display: none;">
-    <div class="admin__field field field-accountNumber">
-        <label class="label admin__field-label" for="accountNumber">
-            <span id="accountNumberLabelText">Card number</span>
-        </label>
-        <div class="admin__field-control control" id="accountNumberDiv">
-            <input class="input-text admin__control-text" type="text" id="keypadAccountNumber" placeholder="Account Number" maxlength="20" />
+    <div id="payframe" data-mage-init='<?php echo $block->escapeHtml($block->getMageInitJson()); ?>'>
+        <div class="admin__field field field-accountNumber">
+            <label class="label admin__field-label" for="accountNumber">
+                <span id="accountNumberLabelText">Card number</span>
+            </label>
+            <div class="admin__field-control control" id="accountNumberDiv">
+                <input class="input-text admin__control-text" type="text" id="keypadAccountNumber" placeholder="Account Number" maxlength="20" />
+            </div>
         </div>
-    </div>
-    <div class="admin__field field field-expDate">
-        <label class="label admin__field-label" for="expDate">
-            <span id="expDateLabelText">Card Expiration Date</span>
-        </label>
-        <div class="admin__field-control control" id="expDate">
-            <input class="input-text admin__control-text" id="keypadExpMonth" placeholder="Month" maxlength="2" style="width:auto;" /> <span id="expDividerText"> / </span> <input class="input-text admin__control-text" id="keypadExpYear"
-                                                                                                                                                                              placeholder="Year" maxlength="2" style="width:auto;" />
+        <div class="admin__field field field-expDate">
+            <label class="label admin__field-label" for="expDate">
+                <span id="expDateLabelText">Card Expiration Date</span>
+            </label>
+            <div class="admin__field-control control" id="expDate">
+                <input class="input-text admin__control-text" id="keypadExpMonth" placeholder="Month" maxlength="2" style="width:auto;" /> <span id="expDividerText"> / </span> <input class="input-text admin__control-text" id="keypadExpYear"
+                                                                                                                                                                                  placeholder="Year" maxlength="2" style="width:auto;" />
+            </div>
         </div>
     </div>
 
@@ -41,10 +43,3 @@ $code = $block->escapeHtml($block->getMethodCode());
     <input id="payment-vantiv-keypadpayment-ecdata" name="payment-vantiv-keypadpayment-ecdata" type="hidden" />
     <input id="payment-vantiv-keypadpayment-serial-number" name="payment-vantiv-keypadpayment-serial-number" type="hidden" />
 </fieldset>
-<script type="text/x-magento-init">
-    {
-        "*": {
-            "SMG_Vantiv/js/keypad": {}
-        }
-    }
-</script>
