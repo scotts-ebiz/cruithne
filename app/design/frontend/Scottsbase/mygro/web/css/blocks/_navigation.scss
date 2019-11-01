@@ -26,9 +26,6 @@ $active-nav-indent: 54px !default;
     cursor: pointer;
     display: block;
     font-size: 0;
-    left: 15px;
-    position: absolute;
-    top: 15px;
     z-index: 14;
 }
 
@@ -181,11 +178,6 @@ $active-nav-indent: 54px !default;
     }
 
     .nav-open {
-        .page-wrapper {
-            left: 80%;
-            left: calc(100% - #{$active-nav-indent});
-        }
-
         .nav-sections {
             $_shadow: 0 0 5px 0 rgba(50, 50, 50, 0.75);
 

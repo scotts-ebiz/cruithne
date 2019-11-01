@@ -10,7 +10,7 @@ define([
 
         const MANUAL_DEFAULT_FORMAT_SIZE = 198;
 
-        $('#p_method_vantiv_keypadpayment').click(function() {
+        $(document).on('click', '#p_method_vantiv_keypadpayment', function() {
             // initialize the error to not display
             $('#keypad-error').css('display', 'none');
 

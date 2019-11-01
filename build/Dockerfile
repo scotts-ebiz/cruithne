@@ -17,6 +17,9 @@ RUN chown -R magento:www-data .git
 USER magento
 WORKDIR $MAGENTO_DIR
 
+# Temporary add to test mass import of images
+RUN mkdir -p $MAGENTO_DIR/var/import/images && gsutil -q -m rsync -r -u gs://magento-image-repo/import/ $MAGENTO_DIR/var/import/images ; exit 0
+
 RUN git fetch --all
 RUN git reset --hard
 RUN git pull
