@@ -2,6 +2,7 @@
 
 namespace SMG\Subscriptions\Model;
 
+use PHPUnit\Runner\Exception;
 use SMG\Subscriptions\Api\RecurlyInterface;
 use SMG\Subscriptions\Config\RecurlyConfig;
 
@@ -9,6 +10,7 @@ use Recurly_Client;
 use Recurly_Account;
 use Recurly_Subscription;
 use Recurly_BillingInfo;
+use Recurly_ShippingAddress;
 
 class RecurlySubscription implements RecurlyInterface
 {
@@ -49,47 +51,89 @@ class RecurlySubscription implements RecurlyInterface
 			Recurly_Client::$apiKey = $this->_recurlyConfig->getValue('apikey');
 			Recurly_Client::$subdomain = $this->_recurlyConfig->getValue('subdomain');
 
-			// Create new subscription
-			try {
-				$subscription = new Recurly_Subscription();
-				$subscription->plan_code = 'annual'; // This should be changed later when customer selects it's subscription type
-				$subscription->currency = 'USD';
+            $account = null;
+            // If Recurly account exists for the customer record, let's make sure that it actually pulls back an account
+            if( ! empty( $this->_customerSession->getCustomer()->getData()['recurly_account_code'] ) ) {
 
-				// If Recurly account exists, add the subscription to it
-				if( ! empty( $this->_customerSession->getCustomer()->getData()['recurly_account_code'] ) ) {
-					$account = Recurly_Account::get( $this->_customerSession->getCustomer()->getData()['recurly_account_code'] );
-					$subscription->account = $account;
-				} else { // Otherwise create new account
-					$subscription->account = new Recurly_Account();
-					$new_recurly_account_code = md5($order['customerData']['email']);
-					$subscription->account->account_code = $new_recurly_account_code;
-					$new_recurly_account_code = md5($order['customerData']['email']);
+                try {
+                    // Attempt to pull an account
+                    $account = Recurly_Account::get( $this->_customerSession->getCustomer()->getData()['recurly_account_code'] );
 
-					// Save Recurly account code to the eav table
-					$this->_customerSession->getCustomer()->setData('recurly_account_code', $new_recurly_account_code);
-					$customer = $this->_customer->load($order['customerData']['id']);
-					$customerData = $customer->getDataModel();
-					$customerData->setCustomAttribute('recurly_account_code',$new_recurly_account_code);
-					$customer->updateData($customerData);
-					$customerResource = $this->_customerFactory->create();
-					$customerResource->saveAttribute($customer, 'recurly_account_code');
+                } catch (Recurly_NotFoundError $e) {
 
-					$subscription->account->first_name = $order['customerData']['firstname'];
-					$subscription->account->last_name = $order['customerData']['lastname'];
-					$subscription->account->email = $order['customerData']['email'];
-				}
+                    // No account existed, let's update the customer record
+                    $this->_customerSession->getCustomer()->setData('recurly_account_code', null);
+                }
+            }
 
-				$subscription->account->billing_info = new Recurly_BillingInfo();
-				$subscription->account->billing_info->token_id = $token;
+            // If there is no account, let's create one
+            if ( is_null($account) ) {
 
-				$subscription->create();
+                // Let's generate an account code
+                // @todo this should be the gigya id
+                $recurlyAccount = md5($order['customerData']['email']);
+                $this->_customerSession->getCustomer()->setData('recurly_account_code', $recurlyAccount);
 
-				return array( array( 'success' => true, 'message' => 'Subscription created.' ) );
-			} catch(Recurly_ValidationError $e) {
-				return array( array( 'success' => false, 'message' => $e ) );
-			}
-		}
+                try {
+                    $account = new Recurly_Account($recurlyAccount);
+                    $account->email = $order['customerData']['email'];
+                    $account->last_name = $order['customerData']['lastname'];
+                    $account->first_name = $order['customerData']['firstname'];
 
-		return;
+                    // work shipping address
+                    $shad1 = new Recurly_ShippingAddress();
+                    $shad1->first_name = "Verena";
+                    $shad1->last_name = "Example";
+                    $shad1->company = "Recurly Inc.";
+                    $shad1->phone = "555-555-5555";
+                    $shad1->email = "verena@example.com";
+                    $shad1->address1 = "123 Main St.";
+                    $shad1->city = "San Francisco";
+                    $shad1->state = "CA";
+                    $shad1->zip = "94110";
+                    $shad1->country = "US";
+
+                    // Create the account
+                    $account->shipping_addresses = array($shad1, $shad1);
+                    $account->create();
+
+                } catch (Exception $e) {
+                    return array(array('failure' => true, 'message' => 'Unexpected error: ' . $e->getMessage()));
+                }
+            }
+
+                try {
+                    $subscription = new Recurly_Subscription();
+                    $subscription->plan_code = 'Annual';
+                    $subscription->currency = 'USD';
+
+                    // @todo feeling this is the wrong address. Need to validate.
+                    $address = $order['customerData']['addresses'][0];
+
+                    $billing_info = new Recurly_BillingInfo();
+                    $billing_info->token_id = $token;
+
+                    $account->billing_info = $billing_info;
+                    $subscription->account = $account;
+
+                    $subscription->create();
+
+                } catch (\Recurly_ValidationError $e) {
+                    return array( array( 'failure' => true, 'message' => 'Unexpected error: ' . $e->getMessage() ) );
+                }
+
+            // @todo do we need this?
+
+//                  // Save to customer record
+//					$customer = $this->_customer->load($order['customerData']['id']);
+//					$customerData = $customer->getDataModel();
+//					$customerData->setCustomAttribute('recurly_account_code',$new_recurly_account_code);
+//					$customer->updateData($customerData);
+//					$customerResource = $this->_customerFactory->create();
+//					$customerResource->saveAttribute($customer, 'recurly_account_code');
+            }
+
+		return array( array( 'success' => true, 'message' => 'Subscription was created for account #: ' . $this->_customerSession->getCustomer()->getData()['recurly_account_code'] ) );
+;
 	}
 }
