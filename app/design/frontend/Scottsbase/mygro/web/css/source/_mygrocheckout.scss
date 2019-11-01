@@ -1362,9 +1362,17 @@
       }
     }
   }
-  .page-wrapper{
-    .page-header{
-      height: 90px;
+  .custom-checkout-btn-wrap.stickyCart{
+    position: fixed;
+    top: 90px;
+    right: 0;
+    width: 100%;
+    padding: 0;
+    z-index: 9999;
+    display:block;
+    @include transition(all 0.2s ease-in-out);
+    .action.primary.checkout{
+      border-radius: 0px;
     }
   }
 }
