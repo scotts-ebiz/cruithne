@@ -90,6 +90,6 @@ class DrupalProductInfo implements DrupalProductInfoInterface {
             );
         }
 
-        return empty($products) ? null : $products;
+        return $products;
     }
 }
