@@ -19,27 +19,27 @@
         <!-- Single Question no Images === 2 -->
         <div data-bind="if: quiz.currentGroup().questionGroupType === 2">
             <div
-                    class="sp-mx-auto lg:sp-w-3/4"
-                    data-bind="foreach: { data: quiz.currentGroup().questions, as: 'question', noChildContext: true }"
+                class="sp-mx-auto lg:sp-w-3/4 xs:sp-w-full"
+                data-bind="foreach: { data: quiz.currentGroup().questions, as: 'question', noChildContext: true }"
             >
 
                 <div
-                        class="sp-quiz__options sp-flex sp-flex-wrap sp-justify-center sp--mx-1"
-                        data-bind="foreach: { data: question.options, as: 'option', noChildContext: true }"
+                    class="sp-quiz__options sp-flex sp-flex-wrap sp-justify-center sp--mx-1"
+                    data-bind="foreach: { data: question.options, as: 'option', noChildContext: true }"
                 >
                     <div
-                            class="sp-quiz-option sp-w-1/2 lg:sp-w-1/2 sp-text-center sp-p-1"
-                            data-bind="css: { 'sp-quiz-option--multiple': question.questionType === 2 }"
+                        class="sp-quiz-option sp-w-1/2 lg:sp-w-1/2 sp-text-center sp-p-1"
+                        data-bind="css: { 'sp-quiz-option--multiple': question.questionType === 2 }"
                     >
                         <input
-                                class="sp-quiz-option__input sp-quiz-checkbox sp-hidden"
-                                data-bind="attr: { id: option.id, name: question.id, value: option.id }"
-                                type="checkbox"
+                            class="sp-quiz-option__input sp-quiz-checkbox sp-hidden"
+                            data-bind="attr: { id: option.id, name: question.id, value: option.id }"
+                            type="checkbox"
                         />
 
                         <label
-                                class="sp-quiz__option-label sp-block sp-h-full"
-                                data-bind="attr: { for: option.id }"
+                            class="sp-quiz__option-label sp-block sp-h-full"
+                            data-bind="attr: { for: option.id }"
                         >
                         <span class="sp-quiz__option-content sp-bg-white sp-block sp-p-4 sp-rounded sp-shadow-md">
                             <span class="sp-block sp-mb-0 sp-text-black" data-bind="text: option.label"></span>
@@ -55,34 +55,34 @@
         <div data-bind="if: quiz.currentGroup().questionGroupType === 1 || quiz.currentGroup().questionGroupType === 3">
 
             <div
-                class="sp-mx-auto lg:sp-w-3/4"
+                class="sp-mx-auto lg:sp-w-3/4 xs:sp-w-full"
                 data-bind="foreach: { data: quiz.currentGroup().questions, as: 'question', noChildContext: true }"
             >
 
                 <div
-                        class="sp-quiz__options sp-flex sp-flex-wrap sp-justify-center sp--mx-1"
-                        data-bind="foreach: { data: question.options, as: 'option', noChildContext: true }"
+                    class="sp-quiz__options sp-flex sp-flex-wrap sp-justify-center sp--mx-1"
+                    data-bind="foreach: { data: question.options, as: 'option', noChildContext: true }"
                 >
                     <div
-                            class="sp-quiz-option sp-w-1/2 lg:sp-w-1/4 sp-text-center sp-p-1"
-                            data-bind="css: { 'sp-quiz-option--multiple': question.questionType === 2 }"
+                        class="sp-quiz-option sp-w-1/2 lg:sp-w-1/4 sp-text-center sp-p-1"
+                        data-bind="css: { 'sp-quiz-option--multiple': question.questionType === 2 }"
                     >
                         <input
-                                class="sp-quiz-option__input sp-quiz-checkbox sp-hidden"
-                                data-bind="attr: { id: option.id, name: question.id, value: option.id }"
-                                type="checkbox"
+                            class="sp-quiz-option__input sp-quiz-checkbox sp-hidden"
+                            data-bind="attr: { id: option.id, name: question.id, value: option.id }"
+                            type="checkbox"
                         />
 
                         <label
-                                class="sp-quiz__option-label sp-block sp-h-full"
-                                data-bind="attr: { for: option.id }"
+                            class="sp-quiz__option-label sp-block sp-h-full"
+                            data-bind="attr: { for: option.id }"
                         >
                             <span class="sp-quiz__option-content sp-bg-white sp-block sp-p-4 sp-rounded sp-shadow-md">
                                 <span class="sp-block sp-my-4">
                                     <img
-                                            alt="Quiz Option"
-                                            class="sp-quiz__option-image"
-                                            data-bind="attr: { src: option.imageUrl }"
+                                        alt="Quiz Option"
+                                        class="sp-quiz__option-image"
+                                        data-bind="attr: { src: option.imageUrl }"
                                     />
                                 </span>
                                 <span class="sp-block sp-mb-0 sp-text-black" data-bind="text: option.label"></span>
@@ -100,18 +100,30 @@
     data-bind="if: quiz.currentGroup()"
 >
     <!-- Progress bar -->    
-    <div class="sp-flex sp-quiz__progress-container sp-mx-auto lg:sp-w-3/4">
-        <ul class="sp-quiz__progress-list sp-mx-auto lg:sp-w-3/4" data-bind="foreach: { data: quiz.progressBarCategories, noChildContext: true } ">
+    <div class="sp-flex sp-quiz__progress-container sp-mx-auto lg:sp-w-3/4 xs:sp-w-full">
+        <ul 
+            class="sp-quiz__progress-list sp-mx-auto lg:sp-w-3/4 xs:sp-w-full" 
+            data-bind="foreach: { data: quiz.progressBarCategories, noChildContext: true } "
+        >
             <li 
                 data-bind="css: { progressBarSelected: $parent.quiz.previousGroups().length === $index(), progressBarVisited: $parent.quiz.previousGroups().length > $index(), progressBarEnd: $parent.quiz.previousGroups().length > $index() && $index() === 4 }" 
                 class="sp-quiz__progress-item"
             >
-            <span class="sp-quiz__progress-item-label sp-label" data-bind="text: label"></span>
+            <!-- Progress label -->
+            <span 
+                class="sp-quiz__progress-item-label sp-label" 
+                data-bind="text: label"
+            ></span>
             <span class="sp-quiz__progress-item-dot"></span>
         </li>
         </ul>
     </div>
+</div>
 
+<div
+    class="sp-quiz__progress-buttons sp-bg-white sp-text-black sp-text-right"
+    data-bind="if: quiz.currentGroup()"
+>
     <div class="sp-container sp-flex sp-items-center sp-justify-between sp-py-6">
         <!-- Previous button -->    
         <div class="lg:sp-w-1/8">
@@ -124,9 +136,9 @@
             </button>
         </div>
 
-        <div class="sp-quiz__progress-bar lg:sp-w-3/4">
+        <!-- <div class="sp-quiz__progress-bar lg:sp-w-3/4 xs:sp-w-full">
             <p class="sp-label sp-mb-0 sp-text-center" data-bind="text: quiz.currentGroup().label"></p>
-        </div>
+        </div> -->
 
         <!-- Next button -->    
         <div class="lg:sp-w-1/8">
