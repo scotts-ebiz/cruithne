@@ -68,11 +68,11 @@ define([
                 return;
             }
 
-            console.log(group);
-
             self.previousGroups.push(self.currentGroup());
 
             self.setGroup(group);
+
+
         };
 
         self.loadPreviousGroup = function () {
@@ -93,41 +93,54 @@ define([
                     results[option.id] = '';
                 }
             }
+
+            self.routeLogic(group);
         };
 
-        // self.updateProgressBar = function (group) {
-        //     var labelValue = $(".sp-quiz__progress-list li").get("value");
-        //     function checkLabel() {
-        //         for (var i = 0; i < self.progressBarCategories.length; i += 1) {
-        //             if (self.labelValue === self.progressBarCategories[i]) {
-        //             $(".sp-quiz__progress-list li").css("background-color", "hotpink");
-        //             $(".sp-quiz__progress-list li").append(".sp-quiz__progress-fill-active");
-        //         }
-        //     }
-        //         if (quiz.currentGroup().label.toLowerCase === progressBarCategories[i].toLowerCase) {
-        //             return 
-        //                 self.progressBarCategories[i].css("background-color", "hotpink");
-        //             if (self.labelValue === self.quiz.currentGroup().label) {
-        //             } 
-        //         } else {
-        //             return self.labelValue.css("background-color", "hotpink");
-        //         }
-        //     } 
+        self.routeLogic = function (group) {
 
-        //     // No group specified so load the first group
-        //     if (!group) {
-        //         self.currentGroup(self.template.questionGroups[0]);
-        //         // $(".sp-quiz__progress-label li:first").css("background-color", "hotpink");
-        //         return;
-        //     // } else {
-        //         // checkLabel();
-        //     };
+            // Sliders Logic
+            if (group.questions[0].questionType === 3) {
 
-        //     self.previousGroups.push(self.currentGroup());
+                let sliderContainers = Array.prototype.slice.call(document.querySelectorAll(".sliderContainer"));
 
-        //     self.setGroup(group);
-        
-        // };
+                for (var p=0; p < sliderContainers.length; p++) {
+                    let scont = sliderContainers[p];
+                    let scontId = "#" + scont.id;
+
+                    console.log(scontId);
+
+                    let sliderValues = {};
+
+                    let labels = Array.prototype.slice.call(document.querySelectorAll( scontId + " span"));
+
+                    for (var i = 0; i < labels.length; i++) {
+                        sliderValues[labels[i].dataset.optid] = labels[i].innerText;
+                    }
+
+                    let slider = document.querySelector(scontId + " .slider");
+
+                    slider.addEventListener("change", function() {
+                        let closest = sliderValues[slider.value];
+                        let key = parseInt(slider.value);
+
+                        // @todo this will need updated once we are getting real images back from the payload.
+                        let backgroundSrc = 'https://picsum.photos/id/' + (9 + ( 5 * slider.dataset.sliderid + key )) + '/570/280'
+                        document.querySelector('#sliderImage img').setAttribute('src', backgroundSrc);
+
+                        let labels = Array.prototype.slice.call(document.querySelectorAll(scontId + " span"));
+                        for (var i = 0; i < labels.length; i++) {
+                            labels[i].classList.add('hide');
+                        }
+                        labels[key-1].classList.remove('hide');
+                    });
+                }
+            }
+
+            // if (group.questions[0].questionType === 5) {
+            //     console.log(group.questions[0]);
+            // }
+        };
 
         self.validateGroup = function () {
             // @todo: Validate responses
@@ -136,12 +149,7 @@ define([
             // Store answers to local storage on validation
             if (!valid) {
                 return;
-            // } else {
-            //     return;
             }
-
-            // Move the progress bar to next question
-            // self.updateProgressBar();
 
             // Get the transitions for the current group.
             var transitions = self.currentGroup().transitions;
@@ -151,22 +159,7 @@ define([
                 var id = transitions[0].destinationQuestionGroupId;
                 
                 // Move progress bar to next category when the next question appears on 'Next' button click
-                
-
-                // Possibly unneeded: Calculate how much to fill in the progress bar
-                // var num = ko.pureComputed(function() {
-                //    return Math.round(
-                //     Math.min(
-                //         ko.unwrap(params.value), 1
-                //     ) * 100) + '%';
-                // });
                 self.loadNextGroup(self.findQuestionGroup(id));
-                // self.progressBar({
-                //     num: 0,
-                //     // transform: "translateX:" + " (calc(questionGroups.length / 5) * 100}" + "%);"
-                //     transform: "translateX: {num}"
-                // });
-                // console.log('progressBar = potato')
             }
         };
 

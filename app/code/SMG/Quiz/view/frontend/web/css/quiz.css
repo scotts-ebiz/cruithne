@@ -130,6 +130,14 @@
     z-index: -1;
   }
 
+  .sp-quiz__green-text {
+    color: #1D5632;
+  }
+
+  .sp-quiz__strong-text {
+    font-weight: bolder;
+  }
+
   li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot:before {
     content: none;
   }
@@ -276,3 +284,16 @@
   }
   
 }
+
+.hide {
+  display: none;
+}
+
+input[type=range] {
+  width: 100%;
+}
+
+  .sp-quiz__slider-box {
+    max-width: 590px;
+    margin: 0 auto;
+  }
