@@ -1,4 +1,4 @@
-<div class="sp-widget">
+<div class="sp-widget sp-widget--contact-address">
 	<div class="sp-widget-line"></div>
 	<?php if( ! empty( $this->getData('contactAddress') ) ) { ?>
 	<address class="sp-widget-address">
@@ -6,6 +6,6 @@
 	</address>
 	<?php } ?>
 	<?php if( ! empty( $this->getData('contactPhone') ) ) { ?>
-		<a href="tel:<?php echo $block->escapeHtml($block->getData('contactPhone')) ?>"><?php echo $block->escapeHtml($block->getData('contactPhone')) ?></a>
+		<p class="sp-text-base"><?php echo $block->escapeHtml($block->getData('contactPhone')) ?></p>
 	<?php } ?>
 </div>

@@ -1,3 +1,5 @@
-<h2 class="sp sp-h2 sp-text-green-1"><?= $block->escapeHtml($block->getData('contactFormHeading')) ?></h2>
-<p class="sp-text-base"><?= $block->escapeHtml($block->getData('contactFormText')) ?></p>
-<?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('contact_form')->toHtml(); ?>	
+<div class="sp-widget sp-widget--contact-form">
+	<h2 class="sp sp-h2 sp-text-green-1"><?= $block->escapeHtml($block->getData('contactFormHeading')) ?></h2>
+	<p class="sp-text-base"><?= $block->escapeHtml($block->getData('contactFormText')) ?></p>
+	<?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('contact_form')->toHtml(); ?>	
+</div>

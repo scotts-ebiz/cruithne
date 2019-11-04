@@ -1,5 +1,30 @@
 .sp-widget {
+	p {
+		color: $black;
+	}
+}
 
+.sp-widget--contact-address {
+	margin-top: 0;
+	margin-bottom: 3rem;
+
+	@include breakpoint('md') {
+		margin-top: 10rem;
+	}
+}
+
+.sp-widget--contact-form {
+	//margin-bottom: 8rem;
+
+	form {
+		margin-top: 3rem;
+		margin-bottom: 3rem;
+
+		@include breakpoint('md') {
+			margin-top: 4rem;
+			margin-bottom: 8rem;
+		  }
+	}
 }
 
 .sp-widget-line {
