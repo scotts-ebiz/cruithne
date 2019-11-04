@@ -2,104 +2,53 @@
 namespace SMG\Checkout\Plugin\Block\Checkout;
 class AttributeMerger
 {
-  public function afterProcess(
-    \Magento\Checkout\Block\Checkout\LayoutProcessor $subject,
-    array $result
-  ) {
 
-    if(isset($result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
-      ['shippingAddress']['children']['shipping-address-fieldset']['children']['street'])){
 
-      $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
-      ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['0']['validation'] = ['required-entry' => false,'required-entry-street-0' => true];
+  protected function afterGetMultilineFieldConfig($results, $attributeCode, array $attributeConfig, $providerName,
+$dataScopePrefix)
+  {
+    $lines = [];
+    unset($attributeConfig['validation']['required-entry']);
+    for ($lineIndex = 0; $lineIndex < (int)$attributeConfig['size']; $lineIndex++) {
+      $isFirstLine = $lineIndex === 0;
+      $line = [
+        'label' => __("%1: Line %2", $attributeConfig['label'], $lineIndex + 1),
+        'component' => 'Magento_Ui/js/form/element/abstract',
+        'config' => [
+          // customScope is used to group elements within a single form e.g. they can be validated separately
+          'customScope' => $dataScopePrefix,
+          'template' => 'ui/form/field',
+          'elementTmpl' => 'ui/form/element/input'
+        ],
+        'dataScope' => $lineIndex,
+        'provider' => $providerName,
+        'validation' => $isFirstLine
+          ? array_merge(
+            ['required-entry' => (bool)$attributeConfig['required']],
+            $attributeConfig['validation']
+          )
+          : $attributeConfig['validation'],
+        'additionalClasses' => $isFirstLine ? 'field' : 'additional'
 
-      $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
-      ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['1']['validation'] = ['required-entry-street-1' => true];
-
-      $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
-      ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['2']['validation'] = ['required-entry-street-2' => true];
-
-      /* State/Provision label change*/
-      $result['components']['checkout']['children']['steps']['children']['shipping-step']
-      ['children']['shippingAddress']['children']['shipping-address-fieldset']['children']['region_id']['label'] = __('State');						/* Shipping address State validation change*/			$result['components']['checkout']['children']['steps']['children']['shipping-step']            ['children']['shippingAddress']['children']['shipping-address-fieldset']['children']['region_id']['validation'] = ['required-entry-regionid' => true,'required-entry' => false];
-
-      /* zip lable change*/
-      $result['components']['checkout']['children']['steps']['children']['shipping-step']
-      ['children']['shippingAddress']['children']['shipping-address-fieldset']['children']['postcode']['label'] = __('ZIP Code');
-    }
-
-    if (isset($result['components']['checkout']['children']['steps']['children']['billing-step']['children']
-      ['payment']['children']['payments-list']['children']
-    )) {
-
-      foreach ($result['components']['checkout']['children']['steps']['children']['billing-step']['children']
-               ['payment']['children']['payments-list']['children'] as $key => $payment) {
-
-        $subs = substr($key, 0, -4);
-        $removeString = str_replace("-", "", $subs);
-        /* Firstname */
-        if (isset($payment['children']['form-fields']['children']['firstname'])) {
-          $result['components']['checkout']['children']['steps']['children']['billing-step']['children']
-          ['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
-          ['firstname']['validation'] = ['required-entry' => false,'required-entry-bfirstname' => true];
-        }
-
-        /* Lastname */
-        if (isset($payment['children']['form-fields']['children']['lastname'])) {
-          $result['components']['checkout']['children']['steps']['children']['billing-step']['children']
-          ['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
-          ['lastname']['validation'] = ['required-entry' => false,'required-entry-blastname' => true];
-        }
-
-        /* Street */
-        if (isset($payment['children']['form-fields']['children']['street'])) {
-          $result['components']['checkout']['children']['steps']['children']['billing-step']['children']
-          ['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
-          ['street']['children']['0']['validation'] = ['required-entry' => false,'required-entry-bstreet-0' => true];
-        }
-
-        if (isset($payment['children']['form-fields']['children']['street'])) {
-          $result['components']['checkout']['children']['steps']['children']['billing-step']['children']
-          ['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
-          ['street']['children']['1']['validation'] = ['required-entry-bstreet-1' => true];
-        }
-
-        if (isset($payment['children']['form-fields']['children']['street'])) {
-          $result['components']['checkout']['children']['steps']['children']['billing-step']['children']
-          ['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
-          ['street']['children']['2']['validation'] = ['required-entry-bstreet-2' => true];
-        }
-
-        /* Postcode */
-        if (isset($payment['children']['form-fields']['children']['postcode'])) {
-          $result['components']['checkout']['children']['steps']['children']['billing-step']['children']
-          ['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
-          ['postcode']['validation'] = ['required-entry-bpcode' => true,'validate-zip-us' => true];
-        }
-
-        /* Telephone */
-        if (isset($payment['children']['form-fields']['children']['telephone'])) {
-          $result['components']['checkout']['children']['steps']['children']['billing-step']['children']
-          ['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
-          ['telephone']['validation'] = ['required-entry' => false,'required-entry-btelephone' => true];
-        }
-
-        /* State/Provision label change*/
-        if (isset($payment['children']['form-fields']['children']['region_id'])) {
-          $result['components']['checkout']['children']['steps']['children']['billing-step']['children']
-          ['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
-          ['region_id']['label'] = __('State');
-        }
-
-        /* ZIP label change*/
-        if (isset($payment['children']['form-fields']['children']['postcode'])) {
-          $result['components']['checkout']['children']['steps']['children']['billing-step']['children']
-          ['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
-          ['postcode']['label'] = __('ZIP Code');
-        }
+      ];
+      if ($isFirstLine && isset($attributeConfig['default']) && $attributeConfig['default'] != null) {
+        $line['value'] = $attributeConfig['default'];
       }
+      $lines[] = $line;
     }
-
-    return $result;
+    return [
+      'component' => 'Magento_Ui/js/form/components/group',
+      'label' => $attributeConfig['label'],
+      'required' => (bool)$attributeConfig['required'],
+      'dataScope' => $dataScopePrefix . '.' . $attributeCode,
+      'provider' => $providerName,
+      'sortOrder' => $attributeConfig['sortOrder'],
+      'type' => 'group',
+      'config' => [
+        'template' => 'ui/group/group',
+        'additionalClasses' => $attributeCode
+      ],
+      'children' => $lines,
+    ];
   }
 }
