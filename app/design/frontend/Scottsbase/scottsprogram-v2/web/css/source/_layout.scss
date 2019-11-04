@@ -32,10 +32,6 @@ body {
   position: relative;
 }
 
-.sp-content {
-  min-height: calc(100vh - #{$header-height});
-}
-
 .contact-index-index {
   .sp-content {
     min-height: auto;
