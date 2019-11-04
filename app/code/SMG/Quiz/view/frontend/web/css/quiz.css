@@ -314,11 +314,11 @@ input[type=range] {
     width: 100%;
   }
 
-  #slider__left{
+  #slider_label_left{
     float:left; 
     padding:5px 0px 0px 0px; 
-    font-size: 12px; 
-    color:rgb(37, 35, 35);
+    font-size: 12px;
+    color:rgb(29, 27, 27);
   }
 
   #slider_label_right{
