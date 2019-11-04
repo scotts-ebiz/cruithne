@@ -487,7 +487,9 @@
                           }
                         }
                         .content.minicart-items{
-                          display:block !important;
+                          margin-top: 2.5rem;
+                          border-top: 1px solid #ccc;
+                          padding-top: .75rem;
                         }
                       }
                     }
@@ -562,9 +564,6 @@
     }
     .minicart-items-wrapper{
       max-height: none;
-    }
-    .block.items-in-cart .title strong{
-      font-size:0;
     }
     .product.options{
       .item-options{
