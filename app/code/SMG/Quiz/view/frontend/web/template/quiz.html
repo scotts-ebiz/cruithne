@@ -32,7 +32,7 @@
             </div>
 
             <div
-                class="sp-mx-auto lg:sp-w-3/4 xs:sp-w-full"
+                class="sp-mx-auto lg:sp-w-3/4 xs:sp-w-full whole_box"
                 data-bind="foreach: { data: quiz.currentGroup().questions, as: 'question', noChildContext: true }"
             >
 
@@ -123,6 +123,21 @@
                     >
                         <option data-bind="attr: { value: option.value }"></option>
                     </datalist>
+
+                    <div data-bind="foreach: { data: question.options, as: 'option', noChildContext: true }">
+                        <div data-bind="attr: { for: option.id }">
+                            <div data-bind="if: option.value === '1'">
+                                <label id="slider_label_left" data-bind="text: option.label">
+                                </label>
+                            </div>
+                        </div>
+                        <div data-bind="attr: { for: option.id }">
+                            <div data-bind="if: option.value == '5'">
+                                <label id="slider_label_right" data-bind="text: option.label">
+                                </label>
+                            </div>
+                        </div>
+                    </div>
 
                 </div>
 
