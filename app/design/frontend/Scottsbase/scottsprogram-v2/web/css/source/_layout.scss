@@ -36,6 +36,12 @@ body {
   min-height: calc(100vh - #{$header-height});
 }
 
+.contact-index-index {
+  .sp-content {
+    min-height: auto;
+  }
+}
+
 .sp-container {
   margin-left: auto;
   margin-right: auto;
