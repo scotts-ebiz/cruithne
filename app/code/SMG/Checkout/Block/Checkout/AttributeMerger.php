@@ -29,7 +29,7 @@ class AttributeMerger extends \Magento\Checkout\Block\Checkout\AttributeMerger
         for ($lineIndex = 0; $lineIndex < (int)$attributeConfig['size']; $lineIndex++) {
           $isFirstLine = $lineIndex === 0;
           $line = [
-            'label' => __("%1: Lineasdf %2", $attributeConfig['label'], $lineIndex + 1),
+            'label' => __($attributeConfig['label']),
             'component' => 'Magento_Ui/js/form/element/abstract',
             'config' => [
               // customScope is used to group elements within a single form e.g. they can be validated separately
