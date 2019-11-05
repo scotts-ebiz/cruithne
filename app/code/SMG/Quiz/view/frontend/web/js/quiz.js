@@ -222,8 +222,12 @@ define([
                     dataType: 'json',
                     method: 'get',
                     success: function (data) {
-                        // Initialize the quiz with the template data.
-                        self.quiz.initialize(data);
+                        if(data.error_message) {
+                            alert( 'Error getting quiz data: ' + data.error_message + '. Please try again.');
+                        } else {
+                            // Initialize the quiz with the template data.
+                            self.quiz.initialize(data);
+                        }
                     }.bind(self),
                 },
             );

@@ -27,12 +27,21 @@ class Template extends Action
             return;
         }
 
-        $http = new Client();
-        $results = $http->get(filter_var($this->_helper->getNewQuizApiPath(), FILTER_SANITIZE_URL));
-        $json = $results->getBody()->getContents();
+        try {
+            $http = new Client();
+            $results = $http->get(filter_var($this->_helper->getNewQuizApiPath(), FILTER_SANITIZE_URL));
+            $json = $results->getBody()->getContents();
 
-        $result = $this->_resultFactory->create(ResultFactory::TYPE_JSON);
+            $result = $this->_resultFactory->create(ResultFactory::TYPE_JSON);
 
-        return $result->setJsonData($json);
+            return $result->setJsonData($json);
+        } catch(\Exception $e) {
+            $result = $this->_resultFactory->create(ResultFactory::TYPE_JSON);
+            $json = array(
+                'status_code'       => $e->getResponse()->getStatusCode(),
+                'error_message'     => $e->getResponse()->getReasonPhrase()
+            );
+            return $result->setJsonData(json_encode($json));
+        }
     }
 }
