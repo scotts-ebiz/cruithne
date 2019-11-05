@@ -1,0 +1,55 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="recommendations_tab" translate="label" sortOrder="400">
+            <label>Recommendations</label>
+        </tab>
+        <section id="recommendations" translate="label" type="text" sortOrder="340" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Settings</label>
+            <tab>recommendations_tab</tab>
+            <resource>SMG_Recommendations::settings</resource>
+            <group id="settings" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Recommendations Settings</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="apikey" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>API Key</label>
+                    <comment>e.g 012345678901234567890123456789ab</comment>
+                    <validate>required-entry validate-no-html-tags</validate>
+                    <depends>
+                        <field id="*/*/active">1</field>
+                    </depends>
+                </field>
+            </group>
+            <group id="recommendations_api_paths" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Recommendations API Paths</label>
+                <field id="new_quiz_api_path" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>New Quiz API Path</label>
+                    <comment>[GET] Fetches quizzes data</comment>
+                    <validate>validate-no-html-tags</validate>
+                    <config_path>recommendations/api/new</config_path>
+                </field>
+                <field id="save_quiz_api_path" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Save Quiz API Path</label>
+                    <comment>[POST] Saves quizzes data. Accepts array of IDs.</comment>
+                    <validate>validate-no-html-tags</validate>
+                    <config_path>recommendations/api/save</config_path>
+                </field>
+                <field id="quiz_results_api_path" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Quiz Results API Path</label>
+                    <comment>[GET] Returns quiz data by ID</comment>
+                    <validate>validate-no-html-tags</validate>
+                    <config_path>recommendations/api/result</config_path>
+                </field>
+                <field id="completed_quizzes_api_path" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Completed Quizzes API Path</label>
+                    <comment>[GET] Returns completed quizzes</comment>
+                    <validate>validate-no-html-tags</validate>
+                    <config_path>recommendations/api/previous</config_path>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
