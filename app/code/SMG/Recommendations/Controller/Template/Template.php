@@ -1,6 +1,6 @@
 <?php
 
-namespace SMG\Quiz\Controller\Template;
+namespace SMG\Recommendations\Controller\Template;
 
 use GuzzleHttp\Client;
 use Magento\Framework\App\Action\Action;

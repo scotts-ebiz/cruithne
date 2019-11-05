@@ -1,6 +1,6 @@
 <?php
 
-namespace SMG\Quiz\Controller\Index;
+namespace SMG\Recommendations\Controller\Index;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
