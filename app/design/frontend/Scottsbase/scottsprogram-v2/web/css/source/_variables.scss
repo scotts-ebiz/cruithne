@@ -40,19 +40,16 @@ $font-size-form-label: 10px;
 $border-radius: .25rem;
 
 // Breakpoints
+$screen-xs: 320px;
 $screen-sm: 640px;
 $screen-md: 768px;
 $screen-lg: 1024px;
 $screen-xl: 1440px;
 // These are the breakpoints used for the responsive mixins.
-$breakpoints: null, sm, md, lg;
+$breakpoints: null, xs, sm, md, lg;
 
 // Layout
 $container-width: 1280px;
-
-// Grid
-$columns: 8;
-$gutter: 1rem;
 
 // Spacing
 // This is used to generate margin and padding utility classes.

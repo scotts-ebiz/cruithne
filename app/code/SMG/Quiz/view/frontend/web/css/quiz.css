@@ -1,0 +1,395 @@
+  .sp-quiz__content {
+    overflow: auto;
+    order: 1;
+  }
+
+  .sp-quiz__banner {
+    padding: 70px 0 20px 0px;
+  }
+
+  .sp-quiz__previous {
+    background-color: transparent;
+    border: none;
+    margin: 0;
+    padding: 0;
+    text-decoration: underline;
+  }
+
+  .sp-quiz__previous:active,
+  .sp-quiz__previous:hover {
+    background-color: transparent;
+    border: none;
+    color: #454545;
+  }
+
+  .sp-quiz__previous:focus {
+    outline: 2px auto #454545;
+    outline-offset: 1px;
+    text-decoration: underline;
+  }
+
+  .sp-quiz__next {
+    width: 80px;
+  }
+
+  .sp-quiz__option-label {
+    border-radius: 0.5rem;
+    padding: 6px; /** Padding used to generate border around option content **/
+    transition: background-color 0.25s ease;
+  }
+
+  .sp-quiz__option-content {
+    height: 100%;
+    transition: background-color 0.25s ease;
+  }
+
+  .sp-quiz-checkbox:checked + .sp-quiz__option-label {
+    background-color: #028c45;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.26);
+  }
+
+  .sp-quiz-checkbox:checked + .sp-quiz__option-label .sp-quiz__option-content {
+    background-color: #edf4e1;
+    box-shadow: none;
+  }
+
+  .sp-quiz__option-image {
+    display: block;
+    height: auto;
+    max-width: 100px;
+    margin: 0 auto;
+    width: 100%;
+  }
+
+  .sp-quiz__progress-container {
+    order: 2;
+    width: auto;
+    height: auto;
+    position: relative;
+    margin-top: 0;
+  }
+
+  .sp-quiz__progress-list {
+    display: inline-flex;
+    flex-direction: row;
+    padding: 0;
+    text-transform: uppercase;
+    margin-bottom: 0;
+    width: 75%;
+  }
+
+  .sp-quiz__progress-item {
+    height: 57.5px;
+    list-style-type: none;
+    width: 20%;
+    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0;
+    z-index: 0;
+  }
+
+  .sp-quiz__progress-item-label {
+    display: none;
+  }
+
+  .sp-quiz__progress-item-label:first-child {
+    margin-left: 0;
+  }
+
+  .sp-quiz__progress-item-label:first-child:before {
+    content: none;
+  }
+
+  .sp-quiz__progress-item-label:last-child {
+    margin-right: 0;
+  }
+
+  .sp-quiz__progress-item-dot {
+    margin-top: 5px;
+    height: 15px;
+    width: 15px;
+    background-color: #FFF;
+    border: 2px solid #D3D3D3;
+    border-radius: 50%;
+    display: block;
+  }
+
+  .sp-quiz__progress-item-dot:before {
+    content: '';
+    display: block;
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: #D3D3D3;
+    margin-top: 4.25px;
+    right: -50%;
+    z-index: -1;
+  }
+
+  .sp-quiz__green-text {
+    color: #1D5632;
+  }
+
+  .sp-quiz__strong-text {
+    font-weight: bolder;
+  }
+
+  li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot:before {
+    content: none;
+  }
+
+  .progressBarEnd .sp-label,
+  .progressBarSelected .sp-label {
+    color:#1D5632;
+    font-size: 12px;
+  }
+
+  .progressBarEnd .sp-quiz__progress-item-dot,
+  .progressBarSelected .sp-quiz__progress-item-dot {
+    border: 2px solid #1D5632;
+    background-color: #1D5632;
+    box-shadow: inset 0 0 0 2.5px #FFF;
+  }
+
+  .progressBarVisited .sp-label {
+    color: #1D5632;
+  }
+
+  .progressBarVisited .sp-quiz__progress-item-dot {
+    border: 2px solid #1D5632;
+  }
+
+  .progressBarVisited .sp-quiz__progress-item-dot:before {
+    background: #1D5632;
+  }
+/* } */
+
+
+@media (min-width: 320px) {
+  /* html {
+    position: relative;
+    min-height: 100vh;
+  } */
+
+  .sp-quiz__progress {
+    order: 1;
+  }
+
+  .sp-quiz__progress-list {
+    width: 100%;
+  }
+
+  .sp-quiz__progress-item {
+    height: 57.5px;
+    list-style-type: none;
+    width: 20%;
+    text-align: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 0;
+    z-index: 0;
+  }
+
+  .sp-quiz__progress-item-label.sp-label {
+    display: none;
+  }
+
+  li.sp-quiz__progress-item.progressBarSelected .sp-quiz__progress-item-label.sp-label,
+  li.sp-quiz__progress-item.progressBarEnd .sp-quiz__progress-item-label.sp-label {
+    color: #1D5632;
+    width: 100%;
+    display: block;
+    line-height: 1.1;
+    height: 23px;
+  }
+
+  .sp-quiz__progress-item-dot:before {
+    top: 30px;
+    margin-top: 5px;
+  }
+
+  .sp-quiz__progress-item-dot {
+    margin-bottom: -10px;
+  }
+
+  li.sp-quiz__progress-item.progressBarVisited .sp-quiz__progress-item-dot {
+    border: 2px solid #1D5632;
+    margin-top: 5px;
+  }
+
+  li.sp-quiz__progress-item.progressBarSelected .sp-quiz__progress-item-dot,
+  li.sp-quiz__progress-item.progressBarEnd .sp-quiz__progress-item-dot {
+    margin-bottom: 14.5px;
+  }
+
+  .sp-quiz__banner {
+    padding: 20px 0;
+  }
+
+  .sp-quiz__content {
+    order: 2;
+  }
+
+  .sp-quiz__progress-container {
+    margin-top: 10px;
+  }
+
+  .sp-quiz__progress-buttons {
+    order: 3;
+    /* position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 0; */
+  }
+}
+
+@media (min-width: 1024px) {
+  .sp-quiz__progress {
+    order: 2;
+  }
+
+  .sp-quiz__progress-buttons {
+    order: 3;
+  }
+
+  .sp-quiz__progress-list {
+    width: 75%;
+  }
+
+  .sp-quiz__progress-item-label.sp-label {
+    color: #D3D3D3;
+    display: block;
+    line-height: 1.1;
+  }
+
+  li.sp-quiz__progress-item.progressBarSelected .sp-quiz__progress-item-label.sp-label,
+  li.sp-quiz__progress-item.progressBarEnd .sp-quiz__progress-item-label.sp-label {
+    height: 13px;
+  }
+
+  .sp-quiz__progress-item-dot {
+    margin-bottom: 3px;
+  }
+
+  li.sp-quiz__progress-item.progressBarSelected .sp-quiz__progress-item-dot,
+  li.sp-quiz__progress-item.progressBarEnd .sp-quiz__progress-item-dot {
+    margin-bottom: 3px;
+  }
+  
+}
+
+.hide {
+  display: none;
+}
+
+input[type=range] {
+  width: 100%;
+}
+
+  .sp-quiz__slider-box {
+    max-width: 590px;
+    margin: 0 auto;
+    margin-bottom: 40px; /*So we can have a margin between the slider_box and the progress bar*/
+  }
+
+
+  /*-----Improving Style for the Sliders*/
+  /*ticks for ff*/
+
+  .sliderContainer{
+    padding: 20px 0px;
+  }
+
+  .sp-quiz__strong-text{
+    padding-bottom:5px;
+  }
+  .whole_box {
+    width: 100%;
+  }
+
+  #slider_label_left{
+    float:left; 
+    padding:5px 0px 0px 0px; 
+    font-size: 12px;
+    color:rgb(29, 27, 27);
+  }
+
+  #slider_label_right{
+    float:right; 
+    padding:5px 0px 0px 0px; 
+    font-size: 12px; 
+    color:rgb(29, 27, 27);
+  }
+
+  input[type="range"]::-moz-range-track {
+    padding: 0px;
+    margin: 0px;
+    background: repeating-linear-gradient(to right, 
+        #ccc, 
+        #ccc 10%, 
+        #000 10%, 
+        #000 11%, 
+        #ccc 11%, 
+        #ccc 20%);
+    }
+
+    /*change slider color based on progress*/
+    @media screen and (-webkit-min-device-pixel-ratio:0) {
+      input[type='range'] {
+      width: 100%;
+      height:0px;
+      display: block;
+      margin: 0 auto;
+      padding:5px;
+      overflow: hidden;
+      }
+      input[type='range']::-webkit-slider-thumb {
+      cursor: pointer;
+      box-shadow: -1000px 0px 0px 1000px #1D5632;
+      } 
+
+      /*input[type='range'] {
+      overflow: hidden;
+      width: 90%;
+      height: 0px;
+      -webkit-appearance: none;
+      background-color: #e2e2d9;
+      }
+      
+      input[type='range']::-webkit-slider-runnable-track {
+     
+      -webkit-appearance: none;
+      color: #0add2d;
+      margin-top: -1px;
+      }
+      
+      input[type='range']::-webkit-slider-thumb {
+      width: 10px;
+      -webkit-appearance: none;
+      height: 12px;
+      cursor: pointer;
+      background: #e26d6d;
+      box-shadow: -1000px 0 0 1000px #07f112;
+      }   */  
+}
+/** FF*/
+input[type="range"]::-moz-range-progress {
+background-color: #1D5632;
+}
+input[type="range"]::-moz-range-track {  
+background-color: #edf3ee;
+}
+/* IE*/
+input[type="range"]::-ms-fill-lower {
+background-color: #1D5632;
+}
+input[type="range"]::-ms-fill-upper {  
+background-color: #f1f1f0;
+}
