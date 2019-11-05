@@ -1,9 +1,17 @@
 <div class="sp-quiz sp-bg-green-1 sp-flex sp-text-white">
-    <div
-        class="sp-quiz__wrapper sp-flex sp-flex-column sp-h-full sp-w-full"
-        data-bind="scope: 'sp-quiz'"
-    >
-        <!-- ko template: getTemplate() --><!-- /ko -->
+    <div class="sp-quiz__wrapper sp-flex sp-flex-column sp-h-full sp-w-full" data-bind="scope: 'quiz'">
+        <div class="sp-quiz__content sp-flex-auto sp-py-12">
+            <!-- ko template: "SMG_Recommendations/questiontypes/1-single-select" --><!-- /ko -->
+            <!-- ko template: "SMG_Recommendations/questiontypes/2-multi-select" --><!-- /ko -->
+            <!-- ko template: "SMG_Recommendations/questiontypes/3-slider" --><!-- /ko -->
+            <!-- ko template: "SMG_Recommendations/questiontypes/4-entry" --><!-- /ko -->
+            <!-- ko template: "SMG_Recommendations/questiontypes/5-zone" --><!-- /ko -->
+            <!-- ko template: "SMG_Recommendations/questiontypes/6-area" --><!-- /ko -->
+            <!-- ko template: "SMG_Recommendations/questiontypes/7-single-select-with-images" --><!-- /ko -->
+            <!-- ko template: "SMG_Recommendations/questiontypes/8-multi-select-with-images" --><!-- /ko -->
+
+        </div>
+        <!-- ko template: "SMG_Recommendations/progress-bar" --><!-- /ko -->
     </div>
 </div>
 
@@ -12,9 +20,8 @@
         "*": {
             "Magento_Ui/js/core/app": {
                 "components": {
-                    "sp-quiz": {
-                        "component": "SMG_Recommendations/js/quiz",
-                        "template" : "SMG_Recommendations/quiz"
+                    "quiz": {
+                        "component": "SMG_Recommendations/js/quiz"
                     }
                 }
             }

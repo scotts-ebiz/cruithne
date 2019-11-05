@@ -1,7 +1,7 @@
 define([
     'uiComponent',
     'ko',
-    'jquery',
+    'jquery'
 ], function (Component, ko, $) {
     /**
      * Question Group View Model
