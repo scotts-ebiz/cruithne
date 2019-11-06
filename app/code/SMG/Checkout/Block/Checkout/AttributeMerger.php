@@ -23,7 +23,6 @@ class AttributeMerger extends \Magento\Checkout\Block\Checkout\AttributeMerger
 {
     protected function getMultilineFieldConfig($attributeCode, array $attributeConfig, $providerName, $dataScopePrefix)
     {
-//      echo "THis!";
         $lines = [];
         unset($attributeConfig['validation']['required-entry']);
         for ($lineIndex = 0; $lineIndex < (int)$attributeConfig['size']; $lineIndex++) {
