@@ -15,6 +15,13 @@
     text-decoration: underline;
   }
 
+  .sp-quiz-map-placeholder {
+    background: #D3D3D3;
+    width: 50%;
+    min-height: 300px;
+    margin: 15px 0 15px 45px; /*margin: 15px 0 15px 15px;*/
+  }
+
   .sp-quiz__previous:active,
   .sp-quiz__previous:hover {
     background-color: transparent;
@@ -299,7 +306,6 @@ input[type=range] {
     margin-bottom: 40px; /*So we can have a margin between the slider_box and the progress bar*/
   }
 
-
   /*-----Improving Style for the Sliders*/
   /*ticks for ff*/
 
@@ -310,10 +316,7 @@ input[type=range] {
   .sp-quiz__strong-text{
     padding-bottom:5px;
   }
-  .whole_box {
-    width: 100%;
-  }
-
+  
   #slider_label_left{
     float:left; 
     padding:5px 0px 0px 0px; 
@@ -392,4 +395,60 @@ background-color: #1D5632;
 }
 input[type="range"]::-ms-fill-upper {  
 background-color: #f1f1f0;
+}
+
+
+/*Zone 5*/
+.sp-quiz__text-gray2
+{
+  color:black;
+}
+.sp-header_type5{
+  text-align: left;
+}
+
+a.sp-quiz__manual-entry{
+  color:white;
+  font-size: 12px;
+  text-decoration: underline;
+}
+.sp-text-left{
+  text-align: left;
+  font-size: 12px;
+  margin:20px 0px;
+}
+
+.sp-quiz-input{
+  min-height:30px;
+  margin:10px 0px;
+}
+input[type="text"].sp-quiz-input{
+  border:none;
+  border-bottom: 1px solid gray;
+}
+input[type="text"].sp-quiz_label_input{
+  border:none;
+  border-bottom: 1px solid #454545;
+}
+
+.sp-quiz-input:hover{
+  border:5px solid #028c45;
+  background-color: #d7e8d7;
+  transition: .3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.26);
+}
+
+input[type="text"].sp-quiz_label_input:hover{
+  border:5px solid #028c45;
+  border:5px solid #028c45;
+  background-color: #d7e8d7;
+  transition: .3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.26);
+}
+
+.sp-label_zone5:hover{
+  border:5px solid #028c45;
+  background-color:#d7e8d7;
+  transition: .3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.26);
 }
