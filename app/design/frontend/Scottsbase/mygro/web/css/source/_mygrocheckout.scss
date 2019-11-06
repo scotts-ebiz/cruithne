@@ -128,7 +128,7 @@
           //}
           img{
             @include max-screen($screen__m) {
-              width:96px;
+              max-width: 96px;
             }
           }
         }
