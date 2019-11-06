@@ -102,6 +102,13 @@ define([
                 return;
             }
 
+            // Remove the current group answers.
+            for (question of self.questions()) {
+                self.answers.remove(function (item) {
+                    return item.questionId === question.id;
+                });
+            }
+
             self.setGroup(self.previousGroups.pop());
         };
 
@@ -113,11 +120,9 @@ define([
             for (question of group.questions) {
                 // Check if the questions are sliders and set a base response.
                 if (+question.questionType === 3) {
-                    self.replaceAnswer(question.id, question.options[0]);
+                    self.addAnswerIfEmpty(question.id, question.options[0], 1);
                 }
             }
-
-            console.log(self.answers());
 
             self.routeLogic(group);
         };
@@ -147,23 +152,24 @@ define([
                 // Get the option.
                 for (item of options) {
                     if (+item.value === +event.target.value) {
-                        self.answers.push(new QuestionResult(event.target.name, item.id));
+                        self.answers.push(new QuestionResult(event.target.name, item.id, event.target.value));
                         break;
                     }
                 }
             } else if (['checkbox', 'radio'].indexOf(event.target.type) === -1 || event.target.checked) {
                 self.answers.push(new QuestionResult(event.target.name, event.target.value));
             }
-
-            console.log(self.answers());
         };
 
-        self.replaceAnswer = function (questionID, option) {
-            self.answers.remove(function (item) {
-                return item.questionId === questionID;
-            });
+        self.addAnswerIfEmpty = function (questionID, option, optionalValue) {
+            // If the answer exists, just return.
+            for (var answer of self.answers()) {
+                if (answer.questionId === questionID) {
+                    return;
+                }
+            }
 
-            self.answers.push(new QuestionResult(questionID, option.id));
+            self.answers.push(new QuestionResult(questionID, option.id, optionalValue));
         };
 
         self.routeLogic = function (group) {
@@ -174,8 +180,6 @@ define([
                 for (var p=0; p < sliderContainers.length; p++) {
                     let scont = sliderContainers[p];
                     let scontId = "#" + scont.id;
-
-                    console.log(scontId);
 
                     let sliderValues = {};
 
@@ -207,6 +211,26 @@ define([
             // if (group.questions[0].questionType === 5) {
             //     console.log(group.questions[0]);
             // }
+        };
+
+        self.getQuestionAnswer = function (questionID) {
+            for (var answer of self.answers()) {
+                if (answer.questionId === questionID) {
+                    return answer.optionalValue || answer.optionId;
+                }
+            }
+
+            return false;
+        };
+
+        self.isOptionSelected = function (questionID, optionID) {
+            for (var answer of self.answers()) {
+                if (answer.questionId === questionID && answer.optionId === optionID) {
+                    return true;
+                }
+            }
+
+            return false;
         };
 
         /**

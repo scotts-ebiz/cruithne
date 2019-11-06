@@ -55,7 +55,12 @@
                         type="range"
                         value="1"
                         data-bind="
-                            attr: { max : question.options.length, name: question.id, 'data-sliderid': $index() },
+                            attr: {
+                               'data-sliderid': $index(),
+                                max : question.options.length,
+                                name: question.id,
+                                value: $parents[0].quiz.getQuestionAnswer(question.id) || 1
+                            },
                             event: { change: $parents[0].quiz.setAnswer }
                         "
                     />
