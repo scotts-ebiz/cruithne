@@ -14,14 +14,6 @@
                     <label>Enable</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
                 </field>
-                <field id="apikey" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>API Key</label>
-                    <comment>e.g 012345678901234567890123456789ab</comment>
-                    <validate>required-entry validate-no-html-tags</validate>
-                    <depends>
-                        <field id="*/*/active">1</field>
-                    </depends>
-                </field>
             </group>
             <group id="recommendations_api_paths" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Recommendations API Paths</label>

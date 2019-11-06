@@ -9,7 +9,6 @@ class QuizHelper extends AbstractHelper
 {
 
 	const CONFIG_RECOMMENDATIONS_ACTIVE_PATH = 'recommendations/settings/active';
-	const CONFIG_RECOMMENDATIONS_APIKEY_PATH = 'recommendations/settings/apikey';
 	const CONFIG_RECOMMENDATIONS_NEW_QUIZ_PATH = 'recommendations/api/new';
 	const CONFIG_RECOMMENDATIONS_SAVE_QUIZ_PATH = 'recommendations/api/save';
 	const CONFIG_RECOMMENDATIONS_QUIZ_RESULT_PATH = 'recommendations/api/result';
@@ -29,13 +28,7 @@ class QuizHelper extends AbstractHelper
 			$store_id
 		);
 
-		$apikey = $this->scopeConfig->getValue(
-			self::CONFIG_RECOMMENDATIONS_APIKEY_PATH,
-			ScopeInterface::SCOPE_STORE,
-			$store_id
-		);
-
-		return $active && $apikey;
+		return $active;
 	}
 
 	/**
