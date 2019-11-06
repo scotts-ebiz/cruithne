@@ -196,14 +196,14 @@ define([
                         let key = parseInt(slider.value);
 
                         // @todo this will need updated once we are getting real images back from the payload.
-                        let backgroundSrc = 'https://picsum.photos/id/' + (9 + ( 5 * slider.dataset.sliderid + key )) + '/570/280'
+                        let backgroundSrc = 'https://picsum.photos/id/' + (9 + ( 5 * slider.dataset.sliderid + key )) + '/570/280';
                         document.querySelector('#sliderImage img').setAttribute('src', backgroundSrc);
 
                         let labels = Array.prototype.slice.call(document.querySelectorAll(scontId + " span"));
                         for (var i = 0; i < labels.length; i++) {
-                            labels[i].classList.add('hide');
+                            labels[i].classList.add('sp-hide');
                         }
-                        labels[key-1].classList.remove('hide');
+                        labels[key-1].classList.remove('sp-hide');
                     });
                 }
             }

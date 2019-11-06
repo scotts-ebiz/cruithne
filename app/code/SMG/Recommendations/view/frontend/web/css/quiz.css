@@ -118,63 +118,56 @@
   display: block;
 }
 
-.sp-quiz__progress-item-dot:before {
+.sp-quiz__progress-item-dot::before {
   content: '';
   display: block;
   position: absolute;
   width: 100%;
   height: 2px;
-  background: #D3D3D3;
-  margin-top: 4.25px;
+  background: #d3d3d3;
+  margin-top: 4px;
   right: -50%;
   z-index: -1;
 }
 
 .sp-quiz__green-text {
-  color: #1D5632;
+  color: #1d5632;
 }
 
 .sp-quiz__strong-text {
   font-weight: bolder;
 }
 
-li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot:before {
+li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot::before {
   content: none;
 }
 
 .progressBarEnd .sp-label,
 .progressBarSelected .sp-label {
-  color: #1D5632;
+  color: #1d5632;
   font-size: 12px;
 }
 
 .progressBarEnd .sp-quiz__progress-item-dot,
 .progressBarSelected .sp-quiz__progress-item-dot {
-  border: 2px solid #1D5632;
-  background-color: #1D5632;
-  box-shadow: inset 0 0 0 2.5px #FFF;
+  border: 2px solid #1d5632;
+  background-color: #1d5632;
+  box-shadow: inset 0 0 0 2px #fff;
 }
 
 .progressBarVisited .sp-label {
-  color: #1D5632;
+  color: #1d5632;
 }
 
 .progressBarVisited .sp-quiz__progress-item-dot {
-  border: 2px solid #1D5632;
+  border: 2px solid #1d5632;
 }
 
-.progressBarVisited .sp-quiz__progress-item-dot:before {
-  background: #1D5632;
+.progressBarVisited .sp-quiz__progress-item-dot::before {
+  background: #1d5632;
 }
-
-/* } */
-
 
 @media (min-width: 320px) {
-  /* html {
-    position: relative;
-    min-height: 100vh;
-  } */
   .sp-quiz__progress {
     order: 1;
   }
@@ -184,7 +177,7 @@ li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot:before {
   }
 
   .sp-quiz__progress-item {
-    height: 57.5px;
+    height: 58px;
     list-style-type: none;
     width: 20%;
     text-align: center;
@@ -279,26 +272,7 @@ li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot:before {
   li.sp-quiz__progress-item.progressBarEnd .sp-quiz__progress-item-dot {
     margin-bottom: 3px;
   }
-
 }
-
-.hide {
-  display: none;
-}
-
-input[type=range] {
-  width: 100%;
-}
-
-.sp-quiz__slider-box {
-  max-width: 590px;
-  margin: 0 auto;
-  margin-bottom: 40px; /*So we can have a margin between the slider_box and the progress bar*/
-}
-
-
-/*-----Improving Style for the Sliders*/
-/*ticks for ff*/
 
 .sliderContainer {
   padding: 20px 0px;
@@ -314,78 +288,29 @@ input[type=range] {
 
 #slider_label_left {
   float: left;
-  padding: 5px 0px 0px 0px;
+  padding: 5px 0 0 0;
   font-size: 12px;
   color: rgb(29, 27, 27);
 }
 
 #slider_label_right {
   float: right;
-  padding: 5px 0px 0px 0px;
+  padding: 5px 0 0 0;
   font-size: 12px;
   color: rgb(29, 27, 27);
 }
 
-input[type="range"]::-moz-range-track {
+.sp-slider-hashes {
+  height: 1rem;
+  left: 0;
   margin: 0;
-  padding: 0;
+  padding: 0 calc(0.5rem - 3px);
+  right: 0;
 }
 
-/*change slider color based on progress*/
-@media screen and (-webkit-min-device-pixel-ratio: 0) {
-  input[type='range'] {
-    width: 100%;
-    /*height: 0px;*/
-    /*display: block;*/
-    /*margin: 0 auto;*/
-    /*padding: 5px;*/
-    /*overflow: hidden;*/
-  }
-
-  input[type='range']::-webkit-slider-thumb {
-    cursor: pointer;
-    box-shadow: -1000px 0 0 1000px #1D5632;
-  }
-
-  /*input[type='range'] {
-  overflow: hidden;
-  width: 90%;
-  height: 0px;
-  -webkit-appearance: none;
-  background-color: #e2e2d9;
-  }
-
-  input[type='range']::-webkit-slider-runnable-track {
-
-  -webkit-appearance: none;
-  color: #0add2d;
-  margin-top: -1px;
-  }
-
-  input[type='range']::-webkit-slider-thumb {
-  width: 10px;
-  -webkit-appearance: none;
-  height: 12px;
-  cursor: pointer;
-  background: #e26d6d;
-  box-shadow: -1000px 0 0 1000px #07f112;
-  }   */
-}
-
-/** FF*/
-input[type="range"]::-moz-range-progress {
-  background-color: #1D5632;
-}
-
-input[type="range"]::-moz-range-track {
-  background-color: #edf3ee;
-}
-
-/* IE*/
-input[type="range"]::-ms-fill-lower {
-  background-color: #1D5632;
-}
-
-input[type="range"]::-ms-fill-upper {
-  background-color: #f1f1f0;
+.sp-hash {
+  border-radius: 9999px;
+  background-color: #d3d3d3;
+  height: 1rem;
+  width: 3px;
 }
