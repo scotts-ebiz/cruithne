@@ -152,7 +152,7 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
                   @media only screen and (max-width: $screen_768){
                     font-size: 1.0rem;
                   }
-                  p{
+                  p {
                     color: #909090;
                     font-size: 0.85rem;
                     @media only screen and (max-width: $screen_768){
@@ -172,11 +172,16 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
                   width: 70%;
                   margin: 0;
                   padding: 0;
-                  &:before{
+                  color: #909090;
+                  font-size: 0.85rem;
+                  &:before {
                     content: none;
                   }
                   @media only screen and (max-width: $screen__l){
                     width: 55%;
+                  }
+                  @media only screen and (max-width: $screen__m){
+                    font-size: 0.75rem;
                   }
                   @media only screen and (max-width: $screen__xs){
                     width: 100%;
