@@ -13,9 +13,8 @@ define([
         var self = this;
 
         self.id = questionGroup.id;
-
-        self.questions = questionGroup.questions;
-        self.answers = ko.observable({});
+        self = Object.assign(self, questionGroup);
+        self.questions = ko.observableArray(questionGroup.questions);
     }
 
     /**
@@ -49,10 +48,36 @@ define([
             {label: "Condition"},
             {label: "Lawn Details"}
         ]);
+
         self.template = null;
         self.previousGroups = ko.observableArray([]);
-        self.currentGroup = ko.observable(null);                            
-        // self.progressBar = ko.observable(null);
+        self.currentGroup = ko.observable(null);
+        self.answers = ko.observableArray([]);
+        self.questions = ko.computed(function () {
+            return self.currentGroup() ? self.currentGroup().questions : [];
+        });
+
+        /**
+         * This looks at the current answers to determine if the current
+         * question group is valid.
+         *
+         * @type {computedObservable|*}
+         */
+        self.isCurrentGroupValid = ko.computed(function () {
+            if (!self.currentGroup()) {
+                return false;
+            }
+
+            // Loop through the questions of the group to see if each one is
+            // valid.
+            for (question of self.questions()) {
+                if (!self.validateQuestion(question)) {
+                    return false;
+                }
+            }
+
+            return true;
+        });
 
         self.initialize = function (data) {
             self.template = new QuizTemplate(data);
@@ -62,8 +87,7 @@ define([
         self.loadNextGroup = function (group) {
             // No group specified so load the first group.
             if (!group) {
-                self.currentGroup(self.template.questionGroups[0]);
-                console.log(self.template.questionGroups[0]);
+                self.setGroup(self.template.questionGroups[0]);
 
                 return;
             }
@@ -71,8 +95,6 @@ define([
             self.previousGroups.push(self.currentGroup());
 
             self.setGroup(group);
-
-
         };
 
         self.loadPreviousGroup = function () {
@@ -89,19 +111,64 @@ define([
             var results = {};
 
             for (question of group.questions) {
-                for (option of question.options) {
-                    results[option.id] = '';
+                // Check if the questions are sliders and set a base response.
+                if (+question.questionType === 3) {
+                    self.replaceAnswer(question.id, question.options[0]);
                 }
             }
+
+            console.log(self.answers());
 
             self.routeLogic(group);
         };
 
-        self.routeLogic = function (group) {
+        self.setAnswer = function (data, event) {
+            // Remove any existing answers.
+            self.answers.remove(function (item) {
+                // If it is a checkbox, only remove the specific option.
+                if (event.target.type === 'checkbox') {
+                    return item.questionId === event.target.name && item.optionId === event.target.value;
+                }
 
+                return item.questionId === event.target.name;
+            });
+
+            if (event.target.type === 'range') {
+                // Get the current options.
+                var options = [];
+
+                for (question of self.questions()) {
+                    if (question.id === event.target.name) {
+                        options = question.options;
+                        break;
+                    }
+                }
+
+                // Get the option.
+                for (item of options) {
+                    if (+item.value === +event.target.value) {
+                        self.answers.push(new QuestionResult(event.target.name, item.id));
+                        break;
+                    }
+                }
+            } else if (['checkbox', 'radio'].indexOf(event.target.type) === -1 || event.target.checked) {
+                self.answers.push(new QuestionResult(event.target.name, event.target.value));
+            }
+
+            console.log(self.answers());
+        };
+
+        self.replaceAnswer = function (questionID, option) {
+            self.answers.remove(function (item) {
+                return item.questionId === questionID;
+            });
+
+            self.answers.push(new QuestionResult(questionID, option.id));
+        };
+
+        self.routeLogic = function (group) {
             // Sliders Logic
             if (group.questions[0].questionType === 3) {
-
                 let sliderContainers = Array.prototype.slice.call(document.querySelectorAll(".sliderContainer"));
 
                 for (var p=0; p < sliderContainers.length; p++) {
@@ -118,7 +185,7 @@ define([
                         sliderValues[labels[i].dataset.optid] = labels[i].innerText;
                     }
 
-                    let slider = document.querySelector(scontId + " .slider");
+                    let slider = document.querySelector(scontId + " input[type=range]");
 
                     slider.addEventListener("change", function() {
                         let closest = sliderValues[slider.value];
@@ -140,6 +207,33 @@ define([
             // if (group.questions[0].questionType === 5) {
             //     console.log(group.questions[0]);
             // }
+        };
+
+        /**
+         * Validate the given question.
+         *
+         * @param question
+         * @returns {boolean}
+         */
+        self.validateQuestion = function (question) {
+            switch (question.questionType) {
+                case 1:
+                case 2:
+                case 3:
+                case 7:
+                case 8:
+                    // Validate checkbox, radio, and slider questions.
+                    var questionValid = false;
+                    for (answer of self.answers()) {
+                        if (answer.questionId === question.id) {
+                            questionValid = true;
+                        }
+                    }
+
+                    return questionValid;
+            }
+
+            return false;
         };
 
         self.validateGroup = function () {
@@ -202,7 +296,6 @@ define([
         questions: ko.observable({}),
         answers: ko.observable({}),
         previousGroups: ko.observableArray([]),
-        // quizProgress: ko.observable({}),
 
         initialize: function () {
             this._super();
@@ -248,9 +341,5 @@ define([
             console.log('validateResponse');
             this.quiz.validateGroup();
         },
-
-        setAnswer: function (data, event) {
-            console.log('setAnswer');
-        }
     })
 });

@@ -34,7 +34,10 @@
                         >
                             <input
                                     class="sp-quiz-option__input sp-quiz-checkbox sp-hidden"
-                                    data-bind="attr: { id: option.id, name: question.id, value: option.id }"
+                                    data-bind="
+                                        attr: { id: option.id, name: question.id, value: option.id },
+                                        event: { change: $parents[1].quiz.setAnswer }
+                                    "
                                     type="radio"
                             />
 

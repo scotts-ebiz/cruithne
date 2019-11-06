@@ -4,6 +4,7 @@
 >
     <head>
         <css src="SMG_Recommendations::css/quiz.css" />
+        <title>Quiz</title>
     </head>
 
     <body>

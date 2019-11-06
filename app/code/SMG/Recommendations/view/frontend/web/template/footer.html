@@ -33,7 +33,11 @@
             <button
                 class="sp-quiz__next sp-button sp-button--primary"
                 type="button"
-                data-bind="click: validateResponse"
+                data-bind="
+                    click: validateResponse,
+                    attr: { disabled: !quiz.isCurrentGroupValid() },
+                    css: { 'sp-button--disabled': !quiz.isCurrentGroupValid() }
+                "
             >
                 Next
             </button>

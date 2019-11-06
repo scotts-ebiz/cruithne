@@ -25,7 +25,6 @@ class Index extends Action
     public function execute()
     {
         $resultPage = $this->_resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->prepend(__('Scotts Program - Quiz'));
 
         return $resultPage;
     }
