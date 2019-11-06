@@ -1,72 +1,72 @@
 <!-- ko if: quiz && quiz.currentGroup() && quiz.currentGroup().questions[0].questionType === 5 -->
 
-<!-- Process Questions -->
-<!-- @todo this class needs adjusted for the slider card -->
-<div>
-
-    <div
-        class="sp-mx-auto lg:sp-w-3/4 xs:sp-w-full"
-        data-bind="foreach: { data: quiz.currentGroup().questions, as: 'question', noChildContext: true }"
-    >
-        <div class="xs:sp-block md:sp-flex md:sp-flex-row"  >
-            <div class="xs:sp-w-full md:sp-w-1\/2 lg:sp-w-1\/3 sp-text-left">
-                <h2
-                    class="sp-quiz__question-title sp-h2 sp-max-w-md sp-mt-0 sp-mx-auto sp-text-center sp-header_type5"
-                    data-bind="text: $parent.quiz.currentGroup().title"
-                >
-                </h2>
-
-                <p 
-                    class="sp-text-left" 
-                    data-bind="text: $parent.quiz.currentGroup().subtitle"
-                ></p>
-
-                <!-- Link to manual lawn square footage are input screen -->
-                <a 
-                    href="" 
-                    class="sp-quiz__manual-entry" 
-                    data-bind="text: $parent.quiz.currentGroup().displayAlternativePageCTA"
-                ></a>
-                <div
-                    class="sp-quiz-option xs:sp-w-full sp-text-left sp-block sp-bg-white sp-block sp--m-1 sp-p-4 sp-rounded sp-shadow-md sp-quiz_label_input"
-                    data-bind="css: { 'sp-quiz-input': question.questionType === 5 }"
-                >
-                    <label
-                        class="sp-quiz__option-label sp-quiz__text-gray2"
+<div class="sp-quiz__question sp-container">
+        <!-- Process Questions -->
+        <div
+            class="sp-mx-auto lg:sp-w-3/4 xs:sp-w-full"
+            data-bind="foreach: { data: quiz.currentGroup().questions, as: 'question', noChildContext: true }"
+        >
+            <div class="xs:sp-block md:sp-flex md:sp-flex-row"  >
+                <div class="xs:sp-w-full md:sp-w-1\/2 lg:sp-w-1\/3 sp-text-left">
+                    <h2
+                        class="sp-quiz__question-title sp-h2 sp-max-w-md sp-mt-0 sp-mx-auto sp-text-center sp-header_type5"
+                        data-bind="text: $parent.quiz.currentGroup().title"
                     >
-                        1. Where is your lawn?
-                    </label>
-                    <input
-                        class="sp-quiz-input"
-                        data-bind="attr: { name: user_address }"
-                        type="text"
-                        placeholder="Address"
-                    />
-                </div>
-                <div
-                    class="sp-quiz-option xs:sp-w-full sp-text-left sp-block sp-bg-white sp-block sp--m-1 sp-p-4 sp-rounded sp-shadow-md sp-label_zone5"
-                    data-bind="css: { 'sp-quiz-input': question.questionType === 5 }"
-                >
-                    <label
-                        class="sp-quiz__option-label sp-quiz__text-gray2"
+                    </h2>
+    
+                    <p 
+                        class="sp-text-left" 
+                        data-bind="text: $parent.quiz.currentGroup().subtitle"
+                    ></p>
+    
+                    <!-- Link to manual lawn square footage are input screen -->
+                    <a 
+                        href="" 
+                        class="sp-quiz__manual-entry" 
+                        data-bind="text: $parent.quiz.currentGroup().displayAlternativePageCTA"
+                    ></a>
+                    
+                        <div
+                            class="sp-quiz-option xs:sp-w-full sp-text-left sp-block sp-bg-white sp-block sp--m-1 sp-p-4 sp-rounded sp-shadow-md sp-quiz_label_input"  
+                        >
+                            <label
+                                class="sp-quiz__option-label sp-quiz__text-gray2"
+                            >
+                                1. Where is your lawn?
+                            </label>
+                            <input
+                                class="sp-quiz-input"
+                                
+                                type="text"
+                                placeholder="Address"
+                            />
+                        </div>
+                    
+                    <div
+                        class="sp-quiz-option xs:sp-w-full sp-text-left sp-block sp-bg-white sp-block sp--m-1 sp-p-4 sp-rounded sp-shadow-md sp-label_zone5"
+                        data-bind="css: { 'sp-quiz-input': question.questionType === '5' }"
                     >
-                        2. Calculate the size of your lawn
-                    </label>
-                </div>
-                <div
-                    class="sp-quiz-option xs:sp-w-full sp-text-left sp-block sp-bg-white sp-block sp--m-1 sp-p-4 sp-rounded sp-shadow-md sp-label_zone5"
-                    data-bind="css: { 'sp-quiz-input': question.questionType === 5 }"
-                >
-                    <label
-                        class="sp-quiz__option-label sp-quiz__text-gray2"
+                        <label
+                            class="sp-quiz__option-label sp-quiz__text-gray2"
+                        >
+                            2. Calculate the size of your lawn
+                        </label>
+                    </div>
+                    <div
+                        class="sp-quiz-option xs:sp-w-full sp-text-left sp-block sp-bg-white sp-block sp--m-1 sp-p-4 sp-rounded sp-shadow-md sp-label_zone5"
+                        data-bind="css: { 'sp-quiz-input': question.questionType === '5' }"
                     >
-                        3. Your total lawn size
-                    </label>
+                        <label
+                            class="sp-quiz__option-label sp-quiz__text-gray2"
+                        >
+                            3. Your total lawn size
+                        </label>
+                    </div>
+                   
                 </div>
+                <div class="sp-quiz-map-placeholder xs:sp-w-full md:sp-w-1\/2 lg:sp-w-2\/3 sp-p-4"></div>
             </div>
-            <div class="sp-quiz-map-placeholder xs:sp-w-full md:sp-w-1\/2 lg:sp-w-2\/3 sp-p-4"></div>
         </div>
+    
     </div>
-</div>
-
 <!-- /ko -->

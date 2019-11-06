@@ -438,6 +438,14 @@ input[type="text"].sp-quiz_label_input{
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.26);
 }
 
+.sp-quiz_label_input:hover{
+  border:5px solid #028c45;
+  border:5px solid #028c45;
+  background-color: #d7e8d7;
+  transition: .3s ease;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.26);
+}
+
 input[type="text"].sp-quiz_label_input:hover{
   border:5px solid #028c45;
   border:5px solid #028c45;
