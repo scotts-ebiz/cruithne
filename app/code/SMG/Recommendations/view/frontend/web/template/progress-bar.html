@@ -1,57 +1,19 @@
-<div
-        class="sp-quiz__progress sp-bg-white sp-text-black sp-text-right"
-        data-bind="if: quiz.currentGroup()"
->
-    <!-- Progress bar -->
-    <div class="sp-flex sp-quiz__progress-container sp-mx-auto lg:sp-w-3/4 xs:sp-w-full">
-        <ul
-                class="sp-quiz__progress-list sp-mx-auto lg:sp-w-3/4 xs:sp-w-full"
-                data-bind="foreach: { data: quiz.progressBarCategories, noChildContext: true } "
+<!-- Progress bar -->
+<div class="sp-flex sp-quiz__progress-container sp-mx-auto lg:sp-w-3/4 xs:sp-w-full">
+    <ul
+        class="sp-quiz__progress-list sp-mx-auto lg:sp-w-3/4 xs:sp-w-full"
+        data-bind="foreach: { data: quiz.progressBarCategories, noChildContext: true } "
+    >
+        <li
+            data-bind="css: { progressBarSelected: $parent.quiz.previousGroups().length === $index(), progressBarVisited: $parent.quiz.previousGroups().length > $index(), progressBarEnd: $parent.quiz.previousGroups().length > $index() && $index() === 4 }"
+            class="sp-quiz__progress-item"
         >
-            <li
-                    data-bind="css: { progressBarSelected: $parent.quiz.previousGroups().length === $index(), progressBarVisited: $parent.quiz.previousGroups().length > $index(), progressBarEnd: $parent.quiz.previousGroups().length > $index() && $index() === 4 }"
-                    class="sp-quiz__progress-item"
-            >
-                <!-- Progress label -->
-                <span
-                        class="sp-quiz__progress-item-label sp-label"
-                        data-bind="text: label"
-                ></span>
-                <span class="sp-quiz__progress-item-dot"></span>
-            </li>
-        </ul>
-    </div>
-</div>
-
-<div
-        class="sp-quiz__progress-buttons sp-bg-white sp-text-black sp-text-right"
-        data-bind="if: quiz.currentGroup()"
->
-    <div class="sp-container sp-flex sp-items-center sp-justify-between sp-py-6">
-        <!-- Previous button -->
-        <div class="lg:sp-w-1/8">
-            <button
-                    class="sp-quiz__previous sp-label sp-text-green-1"
-                    type="button"
-                    data-bind="visible: quiz.previousGroups().length, click: previousQuestionGroup"
-            >
-                Previous
-            </button>
-        </div>
-
-        <!-- <div class="sp-quiz__progress-bar lg:sp-w-3/4 xs:sp-w-full">
-            <p class="sp-label sp-mb-0 sp-text-center" data-bind="text: quiz.currentGroup().label"></p>
-        </div> -->
-
-        <!-- Next button -->
-        <div class="lg:sp-w-1/8">
-            <button
-                    class="sp-quiz__next sp-button sp-button--primary"
-                    type="button"
-                    data-bind="click: validateResponse"
-            >
-                Next
-            </button>
-        </div>
-    </div>
+            <!-- Progress label -->
+            <span
+                class="sp-quiz__progress-item-label sp-label"
+                data-bind="text: label"
+            ></span>
+            <span class="sp-quiz__progress-item-dot"></span>
+        </li>
+    </ul>
 </div>

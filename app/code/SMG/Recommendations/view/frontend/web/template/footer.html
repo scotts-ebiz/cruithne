@@ -1,0 +1,42 @@
+<div
+    class="sp-quiz__progress lg:sp-hide sp-bg-white sp-text-black sp-text-right"
+    data-bind="if: quiz.currentGroup()"
+>
+    <!-- ko template: "SMG_Recommendations/progress-bar" --><!-- /ko -->
+</div>
+
+<div
+    class="sp-quiz__progress-buttons sp-bg-white sp-text-black sp-text-right"
+    data-bind="if: quiz.currentGroup()"
+>
+    <div class="sp-container sp-flex sp-items-center sp-justify-between sp-py-6">
+        <!-- Previous button -->
+        <div class="lg:sp-w-1/8">
+            <button
+                class="sp-quiz__previous sp-label sp-text-green-1"
+                type="button"
+                data-bind="visible: quiz.previousGroups().length, click: previousQuestionGroup"
+            >
+                Previous
+            </button>
+        </div>
+
+        <div
+            class="sp-quiz__progress sp-hide lg:sp-block sp-bg-white sp-text-black sp-text-right"
+            data-bind="if: quiz.currentGroup()"
+        >
+            <!-- ko template: "SMG_Recommendations/progress-bar" --><!-- /ko -->
+        </div>
+
+        <!-- Next button -->
+        <div class="lg:sp-w-1/8">
+            <button
+                class="sp-quiz__next sp-button sp-button--primary"
+                type="button"
+                data-bind="click: validateResponse"
+            >
+                Next
+            </button>
+        </div>
+    </div>
+</div>
