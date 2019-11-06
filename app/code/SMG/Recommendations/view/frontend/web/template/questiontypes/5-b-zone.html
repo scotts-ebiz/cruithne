@@ -1,0 +1,72 @@
+<!-- ko if: quiz && quiz.currentGroup() -->
+<div class="sp-quiz__question sp-container sp-quiz__slider-box">
+
+    <!-- Showing banner image if it exists -->
+    <div class="sp-quiz__banner sp-text-center" data-bind="if: quiz.currentGroup().imageUrl">
+        <img alt="Quiz Banner" data-bind="attr:{src: quiz.currentGroup().imageUrl}"/>
+    </div>
+
+    <h2
+        class="sp-quiz__question-title sp-h2 sp-max-w-md sp-mt-0 sp-mx-auto sp-text-center"
+        data-bind="text: quiz.currentGroup().alternativeTitle"
+    >
+    </h2>
+
+    <p 
+        class="sp-text-center" 
+        data-bind="text: quiz.currentGroup().alternativeSubtitle"
+    >
+    </p>
+
+    <!-- Process Questions -->
+    <div>
+
+        <div
+            class="sp-mx-auto lg:sp-w-3/4 xs:sp-w-full whole_box"
+            data-bind="foreach: { data: quiz.currentGroup().questions, as: 'question', noChildContext: true }"
+        >
+
+            <div>
+
+                <div
+                    class="sp-quiz-option xs:sp-w-full sp-text-left sp-block sp-bg-white sp-block sp--m-1 sp-p-4 sp-rounded sp-shadow-md sp-quiz_label_input"
+                    data-bind="css: { 'sp-quiz-input': question.questionType === 5 }"
+                >
+
+                    <div class="sp-quiz__entry-div">
+                        <label
+                            class="sp-quiz__option-label sp-quiz__black-text"
+                        >
+                            Total Square Footage of your lawn(s)
+                        </label>
+
+                        <input
+                            class="sp-quiz__entry-input"
+                            data-bind="attr: { placeholder: address }"
+                            type="text"
+                        />
+                    </div>
+
+                    <div class="sp-quiz__entry-div">
+                        <label
+                            class="sp-quiz__option-label sp-quiz__black-text"
+                        >
+                            Zip Code
+                        </label>
+
+                        <input
+                            class="sp-quiz__entry-input"
+                            data-bind="attr: { placeholder: address }"
+                            type="text"
+                        />
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+<!-- /ko -->
