@@ -54,7 +54,7 @@ define([
         self.currentGroup = ko.observable(null);
         self.template = null;
         self.previousGroups = ko.observableArray([]);
-        self.usingGoogleMaps = ko.observable(false);
+        self.usingGoogleMaps = ko.observable(true);
 
         self.questions = ko.computed(function () {
             return self.currentGroup() ? self.currentGroup().questions : [];
@@ -97,12 +97,16 @@ define([
 
             self.previousGroups.push(self.currentGroup());
 
-            console.log(group.questions);
-
             self.setGroup(group);
         };
 
         self.loadPreviousGroup = function () {
+            // When hitting previous from manual entry, pull google maps back up.
+            if (self.questions()[0] && self.questions()[0].questionType === 5 && !self.usingGoogleMaps()) {
+               self.toggleGoogleMaps();
+               return;
+            }
+
             if (!self.previousGroups().length) {
                 return;
             }
@@ -212,10 +216,6 @@ define([
                     });
                 }
             }
-
-            // if (group.questions[0].questionType === 5) {
-            //     console.log(group.questions[0]);
-            // }
         };
 
         self.getQuestionAnswer = function (questionID) {
@@ -236,6 +236,10 @@ define([
             }
 
             return false;
+        };
+
+        self.toggleGoogleMaps = function () {
+            self.usingGoogleMaps(!self.usingGoogleMaps());
         };
 
         /**
@@ -320,7 +324,7 @@ define([
                     }
                 });
             }
-        }
+        };
     }
 
     /**

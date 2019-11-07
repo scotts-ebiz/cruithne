@@ -1,4 +1,4 @@
-<!-- ko if: quiz && quiz.currentGroup() && quiz.currentGroup().questions[0].questionType == 5 -->
+<!-- ko if: quiz.questions()[0] && quiz.questions()[0].questionType == 5 && !quiz.usingGoogleMaps() -->
 <div class="sp-quiz__question sp-container sp-mb-8">
 
     <!-- Showing banner image if it exists -->
@@ -22,18 +22,17 @@
     <div>
         <div
             class="sp-mx-auto lg:sp-w-3/4 xs:sp-w-full whole_box"
-            data-bind="foreach: { data: quiz.currentGroup().questions, as: 'question', noChildContext: true }"
         >
             <div>
                 <div
                     class="sp-quiz-option sp-text-left sp-block sp-bg-white sp-block sp-mx-auto sp-mb-8 sp-p-8 sp-rounded sp-shadow-md sp-text-black sp-w-full md:sp-w-1/3"
-                    data-bind="css: { 'sp-quiz-input': question.questionType === 5 }"
                 >
                     <div class="sp-form-group">
                         <input
                             class="sp-input sp-w-full"
                             placeholder="Total Square Footage of your lawn(s)"
-                            type="text"
+                            type="number"
+                            data-bind="attr: { name: quiz.questions()[1].id }"
                         />
 
                         <label class="sp-form-label">
@@ -44,8 +43,12 @@
                     <div class="sp-form-group sp-mb-0">
                         <input
                             class="sp-input sp-w-full"
+                            minlength="5"
+                            maxlength="5"
+                            pattern="[0-9]{5}"
                             placeholder="Zip Code"
                             type="text"
+                            data-bind="attr: { name: quiz.questions()[0].id }, event: { input: quiz.setZipCode }"
                         />
 
                         <label class="sp-form-label">

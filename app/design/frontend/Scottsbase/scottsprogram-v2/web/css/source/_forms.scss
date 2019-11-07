@@ -10,12 +10,13 @@
   top: 0;
   opacity: 0;
   transition: all .25s ease;
-  transform: translateY(0);
+  transform: translateY(50%);
+  z-index: 1;
 
   :focus + &,
   :not(:placeholder-shown) + & {
     opacity: 1;
-    transform: translateY(-100%);
+    transform: translateY(-25%);
   }
 }
 

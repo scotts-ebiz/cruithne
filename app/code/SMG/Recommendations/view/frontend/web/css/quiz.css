@@ -22,11 +22,19 @@
   color: #454545;
 }
 
+.sp-quiz__manual-entry,
+.sp-quiz__manual-entry:hover {
+  background-color: transparent;
+  border: none;
+  color: #fff;
+  padding: 0;
+  text-align: left;
+  text-decoration: underline;
+}
+
 .sp-quiz-map-placeholder {
-  background: #D3D3D3;
-  width: 50%;
-  min-height: 300px;
-  margin: 15px 0 15px 45px; /*margin: 15px 0 15px 15px;*/
+  background: #d3d3d3;
+  min-height: 600px;
 }
 
 .sp-quiz__previous:focus {
