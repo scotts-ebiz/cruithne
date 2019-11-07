@@ -1,0 +1,10 @@
+// Checkout success should not show cart //
+.checkout-onepage-success {
+  .page-header {
+    .header.content {
+      .minicart-wrapper {
+        display: none;
+      }
+    }
+  }
+}
