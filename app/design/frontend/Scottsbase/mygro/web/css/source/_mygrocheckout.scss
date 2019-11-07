@@ -478,7 +478,9 @@
                           }
                         }
                         .content.minicart-items{
-                          display:block !important;
+                          margin-top: 2.5rem;
+                          border-top: 1px solid #ccc;
+                          padding-top: .75rem;
                         }
                       }
                     }
@@ -544,10 +546,6 @@
     margin: 0 0 10px;
   }
   .opc-block-summary {
-    .items-in-cart > .title{
-      background: #f5f5f5;
-      z-index: 9;
-    }
     .items-in-cart > .title:after{
       display:none;
     }
@@ -557,9 +555,6 @@
     }
     .minicart-items-wrapper{
       max-height: none;
-    }
-    .block.items-in-cart .title strong{
-      font-size:0;
     }
     .product.options{
       .item-options{
