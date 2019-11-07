@@ -304,6 +304,23 @@ define([
 
             return false;
         };
+
+        /**
+         * Get Zone
+         *
+         * Takes a zip code and returns an answer id for Zone.
+         * @param zip
+         */
+        self.getZone = function (zip) {
+            let zones = self.template.zipCodesOptionMappings;
+            for (let i = 0; i <= zones.length; i++ ) {
+                zones[i].zipCodePrefixes.forEach(function (prefix) {
+                    if ( prefix === zip.substr(0, 3) ) {
+                        return zones[i].optionId;
+                    }
+                });
+            }
+        }
     }
 
     /**
