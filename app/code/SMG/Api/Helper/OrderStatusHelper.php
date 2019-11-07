@@ -19,7 +19,10 @@ use SMG\Sap\Model\ResourceModel\SapOrderItem as SapOrderItemResource;
 use SMG\Sap\Model\ResourceModel\SapOrderItemHistory as SapOrderItemHistoryResource;
 use SMG\Sap\Model\ResourceModel\SapOrderItem\CollectionFactory as SapOrderItemCollectionFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderShipment\CollectionFactory as SapOrderShipmentCollectionFactory;
-
+use SMG\OrderDiscount\Helper\Data as DiscountHelper;
+use Magento\Sales\Model\Service\InvoiceService as InvoiceService;
+use Magento\Framework\DB\Transaction as Transaction;
+use Magento\Sales\Model\Order\Email\Sender\InvoiceSender as InvoiceSender;
 class OrderStatusHelper
 {
     // Input JSON File Constants
@@ -127,6 +130,23 @@ class OrderStatusHelper
      * @var OrderResource
      */
     protected $_orderResource;
+   /**
+     * @var DiscountHelper
+     */
+    protected $_discountHelper;
+    
+    /**
+     * @var InvoiceService
+     */
+    protected $_invoiceService;
+    /**
+     * @var Transaction
+     */
+    protected $_transaction;
+    /**
+     * @var InvoiceSender
+     */
+    protected $_invoiceSender;
 
     /**
      * OrderStatusHelper constructor.
@@ -168,7 +188,11 @@ class OrderStatusHelper
         SapOrderShipmentCollectionFactory $sapOrderShipmentCollectionFactory,
         ResponseHelper $responseHelper,
         OrderFactory $orderFactory,
-        OrderResource $orderResource)
+        OrderResource $orderResource,
+        DiscountHelper $discountHelper,
+        InvoiceService $invoiceService,
+        Transaction $transaction,
+        InvoiceSender $invoiceSender)
     {
         $this->_logger = $logger;
         $this->_sapOrderFactory = $sapOrderFactory;
@@ -188,6 +212,10 @@ class OrderStatusHelper
         $this->_sapOrderShipmentCollectionFactory = $sapOrderShipmentCollectionFactory;
         $this->_orderFactory = $orderFactory;
         $this->_orderResource = $orderResource;
+        $this->_discountHelper = $discountHelper;
+        $this->_invoiceService = $invoiceService;
+        $this->_transaction = $transaction;
+        $this->_invoiceSender = $invoiceSender;
     }
 
     /**
@@ -961,6 +989,53 @@ class OrderStatusHelper
                 $isUpdateNeeded = true;
                 $sapOrderBatch->setData('is_capture', true);
             }
+
+            // Get the sales order
+                /**
+                 * @var \Magento\Sales\Model\Order $order
+                 */
+                $order = $this->_orderFactory->create();
+                $this->_orderResource->load($order, $sapOrderBatch->getData('order_id'));
+
+
+        // Get the order coupon code discount values if the coupon code
+        // if exists on the order.  You will need to get the order based on the
+        if(!empty($order->getData('coupon_code')))
+        {
+            $orderDiscount = $this->_discountHelper->DiscountCode($order->getData('coupon_code'));
+            $hdrDiscCondCode = $orderDiscount['hdr_disc_cond_code'];
+            if($hdrDiscCondCode == 'Z616')
+            {
+            /* create a invoice */  
+            if($order->canInvoice()) {          
+            $invoice = $this->_invoiceService->prepareInvoice($order);
+            if (!$invoice->getTotalQty()) {
+                throw new \Magento\Framework\Exception\LocalizedException(
+                __('You can\'t create an invoice without products.')
+                );
+            }
+            $invoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
+            $invoice->register();
+            $transaction = $this->_transaction
+            ->addObject($invoice)
+            ->addObject($invoice->getOrder());
+            $transaction->save();
+            
+            $this->_invoiceSender->send($invoice);
+            $order->addStatusHistoryComment(
+            __('Notified customer about invoice #%1.', $invoice->getId())
+            )
+            ->setIsCustomerNotified(false)
+            ->save();
+            }
+             /* end of create a invoice */
+
+            $today = date('Y-m-d H:i:s');
+            $isUpdateNeeded = true;
+            $sapOrderBatch->setData('is_capture', true);
+            $sapOrderBatch->setData('capture_process_date', $today);
+            }
+        }
 
             // check the shipment
             if (!empty($inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]) &&
