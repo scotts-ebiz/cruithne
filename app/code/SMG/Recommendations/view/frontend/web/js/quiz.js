@@ -41,6 +41,7 @@ define([
      */
     function Quiz(data) {
         var self = this;
+
         self.progressBarCategories = ko.observableArray([
             {label: "Goals"}, 
             {label: "Routine"},
@@ -49,10 +50,12 @@ define([
             {label: "Lawn Details"}
         ]);
 
+        self.answers = ko.observableArray([]);
+        self.currentGroup = ko.observable(null);
         self.template = null;
         self.previousGroups = ko.observableArray([]);
-        self.currentGroup = ko.observable(null);
-        self.answers = ko.observableArray([]);
+        self.usingGoogleMaps = ko.observable(false);
+
         self.questions = ko.computed(function () {
             return self.currentGroup() ? self.currentGroup().questions : [];
         });
@@ -93,6 +96,8 @@ define([
             }
 
             self.previousGroups.push(self.currentGroup());
+
+            console.log(group.questions);
 
             self.setGroup(group);
         };

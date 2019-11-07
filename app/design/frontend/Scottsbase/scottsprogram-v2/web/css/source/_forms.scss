@@ -28,6 +28,18 @@
   position: relative;
   z-index: 1;
 
+  &::-moz-focus-inner {
+    outline: none !important;
+  }
+
+  &:-moz-focusring {
+    outline: none !important;
+  }
+
+  &::-moz-focus-outer {
+    outline: none !important;
+  }
+
   &:focus {
     border-color: $gray-1;
 
