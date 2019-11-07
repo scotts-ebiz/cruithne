@@ -703,10 +703,6 @@
     margin: 0 0 10px;
   }
   .opc-block-summary {
-    .items-in-cart > .title{
-      background: #f5f5f5;
-      z-index: 9;
-    }
     .items-in-cart > .title:after{
       display:none;
     }
