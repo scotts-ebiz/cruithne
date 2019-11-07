@@ -87,12 +87,12 @@
 
                     <div data-bind="foreach: { data: question.options, as: 'option', noChildContext: true }">
                         <div data-bind="attr: { for: option.id }">
-                            <div data-bind="if: option.value == '1'">
+                            <div data-bind="if: option.value === '1'">
                                 <label id="slider_label_left" data-bind="text: option.label"> </label>
                             </div>
                         </div>
                         <div data-bind="attr: { for: option.id }">
-                            <div data-bind="if: option.value == '5'">
+                            <div data-bind="if: option.value === '5'">
                                 <label id="slider_label_right" data-bind="text: option.label"> </label>
                             </div>
                         </div>
@@ -103,3 +103,7 @@
     </div>
 
 <!-- /ko -->
+
+
+
+    
