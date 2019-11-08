@@ -5,6 +5,11 @@
 .checkout-cart-index {
     .page-header {
         .header.content {
+            .nav-toggle {
+                @media screen and (max-width: $screen__l) {
+                    display: none;
+                }
+            }
             .minicart-wrapper {
                 display: none;
             }
