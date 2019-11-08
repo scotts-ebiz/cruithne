@@ -3,11 +3,11 @@
     <update handle="1column"/>
     <referenceContainer name="columns">
         <container name="newcontainer" htmlTag="div" htmlClass="sp-container">
-            <container name="div.grid" htmlTag="div" htmlClass="sp-grid" after="main">
-                <container name="div.grid.left" htmlTag="div" htmlClass="sp-col-8" after="div.grid">
+            <container name="div.grid" htmlTag="div" htmlClass="sp-flex sp--mx-4" after="main">
+                <container name="div.grid.left" htmlTag="div" htmlClass="sp-grid-left" after="div.grid">
                     <container name="grid.left" as="grid_left" label="Grid Left" />
                 </container>
-                <container name="div.grid.right" htmlTag="div" htmlClass="sp-col-2" after="div.grid">
+                <container name="div.grid.right" htmlTag="div" htmlClass="sp-grid-right" after="div.grid">
                     <container name="grid.right" as="grid_right" label="Grid Right" />
                 </container>
             </container>

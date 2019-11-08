@@ -1,17 +1,35 @@
 <form class="form contact" action="<?= $block->escapeUrl($block->getFormAction()) ?>" id="contact-form" method="post" data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>" data-mage-init='{"validation":{}}'>
     <fieldset class="fieldset">
         <div class="sp-form-group">
-            <input name="name" id="name" title="<?= $block->escapeHtmlAttr(__('Name')) ?>" value="<?= $block->escapeHtmlAttr($this->helper('Magento\Contact\Helper\Data')->getPostValue('name') ?: $this->helper('Magento\Contact\Helper\Data')->getUserName()) ?>" class="input-text sp-input sp-w-full" type="text" data-validate="{required:true}" placeholder="<?= $block->escapeHtml(__('Name')) ?>*" />
-            <label class="label sp-form-label required" for="name"><span><?= $block->escapeHtml(__('Name')) ?>*</span></label>
+            <input
+                class="input-text sp-input sp-w-full"
+                data-validate="{required:true}"
+                id="name"
+                name="name"
+                placeholder="<?= $block->escapeHtml(__('Name')) ?>*"
+                title="<?= $block->escapeHtmlAttr(__('Name')) ?>"
+                type="text"
+                value="<?= $block->escapeHtmlAttr($this->helper('Magento\Contact\Helper\Data')->getPostValue('name') ?: $this->helper('Magento\Contact\Helper\Data')->getUserName()) ?>"
+            />
+            <label class="label sp-form-label required" for="name"><?= $block->escapeHtml(__('Name')) ?>*</label>
         </div>
         <div class="sp-form-group">
-            <input name="email" id="email" title="<?= $block->escapeHtmlAttr(__('Email')) ?>" value="<?= $block->escapeHtmlAttr($this->helper('Magento\Contact\Helper\Data')->getPostValue('email') ?: $this->helper('Magento\Contact\Helper\Data')->getUserEmail()) ?>" class="input-text sp-input sp-w-full" type="email" data-validate="{required:true, 'validate-email':true}" placeholder="<?= $block->escapeHtml(__('Email')) ?>*" />
-            <label class="label sp-form-label required" for="email"><span><?= $block->escapeHtml(__('Email')) ?>*</span></label>
+            <input
+                class="input-text sp-input sp-w-full"
+                data-validate="{required:true, 'validate-email':true}"
+                id="email"
+                name="email"
+                placeholder="<?= $block->escapeHtml(__('Email')) ?>*"
+                title="<?= $block->escapeHtmlAttr(__('Email')) ?>"
+                type="email"
+                value="<?= $block->escapeHtmlAttr($this->helper('Magento\Contact\Helper\Data')->getPostValue('email') ?: $this->helper('Magento\Contact\Helper\Data')->getUserEmail()) ?>"
+            />
+            <label class="label sp-form-label required" for="email"><?= $block->escapeHtml(__('Email')) ?>*</label>
         </div>
         <div class="sp-form-group">
-            <div class="sp-select">
-                <label class="label sp-form-label required" for="topic"><span><?= $block->escapeHtml(__('Topic')) ?></span></label>
-                <select name="topic" id="topic">
+            <div class="sp-select sp-w-full">
+                <label class="label sp-form-label required" for="topic"><?= $block->escapeHtml(__('Topic')) ?></label>
+                <select name="topic" id="topic" class="sp-w-full">
                     <option value="0" selected disabled style="display: none;">-- Choose --</option>
                     <option value="Information about products or my lawn care plan">Information about products or my lawn care plan</option>
                     <option value="Question or concern with my order">Question or concern with my order</option>
@@ -22,15 +40,23 @@
             </div>
         </div>
         <div class="sp-form-group">
-            <textarea name="comment" id="comment" title="<?= $block->escapeHtmlAttr(__('What’s on your mind?')) ?>" class="input-text sp-textarea sp-input sp-w-full" cols="5" rows="3" data-validate="{required:true}"><?= $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('comment')) ?></textarea>
-            <label class="label sp-form-label required" for="comment"><span><?= $block->escapeHtml(__('Message')) ?>*</span></label>
+            <textarea
+                class="input-text sp-textarea sp-input sp-w-full"
+                cols="5"
+                data-validate="{required:true}"
+                id="comment"
+                name="comment"
+                rows="3"
+                title="<?= $block->escapeHtmlAttr(__('What’s on your mind?')) ?>"
+            ><?= $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('comment')) ?></textarea>
+            <label class="label sp-form-label required" for="comment"><?= $block->escapeHtml(__('Message')) ?>*</label>
         </div>
         <?= $block->getChildHtml('form.additional.info') ?>
     </fieldset>
     <div class="sp-form-group actions-toolbar">
         <input type="hidden" name="hideit" id="hideit" value="" />
         <button type="submit" title="<?= $block->escapeHtmlAttr(__('Submit')) ?>" class="action sp-button sp-button--primary">
-            <span><?= $block->escapeHtml(__('Submit')) ?></span>
+            <?= $block->escapeHtml(__('Submit')) ?>
         </button>
     </div>
 </form>
