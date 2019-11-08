@@ -168,6 +168,13 @@ define([
             }
         };
 
+        /**
+         * Add an answer if it does not already exist.
+         *
+         * @param questionID
+         * @param option
+         * @param optionalValue
+         */
         self.addAnswerIfEmpty = function (questionID, option, optionalValue) {
             // If the answer exists, just return.
             for (var answer of self.answers()) {
@@ -179,16 +186,65 @@ define([
             self.answers.push(new QuestionResult(questionID, option.id, optionalValue));
         };
 
+        /**
+         * Add or replace an answer with the given question ID.
+         *
+         * @param questionID
+         * @param optionID
+         * @param optionalValue
+         */
         self.addOrReplaceAnswer = function (questionID, optionID, optionalValue) {
             self.removeAnswer(questionID);
 
             self.answers.push(new QuestionResult(questionID, optionID, optionalValue));
         };
 
+        /**
+         * Remove an answer with the given question ID.
+         *
+         * @param questionID
+         */
         self.removeAnswer = function (questionID) {
             self.answers.remove(function (item) {
                 return item.questionId === questionID;
             });
+        };
+
+        /**
+         * Get the optional value or option ID for the given question ID.
+         *
+         * @param questionID
+         * @returns {boolean|*}
+         */
+        self.getQuestionAnswer = function (questionID, id) {
+            for (var answer of self.answers()) {
+                if (answer.questionId === questionID) {
+                    if (id) {
+                        return answer.optionId;
+                    }
+
+                    return answer.optionalValue || answer.optionId;
+                }
+            }
+
+            return false;
+        };
+
+        /**
+         * Check if the given option for the question is selected.
+         *
+         * @param questionID
+         * @param optionID
+         * @returns {boolean}
+         */
+        self.isOptionSelected = function (questionID, optionID) {
+            for (var answer of self.answers()) {
+                if (answer.questionId === questionID && answer.optionId === optionID) {
+                    return true;
+                }
+            }
+
+            return false;
         };
 
         self.routeLogic = function (group) {
@@ -228,26 +284,9 @@ define([
             }
         };
 
-        self.getQuestionAnswer = function (questionID) {
-            for (var answer of self.answers()) {
-                if (answer.questionId === questionID) {
-                    return answer.optionalValue || answer.optionId;
-                }
-            }
-
-            return false;
-        };
-
-        self.isOptionSelected = function (questionID, optionID) {
-            for (var answer of self.answers()) {
-                if (answer.questionId === questionID && answer.optionId === optionID) {
-                    return true;
-                }
-            }
-
-            return false;
-        };
-
+        /**
+         * Toggle Google Maps and manual entry.
+         */
         self.toggleGoogleMaps = function () {
             self.usingGoogleMaps(!self.usingGoogleMaps());
         };
@@ -301,7 +340,26 @@ define([
                 
                 // Move progress bar to next category when the next question appears on 'Next' button click
                 self.loadNextGroup(self.findQuestionGroup(id));
+                return;
             }
+
+            // Loop through the transitions and compare the values to see where we should redirect.
+            for (var transition of transitions) {
+                var isCorrectTransition = true;
+
+                for (var condition of transition.conditions) {
+                    if (condition.values[0] != self.getQuestionAnswer(condition.questionId, true)) {
+                        isCorrectTransition = false;
+                    }
+                }
+
+                if (isCorrectTransition) {
+                    self.loadNextGroup(self.findQuestionGroup(transition.destinationQuestionGroupId));
+                    return;
+                }
+            }
+
+            console.log('No transition');
         };
 
         /**
