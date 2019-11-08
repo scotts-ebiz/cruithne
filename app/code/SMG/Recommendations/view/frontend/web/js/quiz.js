@@ -51,6 +51,7 @@ define([
         ]);
 
         self.answers = ko.observableArray([]);
+        self.complete = ko.observable(false);
         self.currentGroup = ko.observable(null);
         self.template = null;
         self.previousGroups = ko.observableArray([]);
@@ -359,7 +360,8 @@ define([
                 }
             }
 
-            console.log('No transition');
+            // No transitions remaining so the quiz is complete.
+            self.complete(true);
         };
 
         /**
