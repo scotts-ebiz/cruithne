@@ -58,8 +58,12 @@ function (
     return Component.extend({
         defaults: {
             template: 'Magento_Checkout/billing-address',
+            actionsTemplate: 'Magento_Checkout/billing-address/actions',
             formTemplate: 'Magento_Checkout/billing-address/form',
             detailsTemplate: 'Magento_Checkout/billing-address/details'
+            links: {
+                isAddressFormVisible: '${$.billingAddressListProvider}:isNewAddressSelected'
+            }
         },
         currentBillingAddress: quote.billingAddress,
         addressOptions: addressOptions,
