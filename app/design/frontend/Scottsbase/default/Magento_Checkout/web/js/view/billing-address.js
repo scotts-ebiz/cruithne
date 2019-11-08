@@ -58,6 +58,7 @@ function (
     return Component.extend({
         defaults: {
             template: 'Magento_Checkout/billing-address',
+            formTemplate: 'Magento_Checkout/billing-address/form',
             detailsTemplate: 'Magento_Checkout/billing-address/details'
         },
         currentBillingAddress: quote.billingAddress,
