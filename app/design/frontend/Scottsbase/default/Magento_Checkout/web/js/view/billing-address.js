@@ -60,7 +60,7 @@ function (
             template: 'Magento_Checkout/billing-address',
             actionsTemplate: 'Magento_Checkout/billing-address/actions',
             formTemplate: 'Magento_Checkout/billing-address/form',
-            detailsTemplate: 'Magento_Checkout/billing-address/details'
+            detailsTemplate: 'Magento_Checkout/billing-address/details',
             links: {
                 isAddressFormVisible: '${$.billingAddressListProvider}:isNewAddressSelected'
             }
@@ -219,6 +219,13 @@ function (
             this.isAddressDetailsVisible(true);
             this.isAddressSameAsShipping(true);
         },
+
+        /**
+         * Manage cancel button visibility
+         */
+        canUseCancelBillingAddress: ko.computed(function () {
+            return quote.billingAddress() || lastSelectedBillingAddress;
+        }),
 
         /**
          * Restore billing address
