@@ -30,9 +30,15 @@
                     <div class="sp-form-group">
                         <input
                             class="sp-input sp-w-full"
+                            min="1"
+                            pattern="[0-9]*"
                             placeholder="Total Square Footage of your lawn(s)"
+                            step="1"
                             type="number"
-                            data-bind="attr: { name: quiz.questions()[1].id }"
+                            data-bind="
+                                attr: { name: quiz.questions()[1].id },
+                                event: { input: quiz.setArea }
+                            "
                         />
 
                         <label class="sp-form-label">

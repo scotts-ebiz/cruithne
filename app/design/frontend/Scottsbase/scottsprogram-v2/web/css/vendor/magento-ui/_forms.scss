@@ -367,53 +367,6 @@
 }
 
 @mixin lib-form-element-all() {
-    input[type="text"],
-    input[type="password"],
-    input[type="url"],
-    input[type="tel"],
-    input[type="search"],
-    input[type="number"],
-    input[type="datetime"],
-    input[type="email"] {
-        //@include lib-form-element-input($_type: input-text);
-    }
-
-    input[type="number"] {
-        //@include lib-form-element-number-reset();
-    }
-
-    input[type="search"] {
-        //@include lib-form-element-search-reset();
-    }
-
-    select {
-        //@include lib-form-element-input($_type: select);
-    }
-
-    select[multiple="multiple"] {
-        //@include lib-css(height, auto);
-        //background-image: none;
-    }
-
-    textarea {
-        //@include lib-form-element-input($_type: textarea);
-        //@include lib-form-element-textarea-resize();
-    }
-
-    input[type="checkbox"] {
-        //@include lib-form-element-choice($_type: input-checkbox);
-    }
-
-    input[type="radio"] {
-        //@include lib-form-element-choice($_type: input-radio);
-    }
-
-    input,
-    select,
-    textarea {
-        //@include lib-form-validation();
-    }
-
     div.mage-error[generated] {
         @include lib-form-validation-note();
     }

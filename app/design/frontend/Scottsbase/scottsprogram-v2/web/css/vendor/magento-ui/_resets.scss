@@ -91,13 +91,4 @@
             outline: 0;
         }
     }
-
-    ._keyfocus *,
-    input:not([disabled]),
-    textarea:not([disabled]),
-    select:not([disabled]) {
-        &:focus {
-            //@include lib-css(box-shadow, $focus__box-shadow);
-        }
-    }
 }

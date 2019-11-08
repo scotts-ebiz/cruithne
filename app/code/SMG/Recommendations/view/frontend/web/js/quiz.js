@@ -113,9 +113,7 @@ define([
 
             // Remove the current group answers.
             for (question of self.questions()) {
-                self.answers.remove(function (item) {
-                    return item.questionId === question.id;
-                });
+                self.removeAnswer(question.id);
             }
 
             self.setGroup(self.previousGroups.pop());
@@ -181,12 +179,24 @@ define([
             self.answers.push(new QuestionResult(questionID, option.id, optionalValue));
         };
 
+        self.addOrReplaceAnswer = function (questionID, optionID, optionalValue) {
+            self.removeAnswer(questionID);
+
+            self.answers.push(new QuestionResult(questionID, optionID, optionalValue));
+        };
+
+        self.removeAnswer = function (questionID) {
+            self.answers.remove(function (item) {
+                return item.questionId === questionID;
+            });
+        };
+
         self.routeLogic = function (group) {
             // Sliders Logic
             if (group.questions[0].questionType === 3) {
                 let sliderContainers = Array.prototype.slice.call(document.querySelectorAll(".sliderContainer"));
 
-                for (var p=0; p < sliderContainers.length; p++) {
+                for (var p = 0; p < sliderContainers.length; p++) {
                     let scont = sliderContainers[p];
                     let scontId = "#" + scont.id;
 
@@ -253,31 +263,35 @@ define([
                 case 1:
                 case 2:
                 case 3:
+                case 5:
                 case 7:
                 case 8:
                     // Validate checkbox, radio, and slider questions.
                     var questionValid = false;
                     for (answer of self.answers()) {
-                        if (answer.questionId === question.id) {
+                        if (answer.questionId === question.id && answer.optionId) {
                             questionValid = true;
                         }
                     }
 
                     return questionValid;
+                case 6:
+                    // Validate that the area answer contains an optional value (the area).
+                    var questionValid = false;
+                    for (answer of self.answers()) {
+                        if (answer.questionId === question.id && answer.optionalValue > 0) {
+                            questionValid = true;
+                        }
+                    }
+
+                    return questionValid;
+
             }
 
             return false;
         };
 
         self.validateGroup = function () {
-            // @todo: Validate responses
-            var valid = true;
-
-            // Store answers to local storage on validation
-            if (!valid) {
-                return;
-            }
-
             // Get the transitions for the current group.
             var transitions = self.currentGroup().transitions;
 
@@ -316,15 +330,49 @@ define([
          * @param zip
          */
         self.getZone = function (zip) {
-            let zones = self.template.zipCodesOptionMappings;
-            for (let i = 0; i <= zones.length; i++ ) {
-                zones[i].zipCodePrefixes.forEach(function (prefix) {
+            var zones = self.template.zipCodesOptionMappings;
+            for (var i = 0; i < zones.length; i++) {
+                for (prefix of zones[i].zipCodePrefixes) {
                     if ( prefix === zip.substr(0, 3) ) {
                         return zones[i].optionId;
                     }
-                });
+                }
             }
         };
+
+        /**
+         * Set the zip code from the manual entry input.
+         *
+         * @param data
+         * @param event
+         */
+        self.setZipCode = function (data, event) {
+            var zip = event.target.value;
+
+            self.removeAnswer(self.questions()[0].id);
+
+            if (zip.length === 5) {
+                var zoneOption = self.getZone(zip);
+
+                if (zoneOption) {
+                    self.addOrReplaceAnswer(self.questions()[0].id, zoneOption);
+                }
+            }
+        };
+
+        /**
+         * Set the lawn area from the manual entry input.
+         *
+         * @param data
+         * @param event
+         */
+        self.setArea = function (data, event) {
+            var area = parseInt(event.target.value);
+
+            if (area > 0) {
+               self.addOrReplaceAnswer(self.questions()[1].id, self.questions()[1].options[0].id, area);
+            }
+        }
     }
 
     /**
@@ -380,7 +428,6 @@ define([
          * Go back to the previous question.
          */
         previousQuestionGroup() {
-            console.log('previousQuestionGroup');
             this.quiz.loadPreviousGroup();
         },
 
@@ -388,7 +435,6 @@ define([
          * Validate the responses and move to the appropriate question.
          */
         validateResponse: function () {
-            console.log('validateResponse');
             this.quiz.validateGroup();
         },
     })
