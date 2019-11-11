@@ -367,6 +367,11 @@
 }
 
 @mixin lib-form-element-all() {
+
+    select[multiple="multiple"] {
+        background-image: none;
+    }
+
     div.mage-error[generated] {
         @include lib-form-validation-note();
     }

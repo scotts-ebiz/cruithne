@@ -269,7 +269,7 @@ $colors: (
           .#{$size}sp-p#{$key}-#{$increment} {
             padding: spacing($increment);
           }
-      } @else {
+        } @else {
           .#{$size}sp-m#{$key}-#{$increment} {
             margin-#{$value}: spacing($increment);
           }
@@ -351,14 +351,14 @@ $colors: (
 }
 
 // Widths
-.sp-w-full {
-  width: 100%;
-}
-
 @each $size in $breakpoints {
   @include breakpoint($size) {
     @if $size {
       $size: #{$size}\:;
+    }
+
+    .#{$size}sp-w-full {
+      width: 100%;
     }
 
     .#{$size}sp-w-1\/2 {
