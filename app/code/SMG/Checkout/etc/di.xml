@@ -7,6 +7,8 @@
 	<preference for="Magento\Checkout\CustomerData\Cart" type="SMG\Checkout\CustomerData\Cart" />
     <preference for="Magento\Checkout\Block\Checkout\AttributeMerger"
                 type="SMG\Checkout\Block\Checkout\AttributeMerger" />
+    <preference for="Magento\Checkout\Block\Checkout\LayoutProcessor"
+                type="SMG\Checkout\Block\Checkout\LayoutProcessor" />
 
 	<type name="Magento\Checkout\Api\GuestPaymentInformationManagementInterface">
 		<plugin  name="SMG_Checkout_Api_GuestPaymentInformationManagementInterface" type="SMG\Checkout\Plugin\Api\GuestPaymentInformationManagementInterface" sortOrder="1" />
