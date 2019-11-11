@@ -1,0 +1,16 @@
+// Checkout success should not show cart //
+.checkout-onepage-success {
+  .page-header {
+    .header.content {
+      .minicart-wrapper {
+        display: none;
+      }
+    }
+  }
+}
+// No hamburger
+.checkout-cart-index, .checkout-index-index, .checkout-onepage-success {
+  .nav-toggle {
+    display: none;
+  }
+}
