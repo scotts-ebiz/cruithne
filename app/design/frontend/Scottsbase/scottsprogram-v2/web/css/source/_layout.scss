@@ -8,6 +8,21 @@ html {
 body {
   margin: 0;
   padding: 0;
+
+  &._has-modal {
+    &:after {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba($black, .6);
+      z-index: 1;
+    }
+  }
 }
 
 .sp-site {
@@ -23,3 +38,17 @@ body {
   width: 100%;
 }
 
+.sp-grid-left,
+.sp-grid-right {
+  padding: 0 1rem;
+}
+
+@media (min-width: 768px) {
+  .sp-grid-left {
+    width: 2/3 * 100%;
+  }
+
+  .sp-grid-right {
+    width: 1/3 * 100%;
+  }
+}
