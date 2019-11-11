@@ -32,9 +32,25 @@
   text-decoration: underline;
 }
 
-.sp-quiz-map-placeholder {
+.sp-quiz-map {
   background: #d3d3d3;
-  min-height: 600px;
+}
+
+.sp-quiz-map__undo {
+  left: 1rem;
+  position: absolute;
+  top: 1rem;
+  z-index: 11;
+}
+
+.sp-quiz-map__helper {
+  bottom: 1rem;
+  border: 2px solid #1d5632;
+  left: 1rem;
+  position: absolute;
+  right: 1rem;
+  top: 1rem;
+  z-index: 12;
 }
 
 .sp-quiz__previous:focus {

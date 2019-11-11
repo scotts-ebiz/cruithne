@@ -20,9 +20,26 @@ a {
 
 .sp-link {
   @extend .sp-label;
+
+  background-color: transparent;
+  border: none;
+  color: $green-1;
+  margin: 0;
+  padding: 0;
   text-transform: uppercase;
 
+  &:active,
+  &:hover {
+    border: none;
+    background-color: transparent;
+    color: $gray-1;
+    text-decoration: underline;
+  }
+
   &:focus {
+    border: none;
+    background-color: transparent;
     outline-color: $green-1;
+    text-decoration: underline;
   }
 }

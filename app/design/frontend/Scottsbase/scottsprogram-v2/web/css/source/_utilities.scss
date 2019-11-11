@@ -144,6 +144,7 @@ $colors: (
     .#{$size}sp-flex-row {
       flex-direction: row;
     }
+
     .#{$size}sp-flex-column {
       flex-direction: column;
     }
@@ -168,6 +169,15 @@ $colors: (
       justify-content: flex-end;
     }
   }
+}
+
+// Font weights
+.sp-font-bold {
+  font-weight: 700;
+}
+
+.sp-font-normal {
+  font-weight: 400;
 }
 
 // Height
@@ -209,6 +219,23 @@ $colors: (
 
     .#{$size}sp-order-5 {
       order: 5;
+    }
+  }
+}
+
+// Overflow
+@each $size in $breakpoints {
+  @include breakpoint($size) {
+    @if $size {
+      $size: #{$size}\:;
+    }
+
+    .#{$size}sp-overflow-auto {
+      overflow: auto;
+    }
+
+    .#{$size}sp-overflow-hidden {
+      overflow: hidden;
     }
   }
 }

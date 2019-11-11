@@ -1,5 +1,6 @@
 <div class="sp-quiz sp-bg-green-1 sp-flex sp-text-white">
     <div class="sp-quiz__wrapper sp-flex sp-flex-column sp-h-full sp-w-full" data-bind="scope: 'quiz'">
+        <!-- ko if: !quiz.complete() -->
         <div
             class="sp-quiz__content sp-flex-auto sp-py-12"
             data-bind="if: !quiz.complete()"
@@ -14,18 +15,32 @@
             <!-- ko template: "SMG_Recommendations/questiontypes/7-single-select-with-images" --><!-- /ko -->
             <!-- ko template: "SMG_Recommendations/questiontypes/8-multi-select-with-images" --><!-- /ko -->
         </div>
+        <!-- /ko -->
 
         <!--Final Screen-->
-        <div
-            class="sp-quiz__content sp-flex-auto sp-py-12"
-            data-bind="if: quiz.complete()"
-        >
-            <!-- ko template: "SMG_Recommendations/final" --><!-- /ko -->
-        </div>
+        <!-- ko template: "SMG_Recommendations/final" --><!-- /ko -->
+
         <!-- ko template: "SMG_Recommendations/footer" --><!-- /ko -->
     </div>
 </div>
 
+<script
+    async
+    defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFmr27VgQLxZYKIf8LSSp5E8pGgg3B5Y4&libraries=drawing,geometry,places"
+    type="text/javascript"
+>
+</script>
+<!--
+Scotts Key
+<script
+    async
+    defer
+    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAsvm_Ci7tTHU1Qb4gf7--goMEV176d4Ro&libraries=drawing,geometry,places"
+    type="text/javascript"
+>
+</script>
+-->
 <script type="text/x-magento-init">
    {
         "*": {
