@@ -133,6 +133,8 @@ define([
             }
 
             self.routeLogic(group);
+
+            console.log(self);
         };
 
         self.setAnswer = function (data, event) {
@@ -355,6 +357,8 @@ define([
                 }
 
                 if (isCorrectTransition) {
+                    console.log("question answer: " + self.getQuestionAnswer(condition.questionId, true));
+                    console.log("transition dest group id " + transition.destinationQuestionGroupId);
                     self.loadNextGroup(self.findQuestionGroup(transition.destinationQuestionGroupId));
                     return;
                 }
@@ -394,6 +398,7 @@ define([
             for (var i = 0; i < zones.length; i++) {
                 for (prefix of zones[i].zipCodePrefixes) {
                     if ( prefix === zip.substr(0, 3) ) {
+                        console.log(zones[i].optionId);
                         return zones[i].optionId;
                     }
                 }

@@ -16,12 +16,14 @@
         </div>
 
         <!--Final Screen-->
+        <!-- ko if: quiz.complete() -->
         <div
             class="sp-quiz__content sp-flex-auto sp-py-12"
-            data-bind="if: quiz.complete()"
         >
             <!-- ko template: "SMG_Recommendations/final" --><!-- /ko -->
         </div>
+        <!-- /ko -->
+
         <!-- ko template: "SMG_Recommendations/footer" --><!-- /ko -->
     </div>
 </div>

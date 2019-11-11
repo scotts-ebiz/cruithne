@@ -262,7 +262,6 @@ input[type="email"].sp-textarea {
   &::-webkit-slider-thumb {
     appearance: none;
     background: $green-1;
-    box-shadow: -1000px 0px 0px 1000px $green-1;
     border-radius: 50%;
     height: 1rem;
     cursor: pointer;
