@@ -17,6 +17,7 @@ class TokenResponseParser extends AbstractResponseParser
     const KEYPAD_RESPONSE_CODE_NODE_NAME = "ExpressResponseCode";
     const KEYPAD_RESPONSE_MESSAGE_NODE_NAME = "ExpressResponseMessage";
     const KEYPAD_TOKEN_ID_NODE_NAME = "TokenID";
+    const KEYPAD_CARD_LOGO = "CardLogo";
 
     /**
      * Get token response path prefix.
@@ -36,6 +37,37 @@ class TokenResponseParser extends AbstractResponseParser
     public function getToken()
     {
         return $this->getValue(self::KEYPAD_TOKEN_ID_NODE_NAME);
+    }
+
+    /**
+     * Get the card type from the token response
+     *
+     * @return string
+     */
+    public function getCardType()
+    {
+        $cardType = null;
+
+        $cardLogo = $this->getValue(self::KEYPAD_CARD_LOGO);
+        if ($cardLogo == 'Amex')
+        {
+            $cardType = 'AX';
+        }
+        else if ($cardLogo == 'Discover')
+        {
+            $cardType = 'DI';
+        }
+        else if ($cardLogo == 'Mastercard')
+        {
+            $cardType = "MC";
+        }
+        else if ($cardLogo == 'Visa')
+        {
+            $cardType = "VI";
+        }
+
+        // return
+        return $cardType;
     }
 
     /**

@@ -46,6 +46,37 @@
                         <label>Default Terminal ID</label>
                         <config_path>payment/vantiv_keypadpayment/terminal_id</config_path>
                     </field>
+                    <field id="suspect_issuer_country" translate="label comment" type="multiselect" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Suspect Issuer Country</label>
+                        <source_model>Vantiv\Payment\Model\Config\Source\SuspectIssuerCountry</source_model>
+                        <config_path>payment/vantiv_keypadpayment/suspect_issuer_country</config_path>
+                    </field>
+                    <field id="suspect_issuer_action" translate="label comment" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Suspect Issuer Country Match Action</label>
+                        <source_model>Vantiv\Payment\Model\Config\Source\SuspectIssuerAction</source_model>
+                        <config_path>payment/vantiv_keypadpayment/suspect_issuer_action</config_path>
+                    </field>
+                    <field id="advanced_fraud_is_active" translate="label comment" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Advanced Fraud</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/vantiv_keypadpayment/advanced_fraud_is_active</config_path>
+                    </field>
+                    <field id="advanced_fraud_results_review_action" translate="label comment" type="select" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Advanced Fraud Review Action</label>
+                        <depends>
+                            <field id="advanced_fraud_is_active">1</field>
+                        </depends>
+                        <source_model>Vantiv\Payment\Model\Config\Source\AdvancedFraudAction</source_model>
+                        <config_path>payment/vantiv_keypadpayment/advanced_fraud_results_review_action</config_path>
+                    </field>
+                    <field id="advanced_fraud_results_fail_action" translate="label comment" type="select" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Advanced Fraud Fail Action</label>
+                        <depends>
+                            <field id="advanced_fraud_is_active">1</field>
+                        </depends>
+                        <source_model>Vantiv\Payment\Model\Config\Source\AdvancedFraudAction</source_model>
+                        <config_path>payment/vantiv_keypadpayment/advanced_fraud_results_fail_action</config_path>
+                    </field>
                 </group>
             </group>
         </section>
