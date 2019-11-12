@@ -17,6 +17,256 @@ define([
         self.questions = ko.observableArray(questionGroup.questions);
     }
 
+    function LawnCalculator(quiz) {
+        var self = this;
+
+        self.autocomplete = null;
+        self.drawingManager = null;
+        self.element = null;
+        self.address = ko.observable('');
+        self.showInstructions = ko.observable(false);
+        self.geocoder = null;
+        self.lawnSize = ko.observable(0);
+        self.map = null;
+        self.quiz = quiz;
+        self.polygons = ko.observableArray([]);
+        self.activePolygon = null;
+
+        self.addListeners = function () {
+            google.maps.event.addListener(self.drawingManager, 'polygoncomplete', self.handlePolygonComplete);
+            self.map.addListener('click', function (a) {
+                if (!self.drawingManager.getDrawingMode()) {
+                    self.drawingManager.setDrawingMode('polygon');
+                }
+            });
+        };
+
+        self.initialize = function () {
+            self.autocomplete = new google.maps.places.Autocomplete(
+                document.getElementById('address-autocomplete'), { types: ['geocode'] }
+            );
+            self.autocomplete.setFields(['geometry']);
+            self.autocomplete.addListener('place_changed', function () {
+                var place = self.autocomplete.getPlace();
+
+                if (!place.geometry) {
+                    return;
+                }
+
+                // We have a place, enable the drawing manager.
+                self.drawingManager.setMap(self.map);
+                self.address($('#address-autocomplete').val().replace(', USA', ''));
+                $('#address-autocomplete').val(self.address());
+                self.showInstructions(true);
+
+                if (place.geometry.viewport) {
+                    self.map.fitBounds(place.geometry.viewport);
+                    self.map.setZoom(22);
+                } else {
+                    self.map.setCenter(place.geometry.location);
+                    self.map.setZoom(22);
+                }
+            });
+
+            // If an address has already been set, repopulate it.
+            if (self.address()) {
+                $('#address-autocomplete').val(self.address());
+            }
+
+            // If a map instance already exists, add it back to the DOM.
+            if (self.element) {
+                $('#map').replaceWith(self.element);
+                return;
+            }
+
+            self.element = document.getElementById('map');
+
+            self.map = new google.maps.Map(document.getElementById('map'), {
+                backgroundColor: '#efefefe',
+                center: { lat: 37.76360215998705, lng: -94.90050332499999 },
+                disableDefaultUI: true,
+                mapTypeId: google.maps.MapTypeId.HYBRID,
+                minZoom: 1,
+                zoom: 4,
+                zoomControl: true,
+                zoomControlOptions: {
+                    position: google.maps.ControlPosition.RIGHT_BOTTOM
+                },
+            });
+
+            self.geocoder = new google.maps.Geocoder;
+
+            self.drawingManager = new google.maps.drawing.DrawingManager({
+                // Change this to false to hide the controls, however, then the
+                // ability to edit points will be lost.
+                drawingControl: false,
+                drawingControlOptions: {
+                    position: google.maps.ControlPosition.TOP_CENTER,
+                    drawingModes: [google.maps.drawing.OverlayType.POLYGON],
+                },
+                polygonOptions: {
+                    fillColor: '#008B43',
+                    fillOpacity: 0.7,
+                    strokeWeight: 2,
+                    strokeColor: '#FFF',
+                    clickable: true,
+                    editable: true,
+                    zIndex: 1,
+                },
+                drawingMode: google.maps.drawing.OverlayType.POLYGON,
+            });
+
+            self.addListeners();
+        };
+
+        self.handlePolygonComplete = function (polygon) {
+            var path = polygon.getPath();
+            var point = path.getAt(0);
+
+            self.activePolygon = polygon;
+            self.drawingManager.setDrawingMode(null);
+
+            function adjustPolygon(index) {
+                var point = path.getAt(index);
+                if (point) {
+                    self.getLocation({ lat: point.lat(), lng: point.lng() });
+                }
+                self.calculateLawnSize();
+            }
+
+            // Attempt to get the zip code from a point on the polygon.
+            if (point) {
+                self.getLocation({ lat: point.lat(), lng: point.lng() });
+            }
+
+            // Can use the following events if we allow the user to edit.
+            path.addListener('set_at', adjustPolygon);
+            path.addListener('insert_at', adjustPolygon);
+
+            // When clicking the polygon, switch to edit mode and set the
+            // polygon to active.
+            polygon.addListener('click', function () {
+                self.activePolygon = polygon;
+                self.drawingManager.setDrawingMode(null);
+            });
+
+            self.polygons.push(polygon);
+            self.calculateLawnSize();
+        };
+
+        self.calculateLawnSize = function () {
+            self.lawnSize(0);
+
+            if (!self.polygons().length) {
+                return;
+            }
+
+            for (polygon of self.polygons()) {
+                var squareMeters = google.maps.geometry.spherical.computeArea(polygon.getPath());
+                var squareFeet = Math.round(squareMeters * 3.28084);
+
+                self.lawnSize(self.lawnSize() + squareFeet);
+            }
+
+            self.quiz.setArea(self.lawnSize());
+        };
+
+        self.getLocation = function (position) {
+            if (!position) {
+                position = self.map.getCenter();
+            }
+
+            self.geocoder.geocode({ 'location': position }, function (results) {
+                if (results && results.length) {
+                    var location = results[0];
+                    for (component of location.address_components) {
+                        for (types of component.types) {
+                            if (types === 'postal_code') {
+                                self.quiz.setZipCode(component.short_name);
+                                return;
+                            }
+                        }
+                    }
+                }
+            });
+        };
+
+        /**
+         * Clear the selected address in the autocomplete.
+         */
+        self.clearAddress = function () {
+            self.address('');
+            $('#address-autocomplete').val('');
+            self.drawingManager.setMap(null);
+        };
+
+        /**
+         * Undo the last point placed on the map.
+         */
+        self.undo = function () {
+            if (!self.activePolygon && !self.polygons().length) {
+                return;
+            }
+
+            var shape = null;
+
+            if (self.activePolygon) {
+                shape = self.activePolygon;
+                self.polygons.remove(shape);
+                shape.setMap(null);
+                self.activePolygon = null;
+            } else {
+                shape = self.polygons.pop();
+                shape.setMap(null);
+            }
+        };
+
+        /**
+         * Hide the helper instructions.
+         */
+        self.hideInstructions = function () {
+            self.showInstructions(false);
+        };
+
+        self.resetMap = function () {
+            // Reset the address.
+            self.address('');
+            $('#address-autocomplete').val('');
+            self.drawingManager.setMap(null);
+
+            // Remove the active polygons.
+            self.activePolygon = null;
+
+            // Remove any polygons from the map.
+            for (polygon of self.polygons()) {
+                polygon.setMap(null);
+            }
+
+            // Remove the polygons from the array.
+            self.polygons.removeAll();
+            self.calculateLawnSize();
+        };
+
+        self.initialize();
+
+        // Try HTML5 geolocation.
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                var pos = {
+                    lat: position.coords.latitude,
+                    lng: position.coords.longitude
+                };
+                self.map.setCenter(pos);
+                self.map.setZoom(18);
+                self.getLocation(pos);
+            }, function() {
+                self.getLocation();
+            });
+        } else {
+            self.getLocation();
+        }
+    }
+
     /**
      * Question Result View Model
      *
@@ -53,6 +303,7 @@ define([
         self.answers = ko.observableArray([]);
         self.complete = ko.observable(false);
         self.currentGroup = ko.observable(null);
+        self.map = ko.observable(null);
         self.template = null;
         self.previousGroups = ko.observableArray([]);
         self.usingGoogleMaps = ko.observable(true);
@@ -91,7 +342,7 @@ define([
         self.loadNextGroup = function (group) {
             // No group specified so load the first group.
             if (!group) {
-                self.setGroup(self.template.questionGroups[0]);
+                self.setGroup(self.template.questionGroups[4]);
 
                 return;
             }
@@ -102,19 +353,15 @@ define([
         };
 
         self.loadPreviousGroup = function () {
-            // When hitting previous from manual entry, pull google maps back up.
-            if (self.questions()[0] && self.questions()[0].questionType === 5 && !self.usingGoogleMaps()) {
-               self.toggleGoogleMaps();
-               return;
-            }
-
             if (!self.previousGroups().length) {
                 return;
             }
 
-            // Remove the current group answers.
-            for (question of self.questions()) {
-                self.removeAnswer(question.id);
+            // Remove the grass type selection if set.
+            if (self.questions().length && self.questions()[0].questionType === 7 && self.currentGroup().label === 'LAWN DETAILS') {
+                for (question of self.questions()) {
+                    self.removeAnswer(question.id);
+                }
             }
 
             self.setGroup(self.previousGroups.pop());
@@ -124,17 +371,32 @@ define([
             self.currentGroup(group);
 
             var results = {};
+            var initializedMap = false;
 
             for (question of group.questions) {
                 // Check if the questions are sliders and set a base response.
                 if (+question.questionType === 3) {
                     self.addAnswerIfEmpty(question.id, question.options[0], 1);
                 }
+
+                // Check if the questions are for the google maps entry and initialize the map.
+                if (!initializedMap && self.usingGoogleMaps() && question.questionType === 5) {
+                    self.initializeMap();
+                    initializedMap = true;
+                }
             }
 
             self.routeLogic(group);
 
             console.log(self);
+        };
+
+        self.initializeMap = function () {
+            if (self.map()) {
+                self.map().initialize();
+            } else {
+                self.map(new LawnCalculator(self));
+            }
         };
 
         self.setAnswer = function (data, event) {
@@ -292,6 +554,13 @@ define([
          */
         self.toggleGoogleMaps = function () {
             self.usingGoogleMaps(!self.usingGoogleMaps());
+            self.setArea(0);
+            self.setZipCode('');
+
+            if (self.usingGoogleMaps()) {
+                self.initializeMap();
+                self.map().resetMap();
+            }
         };
 
         /**
@@ -412,7 +681,12 @@ define([
          * @param event
          */
         self.setZipCode = function (data, event) {
-            var zip = event.target.value;
+            var zip = '';
+            if (!event) {
+                zip = data;
+            } else {
+                zip = event.target.value;
+            }
 
             self.removeAnswer(self.questions()[0].id);
 
@@ -432,7 +706,12 @@ define([
          * @param event
          */
         self.setArea = function (data, event) {
-            var area = parseInt(event.target.value);
+            var area = 0;
+            if (typeof data === 'number') {
+                area = data;
+            } else {
+                area = parseInt(event.target.value);
+            }
 
             if (area > 0) {
                self.addOrReplaceAnswer(self.questions()[1].id, self.questions()[1].options[0].id, area);

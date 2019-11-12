@@ -1,9 +1,9 @@
 <!-- ko if: quiz.questions()[0] && quiz.questions()[0].questionType == 5 && quiz.usingGoogleMaps -->
-<div class="sp-quiz__question sp-container sp-mb-4">
+<div class="sp-quiz__question sp-container sp-mb-4 sp-overflow-hidden">
     <!-- Process Questions -->
     <div class="sp-mx-auto md:sp-w-5/6">
-        <div class="md:sp-flex md:sp--mx-8">
-            <div class="sp-w-full md:sp-w-1/3 sp-p-8 sp-text-left">
+        <div class="md:sp-flex lg:sp--mx-6">
+            <div class="sp-w-full lg:sp-w-2/5 sp-p-6 sp-text-left">
                 <h2
                     class="sp-quiz__question-title sp-h2 sp-max-w-md sp-mt-0 sp-mx-auto"
                     data-bind="text: quiz.currentGroup().title"
@@ -22,29 +22,115 @@
                 ></button>
 
                 <div class="sp-bg-white sp-mb-8 sp-p-8 sp-rounded sp-shadow-md sp-text-black">
-                    <label class="sp-p1 sp-mb-4">
+                    <label
+                        class="sp-block sp-p1 sp-mb-4"
+                        for="address-autocomplete"
+                    >
                         1. Where is your lawn?
                     </label>
-                    <div class="sp-form-group sp-mb-0">
+                    <div
+                        class="sp-form-group sp-mb-0"
+                        data-bind="visible: quiz.map() && !quiz.map().address()"
+                    >
                         <input
+                            id="address-autocomplete"
                             class="sp-input sp-w-full"
                             type="text"
                             placeholder="Address"
                         />
-                        <label class="sp-form-label">Address</label>
+                        <label class="sp-form-label" for="address-autocomplete">Address</label>
+                    </div>
+                    <div
+                        class="sp-p2 sp-flex sp-items-center sp-justify-between sp-font-bold"
+                        data-bind="visible: quiz.map() && quiz.map().address()"
+                    >
+                        <span
+                            data-bind="text: quiz.map() && quiz.map().address()"
+                        >
+                        </span>
+                        <button class="sp-link sp-ml-2" data-bind="click: quiz.map() && quiz.map().clearAddress" type="button">Change</button>
                     </div>
                 </div>
 
                 <div class="sp-bg-white sp-mb-8 sp-p-8 sp-rounded sp-shadow-md sp-text-black">
-                    <label class="sp-p1 sp-mb-0">2. Calculate the size of your lawn</label>
+                    <p
+                        class="sp-p1"
+                        data-bind="css: {
+                            'sp-mb-0': !quiz.map() || !quiz.map().address(),
+                            'sp-mb-4': quiz.map() && quiz.map().address()
+                        }"
+                    >
+                        2. Calculate the size of your lawn
+                    </p>
+                    <p
+                        class="sp-p2 sp-mb-0"
+                        data-bind="visible: quiz.map() && quiz.map().address()"
+                    >
+                        To measure your lawn, start by selecting on each corner. This will create a basic outline. If you have another area to add, simply start the process again.
+                    </p>
                 </div>
 
                 <div class="sp-bg-white sp-mb-8 sp-p-8 sp-rounded sp-shadow-md sp-text-black">
-                    <label class="sp-p1">3. Your total lawn size</label>
+                    <p
+                       class="sp-p1"
+                       data-bind="css: {
+                            'sp-mb-0': !quiz.map() || !quiz.map().lawnSize(),
+                            'sp-mb-4': quiz.map() && quiz.map().lawnSize()
+                        }"
+                    >
+                        3. Your total lawn size
+                    </p>
+                    <p
+                        class="sp-p2 sp-mb-0"
+                        data-bind="visible: quiz.map() && quiz.map().lawnSize(), text: quiz.map() && (quiz.map().lawnSize() + ' Sqft.')"
+                    >
+                        To measure your lawn, start by selecting on each corner. This will create a basic outline. If you have another area to add, simply start the process again.
+                    </p>
                 </div>
             </div>
-            <div class="sp-w-full md:sp-w-2/3 sp-p-8">
-                <div class="sp-quiz-map-placeholder"></div>
+
+            <div class="sp-w-full md:sp-w-3/5 sp-p-6">
+                <div class="sp-quiz-map sp-relative sp-aspect-ratio sp-aspect-ratio--4x3">
+                    <div id="map" class="sp-quiz-map__placeholder sp-aspect-ratio--object">
+                    </div>
+
+                    <!-- ko if: quiz.map() && quiz.map().polygons().length -->
+                    <button
+                        class="sp-quiz-map__undo sp-button sp-button--inverted sp-shadow-md"
+                        type="button"
+                        data-bind="click: quiz.map() && quiz.map().undo"
+                    >
+                        Undo
+                    </button>
+                    <!-- /ko -->
+
+                    <div
+                        class="sp-quiz-map__helper sp-bg-white sp-flex sp-flex-column sp-justify-center sp-p-8 sp-rounded sp-text-black"
+                        data-bind="visible: quiz.map() && quiz.map().showInstructions()"
+                    >
+                        <p class="sp-p1 sp-text-center">
+                            <img src="https://test_magento_image_repo.storage.googleapis.com/mapHelperIcon.svg" alt="Calculate Lawn Size">
+                        </p>
+
+                        <p class="sp-p1 sp-max-w-sm sp-mx-auto sp-text-center">
+                            To calculate lawn size, tap once on map to begin a line and trace the outline of your lawn by adding lines. Close the shape to complete. You can tap and drag the dots to edit, use the undo button to undo an action, and pinch to zoom.
+                        </p>
+
+                        <p class="sp-p1 sp-text-center">
+                            <img src="https://test_magento_image_repo.storage.googleapis.com/mapDraw.png" alt="Draw Lawn Area">
+                        </p>
+
+                        <div class="sp-text-center">
+                            <button
+                                class="sp-button sp-button--primary"
+                                type="button"
+                                data-bind="click: quiz.map() && quiz.map().hideInstructions"
+                            >
+                                Close
+                            </button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
