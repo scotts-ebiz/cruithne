@@ -364,3 +364,39 @@ li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot::before {
   height: 1rem;
   width: 3px;
 }
+
+@media (max-width: 767px) {
+  .sp-quiz--has-address {
+    padding: 0;
+  }
+
+  .sp-quiz--has-address .sp-quiz__question {
+    height: 100%;
+  }
+
+  .sp-quiz--has-address + .sp-quiz__progress {
+    display: none;
+  }
+
+  .sp-quiz--has-address .sp-container {
+    padding: 0;
+  }
+
+  .sp-quiz--has-address .sp-quiz-map--step-1 {
+    border-radius: 0;
+    border-top: 1px solid #d3d3d3;
+  }
+
+  .sp-quiz--has-address .sp-quiz-map {
+    height: 100%;
+    padding: 0;
+  }
+
+  .sp-quiz--has-address .sp-quiz-map--step-1 > label {
+    display: none;
+  }
+
+  .sp-quiz--has-address .sp-quiz-map--step-2 {
+    border: 6px solid #1d5632;
+  }
+}

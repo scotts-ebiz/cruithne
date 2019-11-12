@@ -1,27 +1,38 @@
 <!-- ko if: quiz.questions()[0] && quiz.questions()[0].questionType == 5 && quiz.usingGoogleMaps -->
-<div class="sp-quiz__question sp-container sp-mb-4 sp-overflow-hidden">
+<div class="sp-quiz__question sp-container md:sp-mb-4 sp-overflow-hidden">
     <!-- Process Questions -->
-    <div class="sp-mx-auto md:sp-w-5/6">
-        <div class="md:sp-flex lg:sp--mx-6">
-            <div class="sp-w-full lg:sp-w-2/5 sp-p-6 sp-text-left">
-                <h2
-                    class="sp-quiz__question-title sp-h2 sp-max-w-md sp-mt-0 sp-mx-auto"
-                    data-bind="text: quiz.currentGroup().title"
+    <div class="sp-h-full sp-mx-auto md:sp-w-5/6">
+        <div class="sp-flex sp-flex-column md:sp-flex-row sp-h-full sp--mx-6">
+            <div class="sp-w-full lg:sp-w-2/5 sp-px-6 md:sp-p-6 sp-text-center md:sp-text-left">
+                <div class="md:sp-block" data-bind="css: { 'sp-hide': quiz.map() && quiz.map().address() }">
+                    <h2
+                        class="sp-quiz__question-title sp-h2 sp-max-w-md sp-mt-0 sp-mx-auto"
+                        data-bind="text: quiz.currentGroup().title"
+                    >
+                    </h2>
+
+                    <p
+                        class="sp-text-left"
+                        data-bind="text: quiz.currentGroup().subtitle"
+                    ></p>
+
+                    <!-- Link to manual lawn square footage are input screen -->
+                    <button
+                        class="sp-quiz__manual-entry sp-mb-4 md:sp-block"
+                        data-bind="
+                            text: quiz.currentGroup().displayAlternativePageCTA,
+                            click: quiz.toggleGoogleMaps
+                        "
+                    ></button>
+                </div>
+
+                <div
+                    class="sp-quiz-map--step-1 md:sp-mb-8 sp-p-6 md:sp-p-8 sp-rounded sp-shadow-md sp-text-black sp-text-left"
+                    data-bind="css: {
+                        'sp-bg-green-4': !quiz.map() || !quiz.map().address(),
+                        'sp-bg-white': quiz.map() && quiz.map().address()
+                    }"
                 >
-                </h2>
-
-                <p
-                    class="sp-text-left"
-                    data-bind="text: quiz.currentGroup().subtitle"
-                ></p>
-
-                <!-- Link to manual lawn square footage are input screen -->
-                <button
-                    class="sp-quiz__manual-entry sp-mb-4"
-                    data-bind="text: quiz.currentGroup().displayAlternativePageCTA, click: quiz.toggleGoogleMaps"
-                ></button>
-
-                <div class="sp-bg-white sp-mb-8 sp-p-8 sp-rounded sp-shadow-md sp-text-black">
                     <label
                         class="sp-block sp-p1 sp-mb-4"
                         for="address-autocomplete"
@@ -52,7 +63,7 @@
                     </div>
                 </div>
 
-                <div class="sp-bg-white sp-mb-8 sp-p-8 sp-rounded sp-shadow-md sp-text-black">
+                <div class="sp-quiz-map--step-2 sp-hide md:sp-block sp-bg-white sp-mb-8 sp-p-8 sp-rounded sp-shadow-md sp-text-black">
                     <p
                         class="sp-p1"
                         data-bind="css: {
@@ -70,7 +81,7 @@
                     </p>
                 </div>
 
-                <div class="sp-bg-white sp-mb-8 sp-p-8 sp-rounded sp-shadow-md sp-text-black">
+                <div class="sp-quiz-map--step-3 sp-hide md:sp-block sp-bg-white sp-mb-8 sp-p-8 sp-rounded sp-shadow-md sp-text-black">
                     <p
                        class="sp-p1"
                        data-bind="css: {
@@ -89,8 +100,11 @@
                 </div>
             </div>
 
-            <div class="sp-w-full md:sp-w-3/5 sp-p-6">
-                <div class="sp-quiz-map sp-relative sp-aspect-ratio sp-aspect-ratio--4x3">
+            <div
+                class="sp-flex-auto md:sp-flex-none sp-w-full md:sp-block md:sp-w-3/5 sp-px-6 md:sp-p-6"
+                data-bind="css: { 'sp-hide': !quiz.map() || !quiz.map().address() }"
+            >
+                <div class="sp-quiz-map sp-relative sp-aspect-ratio md:sp-aspect-ratio--4x3">
                     <div id="map" class="sp-quiz-map__placeholder sp-aspect-ratio--object">
                     </div>
 
@@ -130,6 +144,30 @@
                             </button>
                         </div>
                     </div>
+                </div>
+            </div>
+
+            <div
+                class="sp-w-full md:sp-hide sp-px-6"
+                data-bind="css: { 'sp-hide': !quiz.map() || !quiz.map().address() }"
+            >
+                <div
+                    class="sp-quiz-map--step-2 sp-bg-green-4 sp-p-6 sp-rounded sp-shadow-md sp-text-black sp-text-center"
+                >
+                    <p
+                        class="sp-p1"
+                        data-bind="css: {
+                            'sp-mb-0': !quiz.map() || !quiz.map().lawnSize(),
+                            'sp-mb-2': quiz.map() && quiz.map().lawnSize()
+                        }"
+                    >
+                        2. Calculate the size of your lawn
+                    </p>
+                    <p
+                        class="sp-p2 sp-font-bold sp-mb-0"
+                        data-bind="visible: quiz.map() && quiz.map().lawnSize(), text: quiz.map() && ('Total Lawn Size: ' + quiz.map().lawnSize() + ' Sqft.')"
+                    >
+                    </p>
                 </div>
             </div>
         </div>

@@ -31,6 +31,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 
 .sp-input {
+  background-color: transparent;
   border: none;
   border-bottom: 1px solid $gray-2;
   font-size: $font-size-p2--mobile;

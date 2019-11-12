@@ -123,6 +123,10 @@ define([
             var path = polygon.getPath();
             var point = path.getAt(0);
 
+            if (path.getLength() < 3) {
+                return;
+            }
+
             self.activePolygon = polygon;
             self.drawingManager.setDrawingMode(null);
 
@@ -195,9 +199,7 @@ define([
          * Clear the selected address in the autocomplete.
          */
         self.clearAddress = function () {
-            self.address('');
-            $('#address-autocomplete').val('');
-            self.drawingManager.setMap(null);
+            self.resetMap();
         };
 
         /**
@@ -219,6 +221,8 @@ define([
                 shape = self.polygons.pop();
                 shape.setMap(null);
             }
+
+            self.calculateLawnSize();
         };
 
         /**
@@ -387,8 +391,6 @@ define([
             }
 
             self.routeLogic(group);
-
-            console.log(self);
         };
 
         self.initializeMap = function () {
@@ -626,8 +628,6 @@ define([
                 }
 
                 if (isCorrectTransition) {
-                    console.log("question answer: " + self.getQuestionAnswer(condition.questionId, true));
-                    console.log("transition dest group id " + transition.destinationQuestionGroupId);
                     self.loadNextGroup(self.findQuestionGroup(transition.destinationQuestionGroupId));
                     return;
                 }
@@ -667,7 +667,6 @@ define([
             for (var i = 0; i < zones.length; i++) {
                 for (prefix of zones[i].zipCodePrefixes) {
                     if ( prefix === zip.substr(0, 3) ) {
-                        console.log(zones[i].optionId);
                         return zones[i].optionId;
                     }
                 }
