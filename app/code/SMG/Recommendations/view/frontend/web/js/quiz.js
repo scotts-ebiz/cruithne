@@ -342,7 +342,7 @@ define([
         self.loadNextGroup = function (group) {
             // No group specified so load the first group.
             if (!group) {
-                self.setGroup(self.template.questionGroups[4]);
+                self.setGroup(self.template.questionGroups[0]);
 
                 return;
             }
