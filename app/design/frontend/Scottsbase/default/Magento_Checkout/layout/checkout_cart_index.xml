@@ -24,13 +24,6 @@
 						</block>
 						<container name="checkout.cart.parent.summary" htmlTag="div" htmlClass="cart-parent-summary" after="checkout.cart.form">
 							<container name="cart.summary" label="Cart Summary Container" htmlTag="div" htmlClass="cart-summary" after="cart.summary.divlink">
-								<!--<block class="Magento\Framework\View\Element\Template" name="checkout.cart.summary.title" before="-" template="Magento_Theme::text.phtml">-->
-								<!--<arguments>-->
-								<!--<argument translate="true" name="text" xsi:type="string">Summary</argument>-->
-								<!--<argument name="tag" xsi:type="string">strong</argument>-->
-								<!--<argument name="css_class" xsi:type="string">summary title</argument>-->
-								<!--</arguments>-->
-								<!--</block>-->
 								<block class="Magento\Checkout\Block\Cart\Shipping" name="checkout.cart.shipping" as="shipping" template="Magento_Checkout::cart/shipping.phtml" after="checkout.cart.summary.title">
 									<arguments>
 										<argument name="jsLayout" xsi:type="array">
