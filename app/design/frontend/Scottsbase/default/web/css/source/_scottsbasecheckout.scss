@@ -26,6 +26,23 @@
         }
         .columns {
             .column {
+                .actions {
+                  a:before{
+                    -webkit-font-smoothing: antialiased;
+                    -moz-osx-font-smoothing: grayscale;
+                    font-size: 32px;
+                    line-height: 20px;
+                    content: "";
+                    font-family: "icons-blank-theme";
+                    margin: 0;
+                    vertical-align: top;
+                    display: inline-block;
+                    font-weight: 400;
+                    overflow: hidden;
+                    speak: none;
+                    text-align: center;
+                  }
+                }
                 .cart-container {
                     padding-left: 15px;
                     padding-right: 15px;
