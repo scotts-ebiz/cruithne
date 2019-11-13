@@ -1,0 +1,23 @@
+<div
+    class="sp-results sp-flex sp-relative"
+    data-bind="scope: 'results'"
+>
+    <div class="sp-results__wrapper sp-flex sp-flex-column sp-h-full sp-w-full">
+        <!-- ko template: "SMG_Recommendations/results/loading.html" --><!-- /ko -->
+        <!-- ko template: "SMG_Recommendations/results/index.html" --><!-- /ko -->
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+   {
+        "*": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "results": {
+                        "component": "SMG_Recommendations/js/results"
+                    }
+                }
+            }
+        }
+    }
+</script>
