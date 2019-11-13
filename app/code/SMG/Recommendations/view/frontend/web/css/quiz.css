@@ -137,6 +137,12 @@
   margin-top: 0;
 }
 
+@media (min-width: 1024px) {
+  .sp-quiz__progress-container {
+    box-shadow: none;
+  }
+}
+
 .sp-quiz__progress-list {
   display: inline-flex;
   flex-direction: row;
@@ -235,76 +241,72 @@ li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot::before {
   background: #1d5632;
 }
 
-@media (min-width: 320px) {
-  .sp-quiz__progress {
-    order: 1;
-  }
+.sp-quiz__progress {
+  order: 1;
+}
 
-  .sp-quiz__progress-list {
-    width: 100%;
-  }
+.sp-quiz__progress-list {
+  width: 100%;
+}
 
-  .sp-quiz__progress-item {
-    height: 58px;
-    list-style-type: none;
-    width: 20%;
-    text-align: center;
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 0;
-    z-index: 0;
-  }
+.sp-quiz__progress-item {
+  height: 58px;
+  list-style-type: none;
+  width: 20%;
+  text-align: center;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 0;
+  z-index: 0;
+}
 
-  .sp-quiz__progress-item-label.sp-label {
-    display: none;
-  }
+.sp-quiz__progress-item-label {
+  align-items: flex-end;
+  color: #d3d3d3;
+  display: none;
+  height: 23px;
+  justify-content: center;
+  line-height: 1.1;
+}
 
-  li.sp-quiz__progress-item.progressBarSelected .sp-quiz__progress-item-label.sp-label,
-  li.sp-quiz__progress-item.progressBarEnd .sp-quiz__progress-item-label.sp-label {
-    color: #1D5632;
-    width: 100%;
-    display: block;
-    line-height: 1.1;
-    height: 23px;
-  }
+.sp-quiz__progress-item.progressBarSelected .sp-quiz__progress-item-label,
+.sp-quiz__progress-item.progressBarEnd .sp-quiz__progress-item-label {
+  color: #1d5632;
+  display: flex;
+}
 
-  .sp-quiz__progress-item-dot:before {
-    top: 30px;
-    margin-top: 5px;
-  }
+.sp-quiz__progress-item-dot::before {
+  top: 30px;
+  margin-top: 5px;
+}
 
-  .sp-quiz__progress-item-dot {
-    margin-bottom: -10px;
-  }
+.sp-quiz__progress-item-dot {
+  margin-bottom: -10px;
+}
 
-  li.sp-quiz__progress-item.progressBarVisited .sp-quiz__progress-item-dot {
-    border: 2px solid #1D5632;
-    margin-top: 5px;
-  }
+.sp-quiz__progress-item.progressBarVisited .sp-quiz__progress-item-dot {
+  border: 2px solid #1d5632;
+  margin-top: 5px;
+}
 
-  li.sp-quiz__progress-item.progressBarSelected .sp-quiz__progress-item-dot,
-  li.sp-quiz__progress-item.progressBarEnd .sp-quiz__progress-item-dot {
-    margin-bottom: 14.5px;
-  }
+.sp-quiz__progress-item.progressBarSelected .sp-quiz__progress-item-dot,
+.sp-quiz__progress-item.progressBarEnd .sp-quiz__progress-item-dot {
+  margin-bottom: 14px;
+}
 
-  .sp-quiz__banner {
-    padding: 20px 0;
-  }
+.sp-quiz__banner {
+  padding: 20px 0;
+}
 
-  .sp-quiz__content {
-    order: 2;
-  }
+.sp-quiz__content {
+  order: 2;
+}
 
-  .sp-quiz__progress-container {
-    margin-top: 10px;
-  }
-
-  .sp-quiz__progress-buttons {
-    order: 3;
-  }
+.sp-quiz__progress-buttons {
+  order: 3;
 }
 
 @media (min-width: 1024px) {
@@ -321,29 +323,27 @@ li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot::before {
     width: 75%;
   }
 
-  .sp-quiz__progress-item-label.sp-label {
-    color: #D3D3D3;
-    display: block;
-    line-height: 1.1;
+  .sp-quiz__progress-item-label {
+    display: flex;
+    height: 13px;
   }
 
-  li.sp-quiz__progress-item.progressBarSelected .sp-quiz__progress-item-label.sp-label,
-  li.sp-quiz__progress-item.progressBarEnd .sp-quiz__progress-item-label.sp-label {
-    height: 13px;
+  .sp-quiz__progress-item.progressBarSelected .sp-quiz__progress-item-label,
+  .sp-quiz__progress-item.progressBarEnd .sp-quiz__progress-item-label {
   }
 
   .sp-quiz__progress-item-dot {
     margin-bottom: 3px;
   }
 
-  li.sp-quiz__progress-item.progressBarSelected .sp-quiz__progress-item-dot,
-  li.sp-quiz__progress-item.progressBarEnd .sp-quiz__progress-item-dot {
+  .sp-quiz__progress-item.progressBarSelected .sp-quiz__progress-item-dot,
+  .sp-quiz__progress-item.progressBarEnd .sp-quiz__progress-item-dot {
     margin-bottom: 3px;
   }
 }
 
 .sliderContainer {
-  padding: 20px 0px;
+  padding: 20px 0;
 }
 
 .sp-quiz__strong-text {
@@ -381,6 +381,7 @@ li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot::before {
 
 .sp-quiz__footer {
   box-shadow: 0 -1px 3px 0 rgba(0, 0, 0, 0.2), 0 -1px 2px 0 rgba(0, 0, 0, 0.15);
+  position: relative;
 }
 
 @media (max-width: 767px) {
