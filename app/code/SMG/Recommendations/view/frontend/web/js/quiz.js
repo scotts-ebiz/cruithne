@@ -754,7 +754,7 @@ define([
                 '/quiz/template/template',
                 {
                     dataType: 'json',
-                    method: 'get',
+                    method: 'post',
                     success: function (data) {
                         if(data.error_message) {
                             alert( 'Error getting quiz data: ' + data.error_message + '. Please try again.');
