@@ -379,6 +379,10 @@ li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot::before {
   width: 3px;
 }
 
+.sp-quiz__footer {
+  box-shadow: 0 -1px 3px 0 rgba(0, 0, 0, 0.2), 0 -1px 2px 0 rgba(0, 0, 0, 0.15);
+}
+
 @media (max-width: 767px) {
   .sp-quiz--has-address {
     padding: 0;

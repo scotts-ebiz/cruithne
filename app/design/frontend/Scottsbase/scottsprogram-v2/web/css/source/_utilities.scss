@@ -84,6 +84,11 @@ $colors: (
   border-radius: $border-radius;
 }
 
+// Border Radius
+.sp-rounded-full {
+  border-radius: 100%;
+}
+
 // Display
 @each $size in $breakpoints {
   @include breakpoint($size) {
