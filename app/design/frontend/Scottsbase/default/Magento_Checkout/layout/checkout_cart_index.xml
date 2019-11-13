@@ -7,10 +7,9 @@
 			<block class="Magento\Checkout\Block\Cart\ValidationMessages" name="checkout.cart.validationmessages"/>
 		</referenceContainer>
 		<referenceContainer name="content">
-            <!-- Just added for testing -->
-            <block class="Magento\Framework\View\Element\Template" name="continue.shopping"
-                   template="Magento_Checkout::continueshopping.phtml" />
             <block class="Magento\Theme\Block\Html\Title" name="page.main.title" template="Magento_Theme::html/title.phtml"/>
+            <block class="Magento\Framework\View\Element\Template" name="continue.shopping"
+                   template="Magento_Checkout::continueshopping.phtml" before="page.main.title"/>
 			<block class="Magento\Checkout\Block\Cart" name="checkout.cart" template="Magento_Checkout::cart.phtml" cacheable="false">
 				<container name="checkout.cart.items" as="with-items">
 					<container name="checkout.cart.container" htmlTag="div" htmlClass="cart-container" before="-">

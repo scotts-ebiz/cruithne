@@ -1,3 +1,7 @@
-<div class="block" style="float: right;">
-  <?php echo __('Continue Shopping'); ?>
+<div class="actions">
+    <a class="action continue"
+       href="<?= $block->getUrl('') ?>"
+       title="<?= $block->escapeHtml(__('Continue Shopping')) ?>">
+        <span><?= /* @escapeNotVerified */ __('Continue Shopping') ?></span>
+    </a>
 </div>
