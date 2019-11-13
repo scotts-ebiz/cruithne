@@ -61,6 +61,9 @@
                         </span>
                         <button class="sp-link sp-ml-2" data-bind="click: quiz.map() && quiz.map().clearAddress" type="button">Change</button>
                     </div>
+                    <!-- ko if: quiz.invalidZipCode() -->
+                    <div class="sp-form-error">Please select a location within the continental United States.</div>
+                    <!-- /ko -->
                 </div>
 
                 <div class="sp-quiz-map--step-2 sp-hide md:sp-block sp-bg-white sp-mb-8 sp-p-8 sp-rounded sp-shadow-md sp-text-black">

@@ -45,7 +45,9 @@ define([
             self.autocomplete = new google.maps.places.Autocomplete(
                 document.getElementById('address-autocomplete'), { types: ['geocode'] }
             );
+            self.autocomplete.setComponentRestrictions({ 'country': 'us' });
             self.autocomplete.setFields(['geometry']);
+            self.autocomplete.setTypes(['address']);
             self.autocomplete.addListener('place_changed', function () {
                 var place = self.autocomplete.getPlace();
 
@@ -311,6 +313,7 @@ define([
         self.template = null;
         self.previousGroups = ko.observableArray([]);
         self.usingGoogleMaps = ko.observable(true);
+        self.invalidZipCode = ko.observable(false);
 
         self.questions = ko.computed(function () {
             return self.currentGroup() ? self.currentGroup().questions : [];
@@ -694,8 +697,12 @@ define([
 
                 if (zoneOption) {
                     self.addOrReplaceAnswer(self.questions()[0].id, zoneOption);
+                    self.invalidZipCode(false);
+                    return;
                 }
             }
+
+            self.invalidZipCode(true);
         };
 
         /**

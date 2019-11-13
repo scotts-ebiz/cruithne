@@ -46,7 +46,10 @@
                         </label>
                     </div>
 
-                    <div class="sp-form-group sp-mb-0">
+                    <div
+                        class="sp-form-group sp-mb-0"
+                        data-bind="css: { 'sp-has-error': quiz.invalidZipCode() }"
+                    >
                         <input
                             class="sp-input sp-w-full"
                             minlength="5"
@@ -60,6 +63,10 @@
                         <label class="sp-form-label">
                             Zip Code
                         </label>
+
+                        <!-- ko if: quiz.invalidZipCode() -->
+                        <div class="sp-form-error">Please enter a valid US zip code.</div>
+                        <!-- /ko -->
                     </div>
                 </div>
             </div>
