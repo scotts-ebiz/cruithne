@@ -692,6 +692,10 @@ define([
 
             self.removeAnswer(self.questions()[0].id);
 
+            if (!zip) {
+                return;
+            }
+
             if (zip.length === 5) {
                 var zoneOption = self.getZone(zip);
 
