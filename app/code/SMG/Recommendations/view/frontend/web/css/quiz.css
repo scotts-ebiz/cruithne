@@ -364,12 +364,32 @@ li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot::before {
   color: rgb(29, 27, 27);
 }
 
+.sp-slider-progress {
+  border-radius: 0.25rem;
+  height: 0.5rem;
+  left: calc(0.5rem - 3px);
+  pointer-events: none;
+  position: absolute;
+  right: calc(0.5rem - 3px);
+}
+
 .sp-slider-hashes {
   height: 1rem;
   left: 0;
   margin: 0;
   padding: 0 calc(0.5rem - 3px);
   right: 0;
+}
+
+.sp-slider-hashes::before {
+  background-color: #d3d3d3;
+  content: ' ';
+  height: 4px;
+  position: absolute;
+  left: .5rem;
+  right:.5rem;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .sp-hash {

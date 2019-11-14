@@ -257,8 +257,8 @@ $colors: (
       margin-right: auto;
     }
 
-    @each $increment in $spacing {
-      @each $key, $value in ("": null, "x": null, "y": null, "t": "top", "b": "bottom", "l": "left", "r": "right") {
+    @each $key, $value in ("": null, "x": null, "y": null, "t": "top", "b": "bottom", "l": "left", "r": "right") {
+      @each $increment in $spacing {
         @if $key == "x" {
           .#{$size}sp-m#{$key}-#{$increment} {
             margin-left: spacing($increment);
