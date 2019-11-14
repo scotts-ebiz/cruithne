@@ -318,6 +318,7 @@ define([
         self.animation = ko.observable({});
         self.usingGoogleMaps = ko.observable(true);
         self.invalidZipCode = ko.observable(false);
+        self.isAnimating = ko.observable(false);
 
         // Animation States for self.transitionToNextState() to iterate over
         self.animationStates = [
@@ -368,6 +369,7 @@ define([
          * Handle moving the content screen down
          */
         self.contentDown = function () {
+            self.isAnimating(true);
             $('.sp-quiz-option').removeClass('sp-quiz-option-animation');
             $('.sp-quiz__question-wrapper').removeClass('sp-quiz__question-up');
             $('.sp-quiz__question-wrapper').addClass('sp-quiz__question-down');
@@ -401,7 +403,6 @@ define([
          * Handle moving the content screen up
          */
         self.contentUp = function () {
-            console.log('content up', $('.sp-quiz__question-wrapper').hasClass('sp-quiz__displaynone'));
 
             $('.sp-quiz-option').addClass('sp-quiz-option-animation');
             $('.sp-quiz__transition-inner').removeClass('sp-quiz__transition-slidedown');
@@ -412,6 +413,7 @@ define([
 
             setTimeout(() => {
                 $('.sp-quiz-option').addClass('sp-quiz-option-fullopacity');
+                self.isAnimating(false);
             }, 1400);
         };
 
@@ -503,6 +505,8 @@ define([
                 ];
             }
 
+            self.isAnimating(true);
+
             self.currentAnimationState++;
             window.requestAnimationFrame(self.step(null, self.currentAnimationState));
             /**
@@ -526,13 +530,12 @@ define([
                 } else if (self.currentAnimationState == 1 && !self.animation().title) {
                     self.previousGroups.push(self.currentGroup());
                     self.setGroup(group);
+
                     window.requestAnimationFrame(self.step(start, self.currentAnimationState));
                 } else {
                     window.requestAnimationFrame(self.step(start, self.currentAnimationState));
                 }
             }, 2000);
-
-            // self.transitionToNextState();
         };
 
 
@@ -719,7 +722,7 @@ define([
                         let key = parseInt(slider.value);
 
                         // @todo this will need updated once we are getting real images back from the payload.
-                        let backgroundSrc = 'https://picsum.photos/id/' + (9 + ( 5 * slider.dataset.sliderid + key )) + '/570/280';
+                        let backgroundSrc = 'https://picsum.phsotos/id/' + (9 + ( 5 * slider.dataset.sliderid + key )) + '/570/280';
                         document.querySelector('#sliderImage img').setAttribute('src', backgroundSrc);
                     });
                 }
