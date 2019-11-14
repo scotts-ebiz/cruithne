@@ -299,7 +299,7 @@ define([
         var self = this;
 
         // Grab question content block for use in finding callback event
-        self.questionContentBlock = document.querySelector('.sp-quiz__content');
+        self.questionContentBlock = document.querySelector('.sp-quiz__question');
 
         self.progressBarCategories = ko.observableArray([
             {label: "Goals"},
@@ -368,10 +368,10 @@ define([
          * Handle moving the content screen down
          */
         self.contentDown = function () {
-            $('.sp-quiz__content').removeClass('sp-quiz__content-up');
-            $('.sp-quiz__content').addClass('sp-quiz__content-down');
+            $('.sp-quiz__question').removeClass('sp-quiz__question-up');
+            $('.sp-quiz__question').addClass('sp-quiz__question-down');
             setTimeout(() => {
-                $('.sp-quiz__content').addClass('sp-quiz__displaynone');
+                $('.sp-quiz__question').addClass('sp-quiz__displaynone');
             }, 700);
         }
 
@@ -379,7 +379,7 @@ define([
          * Handle moving the transition screen up
          */
         self.transitionUp = function () {
-            $('.sp-quiz__content').addClass('sp-quiz__displaynone');
+            $('.sp-quiz__question').addClass('sp-quiz__displaynone');
             $('.sp-quiz__transition-inner').removeClass('sp-quiz__displaynone');
             $('.sp-quiz__transition-wrapper').addClass('sp-quiz__displayblock');
             $('.sp-quiz__transition-inner').addClass('sp-quiz__transition-slideup');
@@ -401,8 +401,8 @@ define([
         self.contentUp = function () {
             $('.sp-quiz__transition-inner').removeClass('sp-quiz__transition-slidedown');
             $('.sp-quiz__transition-inner').removeClass('sp-quiz__displaynone');
-            $('.sp-quiz__content').removeClass('sp-quiz__displaynone');
-            $('.sp-quiz__content').addClass('sp-quiz__content-up');
+            $('.sp-quiz__question').removeClass('sp-quiz__displaynone');
+            $('.sp-quiz__question').addClass('sp-quiz__question-up');
             $('.sp-quiz__transition-wrapper').removeClass('sp-quiz__displayblock');
         };
 
