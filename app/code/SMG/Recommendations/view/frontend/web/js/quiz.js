@@ -313,6 +313,7 @@ define([
         self.map = ko.observable(null);
         self.template = null;
         self.previousGroups = ko.observableArray([]);
+        self.animation = ko.observable({});
         self.usingGoogleMaps = ko.observable(true);
 
         // Animation States for self.transitionToNextState() to iterate over
@@ -388,13 +389,13 @@ define([
             $('.sp-quiz__content').removeClass('sp-quiz__displaynone');
             $('.sp-quiz__content').addClass('sp-quiz__content-up');
             $('.sp-quiz__transition-wrapper').removeClass('sp-quiz__displayblock');
-        }
+        };
 
         self.transitionToNextState = async function() {
             await self.runningAnimationStates.push(window.requestAnimationFrame(() => {
                 self.animationStates[self.currentAnimationState]();
             }));
-        }
+        };
 
         self.animationEvent = function(el) {
             const animations = {
@@ -403,7 +404,7 @@ define([
                 "MozAnimation": "animationend",
                 "WebkitAnimation": "webkitAnimationEnd",
                 "transitionend": "transitionend"
-            }
+            };
 
             for (let t in animations) {
                 if (el && el.style[t] !== undefined) {
@@ -446,6 +447,38 @@ define([
                 return;
             }
 
+            // Get the transition.
+            const animations = self.currentGroup().animationScreens;
+            self.animation({});
+            if (animations.length === 1) {
+                self.animation(animations[0]);
+            } else {
+                // Find the animation based on the answer.
+                for (const animation of animations) {
+                    for (const condition of animation.conditions) {
+                        const value = self.getQuestionAnswer(condition.questionId, true);
+
+                        if (condition.values.includes(value)) {
+                            self.animation(animation);
+                            break;
+                        }
+                    }
+                }
+            }
+
+            if (!self.animation().title) {
+                self.animationStates = [
+                    () => self.contentDown(),
+                    () => self.contentUp()
+                ];
+            } else {
+                self.animationStates = [
+                    () => self.contentDown(),
+                    () => self.transitionUp(),
+                    () => self.transitionDown(),
+                    () => self.contentUp()
+                ];
+            }
 
             let animInterval = setInterval(() => {
                 let start = null;
