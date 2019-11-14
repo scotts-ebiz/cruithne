@@ -447,7 +447,7 @@ define([
         self.loadNextGroup = async group => {
             // No group specified so load the first group.
             if (!group) {
-                self.setGroup(self.template.questionGroups[4]);
+                self.setGroup(self.template.questionGroups[0]);
 
                 return;
             }
@@ -835,6 +835,7 @@ define([
          */
         self.getZone = function (zip) {
             var zones = self.template.zipCodesOptionMappings;
+
             for (var i = 0; i < zones.length; i++) {
                 for (prefix of zones[i].zipCodePrefixes) {
                     if ( prefix === zip.substr(0, 3) ) {
@@ -860,7 +861,7 @@ define([
 
             self.removeAnswer(self.questions()[0].id);
 
-            if (!zip) {
+            if (!zip || zip.length < 5) {
                 return;
             }
 
@@ -908,7 +909,11 @@ define([
 
        self.id = data.id;
        self.questionGroups = data.questionGroups;
-       self.zipCodesOptionMappings = data.zipCodesOptionMappings;
+
+       // Remove the Alaska and Hawaii zones.
+       self.zipCodesOptionMappings = data.zipCodesOptionMappings.filter((zone) => {
+           return !['eb4c247b-9100-40b0-95fd-bd319dd4393f', 'a028c078-f881-4019-95c8-f4b209ba00bc'].includes(zone.optionId);
+       });
     }
 
     function setSliderTrack(el) {
