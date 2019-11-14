@@ -299,7 +299,7 @@ define([
         var self = this;
 
         // Grab question content block for use in finding callback event
-        self.questionContentBlock = document.querySelector('.sp-quiz__question');
+        self.questionContentBlock = document.querySelector('.sp-quiz__question-wrapper');
 
         self.progressBarCategories = ko.observableArray([
             {label: "Goals"},
@@ -368,10 +368,11 @@ define([
          * Handle moving the content screen down
          */
         self.contentDown = function () {
-            $('.sp-quiz__question').removeClass('sp-quiz__question-up');
-            $('.sp-quiz__question').addClass('sp-quiz__question-down');
+            $('.sp-quiz-option').removeClass('sp-quiz-option-animation');
+            $('.sp-quiz__question-wrapper').removeClass('sp-quiz__question-up');
+            $('.sp-quiz__question-wrapper').addClass('sp-quiz__question-down');
             setTimeout(() => {
-                $('.sp-quiz__question').addClass('sp-quiz__displaynone');
+                $('.sp-quiz__question-wrapper').addClass('sp-quiz__displaynone');
             }, 700);
         }
 
@@ -379,7 +380,8 @@ define([
          * Handle moving the transition screen up
          */
         self.transitionUp = function () {
-            $('.sp-quiz__question').addClass('sp-quiz__displaynone');
+            $('.sp-quiz-option').removeClass('sp-quiz-option-fullopacity');
+            $('.sp-quiz__question-wrapper').addClass('sp-quiz__displaynone');
             $('.sp-quiz__transition-inner').removeClass('sp-quiz__displaynone');
             $('.sp-quiz__transition-wrapper').addClass('sp-quiz__displayblock');
             $('.sp-quiz__transition-inner').addClass('sp-quiz__transition-slideup');
@@ -399,11 +401,18 @@ define([
          * Handle moving the content screen up
          */
         self.contentUp = function () {
+            console.log('content up', $('.sp-quiz__question-wrapper').hasClass('sp-quiz__displaynone'));
+
+            $('.sp-quiz-option').addClass('sp-quiz-option-animation');
             $('.sp-quiz__transition-inner').removeClass('sp-quiz__transition-slidedown');
             $('.sp-quiz__transition-inner').removeClass('sp-quiz__displaynone');
-            $('.sp-quiz__question').removeClass('sp-quiz__displaynone');
-            $('.sp-quiz__question').addClass('sp-quiz__question-up');
+            $('.sp-quiz__question-wrapper').removeClass('sp-quiz__displaynone');
+            $('.sp-quiz__question-wrapper').addClass('sp-quiz__question-up');
             $('.sp-quiz__transition-wrapper').removeClass('sp-quiz__displayblock');
+
+            setTimeout(() => {
+                $('.sp-quiz-option').addClass('sp-quiz-option-fullopacity');
+            }, 1400);
         };
 
         self.transitionToNextState = function() {
@@ -427,14 +436,12 @@ define([
          * Step function to run through the animation states
          */
         self.step = function (start, currentAnimationState) {
-            return function (timestamp) {
-                if (!start) start = timestamp;
-                let progress = timestamp - start;
-
-                if (self.currentAnimationState < 5) {
+            console.log('inside step', currentAnimationState);
+            return function () {
+                if (currentAnimationState <= 5) {
                     setTimeout(() => {
                         window.requestAnimationFrame(() => {
-                            self.animationStates[currentAnimationState]();
+                            self.animationStates[currentAnimationState - 1]();
                         });
                     }, 1000);
                 }
@@ -450,6 +457,10 @@ define([
                 return;
             }
 
+            self.currentAnimationState = 0;
+
+            $('.sp-quiz-option').addClass('sp-quiz-option-fullopacity');
+
             // Get the transition.
             const animations = self.currentGroup().animationScreens;
             self.animation({});
@@ -461,6 +472,7 @@ define([
                     for (const condition of animation.conditions) {
                         const value = self.getQuestionAnswer(condition.questionId, true);
 
+                        //TODO: currently firing every time, left in for demo, needs fixed
                         if (condition.values.includes(value)) {
                             self.animation(animation);
                             break;
@@ -469,10 +481,16 @@ define([
                 }
             }
 
+            // TODO: hardcoded for incorrect mock data
+            if (!self.animation().title) {
+                self.animation(animations[0]);
+            }
+
             // If there isn't a transition screen, don't animate it.
             if (!self.animation().title) {
                 self.animationStates = [
                     () => self.contentDown(),
+                    () => self.contentUp(),
                     () => self.contentUp()
                 ];
             } else {
@@ -485,27 +503,36 @@ define([
                 ];
             }
 
+            self.currentAnimationState++;
+            window.requestAnimationFrame(self.step(null, self.currentAnimationState));
             /**
              * Set an interval for the animation states.
              */
             let animInterval = setInterval(() => {
                 self.currentAnimationState++;
+
                 let start = null;
 
-                if (self.currentAnimationState === 5) {
+                if (self.currentAnimationState >= 5) {
                     self.currentAnimationState = 0;
                     clearInterval(animInterval);
-                } else if (self.currentAnimationState === 3) {
+                } else if (self.currentAnimationState === 4) {
                     self.previousGroups.push(self.currentGroup());
                     self.setGroup(group);
 
+                    window.requestAnimationFrame(self.step(start, self.currentAnimationState));
+
+                    clearInterval(animInterval);
+                } else if (self.currentAnimationState == 1 && !self.animation().title) {
+                    self.previousGroups.push(self.currentGroup());
+                    self.setGroup(group);
                     window.requestAnimationFrame(self.step(start, self.currentAnimationState));
                 } else {
                     window.requestAnimationFrame(self.step(start, self.currentAnimationState));
                 }
             }, 2000);
 
-            self.transitionToNextState();
+            // self.transitionToNextState();
         };
 
 
