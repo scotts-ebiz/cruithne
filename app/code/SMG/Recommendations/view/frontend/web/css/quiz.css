@@ -439,11 +439,11 @@ li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot::before {
 }
 
 .sp-quiz__transition-slideup {
-  animation: transition-slideup 1s ease-in-out;
+  animation: transition-slideup 0.5s ease-in-out;
 }
 
 .sp-quiz__transition-slidedown {
-  animation: transition-slidedown 1s ease-in-out;
+  animation: transition-slidedown 0.5s ease-in-out;
 }
 
 .sp-quiz__content-down {

@@ -369,7 +369,7 @@ define([
             $('.sp-quiz__content').addClass('sp-quiz__content-down');
             setTimeout(() => {
                 $('.sp-quiz__content').addClass('sp-quiz__displaynone');
-            }, 1000);
+            }, 700);
         }
 
         /**
@@ -389,7 +389,7 @@ define([
                 $('.sp-quiz__transition-inner').addClass('sp-quiz__transition-slidedown');
             setTimeout(() => {
                 $('.sp-quiz__transition-inner').addClass('sp-quiz__displaynone');
-            }, 1000);
+            }, 400);
         }
 
         /**
@@ -403,29 +403,11 @@ define([
             $('.sp-quiz__transition-wrapper').removeClass('sp-quiz__displayblock');
         };
 
-        self.transitionToNextState = async function() {
-            await self.runningAnimationStates.push(window.requestAnimationFrame(() => {
+        self.transitionToNextState = function() {
+            self.runningAnimationStates.push(window.requestAnimationFrame(() => {
                 self.animationStates[self.currentAnimationState]();
             }));
         };
-
-        // self.animationEvent = function(el) {
-        //     const animations = {
-        //         "animation": "animationend",
-        //         "OAnimation": "oAnimationEnd",
-        //         "MozAnimation": "animationend",
-        //         "WebkitAnimation": "webkitAnimationEnd",
-        //         "transitionend": "transitionend"
-        //     };
-
-        //     for (let t in animations) {
-        //         if (el && el.style[t] !== undefined) {
-        //             return animations[t];
-        //         } else {
-        //             return 'transitionend';
-        //         }
-        //     }
-        // }
 
         /**
          * Clear animationFrame's stack of previously run animationStates
@@ -456,7 +438,8 @@ define([
             }
         }
 
-        self.loadNextGroup = function (group) {
+
+        self.loadNextGroup = async group => {
             // No group specified so load the first group.
             if (!group) {
                 self.setGroup(self.template.questionGroups[0]);
@@ -509,17 +492,17 @@ define([
                 if (self.currentAnimationState === 5) {
                     self.currentAnimationState = 0;
                     clearInterval(animInterval);
+                } else if (self.currentAnimationState === 3) {
+                    self.previousGroups.push(self.currentGroup());
+                    self.setGroup(group);
+
+                    window.requestAnimationFrame(self.step(start, self.currentAnimationState));
                 } else {
                     window.requestAnimationFrame(self.step(start, self.currentAnimationState));
                 }
             }, 2000);
 
-
-            self.previousGroups.push(self.currentGroup());
-
             self.transitionToNextState();
-
-            self.setGroup(group);
         };
 
 
