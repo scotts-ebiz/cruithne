@@ -451,6 +451,12 @@
       }
     }
 }
+
+.empty-cart-page.checkout-cart-index {
+    .actions {
+        display: none;
+    }
+}
 // Cart Page - End //
 
 
