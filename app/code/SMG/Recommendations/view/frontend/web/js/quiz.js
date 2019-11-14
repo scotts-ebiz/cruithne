@@ -68,6 +68,8 @@ define([
                     self.map.setCenter(place.geometry.location);
                     self.map.setZoom(22);
                 }
+
+                self.getLocation(place.geometry.location);
             });
 
             // If an address has already been set, repopulate it.
@@ -134,15 +136,7 @@ define([
 
             function adjustPolygon(index) {
                 var point = path.getAt(index);
-                if (point) {
-                    self.getLocation({ lat: point.lat(), lng: point.lng() });
-                }
                 self.calculateLawnSize();
-            }
-
-            // Attempt to get the zip code from a point on the polygon.
-            if (point) {
-                self.getLocation({ lat: point.lat(), lng: point.lng() });
             }
 
             // Can use the following events if we allow the user to edit.
@@ -264,12 +258,11 @@ define([
                 };
                 self.map.setCenter(pos);
                 self.map.setZoom(18);
-                self.getLocation(pos);
             }, function() {
-                self.getLocation();
+                // Could not get location.
             });
         } else {
-            self.getLocation();
+            // Browser does not support geolocation.
         }
     }
 
@@ -454,7 +447,7 @@ define([
         self.loadNextGroup = async group => {
             // No group specified so load the first group.
             if (!group) {
-                self.setGroup(self.template.questionGroups[0]);
+                self.setGroup(self.template.questionGroups[4]);
 
                 return;
             }
