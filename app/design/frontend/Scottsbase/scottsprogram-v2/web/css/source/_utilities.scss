@@ -84,6 +84,11 @@ $colors: (
   border-radius: $border-radius;
 }
 
+// Border Radius
+.sp-rounded-full {
+  border-radius: 100%;
+}
+
 // Display
 @each $size in $breakpoints {
   @include breakpoint($size) {
@@ -252,8 +257,8 @@ $colors: (
       margin-right: auto;
     }
 
-    @each $increment in $spacing {
-      @each $key, $value in ("": null, "x": null, "y": null, "t": "top", "b": "bottom", "l": "left", "r": "right") {
+    @each $key, $value in ("": null, "x": null, "y": null, "t": "top", "b": "bottom", "l": "left", "r": "right") {
+      @each $increment in $spacing {
         @if $key == "x" {
           .#{$size}sp-m#{$key}-#{$increment} {
             margin-left: spacing($increment);
@@ -434,6 +439,14 @@ $colors: (
 
     .#{$size}sp-w-1\/12 {
       width: 1/12 * 100%;
+    }
+
+    .#{$size}sp-w-5\/12 {
+      width: 5/12 * 100%;
+    }
+
+    .#{$size}sp-w-7\/12 {
+      width: 7/12 * 100%;
     }
 
     .#{$size}sp-w-11\/12 {

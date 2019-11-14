@@ -45,7 +45,9 @@ define([
             self.autocomplete = new google.maps.places.Autocomplete(
                 document.getElementById('address-autocomplete'), { types: ['geocode'] }
             );
+            self.autocomplete.setComponentRestrictions({ 'country': 'us' });
             self.autocomplete.setFields(['geometry']);
+            self.autocomplete.setTypes(['address']);
             self.autocomplete.addListener('place_changed', function () {
                 var place = self.autocomplete.getPlace();
 
@@ -315,6 +317,7 @@ define([
         self.previousGroups = ko.observableArray([]);
         self.animation = ko.observable({});
         self.usingGoogleMaps = ko.observable(true);
+        self.invalidZipCode = ko.observable(false);
 
         // Animation States for self.transitionToNextState() to iterate over
         self.animationStates = [
@@ -531,7 +534,7 @@ define([
             for (question of group.questions) {
                 // Check if the questions are sliders and set a base response.
                 if (+question.questionType === 3) {
-                    self.addAnswerIfEmpty(question.id, question.options[0], 1);
+                    self.addAnswerIfEmpty(question.id, question.options[0], 3);
                 }
 
                 // Check if the questions are for the google maps entry and initialize the map.
@@ -691,12 +694,6 @@ define([
                         // @todo this will need updated once we are getting real images back from the payload.
                         let backgroundSrc = 'https://picsum.photos/id/' + (9 + ( 5 * slider.dataset.sliderid + key )) + '/570/280';
                         document.querySelector('#sliderImage img').setAttribute('src', backgroundSrc);
-
-                        let labels = Array.prototype.slice.call(document.querySelectorAll(scontId + " span"));
-                        for (var i = 0; i < labels.length; i++) {
-                            labels[i].classList.add('sp-hide');
-                        }
-                        labels[key-1].classList.remove('sp-hide');
                     });
                 }
             }
@@ -840,13 +837,21 @@ define([
 
             self.removeAnswer(self.questions()[0].id);
 
+            if (!zip) {
+                return;
+            }
+
             if (zip.length === 5) {
                 var zoneOption = self.getZone(zip);
 
                 if (zoneOption) {
                     self.addOrReplaceAnswer(self.questions()[0].id, zoneOption);
+                    self.invalidZipCode(false);
+                    return;
                 }
             }
+
+            self.invalidZipCode(true);
         };
 
         /**
@@ -883,6 +888,14 @@ define([
        self.zipCodesOptionMappings = data.zipCodesOptionMappings;
     }
 
+    function setSliderTrack(el) {
+        var value = el.value;
+        var percentage = (value - 1) * 25;
+        var parent = el.parentNode;
+        var progress = parent.querySelector('.sp-slider-progress');
+        progress.style.background = 'linear-gradient(to right, #1d5632 0%, #1d5632 ' + percentage + '%, transparent ' + percentage + '%, transparent 100%)';
+    }
+
     return Component.extend({
         questionGroup: ko.observable(null),
         questions: ko.observable({}),
@@ -905,7 +918,7 @@ define([
                 '/quiz/template/template',
                 {
                     dataType: 'json',
-                    method: 'get',
+                    method: 'post',
                     success: function (data) {
                         if(data.error_message) {
                             alert( 'Error getting quiz data: ' + data.error_message + '. Please try again.');
@@ -916,6 +929,14 @@ define([
                     }.bind(self),
                 },
             );
+        },
+
+        initializeSlider(el) {
+            setSliderTrack(el);
+        },
+
+        updateSlider(data, event) {
+            setSliderTrack(event.target);
         },
 
         /**

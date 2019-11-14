@@ -218,64 +218,46 @@ input[type="email"].sp-textarea {
   margin-top: 0.25rem;
 }
 
+@mixin rangeThumb {
+  appearance: none;
+  background: $green-1;
+  border: 0 !important;
+  border-radius: 50%;
+  height: 1rem;
+  cursor: pointer;
+  width: 1rem;
+}
+
 .sp-slider {
   -webkit-appearance: none;
-  background-color: $gray-2;
-  border-radius: 0.5rem;
-  height: 0.25rem;
-  margin: 0;
-  outline: none;
-  padding: 0;
+  background-color: transparent;
   width: 100%;
 
-  &:focus {
-    box-shadow: none !important;
-  }
-
-  &::-moz-range-progress {
-    background-color: $green-1;
-    border-bottom: 2px solid $green-1;
-    border-radius: 4px;
-    border-top: 2px solid $green-1;
-    margin: 0 0.5rem;
-  }
-
-  &::-webkit-slider-runnable-track {
-    padding: 0 calc(0.5rem - 3px);
-  }
-
-  &::-moz-range-track {
-    background-color: $gray-2;
-    margin: 0 0.5rem;
-    padding: 0 calc(0.5rem - 3px);
-  }
-
-  &::-ms-fill-lower {
-    background-color: $green-1;
-    border-bottom: 2px solid $green-1;
-    border-top: 2px solid $green-1;
-  }
-
-  &::-ms-fill-upper {
-    background-color: $gray-2;
-  }
-
+  // Thumb
   &::-webkit-slider-thumb {
-    appearance: none;
-    background: $green-1;
-    border-radius: 50%;
-    height: 1rem;
-    cursor: pointer;
-    width: 1rem;
+    -webkit-appearance: none; // needed again for Chrome & Safari
+    @include rangeThumb;
   }
 
   &::-moz-range-thumb {
-    background: $green-1;
-    border: 0;
-    border-radius: 50%;
+    @include rangeThumb;
+  }
+
+  &::-ms-thumb {
+    @include rangeThumb;
+  }
+
+  &:focus { // override outline/background on focus
+    background: none;
+    outline: none;
+  }
+
+  &::-ms-track { // A little somethin' somethin' for IE
+    width: 100%;
     cursor: pointer;
-    height: 1rem;
-    width: 1rem;
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
   }
 }
 
