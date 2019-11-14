@@ -296,8 +296,11 @@ define([
     function Quiz(data) {
         var self = this;
 
+        // Grab question content block for use in finding callback event
+        self.questionContentBlock = document.querySelector('.sp-quiz__content');
+
         self.progressBarCategories = ko.observableArray([
-            {label: "Goals"}, 
+            {label: "Goals"},
             {label: "Routine"},
             {label: "Tools"},
             {label: "Condition"},
@@ -311,6 +314,20 @@ define([
         self.template = null;
         self.previousGroups = ko.observableArray([]);
         self.usingGoogleMaps = ko.observable(true);
+
+        // Animation States for self.transitionToNextState() to iterate over
+        self.animationStates = [
+            () => self.contentDown(),
+            () => self.transitionUp(),
+            () => self.transitionDown(),
+            () => self.contentUp()
+        ];
+
+        // Track current animation state
+        self.currentAnimationState = 0;
+
+        // Store id's of all running animations to cancel later on
+        self.runningAnimationStates = [];
 
         self.questions = ko.computed(function () {
             return self.currentGroup() ? self.currentGroup().questions : [];
@@ -343,6 +360,84 @@ define([
             self.loadNextGroup();
         };
 
+        self.contentDown = function () {
+            $('.sp-quiz__content').removeClass('sp-quiz__content-up');
+            $('.sp-quiz__content').addClass('sp-quiz__content-down');
+            setTimeout(() => {
+                $('.sp-quiz__content').addClass('sp-quiz__displaynone');
+            }, 1000);
+        }
+
+        self.transitionUp = function () {
+            $('.sp-quiz__content').addClass('sp-quiz__displaynone');
+            $('.sp-quiz__transition-inner').removeClass('sp-quiz__displaynone');
+            $('.sp-quiz__transition-wrapper').addClass('sp-quiz__displayblock');
+            $('.sp-quiz__transition-inner').addClass('sp-quiz__transition-slideup');
+        }
+
+        self.transitionDown = function () {
+                $('.sp-quiz__transition-inner').addClass('sp-quiz__transition-slidedown');
+            setTimeout(() => {
+                $('.sp-quiz__transition-inner').addClass('sp-quiz__displaynone');
+            }, 1000);
+        }
+
+        self.contentUp = function () {
+            $('.sp-quiz__transition-inner').removeClass('sp-quiz__transition-slidedown');
+            $('.sp-quiz__transition-inner').removeClass('sp-quiz__displaynone');
+            $('.sp-quiz__content').removeClass('sp-quiz__displaynone');
+            $('.sp-quiz__content').addClass('sp-quiz__content-up');
+            $('.sp-quiz__transition-wrapper').removeClass('sp-quiz__displayblock');
+        }
+
+        self.transitionToNextState = async function() {
+            await self.runningAnimationStates.push(window.requestAnimationFrame(() => {
+                self.animationStates[self.currentAnimationState]();
+            }));
+        }
+
+        self.animationEvent = function(el) {
+            const animations = {
+                "animation": "animationend",
+                "OAnimation": "oAnimationEnd",
+                "MozAnimation": "animationend",
+                "WebkitAnimation": "webkitAnimationEnd",
+                "transitionend": "transitionend"
+            }
+
+            for (let t in animations) {
+                if (el && el.style[t] !== undefined) {
+                    return animations[t];
+                } else {
+                    return 'transitionend';
+                }
+            }
+        }
+
+        self.resetAnimationState = function () {
+            self.currentAnimationState = 0;
+            console.log('current animation state reset');
+
+            self.runningAnimationStates.forEach(animationEventID => {
+                window.cancelAnimationFrame(+animationEventID);
+            });
+        }
+
+        self.step = function (start, currentAnimationState) {
+            return function (timestamp) {
+                if (!start) start = timestamp;
+                let progress = timestamp - start;
+
+                if (self.currentAnimationState < 5) {
+                    setTimeout(() => {
+                        window.requestAnimationFrame(() => {
+                            self.animationStates[currentAnimationState]();
+                        });
+                    }, 1000);
+                }
+            }
+        }
+
         self.loadNextGroup = function (group) {
             // No group specified so load the first group.
             if (!group) {
@@ -351,10 +446,97 @@ define([
                 return;
             }
 
+
+            let animInterval = setInterval(() => {
+                let start = null;
+
+                self.currentAnimationState++;
+                if (self.currentAnimationState == 5) {
+                    self.currentAnimationState = 0;
+                    clearInterval(animInterval);
+                } else {
+                    window.requestAnimationFrame(self.step(start, self.currentAnimationState));
+                }
+            }, 2000);
+
+
             self.previousGroups.push(self.currentGroup());
+
+            // const transitionBlock = document.querySelector('.sp-quiz__transition-inner');
+
+            // $('.sp-quiz').on(`${self.animationEvent(self.questionContentBlock) || self.animationEvent(transitionBlock)}`, '.sp-quiz__content, .sp-quiz__transition-inner', () => {
+            //     self.currentAnimationState++;
+
+            //     if (self.currentAnimationState == 1) {
+            //         // Clear previous animation state's leftover classes
+            //         $('.sp-quiz__content').addClass('sp-quiz__displaynone');
+            //         $('.sp-quiz__transition-inner').removeClass('sp-quiz__displaynone');
+            //         $('.sp-quiz__transition-inner').removeClass('sp-quiz__transition-slidedown');
+
+            //         self.transitionToNextState();
+            //     } else if (self.currentAnimationState == 2) {
+            //         // Clear previous animation state's leftover classes
+            //         $('.sp-quiz__content').removeClass('sp-quiz__content-down');
+
+            //         self.transitionToNextState();
+            //     } else if (self.currentAnimationState == 3) {
+            //         // Clear previous animation state's leftover classes
+            //         $('.sp-quiz__transition-inner').removeClass('sp-quiz__transition-slideup');
+            //         $('.sp-quiz__transition-inner').addClass('sp-quiz__displaynone');
+            //         $('.sp-quiz__content').removeClass('sp-quiz__content-down');
+
+            //         self.transitionToNextState();
+            //     } else if (self.currentAnimationState == 4) {
+            //         // Reset currentAnimationState to 0 for next loop
+            //         self.transitionToNextState();
+            //     }
+            // });
+
+            // $('.sp-quiz__content').one(self.animationEvent(self.questionContentBlock), () => {
+            //     self.currentAnimationState++;
+            //     // self.sleep(1000);
+            //     if (self.currentAnimationState == 1) {
+
+            //         $('.sp-quiz__content').addClass('sp-quiz__displaynone');
+            //         $('.sp-quiz__transition-inner').removeClass('sp-quiz__displaynone');
+            //         // setTimeout(() => {
+            //         self.transitionToNextState();
+            //         // }, 300);
+            //     } else if (self.currentAnimationState >= 4) {
+            //         self.resetAnimationState();
+            //     }
+            // });
+
+            // $('.sp-quiz__transition-inner').on(self.animationEvent(transitionBlock), () => {
+            //     self.currentAnimationState++;
+
+            //      if (self.currentAnimationState == 2) {
+            //         $('.sp-quiz__content').removeClass('sp-quiz__content-down');
+
+            //         // setTimeout(() => {
+            //         console.log('currentAnimState == 2', self.currentAnimationState);
+            //         self.transitionToNextState();
+            //         // }, 300);
+            //     } else if (self.currentAnimationState == 3) {
+            //          console.log('currentAnimState == 3, removing slideup, and content-down, adding transition displaynone');
+            //         $('.sp-quiz__transition-inner').removeClass('sp-quiz__transition-slideup');
+            //         $('.sp-quiz__transition-inner').addClass('sp-quiz__displaynone');
+            //         $('.sp-quiz__content').removeClass('sp-quiz__content-down');
+
+            //         // setTimeout(() => {
+            //             self.transitionToNextState()
+            //         // }, 300);
+            //     } else if (self.currentAnimationState >= 4 || self.currentAnimationState <= 0) {
+            //         self.resetAnimationState()
+            //     }
+            // });
+
+            self.transitionToNextState();
 
             self.setGroup(group);
         };
+
+
 
         self.loadPreviousGroup = function () {
             if (!self.previousGroups().length) {
@@ -611,7 +793,7 @@ define([
             if (transitions.length === 1) {
                 // There is only one transition, so pull that questionGroup.
                 var id = transitions[0].destinationQuestionGroupId;
-                
+
                 // Move progress bar to next category when the next question appears on 'Next' button click
                 self.loadNextGroup(self.findQuestionGroup(id));
                 return;

@@ -1,6 +1,7 @@
 .sp-quiz__content {
   overflow: auto;
   order: 1;
+  padding-bottom: 150px;
 }
 
 .sp-quiz__banner {
@@ -286,6 +287,9 @@ li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot::before {
 
   .sp-quiz__progress-buttons {
     order: 3;
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
   }
 }
 
@@ -398,5 +402,113 @@ li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot::before {
 
   .sp-quiz--has-address .sp-quiz-map--step-2 {
     border: 6px solid #1d5632;
+  }
+}
+
+.sp-quiz__transition-wrapper {
+  position: absolute;
+  left: 0;
+  display: none;
+  top: 0;
+  height: 100%;
+  width: 100vw;
+}
+
+.sp-quiz__displayblock {
+  display: block;
+}
+
+.sp-quiz__displaynone {
+  display: none;
+}
+
+.sp-quiz__transition {
+  position: relative;
+  height: 100%;
+  width: 100%;
+  display: block;
+}
+
+.sp-quiz__transition-inner {
+  text-align: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -70%);
+  width: 80%;
+}
+
+.sp-quiz__transition-slideup {
+  animation: transition-slideup 1s ease-in-out;
+}
+
+.sp-quiz__transition-slidedown {
+  animation: transition-slidedown 1s ease-in-out;
+}
+
+.sp-quiz__content-down {
+  animation: question-slidedown 1s ease-in-out;
+}
+
+.sp-quiz__content-up {
+  animation: question-slideup 1s ease-in-out;
+}
+
+.sp-quiz__transition h1 {
+  font-weight: bold;
+  font-size: 48px;
+}
+
+@keyframes transition-slideup {
+  0% {
+    opacity: 0;
+    transform: translate(-50%, 50%);
+  }
+
+  100% {
+    opacity: 1;
+    transform: translate(-50%, -70%);
+  }
+}
+
+@keyframes transition-slidedown {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -60%);
+  }
+
+  100% {
+    opacity: 0;
+    transform: translate(-50%, 50%);
+  }
+}
+
+@keyframes question-slidedown {
+  0% {
+    display: block;
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    display: none;
+    transform: translateY(50%);
+    opacity: 0;
+  }
+}
+
+@keyframes question-slideup {
+  0% {
+    display: none;
+    transform: translateY(50%);
+    opacity: 0;
+
+  }
+  50% {
+    opacity: 0.5;
+  }
+  100% {
+    display: block;
+    transform: none;
   }
 }

@@ -1,0 +1,13 @@
+<!-- ko if: quiz && quiz.currentGroup()-->
+<div class="sp-quiz__transition">
+  <div class="sp-quiz__transition-inner"
+    data-bind="foreach: { data: quiz.currentGroup().animationScreens, as: 'animation', noChildContext: true }">
+    <div class="sp-quiz__transition-textwrap">
+      <h1 class="sp-quiz__transition-title" data-bind="text: animation.title">
+      </h1>
+      <p class="sp-quiz__transition-subtitle" data-bind="text: animation.subtitle">
+    </div>
+    </p>
+  </div>
+</div>
+<!-- /ko -->
