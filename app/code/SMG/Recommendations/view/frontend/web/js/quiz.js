@@ -375,7 +375,7 @@ define([
             $('.sp-quiz__question-wrapper').addClass('sp-quiz__question-down');
             setTimeout(() => {
                 $('.sp-quiz__question-wrapper').addClass('sp-quiz__displaynone');
-            }, 700);
+            }, 250);
         }
 
         /**
@@ -396,7 +396,7 @@ define([
                 $('.sp-quiz__transition-inner').addClass('sp-quiz__transition-slidedown');
             setTimeout(() => {
                 $('.sp-quiz__transition-inner').addClass('sp-quiz__displaynone');
-            }, 400);
+            }, 250);
         }
 
         /**
@@ -414,7 +414,7 @@ define([
             setTimeout(() => {
                 $('.sp-quiz-option').addClass('sp-quiz-option-fullopacity');
                 self.isAnimating(false);
-            }, 1400);
+            }, 640);
         };
 
         self.transitionToNextState = function() {
@@ -438,7 +438,6 @@ define([
          * Step function to run through the animation states
          */
         self.step = function (start, currentAnimationState) {
-            console.log('inside step', currentAnimationState);
             return function () {
                 if (currentAnimationState <= 5) {
                     setTimeout(() => {
