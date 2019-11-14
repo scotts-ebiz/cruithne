@@ -1,7 +1,8 @@
 Here's the first change.
 And here's change two.
 
-test change for deploy`
+test change for deploy
+another deploy`
 
 Should not see this in master!
 
