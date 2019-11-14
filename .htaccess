@@ -1,12 +1,3 @@
-# Set env-var robots flag for non-prod and !homepage scottspgm requests
-SetEnvIf HTTP_HOST ^(dev|test|staging|cruithne)\. [NC] ROBOTS_NOINDEX y
-<If "%{REQUEST_URI} =~ m#!^/??#">
-    SetEnvIf HTTP_HOST scottsprogram\.com$ [NC] ROBOTS_NOINDEX y
-    SetEnvIf HTTP_HOST ^program\.scotts\.com$ [NC] ROBOTS_NOINDEX y
-</If>
-# Now send X-Robots NOINDEX header if above env-variable is set
-Header set X-Robots-Tag "noindex" ENV=ROBOTS_NOINDEX
-
 ############################################
 ## hide directory listings
 
