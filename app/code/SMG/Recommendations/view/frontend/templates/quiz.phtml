@@ -5,8 +5,7 @@
             class="sp-quiz__content sp-flex-auto sp-py-12"
             data-bind="if: !quiz.complete(), css: { 'sp-quiz--has-address': quiz.questions().length && quiz.questions()[0].questionType === 5 && quiz.map() && quiz.map().address() }"
         >
-            <div class="sp-quiz__question-wrapper">
-            <!-- <div class="sp-quiz__content-container"> -->
+            <div class="sp-quiz__question-wrapper sp-h-full">
                 <!-- ko template: "SMG_Recommendations/questiontypes/1-single-select" --><!-- /ko -->
                 <!-- ko template: "SMG_Recommendations/questiontypes/2-multi-select" --><!-- /ko -->
                 <!-- ko template: "SMG_Recommendations/questiontypes/3-slider" --><!-- /ko -->
@@ -16,7 +15,6 @@
                 <!-- ko template: "SMG_Recommendations/questiontypes/6-area" --><!-- /ko -->
                 <!-- ko template: "SMG_Recommendations/questiontypes/7-single-select-with-images" --><!-- /ko -->
                 <!-- ko template: "SMG_Recommendations/questiontypes/8-multi-select-with-images" --><!-- /ko -->
-            <!-- </div> -->
             </div>
             <div class="sp-quiz__transition-wrapper">
                 <!-- ko template: "SMG_Recommendations/transition" --><!-- /ko -->
