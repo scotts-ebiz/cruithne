@@ -361,6 +361,9 @@ define([
             self.loadNextGroup();
         };
 
+        /**
+         * Handle moving the content screen down
+         */
         self.contentDown = function () {
             $('.sp-quiz__content').removeClass('sp-quiz__content-up');
             $('.sp-quiz__content').addClass('sp-quiz__content-down');
@@ -369,6 +372,9 @@ define([
             }, 1000);
         }
 
+        /**
+         * Handle moving the transition screen up
+         */
         self.transitionUp = function () {
             $('.sp-quiz__content').addClass('sp-quiz__displaynone');
             $('.sp-quiz__transition-inner').removeClass('sp-quiz__displaynone');
@@ -376,6 +382,9 @@ define([
             $('.sp-quiz__transition-inner').addClass('sp-quiz__transition-slideup');
         }
 
+        /**
+         * Handle moving the transition screen down
+         */
         self.transitionDown = function () {
                 $('.sp-quiz__transition-inner').addClass('sp-quiz__transition-slidedown');
             setTimeout(() => {
@@ -383,6 +392,9 @@ define([
             }, 1000);
         }
 
+        /**
+         * Handle moving the content screen up
+         */
         self.contentUp = function () {
             $('.sp-quiz__transition-inner').removeClass('sp-quiz__transition-slidedown');
             $('.sp-quiz__transition-inner').removeClass('sp-quiz__displaynone');
@@ -397,33 +409,38 @@ define([
             }));
         };
 
-        self.animationEvent = function(el) {
-            const animations = {
-                "animation": "animationend",
-                "OAnimation": "oAnimationEnd",
-                "MozAnimation": "animationend",
-                "WebkitAnimation": "webkitAnimationEnd",
-                "transitionend": "transitionend"
-            };
+        // self.animationEvent = function(el) {
+        //     const animations = {
+        //         "animation": "animationend",
+        //         "OAnimation": "oAnimationEnd",
+        //         "MozAnimation": "animationend",
+        //         "WebkitAnimation": "webkitAnimationEnd",
+        //         "transitionend": "transitionend"
+        //     };
 
-            for (let t in animations) {
-                if (el && el.style[t] !== undefined) {
-                    return animations[t];
-                } else {
-                    return 'transitionend';
-                }
-            }
-        }
+        //     for (let t in animations) {
+        //         if (el && el.style[t] !== undefined) {
+        //             return animations[t];
+        //         } else {
+        //             return 'transitionend';
+        //         }
+        //     }
+        // }
 
+        /**
+         * Clear animationFrame's stack of previously run animationStates
+         */
         self.resetAnimationState = function () {
             self.currentAnimationState = 0;
-            console.log('current animation state reset');
 
             self.runningAnimationStates.forEach(animationEventID => {
                 window.cancelAnimationFrame(+animationEventID);
             });
         }
 
+        /**
+         * Step function to run through the animation states
+         */
         self.step = function (start, currentAnimationState) {
             return function (timestamp) {
                 if (!start) start = timestamp;
@@ -466,12 +483,14 @@ define([
                 }
             }
 
+            // If there isn't a transition screen, don't animate it.
             if (!self.animation().title) {
                 self.animationStates = [
                     () => self.contentDown(),
                     () => self.contentUp()
                 ];
             } else {
+                // Reset animation states to default values
                 self.animationStates = [
                     () => self.contentDown(),
                     () => self.transitionUp(),
@@ -480,11 +499,14 @@ define([
                 ];
             }
 
+            /**
+             * Set an interval for the animation states.
+             */
             let animInterval = setInterval(() => {
+                self.currentAnimationState++;
                 let start = null;
 
-                self.currentAnimationState++;
-                if (self.currentAnimationState == 5) {
+                if (self.currentAnimationState === 5) {
                     self.currentAnimationState = 0;
                     clearInterval(animInterval);
                 } else {
@@ -494,75 +516,6 @@ define([
 
 
             self.previousGroups.push(self.currentGroup());
-
-            // const transitionBlock = document.querySelector('.sp-quiz__transition-inner');
-
-            // $('.sp-quiz').on(`${self.animationEvent(self.questionContentBlock) || self.animationEvent(transitionBlock)}`, '.sp-quiz__content, .sp-quiz__transition-inner', () => {
-            //     self.currentAnimationState++;
-
-            //     if (self.currentAnimationState == 1) {
-            //         // Clear previous animation state's leftover classes
-            //         $('.sp-quiz__content').addClass('sp-quiz__displaynone');
-            //         $('.sp-quiz__transition-inner').removeClass('sp-quiz__displaynone');
-            //         $('.sp-quiz__transition-inner').removeClass('sp-quiz__transition-slidedown');
-
-            //         self.transitionToNextState();
-            //     } else if (self.currentAnimationState == 2) {
-            //         // Clear previous animation state's leftover classes
-            //         $('.sp-quiz__content').removeClass('sp-quiz__content-down');
-
-            //         self.transitionToNextState();
-            //     } else if (self.currentAnimationState == 3) {
-            //         // Clear previous animation state's leftover classes
-            //         $('.sp-quiz__transition-inner').removeClass('sp-quiz__transition-slideup');
-            //         $('.sp-quiz__transition-inner').addClass('sp-quiz__displaynone');
-            //         $('.sp-quiz__content').removeClass('sp-quiz__content-down');
-
-            //         self.transitionToNextState();
-            //     } else if (self.currentAnimationState == 4) {
-            //         // Reset currentAnimationState to 0 for next loop
-            //         self.transitionToNextState();
-            //     }
-            // });
-
-            // $('.sp-quiz__content').one(self.animationEvent(self.questionContentBlock), () => {
-            //     self.currentAnimationState++;
-            //     // self.sleep(1000);
-            //     if (self.currentAnimationState == 1) {
-
-            //         $('.sp-quiz__content').addClass('sp-quiz__displaynone');
-            //         $('.sp-quiz__transition-inner').removeClass('sp-quiz__displaynone');
-            //         // setTimeout(() => {
-            //         self.transitionToNextState();
-            //         // }, 300);
-            //     } else if (self.currentAnimationState >= 4) {
-            //         self.resetAnimationState();
-            //     }
-            // });
-
-            // $('.sp-quiz__transition-inner').on(self.animationEvent(transitionBlock), () => {
-            //     self.currentAnimationState++;
-
-            //      if (self.currentAnimationState == 2) {
-            //         $('.sp-quiz__content').removeClass('sp-quiz__content-down');
-
-            //         // setTimeout(() => {
-            //         console.log('currentAnimState == 2', self.currentAnimationState);
-            //         self.transitionToNextState();
-            //         // }, 300);
-            //     } else if (self.currentAnimationState == 3) {
-            //          console.log('currentAnimState == 3, removing slideup, and content-down, adding transition displaynone');
-            //         $('.sp-quiz__transition-inner').removeClass('sp-quiz__transition-slideup');
-            //         $('.sp-quiz__transition-inner').addClass('sp-quiz__displaynone');
-            //         $('.sp-quiz__content').removeClass('sp-quiz__content-down');
-
-            //         // setTimeout(() => {
-            //             self.transitionToNextState()
-            //         // }, 300);
-            //     } else if (self.currentAnimationState >= 4 || self.currentAnimationState <= 0) {
-            //         self.resetAnimationState()
-            //     }
-            // });
 
             self.transitionToNextState();
 
