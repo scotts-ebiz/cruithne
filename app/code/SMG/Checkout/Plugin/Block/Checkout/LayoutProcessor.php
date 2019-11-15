@@ -3,7 +3,7 @@ namespace SMG\Checkout\Plugin\Block\Checkout;
 class LayoutProcessor
 {
     public function afterProcess(
-    \Magento\Checkout\Block\Checkout\LayoutProcessor $subject,
+    \Magento\Checkout\Block\Checkout\LayoutProcessor $subject, $jsLayout,
     array $result
     ) {
 
