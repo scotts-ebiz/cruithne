@@ -3,9 +3,7 @@ namespace SMG\Checkout\Plugin\Block\Checkout;
 class LayoutProcessor
 {
     public function afterProcess(
-    \Magento\Checkout\Block\Checkout\LayoutProcessor $subject, $jsLayout,
-    array $result
-    ) {
+    \Magento\Checkout\Block\Checkout\LayoutProcessor $subject, array $result) {
 
 		if(isset($result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
 			['shippingAddress']['children']['shipping-address-fieldset']['children']['street'])){
@@ -84,12 +82,17 @@ class LayoutProcessor
 							['telephone']['validation'] = ['required-entry' => false,'required-entry-btelephone' => true];
 						}
 
+            /* Remove Telephone Tooltip */
+            if (isset($payment['children']['form-fields']['children']['telephone'])) {
+              unset($result['components']['checkout']['children']['steps']['children']['billing-step']['children']['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']['telephone']['config']['tooltip']);
+            }
+
 						/* State/Provision label change*/
 						if (isset($payment['children']['form-fields']['children']['region_id'])) {
 							$result['components']['checkout']['children']['steps']['children']['billing-step']['children']
 							['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
 							['region_id']['label'] = __('State');
-					}
+					  }
 
 						/* ZIP label change*/
 						if (isset($payment['children']['form-fields']['children']['postcode'])) {
