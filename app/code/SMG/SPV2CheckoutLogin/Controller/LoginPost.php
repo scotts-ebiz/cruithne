@@ -1,6 +1,6 @@
 <?php
 
-namespace SMG\LoginRedirection\Controller;
+namespace SMG\SPV2CheckoutLogin\Controller;
 
 class LoginPost
 {

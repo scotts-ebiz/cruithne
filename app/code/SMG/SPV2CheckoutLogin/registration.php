@@ -8,6 +8,6 @@ use Magento\Framework\Component\ComponentRegistrar;
 
 ComponentRegistrar::register(
     ComponentRegistrar::MODULE,
-    'SMG_LoginRedirection',
+    'SMG_SPV2CheckoutLogin',
     __DIR__
 );

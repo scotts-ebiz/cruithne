@@ -1,6 +1,6 @@
 <?php
 
-namespace SMG\LoginRedirection\Controller\Checkout;
+namespace SMG\SPV2CheckoutLogin\Controller\Checkout;
 
 use Magento\Framework\App\Action\HttpGetActionInterface as HttpGetActionInterface;
 
