@@ -190,6 +190,11 @@ $colors: (
   height: 100%;
 }
 
+// Full height, minus header
+.sp-h-full--header {
+  height: calc(100vh - #{$header-height});
+}
+
 // List
 .sp-list-none {
   list-style-type: none;

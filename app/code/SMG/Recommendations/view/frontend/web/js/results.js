@@ -1,39 +1,56 @@
 define([
     'uiComponent',
     'ko',
-    'jquery',
-    'domReady!',
+    'jquery'
 ], function (Component, ko, $) {
-
-
     return Component.extend({
-        initialize: function () {
-            this._super();
-            this.loadResults();
+        hasResults: ko.observable(false),
+        isLoading: ko.observable(true),
+        quiz: ko.observable(null),
+        results: ko.observable({}),
+
+        initialize() {
+            this.loadQuizResponses();
         },
 
         /**
-         * Load the quiz template data.
+         * Load the quiz from the session storage.
          */
-        loadResults: function () {
-           var self = this;
+        loadQuizResponses() {
+            const quiz = window.sessionStorage.getItem('quiz');
+            if (quiz && JSON.parse(quiz)) {
+                this.quiz(JSON.parse(quiz));
+                this.loadResults();
+            } else {
+                // Quiz not found, need to redirect.
+                window.location.href = '/quiz';
+            }
+        },
+
+        /**
+         * Load the results from you quiz answers.
+         */
+        loadResults() {
+            const self = this;
 
             $.ajax(
-                '/your-plan/template/results',
+                `/quiz/${self.quiz().id}/completeQuiz`,
                 {
+                    data: self.quiz(),
                     dataType: 'json',
                     method: 'post',
-                    success: function (data) {
-                         if(data.error_message) {
+                    success(data) {
+                        if (data.error_message) {
                             alert( 'Error getting quiz data: ' + data.error_message + '. Please try again.');
                         } else {
-                            // Save quiz results in local storage
-                            localStorage.setItem('quiz_results', JSON.stringify(data));
-                            console.log(localStorage.getItem('quiz_results'));
+                            // Initialize the quiz with the template data.
+                            self.isLoading(false);
+                            self.hasResults(true);
+                            self.results(data);
                         }
-                    }.bind(self),
+                    },
                 },
             );
         },
-    })
+    });
 });

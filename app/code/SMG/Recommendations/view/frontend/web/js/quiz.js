@@ -303,7 +303,6 @@ define([
         ]);
 
         self.answers = ko.observableArray([]);
-        self.complete = ko.observable(false);
         self.currentGroup = ko.observable(null);
         self.map = ko.observable(null);
         self.template = null;
@@ -312,6 +311,7 @@ define([
         self.usingGoogleMaps = ko.observable(true);
         self.invalidZipCode = ko.observable(false);
         self.isAnimating = ko.observable(false);
+        self.zipCode = '';
 
         // Animation States for self.transitionToNextState() to iterate over
         self.animationStates = [
@@ -804,7 +804,23 @@ define([
             }
 
             // No transitions remaining so the quiz is complete.
-            self.complete(true);
+            self.completeQuiz();
+        };
+
+        /**
+         * Complete the quiz.
+         */
+        self.completeQuiz = function () {
+            var quiz = {
+                id: self.template.id,
+                answers: self.answers(),
+                zip: self.zipCode,
+            };
+
+            window.sessionStorage.setItem('quiz', JSON.stringify(quiz));
+
+            // Redirect to plan page.
+            window.location.href = '/quiz/results';
         };
 
         /**
@@ -869,6 +885,7 @@ define([
 
                 if (zoneOption) {
                     self.addOrReplaceAnswer(self.questions()[0].id, zoneOption);
+                    self.zipCode = zip;
                     self.invalidZipCode(false);
                     return;
                 }

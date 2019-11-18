@@ -50,19 +50,28 @@ class Quiz implements QuizInterface
     }
 
     /**
-     * This endpoint is not complete.
-     * 
-     * { "ids": [1, 2] } in body
+     * Send answers to complete quiz
      * 
      * @api
      */
-    public function save($ids)
+    public function save($quiz_template_id, $answers)
     {
-        if( ! $this->_helper->getSaveQuizApiPath() ) {
+        if( ! $this->_helper->getSaveQuizApiPath() || empty( $answers ) || empty( $quiz_template_id ) ) {
             return;
         }
 
-        return array( array( 'status' => 200 ) );
+        $quiz_template_id = '00ca1678-ff54-4db2-9106-e0998d8c26a4';
+
+        $url = filter_var( $this->_helper->getSaveQuizApiPath() . '/' . $quiz_template_id . '/completeQuiz', FILTER_SANITIZE_URL );
+        $method = 'POST';
+
+        $response = $this->request( $url, $answers, $method );
+
+        if( ! empty( $response ) ) {
+            return $response;
+        }
+
+        return;
     }
 
     /**
@@ -145,7 +154,7 @@ class Quiz implements QuizInterface
                 if( $method == 'POST' ) {
                     curl_setopt($ch, CURLOPT_POST, TRUE);
                     if( ! empty( $data ) ) {
-                        curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
                     }
                 } elseif( $method == 'PUT' ) {
                     curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
