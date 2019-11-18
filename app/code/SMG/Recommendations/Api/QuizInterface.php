@@ -18,10 +18,10 @@ interface QuizInterface
 	 * Save quiz ids. This endpoint is not complete.
 	 * 
 	 * @param mixed $quiz_template_id
-	 * @param mixed $data
+	 * @param mixed $answers
 	 * @return array
 	 */
-	public function save($quiz_template_id, $data);
+	public function save($quiz_template_id, $answers);
 
 	/**
 	 * Get results by quiz id.
