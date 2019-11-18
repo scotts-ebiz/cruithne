@@ -20,6 +20,15 @@
             display: block;
             border-bottom:0;
             margin-top: 0rem;
+            h1.page-title {
+                font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                font-size: 1.6rem;
+                font-weight: 500;
+                text-transform: inherit;
+                padding: 0 0 10px 0;
+                width: 100%;
+                border-bottom: 1px solid #ccc;
+            }
         }
         .columns {
             .column {
@@ -454,4 +463,14 @@
         display: none;
     }
 }
-// Cart Page - End //
+
+//Style Update Cart and Remove Item link
+.checkout-cart-index .cart-container .form-cart {
+  .actions-toolbar {
+    a.action-delete {
+      font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      text-decoration: underline;
+      font-size: 0.8rem;
+    }
+  }
+}
