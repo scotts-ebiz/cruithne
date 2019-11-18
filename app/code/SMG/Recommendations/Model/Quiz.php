@@ -50,19 +50,28 @@ class Quiz implements QuizInterface
     }
 
     /**
-     * This endpoint is not complete.
-     * 
-     * { "ids": [1, 2] } in body
+     * Send answers to complete quiz
      * 
      * @api
      */
-    public function save($ids)
+    public function save($quiz_template_id, $data)
     {
-        if( ! $this->_helper->getSaveQuizApiPath() ) {
+        if( ! $this->_helper->getSaveQuizApiPath() || empty( $data ) ) {
             return;
         }
 
-        return array( array( 'status' => 200 ) );
+        $quiz_template_id = filter_var( $quiz_template_id, FILTER_SANITIZE_SPECIAL_CHARS );
+
+        $url = filter_var( $this->_helper->getSaveQuizApiPath() . '/' . $quiz_template_id . '/completeQuiz', FILTER_SANITIZE_URL );
+        $method = 'POST';
+
+        $response = $this->request( $url, $data, $method );
+
+        if( ! empty( $response ) ) {
+            return $response;
+        }
+
+        return;
     }
 
     /**
