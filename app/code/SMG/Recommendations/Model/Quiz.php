@@ -14,20 +14,19 @@ class Quiz implements QuizInterface
 
     public function __construct(
         \SMG\Recommendations\Helper\QuizHelper $helper
-    )
-    {
+    ) {
         $this->_helper = $helper;
     }
 
     /**
      * Get quiz template and store it's id in session
-     * 
+     *
      * @api
+     * @return array|null
      */
     public function new()
     {
-
-        if( ! $this->_helper->getNewQuizApiPath() ) {
+        if (! $this->_helper->getNewQuizApiPath()) {
             return;
         }
 
@@ -35,11 +34,10 @@ class Quiz implements QuizInterface
         $data = '';
         $method = 'GET';
 
-        $response = $this->request( $url, $data, $method );
+        $response = $this->request($url, $data, $method);
 
-        if( ! empty( $response ) )
-        {
-            if( ! isset( $_SESSION['quiz_template_id'] ) ) {
+        if (! empty($response)) {
+            if (! isset($_SESSION['quiz_template_id'])) {
                 $_SESSION['quiz_template_id'] = $response['id'];
             }
 
@@ -51,35 +49,39 @@ class Quiz implements QuizInterface
 
     /**
      * Send answers to complete quiz
-     * 
+     *
+     * @param $id
+     * @param $answers
+     *
+     * @return array|null
      * @api
      */
-    public function save($quiz_template_id, $answers)
+    public function save($id, $answers)
     {
-        if( ! $this->_helper->getSaveQuizApiPath() || empty( $answers ) || empty( $quiz_template_id ) ) {
-            return;
+        if (! $this->_helper->getSaveQuizApiPath() || empty($answers) || empty($id)) {
+            return null;
         }
 
-        $quiz_template_id = '00ca1678-ff54-4db2-9106-e0998d8c26a4';
+        $url = trim($this->_helper->getSaveQuizApiPath(), '/');
 
-        $url = filter_var( $this->_helper->getSaveQuizApiPath() . '/' . $quiz_template_id . '/completeQuiz', FILTER_SANITIZE_URL );
+        $url = filter_var($url . '/' . $id . '/completeQuiz', FILTER_SANITIZE_URL);
         $method = 'POST';
 
-        $response = $this->request( $url, $answers, $method );
+        $response = $this->request($url, ['answers' => $answers], $method);
 
-        if( ! empty( $response ) ) {
+        if (! empty($response)) {
             return $response;
         }
 
-        return;
+        return null;
     }
 
     /**
      * Returns quiz data by id.
-     * 
+     *
      * @param string $quiz_id
      * @return array
-     * 
+     *
      * @api
      */
     public function getResult($quiz_id)
@@ -87,19 +89,19 @@ class Quiz implements QuizInterface
 
         //getQuizResultApiPath
 
-        if( empty( $quiz_id ) || $this->_helper->getQuizResultApiPath() ) {
+        if (empty($quiz_id) || $this->_helper->getQuizResultApiPath()) {
             return;
         }
 
-        $quiz_id = filter_var( $quiz_id, FILTER_SANITIZE_SPECIAL_CHARS );
+        $quiz_id = filter_var($quiz_id, FILTER_SANITIZE_SPECIAL_CHARS);
 
         $url = filter_var($this->_helper->getQuizResultApiPath(), FILTER_SANITIZE_URL);
         $data = '';
         $method = 'GET';
 
-        $response = $this->request( $url, $data, $method );
+        $response = $this->request($url, $data, $method);
 
-        if( ! empty( $response ) ) {
+        if (! empty($response)) {
             return $response;
         }
 
@@ -108,26 +110,24 @@ class Quiz implements QuizInterface
 
     /**
      * Return completed quizzes
-     * 
+     *
      * @return array
-     * 
+     *
      * @api
      */
     public function getCompleted()
     {
-
-        if( ! $this->_helper->getCompletedQuizApiPath() ) {
+        if (! $this->_helper->getCompletedQuizApiPath()) {
             return;
         }
-
 
         $url = filter_var($this->_helper->getCompletedQuizApiPath(), FILTER_SANITIZE_URL);
         $data = '';
         $method = 'GET';
 
-        $response = $this->request( $url, $data, $method );
+        $response = $this->request($url, $data, $method);
 
-        if( ! empty( $response ) ) {
+        if (! empty($response)) {
             return $response;
         }
 
@@ -136,48 +136,50 @@ class Quiz implements QuizInterface
 
     /**
      * cURL wrapper
-     * 
+     *
      * @param string $url
      * @param string $method
-     * @return array
+     * @return array|null
      */
-    private function request( $url, $data, $method = '' )
+    private function request($url, $data, $method = '')
     {
-        if( ! empty( $url ) ) {
+        if (! empty($url)) {
             try {
                 $ch = curl_init();
                 curl_setopt($ch, CURLOPT_URL, $url);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
+                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, true);
                 curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
                 curl_setopt($ch, CURLOPT_TIMEOUT, 45);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER,TRUE);
-                if( $method == 'POST' ) {
-                    curl_setopt($ch, CURLOPT_POST, TRUE);
-                    if( ! empty( $data ) ) {
-                        curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($data));
+                curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+                if ($method == 'POST') {
+                    curl_setopt($ch, CURLOPT_POST, true);
+                    if (! empty($data)) {
+                        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($data));
                     }
-                } elseif( $method == 'PUT' ) {
+                } elseif ($method == 'PUT') {
                     curl_setopt($curl, CURLOPT_CUSTOMREQUEST, "PUT");
-                    if( ! empty( $data ) ) {
+                    if (! empty($data)) {
                         curl_setopt($ch, CURLOPT_POSTFIELDS, $data);
                     }
                 } else {
-                    curl_setopt($ch, CURLOPT_POST, FALSE);
+                    curl_setopt($ch, CURLOPT_POST, false);
                 }
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                curl_setopt($ch, CURLOPT_HTTPHEADER, [
                     'Content-Type: application/json; charset=utf-8',
                     'Accept: application/json',
-                ));
+                ]);
                 $response = curl_exec($ch);
 
-                if(curl_errno($ch)) {
+                if (curl_errno($ch)) {
                     throw new Exception(curl_error($ch));
                 }
 
                 curl_close($ch);
 
-                return json_decode($response, true);
-            } catch(Exception $e) {
+                // Wrap in an array because Magento strips off the top level
+                // keys for some random reason.
+                return [json_decode($response, true)];
+            } catch (Exception $e) {
                 throw new Exception($e);
             }
         }

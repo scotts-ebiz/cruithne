@@ -32,19 +32,35 @@ define([
          */
         loadResults() {
             const self = this;
+            let minTimePassed = false;
+
+            // Make sure loading screen appears for at least 3 seconds.
+            setTimeout(() => {
+                minTimePassed = true;
+                if (self.hasResults()) {
+                    self.isLoading(false);
+                }
+            }, 3000);
 
             $.ajax(
-                `/quiz/${self.quiz().id}/completeQuiz`,
+                `/rest/V1/recommendations/quiz/save`,
                 {
-                    data: self.quiz(),
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify(self.quiz()),
                     dataType: 'json',
                     method: 'post',
                     success(data) {
                         if (data.error_message) {
                             alert( 'Error getting quiz data: ' + data.error_message + '. Please try again.');
                         } else {
+                            if (Array.isArray(data)) {
+                                data = data[0];
+                            }
+
                             // Initialize the quiz with the template data.
-                            self.isLoading(false);
+                            if (minTimePassed) {
+                                self.isLoading(false);
+                            }
                             self.hasResults(true);
                             self.results(data);
                         }

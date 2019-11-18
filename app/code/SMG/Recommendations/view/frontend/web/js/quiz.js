@@ -820,7 +820,7 @@ define([
             window.sessionStorage.setItem('quiz', JSON.stringify(quiz));
 
             // Redirect to plan page.
-            window.location.href = '/quiz/results';
+            window.location.href = '/your-plan/results';
         };
 
         /**
@@ -959,14 +959,18 @@ define([
             var self = this;
 
             $.ajax(
-                '/your-plan/template/template',
+                '/rest/V1/recommendations/quiz/new',
                 {
-                    dataType: 'json',
                     method: 'post',
+                    dataType: 'json',
                     success: function (data) {
                         if(data.error_message) {
                             alert( 'Error getting quiz data: ' + data.error_message + '. Please try again.');
                         } else {
+                            if (Array.isArray(data)) {
+                                data = data[0];
+                            }
+
                             // Initialize the quiz with the template data.
                             self.quiz.initialize(data);
                         }

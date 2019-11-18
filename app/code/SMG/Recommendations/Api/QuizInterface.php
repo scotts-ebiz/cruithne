@@ -10,18 +10,18 @@ interface QuizInterface
 	/**
      * Retrieve quiz templates from LSPaaS 
      *
-	 * @return string
+	 * @return array
      */
 	public function new();
 
 	/**
 	 * Save quiz ids. This endpoint is not complete.
 	 * 
-	 * @param mixed $quiz_template_id
+	 * @param mixed $id
 	 * @param mixed $answers
 	 * @return array
 	 */
-	public function save($quiz_template_id, $answers);
+	public function save($id, $answers);
 
 	/**
 	 * Get results by quiz id.

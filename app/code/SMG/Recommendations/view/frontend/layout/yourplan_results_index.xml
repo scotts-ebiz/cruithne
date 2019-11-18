@@ -3,8 +3,8 @@
     xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"
 >
     <head>
-        <css src="SMG_Recommendations::css/quiz.css" />
-        <title>Quiz Results</title>
+        <css src="SMG_Recommendations::css/results.css" />
+        <title>Your Lawn Plan</title>
     </head>
 
     <body>
@@ -14,8 +14,6 @@
                 class="Magento\Framework\View\Element\Template"
                 template="SMG_Recommendations::results.phtml"
             />
-        </referenceContainer>
-        <referenceContainer name="footer-container" htmlClass="sp-footer" remove="true">
         </referenceContainer>
     </body>
 </page>
