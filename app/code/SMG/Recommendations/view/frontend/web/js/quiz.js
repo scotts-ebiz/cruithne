@@ -942,7 +942,7 @@ define([
             var self = this;
 
             $.ajax(
-                '/quiz/template/template',
+                '/your-plan/template/template',
                 {
                     dataType: 'json',
                     method: 'post',

@@ -1,6 +1,6 @@
 <?php
 
-namespace SMG\Recommendations\Controller\Index;
+namespace SMG\Recommendations\Controller\Quiz;
 
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
@@ -24,8 +24,6 @@ class Index extends Action
 
     public function execute()
     {
-        echo 'nothing to do here';
-        die();
         $resultPage = $this->_resultPageFactory->create();
 
         return $resultPage;
