@@ -26,6 +26,7 @@ a {
   color: $green-1;
   margin: 0;
   padding: 0;
+  text-decoration: underline;
   text-transform: uppercase;
 
   &:active,
@@ -40,6 +41,19 @@ a {
     border: none;
     background-color: transparent;
     outline-color: $green-1;
+    text-decoration: underline;
+  }
+}
+
+.sp-link--inverted {
+  color: $white;
+
+  &:active,
+  &:focus,
+  &:hover {
+    border: none;
+    background-color: transparent;
+    color: $white;
     text-decoration: underline;
   }
 }

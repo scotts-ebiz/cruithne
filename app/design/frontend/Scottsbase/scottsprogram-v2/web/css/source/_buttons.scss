@@ -73,20 +73,20 @@
 
 .sp-button--inverted {
   background-color: $white;
-  color: $black;
+  color: $green-1;
 
   &:hover {
     background-color: $white;
-    color: $black;
+    color: $green-1;
   }
 
   &:active {
     background-color: $green-4;
-    color: $black;
+    color: $green-1;
   }
 
   &:focus {
-    color: $black;
+    color: $green-1;
     outline-color: $white;
   }
 }
