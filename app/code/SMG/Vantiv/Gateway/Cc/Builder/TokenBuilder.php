@@ -172,6 +172,9 @@ class TokenBuilder extends \Vantiv\Payment\Gateway\Cc\Builder\TokenBuilder
             throw new ClientException(__("Payment Authorization Declined."));
         }
 
+        // set the cc type
+        $method->getInfoInstance()->setCcType($tokenResponseParserFactory->getCardType());
+
         // return the token
         return $tokenResponseParserFactory->getToken();
     }
