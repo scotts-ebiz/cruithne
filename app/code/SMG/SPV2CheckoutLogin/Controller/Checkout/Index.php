@@ -22,10 +22,15 @@ class Index extends \Magento\Checkout\Controller\Index\Index implements HttpGetA
         if( ! $this->_customerSession->isLoggedIn() && ! $checkoutHelper->isAllowedGuestCheckout( $quote ) ) {
             $resultRedirect = $this->resultRedirectFactory->create();
 
+            $params = array(
+                'quiz_id'   => 'cdaf7de7-115c-41be-a7e4-3259d2f511f8'
+            );
+
             $customerLoginUrl = $this->_url->getUrl( 
                 'customer/account/login',
                 array(
-                    'referer' => $urlHelper->getEncodedUrl( $this->_url->getCurrentUrl() )
+                    'referer'   => $urlHelper->getEncodedUrl( $this->_url->getCurrentUrl() ),
+                    '_query'    => $params
                 )
             );
 
