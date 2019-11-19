@@ -6,6 +6,7 @@ use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
 use SMG\Recommendations\Helper\QuizHelper;
+use Magento\Framework\UrlInterface;
 
 class Index extends Action
 {

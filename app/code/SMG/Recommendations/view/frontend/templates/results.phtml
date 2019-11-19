@@ -14,7 +14,8 @@
             "Magento_Ui/js/core/app": {
                 "components": {
                     "results": {
-                        "component": "SMG_Recommendations/js/results"
+                        "component": "SMG_Recommendations/js/results",
+                        "quiz_id": "<?php echo $this->getRequest()->getParam('id') ?? ''; ?>"
                     }
                 }
             }
