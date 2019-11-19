@@ -37,6 +37,11 @@ Options -Indexes
     #AddHandler x-mapp-php5 .php
 
 ############################################
+## enable usage of methods arguments in backtrace
+
+    SetEnv MAGE_DEBUG_SHOW_ARGS 1
+
+############################################
 ## default index file
 
     DirectoryIndex index.php
@@ -443,6 +448,15 @@ RewriteRule ^(.*)$   https://www.mygro.com/$1 [R=301,L,QSA]
         </IfVersion>
     </Files>
     <Files auth.json>
+        <IfVersion < 2.4>
+            order allow,deny
+            deny from all
+        </IfVersion>
+        <IfVersion >= 2.4>
+            Require all denied
+        </IfVersion>
+    </Files>
+    <Files .user.ini>
         <IfVersion < 2.4>
             order allow,deny
             deny from all
