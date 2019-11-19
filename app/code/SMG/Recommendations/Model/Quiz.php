@@ -38,7 +38,7 @@ class Quiz implements QuizInterface
 
         if (! empty($response)) {
             if (! isset($_SESSION['quiz_template_id'])) {
-                $_SESSION['quiz_template_id'] = $response['id'];
+                $_SESSION['quiz_template_id'] = $response[0]['id'];
             }
 
             return $response;
