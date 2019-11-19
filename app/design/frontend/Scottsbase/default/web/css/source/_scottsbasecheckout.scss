@@ -22,7 +22,6 @@
         .columns {
             .column.main {
                 .checkout-container {
-                    //TEST
                     .opc-progress-bar {
                         .opc-progress-bar-item {
                             &._active {
@@ -34,74 +33,74 @@
                                         background: $color_dark30_green_shade;
                                     }
                                     &:after {
-                                        font-size: $font27;
+                                        font-size: 27px;
                                     }
                                 }
                             }
                             &._complete {
                                 span {
                                     &:after {
-                                        font-size: $font27;
+                                        font-size: 27px;
                                     }
                                 }
                             }
                             span {
                                 font-size: 1.4rem;
                                 &:after {
-                                    font-size: $font18;
+                                    font-size: 18px;
                                 }
                             }
                             > span {
-                                font-size: $font16;
+                                font-size: 16px;
                             }
                         }
                     }
-                    //TEST
                     .opc-wrapper {
                         @include max-screen($screen__m) {
                             padding: 1rem;
                         }
                         .opc {
+                            .fieldset > .field > .label {
+                                width: auto;
+                                text-align: left;
+                                margin-bottom: 4px;
+                            }
                             .checkout-shipping-address {
                                 .step-content {
-                                  .form-login {
-                                    border-bottom: 1px solid #c2c2c2;
-                                    padding-bottom: 1rem;
-                                    .field-tooltip {
-                                      display: none;
+                                    .form-login {
+                                        border-bottom: 1px solid #c2c2c2;
+                                        padding-bottom: 1rem;
+                                        .field-tooltip {
+                                          display: none;
+                                        }
                                     }
-                                  }
-                                  .form-login,
-                                  .form-shipping-address {
-                                    .fieldset {
-                                      .label {
-                                        width: auto;
-                                      }
-                                      .control {
-                                        float: none;
-                                        width: auto;
-                                      }
+                                    .form-login,
+                                    .form-shipping-address {
+                                        .fieldset {
+                                            .control {
+                                                float: none;
+                                                width: auto;
+                                            }
+                                        }
+                                        .hidden-fields {
+                                            .actions-toolbar {
+                                                margin-left: 0;
+                                            }
+                                        }
                                     }
-                                    .hidden-fields {
-                                      .actions-toolbar {
-                                        margin-left: 0;
-                                      }
-                                    }
-                                  }
                                 }
                             }
-                          .checkout-shipping-method {
                             .checkout-shipping-method {
-                              .step-content {
-                                .methods-shipping {
-                                  .actions-toolbar {
-                                    .primary {
-                                      .action.primary {
+                                .actions-toolbar {
+                                    .action.primary {
                                         font-family: Lato, Arial, sans-serif;
                                         text-transform: uppercase;
+                                        background: $scotts-green;
+                                        color: $color-white;
+                                        margin-top: 15px;
                                         font-size: 15px;
                                         padding: 23px 35px;
-                                        background: $mygro-green;
+                                        line-height: 0;
                                         -webkit-transition: background 0.2s;
                                         -moz-transition: background 0.2s;
                                         -ms-transition: background 0.2s;
@@ -110,86 +109,161 @@
                                         &:hover {
                                           background: #00634f;
                                         }
-                                      }
                                     }
-                                  }
+                                    .action.primary:disabled{
+                                        background: #4d4e4e;
+                                    }
                                 }
-                              }
+
                             }
-                            .actions-toolbar .action.primary{
-                              height: 45px;
-                              line-height: $font_normal;
-                              background: $color_dark30_green_shade;
-                              color: $color_white;
-                              margin-top: 15px;
-                              font-size: $font15;
-                              padding: 0px 40px;
-                              line-height: 0;
-                              @include transition(all 0.2s ease);
-                              &:hover{
-                                background:$color_black15_shade;
-                              }
-                            }
-                          }
-                          .checkout-validate-address {
-                            .step-content {
-                              .instructions.noError {
-                                display: inline-block;
-                                position: relative;
-                                margin: 15px 0 15px 0;
-                                color: $mygro-green;
-                              }
-                              .errorMessageContainer {
-                                .instructions {
-                                  color: #e02b27;
-                                  margin: 15px 0;
-                                  border: 1px solid;
-                                  padding: 10px;
+                            .checkout-validate-address {
+                                .step-content {
+                                    .instructions.noError {
+                                      display: inline-block;
+                                      position: relative;
+                                      margin: 15px 0 15px 0;
+                                      color: $scotts-green;
+                                    }
+                                    .errorMessageContainer {
+                                        .instructions {
+                                          color: #e02b27;
+                                          margin: 15px 0;
+                                          border: 1px solid;
+                                          padding: 10px;
+                                        }
+                                    }
                                 }
-                              }
                             }
-                          }
-                          .checkout-payment-method {
-                            .step-content {
-                              .form.payments {
-                                .fieldset {
-                                  .opc-payment {
-                                    .items.payment-methods {
-                                      .payment-group {
-                                        .payment-method._active {
-                                          [type="radio"]:checked + label:before,
-                                          [type="radio"]:not(:checked) + label:before{
-                                            top: 2px;
+                            .checkout-payment-method {
+                                .step-content {
+                                    .form.payments {
+                                        .fieldset {
+                                            .opc-payment {
+                                                .items.payment-methods {
+                                                    .payment-group {
+                                                        .payment-method._active {
+                                                            [type="radio"]:checked + label:before,
+                                                            [type="radio"]:not(:checked) + label:before{
+                                                                top: 2px;
+                                                            }
+                                                            [type="radio"]:checked + label:after,
+                                                            [type="radio"]:not(:checked) + label:after{
+                                                                top: 6px;
+                                                            }
+                                                            .payment-method-content {
+                                                                .actions-toolbar {
+                                                                    .primary {
+                                                                        .action.primary.checkout {
+                                                                            -webkit-transition: background 0.2s;
+                                                                            -moz-transition: background 0.2s;
+                                                                            -ms-transition: background 0.2s;
+                                                                            -o-transition: background 0.2s;
+                                                                            transition: background 0.2s;
+                                                                            font-family: Lato, Arial, sans-serif;
+                                                                            font-size: 15px;
+                                                                            text-transform: uppercase;
+                                                                            background: $scotts-green;
+                                                                            padding: 23px 35px;
+                                                                            line-height: 0;
+                                                                            border: none;
+                                                                            display: inline-block;
+                                                                            height: auto;
+                                                                            &:hover {
+                                                                              -webkit-transition: background 0.2s;
+                                                                              -moz-transition: background 0.2s;
+                                                                              -ms-transition: background 0.2s;
+                                                                              -o-transition: background 0.2s;
+                                                                              transition: background 0.2s;
+                                                                              background: $scotts-secondary-green;
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                      .opc-payment-additional {
+                                        .payment-option-title {
+                                          .action-toggle {
+                                            color: $scotts-green;
                                           }
-                                          [type="radio"]:checked + label:after,
-                                          [type="radio"]:not(:checked) + label:after{
-                                            top: 6px;
-                                          }
-                                          .payment-method-content {
+                                        }
+                                        .payment-option-content {
+                                          .form-discount {
                                             .actions-toolbar {
                                               .primary {
-                                                .action.primary.checkout {
+                                                button {
+                                                  font-family: $opensans;
+                                                  font-size: 1rem;
+                                                  color: $color-white;
                                                   -webkit-transition: background 0.2s;
                                                   -moz-transition: background 0.2s;
                                                   -ms-transition: background 0.2s;
                                                   -o-transition: background 0.2s;
                                                   transition: background 0.2s;
-                                                  font-family: Lato, Arial, sans-serif;
-                                                  font-size: 15px;
-                                                  text-transform: uppercase;
-                                                  background: $mygro-green;
-                                                  padding: 23px 35px;
-                                                  line-height: 0;
+                                                  background: $scotts-gray;
                                                   border: none;
-                                                  display: inline-block;
-                                                  height: auto;
                                                   &:hover {
                                                     -webkit-transition: background 0.2s;
                                                     -moz-transition: background 0.2s;
                                                     -ms-transition: background 0.2s;
                                                     -o-transition: background 0.2s;
                                                     transition: background 0.2s;
-                                                    background: $mygro-dark-green;
+                                                    background: $color_black15_shade;
+                                                  }
+                                                }
+                                              }
+                                            }
+                                          }
+                                          .form-giftcard-account {
+                                            .actions-toolbar {
+                                              .primary {
+                                                margin-left: 1rem;
+                                                .action-add.primary {
+                                                  font-family: $opensans;
+                                                  font-size: 1rem;
+                                                  color: $color-white;
+                                                  -webkit-transition: background 0.2s;
+                                                  -moz-transition: background 0.2s;
+                                                  -ms-transition: background 0.2s;
+                                                  -o-transition: background 0.2s;
+                                                  transition: background 0.2s;
+                                                  background: $scotts-gray;
+                                                  border: none;
+                                                  margin-top: 0;
+                                                  &:hover {
+                                                    -webkit-transition: background 0.2s;
+                                                    -moz-transition: background 0.2s;
+                                                    -ms-transition: background 0.2s;
+                                                    -o-transition: background 0.2s;
+                                                    transition: background 0.2s;
+                                                    background: $color_black15_shade;
+                                                  }
+                                                }
+                                              }
+                                              .secondary {
+                                                .action-check {
+                                                  font-family: $opensans;
+                                                  font-size: 1rem;
+                                                  color: $color-white;
+                                                  -webkit-transition: background 0.2s;
+                                                  -moz-transition: background 0.2s;
+                                                  -ms-transition: background 0.2s;
+                                                  -o-transition: background 0.2s;
+                                                  transition: background 0.2s;
+                                                  background: $scotts-gray;
+                                                  border: none;
+                                                  margin-top: 0;
+                                                  &:hover {
+                                                    -webkit-transition: background 0.2s;
+                                                    -moz-transition: background 0.2s;
+                                                    -ms-transition: background 0.2s;
+                                                    -o-transition: background 0.2s;
+                                                    transition: background 0.2s;
+                                                    background: $color_black15_shade;
                                                   }
                                                 }
                                               }
@@ -198,94 +272,56 @@
                                         }
                                       }
                                     }
-                                  }
                                 }
-                                .opc-payment-additional {
-                                  .payment-option-title {
-                                    .action-toggle {
-                                      color: $mygro-green;
-                                    }
-                                  }
-                                  .payment-option-content {
-                                    .form-discount {
-                                      .actions-toolbar {
-                                        .primary {
-                                          button {
-                                            @include font-hellix-regular(1rem, $color-white);
-                                            -webkit-transition: background 0.2s;
-                                            -moz-transition: background 0.2s;
-                                            -ms-transition: background 0.2s;
-                                            -o-transition: background 0.2s;
-                                            transition: background 0.2s;
-                                            background: $mygro-dark-gray;
-                                            border: none;
-                                            &:hover {
-                                              -webkit-transition: background 0.2s;
-                                              -moz-transition: background 0.2s;
-                                              -ms-transition: background 0.2s;
-                                              -o-transition: background 0.2s;
-                                              transition: background 0.2s;
-                                              background: $mygro-black-alt;
-                                            }
-                                          }
-                                        }
-                                      }
-                                    }
-                                    .form-giftcard-account {
-                                      .actions-toolbar {
-                                        .primary {
-                                          margin-left: 1rem;
-                                          .action-add.primary {
-                                            @include font-hellix-regular(1rem, $color-white);
-                                            -webkit-transition: background 0.2s;
-                                            -moz-transition: background 0.2s;
-                                            -ms-transition: background 0.2s;
-                                            -o-transition: background 0.2s;
-                                            transition: background 0.2s;
-                                            background: $mygro-dark-gray;
-                                            border: none;
-                                            margin-top: 0;
-                                            &:hover {
-                                              -webkit-transition: background 0.2s;
-                                              -moz-transition: background 0.2s;
-                                              -ms-transition: background 0.2s;
-                                              -o-transition: background 0.2s;
-                                              transition: background 0.2s;
-                                              background: $mygro-black-alt;
-                                            }
-                                          }
-                                        }
-                                        .secondary {
-                                          .action-check {
-                                            @include font-hellix-regular(1rem, $color-white);
-                                            -webkit-transition: background 0.2s;
-                                            -moz-transition: background 0.2s;
-                                            -ms-transition: background 0.2s;
-                                            -o-transition: background 0.2s;
-                                            transition: background 0.2s;
-                                            background: $mygro-dark-gray;
-                                            border: none;
-                                            margin-top: 0;
-                                            &:hover {
-                                              -webkit-transition: background 0.2s;
-                                              -moz-transition: background 0.2s;
-                                              -ms-transition: background 0.2s;
-                                              -o-transition: background 0.2s;
-                                              transition: background 0.2s;
-                                              background: $mygro-black-alt;
-                                            }
-                                          }
-                                        }
-                                      }
-                                    }
-                                  }
-                                }
-                              }
                             }
-                          }
                         }
                     }
                 }
+                //Enter radio button code
+
+              [type="radio"]:checked + label:before,
+              [type="radio"]:not(:checked) + label:before {
+                  content: '';
+                  position: absolute;
+                  left: 0;
+                  top: -14px;
+                  width: 10px;
+                  height: 10px;
+                  border-radius: 100%;
+                  background: $color-white;
+                  border: 2px solid $scotts-secondary-green;
+              }
+
+              [type="radio"]:checked + label:after,
+              [type="radio"]:not(:checked) + label:after {
+                  content: '';
+                  width: 6px;
+                  height: 6px;
+                  background: $scotts-secondary-green;
+                  position: absolute;
+                  top: -10px;
+                  left: 4px;
+                  border-radius: 100%;
+                  @include transition(all 0.2s ease);
+              }
+
+              [type="radio"]:not(:checked) + label:after {
+                  opacity: 0;
+                  -webkit-transform: scale(0);
+                  transform: scale(0);
+              }
+
+              [type="radio"]:checked + label:after {
+                  opacity: 1;
+                  -webkit-transform: scale(1);
+                  transform: scale(1);
+              }
+
+              .payment-method [type="radio"]:checked + label:after,
+              .payment-method [type="radio"]:not(:checked) + label:after {
+                  top: 4px;
+              }
+
             }
         }
     }
@@ -381,48 +417,48 @@ td#label_carrier_fedex-nextday_flatrate {
         display: inline-block;
     }
 
-    [type="radio"]:checked + label:before,
-    [type="radio"]:not(:checked) + label:before {
-        content: '';
-        position: absolute;
-        left: 0;
-        top: 2px;
-        width: 10px;
-        height: 10px;
-        border-radius: 100%;
-        background: $color_white;
-        border: 2px solid $scotts-secondary-green;
-    }
+    //[type="radio"]:checked + label:before,
+    //[type="radio"]:not(:checked) + label:before {
+    //    content: '';
+    //    position: absolute;
+    //    left: 0;
+    //    top: 2px;
+    //    width: 10px;
+    //    height: 10px;
+    //    border-radius: 100%;
+    //    background: $color-white;
+    //    border: 2px solid $scotts-secondary-green;
+    //}
 
-    [type="radio"]:checked + label:after,
-    [type="radio"]:not(:checked) + label:after {
-        content: '';
-        width: 6px;
-        height: 6px;
-        background: $scotts-secondary-green;
-        position: absolute;
-        top: -10px;
-        left: 4px;
-        border-radius: 100%;
-        @include transition(all 0.2s ease);
-    }
+    //[type="radio"]:checked + label:after,
+    //[type="radio"]:not(:checked) + label:after {
+    //    content: '';
+    //    width: 6px;
+    //    height: 6px;
+    //    background: $scotts-secondary-green;
+    //    position: absolute;
+    //    top: -10px;
+    //    left: 4px;
+    //    border-radius: 100%;
+    //    @include transition(all 0.2s ease);
+    //}
 
-    [type="radio"]:not(:checked) + label:after {
-        opacity: 0;
-        -webkit-transform: scale(0);
-        transform: scale(0);
-    }
+    //[type="radio"]:not(:checked) + label:after {
+    //    opacity: 0;
+    //    -webkit-transform: scale(0);
+    //    transform: scale(0);
+    //}
 
-    [type="radio"]:checked + label:after {
-        opacity: 1;
-        -webkit-transform: scale(1);
-        transform: scale(1);
-    }
+    //[type="radio"]:checked + label:after {
+    //    opacity: 1;
+    //    -webkit-transform: scale(1);
+    //    transform: scale(1);
+    //}
 
-    .payment-method [type="radio"]:checked + label:after,
-    .payment-method [type="radio"]:not(:checked) + label:after {
-        top: 4px !important;
-    }
+    //.payment-method [type="radio"]:checked + label:after,
+    //.payment-method [type="radio"]:not(:checked) + label:after {
+    //    top: 4px !important;
+    //}
 
     .field-error {
         font-size: 0.9375rem;

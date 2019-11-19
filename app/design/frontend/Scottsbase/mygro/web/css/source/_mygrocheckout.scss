@@ -6,9 +6,6 @@
         .column.main {
           .checkout-container {
             .opc-wrapper {
-              @include max-screen($screen__m) {
-                padding: 1rem;
-              }
               //.opc {
               //  .checkout-shipping-address {
               //    .step-content {
@@ -348,12 +345,6 @@
     width: 100% !important;
     height: 29px;
   }
-  .opc-wrapper .fieldset > .field > .label {
-    font-weight: 400;
-    width: 90%;
-    text-align: left;
-    margin-bottom: 4px;
-  }
   div[name="shippingAddress.firstname"],
   div[name="shippingAddress.lastname"] {
     width:50%;
@@ -657,12 +648,6 @@
   .checkout-index-index {
     .field-tooltip {
       top: 30px;
-    }
-  }
-  [type="radio"]:checked ,
-  [type="radio"]:not(:checked){
-    + label.cust-radio:before{
-      top: -14px;
     }
   }
   #block-discount-heading span{
@@ -1395,15 +1380,6 @@ div[name="shippingAddress.postcode"] {
 
 .checkout-index-index{
   .step-content{
-    .methods-shipping{
-      .actions-toolbar{
-        .primary{
-          .action.primary:disabled{
-            background: #4d4e4e !important;
-          }
-        }
-      }
-    }
     .form.payments{
       .opc-payment{
         .payment-method._active{
