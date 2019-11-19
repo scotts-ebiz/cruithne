@@ -425,7 +425,7 @@ define([
             self.runningAnimationStates.forEach(animationEventID => {
                 window.cancelAnimationFrame(+animationEventID);
             });
-        }
+        };
 
         /**
          * Step function to run through the animation states
@@ -440,8 +440,7 @@ define([
                     }, 1000);
                 }
             }
-        }
-
+        };
 
         self.loadNextGroup = async group => {
             // No group specified so load the first group.
@@ -742,7 +741,8 @@ define([
          * @returns {boolean}
          */
         self.validateQuestion = function (question) {
-            switch (question.questionType) {
+            let questionValid = false;
+            switch (+question.questionType) {
                 case 1:
                 case 2:
                 case 3:
@@ -750,7 +750,7 @@ define([
                 case 7:
                 case 8:
                     // Validate checkbox, radio, and slider questions.
-                    var questionValid = false;
+                    questionValid = false;
                     for (answer of self.answers()) {
                         if (answer.questionId === question.id && answer.optionId) {
                             questionValid = true;
@@ -760,7 +760,7 @@ define([
                     return questionValid;
                 case 6:
                     // Validate that the area answer contains an optional value (the area).
-                    var questionValid = false;
+                    questionValid = false;
                     for (answer of self.answers()) {
                         if (answer.questionId === question.id && answer.optionalValue > 0) {
                             questionValid = true;
@@ -768,7 +768,16 @@ define([
                     }
 
                     return questionValid;
+                case 9:
+                    // Validate the zip code question contains an optional value (zip code).
+                    questionValid = false;
+                    for (answer of self.answers()) {
+                        if (answer.questionId === question.id && String(answer.optionalValue).length === 5) {
+                            questionValid = true;
+                        }
+                    }
 
+                    return questionValid;
             }
 
             return false;
@@ -867,24 +876,33 @@ define([
          * @param event
          */
         self.setZipCode = function (data, event) {
-            var zip = '';
+            let zip = '';
             if (!event) {
                 zip = data;
             } else {
                 zip = event.target.value;
             }
 
-            self.removeAnswer(self.questions()[0].id);
+            const zoneQuestion = self.questions().find((question) => +question.questionType === 5);
+            const zipQuestion = self.questions().find((question) => +question.questionType === 9);
+
+            if (!zoneQuestion || !zipQuestion) {
+                return;
+            }
+
+            self.removeAnswer(zoneQuestion.id);
+            self.removeAnswer(zipQuestion.id);
 
             if (!zip || zip.length < 5) {
                 return;
             }
 
             if (zip.length === 5) {
-                var zoneOption = self.getZone(zip);
+                const zoneOption = self.getZone(zip);
 
                 if (zoneOption) {
-                    self.addOrReplaceAnswer(self.questions()[0].id, zoneOption);
+                    self.addOrReplaceAnswer(zoneQuestion.id, zoneOption);
+                    self.addOrReplaceAnswer(zipQuestion.id, zipQuestion.options[0].id, zip);
                     self.zipCode = zip;
                     self.invalidZipCode(false);
                     return;
@@ -901,7 +919,7 @@ define([
          * @param event
          */
         self.setArea = function (data, event) {
-            var area = 0;
+            let area = 0;
             if (typeof data === 'number') {
                 area = data;
             } else {
