@@ -25,7 +25,7 @@
                 </field>
                 <field id="save_quiz_api_path" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Save Quiz API Path</label>
-                    <comment>[POST] Saves quizzes data. Accepts array of IDs.</comment>
+                    <comment>[POST] Saves quizzes data. Accepts array of IDs. Use the markup {quizTemplateId} to inject the returned Quiz Template ID.</comment>
                     <validate>validate-no-html-tags</validate>
                     <config_path>recommendations/api/save</config_path>
                 </field>
