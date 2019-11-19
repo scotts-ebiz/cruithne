@@ -79,27 +79,30 @@ class Quiz implements QuizInterface
     /**
      * Returns quiz data by id.
      *
-     * @param string $quiz_id
+     * @param string $id
      * @return array
      *
      * @api
      */
-    public function getResult($quiz_id)
+    public function getResult($id)
     {
 
         //getQuizResultApiPath
-
-        if (empty($quiz_id) || $this->_helper->getQuizResultApiPath()) {
+        if (empty($id) || ! $this->_helper->getQuizResultApiPath()) {
             return;
         }
 
-        $quiz_id = filter_var($quiz_id, FILTER_SANITIZE_SPECIAL_CHARS);
+        $id = filter_var($id, FILTER_SANITIZE_SPECIAL_CHARS);
 
-        $url = filter_var($this->_helper->getQuizResultApiPath(), FILTER_SANITIZE_URL);
-        $data = '';
-        $method = 'GET';
+        $url = filter_var(
+            trim(
+                str_replace('{completedQuizId}', $id, $this->_helper->getQuizResultApiPath()),
+                '/'
+            ),
+            FILTER_SANITIZE_URL
+        );
 
-        $response = $this->request($url, $data, $method);
+        $response = $this->request($url, '', 'GET');
 
         if (! empty($response)) {
             return $response;

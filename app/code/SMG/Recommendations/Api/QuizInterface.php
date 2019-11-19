@@ -26,10 +26,10 @@ interface QuizInterface
 	/**
 	 * Get results by quiz id.
 	 * 
-	 * @param string $quiz_id
-	 * @return string
+	 * @param string $id
+	 * @return array
 	 */
-	public function getResult($quiz_id);
+	public function getResult($id);
 
 	/**
 	 * Get completed quizzes
