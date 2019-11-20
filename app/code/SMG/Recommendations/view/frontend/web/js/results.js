@@ -67,7 +67,7 @@ define([
                 this.completeQuiz();
             } else {
                 // Quiz not found, need to redirect.
-                window.location.href = '/quiz';
+                window.location.href = '/your-plan/quiz';
             }
         },
 
