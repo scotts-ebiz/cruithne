@@ -542,6 +542,19 @@ class OrdersHelper
                 $referenceDocNum = '';
             }
         }
+        // If configurable, get parent price
+        $price = $orderItem->getOriginalPrice();
+
+        if (!empty($orderItem->getParentItemId())) {
+            $parent = $this->_orderItemCollectionFactory->create()->addFieldToFilter('item_id', ['eq' => $orderItem->getParentItemId()]);;
+            /**
+             * @var \Magento\Sales\Model\Order\Item $parentItem
+             */
+            $parentItem = $parent->getFirstItem();
+            if ($parentItem->getProductType() === "configurable") {
+                $price = $parentItem->getOriginalPrice();
+            }
+        }
 
         // return
         return array_map('trim', array(
@@ -557,7 +570,7 @@ class OrdersHelper
             self::WEB_SKU => $orderItem->getSku(),
             self::QUANTITY => $quantity,
             self::UNIT => 'EA',
-            self::UNIT_PRICE => $orderItem->getOriginalPrice(),
+            self::UNIT_PRICE => $price,
             self::GROSS_SALES => $order->getData('grand_total'),
             self::SHIPPING_AMOUNT => $shippingAmount,
             self::EXEMPT_AMOUNT => '0',
