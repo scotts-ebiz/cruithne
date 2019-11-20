@@ -40,8 +40,8 @@ RUN \
 # Expose Ports for Apache
 EXPOSE 80/tcp 443/tcp
 
-RUN chown -R magento:www-data /var/www/html/magento2/pub/static /var/www/html/magento2/pub/media /var/www/html/magento2/app/etc /var/www/html/magento2/generated
-RUN chmod -R 644 /var/www/html/magento2/pub/static /var/www/html/magento2/pub/media /var/www/html/magento2/app/etc /var/www/html/magento2/generated
+RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -print0 | xargs -0 chown magento:www-data
+RUN find /var/www/html/magento2/pub/media /var/www/html/magento2/pub/static /var/www/html/magento2/app/etc /var/www/html/magento2/var /var/www/html/magento2/generated -print0 | xargs -0 chmod 777
 
 # Run entrypoint file
 COPY ondemand-entrypoint.sh /usr/local/bin/entrypoint.sh
