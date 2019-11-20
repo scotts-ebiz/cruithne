@@ -192,8 +192,16 @@
   display: block;
   padding-bottom: 2rem;
 
-  &:focus {
+  &:active,
+  &:focus,
+  &:hover {
+    text-decoration: underline;
     outline: none;
+    color: $white;
+  }
+
+  &:visited {
+    color: $white;
   }
 
   @media (min-width: $screen-md) {
