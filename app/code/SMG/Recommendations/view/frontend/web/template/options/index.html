@@ -1,3 +1,86 @@
+<!--ko if: hasResults()-->
 <div class="sp-container">
-    <h1 class="sp-h1 sp-max-w-md sp-mx-auto sp-text-green-1 sp-text-center">Your Lawn Will Thank You</h1>
+    <h1 class="sp-h1 sp-mx-auto sp-text-green-1 sp-text-center">Subscription Options</h1>
+    <p class="sp-text-base sp-text-center">Choose whether you'd like to pay for your subscription annually or each time you receive your shipment.</p>
+
+    <div class="">
+    	<h2>Your Plan</h2>
+    	<div data-bind="foreach: { data: results().plan, as: 'plan' }">
+    		<ul data-bind="foreach: { data: plan.coreProducts, as: 'coreProduct' }">
+    			<li data-bind="text: coreProduct.season"></li>
+    		</ul>
+    	</div>
+    </div>
+
+    <div class="sp-flex sp-flex-column md:sp-flex-row md:sp-flex-wrap sp-items-center md:sp--mx-4">
+    	<div class="md:sp-w-1/2 sp-mb-12 sp-px-4 sp-order-1 md:sp-order-0">
+    		<div class="subscription-card --active">
+    			<div class="subscription-card-header">
+    				<h4>One Discounted Payment - Best value</h4>
+    			</div>
+    			<div class="subscription-card-body">
+    				<h3>Annual Subscription</h3>
+    				<p>Subscribe annually and save 10% off MSRP</p>
+    				<div class="subscription-card-price">
+    					<span class="--old-price">$ 59.96</span>
+    					<span class="--current-price">$ 86.00</span>
+    				</div>
+    				<ul>
+    					<li>Charged now</li>
+    					<li>Subscription will be auto-renewed unless canceled</li>
+    					<li>Includes 4 shipments (early April, late July, early September, and mid December)</li>
+    					<li>Free shipping</li>
+    				</ul>
+    			</div>
+    			<div class="subscription-card-footer">
+    				<label class="sp-text-uppercase">
+    					<input type="checkbox" name="subscription_plan" value="annual" checked /> Select annual
+    				</label>
+    			</div>
+    		</div>
+    	</div>
+    	<div class="md:sp-w-1/2 md:sp-mb-12 sp-order-0 md:sp-order-1">
+    		<div class="subscription-card">
+    			<div class="subscription-card-header">
+    				<h4>Pay Per Shipment</h4>
+    			</div>
+    			<div class="subscription-card-body">
+    				<h3>Seasonal Subscription</h3>
+    				<ul>
+    					<li>Charged at the time each shipment is shipped</li>
+    					<li>Subscription will be auto-renewed unless canceled</li>
+    					<li>Cancel anytime</li>
+    					<li>Free shipping</li>
+    				</ul>
+    			</div>
+    			<div class="subscription-card-footer">
+    				<label class="sp-text-uppercase">
+    					<input type="checkbox" name="subscription_plan" value="seasonal" /> Select seasonal
+    				</label>
+    			</div>
+    		</div>
+    	</div>
+    </div>
+
+    <div class="">
+    	<h2>Recommended one time add-ons</h2>
+    	<div data-bind="foreach: { data: results().plan, as: 'plan' }">
+    		<div data-bind="foreach: { data: plan.addOnProducts, as: 'addOnProduct' }">
+    			<h5 data-bind="text: addOnProduct.season"></h5>
+    			<label>
+    				<input type="checkbox" name="addon_products" data-bind="checkedValue: addOnProduct.sku" />
+    				<span data-bind="text: addOnProduct.season"></span>
+    			</label>
+    		</div>
+    	</div>
+    </div>
+
 </div>
+<div class="sp-bg-green-1 sp-py-4">
+    <div class="sp-container sp-flex sp-flex-column md:sp-flex-row sp-justify-end">
+        <a class="sp-button sp-button--inverted sp-order-0 md:sp-order-1 sp-mb-4 md:sp-mb-0" data-bind="click: proceedToCheckout">
+            Proceed to Checkout
+        </a>
+    </div>
+</div>
+<!-- /ko -->

@@ -37,4 +37,14 @@ interface QuizInterface
 	 * @return string
 	 */
 	public function getCompleted();
+
+	/**
+	 * Process quiz options and build the order project
+	 * 
+	 * @param string $subscription_plan
+	 * @param mixed $data
+	 * @param mixed $addons
+	 * @return array
+	 */
+	public function processOrder($subscription_plan, $data, $addons);
 }

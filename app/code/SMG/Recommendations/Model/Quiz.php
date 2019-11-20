@@ -11,11 +11,29 @@ class Quiz implements QuizInterface
      * @var /SMG/Api/Helper/QuizHelper
      */
     protected $_helper;
+    protected $_customerSession;
+    protected $_formKey;
+    protected $_cart;
+    protected $_product;
+    protected $_productRepository;
+    protected $_resultJsonFactory;
 
     public function __construct(
-        \SMG\Recommendations\Helper\QuizHelper $helper
+        \SMG\Recommendations\Helper\QuizHelper $helper,
+        \Magento\Checkout\Model\Session $customerSession,
+        \Magento\Framework\Data\Form\FormKey $formKey,
+        \Magento\Checkout\Model\Cart $cart,
+        \Magento\Catalog\Model\Product $product,
+        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
+        \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
     ) {
         $this->_helper = $helper;
+        $this->_customerSession = $customerSession;
+        $this->_formKey = $formKey;
+        $this->_cart = $cart;
+        $this->_product = $product;
+        $this->_productRepository = $productRepository;
+        $this->_resultJsonFactory = $resultJsonFactory;
     }
 
     /**
@@ -135,6 +153,56 @@ class Quiz implements QuizInterface
         }
 
         return;
+    }
+
+    /**
+     * Process quiz data, build order object and send customer to checkout
+     * 
+     * @return array
+     * 
+     * @api
+     */
+    public function processOrder($subscription_plan, $data, $addons)
+    {
+        // Clear cart
+        $this->_cart->truncate()->save();
+
+        // Add all core products to the Annual subscription
+        if( $subscription_plan == 'annual' ) {
+            $coreProducts = $data['plan']['coreProducts']; // Get core products
+            foreach( $coreProducts as $product ) {
+                $_product = $this->_productRepository->get( $product['sku'] );
+                if( $_product ) {
+                    $this->_cart->addProduct( $_product, array(
+                        'form_key'  => $this->_formKey->getFormKey(),
+                        'product'   => $_product->getId(),
+                        'qty'       => 1
+                    ) );
+                }
+            }
+            die();
+        }
+
+        // Add selected addon products
+        if( ! empty( $addons ) ) {
+            foreach( $addons as $addon ) {
+                $_product = $this->_productRepository->get( $addon );
+                if( $_product ) {
+                    $this->_cart->addProduct( $_product, array(
+                        'form_key'  => $this->_formKey->getFormKey(),
+                        'product'   => $_product->getId(),
+                        'qty'       => 1
+                    ) );
+                }
+            }
+        }
+
+        $this->_cart->save();
+
+        $response = $this->_resultJsonFactory->create();
+        $response->setData( [ 'success' => true ] );
+
+        return $response;
     }
 
     /**
