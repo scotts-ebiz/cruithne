@@ -8,8 +8,8 @@ set -euxo pipefail
 COMMAND="$@"
 
 # Run Setup Upgrade
-# su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade'
-# su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile' 
+su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade'
+su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile' 
 
 # Set Styles
 su - magento -c 'rm /var/www/html/magento2/tools/yarn.lock'
