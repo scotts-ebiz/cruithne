@@ -1,3 +1,9 @@
 .sp-quiz {
   height: calc(100vh - #{$header-height});
 }
+
+.yourplan-options-index {
+	&.sp-overflow-hidden {
+		overflow: unset;
+	}
+}
