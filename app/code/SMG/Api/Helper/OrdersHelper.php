@@ -546,8 +546,10 @@ class OrdersHelper
         $price = $orderItem->getOriginalPrice();
 
         if (!empty($orderItem->getParentItemId())) {
-            $parent = $this->_orderItemCollectionFactory->create()->addFieldToFilter('item_id', ['eq' => $orderItem->getParentItemId()]);;
+            $parent = $this->_orderItemCollectionFactory->create()->addFieldToFilter('item_id', ['eq' => $orderItem->getParentItemId()]);
             /**
+             * There will be only one result since we filter on the unique id
+             *
              * @var \Magento\Sales\Model\Order\Item $parentItem
              */
             $parentItem = $parent->getFirstItem();
