@@ -103,175 +103,10 @@
                                     }
                                 }
                             }
-                            .opc-sidebar.custom-slide {
-                                left: 0;
-                                .modal-inner-wrap {
-                                    .modal-header {
-                                        button.action-close {
-                                            background: #f4f4f4;
-                                        }
-                                    }
-                                    .modal-content {
-                                        #opc-sidebar {
-                                            .opc-block-summary {
-                                                .title {
-                                                    font-size: 16px;
-                                                }
-                                                .table-totals {
-                                                    tbody {
-                                                        .totals.discount {
-                                                            .mark {
-                                                                .title {
-                                                                    font-size: 1rem;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                .items-in-cart {
-                                                    .minicart-items {
-                                                        margin-top: 0.5rem;
-                                                        @include max-screen($screen__m) {
-                                                            margin-top: 0.5rem;
-                                                        }
-                                                        .product-item {
-                                                            .product {
-                                                                .product-item-details {
-                                                                    .product-item-name-block {
-                                                                        .product-item-name {
-                                                                            margin: 0;
-                                                                            @include max-screen($screen__m) {
-                                                                                margin: 0;
-                                                                            }
-                                                                        }
-                                                                        .details-qty {
-                                                                            margin: 0;
-                                                                            @include max-screen($screen__m) {
-                                                                                margin: 0;
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                    .subtotal {
-                                                                        .price-excluding-tax, .price-including-tax {
-                                                                            .cart-price {
-                                                                                .price {
-                                                                                    font-size: 1.2rem;
-                                                                                    font-weight: 700;
-                                                                                    @include max-screen($screen__m) {
-                                                                                        font-size: 1.2rem;
-                                                                                        font-weight: 700;
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                    .content.minicart-items {
-                                                        margin-top: 2.5rem;
-                                                        border-top: 1px solid #ccc;
-                                                        padding-top: .75rem;
-                                                    }
-                                                }
-                                            }
-                                            .opc-block-shipping-information {
-                                                .shipping-information-title {
-                                                    .action-edit {
-                                                        &:before {
-                                                            content: 'Edit';
-                                                            font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                                                            font-size: 0.8rem;
-                                                            text-transform: none;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            .actions .action.continue:before {
-                                display: none;
-                            }
                         }
                     }
                 }
             }
-        }
-        .field-tooltip .field-tooltip-action:before {
-            opacity: 1;
-            color: $mygro-green;
-        }
-        .abs-field-tooltip, .field .control._with-tooltip {
-            input {
-                width: 90% !important;
-                height: 29px;
-            }
-        }
-        input[type="text"], input[type="password"] {
-            width: 100% !important;
-            height: 29px;
-        }
-        div[name="shippingAddress.firstname"], div[name="shippingAddress.lastname"] {
-            width: 50%;
-            display: inline-block;
-        }
-        div[name="shippingAddress.firstname"] {
-            padding-right: 10px !important;
-        }
-        div[name="shippingAddress.lastname"] {
-            padding-left: 10px !important;
-        }
-        .fieldset>.field {
-            margin: 0 0 10px;
-        }
-        .opc-block-summary {
-            .items-in-cart>.title:after {
-                display: none;
-            }
-            .product-item .price {
-                font-size: $font15;
-                font-weight: 600;
-            }
-            .minicart-items-wrapper {
-                max-height: none;
-            }
-            .product.options {
-                .item-options {
-                    .values .price {
-                        display: none;
-                    }
-                }
-            }
-        }
-        .minicart-items {
-            .product>.product-image-container {
-                margin-top: 15px;
-            }
-            .product-item-details {
-                padding-left: 60px;
-                .price-including-tax, .price-excluding-tax {
-                    font-size: 16px;
-                }
-            }
-            .product-item-name {
-                font-size: $font14;
-            }
-            .product-item-details .details-qty {
-                margin-top: 0px;
-                font-size: $font12;
-            }
-        }
-        .product.options {
-            font-size: $font14;
-        }
-        .fieldset>.field:not(.choice)>.control {
-            width: 100%;
-        }
-        #customer-email-fieldset .actions-toolbar {
-            margin-left: 0;
         }
         #checkout {
             margin-top: 30px;
@@ -287,9 +122,6 @@
         }
         .actions-toolbar>.secondary .action:last-child {
             margin-top: 30px;
-        }
-        #checkout-shipping-method-load {
-            //float: left;
         }
         #shipping-method-buttons-container {
             float: right;
@@ -398,7 +230,7 @@
                 display: none;
             }
         }
-        .abs-checkout-title, .opc-wrapper .step-title, .opc-block-shipping-information .shipping-information-title, .opc-block-summary>.title, .checkout-agreements-items .checkout-agreements-item-title {
+        .abs-checkout-title, .opc-wrapper .step-title, .opc-block-shipping-information .shipping-information-title, .checkout-agreements-items .checkout-agreements-item-title {
             font-weight: 500;
             font-size: 1.6rem;
             color: $color_black20_shade;

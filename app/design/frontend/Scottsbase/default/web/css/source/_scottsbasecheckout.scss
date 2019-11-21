@@ -71,15 +71,37 @@
                                         border-bottom: 1px solid #c2c2c2;
                                         padding-bottom: 1rem;
                                         .field-tooltip {
-                                          display: none;
+                                            display: none;
                                         }
                                     }
                                     .form-login,
                                     .form-shipping-address {
                                         .fieldset {
-                                            .control {
-                                                float: none;
-                                                width: auto;
+                                            > .field {
+                                                margin: 0 0 10px;
+                                            }
+                                            div[name="shippingAddress.firstname"], div[name="shippingAddress.lastname"] {
+                                                width: 50%;
+                                                display: inline-block;
+                                                @media screen and (max-width: $screen__m) {
+                                                    width: 100%;
+                                                }
+                                                .control {
+                                                    float: none;
+                                                    width: auto;
+                                                }
+                                            }
+                                            div[name="shippingAddress.firstname"] {
+                                                padding-right: 10px;
+                                                @media screen and (max-width: $screen__m) {
+                                                    padding-right: 0;
+                                                }
+                                            }
+                                            div[name="shippingAddress.lastname"] {
+                                                padding-left: 10px;
+                                                @media screen and (max-width: $screen__m) {
+                                                    padding-left: 0;
+                                                }
                                             }
                                         }
                                         .hidden-fields {
@@ -276,6 +298,93 @@
                             }
                         }
                     }
+                    .opc-sidebar.custom-slide {
+                        left: 0;
+                        .modal-inner-wrap {
+                            .modal-content {
+                                #opc-sidebar {
+                                    .opc-block-summary {
+                                        .title {
+                                            font-size: 16px;
+                                        }
+                                        .table-totals {
+                                            tbody {
+                                                .totals.discount {
+                                                    .mark {
+                                                        .title {
+                                                            font-size: 1rem;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        .items-in-cart {
+                                            .content.minicart-items {
+                                                margin-top: 2.5rem;
+                                                border-top: 1px solid #ccc;
+                                                padding-top: .75rem;
+                                                @include max-screen($screen__m) {
+                                                    margin-top: 0.5rem;
+                                                }
+                                                .minicart-items-wrapper {
+                                                    max-height: none;
+                                                    .product-item {
+                                                        .product {
+                                                            .product-image-container {
+                                                                margin-top: 15px;
+                                                            }
+                                                            .product-item-details {
+                                                                padding-left: 60px;
+                                                                .product-item-name-block {
+                                                                    .product-item-name {
+                                                                        font-size: 14px;
+                                                                        margin: 0;
+                                                                    }
+                                                                    .details-qty {
+                                                                        margin: 0;
+                                                                        font-size: 12px;
+                                                                    }
+                                                                }
+                                                                .subtotal {
+                                                                    .price-excluding-tax, .price-including-tax {
+                                                                        font-size: 16px;
+                                                                        .cart-price {
+                                                                            .price {
+                                                                                font-size: 1.2rem;
+                                                                                font-weight: 700;
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
+                                                            }
+                                                        }
+                                                        .product.options {
+                                                            font-size: 14px;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .opc-block-shipping-information {
+                                        .shipping-information-title {
+                                            .action-edit {
+                                                &:before {
+                                                    content: 'Edit';
+                                                    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                                                    font-size: 0.8rem;
+                                                    text-transform: none;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .actions .action.continue:before {
+                        display: none;
+                    }
                 }
                 [type="radio"]:checked,
                 [type="radio"]:not(:checked) {
@@ -329,6 +438,10 @@
                     top: 4px;
                 }
 
+                //Don't know what this is used for
+                .fieldset>.field:not(.choice)>.control {
+                  width: 100%;
+                }
             }
         }
     }
