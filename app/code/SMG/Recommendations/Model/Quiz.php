@@ -17,23 +17,24 @@ class Quiz implements QuizInterface
     protected $_product;
     protected $_productRepository;
     protected $_resultJsonFactory;
+    protected $_checkoutSession;
 
     public function __construct(
         \SMG\Recommendations\Helper\QuizHelper $helper,
         \Magento\Checkout\Model\Session $customerSession,
         \Magento\Framework\Data\Form\FormKey $formKey,
         \Magento\Checkout\Model\Cart $cart,
+        \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Catalog\Model\Product $product,
-        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
-        \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
+        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
     ) {
         $this->_helper = $helper;
         $this->_customerSession = $customerSession;
         $this->_formKey = $formKey;
         $this->_cart = $cart;
+        $this->_checkoutSession = $checkoutSession;
         $this->_product = $product;
         $this->_productRepository = $productRepository;
-        $this->_resultJsonFactory = $resultJsonFactory;
     }
 
     /**
@@ -164,45 +165,53 @@ class Quiz implements QuizInterface
      */
     public function processOrder($subscription_plan, $data, $addons)
     {
-        // Clear cart
-        $this->_cart->truncate()->save();
+        // Before starting to add new products, let's clear customer's cart
+        $quoteItems = $this->_checkoutSession->getQuote()->getItemsCollection();
+        foreach( $quoteItems as $item ) {
+            $this->_cart->removeItem($item->getId())->save();
+        }
 
         // Add all core products to the Annual subscription
         if( $subscription_plan == 'annual' ) {
-            $coreProducts = $data['plan']['coreProducts']; // Get core products
+            $coreProducts = $data['plan']['coreProducts'];
             foreach( $coreProducts as $product ) {
-                $_product = $this->_productRepository->get( $product['sku'] );
-                if( $_product ) {
-                    $this->_cart->addProduct( $_product, array(
+                try {
+                    $_product = $this->_productRepository->get( $product['sku'] );
+                    $productId = $_product->getId();
+                    $params = array(
                         'form_key'  => $this->_formKey->getFormKey(),
-                        'product'   => $_product->getId(),
-                        'qty'       => 1
-                    ) );
+                        'qty'       => 1,
+                    );
+                    $this->_cart->addProduct( $productId, $params );
+                } catch( Exception $e ) {
+                    $response = array( 'success' => false, 'code' => $e->getCode(), 'message' => $e->getMessage());
+                    return json_encode( $response );
                 }
             }
-            die();
         }
 
-        // Add selected addon products
-        if( ! empty( $addons ) ) {
-            foreach( $addons as $addon ) {
+        // Add selected addon products in the cart
+        foreach( $addons as $addon ) {
+            try {
                 $_product = $this->_productRepository->get( $addon );
-                if( $_product ) {
-                    $this->_cart->addProduct( $_product, array(
-                        'form_key'  => $this->_formKey->getFormKey(),
-                        'product'   => $_product->getId(),
-                        'qty'       => 1
-                    ) );
-                }
+                $productId = $_product->getId();
+                $params = array(
+                    'form_key'  => $this->_formKey->getFormKey(),
+                    'qty'       => 1,
+                );
+                $this->_cart->addProduct( $productId, $params );
+            } catch( Exception $e ) {
+                $response = array( 'success' => false, 'code' => $e->getCode(), 'message' => $e->getMessage());
+                return json_encode( $response );
             }
         }
 
+        // Save cart
         $this->_cart->save();
 
-        $response = $this->_resultJsonFactory->create();
-        $response->setData( [ 'success' => true ] );
+        $response = array( 'success' => true );
 
-        return $response;
+        return json_encode( $response );
     }
 
     /**
