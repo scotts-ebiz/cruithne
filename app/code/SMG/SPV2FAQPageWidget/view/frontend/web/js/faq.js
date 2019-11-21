@@ -14,7 +14,10 @@ define([
             this.category2Name = config.category2Name;
         },
 
-        setupAccordion() {
+        setupAccordion(el) {
+
+            el.classList.remove('sp-hide');
+
             $('#faq_1').accordion({
                 active: false,
                 collapsible: true,
