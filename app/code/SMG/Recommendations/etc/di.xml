@@ -1,4 +1,10 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="SMG\Recommendations\Api\QuizInterface" type="SMG\Recommendations\Model\Quiz" />
+    <preference for="Magento\Checkout\Controller\Index\Index" type="SMG\Recommendations\Controller\Checkout\Index" />
+	<preference for="Magento\Checkout\Controller\Cart\Index" type="SMG\Recommendations\Controller\Cart\Index" />
+	
+	<type name="Magento\Customer\Controller\Account\LoginPost">
+		<plugin name="SMG_Customer_LoginPost" type="SMG\Recommendations\Controller\LoginPost" />
+	</type>
 </config>

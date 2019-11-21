@@ -1,6 +1,6 @@
 <?php
 
-namespace SMG\SPV2CheckoutLogin\Controller\Cart;
+namespace SMG\Recommendations\Controller\Cart;
 
 use Magento\Framework\App\Action\HttpGetActionInterface as HttpGetActionInterface;
 use \Magento\Framework\Exception\NotFoundException;
