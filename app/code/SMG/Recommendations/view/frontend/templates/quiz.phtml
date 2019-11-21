@@ -1,9 +1,8 @@
 <div class="sp-quiz sp-bg-green-1 sp-flex sp-text-white">
     <div class="sp-quiz__wrapper sp-flex sp-flex-column sp-h-full sp-w-full" data-bind="scope: 'quiz'">
-        <!-- ko if: !quiz.complete() -->
         <div
             class="sp-quiz__content sp-flex-auto sp-py-12"
-            data-bind="if: !quiz.complete(), css: { 'sp-quiz--has-address': quiz.questions().length && quiz.questions()[0].questionType === 5 && quiz.map() && quiz.map().address() }"
+            data-bind="css: { 'sp-quiz--has-address': quiz.questions().length && quiz.questions()[0].questionType === 5 && quiz.map() && quiz.map().address() }"
         >
             <div class="sp-quiz__question-wrapper sp-h-full">
                 <!-- ko template: "SMG_Recommendations/questiontypes/1-single-select" --><!-- /ko -->
@@ -20,11 +19,6 @@
                 <!-- ko template: "SMG_Recommendations/transition" --><!-- /ko -->
             </div>
         </div>
-
-        <!-- /ko -->
-
-        <!--Final Screen-->
-        <!-- ko template: "SMG_Recommendations/final" --><!-- /ko -->
 
         <!-- ko template: "SMG_Recommendations/footer" --><!-- /ko -->
     </div>
