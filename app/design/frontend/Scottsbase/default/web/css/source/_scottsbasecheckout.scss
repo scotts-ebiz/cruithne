@@ -22,6 +22,33 @@
         .columns {
             .column.main {
                 .checkout-container {
+                    .custom-checkout-nav-btns {
+                        display: inline-block;
+                        float: right;
+                        width: 250px;
+                        &:after, &:before {
+                            content: '';
+                            display: inline-block;
+                            clear: both;
+                        }
+                        .actions.backbtn {
+                            a:before {
+                                -webkit-font-smoothing: antialiased;
+                                -moz-osx-font-smoothing: grayscale;
+                                font-size: 32px;
+                                line-height: 20px;
+                                content: "";
+                                font-family: "icons-blank-theme";
+                                margin: 0;
+                                vertical-align: top;
+                                display: inline-block;
+                                //font-weight: $font_normal;
+                                overflow: hidden;
+                                speak: none;
+                                text-align: center;
+                            }
+                        }
+                    }
                     .opc-progress-bar {
                         .opc-progress-bar-item {
                             &._active {
@@ -70,8 +97,19 @@
                                     .form-login {
                                         border-bottom: 1px solid #c2c2c2;
                                         padding-bottom: 1rem;
+                                        #customer-email-fieldset>fieldset.fieldset {
+                                          display: none;
+                                        }
                                         .field-tooltip {
                                             display: none;
+                                        }
+                                        .note {
+                                            span {
+                                                display: none;
+                                            }
+                                            &:before {
+                                                display: none;
+                                            }
                                         }
                                     }
                                     .form-login,
@@ -111,13 +149,7 @@
                                         }
                                     }
                                     .form-shipping-address {
-                                        div[name='shippingAddress.street.1'], div[name='shippingAddress.street.2'],
-                                        div[name='billingAddressauthorizenet_directpost.street.1'],
-                                        div[name='billingAddressauthorizenet_directpost.street.2'],
-                                        div[name='billingAddressvantiv_cc.street.1'],
-                                        div[name='billingAddressvantiv_cc.street.2'],
-                                        div[name='billingAddresscashondelivery.street.1'],
-                                        div[name='billingAddresscashondelivery.street.2'] {
+                                        div[name='shippingAddress.street.1'], div[name='shippingAddress.street.2'] {
                                             display: none;
                                         }
                                     }
@@ -187,6 +219,16 @@
                                                             .payment-method-content {
                                                                 .payment-method-billing-address {
                                                                     .checkout-billing-address {
+                                                                        .billing-address-form {
+                                                                            div[name='billingAddressauthorizenet_directpost.street.1'],
+                                                                            div[name='billingAddressauthorizenet_directpost.street.2'],
+                                                                            div[name='billingAddressvantiv_cc.street.1'],
+                                                                            div[name='billingAddressvantiv_cc.street.2'],
+                                                                            div[name='billingAddresscashondelivery.street.1'],
+                                                                            div[name='billingAddresscashondelivery.street.2'] {
+                                                                                display: none;
+                                                                            }
+                                                                        }
                                                                         .fieldset .actions-toolbar {
                                                                             margin-left: 0;
                                                                         }
@@ -255,13 +297,25 @@
                                         }
                                         .opc-payment-additional {
                                             .payment-option-title {
-                                              .action-toggle {
-                                                color: $scotts-green;
-                                              }
+                                                padding-bottom: 10px;
+                                                .action-toggle {
+                                                    color: $scotts-green;
+                                                    span {
+                                                        font-weight: 700;
+                                                        line-height: 1.1;
+                                                        margin-top: 2rem;
+                                                        margin-bottom: 2rem;
+                                                        font-size: 18px;
+                                                    }
+                                                }
                                             }
                                             .payment-option-content {
                                                 .form-discount {
+                                                    max-width: none;
                                                     .payment-option-inner {
+                                                        @media screen and (max-width: $screen__l) {
+                                                            margin: 0 0 0 0;
+                                                        }
                                                         label {
                                                             padding: 6px 15px 0 0;
                                                             text-align: right;
@@ -276,8 +330,24 @@
                                                                 width: auto;
                                                             }
                                                         }
+                                                        .control {
+                                                            width: auto;
+                                                            float: left;
+                                                            .actions-toolbar .primary {
+                                                                float: none;
+                                                            }
+                                                        }
+                                                    }
+                                                    .payment-option-inner>.field {
+                                                        &:after {
+                                                            display: inline-block;
+                                                            content: '';
+                                                            clear: both;
+                                                        }
                                                     }
                                                     .actions-toolbar {
+                                                        margin-left: 25.8%;
+                                                        margin-top: -43px;
                                                         .primary {
                                                             @media screen and (max-width: $screen__l) {
                                                               width: 100%;
@@ -580,6 +650,16 @@
                     }
                 }
 
+                //Vet this
+                .item-options {
+                    dd {
+                        font-weight: bold;
+                    }
+                    dt {
+                        font-weight: 400;
+                    }
+                }
+
 
             }
         }
@@ -754,15 +834,6 @@ td#label_carrier_fedex-nextday_flatrate {
   }
   .checkout-payment-method .payment-option-content {
     padding: 0;
-  }
-  //test - remove cause you just moved this above
-  //.checkout-index-index #payment #checkout-step-payment .payment-option .payment-option-content #discount-form .primary {
-  //  width: 100%;
-  //  margin-left:0 !important;
-  //
-  //}
-  .checkout-index-index #discount-form .payment-option-inner {
-    margin: 0 0 0 0;
   }
   .checkout-index-index #discount-form label {
     padding: 6px 10px 0 0;

@@ -80,112 +80,6 @@
                 }
             }
         }
-
-        //Continue here
-
-        //.cust-btn-add {
-        //    font-size: $font14;
-        //    float: right;
-        //    &:before {
-        //        content: '+';
-        //        display: inline-block;
-        //        margin-right: 3px;
-        //    }
-        //}
-        #checkout-step-shipping {
-            .note {
-                span {
-                    display: none;
-                }
-                &:before {
-                    display: none;
-                }
-            }
-        }
-        #customer-email-fieldset>fieldset.fieldset {
-            display: none !important;
-        }
-        .custom-checkout-nav-btns {
-            display: inline-block;
-            float: right;
-            width: 250px;
-            &:after, &:before {
-                content: '';
-                display: inline-block;
-                clear: both;
-            }
-            .actions.backbtn {
-                a:before {
-                    -webkit-font-smoothing: antialiased;
-                    -moz-osx-font-smoothing: grayscale;
-                    font-size: $font32;
-                    line-height: 20px;
-                    content: "";
-                    font-family: "icons-blank-theme";
-                    margin: 0;
-                    vertical-align: top;
-                    display: inline-block;
-                    font-weight: $font_normal;
-                    overflow: hidden;
-                    speak: none;
-                    text-align: center;
-                }
-            }
-        }
-        .item-options {
-            dd {
-                font-weight: bold;
-            }
-            dt {
-                font-weight: $font_normal;
-            }
-        }
-        .checkout-index-index {
-            .field-tooltip {
-                top: 30px;
-            }
-        }
-        #block-discount-heading span {
-            font-weight: 700;
-            line-height: 1.1;
-            margin-top: 2rem;
-            margin-bottom: 2rem;
-            font-size: 18px;
-        }
-        #discount-form .control {
-            width: auto;
-            float: left;
-            .actions-toolbar .primary {
-                float: none;
-            }
-        }
-        #payment #checkout-step-payment {
-            .payment-option .payment-option-content {
-                #discount-form {
-                    .actions-toolbar {
-                        margin-left: 25.8%;
-                        margin-top: -43px;
-                    }
-                }
-            }
-        }
-        .checkout-payment-method {
-            .discount-code {
-                .payment-option-title {
-                    padding-bottom: 10px;
-                }
-            }
-        }
-        .opc-wrapper .form-discount {
-            max-width: none;
-        }
-        .payment-option-inner>.field {
-            &:after {
-                display: inline-block;
-                content: '';
-                clear: both;
-            }
-        }
     }
 }
 @media screen and (min-width: $screen_1024) {
@@ -267,9 +161,6 @@
     .fieldset>.field:not(.choice) {
         >.label {
             width: 40%;
-        }
-        .control {
-            width: 60%;
         }
     }
     .checkout-index-index {
