@@ -33,9 +33,11 @@ define([
                     dataType: 'json',
                     method: 'post',
                     success(data) {
-                        console.log(data);
+                        var data = JSON.parse(data);
                         if( data.success === true ) {
                         	window.location.href = '/checkout';
+                        } else {
+                            alert( 'Error creating your order ' + data.message + '. Please try again.' );
                         }
                     },
                 },
