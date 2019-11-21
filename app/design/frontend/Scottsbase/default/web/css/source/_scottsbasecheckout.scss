@@ -114,6 +114,7 @@
                             }
                             .checkout-shipping-method {
                                 .actions-toolbar {
+                                    float: right;
                                     .action.primary {
                                         font-family: Lato, Arial, sans-serif;
                                         text-transform: uppercase;
@@ -173,9 +174,42 @@
                                                                 top: 6px;
                                                             }
                                                             .payment-method-content {
+                                                                .payment-method-billing-address {
+                                                                    .checkout-billing-address {
+                                                                        .fieldset .actions-toolbar {
+                                                                            margin-left: 0;
+                                                                        }
+                                                                        .primary {
+                                                                            width: 100%;
+                                                                            float: left;
+                                                                            .action-update, .action-cancel {
+                                                                              width: auto;
+                                                                              border-radius: 4px;
+                                                                              padding: 15px 25px;
+                                                                              margin-top: 0;
+                                                                              font-family: $opensans;
+                                                                              font-size: 0.8rem;
+                                                                              line-height: 0;
+                                                                              float: left;
+                                                                              height: auto;
+                                                                              background: #4d4e4e;
+                                                                              text-transform: inherit;
+                                                                              color: #fff;
+                                                                              text-decoration: none;
+                                                                              &:hover {
+                                                                                text-decoration: none;
+                                                                                background: #262626;
+                                                                              }
+                                                                            }
+                                                                            .action-cancel {
+                                                                              margin: 0 0 0 15px;
+                                                                            }
+                                                                        }
+                                                                    }
+                                                                }
                                                                 .actions-toolbar {
                                                                     .primary {
-                                                                        .action.primary.checkout {
+                                                                        .action.primary.checkout:last-child {
                                                                             -webkit-transition: background 0.2s;
                                                                             -moz-transition: background 0.2s;
                                                                             -ms-transition: background 0.2s;
@@ -184,6 +218,7 @@
                                                                             font-family: Lato, Arial, sans-serif;
                                                                             font-size: 15px;
                                                                             text-transform: uppercase;
+                                                                            color: $color-white;
                                                                             background: $scotts-green;
                                                                             padding: 23px 35px;
                                                                             line-height: 0;
@@ -330,8 +365,13 @@
                                                     max-height: none;
                                                     .product-item {
                                                         .product {
-                                                            .product-image-container {
+                                                            product-image-container {
                                                                 margin-top: 15px;
+                                                                display: inline-block;
+                                                                width: auto !important;
+                                                                .product-image-wrapper {
+                                                                    display: inline-block;
+                                                                }
                                                             }
                                                             .product-item-details {
                                                                 padding-left: 60px;
@@ -441,6 +481,18 @@
                 //Don't know what this is used for
                 .fieldset>.field:not(.choice)>.control {
                   width: 100%;
+                }
+
+                .actions-toolbar>.secondary .action:last-child {
+                  margin-top: 30px;
+                }
+
+                //TEST
+                //Payment Page Address Phone links
+                .shipping-information-content a, .billing-address-details a, .shipping-address-item.selected-item a {
+                    cursor: text;
+                    pointer-events: none;
+                    color: #909090;
                 }
             }
         }
