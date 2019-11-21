@@ -8,7 +8,7 @@ class Quiz implements QuizInterface
 {
 
     /**
-     * @var /SMG/Api/Helper/QuizHelper
+     * @var /SMG/Recommendations/Helper/QuizHelper
      */
     protected $_helper;
 
