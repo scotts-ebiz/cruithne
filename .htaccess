@@ -232,9 +232,9 @@ Options -Indexes
 
 ############################################
 ## GOM1-50 Redirect M1 iframe uris to M2's for easier cutovers.
-    RewriteRule ^/?atgcart/add$    /iframes/addtocart [R=302,NC,L,QSA]
-    RewriteRule ^/?atgcart/index$  /iframes/cart [R=302,NC,L,QSA]
-    RewriteRule ^/?atgcart$        /iframes/cart [R=302,NC,L,QSA]
+    RewriteRule ^/?atgcart/add$    https://%{HTTP_HOST}/iframes/addtocart [R=302,NC,L,QSA]
+    RewriteRule ^/?atgcart/index$  https://%{HTTP_HOST}/iframes/cart [R=302,NC,L,QSA]
+    RewriteRule ^/?atgcart$        https://%{HTTP_HOST}/iframes/cart [R=302,NC,L,QSA]
 
 ############################################
 ## redirect for mobile user agents
