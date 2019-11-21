@@ -171,8 +171,8 @@ class Quiz implements QuizInterface
             $this->_cart->removeItem($item->getId())->save();
         }
 
-        // Add all core products to the Annual subscription
-        if( $subscription_plan == 'annual' ) {
+        // Add all core products to the order
+        if( ! empty( $data['plan']['coreProducts'] ) ) {
             $coreProducts = $data['plan']['coreProducts'];
             foreach( $coreProducts as $product ) {
                 try {
@@ -204,6 +204,11 @@ class Quiz implements QuizInterface
                 $response = array( 'success' => false, 'code' => $e->getCode(), 'message' => $e->getMessage());
                 return json_encode( $response );
             }
+        }
+
+        // Aplly coupon code with 10% discount if it's Annual Subscription
+        if( $subscription_plan == 'annual' ) {
+            $this->_checkoutSession->getQuote()->setCouponCode('annual_discount')->collectTotals()->save();
         }
 
         // Save cart
