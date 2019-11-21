@@ -33,6 +33,13 @@
                                     }
                                 }
                             }
+                            .checkout-validate-address {
+                                .step-content {
+                                    .instructions.noError {
+                                      color: $mygro-green;
+                                    }
+                                }
+                            }
                             .checkout-payment-method {
                                 .step-content {
                                     .form.payments {
@@ -64,41 +71,6 @@
                                                     color: $mygro-green;
                                                 }
                                             }
-                                            .payment-option-content {
-                                                .form-discount {
-                                                    .actions-toolbar {
-                                                        .primary {
-                                                            button {
-                                                                background: $mygro-dark-gray;
-                                                                &:hover {
-                                                                    background: $mygro-black-alt;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                .form-giftcard-account {
-                                                    .actions-toolbar {
-                                                        .primary {
-                                                            margin-left: 1rem;
-                                                            .action-add.primary {
-                                                                background: $mygro-dark-gray;
-                                                                &:hover {
-                                                                    background: $mygro-black-alt;
-                                                                }
-                                                            }
-                                                        }
-                                                        .secondary {
-                                                            .action-check {
-                                                                background: $mygro-dark-gray;
-                                                                &:hover {
-                                                                    background: $mygro-black-alt;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
                                         }
                                     }
                                 }
@@ -109,50 +81,17 @@
             }
         }
 
+        //Continue here
 
-        //Start back up here!
-        .fieldset>.field.choice:before, .fieldset>.field.no-label:before {
-            width: 0;
-        }
-        div[name='shippingAddress.street.1'], div[name='shippingAddress.street.2'], div[name='billingAddressauthorizenet_directpost.street.1'], div[name='billingAddressauthorizenet_directpost.street.2'], div[name='billingAddressvantiv_cc.street.1'], div[name='billingAddressvantiv_cc.street.2'], div[name='billingAddresscashondelivery.street.1'], div[name='billingAddresscashondelivery.street.2'] {
-            display: none;
-        }
-        .field-tooltip .field-tooltip-content {
-            background: $color_lightyellow_shade;
-            &:after {
-                border-right-color: $color_lightyellow_shade;
-            }
-        }
-        .fieldset>.field:not(.choice)>.label {
-            width: 90%;
-            text-align: left;
-        }
-        .actions-toolbar>.primary .action:last-child {
-            margin-top: 10px;
-        }
-        .form.form-discount .actions-toolbar>.primary .action:last-child {
-            margin-top: 0px;
-        }
-        .field.street.admin__control-fields {
-            div[name="billingAddresscheckmo.street.1"], div[name="billingAddresscheckmo.street.2"] {
-                display: none;
-            }
-        }
-        .abs-checkout-title, .opc-wrapper .step-title, .opc-block-shipping-information .shipping-information-title, .checkout-agreements-items .checkout-agreements-item-title {
-            font-weight: 500;
-            font-size: 1.6rem;
-            color: $color_black20_shade;
-            font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-        }
-        .cust-btn-add {
-            font-size: $font14;
-            float: right;
-            &:before {
-                content: '+';
-                display: inline-block;
-                margin-right: 3px;
-            }
-        }
+        //.cust-btn-add {
+        //    font-size: $font14;
+        //    float: right;
+        //    &:before {
+        //        content: '+';
+        //        display: inline-block;
+        //        margin-right: 3px;
+        //    }
+        //}
         #checkout-step-shipping {
             .note {
                 span {
@@ -193,35 +132,12 @@
                 }
             }
         }
-        #payment #checkout-step-payment {
-            .payment-option .payment-option-content {
-                #discount-form .primary .action.action-apply {
-                    background: none;
-                    border: 0;
-                    color: #4d4d4e;
-                    font-size: $font20;
-                    padding: 0;
-                }
-            }
-        }
         .item-options {
             dd {
                 font-weight: bold;
             }
             dt {
                 font-weight: $font_normal;
-            }
-        }
-        .fieldset>.field.required, .fieldset>.field._required {
-            >.label:after {
-                display: none;
-            }
-        }
-        .fieldset>.fields {
-            >.field.required, >.field._required {
-                >.label:after {
-                    display: none;
-                }
             }
         }
         .checkout-index-index {
@@ -236,71 +152,19 @@
             margin-bottom: 2rem;
             font-size: 18px;
         }
-        #discount-form label {
-            padding: 6px 15px 0 0;
-            text-align: right;
-            width: 25.8%;
-            box-sizing: border-box;
-            float: left;
-            position: relative;
-            font-weight: 700;
-            overflow: visible;
-            height: auto;
-        }
         #discount-form .control {
             width: auto;
             float: left;
             .actions-toolbar .primary {
                 float: none;
             }
-        } // Apply Discount - Button on Payment Page
+        }
         #payment #checkout-step-payment {
             .payment-option .payment-option-content {
-                #discount-form .primary .action.action-apply {
-                    border: 0;
-                    display: inline-block;
-                    font-size: 0.8rem;
-                    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                    padding: 5px 10px 5px 10px !important;
-                    background: #4d4d4e !important;
-                    color: #fff !important;
-                    line-height: 0;
-                    height: 30px;
-                    &:hover {
-                        background: #262626 !important;
-                    }
-                }
-                #discount-form .primary .action.cancel.primary {
-                    border: 0;
-                    display: inline-block;
-                    font-size: 0.8rem;
-                    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                    padding: 5px 10px 5px 10px !important;
-                    background: #4d4d4e !important;
-                    color: #fff !important;
-                    line-height: 0;
-                    height: 30px;
-                    &:hover {
-                        background: #262626 !important;
-                    }
-                }
                 #discount-form {
                     .actions-toolbar {
                         margin-left: 25.8%;
                         margin-top: -43px;
-                    }
-                    .primary {
-                        float: none !important;
-                        margin-left: 20px;
-                        @include max-screen($screen__s) {
-                            margin-left: 0px;
-                        }
-                    }
-                    .action:last-child {
-                        height: 30px;
-                        @include max-screen($screen__s) {
-                            height: 100%;
-                        }
                     }
                 }
             }
@@ -366,15 +230,11 @@
                     left: auto;
                     right: 0;
                     top: -20px;
-                    /*---- 30042019 ----*/
                     transform: rotate(90deg);
                     -webkit-transform: rotate(90deg);
                     -moz-transform: rotate(90deg);
                 }
             }
-        }
-        #discount-form label {
-            width: auto;
         }
     }
 }
@@ -530,9 +390,6 @@
 }
 @media screen and (max-width: $screen_568) {
     .checkout-cart-index {
-        div.header.content.stickyHeader {
-            // padding-top: 33px;
-        }
         .cart-summary {
             width: 100% !important;
         }
@@ -556,7 +413,6 @@
                 text-align: left;
                 float: none;
                 line-height: $font_normal;
-                /*font-size: $font12;*/
                 margin-left: 3px;
             }
         }
@@ -585,14 +441,10 @@
                     display: grid;
                     text-align: left;
                     &:before {
-                        //border-bottom: 1px solid #d2d3d8;
                         padding-bottom: 5px;
                         margin-bottom: 10px;
                     }
                 }
-            }
-            .items>.item {
-                //border-bottom: 0;
             }
             .actions-toolbar>.action:last-child {
                 text-transform: capitalize;

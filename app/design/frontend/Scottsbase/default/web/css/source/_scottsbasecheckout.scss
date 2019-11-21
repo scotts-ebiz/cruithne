@@ -110,6 +110,17 @@
                                             }
                                         }
                                     }
+                                    .form-shipping-address {
+                                        div[name='shippingAddress.street.1'], div[name='shippingAddress.street.2'],
+                                        div[name='billingAddressauthorizenet_directpost.street.1'],
+                                        div[name='billingAddressauthorizenet_directpost.street.2'],
+                                        div[name='billingAddressvantiv_cc.street.1'],
+                                        div[name='billingAddressvantiv_cc.street.2'],
+                                        div[name='billingAddresscashondelivery.street.1'],
+                                        div[name='billingAddresscashondelivery.street.2'] {
+                                            display: none;
+                                        }
+                                    }
                                 }
                             }
                             .checkout-shipping-method {
@@ -250,12 +261,34 @@
                                             }
                                             .payment-option-content {
                                                 .form-discount {
+                                                    .payment-option-inner {
+                                                        label {
+                                                            padding: 6px 15px 0 0;
+                                                            text-align: right;
+                                                            width: 25.8%;
+                                                            box-sizing: border-box;
+                                                            float: left;
+                                                            position: relative;
+                                                            font-weight: 700;
+                                                            overflow: visible;
+                                                            height: auto;
+                                                            @media screen and (max-width: $screen__l) {
+                                                                width: auto;
+                                                            }
+                                                        }
+                                                    }
                                                     .actions-toolbar {
                                                         .primary {
+                                                            @media screen and (max-width: $screen__l) {
+                                                              width: 100%;
+                                                              margin-left:0;
+                                                            }
                                                             button {
                                                                 font-family: $opensans;
-                                                                font-size: 1rem;
+                                                                font-size: 0.8rem;
                                                                 color: $color-white;
+                                                                padding: 5px 10px 5px 10px;
+                                                                height: 30px;
                                                                 -webkit-transition: background 0.2s;
                                                                 -moz-transition: background 0.2s;
                                                                 -ms-transition: background 0.2s;
@@ -478,22 +511,76 @@
                     top: 4px;
                 }
 
-                //Don't know what this is used for
+                //Fieldset based styles
                 .fieldset>.field:not(.choice)>.control {
-                  width: 100%;
+                  width: auto;
+                  float: none;
+                }
+                .fieldset>.field.choice:before, .fieldset>.field.no-label:before {
+                  width: 0;
+                }
+                .fieldset>.field:not(.choice)>.label {
+                  width: 90%;
+                  text-align: left;
+                }
+                .fieldset>.field.required, .fieldset>.field._required {
+                  >.label:after {
+                    display: none;
+                  }
+                }
+                .fieldset>.fields {
+                  >.field.required, >.field._required {
+                    >.label:after {
+                      display: none;
+                    }
+                  }
+                }
+
+                .field.street.admin__control-fields {
+                    div[name="billingAddresscheckmo.street.1"], div[name="billingAddresscheckmo.street.2"] {
+                        display: none;
+                    }
                 }
 
                 .actions-toolbar>.secondary .action:last-child {
                   margin-top: 30px;
                 }
 
-                //TEST
                 //Payment Page Address Phone links
                 .shipping-information-content a, .billing-address-details a, .shipping-address-item.selected-item a {
                     cursor: text;
                     pointer-events: none;
                     color: #909090;
                 }
+
+                //Vet this
+                .actions-toolbar>.primary .action:last-child {
+                    margin-top: 10px;
+                }
+
+                .form.form-discount .actions-toolbar>.primary .action:last-child { //test
+                    margin-top: 0px;
+                }
+
+                //Vet this
+                .abs-checkout-title, .opc-wrapper .step-title, .opc-block-shipping-information .shipping-information-title, .checkout-agreements-items .checkout-agreements-item-title {
+                    font-weight: 500;
+                    font-size: 1.6rem;
+                    color: $color_black20_shade;
+                    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                }
+
+                .cust-btn-add {
+                    font-size: 14px;
+                    float: right;
+                    &:before {
+                      content: '+';
+                      display: inline-block;
+                      margin-right: 3px;
+                    }
+                }
+
+
             }
         }
     }
@@ -668,11 +755,12 @@ td#label_carrier_fedex-nextday_flatrate {
   .checkout-payment-method .payment-option-content {
     padding: 0;
   }
-  .checkout-index-index #payment #checkout-step-payment .payment-option .payment-option-content #discount-form .primary {
-    width: 100%;
-    margin-left:0 !important;
-
-  }
+  //test - remove cause you just moved this above
+  //.checkout-index-index #payment #checkout-step-payment .payment-option .payment-option-content #discount-form .primary {
+  //  width: 100%;
+  //  margin-left:0 !important;
+  //
+  //}
   .checkout-index-index #discount-form .payment-option-inner {
     margin: 0 0 0 0;
   }
