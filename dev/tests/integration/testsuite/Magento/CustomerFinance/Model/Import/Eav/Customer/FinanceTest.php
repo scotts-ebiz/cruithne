@@ -88,6 +88,7 @@ class FinanceTest extends \PHPUnit\Framework\TestCase
         );
 
         $pathToCsvFile = __DIR__ . '/../_files/customer_finance.csv';
+        //phpcs:ignore Magento2.Functions.DiscouragedFunction
         $expectedFinanceData = $this->_csvToArray(file_get_contents($pathToCsvFile));
 
         $source = new \Magento\ImportExport\Model\Import\Source\Csv($pathToCsvFile, $directory);
