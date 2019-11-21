@@ -1,0 +1,84 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="payment">
+             <group id="vantiv_payment" sortOrder="7" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1">
+                <group id="vantiv_payment_keypadpayment" sortOrder="120" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="0">
+                    <label>Keypad Authorization</label>
+                    <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Active</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/vantiv_keypadpayment/active</config_path>
+                    </field>
+                    <field id="title" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Title</label>
+                        <config_path>payment/vantiv_keypadpayment/title</config_path>
+                    </field>
+                    <field id="environment" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Environment</label>
+                        <source_model>Vantiv\Payment\Model\Config\Source\VantivEnvironment</source_model>
+                        <config_path>payment/vantiv_keypadpayment/environment</config_path>
+                    </field>
+                    <field id="account_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Account ID</label>
+                        <config_path>payment/vantiv_keypadpayment/account_id</config_path>
+                    </field>
+                    <field id="account_token" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Account Token</label>
+                        <config_path>payment/vantiv_keypadpayment/account_token</config_path>
+                    </field>
+                    <field id="acceptor_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Acceptor ID</label>
+                        <config_path>payment/vantiv_keypadpayment/acceptor_id</config_path>
+                    </field>
+                    <field id="application_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Application ID</label>
+                        <config_path>payment/vantiv_keypadpayment/application_id</config_path>
+                    </field>
+                    <field id="application_name" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Application Name</label>
+                        <config_path>payment/vantiv_keypadpayment/application_name</config_path>
+                    </field>
+                    <field id="application_version" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Application Version</label>
+                        <config_path>payment/vantiv_keypadpayment/application_version</config_path>
+                    </field>
+                    <field id="default_terminal_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                        <label>Default Terminal ID</label>
+                        <config_path>payment/vantiv_keypadpayment/terminal_id</config_path>
+                    </field>
+                    <field id="suspect_issuer_country" translate="label comment" type="multiselect" sortOrder="100" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Suspect Issuer Country</label>
+                        <source_model>Vantiv\Payment\Model\Config\Source\SuspectIssuerCountry</source_model>
+                        <config_path>payment/vantiv_keypadpayment/suspect_issuer_country</config_path>
+                    </field>
+                    <field id="suspect_issuer_action" translate="label comment" type="select" sortOrder="110" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Suspect Issuer Country Match Action</label>
+                        <source_model>Vantiv\Payment\Model\Config\Source\SuspectIssuerAction</source_model>
+                        <config_path>payment/vantiv_keypadpayment/suspect_issuer_action</config_path>
+                    </field>
+                    <field id="advanced_fraud_is_active" translate="label comment" type="select" sortOrder="120" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Advanced Fraud</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/vantiv_keypadpayment/advanced_fraud_is_active</config_path>
+                    </field>
+                    <field id="advanced_fraud_results_review_action" translate="label comment" type="select" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Advanced Fraud Review Action</label>
+                        <depends>
+                            <field id="advanced_fraud_is_active">1</field>
+                        </depends>
+                        <source_model>Vantiv\Payment\Model\Config\Source\AdvancedFraudAction</source_model>
+                        <config_path>payment/vantiv_keypadpayment/advanced_fraud_results_review_action</config_path>
+                    </field>
+                    <field id="advanced_fraud_results_fail_action" translate="label comment" type="select" sortOrder="130" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Advanced Fraud Fail Action</label>
+                        <depends>
+                            <field id="advanced_fraud_is_active">1</field>
+                        </depends>
+                        <source_model>Vantiv\Payment\Model\Config\Source\AdvancedFraudAction</source_model>
+                        <config_path>payment/vantiv_keypadpayment/advanced_fraud_results_fail_action</config_path>
+                    </field>
+                </group>
+            </group>
+        </section>
+    </system>
+</config>
