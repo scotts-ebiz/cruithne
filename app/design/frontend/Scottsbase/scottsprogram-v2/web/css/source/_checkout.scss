@@ -1,0 +1,10 @@
+.opc-block-summary {
+	.discount {
+		&.coupon {
+			display: block;
+		}
+		.title {
+			display: none;
+		}
+	}
+}
