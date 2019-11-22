@@ -1,0 +1,21 @@
+<page
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"
+>
+    <head>
+        <css src="SMG_Quiz::css/quiz.css" />
+        <title>Quiz</title>
+    </head>
+
+    <body>
+        <attribute name="class" value="sp-overflow-hidden"/>
+        <referenceContainer name="content">
+            <block
+                class="Magento\Framework\View\Element\Template"
+                template="SMG_Quiz::quiz.phtml"
+            />
+        </referenceContainer>
+        <referenceContainer name="footer-container" htmlClass="sp-footer" remove="true">
+        </referenceContainer>
+    </body>
+</page>
