@@ -96,31 +96,29 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
                 );
                 $params['qty'] = $filter->filter($params['qty']);
                 $qty = $params['qty'];
-            }else
-            {
-				$qty = 1;
-			}
+            } else {
+                $qty = 1;
+            }
 
             $product = $this->_initProduct();
             $type = $product->getTypeId();
             $related = $this->getRequest()->getParam('related_product');
-            
-            if($type == 'grouped'){
-             $selectProduct = $params['selectProduct'];
-             $super_group = $params['super_group'];
-             foreach ($super_group as $key => $valueqty) {
-                 if($valueqty > 0){
-                    $gid = $key;
-                    $qty = $valueqty;
-                 }
-             }
-             
-             $gproduct = $this->productRepository->getById($gid, false, $storeId); 
-             $gproduct = $gproduct->getName();
-		    }else
-		    {
-			  $gproduct = $product->getName();
-			}
+
+            if ($type == 'grouped') {
+                $selectProduct = $params['selectProduct'];
+                $super_group = $params['super_group'];
+                foreach ($super_group as $key => $valueqty) {
+                    if($valueqty > 0){
+                        $gid = $key;
+                        $qty = $valueqty;
+                    }
+                }
+                $gproduct = $this->productRepository->getById($gid, false, $storeId);
+                $gproduct = $gproduct->getName();
+            } else {
+                $gproduct = $product->getName();
+            }
+
             /**
              * Check product availability
              */
@@ -129,6 +127,7 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
             }
 
             $this->cart->addProduct($product, $params);
+
             if (!empty($related)) {
                 $this->cart->addProductsByIds(explode(',', $related));
             }
@@ -143,27 +142,8 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
                 ['product' => $product, 'request' => $this->getRequest(), 'response' => $this->getResponse()]
             );
 
-            if (!$this->_checkoutSession->getNoCartRedirect(true)) {
-                if (!$this->cart->getQuote()->getHasError()) {
-                    if ($this->shouldRedirectToCart()) {
-                        $message = __(
-                            'You added %1 to your shopping cart.',
-                            $product->getName()
-                        );
-                        $this->messageManager->addSuccessMessage($message);
-                    } else {
-                        $this->messageManager->addComplexSuccessMessage(
-                            'addCartSuccessMessage',
-                            [
-                                'product_name' => $gproduct,
-                                'quantity' =>  $qty,
-                                'cart_url' => $this->getCartUrl(),
-                            ]
-                        );
-                    }
-                }
-                return $this->goBack(null, $product);
-            }
+            $this->showAddedToCartMessage($gproduct, $product, $qty);
+
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             if ($this->_checkoutSession->getUseNotice(true)) {
                 $this->messageManager->addNoticeMessage(
@@ -186,12 +166,20 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
 
             return $this->goBack($url);
         } catch (\Exception $e) {
-            $this->messageManager->addExceptionMessage(
-                $e,
-                __('We can\'t add this item to your shopping cart right now.')
-            );
-            $this->_objectManager->get(\Psr\Log\LoggerInterface::class)->critical($e);
-            return $this->goBack();
+            // CHECK IF EXCEPTION IS DUE TO ZAIUS NOT BEING AVAILABLE
+            $isZaiusPostError = $this->checkForZaiusError($e);
+            if ($isZaiusPostError) {
+                // ZAIUS ERROR; ALLOW ADDED TO CART MESSAGE
+                $this->showAddedToCartMessage($gproduct, $product, $qty);
+            } else {
+                // THIS IS A REGULAR EXCEPTION
+                $this->messageManager->addExceptionMessage(
+                    $e,
+                    __('We can\'t add this item to your shopping cart right now.')
+                );
+                $this->_objectManager->get(\Psr\Log\LoggerInterface::class)->critical($e);
+                return $this->goBack();
+            }
         }
     }
 
@@ -246,5 +234,51 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
             'checkout/cart/redirect_to_cart',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
+    }
+
+    /**
+     * Show the Added to Cart message
+     *
+     * @param string $gproduct
+     * @param \Magento\Catalog\Model\Product $product
+     * @param string $qty
+     * @return $this|\Magento\Framework\Controller\Result\Redirect
+     */
+    private function showAddedToCartMessage($gproduct = null, $product = null, $qty = null)
+    {
+        if (!$this->_checkoutSession->getNoCartRedirect(true)) {
+            if (!$this->cart->getQuote()->getHasError()) {
+                if ($this->shouldRedirectToCart()) {
+                    $message = __(
+                        'You added %1 to your shopping cart.',
+                        $product->getName()
+                    );
+                    $this->messageManager->addSuccessMessage($message);
+                } else {
+                    $this->messageManager->addComplexSuccessMessage(
+                        'addCartSuccessMessage',
+                        [
+                            'product_name' => $gproduct,
+                            'quantity' =>  $qty,
+                            'cart_url' => $this->getCartUrl(),
+                        ]
+                    );
+                }
+            }
+            return $this->goBack(null, $product);
+        }
+    }
+
+    /**
+     * Check if exception is a Zaius POST error or not
+     *
+     * @param object $e
+     * @return bool
+     */
+    private function checkForZaiusError($e = null)
+    {
+        $eventMessage = $e->getMessage();
+        $isZaiusPostError = strpos($eventMessage, 'Failed to POST to Zaius');
+        return ($isZaiusPostError === false) ? false : true;
     }
 }
