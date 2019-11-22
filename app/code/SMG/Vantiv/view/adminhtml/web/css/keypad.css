@@ -1,0 +1,9 @@
+.keypad-error {
+    border: 1px;
+    border-color: red;
+    border-style: solid;
+    color: red;
+    padding: 10px;
+    margin: 10px;
+    display: none;
+}

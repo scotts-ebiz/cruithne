@@ -1,0 +1,45 @@
+<?php
+/**
+ * Copyright © 2018 Vantiv, LLC. All rights reserved.
+ * See LICENSE.txt for license details.
+ */
+
+/** @var SMG\Vantiv\Block\Form\Keypad $block */
+$code = $block->escapeHtml($block->getMethodCode());
+?>
+<div id="keypad-error" class="keypad-error">
+    There was an error parsing keypad data.  Please click on Keypad Authorization radio button
+    and try again.
+</div>
+<fieldset
+    class="admin__fieldset payment-method"
+    id="payment_form_<?php echo $block->escapeHtmlAttr($code); ?>"
+    style="display: none;">
+    <div id="payframe" data-mage-init='<?php echo $block->escapeHtml($block->getMageInitJson()); ?>'>
+        <div class="admin__field field field-accountNumber">
+            <label class="label admin__field-label" for="accountNumber">
+                <span id="accountNumberLabelText">Card number</span>
+            </label>
+            <div class="admin__field-control control" id="accountNumberDiv">
+                <input class="input-text admin__control-text" type="text" id="keypadAccountNumber" placeholder="Account Number" maxlength="20" />
+            </div>
+        </div>
+        <div class="admin__field field field-expDate">
+            <label class="label admin__field-label" for="expDate">
+                <span id="expDateLabelText">Card Expiration Date</span>
+            </label>
+            <div class="admin__field-control control" id="expDate">
+                <input class="input-text admin__control-text" id="keypadExpMonth" placeholder="Month" maxlength="2" style="width:auto;" /> <span id="expDividerText"> / </span> <input class="input-text admin__control-text" id="keypadExpYear"
+                                                                                                                                                                                  placeholder="Year" maxlength="2" style="width:auto;" />
+            </div>
+        </div>
+    </div>
+
+    <input id="payment-vantiv-keypadpayment-type" name="payment[cc_type]" type="hidden" />
+    <input id="payment-vantiv-keypadpayment-last-four" name="payment[additional_information][last_four]" type="hidden" />
+    <input id="payment-vantiv-keypadpayment-exp-month" name="payment[additional_information][exp_month]" type="hidden" />
+    <input id="payment-vantiv-keypadpayment-exp-year" name="payment[additional_information][exp_year]" type="hidden" />
+    <input id="payment-vantiv-keypadpayment-ecdata-type" name="payment-vantiv-keypadpayment-ecdata-type" type="hidden" />
+    <input id="payment-vantiv-keypadpayment-ecdata" name="payment-vantiv-keypadpayment-ecdata" type="hidden" />
+    <input id="payment-vantiv-keypadpayment-serial-number" name="payment-vantiv-keypadpayment-serial-number" type="hidden" />
+</fieldset>

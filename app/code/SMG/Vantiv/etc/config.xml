@@ -1,0 +1,45 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Store/etc/config.xsd">
+    <default>
+        <payment>
+            <vantiv_keypadpayment>
+                <model>SMG\Vantiv\Model\VantivKeyPadFacade</model>
+                <title>Keypad Authorization</title>
+                <active>0</active>
+                <environment>sandbox</environment>
+                <payment_action>authorize</payment_action>
+                <order_status>processing</order_status>
+                <suspect_issuer_action>accept</suspect_issuer_action>
+                <is_gateway>1</is_gateway>
+                <can_authorize>1</can_authorize>
+                <can_authorize_vault>1</can_authorize_vault>
+                <can_capture>1</can_capture>
+                <can_capture_vault>1</can_capture_vault>
+                <can_capture_partial>1</can_capture_partial>
+                <can_use_internal>1</can_use_internal>
+                <can_refund_partial_per_invoice>1</can_refund_partial_per_invoice>
+                <can_refund>1</can_refund>
+                <can_void>1</can_void>
+                <can_cancel>1</can_cancel>
+                <can_review_payment>1</can_review_payment>
+                <can_deny_payment>1</can_deny_payment>
+                <can_accept_payment>1</can_accept_payment>
+                <application_name>smg_secure_keypad</application_name>
+                <application_version>1.0</application_version>
+                <group>offline</group>
+                <order_source>ecommerce</order_source>
+
+                <account_id></account_id>
+                <account_token></account_token>
+                <acceptor_id></acceptor_id>
+                <application_id></application_id>
+                <terminal_id></terminal_id>
+            </vantiv_keypadpayment>
+            <vantiv_keypadpayment_vault>
+                <model>SMG\Vantiv\Model\VantivKeyPadVaultFacade</model>
+                <title>Stored Cards (Vantiv)</title>
+                <active>0</active>
+            </vantiv_keypadpayment_vault>
+       </payment>
+    </default>
+</config>
