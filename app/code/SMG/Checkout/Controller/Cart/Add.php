@@ -142,7 +142,27 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
                 ['product' => $product, 'request' => $this->getRequest(), 'response' => $this->getResponse()]
             );
 
-            $this->showAddedToCartMessage($gproduct, $product, $qty);
+            if (!$this->_checkoutSession->getNoCartRedirect(true)) {
+                if (!$this->cart->getQuote()->getHasError()) {
+                    if ($this->shouldRedirectToCart()) {
+                        $message = __(
+                            'You added %1 to your shopping cart.',
+                            $product->getName()
+                        );
+                        $this->messageManager->addSuccessMessage($message);
+                    } else {
+                        $this->messageManager->addComplexSuccessMessage(
+                            'addCartSuccessMessage',
+                            [
+                                'product_name' => $gproduct,
+                                'quantity' =>  $qty,
+                                'cart_url' => $this->getCartUrl(),
+                            ]
+                        );
+                    }
+                }
+                return $this->goBack(null, $product);
+            }
 
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             if ($this->_checkoutSession->getUseNotice(true)) {
@@ -168,18 +188,15 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
         } catch (\Exception $e) {
             // CHECK IF EXCEPTION IS DUE TO ZAIUS NOT BEING AVAILABLE
             $isZaiusPostError = $this->checkForZaiusError($e);
-            if ($isZaiusPostError) {
-                // ZAIUS ERROR; ALLOW ADDED TO CART MESSAGE
-                $this->showAddedToCartMessage($gproduct, $product, $qty);
-            } else {
-                // THIS IS A REGULAR EXCEPTION
+            if (!$isZaiusPostError) {
+                // NOT THE ZAIUS ERROR - ALLOW THE ERROR MESSAGE
                 $this->messageManager->addExceptionMessage(
                     $e,
                     __('We can\'t add this item to your shopping cart right now.')
                 );
                 $this->_objectManager->get(\Psr\Log\LoggerInterface::class)->critical($e);
-                return $this->goBack();
             }
+            return $this->goBack();
         }
     }
 
@@ -234,39 +251,6 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
             'checkout/cart/redirect_to_cart',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
-    }
-
-    /**
-     * Show the Added to Cart message
-     *
-     * @param string $gproduct
-     * @param \Magento\Catalog\Model\Product $product
-     * @param string $qty
-     * @return $this|\Magento\Framework\Controller\Result\Redirect
-     */
-    private function showAddedToCartMessage($gproduct = null, $product = null, $qty = null)
-    {
-        if (!$this->_checkoutSession->getNoCartRedirect(true)) {
-            if (!$this->cart->getQuote()->getHasError()) {
-                if ($this->shouldRedirectToCart()) {
-                    $message = __(
-                        'You added %1 to your shopping cart.',
-                        $product->getName()
-                    );
-                    $this->messageManager->addSuccessMessage($message);
-                } else {
-                    $this->messageManager->addComplexSuccessMessage(
-                        'addCartSuccessMessage',
-                        [
-                            'product_name' => $gproduct,
-                            'quantity' =>  $qty,
-                            'cart_url' => $this->getCartUrl(),
-                        ]
-                    );
-                }
-            }
-            return $this->goBack(null, $product);
-        }
     }
 
     /**
