@@ -171,7 +171,31 @@ class Quiz implements QuizInterface
             $this->_cart->removeItem($item->getId())->save();
         }
 
-        // Add all core products to the order
+
+        /**
+         * Add "Annual Subscription" product if the customer selected the annual subscription plan
+         */
+        if( $subscription_plan == 'annual' ) {
+            try {
+                $_product = $this->_productRepository->get( 'annual' );
+                $productId = $_product->getId();
+                $params = array(
+                    'form_key'  => $this->_formKey->getFormKey(),
+                    'qty'       => 1,
+                );
+                $this->_cart->addProduct( $productId, $params );
+            } catch( Exception $e ) {
+                $response = array( 'success' => false, 'code' => $e->getCode(), 'message' => $e->getMessage());
+                return json_encode( $response );
+            }
+        }
+
+        $total_subscription_price = 0;
+
+        /**
+         * Go through all the core products, add them to cart and calculate
+         * the total subscription price which will be applied to the Annual Subscription product
+         */
         if( ! empty( $data['plan']['coreProducts'] ) ) {
             $coreProducts = $data['plan']['coreProducts'];
             foreach( $coreProducts as $product ) {
@@ -183,6 +207,7 @@ class Quiz implements QuizInterface
                         'qty'       => 1,
                     );
                     $this->_cart->addProduct( $productId, $params );
+                    $total_subscription_price += $_product->getPrice();
                 } catch( Exception $e ) {
                     $response = array( 'success' => false, 'code' => $e->getCode(), 'message' => $e->getMessage());
                     return json_encode( $response );
@@ -190,7 +215,9 @@ class Quiz implements QuizInterface
             }
         }
 
-        // Add selected addon products in the cart
+        /**
+         * Go through all selected AddOn Products and add them to the cart
+         */
         foreach( $addons as $addon ) {
             try {
                 $_product = $this->_productRepository->get( $addon );
@@ -206,13 +233,39 @@ class Quiz implements QuizInterface
             }
         }
 
-        // Aplly coupon code with 10% discount if it's Annual Subscription
+        // Apply discount code for all annual subscriptions
         if( $subscription_plan == 'annual' ) {
             $this->_checkoutSession->getQuote()->setCouponCode('annual_discount')->collectTotals()->save();
         }
 
         // Save cart
         $this->_cart->save();
+
+        /**
+         * Go through the cart items and modify their prices for the current customer order
+         * 
+         */
+        $quoteItems = $this->_checkoutSession->getQuote()->getItemsCollection();
+        foreach( $quoteItems as $item ) {
+            // Apply the total price from the core products to the annual subscription product
+            if( $item->getSku() == 'annual' ) {
+                $item->setCustomPrice($total_subscription_price);
+                $item->setOriginalCustomPrice($total_subscription_price);
+                $item->getProduct()->setIsSuperMode(true);
+            }
+            
+            // Set price to 0$ for all core products
+            if( $item->getProduct()->getAttributeText('is_addon') != 'Yes' ) {
+                $item->setCustomPrice(0);
+                $item->setOriginalCustomPrice(0);
+                $item->getProduct()->setIsSuperMode(true);
+            }
+        }
+
+        // Update Cart
+        $this->_cart->save();
+        
+        die();
 
         $response = array( 'success' => true );
 
