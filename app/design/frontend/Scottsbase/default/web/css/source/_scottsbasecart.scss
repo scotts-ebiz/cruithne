@@ -93,27 +93,30 @@
                         .cart.table-wrapper {
                             #shopping-cart-table {
                                 td {
-                                    @media screen and (max-width: $screen__m) { //test
+                                    @media screen and (max-width: $screen__m) {
                                         width: 100%;
                                         text-align: left;
                                         display: inline-block;
                                     }
                                 }
                                 .col.item {
+                                    @media screen and (min-width: $screen__m) {
+                                        width: 53%;
+                                    }
                                     @media screen and (max-width: $screen__l) and (min-width: $screen__m) {
                                         width: 60%;
                                     }
                                 }
                                 .col.qty {
-                                    @media screen and (min-width: $screen__l) { //test
+                                    @media screen and (min-width: $screen__l) {
                                         width: 18%;
                                         text-align: center;
                                     }
-                                    @media screen and (max-width: $screen__l) { //test
-                                        width: 20% !important;
+                                    @media screen and (max-width: $screen__l) {
+                                        width: 20%;
                                         text-align: center;
                                     }
-                                    @media screen and (max-width: $screen__m) { //test
+                                    @media screen and (max-width: $screen__m) {
                                         width: 100%;
                                         text-align: left;
                                         display: inline-block;
@@ -140,7 +143,7 @@
                                     }
                                 }
                                 .col.action {
-                                    @media screen and (max-width: $screen__l) {//test
+                                    @media screen and (max-width: $screen__l) {
                                         width: 10%;
                                     }
                                 }
@@ -176,6 +179,11 @@
                                                       color: $scotts-black;
                                                     }
                                                 }
+                                            }
+                                        }
+                                        .price {
+                                            @include max-screen($screen__m) {
+                                                padding: 0;
                                             }
                                         }
                                         .qty {
@@ -236,15 +244,6 @@
                                         }
                                     }
                                 }
-                                //test - moved above
-                                //.cart.item .item-info .col.price,
-                                //.cart.item .item-info .col.subtotal,
-                                //thead tr .col.price,
-                                //thead tr .col.subtotal {
-                                //    width: 14%;
-                                //    text-align: center;
-                                //}
-
                             }
                         }
                         .product-item-photo {
@@ -260,13 +259,6 @@
                         .cart.main.actions {
                             display: none;
                         }
-
-                        //Can you vet this?
-                        div.cart.table-wrapper .cart.item .item-info .col.item,
-                        .cart.table-wrapper thead tr .col.item {
-                            width: 53%;
-                        }
-
                     }
                     .cart-parent-summary {
 
