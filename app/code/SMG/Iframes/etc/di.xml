@@ -2,4 +2,6 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="SMG\Iframes\Api\DrupalProductInfoInterface"
                 type="SMG\Iframes\Model\DrupalProductInfo" />
+    <preference for="Magento\Framework\App\Response\HeaderProvider\XFrameOptions"
+                type="SMG\Iframes\Plugin\Framework\App\Response\HeaderProvider\XFrameOptions" />
 </config>
