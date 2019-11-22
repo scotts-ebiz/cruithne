@@ -83,29 +83,6 @@
     }
 }
 
-@media screen and (max-width: $screen_1024) and (min-width: $screen_769) {
-    .fieldset>.field:not(.choice) {
-        >.label {
-            width: 40%;
-        }
-    }
-    .checkout-index-index {
-        .data.table.table-totals {
-            font-size: 14px;
-        }
-        .opc-block-summary {
-            .product-item {
-                .subtotal {
-                    display: inline-block;
-                }
-                .product-item-name-block {
-                    display: inline-block;
-                    padding-right: 0;
-                }
-            }
-        }
-    }
-}
 @media screen and (max-width: $screen_768) {
     .checkout-cart-index {
         .cart.table-wrapper {
