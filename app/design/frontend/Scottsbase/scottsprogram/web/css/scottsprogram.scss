@@ -12,6 +12,9 @@
 // Override Block Styles
 @import 'blocks/extends';
 
+// Import Scottsbase variables
+@import '../../../default/web/css/source/scottsbasevars';
+
 // Override Module Styles
 @import '../../Magento_Checkout/styles/module';
 
