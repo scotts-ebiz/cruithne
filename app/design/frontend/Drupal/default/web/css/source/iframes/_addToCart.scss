@@ -12,7 +12,11 @@
 
   // Price
   .price-box {
-    .price-label, .price {
+    // Force Magento to hide this since they are attaching it on the element.
+    .price-label {
+      display: none !important;
+    }
+    .price {
       @include font-iframe(1.375rem);
     }
   }

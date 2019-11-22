@@ -15,7 +15,8 @@ requirejs(['catalogAddToCart'], function(catalogAddToCart) {
                 } else {
                     currentSku = JSON.parse($('#product_addtocart_form').attr('data-skus-by-id'))[childId];
                     currentDrupalProductId = JSON.parse($('#product_addtocart_form').attr('data-drupal-ids-by-id'))[childId];
-                    currentSize = $('select.super-attribute-select').val().replace(' ', '').toLowerCase();
+                    // Grab selected option text then lowercase and strip space to match css class created from tag field on Drupal.
+                    currentSize = $('select.super-attribute-select option:selected').text().replace(' ', '').toLowerCase();
                 }
             };
 
