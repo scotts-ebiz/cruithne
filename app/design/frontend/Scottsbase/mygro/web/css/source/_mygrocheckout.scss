@@ -82,29 +82,22 @@
         }
     }
 }
-@media screen and (min-width: $screen_1024) {
-    .cart.table-wrapper {
-        .table .col.qty {
-            width: 18% !important;
-            text-align: center;
-        }
-    }
-}
+
 @media screen and (max-width: $screen_1024) {
     .checkout-cart-index {
         .cart.table-wrapper {
             .table {
                 .col.item {
-                    width: 30%;
+                    //width: 30%;
                 }
                 .col.price, .col.subtotal {
-                    width: 8% !important;
+                    //width: 8% !important;
                 }
                 .col.action {
-                    width: 10%;
+                    //width: 10%;
                 }
                 .col.qty {
-                    width: 26%;
+                    //width: 26%;
                 }
             }
         }
@@ -139,19 +132,16 @@
         }
     }
     .checkout-cart-index {
-        .cart.table-wrapper .table .col.qty {
-            width: 20% !important;
-            text-align: center;
-        }
+        //.cart.table-wrapper .table .col.qty {
+        //    width: 20% !important;
+        //    text-align: center;
+        //}
         .cart-summary {
             width: 35%;
         }
         .page-main .columns .column .cart-container .form-cart {
             div.cart.table-wrapper .cart.item .item-info .col.item, .cart.table-wrapper thead tr .col.item {
                 width: 60%;
-            }
-            .col.price, .col.subtotal {
-                width: 10% !important;
             }
         }
         .options-cont-wrp {
@@ -183,10 +173,10 @@
 @media screen and (max-width: $screen_768) {
     .checkout-cart-index {
         #shopping-cart-table td, #theme__responsive .cart-table td {
-            width: 100%;
-            text-align: left;
-            display: inline-block;
-            padding-left: 0;
+            //width: 100%;
+            //text-align: left;
+            //display: inline-block;
+            //padding-left: 0;
         }
         #shopping-cart-table td.col.price {
             padding-left: 0 !important;

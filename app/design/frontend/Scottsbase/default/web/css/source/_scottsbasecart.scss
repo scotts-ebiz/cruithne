@@ -92,6 +92,58 @@
                         margin-top: 100px;
                         .cart.table-wrapper {
                             #shopping-cart-table {
+                                td {
+                                    @media screen and (max-width: $screen__m) { //test
+                                        width: 100%;
+                                        text-align: left;
+                                        display: inline-block;
+                                    }
+                                }
+                                .col.item {
+                                    @media screen and (max-width: $screen__l) and (min-width: $screen__m) {
+                                        width: 60%;
+                                    }
+                                }
+                                .col.qty {
+                                    @media screen and (min-width: $screen__l) { //test
+                                        width: 18%;
+                                        text-align: center;
+                                    }
+                                    @media screen and (max-width: $screen__l) { //test
+                                        width: 20% !important;
+                                        text-align: center;
+                                    }
+                                    @media screen and (max-width: $screen__m) { //test
+                                        width: 100%;
+                                        text-align: left;
+                                        display: inline-block;
+                                    }
+                                }
+                                .col.price {
+                                    width: 14%;
+                                    text-align: center;
+                                    @media screen and (max-width: $screen__l) {
+                                        width: 10%;
+                                    }
+                                    @media screen and (max-width: $screen__m) {
+                                        width: 8%;
+                                    }
+                                }
+                                .col.subtotal {
+                                    width: 14%;
+                                    text-align: center;
+                                    @media screen and (max-width: $screen__l) {
+                                        width: 10%;
+                                    }
+                                    @media screen and (max-width: $screen__m) {
+                                        display: none;
+                                    }
+                                }
+                                .col.action {
+                                    @media screen and (max-width: $screen__l) {//test
+                                        width: 10%;
+                                    }
+                                }
                                 thead {
                                     tr {
                                         .col {
@@ -184,13 +236,14 @@
                                         }
                                     }
                                 }
-                                .cart.item .item-info .col.price,
-                                .cart.item .item-info .col.subtotal,
-                                thead tr .col.price,
-                                thead tr .col.subtotal {
-                                    width: 14%;
-                                    text-align: center;
-                                }
+                                //test - moved above
+                                //.cart.item .item-info .col.price,
+                                //.cart.item .item-info .col.subtotal,
+                                //thead tr .col.price,
+                                //thead tr .col.subtotal {
+                                //    width: 14%;
+                                //    text-align: center;
+                                //}
 
                             }
                         }
