@@ -171,7 +171,6 @@ class Quiz implements QuizInterface
             $this->_cart->removeItem($item->getId())->save();
         }
 
-        $subscription_plan = 'seasonal';
         $total_subscription_price = 0;
 
         /**
