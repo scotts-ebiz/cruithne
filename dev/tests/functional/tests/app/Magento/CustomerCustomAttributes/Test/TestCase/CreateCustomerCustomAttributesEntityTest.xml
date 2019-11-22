@@ -8,8 +8,6 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../vendor/magento/mtf/etc/variations.xsd">
     <testCase name="Magento\CustomerCustomAttributes\Test\TestCase\CreateCustomerCustomAttributesEntityTest" summary="Create Customer Custom Attributes" ticketId="MAGETWO-25963">
         <variation name="CreateCustomerCustomAttributesEntityTestVariation1">
-            <data name="tag" xsi:type="string">to_maintain:yes</data>
-            <data name="issue" xsi:type="string">MAGETWO-80750: [FT] Remove skipped once MAGETWO-80353 resolved</data>
             <data name="customerAttribute/data/frontend_label" xsi:type="string">TextField_Customer_%isolation%</data>
             <data name="customerAttribute/data/attribute_code" xsi:type="string">text_field_%isolation%</data>
             <data name="customerAttribute/data/frontend_input" xsi:type="string">Text Field</data>
@@ -84,8 +82,6 @@
             <constraint name="Magento\CustomerCustomAttributes\Test\Constraint\AssertCustomerCustomAttributeOnCreateOrderBackend" />
         </variation>
         <variation name="CreateCustomerCustomAttributesEntityTestVariation5">
-            <data name="tag" xsi:type="string">to_maintain:yes</data>
-            <data name="issue" xsi:type="string">MAGETWO-80750: [FT] Remove skipped once MAGETWO-80353 resolved</data>
             <data name="customerAttribute/data/frontend_label" xsi:type="string">Dropdown_Customer_%isolation%</data>
             <data name="customerAttribute/data/attribute_code" xsi:type="string">dropdown_%isolation%</data>
             <data name="customerAttribute/data/frontend_input" xsi:type="string">Dropdown</data>
@@ -99,8 +95,6 @@
             <constraint name="Magento\CustomerCustomAttributes\Test\Constraint\AssertCustomerCustomAttributeInCustomerSegment" />
         </variation>
         <variation name="CreateCustomerCustomAttributesEntityTestVariation6">
-            <data name="tag" xsi:type="string">to_maintain:yes</data>
-            <data name="issue" xsi:type="string">MAGETWO-80750: [FT] Remove skipped once MAGETWO-80353 resolved</data>
             <data name="customerAttribute/data/frontend_label" xsi:type="string">MultipleSelect_Customer_%isolation%</data>
             <data name="customerAttribute/data/attribute_code" xsi:type="string">multi_%isolation%</data>
             <data name="customerAttribute/data/frontend_input" xsi:type="string">Multiple Select</data>
@@ -113,8 +107,6 @@
             <constraint name="Magento\CustomerCustomAttributes\Test\Constraint\AssertCustomerCustomAttributeInGrid" />
         </variation>
         <variation name="CreateCustomerCustomAttributesEntityTestVariation7">
-            <data name="tag" xsi:type="string">to_maintain:yes</data>
-            <data name="issue" xsi:type="string">MAGETWO-80750: [FT] Remove skipped once MAGETWO-80353 resolved</data>
             <data name="customerAttribute/data/frontend_label" xsi:type="string">Yes/No_Customer_%isolation%</data>
             <data name="customerAttribute/data/attribute_code" xsi:type="string">yesno_%isolation%</data>
             <data name="customerAttribute/data/frontend_input" xsi:type="string">Yes/No</data>
@@ -146,8 +138,6 @@
             <constraint name="Magento\CustomerCustomAttributes\Test\Constraint\AssertCustomerCanUploadFileOnRegistration" />
         </variation>
         <variation name="CreateCustomerCustomAttributesEntityTestVariation9">
-            <data name="tag" xsi:type="string">to_maintain:yes</data>
-            <data name="issue" xsi:type="string">MAGETWO-80750: [FT] Remove skipped once MAGETWO-80353 resolved</data>
             <data name="customerAttribute/data/frontend_label" xsi:type="string">Image_Customer_%isolation%</data>
             <data name="customerAttribute/data/attribute_code" xsi:type="string">image_%isolation%</data>
             <data name="customerAttribute/data/frontend_input" xsi:type="string">Image File</data>

@@ -81,5 +81,8 @@ class UpgradeData implements UpgradeDataInterface
             ['status' => 'order_canceled', 'label' => 'Order Canceled - Authorization Voided'],
             ['status' => 'order_captured', 'label' => 'Order Captured']
         ];
+
+        // insert the rows
+        $setup->getConnection()->insertMultiple($tableName, $data);
     }
 }
