@@ -171,6 +171,8 @@ class Quiz implements QuizInterface
             $this->_cart->removeItem($item->getId())->save();
         }
 
+        $subscription_plan = 'seasonal';
+        $total_subscription_price = 0;
 
         /**
          * Add "Annual Subscription" product if the customer selected the annual subscription plan
@@ -190,8 +192,6 @@ class Quiz implements QuizInterface
             }
         }
 
-        $total_subscription_price = 0;
-
         /**
          * Go through all the core products, add them to cart and calculate
          * the total subscription price which will be applied to the Annual Subscription product
@@ -208,6 +208,17 @@ class Quiz implements QuizInterface
                     );
                     $this->_cart->addProduct( $productId, $params );
                     $total_subscription_price += $_product->getPrice();
+                    // If it's seasonal subscription, add only the first product
+                    if( $subscription_plan == 'seasonal' ) {
+                        $seasonal_product_sku = $this->getSeasonalProductSku( $product['season'] );
+                        $seasonal_product = $this->_productRepository->get( $seasonal_product_sku );
+                        $seasonal_poduct_params = array(
+                            'form_key'  => $this->_formKey->getFormKey(),
+                            'qty'       => 1,
+                        );
+                        $this->_cart->addProduct( $seasonal_product->getId(), $seasonal_poduct_params );
+                        break;
+                    }
                 } catch( Exception $e ) {
                     $response = array( 'success' => false, 'code' => $e->getCode(), 'message' => $e->getMessage());
                     return json_encode( $response );
@@ -215,9 +226,7 @@ class Quiz implements QuizInterface
             }
         }
 
-        /**
-         * Go through all selected AddOn Products and add them to the cart
-         */
+        // Go through all selected AddOn Products and add them to the cart
         foreach( $addons as $addon ) {
             try {
                 $_product = $this->_productRepository->get( $addon );
@@ -241,10 +250,7 @@ class Quiz implements QuizInterface
         // Save cart
         $this->_cart->save();
 
-        /**
-         * Go through the cart items and modify their prices for the current customer order
-         * 
-         */
+        // Go through the cart items and modify their prices for the current customer order
         $quoteItems = $this->_checkoutSession->getQuote()->getItemsCollection();
         foreach( $quoteItems as $item ) {
             // Apply the total price from the core products to the annual subscription product
@@ -252,6 +258,16 @@ class Quiz implements QuizInterface
                 $item->setCustomPrice($total_subscription_price);
                 $item->setOriginalCustomPrice($total_subscription_price);
                 $item->getProduct()->setIsSuperMode(true);
+            }
+
+            // If it's Seasonal subscription, apply the total price from the core product to the seasonal product
+            if( $subscription_plan == 'seasonal' ) {
+                $seasonal_skus = array( 'early-spring', 'late-spring', 'early-summer', 'early-fall' );
+                if( in_array( $item->getSku(), $seasonal_skus ) ) {
+                    $item->setCustomPrice($total_subscription_price);
+                    $item->setOriginalCustomPrice($total_subscription_price);
+                    $item->getProduct()->setIsSuperMode(true);
+                }
             }
             
             // Set price to 0$ for all core products
@@ -265,11 +281,31 @@ class Quiz implements QuizInterface
         // Update Cart
         $this->_cart->save();
         
-        die();
-
         $response = array( 'success' => true );
 
         return json_encode( $response );
+    }
+
+    /**
+     * Return SKU code for the product based on the season name
+     * 
+     * @param string $season_name
+     * @return string
+     */
+    private function getSeasonalProductSku($season_name)
+    {
+        switch($season_name) {
+            case 'Early Spring Feeding':
+                return 'early-spring';
+            case 'Late Spring Feeding':
+                return 'late-spring';
+            case 'Early Summer Feeding':
+                return 'early-summer';
+            case 'Early Fall Feeding':
+                return 'early-fall';
+            default:
+                return '';
+        }
     }
 
     /**

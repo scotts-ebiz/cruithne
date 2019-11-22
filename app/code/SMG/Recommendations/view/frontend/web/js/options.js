@@ -17,7 +17,7 @@ define([
         },
 
 		proceedToCheckout() {
-			var subscriptionPlan = $('input[name="subscription_plan"]').val();
+			var subscriptionPlan = $('input[name="subscription_plan"]:checked').val();
 			var addonProducts = $('input[name="addon_products"]:checked').map(function() { return this.value }).get();
 			if( ! subscriptionPlan ) {
 				alert('You must select a subscription plan.');
