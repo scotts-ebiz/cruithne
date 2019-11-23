@@ -84,45 +84,7 @@
 }
 
 @media screen and (max-width: $screen_768) {
-    .checkout-index-index {
-        div[name="shippingAddress.firstname"], div[name="shippingAddress.lastname"] {
-            width: 100%;
-        }
-        div[name="shippingAddress.lastname"] {
-            padding-left: 0 !important;
-        }
-        .custom-slide {
-            left: auto;
-        }
-        .field-tooltip {
-            .field-tooltip-content:before, .field-tooltip-content:after {
-                top: 1px;
-            }
-        }
-        .opc-progress-bar {
-            padding: 0 15px;
-        }
-        #giftcard-form.form-giftcard-account {
-            .actions-toolbar {
-                .primary {
-                    margin-left: 0 !important;
-                    .action.action-add.primary {
-                        margin-left: 0;
-                    }
-                }
-            }
-        }
-    }
-    .cart.table-wrapper .product-item-photo {
-        width: 100% !important;
-        max-width: 100%;
-        padding: 0;
-        margin-bottom: 20px;
-        position: relative;
-    }
-    .field.qty {
-        display: inline-block;
-    }
+
     .cart.table-wrapper thead .col:not(.item) {
         display: none !important;
     }
@@ -187,31 +149,10 @@
     .cart-container .form-cart .action.update {
         padding: 0;
     }
-    //.checkout-cart-index {
-    //    .cart.table-wrapper .table .col.price {
-    //        padding: 0 0.625rem !important;
-    //    }
-    //}
     .checkout-cart-index {
         .cart.table-wrapper {
-            .table {
-                .col.price, .col.qty, .col.subtotal {
-                    display: grid;
-                    text-align: left;
-                    &:before {
-                        padding-bottom: 5px;
-                        margin-bottom: 10px;
-                    }
-                }
-            }
             .actions-toolbar>.action:last-child {
                 text-transform: capitalize;
-            }
-            .product-item-photo {
-                width: 100% !important;
-                max-width: 100%;
-                padding: 0;
-                margin-bottom: 20px;
             }
         }
         #shopping-cart-table {
@@ -230,16 +171,6 @@
     .checkout-index-index {
         .custom-checkout-nav-btns {
             padding: 0 15px;
-        }
-        .opc-progress-bar {
-            padding: 0 15px;
-        }
-    }
-    .checkout-index-index {
-        .field-tooltip {
-            .field-tooltip-content {
-                padding: 12px 5px;
-            }
         }
     }
 }

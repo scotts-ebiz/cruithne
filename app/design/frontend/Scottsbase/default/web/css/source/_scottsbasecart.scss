@@ -169,10 +169,14 @@
                                         }
                                         .item {
                                             .product-item-photo {
+                                                width:138px;
                                                 @include max-screen($screen__m) {
+                                                  width: 100%;
                                                   max-width: none;
                                                   position: static;
                                                   text-align: center;
+                                                  padding: 0;
+                                                  margin-bottom: 20px;
                                                 }
                                             }
                                             .product-item-details {
@@ -199,6 +203,9 @@
                                                 }
                                             }
                                             .field.qty {
+                                                @media screen and (max-width: $screen__m) {
+                                                    display: inline-block;
+                                                }
                                                 .control.qty {
                                                     .qty {
                                                       border: 1px solid $scotts-black;
@@ -258,9 +265,9 @@
                                 }
                             }
                         }
-                        .product-item-photo {
-                            width:138px;
-                        }
+                        //.product-item-photo {
+                        //    width:138px;
+                        //}
 
                         //Can you vet this?
                         .actions-toolbar > .action.action-edit  {
