@@ -84,33 +84,6 @@
 }
 
 @media screen and (max-width: $screen_768) {
-    .checkout-cart-index {
-        .cart.table-wrapper {
-            .table {
-                thead {
-                    .col.price, .col.subtotal {
-                        display: none;
-                    }
-                }
-            }
-            .items thead+.item {
-                border-top: 0;
-            }
-        }
-        .cart-summary {
-            width: 100% !important;
-        }
-        .cart.table-wrapper {
-            .col.qty:before, .col.price:before, .col.subtotal:before, .col.msrp:before {
-                display: inline-block;
-            }
-        }
-        .cart.item .item-info {
-            .price-including-tax, .price-excluding-tax {
-                display: inline-block;
-            }
-        }
-    }
     .checkout-index-index {
         div[name="shippingAddress.firstname"], div[name="shippingAddress.lastname"] {
             width: 100%;

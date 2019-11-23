@@ -159,6 +159,9 @@
                                     }
                                 }
                                 .cart.item {
+                                    @media screen and (max-width: $screen__m) {
+                                        border-top: 0;
+                                    }
                                     .item-info {
                                         .col {
                                           margin: 0;
@@ -184,9 +187,17 @@
                                         .price {
                                             @include max-screen($screen__m) {
                                                 padding: 0;
+                                                &:before {
+                                                  display: inline-block;
+                                                }
                                             }
                                         }
                                         .qty {
+                                            @include max-screen($screen__m) {
+                                                &:before {
+                                                    display: inline-block;
+                                                }
+                                            }
                                             .field.qty {
                                                 .control.qty {
                                                     .qty {
@@ -224,6 +235,7 @@
                                             font-size:16px;
                                             @include max-screen($screen__m) {
                                               font-size: 1rem;
+                                              display: inline-block;
                                             }
                                         }
                                         &:last-child {
@@ -359,6 +371,7 @@
 
                             @media screen and (max-width: $screen__m) {
                                 order:2;
+                                width: 100%;
                             }
                             .cart-totals {
                                 border-top: 0;
