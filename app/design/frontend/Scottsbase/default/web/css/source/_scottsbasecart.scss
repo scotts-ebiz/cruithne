@@ -90,6 +90,9 @@
                     }
                     .form-cart {
                         margin-top: 100px;
+                        @media screen and (max-width: $screen__m) {
+                            margin-top: 20px;
+                        }
                         .cart.table-wrapper {
                             #shopping-cart-table {
                                 td {
@@ -197,9 +200,12 @@
                                             }
                                         }
                                         .qty {
-                                            @include max-screen($screen__m) {
-                                                &:before {
+                                            &:before {
+                                                @include max-screen($screen__m) {
                                                     display: inline-block;
+                                                }
+                                                @media screen and (max-width: $screen__s) {
+                                                    padding-bottom: 0;
                                                 }
                                             }
                                             .field.qty {
@@ -337,31 +343,36 @@
                             }
                             #discount-coupon-form {
                                 .fieldset.coupon {
-                                    .action.apply.primary {
-                                        height:30px;
-                                        font-size: 0.8rem;
-                                        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                                        padding: 5px 10px 5px 10px !important;
-                                        background: #4d4d4e;
-                                        line-height: 0;
-                                        margin-left: 20px;
-                                        &:hover {
-                                          background: #333333;
-                                        }
+                                    .field {
+                                        float: left;
                                     }
-                                    .action.cancel.primary {
-                                        height:30px;
-                                        font-size: 0.8rem;
-                                        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                                        padding: 5px 10px 5px 10px !important;
-                                        background: #4d4d4e;
-                                        line-height: 0;
-                                        margin-left: 20px;
-                                        @include max-screen($screen__s) {
-                                          margin-left:0px;
+                                    .actions-toolbar {
+                                        .action.apply.primary {
+                                            height:30px;
+                                            font-size: 0.8rem;
+                                            font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                                            padding: 5px 10px 5px 10px !important;
+                                            background: #4d4d4e;
+                                            line-height: 0;
+                                            margin-left: 20px;
+                                            &:hover {
+                                              background: #333333;
+                                            }
                                         }
-                                        &:hover {
-                                          background: #333333;
+                                        .action.cancel.primary {
+                                            height:30px;
+                                            font-size: 0.8rem;
+                                            font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                                            padding: 5px 10px 5px 10px !important;
+                                            background: #4d4d4e;
+                                            line-height: 0;
+                                            margin-left: 20px;
+                                            @include max-screen($screen__s) {
+                                              margin-left:0px;
+                                            }
+                                            &:hover {
+                                              background: #333333;
+                                            }
                                         }
                                     }
                                 }
@@ -378,7 +389,7 @@
 
                             @media screen and (max-width: $screen__m) {
                                 order:2;
-                                width: 100%;
+                                //width: 100%;
                             }
                             .cart-totals {
                                 border-top: 0;
