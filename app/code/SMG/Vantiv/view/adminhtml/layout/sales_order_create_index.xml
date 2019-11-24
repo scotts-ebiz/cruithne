@@ -7,5 +7,11 @@
                 <argument name="template" xsi:type="string">SMG_Vantiv::form/cc.phtml</argument>
             </action>
         </referenceBlock>
+        <referenceBlock name="order_create_billing_form">
+            <action method="setMethodFormTemplate">
+                <argument name="method" xsi:type="string">vantiv_keypadpayment</argument>
+                <argument name="template" xsi:type="string">SMG_Vantiv::form/keypad.phtml</argument>
+            </action>
+        </referenceBlock>
     </body>
 </page>

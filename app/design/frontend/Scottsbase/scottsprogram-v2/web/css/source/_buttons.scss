@@ -34,6 +34,10 @@
   background-color: $green-1;
   color: $white;
 
+  &:visited {
+    color: $white;
+  }
+
   &:hover {
     background-color: $green-1;
     color: $white;
@@ -55,6 +59,10 @@
   background-color: $black;
   color: $white;
 
+  &:visited {
+    color: $white;
+  }
+
   &:hover {
     background-color: $black;
     color: $white;
@@ -74,6 +82,10 @@
 .sp-button--inverted {
   background-color: $white;
   color: $green-1;
+
+  &:visited {
+    color: $black;
+  }
 
   &:hover {
     background-color: $white;
@@ -95,6 +107,10 @@
   background-color: $gray-2;
   color: $gray-1;
   cursor: not-allowed;
+
+  &:visited {
+    color: $gray-1;
+  }
 
   &:hover {
     background-color: $gray-2;

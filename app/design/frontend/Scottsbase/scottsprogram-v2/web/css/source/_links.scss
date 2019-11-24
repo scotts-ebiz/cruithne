@@ -5,6 +5,10 @@ a {
   text-decoration: none;
   transition: color .25s ease-in-out;
 
+  &:visited {
+    color: $green-1;
+  }
+
   &:active,
   &:hover {
     color: $gray-1;

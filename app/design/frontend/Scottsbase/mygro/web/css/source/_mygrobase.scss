@@ -48,97 +48,94 @@ body {
     .page-header {
         border-bottom: 1px solid #dcdcdc;
         position: fixed;
-        z-index: 2;
+        z-index: 101; // higher than .loading-mask
         top: 0;
         left: 0;
         width: 100%;
         background: #fff;
         text-align: center;
+
         .header.content {
-            @include max-screen($screen__l) {
-                .nav-toggle {
-                    float: left;
-                    position: relative;
-                    left: 0;
-                    top: -16px;
-                    display: block;
-                }
-            }
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
             position: relative;
             box-sizing: border-box;
-            padding: 0 22px 0 22px;
+            padding: 3px 22px;
             max-width: 1440px;
             width: 100%;
             margin: 0 auto;
-            .logo {
-                display: inline-block;
-                float: left;
-                padding: 0.25rem 0;
+            min-height: 53px;
+
+            @include max-screen($screen__m) {
+                padding: 3px 15px;
+            }
+
+            .nav-toggle {
                 @include max-screen($screen__l) {
-                    float: none;
-                    padding: 0;
+                    margin-top: 2px;
+
+                    &:before {
+                        color: #075534!important;
+                    }
+                }
+                img {
+                    display: block;
+                }
+            }
+            .logo {
+                @include max-screen($screen__l) {
                     max-width: 6rem;
-                    position: relative;
-                    left: 1.25rem;
-                    top: 0.5rem;
+                    position: absolute!important;
+                    left: 50%;
+                    transform: translateX(-50%);
+                }
+                img {
+                    display: block;
                 }
             }
             .minicart-wrapper {
-                float: right;
-                @include max-screen($screen__l) {
-                    display: block;
-                    float: right;
-                    margin-top: 0;
-                    position: relative;
-                    right: 0;
-                    top: -23px;
-                }
+                max-width: 30%;
+                text-align: right;
+                margin: 0;
+
                 .showcart {
+                    display: flex;
+                    align-items: center;
                     color: $mygro-green;
-                    float: left;
                     font-size: 1rem;
-                    margin: 0.5rem 0 0 0;
                     position: relative;
                     text-decoration: none;
                     text-align: right;
-                    width: 85px;
-                    @include max-screen($screen__l) {
-                        //margin: 0.8rem 0.5rem 0 0;
-                        margin: 0.8rem 0 0 0;
-                    }
+
                     &:before {
                         display: none;
                         visibility: hidden;
                     }
                     .icon-bag {
-                        position: relative;
-                        top: -2px;
-                        left: 0;
-                        font-size: inherit;
-                        margin: auto;
+                        color: $mygro-green;
+                        font-size: 1.5rem;
+                        display: block;
+                        padding-right: 5px;
+
                         &:before {
                             content: '\e902';
-                            font-size: 1.5rem;
-                        }
-                        @include max-screen($screen__s) {
-                            top: 0px;
-                            left: -7px;
-                            font-size: 20px;
                         }
                     }
                     .cart-total-container {
                         color: $mygro-black;
                         display: inline-block;
                         position: relative;
-                        bottom: 0.5rem;
-                        float: none;
                         text-transform: uppercase;
-                        letter-spacing: normal;
+                        font-size: $font10;
                         font-size: inherit;
                         text-align: left;
+
                         .cart-total-title {
                             font-size: 0.7rem;
                             text-transform: uppercase;
+                            display: block;
+
                             @include max-screen($screen__s) {
                                 margin-right: 0;
                             }
@@ -146,11 +143,18 @@ body {
                         .total-amt {
                             display: block;
                             font-size: 1.2rem;
-                            line-height: 0;
-                            margin-top: 0.5rem;
+
                             @include max-screen($screen__s) {
                                 font-size: 1rem;
                                 font-weight: 700;
+                            }
+                            .price {
+                                display: block;
+                                letter-spacing: 0;
+                                padding: 0;
+                                margin-left: -1px;
+                                font-weight: bold;
+                                line-height: 1em;
                             }
                         }
                     }
@@ -188,10 +192,15 @@ body {
                 }
             }
             .sections.nav-sections {
-                background: $color-white;
                 display: inline-block;
-                margin-bottom: 0;
-                transform: translateX(-1vw);
+
+                @include min-screen($screen__l) {
+                    position: absolute;
+                    top: 2px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    margin: 0;
+                }
                 @include max-screen($screen__l) {
                     max-width: 250px;
                     text-align: left;
@@ -553,53 +562,14 @@ body {
 	}
 }
 
-
 .product-image-container {
     width: 100% !important;
 }
 
-.icon-bag { 
-	color: $mygro-green; 
-	font-size: $font19;
-	margin: 5px 10px 0 0; 
-}
-.cart-total-container { 
-	float: right; 
-	text-transform: uppercase; 
-	letter-spacing: 1px;
-	font-size: $font10; 
-	color: $color-black; 
-	text-align: left; 
-	
-	.total-amt .price { 
-		display: block; 
-		letter-spacing: 0; 
-		font-size: $font18; 
-		padding: 0 0 0 0; 
-		margin-left: -1px; 
-		font-weight: bold; 
-	} 
-}
 .page-main { 
 	padding-top: 0px; 
 }
-@media screen and (max-width: $screen_1023) {
-	.nav-toggle:before { 
-		color: #075534!important; 
-	}
-	.page-wrapper{
-		.page-header .header.content {
-			padding: 22px; 
-			box-sizing: border-box; 
-			
-			.logo { 
-				position: absolute!important; 
-				left: 50%; transform: 
-				translateX(-50%); 
-			}
-		}
-	}
-}
+
 @media screen and (min-width: $screen_1024) {
 
 	.nav-sections { 

@@ -3,7 +3,7 @@
     <update handle="1column"/>
     <referenceContainer name="columns">
         <container name="newcontainer" htmlTag="div" htmlClass="sp-container">
-            <container name="div.grid" htmlTag="div" htmlClass="sp-flex sp--mx-4" after="main">
+            <container name="div.grid" htmlTag="div" htmlClass="sp-flex sp-flex-wrap sp--mx-4" after="main">
                 <container name="div.grid.left" htmlTag="div" htmlClass="sp-grid-left" after="div.grid">
                     <container name="grid.left" as="grid_left" label="Grid Left" />
                 </container>
