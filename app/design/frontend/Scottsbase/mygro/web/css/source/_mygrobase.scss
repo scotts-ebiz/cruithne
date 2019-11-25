@@ -26,6 +26,16 @@ body {
       font-size: 1.0rem;
     }
 }
+
+a, alink {
+    color: $mygro-green;
+}
+
+a:visited, .alink:visited {
+    color: $mygro-green;
+}
+
+
 [class^="icon-"],
 [class*=" icon-"] {
     font-family: 'gro'; 
