@@ -1,6 +1,6 @@
 <?php
 
-namespace SMG\Iframes\Plugin\Framework\App\Response\HeaderProvider;
+namespace SMG\Framework\Plugin\Framework\App\Response\HeaderProvider;
 
 /**
  * Adds an X-FRAME-OPTIONS header to HTTP responses to safeguard against click-jacking.
