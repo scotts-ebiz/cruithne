@@ -140,9 +140,17 @@ if($currentcmspage == 'warranty'){
             promoCode: '<?php echo $block->escapeHtml($smghelper->getCheckoutCart()->getQuote()->getCouponCode());?>',
             lineItems: [
                 <?php foreach($items as $item) {
-						if($item->getParentItem()){
-							continue;
-						}
+                // If there is a child product with a parent that is not configurable, we do not want to include it.
+                if($item->getParentItem()){
+                    if (!$item->getParentItem()->getProductType() === "configurable") {
+                        continue;
+                    }
+                }
+                // If there is a configurable product, we don't want to include it,
+                // but we will include its children because of the exception we made above
+                if ($item->getProductType() === "configurable") {
+						    continue;
+                }
 
                 $product = $smghelper->getProduct()->load($item->getProductId());
                 $store = $smghelper->getStoremangerInterface()->getStore();
