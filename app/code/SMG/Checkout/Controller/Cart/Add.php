@@ -16,14 +16,14 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
     /**
      * @var ProductRepositoryInterface
      */
-    protected $productRepository;
+    protected $_productRepository;
 
     /**
      * Logger
      *
      * @var Logger
      */
-    private $logger;
+    protected $_logger;
 
     /**
      * @param \Magento\Framework\App\Action\Context $context
@@ -32,8 +32,8 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator
      * @param CustomerCart $cart
-     * @param ProductRepositoryInterface $productRepository
-     * @param Logger $logger
+     * @param ProductRepositoryInterface $_productRepository
+     * @param Logger $_logger
      * @codeCoverageIgnore
      */
     public function __construct(
@@ -43,8 +43,8 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator,
         CustomerCart $cart,
-        ProductRepositoryInterface $productRepository,
-        Logger $logger
+        ProductRepositoryInterface $_productRepository,
+        Logger $_logger
     ) {
         parent::__construct(
             $context,
@@ -54,8 +54,8 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
             $formKeyValidator,
             $cart
         );
-        $this->productRepository = $productRepository;
-        $this->logger = $logger;
+        $this->productRepository = $_productRepository;
+        $this->logger = $_logger;
     }
 
     /**
