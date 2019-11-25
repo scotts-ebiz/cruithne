@@ -118,27 +118,7 @@
         }
     }
 }
-@media screen and (max-width: $screen_768) {
-    .checkout-cart-index {
-        .page.messages {
-            .message.error {
-                background: #ececec;
-                color: #000;
-                width: auto;
-            }
-        }
-    }
-}
-.checkout-cart-index {
-    .message-error {
-        background: #ececec;
-        color: #000;
-        width: 42%;
-        .message-error div:before {
-            display: none;
-        }
-    }
-}
+
 .checkout-index-index {
     .message-error {
         background: #ececec;
@@ -165,30 +145,19 @@
         }
     }
 }
+
+.empty-cart-page {
+  .column.main {
+    min-height: 0px;
+  }
+}
+
 .checkout-index-index {
     .mage-error[generated] {
         font-size: 1rem;
     }
 }
-.form-shipping-address {
-    ._error {
-        padding-bottom: 10px;
-    }
-    .control {
-        position: relative;
-        .field-error {
-            position: absolute;
-            @media only screen and (max-width: $screen__s) {
-                position: relative;
-            }
-        }
-    }
-}
-.empty-cart-page {
-    .column.main {
-        min-height: 0px;
-    }
-}
+
 .opc-wrapper {
     .checkout-payment-method {
         .giftcardaccount {
@@ -249,40 +218,6 @@
     }
 }
 
-//continue here!
-.cart-container {
-    .cart-summary-divlink {
-        #discount-coupon-form {
-            .field {
-                .label {
-                    width: unset;
-                }
-                .control {
-                    div.mage-error {
-                        font-size: 1rem;
-                    }
-                }
-            }
-        }
-    }
-}
-.form-shipping-address {
-    .control {
-        height: 85px;
-        @include max-screen($screen__s) {
-            height: 75px;
-        }
-    }
-    ._error {
-        padding-bottom: 0;
-    }
-    .control._with-tooltip {
-        .field-error {
-            position: relative;
-            margin-top: 5px;
-        }
-    }
-}
 .checkout-onepage-success {
     .page-wrapper {
         #maincontent {
@@ -345,19 +280,13 @@
         }
     }
 }
-.checkout-cart-index {
-    .columns {
-        .block.crosssell {
-            margin-top: 0px;
-            margin-left: 15px;
-        }
-    }
-}
+
 #checkout-step-shipping_method {
     .message.notice {
         font-size: 16px;
     }
 }
+
 div[name="shippingAddress.postcode"] {
     .control {
         .message.warning {
@@ -365,6 +294,7 @@ div[name="shippingAddress.postcode"] {
         }
     }
 }
+
 @media screen and (max-width: $screen_768) {
     .checkout-index-index {
         .modal-custom {
@@ -375,6 +305,7 @@ div[name="shippingAddress.postcode"] {
         }
     }
 }
+
 .checkout-index-index {
     .step-content {
         .form.payments {
@@ -393,11 +324,5 @@ div[name="shippingAddress.postcode"] {
     }
     #customer-email-error {
         font-size: 15px;
-    }
-    div[name="shippingAddress.region_id"] {
-        .field-error {
-            position: relative;
-            margin-top: 3px;
-        }
     }
 }

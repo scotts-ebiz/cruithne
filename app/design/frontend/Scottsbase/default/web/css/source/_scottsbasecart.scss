@@ -345,6 +345,14 @@
                                 .fieldset.coupon {
                                     .field {
                                         float: left;
+                                        .label {
+                                            width: unset;
+                                        }
+                                        .control {
+                                            div.mage-error {
+                                                font-size: 1rem;
+                                            }
+                                        }
                                     }
                                     .actions-toolbar {
                                         .action.apply.primary {
@@ -481,6 +489,10 @@
                     }
                 }
             }
+        }
+        .block.crosssell {
+            margin-top: 0px;
+            margin-left: 15px;
         }
     }
     div[name="shippingAddress.region_id"],
