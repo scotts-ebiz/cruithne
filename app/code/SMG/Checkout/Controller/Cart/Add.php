@@ -4,6 +4,7 @@ use Magento\Framework\App\Action\HttpPostActionInterface as HttpPostActionInterf
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Checkout\Model\Cart as CustomerCart;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Psr\Log\LoggerInterface as Logger;
 
 /**
  * Controller for processing add to cart action.
@@ -18,6 +19,13 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
     protected $productRepository;
 
     /**
+     * Logger
+     *
+     * @var Logger
+     */
+    private $logger;
+
+    /**
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param \Magento\Checkout\Model\Session $checkoutSession
@@ -25,6 +33,7 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
      * @param \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator
      * @param CustomerCart $cart
      * @param ProductRepositoryInterface $productRepository
+     * @param Logger $logger
      * @codeCoverageIgnore
      */
     public function __construct(
@@ -34,7 +43,8 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator,
         CustomerCart $cart,
-        ProductRepositoryInterface $productRepository
+        ProductRepositoryInterface $productRepository,
+        Logger $logger
     ) {
         parent::__construct(
             $context,
@@ -45,6 +55,7 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
             $cart
         );
         $this->productRepository = $productRepository;
+        $this->logger = $logger;
     }
 
     /**
@@ -194,7 +205,7 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
                     $e,
                     __('We can\'t add this item to your shopping cart right now.')
                 );
-                $this->_objectManager->get(\Psr\Log\LoggerInterface::class)->critical($e);
+                $this->logger->error($e->getMessage());
             }
             return $this->goBack();
         }
