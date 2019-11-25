@@ -161,6 +161,13 @@
                                         div[name='shippingAddress.street.1'], div[name='shippingAddress.street.2'] {
                                             display: none;
                                         }
+                                        div[name="shippingAddress.postcode"] {
+                                            .control {
+                                                .message.warning {
+                                                    display: none;
+                                                }
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -462,6 +469,14 @@
                     .opc-sidebar.custom-slide {
                         left: 0;
                         .modal-inner-wrap {
+                            .modal-header {
+                                .action-close {
+                                    @media screen and (max-width: $screen__m) {
+                                        background: none;
+                                        padding: 0;
+                                    }
+                                }
+                            }
                             .modal-content {
                                 #opc-sidebar {
                                     .opc-block-summary {
@@ -930,5 +945,20 @@ td#label_carrier_fedex-nextday_flatrate {
   }
   .checkout-index-index #discount-form label {
     padding: 6px 10px 0 0;
+  }
+}
+
+@media screen and (max-width: $screen__s) {
+  #popup {
+    width: 90%;
+  }
+  .options-cont-wrp {
+    width: 70%;
+  }
+}
+
+#checkout-step-shipping_method {
+  .message.notice {
+    font-size: 16px;
   }
 }
