@@ -658,21 +658,6 @@ button.action{
         	padding: 0 10px 15px 0px;
         }
 }
-.checkout-index-index{
-	#discount-form{
-		.control{
-			@media (max-width: 767px){
-				float:none;
-			}
-			input[type="text"]
-			{
-				@media (max-width: 767px){
-					line-height:40px;
-				}
-			}
-		}
-	}
-}
 
 .messages{
     .message.error{

@@ -83,92 +83,12 @@
     }
 }
 
-@media screen and (max-width: $screen_768) {
-    .checkout-index-index {
-        #payment #checkout-step-payment {
-            .payment-option .payment-option-content {
-                #discount-form {
-                    .actions-toolbar {
-                        margin-left: 0;
-                        text-align: center;
-                        margin-top: 0px;
-                    }
-                }
-            }
-        }
-    }
-}
 @media screen and (max-width: $screen_568) {
     #popup {
         width: 90%;
     }
     .options-cont-wrp {
         width: 70%;
-    }
-    .checkout-index-index {
-        .custom-checkout-nav-btns {
-            padding: 0 15px;
-        }
-    }
-}
-
-.opc-wrapper {
-    .checkout-payment-method {
-        .giftcardaccount {
-            .form-giftcard-account {
-                max-width: 100%;
-                .form-giftcard-account {
-                    position: relative;
-                    .field {
-                        margin: 0 0 0px;
-                        @include max-screen($screen__s) {
-                            margin: 0px;
-                        }
-                    }
-                }
-            }
-            .payment-option-content {
-                .payment-option-inner {
-                    float: left;
-                    max-width: 50%;
-                    @include max-screen($screen__s) {
-                        max-width: 100%;
-                        margin: 0px;
-                        float: none;
-                    }
-                }
-                .actions-toolbar {
-                    float: left;
-                    @include max-screen($screen__s) {
-                        float: left;
-                        width: 100%;
-                    }
-                }
-                div.primary {
-                    float: left;
-                    margin-right: 20px;
-                    @include max-screen($screen__s) {
-                        width: 48%;
-                        margin-right: 0px;
-                    }
-                    .action.primary {
-                        height: 30px;
-                    }
-                }
-                .secondary {
-                    float: left;
-                    @include max-screen($screen__s) {
-                        float: left;
-                        width: 48%;
-                        margin-left: 5px;
-                    }
-                    .action {
-                        height: 30px;
-                        padding: 5px 20px;
-                    }
-                }
-            }
-        }
     }
 }
 

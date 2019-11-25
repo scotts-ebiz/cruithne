@@ -360,7 +360,18 @@
                                                     .actions-toolbar {
                                                         margin-left: 25.8%;
                                                         margin-top: -43px;
+                                                        @media screen and (max-width: $screen__l) {
+                                                            margin-left: 0;
+                                                            margin-top: 10px;
+                                                            display: inline-block;
+                                                            width: 100%;
+                                                        }
+                                                        //@media screen and (max-width: $screen__m) { test - dont think I need
+                                                        //    text-align: center;
+                                                        //}
                                                         .primary {
+                                                            float: none;
+                                                            margin-left: 20px;
                                                             @media screen and (max-width: $screen__l) {
                                                               width: 100%;
                                                               margin-left:0;
@@ -483,7 +494,7 @@
                                                     max-height: none;
                                                     .product-item {
                                                         .product {
-                                                            product-image-container {
+                                                            .product-image-container {
                                                                 margin-top: 15px;
                                                                 display: inline-block;
                                                                 width: auto !important;
@@ -919,12 +930,5 @@ td#label_carrier_fedex-nextday_flatrate {
   }
   .checkout-index-index #discount-form label {
     padding: 6px 10px 0 0;
-  }
-
-  .checkout-index-index #payment #checkout-step-payment .payment-option .payment-option-content #discount-form .actions-toolbar {
-    margin-left: 0 !important;
-    margin-top: 10px !important;
-    display: inline-block;
-    width: 100%;
   }
 }
