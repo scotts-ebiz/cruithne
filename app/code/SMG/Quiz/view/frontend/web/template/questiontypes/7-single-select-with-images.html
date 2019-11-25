@@ -1,0 +1,92 @@
+<!-- ko if: quiz && quiz.currentGroup() && quiz.currentGroup().questions[0].questionType === 7 -->
+    <div
+            class="sp-quiz__question sp-container sp-mb-8"
+    >
+        <!-- Showing banner image if it exists -->
+        <div class="sp-quiz__banner sp-text-center" data-bind="if: quiz.currentGroup().imageUrl">
+            <img data-bind="attr:{src: quiz.currentGroup().imageUrl}" alt="Quiz Banner" />
+        </div>
+
+        <h2
+            class="sp-quiz__question-title sp-h2 sp-max-w-md sp-mt-0 sp-mx-auto sp-text-center"
+            data-bind="text: quiz.currentGroup().title"
+        >
+        </h2>
+
+        <p class="sp-text-center" data-bind="text: quiz.currentGroup().subtitle"></p>
+
+        <!-- Process Questions -->
+        <!-- @todo this class needs adjusted for the slider card -->
+        <div>
+
+            <div
+                class="sp-mx-auto lg:sp-w-3/4 sp-w-full"
+                data-bind="foreach: { data: quiz.currentGroup().questions, as: 'question', noChildContext: true }"
+            >
+                <div>
+                    <div
+                        class="sp-quiz__options sp-flex sp-flex-wrap sp-justify-center sp--mx-1"
+                        data-bind="foreach: { data: question.options, as: 'option', noChildContext: true }"
+                    >
+                        <div
+                            class="sp-quiz-option sp-w-1/2 sp-text-center sp-p-1"
+                            data-bind="css: {
+                                'sp-w-full md:sp-w-1/3': $parents[1].quiz.currentGroup().label == 'LAWN DETAILS',
+                                'sp-w-1/2 md:sp-w-1/4': $parents[1].quiz.currentGroup().label != 'LAWN DETAILS'
+                            }"
+                        >
+                            <input
+                                class="sp-quiz-option__input sp-quiz-checkbox sp-hidden"
+                                data-bind="
+                                    attr: {
+                                        checked: $parents[1].quiz.isOptionSelected(question.id, option.id),
+                                        id: option.id,
+                                        name: question.id,
+                                        value: option.id
+                                    },
+                                    event: { change: $parents[1].quiz.setAnswer }
+                                "
+                                type="radio"
+                            />
+
+                            <label
+                                class="sp-quiz__option-label sp-block sp-h-full"
+                                data-bind="attr: { for: option.id }"
+                            >
+                                <span class="sp-quiz__option-content sp-bg-white sp-block sp-px-4 sp-py-10 sp-rounded sp-shadow-md">
+                                    <span class="sp-block sp-mb-8">
+                                        <img
+                                            alt="Quiz Option"
+                                            class="sp-quiz__option-image"
+                                            data-bind="
+                                                attr: { src: option.imageUrl },
+                                                css: { 'sp-rounded-full': $parents[1].quiz.currentGroup().label == 'LAWN DETAILS' }
+                                            "
+                                        />
+                                    </span>
+                                    <span
+                                        class="sp-block sp-mb-0 sp-text-black"
+                                        data-bind="
+                                            css: { 'sp-label sp-mb-2': $parents[1].quiz.currentGroup().label == 'LAWN DETAILS' },
+                                            text: option.label
+                                        "
+                                    >
+
+                                    </span>
+                                    <!-- ko if: $parents[1].quiz.currentGroup().label == 'LAWN DETAILS' -->
+                                    <span class="sp-p2 sp-text-black">
+                                        Blade: Sharp, pointed, 1/8” wide<br />
+                                        Color/Texture: Deep green, dense<br />
+                                        Growth: Close cut, high quality
+                                    </span>
+                                    <!-- /ko -->
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ko template: "SMG_Quiz/tooltip-general" --><!-- /ko -->
+    </div>
+<!-- /ko -->
