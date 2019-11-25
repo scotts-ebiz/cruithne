@@ -547,9 +547,18 @@
 }
 
 // Empty Cart Page //
-.empty-cart-page.checkout-cart-index {
-    .actions {
-        display: none;
-    }
+.empty-cart-page {
+  .page-main {
+      max-width: 72%;
+      @media screen and (max-width: $screen__m) {
+        max-width: 100%;
+      }
+      .column.main {
+          min-height: 0px;
+          .actions {
+              display: none;
+          }
+      }
+  }
 }
 

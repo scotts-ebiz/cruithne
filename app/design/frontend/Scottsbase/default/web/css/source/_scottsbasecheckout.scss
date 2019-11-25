@@ -296,6 +296,9 @@
                                                                               background: $scotts-secondary-green;
                                                                             }
                                                                         }
+                                                                        .action.primary.disabled {
+                                                                            background: #4d4e4e !important;
+                                                                        }
                                                                     }
                                                                 }
                                                             }
@@ -681,13 +684,78 @@
                         font-weight: 400;
                     }
                 }
-
-
             }
+        }
+    }
+    //Error Code
+    .field-error, #customer-email-error  {
+        font-size: 0.9375rem;
+    }
+    .message-error {
+        background: #ececec;
+        color: #000;
+        .message-error div:before {
+            display: none;
         }
     }
 }
 // Checkout Page - End //
+
+
+
+
+// Success Page - Start //
+.checkout-onepage-success {
+    .page-wrapper {
+        #maincontent {
+            margin-left: 16rem;
+            @include max-screen($screen__s) {
+                margin-left: 0rem;
+            }
+            .page-title-wrapper {
+                margin-top: 9.5rem;
+                .page-title {
+                    font-size: 16px;
+                    color: #000;
+                    font-weight: bold;
+                }
+            }
+            .checkout-success {
+                color: #000;
+                font-weight: 400;
+                width: 700px;
+                @include max-screen($screen__s) {
+                    width: auto;
+                }
+                .actions-toolbar {
+                    width: 100%;
+                    padding-top: 20px;
+                    border-top: 1px solid #ccc;
+                    text-align: right;
+                    .primary {
+                        float: right;
+                        width: 100%;
+                        .action.primary.continue {
+                            color: #fff;
+                            padding: 10px 25px 10px 25px;
+                            display: inline-block;
+                            background: #075534;
+                            margin: 0;
+                            float: right;
+                            width: auto;
+                        }
+                    }
+                }
+            }
+            #registration {
+                display: none;
+            }
+        }
+    }
+}
+// Success Page - End //
+
+
 
 
 //Style Titles / Steps
@@ -762,10 +830,6 @@ td#label_carrier_fedex-nextday_flatrate {
     }
     .table-checkout-shipping-method tbody tr:first-child{
         border-top: none;
-    }
-
-    .field-error {
-        font-size: 0.9375rem;
     }
 }
 
