@@ -1,11 +1,11 @@
 {
-  "name": "SMG/Quiz",
+  "name": "SMG/RecommendationQuiz",
   "description": "N/A",
   "type": "magento2-module",
   "version": "1.0.0",
   "require": {
     "php": "~7.1.3|~7.2.0",
-    "SMG/Recommendation": "1.0.*",
+    "SMG/RecommendationApi": "1.0.*",
     "magento/framework": "~100.0.4"
   },
   "autoload": {
