@@ -20,6 +20,7 @@ define([
         getCompletedQuiz(id) {
             const self = this;
             let minTimePassed = false;
+            let formKey = document.querySelector('input[name=form_key]').value;
 
             // Make sure loading screen appears for at least 3 seconds.
             setTimeout(() => {
@@ -33,7 +34,7 @@ define([
                 `/rest/V1/recommendations/quiz/result`,
                 {
                     contentType: 'application/json; charset=utf-8',
-                    data: JSON.stringify({ id: id }),
+                    data: JSON.stringify({ key: formKey, id: id }),
                     dataType: 'json',
                     method: 'post',
                     success(data) {
