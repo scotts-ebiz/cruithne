@@ -149,7 +149,7 @@ if($currentcmspage == 'warranty'){
                 // If there is a configurable product, we don't want to include it,
                 // but we will include its children because of the exception we made above
                 if ($item->getProductType() === "configurable") {
-						    continue;
+                    continue;
                 }
 
                 $product = $smghelper->getProduct()->load($item->getProductId());
