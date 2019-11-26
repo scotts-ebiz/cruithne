@@ -1,12 +1,12 @@
 <?php
 
-namespace SMG\Recommendation\Model;
+namespace SMG\RecommendationApi\Model;
 
 use Elasticsearch\Common\Exceptions\Forbidden403Exception;
-use SMG\Recommendation\Api\QuizInterface;
 use Magento\Framework\Exception\SecurityViolationException;
+use SMG\RecommendationApi\Api\RecommendationInterface;
 
-class Quiz implements QuizInterface
+class Recommendation implements RecommendationInterface
 {
 
     /**
@@ -31,13 +31,13 @@ class Quiz implements QuizInterface
 
     /**
      * Quiz constructor.
-     * @param \SMG\Recommendation\Helper\QuizHelper $helper
+     * @param \SMG\RecommendationApi\Helper\RecommendationHelper $helper
      * @param \Magento\Framework\Data\Form\FormKey $formKey
      * @param \Magento\Framework\Webapi\Request $request
      * @param \Magento\Framework\Controller\Result\JsonFactory $jsonResultFactory
      */
     public function __construct(
-        \SMG\Recommendation\Helper\QuizHelper $helper,
+        \SMG\RecommendationApi\Helper\RecommendationHelper $helper,
         \Magento\Framework\Data\Form\FormKey $formKey,
         \Magento\Framework\Webapi\Request $request,
         \Magento\Framework\Controller\Result\JsonFactory $jsonResultFactory
@@ -197,6 +197,57 @@ class Quiz implements QuizInterface
         }
 
         return;
+    }
+
+    /**
+     * Map the quiz to the user
+     *
+     * @param string $key
+     * @param string $user_id
+     * @param string $quiz_id
+     * @return bool|string|void
+     * @throws SecurityViolationException
+     *
+     * @api
+     */
+    public function mapToUser($key, $user_id, $quiz_id)
+    {
+
+        // Test the form key
+        if ($this->formValidation($key)) {
+            throw new SecurityViolationException(__('Unauthorized'));
+        }
+
+        // Make sure we have a path
+        if (!$this->_helper->getMapToUserPath()) {
+            return;
+        }
+
+        if (empty($user_id) || empty($quiz_id)) {
+            return;
+        }
+
+        try {
+
+            $url = 'https://lspaasdraft.azurewebsites.net/api/completedQuizzes/mapToUser';
+
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+                'Content-Type: application/json',
+                'x-userid: ' . $user_id,
+            ));
+            curl_setopt($ch, CURLOPT_POSTFIELDS, array($quiz_id));
+
+            $response = curl_exec($ch);
+            curl_close($ch);
+
+            return $response;
+        } catch (Exception $e) {
+            echo $e->getMessage() . ' (' . $e->getCode() . ')';
+        }
     }
 
     /**

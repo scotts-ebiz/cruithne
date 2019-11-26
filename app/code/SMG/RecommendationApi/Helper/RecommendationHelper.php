@@ -1,11 +1,11 @@
 <?php
 
-namespace SMG\Recommendation\Helper;
+namespace SMG\RecommendationApi\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Store\Model\ScopeInterface;
 
-class QuizHelper extends AbstractHelper
+class RecommendationHelper extends AbstractHelper
 {
 
 	const CONFIG_RECOMMENDATIONS_ACTIVE_PATH = 'recommendations/settings/active';
@@ -13,6 +13,7 @@ class QuizHelper extends AbstractHelper
 	const CONFIG_RECOMMENDATIONS_SAVE_QUIZ_PATH = 'recommendations/api/save';
 	const CONFIG_RECOMMENDATIONS_QUIZ_RESULT_PATH = 'recommendations/api/result';
 	const CONFIG_RECOMMENDATIONS_COMPLETED_QUIZ_PATH = 'recommendations/api/previous';
+	const CONFIG_RECOMMENDATIONS_MAP_TO_USER_PATH = 'recommendations/api/map';
 
 	/**
 	 * Check whether Recommendations is active and ready to use
@@ -90,6 +91,21 @@ class QuizHelper extends AbstractHelper
 			$store_id
 		);
 	}
+
+    /**
+     * Return map to user path
+     *
+     * @param null $store_id
+     * @return string
+     */
+    public function getMapToUserPath($store_id = null)
+    {
+        return $this->scopeConfig->getValue(
+            self::CONFIG_RECOMMENDATIONS_MAP_TO_USER_PATH,
+            ScopeInterface::SCOPE_STORE,
+            $store_id
+        );
+    }
 
 	/**
      * cURL wrapper
