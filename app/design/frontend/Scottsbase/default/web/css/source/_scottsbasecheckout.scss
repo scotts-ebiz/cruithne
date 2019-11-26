@@ -41,7 +41,6 @@
                                 margin: 0;
                                 vertical-align: top;
                                 display: inline-block;
-                                //font-weight: $font_normal;
                                 overflow: hidden;
                                 speak: none;
                                 text-align: center;
@@ -373,9 +372,6 @@
                                                             display: inline-block;
                                                             width: 100%;
                                                         }
-                                                        //@media screen and (max-width: $screen__m) { test - dont think I need
-                                                        //    text-align: center;
-                                                        //}
                                                         .primary {
                                                             float: none;
                                                             margin-left: 20px;
@@ -679,7 +675,7 @@
                     margin-top: 10px;
                 }
 
-                .form.form-discount .actions-toolbar>.primary .action:last-child { //test
+                .form.form-discount .actions-toolbar>.primary .action:last-child {
                     margin-top: 0px;
                 }
 
