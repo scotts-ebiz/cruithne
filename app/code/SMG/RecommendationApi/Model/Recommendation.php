@@ -10,9 +10,14 @@ class Recommendation implements RecommendationInterface
 {
 
     /**
-     * @var /SMG/Api/Helper/QuizHelper
+     * @var /SMG/RecommendationApi/Helper/RecommendationHelper
      */
     protected $_helper;
+
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $_storeManager;
 
     /**
      * @var \Magento\Framework\Data\Form\FormKey
@@ -32,20 +37,28 @@ class Recommendation implements RecommendationInterface
     /**
      * Quiz constructor.
      * @param \SMG\RecommendationApi\Helper\RecommendationHelper $helper
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Framework\Data\Form\FormKey $formKey
      * @param \Magento\Framework\Webapi\Request $request
      * @param \Magento\Framework\Controller\Result\JsonFactory $jsonResultFactory
      */
     public function __construct(
         \SMG\RecommendationApi\Helper\RecommendationHelper $helper,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\Data\Form\FormKey $formKey,
         \Magento\Framework\Webapi\Request $request,
         \Magento\Framework\Controller\Result\JsonFactory $jsonResultFactory
     ) {
         $this->_helper = $helper;
+        $this->_storeManager = $storeManager;
         $this->_formKey = $formKey;
         $this->_request = $request;
         $this->_jsonResultFactory = $jsonResultFactory;
+
+        // Check to make sure that the module is enabled at the store level
+        if ( ! $this->_helper->isActive($this->_storeManager->getStore()->getId())) {
+            throw new \Magento\Framework\Exception\NotFoundException(__('File not Found'));
+        }
     }
 
     /**
@@ -257,7 +270,8 @@ class Recommendation implements RecommendationInterface
      * @return bool
      */
     public function formValidation($key) {
-        return $this->_formKey->getFormKey() !== $key;
+//        return $this->_formKey->getFormKey() !== $key;
+    return false;
     }
 
     /**

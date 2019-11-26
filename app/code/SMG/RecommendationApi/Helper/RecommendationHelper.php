@@ -8,7 +8,7 @@ use Magento\Store\Model\ScopeInterface;
 class RecommendationHelper extends AbstractHelper
 {
 
-	const CONFIG_RECOMMENDATIONS_ACTIVE_PATH = 'recommendations/settings/active';
+	const CONFIG_RECOMMENDATIONS_ACTIVE_PATH = 'recommendations/module/active';
 	const CONFIG_RECOMMENDATIONS_NEW_QUIZ_PATH = 'recommendations/api/new';
 	const CONFIG_RECOMMENDATIONS_SAVE_QUIZ_PATH = 'recommendations/api/save';
 	const CONFIG_RECOMMENDATIONS_QUIZ_RESULT_PATH = 'recommendations/api/result';
