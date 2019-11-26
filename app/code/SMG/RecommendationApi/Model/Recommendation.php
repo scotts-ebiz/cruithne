@@ -270,8 +270,7 @@ class Recommendation implements RecommendationInterface
      * @return bool
      */
     public function formValidation($key) {
-//        return $this->_formKey->getFormKey() !== $key;
-    return false;
+        return $this->_formKey->getFormKey() !== $key;
     }
 
     /**
