@@ -77,6 +77,9 @@ define([
         completeQuiz() {
             const self = this;
             let minTimePassed = false;
+            let formKey = document.querySelector('input[name=form_key]').value;
+            let quiz = self.quiz();
+            quiz["key"] = formKey;
 
             // Make sure loading screen appears for at least 3 seconds.
             setTimeout(() => {
