@@ -1,3 +1,5 @@
+
+
 <div class="sp-quiz sp-bg-green-1 sp-flex sp-text-white">
     <div class="sp-quiz__wrapper sp-flex sp-flex-column sp-h-full sp-w-full" data-bind="scope: 'quiz'">
         <div
@@ -28,7 +30,7 @@
 <script
     async
     defer
-    src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCFmr27VgQLxZYKIf8LSSp5E8pGgg3B5Y4&libraries=drawing,geometry,places"
+    src="https://maps.googleapis.com/maps/api/js?key=<?php echo $block->getGoogleMapsApiKey(); ?>&libraries=drawing,geometry,places"
     type="text/javascript"
 >
 </script>

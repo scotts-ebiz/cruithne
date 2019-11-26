@@ -11,7 +11,7 @@
         <attribute name="class" value="sp-overflow-hidden"/>
         <referenceContainer name="content">
             <block
-                class="Magento\Framework\View\Element\Template"
+                class="SMG\RecommendationQuiz\Block\Quiz"
                 template="SMG_RecommendationQuiz::quiz.phtml"
             />
         </referenceContainer>
