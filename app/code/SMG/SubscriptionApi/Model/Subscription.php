@@ -68,9 +68,9 @@ class Subscription implements SubscriptionInterface
         }
 
         // We will have to calculate the price differently for the subscription than we normally would
-        $total_subscription_price = 0;
+        $totalSubscriptionPrice = 0;
 
-         // Add "Annual Subscription" product if the customer selected the annual subscription plan
+        // Add "Annual Subscription" product if the customer selected the annual subscription plan
         if( $subscription_plan == 'annual' ) {
             try {
                 $_product = $this->_productRepository->get( 'annual' );
@@ -81,7 +81,7 @@ class Subscription implements SubscriptionInterface
                 );
                 $this->_cart->addProduct( $productId, $params );
             } catch( Exception $e ) {
-                $response = array( 'success' => false, 'code' => $e->getCode(), 'message' => 'test: ' . $e->getMessage());
+                $response = array( 'success' => false, 'code' => $e->getCode(), 'message' => $e->getMessage());
                 return json_encode( $response );
             }
         }
@@ -89,26 +89,23 @@ class Subscription implements SubscriptionInterface
         // Go through all the core products, add them to cart and calculate
         // the total subscription price which will be applied to the Annual Subscription product
         if( ! empty( $data['plan']['coreProducts'] ) ) {
+            
             $coreProducts = $data['plan']['coreProducts'];
+
             foreach( $coreProducts as $product ) {
                 try {
                     $_product = $this->_productRepository->get( $product['sku'] );
-                    $productId = $_product->getId();
+                    $totalSubscriptionPrice += $_product->getPrice();
+                    $seasonalProductSku = $this->getSeasonalProductSku( $product['season'] );
+                    $seasonalProduct = $this->_productRepository->get( $seasonalProductSku );
                     $params = array(
                         'form_key'  => $this->_formKey->getFormKey(),
                         'qty'       => 1,
                     );
-                    $this->_cart->addProduct( $productId, $params );
-                    $total_subscription_price += $_product->getPrice();
-                    // If it's seasonal subscription, add only the first product
+                    $this->_cart->addProduct( $seasonalProduct->getId(), $params );
+                
+                    // If Seasonal subscription, add only the first core product
                     if( $subscription_plan == 'seasonal' ) {
-                        $seasonal_product_sku = $this->getSeasonalProductSku( $product['season'] );
-                        $seasonal_product = $this->_productRepository->get( $seasonal_product_sku );
-                        $seasonal_poduct_params = array(
-                            'form_key'  => $this->_formKey->getFormKey(),
-                            'qty'       => 1,
-                        );
-                        $this->_cart->addProduct( $seasonal_product->getId(), $seasonal_poduct_params );
                         break;
                     }
                 } catch( Exception $e ) {
@@ -146,27 +143,19 @@ class Subscription implements SubscriptionInterface
         $quoteItems = $this->_checkoutSession->getQuote()->getItemsCollection();
         foreach( $quoteItems as $item ) {
             // Apply the total price from the core products to the annual subscription product
-            if( $item->getSku() == 'annual' ) {
-                $item->setCustomPrice($total_subscription_price);
-                $item->setOriginalCustomPrice($total_subscription_price);
-                $item->getProduct()->setIsSuperMode(true);
-            }
-
-            // If it's Seasonal subscription, apply the total price from the core product to the seasonal product
-            if( $subscription_plan == 'seasonal' ) {
-                $seasonal_skus = array( 'early-spring', 'late-spring', 'early-summer', 'early-fall' );
-                if( in_array( $item->getSku(), $seasonal_skus ) ) {
-                    $item->setCustomPrice($total_subscription_price);
-                    $item->setOriginalCustomPrice($total_subscription_price);
+            if( $subscription_plan == 'annual' ) {
+                if( $item->getSku() == 'annual' ) {
+                    $item->setCustomPrice($totalSubscriptionPrice);
+                    $item->setOriginalCustomPrice($totalSubscriptionPrice);
                     $item->getProduct()->setIsSuperMode(true);
                 }
-            }
-            
-            // Set price to 0$ for all core products
-            if( $item->getProduct()->getAttributeText('is_addon') != 'Yes' ) {
-                $item->setCustomPrice(0);
-                $item->setOriginalCustomPrice(0);
-                $item->getProduct()->setIsSuperMode(true);
+            } else {
+                $seasonalSkus = array( 'early-spring', 'late-spring', 'early-summer', 'early-fall' );
+                if( in_array( $item->getSku(), $seasonalSkus ) ) {
+                    $item->setCustomPrice($totalSubscriptionPrice);
+                    $item->setOriginalCustomPrice($totalSubscriptionPrice);
+                    $item->getProduct()->setIsSuperMode(true);
+                }
             }
         }
 
