@@ -61,14 +61,12 @@ define([
         },
 
         /**
-         * Checks whether the product is an Addon Product or not
+         * Get estimated arrival date for the shipment
          *
-         * @param {Object} quoteItem
-         * @returns {boolean}
+         * @returns {String}
          */
-        isAddon: function(quoteItem) {
-            var item = this.getItem(quoteItem.item_id);
-            return ( item.product.is_addon ) ? true : false;
+        getEstimatedArrivalDate: function() {
+            return localStorage.getItem('estimated_arrival')
         },
 
         /**
@@ -77,20 +75,20 @@ define([
          * @param {Object} quoteItem
          * @returns {String}
          */
-        getProductSku(quoteItem) {
+        getProductSku: function(quoteItem) {
             var item = this.getItem(quoteItem.item_id);
             return item.product.sku
         },
 
         /**
-         * Checks whether the product is a Subscription Product or not
+         * Return product short description
          *
          * @param {Object} quoteItem
          * @returns {String}
          */
-        isSubscriptionProduct(sku) {
-            var subscriptionProductSkus = [ 'annual', 'early-spring', 'late-spring', 'early-summer', 'early-fall' ];
-            return subscriptionProductSkus.includes(sku);
+        getProductShortDescription: function(quoteItem) {
+            var item = this.getItem(quoteItem.item_id);
+            return item.product.short_description
         },
 
         /**

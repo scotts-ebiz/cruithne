@@ -1,7 +1,7 @@
 <div class="block order-summary-products">
     <h5>Products</h5>
     <ol data-bind="foreach: { data: items(), as: 'item' }">
-        <!-- ko if: $parent.isAddon(item) || $parent.isSubscriptionProduct($parent.getProductSku(item)) -->
+        <!-- ko if: item.price > 0 -->
         <li>
             <div class="product">
                 <each args="$parent.elems()" render=""/>
@@ -9,4 +9,9 @@
         </li>
         <!-- /ko -->
     </ol>
+    <div class="sp-estimated-arrival">
+        <div class="sp-p1">
+            Estimated arrival: <span data-bind="text: getEstimatedArrivalDate()"></span>
+        </div>
+    </div>
 </div>
