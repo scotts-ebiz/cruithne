@@ -61,55 +61,6 @@ define([
         },
 
         /**
-         * Checks whether the product is an Addon Product or not
-         *
-         * @param {Object} quoteItem
-         * @returns {boolean}
-         */
-        isAddon: function(quoteItem) {
-            var item = this.getItem(quoteItem.item_id);
-            return ( item.product.is_addon ) ? true : false;
-        },
-
-        /**
-         * Return product SKU
-         *
-         * @param {Object} quoteItem
-         * @returns {String}
-         */
-        getProductSku(quoteItem) {
-            var item = this.getItem(quoteItem.item_id);
-            return item.product.sku
-        },
-
-        /**
-         * Checks whether the product is a Subscription Product or not
-         *
-         * @param {Object} quoteItem
-         * @returns {String}
-         */
-        isSubscriptionProduct(sku) {
-            var subscriptionProductSkus = [ 'annual', 'early-spring', 'late-spring', 'early-summer', 'early-fall' ];
-            return subscriptionProductSkus.includes(sku);
-        },
-
-        /**
-         * Get product data from cart by product id
-         *
-         * @param {Number} item_id
-         * @returns {Object}
-         */
-        getItem: function(item_id) {
-            var itemElement = null;
-            _.each(this.quoteItemData, function(element, index) {
-                if (element.item_id == item_id) {
-                    itemElement = element;
-                }
-            });
-            return itemElement;
-        },
-
-        /**
          * Set items to observable field
          *
          * @param {Object} items
