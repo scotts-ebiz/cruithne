@@ -84,6 +84,11 @@ $colors: (
   border-radius: $border-radius;
 }
 
+// Border Radius
+.sp-rounded-full {
+  border-radius: 100%;
+}
+
 // Display
 @each $size in $breakpoints {
   @include breakpoint($size) {
@@ -144,12 +149,13 @@ $colors: (
     .#{$size}sp-flex-row {
       flex-direction: row;
     }
+
     .#{$size}sp-flex-column {
       flex-direction: column;
     }
 
     .#{$size}sp-items-center {
-      align-items: center;
+        align-items: center;
     }
 
     .#{$size}sp-items-baseline {
@@ -170,9 +176,23 @@ $colors: (
   }
 }
 
+// Font weights
+.sp-font-bold {
+  font-weight: 700;
+}
+
+.sp-font-normal {
+  font-weight: 400;
+}
+
 // Height
 .sp-h-full {
   height: 100%;
+}
+
+// Full height, minus header
+.sp-h-full--header {
+  height: calc(100vh - #{$header-height});
 }
 
 // List
@@ -213,6 +233,23 @@ $colors: (
   }
 }
 
+// Overflow
+@each $size in $breakpoints {
+  @include breakpoint($size) {
+    @if $size {
+      $size: #{$size}\:;
+    }
+
+    .#{$size}sp-overflow-auto {
+      overflow: auto;
+    }
+
+    .#{$size}sp-overflow-hidden {
+      overflow: hidden;
+    }
+  }
+}
+
 // Spacing
 @each $size in $breakpoints {
   @include breakpoint($size) {
@@ -225,8 +262,8 @@ $colors: (
       margin-right: auto;
     }
 
-    @each $increment in $spacing {
-      @each $key, $value in ("": null, "x": null, "y": null, "t": "top", "b": "bottom", "l": "left", "r": "right") {
+    @each $key, $value in ("": null, "x": null, "y": null, "t": "top", "b": "bottom", "l": "left", "r": "right") {
+      @each $increment in $spacing {
         @if $key == "x" {
           .#{$size}sp-m#{$key}-#{$increment} {
             margin-left: spacing($increment);
@@ -407,6 +444,14 @@ $colors: (
 
     .#{$size}sp-w-1\/12 {
       width: 1/12 * 100%;
+    }
+
+    .#{$size}sp-w-5\/12 {
+      width: 5/12 * 100%;
+    }
+
+    .#{$size}sp-w-7\/12 {
+      width: 7/12 * 100%;
     }
 
     .#{$size}sp-w-11\/12 {

@@ -10,16 +10,28 @@
   top: 0;
   opacity: 0;
   transition: all .25s ease;
-  transform: translateY(0);
+  transform: translateY(50%);
+  z-index: 1;
 
   :focus + &,
   :not(:placeholder-shown) + & {
     opacity: 1;
-    transform: translateY(-100%);
+    transform: translateY(-25%);
   }
 }
 
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
 .sp-input {
+  background-color: transparent;
   border: none;
   border-bottom: 1px solid $gray-2;
   font-size: $font-size-p2--mobile;
@@ -27,6 +39,18 @@
   padding: 1rem;
   position: relative;
   z-index: 1;
+
+  &::-moz-focus-inner {
+    outline: none !important;
+  }
+
+  &:-moz-focusring {
+    outline: none !important;
+  }
+
+  &::-moz-focus-outer {
+    outline: none !important;
+  }
 
   &:focus {
     border-color: $gray-1;
@@ -69,12 +93,12 @@
   position: relative;
 
   select {
+    -webkit-appearance: none;
     background-color: $white;
     border: 1px solid $gray-2;
     border-radius: 0;
     padding: 1rem 1.75rem 1rem 1rem;
     outline: none;
-    -webkit-appearance:none;
   }
 
   &:focus {
@@ -190,8 +214,51 @@ input[type="email"].sp-textarea {
 
 .sp-form-error {
   color: $red-1;
-  font-size: .75rem;
-  margin-top: .25rem;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+@mixin rangeThumb {
+  appearance: none;
+  background: $green-1;
+  border: 0 !important;
+  border-radius: 50%;
+  height: 1rem;
+  cursor: pointer;
+  width: 1rem;
+}
+
+.sp-slider {
+  -webkit-appearance: none;
+  background-color: transparent;
+  width: 100%;
+
+  // Thumb
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none; // needed again for Chrome & Safari
+    @include rangeThumb;
+  }
+
+  &::-moz-range-thumb {
+    @include rangeThumb;
+  }
+
+  &::-ms-thumb {
+    @include rangeThumb;
+  }
+
+  &:focus { // override outline/background on focus
+    background: none;
+    outline: none;
+  }
+
+  &::-ms-track { // A little somethin' somethin' for IE
+    width: 100%;
+    cursor: pointer;
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+  }
 }
 
 /* Override Magento 2 default classes */
