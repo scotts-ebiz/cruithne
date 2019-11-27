@@ -90,8 +90,66 @@
                     }
                     .form-cart {
                         margin-top: 100px;
+                        @media screen and (max-width: $screen__m) {
+                            margin-top: 20px;
+                        }
                         .cart.table-wrapper {
                             #shopping-cart-table {
+                                td {
+                                    @media screen and (max-width: $screen__m) {
+                                        width: 100%;
+                                        text-align: left;
+                                        display: inline-block;
+                                    }
+                                }
+                                .col.item {
+                                    @media screen and (min-width: $screen__m) {
+                                        width: 53%;
+                                    }
+                                    @media screen and (max-width: $screen__l) and (min-width: $screen__m) {
+                                        width: 60%;
+                                    }
+                                }
+                                .col.qty {
+                                    @media screen and (min-width: $screen__l) {
+                                        width: 18%;
+                                        text-align: center;
+                                    }
+                                    @media screen and (max-width: $screen__l) {
+                                        width: 20%;
+                                        text-align: center;
+                                    }
+                                    @media screen and (max-width: $screen__m) {
+                                        width: 100%;
+                                        text-align: left;
+                                        display: inline-block;
+                                    }
+                                }
+                                .col.price {
+                                    width: 14%;
+                                    text-align: center;
+                                    @media screen and (max-width: $screen__l) {
+                                        width: 10%;
+                                    }
+                                    @media screen and (max-width: $screen__m) {
+                                        width: 8%;
+                                    }
+                                }
+                                .col.subtotal {
+                                    width: 14%;
+                                    text-align: center;
+                                    @media screen and (max-width: $screen__l) {
+                                        width: 10%;
+                                    }
+                                    @media screen and (max-width: $screen__m) {
+                                        display: none;
+                                    }
+                                }
+                                .col.action {
+                                    @media screen and (max-width: $screen__l) {
+                                        width: 10%;
+                                    }
+                                }
                                 thead {
                                     tr {
                                         .col {
@@ -104,6 +162,10 @@
                                     }
                                 }
                                 .cart.item {
+                                    @media screen and (max-width: $screen__m) {
+                                        border-top: 0;
+                                    }
+
                                     .item-info {
                                         .col {
                                           margin: 0;
@@ -111,10 +173,14 @@
                                         }
                                         .item {
                                             .product-item-photo {
+                                                width:138px;
                                                 @include max-screen($screen__m) {
+                                                  width: 100%;
                                                   max-width: none;
                                                   position: static;
                                                   text-align: center;
+                                                  padding: 0;
+                                                  margin-bottom: 20px;
                                                 }
                                             }
                                             .product-item-details {
@@ -126,8 +192,27 @@
                                                 }
                                             }
                                         }
+                                        .price {
+                                            @include max-screen($screen__m) {
+                                                padding: 0;
+                                                &:before {
+                                                  display: inline-block;
+                                                }
+                                            }
+                                        }
                                         .qty {
+                                            &:before {
+                                                @include max-screen($screen__m) {
+                                                    display: inline-block;
+                                                }
+                                                @media screen and (max-width: $screen__s) {
+                                                    padding-bottom: 0;
+                                                }
+                                            }
                                             .field.qty {
+                                                @media screen and (max-width: $screen__m) {
+                                                    display: inline-block;
+                                                }
                                                 .control.qty {
                                                     .qty {
                                                       border: 1px solid $scotts-black;
@@ -164,6 +249,7 @@
                                             font-size:16px;
                                             @include max-screen($screen__m) {
                                               font-size: 1rem;
+                                              display: inline-block;
                                             }
                                         }
                                         &:last-child {
@@ -184,19 +270,11 @@
                                         }
                                     }
                                 }
-                                .cart.item .item-info .col.price,
-                                .cart.item .item-info .col.subtotal,
-                                thead tr .col.price,
-                                thead tr .col.subtotal {
-                                    width: 14%;
-                                    text-align: center;
-                                }
-
                             }
                         }
-                        .product-item-photo {
-                            width:138px;
-                        }
+                        //.product-item-photo {
+                        //    width:138px;
+                        //}
 
                         //Can you vet this?
                         .actions-toolbar > .action.action-edit  {
@@ -207,13 +285,6 @@
                         .cart.main.actions {
                             display: none;
                         }
-
-                        //Can you vet this?
-                        div.cart.table-wrapper .cart.item .item-info .col.item,
-                        .cart.table-wrapper thead tr .col.item {
-                            width: 53%;
-                        }
-
                     }
                     .cart-parent-summary {
 
@@ -273,31 +344,45 @@
                             }
                             #discount-coupon-form {
                                 .fieldset.coupon {
-                                    .action.apply.primary {
-                                        height:30px;
-                                        font-size: 0.8rem;
-                                        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                                        padding: 5px 10px 5px 10px !important;
-                                        background: #4d4d4e;
-                                        line-height: 0;
-                                        margin-left: 20px;
-                                        &:hover {
-                                          background: #333333;
+                                    .field {
+                                        float: left;
+                                        .label {
+                                            width: unset;
+                                        }
+                                        .control {
+                                            div.mage-error {
+                                                font-size: 1rem;
+                                            }
                                         }
                                     }
-                                    .action.cancel.primary {
-                                        height:30px;
-                                        font-size: 0.8rem;
-                                        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                                        padding: 5px 10px 5px 10px !important;
-                                        background: #4d4d4e;
-                                        line-height: 0;
-                                        margin-left: 20px;
-                                        @include max-screen($screen__s) {
-                                          margin-left:0px;
+                                    .actions-toolbar {
+                                        .action.apply.primary {
+                                            height:30px;
+                                            font-size: 0.8rem;
+                                            font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                                            padding: 5px 10px 5px 10px !important;
+                                            background: #4d4d4e;
+                                            line-height: 0;
+                                            margin-left: 20px;
+                                            &:hover {
+                                              background: #333333;
+                                            }
                                         }
-                                        &:hover {
-                                          background: #333333;
+                                        .action.cancel.primary {
+                                            height:30px;
+                                            font-size: 0.8rem;
+                                            font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                                            padding: 5px 10px 5px 10px !important;
+                                            background: #4d4d4e;
+                                            line-height: 0;
+                                            margin-left: 20px;
+                                            @include max-screen($screen__s) {
+                                              margin-left:0px;
+                                            }
+                                            &:hover {
+                                              background: #333333;
+                                            }
+
                                         }
                                     }
                                 }
@@ -314,6 +399,7 @@
 
                             @media screen and (max-width: $screen__m) {
                                 order:2;
+                                //width: 100%;
                             }
                             .cart-totals {
                                 border-top: 0;
@@ -406,6 +492,10 @@
                 }
             }
         }
+        .block.crosssell {
+            margin-top: 0px;
+            margin-left: 15px;
+        }
     }
     div[name="shippingAddress.region_id"],
     div[name="shippingAddress.country_id"] {
@@ -459,9 +549,18 @@
 }
 
 // Empty Cart Page //
-.empty-cart-page.checkout-cart-index {
-    .actions {
-        display: none;
-    }
+.empty-cart-page {
+  .page-main {
+      max-width: 72%;
+      @media screen and (max-width: $screen__m) {
+        max-width: 100%;
+      }
+      .column.main {
+          min-height: 0px;
+          .actions {
+              display: none;
+          }
+      }
+  }
 }
 
