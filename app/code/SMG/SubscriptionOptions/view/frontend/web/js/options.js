@@ -38,6 +38,7 @@ define([
                     success(data) {
                         var data = JSON.parse(data);
                         if( data.success === true ) {
+                            localStorage.setItem('estimated_arrival', data.estimated_arrival);
                         	window.location.href = '/checkout/#shipping';
                         } else {
                             alert( 'Error creating your order ' + data.message + '. Please try again.' );

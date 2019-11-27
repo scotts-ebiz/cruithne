@@ -91,8 +91,10 @@ class Subscription implements SubscriptionInterface
         if( ! empty( $data['plan']['coreProducts'] ) ) {
             
             $coreProducts = $data['plan']['coreProducts'];
+            $firstApplicationStartDate = $coreProducts[0]['applicationStartDate'];
 
             foreach( $coreProducts as $product ) {
+                
                 try {
                     $_product = $this->_productRepository->get( $product['sku'] );
                     $totalSubscriptionPrice += $_product->getPrice();
@@ -166,9 +168,24 @@ class Subscription implements SubscriptionInterface
             $items[] = $item->getName() . " " . $item->getSku() . " qty: " . $item->getQty() . " addon: " . (String)$item->getAddon() . " price: " .  $item->getPrice();
         }
 
-        $response = array( 'success' => true );
+        $response = array( 'success' => true, 'estimated_arrival' => $this->getEstimatedArrivalDate($firstApplicationStartDate) );
 
         return json_encode( $response );
+    }
+
+    /**
+     * Calculate estimated arrival date
+     * 
+     * @param DateTime $start_date
+     * @return DateTime
+     */
+    private function getEstimatedArrivalDate($start_date)
+    {
+        $applicationStartDate = new \DateTime($start_date);
+        $applicationStartDate->sub(new \DateInterval('P9D'));
+        $todayDate = new \DateTime(date('Y-m-d 00:00:00'));
+
+        return ( $todayDate <= $applicationStartDate ) ? $applicationStartDate->format('m/d/Y') : $todayDate->format('m/d/Y');
     }
 
     /**

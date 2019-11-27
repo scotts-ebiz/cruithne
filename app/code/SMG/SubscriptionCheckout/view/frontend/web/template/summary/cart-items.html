@@ -6,7 +6,12 @@
             <div class="product">
                 <each args="$parent.elems()" render=""/>
             </div>
+            <div data-bind="html: $parent.getProductShortDescription(item)"></div>
+            <p>SKU: <span data-bind="text: $parent.getProductSku(item)"></span></p>
         </li>
         <!-- /ko -->
     </ol>
+    <div class="">
+        <p>Estimated arrival: <span data-bind="text: getEstimatedArrivalDate()"></span></p>
+    </div>
 </div>

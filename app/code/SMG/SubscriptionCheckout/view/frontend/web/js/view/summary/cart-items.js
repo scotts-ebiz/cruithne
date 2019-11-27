@@ -61,6 +61,53 @@ define([
         },
 
         /**
+         * Get estimated arrival date for the shipment
+         *
+         * @returns {String}
+         */
+        getEstimatedArrivalDate: function() {
+            return localStorage.getItem('estimated_arrival')
+        },
+
+        /**
+         * Return product SKU
+         *
+         * @param {Object} quoteItem
+         * @returns {String}
+         */
+        getProductSku: function(quoteItem) {
+            var item = this.getItem(quoteItem.item_id);
+            return item.product.sku
+        },
+
+        /**
+         * Return product short description
+         *
+         * @param {Object} quoteItem
+         * @returns {String}
+         */
+        getProductShortDescription: function(quoteItem) {
+            var item = this.getItem(quoteItem.item_id);
+            return item.product.short_description
+        },
+
+        /**
+         * Get product data from cart by product id
+         *
+         * @param {Number} item_id
+         * @returns {Object}
+         */
+        getItem: function(item_id) {
+            var itemElement = null;
+            _.each(this.quoteItemData, function(element, index) {
+                if (element.item_id == item_id) {
+                    itemElement = element;
+                }
+            });
+            return itemElement;
+        },
+
+        /**
          * Set items to observable field
          *
          * @param {Object} items
