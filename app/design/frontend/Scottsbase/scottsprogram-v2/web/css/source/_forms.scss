@@ -66,6 +66,7 @@ input[type="number"]::-webkit-outer-spin-button {
     }
   }
 
+  &[aria-invalid="true"],
   .sp-has-error & {
     background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='16px' height='16px' viewBox='0 0 16 16' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E%3Cg transform='translate(-999.000000, -257.000000)' fill='%23CB0000'%3E%3Cg transform='translate(803.000000, 219.000000)'%3E%3Cg transform='translate(196.000000, 38.000000)'%3E%3Cg%3E%3Cpath d='M8,16 C12.418278,16 16,12.418278 16,8 C16,3.581722 12.418278,0 8,0 C3.581722,0 0,3.581722 0,8 C0,12.418278 3.581722,16 8,16 Z M8,15 C4.13400675,15 1,11.8659932 1,8 C1,4.13400675 4.13400675,1 8,1 C11.8659932,1 15,4.13400675 15,8 C15,11.8659932 11.8659932,15 8,15 Z' fill-rule='nonzero'%3E%3C/path%3E%3Cg transform='translate(7.500000, 4.000000)'%3E%3Ccircle cx='0.5' cy='7.5' r='1'%3E%3C/circle%3E%3Cpath d='M0,0.5 L0,5.5 C0,5.77614237 0.223857625,6 0.5,6 C0.776142375,6 1,5.77614237 1,5.5 L1,0.5 C1,0.223857625 0.776142375,0 0.5,0 C0.223857625,0 0,0.223857625 0,0.5 Z' fill-rule='nonzero'%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
     background-repeat: no-repeat;
@@ -112,6 +113,11 @@ input[type="number"]::-webkit-outer-spin-button {
     right: .75rem;
     top: 50%;
     transform: translateY(-50%);
+  }
+
+  &[aria-invalid="true"],
+  .sp-has-error & {
+    border-color: $red-1;
   }
 }
 
@@ -212,6 +218,7 @@ input[type="email"].sp-textarea {
   }
 }
 
+#customer-email-error,
 .sp-form-error {
   color: $red-1;
   font-size: 0.75rem;
