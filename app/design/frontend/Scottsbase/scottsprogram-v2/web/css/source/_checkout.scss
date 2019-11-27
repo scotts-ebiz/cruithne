@@ -1,3 +1,22 @@
+.sp-checkout-title {
+	border-bottom: 2px solid $green-1;
+}
+
+.opc-wrapper {
+	@media (min-width: $screen-md) {
+		max-width: 500px;
+	}
+}
+
+.opc-sidebar {
+	margin-bottom: 1rem;
+	margin-top: 0;
+
+	@media (min-width: $screen-md) {
+		max-width: 400px;
+	}
+}
+
 .opc-block-summary {
 	.discount {
 		&.coupon {
