@@ -59,6 +59,24 @@ define(
                     }
                 });
             },
+
+            createNewOrders: function() {
+                event.preventDefault();
+                var self = this;
+                var formKey = document.querySelector('input[name=form_key]').value;
+
+                $.ajax({
+                    type: 'POST',
+                    url: window.location.origin + '/rest/V1/subscription/createorders',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    processData: false,
+                    data: JSON.stringify( { 'key': formKey }),
+                    success: function(response) {
+                        console.log(response);
+                    }
+                })
+            },
  
             myPlaceOrder: function() {
                 event.preventDefault();
@@ -72,6 +90,7 @@ define(
                     if( err ) {
                         alert( err.message );
                     } else {
+                        self.createNewOrders();
                         
                         // $.ajax({
                         //     type: 'POST',

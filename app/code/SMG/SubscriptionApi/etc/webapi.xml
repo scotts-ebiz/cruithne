@@ -6,6 +6,12 @@
             <resource ref="anonymous" />
         </resources>
     </route>
+    <route url="/V1/subscription/createorders" method="POST">
+        <service class="SMG\SubscriptionApi\Api\SubscriptionInterface" method="createOrders" />
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
     <route url="/V1/subscription/check" method="POST">
         <service class="SMG\SubscriptionApi\Api\RecurlyInterface" method="checkRecurlySubscription" />
         <resources>

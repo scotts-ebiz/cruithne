@@ -20,4 +20,15 @@ interface SubscriptionInterface
 	 */
 	public function addSubscriptionToCart($key, $subscription_plan, $data, $addons);
 
+
+	/**
+	 * Create orders in Magento
+	 * 
+	 * @param string $key
+	 * @return array
+	 * 
+	 * @api
+	 */
+	public function createOrders($key);
+
 }

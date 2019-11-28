@@ -19,6 +19,12 @@ class Subscription implements SubscriptionInterface
     protected $_productRepository;
     protected $_resultJsonFactory;
     protected $_checkoutSession;
+    protected $_storeManager;
+    protected $_cartRepositoryInterface;
+    protected $_cartManagementInterface;
+    protected $_customerFactory;
+    protected $_customerRepository;
+    protected $_order;
 
     public function __construct(
         \SMG\RecommendationApi\Helper\RecommendationHelper $helper,
@@ -27,7 +33,14 @@ class Subscription implements SubscriptionInterface
         \Magento\Checkout\Model\Cart $cart,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Catalog\Model\Product $product,
-        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
+        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Quote\Api\CartRepositoryInterface $cartRepositoryInterface,
+        \Magento\Quote\Api\CartManagementInterface $cartManagementInterface,
+        \Magento\Customer\Model\CustomerFactory $customerFactory,
+        \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository,
+        \Magento\Sales\Model\Order $order,
+        \Magento\Directory\Model\AllowedCountries $allowedCountries
     ) {
         $this->_helper = $helper;
         $this->_customerSession = $customerSession;
@@ -36,6 +49,13 @@ class Subscription implements SubscriptionInterface
         $this->_checkoutSession = $checkoutSession;
         $this->_product = $product;
         $this->_productRepository = $productRepository;
+        $this->_storeManager = $storeManager;
+        $this->_cartRepositoryInterface = $cartRepositoryInterface;
+        $this->_cartManagementInterface = $cartManagementInterface;
+        $this->_customerFactory = $customerFactory;
+        $this->_customerRepository = $customerRepository;
+        $this->_order = $order;
+        $this->_allowedCountries = $allowedCountries;
     }
 
     /**
@@ -171,6 +191,120 @@ class Subscription implements SubscriptionInterface
         $response = array( 'success' => true, 'estimated_arrival' => $this->getEstimatedArrivalDate($firstApplicationStartDate) );
 
         return json_encode( $response );
+    }
+
+    /**
+     * Process cart products and create multiple orders
+     * 
+     * @param string $key
+     * @return array|false|string
+     * 
+     * @api
+     */
+    public function createOrders($key) {
+        // Get all items in the cart
+        $quoteItems = $this->_checkoutSession->getQuote()->getItemsCollection();
+
+        $seasonalSkus = array( 'early-spring', 'late-spring', 'early-summer', 'early-fall', 'annual' );
+        $seasonalOrderData = array();
+        $addonOrderData = array();
+        $seasonal_counter = 0;
+        $addon_counter = 0;
+
+        // Separate seasonal with addon products and remove them from the current cart,
+        foreach( $quoteItems as $item ) {
+            if( in_array( $item->getSku(), $seasonalSkus) ) {
+                $seasonalOrderData[$seasonal_counter]['sku'] = $item->getSku();
+                $seasonalOrderData[$seasonal_counter]['price'] = $item->getPrice();
+                $seasonalOrderData[$seasonal_counter]['id'] = $item->getId();
+                $seasonal_counter++;
+            } else {
+                $addonOrderData[$addon_counter]['sku'] = $item->getSku();
+                $addonOrderData[$addon_counter]['price'] = $item->getPrice();
+                $addonOrderData[$addon_counter]['id'] = $item->getId();
+                $addon_counter++;
+            }
+
+            // Remove item from the quote, because there will be duplicate orders created
+            $this->_cart->removeItem($item->getId())->save();
+        }
+
+
+        $store = $this->_storeManager->getStore();
+        $websiteId = $this->_storeManager->getStore()->getWebsiteId();
+        $customerId = 10;
+
+        //Create separate orders for all seasonal orders
+        foreach( $seasonalOrderData as $item ) {
+            $cartId = $this->_cartManagementInterface->createEmptyCartForCustomer($customerId);
+            $quote = $this->_cartRepositoryInterface->get($cartId);
+            $quote->setStore($store);
+
+            $customer = $this->_customerRepository->getById( $customerId );
+            $quote->setCurrency();
+            $quote->assignCustomer($customer); // Assign cart to customer
+
+            $_product = $this->_productRepository->get( $item['sku'] );
+            $product = $this->_product->load( $_product->getId() );
+            $product->setPrice($item['price']);
+            $quote->addProduct( $product, 1 );
+
+            $shippingAddress=$quote->getShippingAddress();
+            $shippingAddress->setCollectShippingRates(true)->collectShippingRates()->setShippingMethod('freeshipping_freeshipping'); //shipping method
+            $quote->setPaymentMethod('recurly'); //payment method
+            $quote->setInventoryProcessed(false); //not effetc inventory
+
+            // Set Sales Order Payment
+            $quote->getPayment()->importData(['method' => 'recurly']);
+            $quote->save();
+     
+            // Collect Totals
+            $quote->collectTotals();
+
+            // Create Order From Quote
+            $quote = $this->_cartRepositoryInterface->get($quote->getId());
+
+            $orderId = $this->_cartManagementInterface->placeOrder($quote->getId());
+            $order = $this->_order->load($orderId);
+           
+            $order->setEmailSent(0);
+            $increment_id = $order->getRealOrderId();
+        }
+
+        // Add all addon products to that order
+        foreach( $addonOrderData as $addon ) {
+            $addonCartId = $this->_cartManagementInterface->createEmptyCartForCustomer( $customerId );
+            $addonQuote = $this->_cartRepositoryInterface->get( $addonCartId );
+            $addonQuote->setStore( $store );
+            $customer = $this->_customerRepository->getById( $customerId );
+            $addonQuote->setCurrency();
+            $addonQuote->assignCustomer( $customer );
+            $_product = $this->_productRepository->get( $addon['sku'] );
+            $product = $this->_product->load( $_product->getId() );
+            $product->setPrice( $addon['price'] );
+            $addonQuote->addProduct( $product, 1 );
+            $shippingAddress = $addonQuote->getShippingAddress();
+            $shippingAddress->setCollectShippingRates(true)->collectShippingRates()->setShippingMethod('freeshipping_freeshipping');
+            $addonQuote->setPaymentMethod('recurly');
+            $addonQuote->setInventoryProcessed(true);
+            $addonQuote->getPayment()->importData( [ 'method' => 'recurly' ] );
+            $addonQuote->save();
+            $addonQuote->collectTotals();
+        }
+        
+        $addonQuote = $this->_cartRepositoryInterface->get( $addonQuote->getId() );
+        $addonOrderId = $this->_cartManagementInterface->placeOrder( $addonQuote->getId() );
+        $quotedata = $addonQuote->getAllItems();
+       
+        $addonOrder = $this->_order->load( $addonOrderId );
+        $addonOrder->setEmailSent(0);
+        $increment_id = $addonOrder->getRealOrderId();
+    
+
+        return array( 'success' => true, 'message' => 'Magento orders created' );
+
+
+        die();
     }
 
     /**
