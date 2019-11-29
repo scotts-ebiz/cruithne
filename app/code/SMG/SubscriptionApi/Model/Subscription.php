@@ -280,27 +280,36 @@ class Subscription implements SubscriptionInterface
             $increment_id = $order->getRealOrderId();
         }
 
-        // Create cart for the addons
-        $addonCartId = $this->_cartManagementInterface->createEmptyCartForCustomer( $customerId );
-        $addonQuote = $this->_cartRepositoryInterface->get( $addonCartId );
-        $addonQuote->setStore( $store );
-        $addonQuote->setCurrency();
-        $addonQuote->assignCustomer( $customer );
-
-        // Go through the addon products
-        foreach( $addonOrderData as $addon ) {
-            // Create cart for the addon
+        if( ! empty( $addonOrderData ) ) {
+            // Create cart for the addons
             $addonCartId = $this->_cartManagementInterface->createEmptyCartForCustomer( $customerId );
             $addonQuote = $this->_cartRepositoryInterface->get( $addonCartId );
             $addonQuote->setStore( $store );
             $addonQuote->setCurrency();
             $addonQuote->assignCustomer( $customer );
 
-            // Add addon products to the cart
-            $_product = $this->_productRepository->get( $addon['sku'] );
-            $product = $this->_product->load( $_product->getId() );
-            $product->setPrice( $addon['price'] );
-            $addonQuote->addProduct( $product, 1 );
+            // Go through the addon products
+            foreach( $addonOrderData as $addon ) {
+                // Create cart for the addon
+                $addonCartId = $this->_cartManagementInterface->createEmptyCartForCustomer( $customerId );
+                $addonQuote = $this->_cartRepositoryInterface->get( $addonCartId );
+                $addonQuote->setStore( $store );
+                $addonQuote->setCurrency();
+                $addonQuote->assignCustomer( $customer );
+
+                // Add addon products to the cart
+                $_product = $this->_productRepository->get( $addon['sku'] );
+                $product = $this->_product->load( $_product->getId() );
+                $product->setPrice( $addon['price'] );
+                $addonQuote->addProduct( $product, 1 );
+
+                // Save quote
+                $addonQuote->save();
+
+                // Collect totals
+                $addonQuote->collectTotals();
+            }
+
             // Set shipping address for the cart
             $shippingAddress = $addonQuote->getShippingAddress();
             $shippingAddress->setCollectShippingRates(true)->collectShippingRates()->setShippingMethod('freeshipping_freeshipping');
@@ -312,19 +321,13 @@ class Subscription implements SubscriptionInterface
             $addonQuote->setPaymentMethod('recurly');
             $addonQuote->getPayment()->importData( [ 'method' => 'recurly' ] );
 
-            // Save quote
-            $addonQuote->save();
-
-            // Collect totals
-            $addonQuote->collectTotals();
+            // Create order
+            $addonQuote = $this->_cartRepositoryInterface->get( $addonQuote->getId() );
+            $addonOrderId = $this->_cartManagementInterface->placeOrder( $addonQuote->getId() );       
+            $addonOrder = $this->_order->load( $addonOrderId );
+            $addonOrder->setEmailSent(0);
+            $increment_id = $addonOrder->getRealOrderId();
         }
-
-        // Create order
-        $addonQuote = $this->_cartRepositoryInterface->get( $addonQuote->getId() );
-        $addonOrderId = $this->_cartManagementInterface->placeOrder( $addonQuote->getId() );       
-        $addonOrder = $this->_order->load( $addonOrderId );
-        $addonOrder->setEmailSent(0);
-        $increment_id = $addonOrder->getRealOrderId();
 
         return array( 'success' => true, 'message' => 'Magento orders created' );
     }
