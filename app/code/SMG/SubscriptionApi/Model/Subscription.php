@@ -4,6 +4,8 @@ namespace SMG\SubscriptionApi\Model;
 
 use Magento\Framework\Exception\SecurityViolationException;
 use SMG\SubscriptionApi\Api\SubscriptionInterface;
+use Recurly_Client;
+use Recurly_SubscriptionList;
 
 class Subscription implements SubscriptionInterface
 {
@@ -25,6 +27,7 @@ class Subscription implements SubscriptionInterface
     protected $_customerFactory;
     protected $_customerRepository;
     protected $_order;
+    protected $_recurlyHelper;
 
     public function __construct(
         \SMG\RecommendationApi\Helper\RecommendationHelper $helper,
@@ -40,7 +43,7 @@ class Subscription implements SubscriptionInterface
         \Magento\Customer\Model\CustomerFactory $customerFactory,
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository,
         \Magento\Sales\Model\Order $order,
-        \Magento\Directory\Model\AllowedCountries $allowedCountries
+        \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper
     ) {
         $this->_helper = $helper;
         $this->_customerSession = $customerSession;
@@ -55,7 +58,7 @@ class Subscription implements SubscriptionInterface
         $this->_customerFactory = $customerFactory;
         $this->_customerRepository = $customerRepository;
         $this->_order = $order;
-        $this->_allowedCountries = $allowedCountries;
+        $this->_recurlyHelper = $recurlyHelper;
     }
 
     /**
@@ -197,11 +200,26 @@ class Subscription implements SubscriptionInterface
      * Process cart products and create multiple orders
      * 
      * @param string $key
+     * @param string $quiz_id
      * @return array|false|string
      * 
      * @api
      */
-    public function createOrders($key) {
+    public function createOrders($key, $quiz_id) {
+        // Get store and website information
+        $store = $this->_storeManager->getStore();
+        $websiteId = $this->_storeManager->getStore()->getWebsiteId();
+
+        // Get customer
+        $customer = $this->_customerFactory->create();
+        $customer->setWebsiteId($websiteId);
+        $customer->loadByEmail( $this->_checkoutSession->getQuote()->getCustomerEmail() );
+        $customerData = $customer->getData();
+        $customerGigyaId = $customerData['gigya_uid'];
+
+        // Get customer's current subscriptions
+        $recurlySubscriptions = $this->getAccountSubscriptions( $customer->getRecurlyAccountCode(), $quiz_id );
+
         // Get all items in the cart
         $quoteItems = $this->_checkoutSession->getQuote()->getItemsCollection();
 
@@ -229,14 +247,6 @@ class Subscription implements SubscriptionInterface
             $this->_cart->removeItem($item->getId())->save();
         }
 
-        // Get store and website information
-        $store = $this->_storeManager->getStore();
-        $websiteId = $this->_storeManager->getStore()->getWebsiteId();
-
-        // Get customer
-        $customer = $this->_customerFactory->create();
-        $customer->setWebsiteId($websiteId);
-        $customer->loadByEmail( $this->_checkoutSession->getQuote()->getCustomerEmail() );
         $customerId = $customer->getId();
         $customer = $this->_customerRepository->getById( $customerId );
 
@@ -277,6 +287,18 @@ class Subscription implements SubscriptionInterface
             $orderId = $this->_cartManagementInterface->placeOrder($quote->getId());
             $order = $this->_order->load($orderId);
             $order->setEmailSent(0);
+            $order->setGigyaId( $customerGigyaId );
+            if( $item['sku'] == 'annual' ) {
+                $order->setMasterSubscriptionId($recurlySubscriptions['annual']['subscription_id']);
+                $order->setSubscriptionId($recurlySubscriptions['annual']['subscription_id']);
+                $order->setShipDate($recurlySubscriptions['annual']['starts_at']);
+            } else {
+                $order->setMasterSubscriptionId($recurlySubscriptions['annual']['subscription_id']);
+                $order->setSubscriptionId($recurlySubscriptions[$item['sku']]['subscription_id']);
+                $order->setShipDate($recurlySubscriptions[$item['sku']]['starts_at']);
+            }
+            $order->setSubscriptionAddon(false);
+            $order->save();
             $increment_id = $order->getRealOrderId();
         }
 
@@ -326,6 +348,12 @@ class Subscription implements SubscriptionInterface
             $addonOrderId = $this->_cartManagementInterface->placeOrder( $addonQuote->getId() );       
             $addonOrder = $this->_order->load( $addonOrderId );
             $addonOrder->setEmailSent(0);
+            $addonOrder->setGigyaId( $customerGigyaId );
+            $addonOrder->setMasterSubscriptionId($recurlySubscriptions['annual']['subscription_id']);
+            $addonOrder->setSubscriptionId($recurlySubscriptions['add-ons']['subscription_id']);
+            $addonOrder->setShipDate($recurlySubscriptions['add-ons']['starts_at']);
+            $addonOrder->setSubscriptionAddon(true);
+            $addonOrder->save();
             $increment_id = $addonOrder->getRealOrderId();
         }
 
@@ -366,6 +394,37 @@ class Subscription implements SubscriptionInterface
                 return 'early-fall';
             default:
                 return '';
+        }
+    }
+
+    /**
+     * Return all customer's subscriptions
+     * 
+     * @param string $account_code
+     * @return array
+     */
+    private function getAccountSubscriptions( $account_code, $quiz_id )
+    {
+        Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
+        Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
+
+        $activeSubscriptions = array();
+
+        try {
+            $subscriptions = Recurly_SubscriptionList::getForAccount($account_code, ['state' => 'live']);
+            foreach ($subscriptions as $subscription) {
+                // If subscription quiz_id is the same as the current quiz_id
+                if( isset( $subscription->custom_fields['quiz_id'] ) ) {
+                    if( $quiz_id == $subscription->custom_fields['quiz_id']->value  ) {
+                        $activeSubscriptions[$subscription->plan->plan_code]['subscription_id'] = $subscription->uuid;
+                        $activeSubscriptions[$subscription->plan->plan_code]['starts_at'] = $subscription->current_term_started_at;
+                    }
+                }
+            }
+
+            return $activeSubscriptions;
+        } catch (Recurly_NotFoundError $e) {
+            print "Account Not Found: $e";
         }
     }
 

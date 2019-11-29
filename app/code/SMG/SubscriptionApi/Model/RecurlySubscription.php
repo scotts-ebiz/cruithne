@@ -107,7 +107,9 @@ class RecurlySubscription implements RecurlyInterface
 
 			$quoteItems = $this->_checkoutSession->getQuote()->getItemsCollection();
 			$totalAnnualAmount = 0;
+			$totalAddonsAmount = 0;
 			$seasonalProductsSkus = array( 'annual', 'early-spring', 'late-spring', 'early-summer', 'early-fall');
+			$all_subscriptions = array();
 
 			foreach( $quoteItems as $item ) {
 				if( $item->getSku() == 'annual' ) {
@@ -119,6 +121,7 @@ class RecurlySubscription implements RecurlyInterface
 					$charge->currency = $this->_currency;
 					$charge->description = $item->getName() . ' (SKU: ' . $item->getSku() . ')';
 					$charge->unit_amount_in_cents = $this->convertAmountToCents( $item->getPrice() );
+					$totalAddonsAmount += $item->getPrice();
 					$charge->quantity = 1;
 					$charge->product_code = $item->getSku();
 					$charge->create();
@@ -127,7 +130,6 @@ class RecurlySubscription implements RecurlyInterface
 				}
 			}
 
-			$all_subscriptions = array();
 			$seasonalProducts = $this->getPlanData($quiz['id']);
 
 			if( $plan == 'annual' ) {
@@ -184,19 +186,28 @@ class RecurlySubscription implements RecurlyInterface
 				}
 			}
 
+			// Create Addon Subscription
+			$addon_subscription = new Recurly_Subscription();
+			$addon_subscription->plan_code = 'add-ons';
+			$addon_subscription->auto_renew = false;
+			$addon_subscription->total_billing_cycles = 1;
+			$addon_subscription->unit_amount_in_cents = 0;
+			$addon_subscription->custom_fields[] = new Recurly_CustomField( 'quiz_id', $quiz['id'] );
+			array_push( $all_subscriptions, $addon_subscription );
+
 			$purchase->subscriptions = $all_subscriptions;
 
 			try {
 				$collection = Recurly_Purchase::invoice( $purchase );
-				return array(
+				return array( array(
 					'success' 	=> true,
 					'message'	=> 'Subscriptions created.'
-				);
+				) );
 			} catch( Recurly_ValidationError $e ) {
-				return array(
+				return array( array(
 					'success'	=> false,
 					'message'	=> $e->getMessage(),
-				);
+				) );
 			}
 
 		}
@@ -209,7 +220,7 @@ class RecurlySubscription implements RecurlyInterface
 	 * 
 	 * @api
 	 */
-	public function checkRecurlySubscription($token)
+	public function checkRecurlySubscription()
 	{
 		// Configure Recurly Client using the API Key and Subdomain entered in the settings page
 		Recurly_Client::$apiKey = $this->_helper->getRecurlyPrivateApiKey();
@@ -225,11 +236,10 @@ class RecurlySubscription implements RecurlyInterface
 		 * Check if the customer already has subscriotions. If yes, ask them if they want to cancel and create a new one.
 		 * If they don't want to create a new one, redirect them to the my account page
 		 */
-		return array( array( 'success' => true, 'message' => 'You do not have a subscription', 'has_subscription' => false ) );
-
 		if( $this->hasRecurlySubscription($account->account_code) ) {
 			return array( array( 'success' => false, 'message' => 'You already have subscriptions. Would you like to cancel them and create new one?', 'has_subscription' => true, 'redirect_url' => $this->_customerUrl->getAccountUrl() ) );
 		} else {
+			return array( array( 'success' => true, 'message' => 'You do not have a subscription', 'has_subscription' => false ) );
 		}
 
 	}
@@ -288,7 +298,7 @@ class RecurlySubscription implements RecurlyInterface
 	private function hasRecurlySubscription($account_code)
 	{
 		try {
-			$subscriptions = Recurly_SubscriptionList::getForAccount($account_code);
+			$subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => 'active' ]);
 
 			if( count( $subscriptions ) > 0 ) {
 				return true;

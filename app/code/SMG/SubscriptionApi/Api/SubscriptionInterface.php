@@ -25,10 +25,11 @@ interface SubscriptionInterface
 	 * Create orders in Magento
 	 * 
 	 * @param string $key
+	 * @param string $quiz_id
 	 * @return array
 	 * 
 	 * @api
 	 */
-	public function createOrders($key);
+	public function createOrders($key, $quiz_id);
 
 }

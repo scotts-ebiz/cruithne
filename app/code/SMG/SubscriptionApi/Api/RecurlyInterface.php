@@ -22,11 +22,10 @@ interface RecurlyInterface
 	/**
 	 * Check existing Recurly subscriptions
 	 * 
-	 * @param string $token
 	 * @return array
 	 * 
 	 * @api
 	 */
-	public function checkRecurlySubscription($token);
+	public function checkRecurlySubscription();
 
 }

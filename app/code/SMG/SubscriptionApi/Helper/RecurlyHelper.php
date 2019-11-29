@@ -1,5 +1,4 @@
 <?php
-
 namespace SMG\SubscriptionApi\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
@@ -104,5 +103,4 @@ class RecurlyHelper extends AbstractHelper
 			$store_id
 		);
 	}
-
 }
