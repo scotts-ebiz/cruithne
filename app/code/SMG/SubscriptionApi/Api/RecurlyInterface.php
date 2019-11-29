@@ -10,25 +10,23 @@ interface RecurlyInterface
 	 * Create new Recurly subscription
 	 * 
 	 * @param string $token
-	 * @param mixed $order
+	 * @param mixed $quiz
+	 * @param string $plan
 	 * @param bool $cancel_existing
-	 * @param mixed $addons
-	 * @param string $plan_code
 	 * @return array
 	 * 
 	 * @api
 	 */
-	public function createRecurlySubscription($token, $order, $cancel_existing, $addons, $plan_code);
+	public function createRecurlySubscription($token, $quiz, $plan, $cancel_existing);
 
 	/**
 	 * Check existing Recurly subscriptions
 	 * 
 	 * @param string $token
-	 * @param mixed $order
 	 * @return array
 	 * 
 	 * @api
 	 */
-	public function checkRecurlySubscription($token, $order);
+	public function checkRecurlySubscription($token);
 
 }
