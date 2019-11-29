@@ -227,15 +227,11 @@ class RecurlySubscription implements RecurlyInterface
 		Recurly_Client::$subdomain = $this->_helper->getRecurlySubdomain();
 
 		// Get checkout data
-		$checkout_data = $this->_checkoutSession->getQuote()->getShippingAddress()->getData();
+		$checkoutData = $this->_checkoutSession->getQuote()->getShippingAddress()->getData();
 
 		// Get Customer's Recurly Account or create new one using current customer's data
-		$account = ( $this->getRecurlyAccount() ) ? $this->getRecurlyAccount() : $this->createRecurlyAccount($checkout_data);
+		$account = ( $this->getRecurlyAccount() ) ? $this->getRecurlyAccount() : $this->createRecurlyAccount( $checkoutData );
 
-		/**
-		 * Check if the customer already has subscriotions. If yes, ask them if they want to cancel and create a new one.
-		 * If they don't want to create a new one, redirect them to the my account page
-		 */
 		if( $this->hasRecurlySubscription($account->account_code) ) {
 			return array( array( 'success' => false, 'message' => 'You already have subscriptions. Would you like to cancel them and create new one?', 'has_subscription' => true, 'redirect_url' => $this->_customerUrl->getAccountUrl() ) );
 		} else {
@@ -353,38 +349,14 @@ class RecurlySubscription implements RecurlyInterface
 				$account = Recurly_Account::get( $this->_customerSession->getCustomer()->getData()['recurly_account_code'] );
 				return $account;
 			} catch(Recurly_NotFoundError $e) {
+				if( $e->getCode() == 0 ) {
+					return false;
+				}
 				return false;
 			}
 		}
 
 		return false;
-	}
-
-	/**
-	 * Create shipping address and connect it with the account
-	 *
-	 * @return bool
-	 */
-	private function createRecurlyAccountShippingAddress($account_code, $data)
-	{
-		if( $this->getRecurlyAccount() ) {
-			$account = $this->getRecurlyAccount();
-			
-			$shipping_address = new Recurly_ShippingAddress();
-			$shipping_address->first_name = $data['firstname'];
-			$shipping_address->last_name = $data['lastname'];
-			$shipping_address->email = $data['email'];
-			$shipping_address->address1 = $data['street'];
-			$shipping_address->city = $data['city'];
-			$shipping_address->state = $this->getRegionCode($data['region']);
-			$shipping_address->zip = $data['postcode'];
-			$shipping_address->country = $data['country_id'];
-
-			$account->createShippingAddress($shipping_address);
-		}
-
-		return false;
-
 	}
 
 	/**
@@ -413,6 +385,7 @@ class RecurlySubscription implements RecurlyInterface
 	 */
 	private function createRecurlyAccount($data)
 	{
+
 		try {
 			// Generate account code from customer's email
 			$recurly_account_code = md5( $data['email'] );
@@ -426,13 +399,23 @@ class RecurlySubscription implements RecurlyInterface
 			$account->first_name = $data['firstname'];
 			$account->last_name = $data['lastname'];
 
-			if( ! $this->createRecurlyAccountShippingAddress($account->account_code, $data) ) {
-				return array( array( 'success' => false, 'message' => 'There was a problem creating a shipping address for the account.' ) );
-			}
-
-			$this->createRecurlyAccountShippingAddress($account->account_code, $data);
-
 			$account->create();
+
+			$shipping_address = new Recurly_ShippingAddress();
+			$shipping_address->first_name = $data['firstname'];
+			$shipping_address->last_name = $data['lastname'];
+			$shipping_address->email = $data['email'];
+			$shipping_address->address1 = $data['street'];
+			$shipping_address->city = $data['city'];
+			$shipping_address->state = $this->getRegionCode($data['region']);
+			$shipping_address->zip = $data['postcode'];
+			$shipping_address->country = $data['country_id'];
+
+			$account->createShippingAddress($shipping_address);
+
+
+			return $account;
+
 		} catch(Recurly_ValidationError $e) {
 			/**
 			 * If a Recurly account with the account_code exists, save the code as a custom attribute,
