@@ -33,48 +33,6 @@ class InstallData implements InstallDataInterface
 	{
 		$installer = $setup;
         $installer->startSetup();
-
-        // Add attributes to the orders
-        $salesSetup = $this->_salesSetupFactory->create( [
-            'resourceName'  => 'sales_setup',
-            'setup'         => $setup
-        ] );
-
-        $salesSetup->addAttribute(Order::ENTITY, 'gigya_id', [
-            'type'      => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-            'length'    => 255,
-            'visible'   => true,
-            'nullable'  => false,
-        ] );
-        $salesSetup->addAttribute(Order::ENTITY, 'master_subscription_id', [
-            'type'      => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-            'length'    => 255,
-            'visible'   => true,
-            'nullable'  => false,
-        ] );
-        $salesSetup->addAttribute(Order::ENTITY, 'subscription_id', [
-            'type'      => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-            'length'    => 255,
-            'visible'   => true,
-            'nullable'  => false,
-        ] );
-        $salesSetup->addAttribute(Order::ENTITY, 'subscription_type', [
-            'type'      => \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-            'length'    => 255,
-            'visible'   => true,
-            'nullable'  => false,
-        ] );
-        $salesSetup->addAttribute(Order::ENTITY, 'subscription_addon', [
-            'type'      => \Magento\Framework\DB\Ddl\Table::TYPE_BOOLEAN,
-            'visible'   => true,
-            'nullable'  => false,
-        ] );
-        $salesSetup->addAttribute(Order::ENTITY, 'ship_date', [
-            'type'      => \Magento\Framework\DB\Ddl\Table::TYPE_DATE,
-            'visible'   => true,
-            'nullable'  => false,
-        ] );
-
         // Add "Recurly Account Code" attribute to customers
         $customerSetup = $this->_customerSetupFactory->create(['setup' => $setup]);
         $customerSetup->addAttribute(\Magento\Customer\Model\Customer::ENTITY, 'recurly_account_code', [
@@ -94,25 +52,6 @@ class InstallData implements InstallDataInterface
             ]
         ]);
         $attribute->save();
-
-		// Add "Is Addon" attribute to products
-		$eavSetup = $this->_eavSetupFactory->create( [ 'setup' => $setup ] );
-		$eavSetup->addAttribute(
-             \Magento\Catalog\Model\Product::ENTITY,
-            'is_addon', [
-				'type' 			=> 'int',
-	            'label' 		=> 'Is Addon Product?',
-	            'input' 		=> 'boolean',                
-	            'source' 		=> 'Magento\Eav\Model\Entity\Attribute\Source\Boolean',                
-	            'global' 		=> \Magento\Eav\Model\Entity\Attribute\ScopedAttributeInterface::SCOPE_GLOBAL,
-	            'visible' 		=> true,
-	            'required' 		=> false,
-	            'user_defined' 	=> false,
-	            'default' 		=> null,
-	            'group' 		=> 'Custom Fields',
-	            'backend' 		=> ''
-			 ]
-        );
 
         $installer->endSetup();
 
