@@ -229,82 +229,104 @@ class Subscription implements SubscriptionInterface
             $this->_cart->removeItem($item->getId())->save();
         }
 
-
+        // Get store and website information
         $store = $this->_storeManager->getStore();
         $websiteId = $this->_storeManager->getStore()->getWebsiteId();
-        $customerId = 10;
 
-        //Create separate orders for all seasonal orders
+        // Get customer
+        $customer = $this->_customerFactory->create();
+        $customer->setWebsiteId($websiteId);
+        $customer->loadByEmail( $this->_checkoutSession->getQuote()->getCustomerEmail() );
+        $customerId = $customer->getId();
+        $customer = $this->_customerRepository->getById( $customerId );
+
+        // Go through the seasonal products
         foreach( $seasonalOrderData as $item ) {
+            // Create empty cart for every seasonal product
             $cartId = $this->_cartManagementInterface->createEmptyCartForCustomer($customerId);
             $quote = $this->_cartRepositoryInterface->get($cartId);
             $quote->setStore($store);
-
-            $customer = $this->_customerRepository->getById( $customerId );
             $quote->setCurrency();
-            $quote->assignCustomer($customer); // Assign cart to customer
+            $quote->assignCustomer($customer);
 
+            // Add product to the cart
             $_product = $this->_productRepository->get( $item['sku'] );
             $product = $this->_product->load( $_product->getId() );
             $product->setPrice($item['price']);
             $quote->addProduct( $product, 1 );
 
-            $shippingAddress=$quote->getShippingAddress();
-            $shippingAddress->setCollectShippingRates(true)->collectShippingRates()->setShippingMethod('freeshipping_freeshipping'); //shipping method
-            $quote->setPaymentMethod('recurly'); //payment method
-            $quote->setInventoryProcessed(false); //not effetc inventory
+            // Set shipping information
+            $shippingAddress = $quote->getShippingAddress();
+            $shippingAddress->setCollectShippingRates(true)->collectShippingRates()->setShippingMethod('freeshipping_freeshipping');
 
-            // Set Sales Order Payment
+            // Don't process inventory on seasonal products
+            $quote->setInventoryProcessed(false);
+
+            // Set payment information
+            $quote->setPaymentMethod('recurly');
             $quote->getPayment()->importData(['method' => 'recurly']);
+
+            // Save quote
             $quote->save();
      
-            // Collect Totals
+            // Collect totals
             $quote->collectTotals();
 
-            // Create Order From Quote
+            // Create order from the quote
             $quote = $this->_cartRepositoryInterface->get($quote->getId());
-
             $orderId = $this->_cartManagementInterface->placeOrder($quote->getId());
             $order = $this->_order->load($orderId);
-           
             $order->setEmailSent(0);
             $increment_id = $order->getRealOrderId();
         }
 
-        // Add all addon products to that order
+        // Create cart for the addons
+        $addonCartId = $this->_cartManagementInterface->createEmptyCartForCustomer( $customerId );
+        $addonQuote = $this->_cartRepositoryInterface->get( $addonCartId );
+        $addonQuote->setStore( $store );
+        $addonQuote->setCurrency();
+        $addonQuote->assignCustomer( $customer );
+
+        // Go through the addon products
         foreach( $addonOrderData as $addon ) {
+            // Create cart for the addon
             $addonCartId = $this->_cartManagementInterface->createEmptyCartForCustomer( $customerId );
             $addonQuote = $this->_cartRepositoryInterface->get( $addonCartId );
             $addonQuote->setStore( $store );
-            $customer = $this->_customerRepository->getById( $customerId );
             $addonQuote->setCurrency();
             $addonQuote->assignCustomer( $customer );
+
+            // Add addon products to the cart
             $_product = $this->_productRepository->get( $addon['sku'] );
             $product = $this->_product->load( $_product->getId() );
             $product->setPrice( $addon['price'] );
             $addonQuote->addProduct( $product, 1 );
+            // Set shipping address for the cart
             $shippingAddress = $addonQuote->getShippingAddress();
             $shippingAddress->setCollectShippingRates(true)->collectShippingRates()->setShippingMethod('freeshipping_freeshipping');
-            $addonQuote->setPaymentMethod('recurly');
+            
+            // Update inventory for the addon products
             $addonQuote->setInventoryProcessed(true);
+
+            // Set payment method
+            $addonQuote->setPaymentMethod('recurly');
             $addonQuote->getPayment()->importData( [ 'method' => 'recurly' ] );
+
+            // Save quote
             $addonQuote->save();
+
+            // Collect totals
             $addonQuote->collectTotals();
         }
-        
+
+        // Create order
         $addonQuote = $this->_cartRepositoryInterface->get( $addonQuote->getId() );
-        $addonOrderId = $this->_cartManagementInterface->placeOrder( $addonQuote->getId() );
-        $quotedata = $addonQuote->getAllItems();
-       
+        $addonOrderId = $this->_cartManagementInterface->placeOrder( $addonQuote->getId() );       
         $addonOrder = $this->_order->load( $addonOrderId );
         $addonOrder->setEmailSent(0);
         $increment_id = $addonOrder->getRealOrderId();
-    
 
         return array( 'success' => true, 'message' => 'Magento orders created' );
-
-
-        die();
     }
 
     /**
