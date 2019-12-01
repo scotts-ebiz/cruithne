@@ -1,47 +1,62 @@
 // MyGro Mixins
 
+$test: 'Hellix-Heavy', Lucida Grande, Arial, Helvetica, sans-serif;
+
 // Fonts //
 @mixin font-hellix-regular($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
-    font-family: 'Hellix-Regular', Lucida Grande, Arial, Helvetica, sans-serif;
-    @if $size { font-size: $size; }
-    @if $color { color: $color; }
-    @if $weight { font-weight: $weight; }
-    @if $lh { line-height: $lh; }
-    @if $ls { letter-spacing: $ls; }
+  font-family: 'Hellix-Regular', Lucida Grande, Arial, Helvetica, sans-serif;
+  @if $size { font-size: $size; }
+  @if $color { color: $color; }
+  @if $weight { font-weight: $weight; }
+  @if $lh { line-height: $lh; }
+  @if $ls { letter-spacing: $ls; }
 }
+
 
 @mixin font-hellix-heavy($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
-    font-family: 'Hellix-Heavy', Lucida Grande, Arial, Helvetica, sans-serif;
-    @if $size { font-size: $size; }
-    @if $color { color: $color; }
-    @if $weight { font-weight: $weight; }
-    @if $lh { line-height: $lh; }
-    @if $ls { letter-spacing: $ls; }
+  font-family: 'Hellix-Heavy', Lucida Grande, Arial, Helvetica, sans-serif;
+  @if $size { font-size: $size; }
+  @if $color { color: $color; }
+  @if $weight { font-weight: $weight; }
+  @if $lh { line-height: $lh; }
+  @if $ls { letter-spacing: $ls; }
 }
+
 
 @mixin font-gro($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
-    font-family: 'Gro', serif;
-    @if $size { font-size: $size; }
-    @if $color { color: $color; }
-    @if $weight { font-weight: $weight; }
-    @if $lh { line-height: $lh; }
-    @if $ls { letter-spacing: $ls; }
+  font-family: 'Gro', serif;
+  @if $size { font-size: $size; }
+  @if $color { color: $color; }
+  @if $weight { font-weight: $weight; }
+  @if $lh { line-height: $lh; }
+  @if $ls { letter-spacing: $ls; }
 }
 
+
+@mixin h2-heading($_family: $h2__font-family) {
+  font-size: 18px;
+  @include lib-css(font-family, $_family);
+  //color: $h2__font-color;
+  //font-weight: $h2__font-weight;
+  //line-height: $h2__line-height;
+  //letter-spacing: $h2__letter-spacing;
+}
+
+
 @mixin transform($transforms) {
-	-moz-transform: $transforms;
-	-o-transform: $transforms;
-	-ms-transform: $transforms;
-	-webkit-transform: $transforms;
-	transform: $transforms;
+  -moz-transform: $transforms;
+  -o-transform: $transforms;
+  -ms-transform: $transforms;
+  -webkit-transform: $transforms;
+  transform: $transforms;
 }
 @mixin translate ($x, $y) {
-	@include transform(translate($x, $y));
+  @include transform(translate($x, $y));
 }
 @mixin transition($x...){
-	-webkit-transition: $x;
-	-moz-transition: $x;
-	-ms-transition: $x;
-	-o-transition: $x;
-	transition: $x;
+  -webkit-transition: $x;
+  -moz-transition: $x;
+  -ms-transition: $x;
+  -o-transition: $x;
+  transition: $x;
 }
