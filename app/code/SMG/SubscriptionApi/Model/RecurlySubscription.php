@@ -254,9 +254,15 @@ class RecurlySubscription implements RecurlyInterface
 	private function cancelAccountSubscriptions($account_code)
 	{
 		try {
-			$subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => 'active' ] );
+			$active_subscriptions = Recurly_SubscriptionList::getForAccount( $account_code, [ 'state' => 'active' ] );
+			$future_subscriptions = Recurly_SubscriptionList::getForAccount( $account_code, [ 'state' => 'future' ] );
 
-			foreach ( $subscriptions as $subscription ) {
+			foreach ( $active_subscriptions as $subscription ) {
+				$_subscription = Recurly_Subscription::get($subscription->uuid);
+				$_subscription->cancel();
+		  	}
+
+		  	foreach ( $future_subscriptions as $subscription ) {
 				$_subscription = Recurly_Subscription::get($subscription->uuid);
 				$_subscription->cancel();
 		  	}
