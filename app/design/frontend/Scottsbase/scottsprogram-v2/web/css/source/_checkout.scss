@@ -132,6 +132,9 @@
 			color: #ccc;
 		}
 		.control {
+			border: none;
+		}
+		.input-text {
 			border-bottom: 1px solid #ccc;
 		}
 		.tooltip-label {
@@ -152,9 +155,25 @@
 
 @media (min-width: $screen-md) {
 	.checkout-container {
-		.form.form-shipping-address {
-			.control {
-
+		form {
+			span {
+				color: #ccc;
+			}
+			.tooltip-label {
+				display: none;
+			}
+			.input-text {
+				border: none;
+			}
+			.cust-btn-add {
+				a:hover,
+				a:focus,
+				a:active {
+					color: #1D5632;
+				}
+				a:visited {
+					color: #ccc;
+				}
 			}
 		}
 	}
