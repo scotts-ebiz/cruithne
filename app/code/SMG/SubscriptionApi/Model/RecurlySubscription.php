@@ -23,6 +23,7 @@ class RecurlySubscription implements RecurlyInterface
 {
 
 	protected $_helper;
+	protected $_recommendationHelper;
 	protected $_customerSession;
 	protected $_customer;
 	protected $_customerFactory;
@@ -35,6 +36,7 @@ class RecurlySubscription implements RecurlyInterface
 
 	public function __construct(
 		\SMG\SubscriptionApi\Helper\RecurlyHelper $helper,
+		\SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper,
 		\Magento\Customer\Model\Session $customerSession,
 		\Magento\Customer\Model\Customer $customer,
     	\Magento\Customer\Model\ResourceModel\CustomerFactory $customerFactory,
@@ -45,6 +47,7 @@ class RecurlySubscription implements RecurlyInterface
 	)
 	{
 		$this->_helper = $helper;
+		$this->_recommendationHelper = $recommendationHelper;
 		$this->_customerSession = $customerSession;
 		$this->_customer = $customer;
 		$this->_customerFactory = $customerFactory;
@@ -132,7 +135,14 @@ class RecurlySubscription implements RecurlyInterface
 					}
 				}
 
-				$seasonalProducts = $this->getPlanData($quiz['id']);
+				$completedQuizUrl = $url = filter_var(
+		            trim(
+		                str_replace('{completedQuizId}', $quiz['id'], $this->_recommendationHelper->getQuizResultApiPath()),
+		                '/'
+		            ),
+		            FILTER_SANITIZE_URL
+		        );
+				$seasonalProducts = $this->_recommendationHelper->request($completedQuizUrl, '', 'GET' );
 
 				if( $plan == 'annual' ) {
 					// Create Annual Subscription (Master Subscription)
@@ -457,42 +467,6 @@ class RecurlySubscription implements RecurlyInterface
 			$customerResource = $this->_customerFactory->create();
 			$customerResource->saveAttribute($customer, 'recurly_account_code');
 		}
-	}
-
-	/**
-	 * 
-	 * 
-	 */
-	private function getPlanData($quiz_id)
-	{
-		 if( ! empty( $quiz_id ) ) {
-		 	$url = 'https://lspaasdraft.azurewebsites.net/api/completedQuizzes/' . $quiz_id;
-
-            try {
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $url);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-                curl_setopt($ch, CURLOPT_TIMEOUT, 45);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER,TRUE);
-                curl_setopt($ch, CURLOPT_POST, FALSE);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                    'Content-Type: application/json; charset=utf-8',
-                    'Accept: application/json',
-                ));
-                $response = curl_exec($ch);
-
-                if(curl_errno($ch)) {
-                    throw new Exception(curl_error($ch));
-                }
-
-                curl_close($ch);
-
-                return json_decode($response, true);
-            } catch(Exception $e) {
-                throw new Exception($e);
-            }
-        }
 	}
 
 	/**
