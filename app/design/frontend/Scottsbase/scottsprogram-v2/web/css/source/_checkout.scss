@@ -124,3 +124,66 @@
 .totals.discount {
   color: $green-1;
 }
+
+.checkout-container {
+	.opc-progress-bar {
+		width: 100%;
+		text-align: center;
+		position: relative;
+	}
+
+	.opc-progress-bar-item {
+		width: 50%;
+
+		&:before {
+			top: 19px;
+			content: '';
+			height: 4px;
+			left: 0;
+			position: absolute;
+			width: 100%;
+		}
+
+		&span:before {
+			height: 20px;
+			margin-left: -12px;
+			width: 20px;
+			border-radius: 50%;
+			content: '';
+			left: 50%;
+			position: absolute;
+			top: 10px;
+		}
+
+		&span:after {
+			height: 12px;
+			margin-left: -8px;
+			top: 14px;
+			width: 12px;
+			content: none;
+		}
+	}
+
+	.opc-progress-bar-item._active {
+
+		&:before {
+			top: 19px;
+			content: '';
+			height: 4px;
+			left: 0;
+			position: absolute;
+			width: 100%;
+		}
+
+		&span:before {
+			height: 18px;
+			margin-left: -9px;
+			width: 18px;
+			border-radius: 50%;
+			content: '';
+			left: 50%;
+			position: absolute;
+			top: 11px;
+		}
+	}
+}
