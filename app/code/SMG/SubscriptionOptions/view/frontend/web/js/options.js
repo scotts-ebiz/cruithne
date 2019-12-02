@@ -39,6 +39,7 @@ define([
                         var data = JSON.parse(data);
                         if( data.success === true ) {
                             localStorage.setItem('estimated_arrival', data.estimated_arrival);
+                            window.sessionStorage.setItem('subscription_plan', subscriptionPlan );
                         	window.location.href = '/checkout/#shipping';
                         } else {
                             alert( 'Error creating your order ' + data.message + '. Please try again.' );
@@ -69,7 +70,6 @@ define([
 
                             self.hasResults(true);
                             self.results(data);
-                            console.log(data);
                         }
                     },
                 },

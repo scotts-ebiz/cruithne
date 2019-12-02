@@ -22,78 +22,86 @@ define(
                 }, 2000)
             },
 
-            createNewSubscription: function(cancel_existing) {
+            createNewSubscription: function(token_id, cancel_existing) {
                 event.preventDefault();
-
                 var self = this;
-
                 var form = document.querySelector('.recurly-form');
-                var plan_code = $('input[name="subscription_plan"]').val();
-                var addon_products = [];
-                $("input[name='addon_products[]']:checked").each(function () {
-                    addon_products.push($(this).val());
+                var quiz = window.sessionStorage.getItem('quiz');
+                quiz = JSON.parse(quiz);
+                var subscriptionPlan = window.sessionStorage.getItem('subscription_plan');
+
+                $.ajax({
+                    type: 'POST',
+                    url: window.location.origin + '/rest/V1/subscription/create',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    processData: false,
+                    data: JSON.stringify( {
+                        'token': token_id,
+                        'quiz': quiz,
+                        'plan': subscriptionPlan,
+                        'cancel_existing': cancel_existing,
+                    } ),
+                    success: function(response) {
+                        if( response[0].success == true ) {
+                            self.createNewOrders();
+                        } else {
+                            alert( response[0].message );
+                        }
+                    }
                 });
+            },
+
+            createNewOrders: function() {
+                event.preventDefault();
+                var self = this;
+                var formKey = document.querySelector('input[name=form_key]').value;
+                var quiz = window.sessionStorage.getItem('quiz');
+                quiz = JSON.parse(quiz);
+
+                $.ajax({
+                    type: 'POST',
+                    url: window.location.origin + '/rest/V1/subscription/createorders',
+                    dataType: 'json',
+                    contentType: 'application/json',
+                    processData: false,
+                    data: JSON.stringify( { 'key': formKey, 'quiz_id': quiz.id }),
+                    success: function(response) {
+                        var response = JSON.parse(response);
+                        if( response[0].success == true ) {
+                            window.location.href = '/thank-you';
+                        }
+                    }
+                })
+            },
+ 
+            myPlaceOrder: function() {
+                event.preventDefault();
+                var self = this;
+                var form = document.querySelector('.recurly-form');
 
                 recurly.token(form, function(err, token) {
-                    console.log(token);
                     if( err ) {
                         alert( err.message );
                     } else {
                         $.ajax({
                             type: 'POST',
-                            url: window.location.origin + '/rest/V1/subscriptions/new',
+                            url: window.location.origin + '/rest/V1/subscription/check',
                             dataType: 'json',
                             contentType: 'application/json',
                             processData: false,
-                            data: JSON.stringify({'token': token.id, 'order': checkoutConfig, 'cancel_existing': cancel_existing, 'addon_products': addon_products, 'plan_code': plan_code }),
                             success: function(response) {
-                                console.log(response);
-
-                                if( response[0].success == true ) {
-                                    self.placeOrder();
+                                if( response[0].success === false && response[0].has_subscription === true ) {
+                                    if( confirm( response[0].message ) ) {
+                                        self.createNewSubscription(token.id, true);
+                                    } else {
+                                        window.location.href = response[0].redirect_url
+                                    }
                                 } else {
-                                    alert( response[0].message );
+                                    self.createNewSubscription(token.id, false);
                                 }
                             }
                         });
-                    }
-                });
-            },
- 
-            myPlaceOrder: function() {
-                event.preventDefault();
-
-                var self = this;
-
-                var form = document.querySelector('.recurly-form');
-
-                recurly.token(form, function(err, token) {
-                    console.log(token);
-                    if( err ) {
-                        alert( err.message );
-                    } else {
-                        
-                        // $.ajax({
-                        //     type: 'POST',
-                        //     url: window.location.origin + '/rest/V1/subscriptions/check',
-                        //     dataType: 'json',
-                        //     contentType: 'application/json',
-                        //     processData: false,
-                        //     data: JSON.stringify({'token': token.id, 'order': checkoutConfig}),
-                        //     success: function(response) {
-                        //         console.log(response);
-
-                        //         if( response[0].success === false && response[0].has_subscription === true ) {
-                        //             if( confirm( response[0].message ) ) {
-                        //                 self.createNewSubscription(true);
-                        //             } else {
-                        //                 window.location.href = response[0].redirect_url
-                        //             }
-                        //         } else {
-                        //             self.createNewSubscription(false);
-                        //         }
-                        //     }
-                        // });
                     }
                 })
             },

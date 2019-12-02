@@ -4,6 +4,8 @@ namespace SMG\SubscriptionApi\Model;
 
 use Magento\Framework\Exception\SecurityViolationException;
 use SMG\SubscriptionApi\Api\SubscriptionInterface;
+use Recurly_Client;
+use Recurly_SubscriptionList;
 
 class Subscription implements SubscriptionInterface
 {
@@ -19,6 +21,13 @@ class Subscription implements SubscriptionInterface
     protected $_productRepository;
     protected $_resultJsonFactory;
     protected $_checkoutSession;
+    protected $_storeManager;
+    protected $_cartRepositoryInterface;
+    protected $_cartManagementInterface;
+    protected $_customerFactory;
+    protected $_customerRepository;
+    protected $_order;
+    protected $_recurlyHelper;
 
     public function __construct(
         \SMG\RecommendationApi\Helper\RecommendationHelper $helper,
@@ -27,7 +36,14 @@ class Subscription implements SubscriptionInterface
         \Magento\Checkout\Model\Cart $cart,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Catalog\Model\Product $product,
-        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
+        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Quote\Api\CartRepositoryInterface $cartRepositoryInterface,
+        \Magento\Quote\Api\CartManagementInterface $cartManagementInterface,
+        \Magento\Customer\Model\CustomerFactory $customerFactory,
+        \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository,
+        \Magento\Sales\Model\Order $order,
+        \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper
     ) {
         $this->_helper = $helper;
         $this->_customerSession = $customerSession;
@@ -36,6 +52,13 @@ class Subscription implements SubscriptionInterface
         $this->_checkoutSession = $checkoutSession;
         $this->_product = $product;
         $this->_productRepository = $productRepository;
+        $this->_storeManager = $storeManager;
+        $this->_cartRepositoryInterface = $cartRepositoryInterface;
+        $this->_cartManagementInterface = $cartManagementInterface;
+        $this->_customerFactory = $customerFactory;
+        $this->_customerRepository = $customerRepository;
+        $this->_order = $order;
+        $this->_recurlyHelper = $recurlyHelper;
     }
 
     /**
@@ -174,6 +197,170 @@ class Subscription implements SubscriptionInterface
     }
 
     /**
+     * Process cart products and create multiple orders
+     * 
+     * @param string $key
+     * @param string $quiz_id
+     * @return array|false|string
+     * 
+     * @api
+     */
+    public function createOrders($key, $quiz_id) {
+        // Get store and website information
+        $store = $this->_storeManager->getStore();
+        $websiteId = $this->_storeManager->getStore()->getWebsiteId();
+
+        // Get customer
+        $customer = $this->_customerFactory->create();
+        $customer->setWebsiteId($websiteId);
+        $customer->loadByEmail( $this->_checkoutSession->getQuote()->getCustomerEmail() );
+        $customerData = $customer->getData();
+        $customerGigyaId = $customerData['gigya_uid'];
+
+        // Get customer's current subscriptions
+        $recurlySubscriptions = $this->getAccountSubscriptions( $customer->getRecurlyAccountCode(), $quiz_id );
+
+        // Get all items in the cart
+        $quoteItems = $this->_checkoutSession->getQuote()->getItemsCollection();
+
+        $seasonalSkus = array( 'early-spring', 'late-spring', 'early-summer', 'early-fall', 'annual' );
+        $seasonalOrderData = array();
+        $addonOrderData = array();
+        $seasonal_counter = 0;
+        $addon_counter = 0;
+
+        // Separate seasonal with addon products and remove them from the current cart,
+        foreach( $quoteItems as $item ) {
+            if( in_array( $item->getSku(), $seasonalSkus) ) {
+                $seasonalOrderData[$seasonal_counter]['sku'] = $item->getSku();
+                $seasonalOrderData[$seasonal_counter]['price'] = $item->getPrice();
+                $seasonalOrderData[$seasonal_counter]['id'] = $item->getId();
+                $seasonal_counter++;
+            } else {
+                $addonOrderData[$addon_counter]['sku'] = $item->getSku();
+                $addonOrderData[$addon_counter]['price'] = $item->getPrice();
+                $addonOrderData[$addon_counter]['id'] = $item->getId();
+                $addon_counter++;
+            }
+
+            // Remove item from the quote, because there will be duplicate orders created
+            $this->_cart->removeItem($item->getId())->save();
+        }
+
+        $customerId = $customer->getId();
+        $customer = $this->_customerRepository->getById( $customerId );
+
+        // Go through the seasonal products
+        foreach( $seasonalOrderData as $item ) {
+            // Create empty cart for every seasonal product
+            $cartId = $this->_cartManagementInterface->createEmptyCartForCustomer($customerId);
+            $quote = $this->_cartRepositoryInterface->get($cartId);
+            $quote->setStore($store);
+            $quote->setCurrency();
+            $quote->assignCustomer($customer);
+
+            // Add product to the cart
+            $_product = $this->_productRepository->get( $item['sku'] );
+            $product = $this->_product->load( $_product->getId() );
+            $product->setPrice($item['price']);
+            $quote->addProduct( $product, 1 );
+
+            // Set shipping information
+            $shippingAddress = $quote->getShippingAddress();
+            $shippingAddress->setCollectShippingRates(true)->collectShippingRates()->setShippingMethod('freeshipping_freeshipping');
+
+            // Don't process inventory on seasonal products
+            $quote->setInventoryProcessed(false);
+
+            // Set payment information
+            $quote->setPaymentMethod('recurly');
+            $quote->getPayment()->importData(['method' => 'recurly']);
+
+            // Save quote
+            $quote->save();
+     
+            // Collect totals
+            $quote->collectTotals();
+
+            // Create order from the quote
+            $quote = $this->_cartRepositoryInterface->get($quote->getId());
+            $orderId = $this->_cartManagementInterface->placeOrder($quote->getId());
+            $order = $this->_order->load($orderId);
+            $order->setEmailSent(0);
+            $order->setGigyaId( $customerGigyaId );
+            if( $item['sku'] == 'annual' ) {
+                $order->setMasterSubscriptionId($recurlySubscriptions['annual']['subscription_id']);
+                $order->setSubscriptionId($recurlySubscriptions['annual']['subscription_id']);
+                $order->setShipDate($recurlySubscriptions['annual']['starts_at']);
+            } else {
+                $order->setMasterSubscriptionId($recurlySubscriptions['annual']['subscription_id']);
+                $order->setSubscriptionId($recurlySubscriptions[$item['sku']]['subscription_id']);
+                $order->setShipDate($recurlySubscriptions[$item['sku']]['starts_at']);
+            }
+            $order->setSubscriptionAddon(false);
+            $order->save();
+            $increment_id = $order->getRealOrderId();
+        }
+
+        if( ! empty( $addonOrderData ) ) {
+            // Create cart for the addons
+            $addonCartId = $this->_cartManagementInterface->createEmptyCartForCustomer( $customerId );
+            $addonQuote = $this->_cartRepositoryInterface->get( $addonCartId );
+            $addonQuote->setStore( $store );
+            $addonQuote->setCurrency();
+            $addonQuote->assignCustomer( $customer );
+
+            // Go through the addon products
+            foreach( $addonOrderData as $addon ) {
+                // Create cart for the addon
+                $addonCartId = $this->_cartManagementInterface->createEmptyCartForCustomer( $customerId );
+                $addonQuote = $this->_cartRepositoryInterface->get( $addonCartId );
+                $addonQuote->setStore( $store );
+                $addonQuote->setCurrency();
+                $addonQuote->assignCustomer( $customer );
+
+                // Add addon products to the cart
+                $_product = $this->_productRepository->get( $addon['sku'] );
+                $product = $this->_product->load( $_product->getId() );
+                $product->setPrice( $addon['price'] );
+                $addonQuote->addProduct( $product, 1 );
+
+                // Save quote
+                $addonQuote->save();
+
+                // Collect totals
+                $addonQuote->collectTotals();
+            }
+
+            // Set shipping address for the cart
+            $shippingAddress = $addonQuote->getShippingAddress();
+            $shippingAddress->setCollectShippingRates(true)->collectShippingRates()->setShippingMethod('freeshipping_freeshipping');
+            
+            // Update inventory for the addon products
+            $addonQuote->setInventoryProcessed(true);
+
+            // Set payment method
+            $addonQuote->setPaymentMethod('recurly');
+            $addonQuote->getPayment()->importData( [ 'method' => 'recurly' ] );
+
+            // Create order
+            $addonQuote = $this->_cartRepositoryInterface->get( $addonQuote->getId() );
+            $addonOrderId = $this->_cartManagementInterface->placeOrder( $addonQuote->getId() );       
+            $addonOrder = $this->_order->load( $addonOrderId );
+            $addonOrder->setEmailSent(0);
+            $addonOrder->setGigyaId( $customerGigyaId );
+            $addonOrder->setMasterSubscriptionId($recurlySubscriptions['annual']['subscription_id']);
+            $addonOrder->setSubscriptionId($recurlySubscriptions['add-ons']['subscription_id']);
+            $addonOrder->setShipDate($recurlySubscriptions['add-ons']['starts_at']);
+            $addonOrder->setSubscriptionAddon(true);
+            $addonOrder->save();
+            $increment_id = $addonOrder->getRealOrderId();
+        }
+
+        return array( 'success' => true, 'message' => 'Magento orders created' );
+    }
+
+    /**
      * Calculate estimated arrival date
      * 
      * @param DateTime $start_date
@@ -207,6 +394,37 @@ class Subscription implements SubscriptionInterface
                 return 'early-fall';
             default:
                 return '';
+        }
+    }
+
+    /**
+     * Return all customer's subscriptions
+     * 
+     * @param string $account_code
+     * @return array
+     */
+    private function getAccountSubscriptions( $account_code, $quiz_id )
+    {
+        Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
+        Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
+
+        $activeSubscriptions = array();
+
+        try {
+            $subscriptions = Recurly_SubscriptionList::getForAccount($account_code, ['state' => 'live']);
+            foreach ($subscriptions as $subscription) {
+                // If subscription quiz_id is the same as the current quiz_id
+                if( isset( $subscription->custom_fields['quiz_id'] ) ) {
+                    if( $quiz_id == $subscription->custom_fields['quiz_id']->value  ) {
+                        $activeSubscriptions[$subscription->plan->plan_code]['subscription_id'] = $subscription->uuid;
+                        $activeSubscriptions[$subscription->plan->plan_code]['starts_at'] = $subscription->current_term_started_at;
+                    }
+                }
+            }
+
+            return $activeSubscriptions;
+        } catch (Recurly_NotFoundError $e) {
+            print "Account Not Found: $e";
         }
     }
 
