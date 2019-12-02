@@ -14,6 +14,7 @@ class Subscription implements SubscriptionInterface
      * @var /SMG/Api/Helper/QuizHelper
      */
     protected $_helper;
+    protected $_recommendationHelper;
     protected $_customerSession;
     protected $_formKey;
     protected $_cart;
@@ -31,6 +32,7 @@ class Subscription implements SubscriptionInterface
 
     public function __construct(
         \SMG\RecommendationApi\Helper\RecommendationHelper $helper,
+        \SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper,
         \Magento\Checkout\Model\Session $customerSession,
         \Magento\Framework\Data\Form\FormKey $formKey,
         \Magento\Checkout\Model\Cart $cart,
@@ -46,6 +48,7 @@ class Subscription implements SubscriptionInterface
         \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper
     ) {
         $this->_helper = $helper;
+        $this->_recommendationHelper = $recommendationHelper;
         $this->_customerSession = $customerSession;
         $this->_formKey = $formKey;
         $this->_cart = $cart;
@@ -223,35 +226,29 @@ class Subscription implements SubscriptionInterface
         // Get all items in the cart
         $quoteItems = $this->_checkoutSession->getQuote()->getItemsCollection();
 
-        $seasonalSkus = array( 'early-spring', 'late-spring', 'early-summer', 'early-fall', 'annual' );
-        $seasonalOrderData = array();
-        $addonOrderData = array();
-        $seasonal_counter = 0;
-        $addon_counter = 0;
-
-        // Separate seasonal with addon products and remove them from the current cart,
+        // Remove items from the quote, because there will be duplicate orders create
         foreach( $quoteItems as $item ) {
-            if( in_array( $item->getSku(), $seasonalSkus) ) {
-                $seasonalOrderData[$seasonal_counter]['sku'] = $item->getSku();
-                $seasonalOrderData[$seasonal_counter]['price'] = $item->getPrice();
-                $seasonalOrderData[$seasonal_counter]['id'] = $item->getId();
-                $seasonal_counter++;
-            } else {
-                $addonOrderData[$addon_counter]['sku'] = $item->getSku();
-                $addonOrderData[$addon_counter]['price'] = $item->getPrice();
-                $addonOrderData[$addon_counter]['id'] = $item->getId();
-                $addon_counter++;
-            }
-
-            // Remove item from the quote, because there will be duplicate orders created
             $this->_cart->removeItem($item->getId())->save();
         }
 
+        // Get customer
         $customerId = $customer->getId();
         $customer = $this->_customerRepository->getById( $customerId );
 
+        // Get seasonal products
+        $completedQuizUrl = $url = filter_var(
+            trim(
+                str_replace('{completedQuizId}', $quiz_id, $this->_recommendationHelper->getQuizResultApiPath()),
+                '/'
+            ),
+            FILTER_SANITIZE_URL
+        );
+
+        $completedQuizResult = $this->_recommendationHelper->request($completedQuizUrl, '', 'GET' );
+        $seasonalProducts = $completedQuizResult['plan']['coreProducts'];
+
         // Go through the seasonal products
-        foreach( $seasonalOrderData as $item ) {
+        foreach( $seasonalProducts as $item ) {
             // Create empty cart for every seasonal product
             $cartId = $this->_cartManagementInterface->createEmptyCartForCustomer($customerId);
             $quote = $this->_cartRepositoryInterface->get($cartId);
@@ -262,15 +259,14 @@ class Subscription implements SubscriptionInterface
             // Add product to the cart
             $_product = $this->_productRepository->get( $item['sku'] );
             $product = $this->_product->load( $_product->getId() );
-            $product->setPrice($item['price']);
             $quote->addProduct( $product, 1 );
 
             // Set shipping information
             $shippingAddress = $quote->getShippingAddress();
             $shippingAddress->setCollectShippingRates(true)->collectShippingRates()->setShippingMethod('freeshipping_freeshipping');
 
-            // Don't process inventory on seasonal products
-            $quote->setInventoryProcessed(false);
+            // Update inventory of the products
+            $quote->setInventoryProcessed(true);
 
             // Set payment information
             $quote->setPaymentMethod('recurly');
@@ -287,22 +283,39 @@ class Subscription implements SubscriptionInterface
             $orderId = $this->_cartManagementInterface->placeOrder($quote->getId());
             $order = $this->_order->load($orderId);
             $order->setEmailSent(0);
+
+            // Set customer gigya id
             $order->setGigyaId( $customerGigyaId );
-            if( $item['sku'] == 'annual' ) {
-                $order->setMasterSubscriptionId($recurlySubscriptions['annual']['subscription_id']);
-                $order->setSubscriptionId($recurlySubscriptions['annual']['subscription_id']);
-                $order->setShipDate($recurlySubscriptions['annual']['starts_at']);
-            } else {
-                $order->setMasterSubscriptionId($recurlySubscriptions['annual']['subscription_id']);
-                $order->setSubscriptionId($recurlySubscriptions[$item['sku']]['subscription_id']);
-                $order->setShipDate($recurlySubscriptions[$item['sku']]['starts_at']);
+
+            // Set master subscription id based on the recurly subscription plan code
+            if( isset( $recurlySubscriptions['annual']['subscription_id'] ) ) {
+                $order->setMasterSubscriptionId( $recurlySubscriptions['annual']['subscription_id'] );
             }
+            if( isset( $recurlySubscriptions['seasonal']['subscription_id'] ) ) {
+                $order->setMasterSubscriptionId( $recurlySubscriptions['seasonal']['subscription_id'] );
+            }
+
+            // Get Recurly plan code based on the season name, so we can map the subscription id and start date fields
+            $seasonCode = $this->getSeasonalProductSku( $item['season'] );
+
+            // Set subscription id
+            $order->setSubscriptionId( $recurlySubscriptions[$seasonCode]['subscription_id'] );
+
+            // Set ship date for the subscription/order
+            $order->setShipDate( $recurlySubscriptions[$seasonCode]['starts_at'] );
+
+            // Set is addon subscription flag
             $order->setSubscriptionAddon(false);
+
+            // Save order
             $order->save();
             $increment_id = $order->getRealOrderId();
         }
 
-        if( ! empty( $addonOrderData ) ) {
+        // Get all addon products from the quiz result
+        $addOnProducts = $completedQuizResult['plan']['addOnProducts'];
+
+        if( ! empty( $addOnProducts ) ) {
             // Create cart for the addons
             $addonCartId = $this->_cartManagementInterface->createEmptyCartForCustomer( $customerId );
             $addonQuote = $this->_cartRepositoryInterface->get( $addonCartId );
@@ -311,7 +324,7 @@ class Subscription implements SubscriptionInterface
             $addonQuote->assignCustomer( $customer );
 
             // Go through the addon products
-            foreach( $addonOrderData as $addon ) {
+            foreach( $addOnProducts as $addon ) {
                 // Create cart for the addon
                 $addonCartId = $this->_cartManagementInterface->createEmptyCartForCustomer( $customerId );
                 $addonQuote = $this->_cartRepositoryInterface->get( $addonCartId );
@@ -322,7 +335,6 @@ class Subscription implements SubscriptionInterface
                 // Add addon products to the cart
                 $_product = $this->_productRepository->get( $addon['sku'] );
                 $product = $this->_product->load( $_product->getId() );
-                $product->setPrice( $addon['price'] );
                 $addonQuote->addProduct( $product, 1 );
 
                 // Save quote
@@ -348,11 +360,28 @@ class Subscription implements SubscriptionInterface
             $addonOrderId = $this->_cartManagementInterface->placeOrder( $addonQuote->getId() );       
             $addonOrder = $this->_order->load( $addonOrderId );
             $addonOrder->setEmailSent(0);
+
+            // Set customer gigya id
             $addonOrder->setGigyaId( $customerGigyaId );
-            $addonOrder->setMasterSubscriptionId($recurlySubscriptions['annual']['subscription_id']);
+
+            // Set master subscription id based on the recurly subscription plan code
+            if( isset( $recurlySubscriptions['annual']['subscription_id'] ) ) {
+                $order->setMasterSubscriptionId( $recurlySubscriptions['annual']['subscription_id'] );
+            }
+            if( isset( $recurlySubscriptions['seasonal']['subscription_id'] ) ) {
+                $order->setMasterSubscriptionId( $recurlySubscriptions['seasonal']['subscription_id'] );
+            }
+
+            // Set subscription id
             $addonOrder->setSubscriptionId($recurlySubscriptions['add-ons']['subscription_id']);
+
+            // Set ship date
             $addonOrder->setShipDate($recurlySubscriptions['add-ons']['starts_at']);
+
+            // Set is addon subscription flag
             $addonOrder->setSubscriptionAddon(true);
+
+            // Save order
             $addonOrder->save();
             $increment_id = $addonOrder->getRealOrderId();
         }

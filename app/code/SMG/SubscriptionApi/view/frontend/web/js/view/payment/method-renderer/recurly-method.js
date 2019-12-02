@@ -67,7 +67,6 @@ define(
                     processData: false,
                     data: JSON.stringify( { 'key': formKey, 'quiz_id': quiz.id }),
                     success: function(response) {
-                        var response = JSON.parse(response);
                         if( response[0].success == true ) {
                             window.location.href = '/thank-you';
                         }
