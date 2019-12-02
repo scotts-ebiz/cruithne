@@ -82,7 +82,7 @@ define(
 
                 recurly.token(form, function(err, token) {
                     if( err ) {
-                        alert( err.message );
+                        console.log( err );
                     } else {
                         $.ajax({
                             type: 'POST',
