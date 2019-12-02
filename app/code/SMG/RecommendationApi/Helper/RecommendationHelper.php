@@ -144,14 +144,14 @@ class RecommendationHelper extends AbstractHelper
                 $response = curl_exec($ch);
 
                 if(curl_errno($ch)) {
-                    throw new Exception(curl_error($ch));
+                    throw new \Exception(curl_error($ch));
                 }
 
                 curl_close($ch);
 
                 return json_decode($response, true);
-            } catch(Exception $e) {
-                throw new Exception($e);
+            } catch(\Exception $e) {
+                throw new \Exception($e);
             }
         }
 

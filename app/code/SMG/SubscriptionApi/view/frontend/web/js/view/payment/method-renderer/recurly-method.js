@@ -67,7 +67,6 @@ define(
                     processData: false,
                     data: JSON.stringify( { 'key': formKey, 'quiz_id': quiz.id }),
                     success: function(response) {
-                        var response = JSON.parse(response);
                         if( response[0].success == true ) {
                             window.location.href = '/thank-you';
                         }
@@ -82,7 +81,7 @@ define(
 
                 recurly.token(form, function(err, token) {
                     if( err ) {
-                        alert( err.message );
+                        console.log( err );
                     } else {
                         $.ajax({
                             type: 'POST',

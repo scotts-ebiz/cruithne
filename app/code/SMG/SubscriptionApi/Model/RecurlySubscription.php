@@ -17,11 +17,13 @@ use Recurly_ShippingAddressList;
 use Recurly_CustomField;
 use Recurly_ValidationError;
 use Recurly_SubscriptionList;
+use Recurly_Error;
 
 class RecurlySubscription implements RecurlyInterface
 {
 
 	protected $_helper;
+	protected $_recommendationHelper;
 	protected $_customerSession;
 	protected $_customer;
 	protected $_customerFactory;
@@ -34,6 +36,7 @@ class RecurlySubscription implements RecurlyInterface
 
 	public function __construct(
 		\SMG\SubscriptionApi\Helper\RecurlyHelper $helper,
+		\SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper,
 		\Magento\Customer\Model\Session $customerSession,
 		\Magento\Customer\Model\Customer $customer,
     	\Magento\Customer\Model\ResourceModel\CustomerFactory $customerFactory,
@@ -44,6 +47,7 @@ class RecurlySubscription implements RecurlyInterface
 	)
 	{
 		$this->_helper = $helper;
+		$this->_recommendationHelper = $recommendationHelper;
 		$this->_customerSession = $customerSession;
 		$this->_customer = $customer;
 		$this->_customerFactory = $customerFactory;
@@ -80,130 +84,138 @@ class RecurlySubscription implements RecurlyInterface
 			}
 
 			// Create Recurly Purchase
-			$purchase = new Recurly_Purchase();
-			$purchase->currency = $this->_currency;
-			$purchase->collection = 'automatic';
-			$purchase->account = $account;
-
-			// Create billing information with the token from Recurly.js
-			if( $this->createBillingInfo( $account->account_code, $token ) ) {
-				$purchase->account->billing_info = $this->createBillingInfo( $account->account_code, $token );
-			} else {
-				return array(
-					'success'	=> false,
-					'message'	=> 'There is a problem with the billing information.'
-				);
-			}
-
-			// Set shipping information
-			if( $this->getRecurlyAccountShippingAddress( $account->account_code ) ) {
-				$purchase->account->shipping_addresses = array( $this->getRecurlyAccountShippingAddress( $account->account_code ) );
-			} else {
-				return array(
-					'success'	=> false,
-					'message'	=> 'There is a problem with the shipping information.'
-				);
-			}
-
-			$quoteItems = $this->_checkoutSession->getQuote()->getItemsCollection();
-			$totalAnnualAmount = 0;
-			$totalAddonsAmount = 0;
-			$seasonalProductsSkus = array( 'annual', 'early-spring', 'late-spring', 'early-summer', 'early-fall');
-			$all_subscriptions = array();
-
-			foreach( $quoteItems as $item ) {
-				if( $item->getSku() == 'annual' ) {
-					$totalAnnualAmount = $item->getPrice(); // Tota price of the annual subscription
-				} elseif( ! in_array( $item->getSku(), $seasonalProductsSkus ) ) { // If it's addon
-					// Charge for the addons
-					$charge = new Recurly_Adjustment();
-					$charge->account_code = $account->account_code;
-					$charge->currency = $this->_currency;
-					$charge->description = $item->getName() . ' (SKU: ' . $item->getSku() . ')';
-					$charge->unit_amount_in_cents = $this->convertAmountToCents( $item->getPrice() );
-					$totalAddonsAmount += $item->getPrice();
-					$charge->quantity = 1;
-					$charge->product_code = $item->getSku();
-					$charge->create();
-
-					$purchase->adjusments = array( $charge );
-				}
-			}
-
-			$seasonalProducts = $this->getPlanData($quiz['id']);
-
-			if( $plan == 'annual' ) {
-				// Create Annual Subscription (Master Subscription)
-				$annual_subscription = new Recurly_Subscription();
-				$annual_subscription->plan_code = $plan;
-				$annual_subscription->auto_renew = true;
-				$annual_subscription->total_billing_cycles = 1;
-				$annual_subscription->unit_amount_in_cents = $this->convertAmountToCents( $totalAnnualAmount );
-				$annual_subscription->custom_fields[] = new Recurly_CustomField( 'quiz_id', $quiz['id'] );
-				array_push( $all_subscriptions, $annual_subscription );
-
-				// Apply cooupon code to annual subscription
-				if( $this->getCouponCode() ) {
-					$purchase->coupon_codes = array( $this->getCouponCode() );
-				}
-
-				// Create Seasonal Subscriptions (Child Subscriptions) for the Annual Subscription
-				if( ! empty( $seasonalProducts['plan']['coreProducts'] ) ) {
-					foreach( $seasonalProducts['plan']['coreProducts'] as $season ) {
-						$subscription = new Recurly_Subscription();
-						$subscription->plan_code = $this->getPlanCodeByName( $season['season'] );
-						$subscription->auto_renew = true;
-						$subscription->total_billing_cycles = 1;
-						$subscription->unit_amount_in_cents = 0;
-						$subscription->custom_fields[] = new Recurly_CustomField( 'quiz_id', $quiz['id'] );
-						$subscription->starts_at = $this->getSubscriptionStartDate($season['applicationStartDate']);
-						array_push( $all_subscriptions, $subscription );
-					}
-				}
-			} else {
-				// Create Seasonal Subscription (Master Subscription)
-				$seasonal_subscription = new Recurly_Subscription();
-				$seasonal_subscription->plan_code = $plan;
-				$seasonal_subscription->auto_renew = true;
-				$seasonal_subscription->unit_amount_in_cents = 0;
-				$seasonal_subscription->custom_fields[] = new Recurly_CustomField( 'quiz_id', $quiz['id'] );
-				array_push( $all_subscriptions, $seasonal_subscription );
-
-				// Create Seasonal Subscriptions (Child Subscriptions) for the Seasonal Subscription
-				if( ! empty( $seasonalProducts['plan']['coreProducts'] ) ) {
-					foreach( $seasonalProducts['plan']['coreProducts'] as $season ) {
-						// Get Product from Magento based on SKU
-						$product = $this->_productRepository->get( $season['sku'] );
-						$subscription = new Recurly_Subscription();
-						$subscription->plan_code = $this->getPlanCodeByName( $season['season'] );
-						$subscription->auto_renew = true;
-						$subscription->total_billing_cycles = 1;
-						$subscription->unit_amount_in_cents = $this->convertAmountToCents( $product->getPrice() );
-						$subscription->custom_fields[] = new Recurly_CustomField( 'quiz_id', $quiz['id'] );
-						$subscription->starts_at = $this->getSubscriptionStartDate($season['applicationStartDate']);
-						array_push( $all_subscriptions, $subscription );
-					}
-				}
-			}
-
-			// Create Addon Subscription
-			$addon_subscription = new Recurly_Subscription();
-			$addon_subscription->plan_code = 'add-ons';
-			$addon_subscription->auto_renew = false;
-			$addon_subscription->total_billing_cycles = 1;
-			$addon_subscription->unit_amount_in_cents = 0;
-			$addon_subscription->custom_fields[] = new Recurly_CustomField( 'quiz_id', $quiz['id'] );
-			array_push( $all_subscriptions, $addon_subscription );
-
-			$purchase->subscriptions = $all_subscriptions;
-
 			try {
+				$purchase = new Recurly_Purchase();
+				$purchase->currency = $this->_currency;
+				$purchase->collection = 'automatic';
+				$purchase->account = $account;
+
+				// Create billing information with the token from Recurly.js
+				if( $this->createBillingInfo( $account->account_code, $token ) ) {
+					$purchase->account->billing_info = $this->createBillingInfo( $account->account_code, $token );
+				} else {
+					return array(
+						'success'	=> false,
+						'message'	=> 'There is a problem with the billing information.'
+					);
+				}
+
+				// Set shipping information
+				if( $this->getRecurlyAccountShippingAddress( $account->account_code ) ) {
+					$purchase->account->shipping_addresses = array( $this->getRecurlyAccountShippingAddress( $account->account_code ) );
+				} else {
+					return array(
+						'success'	=> false,
+						'message'	=> 'There is a problem with the shipping information.'
+					);
+				}
+
+				$quoteItems = $this->_checkoutSession->getQuote()->getItemsCollection();
+				$totalAnnualAmount = 0;
+				$totalAddonsAmount = 0;
+				$seasonalProductsSkus = array( 'annual', 'early-spring', 'late-spring', 'early-summer', 'early-fall');
+				$all_subscriptions = array();
+
+				foreach( $quoteItems as $item ) {
+					if( $item->getSku() == 'annual' ) {
+						$totalAnnualAmount = $item->getPrice(); // Tota price of the annual subscription
+					} elseif( ! in_array( $item->getSku(), $seasonalProductsSkus ) ) { // If it's addon
+						// Charge for the addons
+						$charge = new Recurly_Adjustment();
+						$charge->account_code = $account->account_code;
+						$charge->currency = $this->_currency;
+						$charge->description = $item->getName() . ' (SKU: ' . $item->getSku() . ')';
+						$charge->unit_amount_in_cents = $this->convertAmountToCents( $item->getPrice() );
+						$totalAddonsAmount += $item->getPrice();
+						$charge->quantity = 1;
+						$charge->product_code = $item->getSku();
+						$charge->create();
+
+						$purchase->adjusments = array( $charge );
+					}
+				}
+
+				$completedQuizUrl = $url = filter_var(
+		            trim(
+		                str_replace('{completedQuizId}', $quiz['id'], $this->_recommendationHelper->getQuizResultApiPath()),
+		                '/'
+		            ),
+		            FILTER_SANITIZE_URL
+		        );
+				$seasonalProducts = $this->_recommendationHelper->request($completedQuizUrl, '', 'GET' );
+
+				if( $plan == 'annual' ) {
+					// Create Annual Subscription (Master Subscription)
+					$annual_subscription = new Recurly_Subscription();
+					$annual_subscription->plan_code = $plan;
+					$annual_subscription->auto_renew = true;
+					$annual_subscription->total_billing_cycles = 1;
+					$annual_subscription->unit_amount_in_cents = $this->convertAmountToCents( $totalAnnualAmount );
+					$annual_subscription->custom_fields[] = new Recurly_CustomField( 'quiz_id', $quiz['id'] );
+					array_push( $all_subscriptions, $annual_subscription );
+
+					// Apply cooupon code to annual subscription
+					if( $this->getCouponCode() ) {
+						$purchase->coupon_codes = array( $this->getCouponCode() );
+					}
+
+					// Create Seasonal Subscriptions (Child Subscriptions) for the Annual Subscription
+					if( ! empty( $seasonalProducts['plan']['coreProducts'] ) ) {
+						foreach( $seasonalProducts['plan']['coreProducts'] as $season ) {
+							$subscription = new Recurly_Subscription();
+							$subscription->plan_code = $this->getPlanCodeByName( $season['season'] );
+							$subscription->auto_renew = true;
+							$subscription->total_billing_cycles = 1;
+							$subscription->unit_amount_in_cents = 0;
+							$subscription->custom_fields[] = new Recurly_CustomField( 'quiz_id', $quiz['id'] );
+							$subscription->starts_at = $this->getSubscriptionStartDate($season['applicationStartDate']);
+							array_push( $all_subscriptions, $subscription );
+						}
+					}
+				} else {
+					// Create Seasonal Subscription (Master Subscription)
+					$seasonal_subscription = new Recurly_Subscription();
+					$seasonal_subscription->plan_code = $plan;
+					$seasonal_subscription->auto_renew = true;
+					$seasonal_subscription->unit_amount_in_cents = 0;
+					$seasonal_subscription->custom_fields[] = new Recurly_CustomField( 'quiz_id', $quiz['id'] );
+					array_push( $all_subscriptions, $seasonal_subscription );
+
+					// Create Seasonal Subscriptions (Child Subscriptions) for the Seasonal Subscription
+					if( ! empty( $seasonalProducts['plan']['coreProducts'] ) ) {
+						foreach( $seasonalProducts['plan']['coreProducts'] as $season ) {
+							// Get Product from Magento based on SKU
+							$product = $this->_productRepository->get( $season['sku'] );
+							$subscription = new Recurly_Subscription();
+							$subscription->plan_code = $this->getPlanCodeByName( $season['season'] );
+							$subscription->auto_renew = true;
+							$subscription->total_billing_cycles = 1;
+							$subscription->unit_amount_in_cents = $this->convertAmountToCents( $product->getPrice() );
+							$subscription->custom_fields[] = new Recurly_CustomField( 'quiz_id', $quiz['id'] );
+							$subscription->starts_at = $this->getSubscriptionStartDate($season['applicationStartDate']);
+							array_push( $all_subscriptions, $subscription );
+						}
+					}
+				}
+
+				// Create Addon Subscription
+				$addon_subscription = new Recurly_Subscription();
+				$addon_subscription->plan_code = 'add-ons';
+				$addon_subscription->auto_renew = false;
+				$addon_subscription->total_billing_cycles = 1;
+				$addon_subscription->unit_amount_in_cents = 0;
+				$addon_subscription->custom_fields[] = new Recurly_CustomField( 'quiz_id', $quiz['id'] );
+				array_push( $all_subscriptions, $addon_subscription );
+
+				$purchase->subscriptions = $all_subscriptions;
+
 				$collection = Recurly_Purchase::invoice( $purchase );
+
 				return array( array(
-					'success' 	=> true,
-					'message'	=> 'Subscriptions created.'
+					'success'	=> true,
+					'message'	=> 'Subscriptions created.',
 				) );
-			} catch( Recurly_ValidationError $e ) {
+			} catch(Recurly_Error $e) {
 				return array( array(
 					'success'	=> false,
 					'message'	=> $e->getMessage(),
@@ -232,6 +244,8 @@ class RecurlySubscription implements RecurlyInterface
 		// Get Customer's Recurly Account or create new one using current customer's data
 		$account = ( $this->getRecurlyAccount() ) ? $this->getRecurlyAccount() : $this->createRecurlyAccount( $checkoutData );
 
+		// Check if customer has active/future (live) subscriptions and offer him a choice to
+		// cancel existing subscriptions and create new one, or do nothing (will be redirected to account page)
 		if( $this->hasRecurlySubscription($account->account_code) ) {
 			return array( array( 'success' => false, 'message' => 'You already have subscriptions. Would you like to cancel them and create new one?', 'has_subscription' => true, 'redirect_url' => $this->_customerUrl->getAccountUrl() ) );
 		} else {
@@ -240,7 +254,7 @@ class RecurlySubscription implements RecurlyInterface
 
 	}
 
-		/**
+	/**
 	 * Cancel subscriptions of specific Recurly account
 	 * 
 	 * @param string $account_code
@@ -250,9 +264,15 @@ class RecurlySubscription implements RecurlyInterface
 	private function cancelAccountSubscriptions($account_code)
 	{
 		try {
-			$subscriptions = Recurly_SubscriptionList::getForAccount($account_code);
+			$active_subscriptions = Recurly_SubscriptionList::getForAccount( $account_code, [ 'state' => 'active' ] );
+			$future_subscriptions = Recurly_SubscriptionList::getForAccount( $account_code, [ 'state' => 'future' ] );
 
-			foreach ( $subscriptions as $subscription ) {
+			foreach ( $active_subscriptions as $subscription ) {
+				$_subscription = Recurly_Subscription::get($subscription->uuid);
+				$_subscription->cancel();
+		  	}
+
+		  	foreach ( $future_subscriptions as $subscription ) {
 				$_subscription = Recurly_Subscription::get($subscription->uuid);
 				$_subscription->cancel();
 		  	}
@@ -447,42 +467,6 @@ class RecurlySubscription implements RecurlyInterface
 			$customerResource = $this->_customerFactory->create();
 			$customerResource->saveAttribute($customer, 'recurly_account_code');
 		}
-	}
-
-	/**
-	 * 
-	 * 
-	 */
-	private function getPlanData($quiz_id)
-	{
-		 if( ! empty( $quiz_id ) ) {
-		 	$url = 'https://lspaasdraft.azurewebsites.net/api/completedQuizzes/' . $quiz_id;
-
-            try {
-                $ch = curl_init();
-                curl_setopt($ch, CURLOPT_URL, $url);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, TRUE);
-                curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 2);
-                curl_setopt($ch, CURLOPT_TIMEOUT, 45);
-                curl_setopt($ch, CURLOPT_RETURNTRANSFER,TRUE);
-                curl_setopt($ch, CURLOPT_POST, FALSE);
-                curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                    'Content-Type: application/json; charset=utf-8',
-                    'Accept: application/json',
-                ));
-                $response = curl_exec($ch);
-
-                if(curl_errno($ch)) {
-                    throw new Exception(curl_error($ch));
-                }
-
-                curl_close($ch);
-
-                return json_decode($response, true);
-            } catch(Exception $e) {
-                throw new Exception($e);
-            }
-        }
 	}
 
 	/**
