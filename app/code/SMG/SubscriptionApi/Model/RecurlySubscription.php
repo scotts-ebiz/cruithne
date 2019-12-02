@@ -232,6 +232,8 @@ class RecurlySubscription implements RecurlyInterface
 		// Get Customer's Recurly Account or create new one using current customer's data
 		$account = ( $this->getRecurlyAccount() ) ? $this->getRecurlyAccount() : $this->createRecurlyAccount( $checkoutData );
 
+		// Check if customer has active/future (live) subscriptions and offer him a choice to
+		// cancel existing subscriptions and create new one, or do nothing (will be redirected to account page)
 		if( $this->hasRecurlySubscription($account->account_code) ) {
 			return array( array( 'success' => false, 'message' => 'You already have subscriptions. Would you like to cancel them and create new one?', 'has_subscription' => true, 'redirect_url' => $this->_customerUrl->getAccountUrl() ) );
 		} else {
@@ -250,7 +252,7 @@ class RecurlySubscription implements RecurlyInterface
 	private function cancelAccountSubscriptions($account_code)
 	{
 		try {
-			$subscriptions = Recurly_SubscriptionList::getForAccount($account_code);
+			$subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => 'live' ] );
 
 			foreach ( $subscriptions as $subscription ) {
 				$_subscription = Recurly_Subscription::get($subscription->uuid);
@@ -294,7 +296,7 @@ class RecurlySubscription implements RecurlyInterface
 	private function hasRecurlySubscription($account_code)
 	{
 		try {
-			$subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => 'active' ]);
+			$subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => 'live' ]);
 
 			if( count( $subscriptions ) > 0 ) {
 				return true;
