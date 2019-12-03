@@ -21,56 +21,11 @@ $font20: 20px;
 $font27: 27px;
 $font32: 32px;
 
-
-
-// Font Family //
-$opensans: 'Open Sans', "Helvetica Neue", Helvetica, Arial, sans-serif;
-$lato: 'Lato', sans-serif;
-$hellix: 'Hellix-Regular', Lucida Grande, Arial, Helvetica, sans-serif;
-$hellixheavy: 'Hellix-Heavy', Lucida Grande, Arial, Helvetica, sans-serif;
-
-
-
-// Headings //
-$heading__color__base           : $color-black !default;
-$heading__font-family__base     : $hellixheavy !default;
-$heading__font-weight__base     : $font-weight__bold !default;
-$heading__line-height__base     : 1.1 !default;
-$heading__letter-spacing__base  : 0.5px !default;
-
-
-$h2__font-size                  : 2.5rem !default; // 26px
-$h2__font-color                 : $heading__color__base !default;
-$h2__font-family                : $heading__font-family__base !default;
-$h2__font-weight                : $heading__font-weight__base !default;
-$h2__line-height                : $heasding__line-height__base !default;
-$h2__letter-spacing             : $heading__letter-spacing__base !default;
-
-
-// Font Normal //
 $font_normal: normal;
-
-
-
-// Font Sizes //
-$font10: 10px;
-$font12: 12px;
-$font14: 14px;
-$font15: 15px;
-$font16: 16px;
-$font18: 18px;
-$font19: 19px;
-$font20: 20px;
-$font25: 25px;
-$font27: 27px;
-$font32: 32px;
-
-
 
 // Screen Sizes //
 $screen_1023: 1023px;
 $screen_1024: 1024px;
-$screen_769: 769px;
 $screen_768: 768px;
-$screen_569: 569px;
+$screen_769: 769px;
 $screen_568: 568px;
