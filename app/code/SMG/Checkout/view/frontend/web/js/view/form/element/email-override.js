@@ -88,13 +88,14 @@ define([
                 quote.guestEmail = self.email();
                 checkoutData.setValidatedEmailValue(self.email());
             }
-            this.emailCheckTimeout = setTimeout(function () {
-                if (self.validateEmail()) {
-                    self.checkEmailAvailability();
-                } else {
-                    self.isPasswordVisible(false);
-                }
-            }, self.checkDelay);
+            // this.emailCheckTimeout = setTimeout(function () {
+            //     if (self.validateEmail()) {
+            //         self.checkEmailAvailability();
+            //     } else {
+            //         self.isPasswordVisible(false);
+            //     }
+            // }, self.checkDelay);
+            self.isPasswordVisible(false);
 
             checkoutData.setInputFieldEmailValue(self.email());
         },
