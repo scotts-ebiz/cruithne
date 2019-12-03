@@ -1,92 +1,138 @@
 <?php
-    $storeName = $block->getThemeName() ? $block->getThemeName() : $block->getLogoAlt();
+$storeName = $block->getThemeName() ? $block->getThemeName() : $block->getLogoAlt();
 ?>
 <div class="sp-flex sp-items-center sp-justify-between">
-		<a class="sp-header__home sp-header__home-link sp-flex sp-items-center" href="<?= $block->escapeUrl($block->getBaseUrl()) ?>" title="<?= $block->escapeHtml($storeName) ?>">
-			<div class="sp-header__logo">
-				<img src="<?= $block->escapeUrl($block->getLogoSrc()) ?>"
-					 title="<?= $block->escapeHtml($block->getLogoAlt()) ?>"
-					 alt="<?=  $block->escapeHtml($block->getLogoAlt()) ?>"
-					 <?= $block->getLogoWidth() ? 'width="' . $block->escapeHtml($block->getLogoWidth()) . '"' : '' ?>
-					 <?= $block->getLogoHeight() ? 'height="' . $block->escapeHtml($block->getLogoHeight()) . '"' : '' ?>
-				/>
-			</div>
-			<h1 class="sp-header__title sp-label sp-text-green-1">Program</h1>
-		</a>
-	<button
-			class="sp-header__nav-toggle sp-block md:sp-hide"
-			type="button"
-			aria-controls="navbarSupportedContent"
-			aria-expanded="false"
-			aria-label="Toggle navigation"
-	>
-		Menu
-	</button>
-	<nav id="sp-main-nav" class="sp-header__nav">
-		<ul class="sp-nav-list sp-header__nav-list sp-header__nav-list--left">
-			<li>
-				<a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('quiz')) ?>">
-					Get Started
-				</a>
-			</li>
-			<li>
-				<a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('how-it-works')) ?>">
-					How It Works
-				</a>
-			</li>
-		</ul>
-		<ul class="sp-nav-list sp-header__nav-list sp-header__nav-list--right">
-			<li>
-                <?php if ( $block->isLoggedIn() ) { ?>
-                    <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('customer/account/logout')) ?>">Log Out</a>
-                <?php } else { ?>
-                    <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('customer/account/login')) ?>">Log In</a>
-                <?php } ?>
-			</li>
-		</ul>
-		<address class="sp-header__address">
-			14111 Scottslawn Rd.<br />
-			Marysville, OH 43041
-		</address>
-		<a class="sp-header__phone" href="tel:+18772203091">877-220-3091</a>
-		<ul class="sp-header__social">
-            <li>
-                <a class="sp-link sp-text-white" href="https://www.facebook.com/scottslawn" target="_blank">
-                    <img class="sp-social-icon" src="https://test_magento_image_repo.storage.googleapis.com/facebook.png" alt="Facebook">
-                </a>
-            </li>
-            <li>
-                <a class="sp-link sp-text-white" href="https://twitter.com/ScottsLawnCare" target="_blank">
-                    <img class="sp-social-icon" src="https://test_magento_image_repo.storage.googleapis.com/twitter.png" alt="Twitter">
-                </a>
-            </li>
-            <li>
-                <a class="sp-link sp-text-white" href="https://www.instagram.com/scottslawn/" target="_blank">
-                    <img class="sp-social-icon" src="https://test_magento_image_repo.storage.googleapis.com/instagram.png" alt="Instagram">
-                </a>
-            </li>
-            <li>
-                <a class="sp-link sp-text-white" href="https://www.youtube.com/user/ScottsMiracleGro" target="_blank">
-                    <img class="sp-social-icon" src="https://test_magento_image_repo.storage.googleapis.com/youtube.png" alt="YouTube">
-                </a>
-            </li>
-		</ul>
-		<ul class="sp-header__nav-secondary">
-			<li>
-				<a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('faq')) ?>">FAQ</a>
-			</li>
-			<li>
-				<a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('terms-and-conditions')) ?>">Terms</a>
-			</li>
-			<li>
-				<a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('privacy-policy-cookie-restriction-mode')) ?>">Privacy</a>
-			</li>
-			<li>
-				<a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('returns')) ?>">Returns</a>
-			</li>
-			<li>
-				<a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('contact')) ?>">Contact</a>
-			</li>
-		</ul>
-	</nav>
+    <?php if ($block->getData('hide_links') == true) { ?>
+        <div class="sp-header__logo">
+            <img
+                src="<?= $block->escapeUrl($block->getLogoSrc()) ?>"
+                title="<?= $block->escapeHtml($block->getLogoAlt()) ?>"
+                alt="<?= $block->escapeHtml($block->getLogoAlt()) ?>"
+                <?= $block->getLogoWidth() ? 'width="' . $block->escapeHtml($block->getLogoWidth()) . '"' : '' ?>
+                <?= $block->getLogoHeight() ? 'height="' . $block->escapeHtml($block->getLogoHeight()) . '"' : '' ?>
+            />
+        </div>
+    <?php } else { ?>
+        <a
+            class="sp-header__home sp-header__home-link sp-flex sp-items-center"
+            href="<?= $block->escapeUrl($block->getBaseUrl()) ?>"
+            title="<?= $block->escapeHtml($storeName) ?>"
+        >
+            <div class="sp-header__logo">
+                <img
+                    src="<?= $block->escapeUrl($block->getLogoSrc()) ?>"
+                    title="<?= $block->escapeHtml($block->getLogoAlt()) ?>"
+                    alt="<?= $block->escapeHtml($block->getLogoAlt()) ?>"
+                    <?= $block->getLogoWidth() ? 'width="' . $block->escapeHtml($block->getLogoWidth()) . '"' : '' ?>
+                    <?= $block->getLogoHeight() ? 'height="' . $block->escapeHtml($block->getLogoHeight()) . '"' : '' ?>
+                />
+            </div>
+            <h1 class="sp-header__title sp-label sp-text-green-1">Program</h1>
+        </a>
+    <?php } ?>
+
+    <?php if ($block->getData('hide_links') != true) { ?>
+        <button
+            class="sp-header__nav-toggle sp-block md:sp-hide"
+            type="button"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            Menu
+        </button>
+        <nav id="sp-main-nav" class="sp-header__nav">
+            <ul class="sp-nav-list sp-header__nav-list sp-header__nav-list--left">
+                <li>
+                    <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('quiz')) ?>">
+                        Get Started
+                    </a>
+                </li>
+                <li>
+                    <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('how-it-works')) ?>">
+                        How It Works
+                    </a>
+                </li>
+            </ul>
+            <ul class="sp-nav-list sp-header__nav-list sp-header__nav-list--right">
+                <li>
+                    <?php if ($block->isLoggedIn()) { ?>
+                        <a
+                            class="sp-link"
+                            href="<?php echo $block->escapeUrl($block->getUrl('customer/account/logout')) ?>"
+                        >Log Out</a>
+                    <?php } else { ?>
+                        <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('customer/account/login')) ?>">Log
+                            In</a>
+                    <?php } ?>
+                </li>
+            </ul>
+            <address class="sp-header__address">
+                14111 Scottslawn Rd.<br/>
+                Marysville, OH 43041
+            </address>
+            <a class="sp-header__phone" href="tel:+18772203091">877-220-3091</a>
+            <ul class="sp-header__social">
+                <li>
+                    <a class="sp-link sp-text-white" href="https://www.facebook.com/scottslawn" target="_blank">
+                        <img
+                            class="sp-social-icon"
+                            src="https://test_magento_image_repo.storage.googleapis.com/facebook.png"
+                            alt="Facebook"
+                        >
+                    </a>
+                </li>
+                <li>
+                    <a class="sp-link sp-text-white" href="https://twitter.com/ScottsLawnCare" target="_blank">
+                        <img
+                            class="sp-social-icon"
+                            src="https://test_magento_image_repo.storage.googleapis.com/twitter.png"
+                            alt="Twitter"
+                        >
+                    </a>
+                </li>
+                <li>
+                    <a class="sp-link sp-text-white" href="https://www.instagram.com/scottslawn/" target="_blank">
+                        <img
+                            class="sp-social-icon"
+                            src="https://test_magento_image_repo.storage.googleapis.com/instagram.png"
+                            alt="Instagram"
+                        >
+                    </a>
+                </li>
+                <li>
+                    <a class="sp-link sp-text-white" href="https://www.youtube.com/user/ScottsMiracleGro" target="_blank">
+                        <img
+                            class="sp-social-icon"
+                            src="https://test_magento_image_repo.storage.googleapis.com/youtube.png"
+                            alt="YouTube"
+                        >
+                    </a>
+                </li>
+            </ul>
+            <ul class="sp-header__nav-secondary">
+                <li>
+                    <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('faq')) ?>">FAQ</a>
+                </li>
+                <li>
+                    <a
+                        class="sp-link"
+                        href="<?php echo $block->escapeUrl($block->getUrl('terms-and-conditions')) ?>"
+                    >Terms</a>
+                </li>
+                <li>
+                    <a
+                        class="sp-link"
+                        href="<?php echo $block->escapeUrl($block->getUrl('privacy-policy-cookie-restriction-mode')) ?>"
+                    >Privacy</a>
+                </li>
+                <li>
+                    <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('returns')) ?>">Returns</a>
+                </li>
+                <li>
+                    <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('contact')) ?>">Contact</a>
+                </li>
+            </ul>
+        </nav>
+    <?php } ?>
 </div>
