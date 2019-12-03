@@ -1,0 +1,36 @@
+<?php $subscriptions = $block->getCustomerSubscriptions(); ?>
+<div class="fieldset-wrapper">
+	<div class="fieldset-wrapper-title"><span class="title">Scott's Subscriptions</span></div>
+	<?php if( ! empty( $subscriptions ) ) { ?>
+	<div class="admin__data-grid-wrap admin__data-grid-wrap-static">
+		<table class="data-grid">
+			<thead>
+				<tr>
+					<th class="data-grid-th no-link">Subscription ID</th>
+					<th class="data-grid-th no-link">Quiz ID</th>
+					<th class="data-grid-th no-link">Subscription Plan</th>
+					<th class="data-grid-th no-link">Status</th>
+					<th class="data-grid-th no-link">Subscribed On</th>
+					<th class="data-grid-th no-link">Starts On</th>
+					<th class="data-grid-th no-link">Actions</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach( $subscriptions as $subscription ) { ?>
+					<tr>
+						<td><?php echo $subscription->uuid; ?></td>
+						<td><?php echo ( isset( $subscription->custom_fields['quiz_id'] ) ) ? $subscription->custom_fields['quiz_id']->value : 'Quiz ID does not exist.'; ?></td>
+						<td><?php echo $subscription->plan->name; ?></td>
+						<td><?php echo $subscription->state; ?></td>
+						<td><?php echo $subscription->activated_at->format( 'd F, Y' ); ?></td>
+						<td><?php echo $subscription->current_term_started_at->format( 'd F, Y' ); ?></td>
+						<td><button type="button">Cancel Subscription</button></td>
+					</tr>
+				<?php } ?>
+			</tbody>
+		</table>
+	</div>
+	<?php } else { ?>
+	<p>This customer doesn not have any active subscriptions.</p>
+	<?php } ?>
+</div>
