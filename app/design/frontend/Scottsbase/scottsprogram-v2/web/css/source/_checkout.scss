@@ -25,6 +25,13 @@
 
 .opc-block-summary {
   background-color: $gray-4;
+  margin-left: -1rem;
+  margin-right: -1rem;
+
+  @media (min-width: $screen-md) {
+    margin-left: 0;
+    margin-right: 0;
+  }
 
   .discount {
     &.coupon {
@@ -39,8 +46,8 @@
 
 .opc-block-summary {
   > .title {
+    @extend .sp-h4;
     border-bottom: 2px solid $gray-3;
-    font-size: $font-size-h4;
     font-weight: 700;
     margin-bottom: 1.25rem;
     padding-bottom: 1.25rem;
@@ -260,19 +267,25 @@
   display: none;
 }
 
-.checkout-payment-method .payment-method-content {
-  padding-left: 0;
-}
+.checkout-payment-method {
+  .payment-methods {
+    margin: 0;
+  }
 
-.checkout-payment-method .billing-address-same-as-shipping-block {
-  align-items: center;
-  display: flex;
-  font-size: $font-size-p2;
-  margin-bottom: 2rem;
+  .payment-method-content {
+    padding-left: 0;
+  }
 
-  input {
-    @extend .sp-checkbox;
-    margin-right: 0.5rem;
+  .billing-address-same-as-shipping-block {
+    align-items: center;
+    display: flex;
+    font-size: $font-size-p2;
+    margin-bottom: 2rem;
+
+    input {
+      @extend .sp-checkbox;
+      margin-right: 0.5rem;
+    }
   }
 }
 
@@ -294,4 +307,16 @@
 
 .ship-to .sp-link {
   text-decoration: none;
+}
+
+.opc-estimated-wrapper {
+  display: none;
+}
+
+.actions-toolbar {
+  text-align: center;
+
+  @media (min-width: $screen-md) {
+    text-align: left;
+  }
 }
