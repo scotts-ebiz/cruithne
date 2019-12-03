@@ -1,4 +1,4 @@
-/*Override of Email JS*/
+/*Override of Magento_Checkout/js/view/form/element/email js file*/
 
 define([
     'jquery',
@@ -88,13 +88,11 @@ define([
                 quote.guestEmail = self.email();
                 checkoutData.setValidatedEmailValue(self.email());
             }
-            // this.emailCheckTimeout = setTimeout(function () {
-            //     if (self.validateEmail()) {
-            //         self.checkEmailAvailability();
-            //     } else {
-            //         self.isPasswordVisible(false);
-            //     }
-            // }, self.checkDelay);
+
+            /**
+             * Removed original if statement for validateEmail() and checkEmailAvailability()
+             * Forced isPasswordVisible to false
+             */
             self.isPasswordVisible(false);
 
             checkoutData.setInputFieldEmailValue(self.email());
