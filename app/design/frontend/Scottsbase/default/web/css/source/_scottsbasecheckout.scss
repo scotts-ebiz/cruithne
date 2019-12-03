@@ -22,22 +22,25 @@
             .column.main {
                 .checkout-container {
                     .custom-checkout-nav-btns {
-                        display: inline-block;
-                        float: right;
-                        width: 250px;
+                        display: inline-block !important;
+                        float: left;
+                        width: 100%;
+                        margin: 0 0 10px 0;
                         &:after, &:before {
                             content: '';
                             display: inline-block;
                             clear: both;
                         }
                         .actions.backbtn {
+                            float: left;
                             a:before {
                                 -webkit-font-smoothing: antialiased;
                                 -moz-osx-font-smoothing: grayscale;
-                                font-size: 32px;
+                                font-size: 20px;
                                 line-height: 20px;
-                                content: "";
-                                font-family: "icons-blank-theme";
+                                font-family: "Font Awesome\ 5 Free";
+                                content: "\f0d9";
+                                font-weight: 900;
                                 margin: 0;
                                 vertical-align: top;
                                 display: inline-block;

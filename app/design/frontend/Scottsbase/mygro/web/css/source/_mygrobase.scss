@@ -35,6 +35,9 @@ a:visited, .alink:visited {
     color: $mygro-green;
 }
 
+a:hover {
+    color: $mygro-dark-green;
+}
 
 [class^="icon-"],
 [class*=" icon-"] {
