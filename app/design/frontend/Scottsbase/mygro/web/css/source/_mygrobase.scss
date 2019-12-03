@@ -26,6 +26,19 @@ body {
       font-size: 1.0rem;
     }
 }
+
+a, alink {
+    color: $mygro-green;
+}
+
+a:visited, .alink:visited {
+    color: $mygro-green;
+}
+
+a:hover {
+    color: $mygro-dark-green;
+}
+
 [class^="icon-"],
 [class*=" icon-"] {
     font-family: 'gro'; 
@@ -290,9 +303,6 @@ body {
         .column.main {
             .cart-empty {
                 font-size: 1rem;
-                a {
-                    color: $mygro-green;
-                }
             }
         }
         body > section,
@@ -650,29 +660,6 @@ button.action{
 	@media (max-width: 767px){
         	padding: 0 10px 15px 0px;
         }
-}
-.checkout-index-index{
-	#discount-form{
-		.control{
-			@media (max-width: 767px){
-				float:none;
-			}
-			input[type="text"]
-			{
-				@media (max-width: 767px){
-					line-height:40px;
-				}
-			}
-		}
-
-		.primary{
-			.action.action-apply{
-				@media (max-width: 767px){
-					text-align: center;
-				}
-			}
-		}
-	}
 }
 
 .messages{

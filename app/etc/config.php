@@ -319,6 +319,7 @@ return [
         'SMG_Directory' => 1,
         'SMG_Dtm' => 1,
         'SMG_FeaturesList' => 1,
+        'SMG_Framework' => 1,
         'SMG_GroupedAssociatedProducts' => 1,
         'SMG_HeroCallout' => 1,
         'SMG_HeroVideo' => 1,
