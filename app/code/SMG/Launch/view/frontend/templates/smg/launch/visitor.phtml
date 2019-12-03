@@ -292,7 +292,7 @@ if($currentcmspage == 'warranty'){
     window.dtmData.events.push({
         name: 'filterApplied',
         filterType: '<?php echo $block->escapeJs(implode(',',$filters['key']));?>',
-        filterValue: '<?php echo $block->escapeJs(implode(',',$filters['val']));?>'
+        filterValue: '<?php echo $block->escapeJs(preg_replace("/[()\/]/", "", implode(',',$filters['val'])));?>'
     });
     <?php } ?>
     <?php }?>
