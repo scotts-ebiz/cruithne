@@ -51,6 +51,7 @@ define([
                             }
                             self.hasResults(true);
                             self.results(data);
+                            window.sessionStorage.setItem('result', JSON.stringify(data));
                         }
                     },
                 },
@@ -111,6 +112,7 @@ define([
                             }
                             self.hasResults(true);
                             self.results(data);
+                            window.sessionStorage.setItem('result', JSON.stringify(data));
                         }
                     },
                 },
