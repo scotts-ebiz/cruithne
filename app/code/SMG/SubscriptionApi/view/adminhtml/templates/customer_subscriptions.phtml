@@ -1,7 +1,12 @@
-<?php $subscriptions = $block->getCustomerSubscriptions(); ?>
 <div class="fieldset-wrapper">
 	<div class="fieldset-wrapper-title"><span class="title">Scott's Subscriptions</span></div>
-	<?php if( ! empty( $subscriptions ) ) { ?>
+	<?php
+	$subscriptions = $block->getCustomerSubscriptions();
+
+	if( $subscriptions['success'] == true && ! empty( $subscriptions['subscriptions'] ) ) {
+		$isAnnualSubscription = $subscriptions['is_annual'];
+		$subscriptionsList = $subscriptions['subscriptions'];
+	?>
 	<div class="admin__data-grid-wrap admin__data-grid-wrap-static">
 		<table class="data-grid">
 			<thead>
@@ -12,25 +17,53 @@
 					<th class="data-grid-th no-link">Status</th>
 					<th class="data-grid-th no-link">Subscribed On</th>
 					<th class="data-grid-th no-link">Starts On</th>
+					<?php if( ! $isAnnualSubscription ) { ?>
 					<th class="data-grid-th no-link">Actions</th>
+					<?php } ?>
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach( $subscriptions as $subscription ) { ?>
+				<?php foreach( $subscriptionsList as $subscription ) { ?>
 					<tr>
 						<td><?php echo $subscription->uuid; ?></td>
-						<td><?php echo ( isset( $subscription->custom_fields['quiz_id'] ) ) ? $subscription->custom_fields['quiz_id']->value : 'Quiz ID does not exist.'; ?></td>
+						<td><?php echo ( isset( $subscription->custom_fields['quiz_id'] ) ) ? $subscription->custom_fields['quiz_id']->value : 'Quiz ID does not exist for this subscription.'; ?></td>
 						<td><?php echo $subscription->plan->name; ?></td>
 						<td><?php echo $subscription->state; ?></td>
 						<td><?php echo $subscription->activated_at->format( 'd F, Y' ); ?></td>
 						<td><?php echo $subscription->current_term_started_at->format( 'd F, Y' ); ?></td>
-						<td><button type="button">Cancel Subscription</button></td>
+						<?php if( ! $isAnnualSubscription ) { ?>
+						<td>
+							<form action="<?php echo $block->getCancelUrl(); ?>" method="POST">
+								<input type="hidden" name="form_key" value="<?php echo $block->getFormKey(); ?>" />
+								<input type="hidden" name="subscription_id" value="<?php echo $subscription->uuid; ?>" />
+								<input type="hidden" name="subscription_type" value="<?php echo $subscription->plan->plan_code; ?>" />
+								<input type="hidden" name="recurly_account_code" value="<?php echo $block->getCustomerRecurlyAccountCode(); ?>" />
+								<button type="submit">Cancel Subscription</button>
+							</form>
+						</td>
+						<?php } ?>
 					</tr>
 				<?php } ?>
 			</tbody>
 		</table>
+		<?php if( $isAnnualSubscription ) { ?>
+		<div>
+			<p>This customer has an <strong>annual subscription</strong>. Clicking "Cancel Subscription" will cancel all of it's active and future subscriptions.</p>
+			<form action="<?php echo $block->getCancelUrl(); ?>" method="POST">
+				<input type="hidden" name="form_key" value="<?php echo $block->getFormKey(); ?>" />
+				<input type="hidden" name="subscription_id" value="Not necessary for annual" />
+				<input type="hidden" name="subscription_type" value="annual" />
+				<input type="hidden" name="recurly_account_code" value="<?php echo $block->getCustomerRecurlyAccountCode(); ?>" />
+				<button type="submit">Cancel Subscription</button>
+			</form>
+		</div>
+		<?php } ?>
 	</div>
 	<?php } else { ?>
-	<p>This customer doesn not have any active subscriptions.</p>
+		<?php if( $subscriptions['success'] == false ) { ?>
+			<p><?php echo $subscriptions['error_message']; ?></p>
+		<?php } else { ?>
+			<p>This customer does not have any active or future subscriptions.</p>
+		<?php } ?>
 	<?php } ?>
 </div>

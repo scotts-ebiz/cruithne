@@ -13,18 +13,34 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     protected $_coreRegistry;
     protected $_customer;
     protected $_helper;
+    protected $_urlInterface;
+    protected $_formKey;
 
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
         \Magento\Framework\Registry $registry,
         \Magento\Customer\Model\Customer $customer,
         \SMG\SubscriptionApi\Helper\RecurlyHelper $helper,
+        \Magento\Framework\UrlInterface $urlInterface,
+        \Magento\Framework\Data\Form\FormKey $formKey,
         array $data = []
     ) {
         $this->_coreRegistry = $registry;
         $this->_customer = $customer;
         $this->_helper = $helper;
+        $this->_urlInterface = $urlInterface;
+        $this->_formKey = $formKey;
         parent::__construct($context, $data);
+    }
+
+    /**
+     * Return form key
+     * 
+     * @return string
+     */
+    public function getFormKey()
+    {
+        return $this->_formKey->getFormKey();
     }
 
     /**
@@ -40,13 +56,17 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     /**
      * Return customer's Recurly account code
      * 
-     * @return string
+     * @return string|bool
      */
     public function getCustomerRecurlyAccountCode()
     {
         $customer = $this->_customer->load( $this->getCustomerId() );
 
-        return $customer->getRecurlyAccountCode();
+        if( $customer->getRecurlyAccountCode() ) {
+            return $customer->getRecurlyAccountCode();
+        }
+
+        return false;
     }
 
     /**
@@ -60,7 +80,11 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         Recurly_Client::$apiKey = $this->_helper->getRecurlyPrivateApiKey();
         Recurly_Client::$subdomain = $this->_helper->getRecurlySubdomain();
 
+        // Create empty array so we can merge active and future subscriptions
         $currentSubscriptions = array();
+
+        // Used for the displaying logic for the cancel subscription button in the customer view
+        $isAnnualSubscription = false;
 
         try {
             $activeSubscriptions = Recurly_SubscriptionList::getForAccount( $this->getCustomerRecurlyAccountCode(), [ 'state' => 'active' ] );
@@ -68,16 +92,25 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
             foreach( $activeSubscriptions as $activeSubscription ) {
                 array_push( $currentSubscriptions, $activeSubscription);
+
+                if( $activeSubscription->plan->plan_code == 'annual' ) {
+                    $isAnnualSubscription = true;
+                }
             }
 
             foreach( $futureSubscriptions as $futureSubscription ) {
                 array_push( $currentSubscriptions, $futureSubscription);
             }
 
-            return $currentSubscriptions;
+            return array( 'success' => true, 'is_annual' => $isAnnualSubscription, 'subscriptions' => $currentSubscriptions );
         } catch (Recurly_NotFoundError $e) {
-            print "Account Not Found: $e";
+            return array( 'success' => false, 'error_message' => $e->getMessage() );
         }
+    }
+
+    public function getCancelUrl()
+    {
+        echo $this->_urlInterface->getUrl('customersubscriptions/cancel/index');
     }
 
     public function getTabLabel()
