@@ -252,52 +252,46 @@
   }
 }
 
-.checkout-container {
-  .control {
-    border: none;
-  }
+.payment-group .step-title {
+  display: none;
+}
 
-  .input-text {
-    border-bottom: 1px solid #ccc;
-  }
+.payment-method-title {
+  display: none;
+}
 
-  .tooltip-label {
-    display: none;
-  }
+.checkout-payment-method .payment-method-content {
+  padding-left: 0;
+}
 
-  .cust-btn-add {
-    a:hover,
-    a:focus,
-    a:active {
-      color: $green-1;
-    }
+.checkout-payment-method .billing-address-same-as-shipping-block {
+  align-items: center;
+  display: flex;
+  font-size: $font-size-p2;
+  margin-bottom: 2rem;
 
-    a:visited {
-      color: $gray-2;
-    }
+  input {
+    @extend .sp-checkbox;
+    margin-right: 0.5rem;
   }
 }
 
-@media (min-width: $screen-md) {
-  .checkout-container {
-    .tooltip-label {
-      display: none;
-    }
+.discount-code {
+  display: none;
+}
 
-    .input-text {
-      border: none;
-    }
+.opc-block-shipping-information .shipping-information-title {
+  @extend .sp-checkout-title, .sp-h4;
+}
 
-    .cust-btn-add {
-      a:hover,
-      a:focus,
-      a:active {
-        color: $green-1;
-      }
+.opc-block-shipping-information .ship-to, .opc-block-shipping-information .ship-via {
+  margin: 2rem 0;
+}
 
-      a:visited {
-        color: $gray-2;
-      }
-    }
-  }
+.opc-block-shipping-information {
+  padding: 0;
+}
+
+.ship-to .sp-link {
+  text-decoration: none;
 }
