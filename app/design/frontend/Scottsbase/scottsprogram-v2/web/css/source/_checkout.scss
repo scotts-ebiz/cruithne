@@ -1,7 +1,7 @@
 .sp-checkout-title {
   border-bottom: 2px solid $green-1;
-  margin-bottom: 1.5rem;
-  padding-bottom: 1.5rem;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1.25rem;
 }
 
 .opc-wrapper {
@@ -12,19 +12,26 @@
 
 .opc-summary-wrapper {
   width: 400px;
+}
 
-  .opc-sidebar {
-    margin-bottom: 1rem;
-    margin-top: 0;
+.opc-sidebar {
+  margin-bottom: 1rem;
+  margin-top: 0;
 
-    @media (min-width: $screen-md) {
-      max-width: 400px;
-    }
+  @media (min-width: $screen-md) {
+    max-width: 400px;
   }
 }
 
 .opc-block-summary {
   background-color: $gray-4;
+  margin-left: -1rem;
+  margin-right: -1rem;
+
+  @media (min-width: $screen-md) {
+    margin-left: 0;
+    margin-right: 0;
+  }
 
   .discount {
     &.coupon {
@@ -39,11 +46,11 @@
 
 .opc-block-summary {
   > .title {
+    @extend .sp-h4;
     border-bottom: 2px solid $gray-3;
-    font-size: $font-size-h4;
     font-weight: 700;
-    margin-bottom: 1.5rem;
-    padding-bottom: 1.5rem;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
     text-transform: uppercase;
   }
 
@@ -141,65 +148,175 @@
   color: $green-1;
 }
 
-.checkout-container {
-	.opc-progress-bar {
-		width: 100%;
-		text-align: center;
-		position: relative;
-	}
+.opc-progress-bar {
+  margin: 2rem 0;
+  position: relative;
+  text-align: center;
+  width: 100%;
+}
 
-	.opc-progress-bar-item {
-		width: 50%;
+.opc-progress-bar-item {
+  width: 50%;
 
-		&:before {
-			top: 19px;
-			content: '';
-			height: 4px;
-			left: 0;
-			position: absolute;
-			width: 100%;
-		}
+  &::before {
+    top: 19px;
+    background-color: $gray-2;
+    height: 1px;
+    left: 0;
+    position: absolute;
+    width: 100%;
+  }
 
-		&span:before {
-			height: 20px;
-			margin-left: -12px;
-			width: 20px;
-			border-radius: 50%;
-			content: '';
-			left: 50%;
-			position: absolute;
-			top: 10px;
-		}
+  span {
+    color: $gray-5;
+    font-size: $font-size-label;
+    font-weight: 700;
+    padding-top: 2.5rem;
+    text-transform: uppercase;
+  }
 
-		&span:after {
-			height: 12px;
-			margin-left: -8px;
-			top: 14px;
-			width: 12px;
-			content: none;
-		}
-	}
+  span::before {
+    height: 10px;
+    margin-left: 0;
+    width: 10px;
+    border-radius: 50%;
+    background-color: $gray-2;
+    left: 50%;
+    position: absolute;
+    top: 15px;
+    transform: translateX(-50%);
+  }
 
-	.opc-progress-bar-item._active {
+  span::after {
+    content: none;
+  }
+}
 
-		&:before {
-			top: 19px;
-			content: '';
-			height: 4px;
-			left: 0;
-			position: absolute;
-			width: 100%;
-		}
+.opc-progress-bar-item._active {
+  &::before {
+    top: 19px;
+    content: '';
+    background-color: $green-1;
+    height: 2px;
+    left: 0;
+    position: absolute;
+    width: 100%;
+  }
 
-		&span:before {
-			height: 18px;
-			margin-left: -9px;
-			width: 18px;
-			border-radius: 50%;
-			content: '';
-			left: 50%;
-			position: absolute;
-			top: 11px;
-		}
-	}
+  span::before {
+    content: none;
+  }
+
+  span::after {
+    background-image: url("data:image/svg+xml;charset=utf8,%3C?xml version='1.0' encoding='UTF-8'?%3E%3Csvg width='33px' height='33px' viewBox='0 0 33 33' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Cg id='LawnSubx' stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E%3Cg id='M-1.1-ShippingInfo-D-1.1-ShippingInfo-Default-Annual' transform='translate(-94.000000, -129.000000)' stroke='%231D5632' stroke-width='2'%3E%3Cg id='Bread-Crumb' transform='translate(31.000000, 130.000000)'%3E%3Cg id='Check' transform='translate(64.000000, 0.000000)'%3E%3Ccircle id='Oval' fill='%23FFFFFF' cx='15.5' cy='15.5' r='15.5'%3E%3C/circle%3E%3Cpolyline id='check-2' points='9.79394531 15.6806498 14.697505 20.5842095 21.7939453 9.97731393'%3E%3C/polyline%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    border-radius: 50%;
+    content: '';
+    font-size: 1.8rem;
+    height: 33px;
+    left: 50%;
+    line-height: 1;
+    margin-left: 0;
+    position: absolute;
+    top: 3px;
+    transform: translateX(-50%);
+    width: 33px;
+    z-index: 10;
+  }
+}
+
+.opc-progress-bar-item._complete {
+  &::before {
+    background-color: $green-1;
+    height: 2px;
+  }
+
+  &::after {
+    content: none;
+  }
+
+  span::before {
+    background-color: $green-1;
+  }
+
+  span::after {
+    content: none;
+  }
+}
+
+.opc-wrapper {
+  .step-title {
+    border-bottom: 2px solid #1d5632;
+    font-size: $font-size-h4--mobile;
+    font-weight: 700;
+    margin-bottom: 1.25rem;
+    padding-bottom: 1.25rem;
+    text-transform: uppercase;
+
+    @media (min-width: $screen-sm) {
+      font-size: $font-size-h4;
+    }
+  }
+}
+
+.payment-group .step-title {
+  display: none;
+}
+
+.payment-method-title {
+  display: none;
+}
+
+.checkout-payment-method {
+  .payment-methods {
+    margin: 0;
+  }
+
+  .payment-method-content {
+    padding-left: 0;
+  }
+
+  .billing-address-same-as-shipping-block {
+    align-items: center;
+    display: flex;
+    font-size: $font-size-p2;
+    margin-bottom: 2rem;
+
+    input {
+      @extend .sp-checkbox;
+      margin-right: 0.5rem;
+    }
+  }
+}
+
+.discount-code {
+  display: none;
+}
+
+.opc-block-shipping-information .shipping-information-title {
+  @extend .sp-checkout-title, .sp-h4;
+}
+
+.opc-block-shipping-information .ship-to, .opc-block-shipping-information .ship-via {
+  margin: 2rem 0;
+}
+
+.opc-block-shipping-information {
+  padding: 0;
+}
+
+.ship-to .sp-link {
+  text-decoration: none;
+}
+
+.opc-estimated-wrapper {
+  display: none;
+}
+
+.actions-toolbar {
+  text-align: center;
+
+  @media (min-width: $screen-md) {
+    text-align: left;
+  }
 }

@@ -5,24 +5,18 @@ define([
 ], function (Component, ko, $) {
     return Component.extend({
         hasResults: ko.observable(false),
-        quiz: ko.observable(null),
-        results: ko.observable({}),
+        result: ko.observable(null),
 
-        initialize(config) {
-            if (!config.quiz_id) {
-                this.loadQuizResponses();
-            } else {
-                this.getCompletedQuiz(config.quiz_id);
-            }
+        initialize() {
+            this.getResult();
         },
 
 		proceedToCheckout() {
-			var subscriptionPlan = $('input[name="subscription_plan"]:checked').val();
-			var addonProducts = $('input[name="addon_products"]:checked').map(function() { return this.value }).get();
-            var formKey = document.querySelector('input[name=form_key]').value;
+			const subscriptionPlan = $('input[name="subscription_plan"]:checked').val();
+			const addonProducts = $('input[name="addon_products"]:checked').map(function() { return this.value }).get();
+            const formKey = document.querySelector('input[name=form_key]').value;
 
-
-			if( ! subscriptionPlan ) {
+			if (! subscriptionPlan) {
 				alert('You must select a subscription plan.');
 			}
 
@@ -32,12 +26,18 @@ define([
                 `/rest/V1/subscription/process`,
                 {
                     contentType: 'application/json; charset=utf-8',
-                    data: JSON.stringify( { key: formKey, subscription_plan: subscriptionPlan, data: self.results(), addons: addonProducts } ),
+                    data: JSON.stringify({
+                        key: formKey,
+                        subscription_plan: subscriptionPlan,
+                        data: self.result(),
+                        addons: addonProducts
+                    }),
                     dataType: 'json',
                     method: 'post',
                     success(data) {
-                        var data = JSON.parse(data);
-                        if( data.success === true ) {
+                        data = JSON.parse(data);
+
+                        if (data.success === true) {
                             localStorage.setItem('estimated_arrival', data.estimated_arrival);
                             window.sessionStorage.setItem('subscription_plan', subscriptionPlan );
                         	window.location.href = '/checkout/#shipping';
@@ -79,17 +79,18 @@ define([
         /**
          * Load the quiz from the session storage.
          */
-        loadQuizResponses() {
-            const quiz = window.sessionStorage.getItem('quiz');
-            const quizData = JSON.parse(quiz);
+        getResult() {
+            const result = window.sessionStorage.getItem('result');
 
-            if (quiz && JSON.parse(quiz)) {
-                this.quiz(JSON.parse(quiz));
-                this.getCompletedQuiz(quizData.id);
+            if (result && JSON.parse(result)) {
+                this.hasResults(true);
+                this.result(JSON.parse(result));
             } else {
                 // Quiz not found, need to redirect.
                 window.location.href = '/quiz';
             }
+
+            window.sessionStorage.removeItem('result');
         },
     });
 });

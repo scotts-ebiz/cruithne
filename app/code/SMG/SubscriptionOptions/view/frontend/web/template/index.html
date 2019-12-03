@@ -5,7 +5,7 @@
 
     <div class="">
     	<h2>Your Plan</h2>
-    	<div data-bind="foreach: { data: results().plan, as: 'plan' }">
+    	<div data-bind="foreach: { data: result().plan, as: 'plan' }">
     		<ul data-bind="foreach: { data: plan.coreProducts, as: 'coreProduct' }">
     			<li data-bind="text: coreProduct.season"></li>
     		</ul>
@@ -64,7 +64,7 @@
 
     <div class="">
     	<h2>Recommended one time add-ons</h2>
-    	<div data-bind="foreach: { data: results().plan, as: 'plan' }">
+    	<div data-bind="foreach: { data: result().plan, as: 'plan' }">
     		<div data-bind="foreach: { data: plan.addOnProducts, as: 'addOnProduct' }">
     			<h5 data-bind="text: addOnProduct.season"></h5>
     			<label>
