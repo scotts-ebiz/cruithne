@@ -1,3 +1,6 @@
 <?php
+namespace SMG\Checkout\Plugin\Model\ResourceModel\Region\Collection;
 
-/*Collection Plugin*/
+class Collection extends Magento\Directory\Model\ResourceModel\Region\Collection {
+
+}
