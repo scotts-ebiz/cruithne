@@ -165,13 +165,13 @@ define([
 									}
 								});
 							}
-							$(".checkout-billing-address .street input").keyup(function() {
+							$(".checkout-billing-address .street input").focusout(function() {
 								var str = $(this).val();
 								var nval = str.replace(/  +/g, ' ');
 								$(this).val(nval);
 							});
 
-							$(".checkout-billing-address input[name='telephone']").keyup(function() {
+							$(".checkout-billing-address input[name='telephone']").focusout(function() {
 								var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.telephone';
 								var str = $("div[name='"+inpt+"'] input[name='telephone']").val();
 								var nval = str.replace(/^[(]?(\d{3})[)]?[-|\s]?(\d{3})[-|\s]?(\d{4})$/,'$1-$2-$3')
@@ -202,12 +202,12 @@ define([
 									});
 
 								}
-								$('.form-shipping-address input:visible').keyup(function() {
+								$('.form-shipping-address input:visible').focusout(function() {
 									var str = $(this).val();
 									var nval = str.replace(/[&\/\\#,+$~%*?<>{}@!^]/g, '');
 									$(this).val(nval);
 								});
-								$(".form-shipping-address .street input").keyup(function() {
+								$(".form-shipping-address .street input").focusout(function() {
 									var str = $(this).val();
 									var nval = str.replace(/  +/g, ' ');
 									$(this).val(nval);
@@ -218,14 +218,14 @@ define([
 										$('#shipping-method-buttons-container button').prop('disabled', false);
 								}
 
-								$(".checkout-shipping-address input:visible, select[name='region_id']").on('keyup change', function(e) {
+								$(".checkout-shipping-address input:visible, select[name='region_id']").on('focusout change', function(e) {
 									$('#shipping-method-buttons-container button').prop('disabled', true);
 									if ($("input[name='username']").val() != '' && $("select[name='region_id']").val() != '' && $("input[name='firstname']").val() != '' && $("input[name='lastname']").val() != '' && $("input[name='street[0]']").val() != '' && $("input[name='city']").val() != '' && $("input[name='postcode']").val() != '' && $("input[name='telephone']").val() != '') {
 										$('#shipping-method-buttons-container button').prop('disabled', false);
 									}
 								});
 
-						$("#shipping-new-address-form input[name='telephone']").keyup(function() {
+						$("#shipping-new-address-form input[name='telephone']").focusout(function() {
 							var str = $(this).val();
 									var nval = str.replace(/^[(]?(\d{3})[)]?[-|\s]?(\d{3})[-|\s]?(\d{4})$/,'$1-$2-$3')
 							$(this).val(nval);

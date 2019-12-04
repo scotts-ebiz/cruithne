@@ -1,0 +1,149 @@
+.checkout-cart-index {
+    .page-main {
+        .page-title-wrapper {
+            .page-title {
+                color: $scottsprogram-gray;
+            }
+        }
+        .columns {
+            .column {
+                .cart-container {
+                    .cart-summary {
+                        .summary.title {
+                            @include font-roboto(1.6rem, $scotts-black);
+                        }
+                        .block.shipping,
+                        .block.discount,
+                        .block.giftcard {
+                            .title {
+                                #block-shipping-heading,
+                                #block-discount-heading,
+                                #block-giftcard-heading {
+                                    @include font-roboto(1rem, $scotts-black);
+                                }
+                            }
+                        }
+                        .checkout-methods-items {
+                            .item {
+                                  .action.multicheckout {
+                                      color: $scotts-green;
+                                      text-decoration: underline;
+                                      &:hover {
+                                          text-decoration: none;
+                                      }
+                                  }
+                            }
+                            .upd-cust-btn {
+                                .action.checkout {
+                                    background: $scotts-green;
+                                    &:hover {
+                                        background: #04321e;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    .form-cart {
+                        .cart.table-wrapper {
+                            .cart.item {
+                                .item-info {
+                                    .item {
+                                        .product-item-details {
+                                            .product-item-name {
+                                                a {
+                                                    color: $scotts-black;
+                                                }
+                                            }
+                                        }
+                                    }
+                                    .qty {
+                                        .field.qty {
+                                            .control.qty {
+                                                .qty {
+                                                  border: 1px solid $scotts-black;
+                                                }
+                                            }
+                                        }
+                                        .action.update {
+                                            color: $scottsprogram-orange;
+                                        }
+                                        a.action-delete {
+                                            color: $scottsprogram-orange;
+                                        }
+                                    }
+                                    .price-including-tax,
+                                    .price-excluding-tax {
+                                        color: $scotts-black;
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    #gift-options-cart {
+                        .cart-gift-item {
+                            .gift-item-block {
+                                .title {
+                                    @include font-roboto(1rem, $scotts-black, 400);
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+
+    .field-tooltip {
+        .field-tooltip-action:before {
+            opacity: 1;
+            color: $color_dark_green_shade;
+        }
+    }
+    .pop-cust-click.title {
+        color: $scotts-green;
+        &:hover {
+            color: $color_black20_shade;
+        }
+    }
+    .fieldset.coupon > .field:not(.choice) > .control {
+        width: auto;
+    }
+    #shopping-cart-table {
+        tbody.cart.item tr.item-info:last-child {
+            border:0;
+        }
+        .item-info .item-options dd i {
+            font-style: unset;
+        }
+        .item-options dd {
+            font-weight: bold;
+        }
+        .item-options dt,
+        .item-options dt + dd {
+            font-weight: $font_normal;
+        }
+        thead {
+            border-bottom: 1px solid #ededed;
+        }
+        .item-options dt {
+            display: block;
+            width: 100%;
+        }
+        .col.item .product-item-details {
+            width:65%;
+        }
+    }
+    .cust-simple-image {
+        display: inline-block;
+        width: 50px;
+        margin-right: 8px;
+    }
+    .options-cont-wrp {
+        display: inline-block;
+        float: none;
+        vertical-align: top;
+        width: 80%;
+        text-align: left;
+    }
+}
