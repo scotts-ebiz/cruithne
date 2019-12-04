@@ -595,6 +595,8 @@ define([
             var results = {};
             var initializedMap = false;
 
+            window.location.hash = group.label;
+
             for (question of group.questions) {
                 // Check if the questions are sliders and set a base response.
                 if (+question.questionType === 3) {
