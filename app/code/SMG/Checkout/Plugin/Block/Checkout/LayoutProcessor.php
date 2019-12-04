@@ -9,22 +9,24 @@ class LayoutProcessor {
             ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['0']
             ['validation'] = ['required-entry' => false,'required-entry-street-0' => true];
 
-            $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
-            ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['0']
-            ['label'] = __('qwer');
+		        /* Street Address 0 - Label Change */
+//            $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
+//            ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['0']
+//            ['label'] = __('Street Address');
 
 		        $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
             ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['1']
             ['validation'] = ['required-entry-street-1' => true];
 
-            $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
-            ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['1']
-            ['label'] = __('asdf');
+//            /* Street Address 1 - Label Change */
+//            $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
+//            ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['1']
+//            ['label'] = __('Apartment/Suite/Other(Optional)');
 
             $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
             ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['2']
             ['validation'] = ['required-entry-street-2' => true];
-s
+
             /* State/Provision label change*/
             $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
             ['shippingAddress']['children']['shipping-address-fieldset']['children']['region_id']
