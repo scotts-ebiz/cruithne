@@ -34,12 +34,12 @@ define([
                 `/rest/V1/recommendations/quiz/result`,
                 {
                     contentType: 'application/json; charset=utf-8',
-                    data: JSON.stringify({ key: formKey, id: id }),
+                    data: JSON.stringify({key: formKey, id: id}),
                     dataType: 'json',
                     method: 'post',
                     success(data) {
                         if (data.error_message) {
-                            alert( 'Error getting quiz data: ' + data.error_message + '. Please try again.');
+                            alert('Error getting quiz data: ' + data.error_message + '. Please try again.');
                         } else {
                             if (Array.isArray(data)) {
                                 data = data[0];
@@ -100,7 +100,7 @@ define([
                     method: 'post',
                     success(data) {
                         if (data.error_message) {
-                            alert( 'Error getting quiz data: ' + data.error_message + '. Please try again.');
+                            alert('Error getting quiz data: ' + data.error_message + '. Please try again.');
                         } else {
                             if (Array.isArray(data)) {
                                 data = data[0];

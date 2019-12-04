@@ -24,4 +24,10 @@
             <resource ref="anonymous" />
         </resources>
     </route>
+    <route url="/V1/recommendations/products" method="POST">
+        <service class="SMG\RecommendationApi\Api\RecommendationInterface" method="getProducts" />
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
 </routes>
