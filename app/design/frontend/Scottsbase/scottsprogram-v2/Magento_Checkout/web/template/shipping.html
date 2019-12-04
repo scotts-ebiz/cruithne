@@ -1,19 +1,6 @@
 <li id="shipping" class="checkout-shipping-address" data-bind="fadeVisible: visible()">
-    <div
-        class="sp-checkout-title sp-h4 sp-uppercase"
-        translate="'Shipping Address'"
-        data-role="title"
-    ></div>
-    <div id="checkout-step-shipping"
-         class="step-content"
-         data-role="content">
-
-        <each if="!quoteIsVirtual" args="getRegion('customer-email')" render="" />
-        <each args="getRegion('address-list')" render="" />
-        <each args="getRegion('address-list-additional-addresses')" render="" />
-
-        <each args="getRegion('before-form')" render="" />
-
+    <div class="sp-checkout-title sp-h4 sp-uppercase" translate="'Shipping Address'" data-role="title"></div>
+    <div id="checkout-step-shipping" class="step-content" data-role="content">
         <!-- Inline address form -->
         <render args="shippingFormTemplate" />
     </div>
