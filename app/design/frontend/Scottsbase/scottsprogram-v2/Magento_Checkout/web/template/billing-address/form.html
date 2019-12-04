@@ -2,7 +2,7 @@
     <!-- ko foreach: getRegion('before-fields') -->
     <!-- ko template: getTemplate() --><!-- /ko -->
     <!--/ko-->
-    <form data-bind="attr: {'data-hasrequired': $t('* Required Fields')}">
+    <form id="billing-address-form" data-bind="attr: {'data-hasrequired': $t('* Required Fields')}">
         <fieldset class="fieldset address sp-billing-address-form sp-flex sp-flex-wrap sp--mx-4" data-form="billing-new-address">
             <!-- ko foreach: getRegion('additional-fieldsets') -->
             <!-- ko template: getTemplate() --><!-- /ko -->

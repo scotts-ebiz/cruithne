@@ -13,14 +13,20 @@
         <div class="">
             <div class="sp-checkout-title sp-h4 sp-uppercase">Payment Method</div>
             <form class="recurly-form">
-                <input type="text" data-recurly="first_name" placeholder="first name" value="">
-                <input type="text" data-recurly="last_name" placeholder="last name" value="">
-                <input type="text" data-recurly="address1" placeholder="address" value="">
-                <input type="text" data-recurly="city" placeholder="city" value="">
-                <input type="text" data-recurly="country" placeholder="country" value="">
-                <input type="text" data-recurly="state" placeholder="state" value="">
-                <input type="text" data-recurly="postal_code" value="">
-                <div data-recurly="card"></div>
+                <input type="hidden" data-recurly="address1">
+                <input type="hidden" data-recurly="city">
+                <input type="hidden" data-recurly="country">
+                <input type="hidden" data-recurly="postal_code">
+                <input type="hidden" data-recurly="state">
+                <input type="text" data-recurly="first_name" placeholder="Card Holder First Name">
+                <input type="text" data-recurly="last_name" placeholder="Card Holder Last Name">
+                <p>Card Number</p>
+                <div data-recurly="number"></div>
+                <p>Expiration Date</p>
+                <div data-recurly="month"></div>
+                <div data-recurly="year"></div>
+                <p>CVV</p>
+                <div data-recurly="cvv"></div>
                 <input type="hidden" name="recurly-token" data-recurly="token">
                 <button style="display: none;">Submit</button>
             </form>
@@ -35,11 +41,8 @@
                 class="primary checkout sp-button sp-button--primary sp-button--get-started"
                 data-bind="
                     click: myPlaceOrder,
-                    attr: {title: $t('Place Order')},
-                    css: {disabled: !isPlaceOrderActionAllowed()},
-                    enable: (getCode() == isChecked())
+                    attr: {title: $t('Place Order')}
                     "
-                disabled
                 type="submit">
                 <span data-bind="i18n: 'Place Order'"></span>
             </button>
