@@ -160,8 +160,11 @@
                                                 }
                                             }
                                         }
-                                        div[name='shippingAddress.street.1'], div[name='shippingAddress.street.2'] {
-                                            display: none;
+                                        div[name='shippingAddress.street.0'], div[name='shippingAddress.street.1'], div[name='shippingAddress.street.2'] {
+                                            display: inline-block;
+                                            width: 100%;
+                                            position: relative;
+                                            float: left;
                                         }
                                         div[name="shippingAddress.postcode"] {
                                             .control {
