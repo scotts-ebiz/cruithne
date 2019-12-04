@@ -16,7 +16,7 @@
 	</type>
     <type name="Magento\Directory\Model\ResourceModel\Region\Collection">
         <plugin name="SMG_Checkout_Model_ResourceModel_Region_Collection"
-                type="SMG\Checkout\Model\ResourceModel\Region\Collection" />
+                type="SMG\Checkout\Plugin\Model\ResourceModel\Region\Collection" />
     </type>
 	<type name="Magento\Checkout\Model\ShippingInformationManagement">
 		<plugin name="SMG_Checkout_Model_ShippingInformationManagement" type="SMG\Checkout\Plugin\Model\ShippingInformationManagement" sortOrder="1"/>
