@@ -14,9 +14,6 @@
 	<type name="Magento\Checkout\Block\Checkout\LayoutProcessor">
 		<plugin name="SMG_Checkout_Block_Checkout_LayoutProcessor" type="SMG\Checkout\Plugin\Block\Checkout\LayoutProcessor" />
 	</type>
-    <type name="Magento\Directory\Model\ResourceModel\Region\Collection">
-        <plugin name="SMG_Checkout_Model_ResourceModel_Region_Collection" type="SMG\Checkout\Plugin\Model\ResourceModel\Region\Collection" />
-    </type>
 	<type name="Magento\Checkout\Model\ShippingInformationManagement">
 		<plugin name="SMG_Checkout_Model_ShippingInformationManagement" type="SMG\Checkout\Plugin\Model\ShippingInformationManagement" sortOrder="1"/>
 	</type>
