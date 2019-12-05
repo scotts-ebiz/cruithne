@@ -7,3 +7,6 @@ another deploy`
 Should not see this in master!
 
 small change to trigger new build
+
+
+hey. this little text change will trigger a deploy on 12/5/2019. This way our .htaccess will be updated
