@@ -194,7 +194,7 @@ class Subscription implements SubscriptionInterface
             $items[] = $item->getName() . " " . $item->getSku() . " qty: " . $item->getQty() . " addon: " . (String)$item->getAddon() . " price: " .  $item->getPrice();
         }
 
-        $response = array( 'success' => true, 'estimated_arrival' => $this->getEstimatedArrivalDate($firstApplicationStartDate) );
+        $response = array( 'success' => true );
 
         return json_encode( $response );
     }
