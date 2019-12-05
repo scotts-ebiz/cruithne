@@ -94,6 +94,9 @@
                                 margin-bottom: 4px;
                                 padding: 0;
                             }
+
+
+                            /** Shipping Method form: Start **/
                             .checkout-shipping-address {
                                 .step-content {
                                     .form-login {
@@ -246,6 +249,10 @@
                                     }
                                 }
                             }
+                            /** Shipping Method form: End **/
+
+
+                            /** Payment Method form: Start **/
                             .checkout-payment-method {
                                 .step-content {
                                     .form.payments {
@@ -268,7 +275,7 @@
                                                                         .billing-address-form {
                                                                             div[name='billingAddressauthorizenet_directpost.street.1'],
                                                                             div[name='billingAddressauthorizenet_directpost.street.2'],
-                                                                            div[name='billingAddressvantiv_cc.street.1'],
+                                                                            //div[name='billingAddressvantiv_cc.street.1'], //test - should now see on page
                                                                             div[name='billingAddressvantiv_cc.street.2'],
                                                                             div[name='billingAddresscashondelivery.street.1'],
                                                                             div[name='billingAddresscashondelivery.street.2'] {
@@ -491,6 +498,8 @@
                                     }
                                 }
                             }
+                            /** Payment Method form: End **/
+
                         }
                     }
                     .opc-sidebar.custom-slide {

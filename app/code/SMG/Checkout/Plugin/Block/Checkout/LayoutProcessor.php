@@ -12,7 +12,7 @@ class LayoutProcessor {
 		        /* Street Address 0 - Label Change */
             $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
             ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['0']
-            ['label'] = __('Address Line 1');
+            ['label'] = __('Street Address');
 
 		        $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
             ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['1']
@@ -21,7 +21,7 @@ class LayoutProcessor {
             /* Street Address 1 - Label Change */
             $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
             ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['1']
-            ['label'] = __('Address Line 2 (optional)');
+            ['label'] = __('Apartment/Suite/Other (Optional)');
 
             $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
             ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['2']
@@ -50,29 +50,43 @@ class LayoutProcessor {
 
                 $removeString = str_replace("-", "", $subs);
 
-                /* Firstname */
+                /* Payment - Firstname */
                 if (isset($payment['children']['form-fields']['children']['firstname'])) {
                     $result['components']['checkout']['children']['steps']['children']['billing-step']['children']
                     ['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
                     ['firstname']['validation'] = ['required-entry' => false,'required-entry-bfirstname' => true];
                 }
-                /* Lastname */
+                /* Payment - Lastname */
                 if (isset($payment['children']['form-fields']['children']['lastname'])) {
                     $result['components']['checkout']['children']['steps']['children']['billing-step']['children']
                     ['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
                     ['lastname']['validation'] = ['required-entry' => false,'required-entry-blastname' => true];
                 }
-                /* Street */
+                /* Payment - Street */
                 if (isset($payment['children']['form-fields']['children']['street'])) {
                     $result['components']['checkout']['children']['steps']['children']['billing-step']['children']
                     ['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
                     ['street']['children']['0']['validation'] = ['required-entry' => false,'required-entry-bstreet-0' => true];
                 }
 
+                /* Payment - Street Address 0 - Label Change */
+                if (isset($payment['children']['form-fields']['children']['street'])) {
+                    $result['components']['checkout']['children']['steps']['children']['billing-step']['children']
+                    ['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
+                    ['street']['children']['0']['label'] = __('Street Address');
+                }
+
                 if (isset($payment['children']['form-fields']['children']['street'])) {
                     $result['components']['checkout']['children']['steps']['children']['billing-step']['children']
                     ['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
                     ['street']['children']['1']['validation'] = ['required-entry-bstreet-1' => true];
+                }
+
+                /* Payment - Street Address 1 - Label Change */
+                if (isset($payment['children']['form-fields']['children']['street'])) {
+                    $result['components']['checkout']['children']['steps']['children']['billing-step']['children']
+                    ['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
+                    ['street']['children']['0']['label'] = __('Apartment/Suite/Other (Optional)');
                 }
 
                 if (isset($payment['children']['form-fields']['children']['street'])) {
