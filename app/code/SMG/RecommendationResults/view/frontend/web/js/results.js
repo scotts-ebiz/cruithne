@@ -10,10 +10,18 @@ define([
         results: ko.observable({}),
 
         initialize(config) {
+            if (config.zip) {
+                window.sessionStorage.setItem('lawn-zip', config.zip);
+            }
+
             if (!config.quiz_id) {
                 this.loadQuizResponses();
             } else {
                 this.getCompletedQuiz(config.quiz_id);
+            }
+
+            if (!window.sessionStorage.getItem('lawn-zip') || !window.sessionStorage.getItem('quiz')) {
+                window.location.href = '/quiz';
             }
         },
 
