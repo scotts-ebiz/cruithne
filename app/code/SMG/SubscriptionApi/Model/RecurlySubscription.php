@@ -442,7 +442,7 @@ class RecurlySubscription implements RecurlyInterface
 			 * and get Recurly account using that account code
 			 */
 			if( $e->getCode() === 0 ) {
-				$this->saveRecurlyAccountCode( $data['email'], $dat['customer_id'] );
+				$this->saveRecurlyAccountCode( $data['email'], $data['customer_id'] );
 
 				return $this->getRecurlyAccount();
 			}
