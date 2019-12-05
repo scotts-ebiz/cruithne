@@ -10,18 +10,18 @@ class LayoutProcessor {
             ['validation'] = ['required-entry' => false,'required-entry-street-0' => true];
 
 		        /* Street Address 0 - Label Change */
-//            $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
-//            ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['0']
-//            ['label'] = __('Street Address');
+            $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
+            ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['0']
+            ['label'] = __('Address Line 1');
 
 		        $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
             ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['1']
             ['validation'] = ['required-entry-street-1' => true];
 
-//            /* Street Address 1 - Label Change */
-//            $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
-//            ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['1']
-//            ['label'] = __('Apartment/Suite/Other(Optional)');
+            /* Street Address 1 - Label Change */
+            $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
+            ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['1']
+            ['label'] = __('Address Line 2 (optional)');
 
             $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
             ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['2']
