@@ -165,11 +165,22 @@
                                             width: 100%;
                                             position: relative;
                                             float: left;
+
                                         }
                                         div[name="shippingAddress.postcode"] {
                                             .control {
                                                 .message.warning {
                                                     display: none;
+                                                }
+                                            }
+                                        }
+                                        .field.street {
+                                            .field.additional {
+                                                .label {
+                                                    position: relative;
+                                                    overflow: inherit;
+                                                    margin: 0;
+                                                    width: auto;
                                                 }
                                             }
                                         }

@@ -6,3 +6,5 @@ Menu,Menu
 Account,Account
 Settings,Settings
 "Please select a region, state or province.","Select State"
+"Street Address: Line 1","Street Address"
+"Street Address: Line 2","Apartment/Suite/Other(Optional)"
