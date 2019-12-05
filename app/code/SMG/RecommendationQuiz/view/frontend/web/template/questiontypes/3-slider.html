@@ -97,8 +97,10 @@
                                     value: $parents[0].quiz.getQuestionAnswer(question.id) || 3
                                 },
                                 event: {
-                                    change: $parents[0].quiz.setAnswer,
-                                    input: $parents[0].updateSlider
+                                    input: function (data, event) {
+                                        $parents[0].updateSlider(data, event);
+                                        $parents[0].quiz.setAnswer(data, event);
+                                    }
                                 },
                                 afterRender: $parents[0].initializeSlider
                             "
