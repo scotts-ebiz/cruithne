@@ -622,6 +622,11 @@ define([
                 }
             } else if (['checkbox', 'radio'].indexOf(event.target.type) === -1 || event.target.checked) {
                 self.answers.push(new QuestionResult(event.target.name, event.target.value));
+
+                // This is the grass type question, so store the grass type.
+                if (self.currentGroup().label === 'LAWN DETAILS' && event.target.dataset.label) {
+                    window.sessionStorage.setItem('lawn-type', event.target.dataset.label);
+                }
             }
         };
 
@@ -934,6 +939,7 @@ define([
                     self.addOrReplaceAnswer(zoneQuestion.id, zoneOption);
                     self.addOrReplaceAnswer(zipQuestion.id, zipQuestion.options[0].id, zip);
                     self.zipCode = zip;
+                    window.sessionStorage.setItem('lawn-zip', String(zip));
                     self.invalidZipCode(false);
                     return;
                 }
@@ -958,6 +964,7 @@ define([
 
             if (area > 0) {
                self.addOrReplaceAnswer(self.questions()[1].id, self.questions()[1].options[0].id, area);
+               window.sessionStorage.setItem('lawn-area', String(area));
             }
         }
     }
