@@ -414,21 +414,6 @@ class Subscription implements SubscriptionInterface
     }
 
     /**
-     * Calculate estimated arrival date
-     * 
-     * @param DateTime $start_date
-     * @return DateTime
-     */
-    private function getEstimatedArrivalDate($start_date)
-    {
-        $applicationStartDate = new \DateTime($start_date);
-        $applicationStartDate->sub(new \DateInterval('P9D'));
-        $todayDate = new \DateTime(date('Y-m-d 00:00:00'));
-
-        return ( $todayDate <= $applicationStartDate ) ? $applicationStartDate->format('m/d/Y') : $todayDate->format('m/d/Y');
-    }
-
-    /**
      * Return SKU code for the product based on the season name
      * 
      * @param string $season_name
