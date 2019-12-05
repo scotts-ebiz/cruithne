@@ -4,6 +4,6 @@
 	<preference for="Magento\Checkout\Controller\Cart\Index" type="SMG\SubscriptionCheckout\Controller\Cart\Index" />
 	
 	<type name="Magento\Customer\Controller\Account\LoginPost">
-		<plugin name="SMG_Customer_LoginPost" type="SMG\SubscriptionCheckout\Controller\LoginPost" />
+		<plugin name="SMG_Customer_LoginPost" type="SMG\SubscriptionCheckout\Controller\Account\LoginPost" />
 	</type>
 </config>
