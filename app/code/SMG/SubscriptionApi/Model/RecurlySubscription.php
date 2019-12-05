@@ -163,7 +163,7 @@ class RecurlySubscription implements RecurlyInterface
 					if( ! empty( $seasonalProducts['plan']['coreProducts'] ) ) {
 						foreach( $seasonalProducts['plan']['coreProducts'] as $season ) {
 							$subscription = new Recurly_Subscription();
-							$subscription->plan_code = $this->getPlanCodeByName( $season['season'] );
+							$subscription->plan_code = $this->_helper->getSeasonSlugByName( $season['season'] );
 							$subscription->auto_renew = true;
 							$subscription->total_billing_cycles = 1;
 							$subscription->unit_amount_in_cents = 0;
@@ -187,7 +187,7 @@ class RecurlySubscription implements RecurlyInterface
 							// Get Product from Magento based on SKU
 							$product = $this->_productRepository->get( $season['sku'] );
 							$subscription = new Recurly_Subscription();
-							$subscription->plan_code = $this->getPlanCodeByName( $season['season'] );
+							$subscription->plan_code = $this->_helper->getSeasonSlugByName( $season['season'] );
 							$subscription->auto_renew = true;
 							$subscription->total_billing_cycles = 1;
 							$subscription->unit_amount_in_cents = $this->convertAmountToCents( $product->getPrice() );
@@ -323,26 +323,6 @@ class RecurlySubscription implements RecurlyInterface
 			return false;
 		} catch(Recurly_NotFoundError $e) {
 			return false;
-		}
-	}
-
-	/**
-	 * Return Recurly Plan Code base on the name of the core product
-	 * 
-	 * @return string
-	 */
-	private function getPlanCodeByName($name) {
-		switch($name) {
-			case 'Early Spring Feeding':
-				return 'early-spring';
-			case 'Late Spring Feeding':
-				return 'late-spring';
-			case 'Early Summer Feeding':
-				return 'early-summer';
-			case 'Early Fall Feeding':
-				return 'early-fall';
-			default:
-				return '';
 		}
 	}
 

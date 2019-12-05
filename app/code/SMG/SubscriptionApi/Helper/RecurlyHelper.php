@@ -103,4 +103,26 @@ class RecurlyHelper extends AbstractHelper
 			$store_id
 		);
 	}
+
+	/**
+     * Return Recurly plan code or SKU from the season name
+     * 
+     * @param string $season_name
+     * @return string
+     */
+    public function getSeasonSlugByName($season_name)
+    {
+        switch($season_name) {
+            case 'Early Spring Feeding':
+                return 'early-spring';
+            case 'Late Spring Feeding':
+                return 'late-spring';
+            case 'Early Summer Feeding':
+                return 'early-summer';
+            case 'Early Fall Feeding':
+                return 'early-fall';
+            default:
+                return '';
+        }
+    }
 }

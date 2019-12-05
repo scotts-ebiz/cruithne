@@ -133,7 +133,7 @@ class Subscription implements SubscriptionInterface
                 try {
                     $_product = $this->_productRepository->get( $product['sku'] );
                     $totalSubscriptionPrice += $_product->getPrice();
-                    $seasonalProductSku = $this->getSeasonalProductSku( $product['season'] );
+                    $seasonalProductSku = $this->_recurlyHelper->getSeasonSlugByName( $product['season'] );
                     $seasonalProduct = $this->_productRepository->get( $seasonalProductSku );
                     $params = array(
                         'form_key'  => $this->_formKey->getFormKey(),
@@ -313,7 +313,7 @@ class Subscription implements SubscriptionInterface
                 }
 
                 // Get Recurly plan code based on the season name, so we can map the subscription id and start date fields
-                $seasonCode = $this->getSeasonalProductSku( $item['season'] );
+                $seasonCode = $this->_recurlyHelper->getSeasonSlugByName( $item['season'] );
 
                 // Set subscription id
                 $order->setSubscriptionId( $recurlySubscriptions[$seasonCode]['subscription_id'] );
@@ -411,28 +411,6 @@ class Subscription implements SubscriptionInterface
         }
 
         return array( 'success' => true, 'message' => 'Magento orders created' );
-    }
-
-    /**
-     * Return SKU code for the product based on the season name
-     * 
-     * @param string $season_name
-     * @return string
-     */
-    private function getSeasonalProductSku($season_name)
-    {
-        switch($season_name) {
-            case 'Early Spring Feeding':
-                return 'early-spring';
-            case 'Late Spring Feeding':
-                return 'late-spring';
-            case 'Early Summer Feeding':
-                return 'early-summer';
-            case 'Early Fall Feeding':
-                return 'early-fall';
-            default:
-                return '';
-        }
     }
 
     /**
