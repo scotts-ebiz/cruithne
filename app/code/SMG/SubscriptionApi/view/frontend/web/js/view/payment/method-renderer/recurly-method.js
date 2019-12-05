@@ -73,13 +73,16 @@ define(
                 var quiz = window.sessionStorage.getItem('quiz');
                 quiz = JSON.parse(quiz);
 
+                var isBillingSameAsShipping = ( $('input[name="billing-address-same-as-shipping"]:checked').val() == 'on' ) ? true : false;
+                var address = ( isBillingSameAsShipping === false ) ? this.getBillingAddress() : this.getShippingAddress();
+
                 $.ajax({
                     type: 'POST',
                     url: window.location.origin + '/rest/V1/subscription/createorders',
                     dataType: 'json',
                     contentType: 'application/json',
                     processData: false,
-                    data: JSON.stringify( { 'key': formKey, 'quiz_id': quiz.id }),
+                    data: JSON.stringify( { 'key': formKey, 'quiz_id': quiz.id, 'billing_address': address }),
                     success: function(response) {
                         if( response[0].success == true ) {
                             window.location.href = '/thank-you';
@@ -92,7 +95,7 @@ define(
                 // Check if customer has selected to use the same address for both billing and shipping
                 var isBillingSameAsShipping = ( $('input[name="billing-address-same-as-shipping"]:checked').val() == 'on' ) ? true : false;
 
-                // Get the address data based on the customer selection
+                // Get the billing address data based on the customer selection
                 var address = ( isBillingSameAsShipping === false ) ? this.getBillingAddress() : this.getShippingAddress();
 
                 // Get full state name by it's id
@@ -115,7 +118,6 @@ define(
                 var recurlyForm = $('.recurly-form');
 
                 self.updateRecurlyFormData();
-
 
                 recurly.token(recurlyForm, function(err, token) {
                     if( err ) {

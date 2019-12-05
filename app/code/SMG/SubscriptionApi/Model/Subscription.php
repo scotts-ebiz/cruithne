@@ -29,6 +29,9 @@ class Subscription implements SubscriptionInterface
     protected $_customerRepository;
     protected $_order;
     protected $_recurlyHelper;
+    protected $_addressRepository;
+    protected $_dataAddressFactory;
+    protected $_customerAddress;
 
     public function __construct(
         \SMG\RecommendationApi\Helper\RecommendationHelper $helper,
@@ -45,7 +48,10 @@ class Subscription implements SubscriptionInterface
         \Magento\Customer\Model\CustomerFactory $customerFactory,
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository,
         \Magento\Sales\Model\Order $order,
-        \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper
+        \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper,
+        \Magento\Customer\Api\AddressRepositoryInterface $addressRepository,
+        \Magento\Customer\Api\Data\AddressInterfaceFactory $dataAddressFactory,
+        \Magento\Customer\Model\Address $customerAddress
     ) {
         $this->_helper = $helper;
         $this->_recommendationHelper = $recommendationHelper;
@@ -62,6 +68,9 @@ class Subscription implements SubscriptionInterface
         $this->_customerRepository = $customerRepository;
         $this->_order = $order;
         $this->_recurlyHelper = $recurlyHelper;
+        $this->_addressRepository = $addressRepository;
+        $this->_dataAddressFactory = $dataAddressFactory;
+        $this->_customerAddress = $customerAddress;
     }
 
     /**
@@ -190,10 +199,6 @@ class Subscription implements SubscriptionInterface
         // Update Cart
         $this->_cart->save();
 
-        foreach ( $this->_cart->getItems() as $item ) {
-            $items[] = $item->getName() . " " . $item->getSku() . " qty: " . $item->getQty() . " addon: " . (String)$item->getAddon() . " price: " .  $item->getPrice();
-        }
-
         $response = array( 'success' => true );
 
         return json_encode( $response );
@@ -204,11 +209,12 @@ class Subscription implements SubscriptionInterface
      * 
      * @param string $key
      * @param string $quiz_id
+     * @param mixed $billing_address
      * @return array|false|string
      * 
      * @api
      */
-    public function createOrders($key, $quiz_id) {
+    public function createOrders($key, $quiz_id, $billing_address) {
         // Get store and website information
         $store = $this->_storeManager->getStore();
         $websiteId = $this->_storeManager->getStore()->getWebsiteId();
@@ -224,7 +230,8 @@ class Subscription implements SubscriptionInterface
         $recurlySubscriptions = $this->getAccountSubscriptions( $customer->getRecurlyAccountCode(), $quiz_id );
 
         // Get all items in the cart
-        $quoteItems = $this->_checkoutSession->getQuote()->getItemsCollection();
+        $mainQuote = $this->_checkoutSession->getQuote();
+        $quoteItems = $mainQuote->getItemsCollection();
 
         // Remove items from the quote, because there will be duplicate orders create
         foreach( $quoteItems as $item ) {
@@ -235,6 +242,10 @@ class Subscription implements SubscriptionInterface
         $customerId = $customer->getId();
         $customer = $this->_customerRepository->getById( $customerId );
 
+        // Get customer shipping and billing address
+        $orderShippingAddress = $mainQuote->getShippingAddress()->getData();
+        $orderBillingAddress = $billing_address;
+        
         // Get seasonal products
         $completedQuizUrl = $url = filter_var(
             trim(
@@ -262,6 +273,8 @@ class Subscription implements SubscriptionInterface
             $quote->addProduct( $product, 1 );
 
             // Set shipping information
+            $quote->getShippingAddress()->addData($orderShippingAddress);
+            $quote->getBillingAddress()->addData($orderBillingAddress);
             $shippingAddress = $quote->getShippingAddress();
             $shippingAddress->setCollectShippingRates(true)->collectShippingRates()->setShippingMethod('freeshipping_freeshipping');
 
@@ -309,6 +322,7 @@ class Subscription implements SubscriptionInterface
 
             // Save order
             $order->save();
+
             $increment_id = $order->getRealOrderId();
         }
 
@@ -345,6 +359,8 @@ class Subscription implements SubscriptionInterface
             }
 
             // Set shipping address for the cart
+            $addonQuote->getShippingAddress()->addData($orderShippingAddress);
+            $addonQuote->getBillingAddress()->addData($orderBillingAddress);
             $shippingAddress = $addonQuote->getShippingAddress();
             $shippingAddress->setCollectShippingRates(true)->collectShippingRates()->setShippingMethod('freeshipping_freeshipping');
             
@@ -383,7 +399,14 @@ class Subscription implements SubscriptionInterface
 
             // Save order
             $addonOrder->save();
+
             $increment_id = $addonOrder->getRealOrderId();
+        }
+
+        // Delete customer addresses, because we don't want to store them in the address book,
+        // so they will always need to enter their shipping/billing details on checkout
+        foreach( $customer->getAddresses() as $adr ) {
+            $this->_addressRepository->deleteById( $adr->getId() );
         }
 
         return array( 'success' => true, 'message' => 'Magento orders created' );
