@@ -22,6 +22,11 @@ class Index extends \Magento\Checkout\Controller\Index\Index implements HttpGetA
     protected $_coreSession;
 
     /**
+     * @var \Magento\Checkout\Model\Session
+     */
+    protected $_checkoutSession;
+
+    /**
      * Index constructor.
      * @param \Magento\Framework\App\Action\Context $context
      * @param \Magento\Customer\Model\Session $customerSession
@@ -39,6 +44,7 @@ class Index extends \Magento\Checkout\Controller\Index\Index implements HttpGetA
      * @param \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
      * @param \Magento\Framework\Session\SessionManagerInterface $coreSession
      * @param \Magento\Checkout\Helper\Data $checkoutHelper
+     * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param \Magento\Framework\Url\Helper\Data $urlHelper
      * @param array $data
      */
@@ -59,12 +65,14 @@ class Index extends \Magento\Checkout\Controller\Index\Index implements HttpGetA
         \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory,
         \Magento\Framework\Session\SessionManagerInterface $coreSession,
         \Magento\Checkout\Helper\Data $checkoutHelper,
+        \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Framework\Url\Helper\Data $urlHelper,
         array $data = []
     ) {
         $this->_checkoutHelper = $checkoutHelper;
         $this->_urlHelper = $urlHelper;
         $this->_coreSession = $coreSession;
+        $this->_checkoutSession = $checkoutSession;
         parent::__construct(
             $context,
             $customerSession,
@@ -118,7 +126,7 @@ class Index extends \Magento\Checkout\Controller\Index\Index implements HttpGetA
             $this->_customerSession->regenerateId();
         }
 
-        $this->_objectManager->get(\Magento\Checkout\Model\Session::class)->setCartWasUpdated(false);
+        $this->_checkoutSession->setCartWasUpdated(false);
         $this->getOnepage()->initCheckout();
         $resultPage = $this->resultPageFactory->create();
         $resultPage->getConfig()->getTitle()->set(__('Checkout'));
