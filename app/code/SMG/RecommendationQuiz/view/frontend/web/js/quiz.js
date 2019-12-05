@@ -279,7 +279,7 @@ define([
 
         self.questionId = questionId;
         self.optionId = optionId;
-        self.optionalValue = optionalValue;
+        self.optionalValue = String(optionalValue);
     }
 
     /**

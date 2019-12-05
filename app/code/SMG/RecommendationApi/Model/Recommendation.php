@@ -187,11 +187,17 @@ class Recommendation implements RecommendationInterface
 
         $response = $this->request($url, '', 'GET');
 
-        if (! empty($response)) {
-            return $response;
+        if (empty($response)) {
+            return null;
         }
 
-        return;
+        // Get the product flat file so it is accessible.
+        $this->getProducts($key);
+
+        $this->mapProducts($response[0]['plan']['coreProducts']);
+        $this->mapProducts($response[0]['plan']['addOnProducts']);
+
+        return $response;
     }
 
     /**
