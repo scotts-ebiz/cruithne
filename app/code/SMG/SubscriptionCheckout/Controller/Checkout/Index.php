@@ -17,8 +17,27 @@ class Index extends \Magento\Checkout\Controller\Index\Index implements HttpGetA
     protected $_urlHelper;
 
     /**
+     * @var \Magento\Framework\Session\SessionManagerInterface
+     */
+    protected $_coreSession;
+
+    /**
      * Index constructor.
-     * @param \Magento\Backend\Block\Template\Context $context
+     * @param \Magento\Framework\App\Action\Context $context
+     * @param \Magento\Customer\Model\Session $customerSession
+     * @param \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository
+     * @param \Magento\Customer\Api\AccountManagementInterface $accountManagement
+     * @param \Magento\Framework\Registry $coreRegistry
+     * @param \Magento\Framework\Translate\InlineInterface $translateInline
+     * @param \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
+     * @param \Magento\Framework\View\LayoutFactory $layoutFactory
+     * @param \Magento\Quote\Api\CartRepositoryInterface $quoteRepository
+     * @param \Magento\Framework\View\Result\PageFactory $resultPageFactory
+     * @param \Magento\Framework\View\Result\LayoutFactory $resultLayoutFactory
+     * @param \Magento\Framework\Controller\Result\RawFactory $resultRawFactory
+     * @param \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
+     * @param \Magento\Framework\Session\SessionManagerInterface $coreSession
      * @param \Magento\Checkout\Helper\Data $checkoutHelper
      * @param \Magento\Framework\Url\Helper\Data $urlHelper
      * @param array $data
@@ -38,12 +57,14 @@ class Index extends \Magento\Checkout\Controller\Index\Index implements HttpGetA
         \Magento\Framework\View\Result\LayoutFactory $resultLayoutFactory,
         \Magento\Framework\Controller\Result\RawFactory $resultRawFactory,
         \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory,
+        \Magento\Framework\Session\SessionManagerInterface $coreSession,
         \Magento\Checkout\Helper\Data $checkoutHelper,
         \Magento\Framework\Url\Helper\Data $urlHelper,
         array $data = []
     ) {
         $this->_checkoutHelper = $checkoutHelper;
         $this->_urlHelper = $urlHelper;
+        $this->_coreSession = $coreSession;
         parent::__construct(
             $context,
             $customerSession,
@@ -58,8 +79,7 @@ class Index extends \Magento\Checkout\Controller\Index\Index implements HttpGetA
             $resultPageFactory,
             $resultLayoutFactory,
             $resultRawFactory,
-            $resultJsonFactory,
-            $data
+            $resultJsonFactory
         );
     }
 
@@ -76,10 +96,11 @@ class Index extends \Magento\Checkout\Controller\Index\Index implements HttpGetA
          * so the customer is redirected to checkout page on successful login.
          */
         if( ! $this->_customerSession->isLoggedIn() && ! $this->_checkoutHelper->isAllowedGuestCheckout( $quote ) ) {
+
             $resultRedirect = $this->resultRedirectFactory->create();
 
             $params = array(
-                'quiz_id'   => 'cdaf7de7-115c-41be-a7e4-3259d2f511f8'
+                'quiz_id'   => $this->_coreSession->getQuizId()
             );
 
             $customerLoginUrl = $this->_url->getUrl( 

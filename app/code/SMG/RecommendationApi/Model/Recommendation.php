@@ -41,16 +41,22 @@ class Recommendation implements RecommendationInterface
      */
     protected $_productRepository;
 
+    /**
+     * @var \Magento\Framework\Session\SessionManagerInterface
+     */
+    protected $_coreSession;
+
     protected $_products = [];
 
     /**
-     * Quiz constructor.
+     * Recommendation constructor.
      * @param \SMG\RecommendationApi\Helper\RecommendationHelper $helper
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Framework\Data\Form\FormKey $formKey
      * @param \Magento\Framework\Webapi\Request $request
      * @param \Magento\Framework\Controller\Result\JsonFactory $jsonResultFactory
      * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
+     * @param \Magento\Framework\Session\SessionManagerInterface $coreSession
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Magento\Framework\Exception\NotFoundException
      */
@@ -60,7 +66,8 @@ class Recommendation implements RecommendationInterface
         \Magento\Framework\Data\Form\FormKey $formKey,
         \Magento\Framework\Webapi\Request $request,
         \Magento\Framework\Controller\Result\JsonFactory $jsonResultFactory,
-        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
+        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
+        \Magento\Framework\Session\SessionManagerInterface $coreSession
     ) {
         $this->_helper = $helper;
         $this->_storeManager = $storeManager;
@@ -68,6 +75,7 @@ class Recommendation implements RecommendationInterface
         $this->_request = $request;
         $this->_jsonResultFactory = $jsonResultFactory;
         $this->_productRepository = $productRepository;
+        $this->_coreSession = $coreSession;
 
         // Check to make sure that the module is enabled at the store level
         if (! $this->_helper->isActive($this->_storeManager->getStore()->getId())) {
@@ -150,6 +158,8 @@ class Recommendation implements RecommendationInterface
         $this->mapProducts($response[0]['plan']['coreProducts']);
         $this->mapProducts($response[0]['plan']['addOnProducts']);
 
+        $this->_coreSession->setQuizId($response[0]['id']);
+
         return $response;
     }
 
@@ -196,6 +206,8 @@ class Recommendation implements RecommendationInterface
 
         $this->mapProducts($response[0]['plan']['coreProducts']);
         $this->mapProducts($response[0]['plan']['addOnProducts']);
+
+        $this->_coreSession->setQuizId($response[0]['id']);
 
         return $response;
     }
