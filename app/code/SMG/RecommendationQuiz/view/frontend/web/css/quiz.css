@@ -72,6 +72,10 @@
   height: 21px;
 }
 
+.sp-quiz-option {
+  position: relative;
+}
+
 .sp-quiz__option-content {
   height: 100%;
   transition: background-color 0.25s ease;
