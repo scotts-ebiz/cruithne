@@ -10,7 +10,6 @@ use Magento\Framework\Locale\FormatInterface;
 use Magento\Framework\Pricing\PriceCurrencyInterface;
 use Magento\Framework\Stdlib\StringUtils;
 use Magento\Framework\Url\EncoderInterface;
-use \SMG\Iframes\Model\ContentSecurityPolicy;
 use \Magento\Catalog\Block\Product\View;
 use \Magento\Catalog\Api\ProductRepositoryInterface;
 use \Magento\Store\Model\StoreManagerInterface;
@@ -18,7 +17,6 @@ use \Magento\ConfigurableProduct\Model\Product\Type\Configurable;
 
 class AddToCart extends View
 {
-    protected $_contentSecurityPolicy;
     protected $_skuFromUrl;
     protected $_storeManager;
 
@@ -34,8 +32,7 @@ class AddToCart extends View
         ProductRepositoryInterface $productRepository,
         PriceCurrencyInterface $priceCurrency,
         StoreManagerInterface $storeManager,
-        array $data = [],
-        ContentSecurityPolicy $contentSecurityPolicy) {
+        array $data = []) {
 
 
         parent::__construct($context,
@@ -48,9 +45,7 @@ class AddToCart extends View
             $customerSession,
             $productRepository,
             $priceCurrency);
-        $this->_contentSecurityPolicy = $contentSecurityPolicy;
         $this->_storeManager = $storeManager;
-        $this->_contentSecurityPolicy->setContentSecurityPolicy();
 
         $sku = $this->getRequest()->getParam('sku');
 
