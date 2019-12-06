@@ -14,14 +14,14 @@ define([
                 window.sessionStorage.setItem('lawn-zip', config.zip);
             }
 
+            if (window.sessionStorage.getItem('lawn-zip')) {
+                window.location.href = '/quiz';
+            }
+
             if (!config.quiz_id) {
                 this.loadQuizResponses();
             } else {
                 this.getCompletedQuiz(config.quiz_id);
-            }
-
-            if (!window.sessionStorage.getItem('lawn-zip') || !window.sessionStorage.getItem('quiz')) {
-                window.location.href = '/quiz';
             }
         },
 
@@ -48,6 +48,7 @@ define([
                     success(data) {
                         if (data.error_message) {
                             alert('Error getting quiz data: ' + data.error_message + '. Please try again.');
+                            window.location.href = '/quiz';
                         } else {
                             if (Array.isArray(data)) {
                                 data = data[0];
