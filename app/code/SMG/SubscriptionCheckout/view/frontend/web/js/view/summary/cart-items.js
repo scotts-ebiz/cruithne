@@ -61,15 +61,6 @@ define([
         },
 
         /**
-         * Get estimated arrival date for the shipment
-         *
-         * @returns {String}
-         */
-        getEstimatedArrivalDate: function() {
-            return localStorage.getItem('estimated_arrival')
-        },
-
-        /**
          * Return product SKU
          *
          * @param {Object} quoteItem

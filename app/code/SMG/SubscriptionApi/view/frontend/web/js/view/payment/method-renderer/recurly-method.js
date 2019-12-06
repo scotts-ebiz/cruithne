@@ -19,7 +19,21 @@ define(
                 
                 setTimeout(function() {
                     recurly.configure('ewr1-aefvtq9Ri3MILWsXFPHyv2');
-                }, 2000)
+                }, 2000);
+            },
+
+            getShippingAddress: function() {
+                var checkoutData = JSON.parse(localStorage['mage-cache-storage']);
+                checkoutData = checkoutData['checkout-data'];
+
+                return checkoutData.shippingAddressFromData;
+            },
+
+            getBillingAddress: function() {
+                var checkoutData = JSON.parse(localStorage['mage-cache-storage']);
+                checkoutData = checkoutData['checkout-data'];
+
+                return checkoutData.billingAddressFromData;
             },
 
             createNewSubscription: function(token_id, cancel_existing) {
@@ -40,7 +54,7 @@ define(
                         'token': token_id,
                         'quiz': quiz,
                         'plan': subscriptionPlan,
-                        'cancel_existing': cancel_existing,
+                        'cancel_existing': cancel_existing
                     } ),
                     success: function(response) {
                         if( response[0].success == true ) {
@@ -59,13 +73,16 @@ define(
                 var quiz = window.sessionStorage.getItem('quiz');
                 quiz = JSON.parse(quiz);
 
+                var isBillingSameAsShipping = ( $('input[name="billing-address-same-as-shipping"]:checked').val() == 'on' ) ? true : false;
+                var address = ( isBillingSameAsShipping === false ) ? this.getBillingAddress() : this.getShippingAddress();
+
                 $.ajax({
                     type: 'POST',
                     url: window.location.origin + '/rest/V1/subscription/createorders',
                     dataType: 'json',
                     contentType: 'application/json',
                     processData: false,
-                    data: JSON.stringify( { 'key': formKey, 'quiz_id': quiz.id }),
+                    data: JSON.stringify( { 'key': formKey, 'quiz_id': quiz.id, 'billing_address': address }),
                     success: function(response) {
                         if( response[0].success == true ) {
                             window.location.href = '/thank-you';
@@ -73,13 +90,36 @@ define(
                     }
                 })
             },
+
+            updateRecurlyFormData: function() {
+                // Check if customer has selected to use the same address for both billing and shipping
+                var isBillingSameAsShipping = ( $('input[name="billing-address-same-as-shipping"]:checked').val() == 'on' ) ? true : false;
+
+                // Get the billing address data based on the customer selection
+                var address = ( isBillingSameAsShipping === false ) ? this.getBillingAddress() : this.getShippingAddress();
+
+                // Get full state name by it's id
+                var stateName = $('select[name="region_id"] option[value="' + address.region_id + '"]').attr('data-title');
+
+                // Get full country name by it's id
+                var countryName = $('select[name="country_id"] option[value="' + address.country_id + '"]').attr('data-title');
+
+                // Update Recurly form
+                $('input[data-recurly="address1"]').val(address.street[0]);
+                $('input[data-recurly="city"]').val(address.city);
+                $('input[data-recurly="state"]').val(stateName);
+                $('input[data-recurly="country"]').val(countryName);
+                $('input[data-recurly="postal_code"]').val(address.postcode);
+            },
  
             myPlaceOrder: function() {
                 event.preventDefault();
                 var self = this;
-                var form = document.querySelector('.recurly-form');
+                var recurlyForm = $('.recurly-form');
 
-                recurly.token(form, function(err, token) {
+                self.updateRecurlyFormData();
+
+                recurly.token(recurlyForm, function(err, token) {
                     if( err ) {
                         console.log( err );
                     } else {
