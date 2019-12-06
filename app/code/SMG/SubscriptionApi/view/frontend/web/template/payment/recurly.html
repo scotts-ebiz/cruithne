@@ -18,15 +18,33 @@
                 <input type="hidden" data-recurly="country">
                 <input type="hidden" data-recurly="postal_code">
                 <input type="hidden" data-recurly="state">
-                <input type="text" data-recurly="first_name" placeholder="Card Holder First Name">
-                <input type="text" data-recurly="last_name" placeholder="Card Holder Last Name">
-                <p>Card Number</p>
-                <div data-recurly="number"></div>
-                <p>Expiration Date</p>
-                <div data-recurly="month"></div>
-                <div data-recurly="year"></div>
-                <p>CVV</p>
-                <div data-recurly="cvv"></div>
+                <div class="sp-flex sp-flex-wrap sp--mx-2">
+                    <div class="sp-form-group sp-px-2 sp-w-1/2">
+                        <input
+                            class="sp-input sp-w-full"
+                            data-recurly="first_name"
+                            id="recurly-first-name"
+                            placeholder="First Name"
+                            type="text">
+                        <label class="sp-form-label" for="recurly-first-name">
+                            Cardholder First Name
+                        </label>
+                    </div>
+                    <div class="sp-form-group sp-px-2 sp-w-1/2">
+                        <input
+                            class="sp-input sp-w-full"
+                            data-recurly="last_name"
+                            id="recurly-last-name"
+                            placeholder="Last Name"
+                            type="text">
+                        <label class="sp-form-label" for="recurly-last-name">
+                            Cardholder Last Name
+                        </label>
+                    </div>
+
+                    <div data-recurly="card" class="sp-px-2 sp-w-full"></div>
+                </div>
+
                 <input type="hidden" name="recurly-token" data-recurly="token">
                 <button style="display: none;">Submit</button>
             </form>
