@@ -100,7 +100,7 @@
                                         display: inline-block;
                                         width: auto;
                                         text-align: left;
-                                        margin: 0 0 4px 0;
+                                        margin: 0 0 2px 0;
                                         padding: 0;
                                     }
                                     &.additional {
@@ -285,6 +285,10 @@
                                                                     .checkout-billing-address {
                                                                         .billing-address-same-as-shipping-block {
                                                                             height: auto;
+                                                                        }
+                                                                        .field.field-select-billing {
+                                                                            height: auto;
+                                                                            margin: 0 0 20px;
                                                                         }
                                                                         .billing-address-form {
                                                                             div[name='billingAddressauthorizenet_directpost.street.1'],
