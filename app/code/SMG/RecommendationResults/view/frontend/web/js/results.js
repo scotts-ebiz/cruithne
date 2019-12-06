@@ -14,7 +14,7 @@ define([
                 window.sessionStorage.setItem('lawn-zip', config.zip);
             }
 
-            if (window.sessionStorage.getItem('lawn-zip')) {
+            if (!window.sessionStorage.getItem('lawn-zip')) {
                 window.location.href = '/quiz';
             }
 
