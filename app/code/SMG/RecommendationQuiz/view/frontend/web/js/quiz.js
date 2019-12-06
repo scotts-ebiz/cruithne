@@ -279,7 +279,7 @@ define([
 
         self.questionId = questionId;
         self.optionId = optionId;
-        self.optionalValue = optionalValue;
+        self.optionalValue = String(optionalValue);
     }
 
     /**
@@ -463,20 +463,63 @@ define([
                 // Find the animation based on the answer.
                 for (const animation of animations) {
                     for (const condition of animation.conditions) {
-                        const value = self.getQuestionAnswer(condition.questionId, true);
+                        let values = self.getQuestionAnswer(condition.questionId, true);
 
-                        //TODO: currently firing every time, left in for demo, needs fixed
-                        if (condition.values.includes(value)) {
-                            self.animation(animation);
+                        if (values && !Array.isArray(values)) {
+                            values = [values];
+                        }
+
+                        switch (condition.conditionType) {
+                            case 1:
+                                // Make sure at least one selected option is in
+                                // the condition values.
+                                for (value of values) {
+                                    if (condition.values.includes(value)) {
+                                        self.animation(animation);
+                                        break;
+                                    }
+                                }
+
+                                break;
+                            case 2:
+                                // Make sure all values selected by the user
+                                // are in the condition.
+                                let hasAllValues = true;
+                                for (value of values) {
+                                    if (!condition.values.includes(value)) {
+                                        hasAllValues = false;
+                                        break;
+                                    }
+                                }
+
+                                if (hasAllValues) {
+                                    self.animation(animation);
+                                }
+
+                                break;
+                            case 3:
+                                // Make sure the condition value include no
+                                // user selected values.
+                                let hasValue = false;
+                                for (value of values) {
+                                    if (condition.values.includes(value)) {
+                                        hasValue = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!hasValue) {
+                                    self.animation(animation);
+                                }
+
+                                break;
+                        }
+
+                        if (Object.getOwnPropertyNames(self.animation()).length > 0) {
                             break;
                         }
                     }
                 }
-            }
-
-            // TODO: hardcoded for incorrect mock data
-            if (!self.animation().title) {
-                self.animation(animations[0]);
             }
 
             // If there isn't a transition screen, don't animate it.
@@ -551,6 +594,8 @@ define([
 
             var results = {};
             var initializedMap = false;
+
+            window.location.hash = group.label;
 
             for (question of group.questions) {
                 // Check if the questions are sliders and set a base response.
@@ -659,17 +704,25 @@ define([
          * @returns {boolean|*}
          */
         self.getQuestionAnswer = function (questionID, id) {
+            const answers = [];
             for (var answer of self.answers()) {
                 if (answer.questionId === questionID) {
                     if (id) {
-                        return answer.optionId;
+                        answers.push(answer.optionId);
                     }
 
-                    return answer.optionalValue || answer.optionId;
+                    answers.push(answer.optionalValue || answer.optionId);
                 }
             }
 
-            return false;
+            switch (answers.length) {
+                case 0:
+                    return false;
+                case 1:
+                    return answers[0];
+                default:
+                    return answers;
+            }
         };
 
         /**
@@ -798,11 +851,59 @@ define([
 
             // Loop through the transitions and compare the values to see where we should redirect.
             for (var transition of transitions) {
-                var isCorrectTransition = true;
+                let isCorrectTransition = false;
 
                 for (var condition of transition.conditions) {
-                    if (condition.values[0] != self.getQuestionAnswer(condition.questionId, true)) {
-                        isCorrectTransition = false;
+                    let values = self.getQuestionAnswer(condition.questionId, true);
+
+                    if (values && !Array.isArray(values)) {
+                        values = [values];
+                    }
+
+                    switch (condition.conditionType) {
+                        case 1:
+                            // Make sure at least one selected option is in
+                            // the condition values.
+                            for (value of values) {
+                                if (condition.values.includes(value)) {
+                                    isCorrectTransition = true;
+                                    break;
+                                }
+                            }
+
+                            break;
+                        case 2:
+                            // Make sure all values selected by the user
+                            // are in the condition.
+                            let hasAllValues = true;
+                            for (value of values) {
+                                if (!condition.values.includes(value)) {
+                                    hasAllValues = false;
+                                    break;
+                                }
+                            }
+
+                            if (hasAllValues) {
+                                isCorrectTransition = true;
+                            }
+
+                            break;
+                        case 3:
+                            // Make sure the condition value include no
+                            // user selected values.
+                            let hasValue = false;
+                            for (value of values) {
+                                if (condition.values.includes(value)) {
+                                    hasValue = true;
+                                    break;
+                                }
+                            }
+
+                            if (!hasValue) {
+                                isCorrectTransition = true;
+                            }
+
+                            break;
                     }
                 }
 
