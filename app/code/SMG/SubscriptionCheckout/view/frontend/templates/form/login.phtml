@@ -30,7 +30,7 @@
                 </div>
             </fieldset>
             <?php if( ! empty( $block->getRequest()->getParam('quiz_id') ) ) { ?>
-            <input type="hidden" name="quiz_id" value="<?php echo $block->getRequest()->getParam('quiz_id'); ?>">
+            <input type="hidden" name="quiz_id" value="<?php echo $block->escapeHtml($block->getRequest()->getParam('quiz_id')); ?>">
             <?php } ?>
         </form>
     </div>
