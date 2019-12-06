@@ -88,15 +88,38 @@
                             padding: 1rem;
                         }
                         .opc {
-                            .fieldset > .field > .label {
-                                width: auto;
-                                text-align: left;
-                                margin-bottom: 4px;
-                                padding: 0;
+
+
+                            /** General Form styles: START **/
+                            .fieldset {
+                                .field {
+                                    position: relative;
+                                    height: 85px;
+                                    margin: 0;
+                                    .label {
+                                        display: inline-block;
+                                        width: auto;
+                                        text-align: left;
+                                        margin: 0 0 4px 0;
+                                        padding: 0;
+                                    }
+                                    &.additional {
+                                        width: 100%;
+                                        .label {
+                                            position: relative;
+                                            overflow: inherit;
+                                            height: auto;
+                                        }
+                                    }
+                                    &.street {
+                                        display: contents;
+                                    }
+                                }
                             }
+                            /** General Form styles: END **/
 
 
-                            /** Shipping Method form: Start **/
+                            /** Shipping Method form: START **/
                             .checkout-shipping-address {
                                 .step-content {
                                     .form-login {
@@ -120,9 +143,6 @@
                                     .form-login,
                                     .form-shipping-address {
                                         .fieldset {
-                                            > .field {
-                                                margin: 0;
-                                            }
                                             div[name="shippingAddress.firstname"], div[name="shippingAddress.lastname"] {
                                                 width: 50%;
                                                 display: inline-block;
@@ -156,8 +176,6 @@
                                     .form-shipping-address {
                                         .fieldset {
                                             .field {
-                                                position: relative;
-                                                height: 85px;
                                                 .control {
                                                     .field-error {
                                                         position: absolute;
@@ -167,37 +185,11 @@
                                                     }
                                                 }
                                             }
-                                            .field.additional {
-                                                margin: 0;
-                                            }
-                                            .field.street {
-                                                display: contents;
-                                            }
-                                        }
-
-
-
-                                        div[name='shippingAddress.street.0'], div[name='shippingAddress.street.1'], div[name='shippingAddress.street.2'] {
-                                            display: inline-block;
-                                            width: 100%;
-                                            position: relative;
-                                            float: left;
-
                                         }
                                         div[name="shippingAddress.postcode"] {
                                             .control {
                                                 .message.warning {
                                                     display: none;
-                                                }
-                                            }
-                                        }
-                                        .field.street {
-                                            .field.additional {
-                                                .label {
-                                                    position: relative;
-                                                    overflow: inherit;
-                                                    margin: 0;
-                                                    width: auto;
                                                 }
                                             }
                                         }
@@ -249,10 +241,10 @@
                                     }
                                 }
                             }
-                            /** Shipping Method form: End **/
+                            /** Shipping Method form: END **/
 
 
-                            /** Payment Method form: Start **/
+                            /** Payment Method form: START **/
                             .checkout-payment-method {
                                 .step-content {
                                     .form.payments {
@@ -261,6 +253,25 @@
                                                 .items.payment-methods {
                                                     .payment-group {
                                                         .payment-method._active {
+                                                            .payment-method-title.field {
+                                                                height: auto;
+                                                                [type="radio"]:checked + label,
+                                                                [type="radio"]:not(:checked) + label {
+                                                                    position: relative;
+                                                                    padding-left: 28px;
+                                                                    cursor: pointer;
+                                                                    line-height: 20px;
+                                                                    display: inline-block;
+                                                                }
+                                                            }
+                                                            [type="radio"]:checked + label,
+                                                            [type="radio"]:not(:checked) + label {
+                                                                position: relative;
+                                                                padding-left: 28px;
+                                                                cursor: pointer;
+                                                                line-height: 20px;
+                                                                display: inline-block;
+                                                            }
                                                             [type="radio"]:checked + label:before,
                                                             [type="radio"]:not(:checked) + label:before{
                                                                 top: 2px;
@@ -272,10 +283,12 @@
                                                             .payment-method-content {
                                                                 .payment-method-billing-address {
                                                                     .checkout-billing-address {
+                                                                        .billing-address-same-as-shipping-block {
+                                                                            height: auto;
+                                                                        }
                                                                         .billing-address-form {
                                                                             div[name='billingAddressauthorizenet_directpost.street.1'],
                                                                             div[name='billingAddressauthorizenet_directpost.street.2'],
-                                                                            //div[name='billingAddressvantiv_cc.street.1'], //test - should now see on page
                                                                             div[name='billingAddressvantiv_cc.street.2'],
                                                                             div[name='billingAddresscashondelivery.street.1'],
                                                                             div[name='billingAddresscashondelivery.street.2'] {
@@ -498,7 +511,7 @@
                                     }
                                 }
                             }
-                            /** Payment Method form: End **/
+                            /** Payment Method form: END **/
 
                         }
                     }
@@ -618,14 +631,16 @@
                   position: absolute;
                   left: -9999px;
                 }
+
                 [type="radio"]:checked + label,
-                [type="radio"]:not(:checked) + label {
-                  position: relative;
-                  padding-left: 28px;
-                  cursor: pointer;
-                  line-height: 20px;
-                  display: inline-block;
+                [type="radio"]:not(:checked) + label {//test - moved  this back.
+                    position: relative;
+                    padding-left: 28px;
+                    cursor: pointer;
+                    line-height: 20px;
+                    display: inline-block;
                 }
+
                 [type="radio"]:checked + label:before,
                 [type="radio"]:not(:checked) + label:before {
                     content: '';
