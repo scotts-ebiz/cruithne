@@ -46,6 +46,12 @@
                     <validate>validate-no-html-tags</validate>
                     <config_path>recommendations/api/previous</config_path>
                 </field>
+                <field id="products_api_path" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Products Flat File Path</label>
+                    <comment>[GET] Returns the information for the Scotts products</comment>
+                    <validate>validate-no-html-tags</validate>
+                    <config_path>recommendations/api/products</config_path>
+                </field>
             </group>
         </section>
     </system>

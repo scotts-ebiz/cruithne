@@ -346,6 +346,20 @@ li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot::before {
   }
 }
 
+.sp-quiz__slider-images {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+}
+
+.sp-quiz__slider-image {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  top: 0;
+  right: 0;
+}
+
 .sliderContainer {
   padding: 20px 0;
 }

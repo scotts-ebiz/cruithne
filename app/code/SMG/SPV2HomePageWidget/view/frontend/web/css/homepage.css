@@ -1,3 +1,7 @@
+.sp-home__how-it-works {
+  margin-bottom: 6.5rem;
+}
+
 /* What to expect section */
 .sp-home__what-to-expect-img {
   height: 0;
@@ -16,6 +20,10 @@
   top: 0;
   width: 100%;
   z-index: 1;
+}
+
+.sp-home__what-to-expect-heading{
+  margin-bottom: 4.5rem;
 }
 
 /* History section */
@@ -70,3 +78,4 @@
 .sp-app-image {
   max-width: 10rem;
 }
+

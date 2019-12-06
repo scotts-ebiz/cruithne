@@ -1,46 +1,60 @@
 <!-- ko if: quiz && quiz.currentGroup() && quiz.currentGroup().questions[0].questionType === 3 -->
-
+<div
+    class="sp-quiz__question sp-container sp-quiz__slider-box sp-mb-8"
+>
+    <!-- Showing banner image if it exists -->
     <div
-        class="sp-quiz__question sp-container sp-quiz__slider-box sp-mb-8"
+        class="sp-quiz__banner sp-max-w-lg sp-mx-auto sp-text-center"
+        data-bind="visible: quiz.currentGroup().imageUrl"
     >
-        <!-- Showing banner image if it exists -->
-        <div class="sp-quiz__banner sp-text-center" data-bind="visible: quiz.currentGroup().imageUrl">
-            <img data-bind="attr:{src: quiz.currentGroup().imageUrl}" alt="Quiz Banner" />
+        <img data-bind="attr:{src: quiz.currentGroup().imageUrl}" alt="Quiz Banner"/>
+    </div>
+
+    <h2
+        class="sp-quiz__question-title sp-h2 sp-max-w-lg sp-mt-0 sp-mx-auto sp-text-center"
+        data-bind="text: quiz.currentGroup().title"
+    >
+    </h2>
+
+    <p class="sp-max-w-lg sp-mx-auto sp-text-center" data-bind="text: quiz.currentGroup().subtitle"></p>
+
+    <!-- Process Questions -->
+    <div class="sp-quiz__slider-box sp-bg-white sp-mx-auto sp-shadow-md sp-rounded sp-text-center sp-p-8 sp-pt-4 sp-wrapper md:sp-w-1/2">
+
+        <div
+            id="sliderImage"
+            class="sp-quiz__slider-images"
+        >
+            <img
+                alt="Grass Color"
+                class="sp-quiz__slider-image"
+                data-bind="attr: { src: quiz.sliderImages()[quiz.currentGroup().questions[1].id] }"
+            />
+            <img
+                alt="Grass Thickness"
+                class="sp-quiz__slider-image"
+                data-bind="attr: { src: quiz.sliderImages()[quiz.currentGroup().questions[0].id] }"
+            />
+            <img
+                alt="Grass Weeds"
+                class="sp-quiz__slider-image"
+                data-bind="attr: { src: quiz.sliderImages()[quiz.currentGroup().questions[2].id] }"
+            />
         </div>
 
-        <h2
-            class="sp-quiz__question-title sp-h2 sp-max-w-md sp-mt-0 sp-mx-auto sp-text-center"
-            data-bind="text: quiz.currentGroup().title"
+        <div
+            class="sp-mx-auto sp-w-full"
+            data-bind="foreach: { data: quiz.currentGroup().questions, as: 'question', noChildContext: true }"
         >
-        </h2>
-
-        <p class="sp-max-w-lg sp-mx-auto sp-text-center" data-bind="text: quiz.currentGroup().subtitle"></p>
-
-        <!-- Process Questions -->
-        <!-- @todo this class needs adjusted for the slider card -->
-        <div class="sp-quiz__slider-box sp-bg-white sp-mx-auto sp-shadow-md sp-rounded sp-text-center sp-p-8 sp-pt-4 sp-wrapper md:sp-w-1/2">
-
-            <!-- Slider Image 3 -->
-            <div
-                id="sliderImage"
-            >
-                <img src="https://picsum.photos/id/10/570/280" alt="Grass Health Image" />
-                <!-- @todo temporary image as mock is sending the same bad image each time (quiz.currentGroup().questions[0].options[0].imageUrl) -->
-            </div>
 
             <div
-                class="sp-mx-auto sp-w-full"
-                data-bind="foreach: { data: quiz.currentGroup().questions, as: 'question', noChildContext: true }"
+                class="sliderContainer"
+                data-bind="attr: { id: 'slider_' + question.label }"
             >
-
                 <div
-                    class="sliderContainer"
-                    data-bind="attr: { id: 'slider_' + question.label }"
+                    class="sp-quiz__options sp-flex sp-flex-wrap sp-justify-center sp--mx-1"
+                    data-bind="foreach: { data: question.options, as: 'option', noChildContext: true }"
                 >
-                    <div
-                        class="sp-quiz__options sp-flex sp-flex-wrap sp-justify-center sp--mx-1"
-                        data-bind="foreach: { data: question.options, as: 'option', noChildContext: true }"
-                    >
                         <span
                             class="sp-p2 sp-quiz__green-text sp-font-bold"
                             data-bind="
@@ -50,32 +64,32 @@
                             "
                         >
                         </span>
-                        <!-- ko if: $index() === 0 -->
-                        <!--<span class="sp-p2 sp-quiz__green-text sp-quiz__strong-text" data-bind="text: option.label, attr: { 'data-optid': option.value }"></span>-->
-                        <!-- /ko -->
-                        <!-- ko if: $index() !== 0 -->
-                        <!--<span class="sp-hide sp-p2 sp-quiz__green-text sp-quiz__strong-text" data-bind="text: option.label, attr: { 'data-optid': option.value }"></span>-->
-                        <!-- /ko -->
-                    </div>
+                    <!-- ko if: $index() === 0 -->
+                    <!--<span class="sp-p2 sp-quiz__green-text sp-quiz__strong-text" data-bind="text: option.label, attr: { 'data-optid': option.value }"></span>-->
+                    <!-- /ko -->
+                    <!-- ko if: $index() !== 0 -->
+                    <!--<span class="sp-hide sp-p2 sp-quiz__green-text sp-quiz__strong-text" data-bind="text: option.label, attr: { 'data-optid': option.value }"></span>-->
+                    <!-- /ko -->
+                </div>
 
-                    <div
-                        class="sp-slider-container sp-relative sp-rounded sp-flex sp-items-center"
-                    >
-                        <ul class="sp-slider-hashes sp-absolute sp-flex sp-justify-between">
-                            <li class="sp-hash"></li>
-                            <li class="sp-hash"></li>
-                            <li class="sp-hash"></li>
-                            <li class="sp-hash"></li>
-                            <li class="sp-hash"></li>
-                        </ul>
+                <div
+                    class="sp-slider-container sp-relative sp-rounded sp-flex sp-items-center"
+                >
+                    <ul class="sp-slider-hashes sp-absolute sp-flex sp-justify-between">
+                        <li class="sp-hash"></li>
+                        <li class="sp-hash"></li>
+                        <li class="sp-hash"></li>
+                        <li class="sp-hash"></li>
+                        <li class="sp-hash"></li>
+                    </ul>
 
-                        <input
-                            class="sp-slider sp-flex-auto sp-relative"
-                            min="1"
-                            step="1"
-                            type="range"
-                            value="3"
-                            data-bind="
+                    <input
+                        class="sp-slider sp-flex-auto sp-relative"
+                        min="1"
+                        step="1"
+                        type="range"
+                        value="3"
+                        data-bind="
                                 attr: {
                                    'data-sliderid': $index(),
                                     max : question.options.length,
@@ -83,41 +97,42 @@
                                     value: $parents[0].quiz.getQuestionAnswer(question.id) || 3
                                 },
                                 event: {
-                                    change: $parents[0].quiz.setAnswer,
-                                    input: $parents[0].updateSlider
+                                    input: function (data, event) {
+                                        $parents[0].updateSlider(data, event);
+                                        $parents[0].quiz.setAnswer(data, event);
+                                    }
                                 },
                                 afterRender: $parents[0].initializeSlider
                             "
-                        />
-                        <div class="sp-slider-progress"></div>
-                    </div>
+                    />
+                    <div class="sp-slider-progress"></div>
+                </div>
 
-                    <!-- Hash marks for the datalist are only supported in Chrome -->
-                    <!--
-                    <datalist
-                        data-bind="attr: { id: 'sideticks_' + question.label }, foreach: { data: question.options, as: 'option', noChildContext: true }"
-                    >
-                        <option data-bind="attr: { value: option.value - 1 }"></option>
-                    </datalist>
-                    -->
+                <!-- Hash marks for the datalist are only supported in Chrome -->
+                <!--
+                <datalist
+                    data-bind="attr: { id: 'sideticks_' + question.label }, foreach: { data: question.options, as: 'option', noChildContext: true }"
+                >
+                    <option data-bind="attr: { value: option.value - 1 }"></option>
+                </datalist>
+                -->
 
-                    <div data-bind="foreach: { data: question.options, as: 'option', noChildContext: true }">
-                        <div data-bind="attr: { for: option.id }">
-                            <div data-bind="if: option.value === '1'">
-                                <label id="slider_label_left" data-bind="text: option.label"> </label>
-                            </div>
+                <div data-bind="foreach: { data: question.options, as: 'option', noChildContext: true }">
+                    <div data-bind="attr: { for: option.id }">
+                        <div data-bind="if: option.value === '1'">
+                            <label id="slider_label_left" data-bind="text: option.label"> </label>
                         </div>
-                        <div data-bind="attr: { for: option.id }">
-                            <div data-bind="if: option.value === '5'">
-                                <label id="slider_label_right" data-bind="text: option.label"> </label>
-                            </div>
+                    </div>
+                    <div data-bind="attr: { for: option.id }">
+                        <div data-bind="if: option.value === '5'">
+                            <label id="slider_label_right" data-bind="text: option.label"> </label>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-
+</div>
 <!-- /ko -->
 
 

@@ -1,0 +1,23 @@
+<div
+    class="sp-options sp-flex sp-relative"
+    data-bind="scope: 'options'"
+>
+    <div class="sp-results__wrapper sp-flex sp-flex-column sp-h-full sp-w-full">
+        <input name="form_key" type="hidden" value="<?php echo $block->getFormKey(); ?>">
+        <!-- ko template: "SMG_SubscriptionOptions/index.html" --><!-- /ko -->
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+   {
+        "*": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "options": {
+                        "component": "SMG_SubscriptionOptions/js/options"
+                    }
+                }
+            }
+        }
+    }
+</script>

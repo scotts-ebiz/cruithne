@@ -307,6 +307,7 @@ define([
         self.map = ko.observable(null);
         self.template = null;
         self.previousGroups = ko.observableArray([]);
+        self.sliderImages = ko.observable({});
         self.animation = ko.observable({});
         self.usingGoogleMaps = ko.observable(true);
         self.invalidZipCode = ko.observable(false);
@@ -380,7 +381,7 @@ define([
             $('.sp-quiz__transition-inner').removeClass('sp-quiz__displaynone');
             $('.sp-quiz__transition-wrapper').addClass('sp-quiz__displayblock');
             $('.sp-quiz__transition-inner').addClass('sp-quiz__transition-slideup');
-        }
+        },
 
         /**
          * Handle moving the transition screen down
@@ -390,7 +391,7 @@ define([
             setTimeout(() => {
                 $('.sp-quiz__transition-inner').addClass('sp-quiz__displaynone');
             }, 250);
-        }
+        },
 
         /**
          * Handle moving the content screen up
@@ -594,19 +595,30 @@ define([
 
             var results = {};
             var initializedMap = false;
+            var sliderQuestion = false;
 
             window.location.hash = group.label;
 
             for (question of group.questions) {
+                sliderQuestion = true;
                 // Check if the questions are sliders and set a base response.
                 if (+question.questionType === 3) {
-                    self.addAnswerIfEmpty(question.id, question.options[0], 3);
+                    self.addAnswerIfEmpty(question.id, question.options[2], 3);
                 }
 
                 // Check if the questions are for the google maps entry and initialize the map.
                 if (!initializedMap && self.usingGoogleMaps() && question.questionType === 5) {
                     self.initializeMap();
                     initializedMap = true;
+                }
+            }
+
+            // If this is the slider question, set the images.
+            if (sliderQuestion) {
+                for (question of group.questions) {
+                    self.sliderImages(Object.assign({}, self.sliderImages(), {
+                        [question.id]: self.getOptionImage(question.id),
+                    }));
                 }
             }
 
@@ -647,11 +659,19 @@ define([
                 for (item of options) {
                     if (+item.value === +event.target.value) {
                         self.answers.push(new QuestionResult(event.target.name, item.id, event.target.value));
+                        self.sliderImages(Object.assign({}, self.sliderImages(), {
+                            [event.target.name]: self.getOptionImage(event.target.name),
+                        }));
                         break;
                     }
                 }
             } else if (['checkbox', 'radio'].indexOf(event.target.type) === -1 || event.target.checked) {
                 self.answers.push(new QuestionResult(event.target.name, event.target.value));
+
+                // This is the grass type question, so store the grass type.
+                if (self.currentGroup().label === 'LAWN DETAILS' && event.target.dataset.label) {
+                    window.sessionStorage.setItem('lawn-type', event.target.dataset.label);
+                }
             }
         };
 
@@ -725,6 +745,30 @@ define([
             }
         };
 
+        self.getOptionImage = function (questionID) {
+            const question = self.currentGroup().questions.find((question) => {
+                return question.id === questionID;
+            });
+
+            if (!question) {
+                return '';
+            }
+
+            for (let answer of self.answers()) {
+                if (answer.questionId === questionID) {
+                    const option = question.options.find((option) => {
+                        return option.id === answer.optionId;
+                    });
+
+                    if (option) {
+                        return option.imageUrl;
+                    }
+                }
+            }
+
+            return '';
+        };
+
         /**
          * Check if the given option for the question is selected.
          *
@@ -760,15 +804,6 @@ define([
                     }
 
                     let slider = document.querySelector(scontId + " input[type=range]");
-
-                    slider.addEventListener("change", function() {
-                        let closest = sliderValues[slider.value];
-                        let key = parseInt(slider.value);
-
-                        // @todo this will need updated once we are getting real images back from the payload.
-                        let backgroundSrc = 'https://picsum.photos/id/' + (9 + ( 5 * slider.dataset.sliderid + key )) + '/570/280';
-                        document.querySelector('#sliderImage img').setAttribute('src', backgroundSrc);
-                    });
                 }
             }
         };
@@ -1005,6 +1040,7 @@ define([
                     self.addOrReplaceAnswer(zoneQuestion.id, zoneOption);
                     self.addOrReplaceAnswer(zipQuestion.id, zipQuestion.options[0].id, zip);
                     self.zipCode = zip;
+                    window.sessionStorage.setItem('lawn-zip', String(zip));
                     self.invalidZipCode(false);
                     return;
                 }
@@ -1029,6 +1065,7 @@ define([
 
             if (area > 0) {
                self.addOrReplaceAnswer(self.questions()[1].id, self.questions()[1].options[0].id, area);
+               window.sessionStorage.setItem('lawn-area', String(area));
             }
         }
     }

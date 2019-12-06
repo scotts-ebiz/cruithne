@@ -1357,6 +1357,61 @@
             "time": "2017-10-22T18:56:00+00:00"
         },
         {
+            "name": "gigya/magento2-im",
+            "version": "5.4.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/gigya/Magento-2",
+                "reference": "762c73a18fd19847dd97a0be2e0335d1793e1245"
+            },
+            "require": {
+                "aws/aws-sdk-php": "~3.0",
+                "magento/module-checkout": "*",
+                "magento/module-customer": "*",
+                "php": "~7.0.0|~7.1.0|~7.2.0"
+            },
+            "require-dev": {
+                "magento/marketplace-eqp": "*",
+                "pdepend/pdepend": "~2.5.0",
+                "phpmd/phpmd": "@stable",
+                "phpunit/phpunit": "~5.0",
+                "squizlabs/php_codesniffer": "2.6.2"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "psr-4": {
+                    "Gigya\\GigyaIM\\": ""
+                },
+                "files": [
+                    "registration.php"
+                ]
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Guy A",
+                    "email": "guy.av@gigya-inc.com"
+                },
+                {
+                    "name": "Alexandre Khayrullin",
+                    "email": "akhayrullin@clever-age.com"
+                },
+                {
+                    "name": "Vincent Lemaire",
+                    "email": "vincentlemaire@clever-age.com"
+                },
+                {
+                    "name": "Yan Nasonov",
+                    "email": "yan.na@gigya-inc.com"
+                }
+            ],
+            "description": "Gigya Identity Management for Magento 2",
+            "time": "2019-07-14T11:01:19+00:00"
+        },
+        {
             "name": "google/recaptcha",
             "version": "1.2.3",
             "source": {
@@ -15026,6 +15081,51 @@
                 "promises"
             ],
             "time": "2019-01-07T21:25:54+00:00"
+        },
+        {
+            "name": "recurly/recurly-client",
+            "version": "2.12.9",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/recurly/recurly-client-php.git",
+                "reference": "513f53377d0ff4474a89983876ce896475a008dc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/recurly/recurly-client-php/zipball/513f53377d0ff4474a89983876ce896475a008dc",
+                "reference": "513f53377d0ff4474a89983876ce896475a008dc",
+                "shasum": ""
+            },
+            "require": {
+                "ext-curl": "*",
+                "php": ">= 5.6.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "4.2.*"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.4.x-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "lib"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "The PHP client library for the Recurly API",
+            "homepage": "https://github.com/recurly/recurly-client-php",
+            "keywords": [
+                "pay",
+                "payments",
+                "recurly"
+            ],
+            "time": "2019-11-21T21:18:38+00:00"
         },
         {
             "name": "seatgeek/djjob",
