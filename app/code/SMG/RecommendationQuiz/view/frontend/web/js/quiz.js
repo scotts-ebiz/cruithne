@@ -708,7 +708,7 @@ define([
             for (var answer of self.answers()) {
                 if (answer.questionId === questionID) {
                     if (id) {
-                        answers.push[answer.optionId];
+                        answers.push(answer.optionId);
                     }
 
                     answers.push(answer.optionalValue || answer.optionId);
