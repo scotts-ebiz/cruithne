@@ -115,6 +115,38 @@
                                         display: contents;
                                     }
                                 }
+
+                                div[name="shippingAddress.firstname"],
+                                div[name="shippingAddress.lastname"],
+                                div[name="billingAddressvantiv_cc.firstname"],
+                                div[name="billingAddressvantiv_cc.lastname"] {
+                                  width: 50%;
+                                  display: inline-block;
+                                  @media screen and (max-width: $screen__m) {
+                                    width: 100%;
+                                  }
+                                  .control {
+                                    float: none;
+                                    width: auto;
+                                  }
+                                }
+                                div[name="shippingAddress.firstname"],
+                                div[name="billingAddressvantiv_cc.firstname"] {
+                                  padding-right: 10px;
+                                  @media screen and (max-width: $screen__m) {
+                                    padding-right: 0;
+                                  }
+                                }
+                                div[name="shippingAddress.lastname"],
+                                div[name="billingAddressvantiv_cc.lastname"] {
+                                  padding-left: 10px;
+                                  @media screen and (max-width: $screen__m) {
+                                    padding-left: 0;
+                                  }
+                                }
+
+
+
                             }
                             /** General Form styles: END **/
 
@@ -140,32 +172,32 @@
                                             }
                                         }
                                     }
-                                    .form-login,
+                                    //.form-login,//test - removed this did it break anything?
                                     .form-shipping-address {
                                         .fieldset {
-                                            div[name="shippingAddress.firstname"], div[name="shippingAddress.lastname"] {
-                                                width: 50%;
-                                                display: inline-block;
-                                                @media screen and (max-width: $screen__m) {
-                                                    width: 100%;
-                                                }
-                                                .control {
-                                                    float: none;
-                                                    width: auto;
-                                                }
-                                            }
-                                            div[name="shippingAddress.firstname"] {
-                                                padding-right: 10px;
-                                                @media screen and (max-width: $screen__m) {
-                                                    padding-right: 0;
-                                                }
-                                            }
-                                            div[name="shippingAddress.lastname"] {
-                                                padding-left: 10px;
-                                                @media screen and (max-width: $screen__m) {
-                                                    padding-left: 0;
-                                                }
-                                            }
+                                            //div[name="shippingAddress.firstname"], div[name="shippingAddress.lastname"] {
+                                            //    width: 50%;
+                                            //    display: inline-block;
+                                            //    @media screen and (max-width: $screen__m) {
+                                            //        width: 100%;
+                                            //    }
+                                            //    .control {
+                                            //        float: none;
+                                            //        width: auto;
+                                            //    }
+                                            //}
+                                            //div[name="shippingAddress.firstname"] {
+                                            //    padding-right: 10px;
+                                            //    @media screen and (max-width: $screen__m) {
+                                            //        padding-right: 0;
+                                            //    }
+                                            //}
+                                            //div[name="shippingAddress.lastname"] {
+                                            //    padding-left: 10px;
+                                            //    @media screen and (max-width: $screen__m) {
+                                            //        padding-left: 0;
+                                            //    }
+                                            //}
                                         }
                                         .hidden-fields {
                                             .actions-toolbar {
@@ -285,6 +317,7 @@
                                                                     .checkout-billing-address {
                                                                         .billing-address-same-as-shipping-block {
                                                                             height: auto;
+                                                                            margin: 0 0 10px;
                                                                         }
                                                                         .field.field-select-billing {
                                                                             height: auto;
