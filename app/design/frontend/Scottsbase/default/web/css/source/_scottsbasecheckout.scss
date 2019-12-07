@@ -89,7 +89,6 @@
                         }
                         .opc {
 
-
                             /** General Form styles: START **/
                             .fieldset {
                                 .field {
@@ -115,38 +114,34 @@
                                         display: contents;
                                     }
                                 }
-
                                 div[name="shippingAddress.firstname"],
                                 div[name="shippingAddress.lastname"],
                                 div[name="billingAddressvantiv_cc.firstname"],
                                 div[name="billingAddressvantiv_cc.lastname"] {
-                                  width: 50%;
-                                  display: inline-block;
-                                  @media screen and (max-width: $screen__m) {
-                                    width: 100%;
-                                  }
-                                  .control {
-                                    float: none;
-                                    width: auto;
-                                  }
+                                    width: 50%;
+                                    display: inline-block;
+                                    @media screen and (max-width: $screen__m) {
+                                      width: 100%;
+                                    }
+                                    .control {
+                                      float: none;
+                                      width: auto;
+                                    }
                                 }
                                 div[name="shippingAddress.firstname"],
                                 div[name="billingAddressvantiv_cc.firstname"] {
-                                  padding-right: 10px;
-                                  @media screen and (max-width: $screen__m) {
-                                    padding-right: 0;
-                                  }
+                                    padding-right: 10px;
+                                    @media screen and (max-width: $screen__m) {
+                                      padding-right: 0;
+                                    }
                                 }
                                 div[name="shippingAddress.lastname"],
                                 div[name="billingAddressvantiv_cc.lastname"] {
-                                  padding-left: 10px;
-                                  @media screen and (max-width: $screen__m) {
-                                    padding-left: 0;
-                                  }
+                                    padding-left: 10px;
+                                    @media screen and (max-width: $screen__m) {
+                                        padding-left: 0;
+                                    }
                                 }
-
-
-
                             }
                             /** General Form styles: END **/
 
@@ -172,33 +167,7 @@
                                             }
                                         }
                                     }
-                                    //.form-login,//test - removed this did it break anything?
                                     .form-shipping-address {
-                                        .fieldset {
-                                            //div[name="shippingAddress.firstname"], div[name="shippingAddress.lastname"] {
-                                            //    width: 50%;
-                                            //    display: inline-block;
-                                            //    @media screen and (max-width: $screen__m) {
-                                            //        width: 100%;
-                                            //    }
-                                            //    .control {
-                                            //        float: none;
-                                            //        width: auto;
-                                            //    }
-                                            //}
-                                            //div[name="shippingAddress.firstname"] {
-                                            //    padding-right: 10px;
-                                            //    @media screen and (max-width: $screen__m) {
-                                            //        padding-right: 0;
-                                            //    }
-                                            //}
-                                            //div[name="shippingAddress.lastname"] {
-                                            //    padding-left: 10px;
-                                            //    @media screen and (max-width: $screen__m) {
-                                            //        padding-left: 0;
-                                            //    }
-                                            //}
-                                        }
                                         .hidden-fields {
                                             .actions-toolbar {
                                                 margin-left: 0;
