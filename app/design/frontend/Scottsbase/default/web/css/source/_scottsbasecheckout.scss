@@ -89,7 +89,7 @@
                         }
                         .opc {
 
-                            /** General Form styles: START **/
+                            /** General Form styles - Start **/
                             .fieldset {
                                 .field {
                                     position: relative;
@@ -143,10 +143,10 @@
                                     }
                                 }
                             }
-                            /** General Form styles: END **/
+                            /** General Form styles - End **/
 
 
-                            /** Shipping Method form: START **/
+                            /** Shipping Method form - Start **/
                             .checkout-shipping-address {
                                 .step-content {
                                     .form-login {
@@ -242,10 +242,10 @@
                                     }
                                 }
                             }
-                            /** Shipping Method form: END **/
+                            /** Shipping Method form - End **/
 
 
-                            /** Payment Method form: START **/
+                            /** Payment Method form - Start **/
                             .checkout-payment-method {
                                 .step-content {
                                     .form.payments {
@@ -517,7 +517,7 @@
                                     }
                                 }
                             }
-                            /** Payment Method form: END **/
+                            /** Payment Method form - End **/
 
                         }
                     }
@@ -639,7 +639,7 @@
                 }
 
                 [type="radio"]:checked + label,
-                [type="radio"]:not(:checked) + label {//test - moved  this back.
+                [type="radio"]:not(:checked) + label {
                     position: relative;
                     padding-left: 28px;
                     cursor: pointer;
@@ -702,18 +702,17 @@
                     }
                 }
                 .fieldset>.field.required, .fieldset>.field._required {
-                  >.label:after {
-                    display: none;
-                  }
+                    >.label:after {
+                        display: none;
+                    }
                 }
                 .fieldset>.fields {
-                  >.field.required, >.field._required {
-                    >.label:after {
-                      display: none;
+                    >.field.required, >.field._required {
+                        >.label:after {
+                            display: none;
+                        }
                     }
-                  }
                 }
-
                 .field.street.admin__control-fields {
                     div[name="billingAddresscheckmo.street.1"], div[name="billingAddresscheckmo.street.2"] {
                         display: none;
@@ -958,17 +957,17 @@ td#label_carrier_fedex-nextday_flatrate {
     }
 
     .opc-estimated-wrapper {
-      .minicart-wrapper {
-        .action.showcart {
-          .counter.qty {
-            @include max-screen($screen__l) {
-              background: #fff;
-              color: #4d4d4e;
+        .minicart-wrapper {
+            .action.showcart {
+                .counter.qty {
+                    @include max-screen($screen__l) {
+                        background: #fff;
+                        color: #4d4d4e;
+                    }
+                    background: $primary__color;
+                }
             }
-            background: $primary__color;
-          }
         }
-      }
     }
 
     .opc-estimated-wrapper .minicart-wrapper .action.showcart:before {
@@ -976,12 +975,12 @@ td#label_carrier_fedex-nextday_flatrate {
     }
     //Shipping Page Styles - End
 
+
     .checkout-index-index .checkout-billing-address .fieldset .actions-toolbar{
       margin-top: 10px;
     }
 
 }
-
 
 @media screen and (max-width: $screen__l) {
   .fieldset > .field:not(.choice) > .label {
