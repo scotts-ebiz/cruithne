@@ -86,7 +86,7 @@ class LayoutProcessor {
                 if (isset($payment['children']['form-fields']['children']['street'])) {
                     $result['components']['checkout']['children']['steps']['children']['billing-step']['children']
                     ['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
-                    ['street']['children']['0']['label'] = __('Apartment/Suite/Other (Optional)');
+                    ['street']['children']['1']['label'] = __('Apartment/Suite/Other (Optional)');
                 }
 
                 if (isset($payment['children']['form-fields']['children']['street'])) {
