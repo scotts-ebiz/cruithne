@@ -1,13 +1,26 @@
 // MyGro Brand Colors //
-$mygro-green: #008065;
-$mygro-dark-green: #00634f;
-$mygro-light-green: #59988b;
-$mygro-dark-gray: #383838;
-$mygro-gray: #909090;
-$mygro-gray-alt: #636363;
-$mygro-accent-blue: #2c5999;
-$mygro-black: #222222;
-$mygro-black-alt: #231f20;
+$mygro-green                    : #008065;
+$mygro-dark-green               : #00634f;
+$mygro-light-green              : #59988b;
+$mygro-dark-gray                : #383838;
+$mygro-gray                     : #909090;
+$mygro-gray-alt                 : #636363;
+$mygro-accent-blue              : #2c5999;
+$mygro-black                    : #222222;
+$mygro-black-alt                : #231f20;
+
+
+// Magento UI Color Variables //
+$primary__color                 : $mygro-green;
+$secondary__color               : $mygro-dark-green;
+$active__color                  : $primary__color;
+
+
+// Magento UI Link Variables //
+$link__color                    : $primary__color;
+$link__visited__color           : $link__color;
+$link__hover__color             : $secondary__color;
+
 
 // Font Sizes //
 $font10: 10px;
@@ -29,3 +42,23 @@ $screen_1024: 1024px;
 $screen_768: 768px;
 $screen_769: 769px;
 $screen_568: 568px;
+
+
+
+
+
+//test
+// Headings //
+//$heading__color__base           : $color-black;
+//$heading__font-family__base     : $hellixheavy;
+//$heading__font-weight__base     : $font-weight__bold;
+//$heading__line-height__base     : 1.1;
+//$heading__letter-spacing__base  : 0.5px;
+
+//test
+//$h2__font-size                  : 2.5rem; // 26px
+//$h2__font-color                 : $heading__color__base;
+//$h2__font-family                : $heading__font-family__base;
+//$h2__font-weight                : $heading__font-weight__base;
+//$h2__line-height                : $heasding__line-height__base;
+//$h2__letter-spacing             : $heading__letter-spacing__base;
