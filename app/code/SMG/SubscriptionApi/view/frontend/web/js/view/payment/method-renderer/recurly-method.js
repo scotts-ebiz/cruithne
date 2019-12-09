@@ -102,6 +102,8 @@ define(
                 var countryName = $('select[name="country_id"] option[value="' + address.country_id + '"]').attr('data-title');
 
                 // Update Recurly form
+                $('input[data-recurly="first_name"]').val(address.firstname);
+                $('input[data-recurly="last_name"]').val(address.lastname);
                 $('input[data-recurly="address1"]').val(address.street[0]);
                 $('input[data-recurly="city"]').val(address.city);
                 $('input[data-recurly="state"]').val(stateName);
