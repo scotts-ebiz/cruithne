@@ -67,8 +67,7 @@ define(
             createNewOrders: function () {
                 var self = this;
                 var formKey = document.querySelector('input[name=form_key]').value;
-                var quiz = window.sessionStorage.getItem('quiz');
-                quiz = JSON.parse(quiz);
+                var quizID = window.sessionStorage.getItem('quiz-id');
 
                 var isBillingSameAsShipping = ($('input[name="billing-address-same-as-shipping"]:checked').val() == 'on') ? true : false;
                 var address = (isBillingSameAsShipping === false) ? this.getBillingAddress() : this.getShippingAddress();
@@ -79,10 +78,10 @@ define(
                     dataType: 'json',
                     contentType: 'application/json',
                     processData: false,
-                    data: JSON.stringify({'key': formKey, 'quiz_id': quiz.id, 'billing_address': address}),
+                    data: JSON.stringify({'key': formKey, 'quiz_id': quizID, 'billing_address': address}),
                     success: function (response) {
-                        if (response[0].success == true) {
-                            window.location.href = '/thank-you';
+                        if (response[0] === true) {
+                            window.location.href = '/checkout/onepage/success';
                         }
                     }
                 })
@@ -144,7 +143,6 @@ define(
                                         window.location.href = response[0].redirect_url
                                     }
                                 } else {
-                                    console.log('here');
                                     self.createNewSubscription(token.id, false);
                                 }
                             }
