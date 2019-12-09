@@ -52,3 +52,23 @@
     }
   }
 }
+
+.recurly-hosted-field {
+  @extend .sp-input;
+}
+
+.recurly-form {
+  .recurly-hosted-field {
+    border: none;
+    border-bottom: 1px solid $gray-2;
+    border-radius: 0;
+    height: 3.75rem;
+    margin-top: 0;
+  }
+
+  .recurly-hosted-field-focus {
+    border: none;
+    border-bottom: 1px solid $gray-1;
+  }
+}
+
