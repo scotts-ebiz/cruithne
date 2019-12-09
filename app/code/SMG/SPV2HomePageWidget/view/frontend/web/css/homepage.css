@@ -70,3 +70,368 @@
 .sp-app-image {
   max-width: 10rem;
 }
+
+/* Transition for Summer session in focus*/
+/* Fall*/
+
+.fall_sm_in_focus{
+  animation: rot_fall .5s linear;   
+  animation-fill-mode: forwards;
+}
+
+@keyframes rot_fall{
+  0%{
+  opacity: 0.5;
+  transform:translate(187px, 0px);
+  }
+  25%{
+  transform:translate(310px, 30px);
+  }
+  50%{
+    transform:translate(330px, 60px);
+  }
+  75%{
+    transform:translate(365px, 150px);
+  }
+  100%{
+  opacity: 1;
+  transform:translate(378px,189px);
+  }
+}
+
+.fl-stroke-focus{
+  animation: icon_in_focus_bg 2s linear;
+  animation-fill-mode: forwards;
+}
+.fl-stroke-no-focus{
+  animation: previous_icon_in_focus_bg 2s linear;
+  animation-fill-mode: forwards;
+}
+
+/* Late Spring */
+.lateSpring_sm_in_focus{
+  animation: rot_l_spring .5s linear;   
+  animation-fill-mode: forwards;
+}
+
+@keyframes rot_l_spring{
+  0%{
+  opacity: 0.5;
+  transform:translate(186px, 380px);
+  }
+  20%{
+       opacity: .7;
+       transform:translate(80px,370px);
+   }
+   40%{
+       opacity: .8;
+       transform:translate(5px,250px);
+   }
+  100%{
+  opacity: 1;
+  transform:translate(0px,189px);
+  }
+}
+
+.ls-stroke-focus{
+  animation: icon_in_focus_bg 2s linear;
+  animation-fill-mode: forwards;
+}
+.ls-stroke-no-focus{
+  animation: previous_icon_in_focus_bg 2s linear;
+  animation-fill-mode: forwards;
+}
+
+/*
+#ls-Stroke-3{
+  animation: previous_icon_in_focus_bg 2s linear;
+  animation-fill-mode: forwards;
+}
+#ls-Stroke-5{
+  animation: previous_icon_in_focus_bg 2s linear;
+  animation-fill-mode: forwards;
+}
+*/
+
+/* Early Spring */
+
+.earlySpring_sm_in_focus{
+  animation: rot_e_spring .5s linear;   
+  animation-fill-mode: forwards;
+}
+
+@keyframes rot_e_spring{
+  0%{
+  opacity: 0.5;
+  transform:translate(0px, 189px);
+  }
+  20%{
+      transform:translate(10px,80px);
+  }
+  100%{
+  opacity: 1;
+  transform:translate(187px,0px);
+  }
+}
+
+/* Summer */
+.summer_sm_in_focus{
+  animation: rot_summer .5s linear;   
+  animation-fill-mode: forwards;
+}
+
+@keyframes rot_summer{
+  0%{
+  opacity: 0.3;
+  transform:translate(379px, 189px);
+  }
+  10%{
+     transform:translate(370px,250px);
+  }
+  20%{
+      transform:translate(365px,255px);
+  }
+  30%{
+      opacity: .6s;
+      transform:translate(350px,275px);
+  }
+  40%{
+      transform:translate(340px,300px);
+  }
+  50%{
+      opacity: .7s;
+      transform:translate(320px,330px);
+  }
+  100%{
+  opacity: 1;
+  transform:translate(186px,380px);
+  }
+}
+
+/*
+#sm-Stroke-1, #sm-Stroke-3, #sm-Stroke-5, #sm-Stroke-7, #sm-Stroke-9, #sm-Stroke-11,
+#sm-Stroke-13, #sm-Stroke-15, #sm-Stroke-17, #sm-Stroke-19, #sm-Stroke-21, #sm-Stroke-23,
+#sm-Stroke-25, #sm-Stroke-27
+{
+  animation: icon_in_focus_bg 2s linear;
+  animation-fill-mode: forwards;
+} 
+*/
+
+.sm_stroke_in_focus{
+  animation: icon_in_focus_bg 2s linear;
+  animation-fill-mode: forwards;
+}
+
+.sm_stroke_out_of_focus{
+  animation: previous_icon_in_focus_bg 2s linear;
+  animation-fill-mode: forwards;
+}
+
+/* Icon apply based on focus */
+
+@keyframes previous_icon_in_focus_bg{
+ 0%{
+     opacity: .8;
+     stroke: white;
+     fill: rgb(29, 86, 50);
+ }
+ 20%{
+      opacity: 1;
+      stroke: rgb(29, 86, 50);
+      fill: white;
+ }
+ 100%{
+     opacity: 1;
+     stroke: rgb(29, 86, 50);
+     fill: white;
+ }
+}
+
+@keyframes icon_in_focus_bg{
+  0%{
+     opacity: .6;
+     fill: white;
+     stroke: rgb(29, 86, 50);
+  }
+  50%{
+      opacity: 1;
+      stroke: white;
+      fill: rgb(29, 86, 50);
+  }
+  100%{
+      opacity: 1;
+      stroke: white;
+      fill: rgb(29, 86, 50);
+  }
+}
+
+/* Text and center image */
+.group7Anim{
+  animation: group-7_anim .75s linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes group-7_anim{
+  0%{
+      opacity: 1;
+      transform:translate(74px, 58px);
+  }
+  50%{
+      opacity: 0;
+      transform:translate(74px, 350px)
+  }
+  75%{
+      opacity: .2;
+      transform:translate(74px, 200px)
+  }
+  100%{
+      opacity: 1;
+      transform:translate(74px, 58px);
+  }
+}
+
+.txt_anim_global{
+  animation: txt_anim 1s linear;
+  animation-direction: alternate;
+  animation-fill-mode: forwards;
+}
+.e_spring_txt{
+  animation: txt_anim 1s linear;
+  animation-direction: alternate;
+  animation-fill-mode: forwards;
+}
+.l_spring_txt{
+  animation: txt_anim 1s linear;
+  animation-direction: alternate;
+  animation-fill-mode: forwards;
+}
+.summer_txtAnim{
+  animation: txt_anim 1s linear;
+  animation-direction: alternate;
+  animation-fill-mode: forwards;
+}
+.fall_txtAnim{
+  animation: txt_anim 1s linear;
+  animation-direction: alternate;
+  animation-fill-mode: forwards;
+}
+
+@keyframes txt_anim{
+  0%{
+      opacity: 1;
+      transform:translateY(20px);
+  }
+  50%{
+      opacity: 0;
+      transform:translateY(350px)
+  }
+  75%{
+      opacity: .2;
+      transform:translateY(200px)
+  }
+  100%{
+      opacity: 1;
+      transform:translateY(20px);
+  }
+
+}
+
+.anim_check {
+  animation-name: example;
+  animation-duration: 5s;
+  animation-timing-function: linear;
+  animation-delay: 2s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.anim_check_shorthand {
+  animation: example 5s linear 2s infinite alternate;
+}
+
+
+/* Classes will switch based on the season */
+/* Transition for Fall in focus */
+/* Fall */
+      .fall_fl_in_focus{
+          animation: rot_summer .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+      /* Late Spring */
+      .lateSpring_fl_in_focus{
+          animation: rot_e_spring .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+      /* Early Spring */
+      .earlySpring_fl_in_focus{
+          animation: rot_fall .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+      /* Summer */
+      .summer_fl_in_focus{
+          animation: rot_l_spring .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+/* Transition for Early Spring in focus*/
+      .fall_es_in_focus{
+          animation: rot_l_spring .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+      .lateSpring_es_in_focus{
+          animation: rot_fall .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+      .earlySpring_es_in_focus{
+          animation: rot_summer .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+      .summer_es_in_focus{
+          animation: rot_e_spring .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+/* Transition for late Spring in focus*/
+      .fall_ls_in_focus{
+          animation: rot_e_spring .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+      .lateSpring_ls_in_focus{
+          animation: rot_summer .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+      .earlySpring_ls_in_focus{
+          animation: rot_l_spring .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+      .summer_ls_in_focus{
+          animation: rot_fall .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+
+/*circle animation*/
+.circle_frame_anim{
+  animation: circle_anim .5s linear;
+  /* animation-fill-mode: forwards; */
+}
+@keyframes circle_anim{
+    0%{
+      transform: rotate(0deg);
+      transform-origin: center center;
+    }
+    100%{
+      transform: rotate(-45deg);
+      transform-origin: center center;
+    }
+}
