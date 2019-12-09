@@ -112,6 +112,15 @@ define(
             myPlaceOrder: function () {
                 var self = this;
                 var recurlyForm = $('.recurly-form');
+                var rsco = $('input[name="rsco_accept"]');
+
+                if (!rsco[0].checked) {
+                    rsco[0].setCustomValidity(true);
+
+                    return false;
+                } else {
+                    rsco[0].setCustomValidity(false);
+                }
 
                 self.updateRecurlyFormData();
 
