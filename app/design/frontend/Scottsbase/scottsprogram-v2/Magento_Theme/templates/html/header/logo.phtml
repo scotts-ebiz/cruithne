@@ -1,5 +1,5 @@
 <?php
-$storeName = $block->getThemeName() ? $block->getThemeName() : $block->getLogoAlt();
+$storeName = $block->escapeHtml($block->getThemeName() ? $block->getThemeName() : $block->getLogoAlt());
 ?>
 <div class="sp-flex sp-items-center sp-justify-between">
     <a
