@@ -1,10 +1,10 @@
 <?php
 
-namespace SMG\SubscriptionApi\Model;
+namespace SMG\SubscriptionApi\Api;
 
 use Magento\Directory\Model\ResourceModel\Region\Collection;
 use Magento\Directory\Model\ResourceModel\Region\CollectionFactory;
-use SMG\SubscriptionApi\Api\RecurlyInterface;
+use SMG\SubscriptionApi\Api\Interfaces\RecurlyInterface;
 use Recurly_Client;
 use Recurly_Account;
 use Recurly_Subscription;
@@ -22,7 +22,7 @@ use Recurly_Error;
 
 /**
  * Class RecurlySubscription
- * @package SMG\SubscriptionApi\Model
+ * @package SMG\SubscriptionApi\Api
  */
 class RecurlySubscription implements RecurlyInterface
 {

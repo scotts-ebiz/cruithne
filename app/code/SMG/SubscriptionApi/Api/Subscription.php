@@ -1,11 +1,11 @@
 <?php
 
-namespace SMG\SubscriptionApi\Model;
+namespace SMG\SubscriptionApi\Api;
 
 use Magento\Framework\Exception\SecurityViolationException;
 use Recurly_Client;
 use Recurly_SubscriptionList;
-use SMG\SubscriptionApi\Api\SubscriptionInterface;
+use SMG\SubscriptionApi\Api\Interfaces\SubscriptionInterface;
 
 /**
  * Class Subscription

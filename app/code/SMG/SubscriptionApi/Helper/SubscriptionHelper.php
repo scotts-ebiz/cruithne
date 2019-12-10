@@ -5,6 +5,10 @@ namespace SMG\SubscriptionApi\Helper;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Store\Model\ScopeInterface;
 
+/**
+ * Class SubscriptionHelper
+ * @package SMG\SubscriptionApi\Helper
+ */
 class SubscriptionHelper extends AbstractHelper
 {
 
