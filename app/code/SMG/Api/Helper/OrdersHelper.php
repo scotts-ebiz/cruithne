@@ -36,6 +36,8 @@ class OrdersHelper
 {
     // Output JSON file constants
     const ORDER_NUMBER = 'OrderNumber';
+    const SUBSCRIPTION_ORDER = 'SubscriptOrder';
+    const SUBSCRIPTION_TYPE = 'SubscriptType';
     const DATE_PLACED = 'DatePlaced';
     const SAP_DELIVERY_DATE = 'SAPDeliveryDate';
     const CUSTOMER_NAME = 'CustomerName';
@@ -80,6 +82,9 @@ class OrdersHelper
     const DISCOUNT_PERCENT_AMOUNT = 'DiscPercAmt';
     const SURCH_PERCENT_AMOUNT = 'SurchPercAmt';
     const DISCOUNT_REASON = 'ReasonCode';
+    const SUBSCRIPTION_SHIP_START = 'SubscriptLineShipStart';
+    const SUBSCRIPTION_SHIP_END = 'SubscriptLineShipEnd';
+
     /**
      * @var LoggerInterface
      */
@@ -561,6 +566,8 @@ class OrdersHelper
         // return
         return array_map('trim', array(
             self::ORDER_NUMBER => $order->getIncrementId(),
+            self::SUBSCRIPTION_ORDER => $order->getSubscriptionOrderId(),
+            self::SUBSCRIPTION_TYPE => $order->getData('subscription_type'),
             self::DATE_PLACED => $order->getData('created_at'),
             self::SAP_DELIVERY_DATE => $tomorrow,
             self::CUSTOMER_NAME => $customerName,
@@ -604,7 +611,9 @@ class OrdersHelper
             self::SURCH_FIXED_AMOUNT => $surchFixedAmt,
             self::DISCOUNT_PERCENT_AMOUNT => $discPerAmt,
             self::SURCH_PERCENT_AMOUNT => $surchPerAmt,
-            self::DISCOUNT_REASON => $orderItem->getReasonCode()
+            self::DISCOUNT_REASON => $orderItem->getReasonCode(),
+            self::SUBSCRIPTION_SHIP_START => $order->getData('ship_start_date'),
+            self::SUBSCRIPTION_SHIP_END => $order->getData('ship_end_date')
         ));
     }
 
