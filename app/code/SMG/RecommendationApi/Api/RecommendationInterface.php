@@ -53,4 +53,11 @@ interface RecommendationInterface
      */
     public function mapToUser($key, $user_id, $quiz_id);
 
+    /**
+     * Get product flat file information
+     *
+     * @param string $key
+     * @return array
+     */
+    public function getProducts($key);
 }

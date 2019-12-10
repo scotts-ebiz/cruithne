@@ -1,15 +1,18 @@
 // Colors
-$green-1: #1D5632;
-$green-2: #028C45;
-$green-3: #94C941;
-$green-4: #EDF4E1;
-$yellow-1: #FFDA3A;
-$yellow-2: #FFF9E4;
-$red-1: #CB0000;
-$white: #FFF;
+$green-1: #1d5632;
+$green-2: #028c45;
+$green-3: #94c941;
+$green-4: #edf4e1;
+$yellow-1: #ffda3a;
+$yellow-2: #fff9e4;
+$red-1: #cb0000;
+$white: #fff;
 $black: #000;
 $gray-1: #454545;
-$gray-2: #D3D3D3;
+$gray-2: #d3d3d3;
+$gray-3: #d8d8d8;
+$gray-4: #f4f4f4;
+$gray-5: #333;
 
 // Font Sizes
 $font-size-base: 16px;
@@ -37,7 +40,7 @@ $font-size-label: 12px;
 $font-size-form-label: 10px;
 
 // Borders
-$border-radius: .25rem;
+$border-radius: 0.1875rem;
 
 // Breakpoints
 $screen-xs: 320px;
@@ -66,12 +69,12 @@ $shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.26);
 $header-height: 4.5rem;
 
 // Required
-$product-name-link__color                                     : $text__color !default;
-$product-name-link__color__active                             : $text__color !default;
-$product-name-link__color__hover                              : $text__color !default;
-$product-name-link__color__visited                            : $text__color !default;
+$product-name-link__color: $text__color !default;
+$product-name-link__color__active: $text__color !default;
+$product-name-link__color__hover: $text__color !default;
+$product-name-link__color__visited: $text__color !default;
 
-$product-name-link__text-decoration                           : none !default;
-$product-name-link__text-decoration__active                   : $link__hover__text-decoration !default;
-$product-name-link__text-decoration__hover                    : $link__hover__text-decoration !default;
-$product-name-link__text-decoration__visited                  : $link__hover__text-decoration !default;
+$product-name-link__text-decoration: none !default;
+$product-name-link__text-decoration__active: $link__hover__text-decoration !default;
+$product-name-link__text-decoration__hover: $link__hover__text-decoration !default;
+$product-name-link__text-decoration__visited: $link__hover__text-decoration !default;

@@ -10,6 +10,14 @@ body {
     }
 }
 
+a {
+    color: $scotts-green
+}
+
+a:hover {
+    color: $scotts-secondary-green;
+}
+
 .checkout-index-index {
     .page-wrapper {
         .page-main {
@@ -17,7 +25,6 @@ body {
                 .main {
                     .checkout-container {
                         .actions {
-                            float: right;
                             .action.continue {
                                 &:before {
                                     -webkit-font-smoothing: antialiased;

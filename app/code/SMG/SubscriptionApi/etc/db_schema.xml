@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+    <table name="sales_order_grid" resource="sales" engine="innodb" comment="Extend sales_order_grid table">
+        <column xsi:type="varchar" name="gigya_id" nullable="false" comment="Gigya ID" />
+        <column xsi:type="varchar" name="master_subscription_id" nullable="false" comment="Master Subscription ID" />
+        <column xsi:type="varchar" name="subscription_id" nullable="false" comment="Subscription ID" />
+        <column xsi:type="boolean" name="subscription_addon" nullable="false" comment="Is Addon Subscription?" />
+        <column xsi:type="datetime" name="ship_date" nullable="false" comment="Ship Date" />
+    </table>
+    <table name="sales_order" resource="sales" engine="innodb" comment="Extend sales_order table">
+        <column xsi:type="varchar" name="gigya_id" nullable="false" comment="Gigya ID" />
+        <column xsi:type="varchar" name="master_subscription_id" nullable="false" comment="Master Subscription ID" />
+        <column xsi:type="varchar" name="subscription_id" nullable="false" comment="Subscription ID" />
+        <column xsi:type="boolean" name="subscription_addon" nullable="false" comment="Is Addon Subscription?" />
+        <column xsi:type="datetime" name="ship_date" nullable="false" comment="Ship Date" />
+    </table>
+</schema>

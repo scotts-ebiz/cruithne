@@ -2,17 +2,17 @@
 <div class="sp-quiz__question sp-container sp-mb-8">
 
     <!-- Showing banner image if it exists -->
-    <div class="sp-quiz__banner sp-text-center" data-bind="if: quiz.currentGroup().imageUrl">
+    <div class="sp-quiz__banner sp-max-w-lg sp-mx-auto sp-text-center" data-bind="if: quiz.currentGroup().imageUrl">
         <img alt="Quiz Banner" data-bind="attr:{src: quiz.currentGroup().imageUrl}"/>
     </div>
 
     <h2
-        class="sp-quiz__question-title sp-h2 sp-max-w-md sp-mt-0 sp-mx-auto sp-text-center roll"
+        class="sp-quiz__question-title sp-h2 sp-max-w-lg sp-mt-0 sp-mx-auto sp-text-center roll"
         data-bind="text: quiz.currentGroup().title"
     >
     </h2>
 
-    <p class="sp-text-center" data-bind="text: quiz.currentGroup().subtitle"></p>
+    <p class="sp-max-w-lg sp-mx-auto sp-text-center" data-bind="text: quiz.currentGroup().subtitle"></p>
 
     <!-- Process Questions -->
     <div>
@@ -36,6 +36,7 @@
                             data-bind="
                                 attr: {
                                     checked: $parents[1].quiz.isOptionSelected(question.id, option.id),
+                                    'data-label': option.label,
                                     id: option.id,
                                     name: question.id,
                                     value: option.id
@@ -49,7 +50,7 @@
                             class="sp-quiz__option-label sp-block sp-h-full"
                             data-bind="attr: { for: option.id }"
                         >
-                            <span class="sp-quiz__option-content sp-bg-white sp-block sp-p-4 sp-rounded sp-shadow-md">
+                            <span class="sp-quiz__option-content sp-bg-white sp-flex sp-items-center sp-justify-center sp-p-4 sp-rounded sp-shadow-md">
                                 <span class="sp-block sp-mb-0 sp-text-black" data-bind="text: option.label"></span>
                             </span>
                         </label>

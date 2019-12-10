@@ -24,15 +24,15 @@
     <div class="sp-hero__background <?php echo $block->escapeHtml($block->getData('heroImageClass')) ?>"></div>
     <div class="sp-hero__overlay"></div>
     <?php if ($block->getData('heroHeadline')) { ?>
-        <div class="sp-hero__headline sp-container">
-            <h1 class="sp-h1 sp-relative sp-text-white sp-text-center"><?php echo $block->escapeHtml($block->getData('heroHeadline')) ?></h1>
+        <div class="sp-hero__headline sp-container sp-my-8">
+            <h1 class="sp-h1 sp-relative sp-text-white sp-text-center sp-my-0"><?php echo $block->escapeHtml($block->getData('heroHeadline')) ?></h1>
         </div>
     <?php } ?>
 
     <?php if ($block->getData('heroCallToActionText') && $block->getData('heroCallToActionLink')) { ?>
         <a
             href="<?php echo $block->escapeUrl($block->getData('heroCallToActionLink')) ?>"
-            class="sp-button sp-button--inverted sp-button--get-started sp-mb-12 sp-relative sp-text-center"
+            class="sp-button sp-button--inverted sp-button--get-started sp-mb-8 sp-relative sp-text-center"
         >
             <?php echo $block->escapeHtml($block->getData('heroCallToActionText')) ?>
         </a>

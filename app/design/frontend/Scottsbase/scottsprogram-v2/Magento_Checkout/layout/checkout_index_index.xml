@@ -1,0 +1,19 @@
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="header.container" htmlId="sp-header" htmlClass="sp-header">
+            <container name="header.panel.wrapper" htmlClass="panel wrapper" htmlTag="div" before="-">
+            </container>
+            <container name="header-wrapper" label="Page Header" as="header-wrapper" htmlTag="div" htmlClass="sp-container">
+                <block class="Magento\Theme\Block\Html\Header\Logo" name="logo">
+                    <arguments>
+                        <argument name="logo_file" xsi:type="string">images/scotts_logo@2x.png</argument>
+                        <argument name="logo_img_width" xsi:type="number">113</argument>
+                        <argument name="logo_img_height" xsi:type="number">71</argument>
+                        <argument name="hide_links" xsi:type="boolean">true</argument>
+                    </arguments>
+                </block>
+            </container>
+        </referenceContainer>
+		<referenceContainer name="footer-container" remove="false" />
+    </body>
+</page>

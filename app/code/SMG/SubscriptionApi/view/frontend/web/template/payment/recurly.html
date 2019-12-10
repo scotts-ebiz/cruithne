@@ -1,0 +1,48 @@
+<div class="payment-method" data-bind="css: {'_active': (getCode() == isChecked())}">
+    <div class="payment-method-content">
+        <!-- ko foreach: getRegion('messages') -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!--/ko-->
+        <div class="payment-method-billing-address">
+            <div class="sp-checkout-title sp-h4 sp-uppercase">Billing Address</div>
+            <!-- ko foreach: $parent.getRegion(getBillingAddressFormName()) -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+        <!-- Recurly form -->
+        <div class="">
+            <div class="sp-checkout-title sp-h4 sp-uppercase">Payment Method</div>
+            <form class="recurly-form">
+                <input type="text" data-recurly="first_name" placeholder="first name" value="">
+                <input type="text" data-recurly="last_name" placeholder="last name" value="">
+                <input type="text" data-recurly="address1" placeholder="address" value="">
+                <input type="text" data-recurly="city" placeholder="city" value="">
+                <input type="text" data-recurly="country" placeholder="country" value="">
+                <input type="text" data-recurly="state" placeholder="state" value="">
+                <input type="text" data-recurly="postal_code" value="">
+                <div data-recurly="card"></div>
+                <input type="hidden" name="recurly-token" data-recurly="token">
+                <button style="display: none;">Submit</button>
+            </form>
+        </div>
+        <div class="checkout-agreements-block">
+            <!-- ko foreach: $parent.getRegion('before-place-order') -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+        <div class="sp-mt-6 sp-text-center md:sp-text-left">
+            <button
+                class="primary checkout sp-button sp-button--primary sp-button--get-started"
+                data-bind="
+                    click: myPlaceOrder,
+                    attr: {title: $t('Place Order')},
+                    css: {disabled: !isPlaceOrderActionAllowed()},
+                    enable: (getCode() == isChecked())
+                    "
+                disabled
+                type="submit">
+                <span data-bind="i18n: 'Place Order'"></span>
+            </button>
+        </div>
+    </div>
+</div>
