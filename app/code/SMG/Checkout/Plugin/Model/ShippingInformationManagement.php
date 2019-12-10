@@ -107,7 +107,11 @@ class ShippingInformationManagement
             foreach($data as $value)
             {
                 $attr = $product->getResource()->getAttribute('state_not_allowed');
-                $option_value[] = $attr->getSource()->getOptionText($value);
+
+                // Checking to make sure that this data exists in the DB
+                if ($attr) {
+                    $option_value[] = $attr->getSource()->getOptionText($value);
+                }
             }
 
             if(in_array($State, $option_value)) {
