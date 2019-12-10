@@ -2,57 +2,89 @@
 
 namespace SMG\SubscriptionCheckout\Controller\Account;
 
+/**
+ * Class LoginPost
+ * @package SMG\SubscriptionCheckout\Controller\Account
+ * @todo Wes this needs jailed
+ */
 class LoginPost
 {
 
-	protected $_request;
+    /**
+     * @var \Magento\Framework\App\RequestInterface
+     */
+    protected $_request;
 
-	public function __construct(
-		\Magento\Framework\App\RequestInterface $request
-	)
-	{
-		$this->_request = $request;
-	}
+    /**
+     * @var \SMG\SubscriptionApi\Helper\SubscriptionHelper
+     */
+    protected $_subscriptionHelper;
 
-	public function afterExecute(
-		\Magento\Customer\Controller\Account\LoginPost $subject,
-		$result
-	)
-	{
-		//print_r( $this->_request->getParam('quiz_id') );
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $_storeManager;
 
-		return $result;
-	}
+    /**
+     * LoginPost constructor.
+     * @param \Magento\Framework\App\RequestInterface $request
+     */
+    public function __construct(
+        \Magento\Framework\App\RequestInterface $request,
+        \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper,
+        \Magento\Store\Model\StoreManagerInterface $storeManager
+    ) {
+        $this->_request = $request;
+        $this->_subscriptionHelper = $subscriptionHelper;
+        $this->_storeManager = $storeManager;
+    }
 
-	private function mapCompletedQuiz($user_id, $quiz_id)
-	{
-		if( empty( $user_id ) || empty( $quiz_id ) ) {
-			return;
-		}
+    /**
+     * @param \Magento\Customer\Controller\Account\LoginPost $subject
+     * @param $result
+     * @return mixed
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function afterExecute(
+        \Magento\Customer\Controller\Account\LoginPost $subject,
+        $result
+    ) {
 
-		try {
-			
-			$url = 'https://lspaasdraft.azurewebsites.net/api/completedQuizzes/mapToUser';
+        if ( $this->_subscriptionHelper->isActive( $this->_storeManager->getStore()->getId() ) ) {
+            return $result;
+        }
+    }
 
-			$ch = curl_init();
-			curl_setopt( $ch, CURLOPT_URL, $url );
-			curl_setopt( $ch, CURLOPT_CUSTOMREQUEST, 'PUT' );
-			curl_setopt( $ch, CURLOPT_RETURNTRANSFER, true );
-			curl_setopt( $ch, CURLOPT_HTTPHEADER, array(
-				'Content-Type: application/json',
-				'x-userid: ' . $user_id,
-			) );
-			curl_setopt( $ch, CURLOPT_POSTFIELDS, array( $quiz_id ) );
+    /**
+     * @param $user_id
+     * @param $quiz_id
+     * @return bool|string|void
+     */
+    private function mapCompletedQuiz($user_id, $quiz_id)
+    {
+        if (empty($user_id) || empty($quiz_id)) {
+            return;
+        }
 
-			$response = curl_exec( $ch );
-			curl_close( $ch );
+        try {
+            $url = 'https://lspaasdraft.azurewebsites.net/api/completedQuizzes/mapToUser';
 
-			return $response;
-		} catch(Exception $e) {
-			echo $e->getMessage() . ' (' . $e->getCode() . ')';
-		}
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'x-userid: ' . $user_id,
+            ]);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, [ $quiz_id ]);
 
+            $response = curl_exec($ch);
+            curl_close($ch);
 
-	}
-
+            return $response;
+        } catch (Exception $e) {
+            echo $e->getMessage() . ' (' . $e->getCode() . ')';
+        }
+    }
 }

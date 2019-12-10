@@ -1,9 +1,14 @@
 <?php
+
 namespace SMG\SubscriptionApi\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Store\Model\ScopeInterface;
 
+/**
+ * Class RecurlyHelper
+ * @package SMG\SubscriptionApi\Helper
+ */
 class RecurlyHelper extends AbstractHelper
 {
 
@@ -11,8 +16,6 @@ class RecurlyHelper extends AbstractHelper
 	const RECURLY_CONFIG_PRIVATE_API_KEY = 'recurly/payment/apikey';
 	const RECURLY_CONFIG_PUBLIC_API_KEY = 'recurly/payment/publicapikey';
 	const RECURLY_CONFIG_SUBDOMAIN = 'recurly/payment/subdomain';
-	const SUBSCRIPTION_CONFIG_SHIP_DAYS_START = 'smg/subscription/ship_days_start';
-	const SUBSCRIPTION_CONFIG_SHIP_DAYS_END = 'smg/subscription/ship_days_end';
 
 	/**
 	 * Return state of Recurly payment
@@ -69,36 +72,6 @@ class RecurlyHelper extends AbstractHelper
 	{
 		return $this->scopeConfig->getValue(
 			self::RECURLY_CONFIG_SUBDOMAIN,
-			ScopeInterface::SCOPE_STORE,
-			$store_id
-		);
-	}
-
-	/**
-	 * Return number of days to open shipment before application window
-	 * 
-	 * @param null $store_id
-	 * @return int
-	 */
-	public function getShipDaysStart($store_id = null)
-	{
-		return $this->scopeConfig->getValue(
-			self::SUBSCRIPTION_CONFIG_SHIP_DAYS_START,
-			ScopeInterface::SCOPE_STORE,
-			$store_id
-		);
-	}
-
-	/**
-	 * Return number of days to close shipment before application window
-	 * 
-	 * @param null $store_id
-	 * @return int
-	 */
-	public function getShipDaysEnd($store_id = null)
-	{
-		return $this->scopeConfig->getValue(
-			self::SUBSCRIPTION_CONFIG_SHIP_DAYS_END,
 			ScopeInterface::SCOPE_STORE,
 			$store_id
 		);
