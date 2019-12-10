@@ -1,4 +1,5 @@
 <?php
+
 namespace SMG\SubscriptionApi\Model;
 
 use Magento\Directory\Model\ResourceModel\Region\Collection;
@@ -19,23 +20,89 @@ use Recurly_ValidationError;
 use Recurly_SubscriptionList;
 use Recurly_Error;
 
+/**
+ * Class RecurlySubscription
+ * @package SMG\SubscriptionApi\Model
+ */
 class RecurlySubscription implements RecurlyInterface
 {
 
-	protected $_helper;
+    /**
+     * @var \SMG\SubscriptionApi\Helper\RecurlyHelper
+     */
+	protected $_recurlyHelper;
+
+    /**
+     * @var \SMG\SubscriptionApi\Helper\SubscriptionHelper
+     */
+	protected $_subscriptionHelper;
+
+    /**
+     * @var \SMG\RecommendationApi\Helper\RecommendationHelper
+     */
 	protected $_recommendationHelper;
+
+    /**
+     * @var \Magento\Customer\Model\Session
+     */
 	protected $_customerSession;
+
+    /**
+     * @var \Magento\Customer\Model\Customer
+     */
 	protected $_customer;
+
+    /**
+     * @var \Magento\Customer\Model\ResourceModel\CustomerFactory
+     */
 	protected $_customerFactory;
+
+    /**
+     * @var string
+     */
 	protected $_couponCode;
+
+    /**
+     * @var string
+     */
 	protected $_currency;
+
+    /**
+     * @var \Magento\Catalog\Api\ProductRepositoryInterface
+     */
 	protected $_productRepository;
+
+    /**
+     * @var \Magento\Checkout\Model\Session
+     */
 	protected $_checkoutSession;
+
+    /**
+     * @var CollectionFactory
+     */
 	protected $_collectionFactory;
+
+    /**
+     * @var \Magento\Customer\Model\Url
+     */
 	protected $_customerUrl;
 
+    /**
+     * RecurlySubscription constructor.
+     * @param \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper
+     * @param \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper
+     * @param \SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper
+     * @param \Magento\Customer\Model\Session $customerSession
+     * @param \Magento\Customer\Model\Customer $customer
+     * @param \Magento\Customer\Model\ResourceModel\CustomerFactory $customerFactory
+     * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
+     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param CollectionFactory $collectionFactory
+     * @param \Magento\Customer\Model\Url $customerUrl
+     */
 	public function __construct(
-		\SMG\SubscriptionApi\Helper\RecurlyHelper $helper,
+		\SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper,
+        \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper,
 		\SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper,
 		\Magento\Customer\Model\Session $customerSession,
 		\Magento\Customer\Model\Customer $customer,
@@ -46,7 +113,9 @@ class RecurlySubscription implements RecurlyInterface
 		\Magento\Customer\Model\Url $customerUrl
 	)
 	{
-		$this->_helper = $helper;
+        $this->_recurlyHelper = $recurlyHelper;
+        $this->_subscriptionHelper = $subscriptionHelper;
+        $this->_recommendationHelper = $recommendationHelper;
 		$this->_recommendationHelper = $recommendationHelper;
 		$this->_customerSession = $customerSession;
 		$this->_customer = $customer;
@@ -70,8 +139,8 @@ class RecurlySubscription implements RecurlyInterface
 		// If there is Recurly token, plan code and quiz data
 		if( ! empty( $token ) && ! empty( $plan ) && ! empty( $quiz ) ) {
 			// Configure Recurly Client
-			Recurly_Client::$apiKey = $this->_helper->getRecurlyPrivateApiKey();
-			Recurly_Client::$subdomain = $this->_helper->getRecurlySubdomain();
+			Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
+			Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
 			$checkoutData = $this->_checkoutSession->getQuote()->getShippingAddress()->getData();
 
@@ -235,8 +304,8 @@ class RecurlySubscription implements RecurlyInterface
 	public function checkRecurlySubscription()
 	{
 		// Configure Recurly Client using the API Key and Subdomain entered in the settings page
-		Recurly_Client::$apiKey = $this->_helper->getRecurlyPrivateApiKey();
-		Recurly_Client::$subdomain = $this->_helper->getRecurlySubdomain();
+		Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
+		Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
 		// Get checkout data
 		$checkoutData = $this->_checkoutSession->getQuote()->getShippingAddress()->getData();
@@ -254,13 +323,14 @@ class RecurlySubscription implements RecurlyInterface
 
 	}
 
-	/**
-	 * Cancel subscriptions of specific Recurly account
-	 * 
-	 * @param string $account_code
-	 * 
-	 * @return bool
-	 */
+    /**
+     * Cancel subscriptions of specific Recurly account
+     *
+     * @param string $account_code
+     *
+     * @return bool
+     * @throws Recurly_Error
+     */
 	private function cancelAccountSubscriptions($account_code)
 	{
 		try {
@@ -469,12 +539,13 @@ class RecurlySubscription implements RecurlyInterface
 		}
 	}
 
-	/**
-	 * Check if coupon code exists on Recurly and return it,
-	 * or return false if it doesn't
-	 * 
-	 * @return mixed
-	 */
+    /**
+     * Check if coupon code exists on Recurly and return it,
+     * or return false if it doesn't
+     *
+     * @return mixed
+     * @throws Recurly_Error
+     */
 	private function checkIfCouponExists()
 	{
 		try {
@@ -485,12 +556,13 @@ class RecurlySubscription implements RecurlyInterface
 		}
 	}
 
-	/**
-	 * If the coupon code exists, return the code, otherwise create
-	 * a new Recurly coupon code that can be used for the annual subscriptions
-	 * 
-	 * @return mixed
-	 */
+    /**
+     * If the coupon code exists, return the code, otherwise create
+     * a new Recurly coupon code that can be used for the annual subscriptions
+     *
+     * @return mixed
+     * @throws Recurly_Error
+     */
 	private function getCouponCode()
 	{
 		if( $this->checkIfCouponExists()) {
@@ -517,15 +589,17 @@ class RecurlySubscription implements RecurlyInterface
 		}
 	}
 
-	/**
-	 * Calculate shipping start date 
-	 * 
-	 * @return DateTime 
-	 */
+    /**
+     * Calculate shipping start date
+     *
+     * @param $start_date
+     * @return \DateTime
+     * @throws \Exception
+     */
 	private function getSubscriptionStartDate($start_date)
 	{
 		// Get shipping days start from the settings, if the value is missing set to 14
-		$shippingOpenWindow = ( ! empty( $this->_helper->getShipDaysStart() ) ) ? $this->_helper->getShipDaysStart() : 14;
+		$shippingOpenWindow = ( ! empty( $this->_subscriptionHelper->getShipDaysStart() ) ) ? $this->_subscriptionHelper->getShipDaysStart() : 14;
 
 		$applicationStartDate = new \DateTime($start_date);
 		$applicationStartDate->sub(new \DateInterval('P' . $shippingOpenWindow . 'D'));
