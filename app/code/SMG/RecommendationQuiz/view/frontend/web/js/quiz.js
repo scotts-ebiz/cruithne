@@ -602,7 +602,9 @@ define([
             var initializedMap = false;
             var sliderQuestion = false;
 
-            window.location.hash = group.label;
+            window.location.hash = group.label
+                ? String(group.label).replace(' ', '-').toLowerCase()
+                : '';
 
             for (question of group.questions) {
                 sliderQuestion = true;
