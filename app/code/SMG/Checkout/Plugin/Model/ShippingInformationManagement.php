@@ -95,26 +95,26 @@ class ShippingInformationManagement
         $validate = false;
         $State= $this->_checkoutSession->getQuote()->getShippingAddress()->getRegion();
 
-//        foreach($items as $item) {
-//            $itemId = $item-> getItemId();
-//            $productId=$item->getProductId();
-//            $product=$this->_productloader->create()->load($productId);
-//            $productname[] = $product->getName();
-//            $StateNotAllowd= $product->getStateNotAllowed();
-//            $data = explode(',', $StateNotAllowd);
-//            $option_value = array();
-//
-//            foreach($data as $value)
-//            {
-//                $attr = $product->getResource()->getAttribute('state_not_allowed');
-//                $option_value[] = $attr->getSource()->getOptionText($value);
-//            }
-//
-//            if(in_array($State, $option_value)) {
-//                $validate = true;
-//                $this->_cart->removeItem($itemId)->save();
-//            }
-//        }
+        foreach($items as $item) {
+            $itemId = $item-> getItemId();
+            $productId=$item->getProductId();
+            $product=$this->_productloader->create()->load($productId);
+            $productname[] = $product->getName();
+            $StateNotAllowd= $product->getStateNotAllowed();
+            $data = explode(',', $StateNotAllowd);
+            $option_value = array();
+
+            foreach($data as $value)
+            {
+                $attr = $product->getResource()->getAttribute('state_not_allowed');
+                $option_value[] = $attr->getSource()->getOptionText($value);
+            }
+
+            if(in_array($State, $option_value)) {
+                $validate = true;
+                $this->_cart->removeItem($itemId)->save();
+            }
+        }
 
         if($validate) {
             $quoteId = $this->_checkoutSession->getQuote()->getId();
