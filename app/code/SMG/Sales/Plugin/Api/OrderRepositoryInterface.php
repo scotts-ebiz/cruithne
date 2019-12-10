@@ -13,6 +13,7 @@ use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
 use Magento\Framework\Exception\InputException;
 use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\ResourceModel\Quote as QuoteResource;
+use Magento\Setup\Exception;
 use Psr\Log\LoggerInterface;
 
 
@@ -137,10 +138,13 @@ class OrderRepositoryInterface
                     foreach ($statesNotAllowedList as $stateNotAllowed)
                     {
                         $attr = $this->_productResource->getAttribute('state_not_allowed');
+                        $statesNotAllowedArray = [];
 
                         try
                         {
-                            $statesNotAllowedArray[] = $attr->getSource()->getOptionText($stateNotAllowed);
+                            if ($attr) {
+                                $statesNotAllowedArray[] = $attr->getSource()->getOptionText($stateNotAllowed);
+                            }
                         }
                         catch (\Magento\Framework\Exception\LocalizedException $e)
                         {
@@ -149,8 +153,7 @@ class OrderRepositoryInterface
                     }
 
                     // is the state in the list
-                    if (in_array($state, $statesNotAllowedArray))
-                    {
+                    if (in_array($state, $statesNotAllowedArray)) {
                         $validate = true;
                     }
                 }

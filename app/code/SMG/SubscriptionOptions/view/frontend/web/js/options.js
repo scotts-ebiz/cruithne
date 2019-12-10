@@ -38,7 +38,6 @@ define([
                         data = JSON.parse(data);
 
                         if (data.success === true) {
-                            localStorage.setItem('estimated_arrival', data.estimated_arrival);
                             window.sessionStorage.setItem('subscription_plan', subscriptionPlan );
                         	window.location.href = '/checkout/#shipping';
                         } else {

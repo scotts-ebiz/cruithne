@@ -320,3 +320,21 @@
     text-align: left;
   }
 }
+
+// Success Page
+.checkout-onepage-success .page-wrapper #maincontent {
+  margin: 0;
+}
+
+.checkout-onepage-success .page-wrapper #maincontent .checkout-success {
+  width: 100%;
+}
+
+.sp-success__app-image {
+  @media (min-width: $screen-md) {
+    bottom: 0;
+    left: 50%;
+    position: absolute;
+    transform: translateX(-50%);
+  }
+}
