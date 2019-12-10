@@ -46,16 +46,3 @@
 	transition: $x;
 }
 
-
-//test
-@mixin h2-heading($_family: $h2__font-family) {
-  font-size: 18px;
-  @include lib-css(font-family, $_family);
-  //color: $h2__font-color;
-  //font-weight: $h2__font-weight;
-  //line-height: $h2__line-height;
-  //letter-spacing: $h2__letter-spacing;
-}
-
-//test
-$test: 'Hellix-Heavy', Lucida Grande, Arial, Helvetica, sans-serif;
