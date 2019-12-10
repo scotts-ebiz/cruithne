@@ -7,6 +7,11 @@ use Magento\Framework\App\Action\Context;
 use Magento\Framework\View\Result\PageFactory;
 use SMG\RecommendationApi\Helper\RecommendationHelper;
 
+/**
+ * Class Index
+ * @package SMG\SubscriptionOptions\Controller\Index
+ * @todo Wes this needs jailed
+ */
 class Index extends Action
 {
     /**
