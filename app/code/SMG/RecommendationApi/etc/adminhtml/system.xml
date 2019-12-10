@@ -13,6 +13,12 @@
                     <validate>validate-no-html-tags</validate>
                     <config_path>recommendations/module/active</config_path>
                 </field>
+                <field id="usecsrf" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enforce CSRF</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <validate>validate-no-html-tags</validate>
+                    <config_path>recommendations/module/usecsrf</config_path>
+                </field>
             </group>
             <group id="recommendation_api_paths" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Recommendations API Paths</label>

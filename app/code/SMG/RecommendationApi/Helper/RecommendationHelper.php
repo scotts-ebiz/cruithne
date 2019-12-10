@@ -8,6 +8,7 @@ use Magento\Store\Model\ScopeInterface;
 class RecommendationHelper extends AbstractHelper
 {
     const CONFIG_RECOMMENDATIONS_ACTIVE_PATH = 'recommendations/module/active';
+    const CONFIG_RECOMMENDATIONS_USE_CSRF = 'recommendations/module/usecsrf';
     const CONFIG_RECOMMENDATIONS_NEW_QUIZ_PATH = 'recommendations/api/new';
     const CONFIG_RECOMMENDATIONS_SAVE_QUIZ_PATH = 'recommendations/api/save';
     const CONFIG_RECOMMENDATIONS_QUIZ_RESULT_PATH = 'recommendations/api/result';
@@ -30,6 +31,23 @@ class RecommendationHelper extends AbstractHelper
         );
 
         return $active;
+    }
+
+    /**
+     * Check whether we should use CSRF token checking
+     *
+     * @param null $store_id
+     * @return mixed
+     */
+    public function useCsrf($store_id = null)
+    {
+        $useCsrf = $this->scopeConfig->getValue(
+            self::CONFIG_RECOMMENDATIONS_USE_CSRF,
+            ScopeInterface::SCOPE_STORE,
+            $store_id
+        );
+
+        return $useCsrf === '1';
     }
 
     /**
@@ -126,8 +144,10 @@ class RecommendationHelper extends AbstractHelper
      * cURL wrapper
      *
      * @param string $url
+     * @param $data
      * @param string $method
      * @return array
+     * @throws \Exception
      */
     public function request($url, $data, $method = '')
     {
