@@ -4,6 +4,11 @@ namespace SMG\SubscriptionCheckout\Controller\Checkout;
 
 use Magento\Framework\App\Action\HttpGetActionInterface as HttpGetActionInterface;
 
+/**
+ * Class Index
+ * @package SMG\SubscriptionCheckout\Controller\Checkout
+ * @todo Wes this needs jailed
+ */
 class Index extends \Magento\Checkout\Controller\Index\Index implements HttpGetActionInterface
 {
     /**
@@ -25,6 +30,16 @@ class Index extends \Magento\Checkout\Controller\Index\Index implements HttpGetA
      * @var \Magento\Checkout\Model\Session
      */
     protected $_checkoutSession;
+
+    /**
+     * @var \SMG\SubscriptionApi\Helper\SubscriptionHelper
+     */
+    protected $_subscriptionHelper;
+
+    /**
+     * @var \Magento\Store\Model\StoreManagerInterface
+     */
+    protected $_storeManager;
 
     /**
      * Index constructor.
@@ -67,12 +82,17 @@ class Index extends \Magento\Checkout\Controller\Index\Index implements HttpGetA
         \Magento\Checkout\Helper\Data $checkoutHelper,
         \Magento\Checkout\Model\Session $checkoutSession,
         \Magento\Framework\Url\Helper\Data $urlHelper,
+        \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
         array $data = []
     ) {
         $this->_checkoutHelper = $checkoutHelper;
         $this->_urlHelper = $urlHelper;
         $this->_coreSession = $coreSession;
         $this->_checkoutSession = $checkoutSession;
+        $this->_subscriptionHelper = $subscriptionHelper;
+        $this->_storeManager = $storeManager;
+
         parent::__construct(
             $context,
             $customerSession,
@@ -93,44 +113,48 @@ class Index extends \Magento\Checkout\Controller\Index\Index implements HttpGetA
 
     /**
      * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\Result\Redirect|\Magento\Framework\Controller\ResultInterface|\Magento\Framework\View\Result\Page
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function execute()
     {
-        $quote = $this->getOnepage()->getQuote();
+        if ( $this->_subscriptionHelper->isActive( $this->_storeManager->getStore()->getId() ) ) {
 
-        /**
-         * If the customer is not logged in and guest checkout is not allowed,
-         * redirect the customer to the login page. Set current URL (/checkout) as referer,
-         * so the customer is redirected to checkout page on successful login.
-         */
-        if( ! $this->_customerSession->isLoggedIn() && ! $this->_checkoutHelper->isAllowedGuestCheckout( $quote ) ) {
+            $quote = $this->getOnepage()->getQuote();
 
-            $resultRedirect = $this->resultRedirectFactory->create();
+            /**
+             * If the customer is not logged in and guest checkout is not allowed,
+             * redirect the customer to the login page. Set current URL (/checkout) as referer,
+             * so the customer is redirected to checkout page on successful login.
+             */
+            if (!$this->_customerSession->isLoggedIn() && !$this->_checkoutHelper->isAllowedGuestCheckout($quote)) {
 
-            $params = array(
-                'quiz_id'   => $this->_coreSession->getQuizId()
-            );
+                $resultRedirect = $this->resultRedirectFactory->create();
 
-            $customerLoginUrl = $this->_url->getUrl( 
-                'customer/account/login',
-                array(
-                    'referer'   => $this->_urlHelper->getEncodedUrl( $this->_url->getCurrentUrl() ),
-                    '_query'    => $params
-                )
-            );
+                $params = array(
+                    'quiz_id' => $this->_coreSession->getQuizId()
+                );
 
-            return $resultRedirect->setPath($customerLoginUrl);
+                $customerLoginUrl = $this->_url->getUrl(
+                    'customer/account/login',
+                    array(
+                        'referer' => $this->_urlHelper->getEncodedUrl($this->_url->getCurrentUrl()),
+                        '_query' => $params
+                    )
+                );
+
+                return $resultRedirect->setPath($customerLoginUrl);
+            }
+
+            if (!$this->isSecureRequest()) {
+                $this->_customerSession->regenerateId();
+            }
+
+            $this->_checkoutSession->setCartWasUpdated(false);
+            $this->getOnepage()->initCheckout();
+            $resultPage = $this->resultPageFactory->create();
+            $resultPage->getConfig()->getTitle()->set(__('Checkout'));
+            return $resultPage;
         }
-
-        if ( ! $this->isSecureRequest() ) {
-            $this->_customerSession->regenerateId();
-        }
-
-        $this->_checkoutSession->setCartWasUpdated(false);
-        $this->getOnepage()->initCheckout();
-        $resultPage = $this->resultPageFactory->create();
-        $resultPage->getConfig()->getTitle()->set(__('Checkout'));
-        return $resultPage;
     }
 
     /**
