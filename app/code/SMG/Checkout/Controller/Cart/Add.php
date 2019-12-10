@@ -4,6 +4,7 @@ use Magento\Framework\App\Action\HttpPostActionInterface as HttpPostActionInterf
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Checkout\Model\Cart as CustomerCart;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Psr\Log\LoggerInterface as Logger;
 
 /**
  * Controller for processing add to cart action.
@@ -15,7 +16,14 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
     /**
      * @var ProductRepositoryInterface
      */
-    protected $productRepository;
+    protected $_productRepository;
+
+    /**
+     * Logger
+     *
+     * @var Logger
+     */
+    protected $_logger;
 
     /**
      * @param \Magento\Framework\App\Action\Context $context
@@ -24,7 +32,8 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator
      * @param CustomerCart $cart
-     * @param ProductRepositoryInterface $productRepository
+     * @param ProductRepositoryInterface $_productRepository
+     * @param Logger $_logger
      * @codeCoverageIgnore
      */
     public function __construct(
@@ -34,7 +43,8 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\Data\Form\FormKey\Validator $formKeyValidator,
         CustomerCart $cart,
-        ProductRepositoryInterface $productRepository
+        ProductRepositoryInterface $_productRepository,
+        Logger $_logger
     ) {
         parent::__construct(
             $context,
@@ -44,7 +54,8 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
             $formKeyValidator,
             $cart
         );
-        $this->productRepository = $productRepository;
+        $this->productRepository = $_productRepository;
+        $this->logger = $_logger;
     }
 
     /**
@@ -96,31 +107,29 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
                 );
                 $params['qty'] = $filter->filter($params['qty']);
                 $qty = $params['qty'];
-            }else
-            {
-				$qty = 1;
-			}
+            } else {
+                $qty = 1;
+            }
 
             $product = $this->_initProduct();
             $type = $product->getTypeId();
             $related = $this->getRequest()->getParam('related_product');
-            
-            if($type == 'grouped'){
-             $selectProduct = $params['selectProduct'];
-             $super_group = $params['super_group'];
-             foreach ($super_group as $key => $valueqty) {
-                 if($valueqty > 0){
-                    $gid = $key;
-                    $qty = $valueqty;
-                 }
-             }
-             
-             $gproduct = $this->productRepository->getById($gid, false, $storeId); 
-             $gproduct = $gproduct->getName();
-		    }else
-		    {
-			  $gproduct = $product->getName();
-			}
+
+            if ($type == 'grouped') {
+                $selectProduct = $params['selectProduct'];
+                $super_group = $params['super_group'];
+                foreach ($super_group as $key => $valueqty) {
+                    if($valueqty > 0){
+                        $gid = $key;
+                        $qty = $valueqty;
+                    }
+                }
+                $gproduct = $this->productRepository->getById($gid, false, $storeId);
+                $gproduct = $gproduct->getName();
+            } else {
+                $gproduct = $product->getName();
+            }
+
             /**
              * Check product availability
              */
@@ -129,6 +138,7 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
             }
 
             $this->cart->addProduct($product, $params);
+
             if (!empty($related)) {
                 $this->cart->addProductsByIds(explode(',', $related));
             }
@@ -164,6 +174,7 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
                 }
                 return $this->goBack(null, $product);
             }
+
         } catch (\Magento\Framework\Exception\LocalizedException $e) {
             if ($this->_checkoutSession->getUseNotice(true)) {
                 $this->messageManager->addNoticeMessage(
@@ -186,11 +197,16 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
 
             return $this->goBack($url);
         } catch (\Exception $e) {
-            $this->messageManager->addExceptionMessage(
-                $e,
-                __('We can\'t add this item to your shopping cart right now.')
-            );
-            $this->_objectManager->get(\Psr\Log\LoggerInterface::class)->critical($e);
+            // CHECK IF EXCEPTION IS DUE TO ZAIUS NOT BEING AVAILABLE
+            $isZaiusPostError = $this->checkForZaiusError($e);
+            if (!$isZaiusPostError) {
+                // NOT THE ZAIUS ERROR - ALLOW THE ERROR MESSAGE
+                $this->messageManager->addExceptionMessage(
+                    $e,
+                    __('We can\'t add this item to your shopping cart right now.')
+                );
+                $this->logger->error($e->getMessage());
+            }
             return $this->goBack();
         }
     }
@@ -246,5 +262,18 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
             'checkout/cart/redirect_to_cart',
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
+    }
+
+    /**
+     * Check if exception is a Zaius POST error or not
+     *
+     * @param object $e
+     * @return bool
+     */
+    private function checkForZaiusError($e = null)
+    {
+        $eventMessage = $e->getMessage();
+        $isZaiusPostError = strpos($eventMessage, 'Failed to POST to Zaius');
+        return ($isZaiusPostError === false) ? false : true;
     }
 }

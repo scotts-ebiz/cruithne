@@ -72,6 +72,10 @@
   height: 21px;
 }
 
+.sp-quiz-option {
+  position: relative;
+}
+
 .sp-quiz__option-content {
   height: 100%;
   transition: background-color 0.25s ease;
@@ -340,6 +344,20 @@ li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot::before {
   .sp-quiz__progress-item.progressBarEnd .sp-quiz__progress-item-dot {
     margin-bottom: 3px;
   }
+}
+
+.sp-quiz__slider-images {
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%;
+}
+
+.sp-quiz__slider-image {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  top: 0;
+  right: 0;
 }
 
 .sliderContainer {

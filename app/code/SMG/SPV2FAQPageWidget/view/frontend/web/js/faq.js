@@ -15,7 +15,6 @@ define([
         },
 
         setupAccordion(el) {
-
             el.classList.remove('sp-hide');
 
             $('#faq_1').accordion({

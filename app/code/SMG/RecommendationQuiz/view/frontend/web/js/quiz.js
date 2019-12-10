@@ -279,7 +279,7 @@ define([
 
         self.questionId = questionId;
         self.optionId = optionId;
-        self.optionalValue = optionalValue;
+        self.optionalValue = optionalValue ? String(optionalValue) : null;
     }
 
     /**
@@ -307,6 +307,7 @@ define([
         self.map = ko.observable(null);
         self.template = null;
         self.previousGroups = ko.observableArray([]);
+        self.sliderImages = ko.observable({});
         self.animation = ko.observable({});
         self.usingGoogleMaps = ko.observable(true);
         self.invalidZipCode = ko.observable(false);
@@ -380,7 +381,7 @@ define([
             $('.sp-quiz__transition-inner').removeClass('sp-quiz__displaynone');
             $('.sp-quiz__transition-wrapper').addClass('sp-quiz__displayblock');
             $('.sp-quiz__transition-inner').addClass('sp-quiz__transition-slideup');
-        }
+        },
 
         /**
          * Handle moving the transition screen down
@@ -390,7 +391,7 @@ define([
             setTimeout(() => {
                 $('.sp-quiz__transition-inner').addClass('sp-quiz__displaynone');
             }, 250);
-        }
+        },
 
         /**
          * Handle moving the content screen up
@@ -462,21 +463,69 @@ define([
             } else {
                 // Find the animation based on the answer.
                 for (const animation of animations) {
+                    let isCorrectAnimation = false;
                     for (const condition of animation.conditions) {
-                        const value = self.getQuestionAnswer(condition.questionId, true);
+                        let values = self.getQuestionAnswer(condition.questionId, true) || [];
 
-                        //TODO: currently firing every time, left in for demo, needs fixed
-                        if (condition.values.includes(value)) {
-                            self.animation(animation);
+                        if (values && !Array.isArray(values)) {
+                            values = [values];
+                        }
+
+                        switch (condition.conditionType) {
+                            case 1:
+                                // Make sure at least one selected option is in
+                                // the condition values.
+                                for (value of values) {
+                                    if (condition.values.includes(value)) {
+                                        isCorrectAnimation = true;
+                                        break;
+                                    }
+                                }
+
+                                break;
+                            case 2:
+                                // Make sure all values selected by the user
+                                // are in the condition.
+                                let hasAllValues = true;
+                                for (value of values) {
+                                    if (!condition.values.includes(value)) {
+                                        hasAllValues = false;
+                                        break;
+                                    }
+                                }
+
+                                if (hasAllValues) {
+                                    isCorrectAnimation = true;
+                                }
+
+                                break;
+                            case 3:
+                                // Make sure the condition value include no
+                                // user selected values.
+                                let hasValue = false;
+                                for (value of values) {
+                                    if (condition.values.includes(value)) {
+                                        hasValue = true;
+                                        break;
+                                    }
+                                }
+
+                                if (!hasValue) {
+                                    isCorrectAnimation = true;
+                                }
+
+                                break;
+                        }
+
+                        if (!isCorrectAnimation) {
                             break;
                         }
                     }
-                }
-            }
 
-            // TODO: hardcoded for incorrect mock data
-            if (!self.animation().title) {
-                self.animation(animations[0]);
+                    if (isCorrectAnimation) {
+                        self.animation(animation);
+                    }
+                }
             }
 
             // If there isn't a transition screen, don't animate it.
@@ -551,17 +600,30 @@ define([
 
             var results = {};
             var initializedMap = false;
+            var sliderQuestion = false;
+
+            window.location.hash = group.label;
 
             for (question of group.questions) {
+                sliderQuestion = true;
                 // Check if the questions are sliders and set a base response.
                 if (+question.questionType === 3) {
-                    self.addAnswerIfEmpty(question.id, question.options[0], 3);
+                    self.addAnswerIfEmpty(question.id, question.options[2], 3);
                 }
 
                 // Check if the questions are for the google maps entry and initialize the map.
                 if (!initializedMap && self.usingGoogleMaps() && question.questionType === 5) {
                     self.initializeMap();
                     initializedMap = true;
+                }
+            }
+
+            // If this is the slider question, set the images.
+            if (sliderQuestion) {
+                for (question of group.questions) {
+                    self.sliderImages(Object.assign({}, self.sliderImages(), {
+                        [question.id]: self.getOptionImage(question.id),
+                    }));
                 }
             }
 
@@ -602,11 +664,19 @@ define([
                 for (item of options) {
                     if (+item.value === +event.target.value) {
                         self.answers.push(new QuestionResult(event.target.name, item.id, event.target.value));
+                        self.sliderImages(Object.assign({}, self.sliderImages(), {
+                            [event.target.name]: self.getOptionImage(event.target.name),
+                        }));
                         break;
                     }
                 }
             } else if (['checkbox', 'radio'].indexOf(event.target.type) === -1 || event.target.checked) {
                 self.answers.push(new QuestionResult(event.target.name, event.target.value));
+
+                // This is the grass type question, so store the grass type.
+                if (self.currentGroup().label === 'LAWN DETAILS' && event.target.dataset.label) {
+                    window.sessionStorage.setItem('lawn-type', event.target.dataset.label);
+                }
             }
         };
 
@@ -656,20 +726,53 @@ define([
          * Get the optional value or option ID for the given question ID.
          *
          * @param questionID
+         * @param id
          * @returns {boolean|*}
          */
         self.getQuestionAnswer = function (questionID, id) {
-            for (var answer of self.answers()) {
-                if (answer.questionId === questionID) {
+            const answers = [];
+            for (let answer of self.answers()) {
+                if (answer.questionId === questionID && answer.optionId) {
                     if (id) {
-                        return answer.optionId;
+                        answers.push(answer.optionId);
                     }
 
-                    return answer.optionalValue || answer.optionId;
+                    answers.push(answer.optionalValue || answer.optionId);
                 }
             }
 
-            return false;
+            switch (answers.length) {
+                case 0:
+                    return false;
+                case 1:
+                    return answers[0];
+                default:
+                    return answers;
+            }
+        };
+
+        self.getOptionImage = function (questionID) {
+            const question = self.currentGroup().questions.find((question) => {
+                return question.id === questionID;
+            });
+
+            if (!question) {
+                return '';
+            }
+
+            for (let answer of self.answers()) {
+                if (answer.questionId === questionID) {
+                    const option = question.options.find((option) => {
+                        return option.id === answer.optionId;
+                    });
+
+                    if (option) {
+                        return option.imageUrl;
+                    }
+                }
+            }
+
+            return '';
         };
 
         /**
@@ -707,15 +810,6 @@ define([
                     }
 
                     let slider = document.querySelector(scontId + " input[type=range]");
-
-                    slider.addEventListener("change", function() {
-                        let closest = sliderValues[slider.value];
-                        let key = parseInt(slider.value);
-
-                        // @todo this will need updated once we are getting real images back from the payload.
-                        let backgroundSrc = 'https://picsum.photos/id/' + (9 + ( 5 * slider.dataset.sliderid + key )) + '/570/280';
-                        document.querySelector('#sliderImage img').setAttribute('src', backgroundSrc);
-                    });
                 }
             }
         };
@@ -798,11 +892,63 @@ define([
 
             // Loop through the transitions and compare the values to see where we should redirect.
             for (var transition of transitions) {
-                var isCorrectTransition = true;
+                let isCorrectTransition = false;
 
                 for (var condition of transition.conditions) {
-                    if (condition.values[0] != self.getQuestionAnswer(condition.questionId, true)) {
-                        isCorrectTransition = false;
+                    let values = self.getQuestionAnswer(condition.questionId, true) || [];
+
+                    if (values && !Array.isArray(values)) {
+                        values = [values];
+                    }
+
+                    switch (condition.conditionType) {
+                        case 1:
+                            // Make sure at least one selected option is in
+                            // the condition values.
+                            for (value of values) {
+                                if (condition.values.includes(value)) {
+                                    isCorrectTransition = true;
+                                    break;
+                                }
+                            }
+
+                            break;
+                        case 2:
+                            // Make sure all values selected by the user
+                            // are in the condition.
+                            let hasAllValues = true;
+                            for (value of values) {
+                                if (!condition.values.includes(value)) {
+                                    hasAllValues = false;
+                                    break;
+                                }
+                            }
+
+                            if (hasAllValues) {
+                                isCorrectTransition = true;
+                            }
+
+                            break;
+                        case 3:
+                            // Make sure the condition value include no
+                            // user selected values.
+                            let hasValue = false;
+                            for (value of values) {
+                                if (condition.values.includes(value)) {
+                                    hasValue = true;
+                                    break;
+                                }
+                            }
+
+                            if (!hasValue) {
+                                isCorrectTransition = true;
+                            }
+
+                            break;
+                    }
+
+                    if (!isCorrectTransition) {
+                        break;
                     }
                 }
 
@@ -904,6 +1050,7 @@ define([
                     self.addOrReplaceAnswer(zoneQuestion.id, zoneOption);
                     self.addOrReplaceAnswer(zipQuestion.id, zipQuestion.options[0].id, zip);
                     self.zipCode = zip;
+                    window.sessionStorage.setItem('lawn-zip', String(zip));
                     self.invalidZipCode(false);
                     return;
                 }
@@ -928,6 +1075,7 @@ define([
 
             if (area > 0) {
                self.addOrReplaceAnswer(self.questions()[1].id, self.questions()[1].options[0].id, area);
+               window.sessionStorage.setItem('lawn-area', String(area));
             }
         }
     }
