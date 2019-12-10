@@ -1,12 +1,16 @@
 <?php
 
-namespace SMG\RecommendationApi\Model;
+namespace SMG\RecommendationApi\Api;
 
 use Exception;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Framework\Exception\SecurityViolationException;
-use SMG\RecommendationApi\Api\RecommendationInterface;
+use SMG\RecommendationApi\Api\Interfaces\RecommendationInterface;
 
+/**
+ * Class Recommendation
+ * @package SMG\RecommendationApi\Api
+ */
 class Recommendation implements RecommendationInterface
 {
 

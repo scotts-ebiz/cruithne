@@ -1,31 +1,31 @@
 <?xml version="1.0"?>
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
     <route url="/V1/recommendations/quiz/new" method="POST">
-        <service class="SMG\RecommendationApi\Api\RecommendationInterface" method="new" />
+        <service class="SMG\RecommendationApi\Api\Interfaces\RecommendationInterface" method="new" />
         <resources>
             <resource ref="anonymous" />
         </resources>
     </route>
     <route url="/V1/recommendations/quiz/save" method="POST">
-    	<service class="SMG\RecommendationApi\Api\RecommendationInterface" method="save" />
+    	<service class="SMG\RecommendationApi\Api\Interfaces\RecommendationInterface" method="save" />
     	<resources>
     		<resource ref="anonymous" />
     	</resources>
     </route>
     <route url="/V1/recommendations/quiz/result" method="POST">
-        <service class="SMG\RecommendationApi\Api\RecommendationInterface" method="getResult" />
+        <service class="SMG\RecommendationApi\Api\Interfaces\RecommendationInterface" method="getResult" />
         <resources>
             <resource ref="anonymous" />
         </resources>
     </route>
     <route url="/V1/recommendations/quiz/previous" method="POST">
-        <service class="SMG\RecommendationApi\Api\RecommendationInterface" method="getCompleted" />
+        <service class="SMG\RecommendationApi\Api\Interfaces\RecommendationInterface" method="getCompleted" />
         <resources>
             <resource ref="anonymous" />
         </resources>
     </route>
     <route url="/V1/recommendations/products" method="POST">
-        <service class="SMG\RecommendationApi\Api\RecommendationInterface" method="getProducts" />
+        <service class="SMG\RecommendationApi\Api\Interfaces\RecommendationInterface" method="getProducts" />
         <resources>
             <resource ref="anonymous" />
         </resources>
