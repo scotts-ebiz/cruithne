@@ -26,10 +26,11 @@ interface SubscriptionInterface
 	 * 
 	 * @param string $key
 	 * @param string $quiz_id
+	 * @param mixed $billing_address
 	 * @return array
 	 * 
 	 * @api
 	 */
-	public function createOrders($key, $quiz_id);
+	public function createOrders($key, $quiz_id, $billing_address);
 
 }

@@ -61,6 +61,7 @@ define([
                             self.hasResults(true);
                             self.results(data);
                             window.sessionStorage.setItem('result', JSON.stringify(data));
+                            window.sessionStorage.setItem('quiz-id', data.id);
                         }
                     },
                 },
@@ -122,6 +123,7 @@ define([
                             self.hasResults(true);
                             self.results(data);
                             window.sessionStorage.setItem('result', JSON.stringify(data));
+                            window.sessionStorage.setItem('quiz-id', data.id);
                         }
                     },
                 },
