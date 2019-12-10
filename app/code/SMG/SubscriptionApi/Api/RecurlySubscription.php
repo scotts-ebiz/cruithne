@@ -127,19 +127,28 @@ class RecurlySubscription implements RecurlyInterface
 		$this->_currency = 'USD';
 	}
 
-	/**
-	 * Create new Recurly subscription for the customer. Use it's existing Recurly account if there is one,
-	 * otherwise create new Recurly account for the customer
-	 * 
-	 * @api
-	 */
-	public function createRecurlySubscription($token, $quiz, $plan, $cancel_existing = false)
+    /**
+     * Create new Recurly subscription for the customer. Use it's existing Recurly account if there is one,
+     * otherwise create new Recurly account for the customer
+     *
+     * @param string $token
+     * @param mixed $quiz_id
+     * @param string $plan
+     * @param bool $cancel_existing
+     * @return array|void
+     * @throws Recurly_Error
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     *
+     * @api
+     */
+	public function createRecurlySubscription($token, $quiz_id, $plan, $cancel_existing = false)
 	{
         // If there is Recurly token, plan code and quiz data
         if (! empty($token) && ! empty($plan) && ! empty($quiz_id)) {
             // Configure Recurly Client
-            Recurly_Client::$apiKey = $this->_helper->getRecurlyPrivateApiKey();
-            Recurly_Client::$subdomain = $this->_helper->getRecurlySubdomain();
+            Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
+            Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
             $checkoutData = $this->_checkoutSession->getQuote()->getShippingAddress()->getData();
 
@@ -231,7 +240,7 @@ class RecurlySubscription implements RecurlyInterface
                     if (! empty($seasonalProducts['plan']['coreProducts'])) {
                         foreach ($seasonalProducts['plan']['coreProducts'] as $season) {
                             $subscription = new Recurly_Subscription();
-                            $subscription->plan_code = $this->_helper->getSeasonSlugByName($season['season']);
+                            $subscription->plan_code = $this->_recurlyHelper->getSeasonSlugByName($season['season']);
                             $subscription->auto_renew = true;
                             $subscription->total_billing_cycles = 1;
                             $subscription->unit_amount_in_cents = 0;
@@ -255,7 +264,7 @@ class RecurlySubscription implements RecurlyInterface
                             // Get Product from Magento based on SKU
                             $product = $this->_productRepository->get($season['sku']);
                             $subscription = new Recurly_Subscription();
-                            $subscription->plan_code = $this->_helper->getSeasonSlugByName($season['season']);
+                            $subscription->plan_code = $this->_recurlyHelper->getSeasonSlugByName($season['season']);
                             $subscription->auto_renew = true;
                             $subscription->total_billing_cycles = 1;
                             $subscription->unit_amount_in_cents = $this->convertAmountToCents($product->getPrice());
@@ -302,8 +311,8 @@ class RecurlySubscription implements RecurlyInterface
 	public function checkRecurlySubscription()
 	{
         // Configure Recurly Client using the API Key and Subdomain entered in the settings page
-        Recurly_Client::$apiKey = $this->_helper->getRecurlyPrivateApiKey();
-        Recurly_Client::$subdomain = $this->_helper->getRecurlySubdomain();
+        Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
+        Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
         // Get checkout data
         $checkoutData = $this->_checkoutSession->getQuote()->getShippingAddress()->getData();
@@ -593,7 +602,7 @@ class RecurlySubscription implements RecurlyInterface
     private function getSubscriptionStartDate($start_date)
     {
         // Get shipping days start from the settings, if the value is missing set to 14
-        $shippingOpenWindow = (! empty($this->_helper->getShipDaysStart())) ? $this->_helper->getShipDaysStart() : 14;
+        $shippingOpenWindow = (! empty($this->_subscriptionHelper->getShipDaysStart())) ? $this->_subscriptionHelper->getShipDaysStart() : 14;
 
         $applicationStartDate = new \DateTime($start_date);
         $applicationStartDate->sub(new \DateInterval('P' . $shippingOpenWindow . 'D'));

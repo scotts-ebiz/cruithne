@@ -78,36 +78,6 @@ class RecurlyHelper extends AbstractHelper
 	}
 
 	/**
-	 * Return number of days to open shipment before application window
-	 * 
-	 * @param null $store_id
-	 * @return int
-	 */
-	public function getShipDaysStart($store_id = null)
-	{
-		return $this->scopeConfig->getValue(
-			self::SUBSCRIPTION_CONFIG_SHIP_DAYS_START,
-			ScopeInterface::SCOPE_STORE,
-			$store_id
-		);
-	}
-
-	/**
-	 * Return number of days to close shipment before application window
-	 * 
-	 * @param null $store_id
-	 * @return int
-	 */
-	public function getShipDaysEnd($store_id = null)
-	{
-		return $this->scopeConfig->getValue(
-			self::SUBSCRIPTION_CONFIG_SHIP_DAYS_END,
-			ScopeInterface::SCOPE_STORE,
-			$store_id
-		);
-	}
-
-	/**
      * Return Recurly plan code or SKU from the season name
      *
      * @param string $season_name
