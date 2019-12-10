@@ -14,7 +14,9 @@
             "Magento_Ui/js/core/app": {
                 "components": {
                     "options": {
-                        "component": "SMG_SubscriptionOptions/js/options"
+                        "component": "SMG_SubscriptionOptions/js/options",
+                        "quiz_id": "<?php echo $this->getRequest()->getParam('id') ?? ''; ?>",
+                        "zip": "<?php echo $this->getRequest()->getParam('zip') ?? ''; ?>"
                     }
                 }
             }
