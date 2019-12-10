@@ -166,7 +166,10 @@
   transform:translate(0px, 189px);
   }
   20%{
-      transform:translate(10px,80px);
+      transform:translate(18px,85px);
+  }
+  30%{
+      transform:translate(55px,45px);
   }
   100%{
   opacity: 1;
@@ -435,3 +438,43 @@
       transform-origin: center center;
     }
 }
+
+/*Style from the door windows anim (wondersauce)*/
+     #lottie{
+          background-color:none;
+          width:100%;
+          height:100%;
+          display:block;
+          overflow: hidden;
+          transform: translate3d(0,0,0);
+          text-align: center;
+          opacity: 1;
+      }
+
+      .lottie_frame{
+          /* margin:20%; */
+          max-width: 150px;
+          max-height:150px;
+      }
+
+/*Not use anymore
+
+@keyframes stroke_inside_white{
+  0%{
+      stroke: rgb(29, 86, 50);
+  }
+  100%{
+      stroke: white;
+  }
+}
+
+@keyframes stroke_inside_green{
+  0%{
+      stroke: white;
+  }
+  100%{
+      stroke: rgb(29, 86, 50);
+  }
+}
+
+*/
