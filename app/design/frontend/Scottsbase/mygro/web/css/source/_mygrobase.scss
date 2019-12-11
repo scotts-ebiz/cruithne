@@ -6,12 +6,14 @@ body {
         color: #333;
     }
     h2 {
-        font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
-        font-size: 2.5rem;
-        letter-spacing: 0.5px;
-        @media only screen and (max-width: $screen__l) {
-        font-size: 2.1rem;
-        }
+        @include lib-heading(h2);
+        //font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
+        //font-size: 2.5rem;
+        //letter-spacing: 0.5px;
+        //@include lib-heading(h2);
+        //@media only screen and (max-width: $screen__l) {
+        //font-size: 2.1rem;
+        //}
     }
     h3 {
         font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
