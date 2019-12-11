@@ -1,0 +1,57 @@
+// Scotts Base Default
+html,
+body {
+    font-size: 16px;
+}
+
+.page-wrapper{
+    .page-title-wrapper {
+      display: none;
+    }
+}
+
+h2 {
+  //color: $scotts-green;
+  //@include lib-heading(h2);
+}
+
+a {
+    color: $primary__color
+}
+
+a:hover {
+    color: $scotts-secondary-green;
+}
+
+.checkout-index-index {
+    .page-wrapper {
+        .page-main {
+            .columns {
+                .main {
+                    .checkout-container {
+                        .actions {
+                            .action.continue {
+                                &:before {
+                                    -webkit-font-smoothing: antialiased;
+                                    -moz-osx-font-smoothing: grayscale;
+                                    font-size: 32px;
+                                    line-height: 20px;
+                                    content: "";
+                                    font-family: "icons-blank-theme";
+                                    margin: 0;
+                                    vertical-align: top;
+                                    display: inline-block;
+                                    font-weight: normal;
+                                    overflow: hidden;
+                                    speak: none;
+                                    text-align: center;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+}
+
