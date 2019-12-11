@@ -22,13 +22,10 @@
     <td class="col col-method"
         attr="'id': 'label_method_' + method.method_code + '_' + method.carrier_code"
         text="method.method_title" />
-    <td class="col col-carrier"
-        attr="'id': 'label_carrier_' + method.method_code + '_' + method.carrier_code"
-        text="method.carrier_title" />
 </tr>
 <tr class="row row-error"
     if="method.error_message">
-    <td class="col col-error" colspan="4">
+    <td class="col col-error" colspan="3">
         <div role="alert" class="message error">
             <div text="method.error_message"></div>
         </div>
