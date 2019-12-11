@@ -35,9 +35,9 @@ class Method implements OptionSourceInterface
     public function getAvailableMethods()
     {
         return [
-            'fedex-nextday' => __('FedEx Standard Overnight'),
-            'fedex-2ndday' => __('FedEx 2Day'),
-            'flat-rate-shipping' => __('Flat Rate Shipping')
+            'fedex-nextday' => __('FedEx Next Day, 1 day'),
+            'fedex-2ndday' => __('FedEx 2nd Day, 2 days'),
+            'flat-rate-shipping' => __('Flat Rate, 3-4 days')
         ];
     }
 }
