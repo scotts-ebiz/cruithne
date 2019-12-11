@@ -1,11 +1,13 @@
 <?php
-namespace SMG\SubscriptionApi\Model;
+
+namespace SMG\SubscriptionApi\Api;
 
 use Magento\Directory\Model\ResourceModel\Region\CollectionFactory;
+use SMG\SubscriptionApi\Api\Interfaces\RecurlyInterface;
+use Recurly_Client;
 use Recurly_Account;
 use Recurly_Adjustment;
 use Recurly_BillingInfo;
-use Recurly_Client;
 use Recurly_Coupon;
 use Recurly_CustomField;
 use Recurly_Error;
@@ -16,59 +18,137 @@ use Recurly_ShippingAddressList;
 use Recurly_Subscription;
 use Recurly_SubscriptionList;
 use Recurly_ValidationError;
-use SMG\SubscriptionApi\Api\RecurlyInterface;
 
+/**
+ * Class RecurlySubscription
+ * @package SMG\SubscriptionApi\Api
+ */
 class RecurlySubscription implements RecurlyInterface
 {
-    protected $_helper;
-    protected $_recommendationHelper;
-    protected $_customerSession;
-    protected $_customer;
-    protected $_customerFactory;
-    protected $_couponCode;
-    protected $_currency;
-    protected $_productRepository;
-    protected $_checkoutSession;
-    protected $_collectionFactory;
-    protected $_customerUrl;
 
-    public function __construct(
-        \SMG\SubscriptionApi\Helper\RecurlyHelper $helper,
-        \SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper,
-        \Magento\Customer\Model\Session $customerSession,
-        \Magento\Customer\Model\Customer $customer,
-        \Magento\Customer\Model\ResourceModel\CustomerFactory $customerFactory,
-        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
-        \Magento\Checkout\Model\Session $checkoutSession,
-        CollectionFactory $collectionFactory,
-        \Magento\Customer\Model\Url $customerUrl
-    ) {
-        $this->_helper = $helper;
+    /**
+     * @var \SMG\SubscriptionApi\Helper\RecurlyHelper
+     */
+	protected $_recurlyHelper;
+
+    /**
+     * @var \SMG\SubscriptionApi\Helper\SubscriptionHelper
+     */
+	protected $_subscriptionHelper;
+
+    /**
+     * @var \SMG\RecommendationApi\Helper\RecommendationHelper
+     */
+	protected $_recommendationHelper;
+
+    /**
+     * @var \Magento\Customer\Model\Session
+     */
+	protected $_customerSession;
+
+    /**
+     * @var \Magento\Customer\Model\Customer
+     */
+	protected $_customer;
+
+    /**
+     * @var \Magento\Customer\Model\ResourceModel\CustomerFactory
+     */
+	protected $_customerFactory;
+
+    /**
+     * @var string
+     */
+	protected $_couponCode;
+
+    /**
+     * @var string
+     */
+	protected $_currency;
+
+    /**
+     * @var \Magento\Catalog\Api\ProductRepositoryInterface
+     */
+	protected $_productRepository;
+
+    /**
+     * @var \Magento\Checkout\Model\Session
+     */
+	protected $_checkoutSession;
+
+    /**
+     * @var CollectionFactory
+     */
+	protected $_collectionFactory;
+
+    /**
+     * @var \Magento\Customer\Model\Url
+     */
+	protected $_customerUrl;
+
+    /**
+     * RecurlySubscription constructor.
+     * @param \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper
+     * @param \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper
+     * @param \SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper
+     * @param \Magento\Customer\Model\Session $customerSession
+     * @param \Magento\Customer\Model\Customer $customer
+     * @param \Magento\Customer\Model\ResourceModel\CustomerFactory $customerFactory
+     * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
+     * @param \Magento\Checkout\Model\Session $checkoutSession
+     * @param CollectionFactory $collectionFactory
+     * @param \Magento\Customer\Model\Url $customerUrl
+     */
+	public function __construct(
+		\SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper,
+        \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper,
+		\SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper,
+		\Magento\Customer\Model\Session $customerSession,
+		\Magento\Customer\Model\Customer $customer,
+    	\Magento\Customer\Model\ResourceModel\CustomerFactory $customerFactory,
+    	\Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
+		\Magento\Checkout\Model\Session $checkoutSession,
+		CollectionFactory $collectionFactory,
+		\Magento\Customer\Model\Url $customerUrl
+	)
+	{
+        $this->_recurlyHelper = $recurlyHelper;
+        $this->_subscriptionHelper = $subscriptionHelper;
         $this->_recommendationHelper = $recommendationHelper;
-        $this->_customerSession = $customerSession;
-        $this->_customer = $customer;
-        $this->_customerFactory = $customerFactory;
-        $this->_productRepository = $productRepository;
-        $this->_checkoutSession = $checkoutSession;
-        $this->_collectionFactory = $collectionFactory;
-        $this->_customerUrl = $customerUrl;
-        $this->_couponCode = 'annual_subscription_discount';
-        $this->_currency = 'USD';
-    }
+		$this->_recommendationHelper = $recommendationHelper;
+		$this->_customerSession = $customerSession;
+		$this->_customer = $customer;
+		$this->_customerFactory = $customerFactory;
+		$this->_productRepository = $productRepository;
+		$this->_checkoutSession = $checkoutSession;
+		$this->_collectionFactory = $collectionFactory;
+		$this->_customerUrl = $customerUrl;
+		$this->_couponCode = 'annual_subscription_discount';
+		$this->_currency = 'USD';
+	}
 
     /**
      * Create new Recurly subscription for the customer. Use it's existing Recurly account if there is one,
      * otherwise create new Recurly account for the customer
      *
+     * @param string $token
+     * @param mixed $quiz_id
+     * @param string $plan
+     * @param bool $cancel_existing
+     * @return array|void
+     * @throws Recurly_Error
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     *
      * @api
      */
-    public function createRecurlySubscription($token, $quiz_id, $plan, $cancel_existing = false)
-    {
+	public function createRecurlySubscription($token, $quiz_id, $plan, $cancel_existing = false)
+	{
         // If there is Recurly token, plan code and quiz data
         if (! empty($token) && ! empty($plan) && ! empty($quiz_id)) {
             // Configure Recurly Client
-            Recurly_Client::$apiKey = $this->_helper->getRecurlyPrivateApiKey();
-            Recurly_Client::$subdomain = $this->_helper->getRecurlySubdomain();
+            Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
+            Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
             $checkoutData = $this->_checkoutSession->getQuote()->getShippingAddress()->getData();
 
@@ -160,7 +240,7 @@ class RecurlySubscription implements RecurlyInterface
                     if (! empty($seasonalProducts['plan']['coreProducts'])) {
                         foreach ($seasonalProducts['plan']['coreProducts'] as $season) {
                             $subscription = new Recurly_Subscription();
-                            $subscription->plan_code = $this->_helper->getSeasonSlugByName($season['season']);
+                            $subscription->plan_code = $this->_recurlyHelper->getSeasonSlugByName($season['season']);
                             $subscription->auto_renew = true;
                             $subscription->total_billing_cycles = 1;
                             $subscription->unit_amount_in_cents = 0;
@@ -184,7 +264,7 @@ class RecurlySubscription implements RecurlyInterface
                             // Get Product from Magento based on SKU
                             $product = $this->_productRepository->get($season['sku']);
                             $subscription = new Recurly_Subscription();
-                            $subscription->plan_code = $this->_helper->getSeasonSlugByName($season['season']);
+                            $subscription->plan_code = $this->_recurlyHelper->getSeasonSlugByName($season['season']);
                             $subscription->auto_renew = true;
                             $subscription->total_billing_cycles = 1;
                             $subscription->unit_amount_in_cents = $this->convertAmountToCents($product->getPrice());
@@ -221,18 +301,18 @@ class RecurlySubscription implements RecurlyInterface
         }
 
         return;
-    }
+	}
 
-    /**
-     * Check if the customer already has a Recurly subscription
-     *
-     * @api
-     */
-    public function checkRecurlySubscription()
-    {
+	/**
+	 * Check if the customer already has a Recurly subscription
+	 * 
+	 * @api
+	 */
+	public function checkRecurlySubscription()
+	{
         // Configure Recurly Client using the API Key and Subdomain entered in the settings page
-        Recurly_Client::$apiKey = $this->_helper->getRecurlyPrivateApiKey();
-        Recurly_Client::$subdomain = $this->_helper->getRecurlySubdomain();
+        Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
+        Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
         // Get checkout data
         $checkoutData = $this->_checkoutSession->getQuote()->getShippingAddress()->getData();
@@ -247,7 +327,7 @@ class RecurlySubscription implements RecurlyInterface
         } else {
             return [ [ 'success' => true, 'message' => 'You do not have a subscription', 'has_subscription' => false ] ];
         }
-    }
+	}
 
     /**
      * Cancel subscriptions of specific Recurly account
@@ -255,9 +335,10 @@ class RecurlySubscription implements RecurlyInterface
      * @param string $account_code
      *
      * @return bool
+     * @throws Recurly_Error
      */
-    private function cancelAccountSubscriptions($account_code)
-    {
+	private function cancelAccountSubscriptions($account_code)
+	{
         try {
             $active_subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => 'active' ]);
             $future_subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => 'future' ]);
@@ -276,18 +357,18 @@ class RecurlySubscription implements RecurlyInterface
         } catch (Recurly_NotFoundError $e) {
             return false;
         }
-    }
+	}
 
-    /**
-     * Create billing information with the token provided from Recurly.js
-     *
-     * @param string $account_code
-     * @param string $token
-     *
-     * @return object|bool
-     */
-    private function createBillingInfo($account_code, $token)
-    {
+	/**
+	 * Create billing information with the token provided from Recurly.js
+	 * 
+	 * @param string $account_code
+	 * @param string $token
+	 * 
+	 * @return object|bool
+	 */
+	private function createBillingInfo($account_code, $token)
+	{
         try {
             $billing_info = new Recurly_BillingInfo();
             $billing_info->account_code = $account_code;
@@ -298,15 +379,16 @@ class RecurlySubscription implements RecurlyInterface
         } catch (Recurly_NotFoundError $e) {
             return false;
         }
-    }
+	}
 
-    /**
-     * Check if customer already has a subscription
-     *
-     * @return bool
-     */
-    private function hasRecurlySubscription($account_code)
-    {
+
+	/**
+	 * Check if customer already has a subscription
+	 * 
+	 * @return bool
+	 */
+	private function hasRecurlySubscription($account_code)
+	{
         try {
             $subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => 'active' ]);
 
@@ -318,26 +400,46 @@ class RecurlySubscription implements RecurlyInterface
         } catch (Recurly_NotFoundError $e) {
             return false;
         }
-    }
+	}
 
-    /**
-     * Convert order grand total from dollars to cents
-     *
-     * @return int
-     */
-    private function convertAmountToCents($amount)
-    {
+	/**
+	 * Return Recurly Plan Code base on the name of the core product
+	 * 
+	 * @return string
+	 */
+	private function getPlanCodeByName($name) {
+		switch($name) {
+			case 'Early Spring Feeding':
+				return 'early-spring';
+			case 'Late Spring Feeding':
+				return 'late-spring';
+			case 'Early Summer Feeding':
+				return 'early-summer';
+			case 'Early Fall Feeding':
+				return 'early-fall';
+			default:
+				return '';
+		}
+	}
+
+	/**
+	 * Convert order grand total from dollars to cents
+	 * 
+	 * @return int
+	 */
+	private function convertAmountToCents($amount)
+	{
         return (int) $amount*100;
-    }
+	}
 
-    /**
-     * Check if the current customer has a Recurly account.
-     * If it does, return it's account, otherwise return false.
-     *
-     * @return object|bool
-     */
-    private function getRecurlyAccount()
-    {
+	/**
+	 * Check if the current customer has a Recurly account.
+	 * If it does, return it's account, otherwise return false.
+	 *
+	 * @return object|bool
+	 */
+	private function getRecurlyAccount()
+	{
         if (! empty($this->_customerSession->getCustomer()->getData()['recurly_account_code'])) {
             try {
                 $account = Recurly_Account::get($this->_customerSession->getCustomer()->getData()['recurly_account_code']);
@@ -351,33 +453,34 @@ class RecurlySubscription implements RecurlyInterface
         }
 
         return false;
-    }
+	}
 
-    /**
-     * Get customer's current shipping addresses and use it for the purchase
-     *
-     * @return object|gool
-     */
-    private function getRecurlyAccountShippingAddress($account_code)
-    {
-        $shipping_addresses = Recurly_ShippingAddressList::get($account_code);
+	/**
+	 * Get customer's current shipping addresses and use it for the purchase
+	 * 
+	 * @return object|gool
+	 */
+	private function getRecurlyAccountShippingAddress($account_code)
+	{
 
-        if (! empty($shipping_addresses)) {
-            foreach ($shipping_addresses as $address) {
-                return $address;
-            }
-        }
+		$shipping_addresses = Recurly_ShippingAddressList::get($account_code);
 
-        return false;
-    }
+		if( ! empty( $shipping_addresses ) ) {
+			foreach( $shipping_addresses as $address ) {
+				return $address;
+			}
+		}
 
-    /**
-     * Create Recurly account using the data from the checkout page
-     *
-     * @return object $account
-     */
-    private function createRecurlyAccount($data)
-    {
+		return false;
+	}
+
+	/**
+	 * Create Recurly account using the data from the checkout page
+	 * 
+	 * @return object $account
+	 */
+	private function createRecurlyAccount($data)
+	{
         try {
             // Generate account code from customer's email
             $recurly_account_code = md5($data['email']);
@@ -407,25 +510,24 @@ class RecurlySubscription implements RecurlyInterface
 
             return $account;
         } catch (Recurly_ValidationError $e) {
-            /**
-             * If a Recurly account with the account_code exists, save the code as a custom attribute,
-             * and get Recurly account using that account code
-             */
+
+            // If a Recurly account with the account_code exists, save the code as a custom attribute,
+            // and get Recurly account using that account code
             if ($e->getCode() === 0) {
                 $this->saveRecurlyAccountCode($data['email'], $data['customer_id']);
 
                 return $this->getRecurlyAccount();
             }
         }
-    }
+	}
 
-    /**
-     * Get current customer and save it's Recurly account code as a custom attribute,
-     * generated from customer's email
-     *
-     */
-    private function saveRecurlyAccountCode($customer_email, $customer_id)
-    {
+	/**
+	 * Get current customer and save it's Recurly account code as a custom attribute,
+	 * generated from customer's email
+	 * 
+	 */
+	private function saveRecurlyAccountCode($customer_email, $customer_id)
+	{
         if (! empty($customer_email) && ! empty($customer_id) && filter_var($customer_email, FILTER_VALIDATE_EMAIL)) {
             $recurly_account_code = md5($customer_email);
 
@@ -437,13 +539,14 @@ class RecurlySubscription implements RecurlyInterface
             $customerResource = $this->_customerFactory->create();
             $customerResource->saveAttribute($customer, 'recurly_account_code');
         }
-    }
+	}
 
     /**
      * Check if coupon code exists on Recurly and return it,
      * or return false if it doesn't
      *
      * @return mixed
+     * @throws Recurly_Error
      */
     private function checkIfCouponExists()
     {
@@ -460,6 +563,7 @@ class RecurlySubscription implements RecurlyInterface
      * a new Recurly coupon code that can be used for the annual subscriptions
      *
      * @return mixed
+     * @throws Recurly_Error
      */
     private function getCouponCode()
     {
@@ -490,12 +594,15 @@ class RecurlySubscription implements RecurlyInterface
     /**
      * Calculate shipping start date
      *
-     * @return DateTime
+     * @param $start_date
+     * @return \DateTime
+     * @throws \Exception
      */
+
     private function getSubscriptionStartDate($start_date)
     {
         // Get shipping days start from the settings, if the value is missing set to 14
-        $shippingOpenWindow = (! empty($this->_helper->getShipDaysStart())) ? $this->_helper->getShipDaysStart() : 14;
+        $shippingOpenWindow = (! empty($this->_subscriptionHelper->getShipDaysStart())) ? $this->_subscriptionHelper->getShipDaysStart() : 14;
 
         $applicationStartDate = new \DateTime($start_date);
         $applicationStartDate->sub(new \DateInterval('P' . $shippingOpenWindow . 'D'));
@@ -512,7 +619,7 @@ class RecurlySubscription implements RecurlyInterface
     private function getRegionCode($region)
     {
         $regionCode = $this->_collectionFactory->create()->addRegionNameFilter($region)->getFirstItem()->toArray();
-
         return $regionCode['code'];
     }
+
 }

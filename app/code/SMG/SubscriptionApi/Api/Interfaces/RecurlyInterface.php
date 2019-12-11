@@ -1,5 +1,5 @@
 <?php
-namespace SMG\SubscriptionApi\Api;
+namespace SMG\SubscriptionApi\Api\Interfaces;
 
 /**
  * @api

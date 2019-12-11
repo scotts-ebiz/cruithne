@@ -5,19 +5,30 @@
             <label>Subscription Settings</label>
             <tab>smg</tab>
             <resource>SMG_SubscriptionApi::settings</resource>
-            <group id="settings" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <group id="settings" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Subscription Settings</label>
                 <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Enable</label>
                     <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>smg/subscription/active</config_path>
                 </field>
-                <field id="ship_days_start" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>How many days to open shipment before application window?</label>
+                <field id="usecsrf" translate="label" type="select" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enforce CSRF</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>smg/subscription/usecsrf</config_path>
+                </field>
+            </group>
+            <group id="days" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Subscription Ship Days</label>
+                <field id="ship_days_start" translate="label" type="text" sortOrder="11" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Ship Start Days</label>
+                    <comment>Number of days to open shipment before application window start date.</comment>
                     <validate>validate-digits validate-zero-or-greater validate-no-html-tags</validate>
                     <config_path>smg/subscription/ship_days_start</config_path>
                 </field>
-                <field id="ship_days_end" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
-                    <label>How many days to close shipment before application window?</label>
+                <field id="ship_days_end" translate="label" type="text" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Ship End Days</label>
+                    <comment>Number of days to close shipment before application window ends.</comment>
                     <validate>validate-digits validate-zero-or-greater validate-no-html-tags</validate>
                     <config_path>smg/subscription/ship_days_end</config_path>
                 </field>

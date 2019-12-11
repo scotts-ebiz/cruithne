@@ -1,19 +1,23 @@
 <?php
 
-namespace SMG\RecommendationApi\Model;
+namespace SMG\RecommendationApi\Api;
 
 use Exception;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Framework\Exception\SecurityViolationException;
-use SMG\RecommendationApi\Api\RecommendationInterface;
+use SMG\RecommendationApi\Api\Interfaces\RecommendationInterface;
 
+/**
+ * Class Recommendation
+ * @package SMG\RecommendationApi\Api
+ */
 class Recommendation implements RecommendationInterface
 {
 
     /**
      * @var /SMG/RecommendationApi/Helper/RecommendationHelper
      */
-    protected $_helper;
+    protected $_recommendationHelper;
 
     /**
      * @var \Magento\Store\Model\StoreManagerInterface
@@ -50,7 +54,7 @@ class Recommendation implements RecommendationInterface
 
     /**
      * Recommendation constructor.
-     * @param \SMG\RecommendationApi\Helper\RecommendationHelper $helper
+     * @param \SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \Magento\Framework\Data\Form\FormKey $formKey
      * @param \Magento\Framework\Webapi\Request $request
@@ -61,7 +65,7 @@ class Recommendation implements RecommendationInterface
      * @throws \Magento\Framework\Exception\NotFoundException
      */
     public function __construct(
-        \SMG\RecommendationApi\Helper\RecommendationHelper $helper,
+        \SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Framework\Data\Form\FormKey $formKey,
         \Magento\Framework\Webapi\Request $request,
@@ -69,7 +73,7 @@ class Recommendation implements RecommendationInterface
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         \Magento\Framework\Session\SessionManagerInterface $coreSession
     ) {
-        $this->_helper = $helper;
+        $this->_recommendationHelper = $recommendationHelper;
         $this->_storeManager = $storeManager;
         $this->_formKey = $formKey;
         $this->_request = $request;
@@ -78,7 +82,7 @@ class Recommendation implements RecommendationInterface
         $this->_coreSession = $coreSession;
 
         // Check to make sure that the module is enabled at the store level
-        if (! $this->_helper->isActive($this->_storeManager->getStore()->getId())) {
+        if (! $this->_recommendationHelper->isActive($this->_storeManager->getStore()->getId())) {
             throw new \Magento\Framework\Exception\NotFoundException(__('File not Found'));
         }
     }
@@ -89,21 +93,22 @@ class Recommendation implements RecommendationInterface
      * @param string $key
      * @return array|void
      * @throws SecurityViolationException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      *
      * @api
      */
     public function new($key)
     {
         // Test the form key
-        if ($this->formValidation($key)) {
+        if ( ! $this->formValidation($key) ) {
             throw new SecurityViolationException(__('Unauthorized'));
         }
 
-        if (! $this->_helper->getNewQuizApiPath()) {
+        if (! $this->_recommendationHelper->getNewQuizApiPath()) {
             return;
         }
 
-        $url = filter_var($this->_helper->getNewQuizApiPath(), FILTER_SANITIZE_URL);
+        $url = filter_var($this->_recommendationHelper->getNewQuizApiPath(), FILTER_SANITIZE_URL);
         $data = '';
         $method = 'GET';
 
@@ -127,22 +132,23 @@ class Recommendation implements RecommendationInterface
      * @param mixed $id
      * @param $answers
      * @return array|null
-     * @throws \Magento\Framework\Exception\SecurityViolationException
+     * @throws SecurityViolationException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      *
      * @api
      */
     public function save($key, $id, $answers)
     {
         // Test the form key
-        if ($this->formValidation($key)) {
+        if ( ! $this->formValidation($key) ) {
             throw new SecurityViolationException(__('Unauthorized'));
         }
 
-        if (! $this->_helper->getSaveQuizApiPath() || empty($answers) || empty($id)) {
+        if (! $this->_recommendationHelper->getSaveQuizApiPath() || empty($answers) || empty($id)) {
             return null;
         }
 
-        $url = trim($this->_helper->getSaveQuizApiPath(), '/');
+        $url = trim($this->_recommendationHelper->getSaveQuizApiPath(), '/');
         $url = filter_var(str_replace('{quizTemplateId}', $id, $url), FILTER_SANITIZE_URL);
         $method = 'POST';
 
@@ -169,19 +175,19 @@ class Recommendation implements RecommendationInterface
      * @param mixed $key
      * @param string $id
      * @return array
-     * @throws \Magento\Framework\Exception\SecurityViolationException
-     *
+     * @throws SecurityViolationException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @api
      */
     public function getResult($key, $id)
     {
         // Test the form key
-        if ($this->formValidation($key)) {
+        if ( ! $this->formValidation($key) ) {
             throw new SecurityViolationException(__('Unauthorized'));
         }
 
         //getQuizResultApiPath
-        if (empty($id) || ! $this->_helper->getQuizResultApiPath()) {
+        if (empty($id) || ! $this->_recommendationHelper->getQuizResultApiPath()) {
             return;
         }
 
@@ -189,7 +195,7 @@ class Recommendation implements RecommendationInterface
 
         $url = filter_var(
             trim(
-                str_replace('{completedQuizId}', $id, $this->_helper->getQuizResultApiPath()),
+                str_replace('{completedQuizId}', $id, $this->_recommendationHelper->getQuizResultApiPath()),
                 '/'
             ),
             FILTER_SANITIZE_URL
@@ -217,22 +223,22 @@ class Recommendation implements RecommendationInterface
      *
      * @param mixed $key
      * @return array
-     * @throws \Magento\Framework\Exception\SecurityViolationException
-     *
+     * @throws SecurityViolationException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @api
      */
     public function getCompleted($key)
     {
         // Test the form key
-        if ($this->formValidation($key)) {
+        if ( ! $this->formValidation($key) ) {
             throw new SecurityViolationException(__('Unauthorized'));
         }
 
-        if (! $this->_helper->getCompletedQuizApiPath()) {
+        if (! $this->_recommendationHelper->getCompletedQuizApiPath()) {
             return;
         }
 
-        $url = filter_var($this->_helper->getCompletedQuizApiPath(), FILTER_SANITIZE_URL);
+        $url = filter_var($this->_recommendationHelper->getCompletedQuizApiPath(), FILTER_SANITIZE_URL);
         $data = '';
         $method = 'GET';
 
@@ -253,19 +259,19 @@ class Recommendation implements RecommendationInterface
      * @param string $quiz_id
      * @return bool|string|void
      * @throws SecurityViolationException
-     *
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @api
      */
     public function mapToUser($key, $user_id, $quiz_id)
     {
 
         // Test the form key
-        if ($this->formValidation($key)) {
+        if ( ! $this->formValidation($key) ) {
             throw new SecurityViolationException(__('Unauthorized'));
         }
 
         // Make sure we have a path
-        if (!$this->_helper->getMapToUserPath()) {
+        if (!$this->_recommendationHelper->getMapToUserPath()) {
             return;
         }
 
@@ -274,7 +280,7 @@ class Recommendation implements RecommendationInterface
         }
 
         try {
-            $url = filter_var($this->_helper->getMapToUserPath(), FILTER_SANITIZE_URL);
+            $url = filter_var($this->_recommendationHelper->getMapToUserPath(), FILTER_SANITIZE_URL);
 
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $url);
@@ -301,13 +307,13 @@ class Recommendation implements RecommendationInterface
      * @param $key
      * @return array|bool|string|void
      * @throws SecurityViolationException
-     *
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @api
      */
     public function getProducts($key)
     {
         // Test the form key
-        if ($this->formValidation($key)) {
+        if ( ! $this->formValidation($key) ) {
             throw new SecurityViolationException(__('Unauthorized'));
         }
 
@@ -317,11 +323,11 @@ class Recommendation implements RecommendationInterface
         }
 
         // Make sure we have a path
-        if (!$this->_helper->getProductsPath()) {
+        if (!$this->_recommendationHelper->getProductsPath()) {
             return;
         }
 
-        $url = filter_var($this->_helper->getProductsPath(), FILTER_SANITIZE_URL);
+        $url = filter_var($this->_recommendationHelper->getProductsPath(), FILTER_SANITIZE_URL);
         $response = $this->request($url, '', 'GET');
 
         if (empty($response)) {
@@ -343,10 +349,14 @@ class Recommendation implements RecommendationInterface
      *
      * @param $key
      * @return bool
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function formValidation($key)
     {
-        return $this->_formKey->getFormKey() !== $key;
+        if ( $this->_recommendationHelper->useCsrf( $this->_storeManager->getStore()->getId() ) ) {
+            return $this->_formKey->getFormKey() === $key;
+        }
+        return true;
     }
 
     /**
@@ -356,6 +366,7 @@ class Recommendation implements RecommendationInterface
      * @param $data
      * @param string $method
      * @return array|null
+     * @throws Exception
      */
     private function request($url, $data, $method = '')
     {

@@ -1,25 +1,25 @@
 <?xml version="1.0"?>
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
     <route url="/V1/subscription/process" method="POST">
-        <service class="SMG\SubscriptionApi\Api\SubscriptionInterface" method="addSubscriptionToCart" />
+        <service class="SMG\SubscriptionApi\Api\Interfaces\SubscriptionInterface" method="addSubscriptionToCart" />
         <resources>
             <resource ref="anonymous" />
         </resources>
     </route>
     <route url="/V1/subscription/createorders" method="POST">
-        <service class="SMG\SubscriptionApi\Api\SubscriptionInterface" method="createOrders" />
+        <service class="SMG\SubscriptionApi\Api\Interfaces\SubscriptionInterface" method="createOrders" />
         <resources>
             <resource ref="anonymous" />
         </resources>
     </route>
     <route url="/V1/subscription/check" method="POST">
-        <service class="SMG\SubscriptionApi\Api\RecurlyInterface" method="checkRecurlySubscription" />
+        <service class="SMG\SubscriptionApi\Api\Interfaces\RecurlyInterface" method="checkRecurlySubscription" />
         <resources>
             <resource ref="anonymous" />
         </resources>
     </route>
     <route url="/V1/subscription/create" method="POST">
-        <service class="SMG\SubscriptionApi\Api\RecurlyInterface" method="createRecurlySubscription" />
+        <service class="SMG\SubscriptionApi\Api\Interfaces\RecurlyInterface" method="createRecurlySubscription" />
         <resources>
             <resource ref="anonymous" />
         </resources>

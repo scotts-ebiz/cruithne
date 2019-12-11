@@ -1,8 +1,10 @@
 <?php
 
-namespace SMG\RecommendationApi\Api;
+namespace SMG\RecommendationApi\Api\Interfaces;
 
 /**
+ * Interface RecommendationInterface
+ * @package SMG\RecommendationApi\Api\Interfaces
  * @api
  */
 interface RecommendationInterface
