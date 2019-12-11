@@ -142,17 +142,6 @@
   animation-fill-mode: forwards;
 }
 
-/*
-#ls-Stroke-3{
-  animation: previous_icon_in_focus_bg 2s linear;
-  animation-fill-mode: forwards;
-}
-#ls-Stroke-5{
-  animation: previous_icon_in_focus_bg 2s linear;
-  animation-fill-mode: forwards;
-}
-*/
-
 /* Early Spring */
 
 .earlySpring_sm_in_focus{
@@ -211,16 +200,6 @@
   }
 }
 
-/*
-#sm-Stroke-1, #sm-Stroke-3, #sm-Stroke-5, #sm-Stroke-7, #sm-Stroke-9, #sm-Stroke-11,
-#sm-Stroke-13, #sm-Stroke-15, #sm-Stroke-17, #sm-Stroke-19, #sm-Stroke-21, #sm-Stroke-23,
-#sm-Stroke-25, #sm-Stroke-27
-{
-  animation: icon_in_focus_bg 2s linear;
-  animation-fill-mode: forwards;
-} 
-*/
-
 .sm_stroke_in_focus{
   animation: icon_in_focus_bg 2s linear;
   animation-fill-mode: forwards;
@@ -270,30 +249,102 @@
 }
 
 /* Text and center image */
-.group7Anim{
-  animation: group-7_anim .75s linear;
+/*Anim each window element*/
+.door_anim_go{
+  animation: door_anim .70s linear;
   animation-fill-mode: forwards;
 }
-
-@keyframes group-7_anim{
+@keyframes door_anim{
   0%{
       opacity: 1;
-      transform:translate(74px, 58px);
+      transform:translate(0px, 0px);
   }
   50%{
       opacity: 0;
-      transform:translate(74px, 350px)
+      transform:translate(0px, 350px);
   }
   75%{
       opacity: .2;
-      transform:translate(74px, 200px)
+      transform:translate(0px, 200px);
   }
   100%{
       opacity: 1;
-      transform:translate(74px, 58px);
+      transform:translate(0px, 0px);
   }
 }
 
+.window1_anim_go{
+  animation: window_1_anim .75s linear .04s;
+  animation-fill-mode: forwards;
+}
+@keyframes window_1_anim{
+  0%{
+      opacity: 1;
+      transform:translate(0px, 0px);
+  }
+  50%{
+      opacity: 0;
+      transform:translate(0px, 350px);
+  }
+  75%{
+      opacity: .2;
+      transform:translate(0px, 225px);
+  }
+  100%{
+      opacity: 1;
+      transform:translate(0px, 0px);
+  }
+
+}
+
+.window2_anim_go{
+  animation: window_2_anim .75s linear .04s;
+  animation-fill-mode: forwards;
+}
+@keyframes window_2_anim{
+  0%{
+      opacity: 1;
+      transform:translate(0px, 0px);
+  }
+  50%{
+      opacity: 0;
+      transform:translate(0px, 350px);
+  }
+  75%{
+      opacity: .2;
+      transform:translate(0px, 205px);
+  }
+  100%{
+      opacity: 1;
+      transform:translate(0px, 0px);
+  }
+
+}
+
+.windowBig_anim_go{
+  animation: window_big_anim .75s linear .09s;
+  animation-fill-mode: forwards;
+}
+@keyframes window_big_anim{
+  0%{
+      opacity: 1;
+      transform:translate(0px, 0px);
+  }
+  50%{
+      opacity: 0;
+      transform:translate(0px, 350px);
+  }
+  75%{
+      opacity: .2;
+      transform:translate(0px, 210px);
+  }
+  100%{
+      opacity: 1;
+      transform:translate(0px, 0px);
+  }
+
+}
+/* -----------End Windows animations -------------*/
 .txt_anim_global{
   animation: txt_anim 1s linear;
   animation-direction: alternate;
@@ -339,20 +390,6 @@
   }
 
 }
-
-.anim_check {
-  animation-name: example;
-  animation-duration: 5s;
-  animation-timing-function: linear;
-  animation-delay: 2s;
-  animation-iteration-count: infinite;
-  animation-direction: alternate;
-}
-
-.anim_check_shorthand {
-  animation: example 5s linear 2s infinite alternate;
-}
-
 
 /* Classes will switch based on the season */
 /* Transition for Fall in focus */
@@ -426,7 +463,6 @@
 /*circle animation*/
 .circle_frame_anim{
   animation: circle_anim .5s linear;
-  /* animation-fill-mode: forwards; */
 }
 @keyframes circle_anim{
     0%{
@@ -438,43 +474,3 @@
       transform-origin: center center;
     }
 }
-
-/*Style from the door windows anim (wondersauce)*/
-     #lottie{
-          background-color:none;
-          width:100%;
-          height:100%;
-          display:block;
-          overflow: hidden;
-          transform: translate3d(0,0,0);
-          text-align: center;
-          opacity: 1;
-      }
-
-      .lottie_frame{
-          /* margin:20%; */
-          max-width: 150px;
-          max-height:150px;
-      }
-
-/*Not use anymore
-
-@keyframes stroke_inside_white{
-  0%{
-      stroke: rgb(29, 86, 50);
-  }
-  100%{
-      stroke: white;
-  }
-}
-
-@keyframes stroke_inside_green{
-  0%{
-      stroke: white;
-  }
-  100%{
-      stroke: rgb(29, 86, 50);
-  }
-}
-
-*/
