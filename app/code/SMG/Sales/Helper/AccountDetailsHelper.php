@@ -158,13 +158,8 @@ class AccountDetailsHelper
         $dataobj['order_id'] = $order->getRealOrderId();
         $dataobj['additional_information'] = json_encode($order->getPayment()->getAdditionalInformation());
         $dataobj['shipping_description'] = $order->getShippingDescription();
-        $subscriptionType = $order->getSubscriptionType();
-		if($subscriptionType == 'Annual'){
-		  $dataobj['subscription_order_id'] = $order->getMasterSubscriptionId();
-		}else{
-			$dataobj['subscription_order_id'] = $order->getSubscriptionId();
-		}
-		
+        $dataobj['subscription_type'] = $order->getSubscriptionType();
+        $dataobj['subscription_order_id'] = $order->getSubscriptionId();
 		$dataobj['subscription_ship_start'] = $order->getShipStartDate();
 		$dataobj['subscription_ship_end'] = $order->getShipEndDate();
 			
