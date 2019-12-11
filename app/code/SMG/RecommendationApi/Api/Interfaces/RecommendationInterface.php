@@ -24,9 +24,12 @@ interface RecommendationInterface
      * @param string $key
      * @param mixed $id
      * @param mixed $answers
+     * @param string $zip
+     * @param string $lawnType
+     * @param string $lawnSize
      * @return array
      */
-    public function save($key, $id, $answers);
+    public function save($key, $id, $answers, $zip, $lawnType, $lawnSize);
 
     /**
      * Get results by quiz id.

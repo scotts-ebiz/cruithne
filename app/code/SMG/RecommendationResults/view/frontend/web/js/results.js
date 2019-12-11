@@ -92,6 +92,8 @@ define([
             let formKey = document.querySelector('input[name=form_key]').value;
             let quiz = self.quiz();
             quiz["key"] = formKey;
+            quiz["lawnType"] = window.sessionStorage.getItem('lawn-type');
+            quiz["lawnSize"] = window.sessionStorage.getItem('lawn-area');
 
             // Make sure loading screen appears for at least 3 seconds.
             setTimeout(() => {
@@ -100,6 +102,8 @@ define([
                     self.isLoading(false);
                 }
             }, 3000);
+
+            console.log( self.quiz().id, self.quiz().answers, self.quiz().zip );
 
             $.ajax(
                 `/rest/V1/recommendations/quiz/save`,
