@@ -36,7 +36,7 @@ define(
                 return checkoutData.billingAddressFromData;
             },
 
-            createNewSubscription: function (token_id, cancel_existing) {
+            createNewSubscription: function (token_id) {
                 var self = this;
                 var form = document.querySelector('.recurly-form');
                 var quizID = window.sessionStorage.getItem('quiz-id');
@@ -51,8 +51,7 @@ define(
                     data: JSON.stringify({
                         'token': token_id,
                         'quiz_id': quizID,
-                        'plan': subscriptionPlan,
-                        'cancel_existing': cancel_existing
+                        'plan': subscriptionPlan
                     }),
                     success: function (response) {
                         if (response[0].success === true) {
@@ -129,24 +128,7 @@ define(
                     if (err) {
                         console.log(err);
                     } else {
-                        $.ajax({
-                            type: 'POST',
-                            url: window.location.origin + '/rest/V1/subscription/check',
-                            dataType: 'json',
-                            contentType: 'application/json',
-                            processData: false,
-                            success: function (response) {
-                                if (response[0].success === false && response[0].has_subscription === true) {
-                                    if (confirm(response[0].message)) {
-                                        self.createNewSubscription(token.id, true);
-                                    } else {
-                                        window.location.href = response[0].redirect_url
-                                    }
-                                } else {
-                                    self.createNewSubscription(token.id, false);
-                                }
-                            }
-                        });
+                        self.createNewSubscription( token.id );
                     }
                 })
             },

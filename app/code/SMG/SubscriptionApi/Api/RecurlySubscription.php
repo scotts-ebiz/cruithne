@@ -142,7 +142,7 @@ class RecurlySubscription implements RecurlyInterface
      *
      * @api
      */
-	public function createRecurlySubscription($token, $quiz_id, $plan, $cancel_existing = false)
+	public function createRecurlySubscription($token, $quiz_id, $plan)
 	{
         // If there is Recurly token, plan code and quiz data
         if (! empty($token) && ! empty($plan) && ! empty($quiz_id)) {
@@ -154,11 +154,6 @@ class RecurlySubscription implements RecurlyInterface
 
             // Get Customer's Recurly account
             $account = ($this->getRecurlyAccount()) ? $this->getRecurlyAccount() : $this->createRecurlyAccount($checkoutData);
-
-            // Cancel existing subscriptions if the customer has agreed to that
-            if ($cancel_existing === true) {
-                $this->cancelAccountSubscriptions($account->account_code);
-            }
 
             // Create Recurly Purchase
             try {
@@ -320,25 +315,39 @@ class RecurlySubscription implements RecurlyInterface
         // Get Customer's Recurly Account or create new one using current customer's data
         $account = ($this->getRecurlyAccount()) ? $this->getRecurlyAccount() : $this->createRecurlyAccount($checkoutData);
 
-        // Check if customer has active/future (live) subscriptions and offer him a choice to
-        // cancel existing subscriptions and create new one, or do nothing (will be redirected to account page)
-        if ($this->hasRecurlySubscription($account->account_code)) {
-            return [ [ 'success' => false, 'message' => 'You already have subscriptions. Would you like to cancel them and create new one?', 'has_subscription' => true, 'redirect_url' => $this->_customerUrl->getAccountUrl() ] ];
+        // Check if the customer has an active subscription
+        $activeSubscriptions = $this->hasRecurlySubscription( $account->account_code );
+        if( $activeSubscriptions['has_subscriptions'] === true ) {
+            $response = array(
+                'success'           => true,
+                'has_subscription'  => true,
+                'refund_amount'     => $activeSubscriptions['refund_amount'],
+                'redirect_url'      => $this->_customerUrl->getAccountUrl()
+            );
         } else {
-            return [ [ 'success' => true, 'message' => 'You do not have a subscription', 'has_subscription' => false ] ];
+            $response = array(
+                'success'           => true,
+                'has_subscription'  => false,
+            );
         }
+
+        return json_encode( $response );
 	}
 
     /**
-     * Cancel subscriptions of specific Recurly account
-     *
-     * @param string $account_code
-     *
-     * @return bool
-     * @throws Recurly_Error
+     * Cancel customer Recurly Subscription
+     * 
+     * @api
      */
-	private function cancelAccountSubscriptions($account_code)
-	{
+    public function cancelRecurlySubscription()
+    {
+        // Configure Recurly Client using the API Key and Subdomain entered in the settings page
+        Recurly_Client::$apiKey = $this->_helper->getRecurlyPrivateApiKey();
+        Recurly_Client::$subdomain = $this->_helper->getRecurlySubdomain();
+
+        // Get customer's Recurly account code
+        $account_code = $this->_customerSession->getCustomer()->getRecurlyAccountCode();
+
         try {
             $active_subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => 'active' ]);
             $future_subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => 'future' ]);
@@ -353,11 +362,21 @@ class RecurlySubscription implements RecurlyInterface
                 $_subscription->cancel();
             }
 
-            return true;
+            $response = array(
+                'success'   => true,
+                'message'   => 'Recurly subscriptions canceled'
+            );
+
+            return json_encode( $response );
         } catch (Recurly_NotFoundError $e) {
-            return false;
+            $response = array(
+                'success'   => false,
+                'message'   => 'Recurly subscriptions can not be cancelled (' . $e->getMessage() . ')'
+            );
+
+            return json_encode( $response );
         }
-	}
+    }
 
 	/**
 	 * Create billing information with the token provided from Recurly.js

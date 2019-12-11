@@ -24,4 +24,10 @@
             <resource ref="anonymous" />
         </resources>
     </route>
+    <route url="/V1/subscription/cancel" method="POST">
+        <service class="SMG\SubscriptionApi\Api\Interfaces\RecurlyInterface" method="cancelRecurlySubscription" />
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
 </routes>
