@@ -48,6 +48,7 @@ define(
                     dataType: 'json',
                     contentType: 'application/json',
                     processData: false,
+                    showLoader: true,
                     data: JSON.stringify({
                         'token': token_id,
                         'quiz_id': quizID,
@@ -77,7 +78,12 @@ define(
                     dataType: 'json',
                     contentType: 'application/json',
                     processData: false,
-                    data: JSON.stringify({'key': formKey, 'quiz_id': quizID, 'billing_address': address}),
+                    showLoader: true,
+                    data: JSON.stringify( {
+                        'key': formKey,
+                        'quiz_id': quizID,
+                        'billing_address': address
+                    } ),
                     success: function (response) {
                         if (response[0] === true) {
                             window.location.href = '/checkout/onepage/success';
