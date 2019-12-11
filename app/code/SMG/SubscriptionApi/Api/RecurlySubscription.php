@@ -134,7 +134,6 @@ class RecurlySubscription implements RecurlyInterface
      * @param string $token
      * @param mixed $quiz_id
      * @param string $plan
-     * @param bool $cancel_existing
      * @return array|void
      * @throws Recurly_Error
      * @throws \Magento\Framework\Exception\LocalizedException
@@ -342,8 +341,8 @@ class RecurlySubscription implements RecurlyInterface
     public function cancelRecurlySubscription()
     {
         // Configure Recurly Client using the API Key and Subdomain entered in the settings page
-        Recurly_Client::$apiKey = $this->_helper->getRecurlyPrivateApiKey();
-        Recurly_Client::$subdomain = $this->_helper->getRecurlySubdomain();
+        Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
+        Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
         // Get customer's Recurly account code
         $account_code = $this->_customerSession->getCustomer()->getRecurlyAccountCode();
@@ -410,14 +409,28 @@ class RecurlySubscription implements RecurlyInterface
 	{
         try {
             $subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => 'active' ]);
+            $subscriptions_amount = 0;
 
-            if (count($subscriptions) > 0) {
-                return true;
+            foreach( $subscriptions as $subscription ) {
+                $subscriptions_amount += $subscription->unit_amount_in_cents;
             }
 
-            return false;
+            if ( count($subscriptions) > 0 ) {
+                return array(
+                    'has_subscriptions' => true,
+                    'refund_amount'     => $this->convertAmountToDollars( $subscriptions_amount )
+                );
+            }
+
+            return array(
+                'has_subscriptions' => false,
+                'refund_amount'     => 0
+            );
         } catch (Recurly_NotFoundError $e) {
-            return false;
+            return array(
+                'has_subscriptions' => false,
+                'refund_amount'     => 0
+            );
         }
 	}
 
@@ -450,6 +463,15 @@ class RecurlySubscription implements RecurlyInterface
 	{
         return (int) $amount*100;
 	}
+
+    /**
+     * Convert cents to dollars
+     *
+     */
+    private function convertAmountToDollars($amount)
+    {
+        return number_format(($amount/100), 2, '.', ' ');
+    }
 
 	/**
 	 * Check if the current customer has a Recurly account.
