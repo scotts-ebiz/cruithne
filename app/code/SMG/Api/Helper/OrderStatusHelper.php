@@ -23,6 +23,7 @@ use SMG\OrderDiscount\Helper\Data as DiscountHelper;
 use Magento\Sales\Model\Service\InvoiceService as InvoiceService;
 use Magento\Framework\DB\Transaction as Transaction;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender as InvoiceSender;
+
 class OrderStatusHelper
 {
     // Input JSON File Constants
@@ -969,7 +970,7 @@ class OrderStatusHelper
      * Update the order sap batch table with the appropriate values
      *
      * @param $inputOrder
-     * @param $sapOrder
+     * @param $sapOrderBatch
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
     private function updateOrderSapBatch($inputOrder, $sapOrderBatch)
@@ -991,51 +992,37 @@ class OrderStatusHelper
             }
 
             // Get the sales order
-                /**
-                 * @var \Magento\Sales\Model\Order $order
-                 */
-                $order = $this->_orderFactory->create();
-                $this->_orderResource->load($order, $sapOrderBatch->getData('order_id'));
+            /**
+             * @var \Magento\Sales\Model\Order $order
+             */
+            $order = $this->_orderFactory->create();
+            $this->_orderResource->load($order, $sapOrderBatch->getData('order_id'));
 
-
-        // Get the order coupon code discount values if the coupon code
-        // if exists on the order.  You will need to get the order based on the
-        if(!empty($order->getData('coupon_code')))
-        {
-            $orderDiscount = $this->_discountHelper->DiscountCode($order->getData('coupon_code'));
-            $hdrDiscCondCode = $orderDiscount['hdr_disc_cond_code'];
-            if($hdrDiscCondCode == 'Z616')
+            // Get the order coupon code discount values if the coupon code
+            // if exists on the order.  You will need to get the order based on the
+            if(!empty($order->getData('coupon_code')))
             {
-            /* create a invoice */  
-            if($order->canInvoice()) {          
-            $invoice = $this->_invoiceService->prepareInvoice($order);
-            if (!$invoice->getTotalQty()) {
-                throw new \Magento\Framework\Exception\LocalizedException(
-                __('You can\'t create an invoice without products.')
-                );
-            }
-            $invoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
-            $invoice->register();
-            $transaction = $this->_transaction
-            ->addObject($invoice)
-            ->addObject($invoice->getOrder());
-            $transaction->save();
-            
-            $this->_invoiceSender->send($invoice);
-            $order->addStatusHistoryComment(
-            __('Notified customer about invoice #%1.', $invoice->getId())
-            )
-            ->setIsCustomerNotified(false)
-            ->save();
-            }
-             /* end of create a invoice */
+                $orderDiscount = $this->_discountHelper->DiscountCode($order->getData('coupon_code'));
+                $hdrDiscCondCode = $orderDiscount['hdr_disc_cond_code'];
+                if($hdrDiscCondCode == 'Z616')
+                {
+                    // set the flag to have updates
+                    $isUpdateNeeded = true;
 
-            $today = date('Y-m-d H:i:s');
-            $isUpdateNeeded = true;
-            $sapOrderBatch->setData('is_capture', true);
-            $sapOrderBatch->setData('capture_process_date', $today);
+                    // invoice the order offline
+                    $this->invoiceOffline($order, $sapOrderBatch);
+                }
             }
-        }
+
+            // determine if this is a subscription
+            if ($order->isSubscription())
+            {
+                // set the flag to have updates
+                $isUpdateNeeded = true;
+
+                // invoice the order offline
+                $this->invoiceOffline($order, $sapOrderBatch);
+            }
 
             // check the shipment
             if (!empty($inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]) &&
@@ -1064,5 +1051,48 @@ class OrderStatusHelper
             // update the table
             $this->_sapOrderBatchResource->save($sapOrderBatch);
         }
+    }
+
+    /**
+     * This function allows orders to be invoiced but offline so
+     * the system doesn't try to capture funds.
+     *
+     * @param \Magento\Sales\Model\Order $order
+     * @param \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    private function invoiceOffline($order, $sapOrderBatch)
+    {
+        /* create a invoice */
+        // first check to see if there is an invoice that exists already
+        // if there is one then don't try to create one
+        if (!$order->hasInvoices())
+        {
+            if ($order->canInvoice())
+            {
+                $invoice = $this->_invoiceService->prepareInvoice($order);
+                if (!$invoice->getTotalQty())
+                {
+                    throw new \Magento\Framework\Exception\LocalizedException(__('You can\'t create an invoice without products.'));
+                }
+
+                $invoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
+                $invoice->register();
+                $transaction = $this->_transaction
+                    ->addObject($invoice)
+                    ->addObject($invoice->getOrder());
+                $transaction->save();
+
+                $this->_invoiceSender->send($invoice);
+                $order->addStatusHistoryComment(__('Notified customer about invoice #%1.', $invoice->getId()))
+                    ->setIsCustomerNotified(false)
+                    ->save();
+            }
+        }
+        /* end of create a invoice */
+
+        $today = date('Y-m-d H:i:s');
+        $sapOrderBatch->setData('is_capture', true);
+        $sapOrderBatch->setData('capture_process_date', $today);
     }
 }
