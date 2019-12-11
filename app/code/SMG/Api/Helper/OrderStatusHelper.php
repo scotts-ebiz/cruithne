@@ -998,8 +998,9 @@ class OrderStatusHelper
             $order = $this->_orderFactory->create();
             $this->_orderResource->load($order, $sapOrderBatch->getData('order_id'));
 
-            // Get the order coupon code discount values if the coupon code
-            // if exists on the order.  You will need to get the order based on the
+            // Determine if this is a 100% discount as we do not
+            // want to invoice the order online as it will fail.
+            // 100% discounts should be invoiced offline
             if(!empty($order->getData('coupon_code')))
             {
                 $orderDiscount = $this->_discountHelper->DiscountCode($order->getData('coupon_code'));
@@ -1014,7 +1015,9 @@ class OrderStatusHelper
                 }
             }
 
-            // determine if this is a subscription
+            // determine if this is a subscription as we do not
+            // want to invoice the order online as it will fail.
+            // subscriptions should be invoiced offline.
             if ($order->isSubscription())
             {
                 // set the flag to have updates
