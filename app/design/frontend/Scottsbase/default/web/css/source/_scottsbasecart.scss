@@ -18,16 +18,17 @@
     .page-main {
         .page-title-wrapper {
             display: block;
-            border-bottom:0;
-            margin-top: 0rem;
+            border-bottom: 0;
+            margin-top: 0;
             h1.page-title {
-                font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                font-size: 1.6rem;
-                font-weight: 500;
-                text-transform: inherit;
-                padding: 0 0 10px 0;
+                @include set-font($roboto, 1.3125rem, initial, 500, initial, .125rem);
+                text-transform: uppercase;
+                margin-bottom: 43px;
                 width: 100%;
-                border-bottom: 1px solid #ccc;
+
+                @media screen and (max-width: $screen__l) {
+                    margin-bottom: 32px;
+                }
             }
         }
         .columns {
