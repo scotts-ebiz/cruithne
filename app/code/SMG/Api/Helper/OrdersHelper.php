@@ -405,20 +405,16 @@ class OrdersHelper
         $shippingCondition = $this->_shippingConditionCodeFactory->create();
         $this->_shippingConditionCodeResource->load($shippingCondition, $order->getShippingMethod(), 'shipping_method');
 
-        // check to see if there was a value
-        $invoiceAmount = $order->getData('total_invoiced');
-        if (empty($invoiceAmount))
-        {
-            $invoiceAmount = '';
-        }
-
-        // get the quantity
+        // get the values that change depending on the type of order
         $quantity = $orderItem->getQtyOrdered();
+        $grossSales = $order->getData('grand_total');
         $shippingAmount = $order->getData('shipping_amount');
         $taxAmount = $order->getData('tax_amount');
         $hdrDiscFixedAmount = '';
         $hdrDiscPerc = '';
         $hdrDiscCondCode = '';
+        $subtotal = $order->getData('subtotal');
+        $invoiceAmount = $order->getData('total_invoiced');
 
         // get the shipping address
         /**
@@ -467,6 +463,48 @@ class OrdersHelper
         $surchCondCode='';
         $surchFixedAmt='';
         $surchPerAmt='';
+
+        // determine if this is a subscription
+        if ($order->isSubscription())
+        {
+            // create an array of the desired totals
+            $totalFields = array("grand_total", "shipping_amount", "subtotal", "tax_amount", "total_invoiced", "hdr_disc_fixed_amount");
+
+            // get an array of the desired values summed up for the given subscription
+            $totalArray = $order->getAllSubscriptionTotals($totalFields);
+            if (!empty($totalArray))
+            {
+                if (isset($totalArray["grand_total"]))
+                {
+                    $grossSales = $totalArray["grand_total"];
+                }
+
+                if (isset($totalArray["shipping_amount"]))
+                {
+                    $shippingAmount = $totalArray["shipping_amount"];
+                }
+
+                if (isset($totalArray["hdr_disc_fixed_amount"]))
+                {
+                    $hdrDiscFixedAmount = $totalArray["hdr_disc_fixed_amount"];
+                }
+
+                if (isset($totalArray["subtotal"]))
+                {
+                    $subtotal = $totalArray["subtotal"];
+                }
+
+                if (isset($totalArray["tax_amount"]))
+                {
+                    $taxAmount = $totalArray["tax_amount"];
+                }
+
+                if (isset($totalArray["total_invoiced"]))
+                {
+                    $invoiceAmount = $totalArray["total_invoiced"];
+                }
+            }
+        }
 
         // determine what type of order
         $debitCreditFlag = 'DR';
@@ -563,6 +601,12 @@ class OrdersHelper
             }
         }
 
+        // check to see if there was a value for invoiceAmount
+        if (empty($invoiceAmount))
+        {
+            $invoiceAmount = '';
+        }
+
         // return
         return array_map('trim', array(
             self::ORDER_NUMBER => $order->getIncrementId(),
@@ -580,7 +624,7 @@ class OrdersHelper
             self::QUANTITY => $quantity,
             self::UNIT => 'EA',
             self::UNIT_PRICE => $price,
-            self::GROSS_SALES => $order->getData('grand_total'),
+            self::GROSS_SALES => $grossSales,
             self::SHIPPING_AMOUNT => $shippingAmount,
             self::EXEMPT_AMOUNT => '0',
             self::HDR_DISC_FIXED_AMOUNT => $hdrDiscFixedAmount,
@@ -590,7 +634,7 @@ class OrdersHelper
             self::HDR_SURCH_PERC => $hdrSurchPerc,
             self::HDR_SURCH_COND_CODE => $hdrSurchCondCode,
             self::DISCOUNT_AMOUNT => '',
-            self::SUBTOTAL => $order->getData('subtotal'),
+            self::SUBTOTAL => $subtotal,
             self::TAX_RATE => $orderItem->getTaxPercent(),
             self::SALES_TAX => $taxAmount,
             self::INVOICE_AMOUNT => $invoiceAmount,

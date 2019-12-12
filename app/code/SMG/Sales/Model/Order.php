@@ -8,11 +8,64 @@
 
 namespace SMG\Sales\Model;
 
+use Magento\Framework\Api\AttributeValueFactory;
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Framework\Locale\ResolverInterface;
+use Magento\Framework\Pricing\PriceCurrencyInterface;
+use Magento\Sales\Api\OrderItemRepositoryInterface;
 use Magento\Sales\Model\Order as MagentoOrder;
+use Magento\Sales\Model\Order\ProductOption;
 
+use SMG\OrderDiscount\Helper\Data as DiscountHelper;
 
 class Order extends MagentoOrder
 {
+    /**
+     * @var DiscountHelper
+     */
+    protected $_discountHelper;
+
+    public function __construct(\Magento\Framework\Model\Context $context,
+        \Magento\Framework\Registry $registry,
+        \Magento\Framework\Api\ExtensionAttributesFactory $extensionFactory,
+        AttributeValueFactory $customAttributeFactory,
+        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Sales\Model\Order\Config $orderConfig,
+        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
+        \Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory $orderItemCollectionFactory,
+        \Magento\Catalog\Model\Product\Visibility $productVisibility,
+        \Magento\Sales\Api\InvoiceManagementInterface $invoiceManagement,
+        \Magento\Directory\Model\CurrencyFactory $currencyFactory,
+        \Magento\Eav\Model\Config $eavConfig,
+        \Magento\Sales\Model\Order\Status\HistoryFactory $orderHistoryFactory,
+        \Magento\Sales\Model\ResourceModel\Order\Address\CollectionFactory $addressCollectionFactory,
+        \Magento\Sales\Model\ResourceModel\Order\Payment\CollectionFactory $paymentCollectionFactory,
+        \Magento\Sales\Model\ResourceModel\Order\Status\History\CollectionFactory $historyCollectionFactory,
+        \Magento\Sales\Model\ResourceModel\Order\Invoice\CollectionFactory $invoiceCollectionFactory,
+        \Magento\Sales\Model\ResourceModel\Order\Shipment\CollectionFactory $shipmentCollectionFactory,
+        \Magento\Sales\Model\ResourceModel\Order\Creditmemo\CollectionFactory $memoCollectionFactory,
+        \Magento\Sales\Model\ResourceModel\Order\Shipment\Track\CollectionFactory $trackCollectionFactory,
+        \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $salesOrderCollectionFactory,
+        PriceCurrencyInterface $priceCurrency,
+        \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productListFactory,
+        DiscountHelper $discountHelper,
+        \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
+        \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
+        array $data = [],
+        ResolverInterface $localeResolver = null,
+        ProductOption $productOption = null,
+        OrderItemRepositoryInterface $itemRepository = null,
+        SearchCriteriaBuilder $searchCriteriaBuilder = null)
+    {
+        parent::__construct($context, $registry, $extensionFactory, $customAttributeFactory, $timezone, $storeManager, $orderConfig, $productRepository, $orderItemCollectionFactory, $productVisibility, $invoiceManagement, $currencyFactory, $eavConfig,
+            $orderHistoryFactory, $addressCollectionFactory, $paymentCollectionFactory, $historyCollectionFactory, $invoiceCollectionFactory, $shipmentCollectionFactory, $memoCollectionFactory, $trackCollectionFactory,
+            $salesOrderCollectionFactory, $priceCurrency, $productListFactory, $resource, $resourceCollection, $data, $localeResolver, $productOption, $itemRepository, $searchCriteriaBuilder
+        );
+
+        $this->_discountHelper = $discountHelper;
+    }
+
     /**
      * This will determine if the order is a subscription or
      * a regular order
@@ -53,5 +106,103 @@ class Order extends MagentoOrder
 
         // return the appropriate subscription id
         return $subscriptionOrderId;
+    }
+
+    /**
+     * Get the list of fields with the total amount for subscriptions
+     *
+     * @param array $listOfTotalFields
+     * @return array
+     */
+    public function getAllSubscriptionTotals(array $listOfTotalFields)
+    {
+        // return array initialization
+        $returnOrderTotals = array();
+
+        // make sure that there were fields passed in to get the product values
+        if (count($listOfTotalFields) > 0)
+        {
+            // get the subscription id
+            $subscriptionOrderId = $this->getSubscriptionOrderId();
+
+            // get the subscription type for later use
+            $subscriptionType = $this->getData('subscription_type');
+
+            // get the list of orders
+            $magentoOrders = $this->salesOrderCollectionFactory->create();
+
+            // get a list of orders that have the subscription id
+            if ($subscriptionType == 'seasonal')
+            {
+                // filter out for those with the seasonal subscription id
+                $magentoOrders->addFieldToFilter('subscription_id', ['eq' => $subscriptionOrderId]);
+            } else
+            {
+                // filter out for those with the annual subscription id
+                $magentoOrders->addFieldToFilter('master_subscription_id', ['eq' => $subscriptionOrderId]);
+            }
+
+            // loop through the list of orders
+            /**
+             * @var \Magento\Sales\Model\Order $magentoOrder
+             */
+            foreach($magentoOrders as $magentoOrder)
+            {
+                // loop through the desired fields
+                foreach ($listOfTotalFields as $totalField)
+                {
+                    // make sure that there was a value entered
+                    if (!empty($totalField))
+                    {
+                        // initialize the temp value
+                        $tempValue = 0;
+
+                        // get the value from the return array
+                        if (isset($returnOrderTotals[$totalField]))
+                        {
+                            $tempValue = $returnOrderTotals[$totalField];
+                            if (empty($tempValue))
+                            {
+                                $tempValue = 0;
+                            }
+                        }
+
+                        // check to see if this is a discount value as it is on
+                        // a different table
+                        if ($totalField == 'hdr_disc_fixed_amount')
+                        {
+                            // check to see if there is a discount code
+                            // as this field is only for discounts
+                            $couponCode = $this->getData('coupon_code');
+                            if(!empty($couponCode))
+                            {
+                                // get the order discount from the coupon code
+                                $orderDiscount = $this->_discountHelper->DiscountCode($couponCode);
+
+                                // add the original value and then set the new value
+                                // to the value on the array + the new value
+                                $returnOrderTotals[$totalField] = $tempValue + $orderDiscount[$totalField];
+                            }
+                        }
+                        else
+                        {
+                            // get the value from order
+                            $tempTotal = $magentoOrder->getData($totalField);
+                            if (empty($tempTotal))
+                            {
+                                $tempTotal = 0;
+                            }
+
+                            // add the original value and then set the new value
+                            // to the value on the array + the new value
+                            $returnOrderTotals[$totalField] = $tempValue + $tempTotal;
+                        }
+                    }
+                }
+            }
+        }
+
+        // return
+        return $returnOrderTotals;
     }
 }
