@@ -172,6 +172,9 @@ $colors: (
     .#{$size}sp-justify-between {
       justify-content: space-between;
     }
+    .#{$size}sp-justify-around {
+      justify-content: space-around;
+    }
     .#{$size}sp-justify-center {
       justify-content: center;
     }
