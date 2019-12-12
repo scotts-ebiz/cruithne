@@ -17,6 +17,25 @@ class RecommendationHelper extends AbstractHelper
     const CONFIG_RECOMMENDATIONS_PRODUCTS_PATH = 'recommendations/api/products';
 
     /**
+     * @var \Magento\Framework\Session\SessionManagerInterface
+     */
+    protected $_coreSession;
+
+    /**
+     * Recommendation API Helper Constructor
+     * @param \Magento\Framework\App\Helper\Context $context
+     * @param \Magento\Framework\Session\SessionManagerInterface $coreSession
+     */
+    public function __construct(
+        \Magento\Framework\App\Helper\Context $context,
+        \Magento\Framework\Session\SessionManagerInterface $coreSession
+    )
+    {
+        $this->_coreSession = $coreSession;
+        parent::__construct($context);
+    }
+
+    /**
      * Check whether Recommendations is active and ready to use
      *
      * @param null $store_id
@@ -138,6 +157,47 @@ class RecommendationHelper extends AbstractHelper
             ScopeInterface::SCOPE_STORE,
             $store_id
         );
+    }
+
+    /**
+     * Return array of core and addon products from the quiz result
+     * 
+     * @param string $quiz_id
+     * @return array
+     */
+    public function getQuizResultProducts($quiz_id)
+    {
+        $completedQuizUrl = filter_var(
+            trim(
+                str_replace('{completedQuizId}', $quiz_id, $this->getQuizResultApiPath()),
+                '/'
+            ),
+            FILTER_SANITIZE_URL
+        );
+
+        $completedQuizResults = $this->request( $completedQuizUrl, '', 'GET' );
+        $allProducts = array();
+
+        foreach( $completedQuizResults['plan']['coreProducts'] as $index => $product ) {
+            $allProducts['core'][$index]['season'] = $product['season'];
+            $allProducts['core'][$index]['applicationStartDate'] = $product['applicationStartDate'];
+            $allProducts['core'][$index]['applicationEndDate'] = $product['applicationEndDate'];
+            $allProducts['core'][$index]['sku'] = $product['sku'];
+            $allProducts['core'][$index]['quantity'] = $product['quantity'];
+        }
+
+        foreach( $completedQuizResults['plan']['addOnProducts'] as $index => $product ) {
+            $allProducts['addon'][$index]['season'] = $product['season'];
+            $allProducts['addon'][$index]['applicationStartDate'] = $product['applicationStartDate'];
+            $allProducts['addon'][$index]['applicationEndDate'] = $product['applicationEndDate'];
+            $allProducts['addon'][$index]['sku'] = $product['sku'];
+            $allProducts['addon'][$index]['quantity'] = $product['quantity'];
+        }
+
+        // Save products to session
+        $this->_coreSession->setOrderProducts( $allProducts );
+
+        return $allProducts;
     }
 
     /**

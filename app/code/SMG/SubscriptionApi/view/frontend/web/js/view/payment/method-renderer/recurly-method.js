@@ -4,10 +4,24 @@ define(
         'Magento_Checkout/js/view/payment/default',
         'Magento_Checkout/js/action/place-order',
         'Magento_Checkout/js/action/redirect-on-success',
-        'domReady!',
+        'Magento_Ui/js/modal/modal'
     ],
-    function ($, Component) {
+    function ($, Component, modal) {
         'use strict';
+
+        var options = {
+            type: 'popup',
+            responsive: true,
+            innerScroll: true,
+            buttons: [{
+                text: 'Edit shipping address',
+                class: '',
+                click: function() {
+                    this.closeModal();
+                    window.location.href = '/checkout/#shipping';
+                }
+            }]
+        };
 
         return Component.extend({
             defaults: {
@@ -20,6 +34,12 @@ define(
                 setTimeout(function () {
                     recurly.configure('ewr1-aefvtq9Ri3MILWsXFPHyv2');
                 }, 2000);
+
+                var self = this;
+
+                $(document).on( 'click', 'button#removeFromOrder', function() {
+                   self.createNewSubscription( $(this).attr('data-token'), true );
+                });
             },
 
             getShippingAddress: function () {
@@ -36,7 +56,7 @@ define(
                 return checkoutData.billingAddressFromData;
             },
 
-            createNewSubscription: function (token_id, cancel_existing) {
+            createNewSubscription: function (token_id, remove_not_allowed ) {
                 var self = this;
                 var form = document.querySelector('.recurly-form');
                 var quizID = window.sessionStorage.getItem('quiz-id');
@@ -48,17 +68,41 @@ define(
                     dataType: 'json',
                     contentType: 'application/json',
                     processData: false,
+                    showLoader: true,
                     data: JSON.stringify({
                         'token': token_id,
                         'quiz_id': quizID,
                         'plan': subscriptionPlan,
-                        'cancel_existing': cancel_existing
+                        'remove_not_allowed': remove_not_allowed
                     }),
                     success: function (response) {
-                        if (response[0].success === true) {
-                            self.createNewOrders();
+                        var response = JSON.parse( response );
+                        if( response.success === false ) {
+                            if( response.has_not_allowed_products === true ) {
+
+                                var productsHtml = '';
+
+                                productsHtml += '<h5>Cannot ship product</h5>';
+                                productsHtml += '<p>We\'re sorry, but one or more of the items in your cart does not ship to your area. Review product(s) below.</p>';
+                                productsHtml += '<div class="not-allowed-products-box">';
+                                $.each( response.not_allowed_products, function( key, value ) {
+                                    console.log( value.name );
+                                    productsHtml += '<div class="">';
+                                    productsHtml += '<div class="not-allowed-product-image></div>';
+                                    productsHtml += '<div class="not-allowed-product-name"><h6>' + value.name + '</h6></div>';
+                                    productsHtml += '<div class="not-allowed-product-price"><span>' + value.price + '</span></div>';
+                                    productsHtml += '</div>';
+                                });
+                                productsHtml += '</div>';
+
+                                $('body').append('<div id="popup-modal" class="popup-modal--remove-products">' + productsHtml + '<div><button type="button" class="sp-button sp-button--primary" id="removeFromOrder" data-token="' + token_id + '">Remove from order</button></div></div>');
+                            } else {
+                                $('body').append('<div id="popup-modal" class="popup-modal--remove-products">' + response.message + '</div>');
+                            }
+
+                            $('.popup-modal--remove-products').modal(options).modal('openModal');
                         } else {
-                            alert(response[0].message);
+                            self.createNewOrders();
                         }
                     }
                 });
@@ -78,9 +122,15 @@ define(
                     dataType: 'json',
                     contentType: 'application/json',
                     processData: false,
-                    data: JSON.stringify({'key': formKey, 'quiz_id': quizID, 'billing_address': address}),
+                    showLoader: true,
+                    data: JSON.stringify( {
+                        'key': formKey,
+                        'quiz_id': quizID,
+                        'billing_address': address
+                    } ),
                     success: function (response) {
-                        if (response[0] === true) {
+                        var response = JSON.parse( response );
+                        if ( response.success === true ) {
                             window.location.href = '/checkout/onepage/success';
                         }
                     }
@@ -129,24 +179,7 @@ define(
                     if (err) {
                         console.log(err);
                     } else {
-                        $.ajax({
-                            type: 'POST',
-                            url: window.location.origin + '/rest/V1/subscription/check',
-                            dataType: 'json',
-                            contentType: 'application/json',
-                            processData: false,
-                            success: function (response) {
-                                if (response[0].success === false && response[0].has_subscription === true) {
-                                    if (confirm(response[0].message)) {
-                                        self.createNewSubscription(token.id, true);
-                                    } else {
-                                        window.location.href = response[0].redirect_url
-                                    }
-                                } else {
-                                    self.createNewSubscription(token.id, false);
-                                }
-                            }
-                        });
+                        self.createNewSubscription( token.id, false );
                     }
                 })
             },

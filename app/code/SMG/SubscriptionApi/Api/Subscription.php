@@ -90,6 +90,16 @@ class Subscription implements SubscriptionInterface
     protected $_order;
 
     /**
+     * @var \Magento\Framework\Session\SessionManagerInterface
+     */
+    protected $_coreSession;
+
+    /**
+     * @var \Magento\Catalog\Model\ProductFactory
+     */
+    protected $_productFactory;
+
+    /**
      * Subscription constructor.
      * @param \SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper
      * @param \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper
@@ -109,6 +119,8 @@ class Subscription implements SubscriptionInterface
      * @param \Magento\Customer\Api\AddressRepositoryInterface $addressRepository
      * @param \Magento\Customer\Api\Data\AddressInterfaceFactory $dataAddressFactory
      * @param \Magento\Customer\Model\Address $customerAddress
+     * @param \Magento\Catalog\Model\ProductFactory $productFactory
+     * @param \Magento\Framework\Session\SessionManagerInterface $coreSession
      */
     public function __construct(
         \SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper,
@@ -128,7 +140,9 @@ class Subscription implements SubscriptionInterface
         \Magento\Sales\Model\Order $order,
         \Magento\Customer\Api\AddressRepositoryInterface $addressRepository,
         \Magento\Customer\Api\Data\AddressInterfaceFactory $dataAddressFactory,
-        \Magento\Customer\Model\Address $customerAddress
+        \Magento\Customer\Model\Address $customerAddress,
+        \Magento\Catalog\Model\ProductFactory $productFactory,
+        \Magento\Framework\Session\SessionManagerInterface $coreSession
     ) {
         $this->_recommendationHelper = $recommendationHelper;
         $this->_recurlyHelper = $recurlyHelper;
@@ -149,6 +163,8 @@ class Subscription implements SubscriptionInterface
         $this->_addressRepository = $addressRepository;
         $this->_dataAddressFactory = $dataAddressFactory;
         $this->_customerAddress = $customerAddress;
+        $this->_productFactory = $productFactory;
+        $this->_coreSession = $coreSession;
     }
 
     /**
@@ -215,7 +231,7 @@ class Subscription implements SubscriptionInterface
                     $seasonalProduct = $this->_productRepository->get( $seasonalProductSku );
                     $params = [
                         'form_key'  => $this->_formKey->getFormKey(),
-                        'qty'       => 1
+                        'qty'       => $product['quantity']
                     ];
                     $this->_cart->addProduct($seasonalProduct->getId(), $params);
 
@@ -329,38 +345,26 @@ class Subscription implements SubscriptionInterface
         $orderBillingAddress = $billing_address;
         
         // Get seasonal products
-        $completedQuizUrl = filter_var(
-            trim(
-                str_replace('{completedQuizId}', $quiz_id, $this->_recommendationHelper->getQuizResultApiPath()),
-                '/'
-            ),
-            FILTER_SANITIZE_URL
-        );
+        $orderProducts = $this->_coreSession->getOrderProducts();
 
-        // Get quiz results data
-        $completedQuizResult = $this->_recommendationHelper->request($completedQuizUrl, '', 'GET' );
-
-        // Get seasonal products
-        $seasonalProducts = $completedQuizResult['plan']['coreProducts'];
-
-        if( ! empty( $seasonalProducts ) ) {
+        if( ! empty( $orderProducts['core'] ) ) {
             // Go through the seasonal products
-            foreach( $seasonalProducts as $item ) {
+            foreach( $orderProducts['core'] as $item ) {
                 // Create empty cart for every seasonal product
-                $cartId = $this->_cartManagementInterface->createEmptyCartForCustomer($customerId);
-                $quote = $this->_cartRepositoryInterface->get($cartId);
-                $quote->setStore($store);
+                $cartId = $this->_cartManagementInterface->createEmptyCartForCustomer( $customerId );
+                $quote = $this->_cartRepositoryInterface->get( $cartId );
+                $quote->setStore( $store );
                 $quote->setCurrency();
-                $quote->assignCustomer($customer);
+                $quote->assignCustomer( $customer );
 
                 // Add product to the cart
                 $product = $this->_productRepository->get( $item['sku'] );
-                $product = $this->_product->load( $product->getId() );
-                $quote->addProduct( $product, 1 );
+                $product = $this->_productFactory->create()->load( $product->getId() );
+                $quote->addProduct( $product, $item['quantity'] );
 
                 // Set shipping information
-                $quote->getShippingAddress()->addData($orderShippingAddress);
-                $quote->getBillingAddress()->addData($orderBillingAddress);
+                $quote->getShippingAddress()->addData( $orderShippingAddress );
+                $quote->getBillingAddress()->addData( $orderBillingAddress );
                 $shippingAddress = $quote->getShippingAddress();
                 $shippingAddress->setCollectShippingRates(true)->collectShippingRates()->setShippingMethod('freeshipping_freeshipping');
 
@@ -412,9 +416,7 @@ class Subscription implements SubscriptionInterface
         }
 
         // Get addon products
-        $addOnProducts = $completedQuizResult['plan']['addOnProducts'];
-
-        if (! empty($addOnProducts)) {
+        if ( ! empty( $orderProducts['addon'] ) ) {
             // Create cart for the addons
             $addonCartId = $this->_cartManagementInterface->createEmptyCartForCustomer($customerId);
             $addonQuote = $this->_cartRepositoryInterface->get($addonCartId);
@@ -423,7 +425,7 @@ class Subscription implements SubscriptionInterface
             $addonQuote->assignCustomer($customer);
 
             // Go through the addon products
-            foreach ($addOnProducts as $addon) {
+            foreach ( $orderProducts['addon'] as $addon ) {
                 // Create cart for the addon
                 $addonCartId = $this->_cartManagementInterface->createEmptyCartForCustomer($customerId);
                 $addonQuote = $this->_cartRepositoryInterface->get($addonCartId);
@@ -433,8 +435,8 @@ class Subscription implements SubscriptionInterface
 
                 // Add addon products to the cart
                 $product = $this->_productRepository->get( $addon['sku'] );
-                $product = $this->_product->load( $product->getId() );
-                $addonQuote->addProduct( $product, 1 );
+                $product = $this->_productFactory->create()->load( $product->getId() );
+                $addonQuote->addProduct( $product, $addon['quantity'] );
 
                 // Collect totals
                 $addonQuote->collectTotals();
@@ -492,7 +494,9 @@ class Subscription implements SubscriptionInterface
             $this->_addressRepository->deleteById( $adr->getId() );
         }
 
-        return array( 'success' => true, 'message' => 'Magento orders created' );
+        return json_encode( array(
+            'success' => true,
+        ) );
     }
 
     /**

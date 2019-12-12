@@ -12,12 +12,12 @@ interface RecurlyInterface
 	 * @param string $token
 	 * @param mixed $quiz_id
 	 * @param string $plan
-	 * @param bool $cancel_existing
+	 * @param bool $remove_not_allowed
 	 * @return array
 	 * 
 	 * @api
 	 */
-	public function createRecurlySubscription($token, $quiz_id, $plan, $cancel_existing);
+	public function createRecurlySubscription($token, $quiz_id, $plan, $remove_not_allowed);
 
 	/**
 	 * Check existing Recurly subscriptions
@@ -27,5 +27,14 @@ interface RecurlyInterface
 	 * @api
 	 */
 	public function checkRecurlySubscription();
+
+	/**
+	 * Cancel Recurly subscriptions
+	 * 
+	 * @return array
+	 * 
+	 * @api
+	 */
+	public function cancelRecurlySubscription();
 
 }
