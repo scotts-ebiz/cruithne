@@ -52,7 +52,7 @@ class UpgradeData implements UpgradeDataInterface
     {
 
         // Version 1.1.2
-        if ( version_compare( $context->getVersion(), '1.1.2', '<=' ) ) {
+        if ( version_compare( $context->getVersion(), '1.1.2', '<' ) ) {
             $this->addDataVersion112($setup);
         }
     }

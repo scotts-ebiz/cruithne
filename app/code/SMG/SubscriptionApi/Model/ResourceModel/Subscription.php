@@ -8,6 +8,8 @@ use Magento\Framework\Model\ResourceModel\Db\Context;
 use SMG\SubscriptionApi\Model\SubscriptionFactory;
 use SMG\SubscriptionApi\Model\SubscriptionOrderFactory;
 use SMG\SubscriptionApi\Model\SubscriptionOrderItemFactory;
+use SMG\SubscriptionApi\Model\SubscriptionAddonOrderFactory;
+use SMG\SubscriptionApi\Model\SubscriptionAddonOrderItemFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
 
 
@@ -18,15 +20,28 @@ use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as Su
 class Subscription extends AbstractDb
 {
 
-    /**
-     * @var \SMG\SubscriptionApi\Model\Subscription
-     */
+    /** @var \SMG\SubscriptionApi\Model\Subscription */
     protected $_subscription;
 
+    /** @var SubscriptionFactory */
     protected $_subscriptionFactory;
+
+    /** @var SubscriptionOrderFactory  */
     protected $_subscriptionOrderFactory;
+
+    /** @var SubscriptionOrderItemFactory  */
     protected $_subscriptionOrderItemFactory;
+
+    /** @var SubscriptionAddonOrderFactory  */
+    protected $_subscriptionAddonOrderFactory;
+
+    /** @var SubscriptionAddonOrderItemFactory  */
+    protected $_subscriptionAddonOrderItemFactory;
+
+    /** @var SubscriptionCollectionFactory  */
     protected $_subscriptionCollectionFactory;
+
+    /** @var ProductRepositoryInterface  */
     protected $_productRepository;
 
     /**
@@ -46,6 +61,8 @@ class Subscription extends AbstractDb
      * @param SubscriptionFactory $subscriptionFactory
      * @param SubscriptionOrderFactory $subscriptionOrderFactory
      * @param SubscriptionOrderItemFactory $subscriptionOrderItemFactory
+     * @param SubscriptionAddonOrderFactory $subscriptionAddonOrderFactory
+     * @param SubscriptionAddonOrderItemFactory $subscriptionAddonOrderItemFactory
      * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
      * @param ProductRepositoryInterface $productRepository
      * @param null $connectionName
@@ -55,6 +72,8 @@ class Subscription extends AbstractDb
         SubscriptionFactory $subscriptionFactory,
         SubscriptionOrderFactory $subscriptionOrderFactory,
         SubscriptionOrderItemFactory $subscriptionOrderItemFactory,
+        SubscriptionAddonOrderFactory $subscriptionAddonOrderFactory,
+        SubscriptionAddonOrderItemFactory $subscriptionAddonOrderItemFactory,
         SubscriptionCollectionFactory $subscriptionCollectionFactory,
         ProductRepositoryInterface $productRepository,
         $connectionName = null
@@ -65,6 +84,8 @@ class Subscription extends AbstractDb
         $this->_subscriptionFactory = $subscriptionFactory;
         $this->_subscriptionOrderFactory = $subscriptionOrderFactory;
         $this->_subscriptionOrderItemFactory = $subscriptionOrderItemFactory;
+        $this->_subscriptionAddonOrderFactory = $subscriptionAddonOrderFactory;
+        $this->_subscriptionAddonOrderItemFactory = $subscriptionAddonOrderItemFactory;
         $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
         $this->_productRepository = $productRepository;
     }
@@ -145,6 +166,26 @@ class Subscription extends AbstractDb
             }
         }
 
+        // Create Subscription Addon Orders
+        $recommendationSubscriptionAddonOrder = $this->organizeSubscriptionAddonOrdersFromRecommendation($recommendation[0]['plan']['addOnProducts']);
+
+        $subscriptionAddonOrder = $this->_subscriptionAddonOrderFactory->create();
+        $subscriptionAddonOrder->setSubscriptionEntityId( $subscription->getEntityId() );
+        $subscriptionAddonOrder->setSeasonName( $recommendationSubscriptionAddonOrder['season_name'] );
+        $subscriptionAddonOrder->setApplicationStartDate( $recommendationSubscriptionAddonOrder['application_start_date'] );
+        $subscriptionAddonOrder->setApplicationEndDate( $recommendationSubscriptionAddonOrder['application_end_date'] );
+        $subscriptionAddonOrder->setSubscriptionOrderStatus( $recommendationSubscriptionAddonOrder['subscription_order_status'] );
+        $subscriptionAddonOrder->save();
+
+        // Create the Subscription Order Items
+        foreach ( $recommendationSubscriptionAddonOrder['subscriptionOrderItems'] as $item ) {
+            $subscriptionAddonOrderItem = $this->_subscriptionAddonOrderItemFactory->create();
+            $subscriptionAddonOrderItem->setSubscriptionAddonOrderEntityId( $subscriptionAddonOrder->getEntityId() );
+            $subscriptionAddonOrderItem->setCatalogProductSku( $item['catalog_product_sku'] );
+            $subscriptionAddonOrderItem->setQty( $item['qty'] );
+            $subscriptionAddonOrderItem->save();
+        }
+
         return $this->_subscription;
     }
 
@@ -157,16 +198,16 @@ class Subscription extends AbstractDb
     private function organizeSubscriptionOrdersFromRecommendation($recommendedProducts) {
 
         // Process the recommendation results
-        $seasons = [];
+        $subscriptionOrders = [];
         foreach ( $recommendedProducts as $recommendedProduct ) {
 
             // Going to want to sort this date time ascending later
             $key = strtotime( $recommendedProduct['applicationStartDate'] );
 
             // If there isn't a parent subscription, let's capture that
-            if ( ! isset( $seasons[$key] ) ) {
+            if ( ! isset( $subscriptionOrders[$key] ) ) {
 
-                $seasons[$key] = [
+                $subscriptionOrders[$key] = [
                     'season_name' => $recommendedProduct['season'],
                     'application_start_date' => $recommendedProduct['applicationStartDate'],
                     'application_end_date' => $recommendedProduct['applicationEndDate'],
@@ -185,7 +226,7 @@ class Subscription extends AbstractDb
 
                 }
 
-                $seasons[$key]['subscriptionOrderItems'][] = [
+                $subscriptionOrders[$key]['subscriptionOrderItems'][] = [
                     'catalog_product_sku' => $recommendedProduct['sku'],
                     'qty' => $recommendedProduct['quantity']
                 ];
@@ -194,8 +235,21 @@ class Subscription extends AbstractDb
         }
 
         // Sort by date ascending and return
-        ksort($seasons);
+        ksort($subscriptionOrders);
 
-        return $seasons;
+        return $subscriptionOrders;
+    }
+
+    /**
+     * Organize the subscription addons from the recommendations payload
+     * @param $recommendedProducts
+     * @return array
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function organizeSubscriptionAddonOrdersFromRecommendation($recommendedProducts) {
+
+        // We are only concerned with the first season of addons
+        $subscriptionAddonOrdersAll = $this->organizeSubscriptionOrdersFromRecommendation($recommendedProducts);
+        return array_shift( $subscriptionAddonOrdersAll );
     }
 }

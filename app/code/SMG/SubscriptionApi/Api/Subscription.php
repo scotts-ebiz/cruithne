@@ -3,6 +3,7 @@
 namespace SMG\SubscriptionApi\Api;
 
 use Magento\Framework\Exception\SecurityViolationException;
+use Magento\Setup\Exception;
 use Recurly_Client;
 use Recurly_SubscriptionList;
 use SMG\SubscriptionApi\Api\Interfaces\SubscriptionInterface;
@@ -167,13 +168,16 @@ class Subscription implements SubscriptionInterface
         }
 
         // Add subscription to cart
-        /** @var \SMG\SubscriptionApi\Model\Subscription $subscription */
-        $subscription = $this->_subscription->getSubscriptionByQuizId( $this->_coreSession->getQuizId() );
-        $subscription->setSubscriptionType( $subscription_plan )->save();
-        $subscription->generateShipDates();
-        $subscription->addSubscriptionToCart();
-
-        // @todo Add addons to cart
+        try {
+            /** @var \SMG\SubscriptionApi\Model\Subscription $subscription */
+            $subscription = $this->_subscription->getSubscriptionByQuizId( $this->_coreSession->getQuizId() );
+            $subscription->setSubscriptionType( $subscription_plan )->save();
+            $subscription->generateShipDates();
+            $subscription->addSubscriptionToCart( $addons );
+        } catch ( Exception $e ) {
+            $response = array( 'success' => false, 'message' => $e->getMessage() );
+            return json_encode($response);
+        }
 
         $response = array( 'success' => true );
         return json_encode($response);
