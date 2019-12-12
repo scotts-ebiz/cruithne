@@ -74,31 +74,19 @@
                             'sp-mb-4': quiz.map() && quiz.map().address()
                         }"
                     >
-                        2. Calculate the size of your lawn
+                        2. Outline your lawn.
                     </p>
                     <p
                         class="sp-p2 sp-mb-0"
                         data-bind="visible: quiz.map() && quiz.map().address()"
                     >
-                        To measure your lawn, start by selecting on each corner. This will create a basic outline. If you have another area to add, simply start the process again.
-                    </p>
-                </div>
-
-                <div class="sp-quiz-map--step-3 sp-hide md:sp-block sp-bg-white sp-mb-8 sp-p-8 sp-rounded sp-shadow-md sp-text-black">
-                    <p
-                       class="sp-p1"
-                       data-bind="css: {
-                            'sp-mb-0': !quiz.map() || !quiz.map().lawnSize(),
-                            'sp-mb-4': quiz.map() && quiz.map().lawnSize()
-                        }"
-                    >
-                        3. Your total lawn size
+                        No need to be too precise--we're just looking for an
+                        approximate size.
                     </p>
                     <p
-                        class="sp-p2 sp-mb-0"
-                        data-bind="visible: quiz.map() && quiz.map().lawnSize(), text: quiz.map() && (quiz.map().lawnSize() + ' Sqft.')"
+                        class="sp-p2 sp-font-bold sp-mb-0 sp-mt-4"
+                        data-bind="visible: quiz.map() && quiz.map().lawnSize(), text: quiz.map() && ('Total Lawn Size: ' + quiz.map().lawnSize() + ' SQFT')"
                     >
-                        To measure your lawn, start by selecting on each corner. This will create a basic outline. If you have another area to add, simply start the process again.
                     </p>
                 </div>
             </div>
@@ -166,11 +154,11 @@
                             'sp-mb-2': quiz.map() && quiz.map().lawnSize()
                         }"
                     >
-                        2. Calculate the size of your lawn
+                        2. Outline your lawn.
                     </p>
                     <p
                         class="sp-p2 sp-font-bold sp-mb-0"
-                        data-bind="visible: quiz.map() && quiz.map().lawnSize(), text: quiz.map() && ('Total Lawn Size: ' + quiz.map().lawnSize() + ' Sqft.')"
+                        data-bind="visible: quiz.map() && quiz.map().lawnSize(), text: quiz.map() && ('Total Lawn Size: ' + quiz.map().lawnSize() + ' SQFT')"
                     >
                     </p>
                 </div>
