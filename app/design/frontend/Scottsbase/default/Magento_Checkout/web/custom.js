@@ -55,23 +55,6 @@ function($){
 
 		}, 7000);
 	});
-	/*------- Sticky Header --------*/
-	$(window).scroll(function(){
-		var sticky = $('.custom-checkout-btn-wrap');
-
-		if(typeof  sticky != "undefined" && sticky){
-
-			if ($(window).scrollTop() >= 200) {
-				$('.custom-checkout-btn-wrap').addClass('stickyCart');
-				$('.custom-checkout-btn-wrap').removeClass('slide-up');
-			}
-			else {
-				$('.custom-checkout-btn-wrap').removeClass('stickyCart');
-				$('.custom-checkout-btn-wrap').addClass('slide-up');
-			}
-
-		}
-	});
 
 	/*------- Discount code - toggle --------*/
 	$('#block-discount .title').click(function() {
