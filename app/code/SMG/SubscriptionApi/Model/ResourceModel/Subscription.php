@@ -3,14 +3,12 @@
 namespace SMG\SubscriptionApi\Model\ResourceModel;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Catalog\Model\ProductFactory;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\Framework\Model\ResourceModel\Db\Context;
 use SMG\SubscriptionApi\Model\SubscriptionFactory;
 use SMG\SubscriptionApi\Model\SubscriptionOrderFactory;
 use SMG\SubscriptionApi\Model\SubscriptionOrderItemFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
-use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
 
 
 /**
@@ -29,9 +27,7 @@ class Subscription extends AbstractDb
     protected $_subscriptionOrderFactory;
     protected $_subscriptionOrderItemFactory;
     protected $_subscriptionCollectionFactory;
-    protected $_subscriptionOrderCollectionFactory;
     protected $_productRepository;
-    protected $_subscriptionOrders;
 
     /**
      * Constructor
@@ -51,7 +47,6 @@ class Subscription extends AbstractDb
      * @param SubscriptionOrderFactory $subscriptionOrderFactory
      * @param SubscriptionOrderItemFactory $subscriptionOrderItemFactory
      * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
-     * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
      * @param ProductRepositoryInterface $productRepository
      * @param null $connectionName
      */
@@ -61,7 +56,6 @@ class Subscription extends AbstractDb
         SubscriptionOrderFactory $subscriptionOrderFactory,
         SubscriptionOrderItemFactory $subscriptionOrderItemFactory,
         SubscriptionCollectionFactory $subscriptionCollectionFactory,
-        SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
         ProductRepositoryInterface $productRepository,
         $connectionName = null
     )
@@ -72,7 +66,6 @@ class Subscription extends AbstractDb
         $this->_subscriptionOrderFactory = $subscriptionOrderFactory;
         $this->_subscriptionOrderItemFactory = $subscriptionOrderItemFactory;
         $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
-        $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
         $this->_productRepository = $productRepository;
     }
 
@@ -102,21 +95,6 @@ class Subscription extends AbstractDb
         }
 
         return $this->_subscription;
-    }
-
-    /**
-     * Get subscription orders
-     * @return mixed
-     */
-    public function getSubscriptionOrders()
-    {
-        if ( ! isset($this->_subscriptionOrders) ) {
-            $subscriptionOrders = $this->_subscriptionOrderCollectionFactory->create();
-            $subscriptionOrders->addFieldToFilter( 'subscription_entity_id', $this->_subscription->getEntityId() );
-            $this->_subscriptionOrders = $subscriptionOrders;
-        }
-
-        return $this->_subscriptionOrders;
     }
 
     /**

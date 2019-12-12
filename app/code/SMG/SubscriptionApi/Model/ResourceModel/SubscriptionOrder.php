@@ -10,6 +10,7 @@ use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
  */
 class SubscriptionOrder extends AbstractDb
 {
+
     /**
      * Constructor.
      */
