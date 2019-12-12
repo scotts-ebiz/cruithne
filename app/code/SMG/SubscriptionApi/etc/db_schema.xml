@@ -73,8 +73,8 @@
         <constraint referenceId="SUBSCRIPTION_ORDER_SALES_ORDER_ID_SALES_ORDER_ENTITY_ID"
                     xsi:type="foreign"
                     table="subscription_order"
-                    column="subscription_entity_id"
-                    referenceTable="subscription"
+                    column="sales_order_id"
+                    referenceTable="sales_order"
                     referenceColumn="entity_id"
                     onDelete="NO ACTION" />
     </table>

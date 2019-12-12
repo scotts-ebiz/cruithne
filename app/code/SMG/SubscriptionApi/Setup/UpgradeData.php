@@ -1,6 +1,6 @@
 <?php
 
-namespace Mageplaza\HelloWorld\Setup;
+namespace SMG\SubscriptionApi\Setup;
 
 use Magento\Framework\Setup\UpgradeDataInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
@@ -41,42 +41,55 @@ class UpgradeData implements UpgradeDataInterface
     }
 
     /**
-     * Upgrade function.
      * @param ModuleDataSetupInterface $setup
      * @param ModuleContextInterface $context
+     * @throws \Exception
      */
     public function upgrade(
         ModuleDataSetupInterface $setup,
         ModuleContextInterface $context
     )
     {
-        // Version 1.1.1
-        if ( version_compare( $context->getVersion(), '1.1.1', 'eq' )) {
 
-            // Upgrade Subscription Status
-            $subscriptionStatus = $this->_subscriptionStatusFactory->create();
-            $subscriptionStatus->addData(['status' => 'pending', 'label' => 'Pending'])->save();
-            $subscriptionStatus = $this->_subscriptionStatusFactory->create();
-            $subscriptionStatus->addData(['status' => 'active', 'label' => 'Active'])->save();
-            $subscriptionStatus = $this->_subscriptionStatusFactory->create();
-            $subscriptionStatus->addData(['status' => 'complete', 'label' => 'Complete'])->save();
-            $subscriptionStatus = $this->_subscriptionStatusFactory->create();
-            $subscriptionStatus->addData(['status' => 'abandoned', 'label' => 'Abandoned'])->save();
-
-            // Upgrade Subscription Type
-            $subscriptionTypeFactory = $this->_subscriptionTypeFactory->create();
-            $subscriptionTypeFactory->addData(['type' => 'annual', 'label' => 'Annual Subscription'])->save();
-            $subscriptionTypeFactory = $this->_subscriptionTypeFactory->create();
-            $subscriptionTypeFactory->addData(['type' => 'seasonal', 'label' => 'Seasonal Subscription'])->save();
-
-            // Upgrade Subscription Order Status
-            $subscriptionOrderStatusFactory = $this->_subscriptionOrderStatusFactory->create();
-            $subscriptionOrderStatusFactory->addData(['status' => 'pending', 'label' => 'Pending'])->save();
-            $subscriptionOrderStatusFactory = $this->_subscriptionOrderStatusFactory->create();
-            $subscriptionOrderStatusFactory->addData(['status' => 'complete', 'label' => 'Complete'])->save();
-            $subscriptionOrderStatusFactory = $this->_subscriptionOrderStatusFactory->create();
-            $subscriptionOrderStatusFactory->addData(['status' => 'canceled', 'label' => 'Canceled'])->save();
+        // Version 1.1.2
+        if ( version_compare( $context->getVersion(), '1.1.2', '<=' ) ) {
+            $this->addDataVersion110($setup);
 
         } // End Version 1.1.1
+    }
+
+    /**
+     * Add Data for Version 1.1.2
+     *
+     * @param ModuleDataSetupInterface $setup
+     */
+    private function addDataVersion110(ModuleDataSetupInterface $setup)
+    {
+        // Upgrade Subscription Status
+        $tableName = $setup->getTable('subscription_status');
+        $data = [
+            ['status' => 'pending', 'label' => 'Pending'],
+            ['status' => 'active', 'label' => 'Active'],
+            ['status' => 'complete', 'label' => 'Complete'],
+            ['status' => 'abandoned', 'label' => 'Abandoned']
+        ];
+        $setup->getConnection()->insertMultiple($tableName, $data);
+
+        // Upgrade Subscription Status
+        $tableName = $setup->getTable('subscription_type');
+        $data = [
+            ['type' => 'annual', 'label' => 'Annual Subscription'],
+            ['type' => 'seasonal', 'label' => 'Seasonal Subscription']
+        ];
+        $setup->getConnection()->insertMultiple($tableName, $data);
+
+        // Upgrade Subscription Status
+        $tableName = $setup->getTable('subscription_order_status');
+        $data = [
+            ['status' => 'pending', 'label' => 'Pending'],
+            ['status' => 'complete', 'label' => 'Complete'],
+            ['status' => 'canceled', 'label' => 'Canceled']
+        ];
+        $setup->getConnection()->insertMultiple($tableName, $data);
     }
 }
