@@ -52,11 +52,11 @@
                 data-bind="attr: { id: 'slider_' + question.label }"
             >
                 <div
-                    class="sp-quiz__options sp-flex sp-flex-wrap sp-justify-center sp--mx-1"
+                    class="sp-quiz__options sp-quiz__silder-labels sp-flex sp-flex-wrap sp-justify-center sp--mx-1 sp-mb-1 sp-px-2"
                     data-bind="foreach: { data: question.options, as: 'option', noChildContext: true }"
                 >
                         <span
-                            class="sp-p2 sp-quiz__green-text sp-font-bold"
+                            class="sp-quiz__slider-label sp-p2 sp-text-green-1 sp-font-bold"
                             data-bind="
                                 attr: { 'data-optid': option.value },
                                 text: option.label,
@@ -64,12 +64,6 @@
                             "
                         >
                         </span>
-                    <!-- ko if: $index() === 0 -->
-                    <!--<span class="sp-p2 sp-quiz__green-text sp-quiz__strong-text" data-bind="text: option.label, attr: { 'data-optid': option.value }"></span>-->
-                    <!-- /ko -->
-                    <!-- ko if: $index() !== 0 -->
-                    <!--<span class="sp-hide sp-p2 sp-quiz__green-text sp-quiz__strong-text" data-bind="text: option.label, attr: { 'data-optid': option.value }"></span>-->
-                    <!-- /ko -->
                 </div>
 
                 <div
