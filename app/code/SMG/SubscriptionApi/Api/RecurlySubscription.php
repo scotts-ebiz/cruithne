@@ -134,7 +134,6 @@ class RecurlySubscription implements RecurlyInterface
      * @param string $token
      * @param mixed $quiz_id
      * @param string $plan
-     * @param bool $cancel_existing
      * @return array|void
      * @throws Recurly_Error
      * @throws \Magento\Framework\Exception\LocalizedException
@@ -142,7 +141,7 @@ class RecurlySubscription implements RecurlyInterface
      *
      * @api
      */
-	public function createRecurlySubscription($token, $quiz_id, $plan, $cancel_existing = false)
+	public function createRecurlySubscription($token, $quiz_id, $plan)
 	{
         // If there is Recurly token, plan code and quiz data
         if (! empty($token) && ! empty($plan) && ! empty($quiz_id)) {
@@ -154,11 +153,6 @@ class RecurlySubscription implements RecurlyInterface
 
             // Get Customer's Recurly account
             $account = ($this->getRecurlyAccount()) ? $this->getRecurlyAccount() : $this->createRecurlyAccount($checkoutData);
-
-            // Cancel existing subscriptions if the customer has agreed to that
-            if ($cancel_existing === true) {
-                $this->cancelAccountSubscriptions($account->account_code);
-            }
 
             // Create Recurly Purchase
             try {
@@ -305,7 +299,7 @@ class RecurlySubscription implements RecurlyInterface
 
 	/**
 	 * Check if the customer already has a Recurly subscription
-	 * 
+	 *
 	 * @api
 	 */
 	public function checkRecurlySubscription()
@@ -320,25 +314,39 @@ class RecurlySubscription implements RecurlyInterface
         // Get Customer's Recurly Account or create new one using current customer's data
         $account = ($this->getRecurlyAccount()) ? $this->getRecurlyAccount() : $this->createRecurlyAccount($checkoutData);
 
-        // Check if customer has active/future (live) subscriptions and offer him a choice to
-        // cancel existing subscriptions and create new one, or do nothing (will be redirected to account page)
-        if ($this->hasRecurlySubscription($account->account_code)) {
-            return [ [ 'success' => false, 'message' => 'You already have subscriptions. Would you like to cancel them and create new one?', 'has_subscription' => true, 'redirect_url' => $this->_customerUrl->getAccountUrl() ] ];
+        // Check if the customer has an active subscription
+        $activeSubscriptions = $this->hasRecurlySubscription( $account->account_code );
+        if( $activeSubscriptions['has_subscriptions'] === true ) {
+            $response = array(
+                'success'           => true,
+                'has_subscription'  => true,
+                'refund_amount'     => $activeSubscriptions['refund_amount'],
+                'redirect_url'      => $this->_customerUrl->getAccountUrl()
+            );
         } else {
-            return [ [ 'success' => true, 'message' => 'You do not have a subscription', 'has_subscription' => false ] ];
+            $response = array(
+                'success'           => true,
+                'has_subscription'  => false,
+            );
         }
+
+        return json_encode( $response );
 	}
 
     /**
-     * Cancel subscriptions of specific Recurly account
+     * Cancel customer Recurly Subscription
      *
-     * @param string $account_code
-     *
-     * @return bool
-     * @throws Recurly_Error
+     * @api
      */
-	private function cancelAccountSubscriptions($account_code)
+    public function cancelRecurlySubscription()
 	{
+        // Configure Recurly Client using the API Key and Subdomain entered in the settings page
+        Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
+        Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
+
+        // Get customer's Recurly account code
+        $account_code = $this->_customerSession->getCustomer()->getRecurlyAccountCode();
+
         try {
             $active_subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => 'active' ]);
             $future_subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => 'future' ]);
@@ -353,18 +361,28 @@ class RecurlySubscription implements RecurlyInterface
                 $_subscription->cancel();
             }
 
-            return true;
+            $response = array(
+                'success'   => true,
+                'message'   => 'Recurly subscriptions canceled'
+            );
+
+            return json_encode( $response );
         } catch (Recurly_NotFoundError $e) {
-            return false;
+            $response = array(
+                'success'   => false,
+                'message'   => 'Recurly subscriptions can not be cancelled (' . $e->getMessage() . ')'
+            );
+
+            return json_encode( $response );
         }
 	}
 
 	/**
 	 * Create billing information with the token provided from Recurly.js
-	 * 
+	 *
 	 * @param string $account_code
 	 * @param string $token
-	 * 
+	 *
 	 * @return object|bool
 	 */
 	private function createBillingInfo($account_code, $token)
@@ -381,30 +399,43 @@ class RecurlySubscription implements RecurlyInterface
         }
 	}
 
-
-	/**
-	 * Check if customer already has a subscription
-	 * 
-	 * @return bool
-	 */
-	private function hasRecurlySubscription($account_code)
-	{
+    /**
+     * Check if customer already has a subscription
+     *
+     * @return bool
+     */
+    private function hasRecurlySubscription($account_code)
+    {
         try {
             $subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => 'active' ]);
+            $subscriptions_amount = 0;
 
-            if (count($subscriptions) > 0) {
-                return true;
+            foreach( $subscriptions as $subscription ) {
+                $subscriptions_amount += $subscription->unit_amount_in_cents;
             }
 
-            return false;
+            if ( count($subscriptions) > 0 ) {
+                return array(
+                    'has_subscriptions' => true,
+                    'refund_amount'     => $this->convertAmountToDollars( $subscriptions_amount )
+                );
+            }
+
+            return array(
+                'has_subscriptions' => false,
+                'refund_amount'     => 0
+            );
         } catch (Recurly_NotFoundError $e) {
-            return false;
+            return array(
+                'has_subscriptions' => false,
+                'refund_amount'     => 0
+            );
         }
 	}
 
 	/**
 	 * Return Recurly Plan Code base on the name of the core product
-	 * 
+	 *
 	 * @return string
 	 */
 	private function getPlanCodeByName($name) {
@@ -424,13 +455,22 @@ class RecurlySubscription implements RecurlyInterface
 
 	/**
 	 * Convert order grand total from dollars to cents
-	 * 
+	 *
 	 * @return int
 	 */
 	private function convertAmountToCents($amount)
 	{
         return (int) $amount*100;
 	}
+
+    /**
+     * Convert cents to dollars
+     *
+     */
+    private function convertAmountToDollars($amount)
+    {
+        return number_format(($amount/100), 2, '.', ' ');
+    }
 
 	/**
 	 * Check if the current customer has a Recurly account.
@@ -457,7 +497,7 @@ class RecurlySubscription implements RecurlyInterface
 
 	/**
 	 * Get customer's current shipping addresses and use it for the purchase
-	 * 
+	 *
 	 * @return object|gool
 	 */
 	private function getRecurlyAccountShippingAddress($account_code)
@@ -476,7 +516,7 @@ class RecurlySubscription implements RecurlyInterface
 
 	/**
 	 * Create Recurly account using the data from the checkout page
-	 * 
+	 *
 	 * @return object $account
 	 */
 	private function createRecurlyAccount($data)
@@ -524,7 +564,7 @@ class RecurlySubscription implements RecurlyInterface
 	/**
 	 * Get current customer and save it's Recurly account code as a custom attribute,
 	 * generated from customer's email
-	 * 
+	 *
 	 */
 	private function saveRecurlyAccountCode($customer_email, $customer_id)
 	{

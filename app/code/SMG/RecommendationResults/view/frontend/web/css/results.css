@@ -3,3 +3,121 @@
   top: 0;
   width: 100vw;
 }
+
+
+.sp-results__your-plan {
+  border: 2px solid #1d5632;
+  position: relative;
+}
+
+.sp-results__your-plan::after {
+  content: '';
+  background-image: url(https://test_magento_image_repo.storage.googleapis.com/grass-icon.svg);
+  width: 40px;
+  height: 40px;
+  top: -20px;
+  left: 50%;
+  margin-left: -20px;
+  display: block;
+  position: absolute;
+}
+
+
+.sp-results__tabs {
+  flex-shrink: 0;
+}
+
+.sp-results__tabs-tab {
+  list-style: none;;
+}
+
+.sp-results__tabs-detail {}
+
+.sp-results__list {
+  list-style: none;
+}
+
+.sp-results__icon--small {
+  width: 40px;
+  height: auto;
+}
+
+.sp-results__icon--medium {
+  width: 50px;
+  height: auto;
+}
+
+
+.sp-results__product {
+  border: 2px solid #1d5632;
+  align-items: flex-start;
+}
+
+.sp-results__in-this-box {
+  border-bottom: 2px solid #1d5632;
+}
+
+.sp-results__tabs-button {
+  border: none;
+  background: transparent;
+  color: inherit;
+  align-items: center;
+  text-align: left;
+  width: 100%;
+}
+
+.sp-results__tabs-button:hover,
+.sp-results__tabs-button:active {
+  /* Not ideal, should be styling the li */
+  background-color: #edf4e1;
+  outline: none;
+  border: none;
+}
+
+
+.sp-results__bag-count  {
+  background-image: url(https://test_magento_image_repo.storage.googleapis.com/bag-count.svg);
+  color: white;
+  width: 17px;
+  height: 22px;
+}
+
+.sp-results__title {
+  max-width: 45rem;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.sp-results__title::before,
+.sp-results__title::after {
+  content: '';
+  background-image: url(https://test_magento_image_repo.storage.googleapis.com/grass-land.svg);
+  display: block;
+  height: 22px;
+  flex: 0 0 45px;
+  position: relative;
+  bottom: 7px;
+}
+
+.sp-results__title::before {
+  margin-right: 1rem;
+}
+
+.sp-results__title::after {
+  margin-left: 1rem;
+  transform: scaleX(-1);
+  filter: FlipH;
+}
+
+.sp-results__your-plan-product  {
+  max-width: 6rem;
+}
+
+.sp-results__product-image {
+  width: 75px;
+  height: 110px;
+  flex-shrink: 0;
+}

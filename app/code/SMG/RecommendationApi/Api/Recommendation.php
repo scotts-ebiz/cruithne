@@ -107,6 +107,7 @@ class Recommendation implements RecommendationInterface
      * @return array|void
      * @throws SecurityViolationException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws Exception
      *
      * @api
      */
