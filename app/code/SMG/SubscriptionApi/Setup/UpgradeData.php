@@ -53,9 +53,8 @@ class UpgradeData implements UpgradeDataInterface
 
         // Version 1.1.2
         if ( version_compare( $context->getVersion(), '1.1.2', '<=' ) ) {
-            $this->addDataVersion110($setup);
-
-        } // End Version 1.1.1
+            $this->addDataVersion112($setup);
+        }
     }
 
     /**
@@ -63,7 +62,7 @@ class UpgradeData implements UpgradeDataInterface
      *
      * @param ModuleDataSetupInterface $setup
      */
-    private function addDataVersion110(ModuleDataSetupInterface $setup)
+    private function addDataVersion112(ModuleDataSetupInterface $setup)
     {
         // Upgrade Subscription Status
         $tableName = $setup->getTable('subscription_status');
