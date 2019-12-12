@@ -81,9 +81,6 @@ define(
                             if( response.has_not_allowed_products === true ) {
 
                                 var productsHtml = '';
-
-                                productsHtml += '<h5>Cannot ship product</h5>';
-                                productsHtml += '<p>We\'re sorry, but one or more of the items in your cart does not ship to your area. Review product(s) below.</p>';
                                 productsHtml += '<div class="not-allowed-products-box">';
                                 $.each( response.not_allowed_products, function( key, value ) {
                                     console.log( value.name );
@@ -95,9 +92,14 @@ define(
                                 });
                                 productsHtml += '</div>';
 
-                                $('body').append('<div id="popup-modal" class="popup-modal--remove-products">' + productsHtml + '<div><button type="button" class="sp-button sp-button--primary" id="removeFromOrder" data-token="' + token_id + '">Remove from order</button></div></div>');
+
+                                if( response.core_product_not_allowed === true ) {
+                                    $('body').append('<div class="popup-modal--remove-products"><h6>Cannot ship product</h6><p>We\'re sorry, but one or more of the items in your cart does not ship to your area. Please contact our customer support at 1-888-270-3714</p>' + productsHtml);
+                                } else {
+                                    $('body').append('<div class="popup-modal--remove-products"><h5>Cannot ship product</h5><p>We\'re sorry, but one or more of the items in your cart does not ship to your area. Review product(s) below.</p>' + productsHtml + '<div><button type="button" class="sp-button sp-button--primary" id="removeFromOrder" data-token="' + token_id + '">Remove from order</button></div></div>');
+                                }
                             } else {
-                                $('body').append('<div id="popup-modal" class="popup-modal--remove-products">' + response.message + '</div>');
+                                $('body').append('<div class="popup-modal--remove-products">' + response.message + '</div>');
                             }
 
                             $('.popup-modal--remove-products').modal(options).modal('openModal');

@@ -194,13 +194,13 @@ class RecurlySubscription implements RecurlyInterface
             if( ! empty( $notAllowedProducts ) ) {
                 // If not allowed products should be removed
                 if( $remove_not_allowed === true ) {
-                    $this->removeNotAllowedProducts( $quiz_id, $notAllowedProducts );
-                    
+                    $$this->removeNotAllowedProducts( $quiz_id, $notAllowedProducts['products'] );
                 } else {
                     $response = array(
                         'success'                   => false,
                         'has_not_allowed_products'  => true,
-                        'not_allowed_products'      => $notAllowedProducts,
+                        'not_allowed_products'      => $notAllowedProducts['products'],
+                        'core_product_not_allowed'  => $notAllowedProducts['core_product_not_allowed']
                     );
 
                     return json_encode( $response );
@@ -446,6 +446,7 @@ class RecurlySubscription implements RecurlyInterface
         $regionId = $this->_checkoutSession->getQuote()->getShippingAddress()->getRegionId();
         $notAllowedProducts = array();
         $counter = 0;
+        $hasNotAllowedCoreProducts = false;
 
         foreach( $products['core'] as $core_product ) {
             $product = $this->_productRepository->get( $core_product['sku'] );
@@ -459,6 +460,7 @@ class RecurlySubscription implements RecurlyInterface
                 $notAllowedProducts[$counter]['price'] = $product->getPrice();
                 $notAllowedProducts[$counter]['sku'] = $core_product['sku'];
                 $counter++;
+                $hasNotAllowedCoreProducts = true;
             }
         }
 
@@ -477,7 +479,10 @@ class RecurlySubscription implements RecurlyInterface
             }
         }
 
-       return array_unique( $notAllowedProducts, SORT_REGULAR );
+        return array(
+            'products'                  => array_unique( $notAllowedProducts, SORT_REGULAR ),
+            'core_product_not_allowed'  => $hasNotAllowedCoreProducts
+        );
     }
 
     /**
