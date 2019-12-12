@@ -9,6 +9,10 @@
   max-width: 212px !important;
 }
 
+.sp-how-it-works_lawn-condition{
+  padding-right:0rem;
+}
+
 .sp-how-it-works__title {
   font-size: 50px;
 }
@@ -52,5 +56,9 @@
   .sp-quiz-preview__description {
     margin-left: -12rem;
     padding-left: 12rem;
+  }
+
+  .sp-how-it-works_lawn-condition{
+    padding-right: 6.5rem;
   }
 }

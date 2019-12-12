@@ -279,7 +279,7 @@ define([
 
         self.questionId = questionId;
         self.optionId = optionId;
-        self.optionalValue = String(optionalValue);
+        self.optionalValue = optionalValue ? String(optionalValue) : null;
     }
 
     /**
@@ -463,8 +463,9 @@ define([
             } else {
                 // Find the animation based on the answer.
                 for (const animation of animations) {
+                    let isCorrectAnimation = false;
                     for (const condition of animation.conditions) {
-                        let values = self.getQuestionAnswer(condition.questionId, true);
+                        let values = self.getQuestionAnswer(condition.questionId, true) || [];
 
                         if (values && !Array.isArray(values)) {
                             values = [values];
@@ -476,7 +477,7 @@ define([
                                 // the condition values.
                                 for (value of values) {
                                     if (condition.values.includes(value)) {
-                                        self.animation(animation);
+                                        isCorrectAnimation = true;
                                         break;
                                     }
                                 }
@@ -494,7 +495,7 @@ define([
                                 }
 
                                 if (hasAllValues) {
-                                    self.animation(animation);
+                                    isCorrectAnimation = true;
                                 }
 
                                 break;
@@ -510,15 +511,19 @@ define([
                                 }
 
                                 if (!hasValue) {
-                                    self.animation(animation);
+                                    isCorrectAnimation = true;
                                 }
 
                                 break;
                         }
 
-                        if (Object.getOwnPropertyNames(self.animation()).length > 0) {
+                        if (!isCorrectAnimation) {
                             break;
                         }
+                    }
+
+                    if (isCorrectAnimation) {
+                        self.animation(animation);
                     }
                 }
             }
@@ -597,7 +602,9 @@ define([
             var initializedMap = false;
             var sliderQuestion = false;
 
-            window.location.hash = group.label;
+            window.location.hash = group.label
+                ? String(group.label).replace(' ', '-').toLowerCase()
+                : '';
 
             for (question of group.questions) {
                 sliderQuestion = true;
@@ -721,12 +728,13 @@ define([
          * Get the optional value or option ID for the given question ID.
          *
          * @param questionID
+         * @param id
          * @returns {boolean|*}
          */
         self.getQuestionAnswer = function (questionID, id) {
             const answers = [];
-            for (var answer of self.answers()) {
-                if (answer.questionId === questionID) {
+            for (let answer of self.answers()) {
+                if (answer.questionId === questionID && answer.optionId) {
                     if (id) {
                         answers.push(answer.optionId);
                     }
@@ -889,7 +897,7 @@ define([
                 let isCorrectTransition = false;
 
                 for (var condition of transition.conditions) {
-                    let values = self.getQuestionAnswer(condition.questionId, true);
+                    let values = self.getQuestionAnswer(condition.questionId, true) || [];
 
                     if (values && !Array.isArray(values)) {
                         values = [values];
@@ -939,6 +947,10 @@ define([
                             }
 
                             break;
+                    }
+
+                    if (!isCorrectTransition) {
+                        break;
                     }
                 }
 

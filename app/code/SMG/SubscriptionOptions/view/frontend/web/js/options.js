@@ -5,10 +5,72 @@ define([
 ], function (Component, ko, $) {
     return Component.extend({
         hasResults: ko.observable(false),
-        result: ko.observable(null),
+        results: ko.observable({}),
 
-        initialize() {
-            this.getResult();
+        initialize(config) {
+            if (config.zip) {
+                window.sessionStorage.setItem('lawn-zip', config.zip);
+            }
+
+            if (!window.sessionStorage.getItem('lawn-zip')) {
+                window.location.href = '/quiz';
+            }
+
+            if (config.quiz_id) {
+                this.loadQuizResults(config.quiz_id);
+            } else {
+                this.getResults();
+            }
+        },
+
+        /**
+         * Load the quiz results from the recommendation API.
+         *
+         * @param id
+         */
+        loadQuizResults(id) {
+            const self = this;
+            const formKey = document.querySelector('input[name=form_key]').value;
+
+            $.ajax(
+                '/rest/V1/recommendations/quiz/result',
+                {
+                    contentType: 'application/json; charset=utf-8',
+                    data: JSON.stringify({ key: formKey, id: id }),
+                    dataType: 'json',
+                    method: 'post',
+                    success(data) {
+                        if (Array.isArray(data) && data[0]) {
+                            data = data[0];
+                        }
+
+                        if (data.error_message) {
+                            alert('Error getting quiz data: ' + data.error_message + '. Please try again.');
+                            window.location.href = '/quiz';
+                        } else {
+                            self.hasResults(true);
+                            self.results(data);
+                            window.sessionStorage.setItem('result', JSON.stringify(data));
+                            window.sessionStorage.setItem('quiz-id', data.id);
+                        }
+                    },
+                }
+            )
+        },
+
+        /**
+         * Load the quiz from the session storage.
+         */
+        getResults() {
+            const result = window.sessionStorage.getItem('result');
+
+            if (result && JSON.parse(result)) {
+                this.hasResults(true);
+                this.results(JSON.parse(result));
+            } else {
+                // Quiz not found, need to redirect.
+                window.location.href = '/quiz';
+            }
         },
 
 		proceedToCheckout() {
@@ -29,8 +91,8 @@ define([
                     data: JSON.stringify({
                         key: formKey,
                         subscription_plan: subscriptionPlan,
-                        data: self.result(),
-                        addons: addonProducts
+                        data: self.results(),
+                        addons: addonProducts,
                     }),
                     dataType: 'json',
                     method: 'post',
@@ -38,7 +100,6 @@ define([
                         data = JSON.parse(data);
 
                         if (data.success === true) {
-                            localStorage.setItem('estimated_arrival', data.estimated_arrival);
                             window.sessionStorage.setItem('subscription_plan', subscriptionPlan );
                         	window.location.href = '/checkout/#shipping';
                         } else {
@@ -47,50 +108,6 @@ define([
                     },
                 },
             );
-        },
-
-        getCompletedQuiz(id) {
-            const self = this;
-            var formKey = document.querySelector('input[name=form_key]').value;
-
-            $.ajax(
-                `/rest/V1/recommendations/quiz/result`,
-                {
-                    contentType: 'application/json; charset=utf-8',
-                    data: JSON.stringify({ key: formKey, id: id }),
-                    dataType: 'json',
-                    method: 'post',
-                    success(data) {
-                        if (data.error_message) {
-                            alert( 'Error getting quiz data: ' + data.error_message + '. Please try again.');
-                        } else {
-                            if (Array.isArray(data)) {
-                                data = data[0];
-                            }
-
-                            self.hasResults(true);
-                            self.results(data);
-                        }
-                    },
-                },
-            );
-        },
-
-        /**
-         * Load the quiz from the session storage.
-         */
-        getResult() {
-            const result = window.sessionStorage.getItem('result');
-
-            if (result && JSON.parse(result)) {
-                this.hasResults(true);
-                this.result(JSON.parse(result));
-            } else {
-                // Quiz not found, need to redirect.
-                window.location.href = '/quiz';
-            }
-
-            window.sessionStorage.removeItem('result');
         },
     });
 });

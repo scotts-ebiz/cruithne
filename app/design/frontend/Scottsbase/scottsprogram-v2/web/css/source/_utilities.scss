@@ -158,6 +158,14 @@ $colors: (
         align-items: center;
     }
 
+    .#{$size}sp-items-end {
+      align-items: flex-end;
+    }
+
+    .#{$size}sp-items-start {
+      align-items: flex-start;
+    }
+
     .#{$size}sp-items-baseline {
       align-items: baseline;
     }

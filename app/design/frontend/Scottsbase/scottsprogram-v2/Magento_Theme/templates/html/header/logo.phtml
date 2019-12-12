@@ -1,5 +1,5 @@
 <?php
-$storeName = $block->getThemeName() ? $block->getThemeName() : $block->getLogoAlt();
+$storeName = $block->escapeHtml($block->getThemeName() ? $block->getThemeName() : $block->getLogoAlt());
 ?>
 <div class="sp-flex sp-items-center sp-justify-between">
     <?php if ($block->getData('hide_links') == true) { ?>
@@ -62,8 +62,7 @@ $storeName = $block->getThemeName() ? $block->getThemeName() : $block->getLogoAl
                             href="<?php echo $block->escapeUrl($block->getUrl('customer/account/logout')) ?>"
                         >Log Out</a>
                     <?php } else { ?>
-                        <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('customer/account/login')) ?>">Log
-                            In</a>
+                        <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('customer/account/login')) ?>">Log In</a>
                     <?php } ?>
                 </li>
             </ul>
