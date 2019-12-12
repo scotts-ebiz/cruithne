@@ -1,8 +1,3 @@
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
-
 define([
     'ko',
     'Magento_Checkout/js/model/totals',
@@ -16,7 +11,7 @@ define([
 
     return Component.extend({
         defaults: {
-            template: 'SMG_SubscriptionCheckout/summary/cart-items'
+            template: 'Magento_Checkout/summary/cart-items'
         },
         totals: totals.totals(),
         items: ko.observable([]),

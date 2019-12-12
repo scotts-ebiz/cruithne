@@ -395,6 +395,10 @@ $colors: (
   text-transform: uppercase;
 }
 
+.sp-lowercase {
+  text-transform: lowercase;
+}
+
 // Widths
 @each $size in $breakpoints {
   @include breakpoint($size) {
