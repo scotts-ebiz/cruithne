@@ -12,6 +12,12 @@ define([
         results: ko.observable({}),
         activeProductIndex: ko.observable(0), // for the tab menu
 
+        pdp: ko.observable({
+            visible: false,
+            activeTab: 'learn', // 'learn' or 'product_specs'
+            mode: 'plan', // 'plan' or 'subscription'
+        }),
+
         initialize(config) {
             const self = this
 
@@ -212,6 +218,34 @@ define([
             }
 
             return 'https://test_magento_image_repo.storage.googleapis.com/' + icon
+        },
+
+        togglePDP: function () {
+            if (this.pdp().visible) {
+                // hide
+                $('body').removeClass('no-scroll');
+
+            } else {
+                // show
+                $('body').addClass('no-scroll');
+            }
+
+            this.pdp({
+                ...this.pdp(),
+                visible: !this.pdp().visible
+            });
+        },
+
+        setPDPTab: function (tab) {
+            this.pdp({ ...this.pdp(), activeTab: tab })
+        },
+
+        addToOrder: function () {
+            // TODO: Add the product to the order
+            this.togglePDP();
+        },
+
+        preventDefault: function () {
         }
     });
 });
