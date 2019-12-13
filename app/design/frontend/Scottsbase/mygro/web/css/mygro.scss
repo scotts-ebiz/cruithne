@@ -21,7 +21,8 @@
 @import '../../Magento_Checkout/styles/module';
 
 // Mygro Defaults
-@import 'mygrovars';
+//@import 'mygrovars';
+@import 'source/mygrovars';
 @import 'source/mygromixins';
 @import 'source/mygrobase';
 @import 'source/mygropdp';

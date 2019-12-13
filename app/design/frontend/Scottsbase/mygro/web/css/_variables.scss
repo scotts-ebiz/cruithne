@@ -2,8 +2,37 @@
 //  Typography
 //  ---------------------------------------------
 
+
+//  MyGro Brand Colors
+$mygro-green                                                  : #008065;
+$mygro-dark-green                                             : #00634f;
+$mygro-light-green                                            : #59988b;
+$mygro-dark-gray                                              : #383838;
+$mygro-gray                                                   : #909090;
+$mygro-gray-alt                                               : #636363;
+$mygro-accent-blue                                            : #2c5999;
+$mygro-black                                                  : #222222;
+$mygro-black-alt                                              : #231f20;
+
+
+//  Default Colors
+$primary__color                                               : $mygro-green;
+$secondary__color                                             : $mygro-dark-green;
+$active__color                                                : $primary__color;
+
+
+//  Links
+$link__color                                                  : $primary__color;
+$link__visited__color                                         : $primary__color;
+$link__hover__color                                           : $secondary__color;
+$link__active__color                                          : $primary__color;
+
+
 //  Headings
 $h1__margin-bottom__desktop                                   : $indent__xl !default;
+
+
+
 
 //
 //  Layout grid
@@ -13,12 +42,17 @@ $h1__margin-bottom__desktop                                   : $indent__xl !def
 $header-icons-color                                           : $color-gray56 !default;
 $header-icons-color-hover                                     : $color-gray20 !default;
 
+
+
 //
 //  Icons
 //  ---------------------------------------------
 //
 
 $icon-edit                                                    : '\e606' !default;
+
+
+
 
 //
 //  Popups
@@ -49,6 +83,8 @@ $checkout-step-title__font-size                               : 26px !default;
 $checkout-step-title__font-weight                             : $font-weight__light !default;
 $checkout-sidebar__columns                                    : 4 !default;
 $checkout-shipping-address__max-width                         : 500px !default;
+
+
 
 //
 //  Sidebar
@@ -101,7 +137,3 @@ $mygro-accent-blue              : #2c5999;
 $mygro-black                    : #222222;
 $mygro-black-alt                : #231f20;
 
-$link__color: $mygro-green;
-$link__visited__color: #bbb;
-$link__hover__color: #ccc;
-$link__active__color: #ddd;
