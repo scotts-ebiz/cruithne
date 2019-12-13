@@ -27,7 +27,7 @@
                 class="sp-input sp-w-full"
                 min="1"
                 pattern="[0-9]*"
-                placeholder="Total Square Footage of your lawn(s)"
+                placeholder="Total Square Footage of your lawn"
                 step="1"
                 type="number"
                 data-bind="
@@ -37,7 +37,7 @@
             />
 
             <label class="sp-form-label">
-                    Total square footage of your lawn
+                Total square footage of your lawn
             </label>
         </div>
 
@@ -50,13 +50,13 @@
                 minlength="5"
                 maxlength="5"
                 pattern="[0-9]{5}"
-                placeholder="Zip Code"
+                placeholder="ZIP code"
                 type="text"
                 data-bind="attr: { name: quiz.questions()[0].id }, event: { input: quiz.setZipCode }"
             />
 
             <label class="sp-form-label">
-                    ZIP code
+                ZIP code
             </label>
 
             <!-- ko if: quiz.invalidZipCode() -->
