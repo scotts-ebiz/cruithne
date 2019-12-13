@@ -6,6 +6,8 @@ define([
     return Component.extend({
         hasResults: ko.observable(false),
         lawnArea: ko.observable(0),
+        category: ko.observable('learn'),
+        showPDP: ko.observable(false),
         lawnType: ko.observable(null),
         isLoading: ko.observable(true),
         quiz: ko.observable(null),
@@ -212,6 +214,24 @@ define([
             }
 
             return 'https://test_magento_image_repo.storage.googleapis.com/' + icon
+        },
+
+        togglePDP: function () {
+            if (this.showPDP()) {
+                // hide
+                $('body').removeClass('no-scroll');
+
+            } else {
+                // show
+                $('body').addClass('no-scroll');
+            }
+
+            this.showPDP(!this.showPDP());
+        },
+
+        addToOrder: function () {
+            // TODO: Add the product to the order
+            this.togglePDP();
         }
     });
 });

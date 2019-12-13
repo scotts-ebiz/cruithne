@@ -134,6 +134,10 @@ $colors: (
       flex: 1 1 auto;
     }
 
+    .#{$size}sp-flex-no-shrink {
+      flex-shrink: 0;
+    }
+
     .#{$size}sp-flex-none {
       flex: none;
     }
