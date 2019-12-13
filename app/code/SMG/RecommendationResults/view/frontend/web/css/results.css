@@ -143,15 +143,19 @@
   border: 2px solid #1d5632;
 }
 
-.pdp-modal-close {
+.pdp-modal-close, .pdp-modal-close:hover {
   position: absolute;
   top: 1rem;
   right: 1rem;
   background-image: url(https://test_magento_image_repo.storage.googleapis.com/icon-close.svg);
   width: 20px;
   height: 20px;
-  background: transparent;
+  display: block;
   border: none;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: transparent;
+  padding: 0;
 }
 
 .no-scroll {

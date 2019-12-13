@@ -6,13 +6,17 @@ define([
     return Component.extend({
         hasResults: ko.observable(false),
         lawnArea: ko.observable(0),
-        category: ko.observable('learn'),
-        showPDP: ko.observable(false),
         lawnType: ko.observable(null),
         isLoading: ko.observable(true),
         quiz: ko.observable(null),
         results: ko.observable({}),
         activeProductIndex: ko.observable(0), // for the tab menu
+
+        pdp: ko.observable({
+            visible: false,
+            activeTab: 'learn', // 'learn' or 'product_specs'
+            mode: 'plan', // 'plan' or 'subscription'
+        }),
 
         initialize(config) {
             const self = this
@@ -217,7 +221,7 @@ define([
         },
 
         togglePDP: function () {
-            if (this.showPDP()) {
+            if (this.pdp().visible) {
                 // hide
                 $('body').removeClass('no-scroll');
 
@@ -226,7 +230,14 @@ define([
                 $('body').addClass('no-scroll');
             }
 
-            this.showPDP(!this.showPDP());
+            this.pdp({
+                ...this.pdp(),
+                visible: !this.pdp().visible
+            });
+        },
+
+        setPDPTab: function (tab) {
+            this.pdp({ ...this.pdp(), activeTab: tab })
         },
 
         addToOrder: function () {
