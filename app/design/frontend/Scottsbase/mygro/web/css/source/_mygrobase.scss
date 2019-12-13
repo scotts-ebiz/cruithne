@@ -29,17 +29,17 @@ body {
     }
 }
 
-a, alink {
-    color: $mygro-green;
-}
-
-a:visited, .alink:visited {
-    color: $mygro-green;
-}
-
-a:hover {
-    color: $mygro-dark-green;
-}
+//a, alink {//test - all commented out to test
+//    color: $mygro-green;
+//}
+//
+//a:visited, .alink:visited {
+//    color: $mygro-green;
+//}
+//
+//a:hover {
+//    color: $mygro-dark-green;
+//}
 
 [class^="icon-"],
 [class*=" icon-"] {
@@ -492,9 +492,9 @@ a:hover {
                   }
                     @include font-hellix-regular(0.875rem, $mygro-gray);
 
-                    a {
-                        @include font-hellix-regular(0.875rem, $mygro-gray);
-                    }
+                    //a {//test - commented out for testing!
+                    //    @include font-hellix-regular(0.875rem, $mygro-gray);
+                    //}
                 }
             }
             .mygro-footer-copyright {
