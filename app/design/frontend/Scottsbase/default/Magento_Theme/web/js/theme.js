@@ -16,11 +16,7 @@ define([
             });
         }
     }
-
-    $('.cart-summary').mage('sticky', {
-        container: '#maincontent'
-    });
-
+    
     $('.panel.header > .header.links').clone().appendTo('#store\\.links');
 
     keyboardHandler.apply();
