@@ -168,21 +168,23 @@ class Subscription extends AbstractDb
         // Create Subscription Addon Orders
         $recommendationSubscriptionAddonOrder = $this->organizeSubscriptionAddonOrdersFromRecommendation($recommendation[0]['plan']['addOnProducts']);
 
-        $subscriptionAddonOrder = $this->_subscriptionAddonOrderFactory->create();
-        $subscriptionAddonOrder->setSubscriptionEntityId( $subscription->getEntityId() );
-        $subscriptionAddonOrder->setSeasonName( $recommendationSubscriptionAddonOrder['season_name'] );
-        $subscriptionAddonOrder->setApplicationStartDate( $recommendationSubscriptionAddonOrder['application_start_date'] );
-        $subscriptionAddonOrder->setApplicationEndDate( $recommendationSubscriptionAddonOrder['application_end_date'] );
-        $subscriptionAddonOrder->setSubscriptionOrderStatus( $recommendationSubscriptionAddonOrder['subscription_order_status'] );
-        $subscriptionAddonOrder->save();
+        if (!empty($recommendationSubscriptionAddonOrder)) {
+            $subscriptionAddonOrder = $this->_subscriptionAddonOrderFactory->create();
+            $subscriptionAddonOrder->setSubscriptionEntityId( $subscription->getEntityId() );
+            $subscriptionAddonOrder->setSeasonName( $recommendationSubscriptionAddonOrder['season_name'] );
+            $subscriptionAddonOrder->setApplicationStartDate( $recommendationSubscriptionAddonOrder['application_start_date'] );
+            $subscriptionAddonOrder->setApplicationEndDate( $recommendationSubscriptionAddonOrder['application_end_date'] );
+            $subscriptionAddonOrder->setSubscriptionOrderStatus( $recommendationSubscriptionAddonOrder['subscription_order_status'] );
+            $subscriptionAddonOrder->save();
 
-        // Create the Subscription Order Items
-        foreach ( $recommendationSubscriptionAddonOrder['subscriptionOrderItems'] as $item ) {
-            $subscriptionAddonOrderItem = $this->_subscriptionAddonOrderItemFactory->create();
-            $subscriptionAddonOrderItem->setSubscriptionAddonOrderEntityId( $subscriptionAddonOrder->getEntityId() );
-            $subscriptionAddonOrderItem->setCatalogProductSku( $item['catalog_product_sku'] );
-            $subscriptionAddonOrderItem->setQty( $item['qty'] );
-            $subscriptionAddonOrderItem->save();
+            // Create the Subscription Order Items
+            foreach ( $recommendationSubscriptionAddonOrder['subscriptionOrderItems'] as $item ) {
+                $subscriptionAddonOrderItem = $this->_subscriptionAddonOrderItemFactory->create();
+                $subscriptionAddonOrderItem->setSubscriptionAddonOrderEntityId( $subscriptionAddonOrder->getEntityId() );
+                $subscriptionAddonOrderItem->setCatalogProductSku( $item['catalog_product_sku'] );
+                $subscriptionAddonOrderItem->setQty( $item['qty'] );
+                $subscriptionAddonOrderItem->save();
+            }
         }
 
         return $this->_subscription;

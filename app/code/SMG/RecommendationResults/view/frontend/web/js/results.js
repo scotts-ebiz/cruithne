@@ -26,7 +26,7 @@ define([
             if (!config.quiz_id) {
                 self.loadQuizResponses();
             } else {
-                self.getCompletedQuiz(config.quiz_id);
+                self.loadQuizResults(config.quiz_id, config.zip);
             }
 
             const lawnArea = window.sessionStorage.getItem('lawn-area')
@@ -64,10 +64,16 @@ define([
             });
         },
 
-        getCompletedQuiz(id) {
+        loadQuizResults(id, zip) {
             const self = this;
             let minTimePassed = false;
             let formKey = document.querySelector('input[name=form_key]').value;
+
+            const request = {
+                key: formKey,
+                id: id,
+                zip: zip
+            };
 
             // Make sure loading screen appears for at least 3 seconds.
             setTimeout(() => {
@@ -81,7 +87,7 @@ define([
                 `/rest/V1/recommendations/quiz/result`,
                 {
                     contentType: 'application/json; charset=utf-8',
-                    data: JSON.stringify({ key: formKey, id: id }),
+                    data: JSON.stringify(request),
                     dataType: 'json',
                     method: 'post',
                     success(data) {
@@ -142,8 +148,6 @@ define([
                 }
             }, 3000);
 
-            console.log( self.quiz().id, self.quiz().answers, self.quiz().zip );
-
             $.ajax(
                 `/rest/V1/recommendations/quiz/save`,
                 {
@@ -174,7 +178,7 @@ define([
         },
 
         formatDate: function (_date) {
-            const date = new Date(_date)
+            const date = new Date(_date);
 
             return [
                 date.getMonth() + 1, // Months are 0 based
