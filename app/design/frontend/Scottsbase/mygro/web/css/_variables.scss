@@ -15,17 +15,31 @@ $mygro-black                                                  : #222222;
 $mygro-black-alt                                              : #231f20;
 
 
-//  Default Colors
+//  Colors
 $primary__color                                               : $mygro-green;
 $secondary__color                                             : $mygro-dark-green;
 $active__color                                                : $primary__color;
 
 
+//  Sizes
 $font-size__base                                              : 0.85rem; // Base font size value in px
 $font-size__xl                                                : 1.2rem;
 $font-size__l                                                 : 0.875rem;
 $font-size__s                                                 : 0.8rem;
-$font-size__xs                                                : 0.75rem;;
+$font-size__xs                                                : 0.75rem;
+
+
+//  Fonts
+$font-family-name__base                                       : 'Hellix-Regular';
+$font-family__base                                            : $font-family-name__base, $font-family__sans-serif;
+
+$font-family-name__secondary                                  : 'Hellix-Heavy';
+$font-family__secondary                                       : $font-family-name__secondary, $font-family__sans-serif;
+
+
+//  Miscellaneous
+$letter-spacing_base                                          : 0.5px;
+$letter-spacing_l                                             : 1.0px;
 
 
 //  Links
@@ -40,9 +54,7 @@ $navigation-desktop-level0-item__color                        : $mygro-black;
 $navigation-desktop-level0-item__hover__color                 : $primary__color;
 $navigation-desktop-level0-item__active__color                : $primary__color;
 $navigation-desktop__font-size                                : $font-size__l;
-$navigation-level0-item__text-transform                       : uppercase;
-
-
+$navigation-desktop_letter-spacing                            : $letter-spacing_l; // custom var
 
 
 //  Headings
@@ -110,12 +122,18 @@ $checkout-shipping-address__max-width                         : 500px !default;
 // Used in cart sidebar, Checkout sidebar, Tier Prices, My account navigation, Rating block background
 $sidebar__background-color                                    : $color-white-smoke !default;
 
+
+
+
 //
 //  Variables missing in extend.scss
 //  ---------------------------------------------
 
 $addto-color                                                  : $primary__color !default;
 $addto-hover-color                                            : $link__hover__color !default;
+
+
+
 
 //
 //  Product
@@ -137,6 +155,9 @@ $product-name-link__text-decoration__visited                  : $link__hover__te
 
 $button__shadow                                               : inset 0 2px 1px rgba(0, 0, 0, 0.12) !default;
 
+
+
+
 //
 //  Minicart
 //  ---------------------------------------------
@@ -144,13 +165,4 @@ $button__shadow                                               : inset 0 2px 1px 
 $minicart-icons-color                                         : $header-icons-color !default;
 $minicart-icons-color-hover                                   : $header-icons-color-hover !default;
 
-$mygro-green                    : #008065;
-$mygro-dark-green               : #00634f;
-$mygro-light-green              : #59988b;
-$mygro-dark-gray                : #383838;
-$mygro-gray                     : #909090;
-$mygro-gray-alt                 : #636363;
-$mygro-accent-blue              : #2c5999;
-$mygro-black                    : #222222;
-$mygro-black-alt                : #231f20;
 

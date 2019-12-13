@@ -1,6 +1,6 @@
 // MyGro Base
 body { 
-    @include font-hellix-regular();
+    //@include font-hellix-regular();////test - see if you can set else where
     font-size: 1.2rem;
     h1 {
         color: #333;
@@ -24,7 +24,7 @@ body {
         }
     }
     p {
-      @include font-hellix-regular();
+      //@include font-hellix-regular();//test - see if you can set else where
       font-size: 1.0rem;
     }
 }
