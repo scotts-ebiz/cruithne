@@ -249,11 +249,12 @@ class Subscription extends AbstractModel
 
         try {
 
-            // Get the first seasonal product
+            // Get the first seasonal product or annual depending on type
             $subscriptionOrders = $this->getSubscriptionOrders();
             $planSku = 'annual';
             if ($this->getSubscriptionType() !== 'annual') {
-                $planSku = $this->getPlanCodeByName( $subscriptionOrders->getFirstItem()->getSeasonName() );
+                $firstSeason = $subscriptionOrders->getFirstItem();
+                $planSku = $this->getPlanCodeByName( $firstSeason->getSeasonName() );
             }
 
             $seasonalProduct = $this->_productRepository->get( $planSku );
@@ -279,6 +280,7 @@ class Subscription extends AbstractModel
                 foreach ($subscriptionAddonOrder->getSubscriptionAddonOrderItems() as $subscriptionAddonOrderItem) {
 
                     if (in_array($subscriptionAddonOrderItem->getCatalogProductSku(), $addons)) {
+
                         try {
                             $product = $subscriptionAddonOrderItem->getProduct();
                             $product = $this->_productRepository->get($product->getSku());
@@ -298,6 +300,7 @@ class Subscription extends AbstractModel
                         } catch (\Exception $e) {
                             throw new \Exception("Oops 3: " . $e->getMessage());
                         }
+
                         $subscriptionAddonOrderItem->setSelected(1);
                     } else {
                         $subscriptionAddonOrderItem->setSelected(0);
@@ -312,13 +315,14 @@ class Subscription extends AbstractModel
         // Go through the cart items and modify their prices for the current customer order
         try {
 
-            $item = $quote->getItemByProduct( $seasonalProduct );
+            // If future shipment, don't add a dollar value to the cart
+            $item = $quote->getItemByProduct($seasonalProduct);
             $item->setStoreId($this->_storeManager->getStore()->getStoreId());
-            $item->setCustomPrice( (float)$totalSubscriptionPrice );
+            $item->setCustomPrice((float)$totalSubscriptionPrice);
             $item->setOriginalCustomPrice($item->getCustomPrice());
             $item->setBasePrice($item->getCustomPrice());
             $item->setPrice($item->getCustomPrice());
-            $item->getProduct()->setIsSuperMode( true );
+            $item->getProduct()->setIsSuperMode(true);
             $item->calcRowTotal()->save();
 
             // Update Cart
@@ -331,6 +335,7 @@ class Subscription extends AbstractModel
 //        $items = $quote->getItems();
 //        foreach ( (Array)$items as $item) {
 //            var_dump([
+//                'currently_shippable' => $this->currentlyShippable(),
 //                'product_name' => $item->getName(),
 //                'product_sku' => $item->getSku(),
 //                'product_qty' => $item->getQty(),
@@ -348,6 +353,29 @@ class Subscription extends AbstractModel
 //            'coupon_code' => $quote->getCouponCode()
 //        ]);
 //        die;
+    }
+
+    /**
+     * @return bool
+     * @throws \Exception
+     */
+    public function isCurrentlyShippable() {
+        if ( $this->getSubscriptionType() !== 'annual' ) {
+
+            // Test of seasonal is not shippable
+            $today = new \DateTime();
+            return $today >= $this->getFirstSubscriptionOrder()->getShipStartDate();
+        }
+        return true;
+    }
+
+    /**
+     * Return the first subscription order
+     * @return mixed
+     */
+    public function getFirstSubscriptionOrder() {
+        $subscriptionOrders = $this->getSubscriptionOrders();
+        return $subscriptionOrders->getFirstItem();
     }
 
     /**
