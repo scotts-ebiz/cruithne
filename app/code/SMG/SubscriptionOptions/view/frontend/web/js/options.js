@@ -7,6 +7,13 @@ define([
         hasResults: ko.observable(false),
         results: ko.observable({}),
 
+        activeProduct: ko.observable(null),
+        pdp: ko.observable({
+            visible: false,
+            activeTab: 'learn', // 'learn' or 'product_specs'
+            mode: 'subscription', // 'plan' or 'subscription'
+        }),
+
         initialize(config) {
             const self = this;
 
@@ -101,18 +108,18 @@ define([
             }
         },
 
-		proceedToCheckout() {
-			const subscriptionPlan = $('input[name="subscription_plan"]:checked').val();
-			const addonProducts = $('input[name="addon_products"]:checked').map(function() { return this.value }).get();
+        proceedToCheckout() {
+            const subscriptionPlan = $('input[name="subscription_plan"]:checked').val();
+            const addonProducts = $('input[name="addon_products"]:checked').map(function () { return this.value }).get();
             const formKey = document.querySelector('input[name=form_key]').value;
 
-			if (! subscriptionPlan) {
-				alert('You must select a subscription plan.');
-			}
+            if (!subscriptionPlan) {
+                alert('You must select a subscription plan.');
+            }
 
-			const self = this;
+            const self = this;
 
-			$.ajax(
+            $.ajax(
                 `/rest/V1/subscription/process`,
                 {
                     contentType: 'application/json; charset=utf-8',
@@ -128,10 +135,10 @@ define([
                         data = JSON.parse(data);
 
                         if (data.success === true) {
-                            window.sessionStorage.setItem('subscription_plan', subscriptionPlan );
-                        	window.location.href = '/checkout/#shipping';
+                            window.sessionStorage.setItem('subscription_plan', subscriptionPlan);
+                            window.location.href = '/checkout/#shipping';
                         } else {
-                            alert( 'Error creating your order ' + data.message + '. Please try again.' );
+                            alert('Error creating your order ' + data.message + '. Please try again.');
                         }
                     },
                 },
@@ -168,5 +175,34 @@ define([
                 return num
             }
         },
+
+        togglePDP: function (product) {
+            if (this.pdp().visible) {
+                // hide
+                $('body').removeClass('no-scroll');
+
+            } else {
+                // show
+                $('body').addClass('no-scroll');
+            }
+
+            this.activeProduct(product);
+            this.pdp({
+                ...this.pdp(),
+                visible: !this.pdp().visible
+            });
+        },
+
+        setPDPTab: function (tab) {
+            this.pdp({ ...this.pdp(), activeTab: tab })
+        },
+
+        addToOrder: function () {
+            // TODO: Add the product to the order
+            this.togglePDP();
+        },
+
+        preventDefault: function () {
+        }
     });
 });

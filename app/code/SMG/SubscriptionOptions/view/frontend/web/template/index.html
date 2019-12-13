@@ -170,14 +170,9 @@
 						<h4 class="sp-h4--long sp-mb-4 sp-mt-0" data-bind="text: addOn().season"></h4>
                         <p class="sp-p1 sp-hide md:sp-block" data-bind="text: addOn().description"></p>
 
-						<!--
-							@todo: Rasa - Add this once PDP is completed
-							@author: Sean Kegel
-							@date: 12/12/2019
-						<a class="sp-options__add-on-link sp-link" href="#">
+						<button type="button" class="sp-options__add-on-link sp-link" data-bind="click: togglePDP.bind($data, addOn())">
 							More About This Product
-						</a>
-						-->
+						</button>
 
 						<hr class="sp-options__divider sp-mb-6 sp-mt-4">
 
@@ -215,4 +210,9 @@
         </a>
     </div>
 </div>
+
+<!-- ko if: pdp().visible  -->
+<!-- ko template: "SMG_RecommendationResults/product-detail-modal.html" -->
+<!-- /ko -->
+
 <!-- /ko -->
