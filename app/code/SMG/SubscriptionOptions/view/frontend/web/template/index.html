@@ -28,7 +28,7 @@
 						</div>
 						<strong
 							class="sp-text-center sp-label"
-							data-bind="text: $parent.formatCurrency(price)"
+							data-bind="text: $parent.formatCurrency($data.price * $data.quantity)"
 						>
 						</strong>
 					</li>
@@ -102,7 +102,7 @@
 							<ul class="sp-pl-0" data-bind="foreach: products()" style="list-style: none">
 								<li class="sp-p1">
 									<span data-bind="text: $data.season"></span>
-									<strong data-bind="text: $parent.formatCurrency($data.price)"></strong>
+									<strong data-bind="text: $parent.formatCurrency($data.price * $data.quantity)"></strong>
 								</li>
 							</ul>
 							<ul class="sp-pl-4">

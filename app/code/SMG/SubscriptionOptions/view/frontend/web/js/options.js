@@ -34,7 +34,7 @@ define([
 
             this.total = ko.computed(() => {
                 return this.products().reduce((sum, product) => {
-                    return sum + +product.price;
+                    return sum + (+product.price * +product.quantity);
                 }, 0);
             });
 
