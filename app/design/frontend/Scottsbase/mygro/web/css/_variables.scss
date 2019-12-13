@@ -21,11 +21,28 @@ $secondary__color                                             : $mygro-dark-gree
 $active__color                                                : $primary__color;
 
 
+$font-size__base                                              : 0.85rem; // Base font size value in px
+$font-size__xl                                                : 1.2rem;
+$font-size__l                                                 : 0.875rem;
+$font-size__s                                                 : 0.8rem;
+$font-size__xs                                                : 0.75rem;;
+
+
 //  Links
 $link__color                                                  : $primary__color;
 $link__visited__color                                         : $primary__color;
 $link__hover__color                                           : $secondary__color;
 $link__active__color                                          : $primary__color;
+
+
+//  Navigation
+$navigation-desktop-level0-item__color                        : $mygro-black;
+$navigation-desktop-level0-item__hover__color                 : $primary__color;
+$navigation-desktop-level0-item__active__color                : $primary__color;
+$navigation-desktop__font-size                                : $font-size__l;
+$navigation-level0-item__text-transform                       : uppercase;
+
+
 
 
 //  Headings
