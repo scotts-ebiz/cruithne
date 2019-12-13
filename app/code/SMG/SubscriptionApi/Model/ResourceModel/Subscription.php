@@ -94,10 +94,10 @@ class Subscription extends AbstractDb
      * Get the subscription by quiz_id
      * @param $quizId
      * @return mixed
+     * @throws \Exception
      */
     public function getSubscriptionByQuizId($quizId)
     {
-        $this->_subscription = $this->_subscriptionFactory->create();
 
         if ( ! empty( $quizId ) )
         {
@@ -109,13 +109,12 @@ class Subscription extends AbstractDb
             {
                 if ( ! empty($subscription) )
                 {
-                    $this->_subscription = $subscription;
-                    break;
+                    return $subscription;
                 }
             }
         }
 
-        return $this->_subscription;
+        throw new \Exception('Subscription could not be found with quiz id.');
     }
 
     /**

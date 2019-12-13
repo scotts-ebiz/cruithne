@@ -184,6 +184,29 @@ class Subscription implements SubscriptionInterface
     }
 
     /**
+     * Clean out the quote
+     *
+     * @param string $key
+     * @return false|string
+     * @throws \Magento\Framework\Exception\CouldNotSaveException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     *
+     * @api
+     */
+    public function clean($key) {
+        $quote = $this->_checkoutSession->getQuote();
+        $quoteItems = $quote->getItemsCollection();
+        foreach( $quoteItems as $item ) {
+            $this->_cart->removeItem( $item->getItemId() );
+        }
+        return json_encode(array(
+            'success' => true,
+            'message' => 'Clean slate.'
+        ));
+    }
+
+    /**
      * Process cart products and create multiple orders
      *
      * @param string $key
