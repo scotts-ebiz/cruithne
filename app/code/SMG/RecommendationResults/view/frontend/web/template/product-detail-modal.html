@@ -94,6 +94,11 @@
 
             <h3 class="sp-h4">Coverage Area</h3>
             <div data-bind="html: activeProduct().coverageArea"></div>
+
+            <!-- ko if: activeProduct().fertilizerAnalysis -->
+            <h3 class="sp-h4">Fertilizer Analysis</h3>
+            <div data-bind="html: activeProduct().fertilizerAnalysis"></div>
+            <!-- /ko -->
         </div>
     </div>
 </div>
