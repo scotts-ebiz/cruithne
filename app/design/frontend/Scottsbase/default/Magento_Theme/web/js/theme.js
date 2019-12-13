@@ -16,7 +16,7 @@ define([
             });
         }
     }
-    
+
     $('.panel.header > .header.links').clone().appendTo('#store\\.links');
 
     keyboardHandler.apply();
