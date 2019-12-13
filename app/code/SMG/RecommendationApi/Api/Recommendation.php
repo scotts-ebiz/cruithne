@@ -176,14 +176,12 @@ class Recommendation implements RecommendationInterface
             return null;
         }
 
-        // Check to see if subscription already exists
-        $subscription = $this->_subscription->getSubscriptionByQuizId( $response[0]['id'] );
-
-        if ( is_null( $subscription->getEntityId() ) ) {
-
-            // Nope. Make it.
-            $this->_subscription->createFromRecommendation( $response, $zip, $lawnSize, $lawnType );
-        }
+        $subscription = $this->findOrCreateSubscription(
+            $response,
+            $zip,
+            $lawnSize,
+            $lawnType
+        );
 
         // Get the product flat file so it is accessible.
         $this->getProducts($key);
@@ -201,12 +199,15 @@ class Recommendation implements RecommendationInterface
      *
      * @param mixed $key
      * @param string $id
+     * @param string $zip
+     * @param string $lawnType
+     * @param int $lawnSize
      * @return array
      * @throws SecurityViolationException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @api
      */
-    public function getResult($key, $id)
+    public function getResult($key, $id, $zip, $lawnType = '', $lawnSize = 0)
     {
         // Test the form key
         if ( ! $this->formValidation($key) ) {
@@ -233,6 +234,13 @@ class Recommendation implements RecommendationInterface
         if (empty($response)) {
             return null;
         }
+
+        $subscription = $this->findOrCreateSubscription(
+            $response,
+            $zip,
+            $lawnSize,
+            $lawnType
+        );
 
         // Get the product flat file so it is accessible.
         $this->getProducts($key);
@@ -439,6 +447,35 @@ class Recommendation implements RecommendationInterface
         }
 
         return;
+    }
+
+    /**
+     * Load a subscription if it exists or create it based on response.
+     *
+     * @param $response
+     * @param $zip
+     * @param $lawnSize
+     * @param $lawnType
+     * @return mixed|\SMG\SubscriptionApi\Model\Subscription
+     * @throws Exception
+     */
+    protected function findOrCreateSubscription($response, $zip, $lawnSize, $lawnType)
+    {
+        // Check to see if subscription already exists
+        try {
+            $subscription = $this->_subscription->getSubscriptionByQuizId($response[0]['id']);
+            /**
+             * @todo Wes/Sean Check status to make sure this is a valid subscription to checkout
+             * If this subscription status is not pending, we need to return an error.
+             * @author Sean Kegel
+             * @date 12/13/2019
+             */
+        } catch (\Exception $e) {
+            // Nope. Make it.
+            $subscription = $this->_subscription->createFromRecommendation($response, $zip, $lawnSize, $lawnType);
+        }
+
+        return $subscription;
     }
 
     /**

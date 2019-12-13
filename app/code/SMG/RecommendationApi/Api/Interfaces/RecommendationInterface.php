@@ -36,9 +36,12 @@ interface RecommendationInterface
      *
      * @param string $key
      * @param string $id
+     * @param string $zip
+     * @param string $lawnType
+     * @param int $lawnSize
      * @return array
      */
-    public function getResult($key, $id);
+    public function getResult($key, $id, $zip, $lawnType = '', $lawnSize = 0);
 
     /**
      * Get completed quizzes
