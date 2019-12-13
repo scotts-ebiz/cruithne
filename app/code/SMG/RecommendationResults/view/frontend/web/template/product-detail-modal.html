@@ -1,6 +1,8 @@
-<div id="pdp-modal-wrapper">
+<div id="pdp-modal-wrapper"
+     data-bind="click: togglePDP">
     <div id="pdp-modal"
-         class="sp-max-w-lg sp-bg-white sp-px-8 sp-py-12 sp-text-center md:sp-text-left sp-rounded">
+         class="sp-max-w-lg sp-bg-white sp-px-8 sp-py-12 sp-text-center md:sp-text-left sp-rounded"
+         data-bind="click: preventDefault, clickBubble: false">
 
         <button class="pdp-modal-close"
                 data-bind="click: togglePDP"></button>

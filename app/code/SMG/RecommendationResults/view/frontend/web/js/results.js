@@ -243,6 +243,9 @@ define([
         addToOrder: function () {
             // TODO: Add the product to the order
             this.togglePDP();
+        },
+
+        preventDefault: function () {
         }
     });
 });
