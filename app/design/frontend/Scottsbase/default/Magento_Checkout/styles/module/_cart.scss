@@ -6,7 +6,6 @@
 .cart-summary {
     @extend .abs-add-box-sizing;
     @extend .abs-adjustment-incl-excl-tax;
-    @include lib-css(background, $sidebar__background-color);
     margin-bottom: $indent__m;
     padding: 1px 15px $indent__m;
 
@@ -62,6 +61,7 @@
 //  Totals block
 .cart-totals {
     @extend .abs-sidebar-totals;
+    background-color: $color-gray-light01;
     border-top: 1px solid $border-color__base;
     padding-top: $indent__s;
 
@@ -204,7 +204,6 @@
 
         .action.primary {
             @extend .abs-button-l;
-            width: 100%;
         }
 
         .item {
@@ -338,10 +337,6 @@
     }
 
     .cart-summary {
-        float: right;
-        position: relative;
-        width: 23%;
-
         .actions-toolbar {
             .column.main & {
                 @extend .abs-reset-left-margin-desktop;

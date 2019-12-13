@@ -33,6 +33,9 @@
         }
         .columns {
             .column {
+                max-width: $max_cart_page_width;
+                margin: 0 auto;
+
                 .actions {
                     a:before{
                         -webkit-font-smoothing: antialiased;
@@ -54,41 +57,7 @@
                     padding-left: 15px;
                     padding-right: 15px;
                     position: relative;
-                    .custom-checkout-btn-wrap {
-                        position: absolute;
-                        top: 20px;
-                        right: 0;
-                        width: 27.25%;
-                        padding: 0px 30px 0px;
-                        @media screen and (max-width: $screen__l) {
-                            width: 100% !important;
-                            padding: 0 !important;
-                        }
-                        @media screen and (max-width: $screen__m) {
-                            display: none;
-                        }
-                        .action.primary.checkout {
-                          text-transform: uppercase;
-                          font-family: Lato, Arial, sans-serif;
-                          width: 100%;
-                          padding: 23px 0;
-                        }
-                    }
-                    .custom-checkout-btn-wrap.stickyCart{
-                        @media screen and (max-width: $screen__m) {
-                            position: fixed;
-                            top: 90px;
-                            right: 0;
-                            width: 100%;
-                            padding: 0;
-                            z-index: 9999;
-                            display:block;
-                            @include transition(all 0.2s ease-in-out);
-                            .action.primary.checkout{
-                              border-radius: 0px;
-                            }
-                        }
-                    }
+
                     .form-cart {
                         margin-top: 100px;
                         @media screen and (max-width: $screen__m) {
@@ -300,17 +269,16 @@
                         }
 
                         .cart-summary-divlink {
-                            width: 60%;
+                            width: 50%;
                             float: left;
-                            padding: 1px 20px 25px;
+                            padding: 1px 0 25px;
                             position: relative;
                             color: $scotts-light-gray;
-                            @media screen and (max-width: $screen__l) {
-                              width: 100%;
-                              padding: 1px 0;
-                            }
+
                             @media screen and (max-width: $screen__m) {
-                              order:1;
+                                width: 100%;
+                                padding: 1px 0;
+                                order: 1;
                             }
                             .block.discount {
                                 .title {
@@ -395,49 +363,52 @@
                             }
                         }
                         .cart-summary {
-                            width: 30%;
-                            background: #dfe6ee;
+                            width: 40%;
+                            float: right;
+                            position: relative;
+                            padding: 1px 0 25px;
+                            min-width: 320px;
 
                             @media screen and (max-width: $screen__m) {
-                                order:2;
-                                //width: 100%;
+                                order: 2;
+                                width: 100%;
+                                min-width: 0;
                             }
                             .cart-totals {
                                 border-top: 0;
+                                padding: 24px 28px;
+
+                                @media screen and (max-width: $screen__s) {
+                                    .amount {
+                                        white-space: normal;
+                                    }
+                                }
+
                             }
                             .checkout-methods-items {
+                                margin-top: 32px;
+
                                 .item {
+                                    text-align: right;
+                                    @media screen and (max-width: $screen__m) {
+                                        text-align: center;
+                                    }
+
                                     .action.checkout {
-                                        -webkit-transition: background 0.2s;
-                                        -moz-transition: background 0.2s;
-                                        -ms-transition: background 0.2s;
-                                        -o-transition: background 0.2s;
                                         transition: background 0.2s;
                                         border: none;
                                         &:hover {
-                                            -webkit-transition: background 0.2s;
-                                            -moz-transition: background 0.2s;
-                                            -ms-transition: background 0.2s;
-                                            -o-transition: background 0.2s;
                                             transition: background 0.2s;
                                         }
                                     }
                                 }
                                 .upd-cust-btn {
                                     .action.checkout {
-                                        padding: 23px 0;
+                                        padding: 15px 50px;
+                                        @include set-font($roboto, .75rem, $color-white, 500, initial, .0625rem);
                                         text-transform: uppercase;
-                                        font-size: 15px;
-                                        line-height: 0px;
-                                        font-family: Lato, Arial, sans-serif;
-                                        width: 100%;
-                                        border-radius: 0.313rem;
+                                        border-radius: 3px;
                                         transition: background 0.2s linear;
-                                        -webkit-transition: background 0.2s;
-                                        -moz-transition: background 0.2s;
-                                        -ms-transition: background 0.2s;
-                                        -o-transition: background 0.2s;
-                                        letter-spacing: 0.5px;
                                     }
                                 }
                             }
