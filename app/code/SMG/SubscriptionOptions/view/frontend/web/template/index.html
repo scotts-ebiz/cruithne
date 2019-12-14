@@ -180,9 +180,9 @@
 							<label class="sp-flex-none sp-mb-2 md:sp-mb-0 md:sp-mr-8">
 								<input
 									class="sp-checkbox sp-options__add-on-checkbox sp-mr-1"
-									data-bind="checkedValue: $data.sku"
 									name="addon_products"
 									type="checkbox"
+									data-bind="checkedValue: addOn().sku, checked: selectedAddOns, attr: { checked: selectedAddOns.indexOf(addOn().sku) >= 0 }"
 								/>
 								<span class="sp-options__add sp-label sp-text-green-1">
 									Add to Order
@@ -212,7 +212,5 @@
 </div>
 
 <!-- ko if: pdp().visible  -->
-<!-- ko template: "SMG_RecommendationResults/product-detail-modal.html" -->
-<!-- /ko -->
-
+<!-- ko template: "SMG_RecommendationResults/product-detail-modal.html" --><!-- /ko -->
 <!-- /ko -->

@@ -51,6 +51,8 @@ define([
                     : null;
             });
 
+            this.selectedAddOns = ko.observableArray([]);
+
             this.selectPlan = (data, event) => {
                 if (event.target.checked) {
                     self.subscriptionType(event.target.value);
@@ -110,7 +112,6 @@ define([
 
         proceedToCheckout() {
             const subscriptionPlan = $('input[name="subscription_plan"]:checked').val();
-            const addonProducts = $('input[name="addon_products"]:checked').map(function () { return this.value }).get();
             const formKey = document.querySelector('input[name=form_key]').value;
 
             if (!subscriptionPlan) {
@@ -127,7 +128,7 @@ define([
                         key: formKey,
                         subscription_plan: subscriptionPlan,
                         data: self.results(),
-                        addons: addonProducts,
+                        addons: self.selectedAddOns(),
                     }),
                     dataType: 'json',
                     method: 'post',
@@ -176,8 +177,12 @@ define([
             }
         },
 
-        togglePDP: function (product) {
+        togglePDP(product, event) {
             if (this.pdp().visible) {
+                if (event.target.id !== 'pdp-modal-wrapper' && !event.target.classList.contains('pdp-modal-close')) {
+                    return true;
+                }
+
                 // hide
                 $('body').removeClass('no-scroll');
 
@@ -193,16 +198,8 @@ define([
             });
         },
 
-        setPDPTab: function (tab) {
+        setPDPTab(tab) {
             this.pdp({ ...this.pdp(), activeTab: tab })
         },
-
-        addToOrder: function () {
-            // TODO: Add the product to the order
-            this.togglePDP();
-        },
-
-        preventDefault: function () {
-        }
     });
 });
