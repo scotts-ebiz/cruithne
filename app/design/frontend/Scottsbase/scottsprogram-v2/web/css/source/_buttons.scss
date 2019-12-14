@@ -129,3 +129,10 @@
 .sp-button--get-started {
   min-width: 250px;
 }
+
+.gigya-composite-control-submit input[type=submit].gigya-input-submit {
+  @extend .sp-button, .sp-button--primary;
+
+  box-sizing: border-box;
+  height: auto;
+}

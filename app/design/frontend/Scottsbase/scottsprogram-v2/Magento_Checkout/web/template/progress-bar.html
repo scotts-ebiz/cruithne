@@ -1,0 +1,14 @@
+<a
+    class="sp-inline-flex sp-items-baseline sp-link sp-link--no-underline sp-mt-6"
+    data-bind="visible: optionsLink(), attr: { href: optionsLink() }"
+>
+    <small class="sp-mr-1 sp-text-xxs">&#9668;</small> Back to Plan
+</a>
+
+<ul class="opc-progress-bar">
+    <!-- ko foreach: { data: steps().sort(sortItems), as: 'item' } -->
+        <li class="opc-progress-bar-item" data-bind="css: item.isVisible() ? '_active' : ($parent.isProcessed(item) ? '_complete' : '')">
+            <span data-bind="i18n: item.title, click: $parent.navigateTo"></span>
+        </li>
+    <!-- /ko -->
+</ul>

@@ -1,4 +1,6 @@
-a {
+a,
+.gigya-screen a.gigya-composite-control-link,
+.gigya-screen a:link.gigya-composite-control-link {
   @extend .sp-p1;
 
   color: $green-1;
@@ -46,6 +48,14 @@ a {
     background-color: transparent;
     outline-color: $green-1;
     text-decoration: underline;
+  }
+}
+
+.sp-link--no-underline {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
   }
 }
 
