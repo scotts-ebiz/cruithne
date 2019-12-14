@@ -130,21 +130,19 @@ class OrderRepositoryInterface
                 if (!empty($product))
                 {
                     // get the allowed states
-                    $statesNotAllowed = $product->getStateNotAllowed();
+                    $statesNotAllowed = $product->getStatesNotAllowed();
                     $statesNotAllowedList = explode(',', $statesNotAllowed);
 
                     // initialize the list of
                     $statesNotAllowedArray = array();
                     foreach ($statesNotAllowedList as $stateNotAllowed)
                     {
-                        $attr = $this->_productResource->getAttribute('state_not_allowed');
+                        $attr = $this->_productResource->getAttribute('states_not_allowed');
                         $statesNotAllowedArray = [];
 
                         try
                         {
-                            if ($attr) {
-                                $statesNotAllowedArray[] = $attr->getSource()->getOptionText($stateNotAllowed);
-                            }
+                            $statesNotAllowedArray[] = $attr->getSource()->getOptionText($stateNotAllowed);
                         }
                         catch (\Magento\Framework\Exception\LocalizedException $e)
                         {

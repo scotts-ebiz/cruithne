@@ -338,3 +338,47 @@
     transform: translateX(-50%);
   }
 }
+
+.sp-success__articles {
+  hr {
+    border: 2px solid $green-1;
+  }
+}
+
+.sp-success__article-image-container {
+  overflow: hidden;
+  padding-bottom: 80%;
+  position: relative;
+  width: 100%;
+}
+
+.sp-success__article-image {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+}
+
+.sp-success__article-link {
+  @extend .sp-label;
+
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  padding: 1rem;
+  position: absolute;
+  right: 0;
+
+  &:hover {
+    color: $white;
+  }
+}
+
+.sp-success__article-link-out {
+  position: absolute;
+  right: 1rem;
+  transform: translateY(-50%);
+  top: 50%;
+}
