@@ -55,8 +55,12 @@ class Onepage extends \Magento\Checkout\Block\OnePage
         // Check to see if subscription already exists
         try {
             $subscription = $this->_subscription->getSubscriptionByQuizId($this->_coreSession->getQuizId());
+            $data = $subscription->convertToArray();
+            $addOn = $subscription->getAddOn();
+            $data['is_shippable'] = $subscription->isCurrentlyShippable();
+            $data['add_on'] = $addOn ? $addOn->convertToArray() : false;
 
-            return $subscription->convertToJson();
+            return json_encode($data);
         } catch (\Exception $e) {
             header("Location: /quiz");
         }

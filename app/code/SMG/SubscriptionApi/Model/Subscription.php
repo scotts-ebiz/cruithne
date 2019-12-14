@@ -19,6 +19,8 @@ use Magento\Quote\Model\Quote;
 use Magento\Setup\Exception;
 use Magento\Store\Model\StoreManager;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection as SubscriptionOrderCollection;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\Collection as SubscriptionAddonOrderCollection;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection\Interceptor as SubscriptionOrderCollectionInterceptor;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\Collection\Interceptor as SubscriptionAddonOrderCollectionInterceptor;
@@ -143,7 +145,7 @@ class Subscription extends AbstractModel
 
     /**
      * Get subscription orders
-     * @return mixed
+     * @return SubscriptionOrderCollection|mixed
      */
     public function getSubscriptionOrders()
     {
@@ -166,7 +168,7 @@ class Subscription extends AbstractModel
 
     /**
      * Get subscription addon orders
-     * @return mixed
+     * @return SubscriptionAddonOrderCollection|mixed
      */
     protected function getSubscriptionAddonOrders()
     {
@@ -371,11 +373,44 @@ class Subscription extends AbstractModel
 
     /**
      * Return the first subscription order
-     * @return mixed
+     * @return SubscriptionOrder|mixed
      */
     public function getFirstSubscriptionOrder() {
         $subscriptionOrders = $this->getSubscriptionOrders();
+        if (! $subscriptionOrders) {
+            return false;
+        }
         return $subscriptionOrders->getFirstItem();
+    }
+
+    /**
+     * Get the first add on product.
+     *
+     * @return Product|false
+     */
+    public function getAddOn()
+    {
+        $addOnOrders = $this->getSubscriptionOrders();
+
+        if (! $addOnOrders) {
+            return false;
+        }
+
+        $order = $addOnOrders->getFirstItem();
+
+        if (! $order) {
+            return false;
+        }
+
+        $items = $order->getSubscriptionOrderItems();
+
+        if (! $items) {
+            return false;
+        }
+
+        $addOn = $items->getFirstItem();
+
+        return $addOn ? $addOn->getProduct() : false;
     }
 
     /**

@@ -37,7 +37,6 @@ define([
             this.zipCode = ko.observable(window.sessionStorage.getItem('lawn-zip'));
 
             this.optionsLink = ko.computed(() => {
-                console.log(this.quizID(), this.zipCode());
                 if (this.quizID() && this.zipCode()) {
                     return `/subscription-options/index/index/id/${this.quizID()}/${this.zipCode()}`;
                 }

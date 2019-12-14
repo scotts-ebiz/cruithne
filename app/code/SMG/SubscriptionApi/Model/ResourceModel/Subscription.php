@@ -93,7 +93,7 @@ class Subscription extends AbstractDb
     /**
      * Get the subscription by quiz_id
      * @param $quizId
-     * @return mixed
+     * @return \SMG\SubscriptionApi\Model\Subscription|mixed
      * @throws \Exception
      */
     public function getSubscriptionByQuizId($quizId)
