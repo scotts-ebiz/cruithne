@@ -264,7 +264,7 @@ class Subscription extends AbstractModel
                 'form_key'  => $this->_formKey->getFormKey(),
                 'qty'       => 1
             ];
-            $this->_cart->addProduct($seasonalProduct->getId(), $params);
+            $this->_cart->addProduct($seasonalProduct->getId(), $params)->save();
 
             // Add the discount if it's annual
             if ( $this->getSubscriptionType() == 'annual') {
@@ -291,7 +291,7 @@ class Subscription extends AbstractModel
                                 'form_key' => $this->_formKey->getFormKey(),
                                 'qty' => 1,
                             ];
-                            $this->_cart->addProduct($productId, $params);
+                            $this->_cart->addProduct($productId, $params)->save();
 
                             $price = (float)$product->getPrice() * (int)$subscriptionAddonOrderItem->getQty();
                             $item = $quote->getItemByProduct($product);
@@ -310,9 +310,12 @@ class Subscription extends AbstractModel
                     $subscriptionAddonOrderItem->save();
                 }
             }
+
+            $quote->save();
         } catch (\Exception $e) {
             throw new \Exception("Oops Subscr: " . $e->getMessage());
         }
+
 
         // Go through the cart items and modify their prices for the current customer order
         try {
@@ -337,7 +340,7 @@ class Subscription extends AbstractModel
 //        $items = $quote->getItems();
 //        foreach ( (Array)$items as $item) {
 //            var_dump([
-//                'currently_shippable' => $this->currentlyShippable(),
+//                'currently_shippable' => $this->isCurrentlyShippable(),
 //                'product_name' => $item->getName(),
 //                'product_sku' => $item->getSku(),
 //                'product_qty' => $item->getQty(),
