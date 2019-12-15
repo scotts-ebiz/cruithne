@@ -73,8 +73,10 @@ class SubscriptionAddonOrder extends AbstractModel
      * @throws \Exception
      */
     public function generateShipDates() {
-        $this->generateShipStartDate();
-        $this->generateShipEndDate();
+        if ( is_null($this->getShipStartDate()) || $this->getShipStartDate() == '0000-00-00 00:00:00' ) {
+            $this->generateShipStartDate();
+            $this->generateShipEndDate();
+        }
     }
 
     /**

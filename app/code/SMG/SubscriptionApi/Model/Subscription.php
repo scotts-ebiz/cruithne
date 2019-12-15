@@ -369,7 +369,8 @@ class Subscription extends AbstractModel
 
             // Test of seasonal is not shippable
             $today = new \DateTime();
-            return $today >= $this->getFirstSubscriptionOrder()->getShipStartDate();
+            $shipStart = new \DateTime($this->getFirstSubscriptionOrder()->getShipStartDate());
+            return $today >= $shipStart;
         }
         return true;
     }
