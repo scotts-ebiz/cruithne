@@ -23,7 +23,7 @@ $active__color                                                : $primary__color;
 
 //  Sizes
 $font-size__base                                              : 0.85rem; // Base font size value in px
-$font-size__xl                                                : 1.2rem;
+$font-size__xl                                                : 2.2rem;
 $font-size__l                                                 : 0.875rem;
 $font-size__s                                                 : 0.8rem;
 $font-size__xs                                                : 0.75rem;
@@ -31,6 +31,7 @@ $font-size__xs                                                : 0.75rem;
 
 //  Fonts
 $font-family-name__base                                       : 'Hellix-Regular';
+$font-family__sans-serif                                      : 'Helvetica Neue', Helvetica, Arial, sans-serif !default;
 $font-family__base                                            : $font-family-name__base, $font-family__sans-serif;
 
 $font-family-name__secondary                                  : 'Hellix-Heavy';

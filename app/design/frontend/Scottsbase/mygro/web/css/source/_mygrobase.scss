@@ -1,9 +1,9 @@
 // MyGro Base
 body { 
     //@include font-hellix-regular();////test - see if you can set else where
-    font-size: 1.2rem;
+    //font-size: 1.2rem;// test - remove for typo changes
     h1 {
-        color: #333;
+        //color: #333;
     }
     h2 {
         @include lib-heading(h2);
@@ -25,7 +25,7 @@ body {
     }
     p {
       //@include font-hellix-regular();//test - see if you can set else where
-      font-size: 1.0rem;
+      //font-size: 1.0rem; // test - remove for typo changes
     }
 }
 
