@@ -15,6 +15,10 @@
         <column name="subscription_id" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Master Subscription ID"/>
         <column name="subscription_type" xsi:type="varchar" nullable="true" length="32" comment="Annual / Seasonal"/>
         <column name="subscription_status" xsi:type="varchar" nullable="false" length="32" comment="Subscription Status"/>
+        <column name="subscription_start_date" xsi:type="timestamp" nullable="false" on_update="false" comment="Subscription Start Date"/>
+        <column name="subscription_end_date" xsi:type="timestamp" nullable="false" on_update="false" comment="Subscription End Date"/>
+        <column name="price" xsi:type="decimal" scale="2" precision="10" nullable="false" comment="Subscription Cost"/>
+        <column name="discount" xsi:type="decimal" scale="2" precision="10" nullable="false" comment="Discount Savings"/>
         <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
         <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Updated"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
@@ -67,6 +71,7 @@
         <column name="subscription_id" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Subscription ID"/>
         <column name="sales_order_id" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Sales Order ID"/>
         <column name="subscription_order_status" xsi:type="varchar" nullable="false" length="32" comment="Subscription Order Status"/>
+        <column name="price"  xsi:type="decimal" scale="2" precision="10"  nullable="false" comment="Subscription Cost"/>
         <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
         <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Updated"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
@@ -99,6 +104,7 @@
         <column name="subscription_order_entity_id" xsi:type="int" nullable="false" unsigned="true" comment="Subscription Order Table ID"/>
         <column name="catalog_product_sku" xsi:type="varchar" nullable="false" length="32" comment="Product Sku"/>
         <column name="qty" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Qty of the Product"/>
+        <column name="price"  xsi:type="decimal" scale="2" precision="10"  nullable="false" comment="Subscription Item Cost"/>
         <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
         <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Updated"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
@@ -130,6 +136,7 @@
         <column name="subscription_id" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Subscription ID"/>
         <column name="sales_order_id" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Sales Order ID"/>
         <column name="subscription_order_status" xsi:type="varchar" nullable="false" length="32" comment="Subscription Order Status"/>
+        <column name="price"  xsi:type="decimal" scale="2" precision="10"  nullable="false" comment="Subscription Cost"/>
         <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
         <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Updated"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
@@ -163,6 +170,7 @@
         <column name="catalog_product_sku" xsi:type="varchar" nullable="false" length="32" comment="Product Sku"/>
         <column name="qty" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Qty of the Product"/>
         <column name="selected" xsi:type="tinyint" nullable="false" unsigned="true" default="0" comment="Whether the addon was selected"/>
+        <column name="price"  xsi:type="decimal" scale="2" precision="10"  nullable="false" comment="Subscription Item Cost"/>
         <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
         <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Updated"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">

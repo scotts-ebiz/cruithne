@@ -96,7 +96,7 @@ class Subscription extends AbstractDb
      * @return \SMG\SubscriptionApi\Model\Subscription|mixed
      * @throws \Exception
      */
-    public function getSubscriptionByQuizId($quizId)
+    public function getSubscriptionByQuizId( $quizId )
     {
 
         if ( ! empty( $quizId ) )
@@ -145,6 +145,8 @@ class Subscription extends AbstractDb
         // Create Subscription Orders
         $recommendationSubscriptionOrders = $this->organizeSubscriptionOrdersFromRecommendation($recommendation[0]['plan']['coreProducts']);
 
+        $subscriptionPrice = 0;
+
         foreach ( $recommendationSubscriptionOrders as $recommendationSubscriptionOrder ) {
 
             $subscriptionOrder = $this->_subscriptionOrderFactory->create();
@@ -155,20 +157,33 @@ class Subscription extends AbstractDb
             $subscriptionOrder->setSubscriptionOrderStatus( $recommendationSubscriptionOrder['subscription_order_status'] );
             $subscriptionOrder->save();
 
+            $subscriptionOrderPrice = 0;
+
             // Create the Subscription Order Items
             foreach ( $recommendationSubscriptionOrder['subscriptionOrderItems'] as $item ) {
                 $subscriptionOrderItem = $this->_subscriptionOrderItemFactory->create();
                 $subscriptionOrderItem->setSubscriptionOrderEntityId( $subscriptionOrder->getEntityId() );
                 $subscriptionOrderItem->setCatalogProductSku( $item['catalog_product_sku'] );
                 $subscriptionOrderItem->setQty( $item['qty'] );
+                $product = $this->_productRepository->get( $item['catalog_product_sku'] );
+                $subscriptionOrderItem->setPrice( $product->getPrice() );
                 $subscriptionOrderItem->save();
+                $subscriptionOrderPrice += $product->getPrice() * $item['qty'];
             }
+
+            $subscriptionPrice += $subscriptionOrderPrice;
+            $subscriptionOrder->setPrice( $subscriptionOrderPrice );
+            $subscriptionOrder->save();
         }
+
+        // Set Subscription Total Price
+        $subscription->setPrice( $subscriptionPrice );
+        $subscription->save();
 
         // Create Subscription Addon Orders
         $recommendationSubscriptionAddonOrder = $this->organizeSubscriptionAddonOrdersFromRecommendation($recommendation[0]['plan']['addOnProducts']);
 
-        if (!empty($recommendationSubscriptionAddonOrder)) {
+        if ( ! empty($recommendationSubscriptionAddonOrder)) {
             $subscriptionAddonOrder = $this->_subscriptionAddonOrderFactory->create();
             $subscriptionAddonOrder->setSubscriptionEntityId( $subscription->getEntityId() );
             $subscriptionAddonOrder->setSeasonName( $recommendationSubscriptionAddonOrder['season_name'] );
@@ -177,14 +192,22 @@ class Subscription extends AbstractDb
             $subscriptionAddonOrder->setSubscriptionOrderStatus( $recommendationSubscriptionAddonOrder['subscription_order_status'] );
             $subscriptionAddonOrder->save();
 
+            $subscriptionAddonOrderPrice = 0;
+
             // Create the Subscription Order Items
             foreach ( $recommendationSubscriptionAddonOrder['subscriptionOrderItems'] as $item ) {
                 $subscriptionAddonOrderItem = $this->_subscriptionAddonOrderItemFactory->create();
                 $subscriptionAddonOrderItem->setSubscriptionAddonOrderEntityId( $subscriptionAddonOrder->getEntityId() );
                 $subscriptionAddonOrderItem->setCatalogProductSku( $item['catalog_product_sku'] );
                 $subscriptionAddonOrderItem->setQty( $item['qty'] );
+                $product = $this->_productRepository->get( $item['catalog_product_sku'] );
+                $subscriptionAddonOrderItem->setPrice( $product->getPrice() );
                 $subscriptionAddonOrderItem->save();
+                $subscriptionAddonOrderPrice += $product->getPrice() * $item['qty'];
             }
+
+            $subscriptionAddonOrder->setPrice( $subscriptionAddonOrderPrice );
+            $subscriptionAddonOrder->save();
         }
 
         return $this->_subscription;
