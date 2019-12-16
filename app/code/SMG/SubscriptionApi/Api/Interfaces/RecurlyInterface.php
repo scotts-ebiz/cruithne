@@ -16,7 +16,7 @@ interface RecurlyInterface
 	 * 
 	 * @api
 	 */
-	public function createRecurlySubscription($token, $quiz_id, $plan);
+	public function createRecurlySubscription( $token );
 
 	/**
 	 * Check existing Recurly subscriptions

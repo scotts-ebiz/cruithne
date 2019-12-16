@@ -165,12 +165,32 @@ class Subscription extends AbstractModel
         return $this->_subscriptionOrders;
     }
 
+    /**
+     * Get subscription order by season slug
+     * @param string $seasonSlug
+     * @return SubscriptionOrderCollection|mixed
+     */
+    public function getSubscriptionOrderBySeasonSlug( string $seasonSlug )
+    {
+
+        // Make sure we have an actual subscription
+        if ( is_null( $this->getEntityId() ) ) {
+            return false;
+        }
+
+        $subscriptionOrders = $this->_subscriptionOrderCollectionFactory->create();
+        $subscriptionOrders->addFieldToFilter( 'subscription_entity_id', $this->getEntityId() );
+        $subscriptionOrders->addFieldToFilter( 'season_slug', $seasonSlug );
+
+        return $subscriptionOrders->fetchItem();
+    }
+
 
     /**
      * Get subscription addon orders
      * @return SubscriptionAddonOrderCollection|mixed
      */
-    protected function getSubscriptionAddonOrders()
+    public function getSubscriptionAddonOrders( )
     {
 
         // Make sure we have an actual subscription
@@ -336,28 +356,6 @@ class Subscription extends AbstractModel
         } catch ( \Exception $e ) {
             throw new \Exception("Oops 4: " . $e->getMessage() );
         }
-
-//        $items = $quote->getItems();
-//        foreach ( (Array)$items as $item) {
-//            var_dump([
-//                'currently_shippable' => $this->isCurrentlyShippable(),
-//                'product_name' => $item->getName(),
-//                'product_sku' => $item->getSku(),
-//                'product_qty' => $item->getQty(),
-//                'product_custom_price' => $item->getCustomPrice(),
-//                'product_price' => $item->getPrice(),
-//                'product_base_price' => $item->getBasePrice()
-//            ]);
-//        }
-//
-//        var_dump([
-//            'subtotal' => $quote->getSubtotal(),
-//            'subtotal_with_discount' => $quote->getSubtotalWithDiscount(),
-//            'grand_total' => $quote->getGrandTotal(),
-//            'items_count' => $quote->getItemsCount(),
-//            'coupon_code' => $quote->getCouponCode()
-//        ]);
-//        die;
     }
 
     /**
@@ -415,6 +413,19 @@ class Subscription extends AbstractModel
         $addOn = $items->getFirstItem();
 
         return $addOn ? $addOn->getProduct() : false;
+    }
+
+    /**
+     * Creates the subscription using subscription service
+     * @param $token
+     * @param $service
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function createSubscriptionService( $token, $service ) {
+
+        /** @var RecurlySubscription $service */
+        $service->createSubscription( $token, $this );
     }
 
     /**

@@ -50,15 +50,14 @@ define(
                     processData: false,
                     showLoader: true,
                     data: JSON.stringify({
-                        'token': token_id,
-                        'quiz_id': quizID,
-                        'plan': subscriptionPlan
+                        'token': token_id
                     }),
                     success: function (response) {
-                        if (response[0].success === true) {
+                        response = JSON.parse(response);
+                        if (response.success === true) {
                             self.createNewOrders();
                         } else {
-                            alert(response[0].message);
+                            alert(response.message);
                         }
                     }
                 });

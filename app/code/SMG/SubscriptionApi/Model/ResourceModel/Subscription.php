@@ -140,6 +140,7 @@ class Subscription extends AbstractDb
         $subscription->setOrigin( 'web' );
         $subscription->setSubscriptionStatus( 'pending' );
         $subscription->save();
+
         $this->_subscription = $subscription;
 
         // Create Subscription Orders
@@ -148,10 +149,10 @@ class Subscription extends AbstractDb
         $subscriptionPrice = 0;
 
         foreach ( $recommendationSubscriptionOrders as $recommendationSubscriptionOrder ) {
-
             $subscriptionOrder = $this->_subscriptionOrderFactory->create();
             $subscriptionOrder->setSubscriptionEntityId( $subscription->getEntityId() );
             $subscriptionOrder->setSeasonName( $recommendationSubscriptionOrder['season_name'] );
+            $subscriptionOrder->setSeasonSlug( $this->getPlanCodeByName( $recommendationSubscriptionOrder['season_name'] ) );
             $subscriptionOrder->setApplicationStartDate( $recommendationSubscriptionOrder['application_start_date'] );
             $subscriptionOrder->setApplicationEndDate( $recommendationSubscriptionOrder['application_end_date'] );
             $subscriptionOrder->setSubscriptionOrderStatus( $recommendationSubscriptionOrder['subscription_order_status'] );
@@ -172,6 +173,8 @@ class Subscription extends AbstractDb
             }
 
             $subscriptionPrice += $subscriptionOrderPrice;
+            $subscriptionOrder->setApplicationStartDate( $recommendationSubscriptionOrder['application_start_date'] );
+            $subscriptionOrder->setApplicationEndDate( $recommendationSubscriptionOrder['application_end_date'] );
             $subscriptionOrder->setPrice( $subscriptionOrderPrice );
             $subscriptionOrder->save();
         }
@@ -275,5 +278,27 @@ class Subscription extends AbstractDb
         // We are only concerned with the first season of addons
         $subscriptionAddonOrdersAll = $this->organizeSubscriptionOrdersFromRecommendation($recommendedProducts);
         return array_shift( $subscriptionAddonOrdersAll );
+    }
+
+
+    /**
+     * Return Recurly Plan Code base on the name of the core product
+     *
+     * @param $name
+     * @return string
+     */
+    private function getPlanCodeByName($name) {
+        switch($name) {
+            case 'Early Spring Feeding':
+                return 'early-spring';
+            case 'Late Spring Feeding':
+                return 'late-spring';
+            case 'Early Summer Feeding':
+                return 'early-summer';
+            case 'Early Fall Feeding':
+                return 'early-fall';
+            default:
+                return '';
+        }
     }
 }

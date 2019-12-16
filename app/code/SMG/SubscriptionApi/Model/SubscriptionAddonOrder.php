@@ -81,10 +81,10 @@ class SubscriptionAddonOrder extends AbstractModel
 
     /**
      * Get subscription addon orders
-     * @param bool $selected_only
+     * @param bool $selectedOnly
      * @return mixed
      */
-    public function getSubscriptionAddonOrderItems()
+    public function getSubscriptionAddonOrderItems( bool $selectedOnly = false )
     {
 
         // Make sure we have an actual subscription
@@ -96,6 +96,9 @@ class SubscriptionAddonOrder extends AbstractModel
         if ( ! isset($this->_subscriptionAddonOrderItems) ) {
             $subscriptionAddonOrderItems = $this->_subscriptionAddonOrderItemCollectionFactory->create();
             $subscriptionAddonOrderItems->addFieldToFilter( 'subscription_addon_order_entity_id', $this->getEntityId() );
+            if ( $selectedOnly ) {
+                $subscriptionAddonOrderItems->addFieldToFilter( 'selected', 1 );
+            }
             $this->_subscriptionAddonOrderItems = $subscriptionAddonOrderItems;
         }
 

@@ -4,19 +4,19 @@
     <table name="subscription" engine="innodb" resource="default" comment="Subscription Object">
         <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" padding="10" comment="ID of the record."/>
         <column name="quiz_id" xsi:type="varchar" nullable="false" length="64" comment="Quiz ID returned from Recommendations Engine"/>
-        <column name="quiz_completed_at" xsi:type="timestamp" nullable="false" on_update="false" comment="Quiz Completed At"/>
+        <column name="gigya_id" xsi:type="varchar" nullable="true" length="64" comment="Gigya Id"/>
+        <column name="quiz_completed_at" xsi:type="timestamp" nullable="true" on_update="false" comment="Quiz Completed At"/>
         <column name="origin" xsi:type="varchar" nullable="false" length="32" comment="Where the subscription came from"/>
         <column name="lawn_zip" xsi:type="varchar" nullable="false" length="32" comment="Region Code / Zip Code"/>
         <column name="zone_name" xsi:type="varchar" nullable="false" length="32" comment="Zone Name returned by Recommendations Engine"/>
         <column name="lawn_size" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Lawn Size in feet"/>
         <column name="lawn_type" xsi:type="varchar" length="32" comment="Grass Type"/>
         <column name="customer_id" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Customer Record Id"/>
-        <column name="gigya_id" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Gigya Id"/>
-        <column name="subscription_id" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Master Subscription ID"/>
+        <column name="subscription_id" xsi:type="varchar" length="64" nullable="true" comment="Subscription ID"/>
         <column name="subscription_type" xsi:type="varchar" nullable="true" length="32" comment="Annual / Seasonal"/>
         <column name="subscription_status" xsi:type="varchar" nullable="false" length="32" comment="Subscription Status"/>
-        <column name="subscription_start_date" xsi:type="timestamp" nullable="false" on_update="false" comment="Subscription Start Date"/>
-        <column name="subscription_end_date" xsi:type="timestamp" nullable="false" on_update="false" comment="Subscription End Date"/>
+        <column name="subscription_start_date" xsi:type="timestamp" nullable="true" on_update="false" comment="Subscription Start Date"/>
+        <column name="subscription_end_date" xsi:type="timestamp" nullable="true" on_update="false" comment="Subscription End Date"/>
         <column name="price" xsi:type="decimal" scale="2" precision="10" nullable="false" comment="Subscription Cost"/>
         <column name="discount" xsi:type="decimal" scale="2" precision="10" nullable="false" comment="Discount Savings"/>
         <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
@@ -64,11 +64,12 @@
         <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
         <column name="subscription_entity_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Subscription Table ID"/>
         <column name="season_name" xsi:type="text" nullable="false" comment="Season Name"/>
-        <column name="application_start_date" xsi:type="timestamp" nullable="false" on_update="false" comment="Application Start Date"/>
-        <column name="application_end_date" xsi:type="timestamp" nullable="false" on_update="false" comment="Application End Date"/>
-        <column name="ship_start_date" xsi:type="timestamp" nullable="false" on_update="false" comment="Ship Start Date"/>
-        <column name="ship_end_date" xsi:type="timestamp" nullable="false" on_update="false" comment="Ship End Date"/>
-        <column name="subscription_id" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Subscription ID"/>
+        <column name="season_slug" xsi:type="text" nullable="false" comment="Season Slug"/>
+        <column name="application_start_date" xsi:type="timestamp" nullable="true" on_update="false" comment="Application Start Date"/>
+        <column name="application_end_date" xsi:type="timestamp" nullable="true" on_update="false" comment="Application End Date"/>
+        <column name="ship_start_date" xsi:type="timestamp" nullable="true" on_update="false" comment="Ship Start Date"/>
+        <column name="ship_end_date" xsi:type="timestamp" nullable="true" on_update="false" comment="Ship End Date"/>
+        <column name="subscription_id" xsi:type="varchar" length="64" nullable="true" comment="Subscription ID"/>
         <column name="sales_order_id" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Sales Order ID"/>
         <column name="subscription_order_status" xsi:type="varchar" nullable="false" length="32" comment="Subscription Order Status"/>
         <column name="price"  xsi:type="decimal" scale="2" precision="10"  nullable="false" comment="Subscription Cost"/>
@@ -129,11 +130,11 @@
         <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
         <column name="subscription_entity_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Subscription Table ID"/>
         <column name="season_name" xsi:type="text" nullable="false" comment="Season Name"/>
-        <column name="application_start_date" xsi:type="timestamp" nullable="false" on_update="false" comment="Application Start Date"/>
-        <column name="application_end_date" xsi:type="timestamp" nullable="false" on_update="false" comment="Application End Date"/>
-        <column name="ship_start_date" xsi:type="timestamp" nullable="false" on_update="false" comment="Ship Start Date"/>
-        <column name="ship_end_date" xsi:type="timestamp" nullable="false" on_update="false" comment="Ship End Date"/>
-        <column name="subscription_id" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Subscription ID"/>
+        <column name="application_start_date" xsi:type="timestamp" nullable="true" on_update="false" comment="Application Start Date"/>
+        <column name="application_end_date" xsi:type="timestamp" nullable="true" on_update="false" comment="Application End Date"/>
+        <column name="ship_start_date" xsi:type="timestamp" nullable="true" on_update="false" comment="Ship Start Date"/>
+        <column name="ship_end_date" xsi:type="timestamp" nullable="true" on_update="false" comment="Ship End Date"/>
+        <column name="subscription_id" xsi:type="varchar" length="64" nullable="true" comment="Subscription ID"/>
         <column name="sales_order_id" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Sales Order ID"/>
         <column name="subscription_order_status" xsi:type="varchar" nullable="false" length="32" comment="Subscription Order Status"/>
         <column name="price"  xsi:type="decimal" scale="2" precision="10"  nullable="false" comment="Subscription Cost"/>
