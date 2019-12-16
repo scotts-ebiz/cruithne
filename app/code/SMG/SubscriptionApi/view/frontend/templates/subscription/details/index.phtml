@@ -1,0 +1,78 @@
+<h2>Subscription Details</h2>
+<?php if( ! empty( $block->getSubscriptions() ) ) { 
+	$subscription = $block->getSubscriptions();
+?>
+<div>
+	<table>
+		<tbody>
+			<tr>
+				<th>Type</th>
+				<td><?php echo ( $subscription['is_annual'] === true ) ? 'Annual' : 'Seasonal'; ?></td>
+			</tr>
+			<tr>
+				<th>Start date</th>
+				<td><?php echo $subscription['annual_subscription'][0]->current_period_started_at->format('d F, Y'); ?></td>
+			</tr>
+			<tr>
+				<th>Renewal date</th>
+				<td><?php echo ( $subscription['annual_subscription'][0]->auto_renew === true ) ? $subscription['annual_subscription'][0]->current_period_ends_at->format('d F, Y') : 'Not renewing'; ?></td>
+			</tr>
+			<tr>
+				<th>Latest invoice</th>
+				<td><a href="#">#<?php echo $subscription['annual_subscription'][0]->invoice->get()->invoice_number; ?></a></td>
+			</tr>
+			<tr>
+				<th>Billing Information</th>
+				<td>Ending in <?php echo $block->getBillingInformation()->last_four; ?> <a href="#">Edit</a></td>
+			</tr>
+		</tbody>
+	</table>
+
+	<h3>Next billing on [INSERT DATE]</h3>
+	<table>
+		<tbody>
+			<tr>
+				<td><?php echo ( $subscription['is_annual'] === true ) ? '1 x Annual' : '4 x Seasonaly';; ?></td>
+				<td>$<?php echo ( $subscription['is_annual'] === true ) ? $this->convertAmountToDollars( $subscription['annual_subscription'][0]->unit_amount_in_cents ) : '[TO BE UPDATED]'; ?></td>
+			</tr>
+			<tr>
+				<td>1 Add On Item</td>
+				<td>$[ INSERT AMOUNT ]</td>
+			</tr>
+			<tr>
+				<td><strong>Current total</strong></td>
+				<td><strong>$<?php echo ( $subscription['is_annual'] === true ) ? $this->convertAmountToDollars( $subscription['annual_subscription'][0]->unit_amount_in_cents ) : '[TO BE UPDATED]'; ?></strong></td>
+			</tr>
+		</tbody>
+	</table>
+
+	<?php if( ! empty( $block->getInvoices() ) ) { ?>
+	<h2>INVOICES</h2>
+	<table>
+		<thead>
+			<tr>
+				<th>Invoice Number</th>
+				<th>Issued On</th>
+				<th>Due on</th>
+				<th>Paid</th>
+				<th>Total</th>
+			</tr>
+		</thead>
+		<tbody>
+			<?php foreach( $block->getInvoices() as $invoiceId ) { $invoice = $block->getInvoice( $invoiceId ); ?>
+			<tr>
+				<td><a href="#">#<?php echo $invoice->invoice_number; ?></a></td>
+				<td><?php echo $invoice->created_at->format('d F, Y'); ?></td>
+				<td><?php echo $invoice->due_on->format('d F, Y'); ?></td>
+				<td><?php echo ( $invoice->state == 'paid' ) ? 'yes' : 'no'; ?></td>
+				<td>$<?php echo $block->convertAmountToDollars( $invoice->total_in_cents ); ?></td>
+			</tr>
+			<?php } ?>
+		</tbody>
+	</table>
+	<?php } ?>
+
+</div>
+<?php } else { ?>
+<p>No subscription</p>
+<?php } ?>
