@@ -280,8 +280,7 @@ class Subscription implements SubscriptionInterface
 
                 // Add product to the cart
                 $product = $this->_productRepository->get( $item['sku'] );
-                $product = $this->_product->load( $product->getId() );
-                $quote->addProduct( $product, 1 );
+                $quote->addProduct( $product, $item['quantity'] );
 
                 // Set shipping information
                 $quote->getShippingAddress()->addData($orderShippingAddress);
