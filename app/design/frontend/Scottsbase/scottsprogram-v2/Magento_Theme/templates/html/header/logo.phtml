@@ -1,7 +1,10 @@
 <?php
 $storeName = $block->escapeHtml($block->getThemeName() ? $block->getThemeName() : $block->getLogoAlt());
 ?>
-<div class="sp-flex sp-items-center sp-justify-between">
+<div
+    class="sp-flex sp-items-center sp-justify-between"
+    data-bind="scope: 'customer'"
+>
     <?php if ($block->getData('hide_links') == true) { ?>
         <div class="sp-header__logo">
             <img
@@ -44,26 +47,42 @@ $storeName = $block->escapeHtml($block->getThemeName() ? $block->getThemeName() 
         <nav id="sp-main-nav" class="sp-header__nav">
             <ul class="sp-nav-list sp-header__nav-list sp-header__nav-list--left">
                 <li>
-                    <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('quiz')) ?>">
+                    <a
+                        class="sp-link"
+                        href="/quiz"
+                        data-bind="
+                            text: customer() && customer().websiteId
+                                ? 'My Plan'
+                                : 'Get Started'
+                        "
+                    >
                         Get Started
                     </a>
                 </li>
                 <li>
-                    <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('how-it-works')) ?>">
+                    <a class="sp-link" href="/how-it-works">
                         How It Works
                     </a>
                 </li>
             </ul>
-            <ul class="sp-nav-list sp-header__nav-list sp-header__nav-list--right">
+            <ul
+                class="sp-nav-list sp-header__nav-list sp-header__nav-list--right"
+            >
                 <li>
-                    <?php if ($block->isLoggedIn()) { ?>
-                        <a
-                            class="sp-link"
-                            href="<?php echo $block->escapeUrl($block->getUrl('customer/account/logout')) ?>"
-                        >Log Out</a>
-                    <?php } else { ?>
-                        <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('customer/account/login')) ?>">Log In</a>
-                    <?php } ?>
+                    <a
+                        class="sp-link sp-login"
+                        href="/customer/account"
+                        data-bind="
+                            attr: {
+                                href: customer() && customer().websiteId
+                                    ? '/customer/account'
+                                    : '/customer/account/login'
+                            },
+                            text: customer() && customer().websiteId
+                                ? 'My Account'
+                                : 'Log In'
+                        "
+                    >My Account</a>
                 </li>
             </ul>
             <address class="sp-header__address">
@@ -111,27 +130,41 @@ $storeName = $block->escapeHtml($block->getThemeName() ? $block->getThemeName() 
             </ul>
             <ul class="sp-header__nav-secondary">
                 <li>
-                    <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('faq')) ?>">FAQ</a>
+                    <a class="sp-link" href="/faq">FAQ</a>
                 </li>
                 <li>
                     <a
                         class="sp-link"
-                        href="<?php echo $block->escapeUrl($block->getUrl('terms-and-conditions')) ?>"
+                        href="/terms-and-conditions"
                     >Terms</a>
                 </li>
                 <li>
                     <a
                         class="sp-link"
-                        href="<?php echo $block->escapeUrl($block->getUrl('privacy-policy-cookie-restriction-mode')) ?>"
+                        href="/privacy-policy"
                     >Privacy</a>
                 </li>
                 <li>
-                    <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('returns')) ?>">Returns</a>
+                    <a class="sp-link" href="/return-policy">Returns</a>
                 </li>
                 <li>
-                    <a class="sp-link" href="<?php echo $block->escapeUrl($block->getUrl('contact')) ?>">Contact</a>
+                    <a class="sp-link" href="/contact">Contact</a>
                 </li>
             </ul>
         </nav>
     <?php } ?>
 </div>
+
+<script type="text/x-magento-init">
+{
+    "*": {
+        "Magento_Ui/js/core/app": {
+            "components": {
+                "customer": {
+                    "component": "Magento_Customer/js/view/customer"
+                }
+            }
+        }
+    }
+}
+</script>
