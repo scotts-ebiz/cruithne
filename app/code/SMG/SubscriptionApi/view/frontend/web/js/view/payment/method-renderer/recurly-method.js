@@ -18,6 +18,7 @@ define(
             initialize: function () {
                 this._super();
                 this.subscriptionType = ko.observable(window.sessionStorage.getItem('subscription_plan'));
+                this.loading = ko.observable(false);
 
                 setTimeout(function () {
                     recurly.configure('ewr1-aefvtq9Ri3MILWsXFPHyv2');
@@ -139,8 +140,6 @@ define(
                     }
                 })
             },
-
-
         });
     }
 );

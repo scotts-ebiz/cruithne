@@ -141,3 +141,44 @@
   box-sizing: border-box;
   height: auto;
 }
+
+.sp-button--loading {
+  color: transparent !important;
+  cursor: not-allowed;
+  position: relative;
+  pointer-events: none;
+
+  &::after {
+    animation: spinAround 500ms infinite linear;
+    border-bottom-color: #fff;
+    border-left-color: #fff;
+    border-radius: 100%;
+    border-right-color: transparent;
+    border-top-color: transparent;
+    border-style: solid;
+    border-width: .25rem;
+    content: "";
+    display: block;
+    height: 1.5em;
+    left: calc(50% - (1.5em / 2));
+    opacity: 0.75;
+    position: absolute !important;
+    top: calc(50% - (1.5em / 2));
+    width: 1.5em;
+  }
+
+  &.sp-button--inactive::after,
+  &.sp-button--inverted::after {
+    border-bottom-color: $green-1;
+    border-left-color: $green-1;
+  }
+}
+
+@keyframes spinAround {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}
