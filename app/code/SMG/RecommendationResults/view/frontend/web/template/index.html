@@ -8,7 +8,8 @@
         <span data-bind="if: lawnType()"><strong data-bind="text: lawnType()"></strong></span> lawn in every season.
     </p>
 
-    <a class="sp-block sp-link sp-text-center sp-label">Doesn't look right? Take the quiz again!</a>
+    <a class="sp-block sp-link sp-text-center sp-label"
+       href="/quiz">Doesn't look right? Take the quiz again!</a>
 </div>
 
 <!-- ko if: results().plan -->
@@ -102,12 +103,20 @@
                     <div class="sp-p2"
                          data-bind="html: activeProduct().short_description">
                     </div>
+                    <button class="sp-link sp-uppercase"
+                            data-bind="click: togglePDP">more about this product</button>
                 </div>
             </div>
         </div>
         <!-- /ko -->
     </div>
 </div>
+
+<!-- ko if: pdp().visible  -->
+<!-- ko template: "SMG_RecommendationResults/product-detail-modal.html" -->
+<!-- /ko -->
+<!-- /ko -->
+
 
 <div class="sp-bg-green-1 sp-py-4">
     <div class="sp-container sp-flex sp-flex-column md:sp-flex-row sp-justify-end">
