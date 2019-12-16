@@ -10,8 +10,6 @@ interface RecurlyInterface
 	 * Create new Recurly subscription
 	 * 
 	 * @param string $token
-	 * @param mixed $quiz_id
-	 * @param string $plan
 	 * @return array
 	 * 
 	 * @api
