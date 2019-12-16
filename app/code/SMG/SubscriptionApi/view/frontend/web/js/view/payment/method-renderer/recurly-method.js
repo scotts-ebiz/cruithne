@@ -1,12 +1,13 @@
 define(
     [
+        'ko',
         'jquery',
         'Magento_Checkout/js/view/payment/default',
         'Magento_Checkout/js/action/place-order',
         'Magento_Checkout/js/action/redirect-on-success',
         'domReady!',
     ],
-    function ($, Component) {
+    function (ko, $, Component) {
         'use strict';
 
         return Component.extend({
@@ -16,6 +17,7 @@ define(
 
             initialize: function () {
                 this._super();
+                this.subscriptionType = ko.observable(window.sessionStorage.getItem('subscription_plan'));
 
                 setTimeout(function () {
                     recurly.configure('ewr1-aefvtq9Ri3MILWsXFPHyv2');
