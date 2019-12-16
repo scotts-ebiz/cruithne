@@ -4,7 +4,7 @@
     hasFocus: focused,
     attr: {
         name: inputName,
-        placeholder: inputName == 'street[0]' && 'Address Line 1' || inputName == 'street[1]' && 'Address Line 2 (optional)' || placeholder || element.label,
+        placeholder: inputName == 'street[0]' && 'Street Address' || inputName == 'street[1]' && 'Apartment/Suite/Other (optional)' || placeholder || element.label,
         'aria-describedby': getDescriptionId(),
         'aria-required': required,
         'aria-invalid': error() ? true : 'false',

@@ -48,9 +48,9 @@
   > .title {
     @extend .sp-h4;
     border-bottom: 2px solid $gray-3;
-    font-weight: 700;
-    margin-bottom: 1.25rem;
-    padding-bottom: 1.25rem;
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1.5rem;
     text-transform: uppercase;
   }
 
@@ -60,28 +60,21 @@
     margin-top: 0;
     text-transform: uppercase;
   }
-
-  .table-totals {
-    font-size: $font-size-p2;
-  }
-
-  .table-totals .grand .mark {
-    padding-top: 0.5rem;
-  }
-
-  .table-totals .grand .mark strong {
-    font-weight: 700;
-  }
 }
 
 .order-summary-products {
   border-bottom: 2px solid $gray-3;
   margin-bottom: 1.5rem;
-  padding-bottom: 1.5rem;
+  padding-bottom: 0;
 
   ol {
     list-style-type: none;
     padding-left: 0;
+    margin-bottom: 0;
+  }
+
+  li {
+    margin-bottom: 1.5rem;
   }
 
   .product {
@@ -337,4 +330,66 @@
     position: absolute;
     transform: translateX(-50%);
   }
+}
+
+.sp-success__articles {
+  hr {
+    border: 2px solid $green-1;
+  }
+}
+
+.sp-success__article-image-container {
+  overflow: hidden;
+  padding-bottom: 80%;
+  position: relative;
+  width: 100%;
+}
+
+.sp-success__article-image {
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+}
+
+.sp-success__article-link {
+  @extend .sp-label;
+
+  bottom: 0;
+  cursor: pointer;
+  left: 0;
+  padding: 1rem;
+  position: absolute;
+  right: 0;
+
+  &:hover {
+    color: $white;
+  }
+}
+
+.sp-success__article-link-out {
+  position: absolute;
+  right: 1rem;
+  transform: translateY(-50%);
+  top: 50%;
+}
+
+.sp-summary__price {
+  text-transform: uppercase;
+}
+
+.sp-table-totals {
+  td,
+  th {
+    @extend .sp-p2;
+
+    padding: 0.5rem 0 !important;
+    vertical-align: middle !important;
+  }
+}
+
+.sp-seasonal-total {
+  border-top: 2px solid $gray-3;
 }

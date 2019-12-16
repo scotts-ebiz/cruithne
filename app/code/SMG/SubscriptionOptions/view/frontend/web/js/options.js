@@ -26,7 +26,7 @@ define([
             }
 
             if (config.quiz_id) {
-                this.loadQuizResults(config.quiz_id);
+                this.loadQuizResults(config.quiz_id, config.zip);
             } else {
                 this.getResults();
             }
@@ -52,7 +52,6 @@ define([
             });
 
             this.selectedAddOns = ko.observableArray([]);
-
             this.selectPlan = (data, event) => {
                 if (event.target.checked) {
                     self.subscriptionType(event.target.value);
@@ -64,16 +63,23 @@ define([
          * Load the quiz results from the recommendation API.
          *
          * @param id
+         * @param zip
          */
-        loadQuizResults(id) {
+        loadQuizResults(id, zip) {
             const self = this;
             const formKey = document.querySelector('input[name=form_key]').value;
+
+            const request = {
+                key: formKey,
+                id: id,
+                zip: zip
+            };
 
             $.ajax(
                 '/rest/V1/recommendations/quiz/result',
                 {
                     contentType: 'application/json; charset=utf-8',
-                    data: JSON.stringify({ key: formKey, id: id }),
+                    data: JSON.stringify(request),
                     dataType: 'json',
                     method: 'post',
                     success(data) {

@@ -10,13 +10,11 @@ interface RecurlyInterface
 	 * Create new Recurly subscription
 	 * 
 	 * @param string $token
-	 * @param mixed $quiz_id
-	 * @param string $plan
 	 * @return array
 	 * 
 	 * @api
 	 */
-	public function createRecurlySubscription($token, $quiz_id, $plan);
+	public function createRecurlySubscription( $token );
 
 	/**
 	 * Check existing Recurly subscriptions

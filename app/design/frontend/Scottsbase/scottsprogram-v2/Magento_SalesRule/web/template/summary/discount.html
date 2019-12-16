@@ -1,17 +1,10 @@
-<!--
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
--->
 <!-- ko if: isDisplayed() -->
-<tr class="totals discount">
+<tr class="totals discount sp-py-1">
     <th class="mark" scope="row">
-        <span class="title" data-bind="text: getTitle()"></span>
-        <span class="discount coupon" data-bind="text: getCouponLabel()"></span>
+        <span class="discount coupon sp-py-2" data-bind="text: getCouponLabel()"></span>
     </th>
     <td class="amount">
-        <span class="price" data-bind="text: getValue(), attr: {'data-th': name}"></span>
+        <span class="price sp-py-2" data-bind="text: getValue(), attr: {'data-th': name}"></span>
     </td>
 </tr>
 <!-- /ko -->
