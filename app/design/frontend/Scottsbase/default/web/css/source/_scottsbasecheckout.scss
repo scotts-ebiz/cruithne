@@ -88,65 +88,11 @@
                             padding: 1rem;
                         }
                         .opc {
-
-                            /** General Form styles - Start **/
-                            .fieldset {
-                                .field {
-                                    position: relative;
-                                    height: 85px;
-                                    margin: 0;
-                                    .label {
-                                        display: inline-block;
-                                        width: auto;
-                                        text-align: left;
-                                        margin: 0 0 2px 0;
-                                        padding: 0;
-                                    }
-                                    &.additional {
-                                        width: 100%;
-                                        .label {
-                                            position: relative;
-                                            overflow: inherit;
-                                            height: auto;
-                                        }
-                                    }
-                                    &.street {
-                                        display: contents;
-                                    }
-                                }
-                                div[name="shippingAddress.firstname"],
-                                div[name="shippingAddress.lastname"],
-                                div[name="billingAddressvantiv_cc.firstname"],
-                                div[name="billingAddressvantiv_cc.lastname"] {
-                                    width: 50%;
-                                    display: inline-block;
-                                    @media screen and (max-width: $screen__m) {
-                                      width: 100%;
-                                    }
-                                    .control {
-                                      float: none;
-                                      width: auto;
-                                    }
-                                }
-                                div[name="shippingAddress.firstname"],
-                                div[name="billingAddressvantiv_cc.firstname"] {
-                                    padding-right: 10px;
-                                    @media screen and (max-width: $screen__m) {
-                                      padding-right: 0;
-                                    }
-                                }
-                                div[name="shippingAddress.lastname"],
-                                div[name="billingAddressvantiv_cc.lastname"] {
-                                    padding-left: 10px;
-                                    @media screen and (max-width: $screen__m) {
-                                        padding-left: 0;
-                                    }
-                                }
+                            .fieldset > .field > .label {
+                                width: auto;
+                                text-align: left;
+                                margin-bottom: 4px;
                             }
-                            /** General Form styles - End **/
-
-
-                            /** Shipping Method form - Start **/
                             .checkout-shipping-address {
                                 .step-content {
                                     .form-login {
@@ -167,7 +113,36 @@
                                             }
                                         }
                                     }
+                                    .form-login,
                                     .form-shipping-address {
+                                        .fieldset {
+                                            > .field {
+                                                margin: 0 0 10px;
+                                            }
+                                            div[name="shippingAddress.firstname"], div[name="shippingAddress.lastname"] {
+                                                width: 50%;
+                                                display: inline-block;
+                                                @media screen and (max-width: $screen__m) {
+                                                    width: 100%;
+                                                }
+                                                .control {
+                                                    float: none;
+                                                    width: auto;
+                                                }
+                                            }
+                                            div[name="shippingAddress.firstname"] {
+                                                padding-right: 10px;
+                                                @media screen and (max-width: $screen__m) {
+                                                    padding-right: 0;
+                                                }
+                                            }
+                                            div[name="shippingAddress.lastname"] {
+                                                padding-left: 10px;
+                                                @media screen and (max-width: $screen__m) {
+                                                    padding-left: 0;
+                                                }
+                                            }
+                                        }
                                         .hidden-fields {
                                             .actions-toolbar {
                                                 margin-left: 0;
@@ -175,17 +150,18 @@
                                         }
                                     }
                                     .form-shipping-address {
-                                        .fieldset {
-                                            .field {
-                                                .control {
-                                                    .field-error {
-                                                        position: absolute;
-                                                        @media only screen and (max-width: $screen__s) {
-                                                            position: relative;
-                                                        }
-                                                    }
+                                        .control {
+                                            position: relative;
+                                            height: 85px;
+                                            .field-error {
+                                                position: absolute;
+                                                @media only screen and (max-width: $screen__s) {
+                                                    position: relative;
                                                 }
                                             }
+                                        }
+                                        div[name='shippingAddress.street.1'], div[name='shippingAddress.street.2'] {
+                                            display: none;
                                         }
                                         div[name="shippingAddress.postcode"] {
                                             .control {
@@ -242,10 +218,6 @@
                                     }
                                 }
                             }
-                            /** Shipping Method form - End **/
-
-
-                            /** Payment Method form - Start **/
                             .checkout-payment-method {
                                 .step-content {
                                     .form.payments {
@@ -254,25 +226,6 @@
                                                 .items.payment-methods {
                                                     .payment-group {
                                                         .payment-method._active {
-                                                            .payment-method-title.field {
-                                                                height: auto;
-                                                                [type="radio"]:checked + label,
-                                                                [type="radio"]:not(:checked) + label {
-                                                                    position: relative;
-                                                                    padding-left: 28px;
-                                                                    cursor: pointer;
-                                                                    line-height: 20px;
-                                                                    display: inline-block;
-                                                                }
-                                                            }
-                                                            [type="radio"]:checked + label,
-                                                            [type="radio"]:not(:checked) + label {
-                                                                position: relative;
-                                                                padding-left: 28px;
-                                                                cursor: pointer;
-                                                                line-height: 20px;
-                                                                display: inline-block;
-                                                            }
                                                             [type="radio"]:checked + label:before,
                                                             [type="radio"]:not(:checked) + label:before{
                                                                 top: 2px;
@@ -284,17 +237,10 @@
                                                             .payment-method-content {
                                                                 .payment-method-billing-address {
                                                                     .checkout-billing-address {
-                                                                        .billing-address-same-as-shipping-block {
-                                                                            height: auto;
-                                                                            margin: 0 0 10px;
-                                                                        }
-                                                                        .field.field-select-billing {
-                                                                            height: auto;
-                                                                            margin: 0 0 20px;
-                                                                        }
                                                                         .billing-address-form {
                                                                             div[name='billingAddressauthorizenet_directpost.street.1'],
                                                                             div[name='billingAddressauthorizenet_directpost.street.2'],
+                                                                            div[name='billingAddressvantiv_cc.street.1'],
                                                                             div[name='billingAddressvantiv_cc.street.2'],
                                                                             div[name='billingAddresscashondelivery.street.1'],
                                                                             div[name='billingAddresscashondelivery.street.2'] {
@@ -517,8 +463,6 @@
                                     }
                                 }
                             }
-                            /** Payment Method form - End **/
-
                         }
                     }
                     .opc-sidebar.custom-slide {
@@ -637,16 +581,14 @@
                   position: absolute;
                   left: -9999px;
                 }
-
                 [type="radio"]:checked + label,
                 [type="radio"]:not(:checked) + label {
-                    position: relative;
-                    padding-left: 28px;
-                    cursor: pointer;
-                    line-height: 20px;
-                    display: inline-block;
+                  position: relative;
+                  padding-left: 28px;
+                  cursor: pointer;
+                  line-height: 20px;
+                  display: inline-block;
                 }
-
                 [type="radio"]:checked + label:before,
                 [type="radio"]:not(:checked) + label:before {
                     content: '';
@@ -702,17 +644,18 @@
                     }
                 }
                 .fieldset>.field.required, .fieldset>.field._required {
-                    >.label:after {
-                        display: none;
-                    }
+                  >.label:after {
+                    display: none;
+                  }
                 }
                 .fieldset>.fields {
-                    >.field.required, >.field._required {
-                        >.label:after {
-                            display: none;
-                        }
+                  >.field.required, >.field._required {
+                    >.label:after {
+                      display: none;
                     }
+                  }
                 }
+
                 .field.street.admin__control-fields {
                     div[name="billingAddresscheckmo.street.1"], div[name="billingAddresscheckmo.street.2"] {
                         display: none;
@@ -957,24 +900,23 @@ td#label_carrier_fedex-nextday_flatrate {
     }
 
     .opc-estimated-wrapper {
-        .minicart-wrapper {
-            .action.showcart {
-                .counter.qty {
-                    @include max-screen($screen__l) {
-                        background: #fff;
-                        color: #4d4d4e;
-                    }
-                    background: $primary__color;
-                }
+      .minicart-wrapper {
+        .action.showcart {
+          .counter.qty {
+            @include max-screen($screen__l) {
+              background: #fff;
+              color: #4d4d4e;
             }
+            background: $primary__color;
+          }
         }
+      }
     }
 
     .opc-estimated-wrapper .minicart-wrapper .action.showcart:before {
         color: #333;
     }
     //Shipping Page Styles - End
-
 
     .checkout-index-index .checkout-billing-address .fieldset .actions-toolbar{
       margin-top: 10px;
@@ -984,6 +926,7 @@ td#label_carrier_fedex-nextday_flatrate {
 
 @media screen and (max-width: $screen__l) {
   .fieldset > .field:not(.choice) > .label {
+        padding: 6px 15px 0 0;
         text-align: right;
         box-sizing: border-box;
         float: left;
