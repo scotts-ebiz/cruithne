@@ -17,7 +17,7 @@ use SMG\Sap\Model\ResourceModel\SapOrderBatch;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderItem\CollectionFactory as SapOrderItemCollectionFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderShipment\CollectionFactory as SapOrderShipmentCollectionFactory;
-
+use Magento\Framework\App\Config\ScopeConfigInterface as ScopeConfigInterface;
 class ShipmentHelper
 {
     /**
@@ -104,6 +104,16 @@ class ShipmentHelper
      * @var SapOrderShipmentCollectionFactory
      */
     protected $_sapOrderShipmentCollectionFactory;
+	
+	/**
+     * @var scopeConfig
+     */
+    protected $_scopeConfig;
+	
+   /**
+   * Send Shipment Status
+   */
+   const XML_SEND_SHIPMENT_STATUS = 'zaius_engage/status/send_shipment_status';
 
     /**
      * BatchCaptureHelper constructor.
@@ -140,7 +150,8 @@ class ShipmentHelper
         SapOrder $sapOrderResource,
         OrderManagementInterface $orderManagementInterface,
         ItemInterface $itemInterface,
-        SapOrderShipmentCollectionFactory $sapOrderShipmentCollectionFactory)
+        SapOrderShipmentCollectionFactory $sapOrderShipmentCollectionFactory,
+		ScopeConfigInterface $scopeConfig)
     {
         $this->_logger = $logger;
         $this->_responseHelper = $responseHelper;
@@ -158,6 +169,7 @@ class ShipmentHelper
         $this->_orderManagementInterface = $orderManagementInterface;
         $this->_itemInterface = $itemInterface;
         $this->_sapOrderShipmentCollectionFactory = $sapOrderShipmentCollectionFactory;
+		$this->_scopeConfig = $scopeConfig;
     }
 
     /**
@@ -192,6 +204,9 @@ class ShipmentHelper
 
             // send consumer service email
             $this->sendCustomerServiceEmails();
+			
+			// Zaius apiKey
+			$this->zaiusApiCall($orderId);
         }
 
         // return
@@ -373,5 +388,51 @@ class ShipmentHelper
             // send the email
             $this->_orderManagementInterface->notifyShipmentOrdersServiceTeam($this->_itemInterface);
         }
+    }
+	
+	 private function zaiusApiCall($orderId)
+    {
+       $order = $this->_orderFactory->create();
+       $this->_orderResource->load($order, $orderId);
+	   $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
+       $shipmentstatus = $this->_scopeConfig->getValue(self::XML_SEND_SHIPMENT_STATUS, $storeScope);
+	   if ($order->isSubscription() && $shipmentstatus == 1)
+        {
+			$apiKey = $this->getZaiusTrackerId($storeScope);
+            $privateKey = $this->getZaiusPrivateKey($storeScope);
+			$zaiusClient = new \ZaiusSDK\ZaiusClient($apiKey, $privateKey);
+			$email = $order->getCustomerEmail();
+			$productid = array();
+			foreach ($order->getAllVisibleItems() as $_item) {
+			        $productid[] = $_item->getProductId();                    
+			}
+			
+			$proid = implode(',', $productid);
+			$event = array();
+			$event['type'] = 'product';
+			$event['action'] = 'shipped';
+			$event['identifiers'] = ['email'=>$email];
+			$event['data'] = ['product_id'=>$proid];
+			$zaiusClient->postEvent($events);
+			$this->_customerServiceEmailIds[] = $orderId;
+		}
+    }
+	
+	/**
+     * @param \Magento\Store\Model\Store|int|null $store
+     * @return string
+     */
+    public function getZaiusTrackerId($store = null)
+    {
+        return $this->_scopeConfig->getValue('zaius_engage/status/zaius_tracker_id', 'store', $store);
+    }
+
+    /**
+     * @param \Magento\Store\Model\Store|int|null $store
+     * @return bool
+     */
+    public function getZaiusPrivateKey($store = null)
+    {
+        return $this->_scopeConfig->getValue('zaius_engage/status/zaius_private_api', 'store', $store);
     }
 }
