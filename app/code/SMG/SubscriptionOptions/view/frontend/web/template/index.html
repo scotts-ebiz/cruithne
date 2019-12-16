@@ -170,9 +170,14 @@
 						<h4 class="sp-h4--long sp-mb-4 sp-mt-0" data-bind="text: addOn().season"></h4>
                         <p class="sp-p1 sp-hide md:sp-block" data-bind="text: addOn().description"></p>
 
-						<button type="button" class="sp-options__add-on-link sp-link" data-bind="click: togglePDP.bind($data, addOn())">
+						<!--
+							@todo: Rasa - Add this once PDP is completed
+							@author: Sean Kegel
+							@date: 12/12/2019
+						<a class="sp-options__add-on-link sp-link" href="#">
 							More About This Product
-						</button>
+						</a>
+						-->
 
 						<hr class="sp-options__divider sp-mb-6 sp-mt-4">
 
@@ -180,9 +185,9 @@
 							<label class="sp-flex-none sp-mb-2 md:sp-mb-0 md:sp-mr-8">
 								<input
 									class="sp-checkbox sp-options__add-on-checkbox sp-mr-1"
+									data-bind="checkedValue: $data.sku"
 									name="addon_products"
 									type="checkbox"
-									data-bind="checkedValue: addOn().sku, checked: selectedAddOns, attr: { checked: selectedAddOns.indexOf(addOn().sku) >= 0 }"
 								/>
 								<span class="sp-options__add sp-label sp-text-green-1">
 									Add to Order
@@ -210,7 +215,4 @@
         </a>
     </div>
 </div>
-
-<!-- ko if: pdp().visible  -->
-<!-- ko template: "SMG_RecommendationResults/product-detail-modal.html" --><!-- /ko -->
 <!-- /ko -->
