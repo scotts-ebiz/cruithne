@@ -18,6 +18,8 @@ use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatch
 use SMG\Sap\Model\ResourceModel\SapOrderItem\CollectionFactory as SapOrderItemCollectionFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderShipment\CollectionFactory as SapOrderShipmentCollectionFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface as ScopeConfigInterface;
+use Zaius\Engage\Helper\Sdk as Sdk;
+
 class ShipmentHelper
 {
     /**
@@ -104,12 +106,17 @@ class ShipmentHelper
      * @var SapOrderShipmentCollectionFactory
      */
     protected $_sapOrderShipmentCollectionFactory;
-	
-	/**
+    
+    /**
      * @var scopeConfig
      */
     protected $_scopeConfig;
-	
+    
+    /**
+     * @var scopeConfig
+     */
+    protected $_zaiusSdk;
+    
    /**
    * Send Shipment Status
    */
@@ -151,7 +158,8 @@ class ShipmentHelper
         OrderManagementInterface $orderManagementInterface,
         ItemInterface $itemInterface,
         SapOrderShipmentCollectionFactory $sapOrderShipmentCollectionFactory,
-		ScopeConfigInterface $scopeConfig)
+        ScopeConfigInterface $scopeConfig,
+        Sdk $sdk)
     {
         $this->_logger = $logger;
         $this->_responseHelper = $responseHelper;
@@ -169,7 +177,8 @@ class ShipmentHelper
         $this->_orderManagementInterface = $orderManagementInterface;
         $this->_itemInterface = $itemInterface;
         $this->_sapOrderShipmentCollectionFactory = $sapOrderShipmentCollectionFactory;
-		$this->_scopeConfig = $scopeConfig;
+        $this->_scopeConfig = $scopeConfig;
+        $this->_zaiusSdk    = $sdk;
     }
 
     /**
@@ -204,9 +213,12 @@ class ShipmentHelper
 
             // send consumer service email
             $this->sendCustomerServiceEmails();
-			
-			// Zaius apiKey
-			$this->zaiusApiCall($orderId);
+            
+            // Zaius apiKey
+          if ($this->wasShipmentSuccessful($orderId))
+           {
+            $this->zaiusApiCall($orderId);
+           }
         }
 
         // return
@@ -389,36 +401,44 @@ class ShipmentHelper
             $this->_orderManagementInterface->notifyShipmentOrdersServiceTeam($this->_itemInterface);
         }
     }
-	
-	 private function zaiusApiCall($orderId)
+    
+     private function zaiusApiCall($orderId)
     {
+       $zaiusstatus = false;    
        $order = $this->_orderFactory->create();
        $this->_orderResource->load($order, $orderId);
-	   $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
+       $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
        $shipmentstatus = $this->_scopeConfig->getValue(self::XML_SEND_SHIPMENT_STATUS, $storeScope);
-	   if ($order->isSubscription() && $shipmentstatus == 1)
+       if ($order->isSubscription() && $shipmentstatus == 1)
         {
-			$apiKey = $this->getZaiusTrackerId($storeScope);
-            $privateKey = $this->getZaiusPrivateKey($storeScope);
-			$zaiusClient = new \ZaiusSDK\ZaiusClient($apiKey, $privateKey);
-			$email = $order->getCustomerEmail();
-			$productid = array();
-			foreach ($order->getAllVisibleItems() as $_item) {
-			        $productid[] = $_item->getProductId();                    
-			}
-			
-			$proid = implode(',', $productid);
-			$event = array();
-			$event['type'] = 'product';
-			$event['action'] = 'shipped';
-			$event['identifiers'] = ['email'=>$email];
-			$event['data'] = ['product_id'=>$proid];
-			$zaiusClient->postEvent($events);
-			$this->_customerServiceEmailIds[] = $orderId;
-		}
+        
+            $zaiusClient = $this->_zaiusSdk->getSdkClient($storeScope);
+            $email = $order->getCustomerEmail();
+            $productid = array();
+            foreach ($order->getAllVisibleItems() as $_item) {
+                    $productid[] = $_item->getProductId();                    
+            }
+            
+            $proid = implode(',', $productid);
+            $event = array();
+            $event['type'] = 'product';
+            $event['action'] = 'shipped';
+            $event['identifiers'] = ['email'=>$email];
+            $event['data'] = ['product_id'=>$proid];
+            $zaiusstatus = $zaiusClient->postEvent($events);
+            if($zaiusstatus)
+            {
+                $this->_customerServiceEmailIds[] = $orderId;
+                return true;
+            }
+            else
+            {
+                return false;
+            }
+        }
     }
-	
-	/**
+    
+    /**
      * @param \Magento\Store\Model\Store|int|null $store
      * @return string
      */
