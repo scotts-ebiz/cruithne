@@ -23,10 +23,6 @@ body {
             font-size: 1.5rem;
         }
     }
-    p {
-      //@include font-hellix-regular();//test - see if you can set else where
-      //font-size: 1.0rem; // test - remove for typo changes
-    }
 }
 
 [class^="icon-"],
@@ -276,8 +272,6 @@ body {
     }
 
     .page-main {
-        color: $mygro-gray;
-        font-size: 1rem;
         margin-top: 6rem;
 
         a:active,

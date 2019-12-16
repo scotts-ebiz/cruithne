@@ -669,9 +669,9 @@
     .price-including-tax,
     .price-excluding-tax,
     .weee {
-        @include lib-font-size(14);
-        display: inline-block;
-        white-space: nowrap;
+        //@include lib-font-size(14);//test - remove as not needed?
+        //display: inline-block;
+        //white-space: nowrap;
     }
 
     .price-including-tax + .price-excluding-tax {

@@ -1,4 +1,4 @@
-//
+//  ---------------------------------------------
 //  Typography
 //  ---------------------------------------------
 
@@ -19,14 +19,14 @@ $mygro-black-alt                                              : #231f20;
 $primary__color                                               : $mygro-green;
 $secondary__color                                             : $mygro-dark-green;
 $active__color                                                : $primary__color;
+$text__color                                                  : $mygro-gray; //sets body color
 
 
-//  Sizes
-$font-size__base                                              : 0.85rem; // Base font size value in px
-$font-size__xl                                                : 2.2rem;
-$font-size__l                                                 : 0.875rem;
-$font-size__s                                                 : 0.8rem;
-$font-size__xs                                                : 0.75rem;
+//  Links
+$link__color                                                  : $primary__color;
+$link__visited__color                                         : $primary__color;
+$link__hover__color                                           : $secondary__color;
+$link__active__color                                          : $primary__color;
 
 
 //  Fonts
@@ -43,18 +43,11 @@ $letter-spacing_base                                          : 0.5px;
 $letter-spacing_l                                             : 1.0px;
 
 
-//  Links
-$link__color                                                  : $primary__color;
-$link__visited__color                                         : $primary__color;
-$link__hover__color                                           : $secondary__color;
-$link__active__color                                          : $primary__color;
-
-
 //  Navigation
 $navigation-desktop-level0-item__color                        : $mygro-black;
 $navigation-desktop-level0-item__hover__color                 : $primary__color;
 $navigation-desktop-level0-item__active__color                : $primary__color;
-$navigation-desktop__font-size                                : $font-size__l;
+$navigation-desktop__font-size                                : $font-size__base;
 $navigation-desktop_letter-spacing                            : $letter-spacing_l; // custom var
 
 
@@ -64,7 +57,17 @@ $h1__margin-bottom__desktop                                   : $indent__xl !def
 
 
 
-//
+
+//  ---------------------------------------------
+//  Button
+//  ---------------------------------------------
+$button__shadow                                               : inset 0 2px 1px rgba(0, 0, 0, 0.12) !default;
+
+
+
+
+
+//  ---------------------------------------------
 //  Layout grid
 //  ---------------------------------------------
 
@@ -74,17 +77,18 @@ $header-icons-color-hover                                     : $color-gray20 !d
 
 
 
-//
+
+
+//  ---------------------------------------------
 //  Icons
 //  ---------------------------------------------
-//
-
 $icon-edit                                                    : '\e606' !default;
 
 
 
 
-//
+
+//  ---------------------------------------------
 //  Popups
 //  ---------------------------------------------
 
@@ -116,7 +120,9 @@ $checkout-shipping-address__max-width                         : 500px !default;
 
 
 
-//
+
+
+//  ---------------------------------------------
 //  Sidebar
 //  ---------------------------------------------
 
@@ -126,7 +132,8 @@ $sidebar__background-color                                    : $color-white-smo
 
 
 
-//
+
+//  ---------------------------------------------
 //  Variables missing in extend.scss
 //  ---------------------------------------------
 
@@ -136,7 +143,8 @@ $addto-hover-color                                            : $link__hover__co
 
 
 
-//
+
+//  ---------------------------------------------
 //  Product
 //  ---------------------------------------------
 
@@ -150,16 +158,11 @@ $product-name-link__text-decoration__active                   : $link__hover__te
 $product-name-link__text-decoration__hover                    : $link__hover__text-decoration !default;
 $product-name-link__text-decoration__visited                  : $link__hover__text-decoration !default;
 
-//
-//  Button
+
+
+
+
 //  ---------------------------------------------
-
-$button__shadow                                               : inset 0 2px 1px rgba(0, 0, 0, 0.12) !default;
-
-
-
-
-//
 //  Minicart
 //  ---------------------------------------------
 

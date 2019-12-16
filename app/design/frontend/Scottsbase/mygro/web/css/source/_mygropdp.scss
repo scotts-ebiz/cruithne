@@ -54,8 +54,6 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
             }
           }
           p {
-            font-size: 1.2rem;
-            line-height: 1.5rem;
             @media only screen and (max-width: $screen_768){
               font-size: 1.0rem;
               line-height: 1.2rem;
@@ -147,14 +145,10 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
               tr.grouped-row {
                 display: none;
                 td {
-                  color: #000000;
-                  font-size: 1.2rem;
                   @media only screen and (max-width: $screen_768){
                     font-size: 1.0rem;
                   }
                   p {
-                    color: #909090;
-                    font-size: 0.85rem;
                     @media only screen and (max-width: $screen_768){
                       font-size: 0.75rem;
                     }
@@ -162,8 +156,8 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
                   .price-box {
                     .price-container {
                       .price {
-                        color: #008065;
-                        font-size: 1.2rem;
+                        //color: #008065; //test - remove to test
+                        //font-size: 1.2rem; //test - remove to test
                       }
                     }
                   }
@@ -172,8 +166,6 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
                   width: 70%;
                   margin: 0;
                   padding: 0;
-                  color: #909090;
-                  font-size: 0.85rem;
                   &:before {
                     content: none;
                   }
