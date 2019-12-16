@@ -233,7 +233,7 @@ class Subscription implements SubscriptionInterface
         $customerGigyaId = $customerData['gigya_uid'];
 
         // Get customer's current subscriptions
-        $recurlySubscriptions = $this->getAccountSubscriptions($customer->getRecurlyAccountCode(), $quiz_id);
+        $recurlySubscriptions = $this->getAccountSubscriptions( $customerGigyaId, $quiz_id );
 
         // Get all items in the cart
         $mainQuote = $this->_checkoutSession->getQuote();
@@ -326,7 +326,7 @@ class Subscription implements SubscriptionInterface
                 $order->setSubscriptionId( $recurlySubscriptions[$seasonCode]['subscription_id'] );
 
                 // Set ship date for the subscription/order
-                $order->setShipDate( $recurlySubscriptions[$seasonCode]['starts_at'] );
+                $order->setShipStartDate( $recurlySubscriptions[$seasonCode]['starts_at'] );
 
                 // Set is addon subscription flag
                 $order->setSubscriptionAddon(false);
@@ -399,16 +399,19 @@ class Subscription implements SubscriptionInterface
             }
 
             // Set subscription id
-            $addonOrder->setSubscriptionId($recurlySubscriptions['add-ons']['subscription_id']);
+            if (isset($recurlySubscriptions['add-ons']['subscription_id'])) {
 
-            // Set ship date
-            $addonOrder->setShipDate($recurlySubscriptions['add-ons']['starts_at']);
+                $addonOrder->setSubscriptionId($recurlySubscriptions['add-ons']['subscription_id']);
 
-            // Set is addon subscription flag
-            $addonOrder->setSubscriptionAddon(true);
+                // Set ship date
+                $addonOrder->setShipDate($recurlySubscriptions['add-ons']['starts_at']);
 
-            // Save order
-            $addonOrder->save();
+                // Set is addon subscription flag
+                $addonOrder->setSubscriptionAddon(true);
+
+                // Save order
+                $addonOrder->save();
+            }
         }
 
         // Delete customer addresses, because we don't want to store them in the address book,
