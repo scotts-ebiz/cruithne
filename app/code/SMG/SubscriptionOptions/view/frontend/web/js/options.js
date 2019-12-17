@@ -8,6 +8,8 @@ define([
         results: ko.observable({}),
 
         initialize(config) {
+            const self = this;
+
             if (config.zip) {
                 window.sessionStorage.setItem('lawn-zip', config.zip);
             }
@@ -17,9 +19,35 @@ define([
             }
 
             if (config.quiz_id) {
-                this.loadQuizResults(config.quiz_id);
+                this.loadQuizResults(config.quiz_id, config.zip);
             } else {
                 this.getResults();
+            }
+
+            this.subscriptionType = ko.observable('annual');
+
+            this.products = ko.computed(() => {
+                return this.results().plan
+                    ? this.results().plan.coreProducts
+                    : [];
+            });
+
+            this.total = ko.computed(() => {
+                return this.products().reduce((sum, product) => {
+                    return sum + (+product.price * +product.quantity);
+                }, 0);
+            });
+
+            this.addOn = ko.computed(() => {
+                return this.results().plan
+                    ? this.results().plan.addOnProducts && this.results().plan.addOnProducts[0]
+                    : null;
+            });
+
+            this.selectPlan = (data, event) => {
+                if (event.target.checked) {
+                    self.subscriptionType(event.target.value);
+                }
             }
         },
 
@@ -27,16 +55,23 @@ define([
          * Load the quiz results from the recommendation API.
          *
          * @param id
+         * @param zip
          */
-        loadQuizResults(id) {
+        loadQuizResults(id, zip) {
             const self = this;
             const formKey = document.querySelector('input[name=form_key]').value;
+
+            const request = {
+                key: formKey,
+                id: id,
+                zip: zip
+            };
 
             $.ajax(
                 '/rest/V1/recommendations/quiz/result',
                 {
                     contentType: 'application/json; charset=utf-8',
-                    data: JSON.stringify({ key: formKey, id: id }),
+                    data: JSON.stringify(request),
                     dataType: 'json',
                     method: 'post',
                     success(data) {
@@ -108,6 +143,37 @@ define([
                     },
                 },
             );
+        },
+        formatDate: function (_date) {
+            const date = new Date(_date)
+
+            return [
+                date.getMonth() + 1, // Months are 0 based
+                date.getDate(),
+                date.getFullYear().toString().slice(2)
+            ].join('/')
+        },
+
+        productFeatures: function (product) {
+            return [
+                product.miniClaim1,
+                product.miniClaim2,
+                product.miniClaim3,
+            ].filter(x => !!x)
+        },
+
+        formatCurrency: function (num) {
+            try {
+                const format = Intl.NumberFormat('en-US', {
+                    style: 'currency',
+                    currency: 'USD',
+                    minimumFractionDigits: 2
+                });
+
+                return format.format(num);
+            } catch (e) {
+                return num
+            }
         },
     });
 });

@@ -1,84 +1,216 @@
 <!--ko if: hasResults()-->
-<div class="sp-container">
-    <h1 class="sp-h1 sp-mx-auto sp-text-green-1 sp-text-center">Subscription Options</h1>
-    <p class="sp-text-base sp-text-center">Choose whether you'd like to pay for your subscription annually or each time you receive your shipment.</p>
 
-    <div class="">
-    	<h2>Your Plan</h2>
-    	<div data-bind="foreach: { data: results().plan, as: 'plan' }">
-    		<ul data-bind="foreach: { data: plan.coreProducts, as: 'coreProduct' }">
-    			<li data-bind="text: coreProduct.season"></li>
-    		</ul>
-    	</div>
-    </div>
+<!--Your Plan-->
+<div class="sp-bg-green-4">
+	<div class="sp-container">
+		<div class="sp-mx-auto sp-pb-8 lg:sp-w-1/2">
+			<h1 class="sp-h1 sp-mx-auto sp-text-green-1 sp-text-center">Choose Your Subscription</h1>
+			<p class="sp-text-base sp-text-center">
+				Select a subscription option to continue with your purchase.
+			</p>
 
-    <div class="sp-flex sp-flex-column md:sp-flex-row md:sp-flex-wrap sp-items-center md:sp--mx-4">
-    	<div class="md:sp-w-1/2 sp-mb-12 sp-px-4 sp-order-1 md:sp-order-0">
-    		<div class="subscription-card --active">
-    			<div class="subscription-card-header">
-    				<h4>One Discounted Payment - Best value</h4>
-    			</div>
-    			<div class="subscription-card-body">
-    				<h3>Annual Subscription</h3>
-    				<p>Subscribe annually and save 10% off MSRP</p>
-    				<div class="subscription-card-price">
-    					<span class="--old-price">$ 59.96</span>
-    					<span class="--current-price">$ 86.00</span>
-    				</div>
-    				<ul>
-    					<li>Charged now</li>
-    					<li>Subscription will be auto-renewed unless canceled</li>
-    					<li>Includes 4 shipments (early April, late July, early September, and mid December)</li>
-    					<li>Free shipping</li>
-    				</ul>
-    			</div>
-    			<div class="subscription-card-footer">
-    				<label class="sp-text-uppercase">
-    					<input type="radio" name="subscription_plan" value="annual" checked /> Select annual
-    				</label>
-    			</div>
-    		</div>
-    	</div>
-    	<div class="md:sp-w-1/2 md:sp-mb-12 sp-order-0 md:sp-order-1">
-    		<div class="subscription-card">
-    			<div class="subscription-card-header">
-    				<h4>Pay Per Shipment</h4>
-    			</div>
-    			<div class="subscription-card-body">
-    				<h3>Seasonal Subscription</h3>
-    				<ul>
-    					<li>Charged at the time each shipment is shipped</li>
-    					<li>Subscription will be auto-renewed unless canceled</li>
-    					<li>Cancel anytime</li>
-    					<li>Free shipping</li>
-    				</ul>
-    			</div>
-    			<div class="subscription-card-footer">
-    				<label class="sp-text-uppercase">
-    					<input type="radio" name="subscription_plan" value="seasonal" /> Select seasonal
-    				</label>
-    			</div>
-    		</div>
-    	</div>
-    </div>
+			<div class="sp-options__your-plan sp-bg-white sp-pt-8 sp-pb-4 lg:sp-mx-8 md:sp-mx-auto sp-relative sp-rounded sp-my-8 md:sp-my-12">
+				<h2 class="sp-text-center sp-h4 sp-m-0 sp-mb-4 sp-uppercase">Your Plan</h2>
 
-    <div class="">
-    	<h2>Recommended one time add-ons</h2>
-    	<div data-bind="foreach: { data: results().plan, as: 'plan' }">
-    		<div data-bind="foreach: { data: plan.addOnProducts, as: 'addOnProduct' }">
-    			<h5 data-bind="text: addOnProduct.season"></h5>
-    			<label>
-    				<input type="checkbox" name="addon_products" data-bind="checkedValue: addOnProduct.sku" />
-    				<span data-bind="text: addOnProduct.season"></span>
-    			</label>
-    		</div>
-    	</div>
-    </div>
-
+				<ul
+					class="sp-options__list sp-flex sp-flex-row sp-flex-wrap sp-m-0 sp-p-0 sp-justify-around sp-relative"
+					data-bind="foreach: products()"
+				>
+					<li class="sp-options__your-plan-product sp-text-center sp-mx-4 md:sp-mx-0">
+						<img
+							class="sp-align-center sp-mb-1 sp-options__product-image"
+							data-bind="attr: { src: $data.thumbnailImage }"
+						/>
+						<div
+							class="sp-options__your-plan-label sp-text-center sp-p2"
+							data-bind="text: season"
+						>
+						</div>
+						<strong
+							class="sp-text-center sp-label"
+							data-bind="text: $parent.formatCurrency($data.price * $data.quantity)"
+						>
+						</strong>
+					</li>
+				</ul>
+			</div>
+		</div>
+	</div>
 </div>
-<div class="sp-bg-green-1 sp-py-4">
-    <div class="sp-container sp-flex sp-flex-column md:sp-flex-row sp-justify-end">
-        <a class="sp-button sp-button--inverted sp-order-0 md:sp-order-1 sp-mb-4 md:sp-mb-0" data-bind="click: proceedToCheckout">
+
+<!--Available Plans-->
+<div class="sp-relative sp-mb-16">
+	<div class="sp-options__plan-bg sp-bg-green-4"></div>
+    <div class="sp-container sp-relative sp-z-1">
+		<div class="sp-mx-auto lg:sp-w-5/6">
+			<div class="sp-options__plans sp-flex sp-flex-column md:sp-flex-row sp--mx-2">
+
+				<!--Annual Subscription-->
+				<div
+					class="sp-options__plan sp-mb-8 md:sp-mb-0 sp-px-2 md:sp-w-1/2"
+					data-bind="css: { 'sp-options__plan--selected': subscriptionType() === 'annual' }"
+				>
+					<label class="sp-options__plan-container sp-bg-white sp-flex sp-flex-column sp-h-full sp-rounded sp-shadow-md">
+						<h2 class="sp-options__plan-header sp-h4--long sp-my-0 sp-p-4 sp-text-center">
+							One Yearly Discounted Payment - Best Value
+						</h2>
+						<div class="sp-flex sp-flex-column sp-flex-auto sp-px-6 lg:sp-px-12">
+							<h3 class="sp-h2--long sp-mb-6">Annual Subscription</h3>
+							<p class="sp-mb-0 sp-p1 sp-text-green-1">Subscribe annually and save 10% off MSRP</p>
+							<div class="subscription-card-price sp-mb-6">
+								<span class="--old-price" data-bind="text: formatCurrency(total())"></span>
+								<span class="--current-price sp-h4--long sp-text-green-1" data-bind="text: formatCurrency(total() * .9)"></span>
+							</div>
+							<ul class="sp-pl-4">
+								<li class="sp-p1">Full amount charged now</li>
+								<li class="sp-p1">Subscription will be automatically renewed each year until canceled </li>
+								<li class="sp-p1">Free shipping</li>
+							</ul>
+							<div class="sp-options__plan-selector sp-flex-auto sp-flex sp-flex-column sp-justify-end">
+								<hr class="sp-options__divider sp-my-4 sp-w-full">
+								<div class="sp-flex sp-items-center sp-justify-center sp-mb-4 sp-text-center sp-text-uppercase">
+									<input
+										class="sp-radio sp-mr-1"
+										name="subscription_plan"
+										type="radio"
+										value="annual"
+										data-bind="
+											checked: subscriptionType(),
+											event: { input: selectPlan }
+										"
+									/>
+									<span class="sp-label">
+										Select annual
+									</span>
+								</div>
+							</div>
+						</div>
+					</label>
+				</div>
+
+				<!--Seasonal Subscription-->
+				<div
+					class="sp-options__plan sp-mb-8 md:sp-mb-0 sp-px-2 md:sp-w-1/2"
+					data-bind="css: { 'sp-options__plan--selected': subscriptionType() === 'seasonal' }"
+				>
+					<label class="sp-options__plan-container sp-bg-white sp-flex sp-flex-column sp-h-full sp-rounded sp-shadow-md">
+						<h2 class="sp-options__plan-header sp-h4--long sp-my-0 sp-p-4 sp-text-center">
+							Pay Per Shipment
+						</h2>
+						<div class="sp-flex sp-flex-column sp-flex-auto sp-px-6 lg:sp-px-12">
+							<h3 class="sp-h2--long sp-mb-6">Seasonal Subscription</h3>
+							<ul class="sp-pl-0" data-bind="foreach: products()" style="list-style: none">
+								<li class="sp-p1">
+									<span data-bind="text: $data.season"></span>
+									<strong data-bind="text: $parent.formatCurrency($data.price * $data.quantity)"></strong>
+								</li>
+							</ul>
+							<ul class="sp-pl-4">
+								<li class="sp-p1">Make multiple payments throughout the year</li>
+								<li class="sp-p1">Subscription will be automatically renewed each year until canceled </li>
+								<li class="sp-p1">Free shipping</li>
+							</ul>
+							<div class="sp-options__plan-selector sp-flex-auto sp-flex sp-flex-column sp-justify-end">
+								<hr class="sp-options__divider sp-my-4 sp-w-full">
+								<span class="sp-flex sp-items-center sp-justify-center sp-mb-4 sp-text-center sp-text-uppercase">
+									<input
+										class="sp-radio sp-mr-1"
+										name="subscription_plan"
+										type="radio"
+										value="seasonal"
+										data-bind="
+											checked: subscriptionType(),
+											event: { input: selectPlan }
+										"
+									/>
+									<span class="sp-label">
+										Select seasonal
+									</span>
+								</span>
+							</div>
+						</div>
+					</label>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+	<!--Recommended Add-ons-->
+	<!--ko if: addOn()-->
+	<div class="sp-options__add-ons sp-container sp-mb-16">
+		<div class="sp-container lg:sp-w-5/6">
+			<h4 class="sp-h4 sp-mb-4 sp-mt-0 sp-uppercase">
+				Recommended one time add-ons
+			</h4>
+			<hr class="sp-mt-4 sp-mb-8">
+
+			<!-- ko if: addOn().mentioned -->
+			<div class="sp-p1 sp-mb-4">
+				Because you mentioned
+				<strong data-bind="text: addOn().mentioned.toLowerCase()"></strong>
+			</div>
+            <!-- /ko -->
+
+			<div class="sp-options__add-on sp-px-4 sp-py-8 md:sp-p-8">
+				<div class="sp-flex sp-flex-column md:sp-flex-row sp-py-4 sp-px-8">
+					<div class="sp-flex-none sp-mb-2 md:sp-mb-0 md:sp-mr-8 sp-text-center">
+						<img
+							alt="Add-On Product"
+							class="sp-options__product-image sp-options__product-image--lg"
+							data-bind="attr: { src: addOn().thumbnailImage }"
+						/>
+					</div>
+					<div class="sp-flex-auto sp-text-center md:sp-text-left">
+						<div
+							class="sp-label sp-mb-4"
+							data-bind="text: formatCurrency(addOn().price)"
+						>
+						</div>
+						<h4 class="sp-h4--long sp-mb-4 sp-mt-0" data-bind="text: addOn().season"></h4>
+                        <p class="sp-p1 sp-hide md:sp-block" data-bind="text: addOn().description"></p>
+
+						<!--
+							@todo: Rasa - Add this once PDP is completed
+							@author: Sean Kegel
+							@date: 12/12/2019
+						<a class="sp-options__add-on-link sp-link" href="#">
+							More About This Product
+						</a>
+						-->
+
+						<hr class="sp-options__divider sp-mb-6 sp-mt-4">
+
+						<div class="sp-flex sp-flex-column md:sp-flex-row sp-items-center">
+							<label class="sp-flex-none sp-mb-2 md:sp-mb-0 md:sp-mr-8">
+								<input
+									class="sp-checkbox sp-options__add-on-checkbox sp-mr-1"
+									data-bind="checkedValue: $data.sku"
+									name="addon_products"
+									type="checkbox"
+								/>
+								<span class="sp-options__add sp-label sp-text-green-1">
+									Add to Order
+								</span>
+								<span class="sp-options__added sp-hide sp-label sp-text-green-1">
+									Added to Order
+								</span>
+							</label>
+							<div class="sp-flex-auto">
+								If you add this product to your order, it will
+								only be included in the first shipment.
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- /ko -->
+
+<div class="sp-options__footer sp-bg-green-1 sp-py-4">
+    <div class="sp-container sp-flex sp-flex-column md:sp-flex-row sp-items-center sp-justify-end">
+        <a class="sp-button sp-button--inverted sp-button--get-started sp-order-0 md:sp-order-1 sp-mb-4 md:sp-mb-0" data-bind="click: proceedToCheckout">
             Proceed to Checkout
         </a>
     </div>

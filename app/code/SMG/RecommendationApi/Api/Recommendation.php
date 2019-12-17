@@ -53,6 +53,16 @@ class Recommendation implements RecommendationInterface
     protected $_products = [];
 
     /**
+     * @var \SMG\SubscriptionApi\Model\ResourceModel\Subscription
+     */
+    protected $_subscription;
+
+    /**
+     * @var \SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory
+     */
+    protected $_subscriptionCollectionFactory;
+
+    /**
      * Recommendation constructor.
      * @param \SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
@@ -61,6 +71,7 @@ class Recommendation implements RecommendationInterface
      * @param \Magento\Framework\Controller\Result\JsonFactory $jsonResultFactory
      * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
      * @param \Magento\Framework\Session\SessionManagerInterface $coreSession
+     * @param \SMG\SubscriptionApi\Model\ResourceModel\Subscription $subscription
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Magento\Framework\Exception\NotFoundException
      */
@@ -71,7 +82,8 @@ class Recommendation implements RecommendationInterface
         \Magento\Framework\Webapi\Request $request,
         \Magento\Framework\Controller\Result\JsonFactory $jsonResultFactory,
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
-        \Magento\Framework\Session\SessionManagerInterface $coreSession
+        \Magento\Framework\Session\SessionManagerInterface $coreSession,
+        \SMG\SubscriptionApi\Model\ResourceModel\Subscription $subscription
     ) {
         $this->_recommendationHelper = $recommendationHelper;
         $this->_storeManager = $storeManager;
@@ -80,6 +92,7 @@ class Recommendation implements RecommendationInterface
         $this->_jsonResultFactory = $jsonResultFactory;
         $this->_productRepository = $productRepository;
         $this->_coreSession = $coreSession;
+        $this->_subscription = $subscription;
 
         // Check to make sure that the module is enabled at the store level
         if (! $this->_recommendationHelper->isActive($this->_storeManager->getStore()->getId())) {
@@ -94,11 +107,13 @@ class Recommendation implements RecommendationInterface
      * @return array|void
      * @throws SecurityViolationException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws Exception
      *
      * @api
      */
     public function new($key)
     {
+
         // Test the form key
         if ( ! $this->formValidation($key) ) {
             throw new SecurityViolationException(__('Unauthorized'));
@@ -130,14 +145,17 @@ class Recommendation implements RecommendationInterface
      *
      * @param mixed $key
      * @param mixed $id
-     * @param $answers
+     * @param mixed $answers
+     * @param string $zip
+     * @param string $lawnType
+     * @param string $lawnSize
      * @return array|null
      * @throws SecurityViolationException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      *
      * @api
      */
-    public function save($key, $id, $answers)
+    public function save($key, $id, $answers, $zip, $lawnType, $lawnSize)
     {
         // Test the form key
         if ( ! $this->formValidation($key) ) {
@@ -158,6 +176,13 @@ class Recommendation implements RecommendationInterface
             return null;
         }
 
+        $subscription = $this->findOrCreateSubscription(
+            $response,
+            $zip,
+            $lawnSize,
+            $lawnType
+        );
+
         // Get the product flat file so it is accessible.
         $this->getProducts($key);
 
@@ -174,12 +199,15 @@ class Recommendation implements RecommendationInterface
      *
      * @param mixed $key
      * @param string $id
+     * @param string $zip
+     * @param string $lawnType
+     * @param int $lawnSize
      * @return array
      * @throws SecurityViolationException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @api
      */
-    public function getResult($key, $id)
+    public function getResult($key, $id, $zip, $lawnType = '', $lawnSize = 0)
     {
         // Test the form key
         if ( ! $this->formValidation($key) ) {
@@ -206,6 +234,13 @@ class Recommendation implements RecommendationInterface
         if (empty($response)) {
             return null;
         }
+
+        $subscription = $this->findOrCreateSubscription(
+            $response,
+            $zip,
+            $lawnSize,
+            $lawnType
+        );
 
         // Get the product flat file so it is accessible.
         $this->getProducts($key);
@@ -412,6 +447,35 @@ class Recommendation implements RecommendationInterface
         }
 
         return;
+    }
+
+    /**
+     * Load a subscription if it exists or create it based on response.
+     *
+     * @param $response
+     * @param $zip
+     * @param $lawnSize
+     * @param $lawnType
+     * @return mixed|\SMG\SubscriptionApi\Model\Subscription
+     * @throws Exception
+     */
+    protected function findOrCreateSubscription($response, $zip, $lawnSize, $lawnType)
+    {
+        // Check to see if subscription already exists
+        try {
+            $subscription = $this->_subscription->getSubscriptionByQuizId($response[0]['id']);
+            /**
+             * @todo Wes/Sean Check status to make sure this is a valid subscription to checkout
+             * If this subscription status is not pending, we need to return an error.
+             * @author Sean Kegel
+             * @date 12/13/2019
+             */
+        } catch (\Exception $e) {
+            // Nope. Make it.
+            $subscription = $this->_subscription->createFromRecommendation($response, $zip, $lawnSize, $lawnType);
+        }
+
+        return $subscription;
     }
 
     /**

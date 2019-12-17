@@ -12,6 +12,12 @@ define([
         results: ko.observable({}),
         activeProductIndex: ko.observable(0), // for the tab menu
 
+        pdp: ko.observable({
+            visible: false,
+            activeTab: 'learn', // 'learn' or 'product_specs'
+            mode: 'plan', // 'plan' or 'subscription'
+        }),
+
         initialize(config) {
             const self = this
 
@@ -26,7 +32,7 @@ define([
             if (!config.quiz_id) {
                 self.loadQuizResponses();
             } else {
-                self.getCompletedQuiz(config.quiz_id);
+                self.loadQuizResults(config.quiz_id, config.zip);
             }
 
             const lawnArea = window.sessionStorage.getItem('lawn-area')
@@ -64,10 +70,16 @@ define([
             });
         },
 
-        getCompletedQuiz(id) {
+        loadQuizResults(id, zip) {
             const self = this;
             let minTimePassed = false;
             let formKey = document.querySelector('input[name=form_key]').value;
+
+            const request = {
+                key: formKey,
+                id: id,
+                zip: zip
+            };
 
             // Make sure loading screen appears for at least 3 seconds.
             setTimeout(() => {
@@ -81,7 +93,7 @@ define([
                 `/rest/V1/recommendations/quiz/result`,
                 {
                     contentType: 'application/json; charset=utf-8',
-                    data: JSON.stringify({ key: formKey, id: id }),
+                    data: JSON.stringify(request),
                     dataType: 'json',
                     method: 'post',
                     success(data) {
@@ -131,6 +143,8 @@ define([
             let formKey = document.querySelector('input[name=form_key]').value;
             let quiz = self.quiz();
             quiz["key"] = formKey;
+            quiz["lawnType"] = window.sessionStorage.getItem('lawn-type');
+            quiz["lawnSize"] = window.sessionStorage.getItem('lawn-area');
 
             // Make sure loading screen appears for at least 3 seconds.
             setTimeout(() => {
@@ -170,7 +184,7 @@ define([
         },
 
         formatDate: function (_date) {
-            const date = new Date(_date)
+            const date = new Date(_date);
 
             return [
                 date.getMonth() + 1, // Months are 0 based
@@ -212,6 +226,34 @@ define([
             }
 
             return 'https://test_magento_image_repo.storage.googleapis.com/' + icon
+        },
+
+        togglePDP: function () {
+            if (this.pdp().visible) {
+                // hide
+                $('body').removeClass('no-scroll');
+
+            } else {
+                // show
+                $('body').addClass('no-scroll');
+            }
+
+            this.pdp({
+                ...this.pdp(),
+                visible: !this.pdp().visible
+            });
+        },
+
+        setPDPTab: function (tab) {
+            this.pdp({ ...this.pdp(), activeTab: tab })
+        },
+
+        addToOrder: function () {
+            // TODO: Add the product to the order
+            this.togglePDP();
+        },
+
+        preventDefault: function () {
         }
     });
 });

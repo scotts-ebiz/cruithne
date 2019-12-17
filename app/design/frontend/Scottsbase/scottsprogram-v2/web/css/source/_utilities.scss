@@ -134,6 +134,10 @@ $colors: (
       flex: 1 1 auto;
     }
 
+    .#{$size}sp-flex-no-shrink {
+      flex-shrink: 0;
+    }
+
     .#{$size}sp-flex-none {
       flex: none;
     }
@@ -171,6 +175,9 @@ $colors: (
     }
     .#{$size}sp-justify-between {
       justify-content: space-between;
+    }
+    .#{$size}sp-justify-around {
+      justify-content: space-around;
     }
     .#{$size}sp-justify-center {
       justify-content: center;

@@ -53,6 +53,8 @@ define([
             totals.getItems().subscribe(function (items) {
                 this.setItems(items);
             }.bind(this));
+
+            this.subscriptionData = ko.observable(window.subscriptionData);
         },
 
         /**
@@ -75,6 +77,23 @@ define([
         getProductShortDescription: function(quoteItem) {
             var item = this.getItem(quoteItem.item_id);
             return item.product.short_description
+        },
+
+        /**
+         * Check if the given item is an add-on.
+         *
+         * @param item
+         * @returns {boolean}
+         */
+        isAddOn(item) {
+            if (!item) {
+                return false;
+            }
+
+            const product = this.getItem(item.item_id);
+            const addOn = this.subscriptionData() && this.subscriptionData().add_on;
+
+            return !!(product && addOn && +product.product_id === +addOn.entity_id);
         },
 
         /**

@@ -19,6 +19,7 @@
     </script>
     <script>
         window.checkoutConfig = <?= /* @escapeNotVerified */ $block->getSerializedCheckoutConfig() ?>;
+        window.subscriptionData = <?= /* @escapeNotVerified */ $block->getSubscription() ?>;
         // Create aliases for customer.js model from customer module
         window.isCustomerLoggedIn = window.checkoutConfig.isCustomerLoggedIn;
         window.customerData = window.checkoutConfig.customerData;
