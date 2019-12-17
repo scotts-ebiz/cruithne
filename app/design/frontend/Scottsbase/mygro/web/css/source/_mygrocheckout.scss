@@ -74,6 +74,12 @@
                             }
                         }
                     }
+                    [type="radio"] + label:before {
+                        border-color: $mygro-dark-green;
+                    }
+                    [type="radio"] + label:after {
+                        background: $mygro-dark-green;
+                    }
                 }
             }
         }
