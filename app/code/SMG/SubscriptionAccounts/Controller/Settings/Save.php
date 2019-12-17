@@ -43,6 +43,10 @@ class Save extends \Magento\Framework\App\Action\Action
      */
     protected $_subscriptionHelper;
 
+    protected $_objectManager;
+
+    protected $_accountManagement;
+
     /**
      * Save constructor.
      * 
@@ -60,10 +64,12 @@ class Save extends \Magento\Framework\App\Action\Action
         \Magento\Framework\App\RequestInterface $request,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Framework\Data\Form\FormKey $formKey,
-        \Magento\Framework\Encryption\EncryptorInterface $encryptor,
+        \Magento\Framework\Encryption\Encryptor $encryptor,
         \Magento\Customer\Model\Session $customerSession,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper
+        \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper,
+        \Magento\Framework\ObjectManagerInterface $objectManager,
+        \Magento\Customer\Model\AccountManagement $accountManagement
     ) {
         $this->_request = $request;
         $this->_messageManager = $messageManager;
@@ -72,39 +78,72 @@ class Save extends \Magento\Framework\App\Action\Action
         $this->_customerSession = $customerSession;
         $this->_storeManager = $storeManager;
         $this->_subscriptionHelper = $subscriptionHelper;
+        $this->_objectManager = $objectManager;
+        $this->_accountManagement = $accountManagement;
         parent::__construct($context);
     }
 
     public function execute()
     {
         // Check form key
-        if (! $this->formValidation($this->_request->getParam('form_key'))) {
-            throw new SecurityViolationException(__('Unauthorized'));
+        if ( ! $this->formValidation( $this->_request->getParam( 'form_key' ) ) ) {
+            throw new SecurityViolationException( __( 'Unauthorized' ) );
         }
 
+        // Get form data
         $request = $this->_request->getParams();
 
-        if( empty( $request['firstname'] ) || empty( $request['lastname'] ) ) {
-            $this->_messageManager->addErrorMessage('First Name and Last Name cannot be empty.');
-
-            $resultRedirect = $this->resultFactory->create( ResultFactory::TYPE_REDIRECT );
-            $resultRedirect->setUrl( $this->_redirect->getRefererUrl() );
-            return $resultRedirect;
-        } else {
-            // Update customer first and last name
-            $customer = $this->getCustomer();
-            $customer->setData( 'firstname', $request['firstname'] );
-            $customer->setData( 'lastname', $request['lastname'] );
-            $customer->save();
-
-            $this->_messageManager->addSuccessMessage('Account updated.');
-        }
-
-        // Redirect back to the customer page with a success or error message
         $resultRedirect = $this->resultFactory->create( ResultFactory::TYPE_REDIRECT );
         $resultRedirect->setUrl( $this->_redirect->getRefererUrl() );
 
+        // Get current customer
+        $customer = $this->getCustomer();
+
+        if( ! empty( $request['firstname'] ) && ! empty( $request['lastname'] ) && ! empty( $request['email'] ) ) {
+            $customer->setData( 'firstname', $request['firstname'] );
+            $customer->setData( 'lastname', $request['lastname'] );
+            $customer->setData( 'email', $request['email'] );
+            $customer->save();
+        } else {
+            $this->_messageManager->addErrorMessage( 'Account not updated. First Name, Last Name or Email is missing.' );
+
+            return $resultRedirect;
+        }
+
+        $isPasswordChanged = false;
+
+        // If current password is not empty
+        if( ! empty( $request['current_password'] ) ) {
+            if( ! empty( $request['new_password'] ) && ! empty( $request['confirm_new_password'] ) ) {
+                
+                if( $request['new_password'] != $request['confirm_new_password'] ) {
+                    $this->_messageManager->addErrorMessage( 'New passwords do not match.' );
+                    return $resultRedirect;
+                }
+
+                $isPasswordChanged = $this->_accountManagement->changePassword( $customer->getEmail(), $request['current_password'], $request['new_password'] );
+
+            } else {
+                $this->_messageManager->addErrorMessage( 'New passwords missing.' );
+                return $resultRedirect;
+            }
+        }
+
+        if( $isPasswordChanged == true ) {
+            $this->_messageManager->addSuccessMessage( 'Account details and password updated.' );
+        } else {
+            $this->_messageManager->addSuccessMessage( 'Account details updated.' );
+        }
+
         return $resultRedirect;
+    }
+
+    private function getCurrentPasswordHash($customerId){
+        $resource = $this->_objectManager->get('Magento\Framework\App\ResourceConnection');
+        $connection = $resource->getConnection();
+        $sql = "Select password_hash from customer_entity WHERE entity_id = ".$customerId;
+        $hash = $connection->fetchOne($sql);
+        return $hash;
     }
 
      /**
