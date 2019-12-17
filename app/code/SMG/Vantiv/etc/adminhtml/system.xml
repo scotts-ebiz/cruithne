@@ -2,7 +2,22 @@
     <system>
         <section id="payment">
              <group id="vantiv_payment" sortOrder="7" translate="label comment" showInDefault="1" showInWebsite="1" showInStore="1">
+<<<<<<< HEAD
                 <group id="vantiv_payment_keypadpayment" sortOrder="120" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="0">
+=======
+                <!-- Vantiv Credit Card Settings -->
+                <group id="vantiv_payment_cc" sortOrder="20" translate="label comment" type="text" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Credit Card Settings</label>
+                    <field id="admin_active" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Admin Active</label>
+                        <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                        <config_path>payment/vantiv_cc/admin_active</config_path>
+                    </field>
+                </group>
+
+                 <!-- Vantiv KeyPad Settings -->
+                 <group id="vantiv_payment_keypadpayment" sortOrder="120" translate="label" type="text" showInDefault="1" showInWebsite="1" showInStore="0">
+>>>>>>> staging
                     <label>Keypad Authorization</label>
                     <field id="active" translate="label" type="select" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="0">
                         <label>Active</label>

@@ -1,7 +1,3 @@
-# Set environment variable if this request is not for the home page
-# set the var ROBOTS_NOINDEX 
-SetEnvIf Request_URI !^test.scottsprogram\.com$ [NC] ROBOTS_NOINDEX
-
 ############################################
 ## hide directory listings
 
@@ -233,6 +229,12 @@ Options -Indexes
     RewriteRule ^$   https://ortho.test/ [R=301,L,QSA]
     RewriteCond %{HTTP_HOST} ^cruithne\.tomcatbrand\.local$ [NC]
     RewriteRule ^$   https://tomcatbrand.test/ [R=301,L,QSA]
+
+############################################
+## GOM1-50 Redirect M1 iframe uris to M2's for easier cutovers.
+    RewriteRule ^/?atgcart/add$    https://%{HTTP_HOST}/iframes/addtocart [R=302,NC,L,QSA]
+    RewriteRule ^/?atgcart/index$  https://%{HTTP_HOST}/iframes/cart [R=302,NC,L,QSA]
+    RewriteRule ^/?atgcart$        https://%{HTTP_HOST}/iframes/cart [R=302,NC,L,QSA]
 
 ############################################
 ## redirect for mobile user agents
