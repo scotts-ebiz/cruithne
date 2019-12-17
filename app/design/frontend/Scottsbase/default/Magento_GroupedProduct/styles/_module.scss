@@ -1,3 +1,12 @@
+// -----------------------
+// Grouped Product Styling
+// -----------------------
+
+.grouped-product-wrapper select {
+  font-weight: $font-weight__regular;
+  font-size: $font-size__l;
+}
+
 .table.grouped {
     @include lib-table-bordered(
         $_table_type: horizontal
@@ -7,14 +16,10 @@
         border-bottom: 0;
     }
 
-    .product-item-name {
-        font-weight: $font-weight__regular;
-    }
-
     .price-box {
         .price {
             font-size: $font-size__l;
-            color: $primary__color;;
+            color: $primary__color;
         }
     }
 
