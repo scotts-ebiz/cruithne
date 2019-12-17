@@ -214,11 +214,10 @@ class ShipmentHelper
                // Zaius apiKey
             $this->zaiusApiCall($orderId);
            }
-
-            // send consumer service email
-            $this->sendCustomerServiceEmails();
             
         }
+        // send consumer service email
+        $this->sendCustomerServiceEmails();
 
         // return
         return $orderStatusResponse;
@@ -406,10 +405,9 @@ class ShipmentHelper
 
        // load order from orderId
        $this->_orderResource->load($order, $orderId);
-       $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
 
        // get send shipment status
-       $shipmentstatus = $this->getSendShipmentStatus($storeScope);
+       $shipmentstatus = $this->getSendShipmentStatus();
 
        // check isSubcription and shipmentstatus
        if ($order->isSubscription() && $shipmentstatus)
@@ -439,7 +437,6 @@ class ShipmentHelper
             // check return values from the postevent function
             if($zaiusstatus)
             {
-                $this->_customerServiceEmailIds[] = $orderId;
                 $this->_logger->info("The order Id " . $orderId . " is passed successfully to zaius."); //saved in var/log/system.log
             }
             else
@@ -453,8 +450,8 @@ class ShipmentHelper
      * @param \Magento\Store\Model\Store|int|null $store
      * @return bool
      */
-    private function getSendShipmentStatus($store = null)
+    private function getSendShipmentStatus()
     {
-        return $this->_scopeConfigInterface->getValue('zaius_engage/status/send_shipment_status', $store);
+        return $this->_scopeConfigInterface->getValue('zaius_engage/status/send_shipment_status', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 }
