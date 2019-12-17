@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <!-- Remove links -->
+        <referenceBlock name="customer-account-navigation-orders-link" remove="true"/>
+        <referenceBlock name="customer-account-navigation-address-link" remove="true"/>
+        <referenceBlock name="customer-account-navigation-downloadable-products-link" remove="true"/>
+        <referenceBlock name="customer-account-navigation-newsletter-subscriptions-link" remove="true"/>
+        <referenceBlock name="customer-account-navigation-billing-agreements-link" remove="true"/>
+        <referenceBlock name="customer-account-navigation-product-reviews-link" remove="true"/>
+        <referenceBlock name="customer-account-navigation-my-credit-cards-link" remove="true"/>
+        <referenceBlock name="customer-account-navigation-account-link" remove="true"/>
+        <referenceBlock name="customer-account-navigation-account-edit-link" remove="true"/>
+        <referenceBlock name="customer-account-navigation-wish-list-link" remove="true"/>
+        <referenceBlock name="customer-account-navigation-checkout-sku-link" remove="true"/>
+        <referenceBlock name="customer-account-navigation-giftregistry-link" remove="true"/>
+        <referenceBlock name="customer-account-navigation-customer-balance-link" remove="true"/>
+        <referenceBlock name="customer-account-navigation-vantiv-subscriptions" remove="true" />
+        <referenceBlock name="customer-account-navigation-magento-invitation-link-container" remove="true"/>
+        <referenceBlock name="customer-account-navigation-delimiter-1" remove="true"/>
+        <referenceBlock name="customer-account-navigation-delimiter-2" remove="true"/>
+        <!-- Add new links -->
+        <referenceBlock name="customer_account_navigation">
+            <block class="Magento\Framework\View\Element\Html\Link\Current" name="customer-account-navigation-subscription-details" after="-">
+                <arguments>
+                    <argument name="path" xsi:type="string">account/subscription</argument>
+                    <argument name="label" xsi:type="string">Subscription Details</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+        <referenceBlock name="customer_account_navigation">
+            <block class="Magento\Framework\View\Element\Html\Link\Current" name="customer-account-navigation-account-settings" after="-">
+                <arguments>
+                    <argument name="path" xsi:type="string">account/settings</argument>
+                    <argument name="label" xsi:type="string">Account Settings</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+        <referenceBlock name="customer_account_navigation">
+            <block class="Magento\Framework\View\Element\Html\Link\Current" name="customer-account-navigation-account-billing" after="-">
+                <arguments>
+                    <argument name="path" xsi:type="string">account/billing</argument>
+                    <argument name="label" xsi:type="string">Billing Information</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

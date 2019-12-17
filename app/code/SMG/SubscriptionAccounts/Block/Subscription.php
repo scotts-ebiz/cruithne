@@ -1,5 +1,5 @@
 <?php
-namespace SMG\SubscriptionApi\Block\Subscription;
+namespace SMG\SubscriptionAccounts\Block;
 
 use Recurly_Client;
 use Recurly_SubscriptionList;
@@ -8,7 +8,7 @@ use Recurly_Invoice;
 use Recurly_InvoiceList;
 use Recurly_BillingInfo;
 
-class Details extends \Magento\Framework\View\Element\Template
+class Subscription extends \Magento\Framework\View\Element\Template
 {
     /**
      * @var \Magento\Customer\Model\Session

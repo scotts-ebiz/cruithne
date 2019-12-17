@@ -1,5 +1,5 @@
 <?php
-namespace SMG\SubscriptionApi\Controller\Details;
+namespace SMG\SubscriptionAccounts\Controller\Subscription;
 
 use Magento\Framework\App\RequestInterface;
 
@@ -8,7 +8,7 @@ class Index extends \Magento\Framework\App\Action\Action
     /**
      * @var \Magento\Customer\Model\Session
      */
-    private $_customerSession;
+    protected $_customerSession;
 
     /**
      * @param \Magento\Framework\App\Action\Context $context
