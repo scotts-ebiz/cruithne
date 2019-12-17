@@ -2,6 +2,7 @@
 
 namespace SMG\SubscriptionApi\Api;
 
+use Magento\Framework\Exception\LocalizedException;
 use \SMG\SubscriptionApi\Api\Interfaces\RecurlyInterface;
 use \Magento\Framework\Session\SessionManagerInterface as CoreSession;
 use \SMG\SubscriptionApi\Model\RecurlySubscription as RecurlySubscriptionModel;
@@ -85,7 +86,41 @@ class RecurlySubscription implements RecurlyInterface
      */
     public function cancelRecurlySubscription()
 	{
-        return $this->_recurlySubscriptionModel->cancelRecurlySubscription();
+	    // Cancel Recurly Subscriptions
+        try {
+
+            // Cancel recurly subscriptions
+            $cancelledSubscriptionIds = $this->_recurlySubscriptionModel->cancelRecurlySubscriptions( true, true );
+
+            // Find the master subscription id
+            $masterSubscriptionId = null;
+            foreach ( $cancelledSubscriptionIds as $planCode => $cancelledSubscriptionId ) {
+                if ( in_array( $planCode, ['annual', 'seasonal']) ) {
+                    $masterSubscriptionId = $cancelledSubscriptionId;
+                }
+            }
+            if ( is_null( $masterSubscriptionId ) ) {
+                throw new LocalizedException( __("Couldn't find the master subscription id.") );
+            }
+
+            // Find the subscription
+            /** @var \SMG\SubscriptionApi\Model\Subscription $subscription */
+            $subscription = $this->_subscriptionModel->getSubscriptionByMasterSubscriptionId( $masterSubscriptionId );
+
+            // Cancel subscription orders
+            $subscription->cancelSubscriptions( $this->_recurlySubscriptionModel );
+
+        } catch ( LocalizedException $e ) {
+            return json_encode(array(
+                'success' => false,
+                'message' => $e->getMessage()
+            ));
+        }
+
+        return json_encode(array(
+            'success' => true,
+            'message' => 'Subscriptions successfully cancelled.'
+        ));
 	}
 
 }

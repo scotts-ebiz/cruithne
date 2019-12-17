@@ -3,6 +3,7 @@
 namespace SMG\SubscriptionApi\Model\ResourceModel;
 
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\Framework\Model\ResourceModel\Db\Context;
 use SMG\SubscriptionApi\Model\SubscriptionFactory;
@@ -92,16 +93,15 @@ class Subscription extends AbstractDb
 
     /**
      * Get the subscription by quiz_id
-     * @param $quizId
+     * @param string $quizId
      * @return \SMG\SubscriptionApi\Model\Subscription|mixed
-     * @throws \Exception
+     * @throws LocalizedException
      */
-    public function getSubscriptionByQuizId( $quizId )
+    public function getSubscriptionByQuizId( string $quizId )
     {
 
         if ( ! empty( $quizId ) )
         {
-            // get the list of sapOrders for the provided orderId
             $subscriptions = $this->_subscriptionCollectionFactory->create();
             $subscriptions->addFieldToFilter('quiz_id', $quizId );
 
@@ -114,7 +114,31 @@ class Subscription extends AbstractDb
             }
         }
 
-        throw new \Exception('Subscription could not be found with quiz id.');
+        throw new LocalizedException( __('Subscription could not be found with quiz id.') );
+    }
+
+    /**
+     * Get subscription from master subscription id
+     * @param string $masterSubscription
+     * @return mixed
+     * @throws LocalizedException
+     */
+    public function getSubscriptionByMasterSubscriptionId( string $masterSubscription ) {
+        if ( ! empty( $masterSubscription ) )
+        {
+            $subscriptions = $this->_subscriptionCollectionFactory->create();
+            $subscriptions->addFieldToFilter('subscription_id', $masterSubscription );
+
+            foreach( $subscriptions as $subscription )
+            {
+                if ( ! empty($subscription) )
+                {
+                    return $subscription;
+                }
+            }
+        }
+
+        throw new LocalizedException( __('Subscription could not be found with Master Subscription Id.') );
     }
 
     /**

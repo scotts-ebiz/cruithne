@@ -2,11 +2,15 @@
 
 namespace SMG\SubscriptionApi\Model;
 
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Framework\Model\Context;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Model\OrderRepository;
+use SMG\Sales\Model\Order;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrderItem\CollectionFactory as SubscriptionAddonOrderItemCollectionFactory;
 
@@ -26,6 +30,12 @@ class SubscriptionAddonOrder extends AbstractModel
     /** @var SubscriptionOrderItemInterface */
     protected $_subscriptionAddonOrderItems;
 
+    /** @var OrderRepository */
+    protected $_orderRepository;
+
+    /** @var Order */
+    protected $_order;
+
     /**
      * Constructor.
      */
@@ -42,6 +52,7 @@ class SubscriptionAddonOrder extends AbstractModel
      * @param Registry $registry
      * @param SubscriptionHelper $subscriptionHelper
      * @param SubscriptionAddonOrderItemCollectionFactory $subscriptionAddonOrderItemCollectionFactory
+     * @param OrderRepository $orderRepository
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -51,6 +62,7 @@ class SubscriptionAddonOrder extends AbstractModel
         Registry $registry,
         SubscriptionHelper $subscriptionHelper,
         SubscriptionAddonOrderItemCollectionFactory $subscriptionAddonOrderItemCollectionFactory,
+        OrderRepository $orderRepository,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -66,6 +78,7 @@ class SubscriptionAddonOrder extends AbstractModel
 
         $this->_subscriptionHelper = $subscriptionHelper;
         $this->_subscriptionAddonOrderItemCollectionFactory = $subscriptionAddonOrderItemCollectionFactory;
+        $this->_orderRepository = $orderRepository;
     }
 
     /**
@@ -155,5 +168,29 @@ class SubscriptionAddonOrder extends AbstractModel
         }
 
         $this->save();
+    }
+
+    /**
+     * Create Credit Memo for Order
+     * @throws LocalizedException
+     */
+    public function createCreditMemo() {
+//        try {
+//            /** @var Order $order */
+//            $order = $this->getOrder();
+//            echo "<pre>"; var_dump($order); die;
+//            $invoices = $order->getInvoiceCollection();
+//            /** @var Invoice $invoice */
+//            foreach ( $invoices as $invoice ) {
+//                /** @var Creditmemo $creditmemo */
+//                $creditmemo = $this->_creditmemoFactory->createByOrder( $order );
+//                $creditmemo->setInvoice( $invoice );
+//                $creditmemo->save();
+//            }
+//
+//            echo "<pre>"; var_dump($order->getCreditmemosCollection()->count()); die;
+//        } catch ( \Exception $e ) {
+//            throw new LocalizedException( __('Could not create credit memo for order.') );
+//        }
     }
 }

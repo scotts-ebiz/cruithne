@@ -77,6 +77,9 @@ class Subscription implements SubscriptionInterface
     /** @var \Magento\Framework\Session\SessionManagerInterface */
     protected $_coreSession;
 
+    /** @var \Magento\Sales\Model\ResourceModel\Order\CollectionFactory */
+    private $_orderCollectionFactory;
+
     /**
      * Subscription constructor.
      * @param \SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper
@@ -98,6 +101,7 @@ class Subscription implements SubscriptionInterface
      * @param \Magento\Customer\Api\Data\AddressInterfaceFactory $dataAddressFactory
      * @param \Magento\Customer\Model\Address $customerAddress
      * @param \SMG\SubscriptionApi\Model\ResourceModel\Subscription $subscription
+     * @param \Magento\Framework\Session\SessionManagerInterface $coreSession
      */
     public function __construct(
         \SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper,
