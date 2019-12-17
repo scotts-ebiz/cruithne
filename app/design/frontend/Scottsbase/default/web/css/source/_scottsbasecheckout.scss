@@ -588,6 +588,9 @@
                     .actions .action.continue:before {
                         display: none;
                     }
+                    .checkout-shipping-disclaimer {
+                        display: none; // TEMPORARY TO HIDE THIS AREA UNTIL RESTYLING IS COMPLETE
+                    }
                 }
                 [type="radio"] {
                   position: absolute;
@@ -854,6 +857,8 @@ td#label_carrier_fedex-nextday_flatrate {
 .checkout-index-index {
     .table-checkout-shipping-method {
         margin-bottom: 10px;
+        margin-top: 20px;
+
         @media screen and (max-width: $screen__s) {
             font-size: 14px;
             margin-bottom: 24px;
