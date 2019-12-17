@@ -46,7 +46,6 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
       form {
         .grouped-title-section {
           h2.grouped-product-header {
-            color: #000000;
             margin-top: 1.0rem;
             margin-bottom: 1.0rem;
             @media only screen and (max-width: $screen_768){
@@ -63,27 +62,17 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
         .grouped-product-wrapper {
           margin-bottom: 20px;
           h5 {
-
-            font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
-            color:#222222;
-            font-size: 1.1rem;
             margin: 0 0 10px 0;
-            @media only screen and (max-width: $screen_768){
-              font-size: 0.9rem;
-            }
           }
           select {
             border-radius: 0px;
             border: 0px;
-
             outline: 1px inset #909090;
             outline-style: solid;
             height: 35px;
-
-            //font-size: 1.0rem;// test - removed size control from here and added to grouped php module style
-            @media only screen and (max-width: $screen_768){
-              font-size: 0.9rem;
-            }
+            //@media only screen and (max-width: $screen_768){ //test - moved to grouped product scss
+            //  font-size: 0.9rem;
+            //}
           }
         }
         .table-wrapper {
@@ -145,14 +134,14 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
               tr.grouped-row {
                 display: none;
                 td {
-                  @media only screen and (max-width: $screen_768){
-                    font-size: 1.0rem;
-                  }
-                  p {
-                    @media only screen and (max-width: $screen_768){
-                      font-size: 0.75rem;
-                    }
-                  }
+                  //@media only screen and (max-width: $screen_768){ // test - make sure this looks ok in mobile as 14px
+                  //  font-size: 1.0rem;
+                  //}
+                  //p { // test - make sure this looks ok in mobile as 14px
+                  //  @media only screen and (max-width: $screen_768){
+                  //    font-size: 0.75rem;
+                  //  }
+                  //}
                   .price-box {
                     .price-container {
                       .price {
@@ -172,9 +161,9 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
                   @media only screen and (max-width: $screen__l){
                     width: 55%;
                   }
-                  @media only screen and (max-width: $screen__m){
-                    font-size: 0.75rem;
-                  }
+                  //@media only screen and (max-width: $screen__m){
+                  //  font-size: 0.75rem;
+                  //}
                   @media only screen and (max-width: $screen__xs){
                     width: 100%;
                   }
@@ -221,9 +210,9 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
                   padding: 30px 0;
                 }
                 span{
-                  font-size: 1.3rem;
+                  font-size: $font-size__xl;
                   @media only screen and (max-width: $screen_768){
-                    font-size: 1.0rem;
+                    //font-size: 1.0rem; test - what does this look like in mobile?
                   }
                 }
               }
@@ -260,7 +249,7 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
             span {
               display: inline-block;
               width: 75px;
-              font-size: 0.75rem;
+              font-size: $font-size__s;
               line-height: 13px;
               vertical-align: top;
               margin-top: 10px;
@@ -288,7 +277,6 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
     width: 50%;
     margin-right: auto;
     margin-left: auto;
-    //background: #F0F2F5;
 
     @include max-screen($screen__m) {
       width: 90%;
@@ -306,20 +294,6 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
         @media (max-width: 639px){
           display:inline-block;
           width: 100%;
-        }
-        tr{
-          td:first-child{
-            @media (max-width: 639px){
-              //2019-08-10 Commented out for PDP styling / Break anything?
-              //width:85%;
-            }
-          }
-          td.qty:last-child{
-            @media (max-width: 639px){
-              //2019-08-10 - Commented out for PDP styling / Break anything?
-              //margin-top:10px;
-            }
-          }
         }
       }
     }

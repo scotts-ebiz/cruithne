@@ -43,6 +43,17 @@ $letter-spacing_base                                          : 0.5px;
 $letter-spacing_l                                             : 1.0px;
 
 
+// Custom Sizes
+$font-size__xxl                                               : 4.0rem;
+//mobile - h2
+//mobile - h5
+//mobile - pdp - Select list
+//mobile - pdp - product summary
+//mobile - pdp - Add to Cart
+
+
+
+
 //  Navigation
 $navigation-desktop-level0-item__color                        : $mygro-black;
 $navigation-desktop-level0-item__hover__color                 : $primary__color;
@@ -53,6 +64,20 @@ $navigation-desktop_letter-spacing                            : $letter-spacing_
 
 //  Headings
 $h1__margin-bottom__desktop                                   : $indent__xl !default;
+
+$h2__font-size                                                : $font-size__xxl;
+$h2__font-color                                               : $mygro-black;
+$h2__font-family                                              : $font-family__secondary;
+
+$h5__font-size                                                : $font-size__l;
+$h5__font-color                                               : $mygro-black;
+$h5__font-family                                              : $font-family__secondary;
+
+$h3__font-size                                                : $font-size__base;
+$h3__font-color                                               : $mygro-black;
+$h3__font-family                                              : $font-family__secondary;
+
+
 
 
 

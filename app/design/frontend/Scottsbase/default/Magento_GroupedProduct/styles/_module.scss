@@ -5,6 +5,9 @@
 .grouped-product-wrapper select {
   font-weight: $font-weight__regular;
   font-size: $font-size__l;
+  @media only screen and (max-width: $screen__m){
+      font-size: $font-size__base;
+  }
 }
 
 .table.grouped {

@@ -1,23 +1,8 @@
 // MyGro Base
-body { 
-    //@include font-hellix-regular();////test - see if you can set else where
-    //font-size: 1.2rem;// test - remove for typo changes
-    h1 {
-        //color: #333;
-    }
-    h2 {
-        @include lib-heading(h2);
-        //font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;//test - remove for vars
-        //font-size: 2.5rem;
-        //letter-spacing: 0.5px;
-        //@include lib-heading(h2);
-        //@media only screen and (max-width: $screen__l) {
-        //font-size: 2.1rem;
-        //}
-    }
+body {
     h3 {
-        font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
-        font-size: 1.8rem;
+        //font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
+        //font-size: 1.8rem;
         letter-spacing: 0.5px;
         @media only screen and (max-width: $screen__l) {
             font-size: 1.5rem;
@@ -223,8 +208,6 @@ body {
                     }
                 }
                 .nav-sections-item-content {
-                    //@include font-hellix-regular(0.875rem, $mygro-black, false, false, 1px);//test - remove for vars change
-                    //text-transform: uppercase;//test - remove for vars change
                     @include max-screen($screen__l) {
                         margin-top: 0;
                         padding: 0;
@@ -240,26 +223,15 @@ body {
                         ul {
                             li.level-top {
                                 a.level-top {
-                                    //color: $mygro-black;//test - remove for vars
-                                    //&:hover {
-                                    //    color: $mygro-green;
-                                    //    transition: color 0.2s linear;
-                                    //}
                                     span {
                                         @media only screen and (max-width: 1023px) {
                                             margin-left: 0;
                                         }
                                     }
                                 }
-                                //a.level-top.active {//test - remove for vars
-                                //    color: $mygro-green;
-                                //    @include font-hellix-heavy;
-                                //    border-style: none;
-                                //}
                             }
                             li.level0.active.level-top {
                                 a.level-top {
-                                    //color: $mygro-green;//test - remove for vars
                                     @include font-hellix-heavy;
                                     border-style: none;
                                 }
@@ -458,8 +430,6 @@ body {
                 }
             }
             h3 {
-                font-size: 1.2rem;
-                color: $mygro-black-alt;
                 margin-bottom: 0.25rem;
             }
             ul {
@@ -469,14 +439,16 @@ body {
                 display: inline-block;
                 li {
                     text-align: left;
-                  @media only screen and (max-width: $screen__s){
-                    text-align: center;
-                  }
-                    @include font-hellix-regular(0.875rem, $mygro-gray);
-
-                    //a {//test - commented out for testing!
-                    //    @include font-hellix-regular(0.875rem, $mygro-gray);
-                    //}
+                    @media only screen and (max-width: $screen__s){
+                        text-align: center;
+                    }
+                    a {
+                        color: $mygro-gray;
+                        font-size: $font-size__s;
+                        &:hover {
+                            color: $mygro-gray;
+                        }
+                    }
                 }
             }
             .mygro-footer-copyright {
