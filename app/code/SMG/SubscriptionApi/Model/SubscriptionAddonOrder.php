@@ -2,11 +2,17 @@
 
 namespace SMG\SubscriptionApi\Model;
 
-use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\Model\AbstractModel;
+use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
-use Magento\Framework\Model\Context;
+use Magento\Sales\Model\Order;
+use Magento\Framework\DB\Transaction;
+use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
+use Magento\Sales\Model\Service\InvoiceService;
+use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
+use SMG\Sap\Model\SapOrderBatch;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrderItem\CollectionFactory as SubscriptionAddonOrderItemCollectionFactory;
 
@@ -26,6 +32,27 @@ class SubscriptionAddonOrder extends AbstractModel
     /** @var SubscriptionOrderItemInterface */
     protected $_subscriptionAddonOrderItems;
 
+    /** @var Order */
+    protected $_order;
+
+    /** @var OrderCollectionFactory */
+    protected $_orderCollectionFactory;
+
+    /** @var InvoiceService */
+    protected $_invoiceService;
+
+    /** @var Transaction */
+    protected $_transaction;
+
+    /** @var Order\Email\Sender\InvoiceSender */
+    protected $_invoiceSender;
+
+    /** @var SapOrderBatch */
+    protected $_sapOrderBatch;
+
+    /** @var SapOrderBatchCollectionFactory */
+    private $_sapOrderBatchCollectionFactory;
+
     /**
      * Constructor.
      */
@@ -42,6 +69,10 @@ class SubscriptionAddonOrder extends AbstractModel
      * @param Registry $registry
      * @param SubscriptionHelper $subscriptionHelper
      * @param SubscriptionAddonOrderItemCollectionFactory $subscriptionAddonOrderItemCollectionFactory
+     * @param OrderCollectionFactory $orderCollectionFactory
+     * @param InvoiceService $invoiceService
+     * @param Transaction $transaction
+     * @param Order\Email\Sender\InvoiceSender $invoiceSender
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -51,11 +82,15 @@ class SubscriptionAddonOrder extends AbstractModel
         Registry $registry,
         SubscriptionHelper $subscriptionHelper,
         SubscriptionAddonOrderItemCollectionFactory $subscriptionAddonOrderItemCollectionFactory,
+        OrderCollectionFactory $orderCollectionFactory,
+        InvoiceService $invoiceService,
+        Transaction $transaction,
+        Order\Email\Sender\InvoiceSender $invoiceSender,
+        SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct(
             $context,
             $registry,
@@ -66,14 +101,20 @@ class SubscriptionAddonOrder extends AbstractModel
 
         $this->_subscriptionHelper = $subscriptionHelper;
         $this->_subscriptionAddonOrderItemCollectionFactory = $subscriptionAddonOrderItemCollectionFactory;
+        $this->_orderCollectionFactory = $orderCollectionFactory;
+        $this->_invoiceService = $invoiceService;
+        $this->_transaction = $transaction;
+        $this->_invoiceSender = $invoiceSender;
+        $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
     }
 
     /**
      * Generate the shipment dates for the subscription order
      * @throws \Exception
      */
-    public function generateShipDates() {
-        if ( is_null($this->getShipStartDate()) || $this->getShipStartDate() == '0000-00-00 00:00:00' ) {
+    public function generateShipDates()
+    {
+        if (is_null($this->getShipStartDate()) || $this->getShipStartDate() == '0000-00-00 00:00:00') {
             $this->generateShipStartDate();
             $this->generateShipEndDate();
         }
@@ -84,20 +125,20 @@ class SubscriptionAddonOrder extends AbstractModel
      * @param bool $selectedOnly
      * @return mixed
      */
-    public function getSubscriptionAddonOrderItems( bool $selectedOnly = false )
+    public function getSubscriptionAddonOrderItems(bool $selectedOnly = false)
     {
 
         // Make sure we have an actual subscription
-        if ( is_null( $this->getEntityId() ) ) {
+        if (is_null($this->getEntityId())) {
             return false;
         }
 
         // If subscription orders is local, send them, if not, pull them and send them
-        if ( ! isset($this->_subscriptionAddonOrderItems) ) {
+        if (! isset($this->_subscriptionAddonOrderItems)) {
             $subscriptionAddonOrderItems = $this->_subscriptionAddonOrderItemCollectionFactory->create();
-            $subscriptionAddonOrderItems->addFieldToFilter( 'subscription_addon_order_entity_id', $this->getEntityId() );
-            if ( $selectedOnly ) {
-                $subscriptionAddonOrderItems->addFieldToFilter( 'selected', 1 );
+            $subscriptionAddonOrderItems->addFieldToFilter('subscription_addon_order_entity_id', $this->getEntityId());
+            if ($selectedOnly) {
+                $subscriptionAddonOrderItems->addFieldToFilter('selected', 1);
             }
             $this->_subscriptionAddonOrderItems = $subscriptionAddonOrderItems;
         }
@@ -106,15 +147,103 @@ class SubscriptionAddonOrder extends AbstractModel
     }
 
     /**
+     * Create an invoice for the order.
+     *
+     * @return bool
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function createInvoice()
+    {
+        $order = $this->getOrder();
+
+        if (! $order || $order->hasInvoices() || ! $order->canInvoice()) {
+            return false;
+        }
+
+        $invoice = $this->_invoiceService->prepareInvoice($order);
+
+        if (! $invoice->getTotalQty()) {
+            throw new \Magento\Framework\Exception\LocalizedException(
+                __('You can\'t create an invoice without products.')
+            );
+        }
+
+        $invoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
+        $invoice->register();
+        $transaction = $this->_transaction
+            ->addObject($invoice)
+            ->addObject($invoice->getOrder());
+        $transaction->save();
+        $this->_invoiceSender->send($invoice);
+        $order->addStatusHistoryComment(
+            __('Notified customer about invoice #%1.', $invoice->getId())
+        )
+            ->setIsCustomerNotified(false)
+            ->save();
+
+        $today = date('Y-m-d H:i:s');
+        $sapOrderBatch = $this->getSapOrderBatch();
+
+        if ($sapOrderBatch) {
+            $sapOrderBatch->setData('is_capture', true);
+            $sapOrderBatch->setData('capture_process_date', $today);
+            $sapOrderBatch->save();
+        }
+
+        return true;
+    }
+
+    /**
+     * Get the related sales order record.
+     *
+     * @return \Magento\Framework\DataObject|Order|null
+     */
+    public function getOrder()
+    {
+        if ($this->_order) {
+            return $this->_order;
+        }
+
+        try {
+            $this->_order = $this->_orderCollectionFactory->create()->getItemById($this->getSalesOrderId());
+
+            return $this->_order;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
+     * Get the related SAP order batch record.
+     *
+     * @return SapOrderBatch|null
+     */
+    public function getSapOrderBatch()
+    {
+        if ($this->_sapOrderBatch) {
+            return $this->_sapOrderBatch;
+        }
+
+        try {
+            $this->_sapOrderBatch = $this->_sapOrderCollectionFactory->create()->getItemById($this->getSalesOrderId());
+
+            return $this->_sapOrderBatch;
+        } catch (\Exception $e) {
+            return null;
+        }
+    }
+
+    /**
      * Generate Ship Start Date
      * @throws \Exception
      */
-    private function generateShipStartDate() {
+    private function generateShipStartDate()
+    {
 
         // Grab the shipment open window from the admin
         $shippingOpenWindow = 0;
-        if ( ! empty($this->_subscriptionHelper->getShipDaysStart()) ) {
-            $shippingOpenWindow = filter_var( $this->_subscriptionHelper->getShipDaysStart(), FILTER_SANITIZE_NUMBER_INT );
+        if (! empty($this->_subscriptionHelper->getShipDaysStart())) {
+            $shippingOpenWindow = filter_var($this->_subscriptionHelper->getShipDaysStart(), FILTER_SANITIZE_NUMBER_INT);
         }
 
         // Calculate the Earliest Ship Start Date
@@ -123,10 +252,10 @@ class SubscriptionAddonOrder extends AbstractModel
         $todayDate = new \DateTime(date('Y-m-d 00:00:00'));
 
         // Take either Earliest Ship Start date of Today, whichever is greater
-        if ( $todayDate <= $earliestShipStartDate ) {
-            $this->setShipStartDate( $earliestShipStartDate );
+        if ($todayDate <= $earliestShipStartDate) {
+            $this->setShipStartDate($earliestShipStartDate);
         } else {
-            $this->setShipStartDate( $todayDate );
+            $this->setShipStartDate($todayDate);
         }
     }
 
@@ -134,24 +263,25 @@ class SubscriptionAddonOrder extends AbstractModel
      * Generate Ship End Date
      * @throws \Exception
      */
-    private function generateShipEndDate() {
+    private function generateShipEndDate()
+    {
 
         // Grab the shipment open window from the admin
         $shippingCloseWindow = 0;
-        if ( ! empty($this->_subscriptionHelper->getShipDaysEnd()) ) {
-            $shippingCloseWindow = filter_var( $this->_subscriptionHelper->getShipDaysEnd(), FILTER_SANITIZE_NUMBER_INT );
+        if (! empty($this->_subscriptionHelper->getShipDaysEnd())) {
+            $shippingCloseWindow = filter_var($this->_subscriptionHelper->getShipDaysEnd(), FILTER_SANITIZE_NUMBER_INT);
         }
 
         // Calculate the Earliest Ship Start Date
-        $earliestShipEndDate = new \DateTime( $this->getApplicationEndDate() );
-        $earliestShipEndDate->sub( new \DateInterval('P' . $shippingCloseWindow . 'D') );
+        $earliestShipEndDate = new \DateTime($this->getApplicationEndDate());
+        $earliestShipEndDate->sub(new \DateInterval('P' . $shippingCloseWindow . 'D'));
         $todayDate = new \DateTime(date('Y-m-d 00:00:00'));
 
         // Take either Earliest Ship Start date of Today, whichever is greater
-        if ( $todayDate <= $earliestShipEndDate ) {
-            $this->setShipEndDate( $earliestShipEndDate->format( 'Y-m-d H:i:s' ) );
+        if ($todayDate <= $earliestShipEndDate) {
+            $this->setShipEndDate($earliestShipEndDate->format('Y-m-d H:i:s'));
         } else {
-            $this->setShipEndDate( $todayDate->format( 'Y-m-d H:i:s' )  );
+            $this->setShipEndDate($todayDate->format('Y-m-d H:i:s'));
         }
 
         $this->save();

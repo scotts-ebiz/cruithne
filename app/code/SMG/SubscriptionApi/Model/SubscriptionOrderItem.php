@@ -8,6 +8,7 @@ use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
 
 /**
  * Class SubscriptionOrderItem
@@ -15,9 +16,14 @@ use Magento\Framework\Model\ResourceModel\AbstractResource;
  */
 class SubscriptionOrderItem extends AbstractModel
 {
-
     /** @var ProductRepository */
     protected $_productRepository;
+
+    /** @var SubscriptionOrder */
+    protected $_subscriptionOrder;
+
+    /** @var SubscriptionOrderCollectionFactory*/
+    protected $_subscriptionOrderCollectionFactory;
 
     /**
      * Constructor.
@@ -34,6 +40,7 @@ class SubscriptionOrderItem extends AbstractModel
      * @param Context $context
      * @param Registry $registry
      * @param ProductRepository $productRepository
+     * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -42,6 +49,7 @@ class SubscriptionOrderItem extends AbstractModel
         Context $context,
         Registry $registry,
         ProductRepository $productRepository,
+        SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -50,6 +58,7 @@ class SubscriptionOrderItem extends AbstractModel
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
 
         $this->_productRepository = $productRepository;
+        $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
     }
 
     /**
@@ -71,5 +80,73 @@ class SubscriptionOrderItem extends AbstractModel
         }
 
         return $this->_product;
+    }
+
+    /**
+     * Get the subscription ID of the order.
+     *
+     * @return string;
+     */
+    public function getSubscriptionId()
+    {
+        $subscriptionOrder = $this->getSubscriptionOrder();
+
+        if (! $subscriptionOrder) {
+            return '';
+        }
+
+        return $subscriptionOrder->getSubscriptionId();
+    }
+
+    /**
+     * Get the subscription order ship end date.
+     *
+     * @return string;
+     */
+    public function getShipEndDate()
+    {
+        $subscriptionOrder = $this->getSubscriptionOrder();
+
+        if (! $subscriptionOrder) {
+            return '';
+        }
+
+        return $subscriptionOrder->getShipEndDate();
+    }
+
+    /**
+     * Get the subscription order ship start date.
+     *
+     * @return string;
+     */
+    public function getShipStartDate()
+    {
+        $subscriptionOrder = $this->getSubscriptionOrder();
+
+        if (! $subscriptionOrder) {
+            return '';
+        }
+
+        return $subscriptionOrder->getShipStartDate();
+    }
+
+    /**
+     * Get the subscription order.
+     *
+     * @return bool|SubscriptionOrder
+     */
+    public function getSubscriptionOrder()
+    {
+        if ($this->_subscriptionOrder) {
+            return $this->_subscriptionOrder;
+        }
+
+        try {
+            $this->_subscriptionOrder = $this->_subscriptionOrderCollectionFactory->create()->getItemById($this->getSubscriptionOrderEntityId());
+        } catch (\Exception $e) {
+            return false;
+        }
+
+        return $this->_subscriptionOrder;
     }
 }
