@@ -76,6 +76,9 @@ define([
                 fieldsetName = 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset';
 
             this._super();
+            this.loading = ko.observable(false);
+            this.hasSubscription = ko.observable(false);
+            this.cancellingSubscription = ko.observable(false);
 
             // Check if customer has active subscription
             self.checkRecurlySubscriptions();
@@ -136,6 +139,8 @@ define([
         checkRecurlySubscriptions: function() {
             var self = this;
 
+            self.loading(true);
+
             $.ajax({
                 type: 'POST',
                 url: window.location.origin + '/rest/V1/subscription/check',
@@ -147,8 +152,10 @@ define([
                     var response = JSON.parse( response );
 
                     if( response.success === true && response.has_subscription === true ) {
+                        self.hasSubscription(true);
+
                         // Show modal
-                        $('body').append('<div id="popup-modal" class="modal-popup--subscriptions"><h5 class="sp-h5 sp-text-black sp-text-center">Confirm Your Cancellation</h5><h6 class="sp-h6 sp-text-black sp-text-center">By cancelling your subscription, the following will happen:</h6><div class="content"><ul><li>You will be refunded the following amount, which will appear in your account within 7 days: $' + response.refund_amount + '</li><li>You will no longer be billed</li><li>You will no longer receive product shipments</li><li>You will still have an online account with Scotts</li></ul><p class="sp-text-center"><strong>Questions or concerns? Contact us Monday through Friday betweeen 8am and 5pm EST at <a href="tel:18882703714">1-888-270-3714</a></strong></p><div class="modal-popup-cta sp-text-center"><button type="button" id="cancelSubscription" class="sp-button sp-button--primary">Cancel My Subscription</button></div><div class="sp-text-center"><a href="' + response.redirect_url + '">Nevermind, Take Me Back</a></div></div></div>');
+                        $('body').append('<div id="popup-modal" class="modal-popup--subscriptions"><h5 class="sp-h5 sp-text-black sp-text-center">Confirm Your Cancellation</h5><h6 class="sp-h6 sp-text-black sp-text-center">By cancelling your subscription, the following will happen:</h6><div class="content"><ul><li>You will be refunded the following amount, which will appear in your account within 7 days: $' + response.refund_amount + '</li><li>You will no longer be billed</li><li>You will no longer receive product shipments</li><li>You will still have an online account with Scotts</li></ul><p class="sp-text-center"><strong>Questions or concerns? Contact us Monday through Friday between 8am and 5pm EST at <a href="tel:18882703714">1-888-270-3714</a></strong></p><div class="modal-popup-cta sp-text-center"><button type="button" id="cancelSubscription" class="sp-button sp-button--primary">Cancel My Subscription</button></div><div class="sp-text-center"><a href="' + response.redirect_url + '">Nevermind, Take Me Back</a></div></div></div>');
 
                         var options = {
                             type: 'popup',
@@ -157,13 +164,21 @@ define([
                             buttons: [],
                             opened: function($Event) {
                                 $('.modal-header').remove();
-                            }
+                            },
+                            closed() {
+                                if (self.hasSubscription() && !self.cancellingSubscription()) {
+                                    self.cancelRecurlySubscription();
+                                }
+                            },
                         };
 
                         var popup = modal(options, $('#popup-modal'));
                         $('#popup-modal').modal('openModal');
                     }
-                }
+                },
+                complete() {
+                    self.loading(false);
+                },
             });
         },
 
@@ -171,7 +186,15 @@ define([
          * Cancel Recurly subscription
          *
          */
-        cancelRecurlySubscription: function() {
+        cancelRecurlySubscription() {
+            const self = this;
+            self.loading(true);
+            self.cancellingSubscription(true);
+
+            $('button#cancelSubscription')
+                .addClass('sp-button--loading')
+                .addClass('sp-button--inactive');
+
             $.ajax({
                 type: 'POST',
                 url: window.location.origin + '/rest/V1/subscription/cancel',
@@ -179,14 +202,23 @@ define([
                 contentType: 'application/json',
                 processData: false,
                 success: function(response) {
-                    var response = JSON.parse(response);
+                    response = JSON.parse(response);
                     if( response.success === true ) {
+                        self.hasSubscription(false);
                         $('#popup-modal').modal('closeModal');
                     } else {
                         alert( response.message );
                         $('#popup-modal').modal('closeModal');
                     }
-                }
+                },
+                complete() {
+                    self.loading(false);
+                    self.cancellingSubscription(false);
+
+                    $('button#cancelSubscription')
+                        .removeClass('sp-button--loading')
+                        .removeClass('sp-button--inactive');
+                },
             })
         },
 

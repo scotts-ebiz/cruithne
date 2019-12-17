@@ -9,6 +9,7 @@ define([
 
         initialize(config) {
             const self = this;
+            this.loading = ko.observable(false);
 
             if (config.zip) {
                 window.sessionStorage.setItem('lawn-zip', config.zip);
@@ -67,6 +68,8 @@ define([
                 zip: zip
             };
 
+            this.loading(true);
+
             $.ajax(
                 '/rest/V1/recommendations/quiz/result',
                 {
@@ -89,6 +92,9 @@ define([
                             window.sessionStorage.setItem('quiz-id', data.id);
                         }
                     },
+                    complete() {
+                        self.loading(false);
+                    }
                 }
             )
         },
@@ -119,6 +125,8 @@ define([
 
 			const self = this;
 
+			this.loading(true);
+
 			$.ajax(
                 `/rest/V1/subscription/process`,
                 {
@@ -138,20 +146,24 @@ define([
                             window.sessionStorage.setItem('subscription_plan', subscriptionPlan );
                         	window.location.href = '/checkout/#shipping';
                         } else {
+                            self.loading(false);
                             alert( 'Error creating your order ' + data.message + '. Please try again.' );
                         }
+                    },
+                    error() {
+                        self.loading(false);
                     },
                 },
             );
         },
         formatDate: function (_date) {
-            const date = new Date(_date)
+            const date = new Date(_date);
 
             return [
                 date.getMonth() + 1, // Months are 0 based
                 date.getDate(),
                 date.getFullYear().toString().slice(2)
-            ].join('/')
+            ].join('/');
         },
 
         productFeatures: function (product) {
@@ -159,7 +171,7 @@ define([
                 product.miniClaim1,
                 product.miniClaim2,
                 product.miniClaim3,
-            ].filter(x => !!x)
+            ].filter(x => !!x);
         },
 
         formatCurrency: function (num) {
@@ -172,7 +184,7 @@ define([
 
                 return format.format(num);
             } catch (e) {
-                return num
+                return num;
             }
         },
     });
