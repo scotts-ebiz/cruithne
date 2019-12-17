@@ -23,12 +23,9 @@ RUN mkdir -p $MAGENTO_DIR/var/import/images && gsutil -q -m rsync -r -u gs://mag
 RUN git fetch --all
 RUN git reset --hard
 RUN git pull
-RUN ls -la /var/www/html/magento2/
+
 RUN composer install
 
-# Force the correct .htaccess file even after composer install (Sometimes composer install overwrites .htaccess)
-RUN git checkout .htaccess
-RUN ls -la /var/www/html/magento2/
 RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools
 
 USER root
