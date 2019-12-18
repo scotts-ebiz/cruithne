@@ -1,6 +1,6 @@
 <?php
 
-namespace SMG\SubscriptionCheckout\Controller\Account;
+namespace SMG\SubscriptionCheckout\Plugin\Controller\Account;
 
 /**
  * Class LoginPost
