@@ -1,78 +1,146 @@
-<h2>Subscription Details</h2>
-<?php if( ! empty( $block->getSubscriptions() ) ) { 
-	$subscription = $block->getSubscriptions();
-?>
-<div>
-	<table>
-		<tbody>
-			<tr>
-				<th>Type</th>
-				<td><?php echo ( $subscription['is_annual'] === true ) ? 'Annual' : 'Seasonal'; ?></td>
-			</tr>
-			<tr>
-				<th>Start date</th>
-				<td><?php echo $subscription['annual_subscription'][0]->current_period_started_at->format('d F, Y'); ?></td>
-			</tr>
-			<tr>
-				<th>Renewal date</th>
-				<td><?php echo ( $subscription['annual_subscription'][0]->auto_renew === true ) ? $subscription['annual_subscription'][0]->current_period_ends_at->format('d F, Y') : 'Not renewing'; ?></td>
-			</tr>
-			<tr>
-				<th>Latest invoice</th>
-				<td><a href="#">#<?php echo $subscription['annual_subscription'][0]->invoice->get()->invoice_number; ?></a></td>
-			</tr>
-			<tr>
-				<th>Billing Information</th>
-				<td>Ending in <?php echo $block->getBillingInformation()->last_four; ?> <a href="#">Edit</a></td>
-			</tr>
-		</tbody>
-	</table>
+<div class="sp-subscription-details sp-container">
+    <div class="sp-flex sp-justify-between sp-items-center">
+        <h2 class="sp-h2 sp-text-center md:sp-text-left">Subscription Details</h2>
+        <a class="sp-link sp-hide md:sp-block"
+           href="#">Log Out</a>
+    </div>
 
-	<h3>Next billing on [INSERT DATE]</h3>
-	<table>
-		<tbody>
-			<tr>
-				<td><?php echo ( $subscription['is_annual'] === true ) ? '1 x Annual' : '4 x Seasonaly';; ?></td>
-				<td>$<?php echo ( $subscription['is_annual'] === true ) ? $this->convertAmountToDollars( $subscription['annual_subscription'][0]->unit_amount_in_cents ) : '[TO BE UPDATED]'; ?></td>
-			</tr>
-			<tr>
-				<td>1 Add On Item</td>
-				<td>$[ INSERT AMOUNT ]</td>
-			</tr>
-			<tr>
-				<td><strong>Current total</strong></td>
-				<td><strong>$<?php echo ( $subscription['is_annual'] === true ) ? $this->convertAmountToDollars( $subscription['annual_subscription'][0]->unit_amount_in_cents ) : '[TO BE UPDATED]'; ?></strong></td>
-			</tr>
-		</tbody>
-	</table>
+    <div class="sp-flex sp-items-center sp-py-8 sp-px-4 sp-mt-8 sp-subscription-details--border-bottom">
+        <h3 class="sp-h4 sp-uppercase">subscription</h3>
+        <div class="sp-label sp-uppercase sp-ml-auto md:sp-ml-4">active</div>
 
-	<?php if( ! empty( $block->getInvoices() ) ) { ?>
-	<h2>INVOICES</h2>
-	<table>
-		<thead>
-			<tr>
-				<th>Invoice Number</th>
-				<th>Issued On</th>
-				<th>Due on</th>
-				<th>Paid</th>
-				<th>Total</th>
-			</tr>
-		</thead>
-		<tbody>
-			<?php foreach( $block->getInvoices() as $invoiceId ) { $invoice = $block->getInvoice( $invoiceId ); ?>
-			<tr>
-				<td><a href="#">#<?php echo $invoice->invoice_number; ?></a></td>
-				<td><?php echo $invoice->created_at->format('d F, Y'); ?></td>
-				<td><?php echo $invoice->due_on->format('d F, Y'); ?></td>
-				<td><?php echo ( $invoice->state == 'paid' ) ? 'yes' : 'no'; ?></td>
-				<td>$<?php echo $block->convertAmountToDollars( $invoice->total_in_cents ); ?></td>
-			</tr>
-			<?php } ?>
-		</tbody>
-	</table>
-	<?php } ?>
+        <div class="sp-hide md:sp-block sp-subscription-details__desktop-links">
+            <a class="sp-link">Lawn conditions changed?</a>
+            <a class="sp-link sp-inline-block sp-ml-4">Cancel Subscription</a>
+        </div>
+    </div>
 
+    <div class="md:sp-flex md:sp-mt-12">
+        <div class="sp-p-8 sp-flex-auto">
+            <table>
+
+                <tbody>
+                    <tr>
+                        <th class="sp-label">Type</th>
+                        <td>Seasonal</td>
+                    </tr>
+                    <tr>
+                        <th class="sp-label">Start date</th>
+                        <td>Aug 21, 2019</td>
+                    </tr>
+                    <tr>
+                        <th class="sp-label">Renewal date</th>
+                        <td>
+                            Aug 21, 2020
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="sp-label">Latest invoice</th>
+                        <td><a class="sp-link"
+                               href="#">#202</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th class="sp-label">Billing Information</th>
+                        <td>Ending in 4444 <a class="sp-link"
+                               href="#">Edit</a></td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <div class="md:sp-hide sp-mt-8">
+                <a class="sp-link sp-block">Lawn conditions changed?</a>
+                <a class="sp-link sp-block">Cancel Subscription</a>
+            </div>
+        </div>
+
+
+        <div class="sp-subscription-details__next-billing sp-p-8 md:sp-p-16 sp-flex-auto">
+            <h3 class="sp-label">Next Billing on October 21, 2019</h3>
+            <table>
+                <tbody>
+                    <tr class="screen-reader-text">
+                        <th class="sp-label">Item</th>
+                        <th class="sp-label">cost</th>
+                    </tr>
+                    <tr>
+                        <td>1 x Annual</td>
+                        <td>$30.00 USD</td>
+                    </tr>
+                    <tr class="--dense">
+                        <td>1 Add On Item</td>
+                        <td>$1000</td>
+                    </tr>
+                    <tr class="sp-subscription-details__next-billing-total">
+                        <td>Current Total</td>
+                        <td>$30.00 USD</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <div class="sp-flex sp-justify-between sp-items-center sp-py-8 sp-px-4 sp-subscription-details--border-bottom">
+        <h3 class="sp-h4">INVOICES</h2>
+    </div>
+
+    <div class="sm:sp-px-8">
+        <table class="sp-subscription-details__invoices">
+            <thead>
+                <tr>
+                    <th class="sp-label">Invoice Number</th>
+                    <th class="sp-label">Issued On</th>
+                    <th class="sp-label">Due On</th>
+                    <th class="sp-label">Paid</th>
+                    <th class="sp-label">Total</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td data-label="Invoice Number"><a class="sp-link"
+                           href="#">#202</a></td>
+                    <td data-label="Issued On">Aug 21, 2019</td>
+                    <td data-label="Due On">Sept 01, 2019</td>
+                    <td data-label="Paid">Yes</td>
+                    <td data-label="Total"
+                        class="sp-subscription-details__bold">$119.98</td>
+                </tr>
+                <tr>
+                    <td data-label="Invoice Number"><a class="sp-link"
+                           href="#">#202</a></td>
+                    <td data-label="Issued On">Aug 21, 2019</td>
+                    <td data-label="Due On">Sept 01, 2019</td>
+                    <td data-label="Paid"
+                        class="sp-text-red-1">No</td>
+                    <td data-label="Total"
+                        class="sp-subscription-details__bold">$119.98</td>
+                </tr>
+                <tr>
+                    <td data-label="Invoice Number"><a class="sp-link"
+                           href="#">#202</a></td>
+                    <td data-label="Issued On">Aug 21, 2019</td>
+                    <td data-label="Due On">Sept 01, 2019</td>
+                    <td data-label="Paid">Yes</td>
+                    <td data-label="Total"
+                        class="sp-subscription-details__bold">$119.98</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>
-<?php } else { ?>
-<p>No subscription</p>
-<?php } ?>
+
+<script type="text/x-magento-init">
+   {
+        "*": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "subscription-details": {
+						"component": "SMG_SubscriptionAccounts/js/subscription-details",
+						"subscriptions": <?php echo json_encode($block->getSubscriptions()); ?>,
+						"invoices": <?php echo json_encode($block->getInvoices()); ?>
+					}
+                }
+            }
+        }
+    }
+</script>
