@@ -46,7 +46,7 @@
 			</tr>
 			<tr>
 				<th>Latest invoice</th>
-				<td><a href="#">#<?php echo $result['active_subscription']->invoice->get()->invoice_number; ?></a></td>
+				<td><a href="/account/subscription/pdf/invoice/<?php echo $result['active_subscription']->invoice->get()->invoice_number; ?>">#<?php echo $result['active_subscription']->invoice->get()->invoice_number; ?></a></td>
 			</tr>
 			<tr>
 				<th>Billing Information</th>
@@ -90,7 +90,7 @@
 		<tbody>
 			<?php foreach( $result['invoices'] as $invoiceId ) { $invoice = $block->getInvoice( $invoiceId ); ?>
 			<tr>
-				<td><a href="#">#<?php echo $invoice->invoice_number; ?></a></td>
+				<td><a href="/account/subscription/pdf/invoice/<?php echo $invoice->invoice_number; ?>">#<?php echo $invoice->invoice_number; ?></a></td>
 				<td><?php echo $invoice->created_at->format('M d, Y'); ?></td>
 				<td><?php echo $invoice->due_on->format('M d, Y'); ?></td>
 				<td><?php echo ( $invoice->state == 'paid' ) ? 'yes' : 'no'; ?></td>
