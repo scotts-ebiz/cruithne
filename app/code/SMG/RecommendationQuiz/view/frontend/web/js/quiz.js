@@ -448,67 +448,15 @@ define([
             } else {
                 // Find the animation based on the answer.
                 for (const animation of animations) {
-                    let isCorrectAnimation = false;
-                    for (const condition of animation.conditions) {
-                        let values = self.getQuestionAnswer(condition.questionId, true) || [];
-
-                        if (values && !Array.isArray(values)) {
-                            values = [values];
-                        }
-
-                        switch (condition.conditionType) {
-                            case 1:
-                                // Make sure at least one selected option is in
-                                // the condition values.
-                                for (value of values) {
-                                    if (condition.values.includes(value)) {
-                                        isCorrectAnimation = true;
-                                        break;
-                                    }
-                                }
-
-                                break;
-                            case 2:
-                                // Make sure all values selected by the user
-                                // are in the condition.
-                                let hasAllValues = true;
-                                for (value of values) {
-                                    if (!condition.values.includes(value)) {
-                                        hasAllValues = false;
-                                        break;
-                                    }
-                                }
-
-                                if (hasAllValues) {
-                                    isCorrectAnimation = true;
-                                }
-
-                                break;
-                            case 3:
-                                // Make sure the condition value include no
-                                // user selected values.
-                                let hasValue = false;
-                                for (value of values) {
-                                    if (condition.values.includes(value)) {
-                                        hasValue = true;
-                                        break;
-                                    }
-                                }
-
-                                if (!hasValue) {
-                                    isCorrectAnimation = true;
-                                }
-
-                                break;
-                        }
-
-                        if (!isCorrectAnimation) {
-                            break;
-                        }
+                    // No required conditions for this animation, so just use it.
+                    if (!animation.conditions.length) {
+                        self.animation(animation);
+                        break;
                     }
 
-                    if (isCorrectAnimation) {
+                    if (self.testConditions(animation.conditions)) {
                         self.animation(animation);
+                        break;
                     }
                 }
             }
@@ -722,6 +670,7 @@ define([
                 if (answer.questionId === questionID && answer.optionId) {
                     if (id) {
                         answers.push(answer.optionId);
+                        continue;
                     }
 
                     answers.push(answer.optionalValue || answer.optionId);
@@ -878,68 +827,14 @@ define([
             }
 
             // Loop through the transitions and compare the values to see where we should redirect.
-            for (var transition of transitions) {
-                let isCorrectTransition = false;
-
-                for (var condition of transition.conditions) {
-                    let values = self.getQuestionAnswer(condition.questionId, true) || [];
-
-                    if (values && !Array.isArray(values)) {
-                        values = [values];
-                    }
-
-                    switch (condition.conditionType) {
-                        case 1:
-                            // Make sure at least one selected option is in
-                            // the condition values.
-                            for (value of values) {
-                                if (condition.values.includes(value)) {
-                                    isCorrectTransition = true;
-                                    break;
-                                }
-                            }
-
-                            break;
-                        case 2:
-                            // Make sure all values selected by the user
-                            // are in the condition.
-                            let hasAllValues = true;
-                            for (value of values) {
-                                if (!condition.values.includes(value)) {
-                                    hasAllValues = false;
-                                    break;
-                                }
-                            }
-
-                            if (hasAllValues) {
-                                isCorrectTransition = true;
-                            }
-
-                            break;
-                        case 3:
-                            // Make sure the condition value include no
-                            // user selected values.
-                            let hasValue = false;
-                            for (value of values) {
-                                if (condition.values.includes(value)) {
-                                    hasValue = true;
-                                    break;
-                                }
-                            }
-
-                            if (!hasValue) {
-                                isCorrectTransition = true;
-                            }
-
-                            break;
-                    }
-
-                    if (!isCorrectTransition) {
-                        break;
-                    }
+            for (const transition of transitions) {
+                // No required conditions for this transition, so just use it.
+                if (!transition.conditions.length) {
+                    self.loadNextGroup(self.findQuestionGroup(transition.destinationQuestionGroupId));
+                    return;
                 }
 
-                if (isCorrectTransition) {
+                if (self.testConditions(transition.conditions)) {
                     self.loadNextGroup(self.findQuestionGroup(transition.destinationQuestionGroupId));
                     return;
                 }
@@ -947,6 +842,81 @@ define([
 
             // No transitions remaining so the quiz is complete.
             self.completeQuiz();
+        };
+
+        /**
+         * Test a group of transition/animation conditions.
+         *
+         * @param conditions
+         * @returns {boolean}
+         */
+        self.testConditions = function (conditions) {
+            for (var condition of conditions) {
+                // Condition failed, return false.
+                if (! self.testCondition(condition)) {
+                    return false;
+                }
+            }
+
+            return true;
+        };
+
+        /**
+         * Test a single condition.
+         *
+         * @param condition
+         * @returns {boolean}
+         */
+        self.testCondition = function (condition) {
+            let values = self.getQuestionAnswer(condition.questionId, true) || [];
+
+            if (values && !Array.isArray(values)) {
+                values = [values];
+            }
+
+            switch (condition.conditionType) {
+                case 1:
+                    // Make sure at least one selected option is in
+                    // the condition values.
+                    let passed = false;
+                    for (value of values) {
+                        if (condition.values.includes(value)) {
+                            passed = true;
+                            break;
+                        }
+                    }
+
+                    // No value existed in conditions so it did not pass.
+                    if (!passed) {
+                        return false;
+                    }
+
+                    break;
+                case 2:
+                    // Make sure all values selected by the user
+                    // are in the condition.
+                    for (value of values) {
+                        if (!condition.values.includes(value)) {
+                            // Does not have all required values, so condition
+                            // fails.
+                            return false;
+                        }
+                    }
+
+                    break;
+                case 3:
+                    // Make sure the condition value include no
+                    // user selected values.
+                    for (value of values) {
+                        if (condition.values.includes(value)) {
+                            // User selected a restricted value so condition
+                            // fails.
+                            return false;
+                        }
+                    }
+            }
+
+            return true;
         };
 
         /**
