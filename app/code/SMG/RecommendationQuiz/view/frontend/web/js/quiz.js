@@ -893,12 +893,9 @@ define([
 
                     break;
                 case 2:
-                    // Make sure all values selected by the user
-                    // are in the condition.
-                    for (value of values) {
-                        if (!condition.values.includes(value)) {
-                            // Does not have all required values, so condition
-                            // fails.
+                    // Make sure all condition values are selected by the user.
+                    for (let conditionValue of condition.values) {
+                        if (!values.includes(value)) {
                             return false;
                         }
                     }
