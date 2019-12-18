@@ -81,7 +81,6 @@ h3 {
                     display: flex;
                     align-items: center;
                     color: $mygro-green;
-                    font-size: 1rem;
                     position: relative;
                     text-decoration: none;
                     text-align: right;
@@ -92,12 +91,12 @@ h3 {
                     }
                     .icon-bag {
                         color: $mygro-green;
-                        font-size: 1.5rem;
                         display: block;
                         padding-right: 5px;
 
                         &:before {
                             content: '\e902';
+                            font-size: 2.5rem;;
                         }
                     }
                     .cart-total-container {
@@ -105,12 +104,10 @@ h3 {
                         display: inline-block;
                         position: relative;
                         text-transform: uppercase;
-                        font-size: $font10;
-                        font-size: inherit;
                         text-align: left;
 
                         .cart-total-title {
-                            font-size: 0.7rem;
+                            font-size: $font-size__s;
                             text-transform: uppercase;
                             display: block;
 
@@ -120,7 +117,7 @@ h3 {
                         }
                         .total-amt {
                             display: block;
-                            font-size: 1.2rem;
+                            font-size: $font-size__l;
 
                             @include max-screen($screen__s) {
                                 font-size: 1rem;
