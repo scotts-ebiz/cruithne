@@ -494,7 +494,7 @@ class Subscription extends AbstractModel
 
         // Update Subscription statuses
         try {
-            $this->updateStatuses( $subscriptionOrders );
+            $this->updateCanceledStatuses( $subscriptionOrders );
         } catch ( \Exception $e ) {
             throw new LocalizedException( __('There was a problem updating statuses.' . $e->getMessage()) );
         }
@@ -557,7 +557,11 @@ class Subscription extends AbstractModel
         }
     }
 
-    private function updateStatuses( $subscriptionOrders ) {
+    /**
+     * Update Canceled Statuses
+     * @param $subscriptionOrders
+     */
+    private function updateCanceledStatuses( $subscriptionOrders ) {
         foreach ( $subscriptionOrders as $subscriptionOrder ) {
             $subscriptionOrder->setSubscriptionOrderStatus('canceled')->save();
         }
