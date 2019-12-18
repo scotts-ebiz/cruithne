@@ -26,6 +26,10 @@ RUN git pull
 RUN composer install
 RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools
 
+RUN php /var/www/html/magento2/bin/magento setup:di:compile
+RUN rm /var/www/html/magento2/tools/yarn.lock && cd /var/www/html/magento2/tools && npm install && npm rebuild node-sass && gulp clean -f /var/www/html/magento2/tools/gulpfile.esm.js && gulp styles -f /var/www/html/magento2/tools/gulpfile.esm.js
+RUN php /var/www/html/magento2/bin/magento setup:static-content:deploy
+
 USER root
 
 RUN REV=$(git rev-parse HEAD)
@@ -37,10 +41,11 @@ RUN \
      -d \
 	'{ "deployment": { "revision": "$REV" } }'
 
+
 # Expose Ports for Apache
 EXPOSE 80/tcp 443/tcp
 
-RUN find var pub/static pub/media app/etc -type f -exec chmod g+w {} + 
+RUN find var pub/static pub/media app/etc -type f -exec chmod g+w {} +
 RUN find var pub/static pub/media app/etc -type d -exec chmod g+ws {} +
 
 # Run entrypoint file
