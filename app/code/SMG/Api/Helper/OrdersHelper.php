@@ -309,7 +309,7 @@ class OrdersHelper
         }
 
         // return..
-        
+
         return $orders;
     }
 
@@ -446,7 +446,7 @@ class OrdersHelper
         $itemDiscount = $this->_discountHelper->CatalogCode($order->getId(), $orderItem);
 
         if(!empty($itemDiscount))
-        { 
+        {
             $discFixedAmt = $itemDiscount['disc_fixed_amount'];
             $discPerAmt  = $itemDiscount['disc_percent_amount'];
             $discCondCode = $itemDiscount['disc_condition_code'];
@@ -601,12 +601,6 @@ class OrdersHelper
             }
         }
 
-        // check to see if there was a value for invoiceAmount
-        if (empty($invoiceAmount))
-        {
-            $invoiceAmount = '';
-        }
-
         // return
         return array_map('trim', array(
             self::ORDER_NUMBER => $order->getIncrementId(),
@@ -624,7 +618,7 @@ class OrdersHelper
             self::QUANTITY => $quantity,
             self::UNIT => 'EA',
             self::UNIT_PRICE => $price,
-            self::GROSS_SALES => $grossSales,
+            self::GROSS_SALES => $order->getData('grand_total'),
             self::SHIPPING_AMOUNT => $shippingAmount,
             self::EXEMPT_AMOUNT => '0',
             self::HDR_DISC_FIXED_AMOUNT => $hdrDiscFixedAmount,

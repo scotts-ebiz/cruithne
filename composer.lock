@@ -5001,6 +5001,36 @@
                 "shasum": "553c6b4b9831081e5732f3e61d8eefde88ef54bc"
             },
             "require": {
+                "magento/framework": "~102.0.2-p2",
+                "php": "~7.1.3||~7.2.0"
+            },
+            "suggest": {
+                "magento/module-catalog-staging": "100.3.*",
+                "magento/module-page-builder": "1.0.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\CatalogStagingPageBuilder\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Catalog Staging Page Builder module"
+        },
+        {
+            "name": "magento/module-catalog-url-rewrite",
+            "version": "100.3.2",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-catalog-url-rewrite/magento-module-catalog-url-rewrite-100.3.2.0.zip",
+                "shasum": "553c6b4b9831081e5732f3e61d8eefde88ef54bc"
+            },
+            "require": {
                 "magento/framework": "102.0.*",
                 "magento/module-backend": "101.0.*",
                 "magento/module-catalog": "103.0.*",
@@ -6633,6 +6663,80 @@
                 ],
                 "psr-4": {
                     "Magento\\Elasticsearch\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-elasticsearch-6",
+            "version": "100.3.1",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-elasticsearch-6/magento-module-elasticsearch-6-100.3.1.0.zip",
+                "shasum": "1ad56707d488f98b60a2386246a1357716413434"
+            },
+            "require": {
+                "elasticsearch/elasticsearch": "~2.0|~5.1|~6.1",
+                "magento/framework": "102.0.*",
+                "magento/module-advanced-search": "100.3.*",
+                "magento/module-catalog-search": "101.0.*",
+                "magento/module-elasticsearch": "100.3.*",
+                "magento/module-search": "101.0.*",
+                "magento/module-store": "101.0.*",
+                "php": "~7.1.3||~7.2.0"
+            },
+            "suggest": {
+                "magento/module-config": "101.1.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Elasticsearch6\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-elasticsearch-catalog-permissions",
+            "version": "100.3.0",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-elasticsearch-catalog-permissions/magento-module-elasticsearch-catalog-permissions-100.3.0.0.zip",
+                "shasum": "a2bdc291d4321bc81794a370cbab8fafdf7c3f9e"
+            },
+            "require": {
+                "magento/framework": "102.0.*",
+                "magento/module-advanced-search": "100.3.*",
+                "magento/module-catalog": "103.0.*",
+                "magento/module-catalog-permissions": "100.3.*",
+                "magento/module-catalog-search": "101.0.*",
+                "magento/module-customer": "102.0.*",
+                "magento/module-elasticsearch": "100.3.*",
+                "magento/module-search": "101.0.*",
+                "magento/module-store": "101.0.*",
+                "php": "~7.1.3||~7.2.0"
+            },
+            "suggest": {
+                "magento/module-config": "101.1.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\ElasticsearchCatalogPermissions\\": ""
                 }
             },
             "license": [
@@ -9525,6 +9629,68 @@
             "description": "N/A"
         },
         {
+            "name": "magento/module-msrp",
+            "version": "100.3.2",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-msrp/magento-module-msrp-100.3.2.0.zip",
+                "shasum": "58e41053d3e368a736ce65d6b636a52eac6d9ec9"
+            },
+            "require": {
+                "magento/framework": "102.0.*",
+                "magento/module-catalog": "103.0.*",
+                "magento/module-downloadable": "100.3.*",
+                "magento/module-eav": "102.0.*",
+                "magento/module-store": "101.0.*",
+                "magento/module-tax": "100.3.*",
+                "php": "~7.1.3||~7.2.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\MsrpGroupedProduct\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-msrp-configurable-product",
+            "version": "100.3.1",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-msrp-configurable-product/magento-module-msrp-configurable-product-100.3.1.0.zip",
+                "shasum": "f7dc4eb52ddf97bc122350a0c5f2c06192d3e457"
+            },
+            "require": {
+                "magento/framework": "102.0.*",
+                "magento/module-catalog": "103.0.*",
+                "magento/module-configurable-product": "100.3.*",
+                "magento/module-msrp": "100.3.*",
+                "php": "~7.1.3||~7.2.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\MsrpConfigurableProduct\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
             "name": "magento/module-msrp-grouped-product",
             "version": "100.3.1",
             "dist": {
@@ -9831,6 +9997,77 @@
                 "AFL-3.0"
             ],
             "description": "N/A"
+        },
+        {
+            "name": "magento/module-page-builder",
+            "version": "1.0.3",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-page-builder/magento-module-page-builder-1.0.3.0.zip",
+                "shasum": "59d99d766c8fa11c15685170921c9163aa9aa99f"
+            },
+            "require": {
+                "magento/framework": "~102.0.2-p2",
+                "magento/module-backend": "~101.0.2-p2",
+                "magento/module-catalog": "103.0.*",
+                "magento/module-catalog-widget": "*",
+                "magento/module-cms": "103.0.*",
+                "magento/module-config": "~101.1.2-p2",
+                "magento/module-directory": "~100.3.2",
+                "magento/module-eav": "102.0.*",
+                "magento/module-email": "101.0.*",
+                "magento/module-require-js": "*",
+                "magento/module-rule": "~100.3.2-p2",
+                "magento/module-search": "~101.0.2-p2",
+                "magento/module-store": "~101.0.2-p2",
+                "magento/module-ui": "101.1.*",
+                "magento/module-widget": "*",
+                "php": "~7.1.3||~7.2.0"
+            },
+            "conflict": {
+                "gene/bluefoot": "*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\PageBuilder\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Page Builder module"
+        },
+        {
+            "name": "magento/module-page-builder-analytics",
+            "version": "1.0.3",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-page-builder-analytics/magento-module-page-builder-analytics-1.0.3.0.zip",
+                "shasum": "5ddb45175a76fd69ffaaef37df7c367a65d85327"
+            },
+            "require": {
+                "magento/framework": "~102.0.2-p2",
+                "magento/module-analytics": "~100.3.2",
+                "magento/module-page-builder": "1.0.*",
+                "php": "~7.1.3||~7.2.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\PageBuilderAnalytics\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Page Builder Analytics module"
         },
         {
             "name": "magento/module-page-builder",
@@ -11840,6 +12077,36 @@
             "description": "Staging Page Builder module"
         },
         {
+            "name": "magento/module-staging-page-builder",
+            "version": "1.0.3",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-staging-page-builder/magento-module-staging-page-builder-1.0.3.0.zip",
+                "shasum": "d6e4ff49ae2c884b97fabed013463d49a998aaef"
+            },
+            "require": {
+                "magento/framework": "~102.0.2-p2",
+                "php": "~7.1.3||~7.2.0"
+            },
+            "suggest": {
+                "magento/module-page-builder": "1.0.*",
+                "magento/module-staging": "101.1.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\StagingPageBuilder\\": ""
+                }
+            },
+            "license": [
+                "proprietary"
+            ],
+            "description": "Staging Page Builder module"
+        },
+        {
             "name": "magento/module-store",
             "version": "101.0.2-p2",
             "dist": {
@@ -12320,6 +12587,36 @@
                 ],
                 "psr-4": {
                     "Magento\\Theme\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-theme-graph-ql",
+            "version": "100.3.1",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-theme-graph-ql/magento-module-theme-graph-ql-100.3.1.0.zip",
+                "shasum": "d552fc284209e91fb83f8aa5fbeb2bceb20f659b"
+            },
+            "require": {
+                "magento/framework": "102.0.*",
+                "php": "~7.1.3||~7.2.0"
+            },
+            "suggest": {
+                "magento/module-store-graph-ql": "100.3.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\ThemeGraphQl\\": ""
                 }
             },
             "license": [

@@ -23,7 +23,6 @@ use SMG\OrderDiscount\Helper\Data as DiscountHelper;
 use Magento\Sales\Model\Service\InvoiceService as InvoiceService;
 use Magento\Framework\DB\Transaction as Transaction;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender as InvoiceSender;
-
 class OrderStatusHelper
 {
     // Input JSON File Constants
@@ -135,7 +134,7 @@ class OrderStatusHelper
      * @var DiscountHelper
      */
     protected $_discountHelper;
-    
+
     /**
      * @var InvoiceService
      */
@@ -992,40 +991,51 @@ class OrderStatusHelper
             }
 
             // Get the sales order
-            /**
-             * @var \Magento\Sales\Model\Order $order
-             */
-            $order = $this->_orderFactory->create();
-            $this->_orderResource->load($order, $sapOrderBatch->getData('order_id'));
+                /**
+                 * @var \Magento\Sales\Model\Order $order
+                 */
+                $order = $this->_orderFactory->create();
+                $this->_orderResource->load($order, $sapOrderBatch->getData('order_id'));
 
-            // Determine if this is a 100% discount as we do not
-            // want to invoice the order online as it will fail.
-            // 100% discounts should be invoiced offline
-            if(!empty($order->getData('coupon_code')))
+
+        // Get the order coupon code discount values if the coupon code
+        // if exists on the order.  You will need to get the order based on the
+        if(!empty($order->getData('coupon_code')))
+        {
+            $orderDiscount = $this->_discountHelper->DiscountCode($order->getData('coupon_code'));
+            $hdrDiscCondCode = $orderDiscount['hdr_disc_cond_code'];
+            if($hdrDiscCondCode == 'Z616')
             {
-                $orderDiscount = $this->_discountHelper->DiscountCode($order->getData('coupon_code'));
-                $hdrDiscCondCode = $orderDiscount['hdr_disc_cond_code'];
-                if($hdrDiscCondCode == 'Z616')
-                {
-                    // set the flag to have updates
-                    $isUpdateNeeded = true;
-
-                    // invoice the order offline
-                    $this->invoiceOffline($order, $sapOrderBatch);
-                }
+            /* create a invoice */
+            if($order->canInvoice()) {
+            $invoice = $this->_invoiceService->prepareInvoice($order);
+            if (!$invoice->getTotalQty()) {
+                throw new \Magento\Framework\Exception\LocalizedException(
+                __('You can\'t create an invoice without products.')
+                );
             }
+            $invoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
+            $invoice->register();
+            $transaction = $this->_transaction
+            ->addObject($invoice)
+            ->addObject($invoice->getOrder());
+            $transaction->save();
 
-            // determine if this is a subscription as we do not
-            // want to invoice the order online as it will fail.
-            // subscriptions should be invoiced offline.
-            if ($order->isSubscription())
-            {
-                // set the flag to have updates
-                $isUpdateNeeded = true;
-
-                // invoice the order offline
-                $this->invoiceOffline($order, $sapOrderBatch);
+            $this->_invoiceSender->send($invoice);
+            $order->addStatusHistoryComment(
+            __('Notified customer about invoice #%1.', $invoice->getId())
+            )
+            ->setIsCustomerNotified(false)
+            ->save();
             }
+             /* end of create a invoice */
+
+            $today = date('Y-m-d H:i:s');
+            $isUpdateNeeded = true;
+            $sapOrderBatch->setData('is_capture', true);
+            $sapOrderBatch->setData('capture_process_date', $today);
+            }
+        }
 
             // check the shipment
             if (!empty($inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]) &&
