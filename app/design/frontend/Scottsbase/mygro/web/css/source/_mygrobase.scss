@@ -1,13 +1,7 @@
 // MyGro Base
-body {
-    h3 {
-        //font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
-        //font-size: 1.8rem;
-        letter-spacing: 0.5px;
-        //@media only screen and (max-width: $screen__l) {// test - removed caused defined in vars
-        //    font-size: 1.5rem;
-        //}
-    }
+
+h3 {
+  letter-spacing: 0.5px;
 }
 
 [class^="icon-"],
