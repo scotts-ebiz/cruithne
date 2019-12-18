@@ -91,6 +91,7 @@ define([
                 disableDefaultUI: true,
                 mapTypeId: google.maps.MapTypeId.HYBRID,
                 minZoom: 1,
+                tilt: 0,
                 zoom: 4,
                 zoomControl: true,
                 zoomControlOptions: {
@@ -163,7 +164,7 @@ define([
 
             for (polygon of self.polygons()) {
                 var squareMeters = google.maps.geometry.spherical.computeArea(polygon.getPath());
-                var squareFeet = Math.round(squareMeters * 3.28084);
+                var squareFeet = Math.round(squareMeters * 10.76391);
 
                 self.lawnSize(self.lawnSize() + squareFeet);
             }
@@ -248,22 +249,6 @@ define([
         };
 
         self.initialize();
-
-        // Try HTML5 geolocation.
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(function(position) {
-                var pos = {
-                    lat: position.coords.latitude,
-                    lng: position.coords.longitude
-                };
-                self.map.setCenter(pos);
-                self.map.setZoom(18);
-            }, function() {
-                // Could not get location.
-            });
-        } else {
-            // Browser does not support geolocation.
-        }
     }
 
     /**
