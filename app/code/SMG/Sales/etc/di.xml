@@ -13,4 +13,7 @@
     <type name="Magento\Sales\Model\Order\Payment">
         <plugin name="smg_plugin_order_payment" type="SMG\Sales\Plugin\Model\Order\Payment" />
     </type>
+	<type name="Magento\Backend\Block\Widget\Button\Toolbar">
+        <plugin name="smg_plugin_order_toolbarbuttons" type="SMG\Sales\Plugin\Block\Widget\Button\Toolbar" />
+    </type>
 </config>
