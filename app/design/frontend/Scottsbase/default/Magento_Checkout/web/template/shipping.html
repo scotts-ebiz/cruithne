@@ -5,7 +5,7 @@
  */
 -->
 <li id="shipping" class="checkout-shipping-address" data-bind="fadeVisible: visible()">
-    <div class="step-title" translate="'Shipping Address'" data-role="title" />
+    <h2 class="step-title" translate="'Shipping Address'" data-role="title" />
     <div id="checkout-step-shipping"
          class="step-content"
          data-role="content">
@@ -40,9 +40,10 @@
     data-bind="fadeVisible: visible(), blockLoader: isLoading"
     role="presentation">
     <div class="checkout-shipping-method">
-        <div class="step-title"
+        <h2 class="step-title"
              translate="'Shipping Methods'"
              data-role="title" />
+        <p class="checkout-shipping-disclaimer" translate="'Shipping Disclaimer'"></p>
 
         <each args="getRegion('before-shipping-method-form')" render="" />
 
