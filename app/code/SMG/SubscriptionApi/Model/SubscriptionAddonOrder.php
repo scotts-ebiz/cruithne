@@ -3,12 +3,13 @@
 namespace SMG\SubscriptionApi\Model;
 
 use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\DB\Transaction;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Sales\Model\Order;
-use Magento\Framework\DB\Transaction;
+use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use Magento\Sales\Model\Service\InvoiceService;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
@@ -44,7 +45,7 @@ class SubscriptionAddonOrder extends AbstractModel
     /** @var Transaction */
     protected $_transaction;
 
-    /** @var Order\Email\Sender\InvoiceSender */
+    /** @var InvoiceSender */
     protected $_invoiceSender;
 
     /** @var SapOrderBatch */
@@ -72,7 +73,7 @@ class SubscriptionAddonOrder extends AbstractModel
      * @param OrderCollectionFactory $orderCollectionFactory
      * @param InvoiceService $invoiceService
      * @param Transaction $transaction
-     * @param Order\Email\Sender\InvoiceSender $invoiceSender
+     * @param InvoiceSender $invoiceSender
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -85,7 +86,7 @@ class SubscriptionAddonOrder extends AbstractModel
         OrderCollectionFactory $orderCollectionFactory,
         InvoiceService $invoiceService,
         Transaction $transaction,
-        Order\Email\Sender\InvoiceSender $invoiceSender,
+        InvoiceSender $invoiceSender,
         SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
@@ -174,7 +175,10 @@ class SubscriptionAddonOrder extends AbstractModel
             ->addObject($invoice)
             ->addObject($invoice->getOrder());
         $transaction->save();
+
+        // For some reason, this causes the response to come back with a 500 code.
         $this->_invoiceSender->send($invoice);
+
         $order->addStatusHistoryComment(
             __('Notified customer about invoice #%1.', $invoice->getId())
         )
