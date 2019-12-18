@@ -4,16 +4,13 @@ namespace SMG\SubscriptionCheckout\Plugin\Controller\Cart;
 
 use Magento\Framework\Exception\NotFoundException;
 use Magento\Store\Model\StoreManagerInterface;
-
 use Psr\Log\LoggerInterface;
-
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 
 /**
  * Class Index
  *
  * @package SMG\SubscriptionCheckout\Plugin\Controller\Cart
- * @todo Wes this needs jailed
  */
 class Index
 {
@@ -52,7 +49,6 @@ class Index
      * Check if this is a subscription otherwise continue
      *
      * @param \Magento\Checkout\Controller\Cart\Index $subject
-     * @param $result
      * @return mixed
      */
     public function beforeExecute(\Magento\Checkout\Controller\Cart\Index $subject)
