@@ -1,25 +1,52 @@
 <h2>Subscription Details</h2>
 <?php if( ! empty( $block->getSubscriptions() ) ) { 
-	$subscription = $block->getSubscriptions();
+	$result = $block->getSubscriptions();
+
+	$mainInvoice = $this->getInvoice( $result['main_subscription']->invoice->get()->invoice_number );
+	$notAddonProduct = array( 'annual', 'add-ons', 'early-spring', 'late-spring', 'early-summer', 'early-fall', 'seasonal' );
+	$totalAddonAmount = 0;
+	$totalMainAmount = 0;
+	$numberOfAddonProducts = 0;
+	foreach( $mainInvoice->line_items as $item ) {
+		if( ! in_array( $item->product_code, $notAddonProduct ) ) {
+			$totalAddonAmount += $item->total_in_cents;
+			$numberOfAddonProducts++;
+		}
+		if( $item->product_code == 'annual' || $item->product_code == 'seasonal' ) {
+			$totalMainAmount = $item->total_in_cents;
+		}
+	}
 ?>
 <div>
+
+	<div>
+		<div>
+			<h3>Subscription</h3>
+			<span>Active</span>
+		</div>
+		<div>
+			<a href="/quiz">Lawn conditions changed?</a> | 
+			<a href="#" id="cancelSubscriptionModal">Cancel subscription</a>
+		</div>	
+	</div>
+
 	<table>
 		<tbody>
 			<tr>
 				<th>Type</th>
-				<td><?php echo ( $subscription['is_annual'] === true ) ? 'Annual' : 'Seasonal'; ?></td>
+				<td><?php echo ( $result['is_annual'] === true ) ? 'Annual' : 'Seasonal'; ?></td>
 			</tr>
 			<tr>
 				<th>Start date</th>
-				<td><?php echo $subscription['annual_subscription'][0]->current_period_started_at->format('d F, Y'); ?></td>
+				<td><?php echo $result['main_subscription']->current_period_started_at->format( 'M d, Y' ); ?></td>
 			</tr>
 			<tr>
 				<th>Renewal date</th>
-				<td><?php echo ( $subscription['annual_subscription'][0]->auto_renew === true ) ? $subscription['annual_subscription'][0]->current_period_ends_at->format('d F, Y') : 'Not renewing'; ?></td>
+				<td><?php echo ( $result['main_subscription']->auto_renew === true ) ? $result['main_subscription']->current_period_ends_at->format( 'M d, Y' ) : '/'; ?></td>
 			</tr>
 			<tr>
 				<th>Latest invoice</th>
-				<td><a href="#">#<?php echo $subscription['annual_subscription'][0]->invoice->get()->invoice_number; ?></a></td>
+				<td><a href="#">#<?php echo $result['active_subscription']->invoice->get()->invoice_number; ?></a></td>
 			</tr>
 			<tr>
 				<th>Billing Information</th>
@@ -28,25 +55,27 @@
 		</tbody>
 	</table>
 
-	<h3>Next billing on [INSERT DATE]</h3>
+	<h4>Next Billing on <?php echo $result['main_subscription']->current_period_ends_at->format( 'F d, Y' ); ?></h4>
 	<table>
 		<tbody>
 			<tr>
-				<td><?php echo ( $subscription['is_annual'] === true ) ? '1 x Annual' : '4 x Seasonaly';; ?></td>
-				<td>$<?php echo ( $subscription['is_annual'] === true ) ? $this->convertAmountToDollars( $subscription['annual_subscription'][0]->unit_amount_in_cents ) : '[TO BE UPDATED]'; ?></td>
+				<td><?php echo ( $result['is_annual'] === true ) ? '1 x Annual' : '4 x Seasonally'; ?></td>
+				<td>$<?php echo $this->convertAmountToDollars( $totalMainAmount ); ?> USD</td>
 			</tr>
+			<?php if( $numberOfAddonProducts > 0 ) { ?>
 			<tr>
-				<td>1 Add On Item</td>
-				<td>$[ INSERT AMOUNT ]</td>
+				<td><?php echo $numberOfAddonProducts; ?> x Add on item(s)</td>
+				<td>$<?php echo $this->convertAmountToDollars( $totalAddonAmount ); ?> USD</td>
 			</tr>
+			<?php } ?>
 			<tr>
 				<td><strong>Current total</strong></td>
-				<td><strong>$<?php echo ( $subscription['is_annual'] === true ) ? $this->convertAmountToDollars( $subscription['annual_subscription'][0]->unit_amount_in_cents ) : '[TO BE UPDATED]'; ?></strong></td>
+				<td><strong>$<?php echo $this->convertAmountToDollars( $mainInvoice->total_in_cents ); ?> USD</strong></td>
 			</tr>
 		</tbody>
 	</table>
 
-	<?php if( ! empty( $block->getInvoices() ) ) { ?>
+	<?php if( ! empty( $result['invoices'] ) ) { ?>
 	<h2>INVOICES</h2>
 	<table>
 		<thead>
@@ -59,11 +88,11 @@
 			</tr>
 		</thead>
 		<tbody>
-			<?php foreach( $block->getInvoices() as $invoiceId ) { $invoice = $block->getInvoice( $invoiceId ); ?>
+			<?php foreach( $result['invoices'] as $invoiceId ) { $invoice = $block->getInvoice( $invoiceId ); ?>
 			<tr>
 				<td><a href="#">#<?php echo $invoice->invoice_number; ?></a></td>
-				<td><?php echo $invoice->created_at->format('d F, Y'); ?></td>
-				<td><?php echo $invoice->due_on->format('d F, Y'); ?></td>
+				<td><?php echo $invoice->created_at->format('M d, Y'); ?></td>
+				<td><?php echo $invoice->due_on->format('M d, Y'); ?></td>
 				<td><?php echo ( $invoice->state == 'paid' ) ? 'yes' : 'no'; ?></td>
 				<td>$<?php echo $block->convertAmountToDollars( $invoice->total_in_cents ); ?></td>
 			</tr>
@@ -71,8 +100,78 @@
 		</tbody>
 	</table>
 	<?php } ?>
-
 </div>
+
+<div id="popup-modal" class="modal-popup--subscriptions">
+	<h5 class="sp-h5 sp-text-black sp-text-center">Before you cancel</h5>
+	<p class="sp-text-black sp-text-center">We understand that lawn care can be tough. Can we help you get your best results?</p>
+	<div class="content">
+		<div>
+			<p><strong>Still seeing weeds?</strong></p>
+			<p>You should see results from weed control after about 30 days</p>	
+		</div>
+		<div>
+			<p><strong>Lawn looking brown?</strong></p>
+			<p>Your lawn can get really stressed from really hot or dry conditions.</p>	
+		</div>
+		<div>
+			<p><strong>Grass not growing?</strong></p>
+			<p>Starting from seed requires daily watering for best results</p>
+		</div>
+		<div class="divider"></div>
+		<p class="sp-text-center">Our service team is here to help you get your best lawn. Contact us between Xam and Xpm EST at 1-800-000-000.</p>
+	</div>
+	<button type="button" class="sp-button sp-button--primary" id="cancelSubscription">I want to cancel</button>
+	<a href="#" id="closeSubscriptionModal">Nevermind, take me back</a>
+</div>
+
+
 <?php } else { ?>
 <p>No subscription</p>
 <?php } ?>
+
+<script type="text/javascript">
+    require(
+    [ 'jquery', 'Magento_Ui/js/modal/modal' ],
+    function( $, modal ) {
+    	var options = {
+            type: 'popup',
+            responsive: true,
+            innerScroll: true,
+            buttons: [],
+            opened: function($Event) {
+                $('.modal-header').remove();
+            }
+        };
+
+        $(document).on('click', 'a#cancelSubscriptionModal', function(e) {
+        	e.preventDefault();
+        	$('.modal-popup--subscriptions').modal(options).modal('openModal');
+        });
+
+        $(document).on('click', 'a#closeSubscriptionModal', function(e) {
+        	e.preventDefault();
+        	$('.modal-popup--subscriptions').modal(options).modal('closeModal');
+        });
+
+        $(document).on('click', 'button#cancelSubscription', function() {
+        	$.ajax({
+                type: 'POST',
+                url: window.location.origin + '/rest/V1/subscription/cancel',
+                dataType: 'json',
+                contentType: 'application/json',
+                processData: false,
+                success: function(response) {
+                    var response = JSON.parse(response);
+                    if( response.success === true ) {
+                        $('#popup-modal').modal('closeModal');
+                    } else {
+                        alert( response.message );
+                        $('#popup-modal').modal('closeModal');
+                    }
+                }
+            })
+        })
+
+    });
+</script>
