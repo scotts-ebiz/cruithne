@@ -43,8 +43,14 @@ class Save extends \Magento\Framework\App\Action\Action
      */
     protected $_subscriptionHelper;
 
+    /**
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
     protected $_objectManager;
 
+    /**
+     * @var \Magento\Customer\Model\AccountManagement
+     */
     protected $_accountManagement;
 
     /**
@@ -58,6 +64,8 @@ class Save extends \Magento\Framework\App\Action\Action
      * @param \Magento\Customer\Model\Session $customerSession
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper
+     * @param \Magento\Framework\ObjectManagerInterface $objectManager
+     * @param \Magento\Customer\Model\AccountManagement $accountManagement
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,

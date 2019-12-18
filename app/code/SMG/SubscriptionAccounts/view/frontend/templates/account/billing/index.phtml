@@ -1,6 +1,6 @@
-<h1>Billing Information</h1>
 <?php $billing = $block->getBillingInformation(); ?>
-<form>
+<h1>Billing Information</h1>
+<form id="recurlyForm" action="<?php echo $block->escapeUrl( $block->saveFormAction() ); ?>" method="POST">
     <div>
     	<label>First Name</label>
     	<input type="text" data-recurly="first_name" value="<?php echo $block->escapeHtml( $billing->first_name ); ?>">
@@ -37,7 +37,7 @@
         <label>State</label>
         <select name="state" data-recurly="state">
             <?php foreach( $block->getStates() as $state ) { ?>
-            <option value="<?php echo $state['value']; ?>" <?php echo ( $state['value'] == $block->getStateIdByCode( $block->escapeHtml( $billing->state ), $block->escapeHtml( $billing->country ) ) ) ? 'selected="selected"' : ''; ?>><?php echo $state['label']; ?></option>
+            <option value="<?php echo ( ! empty( $state['value'] ) ) ? $block->getRegionCodeByName( $state['label'] )['code'] : ''; ?>" <?php echo ( ! empty( $state['value'] ) && ( $billing->state == $block->getRegionCodeByName( $state['label'] )['code'] ) ) ? 'selected="selected"' : ''; ?>><?php echo $state['label']; ?></option>
             <?php } ?>
         </select>
     </div>
@@ -46,6 +46,7 @@
         <div data-recurly="card" class="sp-form-group sp-px-2 sp-w-full"></div>
     </div>
     <div>
+        <input type="hidden" name="recurly-token" data-recurly="token">
         <button type="submit" class="sp-button sp-button--primary">Save</button>    
     </div>
 </form>
@@ -57,6 +58,21 @@
     function( $, modal ) {
     	$(document).ready( function() {
     		recurly.configure('ewr1-aefvtq9Ri3MILWsXFPHyv2');
+
+            $('form#recurlyForm').on( 'submit', function(e) {
+                e.preventDefault();
+                recurly.token( $('form#recurlyForm'), function (err, token) {
+                    if( err ) {
+                        alert( err.message );
+                    } else {
+                        $('form#recurlyForm').unbind(e);
+                        if( token ) {
+                            $('form#recurlyForm').submit();
+                        }
+                    }
+                })
+            })
+
     	});
     });
 </script>

@@ -1,7 +1,6 @@
 <?php
 namespace SMG\SubscriptionAccounts\Block;
 
-
 class Settings extends \Magento\Framework\View\Element\Template
 {
     /**

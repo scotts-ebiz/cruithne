@@ -1,7 +1,6 @@
 <?php
 namespace SMG\SubscriptionAccounts\Block;
 
-
 use Recurly_Client;
 use Recurly_NotFoundError;
 use Recurly_BillingInfo;
@@ -34,10 +33,17 @@ class Billing extends \Magento\Framework\View\Element\Template
     protected $_regionFactory;
 
     /**
+     * @var \Magento\Directory\Model\ResourceModel\Region\CollectionFactory
+     */
+    protected $_collectionFactory;
+
+    /**
      * Subscriptions block constructor.
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magento\Customer\Model\Session $customerSession
      * @param \Magento\Customer\Model\Customer $customer
+     * @param \Magento\Directory\Model\ResourceModel\Region\Collection $collection
+     * @param \Magento\Directory\Model\ResourceModel\Region\CollectionFactory $collectionFactory
      * @param array $data
      */
     public function __construct(
@@ -47,6 +53,7 @@ class Billing extends \Magento\Framework\View\Element\Template
         \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper,
         \Magento\Directory\Block\Data $directoryData,
         \Magento\Directory\Model\RegionFactory $regionFactory,
+        \Magento\Directory\Model\ResourceModel\Region\CollectionFactory $collectionFactory,
         array $data = []
     ) {
         $this->_customerSession = $customerSession;
@@ -54,6 +61,7 @@ class Billing extends \Magento\Framework\View\Element\Template
         $this->_recurlyHelper = $recurlyHelper;
         $this->_directoryData = $directoryData;
         $this->_regionFactory = $regionFactory;
+        $this->_collectionFactory = $collectionFactory;
         parent::__construct($context, $data);
     }
 
@@ -102,21 +110,46 @@ class Billing extends \Magento\Framework\View\Element\Template
         }
     }
 
+     /**
+     * Get the form action URL for POST the save request
+     * 
+     * @return string 
+     */
+    public function saveFormAction()
+    {
+        return '/account/billing/save';
+    }
+
+    /**
+     * Return states
+     * 
+     * @return array
+     */
     public function getStates()
     {
         return $this->_directoryData->getRegionCollection()->toOptionArray();
     }
 
+    /**
+     * Return countries
+     * 
+     * @return array
+     */
     public function getCountries()
     {
         return $this->_directoryData->getCountryCollection()->toOptionArray();
     }
 
-    public function getStateIdByCode( $region_code, $country_code )
+    /**
+     * Return state details (region_id, country_id, code, name, ...) by state name
+     * 
+     * @return array
+     */
+    public function getRegionCodeByName( $region )
     {
-        $state = $this->_regionFactory->create()->loadByCode( $region_code, $country_code);
-        return $state->getRegionId();
-    }
+        $regionCode = $this->_collectionFactory->create()->addRegionNameFilter( $region )->getFirstItem()->toArray();
 
+        return $regionCode;
+    }
 
 }
