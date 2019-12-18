@@ -1,1 +1,22 @@
 <h1>Billing Information</h1>
+<form>
+	<input type="text" data-recurly="first_name">
+    <input type="text" data-recurly="last_name">
+    <input type="text" data-recurly="address1">
+    <input type="text" data-recurly="city">
+    <input type="text" data-recurly="country">
+    <input type="text" data-recurly="postal_code">
+    <input type="text" data-recurly="state">
+    <div data-recurly="card" class="sp-form-group sp-px-2 sp-w-full"></div>
+</form>
+
+
+<script type="text/javascript">
+    require(
+    [ 'jquery' ],
+    function( $, modal ) {
+    	$(document).ready( function() {
+    		recurly.configure('ewr1-aefvtq9Ri3MILWsXFPHyv2');
+    	});
+    });
+</script>
