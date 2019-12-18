@@ -1,24 +1,22 @@
 <?php
 
-namespace SMG\SubscriptionCheckout\Plugin\Controller\Index;
+namespace SMG\SubscriptionCheckout\Plugin\Controller\Checkout;
 
 use Magento\Checkout\Helper\Data as CheckoutHelper;
 use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\Session\SessionManagerInterface as CoreSession;
 use Magento\Framework\Url\Helper\Data as UrlHelper;
 use Magento\Framework\UrlInterface;
 use Magento\Store\Model\StoreManagerInterface;
-
 use Psr\Log\LoggerInterface;
-
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 
 /**
  * Class Index
  *
- * @package SMG\SubscriptionCheckout\Plugin\Controller\Index
- * @todo Wes this needs jailed
+ * @package SMG\SubscriptionCheckout\Plugin\Controller\Checkout\Index
  */
 class Index
 {
@@ -97,9 +95,13 @@ class Index
      * Check to see if it is a subscription and if the user is logged in before continuing
      *
      * @param \Magento\Checkout\Controller\Index\Index $subject
-     * @return \Magento\Framework\Controller\Result\Redirect
+     * @param callable $proceed
+     * @return Redirect
      */
-    public function beforeExecute(\Magento\Checkout\Controller\Index\Index $subject)
+    public function aroundExecute(
+        \Magento\Checkout\Controller\Index\Index $subject,
+        callable $proceed
+    )
     {
         $this->_logger->debug("I am in Index/Index beforeExecute");
 
@@ -135,6 +137,8 @@ class Index
                     // return the login page
                     return $resultRedirect->setPath($customerLoginUrl);
                 }
+            } else {
+                return $proceed();
             }
         }
         catch (\Exception $e)
