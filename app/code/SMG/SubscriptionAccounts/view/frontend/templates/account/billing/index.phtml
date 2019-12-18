@@ -1,13 +1,53 @@
 <h1>Billing Information</h1>
+<?php $billing = $block->getBillingInformation(); ?>
 <form>
-	<input type="text" data-recurly="first_name">
-    <input type="text" data-recurly="last_name">
-    <input type="text" data-recurly="address1">
-    <input type="text" data-recurly="city">
-    <input type="text" data-recurly="country">
-    <input type="text" data-recurly="postal_code">
-    <input type="text" data-recurly="state">
-    <div data-recurly="card" class="sp-form-group sp-px-2 sp-w-full"></div>
+    <div>
+    	<label>First Name</label>
+    	<input type="text" data-recurly="first_name" value="<?php echo $block->escapeHtml( $billing->first_name ); ?>">
+    </div>
+    <div>
+    	<label>Last Name</label>
+        <input type="text" data-recurly="last_name" value="<?php echo $block->escapeHtml( $billing->last_name ); ?>">
+    </div>
+    <div>
+        <label>Address line 1</label>
+        <input type="text" data-recurly="address1" value="<?php echo $block->escapeHtml( $billing->address1 ); ?>">
+    </div>
+    <div>
+        <label>Address line 2</label>
+        <input type="text" data-recurly="address2" value="<?php echo ( $block->escapeHtml( $billing->address2 ) ) ? $block->escapeHtml( $billing->address2 ) : ''; ?>">
+    </div>
+    <div>
+        <label>City</label>
+        <input type="text" data-recurly="city" value="<?php echo $block->escapeHtml( $billing->city ); ?>">
+    </div>
+    <div>
+        <label>Country</label>
+        <select name="country" data-recurly="country">
+            <?php foreach( $block->getCountries() as $country ) { ?>
+            <option value="<?php echo $country['value']; ?>" <?php echo ( $country['value'] == $block->escapeHtml( $billing->country ) ) ? 'selected="selected"' : ''; ?>><?php echo $country['label']; ?></option>
+            <?php } ?>
+        </select>
+    </div>
+    <div>
+        <label>Zip/Postal Code</label>
+        <input type="text" data-recurly="postal_code" value="<?php echo $block->escapeHtml( $billing->zip ); ?>">
+    </div>
+    <div>
+        <label>State</label>
+        <select name="state" data-recurly="state">
+            <?php foreach( $block->getStates() as $state ) { ?>
+            <option value="<?php echo $state['value']; ?>" <?php echo ( $state['value'] == $block->getStateIdByCode( $block->escapeHtml( $billing->state ), $block->escapeHtml( $billing->country ) ) ) ? 'selected="selected"' : ''; ?>><?php echo $state['label']; ?></option>
+            <?php } ?>
+        </select>
+    </div>
+    <div>
+        <label>Card Number</label>
+        <div data-recurly="card" class="sp-form-group sp-px-2 sp-w-full"></div>
+    </div>
+    <div>
+        <button type="submit" class="sp-button sp-button--primary">Save</button>    
+    </div>
 </form>
 
 
