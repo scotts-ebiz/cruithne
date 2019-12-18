@@ -46,7 +46,7 @@ class Index extends \Magento\Framework\App\Action\Action
     public function execute()
     {
         $this->_view->loadLayout();
-        $this->_view->getPage()->getConfig()->getTitle()->set(__('Account Settings'));
+        $this->_view->getPage()->getConfig()->getTitle()->set(__('Billing Information'));
         $this->_view->renderLayout();
     }
 }
