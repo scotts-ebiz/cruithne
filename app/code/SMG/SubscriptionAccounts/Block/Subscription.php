@@ -107,12 +107,37 @@ class Subscription extends \Magento\Framework\View\Element\Template
                     $isAnnualSubscription = ( $subscription->plan->plan_code == 'annual' ) ? true : false;
 
                     // Get main subscription
-                    $mainSubscription = $subscription;
+                    $mainSubscription['invoice_number'] = $subscription->invoice->get()->invoice_number;
+                    $mainSubscription['starts_at'] = $subscription->current_period_started_at->format( 'M d, Y' );
+                    $mainSubscription['ends_at'] = $subscription->current_period_ends_at->format( 'M d, Y' );
+                    $mainSubscription['next_billing_date'] = $subscription->current_period_ends_at->format( 'F d, Y' );
+                    $mainSubscription['cc_last_four'] = $this->getBillingInformation()->last_four;
+
+                    // Get items from the main invoice
+                    $mainInvoice = $this->getInvoice( $mainSubscription['invoice_number'] );
+                    $notAddonProduct = array( 'annual', 'add-ons', 'early-spring', 'late-spring', 'early-summer', 'early-fall', 'seasonal' );
+                    $totalAddonAmount = 0;
+                    $totalMainAmount = 0;
+                    $numberOfAddonProducts = 0;
+                    foreach( $mainInvoice->line_items as $item ) {
+                        if( ! in_array( $item->product_code, $notAddonProduct ) ) {
+                            $totalAddonAmount += $item->total_in_cents;
+                            $numberOfAddonProducts++;
+                        }
+                        if( $item->product_code == 'annual' || $item->product_code == 'seasonal' ) {
+                            $totalMainAmount = $item->total_in_cents;
+                        }
+                    }
+
+                    $mainSubscription['addon_count'] = $numberOfAddonProducts;
+                    $mainSubscription['addon_total_amount'] = $this->convertAmountToDollars( $totalAddonAmount );
+                    $mainSubscription['main_total_amount'] = $this->convertAmountToDollars( $totalMainAmount );
+                    $mainSubscription['total_amount'] = $this->convertAmountToDollars( $mainInvoice->total_in_cents );
                 }
 
                 // Get active subscription, and it's not addons
                 if( $subscription->state == 'active' && $subscription->plan->plan_code != 'add-ons' ) {
-                    $activeSubscription = $subscription; 
+                    $activeSubscription['invoice_number'] = $subscription->invoice->get()->invoice_number; 
                 }
 
                 // Get invoice numbers if there is an invoice generated for the subscription
@@ -121,11 +146,14 @@ class Subscription extends \Magento\Framework\View\Element\Template
                 }
             }
 
+            $invoices = $this->getInvoices( array_unique( $invoices ) );
+
             return array(
                 'is_annual'             => $isAnnualSubscription,
+                'subscription_type'     => ( $isAnnualSubscription ) ? 'Annual' : 'Seasonal',
                 'main_subscription'     => $mainSubscription,
                 'active_subscription'   => $activeSubscription,
-                'invoices'              => array_unique( $invoices ),
+                'invoices'              => $invoices,
             );
         } catch (Recurly_NotFoundError $e) {
             return array(
@@ -133,6 +161,28 @@ class Subscription extends \Magento\Framework\View\Element\Template
                 'error_message' => $e->getMessage()
             );
         }
+    }
+
+    /**
+     * Return all invoices
+     * 
+     * @param array $invocies
+     * @return array
+     */
+    private function getInvoices( $invoices )
+    {
+        $invoicesArray = array();
+
+        foreach( $invoices as $index => $invoiceId ) {
+            $invoice = $this->getInvoice( $invoiceId );
+            $invoicesArray['invoice_number'] = $invoiceId;
+            $invoicesArray['created_at'] = $invoice->created_at->format( 'M d, Y' );
+            $invoicesArray['due_on'] = $invoice->created_at->format( 'M d, Y' );;
+            $invoicesArray['paid'] = ( $invoice->state == 'paid' ) ? 'YES' : 'NO';
+            $invoicesArray['total'] = $this->convertAmountToDollars( $invoice->total_in_cents );
+        }
+
+        return $invoicesArray;
     }
 
     /**
