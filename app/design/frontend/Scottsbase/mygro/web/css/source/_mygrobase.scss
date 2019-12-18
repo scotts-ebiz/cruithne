@@ -4,9 +4,9 @@ body {
         //font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
         //font-size: 1.8rem;
         letter-spacing: 0.5px;
-        @media only screen and (max-width: $screen__l) {
-            font-size: 1.5rem;
-        }
+        //@media only screen and (max-width: $screen__l) {// test - removed caused defined in vars
+        //    font-size: 1.5rem;
+        //}
     }
 }
 
@@ -439,6 +439,8 @@ body {
                 display: inline-block;
                 li {
                     text-align: left;
+                    color: $mygro-gray;
+                    font-size: $font-size__s;
                     @media only screen and (max-width: $screen__s){
                         text-align: center;
                     }
