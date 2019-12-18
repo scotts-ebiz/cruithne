@@ -55,8 +55,12 @@ class Index
      * @param $result
      * @return mixed
      */
-    public function beforeExecute(\Magento\Checkout\Controller\Cart\Index $subject)
+    public function afterExecute(\Magento\Checkout\Controller\Cart\Index $subject, $result)
     {
+        $this->_logger->debug("******************************");
+        $this->_logger->debug("I am in Cart/Index afterExecute");
+        $this->_logger->debug("*****************************");
+
         try
         {
             // if this is a subscription site we do not want them to go to the checkout cart page
@@ -69,5 +73,8 @@ class Index
         {
             $this->_logger->error($e);
         }
+
+        // return
+        return $result;
     }
 }

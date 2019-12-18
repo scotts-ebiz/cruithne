@@ -101,6 +101,8 @@ class Index
      */
     public function beforeExecute(\Magento\Checkout\Controller\Index\Index $subject)
     {
+        $this->_logger->debug("I am in Index/Index beforeExecute");
+
         try
         {
             // if this store uses subscription then check for login before continuing

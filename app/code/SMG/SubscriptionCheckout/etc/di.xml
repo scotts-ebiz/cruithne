@@ -9,6 +9,6 @@
 		<plugin name="smg_cart_index_controller" type="SMG\SubscriptionCheckout\Plugin\Controller\Cart\Index" />
 	</type>
 	<type name="Magento\Checkout\Controller\Index\Index">
-		<plugin name="smg_cart_index_controller" type="SMG\SubscriptionCheckout\Plugin\Controller\Index\Index" />
+		<plugin name="smg_index_index_controller" type="SMG\SubscriptionCheckout\Plugin\Controller\Index\Index" />
 	</type>
 </config>
