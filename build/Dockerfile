@@ -33,7 +33,7 @@ RUN rm /var/www/html/magento2/tools/yarn.lock && cd /var/www/html/magento2/tools
 
 # Move env.php to avoid Magento reading it
 RUN mv /var/www/html/magento2/app/etc/env.php /var/www/html/magento2/app/etc/__env.php
-RUN php /var/www/html/magento2/bin/magento setup:static-content:deploy
+RUN php /var/www/html/magento2/bin/magento setup:static-content:deploy -f
 # Move env.php back
 RUN mv /var/www/html/magento2/app/etc/__env.php /var/www/html/magento2/app/etc/env.php
 
