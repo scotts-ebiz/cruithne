@@ -449,12 +449,7 @@ define([
                 // Find the animation based on the answer.
                 for (const animation of animations) {
                     // No required conditions for this animation, so just use it.
-                    if (!animation.conditions.length) {
-                        self.animation(animation);
-                        break;
-                    }
-
-                    if (self.testConditions(animation.conditions)) {
+                    if (!animation.conditions.length || self.testConditions(animation.conditions) {
                         self.animation(animation);
                         break;
                     }
@@ -829,12 +824,7 @@ define([
             // Loop through the transitions and compare the values to see where we should redirect.
             for (const transition of transitions) {
                 // No required conditions for this transition, so just use it.
-                if (!transition.conditions.length) {
-                    self.loadNextGroup(self.findQuestionGroup(transition.destinationQuestionGroupId));
-                    return;
-                }
-
-                if (self.testConditions(transition.conditions)) {
+                if (!transition.conditions.length || self.testConditions(transition.conditions)) {
                     self.loadNextGroup(self.findQuestionGroup(transition.destinationQuestionGroupId));
                     return;
                 }
