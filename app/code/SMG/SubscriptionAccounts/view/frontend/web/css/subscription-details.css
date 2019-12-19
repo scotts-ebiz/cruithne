@@ -138,3 +138,8 @@ tr.--dense td {
     flex: 0 0 auto;
     order: -1;
 }
+
+
+.modal-inner-wrap {
+    max-width: 640px;
+}
