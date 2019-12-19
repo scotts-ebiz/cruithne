@@ -653,7 +653,7 @@
                   left: -9999px;
                 }
 
-                [type="radio"] + label { {
+                [type="radio"] + label {
                     position: relative;
                     padding-left: 28px;
                     cursor: pointer;
@@ -672,8 +672,7 @@
                     background: $color-white;
                     border: 2px solid $color-black;
                 }
-                [type="radio"]:checked + label:after,
-                [type="radio"]:not(:checked) + label:after {
+                [type="radio"] + label:after {
                     content: '';
                     width: 6px;
                     height: 6px;
