@@ -33,21 +33,39 @@
         .columns {
             .column {
                 .actions {
-                    a:before{
-                        -webkit-font-smoothing: antialiased;
-                        -moz-osx-font-smoothing: grayscale;
-                        font-size: 20px;
-                        line-height: 20px;
-                        font-family: "Font Awesome\ 5 Free";
-                        content: "\f0d9";
-                        font-weight: 900;
-                        margin: 0;
-                        vertical-align: top;
-                        display: inline-block;
-                        overflow: hidden;
-                        speak: none;
-                        text-align: center;
+                    .action.continue {
+                        font-size: $font-size__ml;
+                        &:before {
+                          -webkit-font-smoothing: antialiased;
+                          -moz-osx-font-smoothing: grayscale;
+                          font-size: 20px;
+                          line-height: 20px;
+                          font-family: "Font Awesome\ 5 Free";
+                          content: "\f0d9";
+                          font-weight: 900;
+                          margin: 0;
+                          vertical-align: top;
+                          display: inline-block;
+                          overflow: hidden;
+                          speak: none;
+                          text-align: center;
+                        }
                     }
+                    //a:before{
+                    //    -webkit-font-smoothing: antialiased;
+                    //    -moz-osx-font-smoothing: grayscale;
+                    //    font-size: 20px;
+                    //    line-height: 20px;
+                    //    font-family: "Font Awesome\ 5 Free";
+                    //    content: "\f0d9";
+                    //    font-weight: 900;
+                    //    margin: 0;
+                    //    vertical-align: top;
+                    //    display: inline-block;
+                    //    overflow: hidden;
+                    //    speak: none;
+                    //    text-align: center;
+                    //}
                 }
                 .cart-container {
                     padding-left: 15px;

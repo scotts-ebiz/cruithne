@@ -15,6 +15,12 @@
         }
         .columns {
             .column {
+                .actions {
+                    .action.continue {
+                        font-size: $font-size__ml;
+                    }
+                }
+
                 .cart-container {
                     .cart-summary {
                         .summary.title {
