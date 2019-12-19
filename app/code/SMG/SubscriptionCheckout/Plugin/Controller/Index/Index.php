@@ -90,7 +90,6 @@ class Index
      * Check to see if it is a subscription and if the user is logged in before continuing
      *
      * @param \Magento\Checkout\Controller\Index\Index $subject
-     * @param callable $proceed
      * @return Redirect
      */
     public function beforeExecute(\Magento\Checkout\Controller\Index\Index $subject)
