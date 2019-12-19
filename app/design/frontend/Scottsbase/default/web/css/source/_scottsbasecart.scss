@@ -21,9 +21,9 @@
             border-bottom:0;
             margin-top: 0rem;
             h1.page-title {
-                font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                font-size: 1.6rem;
-                font-weight: 500;
+                //font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                //font-size: 1.6rem;
+                //font-weight: 500;
                 text-transform: inherit;
                 padding: 0 0 10px 0;
                 width: 100%;
@@ -34,7 +34,7 @@
             .column {
                 .actions {
                     .action.continue {
-                        font-size: $font-size__ml;
+                        font-size: 1.6rem;
                         &:before {
                           -webkit-font-smoothing: antialiased;
                           -moz-osx-font-smoothing: grayscale;
@@ -242,7 +242,7 @@
                                                 text-decoration: underline;
                                                 text-align: left;
                                                 color: $scotts-accent-orange;
-                                                font-size: 0.8rem;
+                                                font-size: 1.2rem;
                                                 margin-left: 0;
                                                 margin-top: 10px;
                                                 margin-bottom: 0;
@@ -257,7 +257,7 @@
                                                 a.action-delete {
                                                     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
                                                     text-decoration: underline;
-                                                    font-size: 0.8rem;
+                                                    font-size: 1.2rem;
                                                     color: $scotts-accent-orange;
                                                 }
                                             }

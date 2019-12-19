@@ -22,6 +22,14 @@ $active__color                                                : $primary__color;
 $text__color                                                  : $mygro-gray; //sets body color
 
 
+//  Sizes
+$font-size__base                                              : $font-size-unit-ratio * $font-size-ratio__base * 1px !default; // Base font size value in px
+$font-size__xl                                                : ceil(1.5 * $font-size__base) !default; // 21px
+$font-size__l                                                 : ceil(1.25 * $font-size__base) !default; // 18px
+$font-size__s                                                 : ceil(0.85 * $font-size__base) !default; // 12px
+$font-size__xs                                                : floor(0.75 * $font-size__base) !default; // 11px
+
+
 //  Links
 $link__color                                                  : $primary__color;
 $link__visited__color                                         : $primary__color;
@@ -45,7 +53,6 @@ $letter-spacing_m                                             : 0.5px;
 
 
 // Custom Sizes
-$font-size__ml                                                : 1.6rem;
 $font-size__xxl                                               : 4.0rem;
 
 
@@ -59,6 +66,9 @@ $navigation-desktop_letter-spacing                            : $letter-spacing_
 
 //  Headings
 $h1__margin-bottom__desktop                                   : $indent__xl !default;
+$h1__font-size                                                : $font-size__xl;
+$h1__font-color                                               : $mygro-black;
+$h1__font-family                                              : $font-family__base;
 
 $h2__font-size                                                : $font-size__xxl;
 $h2__font-color                                               : $mygro-black;

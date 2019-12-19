@@ -14,6 +14,18 @@ $header-icons-color                                           : $color-gray56 !d
 $header-icons-color-hover                                     : $color-gray20 !default;
 
 
+//  Fonts
+$font-family-name__base                                       : 'Open-Sans';
+$font-family__sans-serif                                      : 'Helvetica Neue', Helvetica, Arial, sans-serif !default;
+$font-family__base                                            : $font-family-name__base, $font-family__sans-serif;
+
+
+
+//  Headings
+$h1__font-size                                                : $font-size__xl;
+$h1__font-color                                               : $color-black;
+$h1__font-family                                              : $font-family__base;
+
 
 
 //  Miscellaneous
@@ -23,7 +35,6 @@ $letter-spacing_m                                             : 0.5px;
 
 
 // Custom Sizes
-$font-size__ml                                                : 1.6rem !default;
 $font-size__xxl                                               : 4.0rem;
 
 

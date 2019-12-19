@@ -26,6 +26,13 @@
     $font-style: normal
 );
 
+@include lib-font-face(
+        $family-name: 'Open-Sans',
+        $font-path: '../fonts/opensans/light/opensans-300',
+        $font-weight: 300,
+        $font-style: normal
+);
+
 //
 //  Desktop
 //  _____________________________________________

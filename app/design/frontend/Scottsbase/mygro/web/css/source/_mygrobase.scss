@@ -235,7 +235,7 @@ h3 {
     }
 
     .page-main {
-        margin-top: 6rem;
+        margin-top: 95px;
 
         a:active,
         .alink:active {
@@ -247,11 +247,6 @@ h3 {
             text-decoration: none;
         }
 
-        .column.main {
-            .cart-empty {
-                font-size: 1rem;
-            }
-        }
         body > section,
         .column.main > section {
             max-width: 1440px;
