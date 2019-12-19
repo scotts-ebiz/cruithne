@@ -103,8 +103,18 @@ class Billing extends \Magento\Framework\View\Element\Template
 
         try {
             $billing_info = Recurly_BillingInfo::get($this->getCustomerRecurlyAccountCode());
+
+            $billing = array();
+            $billing['first_name'] = $billing_info->first_name;
+            $billing['last_name'] = $billing_info->last_name;
+            $billing['address1'] = $billing_info->address1;
+            $billing['address2'] = $billing_info->address2;
+            $billing['city'] = $billing_info->city;
+            $billing['country'] = $billing_info->country;
+            $billing['state'] = $billing_info->state;
+            $billing['zip'] = $billing_info->zip;
             
-            return $billing_info;
+            return $billing;
         } catch (Recurly_NotFoundError $e) {
             print "Not found: $e";
         }
@@ -127,7 +137,20 @@ class Billing extends \Magento\Framework\View\Element\Template
      */
     public function getStates()
     {
-        return $this->_directoryData->getRegionCollection()->toOptionArray();
+        $states = $this->_directoryData->getRegionCollection()->toOptionArray();
+        $statesArray = array();
+
+        foreach( $states as $key => $state ) {
+            if( ! is_object( $state['label'] ) ) {
+                $statesArray[$key]['value'] = $this->getRegionCodeByName( $state['label'] )['code'];
+
+            } else {
+                $statesArray[$key]['value'] = '';
+            }
+            $statesArray[$key]['text'] = $state['label'];
+        }
+
+        return $statesArray;
     }
 
     /**

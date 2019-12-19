@@ -1,78 +1,23 @@
-<?php $billing = $block->getBillingInformation(); ?>
-<h1>Billing Information</h1>
-<form id="recurlyForm" action="<?php echo $block->escapeUrl( $block->saveFormAction() ); ?>" method="POST">
-    <div>
-    	<label>First Name</label>
-    	<input type="text" data-recurly="first_name" value="<?php echo $block->escapeHtml( $billing->first_name ); ?>">
-    </div>
-    <div>
-    	<label>Last Name</label>
-        <input type="text" data-recurly="last_name" value="<?php echo $block->escapeHtml( $billing->last_name ); ?>">
-    </div>
-    <div>
-        <label>Address line 1</label>
-        <input type="text" data-recurly="address1" value="<?php echo $block->escapeHtml( $billing->address1 ); ?>">
-    </div>
-    <div>
-        <label>Address line 2</label>
-        <input type="text" data-recurly="address2" value="<?php echo ( $block->escapeHtml( $billing->address2 ) ) ? $block->escapeHtml( $billing->address2 ) : ''; ?>">
-    </div>
-    <div>
-        <label>City</label>
-        <input type="text" data-recurly="city" value="<?php echo $block->escapeHtml( $billing->city ); ?>">
-    </div>
-    <div>
-        <label>Country</label>
-        <select name="country" data-recurly="country">
-            <?php foreach( $block->getCountries() as $country ) { ?>
-            <option value="<?php echo $country['value']; ?>" <?php echo ( $country['value'] == $block->escapeHtml( $billing->country ) ) ? 'selected="selected"' : ''; ?>><?php echo $country['label']; ?></option>
-            <?php } ?>
-        </select>
-    </div>
-    <div>
-        <label>Zip/Postal Code</label>
-        <input type="text" data-recurly="postal_code" value="<?php echo $block->escapeHtml( $billing->zip ); ?>">
-    </div>
-    <div>
-        <label>State</label>
-        <select name="state" data-recurly="state">
-            <?php foreach( $block->getStates() as $state ) { ?>
-            <option value="<?php echo ( ! empty( $state['value'] ) ) ? $block->getRegionCodeByName( $state['label'] )['code'] : ''; ?>" <?php echo ( ! empty( $state['value'] ) && ( $billing->state == $block->getRegionCodeByName( $state['label'] )['code'] ) ) ? 'selected="selected"' : ''; ?>><?php echo $state['label']; ?></option>
-            <?php } ?>
-        </select>
-    </div>
-    <div>
-        <label>Card Number</label>
-        <div data-recurly="card" class="sp-form-group sp-px-2 sp-w-full"></div>
-    </div>
-    <div>
-        <input type="hidden" name="recurly-token" data-recurly="token">
-        <button type="submit" class="sp-button sp-button--primary">Save</button>    
-    </div>
-</form>
+<div
+    class="sp-subscription-details sp-container"
+    data-bind="scope: 'billingInformation'"
+>
+    <!-- ko template: "SMG_SubscriptionAccounts/billing-information.html" --><!-- /ko -->
+</div>
 
-
-<script type="text/javascript">
-    require(
-    [ 'jquery' ],
-    function( $, modal ) {
-    	$(document).ready( function() {
-    		recurly.configure('ewr1-aefvtq9Ri3MILWsXFPHyv2');
-
-            $('form#recurlyForm').on( 'submit', function(e) {
-                e.preventDefault();
-                recurly.token( $('form#recurlyForm'), function (err, token) {
-                    if( err ) {
-                        alert( err.message );
-                    } else {
-                        $('form#recurlyForm').unbind(e);
-                        if( token ) {
-                            $('form#recurlyForm').submit();
-                        }
+<script type="text/x-magento-init">
+   {
+        "*": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "billingInformation": {
+                        "component": "SMG_SubscriptionAccounts/js/billing-information",
+                        "billing": <?php echo json_encode( $block->getBillingInformation() ); ?>,
+                        "states": <?php echo json_encode( $block->getStates() ); ?>,
+                        "countries": <?php echo json_encode( $block->getCountries() ); ?>
                     }
-                })
-            })
-
-    	});
-    });
+                }
+            }
+        }
+    }
 </script>

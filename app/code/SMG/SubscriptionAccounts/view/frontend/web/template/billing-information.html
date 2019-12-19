@@ -1,0 +1,44 @@
+<h1>Billing Information</h1>
+<form id="recurlyForm">
+    <div>
+    	<label>First Name</label>
+    	<input type="text" data-recurly="first_name" data-bind="value: billing().first_name">
+    </div>
+    <div>
+    	<label>Last Name</label>
+        <input type="text" data-recurly="last_name" data-bind="value: billing().last_name">
+    </div>
+    <div>
+        <label>Address line 1</label>
+        <input type="text" data-recurly="address1" data-bind="value: billing().address1">
+    </div>
+    <div>
+        <label>Address line 2</label>
+        <input type="text" data-recurly="address2" data-bind="value: billing().address2">
+    </div>
+    <div>
+        <label>City</label>
+        <input type="text" data-recurly="city" data-bind="value: billing().city">
+    </div>
+    <div>
+        <label>Country</label>
+        <select name="country" data-recurly="country" data-bind="options: countries(), optionsText: function(item) { return item.label }, optionsValue: function(item) { return item.value }, value: billing().country"></select>
+    </div>
+    <div>
+        <label>Zip/Postal Code</label>
+        <input type="text" data-recurly="postal_code" data-bind="value: billing().zip">
+    </div>
+    <div>
+        <label>State</label>
+        <select name="state" data-recurly="state" data-bind="options: Object.values(states()), optionsText: function(item) { return item.text }, optionsValue: function(item) { return item.value }, value: billing().state"></select>
+
+    </div>
+    <div>
+        <label>Card Number</label>
+        <div data-recurly="card" class="sp-form-group sp-px-2 sp-w-full"></div>
+    </div>
+    <div>
+        <input type="hidden" name="recurly-token" data-recurly="token">
+        <button type="submit" data-bind="click: saveBilling" class="sp-button sp-button--primary">Save</button>    
+    </div>
+</form>
