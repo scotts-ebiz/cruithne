@@ -1,7 +1,5 @@
 <?php
-
 namespace SMG\Api\Helper;
-
 use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Psr\Log\LoggerInterface;
@@ -23,7 +21,6 @@ use SMG\OrderDiscount\Helper\Data as DiscountHelper;
 use Magento\Sales\Model\Service\InvoiceService as InvoiceService;
 use Magento\Framework\DB\Transaction as Transaction;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender as InvoiceSender;
-
 class OrderStatusHelper
 {
     // Input JSON File Constants
@@ -41,92 +38,74 @@ class OrderStatusHelper
     const INPUT_SAP_SAP_BILLING_DOC_DATE = 'InvoiceDate';
     const INPUT_SAP_PAYER_ID = 'PayerId';
     const INPUT_SAP_DELIVERY_NUMBER = 'DeliveryNumber';
-
     /**
      * @var LoggerInterface
      */
     protected $_logger;
-
     /**
      * @var SapOrderFactory
      */
     protected $_sapOrderFactory;
-
     /**
      * @var SapOrderBatchFactory
      */
     protected $_sapOrderBatchFactory;
-
     /**
      * @var SapOrderHistoryFactory
      */
     protected $_sapOrderHistoryFactory;
-
     /**
      * @var SapOrderItemFactory
      */
     protected $_sapOrderItemFactory;
-
     /**
      * @var SapOrderItemHistoryFactory
      */
     protected $_sapOrderItemHistoryFactory;
-
     /**
      * @var SapOrderResource
      */
     protected $_sapOrderResource;
-
     /**
      * @var SapOrderBatchResource
      */
     protected $_sapOrderBatchResource;
-
     /**
      * @var SapOrderHistoryResource
      */
     protected $_sapOrderHistoryResource;
-
     /**
      * @var SapOrderItemResource
      */
     protected $_sapOrderItemResource;
-
     /**
      * @var SapOrderItemHistoryResource
      */
     protected $_sapOrderItemHistoryResource;
-
     /**
      * @var SapOrderItemCollectionFactory
      */
     protected $_sapOrderItemCollectionFactory;
-
     /**
      * @var ResponseHelper
      */
     protected $_responseHelper;
-
     /**
      * @var SapOrderShipmentFactory
      */
     protected $_sapOrderShipmentFactory;
-
     /**
      * @var SapOrderShipmentResource
      */
     protected $_sapOrderShipmentResource;
-
     /**
      * @var SapOrderShipmentCollectionFactory
      */
     protected $_sapOrderShipmentCollectionFactory;
-
     /**
      * @var OrderFactory
      */
     protected $_orderFactory;
-
     /**
      * @var OrderResource
      */
@@ -148,7 +127,6 @@ class OrderStatusHelper
      * @var InvoiceSender
      */
     protected $_invoiceSender;
-
     /**
      * OrderStatusHelper constructor.
      *
@@ -218,7 +196,6 @@ class OrderStatusHelper
         $this->_transaction = $transaction;
         $this->_invoiceSender = $invoiceSender;
     }
-
     /**
      * Handles the order status request
      *
@@ -229,7 +206,6 @@ class OrderStatusHelper
     {
         // variables
         $orderStatusResponse = $this->_responseHelper->createResponse(true, "The order status process completed successfully.");
-
         // make sure that we were given something from the request
         if (!empty($requestData))
         {
@@ -247,10 +223,8 @@ class OrderStatusHelper
                          * @var \SMG\Sap\Model\SapOrder $sapOrder
                          */
                         $sapOrder = $this->_sapOrderResource->getSapOrderByIncrementId($orderIncrementId);
-
                         // process the sap order info
                         $this->processOrderSapInfo($inputOrder, $sapOrder);
-
                         // update the batch processing for those
                         // that need to be processed through batch capture
                         $this->processOrderSapBatchInfo($inputOrder, $sapOrder);
@@ -272,14 +246,11 @@ class OrderStatusHelper
         {
             // log the error
             $this->_logger->error("SMG\Api\Helper\OrderStatusHelper - Nothing was provided to process.");
-
             $orderStatusResponse = $this->_responseHelper->createResponse(false, 'Nothing was provided to process.');
         }
-
         // return
         return $orderStatusResponse;
     }
-
     /**
      * Takes the request data and inserts/updates the appropriate SAP tables
      *
@@ -291,7 +262,6 @@ class OrderStatusHelper
     {
         // get the orderId to see if it is present in the object
         $orderId = $sapOrder->getData('order_id');
-
         // determine if the sapOrder needs to be created
         // if it was loaded from the database there should be an
         // order id value
@@ -300,10 +270,8 @@ class OrderStatusHelper
             // check to see if the order needs to be updated
             // if so then update the order
             $this->updateOrderSap($inputOrder, $sapOrder);
-
             // process the sap order item information
             $this->processOrderSapItemInfo($inputOrder, $sapOrder);
-
             // process the sap order shipment information
             $this->processOrderSapShipmentInfo($inputOrder, $sapOrder);
         }
@@ -311,15 +279,12 @@ class OrderStatusHelper
         {
             // create the order sap record
             $orderSapId = $this->insertOrderSap($inputOrder);
-
             // create the order sap item record
             $orderSapItemId = $this->insertOrderSapItem($inputOrder, $orderSapId);
-
             // create the order sap shipment record
             $this->insertOrderSapShipment($inputOrder, $orderSapItemId);
         }
     }
-
     /**
      * Takes the request data and inserts/updates the appropriate SAP
      * Item Tables
@@ -332,12 +297,10 @@ class OrderStatusHelper
     {
         // get the order sap id
         $orderSapId = $sapOrder->getId();
-
         // create the sap orders item factory to retrieve all
         // the items with the desired order
         $sapOrderItems = $this->_sapOrderItemCollectionFactory->create();
         $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $orderSapId]);
-
         // check to see if there is a record already
         // if there is then update the appropriate tables
         // otherwise create new values in the tables
@@ -345,7 +308,6 @@ class OrderStatusHelper
         {
             // initialize if the item has already been added to this order
             $isAdd = true;
-
             // loop through the orders
             foreach($sapOrderItems as $sapOrderItem)
             {
@@ -356,13 +318,11 @@ class OrderStatusHelper
                     // set the is add flag to false since
                     // it already exists for this order
                     $isAdd = false;
-
                     // check to see if the order needs to be updated
                     // if so then update the order item
                     $this->updateOrderSapItem($inputOrder, $sapOrderItem);
                 }
             }
-
             // if the flag is true then add the order item
             if ($isAdd)
             {
@@ -376,7 +336,6 @@ class OrderStatusHelper
             $this->insertOrderSapItem($inputOrder, $orderSapId);
         }
     }
-
     /**
      * Takes the request data and inserts/updates the appropriate SAP
      * Item Tables
@@ -389,7 +348,6 @@ class OrderStatusHelper
     {
         // get the ship tracking number for later use
         $shipTrackingNumber = $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER];
-
         // only add something if there is a ship tracking number
         // this is because this table is for when the item has been shipped
         if (!empty($shipTrackingNumber))
@@ -399,7 +357,6 @@ class OrderStatusHelper
             $sapOrderItems = $this->_sapOrderItemCollectionFactory->create();
             $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $sapOrder->getId()]);
             $sapOrderItems->addFieldToFilter('sku', ['eq' => $inputOrder[self::INPUT_SAP_SKU]]);
-
             // loop through the order items to get the desired sap order item id
             // there should only be one
             foreach ($sapOrderItems as $sapOrderItem)
@@ -407,14 +364,12 @@ class OrderStatusHelper
                 // get the order sap item id
                 $orderSapItemId = $sapOrderItem->getId();
             }
-
             // create the sap orders shipment factory to retrieve all
             // the shipment items with the desired order
             $sapOrderShipments = $this->_sapOrderShipmentCollectionFactory->create();
             $sapOrderShipments->addFieldToFilter('order_sap_item_id', ['eq' => $orderSapItemId]);
             $sapOrderShipments->addFieldToFilter('ship_tracking_number', ['eq' => $shipTrackingNumber]);
             $sapOrderShipments->addFieldToFilter('qty', ['eq' => $inputOrder[self::INPUT_SAP_ORDER_QTY]]);
-
             // check to see if there is a record already
             // if there is then update the appropriate tables
             // otherwise create new values in the tables
@@ -436,7 +391,6 @@ class OrderStatusHelper
             }
         }
     }
-
     /**
      * Insert the order sap table with the appropriate values
      *
@@ -449,14 +403,11 @@ class OrderStatusHelper
         // get the order for the desired increment id
         $order = $this->_orderFactory->create();
         $this->_orderResource->load($order, $inputOrder[self::INPUT_SAP_MAGENTO_PO], 'increment_id');
-
         // variables
         $sapOrderStatus = $inputOrder[self::INPUT_SAP_SAP_ORDER_STATUS];
-
         // get the order status for this order based on the
         // ship tracking number
         $orderStatus = $this->getOrderStatus($sapOrderStatus, $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]);
-
         // Add to the sales_order_sap table
         $sapOrder = $this->_sapOrderFactory->create();
         $sapOrder->setData('order_id', $order->getId());
@@ -465,21 +416,16 @@ class OrderStatusHelper
         $sapOrder->setData('sap_order_status', $sapOrderStatus);
         $sapOrder->setData('order_status', $orderStatus);
         $sapOrder->setData('sap_payer_id', $inputOrder[self::INPUT_SAP_PAYER_ID]);
-
         // save the data to the table
         $this->_sapOrderResource->save($sapOrder);
-
         // get the entity id from the newly added sap order
         $orderSapId = $sapOrder->getId();
-
         // Add to the sale_order_sap_history table
         $this->insertOrderSapHistory($orderSapId, $orderStatus, null);
-
         // return the order sap id that was generated from
         // inserting into the table
         return $orderSapId;
     }
-
     /**
      * Insert the order sap history table with the appropriate values
      *
@@ -495,20 +441,16 @@ class OrderStatusHelper
         $sapOrderHistory = $this->_sapOrderHistoryFactory->create();
         $sapOrderHistory->setData('order_sap_id', $orderSapId);
         $sapOrderHistory->setData('order_status', $orderStatus);
-
         if (!empty($orderStatusNotes))
         {
             $sapOrderHistory->setData('order_status_notes', $orderStatusNotes);
         }
-
         // save the data to the table
         $this->_sapOrderHistoryResource->save($sapOrderHistory);
-
         // return the order sap id that was generated from
         // inserting into the table
         return $orderSapId;
     }
-
     /**
      * Update the order sap table with the appropriate values
      *
@@ -520,11 +462,9 @@ class OrderStatusHelper
     {
         // initialize update flag
         $isUpdateNeeded = false;
-
         // initialize the order status and notes
         $orderStatus = 'updated';
         $orderStatusNotes = '';
-
         // check sap order id
         $inputValue = $inputOrder[self::INPUT_SAP_ORDER_NUMBER];
         $sapOrderValue = $sapOrder->getData('sap_order_id');
@@ -534,7 +474,6 @@ class OrderStatusHelper
             $sapOrder->setData('sap_order_id', $inputValue);
             $orderStatusNotes .= 'SAP Order Id was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
         }
-
         // check order created at
         $inputValue = $inputOrder[self::INPUT_SAP_ORDER_CREATE_DATE];
         $sapOrderValue = $sapOrder->getData('order_created_at');
@@ -542,7 +481,6 @@ class OrderStatusHelper
         {
             // update date
             $isUpdateDate = true;
-
             // if they both have a value then compare the dates
             // otherwise go ahead and update
             if (!empty($inputValue) && !empty($sapOrderValue))
@@ -555,7 +493,6 @@ class OrderStatusHelper
                     $isUpdateDate = false;
                 }
             }
-
             // if the date is okay to update then update
             if ($isUpdateDate)
             {
@@ -564,7 +501,6 @@ class OrderStatusHelper
                 $orderStatusNotes .= 'Order created was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
             }
         }
-
         // check sap order status
         $inputValue = $inputOrder[self::INPUT_SAP_SAP_ORDER_STATUS];
         $sapOrderValue = $sapOrder->getData('sap_order_status');
@@ -574,7 +510,6 @@ class OrderStatusHelper
             $sapOrder->setData('sap_order_status', $inputValue);
             $orderStatusNotes .= 'SAP Order Status was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
         }
-
         // check order status
         $inputValue = $this->getOrderStatus($inputOrder[self::INPUT_SAP_SAP_ORDER_STATUS], $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]);
         $sapOrderValue = $sapOrder->getData('order_status');
@@ -585,7 +520,6 @@ class OrderStatusHelper
             $orderStatus = $inputValue;
             $orderStatusNotes .= 'Order Status was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
         }
-
         // check if the payer id changed
         $inputValue = $inputOrder[self::INPUT_SAP_PAYER_ID];
         $sapOrderValue = $sapOrder->getData('sap_payer_id');
@@ -595,18 +529,15 @@ class OrderStatusHelper
             $sapOrder->setData('sap_payer_id', $inputValue);
             $orderStatusNotes .= 'Payer Id was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
         }
-
         // if there was something updated then update the table
         if ($isUpdateNeeded)
         {
             // update the table
             $this->_sapOrderResource->save($sapOrder);
-
             // insert new record in the history
             $this->insertOrderSapHistory($sapOrder->getId(), $orderStatus, $orderStatusNotes);
         }
     }
-
     /**
      * Insert the order sap item table with the appropriate values
      *
@@ -619,11 +550,9 @@ class OrderStatusHelper
         // variables
         $sapOrderStatus = $inputOrder[self::INPUT_SAP_SAP_ORDER_STATUS];
         $shipTrackingNumber = $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER];
-
         // get the order status for this order based on the
         // ship tracking number
         $orderStatus = $this->getOrderStatus($sapOrderStatus, $shipTrackingNumber);
-
         // add to the sales_order_sap_item table
         $sapOrderItem = $this->_sapOrderItemFactory->create();
         $sapOrderItem->setData('order_sap_id', $orderSapId);
@@ -633,21 +562,16 @@ class OrderStatusHelper
         $sapOrderItem->setData('sku_description', $inputOrder[self::INPUT_SAP_SKU_DESCRIPTION]);
         $sapOrderItem->setData('qty', $inputOrder[self::INPUT_SAP_ORDER_QTY]);
         $sapOrderItem->setData('confirmed_qty', $inputOrder[self::INPUT_SAP_CONFIRMED_QTY]);
-
         // save the data to the table
         $this->_sapOrderItemResource->save($sapOrderItem);
-
         // get the entity id from the newly added sap order item
         $orderSapItemId = $sapOrderItem->getId();
-
         // add to the sales_order_sap_item_history table
         $this->insertOrderSapItemHistory($orderSapItemId, $orderStatus, null);
-
         // return the order sap item id that was generated from
         // inserting into the table
         return $orderSapItemId;
     }
-
     /**
      * Insert the order sap item history table with the appropriate values
      *
@@ -662,16 +586,13 @@ class OrderStatusHelper
         $sapOrderItemHistory = $this->_sapOrderItemHistoryFactory->create();
         $sapOrderItemHistory->setData('order_sap_item_id', $orderSapItemId);
         $sapOrderItemHistory->setData('order_status', $orderStatus);
-
         if (!empty($orderStatusNotes))
         {
             $sapOrderItemHistory->setData('order_status_notes', $orderStatusNotes);
         }
-
         // save the data to the table
         $this->_sapOrderItemHistoryResource->save($sapOrderItemHistory);
     }
-
     /**
      * Insert the order sap shipment table with the appropriate values
      *
@@ -683,7 +604,6 @@ class OrderStatusHelper
     {
         // get the ship tracking number for later use
         $shipTrackingNumber = $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER];
-
         // only add something if there is a ship tracking number
         // this is because this table is for when the item has been shipped
         if (!empty($shipTrackingNumber))
@@ -698,12 +618,10 @@ class OrderStatusHelper
             $sapOrderShipment->setData('fulfillment_location', $inputOrder[self::INPUT_SAP_FULFILLMENT_LOCATION]);
             $sapOrderShipment->setData('sap_billing_doc_number', $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER]);
             $sapOrderShipment->setData('sap_billing_doc_date', $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_DATE]);
-
             // save the data to the table
             $this->_sapOrderShipmentResource->save($sapOrderShipment);
         }
     }
-
     /**
      * Update the order sap Item table with the appropriate values
      *
@@ -715,11 +633,9 @@ class OrderStatusHelper
     {
         // initialize update flag
         $isUpdateNeeded = false;
-
         // initialize the order status and notes
         $orderStatus = 'updated';
         $orderStatusNotes = '';
-
         // check sap order status
         $inputValue = $inputOrder[self::INPUT_SAP_SAP_ORDER_STATUS];
         $sapOrderValue = $sapOrderItem->getData('sap_order_status');
@@ -729,7 +645,6 @@ class OrderStatusHelper
             $sapOrderItem->setData('sap_order_status', $inputValue);
             $orderStatusNotes .= 'SAP Order Status was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
         }
-
         // check order status
         $inputValue = $this->getOrderStatus($inputOrder[self::INPUT_SAP_SAP_ORDER_STATUS], $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]);
         $sapOrderItemValue = $sapOrderItem->getData('order_status');
@@ -740,18 +655,15 @@ class OrderStatusHelper
             $orderStatus = $inputValue;
             $orderStatusNotes .= 'Order Status was ' . $sapOrderItemValue . ' now ' . $inputValue . '. ';
         }
-
         // if there was something updated then update the table
         if ($isUpdateNeeded)
         {
             // update the table
             $this->_sapOrderItemResource->save($sapOrderItem);
-
             // insert new record in the history
             $this->insertOrderSapItemHistory($sapOrderItem->getId(), $orderStatus, $orderStatusNotes);
         }
     }
-
     /**
      * Update the order sap Item table with the appropriate values
      *
@@ -763,7 +675,6 @@ class OrderStatusHelper
     {
         // initialize update flag
         $isUpdateNeeded = false;
-
         // check the ship tracking number
         $inputValue = $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER];
         $sapOrderValue = $sapOrderShipment->getData('ship_tracking_number');
@@ -772,7 +683,6 @@ class OrderStatusHelper
             $isUpdateNeeded = true;
             $sapOrderShipment->setData('ship_tracking_number', $inputValue);
         }
-
         // check the quantity
         $inputValue = $inputOrder[self::INPUT_SAP_ORDER_QTY];
         $sapOrderValue = $sapOrderShipment->getData('qty');
@@ -781,7 +691,6 @@ class OrderStatusHelper
             $isUpdateNeeded = true;
             $sapOrderShipment->setData('qty', $inputValue);
         }
-
         // check the confirmed quantity
         $inputValue = $inputOrder[self::INPUT_SAP_CONFIRMED_QTY];
         $sapOrderValue = $sapOrderShipment->getData('confirmed_qty');
@@ -790,7 +699,6 @@ class OrderStatusHelper
             $isUpdateNeeded = true;
             $sapOrderShipment->setData('confirmed_qty', $inputValue);
         }
-
         // check delivery number
         $inputValue = $inputOrder[self::INPUT_SAP_DELIVERY_NUMBER];
         $sapOrderValue = $sapOrderShipment->getData('delivery_number');
@@ -799,7 +707,6 @@ class OrderStatusHelper
             $isUpdateNeeded = true;
             $sapOrderShipment->setData('delivery_number', $inputValue);
         }
-
         // check fulfillment location
         $inputValue = $inputOrder[self::INPUT_SAP_FULFILLMENT_LOCATION];
         $sapOrderValue = $sapOrderShipment->getData('fulfillment_location');
@@ -808,7 +715,6 @@ class OrderStatusHelper
             $isUpdateNeeded = true;
             $sapOrderShipment->setData('fulfillment_location', $inputValue);
         }
-
         // check to see if the billing doc number changed
         $inputValue = $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER];
         $sapOrderValue = $sapOrderShipment->getData('sap_billing_doc_number');
@@ -817,7 +723,6 @@ class OrderStatusHelper
             $isUpdateNeeded = true;
             $sapOrderShipment->setData('sap_billing_doc_number', $inputValue);
         }
-
         // check to see if the billing doc date changed
         $inputValue = $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_DATE];
         $sapOrderValue = $sapOrderShipment->getData('sap_billing_doc_date');
@@ -825,7 +730,6 @@ class OrderStatusHelper
         {
             // update date
             $isUpdateDate = true;
-
             // if they both have a value then compare the dates
             // otherwise go ahead and update
             if (!empty($inputValue) && !empty($sapOrderValue))
@@ -838,7 +742,6 @@ class OrderStatusHelper
                     $isUpdateDate = false;
                 }
             }
-
             // if the date is okay to update then update
             if ($isUpdateDate)
             {
@@ -846,7 +749,6 @@ class OrderStatusHelper
                 $sapOrderShipment->setData('sap_billing_doc_date', $inputValue);
             }
         }
-
         // if there was something updated then update the table
         if ($isUpdateNeeded)
         {
@@ -854,7 +756,6 @@ class OrderStatusHelper
             $this->_sapOrderShipmentResource->save($sapOrderShipment);
         }
     }
-
     /**
      * Determine the status of the order or the order item
      *
@@ -865,7 +766,6 @@ class OrderStatusHelper
     private function getOrderStatus($sapOrderStatus, $shipTrackingNumber)
     {
         $status = 'created';
-
         // determine the status of the order
         if (!empty($shipTrackingNumber))
         {
@@ -883,11 +783,9 @@ class OrderStatusHelper
         {
             $status = 'created_approved';
         }
-
         // return the status
         return $status;
     }
-
     /**
      * Process the batch processing table with the appropriate values
      *
@@ -904,18 +802,15 @@ class OrderStatusHelper
             // get the order for the desired increment id
             $order = $this->_orderFactory->create();
             $this->_orderResource->load($order, $inputOrder[self::INPUT_SAP_MAGENTO_PO], 'increment_id');
-
             // set the order id
             $orderId = $order->getId();
         }
-
         // check to see if there is an order id
         if ($orderId)
         {
             // get the sap batch order
             $sapOrderBatch = $this->_sapOrderBatchFactory->create();
             $this->_sapOrderBatchResource->load($sapOrderBatch, $orderId, 'order_id');
-
             // check to see if the sap order batch was loaded properly
             // it should as the batch record should have been created before
             // the status file to contain the order but it is best to check
@@ -939,7 +834,6 @@ class OrderStatusHelper
             $this->_logger->error("SMG\Api\Helper\OrderStatusHelper - Missing orderId in file.");
         }
     }
-
     /**
      * Insert the order sap batch table with the appropriate values
      *
@@ -954,30 +848,26 @@ class OrderStatusHelper
         {
             $sapOrderBatch->setData('is_capture', true);
         }
-
         // check to see if the sap billing doc is set if it is then set the
         // invoice reconciliation for processing
         if (!empty($inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER]))
         {
             $sapOrderBatch->setData('is_invoice_reconciliation', true);
         }
-
         // save the data to the table
         $this->_sapOrderBatchResource->save($sapOrderBatch);
     }
-
     /**
      * Update the order sap batch table with the appropriate values
      *
      * @param $inputOrder
-     * @param $sapOrderBatch
+     * @param $sapOrder
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
     private function updateOrderSapBatch($inputOrder, $sapOrderBatch)
     {
         // initialize update flag
         $isUpdateNeeded = false;
-
         // first check to see if this request was unauthorized or set to be unauthorized
         // as we don't want to do anything if that is the case
         if ($sapOrderBatch->getData('is_unauthorized') !== true)
@@ -990,43 +880,49 @@ class OrderStatusHelper
                 $isUpdateNeeded = true;
                 $sapOrderBatch->setData('is_capture', true);
             }
-
             // Get the sales order
-            /**
-             * @var \Magento\Sales\Model\Order $order
-             */
-            $order = $this->_orderFactory->create();
-            $this->_orderResource->load($order, $sapOrderBatch->getData('order_id'));
-
-            // Determine if this is a 100% discount as we do not
-            // want to invoice the order online as it will fail.
-            // 100% discounts should be invoiced offline
-            if(!empty($order->getData('coupon_code')))
+                /**
+                 * @var \Magento\Sales\Model\Order $order
+                 */
+                $order = $this->_orderFactory->create();
+                $this->_orderResource->load($order, $sapOrderBatch->getData('order_id'));
+        // Get the order coupon code discount values if the coupon code
+        // if exists on the order.  You will need to get the order based on the
+        if(!empty($order->getData('coupon_code')))
+        {
+            $orderDiscount = $this->_discountHelper->DiscountCode($order->getData('coupon_code'));
+            $hdrDiscCondCode = $orderDiscount['hdr_disc_cond_code'];
+            if($hdrDiscCondCode == 'Z616')
             {
-                $orderDiscount = $this->_discountHelper->DiscountCode($order->getData('coupon_code'));
-                $hdrDiscCondCode = $orderDiscount['hdr_disc_cond_code'];
-                if($hdrDiscCondCode == 'Z616')
-                {
-                    // set the flag to have updates
-                    $isUpdateNeeded = true;
-
-                    // invoice the order offline
-                    $this->invoiceOffline($order, $sapOrderBatch);
-                }
+            /* create a invoice */  
+            if($order->canInvoice()) {          
+            $invoice = $this->_invoiceService->prepareInvoice($order);
+            if (!$invoice->getTotalQty()) {
+                throw new \Magento\Framework\Exception\LocalizedException(
+                __('You can\'t create an invoice without products.')
+                );
             }
-
-            // determine if this is a subscription as we do not
-            // want to invoice the order online as it will fail.
-            // subscriptions should be invoiced offline.
-            if ($order->isSubscription())
-            {
-                // set the flag to have updates
-                $isUpdateNeeded = true;
-
-                // invoice the order offline
-                $this->invoiceOffline($order, $sapOrderBatch);
+            $invoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
+            $invoice->register();
+            $transaction = $this->_transaction
+            ->addObject($invoice)
+            ->addObject($invoice->getOrder());
+            $transaction->save();
+            
+            $this->_invoiceSender->send($invoice);
+            $order->addStatusHistoryComment(
+            __('Notified customer about invoice #%1.', $invoice->getId())
+            )
+            ->setIsCustomerNotified(false)
+            ->save();
             }
-
+             /* end of create a invoice */
+            $today = date('Y-m-d H:i:s');
+            $isUpdateNeeded = true;
+            $sapOrderBatch->setData('is_capture', true);
+            $sapOrderBatch->setData('capture_process_date', $today);
+            }
+        }
             // check the shipment
             if (!empty($inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]) &&
                 !empty($sapOrderBatch->getData('capture_process_date')) &&
@@ -1036,7 +932,6 @@ class OrderStatusHelper
                 $isUpdateNeeded = true;
                 $sapOrderBatch->setData('is_shipment', true);
             }
-
             // check if the order was invoiced
             // if it was then it is ready to be reconciled
             if (!empty($inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER]) &&
@@ -1047,55 +942,11 @@ class OrderStatusHelper
                 $sapOrderBatch->setData('is_invoice_reconciliation', true);
             }
         }
-
         // if there was something updated then update the table
         if ($isUpdateNeeded)
         {
             // update the table
             $this->_sapOrderBatchResource->save($sapOrderBatch);
         }
-    }
-
-    /**
-     * This function allows orders to be invoiced but offline so
-     * the system doesn't try to capture funds.
-     *
-     * @param \Magento\Sales\Model\Order $order
-     * @param \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
-     * @throws \Magento\Framework\Exception\LocalizedException
-     */
-    private function invoiceOffline($order, $sapOrderBatch)
-    {
-        /* create a invoice */
-        // first check to see if there is an invoice that exists already
-        // if there is one then don't try to create one
-        if (!$order->hasInvoices())
-        {
-            if ($order->canInvoice())
-            {
-                $invoice = $this->_invoiceService->prepareInvoice($order);
-                if (!$invoice->getTotalQty())
-                {
-                    throw new \Magento\Framework\Exception\LocalizedException(__('You can\'t create an invoice without products.'));
-                }
-
-                $invoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
-                $invoice->register();
-                $transaction = $this->_transaction
-                    ->addObject($invoice)
-                    ->addObject($invoice->getOrder());
-                $transaction->save();
-
-                $this->_invoiceSender->send($invoice);
-                $order->addStatusHistoryComment(__('Notified customer about invoice #%1.', $invoice->getId()))
-                    ->setIsCustomerNotified(false)
-                    ->save();
-            }
-        }
-        /* end of create a invoice */
-
-        $today = date('Y-m-d H:i:s');
-        $sapOrderBatch->setData('is_capture', true);
-        $sapOrderBatch->setData('capture_process_date', $today);
     }
 }

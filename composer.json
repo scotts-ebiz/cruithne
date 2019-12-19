@@ -13,8 +13,6 @@
         "amasty/securityauth": "^1.1",
         "avalara/avatax-magento": "^1.5",
         "composer/composer": "@alpha",
-        "magento/composer-root-update-plugin": "~0.1",
-        "magento/product-enterprise-edition": "2.3.2-p2",
         "gigya/magento2-im": "^5.4",
         "magento/composer-root-update-plugin": "~0.1",
         "magento/product-enterprise-edition": "2.3.2-p2",

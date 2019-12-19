@@ -4,7 +4,6 @@
  * Date: 5/14/19
  */
 namespace SMG\Api\Helper;
-
 use Magento\Framework\App\ResourceConnection;
 use Magento\Sales\Api\CreditmemoRepositoryInterface;
 use Magento\Sales\Api\Data\CreditmemoInterface;
@@ -31,13 +30,10 @@ use SMG\OrderDiscount\Helper\Data as DiscountHelper;
 use SMG\CreditReason\Model\CreditReasonCodeFactory;
 use SMG\CreditReason\Model\ResourceModel\CreditReasonCode as CreditReasonCodeReource;
 use SMG\CreditReason\Model\ResourceModel\CreditReasonCode\CollectionFactory as CreditReasonCodeCollectionFactory;
-
 class OrdersHelper
 {
     // Output JSON file constants
     const ORDER_NUMBER = 'OrderNumber';
-    const SUBSCRIPTION_ORDER = 'SubscriptOrder';
-    const SUBSCRIPTION_TYPE = 'SubscriptType';
     const DATE_PLACED = 'DatePlaced';
     const SAP_DELIVERY_DATE = 'SAPDeliveryDate';
     const CUSTOMER_NAME = 'CustomerName';
@@ -82,124 +78,98 @@ class OrdersHelper
     const DISCOUNT_PERCENT_AMOUNT = 'DiscPercAmt';
     const SURCH_PERCENT_AMOUNT = 'SurchPercAmt';
     const DISCOUNT_REASON = 'ReasonCode';
-    const SUBSCRIPTION_SHIP_START = 'SubscriptLineShipStart';
-    const SUBSCRIPTION_SHIP_END = 'SubscriptLineShipEnd';
-
     /**
      * @var LoggerInterface
      */
     protected $_logger;
-
     /**
      * @var ResourceConnection
      */
     protected $_resourceConnection;
-
     /**
      * @var CreditReasonCodeFactory
      */
     protected $_creditReasonCodeFactory;
-
     /**
      * @var CreditReasonCodeResource
      */
     protected $_creditReasonCodeResource;
-
     /**
      * @var CreditReasonCodeCollectionFactory
      */
     protected $_creditReasonCodeCollectionFactory;
-
     /**
      * @var ResponseHelper
      */
     protected $_responseHelper;
-
     /**
      * @var OrderCollectionFactory
      */
     protected $_orderCollectionFactory;
-
     /**
      * @var OrderItemCollectionFactory
      */
     protected $_orderItemCollectionFactory;
-
     /**
      * @var ShippingConditionCodeFactory
      */
     protected $_shippingConditionCodeFactory;
-
     /**
      * @var ShippingConditionCodeResource
      */
     protected $_shippingConditionCodeResource;
-
     /**
      * @var SapOrderBatchCreditmemoCollectionFactory
      */
     protected  $_sapOrderBatchCreditmemoCollectionFactory;
-
     /**
      * @var SapOrderBatchRmaCollectionFactory
      */
     protected  $_sapOrderBatchRmaCollectionFactory;
-
     /**
      * @var OrderFactory
      */
     protected $_orderFactory;
-
     /**
      * @var OrderResource
      */
     protected $_orderResource;
-
     /**
      * @var ItemFactory
      */
     protected $_itemFactory;
-
     /**
      * @var ItemResource
      */
     protected $_itemResource;
-
     /**
      * @var SapOrderFactory
      */
     protected $_sapOrderFactory;
-
     /**
      * @var SapOrderResource
      */
     protected $_sapOrderResource;
-
     /**
      * @var CreditmemoRepositoryInterface
      */
     protected $_creditmemoRespository;
-
     /**
      * @var rmaRepositoryInterface
      */
     protected $_rmaRespository;
-
     /**
      * @var SapOrderBatchCollectionFactory
      */
     protected $_sapOrderBatchCollectionFactory;
-
      /**
      * @var DiscountHelper
      */
     protected $_discountHelper;
-
     /**
      * @var SapOrderBatchResource
      */
     protected $_sapOrderBatchResource;
-
     /**
      * OrdersHelper constructor.
      *
@@ -275,7 +245,6 @@ class OrdersHelper
         $this->_discountHelper = $discountHelper;
         $this->_sapOrderBatchResource = $sapOrderBatchResource;
     }
-
     /**
      * Get the sales orders in the desired format
      *
@@ -285,34 +254,27 @@ class OrdersHelper
     {
         // get the debit order data
         $debitArray = $this->getDebitOrderData();
-
         // get the credit order data
         $creditArray = $this->getCreditOrderData();
-
         // get the rma dat
         $rmaArray = $this->getRmaOrderData();
-
         // merge the debits and credits
         $ordersArray = array_merge($debitArray, $creditArray, $rmaArray);
-
         // determine if there is anything there to send
         if (empty($ordersArray))
         {
             // log that there were no records found.
             $this->_logger->info("SMG\Api\Helper\OrdersHelper - No Orders were found for processing.");
-
             $orders = $this->_responseHelper->createResponse(true, 'No Orders where found for processing.');
         }
         else
         {
             $orders = $this->_responseHelper->createResponse(true, $ordersArray);
         }
-
         // return..
         
         return $orders;
     }
-
     /**
      * Get the debit orders
      *
@@ -321,12 +283,10 @@ class OrdersHelper
     private function getDebitOrderData()
     {
         $ordersArray = array();
-
         // get the orders that are ready to be sent to SAP
         $sapOrderBatches = $this->_sapOrderBatchCollectionFactory->create();
         $sapOrderBatches->addFieldToFilter('is_order', ['eq' => true]);
         $sapOrderBatches->addFieldToFilter('order_process_date', ['null' => true]);
-
         // check if there are orders to process
         if ($sapOrderBatches->count() > 0)
         {
@@ -337,24 +297,20 @@ class OrdersHelper
             {
                 // get the required fields needed for processing
                 $orderId = $sapOrderBatch->getData('order_id');
-
                 // Get the sales order
                 /**
                  * @var \Magento\Sales\Model\Order $order
                  */
                 $order = $this->_orderFactory->create();
                 $this->_orderResource->load($order, $orderId);
-
                 // make sure that this order was not canceled before continuing
                 // we do not want to send canceled orders
                 if ($order->isCanceled())
                 {
                     // get the date for today
                     $today = date('Y-m-d H:i:s');
-
                     // update the process date so it isn't picked up again
                     $sapOrderBatch->setData('order_process_date', $today);
-
                     // save to the database
                     $this->_sapOrderBatchResource->save($sapOrderBatch);
                 }
@@ -365,7 +321,6 @@ class OrdersHelper
                     $orderItems->addFieldToFilter("order_id", ['eq' => $order->getId()]);
                     $orderItems->addFieldToFilter("product_type", ['neq' => 'bundle']);
                     $orderItems->addFieldToFilter("product_type", ['neq' => 'configurable']);
-
                     /**
                      * @var \Magento\Sales\Model\Order\Item $orderItem
                      */
@@ -376,11 +331,9 @@ class OrdersHelper
                 }
             }
         }
-
         // return
         return $ordersArray;
     }
-
     /**
      * Takes the order and item details and puts it in an array
      *
@@ -394,28 +347,27 @@ class OrdersHelper
     {
         // get tomorrows date
         $tomorrow = date('Y-m-d', strtotime("tomorrow"));
-
         // split the base url into different parts for later use
         $urlParts = parse_url($order->getStore()->getBaseUrl());
-
         // get the shipping condition data
         /**
          * @var /SMG/OfflineShipping/Model/ShippingConditionCode $shippingCondition
          */
         $shippingCondition = $this->_shippingConditionCodeFactory->create();
         $this->_shippingConditionCodeResource->load($shippingCondition, $order->getShippingMethod(), 'shipping_method');
-
-        // get the values that change depending on the type of order
+        // check to see if there was a value
+        $invoiceAmount = $order->getData('total_invoiced');
+        if (empty($invoiceAmount))
+        {
+            $invoiceAmount = '';
+        }
+        // get the quantity
         $quantity = $orderItem->getQtyOrdered();
-        $grossSales = $order->getData('grand_total');
         $shippingAmount = $order->getData('shipping_amount');
         $taxAmount = $order->getData('tax_amount');
         $hdrDiscFixedAmount = '';
         $hdrDiscPerc = '';
         $hdrDiscCondCode = '';
-        $subtotal = $order->getData('subtotal');
-        $invoiceAmount = $order->getData('total_invoiced');
-
         // get the shipping address
         /**
          * @var \Magento\Sales\Model\Order\Address $shippingAddress
@@ -428,30 +380,25 @@ class OrdersHelper
             $customerFirstName = $order->getData('customer_firstname');
             $customerLastName = $order->getData('customer_lastname');
         }
-
         // get the customer name
         // SAP requires the shipping name not the customer/billing name
         $customerName = $customerFirstName . ' ' . $customerLastName;
-
         if(!empty($order->getData('coupon_code'))){
             $orderDiscount = $this->_discountHelper->DiscountCode($order->getData('coupon_code'));
             $hdrDiscFixedAmount = $orderDiscount['hdr_disc_fixed_amount'];
             $hdrDiscPerc = $orderDiscount['hdr_disc_perc'];
             $hdrDiscCondCode = $orderDiscount['hdr_disc_cond_code'];
         }
-
         $discCondCode = '';
         $discFixedAmt = '';
         $discPerAmt = '';
         $itemDiscount = $this->_discountHelper->CatalogCode($order->getId(), $orderItem);
-
         if(!empty($itemDiscount))
         { 
             $discFixedAmt = $itemDiscount['disc_fixed_amount'];
             $discPerAmt  = $itemDiscount['disc_percent_amount'];
             $discCondCode = $itemDiscount['disc_condition_code'];
         }
-
         // set credit fields to empty
         $hdrSurchFixedAmount = '';
         $hdrSurchPerc = '';
@@ -463,76 +410,28 @@ class OrdersHelper
         $surchCondCode='';
         $surchFixedAmt='';
         $surchPerAmt='';
-
-        // determine if this is a subscription
-        if ($order->isSubscription())
-        {
-            // create an array of the desired totals
-            $totalFields = array("grand_total", "shipping_amount", "subtotal", "tax_amount", "total_invoiced", "hdr_disc_fixed_amount");
-
-            // get an array of the desired values summed up for the given subscription
-            $totalArray = $order->getAllSubscriptionTotals($totalFields);
-            if (!empty($totalArray))
-            {
-                if (isset($totalArray["grand_total"]))
-                {
-                    $grossSales = $totalArray["grand_total"];
-                }
-
-                if (isset($totalArray["shipping_amount"]))
-                {
-                    $shippingAmount = $totalArray["shipping_amount"];
-                }
-
-                if (isset($totalArray["hdr_disc_fixed_amount"]))
-                {
-                    $hdrDiscFixedAmount = $totalArray["hdr_disc_fixed_amount"];
-                }
-
-                if (isset($totalArray["subtotal"]))
-                {
-                    $subtotal = $totalArray["subtotal"];
-                }
-
-                if (isset($totalArray["tax_amount"]))
-                {
-                    $taxAmount = $totalArray["tax_amount"];
-                }
-
-                if (isset($totalArray["total_invoiced"]))
-                {
-                    $invoiceAmount = $totalArray["total_invoiced"];
-                }
-            }
-        }
-
         // determine what type of order
         $debitCreditFlag = 'DR';
         if (!empty($creditMemo) && !empty($creditMemoItem))
         {
             $debitCreditFlag = 'CR';
-
             // set other credit memeo type fields
             $quantity = $creditMemoItem->getQty();
             $shippingAmount = $creditMemo->getShippingAmount();
             $creditAmount = $creditMemoItem->getRowTotalInclTax();
             $creditComment = $creditMemo->getData('customer_note');
             $orderReason = $creditMemoItem->getData('refunded_reason_code');
-
             // get the sap order for the billing doc number
             /**
              * @var \SMG\Sap\Model\SapOrder $sapOrder
              */
             $sapOrder = $this->_sapOrderFactory->create();
             $this->_sapOrderResource->load($sapOrder, $order->getId(), 'order_id');
-
             $sapOrderItems = $sapOrder->getSapOrderItems();
             $sapOrderItems->addFieldToFilter('sku', ['eq' => $orderItem->getSku()]);
-
             // if there is something there then get the first item
             // there should only be one item but get the first just in case
             $sapOrderItem = $sapOrderItems->getFirstItem();
-
             // get the billing doc number
             $referenceDocNum = $sapOrderItem->getData('sap_billing_doc_number');
             if (!isset($referenceDocNum))
@@ -540,33 +439,27 @@ class OrdersHelper
                 $referenceDocNum = '';
             }
         }
-
         // Returns (Rma)
         if (!empty($rmaItem) && !empty($rmaItemInfo))
         {
             $debitCreditFlag = 'RE';
-
             // set rma fields
             $quantity = $rmaItem->getData('qty_returned');
             $shippingAmount = '0';
             $discCondCode = 'ZMPA';
             $discPerAmt = '100';
             $taxAmount = '0';
-
             // Get the reason code
             $reasonId = $rmaItemInfo->getData('reason_id');
             $returnReason = $this->_creditReasonCodeFactory->create();
             $this->_creditReasonCodeResource->load($returnReason, $reasonId);
-
             $orderReason = $returnReason->getData('reason_code');
-
             // get the sap order for the billing doc number
             /**
              * @var \SMG\Sap\Model\SapOrder $sapOrder
              */
             $sapOrder = $this->_sapOrderFactory->create();
             $this->_sapOrderResource->load($sapOrder, $order->getId(), 'order_id');
-
             // get the sap order for the billing doc number
             /**
              * @var \SMG\Sap\Model\SapOrder $sapOrder
@@ -587,7 +480,6 @@ class OrdersHelper
         }
         // If configurable, get parent price
         $price = $orderItem->getOriginalPrice();
-
         if (!empty($orderItem->getParentItemId())) {
             $parent = $this->_orderItemCollectionFactory->create()->addFieldToFilter('item_id', ['eq' => $orderItem->getParentItemId()]);
             /**
@@ -600,18 +492,9 @@ class OrdersHelper
                 $price = $parentItem->getOriginalPrice();
             }
         }
-
-        // check to see if there was a value for invoiceAmount
-        if (empty($invoiceAmount))
-        {
-            $invoiceAmount = '';
-        }
-
         // return
         return array_map('trim', array(
             self::ORDER_NUMBER => $order->getIncrementId(),
-            self::SUBSCRIPTION_ORDER => $order->getSubscriptionOrderId(),
-            self::SUBSCRIPTION_TYPE => $order->getData('subscription_type'),
             self::DATE_PLACED => $order->getData('created_at'),
             self::SAP_DELIVERY_DATE => $tomorrow,
             self::CUSTOMER_NAME => $customerName,
@@ -624,7 +507,7 @@ class OrdersHelper
             self::QUANTITY => $quantity,
             self::UNIT => 'EA',
             self::UNIT_PRICE => $price,
-            self::GROSS_SALES => $grossSales,
+            self::GROSS_SALES => $order->getData('grand_total'),
             self::SHIPPING_AMOUNT => $shippingAmount,
             self::EXEMPT_AMOUNT => '0',
             self::HDR_DISC_FIXED_AMOUNT => $hdrDiscFixedAmount,
@@ -634,7 +517,7 @@ class OrdersHelper
             self::HDR_SURCH_PERC => $hdrSurchPerc,
             self::HDR_SURCH_COND_CODE => $hdrSurchCondCode,
             self::DISCOUNT_AMOUNT => '',
-            self::SUBTOTAL => $subtotal,
+            self::SUBTOTAL => $order->getData('subtotal'),
             self::TAX_RATE => $orderItem->getTaxPercent(),
             self::SALES_TAX => $taxAmount,
             self::INVOICE_AMOUNT => $invoiceAmount,
@@ -655,12 +538,9 @@ class OrdersHelper
             self::SURCH_FIXED_AMOUNT => $surchFixedAmt,
             self::DISCOUNT_PERCENT_AMOUNT => $discPerAmt,
             self::SURCH_PERCENT_AMOUNT => $surchPerAmt,
-            self::DISCOUNT_REASON => $orderItem->getReasonCode(),
-            self::SUBSCRIPTION_SHIP_START => $order->getData('ship_start_date'),
-            self::SUBSCRIPTION_SHIP_END => $order->getData('ship_end_date')
+            self::DISCOUNT_REASON => $orderItem->getReasonCode()
         ));
     }
-
     /**
      * Get the array of credit orders
      *
@@ -669,12 +549,10 @@ class OrdersHelper
     private function getCreditOrderData()
     {
         $ordersArray = array();
-
         // get the orders that are ready to be sent to SAP
         $sapOrderBatchCreditmemos = $this->_sapOrderBatchCreditmemoCollectionFactory->create();
         $sapOrderBatchCreditmemos->addFieldToFilter('is_credit', ['eq' => true]);
         $sapOrderBatchCreditmemos->addFieldToFilter('credit_process_date', ['null' => true]);
-
         // check if there are orders to process
         if ($sapOrderBatchCreditmemos->count() > 0)
         {
@@ -688,24 +566,20 @@ class OrdersHelper
                 $orderItemId = $sapOrderBatchCreditmemo->getData('order_item_id');
                 $creditmemoId = $sapOrderBatchCreditmemo->getData('creditmemo_order_id');
                 $sku = $sapOrderBatchCreditmemo->getData('sku');
-
                 // Get the sales order
                 /**
                  * @var \Magento\Sales\Model\Order $order
                  */
                 $order = $this->_orderFactory->create();
                 $this->_orderResource->load($order, $orderId);
-
                 // Get the sales order item
                 /**
                  * @var \Magento\Sales\Model\Order\Item $orderItem
                  */
                 $orderItem = $this->_itemFactory->create();
                 $this->_itemResource->load($orderItem, $orderItemId);
-
                 // Get the credit memo
                 $creditMemo = $this->_creditmemoRespository->get($creditmemoId);
-
                 // Get the credit memo items
                 $creditMemoItems = $creditMemo->getItems();
                 foreach ($creditMemoItems as $creditMemoItem)
@@ -715,27 +589,22 @@ class OrdersHelper
                     {
                         // add the record to the orders array
                         $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem, $creditMemo, $creditMemoItem);
-
                         // get out of the loop as we found it
                         break;
                     }
                 }
             }
         }
-
         // return
         return $ordersArray;
     }
-
     private function getRmaOrderData()
     {
         $ordersArray = array();
-
         // get the orders that are ready to be sent to SAP
         $sapOrderBatchRmas = $this->_sapOrderBatchRmaCollectionFactory->create();
         $sapOrderBatchRmas->addFieldToFilter('is_return', ['eq' => true]);
         $sapOrderBatchRmas->addFieldToFilter('return_process_date', ['null' => true]);
-
         // check if there are orders to process
         if ($sapOrderBatchRmas->count() > 0)
         {
@@ -749,27 +618,22 @@ class OrdersHelper
                 $orderItemId = $sapOrderBatchRma->getData('order_item_id');
                 $rmaId = $sapOrderBatchRma->getData('rma_id');
                 $sku = $sapOrderBatchRma->getData('sku');
-
                 // Get the sales order
                 /**
                  * @var \Magento\Sales\Model\Order $order
                  */
                 $order = $this->_orderFactory->create();
                 $this->_orderResource->load($order, $orderId);
-
                 // Get the sales order item
                 /**
                  * @var \Magento\Sales\Model\Order\Item $orderItem
                  */
                 $orderItem = $this->_itemFactory->create();
                 $this->_itemResource->load($orderItem, $orderItemId);
-
                 // Get the credit memo
                 $rma = $this->_rmaRespository->get($rmaId);
-
                 // Get the credit memo items
                 $rmaItems = $rma->getItems();
-
                 foreach ($rmaItems as $rmaItem)
                 {
                     // see if the sku is the same as the sku that we are looking for
@@ -777,14 +641,12 @@ class OrdersHelper
                     {
                         // add the record to the orders array
                         $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem, null, null, $rmaItem, $sapOrderBatchRma);
-
                         // get out of the loop as we found it
                         break;
                     }
                 }
             }
         }
-
         // return
         return $ordersArray;
     }

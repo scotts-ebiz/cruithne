@@ -366,6 +366,7 @@ return [
         'Temando_Shipping' => 1,
         'SMG_Vantiv' => 1,
         'Vertex_Tax' => 1,
-        'SMG_Zaius' => 1
+        'SMG_Zaius' => 1,
+        'Zaius_Engage' => 1
     ]
 ];
