@@ -15,10 +15,12 @@ class Toolbar
         if (!$context instanceof \Magento\Sales\Block\Adminhtml\Order\View) {
             return [$context, $buttonList];
         }
-
+        
+        // get current order 
         $order = $context->getOrder();
-
-        if (!empty($order['master_subscription_id']) || !empty($order['subscription_id'])):      
+        
+        // Check isSubscription from the order model
+        if ($order->isSubscription()):          
             $buttonList->remove('order_cancel');
         endif;
 
