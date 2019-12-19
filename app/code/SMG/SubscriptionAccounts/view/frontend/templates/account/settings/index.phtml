@@ -1,37 +1,21 @@
-<h1>Account Settings</h1>
-<?php $customer = $block->getCustomerData(); ?>
+<div
+    class="sp-subscription-details sp-container"
+    data-bind="scope: 'accountDetails'"
+>
+    <!-- ko template: "SMG_SubscriptionAccounts/account-settings.html" --><!-- /ko -->
+</div>
 
-<form method="POST" action="<?php echo $block->escapeUrl( $block->saveFormAction() ); ?>">
-	<h4>Account Information</h4>
-	<div>
-		<label for="firstname">First Name</label>
-		<input type="text" name="firstname" id="firstname" value="<?php echo $block->escapeHtml( $customer['firstname'] ); ?>" />
-	</div>
-	<div>
-		<label for="lastname">Last Name</label>
-		<input type="text" name="lastname" id="lastname" value="<?php echo $block->escapeHtml( $customer['lastname'] ); ?>" />
-	</div>
-
-	<h4>Change Email and Password</h4>
-	<div>
-		<label for="email">Email</label>
-		<input type="email" name="email" id="email" value="<?php echo $block->escapeHtml( $customer['email'] ); ?>" />
-	</div>
-
-	<div>
-		<label for="current_password">Current Password</label>
-		<input type="password" name="current_password" id="current_password" value="" />
-	</div>
-
-	<div>
-		<label for="new_password">New Password</label>
-		<input type="password" name="new_password" id="new_password" value="" />
-	</div>
-
-	<div>
-		<label for="confirm_new_password">Confirm New Password</label>
-		<input type="password" name="confirm_new_password" id="confirm_new_password" value="" />
-	</div>
-	<input type="hidden" name="form_key" value="<?php echo $block->getFormKey(); ?>" />
-	<button type="submit" class="sp-button sp-button--primary">Save</button>
-</form>
+<script type="text/x-magento-init">
+   {
+        "*": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "accountDetails": {
+						"component": "SMG_SubscriptionAccounts/js/account-settings",
+						"account": <?php echo json_encode( $block->getCustomerData() ); ?>
+					}
+                }
+            }
+        }
+    }
+</script>
