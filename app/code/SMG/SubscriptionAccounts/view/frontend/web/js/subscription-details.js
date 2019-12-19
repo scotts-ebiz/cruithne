@@ -9,8 +9,32 @@ define([
 
     return Component.extend({
         initialize(config) {
-            this.subscriptions = ko.observable(config.subscriptions);
-            this.invoices = ko.observable(config.invoices);
+            // this.subscriptions = ko.observable(config.subscriptions);
+            this.subscriptions = ko.observable({
+                "is_annual": true,
+                "subscription_type": "Annual",
+                "main_subscription": {
+                    "invoice_number": 1260,
+                    "starts_at": "Dec 16, 2019",
+                    "ends_at": "Dec 16, 2020",
+                    "next_billing_date": "December 16, 2020",
+                    "cc_last_four": "1111",
+                    "addon_count": 0,
+                    "addon_total_amount": "0.00",
+                    "main_total_amount": "166.60",
+                    "total_amount": "166.60"
+                },
+                "active_subscription": {
+                    "invoice_number": 1260
+                },
+                "invoices": [{
+                    "invoice_number": 1260,
+                    "created_at": "Dec 16, 2019",
+                    "due_on": "Dec 16, 2019",
+                    "paid": "YES",
+                    "total": "166.60"
+                }]
+            });
 
             // We need some reliable way to tell when the dom is finished
             // loading. domReady! doesn't seem to be working, so we delay
@@ -29,11 +53,11 @@ define([
         },
 
         displaySubscriptionModal: function () {
-            cancelSubscriptionModal.modal(options).modal('openModal');
+            cancelSubscriptionModal.openModal();
         },
 
         closeSubscriptionModal: function () {
-            cancelSubscriptionModal.modal(options).modal('closeModal');
+            cancelSubscriptionModal.closeModal();
         },
 
         cancelSubscription: function () {

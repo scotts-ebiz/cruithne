@@ -105,8 +105,11 @@ tr.--dense td {
     }
 }
 
-
 .sp-subscription-details__desktop-links {
+    margin-left: auto;
+}
+
+.sp-subscription-details__subscription-active {
     margin-left: auto;
 }
 
@@ -119,6 +122,12 @@ tr.--dense td {
 #maincontent > .columns {
     display: flex;
     flex-wrap: wrap;
+}
+
+@media screen and (max-width: 640px) {
+    #maincontent > .columns {
+        flex-flow: column;
+    }
 }
 
 .sp-content {

@@ -48,7 +48,7 @@ class Subscription extends \Magento\Framework\View\Element\Template
 
     /**
      * Return customer id
-     * 
+     *
      * @return string
      */
     private function getCustomerId()
@@ -58,7 +58,7 @@ class Subscription extends \Magento\Framework\View\Element\Template
 
     /**
      * Return customer's Recurly account code
-     * 
+     *
      * @return string|bool
      */
     private function getCustomerRecurlyAccountCode()
@@ -74,7 +74,7 @@ class Subscription extends \Magento\Framework\View\Element\Template
 
     /**
      * Return customer subscriptions
-     * 
+     *
      * @return array
      */
     public function getSubscriptions()
@@ -137,7 +137,7 @@ class Subscription extends \Magento\Framework\View\Element\Template
 
                 // Get active subscription, and it's not addons
                 if( $subscription->state == 'active' && $subscription->plan->plan_code != 'add-ons' ) {
-                    $activeSubscription['invoice_number'] = $subscription->invoice->get()->invoice_number; 
+                    $activeSubscription['invoice_number'] = $subscription->invoice->get()->invoice_number;
                 }
 
                 // Get invoice numbers if there is an invoice generated for the subscription
@@ -158,14 +158,16 @@ class Subscription extends \Magento\Framework\View\Element\Template
         } catch (Recurly_NotFoundError $e) {
             return array(
                 'success' => false,
-                'error_message' => $e->getMessage()
+                'error_message' => $e->getMessage(),
+                'api' => Recurly_Client::$apiKey,
+                'subdomain' => Recurly_Client::$subdomain,
             );
         }
     }
 
     /**
      * Return all invoices
-     * 
+     *
      * @param array $invocies
      * @return array
      */
@@ -187,7 +189,7 @@ class Subscription extends \Magento\Framework\View\Element\Template
 
     /**
      * Return invoice based on Invoice ID
-     * 
+     *
      * @param int $id;
      * @return object $invoice
      */
@@ -218,7 +220,7 @@ class Subscription extends \Magento\Framework\View\Element\Template
 
     /**
      * Return customer's billing information
-     * 
+     *
      * @return object $billing_info
      */
     public function getBillingInformation()
@@ -228,7 +230,7 @@ class Subscription extends \Magento\Framework\View\Element\Template
 
         try {
             $billing_info = Recurly_BillingInfo::get($this->getCustomerRecurlyAccountCode());
-            
+
             return $billing_info;
         } catch (Recurly_NotFoundError $e) {
             print "Not found: $e";
