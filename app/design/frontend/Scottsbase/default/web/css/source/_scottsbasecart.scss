@@ -388,9 +388,10 @@
                                 }
                                 .fieldset.coupon > .field:not(.choice) > .control {
                                     width: auto;
+                                    @media screen and (max-width: $screen__xs) {
+                                        clear: left;
+                                    }
                                 }
-
-
                             }
                         }
                         .cart-summary {

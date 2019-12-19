@@ -631,11 +631,13 @@
                     .actions .action.continue:before {
                         display: none;
                     }
+                    .checkout-shipping-disclaimer {
+                        display: none; // TEMPORARY TO HIDE THIS AREA UNTIL RESTYLING IS COMPLETE
+                    }
                 }
-                [type="radio"]:checked,
-                [type="radio"]:not(:checked) {
-                  position: absolute;
-                  left: -9999px;
+                [type="radio"]:checked {
+                    position: absolute;
+                    left: -9999px;
                 }
 
                 [type="radio"]:checked + label,
@@ -900,19 +902,48 @@ td#label_carrier_fedex-nextday_flatrate {
     display:none;
 }
 
-.checkout-index-index {
-    .table-checkout-shipping-method tbody td {
-        border: 0;
+//Test - remove if you don't need it
+//.checkout-index-index {
+//    .table-checkout-shipping-method tbody td {
+//        border: 0;
+//
+//        &.col-price {
+//            width: 48px;
+//        }
+//    }
+//    .table-checkout-shipping-method tbody tr {
+//        border-top: 1px solid #ccc;
+//    }
+//    .table-checkout-shipping-method tbody tr:first-child{
+//        border-top: none;
+//    }
+//}
 
-        &.col-price {
-            width: 48px;
+
+.checkout-index-index {
+    .table-checkout-shipping-method {
+        margin-bottom: 10px;
+        margin-top: 20px;
+
+        @media screen and (max-width: $screen__s) {
+            font-size: 14px;
+            margin-bottom: 24px;
         }
-    }
-    .table-checkout-shipping-method tbody tr {
-        border-top: 1px solid #ccc;
-    }
-    .table-checkout-shipping-method tbody tr:first-child{
-        border-top: none;
+        tbody td {
+            border: none;
+            float: none;
+            display: table-cell;
+            padding: 8px;
+            color: $color_black;
+
+            &.col-price {
+                width: 64px;
+                padding-left: 0;
+                @media screen and (max-width: $screen__s) {
+                    width: 54px;
+                }
+            }
+        }
     }
 }
 
