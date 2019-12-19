@@ -7,11 +7,6 @@ use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 
-/**
- * Class Index
- *
- * @package SMG\SubscriptionCheckout\Plugin\Controller\Cart
- */
 class Index
 {
     /**
@@ -53,10 +48,6 @@ class Index
      */
     public function afterExecute(\Magento\Checkout\Controller\Cart\Index $subject, $result)
     {
-        $this->_logger->debug("******************************");
-        $this->_logger->debug("I am in Cart/Index afterExecute");
-        $this->_logger->debug("*****************************");
-
         try
         {
             // if this is a subscription site we do not want them to go to the checkout cart page

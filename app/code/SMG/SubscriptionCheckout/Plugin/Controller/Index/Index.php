@@ -1,6 +1,6 @@
 <?php
 
-namespace SMG\SubscriptionCheckout\Plugin\Controller\Checkout;
+namespace SMG\SubscriptionCheckout\Plugin\Controller\Index;
 
 use Magento\Checkout\Helper\Data as CheckoutHelper;
 use Magento\Customer\Model\Session as CustomerSession;
@@ -13,11 +13,6 @@ use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 
-/**
- * Class Index
- *
- * @package SMG\SubscriptionCheckout\Plugin\Controller\Checkout\Index
- */
 class Index
 {
     /**
@@ -98,13 +93,8 @@ class Index
      * @param callable $proceed
      * @return Redirect
      */
-    public function aroundExecute(
-        \Magento\Checkout\Controller\Index\Index $subject,
-        callable $proceed
-    )
+    public function beforeExecute(\Magento\Checkout\Controller\Index\Index $subject)
     {
-        $this->_logger->debug("I am in Index/Index beforeExecute");
-
         try
         {
             // if this store uses subscription then check for login before continuing
@@ -137,8 +127,6 @@ class Index
                     // return the login page
                     return $resultRedirect->setPath($customerLoginUrl);
                 }
-            } else {
-                return $proceed();
             }
         }
         catch (\Exception $e)

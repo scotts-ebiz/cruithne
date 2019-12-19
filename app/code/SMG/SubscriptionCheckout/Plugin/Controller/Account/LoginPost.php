@@ -45,12 +45,11 @@ class LoginPost
      * @return mixed
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function afterExecute(
-        \Magento\Customer\Controller\Account\LoginPost $subject,
-        $result
-    ) {
-
-        if ( $this->_subscriptionHelper->isActive( $this->_storeManager->getStore()->getId() ) ) {
+    public function afterExecute(\Magento\Customer\Controller\Account\LoginPost $subject, $result)
+    {
+        // if this is a subscription site we do not want them to go to the checkout cart page
+        if ($this->_subscriptionHelper->isActive( $this->_storeManager->getStore()->getId()))
+        {
             return $result;
         }
     }
