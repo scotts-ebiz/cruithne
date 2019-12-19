@@ -631,125 +631,124 @@
                     left: -9999px;
                 }
                 [type="radio"]+label {
-                        {
-                        position: relative;
-                        padding-left: 28px;
-                        cursor: pointer;
-                        line-height: 20px;
-                        display: inline-block;
+                    position: relative;
+                    padding-left: 28px;
+                    cursor: pointer;
+                    line-height: 20px;
+                    display: inline-block;
+                }
+                [type="radio"]+label:before {
+                    content: '';
+                    position: absolute;
+                    left: 0;
+                    top: -14px;
+                    width: 12px;
+                    height: 12px;
+                    border-radius: 100%;
+                    background: $color-white;
+                    border: 2px solid $color-black;
+                }
+                [type="radio"]:checked+label:after, [type="radio"]:not(:checked)+label:after {
+                    content: '';
+                    width: 6px;
+                    height: 6px;
+                    background: $color-black;
+                    position: absolute;
+                    top: -9px;
+                    left: 5px;
+                    border-radius: 100%;
+                    @include transition(all 0.2s ease);
+                }
+                [type="radio"]:not(:checked)+label:after {
+                    opacity: 0;
+                    -webkit-transform: scale(0);
+                    transform: scale(0);
+                }
+                [type="radio"]:checked+label:after {
+                    opacity: 1;
+                    -webkit-transform: scale(1);
+                    transform: scale(1);
+                }
+                .payment-method [type="radio"]+label:after {
+                    top: 4px;
+                }
+                //Fieldset based styles
+                .fieldset>.field:not(.choice)>.control {
+                    width: auto;
+                    float: none;
+                }
+                .fieldset>.field.choice:before, .fieldset>.field.no-label:before {
+                    width: 0;
+                }
+                .fieldset>.field:not(.choice)>.label {
+                    width: 90%;
+                    text-align: left;
+                    @media screen and (max-width: $screen__l) and (min-width: $screen__m) {
+                        width: 40%;
                     }
-                    [type="radio"]+label:before {
-                        content: '';
-                        position: absolute;
-                        left: 0;
-                        top: -14px;
-                        width: 12px;
-                        height: 12px;
-                        border-radius: 100%;
-                        background: $color-white;
-                        border: 2px solid $color-black;
+                }
+                .fieldset>.field.required, .fieldset>.field._required {
+                    >.label:after {
+                        display: none;
                     }
-                    [type="radio"]:checked+label:after, [type="radio"]:not(:checked)+label:after {
-                        content: '';
-                        width: 6px;
-                        height: 6px;
-                        background: $color-black;
-                        position: absolute;
-                        top: -9px;
-                        left: 5px;
-                        border-radius: 100%;
-                        @include transition(all 0.2s ease);
-                    }
-                    [type="radio"]:not(:checked)+label:after {
-                        opacity: 0;
-                        -webkit-transform: scale(0);
-                        transform: scale(0);
-                    }
-                    [type="radio"]:checked+label:after {
-                        opacity: 1;
-                        -webkit-transform: scale(1);
-                        transform: scale(1);
-                    }
-                    .payment-method [type="radio"]+label:after {
-                        top: 4px;
-                    }
-                    //Fieldset based styles
-                    .fieldset>.field:not(.choice)>.control {
-                        width: auto;
-                        float: none;
-                    }
-                    .fieldset>.field.choice:before, .fieldset>.field.no-label:before {
-                        width: 0;
-                    }
-                    .fieldset>.field:not(.choice)>.label {
-                        width: 90%;
-                        text-align: left;
-                        @media screen and (max-width: $screen__l) and (min-width: $screen__m) {
-                            width: 40%;
-                        }
-                    }
-                    .fieldset>.field.required, .fieldset>.field._required {
+                }
+                .fieldset>.fields {
+                    >.field.required, >.field._required {
                         >.label:after {
                             display: none;
                         }
                     }
-                    .fieldset>.fields {
-                        >.field.required, >.field._required {
-                            >.label:after {
-                                display: none;
-                            }
-                        }
+                }
+                .field.street.admin__control-fields {
+                    div[name="billingAddresscheckmo.street.1"], div[name="billingAddresscheckmo.street.2"] {
+                        display: none;
                     }
-                    .field.street.admin__control-fields {
-                        div[name="billingAddresscheckmo.street.1"], div[name="billingAddresscheckmo.street.2"] {
-                            display: none;
-                        }
+                }
+                .actions-toolbar>.secondary .action:last-child {
+                    margin-top: 30px;
+                }
+                //Payment Page Address Phone links
+                .shipping-information-content a, .billing-address-details a, .shipping-address-item.selected-item a {
+                    cursor: text;
+                    pointer-events: none;
+                    color: #909090;
+                }
+                //Vet this
+                .actions-toolbar>.primary .action:last-child {
+                    margin-top: 10px;
+                }
+                .form.form-discount .actions-toolbar>.primary .action:last-child {
+                    margin-top: 0px;
+                }
+                //Vet this
+                .abs-checkout-title, .opc-wrapper .step-title, .opc-block-shipping-information .shipping-information-title, .checkout-agreements-items .checkout-agreements-item-title {
+                    font-weight: 500;
+                    font-size: 1.6rem;
+                    color: $color_black20_shade;
+                    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                }
+                .cust-btn-add {
+                    font-size: 14px;
+                    float: right;
+                    &:before {
+                        content: '+';
+                        display: inline-block;
+                        margin-right: 3px;
                     }
-                    .actions-toolbar>.secondary .action:last-child {
-                        margin-top: 30px;
+                }
+                //Vet this
+                .item-options {
+                    dd {
+                        font-weight: bold;
                     }
-                    //Payment Page Address Phone links
-                    .shipping-information-content a, .billing-address-details a, .shipping-address-item.selected-item a {
-                        cursor: text;
-                        pointer-events: none;
-                        color: #909090;
-                    }
-                    //Vet this
-                    .actions-toolbar>.primary .action:last-child {
-                        margin-top: 10px;
-                    }
-                    .form.form-discount .actions-toolbar>.primary .action:last-child {
-                        margin-top: 0px;
-                    }
-                    //Vet this
-                    .abs-checkout-title, .opc-wrapper .step-title, .opc-block-shipping-information .shipping-information-title, .checkout-agreements-items .checkout-agreements-item-title {
-                        font-weight: 500;
-                        font-size: 1.6rem;
-                        color: $color_black20_shade;
-                        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                    }
-                    .cust-btn-add {
-                        font-size: 14px;
-                        float: right;
-                        &:before {
-                            content: '+';
-                            display: inline-block;
-                            margin-right: 3px;
-                        }
-                    }
-                    //Vet this
-                    .item-options {
-                        dd {
-                            font-weight: bold;
-                        }
-                        dt {
-                            font-weight: 400;
-                        }
+                    dt {
+                        font-weight: 400;
                     }
                 }
             }
         }
     }
+}
 
     //Error Code
     .field-error, #customer-email-error {
@@ -762,7 +761,6 @@
             display: none;
         }
     }
-}
 /** Checkout Page - End **/
 
 
