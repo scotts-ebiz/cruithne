@@ -199,7 +199,8 @@
                             }
                             .checkout-shipping-method {
                                 .actions-toolbar {
-                                    float: right;
+                                    float: none;
+                                    margin-left: 0;
                                     .action.primary {
                                         font-family: Lato, Arial, sans-serif;
                                         text-transform: uppercase;
@@ -214,6 +215,7 @@
                                         -ms-transition: background 0.2s;
                                         -o-transition: background 0.2s;
                                         transition: background 0.2s;
+                                        float: none;
                                         &:hover {
                                           background: $scotts-secondary-green;
                                         }
@@ -640,8 +642,7 @@
                     left: -9999px;
                 }
 
-                [type="radio"]:checked + label,
-                [type="radio"]:not(:checked) + label {
+                [type="radio"] + label {
                     position: relative;
                     padding-left: 28px;
                     cursor: pointer;
@@ -649,27 +650,25 @@
                     display: inline-block;
                 }
 
-                [type="radio"]:checked + label:before,
-                [type="radio"]:not(:checked) + label:before {
+                [type="radio"] + label:before {
                     content: '';
                     position: absolute;
                     left: 0;
                     top: -14px;
-                    width: 10px;
-                    height: 10px;
+                    width: 12px;
+                    height: 12px;
                     border-radius: 100%;
                     background: $color-white;
-                    border: 2px solid $scotts-secondary-green;
+                    border: 2px solid $color-black;
                 }
-                [type="radio"]:checked + label:after,
-                [type="radio"]:not(:checked) + label:after {
+                [type="radio"] + label:after {
                     content: '';
                     width: 6px;
                     height: 6px;
-                    background: $scotts-secondary-green;
+                    background: $color-black;
                     position: absolute;
-                    top: -10px;
-                    left: 4px;
+                    top: -9px;
+                    left: 5px;
                     border-radius: 100%;
                     @include transition(all 0.2s ease);
                 }
@@ -683,8 +682,7 @@
                     -webkit-transform: scale(1);
                     transform: scale(1);
                 }
-                .payment-method [type="radio"]:checked + label:after,
-                .payment-method [type="radio"]:not(:checked) + label:after {
+                .payment-method [type="radio"] + label:after {
                     top: 4px;
                 }
 
@@ -923,8 +921,6 @@ td#label_carrier_fedex-nextday_flatrate {
 .checkout-index-index {
     .table-checkout-shipping-method {
         margin-bottom: 10px;
-        margin-top: 20px;
-
         @media screen and (max-width: $screen__s) {
             font-size: 14px;
             margin-bottom: 24px;
@@ -934,8 +930,6 @@ td#label_carrier_fedex-nextday_flatrate {
             float: none;
             display: table-cell;
             padding: 8px;
-            color: $color_black;
-
             &.col-price {
                 width: 64px;
                 padding-left: 0;
