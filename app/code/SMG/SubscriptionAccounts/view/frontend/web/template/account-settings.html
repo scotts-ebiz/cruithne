@@ -1,0 +1,34 @@
+<h1>Account Settings</h1>
+<form method="POST">
+	<h4>Account Information</h4>
+	<div>
+		<label for="firstname">First Name</label>
+		<input type="text" name="firstname" id="firstname" data-bind="value: account().firstname" />
+	</div>
+	<div>
+		<label for="lastname">Last Name</label>
+		<input type="text" name="lastname" id="lastname" data-bind="value: account().lastname" />
+	</div>
+
+	<h4>Change Email and Password</h4>
+	<div>
+		<label for="email">Email</label>
+		<input type="email" name="email" id="email" data-bind="value: account().email" />
+	</div>
+
+	<div>
+		<label for="current_password">Current Password</label>
+		<input type="password" name="password" id="password" value="" />
+	</div>
+
+	<div>
+		<label for="newPassword">New Password</label>
+		<input type="password" name="newPassword" id="newPassword" value="" />
+	</div>
+
+	<div>
+		<label for="passwordRetype">Confirm New Password</label>
+		<input type="password" name="passwordRetype" id="passwordRetype" value="" />
+	</div>
+	<button type="submit" class="sp-button sp-button--primary" data-bind="click: saveAccount">Save</button>
+</form>

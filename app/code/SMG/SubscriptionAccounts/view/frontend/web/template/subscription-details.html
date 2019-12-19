@@ -21,6 +21,7 @@
         <a href="/quiz"
            class="sp-link">Lawn conditions changed?</a>
         <a href="#"
+           data-bind="click: displaySubscriptionModal"
            class="sp-link sp-inline-block sp-ml-4 cancel-subscription-modal">Cancel Subscription</a>
     </div>
 </div>
@@ -155,7 +156,8 @@
     </div>
     <button type="button"
             class="sp-button sp-button--primary"
-            id="cancelSubscription">I want to cancel</button>
+            data-bind="click: cancelSubscription">I want to cancel</button>
     <a href="sp-link"
+       data-bind="click: closeSubscriptionModal"
        class="close-subscription-modal">Nevermind, take me back</a>
 </div>

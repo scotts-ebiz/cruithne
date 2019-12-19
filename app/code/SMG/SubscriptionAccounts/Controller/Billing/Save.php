@@ -52,6 +52,11 @@ class Save extends \Magento\Framework\App\Action\Action
     protected $_storeManager;
 
     /**
+     * @var \Magento\Framework\Controller\Result\JsonFactory
+     */
+    protected $_jsonResultFactory;
+
+    /**
      * Save constructor.
      * 
      * @param \Magento\Backend\App\Action\Context $context
@@ -63,6 +68,7 @@ class Save extends \Magento\Framework\App\Action\Action
      * @param \Magento\Customer\Model\Customer $customer
      * @param \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
+     * @param \Magento\Framework\Controller\Result\JsonFactory $jsonFactory
      */
     public function __construct(
         \Magento\Backend\App\Action\Context $context,
@@ -73,7 +79,8 @@ class Save extends \Magento\Framework\App\Action\Action
         \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper,
         \Magento\Customer\Model\Customer $customer,
         \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        \Magento\Framework\Controller\Result\JsonFactory $jsonFactory
     ) {
         $this->_request = $request;
         $this->_messageManager = $messageManager;
@@ -83,38 +90,40 @@ class Save extends \Magento\Framework\App\Action\Action
         $this->_customer = $customer;
         $this->_recurlyHelper = $recurlyHelper;
         $this->_storeManager = $storeManager;
+        $this->_jsonResultFactory = $jsonFactory;
         parent::__construct($context);
     }
 
     public function execute()
     {
-        // Check form key
-        if ( ! $this->formValidation( $this->_request->getParam( 'form_key' ) ) ) {
-            throw new SecurityViolationException( __( 'Unauthorized' ) );
-        }
-
-        // Get form data
-        $request = $this->_request->getParams();
+        $request = json_decode( $this->_request->getContent() );
 
         Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
-        $resultRedirect = $this->resultFactory->create( ResultFactory::TYPE_REDIRECT );
-        $resultRedirect->setUrl( $this->_redirect->getRefererUrl() );
+        $result = $this->_jsonResultFactory->create();
 
         try {
             $billing_info = new Recurly_BillingInfo();
             $billing_info->account_code = $this->getCustomerRecurlyAccountCode();
-            $billing_info->token_id = $request['recurly-token'];
+            $billing_info->token_id = $request->token;
             $billing_info->update();
 
-            $this->_messageManager->addSuccessMessage( 'Billing informations updated' );
+            $data = array(
+                'success'   => true,
+                'message'   => 'Billing details updated.'
+            );
 
-            return $resultRedirect;
+            $result->setData( $data );
+            return $result;
         } catch( Recurly_NotFoundError $e ) {
-            $this->_messageManager->addErrorMessage( $e->getMessage() );
+            $data = array(
+                'success'   => false,
+                'message'   => $e->getMessage()
+            );
 
-            return $resultRedirect;
+            $result->setData( $data );
+            return $result;
         }
     }
 

@@ -11,7 +11,6 @@ define([
         initialize(config) {
             this.subscriptions = ko.observable(config.subscriptions);
             this.invoices = ko.observable(config.invoices);
-            let self = this;
 
             // We need some reliable way to tell when the dom is finished
             // loading. domReady! doesn't seem to be working, so we delay
@@ -27,28 +26,19 @@ define([
                     }
                 }, $('#popup-modal'));
             }, 1000)
+        },
 
-            $(document).on('click', '.trigger-modal', function (e) {
-                e.preventDefault();
-                cancelSubscriptionModal.openModal();
-            });
+        displaySubscriptionModal: function () {
+            cancelSubscriptionModal.modal(options).modal('openModal');
+        },
 
-            $(document).on('click', '.cancel-subscription-modal', function (e) {
-                e.preventDefault();
-                cancelSubscriptionModal.openModal();
-            });
-
-            $(document).on('click', '.close-subscription-modal', function (e) {
-                e.preventDefault();
-                cancelSubscriptionModal.closeModal();
-            });
-
-            $(document).on('click', 'button#cancelSubscription', function () {
-                self.cancelSubscription();
-            });
+        closeSubscriptionModal: function () {
+            cancelSubscriptionModal.modal(options).modal('closeModal');
         },
 
         cancelSubscription: function () {
+            let self = this;
+
             $.ajax({
                 type: 'POST',
                 url: window.location.origin + '/rest/V1/subscription/cancel',
@@ -58,10 +48,10 @@ define([
                 success: function (response) {
                     var response = JSON.parse(response);
                     if (response.success === true) {
-                        cancelSubscriptionModal.closeModal();
+                        self.closeSubscriptionModal();
                     } else {
                         alert(response.message);
-                        cancelSubscriptionModal.closeModal();
+                        self.closeSubscriptionModal();
                     }
                 }
             })
