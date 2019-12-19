@@ -83,7 +83,7 @@ class Save extends \Magento\Framework\App\Action\Action
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper,
         \Magento\Framework\ObjectManagerInterface $objectManager,
-        \Magento\Customer\Model\AccountManagementInterface $accountManagement,
+        \Magento\Customer\Model\AccountManagement $accountManagement,
         \Magento\Framework\Controller\Result\JsonFactory $jsonFactory
     ) {
         $this->_request = $request;
@@ -100,7 +100,7 @@ class Save extends \Magento\Framework\App\Action\Action
     }
 
     public function execute()
-    {
+    {        
         $request = json_decode( $this->_request->getContent() );
 
         // Check form key
