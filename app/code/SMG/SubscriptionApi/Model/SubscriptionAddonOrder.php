@@ -122,11 +122,63 @@ class SubscriptionAddonOrder extends AbstractModel
     }
 
     /**
+     * Get the subscription for this order.
+     *
+     * @return Subscription|bool
+     */
+    public function getSubscription()
+    {
+        if ($this->_subscription->getId()) {
+            return $this->_subscription;
+        }
+
+        $subscription = $this->_subscription->load($this->getSubscriptionEntityId());
+
+        if (! $subscription->getId()) {
+            return false;
+        }
+
+        return $subscription;
+    }
+
+    /**
+     * Get the subscription master ID.
+     *
+     * @return string
+     */
+    public function getMasterSubscriptionId()
+    {
+        $subscription = $this->getSubscription();
+
+        if ($subscription) {
+            return $subscription->getSubscriptionId();
+        }
+
+        return '';
+    }
+
+    /**
+     * Get the subscription type.
+     *
+     * @return string
+     */
+    public function getSubscriptionType()
+    {
+        $subscription = $this->getSubscription();
+
+        if ($subscription) {
+            return $subscription->getSubscriptionType();
+        }
+
+        return '';
+    }
+
+    /**
      * Get subscription addon orders
      * @param bool $selectedOnly
      * @return mixed
      */
-    public function getSubscriptionAddonOrderItems(bool $selectedOnly = false)
+    public function getOrderItems(bool $selectedOnly = false)
     {
 
         // Make sure we have an actual subscription
@@ -238,12 +290,19 @@ class SubscriptionAddonOrder extends AbstractModel
     }
 
     /**
+     * @return string
+     */
+    public function type()
+    {
+        return 'addon';
+    }
+
+    /**
      * Generate Ship Start Date
      * @throws \Exception
      */
     private function generateShipStartDate()
     {
-
         // Grab the shipment open window from the admin
         $shippingOpenWindow = 0;
         if (! empty($this->_subscriptionHelper->getShipDaysStart())) {

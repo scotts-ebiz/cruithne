@@ -697,7 +697,7 @@ class RecurlySubscription
             /** @var SubscriptionAddonOrder $subscriptionAddonOrder */
             foreach( $subscriptionAddonOrders as $subscriptionAddonOrder) {
 
-                $subscriptionAddonOrderItems = $subscriptionAddonOrder->getSubscriptionAddonOrderItems( true );
+                $subscriptionAddonOrderItems = $subscriptionAddonOrder->getOrderItems( true );
 
                 /** @var SubscriptionAddonOrderItem $subscriptionAddonOrderItem */
                 foreach ( $subscriptionAddonOrderItems as $subscriptionAddonOrderItem ) {

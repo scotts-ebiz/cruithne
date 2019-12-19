@@ -50,6 +50,10 @@ class SubscriptionOrder extends AbstractModel
 
     /** @var SapOrderBatchCollectionFactory */
     private $_sapOrderBatchCollectionFactory;
+    /**
+     * @var \SMG\SubscriptionApi\Model\Subscription
+     */
+    protected $_subscription;
 
     /**
      * Constructor.
@@ -66,6 +70,7 @@ class SubscriptionOrder extends AbstractModel
      * @param Context $context
      * @param Registry $registry
      * @param SubscriptionHelper $subscriptionHelper
+     * @param Subscription $subscription
      * @param SubscriptionOrderItemCollectionFactory $subscriptionOrderItemCollectionFactory
      * @param OrderCollectionFactory $orderCollectionFactory
      * @param InvoiceService $invoiceService
@@ -79,6 +84,7 @@ class SubscriptionOrder extends AbstractModel
         Context $context,
         Registry $registry,
         SubscriptionHelper $subscriptionHelper,
+        Subscription $subscription,
         SubscriptionOrderItemCollectionFactory $subscriptionOrderItemCollectionFactory,
         OrderCollectionFactory $orderCollectionFactory,
         InvoiceService $invoiceService,
@@ -98,6 +104,7 @@ class SubscriptionOrder extends AbstractModel
         );
 
         $this->_subscriptionHelper = $subscriptionHelper;
+        $this->_subscription = $subscription;
         $this->_subscriptionOrderItemCollectionFactory = $subscriptionOrderItemCollectionFactory;
         $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->_invoiceService = $invoiceService;
@@ -119,10 +126,62 @@ class SubscriptionOrder extends AbstractModel
     }
 
     /**
+     * Get the subscription for this order.
+     *
+     * @return Subscription|bool
+     */
+    public function getSubscription()
+    {
+        if ($this->_subscription->getId()) {
+            return $this->_subscription;
+        }
+
+        $subscription = $this->_subscription->load($this->getSubscriptionEntityId());
+
+        if (! $subscription->getId()) {
+            return false;
+        }
+
+        return $subscription;
+    }
+
+    /**
+     * Get the subscription master ID.
+     *
+     * @return string
+     */
+    public function getMasterSubscriptionId()
+    {
+        $subscription = $this->getSubscription();
+
+        if ($subscription) {
+            return $subscription->getSubscriptionId();
+        }
+
+        return '';
+    }
+
+    /**
+     * Get the subscription type.
+     *
+     * @return string
+     */
+    public function getSubscriptionType()
+    {
+        $subscription = $this->getSubscription();
+
+        if ($subscription) {
+            return $subscription->getSubscriptionType();
+        }
+
+        return '';
+    }
+
+    /**
      * Get subscription orders
      * @return mixed
      */
-    public function getSubscriptionOrderItems()
+    public function getOrderItems()
     {
 
         // Make sure we have an actual subscription
@@ -231,12 +290,19 @@ class SubscriptionOrder extends AbstractModel
     }
 
     /**
+     * @return string
+     */
+    public function type()
+    {
+        return 'seasonal';
+    }
+
+    /**
      * Generate Ship Start Date
      * @throws \Exception
      */
     private function generateShipStartDate()
     {
-
         // Grab the shipment open window from the admin
         $shippingOpenWindow = 0;
         if (! empty($this->_subscriptionHelper->getShipDaysStart())) {

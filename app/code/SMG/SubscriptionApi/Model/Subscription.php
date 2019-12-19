@@ -16,7 +16,6 @@ use Magento\Framework\Registry;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\Quote;
-use Magento\Setup\Exception;
 use Magento\Store\Model\StoreManager;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\Collection as SubscriptionAddonOrderCollection;
@@ -176,7 +175,7 @@ class Subscription extends AbstractModel
 
         foreach ($orders as $order) {
             /** @var SubscriptionOrder $order */
-            $orderItems = $order->getSubscriptionOrderItems() ?: [];
+            $orderItems = $order->getOrderItems() ?: [];
 
             foreach ($orderItems as $item) {
                 /** @var SubscriptionOrderItem $item */
@@ -203,7 +202,7 @@ class Subscription extends AbstractModel
 
         foreach ($orders as $order) {
             /** @var SubscriptionAddonOrder $order */
-            $orderItems = $order->getSubscriptionAddonOrderItems() ?: [];
+            $orderItems = $order->getOrderItems() ?: [];
 
             foreach ($orderItems as $item) {
                 /** @var SubscriptionOrderItem $item */
@@ -355,7 +354,7 @@ class Subscription extends AbstractModel
         // Go through all the core products, add them to cart and calculate
         // the total subscription price which will be applied to the Annual Subscription product
         foreach ($this->getSubscriptionOrders() as $subscriptionOrder) {
-            foreach ($subscriptionOrder->getSubscriptionOrderItems() as $subscriptionOrderItem) {
+            foreach ($subscriptionOrder->getOrderItems() as $subscriptionOrderItem) {
                 $product = $subscriptionOrderItem->getProduct();
                 $product = $this->_productRepository->get($product->getSku());
                 $totalSubscriptionPrice += $product->getPrice() * $subscriptionOrderItem->getQty();
@@ -394,7 +393,7 @@ class Subscription extends AbstractModel
         try {
             // Go through all selected AddOn Products and add them to the cart
             foreach ($this->getSubscriptionAddonOrders() as $subscriptionAddonOrder) {
-                foreach ($subscriptionAddonOrder->getSubscriptionAddonOrderItems() as $subscriptionAddonOrderItem) {
+                foreach ($subscriptionAddonOrder->getOrderItems() as $subscriptionAddonOrderItem) {
                     if (in_array($subscriptionAddonOrderItem->getCatalogProductSku(), $addons)) {
                         try {
                             $product = $subscriptionAddonOrderItem->getProduct();
@@ -496,7 +495,7 @@ class Subscription extends AbstractModel
             return false;
         }
 
-        $items = $order->getSubscriptionOrderItems();
+        $items = $order->getOrderItems();
 
         if (! $items) {
             return false;
