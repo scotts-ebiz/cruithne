@@ -1,1046 +1,1152 @@
 // Checkout Page - Start //
 .checkout-index-index {
-    .page-header {
-        .header.content {
-            .logo {
-                img{
-                    @include max-screen($screen__m) {
-                        max-width: 96px;
-                    }
-                }
-            }
-            .minicart-wrapper {
-                display: none;
-            }
-            .nav-sections {
-                display: none !important;
-            }
+  .page-header {
+    .header.content {
+      .logo {
+        img {
+          @include max-screen($screen__m) {
+            max-width: 96px;
+          }
         }
+      }
+
+      .minicart-wrapper {
+        display: none;
+      }
+
+      .nav-sections {
+        display: none !important;
+      }
     }
-    .page-main {
-        .columns {
-            .column.main {
-                .checkout-container {
-                    .custom-checkout-nav-btns {
-                        display: inline-block !important;
-                        float: left;
-                        width: 100%;
-                        margin: 0 0 10px 0;
-                        &:after, &:before {
-                            content: '';
-                            display: inline-block;
-                            clear: both;
+  }
+
+  .page-main {
+    .columns {
+      .column.main {
+        .checkout-container {
+          .custom-checkout-nav-btns {
+            display: inline-block !important;
+            float: left;
+            width: 100%;
+            margin: 0 0 10px 0;
+
+            &:after, &:before {
+              content: '';
+              display: inline-block;
+              clear: both;
+            }
+
+            .actions.backbtn {
+              float: left;
+
+              a:before {
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                font-size: 20px;
+                line-height: 20px;
+                font-family: "Font Awesome\ 5 Free";
+                content: "\f0d9";
+                font-weight: 900;
+                margin: 0;
+                vertical-align: top;
+                display: inline-block;
+                overflow: hidden;
+                speak: none;
+                text-align: center;
+              }
+            }
+          }
+
+          .opc-progress-bar {
+            .opc-progress-bar-item {
+              &._active {
+                &:before {
+                  background: $color_dark30_green_shade;
+                }
+
+                span {
+                  &:before {
+                    background: $color_dark30_green_shade;
+                  }
+
+                  &:after {
+                    font-size: 27px;
+                  }
+                }
+              }
+
+              &._complete {
+                span {
+                  &:after {
+                    font-size: 27px;
+                  }
+                }
+              }
+
+              span {
+                font-size: 1.4rem;
+
+                &:after {
+                  font-size: 18px;
+                }
+              }
+
+              > span {
+                font-size: 16px;
+              }
+            }
+          }
+
+          .opc-wrapper {
+            @include max-screen($screen__m) {
+              padding: 1rem;
+            }
+
+            .opc {
+
+              /** General Form styles - Start **/
+              .fieldset {
+                .field {
+                  position: relative;
+                  height: 85px;
+                  margin: 0;
+
+                  .label {
+                    display: inline-block;
+                    width: auto;
+                    text-align: left;
+                    margin: 0 0 2px 0;
+                    padding: 0;
+                  }
+
+                  &.additional {
+                    width: 100%;
+
+                    .label {
+                      position: relative;
+                      overflow: inherit;
+                      height: auto;
+                    }
+                  }
+
+                  &.street {
+                    display: contents;
+                  }
+                }
+
+                div[name="shippingAddress.firstname"],
+                div[name="shippingAddress.lastname"],
+                div[name="billingAddressvantiv_cc.firstname"],
+                div[name="billingAddressvantiv_cc.lastname"] {
+                  width: 50%;
+                  display: inline-block;
+                  @media screen and (max-width: $screen__m) {
+                    width: 100%;
+                  }
+
+                  .control {
+                    float: none;
+                    width: auto;
+                  }
+                }
+
+                div[name="shippingAddress.firstname"],
+                div[name="billingAddressvantiv_cc.firstname"] {
+                  padding-right: 10px;
+                  @media screen and (max-width: $screen__m) {
+                    padding-right: 0;
+                  }
+                }
+
+                div[name="shippingAddress.lastname"],
+                div[name="billingAddressvantiv_cc.lastname"] {
+                  padding-left: 10px;
+                  @media screen and (max-width: $screen__m) {
+                    padding-left: 0;
+                  }
+                }
+              }
+
+              /** General Form styles - End **/
+
+
+              /** Shipping Method form - Start **/
+              .checkout-shipping-address {
+                .step-content {
+                  .form-login {
+                    border-bottom: 1px solid #c2c2c2;
+                    padding-bottom: 1rem;
+
+                    #customer-email-fieldset > fieldset.fieldset {
+                      display: none !important;
+                    }
+
+                    .field-tooltip {
+                      display: none;
+                    }
+
+                    .note {
+                      span {
+                        display: none;
+                      }
+
+                      &:before {
+                        display: none;
+                      }
+                    }
+                  }
+
+                  .form-shipping-address {
+                    .hidden-fields {
+                      .actions-toolbar {
+                        margin-left: 0;
+                      }
+                    }
+                  }
+
+                  .form-shipping-address {
+                    .fieldset {
+                      .field {
+                        .control {
+                          .field-error {
+                            position: absolute;
+                            @media only screen and (max-width: $screen__s) {
+                              position: relative;
+                            }
+                          }
                         }
-                        .actions.backbtn {
-                            float: left;
-                            a:before {
-                                -webkit-font-smoothing: antialiased;
-                                -moz-osx-font-smoothing: grayscale;
-                                font-size: 20px;
+                      }
+                    }
+
+                    div[name="shippingAddress.postcode"] {
+                      .control {
+                        .message.warning {
+                          display: none;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+
+              .checkout-shipping-method {
+                .actions-toolbar {
+                  float: none;
+                  margin-left: 0;
+
+                  .action.primary {
+                    font-family: Lato, Arial, sans-serif;
+                    text-transform: uppercase;
+                    background: $scotts-green;
+                    color: $color-white;
+                    margin-top: 15px;
+                    font-size: 12px;
+                    font-weight: 700;
+                    letter-spacing: 1px;
+                    border-radius: 3px;
+                    padding: 14px 40px;
+                    line-height: 1.3;
+                    opacity: 1;
+                    transition: background 0.2s;
+                    float: none;
+
+                    &:hover {
+                      background: $scotts-secondary-green;
+                    }
+
+                    &:disabled {
+                      color: $color-black;
+                      background: $color-gray82;
+                    }
+
+                    @media screen and (max-width: $screen__s) {
+                      padding: 14px 30px;
+                    }
+
+                    span {
+                      padding-top: 2px;
+                      display: inline-block;
+                    }
+                  }
+                }
+
+              }
+
+              .checkout-validate-address {
+                .step-content {
+                  .instructions.noError {
+                    display: inline-block;
+                    position: relative;
+                    margin: 15px 0 15px 0;
+                    color: $scotts-green;
+                  }
+
+                  .errorMessageContainer {
+                    .instructions {
+                      color: #e02b27;
+                      margin: 15px 0;
+                      border: 1px solid;
+                      padding: 10px;
+                    }
+                  }
+                }
+              }
+
+              /** Shipping Method form - End **/
+
+
+              /** Payment Method form - Start **/
+              .checkout-payment-method {
+                .step-content {
+                  .form.payments {
+                    .fieldset {
+                      .opc-payment {
+                        .items.payment-methods {
+                          .payment-group {
+                            .payment-method._active {
+                              .payment-method-title.field {
+                                height: auto;
+
+                                [type="radio"]:checked + label,
+                                [type="radio"]:not(:checked) + label {
+                                  position: relative;
+                                  padding-left: 28px;
+                                  cursor: pointer;
+                                  line-height: 20px;
+                                  display: inline-block;
+                                }
+                              }
+
+                              [type="radio"]:checked + label,
+                              [type="radio"]:not(:checked) + label {
+                                position: relative;
+                                padding-left: 28px;
+                                cursor: pointer;
                                 line-height: 20px;
-                                font-family: "Font Awesome\ 5 Free";
-                                content: "\f0d9";
-                                font-weight: 900;
-                                margin: 0;
-                                vertical-align: top;
                                 display: inline-block;
-                                overflow: hidden;
-                                speak: none;
-                                text-align: center;
-                            }
-                        }
-                    }
-                    .opc-progress-bar {
-                        .opc-progress-bar-item {
-                            &._active {
-                                &:before {
-                                    background: $color_dark30_green_shade;
-                                }
-                                span {
-                                    &:before {
-                                        background: $color_dark30_green_shade;
-                                    }
-                                    &:after {
-                                        font-size: 27px;
-                                    }
-                                }
-                            }
-                            &._complete {
-                                span {
-                                    &:after {
-                                        font-size: 27px;
-                                    }
-                                }
-                            }
-                            span {
-                                font-size: 1.4rem;
-                                &:after {
-                                    font-size: 18px;
-                                }
-                            }
-                            > span {
-                                font-size: 16px;
-                            }
-                        }
-                    }
-                    .opc-wrapper {
-                        @include max-screen($screen__m) {
-                            padding: 1rem;
-                        }
-                        .opc {
+                              }
 
-                            /** General Form styles - Start **/
-                            .fieldset {
-                                .field {
-                                    position: relative;
-                                    height: 85px;
-                                    margin: 0;
-                                    .label {
-                                        display: inline-block;
-                                        width: auto;
-                                        text-align: left;
-                                        margin: 0 0 2px 0;
-                                        padding: 0;
+                              [type="radio"]:checked + label:before,
+                              [type="radio"]:not(:checked) + label:before {
+                                top: 2px;
+                              }
+
+                              [type="radio"]:checked + label:after,
+                              [type="radio"]:not(:checked) + label:after {
+                                top: 6px;
+                              }
+
+                              .payment-method-content {
+                                .payment-method-billing-address {
+                                  .checkout-billing-address {
+                                    .billing-address-same-as-shipping-block {
+                                      height: auto;
+                                      margin: 0 0 10px;
                                     }
-                                    &.additional {
-                                        width: 100%;
-                                        .label {
-                                            position: relative;
-                                            overflow: inherit;
-                                            height: auto;
-                                        }
+
+                                    .field.field-select-billing {
+                                      height: auto;
+                                      margin: 0 0 20px;
                                     }
-                                    &.street {
-                                        display: contents;
+
+                                    .billing-address-form {
+                                      div[name='billingAddressauthorizenet_directpost.street.1'],
+                                      div[name='billingAddressauthorizenet_directpost.street.2'],
+                                      div[name='billingAddressvantiv_cc.street.2'],
+                                      div[name='billingAddresscashondelivery.street.1'],
+                                      div[name='billingAddresscashondelivery.street.2'] {
+                                        display: none;
+                                      }
                                     }
-                                }
-                                div[name="shippingAddress.firstname"],
-                                div[name="shippingAddress.lastname"],
-                                div[name="billingAddressvantiv_cc.firstname"],
-                                div[name="billingAddressvantiv_cc.lastname"] {
-                                    width: 50%;
-                                    display: inline-block;
-                                    @media screen and (max-width: $screen__m) {
+
+                                    .fieldset .actions-toolbar {
+                                      margin-left: 0;
+                                    }
+
+                                    .primary {
                                       width: 100%;
-                                    }
-                                    .control {
-                                      float: none;
-                                      width: auto;
-                                    }
-                                }
-                                div[name="shippingAddress.firstname"],
-                                div[name="billingAddressvantiv_cc.firstname"] {
-                                    padding-right: 10px;
-                                    @media screen and (max-width: $screen__m) {
-                                      padding-right: 0;
-                                    }
-                                }
-                                div[name="shippingAddress.lastname"],
-                                div[name="billingAddressvantiv_cc.lastname"] {
-                                    padding-left: 10px;
-                                    @media screen and (max-width: $screen__m) {
-                                        padding-left: 0;
-                                    }
-                                }
-                            }
-                            /** General Form styles - End **/
+                                      float: left;
 
-
-                            /** Shipping Method form - Start **/
-                            .checkout-shipping-address {
-                                .step-content {
-                                    .form-login {
-                                        border-bottom: 1px solid #c2c2c2;
-                                        padding-bottom: 1rem;
-                                        #customer-email-fieldset>fieldset.fieldset {
-                                          display: none !important;
-                                        }
-                                        .field-tooltip {
-                                            display: none;
-                                        }
-                                        .note {
-                                            span {
-                                                display: none;
-                                            }
-                                            &:before {
-                                                display: none;
-                                            }
-                                        }
-                                    }
-                                    .form-shipping-address {
-                                        .hidden-fields {
-                                            .actions-toolbar {
-                                                margin-left: 0;
-                                            }
-                                        }
-                                    }
-                                    .form-shipping-address {
-                                        .fieldset {
-                                            .field {
-                                                .control {
-                                                    .field-error {
-                                                        position: absolute;
-                                                        @media only screen and (max-width: $screen__s) {
-                                                            position: relative;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        div[name="shippingAddress.postcode"] {
-                                            .control {
-                                                .message.warning {
-                                                    display: none;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            .checkout-shipping-method {
-                                .actions-toolbar {
-                                    float: none;
-                                    margin-left: 0;
-                                    .action.primary {
-                                        font-family: Lato, Arial, sans-serif;
-                                        text-transform: uppercase;
-                                        background: $scotts-green;
-                                        color: $color-white;
-                                        margin-top: 15px;
-                                        font-size: 15px;
-                                        padding: 23px 35px;
+                                      .action-update, .action-cancel {
+                                        width: auto;
+                                        border-radius: 4px;
+                                        padding: 15px 25px;
+                                        margin-top: 0;
+                                        font-family: $opensans;
+                                        font-size: 0.8rem;
                                         line-height: 0;
+                                        float: left;
+                                        height: auto;
+                                        background: #4d4e4e;
+                                        text-transform: inherit;
+                                        color: #fff;
+                                        text-decoration: none;
+
+                                        &:hover {
+                                          text-decoration: none;
+                                          background: #262626;
+                                        }
+                                      }
+
+                                      .action-cancel {
+                                        margin: 0 0 0 15px;
+                                      }
+                                    }
+                                  }
+                                }
+
+                                .actions-toolbar {
+                                  .primary {
+                                    .action.primary.checkout:last-child {
+                                      -webkit-transition: background 0.2s;
+                                      -moz-transition: background 0.2s;
+                                      -ms-transition: background 0.2s;
+                                      -o-transition: background 0.2s;
+                                      transition: background 0.2s;
+                                      font-family: Lato, Arial, sans-serif;
+                                      font-size: 15px;
+                                      text-transform: uppercase;
+                                      color: $color-white;
+                                      background: $scotts-green;
+                                      padding: 23px 35px;
+                                      line-height: 0;
+                                      border: none;
+                                      display: inline-block;
+                                      height: auto;
+
+                                      &:hover {
                                         -webkit-transition: background 0.2s;
                                         -moz-transition: background 0.2s;
                                         -ms-transition: background 0.2s;
                                         -o-transition: background 0.2s;
                                         transition: background 0.2s;
-                                        float: none;
-                                        &:hover {
-                                          background: $scotts-secondary-green;
-                                        }
+                                        background: $scotts-secondary-green;
+                                      }
                                     }
-                                    .action.primary:disabled{
-                                        background: $color_dark30_green_shade;
+
+                                    .action.primary.disabled {
+                                      background: #4d4e4e !important;
                                     }
+                                  }
                                 }
-
+                              }
                             }
-                            .checkout-validate-address {
-                                .step-content {
-                                    .instructions.noError {
-                                      display: inline-block;
-                                      position: relative;
-                                      margin: 15px 0 15px 0;
-                                      color: $scotts-green;
-                                    }
-                                    .errorMessageContainer {
-                                        .instructions {
-                                          color: #e02b27;
-                                          margin: 15px 0;
-                                          border: 1px solid;
-                                          padding: 10px;
-                                        }
-                                    }
-                                }
-                            }
-                            /** Shipping Method form - End **/
-
-
-                            /** Payment Method form - Start **/
-                            .checkout-payment-method {
-                                .step-content {
-                                    .form.payments {
-                                        .fieldset {
-                                            .opc-payment {
-                                                .items.payment-methods {
-                                                    .payment-group {
-                                                        .payment-method._active {
-                                                            .payment-method-title.field {
-                                                                height: auto;
-                                                                [type="radio"]:checked + label,
-                                                                [type="radio"]:not(:checked) + label {
-                                                                    position: relative;
-                                                                    padding-left: 28px;
-                                                                    cursor: pointer;
-                                                                    line-height: 20px;
-                                                                    display: inline-block;
-                                                                }
-                                                            }
-                                                            [type="radio"]:checked + label,
-                                                            [type="radio"]:not(:checked) + label {
-                                                                position: relative;
-                                                                padding-left: 28px;
-                                                                cursor: pointer;
-                                                                line-height: 20px;
-                                                                display: inline-block;
-                                                            }
-                                                            [type="radio"]:checked + label:before,
-                                                            [type="radio"]:not(:checked) + label:before{
-                                                                top: 2px;
-                                                            }
-                                                            [type="radio"]:checked + label:after,
-                                                            [type="radio"]:not(:checked) + label:after{
-                                                                top: 6px;
-                                                            }
-                                                            .payment-method-content {
-                                                                .payment-method-billing-address {
-                                                                    .checkout-billing-address {
-                                                                        .billing-address-same-as-shipping-block {
-                                                                            height: auto;
-                                                                            margin: 0 0 10px;
-                                                                        }
-                                                                        .field.field-select-billing {
-                                                                            height: auto;
-                                                                            margin: 0 0 20px;
-                                                                        }
-                                                                        .billing-address-form {
-                                                                            div[name='billingAddressauthorizenet_directpost.street.1'],
-                                                                            div[name='billingAddressauthorizenet_directpost.street.2'],
-                                                                            div[name='billingAddressvantiv_cc.street.2'],
-                                                                            div[name='billingAddresscashondelivery.street.1'],
-                                                                            div[name='billingAddresscashondelivery.street.2'] {
-                                                                                display: none;
-                                                                            }
-                                                                        }
-                                                                        .fieldset .actions-toolbar {
-                                                                            margin-left: 0;
-                                                                        }
-                                                                        .primary {
-                                                                            width: 100%;
-                                                                            float: left;
-                                                                            .action-update, .action-cancel {
-                                                                              width: auto;
-                                                                              border-radius: 4px;
-                                                                              padding: 15px 25px;
-                                                                              margin-top: 0;
-                                                                              font-family: $opensans;
-                                                                              font-size: 0.8rem;
-                                                                              line-height: 0;
-                                                                              float: left;
-                                                                              height: auto;
-                                                                              background: #4d4e4e;
-                                                                              text-transform: inherit;
-                                                                              color: #fff;
-                                                                              text-decoration: none;
-                                                                              &:hover {
-                                                                                text-decoration: none;
-                                                                                background: #262626;
-                                                                              }
-                                                                            }
-                                                                            .action-cancel {
-                                                                              margin: 0 0 0 15px;
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                                .actions-toolbar {
-                                                                    .primary {
-                                                                        .action.primary.checkout:last-child {
-                                                                            -webkit-transition: background 0.2s;
-                                                                            -moz-transition: background 0.2s;
-                                                                            -ms-transition: background 0.2s;
-                                                                            -o-transition: background 0.2s;
-                                                                            transition: background 0.2s;
-                                                                            font-family: Lato, Arial, sans-serif;
-                                                                            font-size: 15px;
-                                                                            text-transform: uppercase;
-                                                                            color: $color-white;
-                                                                            background: $scotts-green;
-                                                                            padding: 23px 35px;
-                                                                            line-height: 0;
-                                                                            border: none;
-                                                                            display: inline-block;
-                                                                            height: auto;
-                                                                            &:hover {
-                                                                              -webkit-transition: background 0.2s;
-                                                                              -moz-transition: background 0.2s;
-                                                                              -ms-transition: background 0.2s;
-                                                                              -o-transition: background 0.2s;
-                                                                              transition: background 0.2s;
-                                                                              background: $scotts-secondary-green;
-                                                                            }
-                                                                        }
-                                                                        .action.primary.disabled {
-                                                                            background: #4d4e4e !important;
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        .opc-payment-additional {
-                                            .payment-option-title {
-                                                padding-bottom: 10px;
-                                                .action-toggle {
-                                                    color: $scotts-green;
-                                                    span {
-                                                        font-weight: 700;
-                                                        line-height: 1.1;
-                                                        margin-top: 2rem;
-                                                        margin-bottom: 2rem;
-                                                        font-size: 18px;
-                                                    }
-                                                }
-                                            }
-                                            .payment-option-content {
-                                                .form-discount {
-                                                    max-width: none;
-                                                    .payment-option-inner {
-                                                        @media screen and (max-width: $screen__l) {
-                                                            margin: 0 0 0 0;
-                                                        }
-                                                        label {
-                                                            padding: 6px 15px 0 0;
-                                                            text-align: right;
-                                                            width: 25.8%;
-                                                            box-sizing: border-box;
-                                                            float: left;
-                                                            position: relative;
-                                                            font-weight: 700;
-                                                            overflow: visible;
-                                                            height: auto;
-                                                            @media screen and (max-width: $screen__l) {
-                                                                width: auto;
-                                                            }
-                                                        }
-                                                        .control {
-                                                            width: auto;
-                                                            float: left;
-                                                            .actions-toolbar .primary {
-                                                                float: none;
-                                                            }
-                                                        }
-                                                    }
-                                                    .payment-option-inner>.field {
-                                                        &:after {
-                                                            display: inline-block;
-                                                            content: '';
-                                                            clear: both;
-                                                        }
-                                                    }
-                                                    .actions-toolbar {
-                                                        margin-left: 25.8%;
-                                                        margin-top: -43px;
-                                                        @media screen and (max-width: $screen__l) {
-                                                            margin-left: 0;
-                                                            margin-top: 10px;
-                                                            display: inline-block;
-                                                            width: 100%;
-                                                        }
-                                                        .primary {
-                                                            float: none;
-                                                            margin-left: 20px;
-                                                            @media screen and (max-width: $screen__l) {
-                                                              width: 100%;
-                                                              margin-left:0;
-                                                            }
-                                                            button {
-                                                                font-family: $opensans;
-                                                                font-size: 0.8rem;
-                                                                color: $color-white;
-                                                                padding: 5px 10px 5px 10px;
-                                                                height: 30px;
-                                                                -webkit-transition: background 0.2s;
-                                                                -moz-transition: background 0.2s;
-                                                                -ms-transition: background 0.2s;
-                                                                -o-transition: background 0.2s;
-                                                                transition: background 0.2s;
-                                                                background: $scotts-gray;
-                                                                border: none;
-                                                                &:hover {
-                                                                    -webkit-transition: background 0.2s;
-                                                                    -moz-transition: background 0.2s;
-                                                                    -ms-transition: background 0.2s;
-                                                                    -o-transition: background 0.2s;
-                                                                    transition: background 0.2s;
-                                                                    background: $color_black15_shade;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                                .form-giftcard-account {
-                                                    .actions-toolbar {
-                                                        .primary {
-                                                            margin-left: 1rem;
-                                                            .action-add.primary {
-                                                                font-family: $opensans;
-                                                                font-size: 1rem;
-                                                                color: $color-white;
-                                                                -webkit-transition: background 0.2s;
-                                                                -moz-transition: background 0.2s;
-                                                                -ms-transition: background 0.2s;
-                                                                -o-transition: background 0.2s;
-                                                                transition: background 0.2s;
-                                                                background: $scotts-gray;
-                                                                border: none;
-                                                                margin-top: 0;
-                                                                &:hover {
-                                                                    -webkit-transition: background 0.2s;
-                                                                    -moz-transition: background 0.2s;
-                                                                    -ms-transition: background 0.2s;
-                                                                    -o-transition: background 0.2s;
-                                                                    transition: background 0.2s;
-                                                                    background: $color_black15_shade;
-                                                                }
-                                                            }
-                                                        }
-                                                        .secondary {
-                                                            .action-check {
-                                                                font-family: $opensans;
-                                                                font-size: 1rem;
-                                                                color: $color-white;
-                                                                -webkit-transition: background 0.2s;
-                                                                -moz-transition: background 0.2s;
-                                                                -ms-transition: background 0.2s;
-                                                                -o-transition: background 0.2s;
-                                                                transition: background 0.2s;
-                                                                background: $scotts-gray;
-                                                                border: none;
-                                                                margin-top: 0;
-                                                                &:hover {
-                                                                    -webkit-transition: background 0.2s;
-                                                                    -moz-transition: background 0.2s;
-                                                                    -ms-transition: background 0.2s;
-                                                                    -o-transition: background 0.2s;
-                                                                    transition: background 0.2s;
-                                                                    background: $color_black15_shade;
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
-                            /** Payment Method form - End **/
-
+                          }
                         }
+                      }
                     }
-                    .opc-sidebar.custom-slide {
-                        left: 0;
-                        .modal-inner-wrap {
-                            .modal-header {
-                                .action-close {
-                                    @media screen and (max-width: $screen__m) {
-                                        background: none;
-                                        padding: 0;
-                                    }
-                                }
-                            }
-                            .modal-content {
-                                #opc-sidebar {
-                                    .opc-block-summary {
-                                        .title {
-                                            font-size: 16px;
-                                        }
-                                        .table-totals {
-                                            @media screen and (max-width: $screen__l) and (min-width: $screen__m) {
-                                                font-size: 14px;
-                                            }
-                                            tbody {
-                                                .totals.discount {
-                                                    .mark {
-                                                        .title {
-                                                            font-size: 1rem;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                        .items-in-cart {
-                                            .content.minicart-items {
-                                                margin-top: 2.5rem;
-                                                border-top: 1px solid #ccc;
-                                                padding-top: .75rem;
-                                                @include max-screen($screen__m) {
-                                                    margin-top: 0.5rem;
-                                                }
-                                                .minicart-items-wrapper {
-                                                    max-height: none;
-                                                    .product-item {
-                                                        .product {
-                                                            .product-image-container {
-                                                                margin-top: 15px;
-                                                                display: inline-block;
-                                                                width: auto !important;
-                                                                .product-image-wrapper {
-                                                                    display: inline-block;
-                                                                }
-                                                            }
-                                                            .product-item-details {
-                                                                padding-left: 60px;
-                                                                .product-item-name-block {
-                                                                    @media screen and (max-width: $screen__l) and (min-width: $screen__m) {
-                                                                        display: inline-block;
-                                                                        padding-right: 0;
-                                                                    }
-                                                                    .product-item-name {
-                                                                        font-size: 14px;
-                                                                        margin: 0;
-                                                                    }
-                                                                    .details-qty {
-                                                                        margin: 0;
-                                                                        font-size: 12px;
-                                                                    }
-                                                                }
-                                                                .subtotal {
-                                                                    @media screen and (max-width: $screen__l) and (min-width: $screen__m) {
-                                                                        display: inline-block;
-                                                                    }
-                                                                    .price-excluding-tax, .price-including-tax {
-                                                                        font-size: 16px;
-                                                                        .cart-price {
-                                                                            .price {
-                                                                                font-size: 1.2rem;
-                                                                                font-weight: 700;
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                        .product.options {
-                                                            font-size: 14px;
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
-                                    }
-                                    .opc-block-shipping-information {
-                                        .shipping-information-title {
-                                            .action-edit {
-                                                &:before {
-                                                    content: 'Edit';
-                                                    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                                                    font-size: 0.8rem;
-                                                    text-transform: none;
-                                                }
-                                            }
-                                        }
-                                    }
-                                }
-                            }
+
+                    .opc-payment-additional {
+                      .payment-option-title {
+                        padding-bottom: 10px;
+
+                        .action-toggle {
+                          color: $scotts-green;
+
+                          span {
+                            font-weight: 700;
+                            line-height: 1.1;
+                            margin-top: 2rem;
+                            margin-bottom: 2rem;
+                            font-size: 18px;
+                          }
                         }
-                    }
-                    .actions .action.continue:before {
-                        display: none;
-                    }
-                    .checkout-shipping-disclaimer {
-                        display: none; // TEMPORARY TO HIDE THIS AREA UNTIL RESTYLING IS COMPLETE
-                    }
-                }
-                [type="radio"]:checked {
-                    position: absolute;
-                    left: -9999px;
-                }
+                      }
 
-                [type="radio"] + label {
-                    position: relative;
-                    padding-left: 28px;
-                    cursor: pointer;
-                    line-height: 20px;
-                    display: inline-block;
-                }
+                      .payment-option-content {
+                        .form-discount {
+                          max-width: none;
 
-                [type="radio"] + label:before {
-                    content: '';
-                    position: absolute;
-                    left: 0;
-                    top: -14px;
-                    width: 12px;
-                    height: 12px;
-                    border-radius: 100%;
-                    background: $color-white;
-                    border: 2px solid $color-black;
-                }
-                [type="radio"] + label:after {
-                    content: '';
-                    width: 6px;
-                    height: 6px;
-                    background: $color-black;
-                    position: absolute;
-                    top: -9px;
-                    left: 5px;
-                    border-radius: 100%;
-                    @include transition(all 0.2s ease);
-                }
-                [type="radio"]:not(:checked) + label:after {
-                    opacity: 0;
-                    -webkit-transform: scale(0);
-                    transform: scale(0);
-                }
-                [type="radio"]:checked + label:after {
-                    opacity: 1;
-                    -webkit-transform: scale(1);
-                    transform: scale(1);
-                }
-                .payment-method [type="radio"] + label:after {
-                    top: 4px;
-                }
+                          .payment-option-inner {
+                            @media screen and (max-width: $screen__l) {
+                              margin: 0 0 0 0;
+                            }
 
-                //Fieldset based styles
-                .fieldset>.field:not(.choice)>.control {
-                    width: auto;
-                    float: none;
-                }
-                .fieldset>.field.choice:before, .fieldset>.field.no-label:before {
-                    width: 0;
-                }
-                .fieldset>.field:not(.choice)>.label {
-                    width: 90%;
-                    text-align: left;
-                    @media screen and (max-width: $screen__l) and (min-width: $screen__m) {
-                        width: 40%;
-                    }
-                }
-                .fieldset>.field.required, .fieldset>.field._required {
-                    >.label:after {
-                        display: none;
-                    }
-                }
-                .fieldset>.fields {
-                    >.field.required, >.field._required {
-                        >.label:after {
-                            display: none;
+                            label {
+                              padding: 6px 15px 0 0;
+                              text-align: right;
+                              width: 25.8%;
+                              box-sizing: border-box;
+                              float: left;
+                              position: relative;
+                              font-weight: 700;
+                              overflow: visible;
+                              height: auto;
+                              @media screen and (max-width: $screen__l) {
+                                width: auto;
+                              }
+                            }
+
+                            .control {
+                              width: auto;
+                              float: left;
+
+                              .actions-toolbar .primary {
+                                float: none;
+                              }
+                            }
+                          }
+
+                          .payment-option-inner > .field {
+                            &:after {
+                              display: inline-block;
+                              content: '';
+                              clear: both;
+                            }
+                          }
+
+                          .actions-toolbar {
+                            margin-left: 25.8%;
+                            margin-top: -43px;
+                            @media screen and (max-width: $screen__l) {
+                              margin-left: 0;
+                              margin-top: 10px;
+                              display: inline-block;
+                              width: 100%;
+                            }
+
+                            .primary {
+                              float: none;
+                              margin-left: 20px;
+                              @media screen and (max-width: $screen__l) {
+                                width: 100%;
+                                margin-left: 0;
+                              }
+
+                              button {
+                                font-family: $opensans;
+                                font-size: 0.8rem;
+                                color: $color-white;
+                                padding: 5px 10px 5px 10px;
+                                height: 30px;
+                                -webkit-transition: background 0.2s;
+                                -moz-transition: background 0.2s;
+                                -ms-transition: background 0.2s;
+                                -o-transition: background 0.2s;
+                                transition: background 0.2s;
+                                background: $scotts-gray;
+                                border: none;
+
+                                &:hover {
+                                  -webkit-transition: background 0.2s;
+                                  -moz-transition: background 0.2s;
+                                  -ms-transition: background 0.2s;
+                                  -o-transition: background 0.2s;
+                                  transition: background 0.2s;
+                                  background: $color_black15_shade;
+                                }
+                              }
+                            }
+                          }
                         }
+
+                        .form-giftcard-account {
+                          .actions-toolbar {
+                            .primary {
+                              margin-left: 1rem;
+
+                              .action-add.primary {
+                                font-family: $opensans;
+                                font-size: 1rem;
+                                color: $color-white;
+                                -webkit-transition: background 0.2s;
+                                -moz-transition: background 0.2s;
+                                -ms-transition: background 0.2s;
+                                -o-transition: background 0.2s;
+                                transition: background 0.2s;
+                                background: $scotts-gray;
+                                border: none;
+                                margin-top: 0;
+
+                                &:hover {
+                                  -webkit-transition: background 0.2s;
+                                  -moz-transition: background 0.2s;
+                                  -ms-transition: background 0.2s;
+                                  -o-transition: background 0.2s;
+                                  transition: background 0.2s;
+                                  background: $color_black15_shade;
+                                }
+                              }
+                            }
+
+                            .secondary {
+                              .action-check {
+                                font-family: $opensans;
+                                font-size: 1rem;
+                                color: $color-white;
+                                -webkit-transition: background 0.2s;
+                                -moz-transition: background 0.2s;
+                                -ms-transition: background 0.2s;
+                                -o-transition: background 0.2s;
+                                transition: background 0.2s;
+                                background: $scotts-gray;
+                                border: none;
+                                margin-top: 0;
+
+                                &:hover {
+                                  -webkit-transition: background 0.2s;
+                                  -moz-transition: background 0.2s;
+                                  -ms-transition: background 0.2s;
+                                  -o-transition: background 0.2s;
+                                  transition: background 0.2s;
+                                  background: $color_black15_shade;
+                                }
+                              }
+                            }
+                          }
+                        }
+                      }
                     }
+                  }
                 }
-                .field.street.admin__control-fields {
-                    div[name="billingAddresscheckmo.street.1"], div[name="billingAddresscheckmo.street.2"] {
-                        display: none;
-                    }
-                }
+              }
 
-                .actions-toolbar>.secondary .action:last-child {
-                  margin-top: 30px;
-                }
+              /** Payment Method form - End **/
 
-                //Payment Page Address Phone links
-                .shipping-information-content a, .billing-address-details a, .shipping-address-item.selected-item a {
-                    cursor: text;
-                    pointer-events: none;
-                    color: #909090;
-                }
-
-                //Vet this
-                .actions-toolbar>.primary .action:last-child {
-                    margin-top: 10px;
-                }
-
-                .form.form-discount .actions-toolbar>.primary .action:last-child {
-                    margin-top: 0px;
-                }
-
-                //Vet this
-                .abs-checkout-title, .opc-wrapper .step-title, .opc-block-shipping-information .shipping-information-title, .checkout-agreements-items .checkout-agreements-item-title {
-                    font-weight: 500;
-                    font-size: 1.6rem;
-                    color: $color_black20_shade;
-                    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                }
-
-                .cust-btn-add {
-                    font-size: 14px;
-                    float: right;
-                    &:before {
-                      content: '+';
-                      display: inline-block;
-                      margin-right: 3px;
-                    }
-                }
-
-                //Vet this
-                .item-options {
-                    dd {
-                        font-weight: bold;
-                    }
-                    dt {
-                        font-weight: 400;
-                    }
-                }
             }
-        }
-    }
-    //Error Code
-    .field-error, #customer-email-error  {
-        font-size: 0.9375rem;
-    }
-    .message-error {
-        background: #ececec;
-        color: #000;
-        .message-error div:before {
+          }
+
+          .opc-sidebar.custom-slide {
+            left: 0;
+
+            .modal-inner-wrap {
+              .modal-header {
+                .action-close {
+                  @media screen and (max-width: $screen__m) {
+                    background: none;
+                    padding: 0;
+                  }
+                }
+              }
+
+              .modal-content {
+                #opc-sidebar {
+                  .opc-block-summary {
+                    .title {
+                      font-size: 16px;
+                    }
+
+                    .table-totals {
+                      @media screen and (max-width: $screen__l) and (min-width: $screen__m) {
+                        font-size: 14px;
+                      }
+
+                      tbody {
+                        .totals.discount {
+                          .mark {
+                            .title {
+                              font-size: 1rem;
+                            }
+                          }
+                        }
+                      }
+                    }
+
+                    .items-in-cart {
+                      .content.minicart-items {
+                        margin-top: 2.5rem;
+                        border-top: 1px solid #ccc;
+                        padding-top: .75rem;
+                        @include max-screen($screen__m) {
+                          margin-top: 0.5rem;
+                        }
+
+                        .minicart-items-wrapper {
+                          max-height: none;
+
+                          .product-item {
+                            .product {
+                              .product-image-container {
+                                margin-top: 15px;
+                                display: inline-block;
+                                width: auto !important;
+
+                                .product-image-wrapper {
+                                  display: inline-block;
+                                }
+                              }
+
+                              .product-item-details {
+                                padding-left: 60px;
+
+                                .product-item-name-block {
+                                  @media screen and (max-width: $screen__l) and (min-width: $screen__m) {
+                                    display: inline-block;
+                                    padding-right: 0;
+                                  }
+
+                                  .product-item-name {
+                                    font-size: 14px;
+                                    margin: 0;
+                                  }
+
+                                  .details-qty {
+                                    margin: 0;
+                                    font-size: 12px;
+                                  }
+                                }
+
+                                .subtotal {
+                                  @media screen and (max-width: $screen__l) and (min-width: $screen__m) {
+                                    display: inline-block;
+                                  }
+
+                                  .price-excluding-tax, .price-including-tax {
+                                    font-size: 16px;
+
+                                    .cart-price {
+                                      .price {
+                                        font-size: 1.2rem;
+                                        font-weight: 700;
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            }
+
+                            .product.options {
+                              font-size: 14px;
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+
+                  .opc-block-shipping-information {
+                    .shipping-information-title {
+                      .action-edit {
+                        &:before {
+                          content: 'Edit';
+                          font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                          font-size: 0.8rem;
+                          text-transform: none;
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+
+          .actions .action.continue:before {
             display: none;
+          }
         }
-    }
-}
-// Checkout Page - End //
 
+        [type="radio"] {
+          position: absolute;
+          left: -9999px;
+        }
 
+        [type="radio"] + label {
+        {
+          position: relative;
+          padding-left: 28px;
+          cursor: pointer;
+          line-height: 20px;
+          display: inline-block;
+        }
 
+          [type="radio"] + label:before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: -14px;
+            width: 12px;
+            height: 12px;
+            border-radius: 100%;
+            background: $color-white;
+            border: 2px solid $color-black;
+          }
 
-// Success Page - Start //
-.checkout-onepage-success {
-    .page-wrapper {
-        #maincontent {
-            margin-left: 16rem;
-            @include max-screen($screen__s) {
-                margin-left: 0rem;
+          [type="radio"]:checked + label:after,
+          [type="radio"]:not(:checked) + label:after {
+            content: '';
+            width: 6px;
+            height: 6px;
+            background: $color-black;
+            position: absolute;
+            top: -9px;
+            left: 5px;
+            border-radius: 100%;
+            @include transition(all 0.2s ease);
+          }
+
+          [type="radio"]:not(:checked) + label:after {
+            opacity: 0;
+            -webkit-transform: scale(0);
+            transform: scale(0);
+          }
+
+          [type="radio"]:checked + label:after {
+            opacity: 1;
+            -webkit-transform: scale(1);
+            transform: scale(1);
+          }
+
+          .payment-method [type="radio"] + label:after {
+            top: 4px;
+          }
+
+          //Fieldset based styles
+          .fieldset > .field:not(.choice) > .control {
+            width: auto;
+            float: none;
+          }
+
+          .fieldset > .field.choice:before, .fieldset > .field.no-label:before {
+            width: 0;
+          }
+
+          .fieldset > .field:not(.choice) > .label {
+            width: 90%;
+            text-align: left;
+            @media screen and (max-width: $screen__l) and (min-width: $screen__m) {
+              width: 40%;
             }
-            .page-title-wrapper {
-                margin-top: 9.5rem;
-                .page-title {
-                    font-size: 16px;
-                    color: #000;
-                    font-weight: bold;
-                }
+          }
+
+          .fieldset > .field.required, .fieldset > .field._required {
+            > .label:after {
+              display: none;
             }
-            .checkout-success {
-                color: #000;
-                font-weight: 400;
-                width: 700px;
-                @include max-screen($screen__s) {
-                    width: auto;
-                }
-                .actions-toolbar {
-                    width: 100%;
-                    padding-top: 20px;
-                    border-top: 1px solid #ccc;
-                    text-align: right;
-                    .primary {
-                        float: right;
-                        width: 100%;
-                        .action.primary.continue {
-                            color: #fff;
-                            padding: 10px 25px 10px 25px;
-                            display: inline-block;
-                            background: #075534;
-                            margin: 0;
-                            float: right;
-                            width: auto;
-                        }
-                    }
-                }
-            }
-            #registration {
+          }
+
+          .fieldset > .fields {
+            > .field.required, > .field._required {
+              > .label:after {
                 display: none;
+              }
             }
+          }
+
+          .field.street.admin__control-fields {
+            div[name="billingAddresscheckmo.street.1"], div[name="billingAddresscheckmo.street.2"] {
+              display: none;
+            }
+          }
+
+          .actions-toolbar > .secondary .action:last-child {
+            margin-top: 30px;
+          }
+
+          //Payment Page Address Phone links
+          .shipping-information-content a, .billing-address-details a, .shipping-address-item.selected-item a {
+            cursor: text;
+            pointer-events: none;
+            color: #909090;
+          }
+
+          //Vet this
+          .actions-toolbar > .primary .action:last-child {
+            margin-top: 10px;
+          }
+
+          .form.form-discount .actions-toolbar > .primary .action:last-child {
+            margin-top: 0px;
+          }
+
+          //Vet this
+          .abs-checkout-title, .opc-wrapper .step-title, .opc-block-shipping-information .shipping-information-title, .checkout-agreements-items .checkout-agreements-item-title {
+            font-weight: 500;
+            font-size: 1.6rem;
+            color: $color_black20_shade;
+            font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+          }
+
+          .cust-btn-add {
+            font-size: 14px;
+            float: right;
+
+            &:before {
+              content: '+';
+              display: inline-block;
+              margin-right: 3px;
+            }
+          }
+
+          //Vet this
+          .item-options {
+            dd {
+              font-weight: bold;
+            }
+
+            dt {
+              font-weight: 400;
+            }
+          }
         }
+      }
     }
-}
-// Success Page - End //
+
+    //Error Code
+    .field-error, #customer-email-error {
+      font-size: 0.9375rem;
+    }
+
+    .message-error {
+      background: #ececec;
+      color: #000;
+
+      .message-error div:before {
+        display: none;
+      }
+    }
+  }
+
+  // Checkout Page - End //
 
 
+  // Success Page - Start //
+  .checkout-onepage-success {
+    .page-wrapper {
+      #maincontent {
+        margin-left: 16rem;
+        @include max-screen($screen__s) {
+          margin-left: 0rem;
+        }
+
+        .page-title-wrapper {
+          margin-top: 9.5rem;
+
+          .page-title {
+            font-size: 16px;
+            color: #000;
+            font-weight: bold;
+          }
+        }
+
+        .checkout-success {
+          color: #000;
+          font-weight: 400;
+          width: 700px;
+          @include max-screen($screen__s) {
+            width: auto;
+          }
+
+          .actions-toolbar {
+            width: 100%;
+            padding-top: 20px;
+            border-top: 1px solid #ccc;
+            text-align: right;
+
+            .primary {
+              float: right;
+              width: 100%;
+
+              .action.primary.continue {
+                color: #fff;
+                padding: 10px 25px 10px 25px;
+                display: inline-block;
+                background: #075534;
+                margin: 0;
+                float: right;
+                width: auto;
+              }
+            }
+          }
+        }
+
+        #registration {
+          display: none;
+        }
+      }
+    }
+  }
+
+  // Success Page - End //
 
 
-//Style Titles / Steps
-.opc-wrapper {
+  //Style Titles / Steps
+  .opc-wrapper {
     .step-title {
-        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-size: 1.6rem;
-        font-weight: 500;
-        padding: 0 0 10px 0;
-        border-bottom: 1px solid #ccc;
+      font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+      font-size: 1.6rem;
+      font-weight: 500;
+      padding: 0 0 10px 0;
+      border-bottom: 1px solid #ccc;
     }
-}
+  }
 
 
-//Estimate Shipping link on summary div
-.cart-summary > .pop-cust-click.title {
+  //Estimate Shipping link on summary div
+  .cart-summary > .pop-cust-click.title {
     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
     font-size: 0.8rem;
     color: #333333;
     text-decoration: underline;
     cursor: pointer;
     margin-left: 5px;
-    &:hover {
-        -webkit-transition: background 0.2s;
-        -moz-transition: background 0.2s;
-        -ms-transition: background 0.2s;
-        -o-transition: background 0.2s;
-        transition: background 0.2s;
-        color: $color_black;
-    }
-}
 
-//Default styling for Order Summary Total
-.cart-totals .grand .amount strong,
-.cart-container .cart-totals .grand.totals .mark strong,
-.opc-block-summary .table-totals .mark strong,
-.opc-block-summary .table-totals .grand .amount strong,
-.cart-container .cart-totals .grand.totals .mark strong {
+    &:hover {
+      -webkit-transition: background 0.2s;
+      -moz-transition: background 0.2s;
+      -ms-transition: background 0.2s;
+      -o-transition: background 0.2s;
+      transition: background 0.2s;
+      color: $color_black;
+    }
+  }
+
+  //Default styling for Order Summary Total
+  .cart-totals .grand .amount strong,
+  .cart-container .cart-totals .grand.totals .mark strong,
+  .opc-block-summary .table-totals .mark strong,
+  .opc-block-summary .table-totals .grand .amount strong,
+  .cart-container .cart-totals .grand.totals .mark strong {
     color: #333333;
     font-weight: 700 !important;
-}
+  }
 
 
-//Checkout - Hide Country Field in Checkout Shipping Page (Will need to be nested correctly):
-.opc-wrapper .fieldset > .field._required[name="shippingAddress.country_id"],
-.opc-wrapper .fieldset > .field._required[name="billingAddressvantiv_cc.country_id"]{
-  display: none;
-}
+  //Checkout - Hide Country Field in Checkout Shipping Page (Will need to be nested correctly):
+  .opc-wrapper .fieldset > .field._required[name="shippingAddress.country_id"],
+  .opc-wrapper .fieldset > .field._required[name="billingAddressvantiv_cc.country_id"] {
+    display: none;
+  }
 
 
+  //Avalara "Change your Address" Message stying
+  .checkout-index-index .page-wrapper .page-main .columns .column.main .checkout-container .opc-wrapper .opc .checkout-validate-address .step-content .instructions.noError a.edit-address {
+    text-decoration: underline;
+  }
 
-//Avalara "Change your Address" Message stying
-.checkout-index-index .page-wrapper .page-main .columns .column.main .checkout-container .opc-wrapper .opc .checkout-validate-address .step-content .instructions.noError a.edit-address {
-  text-decoration: underline;
-}
+  td#label_carrier_flat-rate-shipping_flatrate,
+  td#label_carrier_fedex-2ndday_flatrate,
+  td#label_carrier_fedex-nextday_flatrate {
+    display: none;
+  }
 
-td#label_carrier_flat-rate-shipping_flatrate,
-td#label_carrier_fedex-2ndday_flatrate,
-td#label_carrier_fedex-nextday_flatrate {
-    display:none;
-}
-
-//Test - remove if you don't need it
-//.checkout-index-index {
-//    .table-checkout-shipping-method tbody td {
-//        border: 0;
-//
-//        &.col-price {
-//            width: 48px;
-//        }
-//    }
-//    .table-checkout-shipping-method tbody tr {
-//        border-top: 1px solid #ccc;
-//    }
-//    .table-checkout-shipping-method tbody tr:first-child{
-//        border-top: none;
-//    }
-//}
-
-
-.checkout-index-index {
+  .checkout-index-index {
     .table-checkout-shipping-method {
-        margin-bottom: 10px;
-        @media screen and (max-width: $screen__s) {
-            font-size: 14px;
-            margin-bottom: 24px;
-        }
-        tbody td {
-            border: none;
-            float: none;
-            display: table-cell;
-            padding: 8px;
-            &.col-price {
-                width: 64px;
-                padding-left: 0;
-                @media screen and (max-width: $screen__s) {
-                    width: 54px;
-                }
-            }
-        }
-    }
-}
+      margin-bottom: 10px;
+      @media screen and (max-width: $screen__s) {
+        font-size: 14px;
+        margin-bottom: 24px;
+      }
 
-@media screen and (max-width: $screen__m) {
+      tbody td {
+        border: none;
+        float: none;
+        display: table-cell;
+        padding: 8px;
+
+        &.col-price {
+          width: 64px;
+          padding-left: 0;
+          @media screen and (max-width: $screen__s) {
+            width: 54px;
+          }
+        }
+      }
+    }
+  }
+
+  @media screen and (max-width: $screen__m) {
     .checkout-cart-index #shopping-cart-table .col.item .product-item-details {
-        width: 100%;
-        text-align: left;
-        display: inline-block;
-        position: relative;
+      width: 100%;
+      text-align: left;
+      display: inline-block;
+      position: relative;
     }
 
     .checkout-cart-index #shopping-cart-table td .product-item-name {
-        font-size: 1.1rem;
+      font-size: 1.1rem;
     }
 
     .checkout-cart-index #shopping-cart-table td, .checkout-cart-index #shopping-cart-table td.col.price {
-        padding: 0;
+      padding: 0;
     }
 
     .checkout-cart-index #shopping-cart-table thead {
-        display: none;
+      display: none;
     }
 
     .checkout-cart-index .cart-summary-divlink #discount-coupon-form .action.apply.primary {
-        margin: 0 0 25px 0;
-        margin-left: 0 !important;
+      margin: 0 0 25px 0;
+      margin-left: 0 !important;
     }
 
 
     //Shipping Page Styles - Start
     .checkout-index-index #shipping-method-buttons-container {
-        width: 100%;
+      width: 100%;
     }
 
     .checkout-index-index .page-wrapper .page-main .columns .column.main .checkout-container .opc-estimated-wrapper .minicart-wrapper .action.showcart {
+      background: #fff;
+      border: 1px solid #ccc;
+      padding: 10px;
+
+      &:hover {
         background: #fff;
-        border: 1px solid #ccc;
-        padding: 10px;
-        &:hover {
-            background: #fff;
-        }
+      }
     }
 
     .opc-estimated-wrapper {
-        .minicart-wrapper {
-            .action.showcart {
-                .counter.qty {
-                    @include max-screen($screen__l) {
-                        background: #fff;
-                        color: #4d4d4e;
-                    }
-                    background: $primary__color;
-                }
+      .minicart-wrapper {
+        .action.showcart {
+          .counter.qty {
+            @include max-screen($screen__l) {
+              background: #fff;
+              color: #4d4d4e;
             }
+            background: $primary__color;
+          }
         }
+      }
     }
 
     .opc-estimated-wrapper .minicart-wrapper .action.showcart:before {
-        color: #333;
+      color: #333;
     }
     //Shipping Page Styles - End
 
 
-    .checkout-index-index .checkout-billing-address .fieldset .actions-toolbar{
+    .checkout-index-index .checkout-billing-address .fieldset .actions-toolbar {
       margin-top: 10px;
     }
 
-}
+  }
 
-@media screen and (max-width: $screen__l) {
-  .fieldset > .field:not(.choice) > .label {
-        text-align: right;
-        box-sizing: border-box;
-        float: left;
+  @media screen and (max-width: $screen__l) {
+    .fieldset > .field:not(.choice) > .label {
+      text-align: right;
+      box-sizing: border-box;
+      float: left;
     }
     .fieldset > .field:not(.choice) > .control {
-        float: left;
+      float: left;
     }
-  .cart-summary {
-    width: 100% !important;
+    .cart-summary {
+      width: 100% !important;
+    }
+    .checkout-payment-method .payment-option-title {
+      padding-left: 0;
+    }
+    .checkout-payment-method .payment-option-content {
+      padding: 0;
+    }
+    .checkout-index-index #discount-form label {
+      padding: 6px 10px 0 0;
+    }
   }
-  .checkout-payment-method .payment-option-title {
-    padding-left: 0;
-  }
-  .checkout-payment-method .payment-option-content {
-    padding: 0;
-  }
-  .checkout-index-index #discount-form label {
-    padding: 6px 10px 0 0;
-  }
-}
 
-@media screen and (max-width: $screen__s) {
-  #popup {
-    width: 90%;
+  @media screen and (max-width: $screen__s) {
+    #popup {
+      width: 90%;
+    }
+    .options-cont-wrp {
+      width: 70%;
+    }
   }
-  .options-cont-wrp {
-    width: 70%;
-  }
-}
 
-#checkout-step-shipping_method {
-  .message.notice {
-    font-size: 16px;
+  #checkout-step-shipping_method {
+    .message.notice {
+      font-size: 16px;
+    }
   }
 }
