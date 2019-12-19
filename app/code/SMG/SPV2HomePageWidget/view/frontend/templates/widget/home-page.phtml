@@ -77,16 +77,35 @@
 					</div>
 				</div>
 				<div class="sp-home__history-date sp-mb-8 md:sp-mb-0">
-					<img
-						alt="Timeline"
-						class="sp-hide md:sp-block sp-mx-auto"
-						src="https://test_magento_image_repo.storage.googleapis.com/Line Animation.png"
-					/>
-					<img
-						alt="Timeline"
-						class="md:sp-hide sp-mx-auto"
-						src="https://test_magento_image_repo.storage.googleapis.com/Line Animation Mobile.png"
-					/>
+					<div class="sp-text-center sp-mt-1">
+						<svg class="line-1" id="line-1-id" width="3px" viewBox="0 0 2 174" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+							<g id="Page-1" stroke="none" fill="none" fill-rule="evenodd">
+								<g id="D-HomePage-" transform="translate(-639.000000, -3435.000000)" stroke="#1d5632" stroke-width="2">
+									<g id="Expertise" transform="translate(0.000000, 3056.000000)">
+										<g id="Line-Animation" transform="translate(566.000000, 128.000000)">
+											<line x1="74" y1="252" x2="74" y2="424" id="Line-2"></line>
+										</g>
+									</g>
+								</g>
+							</g>
+						</svg>
+					</div>
+
+					<p id="countdown">1968</p>
+
+					<div class="sp-text-center" id="trigger-anim">
+						<svg class="line-2" id="line-2-id" width="3px" viewBox="0 0 2 174" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+							<g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
+								<g id="D-HomePage-" transform="translate(-639.000000, -3435.000000)" stroke="#1d5632" stroke-width="2">
+									<g id="Expertise" transform="translate(0.000000, 3056.000000)">
+										<g id="Line-Animation" transform="translate(566.000000, 128.000000)">
+											<line x1="74" y1="252" x2="74" y2="424" id="Line-3"></line>
+										</g>
+									</g>
+								</g>
+							</g>
+						</svg>
+					</div>
 				</div>
 				<div class="sp-home__history-image md:sp-w-1/2 sp-px-4">
 					<div>
@@ -139,3 +158,55 @@
 		</div>
     </div>
 </div>
+<script type="text/javascript">
+ require([ 
+	     "jquery" 
+        ], function($){
+		$(document).ready(function(){ 
+
+			var count=1868;
+			var loop=50;
+			var interval;
+
+			var text=document.getElementById('countdown');
+
+			var line1_get = document.getElementById("line-1-id");
+			var line2_get = document.getElementById("line-2-id");
+
+
+		function timer(time)
+			{
+					if (count < 2020)
+					{
+						count = count+1;
+						text.innerHTML = count;
+
+						interval = setTimeout(function(){
+												timer(300);
+											},loop);
+						
+						if(count >= 2020){
+						clearTimeout(interval);
+						return;
+						}
+					}
+			}
+
+			//trigger the countdown animation
+			$(window).scroll(function() {
+				var hT = $('#trigger-anim').offset().top;
+				var	hH = $('#trigger-anim').outerHeight();
+				var	wH = $(window).height();
+				var	wS = $(this).scrollTop();
+				if (wS > (hT+hH-wH) && (hT > wS)){
+					//Animate line1
+					line1_get.classList.add("line-1_anim");
+					//timer(parseInt(range.value));
+					setTimeout(function(){ timer(30); },200);
+					//Animate line 2
+					setTimeout(function(){ line2_get.classList.add("line-2_anim"); },400);
+				} 
+				});
+		});
+	});		
+</script>
