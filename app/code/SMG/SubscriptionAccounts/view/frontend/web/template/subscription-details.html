@@ -12,7 +12,7 @@
 
     <div class="sp-hide md:sp-block sp-subscription-details__desktop-links">
         <a href="/quiz" class="sp-link">Lawn conditions changed?</a>
-        <a href="#" class="sp-link sp-inline-block sp-ml-4 cancel-subscription-modal">Cancel Subscription</a>
+        <a href="#" data-bind="click: displaySubscriptionModal" class="sp-link sp-inline-block sp-ml-4 cancel-subscription-modal">Cancel Subscription</a>
     </div>
 </div>
 
@@ -124,6 +124,6 @@
         <div class="divider"></div>
         <p class="sp-text-center">Our service team is here to help you get your best lawn. Contact us between Xam and Xpm EST at 1-800-000-000.</p>
     </div>
-    <button type="button" class="sp-button sp-button--primary" id="cancelSubscription">I want to cancel</button>
-    <a href="sp-link" class="close-subscription-modal">Nevermind, take me back</a>
+    <button type="button" class="sp-button sp-button--primary" data-bind="click: cancelSubscription">I want to cancel</button>
+    <a href="sp-link" data-bind="click: closeSubscriptionModal" class="close-subscription-modal">Nevermind, take me back</a>
 </div>
