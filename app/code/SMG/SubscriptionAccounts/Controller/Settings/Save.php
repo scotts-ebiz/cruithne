@@ -4,6 +4,9 @@ namespace SMG\SubscriptionAccounts\Controller\Settings;
 
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Controller\ResultFactory;
+use Recurly_Client;
+use Recurly_Account;
+use Recurly_NotFoundError;
 
 class Save extends \Magento\Framework\App\Action\Action
 {
@@ -59,6 +62,16 @@ class Save extends \Magento\Framework\App\Action\Action
     protected $_jsonResultFactory;
 
     /**
+     * @var \Magento\Customer\Model\Customer
+     */
+    protected $_customer;
+
+    /**
+     * @var \SMG\SubscriptionApi\Helper\RecurlyHelper
+     */
+    protected $_recurlyHelper;
+
+    /**
      * Save constructor.
      * 
      * @param \Magento\Backend\App\Action\Context $context
@@ -84,7 +97,9 @@ class Save extends \Magento\Framework\App\Action\Action
         \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper,
         \Magento\Framework\ObjectManagerInterface $objectManager,
         \Magento\Customer\Model\AccountManagement $accountManagement,
-        \Magento\Framework\Controller\Result\JsonFactory $jsonFactory
+        \Magento\Framework\Controller\Result\JsonFactory $jsonFactory,
+        \Magento\Customer\Model\Customer $customer,
+        \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper
     ) {
         $this->_request = $request;
         $this->_messageManager = $messageManager;
@@ -96,6 +111,8 @@ class Save extends \Magento\Framework\App\Action\Action
         $this->_objectManager = $objectManager;
         $this->_accountManagement = $accountManagement;
         $this->_jsonResultFactory = $jsonFactory;
+        $this->_customer = $customer;
+        $this->_recurlyHelper = $recurlyHelper;
         parent::__construct($context);
     }
 
@@ -114,10 +131,28 @@ class Save extends \Magento\Framework\App\Action\Action
         $customer = $this->getCustomer();
 
         if( ! empty( $request->firstname ) && ! empty( $request->lastname ) && ! empty( $request->email ) ) {
-            $customer->setData( 'firstname', $request->firstname );
-            $customer->setData( 'lastname', $request->lastname );
-            $customer->setData( 'email', $request->email );
-            $customer->save();
+            Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
+            Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
+
+            try {
+                $customer->setData( 'firstname', $request->firstname );
+                $customer->setData( 'lastname', $request->lastname );
+                $customer->setData( 'email', $request->email );
+                $customer->save();
+
+                $account = Recurly_Account::get( $this->getCustomerRecurlyAccountCode() );
+                $account->email = $request->email;
+                $account->first_name = $request->firstname;
+                $account->last_name = $request->lastname;
+                $account->update();
+            } catch( Recurly_NotFoundError $e ) {
+                $data = array(
+                    'success'   => false,
+                    'message'   => 'There was a problem with updating the account details ( '. $e->getMessage() .' )'
+                );
+                $result->setData( $data );
+                return $result;
+            }
         } else {
             $data = array(
                 'success'   => false,
@@ -172,6 +207,32 @@ class Save extends \Magento\Framework\App\Action\Action
     private function getCustomer()
     {
         return $this->_customerSession->getCustomer();
+    }
+
+    /**
+     * Return customer id
+     * 
+     * @return string
+     */
+    private function getCustomerId()
+    {
+        return $this->_customerSession->getCustomer()->getId();
+    }
+
+    /**
+     * Return customer's Recurly account code
+     * 
+     * @return string|bool
+     */
+    private function getCustomerRecurlyAccountCode()
+    {
+        $customer = $this->_customer->load( $this->getCustomerId() );
+
+        if( $customer->getRecurlyAccountCode() ) {
+            return $customer->getRecurlyAccountCode();
+        }
+
+        return false;
     }
 
     /**
