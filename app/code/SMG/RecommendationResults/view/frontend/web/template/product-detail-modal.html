@@ -29,7 +29,7 @@
 
                 <h2
                     class="sp-h2 sp-my-0 sp-mb-4"
-                    data-bind="text: activeProduct().displayName"
+                    data-bind="html: activeProduct().displayName"
                 ></h2>
 
                 <div
@@ -123,8 +123,8 @@
 
             <h3 class="sp-h4">Weight</h3>
             <div>
-                <span data-bind="text: activeProduct().weight"></span>
-                <span data-bind="text: activeProduct()['Product Weight UOM']"></span>
+                <span data-bind="html: activeProduct().weight"></span>
+                <span data-bind="html: activeProduct()['Product Weight UOM']"></span>
             </div>
 
             <h3 class="sp-h4">Coverage Area</h3>
