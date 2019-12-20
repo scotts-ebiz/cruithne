@@ -34,13 +34,25 @@
     @if $ls { letter-spacing: $ls; }
 }
 
-@mixin roboto-regular($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
+@mixin roboto-regular($size: $font-size__base, $color: $color-black, $weight: false, $lh: false, $ls: false) {
   font-family: $font-family__quaternary;
-  @if $size { font-size: $font-size__base; }
-  @if $color { color: $color-black; }
+  @if $size { font-size: $size; }
+  @if $color { color: $color; }
   @if $weight { font-weight: $weight; }
   @if $lh { line-height: $lh; }
   @if $ls { letter-spacing: $ls; }
+}
+
+//Cart & Checkout Body Font
+@mixin cart-checkout-body-font($lh: 20px) {
+  @include roboto-regular();
+  @if $lh { line-height: $lh; }
+}
+
+//Cart & Checkout Body Font - Mobile
+@mixin cart-checkout-body-font-mobile($lh: 18px) {
+  @include roboto-regular($size: $font-size__s);
+  @if $lh { line-height: $lh; }
 }
 
 @mixin defaultwrap($center: true) {

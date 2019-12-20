@@ -19,8 +19,12 @@
     }
     .page-main {
         p {
-            @include roboto-regular();
-            border: 1px solid blue;
+            @include cart-checkout-body-font();
+            padding: 23px 0 0 0;
+            @include max-screen($screen__m) {
+              @include cart-checkout-body-font-mobile();
+              padding: 16px 0 0 0;
+            }
         }
         .columns {
             .column.main {
@@ -728,6 +732,7 @@
                 .abs-checkout-title, .opc-wrapper .step-title, .opc-block-shipping-information .shipping-information-title, .checkout-agreements-items .checkout-agreements-item-title {
                     font-weight: 500;
                     font-size: 1.6rem;
+                    border-bottom: 2px solid $color_dark40_green_shade;
                     color: $color_black20_shade;
                     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
                 }
