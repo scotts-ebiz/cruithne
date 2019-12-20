@@ -40,6 +40,20 @@
         $font-style: normal
 );
 
+@include lib-font-face(
+        $family-name: 'Roboto',
+        $font-path: '../fonts/roboto/roboto-v20-latin-regular',
+        $font-weight: 400,
+        $font-style: normal
+);
+
+@include lib-font-face(
+        $family-name: 'Roboto-Bold',
+        $font-path: '../fonts/roboto/roboto-v20-latin-700',
+        $font-weight: 700,
+        $font-style: normal
+);
+
 //
 //  Desktop
 //  _____________________________________________
