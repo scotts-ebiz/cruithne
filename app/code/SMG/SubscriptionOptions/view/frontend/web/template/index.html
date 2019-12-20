@@ -4,7 +4,7 @@
 <div class="sp-bg-green-4">
 	<div class="sp-container">
 		<div class="sp-text-center">
-			<div class="sp-mx-auto sp-pb-8 lg:sp-w-1/2">
+			<div class="sp-mx-auto lg:sp-w-1/2">
 				<h1 class="sp-h1 sp-mx-auto sp-text-green-1 sp-text-center">Choose Your Subscription</h1>
 				<p class="sp-text-base sp-text-center">
 					Select a subscription option to continue with your purchase.
@@ -15,7 +15,7 @@
 					<h2 class="sp-text-center sp-h4 sp-m-0 sp-mb-4 sp-uppercase">Your Plan</h2>
 
 					<ul
-						class="sp-options__list sp-flex sp-flex-row sp-flex-wrap lg:sp-flex-no-wrap sp-m-0 sp--mx-2 sp-p-0 sp-justify-around sp-relative"
+						class="sp-options__list sp-flex sp-flex-row sp-flex-wrap lg:sp-flex-no-wrap sp-m-0 sp-mb-6 sp--mx-2 sp-p-0 sp-justify-around sp-relative"
 						data-bind="foreach: seasons()"
 					>
 						<li class="sp-options__your-plan-product sp-text-center sp-mx-4 md:sp-mx-0 sp-px-2">
@@ -106,10 +106,10 @@
 						</h2>
 						<div class="sp-flex sp-flex-column sp-flex-auto sp-px-6 lg:sp-px-12">
 							<h3 class="sp-h2--long sp-mb-6">Seasonal Subscription</h3>
-							<ul class="sp-pl-0" data-bind="foreach: products()" style="list-style: none">
+							<ul class="sp-pl-0" data-bind="foreach: seasons()" style="list-style: none">
 								<li class="sp-p1">
-									<span data-bind="text: $data.season"></span>
-									<strong data-bind="text: $parent.formatCurrency($data.price * $data.quantity)"></strong>
+									<span data-bind="text: season"></span>
+									<strong data-bind="text: $parent.formatCurrency(total)"></strong>
 								</li>
 							</ul>
 							<ul class="sp-pl-4">

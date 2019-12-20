@@ -276,11 +276,6 @@ define([
             this.pdp({ ...this.pdp(), activeTab: tab })
         },
 
-        addToOrder: function () {
-            // TODO: Add the product to the order
-            this.togglePDP();
-        },
-
         preventDefault: function () {
         }
     });
