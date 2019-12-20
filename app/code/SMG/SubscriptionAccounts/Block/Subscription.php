@@ -1,12 +1,11 @@
 <?php
 namespace SMG\SubscriptionAccounts\Block;
 
-use Recurly_Client;
-use Recurly_SubscriptionList;
-use Recurly_NotFoundError;
-use Recurly_Invoice;
-use Recurly_InvoiceList;
 use Recurly_BillingInfo;
+use Recurly_Client;
+use Recurly_Invoice;
+use Recurly_NotFoundError;
+use Recurly_SubscriptionList;
 
 class Subscription extends \Magento\Framework\View\Element\Template
 {
@@ -63,9 +62,9 @@ class Subscription extends \Magento\Framework\View\Element\Template
      */
     private function getCustomerRecurlyAccountCode()
     {
-        $customer = $this->_customer->load( $this->getCustomerId() );
+        $customer = $this->_customer->load($this->getCustomerId());
 
-        if( $customer->getRecurlyAccountCode() ) {
+        if ($customer->getRecurlyAccountCode()) {
             return $customer->getRecurlyAccountCode();
         }
 
@@ -76,6 +75,7 @@ class Subscription extends \Magento\Framework\View\Element\Template
      * Return customer subscriptions
      *
      * @return array
+     * @throws \Recurly_Error
      */
     public function getSubscriptions()
     {
@@ -83,106 +83,109 @@ class Subscription extends \Magento\Framework\View\Element\Template
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
         $isAnnualSubscription = false;
-        $activeSubscription = array(); // Used for storing the active subscription, can be of any type
-        $mainSubscription = array(); // Used for stroing the main subscription, annual or seasonal
-        $subscriptions = array(); // Used for merging the active and future subscriptions
-        $invoices = array();
+        $activeSubscription = []; // Used for storing the active subscription, can be of any type
+        $mainSubscription = []; // Used for stroing the main subscription, annual or seasonal
+        $subscriptions = []; // Used for merging the active and future subscriptions
+        $invoices = [];
 
         try {
             // Get active, future and expired subscriptions
-            $activeSubscriptions = Recurly_SubscriptionList::getForAccount( $this->getCustomerRecurlyAccountCode(), [ 'state' => 'active' ] );
-            $futureSubscriptions = Recurly_SubscriptionList::getForAccount( $this->getCustomerRecurlyAccountCode(), [ 'state' => 'future' ] );
+            $activeSubscriptions = Recurly_SubscriptionList::getForAccount($this->getCustomerRecurlyAccountCode(), [ 'state' => 'active' ]);
+            $futureSubscriptions = Recurly_SubscriptionList::getForAccount($this->getCustomerRecurlyAccountCode(), [ 'state' => 'future' ]);
 
             // Merge active and future subscriptions
-            foreach( $activeSubscriptions as $subscription ) {
-                array_push( $subscriptions, $subscription );
+            foreach ($activeSubscriptions as $subscription) {
+                array_push($subscriptions, $subscription);
             }
-            foreach( $futureSubscriptions as $subscription ) {
-                array_push( $subscriptions, $subscription );
+            foreach ($futureSubscriptions as $subscription) {
+                array_push($subscriptions, $subscription);
             }
 
-            foreach( $subscriptions as $subscription ) {
-                if( $subscription->plan->plan_code == 'annual' || $subscription->plan->plan_code == 'seasonal' ) {
+            foreach ($subscriptions as $subscription) {
+                if ($subscription->plan->plan_code == 'annual' || $subscription->plan->plan_code == 'seasonal') {
                     // Get Subscription Type
-                    $isAnnualSubscription = ( $subscription->plan->plan_code == 'annual' ) ? true : false;
+                    $isAnnualSubscription = ($subscription->plan->plan_code == 'annual') ? true : false;
 
                     // Get main subscription
                     $mainSubscription['invoice_number'] = $subscription->invoice->get()->invoice_number;
-                    $mainSubscription['starts_at'] = $subscription->current_period_started_at->format( 'M d, Y' );
-                    $mainSubscription['ends_at'] = $subscription->current_period_ends_at->format( 'M d, Y' );
-                    $mainSubscription['next_billing_date'] = $subscription->current_period_ends_at->format( 'F d, Y' );
+                    $mainSubscription['starts_at'] = $subscription->current_period_started_at->format('M d, Y');
+                    $mainSubscription['ends_at'] = $subscription->current_period_ends_at->format('M d, Y');
+                    $mainSubscription['next_billing_date'] = $subscription->current_period_ends_at->format('F d, Y');
                     $mainSubscription['cc_last_four'] = $this->getBillingInformation()->last_four;
 
                     // Get items from the main invoice
-                    $mainInvoice = $this->getInvoice( $mainSubscription['invoice_number'] );
-                    $notAddonProduct = array( 'annual', 'add-ons', 'early-spring', 'late-spring', 'early-summer', 'early-fall', 'seasonal' );
+                    $mainInvoice = $this->getInvoice($mainSubscription['invoice_number']);
+                    $notAddonProduct = [ 'annual', 'add-ons', 'early-spring', 'late-spring', 'early-summer', 'early-fall', 'seasonal' ];
                     $totalAddonAmount = 0;
                     $totalMainAmount = 0;
                     $numberOfAddonProducts = 0;
-                    foreach( $mainInvoice->line_items as $item ) {
-                        if( ! in_array( $item->product_code, $notAddonProduct ) ) {
+                    foreach ($mainInvoice->line_items as $item) {
+                        if (! in_array($item->product_code, $notAddonProduct)) {
                             $totalAddonAmount += $item->total_in_cents;
                             $numberOfAddonProducts++;
                         }
-                        if( $item->product_code == 'annual' || $item->product_code == 'seasonal' ) {
+                        if ($item->product_code == 'annual' || $item->product_code == 'seasonal') {
                             $totalMainAmount = $item->total_in_cents;
                         }
                     }
 
                     $mainSubscription['addon_count'] = $numberOfAddonProducts;
-                    $mainSubscription['addon_total_amount'] = $this->convertAmountToDollars( $totalAddonAmount );
-                    $mainSubscription['main_total_amount'] = $this->convertAmountToDollars( $totalMainAmount );
-                    $mainSubscription['total_amount'] = $this->convertAmountToDollars( $mainInvoice->total_in_cents );
+                    $mainSubscription['addon_total_amount'] = $this->convertAmountToDollars($totalAddonAmount);
+                    $mainSubscription['main_total_amount'] = $this->convertAmountToDollars($totalMainAmount);
+                    $mainSubscription['total_amount'] = $this->convertAmountToDollars($mainInvoice->total_in_cents);
                 }
 
                 // Get active subscription, and it's not addons
-                if( $subscription->state == 'active' && $subscription->plan->plan_code != 'add-ons' ) {
+                if ($subscription->state == 'active' && $subscription->plan->plan_code != 'add-ons') {
                     $activeSubscription['invoice_number'] = $subscription->invoice->get()->invoice_number;
                 }
 
                 // Get invoice numbers if there is an invoice generated for the subscription
-                if( $subscription->invoice ) {
-                    array_push( $invoices, $subscription->invoice->get()->invoice_number );
+                if ($subscription->invoice) {
+                    array_push($invoices, $subscription->invoice->get()->invoice_number);
                 }
             }
 
-            $invoices = $this->getInvoices( array_unique( $invoices ) );
+            $invoices = $this->getInvoices(array_unique($invoices));
 
-            return array(
+            return [
                 'success'               => true,
                 'is_annual'             => $isAnnualSubscription,
-                'subscription_type'     => ( $isAnnualSubscription ) ? 'Annual' : 'Seasonal',
+                'subscription_type'     => ($isAnnualSubscription) ? 'Annual' : 'Seasonal',
                 'main_subscription'     => $mainSubscription,
                 'active_subscription'   => $activeSubscription,
                 'invoices'              => $invoices,
-            );
+            ];
         } catch (Recurly_NotFoundError $e) {
-            return array(
+            $this->_logger->error($e->getMessage());
+
+            return [
                 'success' => false,
                 'error_message' => $e->getMessage(),
                 'api' => Recurly_Client::$apiKey,
                 'subdomain' => Recurly_Client::$subdomain,
-            );
+            ];
         }
     }
 
     /**
      * Return all invoices
      *
-     * @param array $invocies
+     * @param $invoices
      * @return array
+     * @throws \Recurly_Error
      */
-    private function getInvoices( $invoices )
+    private function getInvoices($invoices)
     {
-        $invoicesArray = array();
+        $invoicesArray = [];
 
-        foreach( $invoices as $index => $invoiceId ) {
-            $invoice = $this->getInvoice( $invoiceId );
+        foreach ($invoices as $index => $invoiceId) {
+            $invoice = $this->getInvoice($invoiceId);
             $invoicesArray[$index]['invoice_number'] = $invoiceId;
-            $invoicesArray[$index]['created_at'] = $invoice->created_at->format( 'M d, Y' );
-            $invoicesArray[$index]['due_on'] = $invoice->created_at->format( 'M d, Y' );;
-            $invoicesArray[$index]['paid'] = ( $invoice->state == 'paid' ) ? 'YES' : 'NO';
-            $invoicesArray[$index]['total'] = $this->convertAmountToDollars( $invoice->total_in_cents );
+            $invoicesArray[$index]['created_at'] = $invoice->created_at->format('M d, Y');
+            $invoicesArray[$index]['due_on'] = $invoice->created_at->format('M d, Y');
+            $invoicesArray[$index]['paid'] = ($invoice->state == 'paid') ? 'YES' : 'NO';
+            $invoicesArray[$index]['total'] = $this->convertAmountToDollars($invoice->total_in_cents);
         }
 
         return $invoicesArray;
@@ -191,20 +194,23 @@ class Subscription extends \Magento\Framework\View\Element\Template
     /**
      * Return invoice based on Invoice ID
      *
-     * @param int $id;
+     * @param int $id ;
      * @return object $invoice
+     * @throws \Recurly_Error
      */
-    public function getInvoice( $id )
+    public function getInvoice($id)
     {
         Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
         try {
-            $invoice = Recurly_Invoice::get( $id );
+            $invoice = Recurly_Invoice::get($id);
 
-           return $invoice;
+            return $invoice;
         } catch (Recurly_NotFoundError $e) {
-            print "Account not found: $e";
+            $this->_logger->error('Account not found: ' . $e->getMessage());
+
+            return [];
         }
     }
 
@@ -223,6 +229,7 @@ class Subscription extends \Magento\Framework\View\Element\Template
      * Return customer's billing information
      *
      * @return object $billing_info
+     * @throws \Recurly_Error
      */
     public function getBillingInformation()
     {
@@ -234,8 +241,9 @@ class Subscription extends \Magento\Framework\View\Element\Template
 
             return $billing_info;
         } catch (Recurly_NotFoundError $e) {
-            print "Not found: $e";
+            $this->_logger->error($e->getMessage());
+
+            return [];
         }
     }
-
 }

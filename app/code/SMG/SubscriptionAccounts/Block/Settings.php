@@ -33,7 +33,7 @@ class Settings extends \Magento\Framework\View\Element\Template
 
     /**
      * Return customer data to use it in the frontend form
-     * 
+     *
      * @return array
      */
     public function getCustomerData()
@@ -43,8 +43,8 @@ class Settings extends \Magento\Framework\View\Element\Template
 
     /**
      * Get the form action URL for POST the save request
-     * 
-     * @return string 
+     *
+     * @return string
      */
     public function saveFormAction()
     {
@@ -53,7 +53,7 @@ class Settings extends \Magento\Framework\View\Element\Template
 
     /**
      * Return customer id
-     * 
+     *
      * @return string
      */
     private function getCustomerId()
@@ -63,7 +63,7 @@ class Settings extends \Magento\Framework\View\Element\Template
 
     /**
      * Return form key
-     * 
+     *
      * @return string
      */
     public function getFormKey()
