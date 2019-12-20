@@ -146,6 +146,7 @@ input[type="number"]::-webkit-outer-spin-button {
     background-repeat: no-repeat;
   }
 
+  &:invalid,
   .sp-has-error & {
     color: $red-1;
   }

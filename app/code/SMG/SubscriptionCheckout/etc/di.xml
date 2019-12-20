@@ -1,10 +1,14 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="Magento\Checkout\Controller\Index\Index" type="SMG\SubscriptionCheckout\Controller\Checkout\Index" />
-	<preference for="Magento\Checkout\Controller\Cart\Index" type="SMG\SubscriptionCheckout\Controller\Cart\Index" />
 	<preference for="Magento\Checkout\Block\Onepage" type="SMG\SubscriptionCheckout\Block\Onepage" />
 
 	<type name="Magento\Customer\Controller\Account\LoginPost">
-		<plugin name="SMG_Customer_LoginPost" type="SMG\SubscriptionCheckout\Controller\Account\LoginPost" />
+		<plugin name="SMG_Customer_LoginPost" type="SMG\SubscriptionCheckout\Plugin\Controller\Account\LoginPost" />
+	</type>
+	<type name="Magento\Checkout\Controller\Cart\Index">
+		<plugin name="smg_cart_index_controller" type="SMG\SubscriptionCheckout\Plugin\Controller\Cart\Index" />
+	</type>
+	<type name="Magento\Checkout\Controller\Index\Index">
+		<plugin name="smg_index_index_controller" type="SMG\SubscriptionCheckout\Plugin\Controller\Index\Index" />
 	</type>
 </config>
