@@ -2,59 +2,81 @@
 
 namespace SMG\SubscriptionAccounts\Controller\Subscription;
 
+use Magento\Backend\App\Action\Context;
+use Magento\Customer\Model\Customer;
+use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Controller\ResultInterface;
+use Psr\Log\LoggerInterface;
 use Recurly_Client;
-use Recurly_NotFoundError;
 use Recurly_Invoice;
 use Recurly_InvoiceList;
+use SMG\SubscriptionApi\Helper\RecurlyHelper;
 
-class Pdf extends \Magento\Framework\App\Action\Action
+/**
+ * Class Pdf
+ * @package SMG\SubscriptionAccounts\Controller\Subscription
+ */
+class Pdf extends Action
 {
 
     /**
-     * @var \Magento\Framework\App\RequestInterface
+     * @var RequestInterface
      */
     protected $_request;
 
     /**
-     * @var \Magento\Customer\Model\Session
+     * @var CustomerSession
      */
     protected $_customerSession;
 
     /**
-     * @var \Magento\Customer\Model\Customer
+     * @var Customer
      */
     protected $_customer;
 
     /**
-     * @var \SMG\SubscriptionApi\Helper\RecurlyHelper
+     * @var RecurlyHelper
      */
     protected $_recurlyHelper;
 
     /**
-     * Save constructor.
-     * 
-     * @param \Magento\Backend\App\Action\Context $context
-     * @param \Magento\Framework\App\RequestInterface $request
-     * @param \Magento\Customer\Model\Session $customerSession
-     * @param \Magento\Customer\Model\Customer $customer
-     * @param \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper
+     * @var LoggerInterface
+     */
+    protected $_logger;
+
+    /**
+     * Pdf constructor.
+     * @param Context $context
+     * @param RequestInterface $request
+     * @param CustomerSession $customerSession
+     * @param Customer $customer
+     * @param RecurlyHelper $recurlyHelper
+     * @param LoggerInterface $logger
      */
     public function __construct(
-        \Magento\Backend\App\Action\Context $context,
-        \Magento\Framework\App\RequestInterface $request,
-        \Magento\Customer\Model\Session $customerSession,
-        \Magento\Customer\Model\Customer $customer,
-        \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper
+        Context $context,
+        RequestInterface $request,
+        CustomerSession $customerSession,
+        Customer $customer,
+        RecurlyHelper $recurlyHelper,
+        LoggerInterface $logger
     ) {
         $this->_request = $request;
         $this->_customerSession = $customerSession;
         $this->_customer = $customer;
         $this->_recurlyHelper = $recurlyHelper;
+        $this->_logger = $logger;
         parent::__construct($context);
     }
 
+    /**
+     * Execute
+     * @return ResponseInterface|ResultInterface
+     */
     public function execute()
     {
         $request = $this->_request->getParams();
@@ -62,20 +84,17 @@ class Pdf extends \Magento\Framework\App\Action\Action
         // Check if invoice ID exists and this is current customer's invoice
         if( ! empty( $request['invoice'] ) && in_array( $request['invoice'], $this->getCustomerInvoices() ) ) {
             header( 'Content-type: application/pdf' );
-
             echo $this->getInvoicePdf( $request['invoice'] );
         } else {
             echo 'Invoice does\'t exist or is not yours. Redirecting back...';
             $resultRedirect = $this->resultFactory->create( ResultFactory::TYPE_REDIRECT );
             $resultRedirect->setUrl( $this->_redirect->getRefererUrl() );
-
             return $resultRedirect;
         }
     }
 
     /**
      * Return customer id
-     * 
      * @return string
      */
     private function getCustomerId()
@@ -85,15 +104,14 @@ class Pdf extends \Magento\Framework\App\Action\Action
 
     /**
      * Return customer's Recurly account code
-     * 
      * @return string|bool
      */
-    private function getCustomerRecurlyAccountCode()
+    private function getGigyaUid()
     {
         $customer = $this->_customer->load( $this->getCustomerId() );
 
-        if( $customer->getRecurlyAccountCode() ) {
-            return $customer->getRecurlyAccountCode();
+        if( $customer->getGigyaUid() ) {
+            return $customer->getGigyaUid();
         }
 
         return false;
@@ -101,8 +119,6 @@ class Pdf extends \Magento\Framework\App\Action\Action
 
     /**
      * Return customer's invoice ids
-     * 
-     * @throws Recurly_NotFoundError
      * @return array
      */
     private function getCustomerInvoices()
@@ -113,24 +129,21 @@ class Pdf extends \Magento\Framework\App\Action\Action
         $customerInvoiceNumbers = array();
 
         try {
-            $invoices = Recurly_InvoiceList::getForAccount($this->getCustomerRecurlyAccountCode());
-
+            $invoices = Recurly_InvoiceList::getForAccount($this->getGigyaUid());
             foreach( $invoices as $invoice ) {
                 array_push( $customerInvoiceNumbers, $invoice->invoice_number );
             }
-            
            return $customerInvoiceNumbers;
-        } catch (Recurly_NotFoundError $e) {
-            print "Account not found: $e";
+        } catch (\Exception $e) {
+            $error = "Account not found: $e";
+            $this->_logger->error($error);
+            echo $error;
         }
     }
 
     /**
      * Return invoice pdf content
-     * 
      * @param int $id
-     * 
-     * @throws Recurly_NotFoundError
      * @return string
      */
     private function getInvoicePdf( $id )
@@ -139,11 +152,11 @@ class Pdf extends \Magento\Framework\App\Action\Action
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
         try {
-            $pdf = Recurly_Invoice::getInvoicePdf( $id );
-
-            return $pdf;
-        } catch (Recurly_NotFoundError $e) {
-            print "Invoice not found: $e";
+            return Recurly_Invoice::getInvoicePdf( $id );
+        } catch (\Exception $e) {
+            $error = "Invoice not found: $e";
+            $this->_logger->error($error);
+            echo $error;
         }
     }
 

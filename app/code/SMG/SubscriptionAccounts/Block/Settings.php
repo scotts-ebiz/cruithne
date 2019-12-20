@@ -1,29 +1,39 @@
 <?php
+
 namespace SMG\SubscriptionAccounts\Block;
 
-class Settings extends \Magento\Framework\View\Element\Template
+use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Framework\Data\Form\FormKey;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
+
+/**
+ * Class Settings
+ * @package SMG\SubscriptionAccounts\Block
+ */
+class Settings extends Template
 {
     /**
-     * @var \Magento\Customer\Model\Session
+     * @var CustomerSession
      */
     protected $_customerSession;
 
     /**
-     * @var \Magento\Framework\Data\Form\FormKey
+     * @var FormKey
      */
     protected $_formKey;
 
     /**
      * Subscriptions block constructor.
-     * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Magento\Customer\Model\Session $customerSession
-     * @param \Magento\Framework\Data\Form\FormKey $formKey
+     * @param Context $context
+     * @param CustomerSession $customerSession
+     * @param FormKey $formKey
      * @param array $data
      */
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
-        \Magento\Customer\Model\Session $customerSession,
-        \Magento\Framework\Data\Form\FormKey $formKey,
+        Context $context,
+        CustomerSession $customerSession,
+        FormKey $formKey,
         array $data = []
     ) {
         $this->_customerSession = $customerSession;

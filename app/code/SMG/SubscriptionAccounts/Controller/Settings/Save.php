@@ -2,104 +2,136 @@
 
 namespace SMG\SubscriptionAccounts\Controller\Settings;
 
+use Magento\Backend\App\Action\Context;
+use Magento\Customer\Model\AccountManagement;
+use Magento\Customer\Model\Customer;
+use Magento\Customer\Model\Session;
+use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\RequestInterface;
-use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\Result\Json;
+use Magento\Framework\Controller\Result\JsonFactory;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Data\Form\FormKey;
+use Magento\Framework\Encryption\Encryptor;
+use Magento\Framework\Encryption\EncryptorInterface;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Exception\SecurityViolationException;
+use Magento\Framework\Message\ManagerInterface;
+use Magento\Framework\ObjectManagerInterface;
+use Magento\Store\Model\StoreManagerInterface;
+use Psr\Log\LoggerInterface;
 use Recurly_Client;
 use Recurly_Account;
-use Recurly_NotFoundError;
+use SMG\SubscriptionApi\Helper\RecurlyHelper;
+use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 
-class Save extends \Magento\Framework\App\Action\Action
+/**
+ * Class Save
+ * @package SMG\SubscriptionAccounts\Controller\Settings
+ */
+class Save extends Action
 {
 
     /**
-     * @var \Magento\Framework\App\RequestInterface
+     * @var RequestInterface
      */
     protected $_request;
 
     /**
-     * @var \Magento\Framework\Message\ManagerInterface
+     * @var ManagerInterface
      */
     protected $_messageManager;
 
     /**
-     * @var \Magento\Framework\Data\Form\FormKey
+     * @var FormKey
      */
     protected $_formKey;
 
     /**
-     * @var \Magento\Framework\Encryption\EncryptorInterface
+     * @var EncryptorInterface
      */
     protected $_encryptor;
 
     /**
-     * @var \Magento\Customer\Model\Session
+     * @var Session
      */
     protected $_customerSession;
 
     /**
-     * @var \Magento\Store\Model\StoreManagerInterface
+     * @var StoreManagerInterface
      */
     protected $_storeManager;
 
     /**
-     * @var \SMG\SubscriptionApi\Helper\SubscriptionHelper
+     * @var SubscriptionHelper
      */
     protected $_subscriptionHelper;
 
     /**
-     * @var \Magento\Framework\ObjectManagerInterface
+     * @var ObjectManagerInterface
      */
     protected $_objectManager;
 
     /**
-     * @var \Magento\Customer\Model\AccountManagement
+     * @var AccountManagement
      */
     protected $_accountManagement;
 
     /**
-     * @var \Magento\Framework\Controller\Result\JsonFactory
+     * @var JsonFactory
      */
     protected $_jsonResultFactory;
 
     /**
-     * @var \Magento\Customer\Model\Customer
+     * @var Customer
      */
     protected $_customer;
 
     /**
-     * @var \SMG\SubscriptionApi\Helper\RecurlyHelper
+     * @var RecurlyHelper
      */
     protected $_recurlyHelper;
+    
+    /**
+     * @var LoggerInterface
+     */
+    protected $_logger;
 
     /**
      * Save constructor.
-     * 
-     * @param \Magento\Backend\App\Action\Context $context
-     * @param \Magento\Framework\App\RequestInterface $request
-     * @param \Magento\Framework\Message\ManagerInterface $messageManager
-     * @param \Magento\Framework\Data\Form\FormKey $formKey
-     * @param \Magento\Framework\Encryption\EncryptorInterface $encryptor
-     * @param \Magento\Customer\Model\Session $customerSession
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper
-     * @param \Magento\Framework\ObjectManagerInterface $objectManager
-     * @param \Magento\Customer\Model\AccountManagement $accountManagement
-     * @param \Magento\Framework\Controller\Result\JsonFactory $jsonFactory
+     *
+     * @param Context $context
+     * @param RequestInterface $request
+     * @param ManagerInterface $messageManager
+     * @param FormKey $formKey
+     * @param Encryptor $encryptor
+     * @param Session $customerSession
+     * @param StoreManagerInterface $storeManager
+     * @param SubscriptionHelper $subscriptionHelper
+     * @param ObjectManagerInterface $objectManager
+     * @param AccountManagement $accountManagement
+     * @param JsonFactory $jsonFactory
+     * @param Customer $customer
+     * @param RecurlyHelper $recurlyHelper
+     * @param LoggerInterface $logger
      */
     public function __construct(
-        \Magento\Backend\App\Action\Context $context,
-        \Magento\Framework\App\RequestInterface $request,
-        \Magento\Framework\Message\ManagerInterface $messageManager,
-        \Magento\Framework\Data\Form\FormKey $formKey,
-        \Magento\Framework\Encryption\Encryptor $encryptor,
-        \Magento\Customer\Model\Session $customerSession,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper,
-        \Magento\Framework\ObjectManagerInterface $objectManager,
-        \Magento\Customer\Model\AccountManagement $accountManagement,
-        \Magento\Framework\Controller\Result\JsonFactory $jsonFactory,
-        \Magento\Customer\Model\Customer $customer,
-        \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper
+        Context $context,
+        RequestInterface $request,
+        ManagerInterface $messageManager,
+        FormKey $formKey,
+        Encryptor $encryptor,
+        Session $customerSession,
+        StoreManagerInterface $storeManager,
+        SubscriptionHelper $subscriptionHelper,
+        ObjectManagerInterface $objectManager,
+        AccountManagement $accountManagement,
+        JsonFactory $jsonFactory,
+        Customer $customer,
+        RecurlyHelper $recurlyHelper,
+        LoggerInterface $logger
     ) {
         $this->_request = $request;
         $this->_messageManager = $messageManager;
@@ -113,16 +145,26 @@ class Save extends \Magento\Framework\App\Action\Action
         $this->_jsonResultFactory = $jsonFactory;
         $this->_customer = $customer;
         $this->_recurlyHelper = $recurlyHelper;
+        $this->_logger = $logger;
         parent::__construct($context);
     }
 
+    /**
+     * Execute
+     * @return ResponseInterface|Json|ResultInterface
+     * @throws SecurityViolationException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
+     */
     public function execute()
     {        
         $request = json_decode( $this->_request->getContent() );
 
         // Check form key
         if ( ! $this->formValidation( $request->form_key ) ) {
-            throw new SecurityViolationException( __( 'Unauthorized' ) );
+            $error = 'Unauthorized';
+            $this->_logger->error($error);
+            throw new SecurityViolationException( __($error) );
         }
 
         $result = $this->_jsonResultFactory->create();
@@ -140,15 +182,17 @@ class Save extends \Magento\Framework\App\Action\Action
                 $customer->setData( 'email', $request->email );
                 $customer->save();
 
-                $account = Recurly_Account::get( $this->getCustomerRecurlyAccountCode() );
+                $account = Recurly_Account::get( $this->getGigyaUid() );
                 $account->email = $request->email;
                 $account->first_name = $request->firstname;
                 $account->last_name = $request->lastname;
                 $account->update();
-            } catch( Recurly_NotFoundError $e ) {
+            } catch(\Exception $e) {
+                $error = 'There was a problem with updating the account details ( '. $e->getMessage() .' )';
+                $this->_logger->error($error);
                 $data = array(
                     'success'   => false,
-                    'message'   => 'There was a problem with updating the account details ( '. $e->getMessage() .' )'
+                    'message'   => $error
                 );
                 $result->setData( $data );
                 return $result;
@@ -167,7 +211,6 @@ class Save extends \Magento\Framework\App\Action\Action
         // If current password is not empty
         if( ! empty( $request->current_password ) ) {
             if( ! empty( $request->new_password ) && ! empty( $request->confirm_new_password ) ) {
-                
                 if( $request->new_password != $request->confirm_new_password ) {
                     $data = array(
                         'success'   => false,
@@ -176,9 +219,7 @@ class Save extends \Magento\Framework\App\Action\Action
                     $result->setData( $data );
                     return $result;
                 }
-
                 $isPasswordChanged = $this->_accountManagement->changePassword( $customer->getEmail(), $request->current_password, $request->new_password );
-
             }
         }
 
@@ -220,16 +261,16 @@ class Save extends \Magento\Framework\App\Action\Action
     }
 
     /**
-     * Return customer's Recurly account code
+     * Return Gigya Uid / customer's Recurly account code
      * 
      * @return string|bool
      */
-    private function getCustomerRecurlyAccountCode()
+    private function getGigyaUid()
     {
         $customer = $this->_customer->load( $this->getCustomerId() );
 
-        if( $customer->getRecurlyAccountCode() ) {
-            return $customer->getRecurlyAccountCode();
+        if( $customer->getGigyaUid() ) {
+            return $customer->getGigyaUid();
         }
 
         return false;
@@ -240,7 +281,7 @@ class Save extends \Magento\Framework\App\Action\Action
      *
      * @param $key
      * @return bool
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     private function formValidation($key)
     {

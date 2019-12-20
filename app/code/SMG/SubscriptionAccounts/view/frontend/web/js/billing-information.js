@@ -18,6 +18,8 @@ define([
         saveBilling() {
             const self = this;
             const recurlyForm = $('form#recurlyForm');
+            const formKey = document.querySelector('input[name=form_key]').value;
+            console.log(recurlyForm.serializeArray());
 
             recurly.token( recurlyForm, function( err, token ) {
                 if( err ) {
@@ -28,7 +30,9 @@ define([
                             type: 'POST',
                             url: '/account/billing/save',
                             data: JSON.stringify( {
-                                token: token.id
+                                form_key: formKey,
+                                token: token.id,
+                                form: recurlyForm.serializeArray()
                             } ),
                             success: function( response ) {
                                 self.success('Your billing information has been updated.');

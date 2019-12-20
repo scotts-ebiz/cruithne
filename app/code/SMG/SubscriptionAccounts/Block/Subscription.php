@@ -1,42 +1,51 @@
 <?php
+
 namespace SMG\SubscriptionAccounts\Block;
 
+use Magento\Customer\Model\Customer;
+use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
 use Recurly_BillingInfo;
 use Recurly_Client;
 use Recurly_Invoice;
-use Recurly_NotFoundError;
 use Recurly_SubscriptionList;
+use SMG\SubscriptionApi\Helper\RecurlyHelper;
 
-class Subscription extends \Magento\Framework\View\Element\Template
+/**
+ * Class Subscription
+ * @package SMG\SubscriptionAccounts\Block
+ */
+class Subscription extends Template
 {
     /**
-     * @var \Magento\Customer\Model\Session
+     * @var CustomerSession
      */
     protected $_customerSession;
 
     /**
-     * @var \Magento\Customer\Model\Customer
+     * @var Customer
      */
     protected $_customer;
 
     /**
-     * @var \SMG\SubscriptionApi\Helper\RecurlyHelper
+     * @var RecurlyHelper
      */
     protected $_recurlyHelper;
 
     /**
      * Subscriptions block constructor.
-     * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Magento\Customer\Model\Session $customerSession
-     * @param \Magento\Customer\Model\Customer $customer
-     * @param \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper
+     * @param Context $context
+     * @param CustomerSession $customerSession
+     * @param Customer $customer
+     * @param RecurlyHelper $recurlyHelper
      * @param array $data
      */
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
-        \Magento\Customer\Model\Session $customerSession,
-        \Magento\Customer\Model\Customer $customer,
-        \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper,
+        Context $context,
+        CustomerSession $customerSession,
+        Customer $customer,
+        RecurlyHelper $recurlyHelper,
         array $data = []
     ) {
         $this->_customerSession = $customerSession;
@@ -56,16 +65,16 @@ class Subscription extends \Magento\Framework\View\Element\Template
     }
 
     /**
-     * Return customer's Recurly account code
+     * Return customer's Gigya UID / Recurly Account Code
      *
      * @return string|bool
      */
-    private function getCustomerRecurlyAccountCode()
+    private function getGigyaUid()
     {
         $customer = $this->_customer->load($this->getCustomerId());
 
-        if ($customer->getRecurlyAccountCode()) {
-            return $customer->getRecurlyAccountCode();
+        if ($customer->getGigyaUid()) {
+            return $customer->getGigyaUid();
         }
 
         return false;
@@ -75,7 +84,6 @@ class Subscription extends \Magento\Framework\View\Element\Template
      * Return customer subscriptions
      *
      * @return array
-     * @throws \Recurly_Error
      */
     public function getSubscriptions()
     {
@@ -84,14 +92,14 @@ class Subscription extends \Magento\Framework\View\Element\Template
 
         $isAnnualSubscription = false;
         $activeSubscription = []; // Used for storing the active subscription, can be of any type
-        $mainSubscription = []; // Used for stroing the main subscription, annual or seasonal
+        $mainSubscription = []; // Used for storing the main subscription, annual or seasonal
         $subscriptions = []; // Used for merging the active and future subscriptions
         $invoices = [];
 
         try {
             // Get active, future and expired subscriptions
-            $activeSubscriptions = Recurly_SubscriptionList::getForAccount($this->getCustomerRecurlyAccountCode(), [ 'state' => 'active' ]);
-            $futureSubscriptions = Recurly_SubscriptionList::getForAccount($this->getCustomerRecurlyAccountCode(), [ 'state' => 'future' ]);
+            $activeSubscriptions = Recurly_SubscriptionList::getForAccount($this->getGigyaUid(), [ 'state' => 'active' ]);
+            $futureSubscriptions = Recurly_SubscriptionList::getForAccount($this->getGigyaUid(), [ 'state' => 'future' ]);
 
             // Merge active and future subscriptions
             foreach ($activeSubscriptions as $subscription) {
@@ -156,9 +164,8 @@ class Subscription extends \Magento\Framework\View\Element\Template
                 'active_subscription'   => $activeSubscription,
                 'invoices'              => $invoices,
             ];
-        } catch (Recurly_NotFoundError $e) {
+        } catch (\Exception $e) {
             $this->_logger->error($e->getMessage());
-
             return [
                 'success' => false,
                 'error_message' => $e->getMessage(),
@@ -173,7 +180,6 @@ class Subscription extends \Magento\Framework\View\Element\Template
      *
      * @param $invoices
      * @return array
-     * @throws \Recurly_Error
      */
     private function getInvoices($invoices)
     {
@@ -194,9 +200,8 @@ class Subscription extends \Magento\Framework\View\Element\Template
     /**
      * Return invoice based on Invoice ID
      *
-     * @param int $id ;
-     * @return object $invoice
-     * @throws \Recurly_Error
+     * @param int $id
+     * @return array|object
      */
     public function getInvoice($id)
     {
@@ -204,12 +209,9 @@ class Subscription extends \Magento\Framework\View\Element\Template
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
         try {
-            $invoice = Recurly_Invoice::get($id);
-
-            return $invoice;
-        } catch (Recurly_NotFoundError $e) {
+            return Recurly_Invoice::get($id);
+        } catch (\Exception $e) {
             $this->_logger->error('Account not found: ' . $e->getMessage());
-
             return [];
         }
     }
@@ -228,8 +230,7 @@ class Subscription extends \Magento\Framework\View\Element\Template
     /**
      * Return customer's billing information
      *
-     * @return object $billing_info
-     * @throws \Recurly_Error
+     * @return array|object
      */
     public function getBillingInformation()
     {
@@ -237,12 +238,9 @@ class Subscription extends \Magento\Framework\View\Element\Template
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
         try {
-            $billing_info = Recurly_BillingInfo::get($this->getCustomerRecurlyAccountCode());
-
-            return $billing_info;
-        } catch (Recurly_NotFoundError $e) {
+            return Recurly_BillingInfo::get($this->getGigyaUid());
+        } catch (\Exception $e) {
             $this->_logger->error($e->getMessage());
-
             return [];
         }
     }

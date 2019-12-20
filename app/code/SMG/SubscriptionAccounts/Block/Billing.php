@@ -1,59 +1,73 @@
 <?php
+
 namespace SMG\SubscriptionAccounts\Block;
 
+use Magento\Customer\Model\Customer;
+use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Directory\Block\Data;
+use Magento\Directory\Model\RegionFactory;
+use Magento\Directory\Model\ResourceModel\Region\CollectionFactory;
+use Magento\Framework\View\Element\Template;
+use Magento\Framework\View\Element\Template\Context;
 use Recurly_BillingInfo;
 use Recurly_Client;
-use Recurly_NotFoundError;
+use SMG\SubscriptionApi\Helper\RecurlyHelper;
 
-class Billing extends \Magento\Framework\View\Element\Template
+/**
+ * Class Billing
+ * @package SMG\SubscriptionAccounts\Block
+ */
+class Billing extends Template
 {
     /**
-     * @var \Magento\Customer\Model\Session
+     * @var CustomerSession
      */
     protected $_customerSession;
 
     /**
-     * @var \Magento\Customer\Model\Customer
+     * @var Customer
      */
     protected $_customer;
 
     /**
-     * @var \SMG\SubscriptionApi\Helper\RecurlyHelper
+     * @var RecurlyHelper
      */
     protected $_recurlyHelper;
 
     /**
-     * @var \Magento\Directory\Block\Data
+     * @var Data
      */
     protected $_directoryData;
 
     /**
-     * @var \Magento\Directory\Model\RegionFactory
+     * @var RegionFactory
      */
     protected $_regionFactory;
 
     /**
-     * @var \Magento\Directory\Model\ResourceModel\Region\CollectionFactory
+     * @var CollectionFactory
      */
     protected $_collectionFactory;
 
     /**
      * Subscriptions block constructor.
-     * @param \Magento\Framework\View\Element\Template\Context $context
-     * @param \Magento\Customer\Model\Session $customerSession
-     * @param \Magento\Customer\Model\Customer $customer
-     * @param \Magento\Directory\Model\ResourceModel\Region\Collection $collection
-     * @param \Magento\Directory\Model\ResourceModel\Region\CollectionFactory $collectionFactory
+     * @param Context $context
+     * @param CustomerSession $customerSession
+     * @param Customer $customer
+     * @param RecurlyHelper $recurlyHelper
+     * @param Data $directoryData
+     * @param RegionFactory $regionFactory
+     * @param CollectionFactory $collectionFactory
      * @param array $data
      */
     public function __construct(
-        \Magento\Framework\View\Element\Template\Context $context,
-        \Magento\Customer\Model\Session $customerSession,
-        \Magento\Customer\Model\Customer $customer,
-        \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper,
-        \Magento\Directory\Block\Data $directoryData,
-        \Magento\Directory\Model\RegionFactory $regionFactory,
-        \Magento\Directory\Model\ResourceModel\Region\CollectionFactory $collectionFactory,
+        Context $context,
+        CustomerSession $customerSession,
+        Customer $customer,
+        RecurlyHelper $recurlyHelper,
+        Data $directoryData,
+        RegionFactory $regionFactory,
+        CollectionFactory $collectionFactory,
         array $data = []
     ) {
         $this->_customerSession = $customerSession;
@@ -94,8 +108,7 @@ class Billing extends \Magento\Framework\View\Element\Template
     /**
      * Return customer's billing information
      *
-     * @return object $billing_info
-     * @throws \Recurly_Error
+     * @return array
      */
     public function getBillingInformation()
     {
@@ -115,9 +128,8 @@ class Billing extends \Magento\Framework\View\Element\Template
             $billing['country'] = $billing_info->country;
             $billing['state'] = $billing_info->state;
             $billing['zip'] = $billing_info->zip;
-
-            return $billing;
-        } catch (Recurly_NotFoundError $e) {
+        } catch (\Exception $e) {
+            // Not truly an error state. We expect this for users without recurly accounts
             $billing['first_name'] = '';
             $billing['last_name'] = '';
             $billing['address1'] = '';
@@ -126,9 +138,9 @@ class Billing extends \Magento\Framework\View\Element\Template
             $billing['country'] = '';
             $billing['state'] = '';
             $billing['zip'] = '';
-
-            return $billing;
         }
+
+        return $billing;
     }
 
     /**
@@ -176,12 +188,11 @@ class Billing extends \Magento\Framework\View\Element\Template
     /**
      * Return state details (region_id, country_id, code, name, ...) by state name
      *
+     * @param $region
      * @return array
      */
     public function getRegionCodeByName($region)
     {
-        $regionCode = $this->_collectionFactory->create()->addRegionNameFilter($region)->getFirstItem()->toArray();
-
-        return $regionCode;
+        return $this->_collectionFactory->create()->addRegionNameFilter($region)->getFirstItem()->toArray();
     }
 }

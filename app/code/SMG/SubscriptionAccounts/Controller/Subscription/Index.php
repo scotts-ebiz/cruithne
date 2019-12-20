@@ -1,22 +1,32 @@
 <?php
+
 namespace SMG\SubscriptionAccounts\Controller\Subscription;
 
+use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Framework\App\Action\Action;
+use Magento\Framework\App\Action\Context;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Exception\NotFoundException;
 
-class Index extends \Magento\Framework\App\Action\Action
+/**
+ * Class Index
+ * @package SMG\SubscriptionAccounts\Controller\Subscription
+ */
+class Index extends Action
 {
     /**
-     * @var \Magento\Customer\Model\Session
+     * @var CustomerSession
      */
     protected $_customerSession;
 
     /**
-     * @param \Magento\Framework\App\Action\Context $context
-     * @param \Magento\Customer\Model\Session $customerSession
+     * @param Context $context
+     * @param CustomerSession $customerSession
      */
     public function __construct(
-        \Magento\Framework\App\Action\Context $context,
-        \Magento\Customer\Model\Session $customerSession
+        Context $context,
+        CustomerSession $customerSession
     ) {
         $this->_customerSession = $customerSession;
         parent::__construct($context);
@@ -26,7 +36,8 @@ class Index extends \Magento\Framework\App\Action\Action
      * Check customer authentication
      *
      * @param RequestInterface $request
-     * @return \Magento\Framework\App\ResponseInterface
+     * @return ResponseInterface
+     * @throws NotFoundException
      */
     public function dispatch(RequestInterface $request)
     {
