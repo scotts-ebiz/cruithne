@@ -121,7 +121,7 @@ class LoginPost
      * @throws LocalizedException
      * @api
      */
-    public function mapToUser( $user_id, $quiz_id )
+    private function mapToUser( $user_id, $quiz_id )
     {
 
         // Make sure we have a path
