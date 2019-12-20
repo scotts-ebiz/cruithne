@@ -23,7 +23,7 @@
                 <!-- ko if: pdp().mode === 'subscription' -->
                 <strong
                     class="sp-block sp-h4 sp-my-0 sp-mb-2"
-                    data-bind="text: formatCurrency(pdp().product.price)"
+                    data-bind="html: formatCurrency(pdp().product.price)"
                 ></strong>
                 <!-- /ko -->
 
@@ -104,7 +104,7 @@
             <div data-bind="html: pdp().product.howToApply"></div>
 
             <h3 class="sp-h4">When To Use</h3>
-            <p data-bind="text: pdp().product.season"></p>
+            <p data-bind="html: pdp().product.season"></p>
 
             <h3 class="sp-h4">Spreader Settings</h3>
             <div data-bind="html: pdp().product.spreaderSettings"></div>
