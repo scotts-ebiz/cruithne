@@ -5,12 +5,15 @@ define([
 ], function (Component, ko, $) {
     return Component.extend({
         initialize(config) {
-            console.log(config);
-            this.account = ko.observable(config.account);
             let self = this;
+
+            this.account = ko.observable(config.account);
+            this.success = ko.observable(null);
         },
+
         saveAccount: function() {
-            var formKey = document.querySelector('input[name=form_key]').value;
+            const self = this;
+            const formKey = document.querySelector('input[name=form_key]').value;
 
             $.ajax({
                 type: 'POST',
@@ -25,8 +28,12 @@ define([
                     newPassword: $('input[name="newPassword"]').val(),
                     passwordRetype: $('input[name="passwordRetype"]').val(),
                 } ),
-                success: function (response) {
-                    console.log( response );
+                success() {
+                    self.success('Your account has been saved.');
+
+                    setTimeout(() => {
+                        self.success(null);
+                    }, 5000);
                 }
             })
         }

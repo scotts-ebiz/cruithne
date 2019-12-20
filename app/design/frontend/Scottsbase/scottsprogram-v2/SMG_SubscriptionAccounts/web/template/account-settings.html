@@ -1,4 +1,12 @@
-<h2 class="sp-h2 sp-text-center lg:sp-text-left">Account Settings</h2>
+<!-- ko if: success() -->
+<div
+	class="sp-bg-green-4 sp-p1 sp-px-4 sp-py-2 sp-mb-4 sp-rounded sp-text-green-1 sp-text-bold"
+	data-bind="text: success()"
+>
+</div>
+<!-- /ko -->
+
+<h2 class="sp-h2 sp-mt-0 sp-text-center lg:sp-text-left">Account Settings</h2>
 
 <form method="POST"
 	  class="sp-flex sp-flex-column lg:sp-flex-row">

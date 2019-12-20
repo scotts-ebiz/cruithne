@@ -1,5 +1,13 @@
+<!-- ko if: success() -->
+<div
+    class="sp-bg-green-4 sp-p1 sp-px-4 sp-py-2 sp-mb-4 sp-rounded sp-text-green-1 sp-text-bold"
+    data-bind="text: success()"
+>
+</div>
+<!-- /ko -->
+
 <div class="sp-flex sp-justify-center md:sp-justify-between sp-items-center">
-    <h2 class="sp-h2 sp-text-center md:sp-text-left">
+    <h2 class="sp-h2 sp-mt-0  sp-text-center md:sp-text-left">
         <!-- ko if: subscriptions().success -->
         Subscription Details
         <!-- /ko -->
@@ -158,9 +166,16 @@
     <hr class="sp-my-8" />
 
     <div class="sp-flex sp-flex-column sp-justify-center sp-items-center">
-        <button type="button"
-                class="sp-button sp-button--primary"
-                data-bind="click: cancelSubscription">I want to cancel</button>
+        <button
+            class="sp-button sp-button--primary"
+            type="button"
+            data-bind="
+                click: cancelSubscription,
+                css: { 'sp-button--inactive sp-button--loading': loading() }
+            "
+        >
+            I want to cancel
+        </button>
         <a href="sp-link"
            data-bind="click: closeSubscriptionModal"
            class="close-subscription-modal sp-block sp-mt-4">Nevermind, take me back</a>

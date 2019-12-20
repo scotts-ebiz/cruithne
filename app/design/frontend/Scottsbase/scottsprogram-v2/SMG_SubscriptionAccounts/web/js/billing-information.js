@@ -5,17 +5,20 @@ define([
 ], function (Component, ko, $) {
     return Component.extend({
         initialize(config) {
-            console.log(config);
             this.billing = ko.observable(config.billing);
             this.states = ko.observable(config.states);
             this.countries = ko.observable(config.countries);
+            this.success = ko.observable(null);
 
             setTimeout( function() {
                 recurly.configure('ewr1-aefvtq9Ri3MILWsXFPHyv2');
             }, 2000);
         },
-        saveBilling: function() {
-            var recurlyForm = $('form#recurlyForm');
+
+        saveBilling() {
+            const self = this;
+            const recurlyForm = $('form#recurlyForm');
+
             recurly.token( recurlyForm, function( err, token ) {
                 if( err ) {
                     alert( err.message );
@@ -28,7 +31,11 @@ define([
                                 token: token.id
                             } ),
                             success: function( response ) {
-                                var response = JSON.parse( response );
+                                self.success('Your billing information has been updated.');
+
+                                setTimeout(() => {
+                                    self.success(null);
+                                }, 5000);
                             }
                         })
                     }

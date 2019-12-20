@@ -1,4 +1,12 @@
-<h2 class="sp-h2 sp-text-center lg:sp-text-left">Billing Information</h1>
+<!-- ko if: success() -->
+<div
+    class="sp-bg-green-4 sp-p1 sp-px-4 sp-py-2 sp-mb-4 sp-rounded sp-text-green-1 sp-text-bold"
+    data-bind="text: success()"
+>
+</div>
+<!-- /ko -->
+
+<h2 class="sp-h2 sp-mt-0 sp-text-center lg:sp-text-left">Billing Information</h2>
 
 <form id="recurlyForm" class="sp-flex sp-flex-column lg:sp-flex-row">
 	<div class="sp-flex-auto sp-p-4 lg:sp-p-0">
@@ -25,7 +33,7 @@
                 class="sp-form-group sp-px-2 sp-w-full"></div>
         </div>
 
-        <div class="sp-form-group">
+        <div class="sp-form-group sp-hidden">
             <div class="sp-select sp-block sp-w-full">
                 <select name="country"
                         placeholder="Country"
