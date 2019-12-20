@@ -38,7 +38,7 @@ define([
 
             this.optionsLink = ko.computed(() => {
                 if (this.quizID() && this.zipCode()) {
-                    return `/subscription-options/index/index/id/${this.quizID()}/${this.zipCode()}`;
+                    return `/subscription-options/index/index/id/${this.quizID()}/zip/${this.zipCode()}`;
                 }
 
                 return '';

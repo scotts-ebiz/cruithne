@@ -7,8 +7,16 @@ define([
         hasResults: ko.observable(false),
         results: ko.observable({}),
 
+        activeProduct: ko.observable(null),
+        pdp: ko.observable({
+            visible: false,
+            activeTab: 'learn', // 'learn' or 'product_specs'
+            mode: 'subscription', // 'plan' or 'subscription'
+        }),
+
         initialize(config) {
             const self = this;
+            this.loading = ko.observable(false);
 
             if (config.zip) {
                 window.sessionStorage.setItem('lawn-zip', config.zip);
@@ -44,6 +52,7 @@ define([
                     : null;
             });
 
+            this.selectedAddOns = ko.observableArray([]);
             this.selectPlan = (data, event) => {
                 if (event.target.checked) {
                     self.subscriptionType(event.target.value);
@@ -67,6 +76,8 @@ define([
                 zip: zip
             };
 
+            this.loading(true);
+
             $.ajax(
                 '/rest/V1/recommendations/quiz/result',
                 {
@@ -89,6 +100,9 @@ define([
                             window.sessionStorage.setItem('quiz-id', data.id);
                         }
                     },
+                    complete() {
+                        self.loading(false);
+                    }
                 }
             )
         },
@@ -108,18 +122,19 @@ define([
             }
         },
 
-		proceedToCheckout() {
-			const subscriptionPlan = $('input[name="subscription_plan"]:checked').val();
-			const addonProducts = $('input[name="addon_products"]:checked').map(function() { return this.value }).get();
+        proceedToCheckout() {
+            const subscriptionPlan = $('input[name="subscription_plan"]:checked').val();
             const formKey = document.querySelector('input[name=form_key]').value;
 
-			if (! subscriptionPlan) {
-				alert('You must select a subscription plan.');
-			}
+            if (!subscriptionPlan) {
+                alert('You must select a subscription plan.');
+            }
 
-			const self = this;
+            const self = this;
+          
+            this.loading(true);
 
-			$.ajax(
+            $.ajax(			
                 `/rest/V1/subscription/process`,
                 {
                     contentType: 'application/json; charset=utf-8',
@@ -127,7 +142,7 @@ define([
                         key: formKey,
                         subscription_plan: subscriptionPlan,
                         data: self.results(),
-                        addons: addonProducts,
+                        addons: self.selectedAddOns(),
                     }),
                     dataType: 'json',
                     method: 'post',
@@ -135,23 +150,27 @@ define([
                         data = JSON.parse(data);
 
                         if (data.success === true) {
-                            window.sessionStorage.setItem('subscription_plan', subscriptionPlan );
-                        	window.location.href = '/checkout/#shipping';
+                            window.sessionStorage.setItem('subscription_plan', subscriptionPlan);
+                            window.location.href = '/checkout/#shipping';
                         } else {
+                            self.loading(false);
                             alert( 'Error creating your order ' + data.message + '. Please try again.' );
                         }
+                    },
+                    error() {
+                        self.loading(false);
                     },
                 },
             );
         },
         formatDate: function (_date) {
-            const date = new Date(_date)
+            const date = new Date(_date);
 
             return [
                 date.getMonth() + 1, // Months are 0 based
                 date.getDate(),
                 date.getFullYear().toString().slice(2)
-            ].join('/')
+            ].join('/');
         },
 
         productFeatures: function (product) {
@@ -159,7 +178,7 @@ define([
                 product.miniClaim1,
                 product.miniClaim2,
                 product.miniClaim3,
-            ].filter(x => !!x)
+            ].filter(x => !!x);
         },
 
         formatCurrency: function (num) {
@@ -172,8 +191,33 @@ define([
 
                 return format.format(num);
             } catch (e) {
-                return num
+                return num;
             }
+        },
+
+        togglePDP(product, event) {
+            if (this.pdp().visible) {
+                if (event.target.id !== 'pdp-modal-wrapper' && !event.target.classList.contains('pdp-modal-close')) {
+                    return true;
+                }
+
+                // hide
+                $('body').removeClass('no-scroll');
+
+            } else {
+                // show
+                $('body').addClass('no-scroll');
+            }
+
+            this.activeProduct(product);
+            this.pdp({
+                ...this.pdp(),
+                visible: !this.pdp().visible
+            });
+        },
+
+        setPDPTab(tab) {
+            this.pdp({ ...this.pdp(), activeTab: tab })
         },
     });
 });

@@ -124,6 +124,9 @@
 }
 
 
+/* ====================================
+PDP MODAL
+==================================== */
 
 #pdp-modal-wrapper {
   position: fixed;
@@ -134,7 +137,7 @@
   overflow: auto;
   -webkit-overflow-scrolling: touch;
   background-color: rgba(0,0,0,0.25);
-  padding: 0 2rem
+  padding: 0 2rem;
 }
 
 #pdp-modal {

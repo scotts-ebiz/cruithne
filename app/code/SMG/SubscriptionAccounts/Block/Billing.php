@@ -1,9 +1,9 @@
 <?php
 namespace SMG\SubscriptionAccounts\Block;
 
+use Recurly_BillingInfo;
 use Recurly_Client;
 use Recurly_NotFoundError;
-use Recurly_BillingInfo;
 
 class Billing extends \Magento\Framework\View\Element\Template
 {
@@ -67,7 +67,7 @@ class Billing extends \Magento\Framework\View\Element\Template
 
     /**
      * Return customer id
-     * 
+     *
      * @return string
      */
     private function getCustomerId()
@@ -77,14 +77,14 @@ class Billing extends \Magento\Framework\View\Element\Template
 
     /**
      * Return customer's Recurly account code
-     * 
+     *
      * @return string|bool
      */
     private function getCustomerRecurlyAccountCode()
     {
-        $customer = $this->_customer->load( $this->getCustomerId() );
+        $customer = $this->_customer->load($this->getCustomerId());
 
-        if( $customer->getRecurlyAccountCode() ) {
+        if ($customer->getRecurlyAccountCode()) {
             return $customer->getRecurlyAccountCode();
         }
 
@@ -93,15 +93,16 @@ class Billing extends \Magento\Framework\View\Element\Template
 
     /**
      * Return customer's billing information
-     * 
+     *
      * @return object $billing_info
+     * @throws \Recurly_Error
      */
     public function getBillingInformation()
     {
         Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
-        $billing = array();
+        $billing = [];
 
         try {
             $billing_info = Recurly_BillingInfo::get($this->getCustomerRecurlyAccountCode());
@@ -114,7 +115,7 @@ class Billing extends \Magento\Framework\View\Element\Template
             $billing['country'] = $billing_info->country;
             $billing['state'] = $billing_info->state;
             $billing['zip'] = $billing_info->zip;
-            
+
             return $billing;
         } catch (Recurly_NotFoundError $e) {
             $billing['first_name'] = '';
@@ -130,11 +131,11 @@ class Billing extends \Magento\Framework\View\Element\Template
         }
     }
 
-     /**
-     * Get the form action URL for POST the save request
-     * 
-     * @return string 
-     */
+    /**
+    * Get the form action URL for POST the save request
+    *
+    * @return string
+    */
     public function saveFormAction()
     {
         return '/account/billing/save';
@@ -142,18 +143,17 @@ class Billing extends \Magento\Framework\View\Element\Template
 
     /**
      * Return states
-     * 
+     *
      * @return array
      */
     public function getStates()
     {
         $states = $this->_directoryData->getRegionCollection()->toOptionArray();
-        $statesArray = array();
+        $statesArray = [];
 
-        foreach( $states as $key => $state ) {
-            if( ! is_object( $state['label'] ) ) {
-                $statesArray[$key]['value'] = $this->getRegionCodeByName( $state['label'] )['code'];
-
+        foreach ($states as $key => $state) {
+            if (! is_object($state['label'])) {
+                $statesArray[$key]['value'] = $this->getRegionCodeByName($state['label'])['code'];
             } else {
                 $statesArray[$key]['value'] = '';
             }
@@ -165,7 +165,7 @@ class Billing extends \Magento\Framework\View\Element\Template
 
     /**
      * Return countries
-     * 
+     *
      * @return array
      */
     public function getCountries()
@@ -175,14 +175,13 @@ class Billing extends \Magento\Framework\View\Element\Template
 
     /**
      * Return state details (region_id, country_id, code, name, ...) by state name
-     * 
+     *
      * @return array
      */
-    public function getRegionCodeByName( $region )
+    public function getRegionCodeByName($region)
     {
-        $regionCode = $this->_collectionFactory->create()->addRegionNameFilter( $region )->getFirstItem()->toArray();
+        $regionCode = $this->_collectionFactory->create()->addRegionNameFilter($region)->getFirstItem()->toArray();
 
         return $regionCode;
     }
-
 }
