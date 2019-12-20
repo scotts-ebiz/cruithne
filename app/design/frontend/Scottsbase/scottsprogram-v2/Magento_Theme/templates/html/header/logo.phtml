@@ -71,18 +71,18 @@ $storeName = $block->escapeHtml($block->getThemeName() ? $block->getThemeName() 
                 <li>
                     <a
                         class="sp-link sp-login"
-                        href="/customer/account"
+                        href="/customer/account/login"
                         data-bind="
                             attr: {
                                 href: customer() && customer().websiteId
-                                    ? '/customer/account'
+                                    ? '/account/settings'
                                     : '/customer/account/login'
                             },
                             text: customer() && customer().websiteId
                                 ? 'My Account'
                                 : 'Log In'
                         "
-                    >My Account</a>
+                    >Log In</a>
                 </li>
             </ul>
             <address class="sp-header__address">
