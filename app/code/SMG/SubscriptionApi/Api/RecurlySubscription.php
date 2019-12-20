@@ -2,9 +2,10 @@
 
 namespace SMG\SubscriptionApi\Api;
 
-use SMG\SubscriptionApi\Exception\SubscriptionException;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Session\SessionManagerInterface as CoreSession;
 use SMG\SubscriptionApi\Api\Interfaces\RecurlyInterface;
+use SMG\SubscriptionApi\Exception\SubscriptionException;
 use SMG\SubscriptionApi\Helper\SubscriptionOrderHelper;
 use SMG\SubscriptionApi\Model\RecurlySubscription as RecurlySubscriptionModel;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionModel;
@@ -23,6 +24,7 @@ class RecurlySubscription implements RecurlyInterface
 
     /** @var CoreSession */
     private $_coreSession;
+
     /**
      * @var SubscriptionOrderHelper
      */
@@ -92,7 +94,40 @@ class RecurlySubscription implements RecurlyInterface
      */
     public function cancelRecurlySubscription()
     {
-        return $this->_recurlySubscriptionModel->cancelRecurlySubscription();
+        // Cancel Recurly Subscriptions
+        try {
+
+            // Cancel recurly subscriptions
+            $cancelledSubscriptionIds = $this->_recurlySubscriptionModel->cancelRecurlySubscriptions(true, true);
+
+            // Find the master subscription id
+            $masterSubscriptionId = null;
+            foreach ($cancelledSubscriptionIds as $planCode => $cancelledSubscriptionId) {
+                if (in_array($planCode, ['annual', 'seasonal'])) {
+                    $masterSubscriptionId = $cancelledSubscriptionId;
+                }
+            }
+            if (is_null($masterSubscriptionId)) {
+                throw new LocalizedException(__("Couldn't find the master subscription id."));
+            }
+
+            // Find the subscription
+            /** @var \SMG\SubscriptionApi\Model\Subscription $subscription */
+            $subscription = $this->_subscriptionModel->getSubscriptionByMasterSubscriptionId($masterSubscriptionId);
+
+            // Cancel subscription orders
+            $subscription->cancelSubscriptions($this->_recurlySubscriptionModel);
+        } catch (LocalizedException $e) {
+            return json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+
+        return json_encode([
+            'success' => true,
+            'message' => 'Subscriptions successfully cancelled.'
+        ]);
     }
 
     /**

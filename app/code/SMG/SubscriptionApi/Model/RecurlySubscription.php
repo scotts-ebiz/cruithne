@@ -283,46 +283,71 @@ class RecurlySubscription
     /**
      * Cancel customer Recurly Subscription
      *
+     * @param bool $cancelActive
+     * @param bool $cancelFuture
+     * @return array
+     * @throws Recurly_Error
+     * @throws LocalizedException
      * @api
      */
-    public function cancelRecurlySubscription()
+    public function cancelRecurlySubscriptions( bool $cancelActive = true, bool $cancelFuture = true )
 	{
-        // Configure Recurly Client using the API Key and Subdomain entered in the settings page
-        Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
-        Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
+	    $cancelledSubscriptionIds = [];
 
-        // Get customer's Recurly account code
-        $account_code = $this->_customerSession->getCustomer()->getGigyaUid();
-
+        // Configure Recurly Client using the API Key and Subdomain entered in the settings page and get account
         try {
-            $active_subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => 'active' ]);
-            $future_subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => 'future' ]);
+            Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
+            Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
-            foreach ($active_subscriptions as $subscription) {
-                $_subscription = Recurly_Subscription::get($subscription->uuid);
-                $_subscription->cancel();
-            }
-
-            foreach ($future_subscriptions as $subscription) {
-                $_subscription = Recurly_Subscription::get($subscription->uuid);
-                $_subscription->cancel();
-            }
-
-            $response = array(
-                'success'   => true,
-                'message'   => 'Recurly subscriptions canceled'
-            );
-
-            return json_encode( $response );
-        } catch (Recurly_NotFoundError $e) {
-            $response = array(
-                'success'   => false,
-                'message'   => 'Recurly subscriptions can not be cancelled (' . $e->getMessage() . ')'
-            );
-
-            return json_encode( $response );
+            $account_code = $this->_customerSession->getCustomer()->getGigyaUid();
+        } catch ( \Exception $e ) {
+            throw new LocalizedException( __('Failed to retrieve subscription account.') );
         }
+
+        // Handle Cancelling Active Subscriptions
+        if ( $cancelActive ) {
+            try {
+                $cancelledSubscriptionIds = array_merge( $cancelledSubscriptionIds, $this->cancelRecurlySubscriptionsByAccountCodeAndStatus( $account_code, 'active' ) );
+            } catch ( LocalizedException $e ) {
+                throw $e;
+            }
+        }
+
+        // Handle Cancelling Future Subscriptions
+        if ( $cancelFuture ) {
+            try {
+                $cancelledSubscriptionIds = array_merge( $cancelledSubscriptionIds, $this->cancelRecurlySubscriptionsByAccountCodeAndStatus( $account_code, 'future' ) );
+            } catch ( LocalizedException $e ) {
+                throw $e;
+            }
+        }
+
+        return $cancelledSubscriptionIds;
 	}
+
+    /**
+     * Cancel Recurly subscriptions By Account Code and Status
+     * @param string $account_code
+     * @param string $status
+     * @return array
+     * @throws LocalizedException
+     * @throws Recurly_Error
+     */
+	private function cancelRecurlySubscriptionsByAccountCodeAndStatus( string $account_code, string $status ) {
+        $cancelledSubscriptionIds = [];
+        try {
+            $subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => $status ]);
+
+            foreach ( $subscriptions as $subscription ) {
+                $_subscription = Recurly_Subscription::get( $subscription->uuid );
+//                $_subscription->cancel();
+                $cancelledSubscriptionIds[$subscription->getValues()['plan']->getValues()['plan_code']] = $subscription->uuid;
+            }
+        } catch (Recurly_NotFoundError $e) {
+            throw new LocalizedException( __('Failed to cancel active subscriptions.') );
+        }
+        return $cancelledSubscriptionIds;
+    }
 
 	/**
 	 * Create billing information with the token provided from Recurly.js
@@ -423,13 +448,17 @@ class RecurlySubscription
 	 * Check if the current customer has a Recurly account.
 	 * If it does, return it's account, otherwise return false.
 	 *
+     * @param string $gigyaId
 	 * @return object|bool
 	 */
-	private function getRecurlyAccount()
+	private function getRecurlyAccount( string $gigyaId = null)
 	{
-        if (! empty($this->_customerSession->getCustomer()->getGigyaUid())) {
+	    if ( is_null($gigyaId) ) {
+	        $gigyaId = $this->_customerSession->getCustomer()->getGigyaUid();
+        }
+        if ( ! empty( $gigyaId )) {
             try {
-                $account = Recurly_Account::get($this->_customerSession->getCustomer()->getGigyaUid());
+                $account = Recurly_Account::get( $gigyaId );
                 return $account;
             } catch (Recurly_NotFoundError $e) {
                 if ($e->getCode() == 0) {
@@ -766,6 +795,38 @@ class RecurlySubscription
             }
         } catch ( \Exception $e ) {
             throw $e;
+        }
+    }
+
+    /**
+     * Create Credit for Recurly
+     * @param $totalRefund
+     * @param $gigyaId
+     * @throws LocalizedException
+     */
+    public function createCredit( $totalRefund, $gigyaId ) {
+
+        try {
+            Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
+            Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
+
+            $purchase = new Recurly_Purchase();
+            $purchase->currency = $this->_currency;
+            $purchase->collection = 'automatic';
+            $purchase->account = $this->getRecurlyAccount( $gigyaId );
+
+            $credit = new Recurly_Adjustment();
+            $credit->account_code = $gigyaId;
+            $credit->currency = $this->_currency;
+            $credit->description = 'Partial refund for subscription cancellation';
+            $credit->unit_amount_in_cents = $this->convertAmountToCents( $totalRefund );
+            $credit->create();
+
+            $purchase->adjustments = [ $credit ];
+            Recurly_Purchase::invoice($purchase);
+
+        } catch ( \Exception $e ) {
+            throw new LocalizedException( __('Credit failed to apply.' . $e->getMessage()) );
         }
     }
 

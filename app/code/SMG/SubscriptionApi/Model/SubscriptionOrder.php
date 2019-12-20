@@ -4,6 +4,7 @@ namespace SMG\SubscriptionApi\Model;
 
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DB\Transaction;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
@@ -14,6 +15,14 @@ use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollection
 use Magento\Sales\Model\Service\InvoiceService;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\Sap\Model\SapOrderBatch;
+use Magento\Sales\Api\Data\OrderInterface;
+use Magento\Sales\Model\Order\Creditmemo;
+use Magento\Sales\Model\Order\CreditmemoFactory;
+use Magento\Sales\Model\Order\Invoice;
+use Magento\Sales\Model\OrderRepository;
+use Magento\Sales\Model\ResourceModel\Order\Creditmemo\CollectionFactory as CreditmemoCollectionFactory;
+use Magento\Sales\Model\Service\CreditmemoService;
+use SMG\Sales\Model\Order;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrderItem\CollectionFactory as SubscriptionOrderItemCollectionFactory;
 
@@ -55,6 +64,18 @@ class SubscriptionOrder extends AbstractModel
      */
     protected $_subscription;
 
+    /** @var OrderRepository */
+    protected $_orderRepository;
+
+    /** @var Order */
+    protected $_order;
+
+    /** @var CreditmemoCollectionFactory */
+    protected $_creditmemoFactory;
+
+    /** @var CreditmemoService */
+    private $_creditmemoService;
+
     /**
      * Constructor.
      */
@@ -72,6 +93,9 @@ class SubscriptionOrder extends AbstractModel
      * @param SubscriptionHelper $subscriptionHelper
      * @param Subscription $subscription
      * @param SubscriptionOrderItemCollectionFactory $subscriptionOrderItemCollectionFactory
+     * @param OrderRepository $orderRepository
+     * @param CreditmemoFactory $creditmemoFactory
+     * @param CreditmemoService $creditmemoService
      * @param OrderCollectionFactory $orderCollectionFactory
      * @param InvoiceService $invoiceService
      * @param Transaction $transaction
@@ -91,6 +115,9 @@ class SubscriptionOrder extends AbstractModel
         Transaction $transaction,
         InvoiceSender $invoiceSender,
         SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory,
+        OrderRepository $orderRepository,
+        CreditmemoFactory $creditmemoFactory,
+        CreditmemoService $creditmemoService,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -111,6 +138,9 @@ class SubscriptionOrder extends AbstractModel
         $this->_transaction = $transaction;
         $this->_invoiceSender = $invoiceSender;
         $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
+        $this->_orderRepository = $orderRepository;
+        $this->_creditmemoFactory = $creditmemoFactory;
+        $this->_creditmemoService = $creditmemoService;
     }
 
     /**
@@ -348,5 +378,29 @@ class SubscriptionOrder extends AbstractModel
         }
 
         $this->save();
+    }
+
+    /**
+     * Create Credit Memo for Order
+     * @throws LocalizedException
+     */
+    public function createCreditMemo() {
+//        try {
+//            /** @var Order $order */
+//            $order = $this->getOrder();
+//            echo "<pre>"; var_dump($order); die;
+//            $invoices = $order->getInvoiceCollection();
+//            /** @var Invoice $invoice */
+//            foreach ( $invoices as $invoice ) {
+//                /** @var Creditmemo $creditmemo */
+//                $creditmemo = $this->_creditmemoFactory->createByOrder( $order );
+//                $creditmemo->setInvoice( $invoice );
+//                $creditmemo->save();
+//            }
+//
+//            echo "<pre>"; var_dump($order->getCreditmemosCollection()->count()); die;
+//        } catch ( \Exception $e ) {
+//            throw new LocalizedException( __('Could not create credit memo for order.') );
+//        }
     }
 }

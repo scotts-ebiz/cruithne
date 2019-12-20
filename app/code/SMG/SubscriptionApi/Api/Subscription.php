@@ -125,6 +125,7 @@ class Subscription implements SubscriptionInterface
      * @param \SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory $subscriptionCollectionFactory
      * @param \Magento\Framework\Session\SessionManagerInterface $coreSession
      * @param AddressFactory $addressFactory
+     * @param SubscriptionOrderHelper $subscriptionOrderHelper
      */
     public function __construct(
         \SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper,
@@ -196,7 +197,7 @@ class Subscription implements SubscriptionInterface
     {
 
         // Test the form key
-        if (!$this->formValidation($key)) {
+        if (! $this->formValidation($key)) {
             throw new SecurityViolationException(__('Unauthorized'));
         }
 
