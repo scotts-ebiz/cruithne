@@ -43,6 +43,16 @@
   @if $ls { letter-spacing: $ls; }
 }
 
+@mixin roboto-bold($size: $font-size__s, $color: $color-black, $text-transform: uppercase, $weight: false, $lh: false, $ls: false) {
+  font-family: $font-family__quinary;
+  @if $size { font-size: $size; }
+  @if $color { color: $color; }
+  @if $weight { font-weight: $weight; }
+  @if $text-transform { text-transform: $text-transform; }
+  @if $lh { line-height: $lh; }
+  @if $ls { letter-spacing: $ls; }
+}
+
 //Cart & Checkout Body Font
 @mixin cart-checkout-body-font($lh: 20px) {
   @include roboto-regular();

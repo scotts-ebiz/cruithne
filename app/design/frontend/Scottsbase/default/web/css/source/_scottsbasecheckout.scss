@@ -62,21 +62,12 @@
                         .opc-progress-bar-item {
                             width: 49%;
                             span {
-                                font-size: 1.4rem;
+                                @include roboto-bold();
                                 &:before {
                                   height: 10px;
                                   width: 10px;
                                   top: 15px;
                                 }
-                                &:after {
-                                  //might not need this
-                                }
-                            }
-                            >span {
-                              font-size: 16px;
-                              &:after {
-                                display: none;
-                              }
                             }
                             &:before {
                                 height: 2px;
@@ -110,23 +101,6 @@
                                     }
                                 }
                             }
-                            //span {
-                            //    font-size: 1.4rem;
-                            //    &:before {
-                            //        height: 10px;
-                            //        width: 10px;
-                            //        top: 15px;
-                            //    }
-                            //    &:after {
-                            //        //might not need this
-                            //    }
-                            //}
-                            //>span {
-                            //    font-size: 16px;
-                            //    &:after {
-                            //        display: none;
-                            //    }
-                            //}
                         }
                     }
                     .opc-wrapper {
