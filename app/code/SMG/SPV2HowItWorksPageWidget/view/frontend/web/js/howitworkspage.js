@@ -1,7 +1,6 @@
 define([
     'jquery'
 ], function ($) {
-    $(document).ready(function(){
         //It focuses on the summer initialy (when the page load)
 	    //get the door and each window image
 		var door = document.getElementById("door_img");
@@ -342,6 +341,5 @@ define([
 			circle_frame.classList.remove("circle_frame_anim");
 		  },1000);
 		} 
-    });
 });
 

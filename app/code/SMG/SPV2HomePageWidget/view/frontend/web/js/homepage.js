@@ -1,14 +1,13 @@
 define([
     'jquery'
 ], function ($) {
-    $(document).ready(function(){
         //It focuses on the summer initialy (when the page load)
 	    //get the door and each window image
 		var door = document.getElementById("door_img");
 		var window1 = document.getElementById("window1_img");
 		var window2 = document.getElementById("window2_img");
 		var windowBig = document.getElementById("windowBig_img");
-	//get seasons
+	    //get seasons
 		//var group7 = document.getElementById("Group-7");
 		var text_early_spring = document.getElementById("e_spring_txt");
 		var text_late_spring = document.getElementById("l_spring_txt");
@@ -79,7 +78,7 @@ define([
 
 		setTimeout(function(){ exec_rotation(); },3000);
 
-	function exec_rotation(){
+	   function exec_rotation(){
 		setTimeout(function(){
 			fall_in_focus();
 		},3000);
@@ -342,6 +341,5 @@ define([
 			circle_frame.classList.remove("circle_frame_anim");
 		  },1000);
 		} 
-    });
 });
 
