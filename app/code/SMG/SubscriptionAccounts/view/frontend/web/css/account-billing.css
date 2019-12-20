@@ -1,0 +1,44 @@
+.sp-account-billing input[type=text] {
+    display: block;
+    width: 100%;
+}
+
+.sp-account-billing .sp-select select {
+    border-left: none;
+    border-right: none;
+    border-top: none;
+}
+
+.sp-form-group {
+    padding-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+
+
+
+/* These styles should go elsewhere */
+#maincontent {
+    padding-top: 1rem;
+}
+
+#maincontent > .columns {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+@media screen and (max-width: 768px) {
+    #maincontent > .columns {
+        flex-flow: column;
+    }
+}
+
+.sp-content {
+    flex: 1 1 auto;
+}
+
+.sidebar.sidebar-main {
+    flex: 0 0 auto;
+    order: -1;
+}
+

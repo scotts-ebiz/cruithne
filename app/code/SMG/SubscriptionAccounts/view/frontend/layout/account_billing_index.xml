@@ -4,6 +4,7 @@
     <head>
         <script src="https://js.recurly.com/v4/recurly.js" src_type="url" />
         <css src="https://js.recurly.com/v4/recurly.css" src_type="url" />
+        <css src="SMG_SubscriptionAccounts::css/account-billing.css" />
     </head>
     <body>
         <referenceContainer name="content">
