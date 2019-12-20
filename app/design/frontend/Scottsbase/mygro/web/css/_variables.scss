@@ -2,18 +2,8 @@
 //  Typography
 //  ---------------------------------------------
 
-
-//  MyGro Brand Colors
-$mygro-green                                                  : #008065;
-$mygro-dark-green                                             : #00634f;
-$mygro-light-green                                            : #59988b;
-$mygro-dark-gray                                              : #383838;
-$mygro-gray                                                   : #909090;
-$mygro-gray-alt                                               : #636363;
-$mygro-accent-blue                                            : #2c5999;
-$mygro-black                                                  : #222222;
-$mygro-black-alt                                              : #231f20;
-
+// Import mygrovars
+@import 'source/mygrovars';
 
 //  Colors
 $primary__color                                               : $mygro-green;
@@ -22,19 +12,26 @@ $active__color                                                : $primary__color;
 $text__color                                                  : $mygro-gray; //sets body color
 
 
-//  Sizes
-$font-size__base                                              : $font-size-unit-ratio * $font-size-ratio__base * 1px !default; // Base font size value in px
-$font-size__xl                                                : ceil(1.5 * $font-size__base) !default; // 21px
-$font-size__l                                                 : ceil(1.25 * $font-size__base) !default; // 18px
-$font-size__s                                                 : ceil(0.85 * $font-size__base) !default; // 12px
-$font-size__xs                                                : floor(0.75 * $font-size__base) !default; // 11px
-
-
 //  Links
 $link__color                                                  : $primary__color;
+$link__text-decoration                                        : none;
+
 $link__visited__color                                         : $primary__color;
+$link__visited__text-decoration                               : none;
+
 $link__hover__color                                           : $secondary__color;
+$link__hover__text-decoration                                 : underline;
+
 $link__active__color                                          : $primary__color;
+$link__active__text-decoration                                : underline;
+
+
+//  Sizes
+$font-size__base                                              : $font-size-unit-ratio * $font-size-ratio__base * 1px; // Base font size value in px
+$font-size__xl                                                : ceil(1.5 * $font-size__base); // 21px
+$font-size__l                                                 : ceil(1.25 * $font-size__base); // 18px
+$font-size__s                                                 : ceil(0.85 * $font-size__base); // 12px
+$font-size__xs                                                : floor(0.75 * $font-size__base); // 11px
 
 
 //  Fonts
@@ -44,16 +41,6 @@ $font-family__base                                            : $font-family-nam
 
 $font-family-name__secondary                                  : 'Hellix-Heavy';
 $font-family__secondary                                       : $font-family-name__secondary, $font-family__sans-serif;
-
-
-//  Miscellaneous
-$letter-spacing_base                                          : inherit;
-$letter-spacing_l                                             : 1.0px;
-$letter-spacing_m                                             : 0.5px;
-
-
-// Custom Sizes
-$font-size__xxl                                               : 4.0rem;
 
 
 //  Navigation
@@ -86,10 +73,6 @@ $h5__font-family                                              : $font-family__se
 
 
 
-
-
-
-
 //  ---------------------------------------------
 //  Button
 //  ---------------------------------------------
@@ -114,7 +97,9 @@ $header-icons-color-hover                                     : $color-gray20 !d
 //  ---------------------------------------------
 //  Icons
 //  ---------------------------------------------
+
 $icon-edit                                                    : '\e606' !default;
+
 
 
 
@@ -141,6 +126,7 @@ $checkout-tooltip-content__active__border-color               : darken($checkout
 $checkout-tooltip-icon-arrow__left                            : -( $checkout-tooltip-content__padding + $checkout-tooltip-icon-arrow__font-size - $checkout-tooltip-content__border-width) !default;
 
 $checkout-billing-address-details__line-height                : 27px !default;
+
 
 // Checkout
 $checkout-step-title__padding                                 : $indent__s !default;
