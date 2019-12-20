@@ -190,8 +190,6 @@ class Subscription implements SubscriptionInterface
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      *
-     * @todo Wes this needs to be refactored. We should be able to just add all of the orders for any
-     *
      * @api
      */
     public function addSubscriptionToCart($key, $subscription_plan, $data, $addons = [])
@@ -314,12 +312,6 @@ class Subscription implements SubscriptionInterface
 
         if (! $subscription) {
             http_response_code(404);
-
-            /**
-             * @todo Sean/Wes Improve the error response
-             * @author Sean Kegel
-             * @date 12/17/2019
-             */
 
             return ['error' => 'Subscription not found.'];
         }
