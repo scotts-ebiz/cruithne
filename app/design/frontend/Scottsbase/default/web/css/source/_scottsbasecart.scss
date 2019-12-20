@@ -21,9 +21,6 @@
             border-bottom:0;
             margin-top: 0rem;
             h1.page-title {
-                //font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                //font-size: 1.6rem;
-                //font-weight: 500;
                 text-transform: inherit;
                 padding: 0 0 10px 0;
                 width: 100%;
@@ -51,21 +48,6 @@
                           text-align: center;
                         }
                     }
-                    //a:before{
-                    //    -webkit-font-smoothing: antialiased;
-                    //    -moz-osx-font-smoothing: grayscale;
-                    //    font-size: 20px;
-                    //    line-height: 20px;
-                    //    font-family: "Font Awesome\ 5 Free";
-                    //    content: "\f0d9";
-                    //    font-weight: 900;
-                    //    margin: 0;
-                    //    vertical-align: top;
-                    //    display: inline-block;
-                    //    overflow: hidden;
-                    //    speak: none;
-                    //    text-align: center;
-                    //}
                 }
                 .cart-container {
                     padding-left: 15px;
@@ -290,9 +272,6 @@
                                 }
                             }
                         }
-                        //.product-item-photo {
-                        //    width:138px;
-                        //}
 
                         //Can you vet this?
                         .actions-toolbar > .action.action-edit  {
@@ -418,7 +397,6 @@
 
                             @media screen and (max-width: $screen__m) {
                                 order:2;
-                                //width: 100%;
                             }
                             .cart-totals {
                                 border-top: 0;
