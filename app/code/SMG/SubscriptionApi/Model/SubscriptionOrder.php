@@ -119,7 +119,7 @@ class SubscriptionOrder extends AbstractModel
      */
     public function generateShipDates()
     {
-        if (is_null($this->getShipStartDate()) || $this->getShipStartDate() == '0000-00-00 00:00:00') {
+        if (empty($this->getShipStartDate()) || $this->getShipStartDate() == '0000-00-00 00:00:00') {
             $this->generateShipStartDate();
             $this->generateShipEndDate();
         }
@@ -185,7 +185,7 @@ class SubscriptionOrder extends AbstractModel
     {
 
         // Make sure we have an actual subscription
-        if (is_null($this->getEntityId())) {
+        if (empty($this->getEntityId())) {
             return false;
         }
 

@@ -149,7 +149,7 @@ class Subscription extends AbstractModel
     public function getSubscriptionOrders()
     {
         // Make sure we have an actual subscription
-        if (is_null($this->getEntityId())) {
+        if (empty($this->getEntityId())) {
             return false;
         }
 
@@ -272,7 +272,7 @@ class Subscription extends AbstractModel
     {
 
         // Make sure we have an actual subscription
-        if (is_null($this->getEntityId())) {
+        if (empty($this->getEntityId())) {
             return false;
         }
 
@@ -291,7 +291,7 @@ class Subscription extends AbstractModel
     {
 
         // Make sure we have an actual subscription
-        if (is_null($this->getEntityId())) {
+        if (empty($this->getEntityId())) {
             return false;
         }
 
@@ -314,7 +314,7 @@ class Subscription extends AbstractModel
     {
 
         // Make sure we have an actual subscription and that we have a subscription type
-        if (is_null($this->getEntityId()) || is_null($this->getSubscriptionType())) {
+        if (empty($this->getEntityId()) || empty($this->getSubscriptionType())) {
             return false;
         }
 

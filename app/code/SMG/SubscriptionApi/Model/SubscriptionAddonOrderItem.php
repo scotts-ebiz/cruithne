@@ -69,7 +69,7 @@ class SubscriptionAddonOrderItem extends AbstractModel
     {
 
         // Make sure we have an actual subscription order item
-        if (is_null($this->getEntityId()) || is_null($this->getCatalogProductSku())) {
+        if (empty($this->getEntityId()) || empty($this->getCatalogProductSku())) {
             return false;
         }
 
