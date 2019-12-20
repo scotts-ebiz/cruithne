@@ -10,12 +10,13 @@ define([
         isLoading: ko.observable(true),
         quiz: ko.observable(null),
         results: ko.observable({}),
-        activeProductIndex: ko.observable(0), // for the tab menu
+        activeSeasonIndex: ko.observable(0), // for the tab menu
 
         pdp: ko.observable({
             visible: false,
             activeTab: 'learn', // 'learn' or 'product_specs'
             mode: 'plan', // 'plan' or 'subscription'
+            product: null,
         }),
 
         initialize(config) {
@@ -93,9 +94,10 @@ define([
                 return (nextProductIndex + 1) % products.length
             });
 
-            self.activeProduct = ko.computed(function () {
-                return self.products()[self.activeProductIndex()]
+            self.activeSeason = ko.computed(function () {
+                return self.seasons()[self.activeSeasonIndex()]
             });
+
         },
 
         loadQuizResults(id, zip) {
@@ -256,7 +258,7 @@ define([
             return 'https://test_magento_image_repo.storage.googleapis.com/' + icon
         },
 
-        togglePDP: function () {
+        togglePDP: function (product) {
             if (this.pdp().visible) {
                 // hide
                 $('body').removeClass('no-scroll');
@@ -268,7 +270,8 @@ define([
 
             this.pdp({
                 ...this.pdp(),
-                visible: !this.pdp().visible
+                visible: !this.pdp().visible,
+                product: product
             });
         },
 

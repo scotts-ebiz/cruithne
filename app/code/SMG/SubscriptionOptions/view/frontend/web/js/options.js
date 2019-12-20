@@ -7,11 +7,11 @@ define([
         hasResults: ko.observable(false),
         results: ko.observable({}),
 
-        activeProduct: ko.observable(null),
         pdp: ko.observable({
             visible: false,
             activeTab: 'learn', // 'learn' or 'product_specs'
             mode: 'subscription', // 'plan' or 'subscription'
+            product: null,
         }),
 
         initialize(config) {
@@ -237,10 +237,10 @@ define([
                 $('body').addClass('no-scroll');
             }
 
-            this.activeProduct(product);
             this.pdp({
                 ...this.pdp(),
-                visible: !this.pdp().visible
+                visible: !this.pdp().visible,
+                product: product
             });
         },
 
