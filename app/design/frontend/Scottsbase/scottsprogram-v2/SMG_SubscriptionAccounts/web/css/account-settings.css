@@ -1,9 +1,11 @@
-.sp-account-billing input[type=text] {
+.sp-account-settings input[type=text],
+.sp-account-settings input[type=email],
+.sp-account-settings input[type=password] {
     display: block;
     width: 100%;
 }
 
-.sp-account-billing .sp-select select {
+.sp-account-settings .sp-select select {
     border-left: none;
     border-right: none;
     border-top: none;
