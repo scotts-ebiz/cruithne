@@ -18,6 +18,10 @@
         }
     }
     .page-main {
+        p {
+            @include roboto-regular();
+            border: 1px solid blue;
+        }
         .columns {
             .column.main {
                 .checkout-container {
