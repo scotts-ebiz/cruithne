@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<layout xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_layout.xsd">
+    <update handle="1column"/>
+    <referenceContainer name="columns">
+        <container name="newcontainer" htmlTag="div" htmlClass="sp-container">
+            <container name="div.grid" htmlTag="div" htmlClass="sp-flex sp-flex-wrap sp--mx-4" after="main">
+                <container name="div.grid.left" htmlTag="div" htmlClass="sp-grid-left" after="div.grid">
+                    <container name="grid.left" as="grid_left" label="Grid Left" />
+                </container>
+                <container name="div.grid.right" htmlTag="div" htmlClass="sp-grid-right" after="div.grid">
+                    <container name="grid.right" as="grid_right" label="Grid Right" />
+                </container>
+            </container>
+        </container>
+    </referenceContainer>
+    <move element="main" destination="newcontainer" before="-" />
+</layout>

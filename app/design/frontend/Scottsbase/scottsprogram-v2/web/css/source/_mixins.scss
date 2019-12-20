@@ -1,0 +1,36 @@
+// Breakpoints
+@mixin breakpoint($size) {
+  @if $size == sm {
+    @media (min-width: $screen-sm) { @content; }
+  }
+  @else if $size == md {
+    @media (min-width: $screen-md) { @content; }
+  }
+  @else if $size == lg {
+    @media (min-width: $screen-lg) { @content; }
+  }
+  @else if $size == xl {
+    @media (min-width: $screen-xl)  { @content; }
+  } @else {
+    @content;
+  }
+}
+
+@mixin appearance {
+  -webkit-appearance: none;
+     -moz-appearance: none;
+          appearance: none;
+}
+
+@mixin user-select {
+  -webkit-user-select: none;
+     -moz-user-select: none;
+      -ms-user-select: none;
+          user-select: none;
+}
+
+// Try to keep spacing (margin, padding, etc.) more consistent by using a .25rem
+// increment
+@function spacing($increment) {
+  @return $increment * .25rem;
+}

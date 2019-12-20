@@ -1,0 +1,80 @@
+// Colors
+$green-1: #1d5632;
+$green-2: #028c45;
+$green-3: #94c941;
+$green-4: #edf4e1;
+$yellow-1: #ffda3a;
+$yellow-2: #fff9e4;
+$red-1: #cb0000;
+$white: #fff;
+$black: #000;
+$gray-1: #454545;
+$gray-2: #d3d3d3;
+$gray-3: #d8d8d8;
+$gray-4: #f4f4f4;
+$gray-5: #333;
+
+// Font Sizes
+$font-size-base: 16px;
+$font-size-base--mobile: 14px;
+$font-size-h0: 100px;
+$font-size-h1: 76px;
+$font-size-h1--mobile: 50px;
+$font-size-h1--long: 64px;
+$font-size-h1--long--mobile: 44px;
+$font-size-h2: 51px;
+$font-size-h2--mobile: 28px;
+$font-size-h2--long: 38px;
+$font-size-h2--long--mobile: 32px;
+$font-size-h3: 28px;
+$font-size-h3--mobile: 21px;
+$font-size-h4: 21px;
+$font-size-h4--mobile: 21px;
+$font-size-h4--long: 18px;
+$font-size-h4--long--mobile: 18px;
+$font-size-p1: 16px;
+$font-size-p1--mobile: 14px;
+$font-size-p2: 14px;
+$font-size-p2--mobile: 12px;
+$font-size-label: 12px;
+$font-size-form-label: 10px;
+
+// Borders
+$border-radius: 0.1875rem;
+
+// Breakpoints
+$screen-xs: 320px;
+$screen-sm: 640px;
+$screen-md: 768px;
+$screen-lg: 1024px;
+$screen-xl: 1440px;
+// These are the breakpoints used for the responsive mixins.
+$breakpoints: null, xs, sm, md, lg;
+
+// Layout
+$container-width: 1280px;
+
+// Spacing
+// This is used to generate margin and padding utility classes.
+// Each value is multiplied by 0.25rem to determine the size of the spacing.
+$spacing: 0, 1, 2, 4, 6, 8, 10, 12, 16, 20, 24;
+
+// Shadows
+$shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.3), 0 1px 2px 0 rgba(0, 0, 0, 0.26);
+$shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.3), 0 2px 4px -1px rgba(0, 0, 0, 0.26);
+$shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.3), 0 4px 6px -2px rgba(0, 0, 0, 0.25);
+$shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.3), 0 10px 10px -5px rgba(0, 0, 0, 0.24);
+$shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.26);
+
+$header-height: 4.5rem;
+
+// Required
+$product-name-link__color: $text__color !default;
+$product-name-link__color__active: $text__color !default;
+$product-name-link__color__hover: $text__color !default;
+$product-name-link__color__visited: $text__color !default;
+
+$product-name-link__text-decoration: none !default;
+$product-name-link__text-decoration__active: $link__hover__text-decoration !default;
+$product-name-link__text-decoration__hover: $link__hover__text-decoration !default;
+$product-name-link__text-decoration__visited: $link__hover__text-decoration !default;

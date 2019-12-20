@@ -1,0 +1,56 @@
+.opc-wrapper .form-shipping-address {
+  margin-bottom: 1rem;
+  margin-top: 1rem;
+  max-width: 100%;
+}
+
+.sp-shipping-form {
+  .sp-form-group {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    width: 100%;
+  }
+
+  .field.street {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+
+    .control {
+      float: none;
+      width: 100%;
+    }
+
+    legend {
+      display: none !important;
+    }
+  }
+
+  .cust-btn-add {
+    display: none;
+  }
+
+  div[name="shippingAddress.street.0"] {
+    margin-bottom: 0;
+  }
+
+  div[name="shippingAddress.street.1"] {
+    label {
+      opacity: 0;
+    }
+  }
+
+  div[name="shippingAddress.street.2"] {
+    display: none;
+  }
+
+  div[name="shippingAddress.firstname"],
+  div[name="shippingAddress.lastname"],
+  div[name="shippingAddress.region_id"],
+  div[name="shippingAddress.postcode"] {
+    @media (min-width: $screen-md) {
+      width: 50%;
+    }
+  }
+}
