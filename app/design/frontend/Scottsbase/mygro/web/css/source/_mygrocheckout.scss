@@ -28,9 +28,6 @@
                                             background: $mygro-dark-green;
                                         }
                                     }
-                                    .action.primary:disabled {
-                                        background: $color_dark30_green_shade;
-                                    }
                                 }
                             }
                             .checkout-validate-address {
@@ -77,9 +74,14 @@
                             }
                         }
                     }
+                    [type="radio"] + label:before {
+                        border-color: $mygro-dark-green;
+                    }
+                    [type="radio"] + label:after {
+                        background: $mygro-dark-green;
+                    }
                 }
             }
         }
     }
 }
-
