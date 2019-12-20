@@ -30,4 +30,10 @@
             <resource ref="anonymous" />
         </resources>
     </route>
+    <route url="/V1/subscription/process-invoice" method="POST">
+        <service class="SMG\SubscriptionApi\Api\Interfaces\RecurlyInterface" method="processSeasonalInvoice" />
+        <resources>
+            <resource ref="anonymous" />
+        </resources>
+    </route>
 </routes>

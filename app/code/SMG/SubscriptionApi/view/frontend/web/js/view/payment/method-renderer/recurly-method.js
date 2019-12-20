@@ -90,6 +90,15 @@ define(
                         if (response[0] === true) {
                             window.location.href = '/checkout/onepage/success';
                         }
+                    },
+                    error: function (response) {
+                        response = JSON.parse(response.responseText);
+
+                        // This exists because sending invoices is return 500
+                        // error codes, however, the response was successful.
+                        if (response[0] === true) {
+                            window.location.href = '/checkout/onepage/success';
+                        }
                     }
                 })
             },
