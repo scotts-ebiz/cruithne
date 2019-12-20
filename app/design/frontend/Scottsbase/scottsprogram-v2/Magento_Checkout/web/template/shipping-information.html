@@ -1,0 +1,25 @@
+<!-- ko if: (isVisible()) -->
+<div class="shipping-information">
+    <div class="ship-to sp-mt-6">
+        <div class="shipping-information-title sp-checkout-title sp-h4 sp-flex sp-items-baseline sp-justify-between sp-uppercase">
+            <span data-bind="i18n: 'Ship To:'"></span>
+            <button class="sp-link" data-bind="click: back">
+                Edit
+            </button>
+        </div>
+        <div class="shipping-information-content">
+            <!-- ko foreach: getRegion('ship-to') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+        </div>
+    </div>
+    <div class="ship-via sp-mt-6">
+        <div class="shipping-information-title sp-checkout-title sp-h4 sp-uppercase">
+            <span data-bind="i18n: 'Shipping Method:'"></span>
+        </div>
+        <div class="shipping-information-content">
+            <span class="value" data-bind="text: getShippingMethodTitle()"></span>
+        </div>
+    </div>
+</div>
+<!--/ko-->

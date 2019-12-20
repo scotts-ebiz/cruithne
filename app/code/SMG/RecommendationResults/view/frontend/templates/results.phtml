@@ -1,0 +1,25 @@
+<div
+    class="sp-results sp-flex sp-relative"
+    data-bind="scope: 'results'"
+>
+    <div class="sp-results__wrapper sp-flex sp-flex-column sp-h-full sp-w-full">
+        <!-- ko template: "SMG_RecommendationResults/loading.html" --><!-- /ko -->
+        <!-- ko template: "SMG_RecommendationResults/index.html" --><!-- /ko -->
+    </div>
+</div>
+
+<script type="text/x-magento-init">
+   {
+        "*": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "results": {
+                        "component": "SMG_RecommendationResults/js/results",
+                        "quiz_id": "<?php echo $this->getRequest()->getParam('id') ?? ''; ?>",
+                        "zip": "<?php echo $this->getRequest()->getParam('zip') ?? ''; ?>"
+                    }
+                }
+            }
+        }
+    }
+</script>
