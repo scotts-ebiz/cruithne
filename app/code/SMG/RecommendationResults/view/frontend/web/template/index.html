@@ -88,9 +88,10 @@
 
                 <ul class="sp-results__list sp-p-0 sp-m-0 md:sp-w-1/2 md:sp-justify-end sp-flex sp-flex-wrap sp--mx-2"
                     data-bind="foreach: productFeatures(activeProduct())">
-                    <li class="sp-text-center sp-m-0 sp-mx-2">
-                        <img class="sp-results__icon--medium"
-                             data-bind="attr: { src: $data }" />
+                    <li class="sp-results__product-addon-image sp-text-center sp-m-0 sp-mx-2 sp-flex sp-flex-column sp-justify-start sp-items-center ">
+                        <img class="sp-results__icon--medium sp-mb-2"
+                             data-bind="attr: { src: $data.image }" />
+                        <span data-bind="text: $data.text"></span>
                     </li>
                 </ul>
             </div>

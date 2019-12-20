@@ -223,10 +223,10 @@ define([
 
         productFeatures: function (product) {
             return [
-                product.miniClaim1,
-                product.miniClaim2,
-                product.miniClaim3,
-            ].filter(x => !!x)
+                { image: product.miniClaim1, text: product.miniClaim1Description },
+                { image: product.miniClaim2, text: product.miniClaim2Description },
+                { image: product.miniClaim3, text: product.miniClaim3Description },
+            ].filter(x => !!x.image)
         },
 
         formatCurrency: function (num) {

@@ -170,3 +170,8 @@ PDP MODAL
 .no-scroll {
   overflow: hidden;
 }
+
+
+.sp-results__product-addon-image {
+  flex: 0 1 75px;
+}
