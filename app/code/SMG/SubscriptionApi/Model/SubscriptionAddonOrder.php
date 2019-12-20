@@ -57,7 +57,12 @@ class SubscriptionAddonOrder extends AbstractModel
     protected $_sapOrderBatch;
 
     /** @var SapOrderBatchCollectionFactory */
-    private $_sapOrderBatchCollectionFactory;
+    protected $_sapOrderBatchCollectionFactory;
+
+    /**
+     * @var Subscription
+     */
+    protected $_subscription;
 
     /**
      * Constructor.
@@ -73,13 +78,15 @@ class SubscriptionAddonOrder extends AbstractModel
      * SubscriptionOrder constructor.
      * @param Context $context
      * @param Registry $registry
+     * @param Subscription $subscription
      * @param SubscriptionHelper $subscriptionHelper
      * @param SubscriptionAddonOrderItemCollectionFactory $subscriptionAddonOrderItemCollectionFactory
+     * @param OrderRepository $orderRepository
      * @param OrderCollectionFactory $orderCollectionFactory
      * @param InvoiceService $invoiceService
      * @param Transaction $transaction
      * @param InvoiceSender $invoiceSender
-     * @param OrderRepository $orderRepository
+     * @param SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -87,6 +94,7 @@ class SubscriptionAddonOrder extends AbstractModel
     public function __construct(
         Context $context,
         Registry $registry,
+        Subscription $subscription,
         SubscriptionHelper $subscriptionHelper,
         SubscriptionAddonOrderItemCollectionFactory $subscriptionAddonOrderItemCollectionFactory,
         OrderRepository $orderRepository,
@@ -115,6 +123,7 @@ class SubscriptionAddonOrder extends AbstractModel
         $this->_invoiceSender = $invoiceSender;
         $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
         $this->_orderRepository = $orderRepository;
+        $this->_subscription = $subscription;
     }
 
     /**

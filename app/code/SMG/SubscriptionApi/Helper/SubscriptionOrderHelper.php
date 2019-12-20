@@ -10,6 +10,7 @@ use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Store\Model\StoreManagerInterface;
 use SMG\SubscriptionApi\Exception\SubscriptionException;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\Collection as SubscriptionAddonOrderCollection;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\CollectionFactory as SubscriptionAddonOrderCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection as SubscriptionOrderCollection;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
@@ -121,6 +122,7 @@ class SubscriptionOrderHelper extends AbstractHelper
      * Process orders with the given subscription ID.
      *
      * @param string $subscriptionId
+     * @throws SubscriptionException
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
@@ -192,12 +194,16 @@ class SubscriptionOrderHelper extends AbstractHelper
         $subscriptionOrder = $subscriptionOrderCollection
             ->getItemByColumnValue('subscription_id', $subscriptionId);
 
-        if (! $subscriptionOrder->getId()) {
+        if (! $subscriptionOrder || ! $subscriptionOrder->getId()) {
             // Lets see if it is an add-on order.
             $subscriptionOrderCollection = $this->_subscriptionAddonOrderCollectionFactory->create();
             $subscriptionOrder = $subscriptionOrderCollection
                 ->getItemByColumnValue('subscription_id', $subscriptionId);
             $addOnOrder = true;
+        }
+
+        if (! $subscriptionOrder || ! $subscriptionOrder->getId()) {
+            return false;
         }
 
         if ($addOnOrder) {
