@@ -34,6 +34,15 @@
     @if $ls { letter-spacing: $ls; }
 }
 
+@mixin roboto-regular($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
+  font-family: 'Roboto';
+  @if $size { font-size: $font-size__base; }
+  @if $color { color: $color-black; }
+  @if $weight { font-weight: $weight; }
+  @if $lh { line-height: $lh; }
+  @if $ls { letter-spacing: $ls; }
+}
+
 @mixin defaultwrap($center: true) {
     @if $center == false {
         margin: 0;
