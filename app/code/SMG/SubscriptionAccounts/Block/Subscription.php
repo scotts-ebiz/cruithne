@@ -149,6 +149,7 @@ class Subscription extends \Magento\Framework\View\Element\Template
             $invoices = $this->getInvoices( array_unique( $invoices ) );
 
             return array(
+                'success'               => true,
                 'is_annual'             => $isAnnualSubscription,
                 'subscription_type'     => ( $isAnnualSubscription ) ? 'Annual' : 'Seasonal',
                 'main_subscription'     => $mainSubscription,

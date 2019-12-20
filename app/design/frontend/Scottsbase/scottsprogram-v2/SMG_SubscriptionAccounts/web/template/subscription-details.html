@@ -1,10 +1,10 @@
 <div class="sp-flex sp-justify-center md:sp-justify-between sp-items-center">
     <h2 class="sp-h2 sp-text-center md:sp-text-left">
-        <!-- ko if: subscriptions() -->
+        <!-- ko if: subscriptions().success -->
         Subscription Details
         <!-- /ko -->
 
-        <!-- ko ifnot: subscriptions() -->
+        <!-- ko ifnot: subscriptions().success -->
         No Subscriptions
         <!-- /ko -->
     </h2>
@@ -12,7 +12,7 @@
        href="/customer/account/logout">Log Out</a>
 </div>
 
-<!-- ko if: subscriptions() -->
+<!-- ko if: subscriptions().success -->
 <div class="sp-flex sp-items-center sp-py-8 sp-px-4 sp-mt-8 sp-subscription-details--border-bottom">
     <h3 class="sp-h4 sp-uppercase">subscription</h3>
     <div class="sp-subscription-details__subscription-active sp-label sp-uppercase md:sp-ml-4">active</div>
