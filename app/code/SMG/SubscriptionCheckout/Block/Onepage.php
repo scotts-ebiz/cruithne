@@ -10,7 +10,7 @@ use SMG\SubscriptionApi\Model\ResourceModel\Subscription;
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @since 100.0.2
  */
-class Onepage extends \Magento\Checkout\Block\OnePage
+class Onepage extends \Magento\Checkout\Block\Onepage
 {
     /** @var Subscription  */
     private $_subscription;
