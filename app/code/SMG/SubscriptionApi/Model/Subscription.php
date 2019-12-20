@@ -345,7 +345,10 @@ class Subscription extends AbstractModel
                 $this->_cart->removeItem($item->getItemId());
             }
         } catch (\Exception $e) {
-            throw new \Exception("Oops 1: " . $e->getMessage());
+            $error = 'Could not add remove items from cart. - '.$e->getMessage();
+            $this->_logger->error($error);
+
+            throw new \Exception($error);
         }
 
         // We will have to calculate the price differently for the subscription than we normally would
@@ -366,7 +369,6 @@ class Subscription extends AbstractModel
         }
 
         try {
-
             // Get the first seasonal product or annual depending on type
             $subscriptionOrders = $this->getSubscriptionOrders();
             $planSku = 'annual';
@@ -387,7 +389,10 @@ class Subscription extends AbstractModel
                 $this->_cart->getQuote()->setCouponCode('annual_discount')->collectTotals()->save();
             }
         } catch (\Exception $e) {
-            throw new \Exception("Oops 2: " . $e->getMessage());
+            $error = 'There was an issue adding the subscription to the cart. - ' . $e->getMessage();
+            $this->_logger->error($error);
+
+            throw new \Exception($error);
         }
 
         try {
@@ -411,7 +416,10 @@ class Subscription extends AbstractModel
                             $item->setOriginalCustomPrice((float)$price);
                             $item->getProduct()->setIsSuperMode(true);
                         } catch (\Exception $e) {
-                            throw new \Exception("Oops 3: " . $e->getMessage());
+                            $error = 'There were issues adding add-on products to the cart. - ' . $e->getMessage();
+                            $this->_logger->error($error);
+
+                            throw new \Exception($error);
                         }
 
                         $subscriptionAddonOrderItem->setSelected(1);
@@ -424,7 +432,10 @@ class Subscription extends AbstractModel
 
             $quote->save();
         } catch (\Exception $e) {
-            throw new \Exception("Oops Subscr: " . $e->getMessage());
+            $error = 'There was an issue saving the quote. - ' . $e->getMessage();
+            $this->_logger->error($error);
+
+            throw new \Exception($error);
         }
 
         // Go through the cart items and modify their prices for the current customer order
@@ -443,7 +454,10 @@ class Subscription extends AbstractModel
             // Update Cart
             $quote->collectTotals()->save();
         } catch (\Exception $e) {
-            throw new \Exception("Oops 4: " . $e->getMessage());
+            $error = 'There was an issue updating the cart item pricing. - ' . $e->getMessage();
+            $this->_logger->error($error);
+
+            throw new \Exception($error);
         }
     }
 
