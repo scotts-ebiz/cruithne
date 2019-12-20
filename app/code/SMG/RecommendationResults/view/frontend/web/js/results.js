@@ -51,6 +51,34 @@ define([
                     : []
             });
 
+            self.seasons = ko.computed(() => {
+                const uniqueSeasons = self.products().reduce((items, product) => {
+                    if (items.indexOf(product.season) === -1) {
+                        items.push(product.season);
+                    }
+
+                    return items;
+                }, []);
+
+                const seasons = uniqueSeasons.map((season) => {
+                    const products = self.products().filter((product) => {
+                        return product.season === season;
+                    });
+
+                    return {
+                        season: season,
+                        products: self.products().filter((product) => {
+                            return product.season === season;
+                        }),
+                        total: products.reduce((price, product) => {
+                            return price + (+product.price * +product.quantity);
+                        }, 0),
+                    }
+                });
+
+                return seasons;
+            });
+
             // used to indicate which product is up next for delivery
             self.nextAvailableProduct = ko.computed(function () {
                 const currentDate = new Date();

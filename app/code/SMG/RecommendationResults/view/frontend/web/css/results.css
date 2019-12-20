@@ -4,37 +4,52 @@
   width: 100vw;
 }
 
-
 .sp-results__your-plan {
   border: 2px solid #1d5632;
+  margin: 0 auto;
   position: relative;
 }
 
 .sp-results__your-plan::after {
   content: '';
+  background-color: #fff;
   background-image: url(https://test_magento_image_repo.storage.googleapis.com/grass-icon.svg);
-  width: 40px;
-  height: 40px;
-  top: -20px;
-  left: 50%;
-  margin-left: -20px;
+  border-radius: 100%;
   display: block;
+  height: 38px;
+  left: 50%;
+  margin-left: -19px;
   position: absolute;
-  background-size: cover;
+  top: -20px;
+  width: 38px;
 }
 
+.sp-results__list {
+  list-style: none;
+}
+
+.sp-results__product-image {
+  flex-shrink: 0;
+  height: 100px;
+  width: 68px;
+}
+
+.sp-results__product-image--lg {
+  height: 224px;
+  width: 174px;
+}
+
+.sp-results__your-plan-label {
+  line-height: 1.25;
+  margin: 0 auto;
+  max-width: 6rem;
+}
 
 .sp-results__tabs {
   flex-shrink: 0;
 }
 
 .sp-results__tabs-tab {
-  list-style: none;;
-}
-
-.sp-results__tabs-detail {}
-
-.sp-results__list {
   list-style: none;
 }
 
@@ -47,7 +62,6 @@
   width: 50px;
   height: auto;
 }
-
 
 .sp-results__product {
   border: 2px solid #1d5632;
@@ -75,8 +89,7 @@
   border: none;
 }
 
-
-.sp-results__bag-count  {
+.sp-results__bag-count {
   background-image: url(https://test_magento_image_repo.storage.googleapis.com/bag-count.svg);
   color: white;
   width: 17px;
@@ -113,16 +126,9 @@
   filter: FlipH;
 }
 
-.sp-results__your-plan-product  {
-  max-width: 6rem;
+.sp-results__your-plan-product {
+  text-align: center;
 }
-
-.sp-results__product-image {
-  width: 75px;
-  height: 110px;
-  flex-shrink: 0;
-}
-
 
 /* ====================================
 PDP MODAL
@@ -136,7 +142,7 @@ PDP MODAL
   height: 100%;
   overflow: auto;
   -webkit-overflow-scrolling: touch;
-  background-color: rgba(0,0,0,0.25);
+  background-color: rgba(0, 0, 0, 0.25);
   padding: 0 2rem;
 }
 

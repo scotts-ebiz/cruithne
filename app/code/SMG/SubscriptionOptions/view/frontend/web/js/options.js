@@ -40,6 +40,34 @@ define([
                     : [];
             });
 
+            this.seasons = ko.computed(() => {
+                const uniqueSeasons = self.products().reduce((items, product) => {
+                    if (items.indexOf(product.season) === -1) {
+                        items.push(product.season);
+                    }
+
+                    return items;
+                }, []);
+
+                const seasons = uniqueSeasons.map((season) => {
+                    const products = self.products().filter((product) => {
+                        return product.season === season;
+                    });
+
+                    return {
+                        season: season,
+                        products: self.products().filter((product) => {
+                            return product.season === season;
+                        }),
+                        total: products.reduce((price, product) => {
+                            return price + (+product.price * +product.quantity);
+                        }, 0),
+                    }
+                });
+
+                return seasons;
+            });
+
             this.total = ko.computed(() => {
                 return this.products().reduce((sum, product) => {
                     return sum + (+product.price * +product.quantity);
