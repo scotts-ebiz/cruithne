@@ -11,13 +11,11 @@ use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
+use Magento\Sales\Model\OrderRepository;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use Magento\Sales\Model\Service\InvoiceService;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\Sap\Model\SapOrderBatch;
-use Magento\Sales\Api\Data\OrderInterface;
-use Magento\Sales\Model\OrderRepository;
-use SMG\Sales\Model\Order;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrderItem\CollectionFactory as SubscriptionAddonOrderItemCollectionFactory;
 
@@ -39,9 +37,6 @@ class SubscriptionAddonOrder extends AbstractModel
 
     /** @var OrderRepository */
     protected $_orderRepository;
-
-    /** @var Order */
-    protected $_order;
 
     /** @var Order */
     protected $_order;
@@ -367,7 +362,8 @@ class SubscriptionAddonOrder extends AbstractModel
      * Create Credit Memo for Order
      * @throws LocalizedException
      */
-    public function createCreditMemo() {
+    public function createCreditMemo()
+    {
 //        try {
 //            /** @var Order $order */
 //            $order = $this->getOrder();

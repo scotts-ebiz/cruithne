@@ -5,21 +5,20 @@ namespace SMG\SubscriptionApi\Model;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ProductFactory;
 use Magento\Catalog\Model\ProductRepository;
+use Magento\Checkout\Model\Cart;
 use Magento\Checkout\Model\Session as CheckoutSession;
+use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Registry;
-use Magento\Checkout\Model\Cart;
-use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Registry;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\Quote;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
-use Magento\Setup\Exception;
 use Magento\Store\Model\StoreManager;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\Collection as SubscriptionAddonOrderCollection;
@@ -355,7 +354,7 @@ class Subscription extends AbstractModel
                 $this->_cart->removeItem($item->getItemId());
             }
         } catch (\Exception $e) {
-            $error = 'Could not add remove items from cart. - '.$e->getMessage();
+            $error = 'Could not add remove items from cart. - ' . $e->getMessage();
             $this->_logger->error($error);
 
             throw new \Exception($error);
@@ -570,41 +569,41 @@ class Subscription extends AbstractModel
      * @param $service
      * @throws LocalizedException
      */
-    public function cancelSubscriptions( $service ) {
-
+    public function cancelSubscriptions($service)
+    {
         $subscriptionOrders = [];
 
         // Get orders that apply
-        $orders = $this->getOrders( true, false );
+        $orders = $this->getOrders(true, false);
 
         // Create Credit Memos
-        foreach ( $orders as $order ) {
+        foreach ($orders as $order) {
             try {
                 /** @var SubscriptionOrder $subscriptionOrder */
-                if ( $order->getSubscriptionAddon() ) {
-                    $subscriptionOrder = $this->_subscriptionOrderCollectionFactory->create()->addFieldToFilter('sales_order_id', $order->getEntityId() )->getFirstItem();
+                if ($order->getSubscriptionAddon()) {
+                    $subscriptionOrder = $this->_subscriptionOrderCollectionFactory->create()->addFieldToFilter('sales_order_id', $order->getEntityId())->getFirstItem();
                 } else {
-                    $subscriptionOrder = $this->_subscriptionOrderCollectionFactory->create()->addFieldToFilter('sales_order_id', $order->getEntityId() )->getFirstItem();
+                    $subscriptionOrder = $this->_subscriptionOrderCollectionFactory->create()->addFieldToFilter('sales_order_id', $order->getEntityId())->getFirstItem();
                 }
                 $subscriptionOrder->createCreditMemo();
                 $subscriptionOrders[] = $subscriptionOrder;
-            } catch ( \Exception $e ) {
-                throw new LocalizedException( __('There was a problem making a credit memo for subscription cancellation.' . $e->getMessage()) );
+            } catch (\Exception $e) {
+                throw new LocalizedException(__('There was a problem making a credit memo for subscription cancellation.' . $e->getMessage()));
             }
         }
 
         // Generate Refund
         try {
-            $this->generateRefund( $orders, $service );
-        } catch ( \Exception $e ) {
-            throw new LocalizedException( __('There was a problem generating a refund.' . $e->getMessage()) );
+            $this->generateRefund($orders, $service);
+        } catch (\Exception $e) {
+            throw new LocalizedException(__('There was a problem generating a refund.' . $e->getMessage()));
         }
 
         // Update Subscription statuses
         try {
-            $this->updateCanceledStatuses( $subscriptionOrders );
-        } catch ( \Exception $e ) {
-            throw new LocalizedException( __('There was a problem updating statuses.' . $e->getMessage()) );
+            $this->updateCanceledStatuses($subscriptionOrders);
+        } catch (\Exception $e) {
+            throw new LocalizedException(__('There was a problem updating statuses.' . $e->getMessage()));
         }
     }
 
@@ -617,26 +616,25 @@ class Subscription extends AbstractModel
      * @return array
      * @throws LocalizedException
      */
-    public function getOrders( bool $filterByInvoiced = null, bool $filterByShipped = null ) {
-
+    public function getOrders(bool $filterByInvoiced = null, bool $filterByShipped = null)
+    {
         $ordersArray = [];
 
         try {
-            $orders = $this->_orderCollectionFactory->create()->addFieldToFilter('master_subscription_id', $this->getSubscriptionId() );
-        } catch ( \Exception $e ) {
-            throw new LocalizedException( __('There was an issue returning orders to cancel.') );
+            $orders = $this->_orderCollectionFactory->create()->addFieldToFilter('master_subscription_id', $this->getSubscriptionId());
+        } catch (\Exception $e) {
+            throw new LocalizedException(__('There was an issue returning orders to cancel.'));
         }
 
         /** @var Order $order */
-        foreach ( $orders as $order ) {
-
+        foreach ($orders as $order) {
             $hasInvoices = $order->getInvoiceCollection()->count() > 0;
             $hasShipments = $order->getShipmentsCollection()->count() > 0;
 
             if (
-                ( is_null( $filterByInvoiced ) || $filterByInvoiced === $hasInvoices )
+                (is_null($filterByInvoiced) || $filterByInvoiced === $hasInvoices)
                     &&
-                ( is_null( $filterByShipped ) || $filterByShipped === $hasShipments )
+                (is_null($filterByShipped) || $filterByShipped === $hasShipments)
             ) {
                 $ordersArray[] = $order;
             }
@@ -651,17 +649,18 @@ class Subscription extends AbstractModel
      * @param $service
      * @throws LocalizedException
      */
-    private function generateRefund( $orders, $service ) {
+    private function generateRefund($orders, $service)
+    {
         try {
             $totalRefund = 0;
             /** @var \SMG\Sales\Model\Order $order */
-            foreach ( $orders as $order ) {
+            foreach ($orders as $order) {
                 $totalRefund += (float) $order->getGrandTotal();
             }
             /** @var RecurlySubscription $service */
-            $service->createCredit( $totalRefund, $this->getGigyaId() );
-        } catch ( \Exeception $e ) {
-            throw new LocalizedException( __('Cannot generate refund.') );
+            $service->createCredit($totalRefund, $this->getGigyaId());
+        } catch (\Exeception $e) {
+            throw new LocalizedException(__('Cannot generate refund.'));
         }
     }
 
@@ -669,11 +668,11 @@ class Subscription extends AbstractModel
      * Update Canceled Statuses
      * @param $subscriptionOrders
      */
-    private function updateCanceledStatuses( $subscriptionOrders ) {
-        foreach ( $subscriptionOrders as $subscriptionOrder ) {
+    private function updateCanceledStatuses($subscriptionOrders)
+    {
+        foreach ($subscriptionOrders as $subscriptionOrder) {
             $subscriptionOrder->setSubscriptionOrderStatus('canceled')->save();
         }
         $this->setSubscriptionStatus('canceled')->save();
     }
-
 }
