@@ -101,10 +101,11 @@ class Billing extends \Magento\Framework\View\Element\Template
         Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
+        $billing = array();
+
         try {
             $billing_info = Recurly_BillingInfo::get($this->getCustomerRecurlyAccountCode());
 
-            $billing = array();
             $billing['first_name'] = $billing_info->first_name;
             $billing['last_name'] = $billing_info->last_name;
             $billing['address1'] = $billing_info->address1;
@@ -116,7 +117,16 @@ class Billing extends \Magento\Framework\View\Element\Template
             
             return $billing;
         } catch (Recurly_NotFoundError $e) {
-            print "Not found: $e";
+            $billing['first_name'] = '';
+            $billing['last_name'] = '';
+            $billing['address1'] = '';
+            $billing['address2'] = '';
+            $billing['city'] = '';
+            $billing['country'] = '';
+            $billing['state'] = '';
+            $billing['zip'] = '';
+
+            return $billing;
         }
     }
 
