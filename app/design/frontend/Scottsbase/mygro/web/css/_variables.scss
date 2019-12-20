@@ -39,9 +39,6 @@ $font-family-name__base                                       : 'Hellix-Regular'
 $font-family__sans-serif                                      : 'Helvetica Neue', Helvetica, Arial, sans-serif !default;
 $font-family__base                                            : $font-family-name__base, $font-family__sans-serif;
 
-$font-family-name__secondary                                  : 'Hellix-Heavy';
-$font-family__secondary                                       : $font-family-name__secondary, $font-family__sans-serif;
-
 
 //  Navigation
 $navigation-desktop-level0-item__color                        : $mygro-black;
@@ -55,7 +52,7 @@ $navigation-desktop_letter-spacing                            : $letter-spacing_
 $h1__margin-bottom__desktop                                   : $indent__xl !default;
 $h1__font-size                                                : $font-size__xl;
 $h1__font-color                                               : $mygro-black;
-$h1__font-family                                              : $font-family__base;
+$h1__font-family                                              : $font-family__tertiary;
 
 $h2__font-size                                                : $font-size__xxl;
 $h2__font-color                                               : $mygro-black;

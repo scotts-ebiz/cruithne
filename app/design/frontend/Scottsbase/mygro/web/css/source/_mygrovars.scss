@@ -13,6 +13,11 @@ $mygro-black                                                  : #222222;
 $mygro-black-alt                                              : #231f20;
 
 
+//  Fonts
+$font-family-name__secondary                                  : 'Hellix-Heavy';
+$font-family__secondary                                       : $font-family-name__secondary, $font-family__sans-serif;
+
+
 // Font Sizes //
 $font10: 10px;
 $font12: 12px;
