@@ -110,8 +110,8 @@
                 <th class="sp-label">Total</th>
             </tr>
         </thead>
-        <tbody>
-            <tr data-bind="foreach: { data: subscriptions().invoices, as: 'invoice' }">
+        <tbody data-bind="foreach: { data: subscriptions().invoices, as: 'invoice' }">
+            <tr>
                 <td data-label="Invoice Number"><a class="sp-link"
                        data-bind="attr: { href: '/account/subscription/pdf/invoice/' + invoice.invoice_number }">#<span
                               data-bind="text: invoice.invoice_number"></span></a></td>

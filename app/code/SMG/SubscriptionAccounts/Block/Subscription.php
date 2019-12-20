@@ -178,11 +178,11 @@ class Subscription extends \Magento\Framework\View\Element\Template
 
         foreach( $invoices as $index => $invoiceId ) {
             $invoice = $this->getInvoice( $invoiceId );
-            $invoicesArray['invoice_number'] = $invoiceId;
-            $invoicesArray['created_at'] = $invoice->created_at->format( 'M d, Y' );
-            $invoicesArray['due_on'] = $invoice->created_at->format( 'M d, Y' );;
-            $invoicesArray['paid'] = ( $invoice->state == 'paid' ) ? 'YES' : 'NO';
-            $invoicesArray['total'] = $this->convertAmountToDollars( $invoice->total_in_cents );
+            $invoicesArray[$index]['invoice_number'] = $invoiceId;
+            $invoicesArray[$index]['created_at'] = $invoice->created_at->format( 'M d, Y' );
+            $invoicesArray[$index]['due_on'] = $invoice->created_at->format( 'M d, Y' );;
+            $invoicesArray[$index]['paid'] = ( $invoice->state == 'paid' ) ? 'YES' : 'NO';
+            $invoicesArray[$index]['total'] = $this->convertAmountToDollars( $invoice->total_in_cents );
         }
 
         return $invoicesArray;
