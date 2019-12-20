@@ -70,9 +70,6 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
             outline: 1px inset #909090;
             outline-style: solid;
             height: 35px;
-            //@media only screen and (max-width: $screen_768){ //test - moved to grouped product scss
-            //  font-size: 0.9rem;
-            //}
           }
         }
         .table-wrapper {
@@ -133,24 +130,6 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
               }
               tr.grouped-row {
                 display: none;
-                td {
-                  //@media only screen and (max-width: $screen_768){ // test - make sure this looks ok in mobile as 14px
-                  //  font-size: 1.0rem;
-                  //}
-                  //p { // test - make sure this looks ok in mobile as 14px
-                  //  @media only screen and (max-width: $screen_768){
-                  //    font-size: 0.75rem;
-                  //  }
-                  //}
-                  .price-box {
-                    .price-container {
-                      .price {
-                        //color: #008065; //test - remove to test
-                        //font-size: 1.2rem; //test - remove to test
-                      }
-                    }
-                  }
-                }
                 td.product-detail-td {
                   width: 70%;
                   margin: 0;
@@ -161,9 +140,6 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
                   @media only screen and (max-width: $screen__l){
                     width: 55%;
                   }
-                  //@media only screen and (max-width: $screen__m){
-                  //  font-size: 0.75rem;
-                  //}
                   @media only screen and (max-width: $screen__xs){
                     width: 100%;
                   }
@@ -211,9 +187,6 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
                 }
                 span{
                   font-size: $font-size__xl;
-                  @media only screen and (max-width: $screen_768){
-                    //font-size: 1.0rem; test - what does this look like in mobile?
-                  }
                 }
               }
             }
