@@ -6,12 +6,12 @@ $checkout-progress-bar__font-size                              : 18px !default;
 $checkout-progress-bar__font-weight                            : $font-weight__light !default;
 $checkout-progress-bar__margin                                 : $indent__base !default;
 
-$checkout-progress-bar-item__background-color                  : $color-gray-middle1 !default;
+$checkout-progress-bar-item__background-color                  : $scotts-black !default;
 $checkout-progress-bar-item__border-radius                     : 6px !default;
 $checkout-progress-bar-item__color                             : $primary__color !default;
 $checkout-progress-bar-item__margin                            : $indent__s !default;
 $checkout-progress-bar-item__width                             : 185px !default;
-$checkout-progress-bar-item__active__background-color          : $color-orange-red1 !default;
+$checkout-progress-bar-item__active__background-color          : $color_dark40_green_shade;
 $checkout-progress-bar-item__complete__color                   : $link__color !default;
 
 $checkout-progress-bar-item-element__width                     : 38px !default;
@@ -118,14 +118,15 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
 
     &._active {
         &:before {
-            background: $checkout-progress-bar-item__active__background-color;
+            background: $checkout-progress-bar-item__active__background-color; //test - changed to new grn
         }
 
         > span {
             @include lib-css(color, $checkout-progress-bar-item__color);
 
             &:before {
-                @include lib-css(background, $checkout-progress-bar-item__active__background-color);
+                @include lib-css(background, $checkout-progress-bar-item__active__background-color);//test - change this to new grn
+                @include lib-css(height, $checkout-progress-bar-item-element__height);//test - check to see if height added
             }
 
             &:after {

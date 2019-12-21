@@ -71,11 +71,10 @@
                             }
                             &:before {
                                 height: 2px;
-                                background: $color_light_grey_40;
                             }
                             &._active {
                                 &:before {
-                                    background: $color_dark40_green_shade;
+                                    //background: $color_dark40_green_shade;// test - moved into module change
                                 }
                                 > span {
                                   &:after {
@@ -87,7 +86,7 @@
                                         top: 0;
                                         width: 38px;
                                         height: 38px;
-                                        background: $color_dark40_green_shade;
+                                        //background: $color_dark40_green_shade; // test - moved into module change
                                     }
                                     &:after {
                                         font-size: 27px;
