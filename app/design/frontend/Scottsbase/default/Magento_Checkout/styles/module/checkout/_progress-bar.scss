@@ -76,14 +76,14 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
         word-wrap: break-word;
 
         @include lib-typography(
-            $_color       : $color-black, //test
+            $_color       : $color-black,
             $_font-family : $font-family__quinary,
             $_font-size   : $checkout-progress-bar__font-size,
             $_font-style  : false,
-            $_font-weight : $checkout-progress-bar__font-weight,//test again - bold 700
+            $_font-weight : $checkout-progress-bar__font-weight,
             $_line-height : false
         );
-        @include lib-css(text-transform, uppercase);//test again
+        @include lib-css(text-transform, uppercase);
 
         &:before, // Item element
         &:after {
@@ -128,8 +128,8 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
             &:before {
                 @include lib-css(background, $checkout-progress-bar-item__active__background-color);
                 @include lib-css(height, $checkout-progress-bar-item-element__height);
-                @include lib-css(width, $checkout-progress-bar-item-element__width);//test - 38px?
-                top: 0;// test
+                @include lib-css(width, $checkout-progress-bar-item-element__width);//test - Fix this still on other sheet!
+                top: 0;//test - Fix this still on other sheet!
             }
 
             &:after {

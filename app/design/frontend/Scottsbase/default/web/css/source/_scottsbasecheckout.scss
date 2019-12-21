@@ -62,7 +62,6 @@
                         .opc-progress-bar-item {
                             width: 49%;
                             span {
-                                //@include roboto-bold();//test - do you see on both titles?
                                 &:before {
                                   height: 10px;
                                   width: 10px;
