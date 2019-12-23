@@ -4,6 +4,8 @@ namespace SMG\Theme\Block\Html\Header;
 
 use Magento\Customer\Model\Session\Proxy as SessionProxy;
 use SMG\Launch\Model\Session;
+use SMG\SubscriptionApi\Model\RecurlySubscription;
+use Recurly_Client;
 
 /**
  * Logo page header block
@@ -18,6 +20,21 @@ class Logo extends \Magento\Theme\Block\Html\Header\Logo
     protected $_session;
 
     /**
+     * @var RecurlySubscription
+     */
+    protected $_recurlySubscription;
+
+    /**
+     * @var \SMG\SubscriptionApi\Helper\RecurlyHelper
+     */
+    protected $_recurlyHelper;
+
+     /**
+     * @var \Magento\Customer\Model\Customer
+     */
+    protected $_customer;
+
+    /**
      * Logo constructor.
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magento\MediaStorage\Helper\File\Storage\Database $fileStorageHelper
@@ -28,9 +45,15 @@ class Logo extends \Magento\Theme\Block\Html\Header\Logo
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\MediaStorage\Helper\File\Storage\Database $fileStorageHelper,
         \Magento\Customer\Model\Session $session,
+        RecurlySubscription $recurlySubscription,
+        \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper,
+        \Magento\Customer\Model\Customer $customer,
         array $data = []
     ) {
         $this->_session = $session;
+        $this->_recurlySubscription = $recurlySubscription;
+        $this->_recurlyHelper = $recurlyHelper;
+        $this->_customer = $customer;
         parent::__construct($context, $fileStorageHelper, $data);
     }
 
@@ -42,6 +65,29 @@ class Logo extends \Magento\Theme\Block\Html\Header\Logo
     public function isLoggedIn()
     {
         $visitorData = $this->_session->getData("visitor_data");
-        return isset($visitorData["do_customer_login"]) && $visitorData["do_customer_login"];
+
+        return isset( $visitorData["do_customer_login"] ) && $visitorData["do_customer_login"];
+    }
+
+    /**
+     * Check if customer has subscriptions
+     * 
+     * @return bool
+     */
+    public function hasSubscriptions()
+    {
+        if( $this->isLoggedIn() ) {
+            Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
+            Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
+
+            $visitorData = $this->_session->getData("visitor_data");
+            $customer = $this->_customer->load( $visitorData['customer_id'] );
+
+            $subscriptions = $this->_recurlySubscription->hasRecurlySubscription( $customer->getGigyaUid() );
+
+            return ( $subscriptions['has_subscriptions'] === true ) ? true : false;
+        }
+
+        return false;
     }
 }

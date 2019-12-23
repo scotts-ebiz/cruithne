@@ -3,7 +3,7 @@ $storeName = $block->escapeHtml($block->getThemeName() ? $block->getThemeName() 
 ?>
 <div
     class="sp-flex sp-items-center sp-justify-between"
-    data-bind="scope: 'customer'"
+    data-bind="scope: 'navigation'"
 >
     <?php if ($block->getData('hide_links') == true) { ?>
         <div class="sp-header__logo">
@@ -51,13 +51,16 @@ $storeName = $block->escapeHtml($block->getThemeName() ? $block->getThemeName() 
                         class="sp-link"
                         href="/quiz"
                         data-bind="
-                            text: customer() && customer().websiteId
+                            attr: {
+                                href: isLoggedIn() && hasSubscriptions()
+                                    ? '/account/subscriptions'
+                                    : '/quiz'
+                            },
+                            text: isLoggedIn() && hasSubscriptions()
                                 ? 'My Plan'
                                 : 'Get Started'
                         "
-                    >
-                        Get Started
-                    </a>
+                    ></a>
                 </li>
                 <li>
                     <a class="sp-link" href="/how-it-works">
@@ -74,15 +77,15 @@ $storeName = $block->escapeHtml($block->getThemeName() ? $block->getThemeName() 
                         href="/customer/account"
                         data-bind="
                             attr: {
-                                href: customer() && customer().websiteId
+                                href: isLoggedIn()
                                     ? '/customer/account'
                                     : '/customer/account/login'
                             },
-                            text: customer() && customer().websiteId
+                            text: isLoggedIn()
                                 ? 'My Account'
                                 : 'Log In'
                         "
-                    >My Account</a>
+                    ></a>
                 </li>
             </ul>
             <address class="sp-header__address">
@@ -160,8 +163,10 @@ $storeName = $block->escapeHtml($block->getThemeName() ? $block->getThemeName() 
     "*": {
         "Magento_Ui/js/core/app": {
             "components": {
-                "customer": {
-                    "component": "Magento_Customer/js/view/customer"
+                "navigation": {
+                    "component": "Magento_Theme/js/navigation",
+                    "hasSubscriptions": "<?php echo $block->hasSubscriptions(); ?>",
+                    "isLoggedIn": "<?php echo $block->isLoggedIn(); ?>"
                 }
             }
         }
