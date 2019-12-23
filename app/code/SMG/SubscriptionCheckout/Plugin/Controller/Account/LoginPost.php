@@ -118,8 +118,6 @@ class LoginPost
                 $this->mapToUser( $gigyaId, $quizId );
             }
 
-            echo $zipCode; die();
-
             if ( $gigyaId && $zipCode ) {
                 $gigyaData['profile']['address'] = $zipCode;
                 $this->_gigyaMageHelper->updateGigyaAccount( $gigyaId, $gigyaData );
