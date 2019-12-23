@@ -60,8 +60,6 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
      */
     public function getCustomerRecurlyAccountCode()
     {
-        return '7df2ba4bb75745d0bf66a9c8337cfe60';
-
         $customer = $this->_customer->load( $this->getCustomerId() );
 
         if( $customer->getGigyaUid() ) {
