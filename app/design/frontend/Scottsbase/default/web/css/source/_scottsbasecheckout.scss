@@ -63,18 +63,13 @@
                             width: 49%;
                             span {
                                 &:before {
-                                  height: 10px;
-                                  width: 10px;
-                                  top: 15px;
+                                  //height: 10px;// test - on other sheet
+                                  //width: 10px;
+                                  //top: 15px;
                                 }
                             }
                             &._active {
                                 span {
-                                    &:before {
-                                        //top: 0;
-                                        //width: 38px;//test - should be moved
-                                        //height: 38px;//test - should be moved
-                                    }
                                     &:after {
                                         font-size: 27px;
                                     }
