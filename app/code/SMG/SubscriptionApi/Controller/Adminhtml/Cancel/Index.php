@@ -87,47 +87,32 @@ class Index extends \Magento\Backend\App\Action
         }
 
         // Check if subscription id, type and Recurly account code are in the request
-        if (! empty($this->_request->getParam('subscription_id')) && ! empty($this->_request->getParam('subscription_type')) && ! empty($this->_request->getParam('recurly_account_code'))) {
+        if ( ! empty($this->_request->getParam('recurly_account_code') ) ) {
             Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
             Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
             $recurlyAccountCode = $this->_request->getParam('recurly_account_code');
 
-            // If it's annual subscription, cancel all active and future subscriptions of the customer
-            if ($this->_request->getParam('subscription_type') == 'annual') {
-                try {
-                    $active_subscriptions = Recurly_SubscriptionList::getForAccount($recurlyAccountCode, [ 'state' => 'active' ]);
-                    $future_subscriptions = Recurly_SubscriptionList::getForAccount($recurlyAccountCode, [ 'state' => 'future' ]);
+            try {
+                $active_subscriptions = Recurly_SubscriptionList::getForAccount($recurlyAccountCode, [ 'state' => 'active' ]);
+                $future_subscriptions = Recurly_SubscriptionList::getForAccount($recurlyAccountCode, [ 'state' => 'future' ]);
 
-                    foreach ($active_subscriptions as $subscription) {
-                        $_subscription = Recurly_Subscription::get($subscription->uuid);
-                        $_subscription->cancel();
-                    }
-
-                    foreach ($future_subscriptions as $subscription) {
-                        $_subscription = Recurly_Subscription::get($subscription->uuid);
-                        $_subscription->cancel();
-                    }
-
-                    $this->_messageManager->addSuccessMessage('Annual Subscription successfully cancelled.');
-                } catch (Recurly_NotFoundError $e) {
-                    $this->_messageManager->addErrorMessage('There was an error with the cancellation. (' . $e->getMessage() . ')');
+                foreach ($active_subscriptions as $subscription) {
+                    $_subscription = Recurly_Subscription::get($subscription->uuid);
+                    $_subscription->cancel();
                 }
-            } else {
-                // Cancel only the subscription the customer selected to delete
-                try {
-                    $subscription = Recurly_Subscription::get($this->_request->getParam('subscription_id'));
-                    $subscription->cancel();
 
-                    $this->_messageManager->addSuccessMessage('Subscription canceled.');
-                } catch (Recurly_NotFoundError $e) {
-                    $this->_messageManager->addErrorMessage('Subscription not found.');
-                } catch (Recurly_Error $e) {
-                    $this->_messageManager->addErrorMessage('This subscription is already cancelled.');
+                foreach ($future_subscriptions as $subscription) {
+                    $_subscription = Recurly_Subscription::get($subscription->uuid);
+                    $_subscription->cancel();
                 }
+
+                $this->_messageManager->addSuccessMessage('Subscriptions cancelled.');
+            } catch( Recurly_NotFoundError $e ) {
+                $this->_messageManager->addErrorMessage('There was an error with the cancellation. (' . $e->getMessage() . ')');
             }
         } else {
-            $this->_messageManager->addErrorMessage('There was an error with the cancellation. Some of the required data is missing in the request.');
+            $this->_messageManager->addErrorMessage('There was an error with the cancellation.');
         }
 
         // Redirect back to the customer page with a success or error message
