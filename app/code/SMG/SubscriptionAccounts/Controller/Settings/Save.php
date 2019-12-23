@@ -26,6 +26,7 @@ use Recurly_Client;
 use Recurly_Account;
 use SMG\SubscriptionApi\Helper\RecurlyHelper;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
+use Gigya\GigyaIM\Helper\GigyaMageHelper;
 
 /**
  * Class Save
@@ -100,6 +101,11 @@ class Save extends Action
     protected $_logger;
 
     /**
+     * @var GigyaMageHelper
+     */
+    protected $_gigyaMageHelper;
+
+    /**
      * Save constructor.
      *
      * @param Context $context
@@ -116,6 +122,7 @@ class Save extends Action
      * @param Customer $customer
      * @param RecurlyHelper $recurlyHelper
      * @param LoggerInterface $logger
+     * @param GigyaMageHelper $gigyaMageHelper
      */
     public function __construct(
         Context $context,
@@ -131,7 +138,8 @@ class Save extends Action
         JsonFactory $jsonFactory,
         Customer $customer,
         RecurlyHelper $recurlyHelper,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        GigyaMageHelper $gigyaMageHelper
     ) {
         $this->_request = $request;
         $this->_messageManager = $messageManager;
@@ -146,6 +154,7 @@ class Save extends Action
         $this->_customer = $customer;
         $this->_recurlyHelper = $recurlyHelper;
         $this->_logger = $logger;
+        $this->_gigyaMageHelper = $gigyaMageHelper;
         parent::__construct($context);
     }
 
@@ -172,16 +181,27 @@ class Save extends Action
         // Get current customer
         $customer = $this->getCustomer();
 
+        // $gigyaProfile = $gigyaUser->getProfile();
+        // print_r( $gigyaProfile );
+
         if( ! empty( $request->firstname ) && ! empty( $request->lastname ) && ! empty( $request->email ) ) {
             Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
             Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
             try {
+                // Update Magento customer data
                 $customer->setData( 'firstname', $request->firstname );
                 $customer->setData( 'lastname', $request->lastname );
                 $customer->setData( 'email', $request->email );
                 $customer->save();
 
+                // Update Gigya customer data
+                $gigyaData['profile']['firstName'] = $request->firstname;
+                $gigyaData['profile']['lastName'] = $request->lastname;
+                $gigyaData['profile']['email'] = $request->email;
+                $this->_gigyaMageHelper->updateGigyaAccount( $this->getGigyaUid(), $gigyaData );
+
+                // Update Recurly customer data
                 $account = Recurly_Account::get( $this->getGigyaUid() );
                 $account->email = $request->email;
                 $account->first_name = $request->firstname;
@@ -219,7 +239,25 @@ class Save extends Action
                     $result->setData( $data );
                     return $result;
                 }
-                $isPasswordChanged = $this->_accountManagement->changePassword( $customer->getEmail(), $request->current_password, $request->new_password );
+                
+                try {
+                    // Update Magento password
+                    $isPasswordChanged = $this->_accountManagement->changePassword( $customer->getEmail(), $request->current_password, $request->new_password );
+
+                    // Update Gigya password
+                    $gigyaPasswordData['password'] = $request->current_password;
+                    $gigyaPasswordData['newPassword'] = $request->new_password;
+                    $this->_gigyaMageHelper->updateGigyaAccount( $this->getGigyaUid(), $gigyaPasswordData);
+                } catch(\Exception $e) {
+                    $error = 'There was a problem with updating the password ( ' . $e->getMessage() . ')';
+                    $this->_logger->error( $error );
+                    $data = array(
+                        'success'   => false,
+                        'message'   => $error,
+                    );
+                    $result->setData($data);
+                    return $result;
+                }
             }
         }
 
