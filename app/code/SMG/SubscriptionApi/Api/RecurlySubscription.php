@@ -90,7 +90,7 @@ class RecurlySubscription implements RecurlyInterface
         try {
 
             // Cancel recurly subscriptions
-            $cancelledSubscriptionIds = $this->_recurlySubscriptionModel->cancelRecurlySubscriptions( true, true );
+            $cancelledSubscriptionIds = $this->_recurlySubscriptionModel->cancelRecurlySubscriptions( true, true, 'self' );
 
             // Find the master subscription id
             $masterSubscriptionId = null;

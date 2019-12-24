@@ -285,12 +285,13 @@ class RecurlySubscription
      *
      * @param bool $cancelActive
      * @param bool $cancelFuture
+     * @param string $account_code
      * @return array
      * @throws Recurly_Error
      * @throws LocalizedException
      * @api
      */
-    public function cancelRecurlySubscriptions( bool $cancelActive = true, bool $cancelFuture = true )
+    public function cancelRecurlySubscriptions( bool $cancelActive = true, bool $cancelFuture = true, string $account_code = 'self' )
 	{
 	    $cancelledSubscriptionIds = [];
 
@@ -299,7 +300,7 @@ class RecurlySubscription
             Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
             Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
-            $account_code = $this->_customerSession->getCustomer()->getGigyaUid();
+            $account_code = ( $account_code == 'self' ) ? $this->_customerSession->getCustomer()->getGigyaUid() : $account_code;
         } catch ( \Exception $e ) {
             throw new LocalizedException( __('Failed to retrieve subscription account.') );
         }
@@ -340,7 +341,7 @@ class RecurlySubscription
 
             foreach ( $subscriptions as $subscription ) {
                 $_subscription = Recurly_Subscription::get( $subscription->uuid );
-//                $_subscription->cancel();
+               $_subscription->cancel();
                 $cancelledSubscriptionIds[$subscription->getValues()['plan']->getValues()['plan_code']] = $subscription->uuid;
             }
         } catch (Recurly_NotFoundError $e) {
