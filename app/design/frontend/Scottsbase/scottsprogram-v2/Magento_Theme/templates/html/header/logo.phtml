@@ -1,5 +1,8 @@
 <?php
 $storeName = $block->escapeHtml($block->getThemeName() ? $block->getThemeName() : $block->getLogoAlt());
+$currentUrl = $block->getRequest()->getUriString();
+$currentUrl = explode('/', $currentUrl);
+$currentSlug = end( $currentUrl );
 ?>
 <div
     class="sp-flex sp-items-center sp-justify-between"
@@ -47,7 +50,7 @@ $storeName = $block->escapeHtml($block->getThemeName() ? $block->getThemeName() 
             <ul class="sp-nav-list sp-header__nav-list sp-header__nav-list--left">
                 <li>
                     <a
-                        class="sp-link"
+                        class="sp-link <?php echo ( $currentSlug == 'quiz' || $currentSlug == 'subscriptions' ) ? 'active' : ''; ?>"
                         href="/quiz"
                         data-bind="
                             attr: {
@@ -62,7 +65,7 @@ $storeName = $block->escapeHtml($block->getThemeName() ? $block->getThemeName() 
                     ></a>
                 </li>
                 <li>
-                    <a class="sp-link" href="/how-it-works">
+                    <a class="sp-link <?php echo ( $currentSlug == 'how-it-works' ) ? 'active' : ''; ?>" href="/how-it-works">
                         How It Works
                     </a>
                 </li>

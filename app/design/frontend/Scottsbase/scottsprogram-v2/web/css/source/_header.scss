@@ -131,6 +131,7 @@
   }
 
   a {
+    display: block;
     color: $white;
     font-size: $font-size-h2--mobile;
     text-transform: none;
@@ -151,6 +152,16 @@
 
       @media (min-width: $screen-md) {
         color: $green-1;
+      }
+    }
+
+    &.sp-link:not(.sp-login) {
+      border-bottom: 2px solid transparent;
+
+      &.active,
+      &:hover {
+        border-bottom: 2px solid $green-1;
+        text-decoration: none;
       }
     }
   }

@@ -39,6 +39,9 @@ class Logo extends \Magento\Theme\Block\Html\Header\Logo
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magento\MediaStorage\Helper\File\Storage\Database $fileStorageHelper
      * @param \Magento\Customer\Model\Session $session
+     * @param \SMG\SubscriptionApi\Model\RecurlySubscription $recurlySubscription
+     * @param \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper
+     * @param \Magento\Customer\Model\Customer $customer
      * @param array $data
      */
     public function __construct(
