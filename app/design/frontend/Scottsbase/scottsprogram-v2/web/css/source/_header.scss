@@ -83,6 +83,7 @@
   border: none;
   color: $green-1;
   justify-self: flex-end;
+  cursor: pointer;
 
   .sp-is-active & {
     color: transparent;
