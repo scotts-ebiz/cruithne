@@ -5,21 +5,24 @@
 $checkout-progress-bar__font-size                              : $font-size__s !default;
 $checkout-progress-bar__font-weight                            : $font-weight__bold !default;
 $checkout-progress-bar__margin                                 : $indent__base !default;
+$checkout-progress-bar__active__background-color               : $color_dark40_green_shade !default;
 
 $checkout-progress-bar-item__background-color                  : $color_light_grey_40 !default;
+$checkout-progress-bar-item__active__background-color          : $color-white !default;
 $checkout-progress-bar-item__border-radius                     : 6px !default;
 $checkout-progress-bar-item__color                             : $primary__color !default;
 $checkout-progress-bar-item__margin                            : $indent__s !default;
 $checkout-progress-bar-item__width                             : 185px !default;
-$checkout-progress-bar-item__active__background-color          : $color_dark40_green_shade;
 $checkout-progress-bar-item__complete__color                   : $link__color !default;
 
 $checkout-progress-bar-item-element__width                     : 10px !default;
 $checkout-progress-bar-item-element__height                    : $checkout-progress-bar-item-element__width !default;
 
 //new var for active span
-$checkout-progress-bar-item-element__active__width             : 31px !default;
+$checkout-progress-bar-item-element__active__width             : 30px !default;
 $checkout-progress-bar-item-element__active__height            : $checkout-progress-bar-item-element__active__width !default;
+$checkout-progress-bar-item-element__active__after__width      : $checkout-progress-bar-item-element__active__width - 4 !default;
+$checkout-progress-bar-item-element__active__after__height     : $checkout-progress-bar-item-element__active__after__width !default;
 
 $checkout-progress-bar-item-element-inner__background-color    : $page__background-color !default;
 $checkout-progress-bar-item-element-inner__color               : $checkout-progress-bar-item__color !default;
@@ -75,7 +78,7 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
 
     > span {
         display: inline-block;
-        padding-top: 45px;
+        padding-top: 34px;
         width: 100%;
         word-wrap: break-word;
 
@@ -98,10 +101,10 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
             content: '';
             left: 50%;
             position: absolute;
-            top: 0;
+            top: 11px;
         }
         &:after {
-            @include lib-css(background, $checkout-progress-bar-item__background-color);
+            //@include lib-css(background, $checkout-progress-bar-item__background-color);//test - did it remove?
             @include lib-css(height, $checkout-progress-bar-item-element__height);
             @include lib-css(margin-left, -($checkout-progress-bar-item-element__width/2));
             @include lib-css(width, $checkout-progress-bar-item-element__width);
@@ -118,8 +121,8 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
             @include lib-css(margin-left, -($checkout-progress-bar-item-element-inner__width/2));
             @include lib-css(top, $checkout-progress-bar-item-element-outer-radius__width);
             @include lib-css(width, $checkout-progress-bar-item-element-inner__width);
-            content: counter(i);
-            counter-increment: i;
+            //content: counter(i);//test - dont see
+            //counter-increment: i;//test - dont see
             @include lib-typography(
                 $_color       : $checkout-progress-bar-item-element-inner__color,
                 $_font-family : false,
@@ -133,31 +136,34 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
 
     &._active {
         &:before {
-            background: $checkout-progress-bar-item__active__background-color;
+            background: $checkout-progress-bar__active__background-color;
         }
 
         > span {
-            &:before {
-                @include lib-css(background, $checkout-progress-bar-item__active__background-color);
+            &:before { //outer element
+                @include lib-css(background, $checkout-progress-bar__active__background-color);
                 @include lib-css(height, $checkout-progress-bar-item-element__active__height);
                 @include lib-css(width, $checkout-progress-bar-item-element__active__width);//test - Remove from other sheet!
                 top: 0;//test - Fix this still on other sheet!
                 left:50%;
                 margin-left:-15px;
-                height:30px;
-                width: 30px;
+                //height:30px;
+                //width: 30px;
 
             }
 
             &:after {
+                @include lib-css(background, $checkout-progress-bar-item__active__background-color);//test - do you see bg color of #fff fore acive?
                 @include lib-css(content, $checkout-progress-bar-item-element-inner__active__content);
                 @include lib-css(font-family, $icons__font-name);
                 @include lib-css(line-height, $checkout-progress-bar-item-element-inner__active__line-height);
                 @include lib-font-size($checkout-progress-bar-item-element-inner__active__font-size);
+                @include lib-css(height, $checkout-progress-bar-item-element__active__after__height);
+                @include lib-css(width, $checkout-progress-bar-item-element__active__after__width);
                 left:50%;
                 margin-left:-13px;
-                height:26px;
-                width: 26px;
+                //height:26px;
+                //width: 26px;
                 top:2px;
             }
         }
