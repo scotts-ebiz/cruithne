@@ -18,6 +18,14 @@ define([
             mode: 'plan', // 'plan' or 'subscription'
         }),
 
+        saveAndSendModal: ko.observable({
+            visible: false
+        }),
+
+        saveAndSendSuccessModal: ko.observable({
+            visible: false
+        }),
+
         initialize(config) {
             const self = this
 
@@ -254,6 +262,32 @@ define([
         },
 
         preventDefault: function () {
+        },
+
+        toggleSaveAndSendModal: function() {
+            if( this.saveAndSendModal().visible) {
+                $('body').removeClass('no-scroll');
+            } else {
+                $('body').addClass('no-scroll')
+            }
+
+            this.ssm({
+                ...this.saveAndSendModal(),
+                visible: !this.saveAndSendModal().visible
+            })
+        },
+
+        toggleSaveAndSendSuccessModal: function() {
+            if( this.saveAndSendSuccessModal().visible) {
+                $('body').removeClass('no-scroll');
+            } else {
+                $('body').addClass('no-scroll')
+            }
+
+            this.ssm({
+                ...this.saveAndSendSuccessModal(),
+                visible: !this.saveAndSendSuccessModal().visible
+            })
         }
     });
 });

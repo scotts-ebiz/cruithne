@@ -31,7 +31,7 @@
 
 <div class="sp-mb-16 sp-max-w-xl sp-mx-auto sp-w-full">
     <div class="sp-flex sp-justify-end sp-mr-8 md:sp-mr-0 sp-my-4">
-        <button class="sp-link">Save and Send Results</button>
+        <button class="sp-link" data-bind="click: toggleSaveAndSendModal">Save and Send Results</button>
     </div>
 
     <!-- Sidebar -->
@@ -117,6 +117,13 @@
 <!-- /ko -->
 <!-- /ko -->
 
+<!-- ko if: saveAndSendModal().visible -->
+<!-- ko template: "SMG_RecommendationResults/save-and-send-modal.html" --><!-- /ko -->
+<!-- /ko -->
+
+<!-- ko if: saveAndSendSuccessModal().visible -->
+<!-- ko template: "SMG_RecommendationResults/save-and-send-success-modal.html" --><!-- /ko -->
+<!-- /ko -->
 
 <div class="sp-bg-green-1 sp-py-4">
     <div class="sp-container sp-flex sp-flex-column md:sp-flex-row sp-justify-end">
