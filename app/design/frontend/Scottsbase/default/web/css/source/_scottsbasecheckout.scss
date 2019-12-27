@@ -60,21 +60,6 @@
                     }
                     .opc-progress-bar {
                         .opc-progress-bar-item {
-                            width: 49%;
-                            span {
-                                &:before {
-                                  //height: 10px;// test - on other sheet
-                                  //width: 10px;
-                                  //top: 15px;
-                                }
-                            }
-                            &._active {
-                                span {
-                                    &:after {
-                                        //font-size: 27px; test - moved
-                                    }
-                                }
-                            }
                             &._complete {
                                 span {
                                     &:after {

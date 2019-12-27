@@ -57,24 +57,12 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
 
     &:before { // Horizontal line
         @include lib-css(background, $checkout-progress-bar-item__background-color);
-        @include lib-css(top, $checkout-progress-bar-item-element__active__width/2); //test - want this to be 14px!
+        @include lib-css(top, $checkout-progress-bar-item-element__active__width/2);
         content: '';
         height: 2px;
         left: 0;
         position: absolute;
         width: 100%;
-    }
-
-    &:first-child {
-        &:before {
-            @include lib-css(border-radius, $checkout-progress-bar-item__border-radius 0 0 $checkout-progress-bar-item__border-radius);
-        }
-    }
-
-    &:last-child {
-        &:before {
-            @include lib-css(border-radius, 0 $checkout-progress-bar-item__border-radius $checkout-progress-bar-item__border-radius 0);
-        }
     }
 
     > span {
@@ -93,7 +81,7 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
         );
         @include lib-css(text-transform, uppercase);
 
-        &:before { // Outer element - NonActive
+        &:before { // Outer Circle - NonActive
             @include lib-css(background, $checkout-progress-bar-item__background-color);
             @include lib-css(height, $checkout-progress-bar-item-element__height);
             @include lib-css(margin-left, -($checkout-progress-bar-item-element__width/2));
@@ -112,7 +100,7 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
         }
 
         > span {
-            &:before { // outer element
+            &:before { // Outer Circle
                 @include lib-css(background, $checkout-progress-bar__active__background-color);
                 @include lib-css(height, $checkout-progress-bar-item-element__active__height);
                 @include lib-css(width, $checkout-progress-bar-item-element__active__width);
@@ -121,18 +109,17 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
                 margin-left:-15px;
             }
 
-            &:after { // inner element
-                @include lib-css(background, $checkout-progress-bar-item__active__background-color);//test - do you see bg color of #fff fore acive?
+            &:after { // Inner Circle
+                @include lib-css(background, $checkout-progress-bar-item__active__background-color);
                 @include lib-css(content, $checkout-progress-bar-item-element-inner__active__content);
-                @include lib-css(font-family, $icons__font-name);
+                //@include lib-css(font-family, $icons__font-name);// test moved below to lib-typo
                 @include lib-css(line-height, $checkout-progress-bar-item-element-inner__active__line-height);
-                //@include lib-font-size($checkout-progress-bar-item-element-inner__active__font-size); //test - font size : 27px
                 @include lib-css(height, $checkout-progress-bar-item-element__active__after__height);
                 @include lib-css(width, $checkout-progress-bar-item-element__active__after__width);
-                @include lib-css(margin-left, $checkout-progress-bar-item-element__active__after__margin);//test - margin - left: -13px
+                @include lib-css(margin-left, $checkout-progress-bar-item-element__active__after__margin);
                 @include lib-typography(
                         $_color       : $checkout-progress-bar-item-element-inner__color,
-                        $_font-family : false,
+                        $_font-family : $icons__font-name,
                         $_font-size   : $checkout-progress-bar-item-element-inner__active__font-size,
                         $_font-style  : false,
                         $_font-weight : $font-weight__semibold,
@@ -140,10 +127,8 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
                 );
                 border-radius: 50%;
                 left:50%;
-                //margin-left:-13px;//test -right now should be -13px
                 top:2px;
                 position: absolute;
-                //font-size: 27px;
             }
         }
     }
@@ -170,6 +155,6 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
 
 @include min-screen($screen__m) {
     .opc-progress-bar-item {
-        @include lib-css(width, $checkout-progress-bar-item__width);
+        //@include lib-css(width, $checkout-progress-bar-item__width);// test - I might want to do something with this
     }
 }
