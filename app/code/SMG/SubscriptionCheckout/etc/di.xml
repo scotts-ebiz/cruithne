@@ -3,12 +3,12 @@
 	<preference for="Magento\Checkout\Block\Onepage" type="SMG\SubscriptionCheckout\Block\Onepage" />
 
 	<type name="Magento\Customer\Controller\Account\LoginPost">
-		<plugin name="SMG_Customer_LoginPost" type="SMG\SubscriptionCheckout\Plugin\Controller\Account\LoginPost" />
+		<plugin name="smg_subscriptioncheckout_plugin_controller_account_loginpost" type="SMG\SubscriptionCheckout\Plugin\Controller\Account\LoginPost" />
 	</type>
 	<type name="Magento\Checkout\Controller\Cart\Index">
-		<plugin name="smg_cart_index_controller" type="SMG\SubscriptionCheckout\Plugin\Controller\Cart\Index" />
+		<plugin name="smg_subscriptioncheckout_plugin_controller_cart_index" type="SMG\SubscriptionCheckout\Plugin\Controller\Cart\Index" />
 	</type>
 	<type name="Magento\Checkout\Controller\Index\Index">
-		<plugin name="smg_index_index_controller" type="SMG\SubscriptionCheckout\Plugin\Controller\Index\Index" />
+		<plugin name="smg_subscriptioncheckout_plugin_controller_index_index" type="SMG\SubscriptionCheckout\Plugin\Controller\Index\Index" />
 	</type>
 </config>
