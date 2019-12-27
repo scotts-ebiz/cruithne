@@ -112,7 +112,6 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
             &:after { // Inner Circle
                 @include lib-css(background, $checkout-progress-bar-item__active__background-color);
                 @include lib-css(content, $checkout-progress-bar-item-element-inner__active__content);
-                //@include lib-css(font-family, $icons__font-name);// test moved below to lib-typo
                 @include lib-css(line-height, $checkout-progress-bar-item-element-inner__active__line-height);
                 @include lib-css(height, $checkout-progress-bar-item-element__active__after__height);
                 @include lib-css(width, $checkout-progress-bar-item-element__active__after__width);
@@ -134,17 +133,20 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
     }
 
     &._complete {
+        &:before {
+          background: $checkout-progress-bar__active__background-color;
+        }
         cursor: pointer;
 
         > span {
-            @include lib-css(color, $checkout-progress-bar-item__color);
+            //@include lib-css(color, $checkout-progress-bar-item__color);// test - black color
 
-            &:after {
-                @include lib-css(content, $checkout-progress-bar-item-element-inner__active__content);
-                @include lib-css(font-family, $icons__font-name);
-                @include lib-css(line-height, $checkout-progress-bar-item-element-inner__active__line-height);
-                @include lib-font-size($checkout-progress-bar-item-element-inner__active__font-size);
-            }
+            //&:after {// test - I don't think I need any of this
+            //    @include lib-css(content, $checkout-progress-bar-item-element-inner__active__content);
+            //    @include lib-css(font-family, $icons__font-name);
+            //    @include lib-css(line-height, $checkout-progress-bar-item-element-inner__active__line-height);
+            //    @include lib-font-size($checkout-progress-bar-item-element-inner__active__font-size);
+            //}
         }
     }
 }
