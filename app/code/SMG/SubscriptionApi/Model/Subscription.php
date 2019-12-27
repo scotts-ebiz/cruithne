@@ -383,6 +383,7 @@ class Subscription extends AbstractModel
                 'qty'       => 1
             ];
             $this->_cart->addProduct($seasonalProduct->getId(), $params)->save();
+            $this->_logger->info( 'Adding product ' . $seasonalProduct->getSku() . ' to cart.' );
 
             // Add the discount if it's annual
             if ($this->getSubscriptionType() == 'annual') {
@@ -409,6 +410,7 @@ class Subscription extends AbstractModel
                                 'qty' => 1,
                             ];
                             $this->_cart->addProduct($productId, $params)->save();
+                            $this->_logger->info( 'Adding product ' . $product->getSku() . ' to cart.' );
 
                             $price = (float)$product->getPrice() * (int)$subscriptionAddonOrderItem->getQty();
                             $item = $quote->getItemByProduct($product);

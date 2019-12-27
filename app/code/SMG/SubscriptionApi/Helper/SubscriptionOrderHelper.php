@@ -262,6 +262,7 @@ class SubscriptionOrderHelper extends AbstractHelper
             }
 
             $quote->addProduct($product, (int) $item->getQty());
+            $this->_logger->info( 'Adding product ' . $item->getCatalogProductSku() . ' to cart.' );
         }
 
         $quote->setInventoryProcessed(true);
