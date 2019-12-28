@@ -32,9 +32,11 @@
 .sp-footer__grid {
   display: flex;
   flex-direction: column;
+  margin-bottom: 30px;
 
   @media (min-width: $screen-md) {
     flex-direction: row;
+    margin-bottom: 60px;
   }
 }
 
@@ -144,6 +146,12 @@
     @media (min-width: $screen-md) {
       flex-wrap: nowrap;
       justify-content: start;
+    }
+  }
+
+  .sp-footer__nav-secondary-list {
+    @media (min-width: $screen-md) {
+      justify-content: center;
     }
   }
 
