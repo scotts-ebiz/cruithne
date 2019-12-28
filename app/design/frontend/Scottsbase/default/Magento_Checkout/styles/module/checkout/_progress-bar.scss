@@ -30,7 +30,7 @@ $checkout-progress-bar-item-element-inner__color               : $checkout-progr
 $checkout-progress-bar-item-element-outer-radius__width        : 6px !default;
 $checkout-progress-bar-item-element-inner__width               : $checkout-progress-bar-item-element__width - ($checkout-progress-bar-item-element-outer-radius__width * 2) !default;
 $checkout-progress-bar-item-element-inner__height              : $checkout-progress-bar-item-element-inner__width !default;
-$checkout-progress-bar-item-element-inner__active__content     : $icon-checkmark !default;
+$checkout-progress-bar-item-element-inner__active__content     : url(../images/check.svg) !default; //$icon-checkmark !default;
 $checkout-progress-bar-item-element-inner__active__font-size   : 2.7rem !default;
 $checkout-progress-bar-item-element-inner__active__line-height : 1 !default;
 
@@ -131,7 +131,7 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
                         $_font-style  : false,
                         $_font-weight : $font-weight__semibold,
                         $_line-height : false
-                );padding-top
+                );
                 border-radius: 50%;
                 left:50%;
                 top:2px;
