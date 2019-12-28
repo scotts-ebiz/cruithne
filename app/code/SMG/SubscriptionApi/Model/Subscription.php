@@ -478,7 +478,7 @@ class Subscription extends AbstractModel
                 } else {
                     $subscriptionOrder = $this->_subscriptionOrderCollectionFactory->create()->addFieldToFilter('sales_order_id', $order->getEntityId() )->getFirstItem();
                 }
-                $subscriptionOrder->createCreditMemo();
+                $subscriptionOrder->createCreditMemo( $order->getEntityId() );
                 $subscriptionOrders[] = $subscriptionOrder;
             } catch ( \Exception $e ) {
                 throw new LocalizedException( __('There was a problem making a credit memo for subscription cancellation.' . $e->getMessage()) );

@@ -182,25 +182,28 @@ class SubscriptionOrder extends AbstractModel
 
     /**
      * Create Credit Memo for Order
+     * 
+     * @param int $order_id
      * @throws LocalizedException
      */
-    public function createCreditMemo() {
-//        try {
-//            /** @var Order $order */
-//            $order = $this->getOrder();
-//            echo "<pre>"; var_dump($order); die;
-//            $invoices = $order->getInvoiceCollection();
-//            /** @var Invoice $invoice */
-//            foreach ( $invoices as $invoice ) {
-//                /** @var Creditmemo $creditmemo */
-//                $creditmemo = $this->_creditmemoFactory->createByOrder( $order );
-//                $creditmemo->setInvoice( $invoice );
-//                $creditmemo->save();
-//            }
-//
-//            echo "<pre>"; var_dump($order->getCreditmemosCollection()->count()); die;
-//        } catch ( \Exception $e ) {
-//            throw new LocalizedException( __('Could not create credit memo for order.') );
-//        }
+    public function createCreditMemo( $order_id ) {
+       try {
+           /** @var Order $order */
+           $order = $this->_orderRepository->get( $order_id );
+           $invoices = $order->getInvoiceCollection();
+
+           /** @var Invoice $invoice */
+           foreach ( $invoices as $invoice ) {
+                $invoiceIncrementId = $invoice->getIncrementId();
+           }
+
+           $invoiceData = $invoice->loadByIncrementId( $invoiceIncrementId );
+            /** @var Creditmemo $creditmemo */
+           $creditmemo = $this->_creditmemoFactory->createByOrder( $order );
+           $creditmemo->setInvoice( $invoiceData );
+           $this->_creditmemoService->refund( $creditmemo );
+       } catch ( \Exception $e ) {
+           throw new LocalizedException( __('Could not create credit memo for order.') );
+       }
     }
 }

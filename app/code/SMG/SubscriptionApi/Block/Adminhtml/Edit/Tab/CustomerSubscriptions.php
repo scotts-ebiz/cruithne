@@ -81,28 +81,26 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         Recurly_Client::$subdomain = $this->_helper->getRecurlySubdomain();
 
         // Create empty array so we can merge active and future subscriptions
-        $currentSubscriptions = array();
+        $subscriptions = array();
 
-        // Used for the displaying logic for the cancel subscription button in the customer view
-        $isAnnualSubscription = false;
+        // Create variable for storing the total amount of the order
+        $totalAmount = 0;
 
         try {
             $activeSubscriptions = Recurly_SubscriptionList::getForAccount( $this->getCustomerRecurlyAccountCode(), [ 'state' => 'active' ] );
             $futureSubscriptions = Recurly_SubscriptionList::getForAccount( $this->getCustomerRecurlyAccountCode(), [ 'state' => 'future' ] );
 
-            foreach( $activeSubscriptions as $activeSubscription ) {
-                array_push( $currentSubscriptions, $activeSubscription);
-
-                if( $activeSubscription->plan->plan_code == 'annual' ) {
-                    $isAnnualSubscription = true;
-                }
+            foreach( $activeSubscriptions as $subscription ) {
+                array_push( $subscriptions, $subscription );
+                $totalAmount += $subscription->unit_amount_in_cents;
             }
 
-            foreach( $futureSubscriptions as $futureSubscription ) {
-                array_push( $currentSubscriptions, $futureSubscription);
+            foreach( $futureSubscriptions as $subscription ) {
+                array_push( $subscriptions, $subscription );
+                $totalAmount += $subscription->unit_amount_in_cents;
             }
 
-            return array( 'success' => true, 'is_annual' => $isAnnualSubscription, 'subscriptions' => $currentSubscriptions );
+            return array( 'success' => true, 'subscriptions' => $subscriptions, 'total_amount' => $this->convertAmountToDollars( $totalAmount ) );
         } catch (Recurly_NotFoundError $e) {
             return array( 'success' => false, 'error_message' => $e->getMessage() );
         }
@@ -154,6 +152,11 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     public function isAjaxLoaded()
     {
         return true;
+    }
+
+    public function convertAmountToDollars($amount)
+    {
+        return number_format(($amount/100), 2, '.', ' ');
     }
 
 }
