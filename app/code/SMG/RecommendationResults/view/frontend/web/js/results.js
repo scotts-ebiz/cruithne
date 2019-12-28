@@ -10,12 +10,13 @@ define([
         isLoading: ko.observable(true),
         quiz: ko.observable(null),
         results: ko.observable({}),
-        activeProductIndex: ko.observable(0), // for the tab menu
+        activeSeasonIndex: ko.observable(0), // for the tab menu
 
         pdp: ko.observable({
             visible: false,
             activeTab: 'learn', // 'learn' or 'product_specs'
             mode: 'plan', // 'plan' or 'subscription'
+            product: null,
         }),
 
         saveAndSendModal: ko.observable({
@@ -59,6 +60,34 @@ define([
                     : []
             });
 
+            self.seasons = ko.computed(() => {
+                const uniqueSeasons = self.products().reduce((items, product) => {
+                    if (items.indexOf(product.season) === -1) {
+                        items.push(product.season);
+                    }
+
+                    return items;
+                }, []);
+
+                const seasons = uniqueSeasons.map((season) => {
+                    const products = self.products().filter((product) => {
+                        return product.season === season;
+                    });
+
+                    return {
+                        season: season,
+                        products: self.products().filter((product) => {
+                            return product.season === season;
+                        }),
+                        total: products.reduce((price, product) => {
+                            return price + (+product.price * +product.quantity);
+                        }, 0),
+                    }
+                });
+
+                return seasons;
+            });
+
             // used to indicate which product is up next for delivery
             self.nextAvailableProduct = ko.computed(function () {
                 const currentDate = new Date();
@@ -73,9 +102,10 @@ define([
                 return (nextProductIndex + 1) % products.length
             });
 
-            self.activeProduct = ko.computed(function () {
-                return self.products()[self.activeProductIndex()]
+            self.activeSeason = ko.computed(function () {
+                return self.seasons()[self.activeSeasonIndex()]
             });
+
         },
 
         loadQuizResults(id, zip) {
@@ -203,10 +233,10 @@ define([
 
         productFeatures: function (product) {
             return [
-                product.miniClaim1,
-                product.miniClaim2,
-                product.miniClaim3,
-            ].filter(x => !!x)
+                { image: product.miniClaim1, text: product.miniClaim1Description },
+                { image: product.miniClaim2, text: product.miniClaim2Description },
+                { image: product.miniClaim3, text: product.miniClaim3Description },
+            ].filter(x => !!x.image)
         },
 
         formatCurrency: function (num) {
@@ -236,7 +266,7 @@ define([
             return 'https://test_magento_image_repo.storage.googleapis.com/' + icon
         },
 
-        togglePDP: function () {
+        togglePDP: function (product) {
             if (this.pdp().visible) {
                 // hide
                 $('body').removeClass('no-scroll');
@@ -248,17 +278,13 @@ define([
 
             this.pdp({
                 ...this.pdp(),
-                visible: !this.pdp().visible
+                visible: !this.pdp().visible,
+                product: product
             });
         },
 
         setPDPTab: function (tab) {
             this.pdp({ ...this.pdp(), activeTab: tab })
-        },
-
-        addToOrder: function () {
-            // TODO: Add the product to the order
-            this.togglePDP();
         },
 
         preventDefault: function () {
