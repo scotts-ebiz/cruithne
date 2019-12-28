@@ -76,6 +76,7 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
         word-wrap: break-word;
         @include max-screen($screen__xs) {
             width: 50%;
+            padding-top: 30px;
         }
 
         @include lib-typography(
@@ -130,7 +131,7 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
                         $_font-style  : false,
                         $_font-weight : $font-weight__semibold,
                         $_line-height : false
-                );
+                );padding-top
                 border-radius: 50%;
                 left:50%;
                 top:2px;
