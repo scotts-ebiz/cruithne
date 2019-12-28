@@ -45,6 +45,7 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
     @include lib-css(margin, 0 0 $checkout-progress-bar__margin);
     counter-reset: i;
     font-size: 0;
+    text-align: center;
 }
 
 .opc-progress-bar-item {
@@ -54,6 +55,9 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
     text-align: center;
     vertical-align: top;
     width: 50%;
+    @include max-screen($screen__s) {
+        width: 45%;
+    }
 
     &:before { // Horizontal line
         @include lib-css(background, $checkout-progress-bar-item__background-color);
@@ -70,6 +74,9 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
         padding-top: 34px;
         width: 100%;
         word-wrap: break-word;
+        @include max-screen($screen__xs) {
+            width: 50%;
+        }
 
         @include lib-typography(
             $_color       : $color-black,
@@ -139,14 +146,9 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
         cursor: pointer;
 
         > span {
-            //@include lib-css(color, $checkout-progress-bar-item__color);// test - black color
-
-            //&:after {// test - I don't think I need any of this
-            //    @include lib-css(content, $checkout-progress-bar-item-element-inner__active__content);
-            //    @include lib-css(font-family, $icons__font-name);
-            //    @include lib-css(line-height, $checkout-progress-bar-item-element-inner__active__line-height);
-            //    @include lib-font-size($checkout-progress-bar-item-element-inner__active__font-size);
-            //}
+            &:before {
+                @include lib-css(background, $checkout-progress-bar__active__background-color);
+            }
         }
     }
 }
