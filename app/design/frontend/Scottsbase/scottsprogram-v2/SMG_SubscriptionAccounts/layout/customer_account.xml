@@ -37,7 +37,7 @@
             </block>
         </referenceBlock>
         <referenceBlock name="customer_account_navigation">
-            <block class="Magento\Framework\View\Element\Html\Link\Current" name="customer-account-navigation-account-billing" after="-">
+            <block class="SMG\SubscriptionAccounts\Block\Link" name="customer-account-navigation-account-billing" after="-">
                 <arguments>
                     <argument name="path" xsi:type="string">account/billing</argument>
                     <argument name="label" xsi:type="string">Billing Information</argument>
