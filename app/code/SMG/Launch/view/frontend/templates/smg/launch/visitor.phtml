@@ -182,6 +182,9 @@ if($currentcmspage == 'warranty'){
                     sku: '<?php echo $block->escapeHtml($item->getSku());?>',
                     imageUrl: '<?php echo $block->escapeUrl($productImageUrl);?>',
                     quantity: <?php echo $block->escapeHtml($item->getQty());?>,
+                    <?php if (!empty($product->getData('drupalproductid'))): ?>
+                    drupalproductid:  '<?php echo $block->escapeHtml($product->getData('drupalproductid')) ?>',
+                    <?php endif; ?>
                     url: '<?php echo $block->escapeUrl($productUrl);?>'
                 }<?php if (!($item === end($items))) { echo ','; } ?>
                 <?php } ?>
@@ -210,6 +213,9 @@ if($currentcmspage == 'warranty'){
             currency: '<?php echo $block->escapeHtml($smghelper->getCheckoutCart()->getQuote()->getBaseCurrencyCode());?>',
             unitPrice: '<?php echo $block->escapeHtml($product->getPrice()); ?>',
             sku: '<?php echo $block->escapeHtml($product->getSku()); ?>',
+            <?php if (!empty($product->getData('drupalproductid'))): ?>
+            drupalproductid:  '<?php echo $block->escapeHtml($product->getData('drupalproductid')) ?>',
+            <?php endif; ?>
             inStock: <?php echo $block->escapeHtml($product->getIsSalable()); ?>
 
         }
@@ -267,6 +273,9 @@ if($currentcmspage == 'warranty'){
                     currency: '<?php echo $block->escapeHtml($order->getOrderCurrencyCode());?>',
                     unitPrice: <?php echo $block->escapeHtml($item->getPrice());?>,
                     sku: '<?php echo $block->escapeHtml($item->getSku());?>',
+                    <?php if (!empty($product->getData('drupalproductid'))): ?>
+                    drupalproductid:  '<?php echo $block->escapeHtml($product->getData('drupalproductid')) ?>',
+                    <?php endif; ?>
                     imageUrl: '<?php echo $block->escapeUrl($productImageUrl);?>',
                     quantity: <?php echo $block->escapeHtml($item->getQty());?>,
                     url: '<?php echo $block->escapeUrl($productUrl);?>'

@@ -5,23 +5,23 @@ $item = $smghelper->getCheckoutSession()->getDtmAddToCart();
 ?>
 <?php if ($item) : ?>
     <script>
+
         window.dtmData.events.push({
-
             name: 'cartAdd',
-
             product: {
                 <?php foreach($smghelper->getCheckoutSession()->getDtmAddToCart() as $pro){ ?>
-		id: '<?php echo $block->escapeHtml($pro["id"]);?>',
-		name: '<?php $p_name = $pro["name"]; echo $block->escapeHtml(str_replace("™","",$p_name)); ?>',
-		category: [<?php echo $block->escapeHtml($pro["category"]);?>],
-                currency: '<?php echo $block->escapeHtml($block->getCurrencyCode());?>',
-		unitPrice: <?php echo $block->escapeHtml($pro["unitPrice"]);?>,
-		sku: '<?php echo $block->escapeHtml($pro["sku"]);?>',
-		quantity: <?php echo $block->escapeHtml($pro["quantity"]);?>
+                id: '<?php echo $block->escapeHtml($pro["id"]);?>',
+                name: '<?php $p_name = $pro["name"]; echo $block->escapeHtml(str_replace("™","",$p_name)); ?>',
+                category: ['<?php echo $block->escapeHtml($pro["category"]);?>'],
+                        currency: '<?php echo $block->escapeHtml($block->getCurrencyCode());?>',
+                unitPrice: <?php echo $block->escapeHtml($pro["unitPrice"]);?>,
+                sku: '<?php echo $block->escapeHtml($pro["sku"]);?>',
+                <?php if (!empty($pro['drupalproductid'])): ?>
+                drupalproductid:  '<?php echo $pro['drupalproductid'] ?>',
+                <?php endif; ?>
+                quantity: <?php echo $block->escapeHtml($pro["quantity"]);?>
                 <?php } ?>
-
             }
-
         });
     </script>
     <?php $smghelper->getCheckoutSession()->unsDtmAddToCart();?>
@@ -57,6 +57,9 @@ $item = $smghelper->getCheckoutSession()->getDtmAddToCart();
                 currency: '<?php echo $block->escapeHtml($block->getCurrencyCode());?>',
 			unitPrice: <?php echo $block->escapeHtml($deleteitem["unitPrice"]);?>,
 			sku: '<?php echo $block->escapeHtml($deleteitem["sku"]);?>',
+            <?php if (!empty($deleteitem['drupalproductid'])): ?>
+            drupalproductid:  '<?php echo $block->escapeHtml($deleteitem['drupalproductid']) ?>',
+            <?php endif; ?>
 			quantity: <?php echo $block->escapeHtml($deleteitem["quantity"]);?>,
             }
         });

@@ -2,10 +2,9 @@
 namespace SMG\Launch\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\App\RequestInterface;
 use Magento\Checkout\Model\Session;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory;
-use Magento\Catalog\Model\Product;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 
 class Removeitem implements ObserverInterface {
 
@@ -18,20 +17,20 @@ class Removeitem implements ObserverInterface {
 	
 	protected $_collectionFactory;
 	
-	protected $_productManager;
+	protected $_productRepository;
 
 	public function __construct(
 		\SMG\Launch\Model\Session $launchSession,
 		 Session $checkoutSession,
 		 CollectionFactory $collectionFactory,
-		 Product $productManager,
+		 ProductRepositoryInterface $productRepository,
 		\SMG\Launch\Helper\Data $helper
 	) {
 		$this->_launchSession = $launchSession;
 		$this->_checkoutSession = $checkoutSession;
 		$this->_launchHelper = $helper;
 		$this->_collectionFactory = $collectionFactory;
-		$this->_productManager = $productManager;
+		$this->_productRepository = $productRepository;
 	}
 
 	/**
@@ -40,15 +39,31 @@ class Removeitem implements ObserverInterface {
 	 * @return void
 	 */
 	public function execute( \Magento\Framework\Event\Observer $observer ) {
-		$item = $observer->getQuoteItem();
-		
-		$product = $this->_productManager->load($item->getProductId());
-		$candidates = array();
-		$candidates['id'] = $item->getId();
+        $item = $observer->getQuoteItem();
+        $product = $item->getProduct();
+        // For configurable products we need the selected option
+        if($item->getProductType() === "configurable") {
+            $productOptions = $product->getTypeInstance(true)->getOrderOptions($product);
+            $selectedOptionId = $productOptions['info_buyRequest']['selected_configurable_option'];
+            $option = $this->_productRepository->getById($selectedOptionId);
+        }
+
+        $candidates = array();
+		$candidates['id'] = $item->getProductId();
 		$candidates['name'] = $item->getName();
 		$candidates['sku'] = $item->getSku();
 		$candidates['quantity'] =  $item->getQty();
-		$candidates['unitPrice'] = $item->getProduct()->getFinalPrice();
+		$candidates['unitPrice'] = $product->getFinalPrice();
+		// Product may or may not have a drupal id, need product from repo to see it tho
+        $productFromRepo = $this->_productRepository->getById($item->getProductId());
+		if (!empty($productFromRepo->getData('drupalproductid'))) {
+            $candidates['drupalproductid'] = $productFromRepo->getData('drupalproductid');
+        }
+		//If we have a configurable option, we override certain properties
+        if (!empty($option) && !empty($option->getData('drupalproductid'))) {
+            $candidates['id'] = $option->getId();
+            $candidates['drupalproductid'] = $option->getData('drupalproductid');
+        }
 		$categoryIds = $product->getCategoryIds();
 		$categories = $this->_collectionFactory->create()
 							 ->addAttributeToSelect('*')
@@ -58,7 +73,6 @@ class Removeitem implements ObserverInterface {
 			$cats[] = $category->getName();
 		}					
 		$candidates['category'] = implode(',',$cats);
-		$this->_checkoutSession->setDeleteitem($candidates); 
-		return $this;
+		$this->_checkoutSession->setDeleteitem($candidates);
 	}
 }

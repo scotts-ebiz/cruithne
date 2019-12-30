@@ -5,7 +5,6 @@ namespace SMG\Launch\Observer;
 use Magento\Framework\Event\ObserverInterface;
 use Magento\Checkout\Model\Session;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory;
-use Magento\Catalog\Model\Product;
 
 class SalesQuoteProductAddAfter implements ObserverInterface {
 
@@ -17,21 +16,17 @@ class SalesQuoteProductAddAfter implements ObserverInterface {
 	protected $_launchHelper;
 	
 	protected $_collectionFactory;
-	
-	protected $_productManager;
 
 	public function __construct(
 		\SMG\Launch\Model\Session $_launchSession,
 		 Session $checkoutSession,
 		 CollectionFactory $collectionFactory,
-		 Product $productManager,
 		\SMG\Launch\Helper\Data $helper
 	) {
 		$this->_launchSession = $_launchSession;
 		$this->_checkoutSession = $checkoutSession;
 		$this->_launchHelper = $helper;
 		$this->_collectionFactory = $collectionFactory;
-		$this->_productManager = $productManager;
 	}
 
 	/**
@@ -42,17 +37,31 @@ class SalesQuoteProductAddAfter implements ObserverInterface {
 	public function execute( \Magento\Framework\Event\Observer $observer ) {
 		$items = $observer->getItems();
 		$i = 0;
+        $candidates = array();
 		foreach ($items as $item) {
-			if ($item->getParentItem()) {
-				continue;
-			}
+            // If there is a child product with a parent that is not configurable, we do not want to include it.
+            if($item->getParentItem()){
+                if (!$item->getParentItem()->getProductType() === "configurable") {
+                    continue;
+                }
+            }
+            // If there is a configurable product, we don't want to include it,
+            // but we will include its children because of the exception we made above
+            if ($item->getProductType() === "configurable") {
+                continue;
+            }
+
+            $product = $item->getProduct();
+
 			$i++;
-			$product = $this->_productManager->load($item->getProductId());
-			$candidates[$i]['id'] = $item->getId();
+			$candidates[$i]['id'] = $product->getId();
 			$candidates[$i]['name'] = $item->getName();
 			$candidates[$i]['sku'] = $item->getSku();
-			$candidates[$i]['quantity'] =  $item->getProduct()->getQty();
-			$candidates[$i]['unitPrice'] = $item->getProduct()->getFinalPrice();
+			$candidates[$i]['quantity'] =  $item->getQty();
+			$candidates[$i]['unitPrice'] = $product->getFinalPrice();
+			if ($product->getData('drupalproductid')) {
+                $candidates[$i]['drupalproductid'] = $product->getData('drupalproductid');
+            }
 			$categoryIds = $product->getCategoryIds();
 			$categories = $this->_collectionFactory->create()
                                  ->addAttributeToSelect('*')
@@ -63,7 +72,6 @@ class SalesQuoteProductAddAfter implements ObserverInterface {
 			}					
 			$candidates[$i]['category'] = implode(',',$cats);
 		}
-		$this->_checkoutSession->setDtmAddToCart($candidates); 
-		return $this;
+		$this->_checkoutSession->setDtmAddToCart($candidates);
 	}
 }

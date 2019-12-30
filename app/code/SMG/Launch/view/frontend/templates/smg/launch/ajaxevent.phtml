@@ -8,7 +8,7 @@ $updateditems = $smghelper->getCheckoutSession()->getUpdateqty();
 
 if ($updateditems) :
     foreach($updateditems as $pro){ ?>
-
+        <?php if ($pro["quantity"] != $pro["previousQuantity"]):?>
         <script>
 
             window.dtmData.events.push({
@@ -19,6 +19,9 @@ if ($updateditems) :
 					currency: '<?php echo $block->escapeHtml($block->getCurrencyCode());?>',
 					unitPrice: <?php echo $block->escapeHtml($pro["unitPrice"]);?>,
 					sku: '<?php echo $block->escapeHtml($pro["sku"]);?>',
+                    <?php if (!empty($pro['drupalproductid'])): ?>
+                    drupalproductid:  '<?php echo $block->escapeHtml($pro['drupalproductid']) ?>',
+                    <?php endif; ?>
 					quantity: <?php echo $block->escapeHtml($pro["quantity"]);?>,
 					previousQuantity: <?php echo $block->escapeHtml($pro["previousQuantity"]);?>
                 }
@@ -26,7 +29,7 @@ if ($updateditems) :
             });
 
         </script>
-
+        <?php endif; ?>
     <?php }
     $smghelper->getCheckoutSession()->unsUpdateqty();
 endif; ?>

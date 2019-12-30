@@ -3,10 +3,9 @@
 namespace SMG\Launch\Observer;
 
 use Magento\Framework\Event\ObserverInterface;
-use Magento\Framework\App\RequestInterface;
 use Magento\Checkout\Model\Session;
 use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory;
-use Magento\Catalog\Model\Product;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 
 class Updatecart implements ObserverInterface {
 
@@ -18,21 +17,21 @@ class Updatecart implements ObserverInterface {
 	protected $_launchHelper;
 	
 	protected $_collectionFactory;
-	
-	protected $_productManager;
+
+	protected $_productRepository;
 
 	public function __construct(
 		\SMG\Launch\Model\Session $launchSession,
 		 Session $checkoutSession,
 		 CollectionFactory $collectionFactory,
-		 Product $productManager,
+		 ProductRepositoryInterface $productRepository,
 		\SMG\Launch\Helper\Data $helper
 	) {
 		$this->_launchSession = $launchSession;
 		$this->_checkoutSession = $checkoutSession;
 		$this->_launchHelper = $helper;
 		$this->_collectionFactory = $collectionFactory;
-		$this->_productManager = $productManager;
+		$this->_productRepository = $productRepository;
 	}
 
 	/**
@@ -45,19 +44,35 @@ class Updatecart implements ObserverInterface {
 		$items = $observer->getCart()->getQuote()->getItems();
 		$info = $observer->getInfo()->getData();
 		$i = 0;
+		$candidates = array();
+
 		foreach ($items as $item) {
-			if ($item->getParentItem()) {
-				continue;
-			}
+            $product = $item->getProduct();
+            $option = null;
+            // For configurable products we need the selected option
+            if($item->getProductType() === "configurable") {
+                $productOptions = $product->getTypeInstance(true)->getOrderOptions($product);
+                $selectedOptionId = $productOptions['info_buyRequest']['selected_configurable_option'];
+                $option = $this->_productRepository->getById($selectedOptionId);
+            }
+
 			$i++;
-			$product = $this->_productManager->load($item->getProductId());
-			$candidates[$i]['id'] = $item->getId();
+			$candidates[$i]['id'] = $item->getProductId();
 			$candidates[$i]['name'] = $item->getName();
 			$candidates[$i]['sku'] = $item->getSku();
+            // Product may or may not have a drupal id, need a product from the repo to see it tho
+            $productFromRepo = $this->_productRepository->getById($item->getProductId());
+            if (!empty($productFromRepo->getData('drupalproductid'))) {
+                $candidates[$i]['drupalproductid'] = $productFromRepo->getData('drupalproductid');
+            }
+            //If we have a configurable option, we override certain properties
+            if (!empty($option) && !empty($option->getData('drupalproductid'))) {
+                $candidates[$i]['id'] = $option->getId();
+                $candidates[$i]['drupalproductid'] = $option->getData('drupalproductid');
+            }
 			$candidates[$i]['quantity'] =  $info[$item->getId()]['qty'];
 			$candidates[$i]['previousQuantity'] =  $item->getQty();
-			
-			$candidates[$i]['unitPrice'] = $item->getProduct()->getFinalPrice();
+			$candidates[$i]['unitPrice'] = $product->getFinalPrice();
 			$categoryIds = $product->getCategoryIds();
 			$categories = $this->_collectionFactory->create()
                                  ->addAttributeToSelect('*')
@@ -68,7 +83,6 @@ class Updatecart implements ObserverInterface {
 			}					
 			$candidates[$i]['category'] = implode(',',$cats);
 		}
-		$this->_checkoutSession->setUpdateqty($candidates); 
-		return $this;
+		$this->_checkoutSession->setUpdateqty($candidates);
 	}
 }
