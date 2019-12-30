@@ -106,5 +106,8 @@
 			<block name="customer.section.config" class="Magento\Customer\Block\SectionConfig" template="Magento_Customer::js/section-config.phtml"/>
 			<block name="customer.customer.data" class="Magento\Customer\Block\CustomerData" template="Magento_Customer::js/customer-data.phtml"/>
 		</referenceContainer>
+		<referenceBlock name="catalog.compare.link" remove="true"/>
+    	<referenceBlock name="catalog.compare.sidebar" remove="true"/>
+    	<referenceBlock name="sale.reorder.sidebar" remove="true"/>
 	</body>
 </page>

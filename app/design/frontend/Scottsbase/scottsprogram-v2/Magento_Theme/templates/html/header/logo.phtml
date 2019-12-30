@@ -50,19 +50,16 @@ $currentSlug = end( $currentUrl );
             <ul class="sp-nav-list sp-header__nav-list sp-header__nav-list--left">
                 <li>
                     <a
-                        class="sp-link <?php echo ( $currentSlug == 'quiz' || $currentSlug == 'subscriptions' ) ? 'active' : ''; ?>"
+                        class="sp-link"
                         href="/quiz"
                         data-bind="
-                            attr: {
-                                href: isLoggedIn() && hasSubscriptions()
-                                    ? '/account/subscriptions'
-                                    : '/quiz'
-                            },
-                            text: isLoggedIn() && hasSubscriptions()
+                            text: customer() && customer().websiteId
                                 ? 'My Plan'
                                 : 'Get Started'
                         "
-                    ></a>
+                    >
+                        Get Started
+                    </a>
                 </li>
                 <li>
                     <a class="sp-link <?php echo ( $currentSlug == 'how-it-works' ) ? 'active' : ''; ?>" href="/how-it-works">
@@ -76,18 +73,18 @@ $currentSlug = end( $currentUrl );
                 <li>
                     <a
                         class="sp-link sp-login"
-                        href="/customer/account"
+                        href="/customer/account/login"
                         data-bind="
                             attr: {
-                                href: isLoggedIn()
-                                    ? '/customer/account'
+                                href: customer() && customer().websiteId
+                                    ? '/account/settings'
                                     : '/customer/account/login'
                             },
-                            text: isLoggedIn()
+                            text: customer() && customer().websiteId
                                 ? 'My Account'
                                 : 'Log In'
                         "
-                    ></a>
+                    >Log In</a>
                 </li>
             </ul>
             <address class="sp-header__address">
