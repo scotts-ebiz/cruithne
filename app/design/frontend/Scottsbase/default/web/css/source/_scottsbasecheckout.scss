@@ -58,17 +58,6 @@
                             }
                         }
                     }
-                    .opc-progress-bar {
-                        .opc-progress-bar-item {
-                            &._complete {
-                                span {
-                                    &:after {
-                                        font-size: 27px;
-                                    }
-                                }
-                            }
-                        }
-                    }
                     .opc-wrapper {
                         @include max-screen($screen__m) {
                             padding: 1rem;
