@@ -49,17 +49,11 @@ $currentSlug = end( $currentUrl );
         <nav id="sp-main-nav" class="sp-header__nav">
             <ul class="sp-nav-list sp-header__nav-list sp-header__nav-list--left">
                 <li>
-                    <a
-                        class="sp-link"
-                        href="/quiz"
-                        data-bind="
-                            text: customer() && customer().websiteId
-                                ? 'My Plan'
-                                : 'Get Started'
-                        "
-                    >
-                        Get Started
-                    </a>
+                    <?php if ($block->isLoggedIn() && $block->hasSubscriptions()) { ?>
+                        <a class="sp-link" href="/account/subscription">My Plan</a>
+                    <?php } else { ?>
+                        <a class="sp-link" href="/quiz">Get Started</a>
+                    <?php } ?>
                 </li>
                 <li>
                     <a class="sp-link <?php echo ( $currentSlug == 'how-it-works' ) ? 'active' : ''; ?>" href="/how-it-works">
@@ -71,20 +65,11 @@ $currentSlug = end( $currentUrl );
                 class="sp-nav-list sp-header__nav-list sp-header__nav-list--right"
             >
                 <li>
-                    <a
-                        class="sp-link sp-login"
-                        href="/customer/account/login"
-                        data-bind="
-                            attr: {
-                                href: customer() && customer().websiteId
-                                    ? '/account/settings'
-                                    : '/customer/account/login'
-                            },
-                            text: customer() && customer().websiteId
-                                ? 'My Account'
-                                : 'Log In'
-                        "
-                    >Log In</a>
+                    <?php if ($block->isLoggedIn()) { ?>
+                        <a class="sp-link sp-login" href="/account/settings">My Account</a>
+                    <?php } else { ?>
+                        <a class="sp-link sp-login" href="/customer/account/login">Log In</a>
+                    <?php } ?>
                 </li>
             </ul>
             <address class="sp-header__address">
@@ -164,8 +149,8 @@ $currentSlug = end( $currentUrl );
             "components": {
                 "navigation": {
                     "component": "Magento_Theme/js/navigation",
-                    "hasSubscriptions": "<?php echo $block->hasSubscriptions(); ?>",
-                    "isLoggedIn": "<?php echo $block->isLoggedIn(); ?>"
+                    "hasSubscriptions": <?php echo $block->hasSubscriptions() ? "true" : "false"; ?>,
+                    "isLoggedIn": <?php echo $block->isLoggedIn() ? "true" : "false"; ?>
                 }
             }
         }
