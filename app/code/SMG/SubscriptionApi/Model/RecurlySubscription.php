@@ -351,8 +351,12 @@ class RecurlySubscription
      *
      * @return bool
      */
-    private function hasRecurlySubscription($account_code)
+    public function hasRecurlySubscription($account_code)
     {
+        // Configure Recurly Client using the API Key and Subdomain entered in the settings page
+        Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
+        Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
+        
         try {
             $subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => 'active' ]);
             $subscriptions_amount = 0;

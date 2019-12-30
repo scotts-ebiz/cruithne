@@ -41,12 +41,11 @@ class Index
     }
 
     /**
-     * Check if this is a subscription otherwise continue
-     *
-     * @param \Magento\Checkout\Controller\Cart\Index $subject
-     * @return mixed
+     * Check if the store is active subscription store, if a subscription then return 404
+     * as we do not want customers coming here.  If the store is not an active subscription
+     * store, then continue on as normal.
      */
-    public function afterExecute(\Magento\Checkout\Controller\Cart\Index $subject, $result)
+    public function beforeExecute()
     {
         try
         {
@@ -60,8 +59,5 @@ class Index
         {
             $this->_logger->error($e);
         }
-
-        // return
-        return $result;
     }
 }

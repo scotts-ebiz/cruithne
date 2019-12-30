@@ -1,11 +1,11 @@
 <!--ko if: hasResults()-->
 <div class="sp-text-center sp-px-8 md:sp-px-0 md:sp-container sp-mb-8">
-    <h1 class="sp-results__title sp-h1 sp-text-green-1">Your Lawn Plan</h1>
+    <h1 class="sp-results__title sp-h1 sp-text-green-1">Here’s Your Plan</h1>
 
     <p class="sp-text-center sp-max-w-md sp-mx-auto">
         Get ready to grow a thick, strong, green lawn! Your plan contains everything you need to take care of all
-        <strong data-bind="if: lawnArea() > 0"><span data-bind="text: lawnArea()"></span> square feet</strong> of your
-        <span data-bind="if: lawnType()"><strong data-bind="text: lawnType()"></strong></span> lawn in every season.
+        <strong data-bind="if: lawnArea() > 0"><span data-bind="html: lawnArea()"></span> square feet</strong> of your
+        <span data-bind="if: lawnType()"><strong data-bind="html: lawnType()"></strong></span> lawn in every season.
     </p>
 
     <a class="sp-block sp-link sp-text-center sp-label"
@@ -13,45 +13,61 @@
 </div>
 
 <!-- ko if: results().plan -->
-<div class="sp-results__your-plan sp-pt-8 sp-pb-4 sp-mx-8 md:sp-mx-auto sp-rounded sp-my-8 md:sp-my-12">
-    <h2 class="sp-text-center sp-h4 sp-m-0 sp-mb-4 sp-uppercase">Your Plan</h2>
+<div class="sp-container sp-text-center">
+    <div class="sp-results__your-plan sp-inline-block sp-bg-white sp-pt-8 sp-pb-4 sp-px-4 lg:sp-mx-8 md:sp-mx-auto sp-relative sp-rounded sp-my-8 md:sp-my-12">
+        <h2 class="sp-text-center sp-h4 sp-m-0 sp-mb-4 sp-uppercase">Your Plan</h2>
 
-    <ul class="sp-results__list sp-flex sp-flex-row sp-flex-wrap sp-m-0 sp-p-0 sp-justify-center"
-        data-bind="foreach: products()">
-        <li class="sp-results__your-plan-product sp-text-center sp-m-0 sp-mx-6">
-            <img class="sp-align-center sp-mb-1 sp-results__product-image"
-                 data-bind="attr: { src: $data.thumbnailImage }" />
-            <div class="sp-text-center sp-p2"
-                 data-bind="text: season"></div>
-            <strong class="sp-text-center sp-label"
-                    data-bind="text: $parent.formatCurrency(price)"></strong>
-        </li>
-    </ul>
+        <ul
+            class="sp-results__list sp-flex sp-flex-row sp-flex-wrap lg:sp-flex-no-wrap sp-m-0 sp--mx-2 sp-p-0 sp-justify-around sp-relative"
+            data-bind="foreach: seasons()"
+        >
+            <li class="sp-results__your-plan-product sp-text-center sp-mx-4 md:sp-mx-0 sp-px-2">
+                <div class="sp-flex sp-items-center sp-justify-center sp--mx-1" data-bind="foreach: products">
+                    <div class="sp-px-1">
+                        <img
+                            class="sp-align-center sp-block sp-mb-1 sp-results__product-image"
+                            data-bind="attr: { src: thumbnailImage }"
+                        />
+                    </div>
+                </div>
+                <div
+                    class="sp-results__your-plan-label sp-text-center sp-p2"
+                    data-bind="html: season"
+                >
+                </div>
+                <strong
+                    class="sp-text-center sp-label"
+                    data-bind="html: $parent.formatCurrency(total)"
+                >
+                </strong>
+            </li>
+        </ul>
+    </div>
 </div>
 
 <div class="sp-mb-16 sp-max-w-xl sp-mx-auto sp-w-full">
     <div class="sp-flex sp-justify-end sp-mr-8 md:sp-mr-0 sp-my-4">
-        <button class="sp-link">Save and Send Results</button>
+        <button class="sp-link" data-bind="click: toggleSaveAndSendModal">Save and Send Results</button>
     </div>
 
     <!-- Sidebar -->
     <div class="md:sp-flex">
         <ul class="sp-p-0 sp-results__tabs"
-            data-bind="foreach: products()">
+            data-bind="foreach: seasons()">
             <li class="sp-results__list sp-mb-0"
-                data-bind="css: {'sp-bg-green-4': ($index() === $parent.activeProductIndex())}">
+                data-bind="css: {'sp-bg-green-4': ($index() === $parent.activeSeasonIndex())}">
                 <button type="button"
-                        data-bind="click: function() { $parent.activeProductIndex($index()) }"
+                        data-bind="click: function() { $parent.activeSeasonIndex($index()) }"
                         class="sp-results__tabs-button sp-flex sp-align-center sp-py-8 sp-px-4">
                     <img class="sp-mr-4 sp-results__icon--small"
-                         data-bind="attr: { src: $parent.getSeasonIcon($data) }" />
+                         data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]) }" />
                     <div>
                         <strong class="sp-h4"
-                                data-bind="text: season"></strong>
+                                data-bind="html: $data.products[0].season"></strong>
                         <div class="sp-p2"
                              data-bind="if: $parent.nextAvailableProduct() === $index()">(Next Shipment)</div>
-                        <div class="sp-p2"><span data-bind="text: $parent.formatDate(applicationStartDate)"></span> -
-                            <span data-bind="text: $parent.formatDate(applicationEndDate)"></span></div>
+                        <div class="sp-p2"><span data-bind="html: $parent.formatDate($data.products[0].applicationStartDate)"></span> -
+                            <span data-bind="html: $parent.formatDate($data.products[0].applicationEndDate)"></span></div>
                     </div>
                 </button>
 
@@ -59,22 +75,23 @@
         </ul>
 
         <!-- Product Detail -->
-        <!-- ko if: activeProduct() -->
+        <!-- ko if: activeSeason() -->
         <div class="sp-results__tabs-detail sp-bg-green-4 sp-flex-auto sp-p-8 md:sp-p-12">
             <div class="md:sp-flex sp-mb-12">
                 <div class="md:sp-w-1/2">
                     <h3 class="sp-my-0 sp-h2 sp-text-green-1"
-                        data-bind="text: activeProduct().season"></h3>
+                        data-bind="html: activeSeason().products[0].season"></h3>
                     <div>Apply between</div>
-                    <div><span data-bind="text: formatDate(activeProduct().applicationStartDate)"></span> - <span
-                              data-bind="text: formatDate(activeProduct().applicationEndDate)"></span></div>
+                    <div><span data-bind="html: formatDate(activeSeason().products[0].applicationStartDate)"></span> - <span
+                              data-bind="html: formatDate(activeSeason().products[0].applicationEndDate)"></span></div>
                 </div>
 
                 <ul class="sp-results__list sp-p-0 sp-m-0 md:sp-w-1/2 md:sp-justify-end sp-flex sp-flex-wrap sp--mx-2"
-                    data-bind="foreach: productFeatures(activeProduct())">
-                    <li class="sp-text-center sp-m-0 sp-mx-2">
-                        <img class="sp-results__icon--medium"
-                             data-bind="attr: { src: $data }" />
+                    data-bind="foreach: productFeatures(activeSeason().products[0])">
+                    <li class="sp-results__product-addon-image sp-text-center sp-m-0 sp-mx-2 sp-flex sp-flex-column sp-justify-start sp-items-center ">
+                        <img class="sp-results__icon--medium sp-mb-2"
+                             data-bind="attr: { src: $data.image }" />
+                        <span data-bind="html: $data.text"></span>
                     </li>
                 </ul>
             </div>
@@ -83,28 +100,31 @@
                 <h4 class="sp-my-0 sp-h4 sp-gree-2 sp-pb-4 sp-uppercase">Products in this box</h4>
             </div>
 
-            <p data-bind="if: activeProduct().mentioned">Because you mentioned <strong class="sp-lowercase"
-                        data-bind="text: activeProduct().mentioned"></strong>:</p>
+            <div data-bind="foreach: activeSeason().products">
+                <p class="sp-mt-4" data-bind="if: $data.mentioned">Because you mentioned <strong class="sp-lowercase"
+                            data-bind="html: $data.mentioned"></strong>:</p>
 
-            <div class="sp-results__product sp-m--4 sp-bg-white sp-flex sp-rounded">
-                <img class="sp-mx-auto sp-m-4 sp-results__product-image sp-block"
-                     data-bind="attr: { src: activeProduct().thumbnailImage }" />
+                <div class="sp-results__product sp-m--4 sp-bg-white sp-flex sp-rounded">
 
-                <div class="sp-m-4">
-                    <div class="sp-flex sp-mb-2">
-                        <div class="sp-results__bag-count sp-label sp-mr-2 sp-flex sp-justify-center sp-items-center sp-label sp-uppercase"
-                             data-bind="text: activeProduct().quantity"></div>
-                        <span>Bag Count</span>
+                    <img class="sp-mx-auto sp-m-4 sp-results__product-image sp-block"
+                        data-bind="attr: { src: $data.thumbnailImage }" />
+
+                    <div class="sp-m-4">
+                        <div class="sp-flex sp-mb-2">
+                            <div class="sp-results__bag-count sp-label sp-mr-2 sp-flex sp-justify-center sp-items-center sp-label sp-uppercase"
+                                data-bind="html: $data.quantity"></div>
+                            <span>Bag Count</span>
+                        </div>
+
+                        <h5 class="sp-mt-0 sp-mb-4 sp-h4"
+                            data-bind="html: $data.displayName">
+                        </h5>
+                        <div class="sp-p2"
+                            data-bind="html: $data.short_description">
+                        </div>
+                        <button class="sp-link sp-uppercase"
+                                data-bind="click: function() { $parent.togglePDP($data) }">more about this product</button>
                     </div>
-
-                    <h5 class="sp-mt-0 sp-mb-4 sp-h4"
-                        data-bind="text: activeProduct().displayName">
-                    </h5>
-                    <div class="sp-p2"
-                         data-bind="html: activeProduct().short_description">
-                    </div>
-                    <button class="sp-link sp-uppercase"
-                            data-bind="click: togglePDP">more about this product</button>
                 </div>
             </div>
         </div>
@@ -112,11 +132,18 @@
     </div>
 </div>
 
-<!-- ko if: pdp().visible  -->
+<!-- ko if: pdp().visible && pdp().product -->
 <!-- ko template: "SMG_RecommendationResults/product-detail-modal.html" -->
 <!-- /ko -->
 <!-- /ko -->
 
+<!-- ko if: saveAndSendModal().visible -->
+<!-- ko template: "SMG_RecommendationResults/save-and-send-modal.html" --><!-- /ko -->
+<!-- /ko -->
+
+<!-- ko if: saveAndSendSuccessModal().visible -->
+<!-- ko template: "SMG_RecommendationResults/save-and-send-success-modal.html" --><!-- /ko -->
+<!-- /ko -->
 
 <div class="sp-bg-green-1 sp-py-4">
     <div class="sp-container sp-flex sp-flex-column md:sp-flex-row sp-justify-end">

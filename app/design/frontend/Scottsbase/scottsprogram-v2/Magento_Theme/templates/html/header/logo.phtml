@@ -1,9 +1,12 @@
 <?php
 $storeName = $block->escapeHtml($block->getThemeName() ? $block->getThemeName() : $block->getLogoAlt());
+$currentUrl = $block->getRequest()->getUriString();
+$currentUrl = explode('/', $currentUrl);
+$currentSlug = end( $currentUrl );
 ?>
 <div
     class="sp-flex sp-items-center sp-justify-between"
-    data-bind="scope: 'customer'"
+    data-bind="scope: 'navigation'"
 >
     <?php if ($block->getData('hide_links') == true) { ?>
         <div class="sp-header__logo">
@@ -30,7 +33,6 @@ $storeName = $block->escapeHtml($block->getThemeName() ? $block->getThemeName() 
                     <?= $block->getLogoHeight() ? 'height="' . $block->escapeHtml($block->getLogoHeight()) . '"' : '' ?>
                 />
             </div>
-            <h1 class="sp-header__title sp-label sp-text-green-1">Program</h1>
         </a>
     <?php } ?>
 
@@ -60,7 +62,7 @@ $storeName = $block->escapeHtml($block->getThemeName() ? $block->getThemeName() 
                     </a>
                 </li>
                 <li>
-                    <a class="sp-link" href="/how-it-works">
+                    <a class="sp-link <?php echo ( $currentSlug == 'how-it-works' ) ? 'active' : ''; ?>" href="/how-it-works">
                         How It Works
                     </a>
                 </li>
@@ -141,7 +143,7 @@ $storeName = $block->escapeHtml($block->getThemeName() ? $block->getThemeName() 
                 <li>
                     <a
                         class="sp-link"
-                        href="/privacy-policy"
+                        href="/privacy"
                     >Privacy</a>
                 </li>
                 <li>
@@ -160,8 +162,10 @@ $storeName = $block->escapeHtml($block->getThemeName() ? $block->getThemeName() 
     "*": {
         "Magento_Ui/js/core/app": {
             "components": {
-                "customer": {
-                    "component": "Magento_Customer/js/view/customer"
+                "navigation": {
+                    "component": "Magento_Theme/js/navigation",
+                    "hasSubscriptions": "<?php echo $block->hasSubscriptions(); ?>",
+                    "isLoggedIn": "<?php echo $block->isLoggedIn(); ?>"
                 }
             }
         }
