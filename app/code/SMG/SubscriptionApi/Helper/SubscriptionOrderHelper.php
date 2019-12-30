@@ -224,6 +224,7 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws SubscriptionException
      */
     protected function processOrder(Customer $customer, $subscriptionOrder)
     {
@@ -257,7 +258,12 @@ class SubscriptionOrderHelper extends AbstractHelper
             ->setShippingMethod('freeshipping_freeshipping');
 
         foreach ($subscriptionOrder->getOrderItems() as $item) {
-            // Add product to the cart
+            // Check if the item has the selected field and if it is set.
+            if ($item->hasData('selected') && ! $item->getSelected()) {
+                // This is an add-on product and is not selected, so continue.
+                continue;
+            }
+                // Add product to the cart
             try {
                 $product = $item->getProduct();
             } catch (\Exception $e) {
