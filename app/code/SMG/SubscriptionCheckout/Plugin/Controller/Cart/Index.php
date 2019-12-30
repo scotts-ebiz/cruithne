@@ -7,6 +7,10 @@ use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 
+/**
+ * Class Index
+ * @package SMG\SubscriptionCheckout\Plugin\Controller\Cart
+ */
 class Index
 {
     /**
@@ -31,9 +35,11 @@ class Index
      * @param StoreManagerInterface $storeManager
      * @param SubscriptionHelper $subscriptionHelper
      */
-    public function __construct(LoggerInterface $logger,
+    public function __construct(
+        LoggerInterface $logger,
         SubscriptionHelper $subscriptionHelper,
-        StoreManagerInterface $storeManager)
+        StoreManagerInterface $storeManager
+    )
     {
         $this->_logger = $logger;
         $this->_subscriptionHelper = $subscriptionHelper;
@@ -47,17 +53,11 @@ class Index
      */
     public function beforeExecute()
     {
-        try
+        // if this is a subscription site we do not want them to go to the checkout cart page
+        if ( $this->_subscriptionHelper->isActive($this->_storeManager->getStore()->getId()))
         {
-            // if this is a subscription site we do not want them to go to the checkout cart page
-            if ( $this->_subscriptionHelper->isActive($this->_storeManager->getStore()->getId()))
-            {
-                throw new NotFoundException(__('404'));
-            }
-        }
-        catch (\Exception $e)
-        {
-            $this->_logger->error($e);
+            $this->_logger->error('Attempting to hit cart page in subscription flow.: 404');
+            throw new NotFoundException(__('404'));
         }
     }
 }
