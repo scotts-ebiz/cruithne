@@ -3,9 +3,21 @@
 namespace SMG\RecommendationApi\Api;
 
 use Exception;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\ProductRepository;
+use Magento\Framework\Controller\Result\JsonFactory;
+use Magento\Framework\Data\Form\FormKey;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Exception\NotFoundException;
 use Magento\Framework\Exception\SecurityViolationException;
+use Magento\Framework\Session\SessionManagerInterface;
+use Magento\Framework\Webapi\Request;
+use Magento\Store\Model\StoreManagerInterface;
+use Psr\Log\LoggerInterface;
 use SMG\RecommendationApi\Api\Interfaces\RecommendationInterface;
+use SMG\RecommendationApi\Helper\RecommendationHelper;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription;
 
 /**
  * Class Recommendation
@@ -15,75 +27,79 @@ class Recommendation implements RecommendationInterface
 {
 
     /**
-     * @var /SMG/RecommendationApi/Helper/RecommendationHelper
+     * @var RecommendationHelper
      */
     protected $_recommendationHelper;
 
     /**
-     * @var \Magento\Store\Model\StoreManagerInterface
+     * @var StoreManagerInterface
      */
     protected $_storeManager;
 
     /**
-     * @var \Magento\Framework\Data\Form\FormKey
+     * @var FormKey
      */
     protected $_formKey;
 
     /**
-     * @var \Magento\Framework\Webapi\Request
+     * @var Request
      */
     protected $_request;
 
     /**
-     * @var \Magento\Framework\Controller\Result\JsonFactory
+     * @var JsonFactory
      */
     protected $_jsonResultFactory;
 
     /**
      * @var ProductRepository
-     * \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
      */
     protected $_productRepository;
 
     /**
-     * @var \Magento\Framework\Session\SessionManagerInterface
+     * @var SessionManagerInterface
      */
     protected $_coreSession;
 
+    /**
+     * @var array
+     */
     protected $_products = [];
 
     /**
-     * @var \SMG\SubscriptionApi\Model\ResourceModel\Subscription
+     * @var Subscription
      */
     protected $_subscription;
 
     /**
-     * @var \SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory
+     * @var LoggerInterface
      */
-    protected $_subscriptionCollectionFactory;
+    private $_logger;
 
     /**
      * Recommendation constructor.
-     * @param \SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper
-     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
-     * @param \Magento\Framework\Data\Form\FormKey $formKey
-     * @param \Magento\Framework\Webapi\Request $request
-     * @param \Magento\Framework\Controller\Result\JsonFactory $jsonResultFactory
-     * @param \Magento\Catalog\Api\ProductRepositoryInterface $productRepository
-     * @param \Magento\Framework\Session\SessionManagerInterface $coreSession
-     * @param \SMG\SubscriptionApi\Model\ResourceModel\Subscription $subscription
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Exception\NotFoundException
+     * @param RecommendationHelper $recommendationHelper
+     * @param StoreManagerInterface $storeManager
+     * @param FormKey $formKey
+     * @param Request $request
+     * @param JsonFactory $jsonResultFactory
+     * @param ProductRepositoryInterface $productRepository
+     * @param SessionManagerInterface $coreSession
+     * @param Subscription $subscription
+     * @param LoggerInterface $logger
+     * @throws NoSuchEntityException
+     * @throws NotFoundException
      */
     public function __construct(
-        \SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \Magento\Framework\Data\Form\FormKey $formKey,
-        \Magento\Framework\Webapi\Request $request,
-        \Magento\Framework\Controller\Result\JsonFactory $jsonResultFactory,
-        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
-        \Magento\Framework\Session\SessionManagerInterface $coreSession,
-        \SMG\SubscriptionApi\Model\ResourceModel\Subscription $subscription
+        RecommendationHelper $recommendationHelper,
+        StoreManagerInterface $storeManager,
+        FormKey $formKey,
+        Request $request,
+        JsonFactory $jsonResultFactory,
+        ProductRepositoryInterface $productRepository,
+        SessionManagerInterface $coreSession,
+        Subscription $subscription,
+        LoggerInterface $logger
     ) {
         $this->_recommendationHelper = $recommendationHelper;
         $this->_storeManager = $storeManager;
@@ -93,10 +109,11 @@ class Recommendation implements RecommendationInterface
         $this->_productRepository = $productRepository;
         $this->_coreSession = $coreSession;
         $this->_subscription = $subscription;
+        $this->_logger = $logger;
 
         // Check to make sure that the module is enabled at the store level
         if (! $this->_recommendationHelper->isActive($this->_storeManager->getStore()->getId())) {
-            throw new \Magento\Framework\Exception\NotFoundException(__('File not Found'));
+            throw new NotFoundException(__('File not Found'));
         }
     }
 
@@ -106,8 +123,8 @@ class Recommendation implements RecommendationInterface
      * @param string $key
      * @return array|void
      * @throws SecurityViolationException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws Exception
+     * @throws NoSuchEntityException
+     * @throws LocalizedException
      *
      * @api
      */
@@ -116,28 +133,36 @@ class Recommendation implements RecommendationInterface
 
         // Test the form key
         if ( ! $this->formValidation($key) ) {
+            $this->_logger->error('Form key validation error.');
             throw new SecurityViolationException(__('Unauthorized'));
         }
 
+        // Check to make sure that the config is set up
         if (! $this->_recommendationHelper->getNewQuizApiPath()) {
-            return;
+            $error = 'Quiz New API Path not set in config.';
+            $this->_logger->error($error);
+            throw new LocalizedException(__($error));
         }
 
+        // Get the response
         $url = filter_var($this->_recommendationHelper->getNewQuizApiPath(), FILTER_SANITIZE_URL);
         $data = '';
         $method = 'GET';
-
         $response = $this->request($url, $data, $method);
 
-        if (! empty($response)) {
-            if (! isset($_SESSION['quiz_template_id'])) {
-                $_SESSION['quiz_template_id'] = $response[0]['id'];
-            }
-
-            return $response;
+        // Check the response
+        if (empty($response)) {
+            $error = 'Recommendation Engine response for new quiz template is malformed';
+            $this->_logger->error($error . ": " . json_encode($response));
+            throw new LocalizedException(__($error));
         }
 
-        return;
+        // Set Quiz Template ID
+        if ( ! $this->_coreSession->getQuizTemplateId()) {
+            $this->_coreSession->setQuizTemplateId($response[0]['id']);
+        }
+
+        return $response;
     }
 
     /**
@@ -151,7 +176,8 @@ class Recommendation implements RecommendationInterface
      * @param string $lawnSize
      * @return array|null
      * @throws SecurityViolationException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
+     * @throws LocalizedException
      *
      * @api
      */
@@ -159,36 +185,63 @@ class Recommendation implements RecommendationInterface
     {
         // Test the form key
         if ( ! $this->formValidation($key) ) {
+            $this->_logger->error('Form key validation error.');
             throw new SecurityViolationException(__('Unauthorized'));
         }
 
-        if (! $this->_recommendationHelper->getSaveQuizApiPath() || empty($answers) || empty($id)) {
-            return null;
+        // Check to see if the id is already processed and return result if so
+        if ($id == $this->_coreSession->getQuizId()) {
+            $this->_logger->info("Save called but quiz already exists with id: " . $id . ". Redirected to getResult().");
+            return $this->getResult($key, $id, $zip, $lawnType, $lawnSize);
         }
 
+        // Make sure that the config path is set up
+        if (! $this->_recommendationHelper->getSaveQuizApiPath() ){
+            $error = 'Quiz Save API Path not set in config.';
+            $this->_logger->error($error);
+            throw new LocalizedException(__($error));
+        }
+
+        // Make sure we have the necessary input
+        if (empty($answers) || empty($id)) {
+            $error = 'Invalid input for save endpoint';
+            $this->_logger->error($error . ": id: " . $id . " answers: " . json_encode($answers));
+            throw new LocalizedException(__($error));
+        }
+
+        // Get the response
         $url = trim($this->_recommendationHelper->getSaveQuizApiPath(), '/');
         $url = filter_var(str_replace('{quizTemplateId}', $id, $url), FILTER_SANITIZE_URL);
         $method = 'POST';
-
         $response = $this->request($url, ['answers' => $answers], $method);
 
-        if (empty($response)) {
-            return null;
+        // Check that the response is good
+        if (empty($response) || ! isset($response[0]['id'])) {
+            $error = 'Recommendation Engine returned a malformed or invalid response';
+            $this->_logger->error($error . ": " . json_encode($response));
+            throw new LocalizedException(__($error));
         }
 
-        $subscription = $this->findOrCreateSubscription(
-            $response,
-            $zip,
-            $lawnSize,
-            $lawnType
-        );
+        // Get the subscription
+        try {
+            $this->findOrCreateSubscription(
+                $response,
+                $zip,
+                $lawnSize,
+                $lawnType
+            );
+        } catch (\Exception $e) {
+            $error = "Failed to find or create a subscription";
+            $this->_logger->error($error . ": " . $e->getMessage());
+            throw new LocalizedException(__($error));
+        }
 
         // Get the product flat file so it is accessible.
         $this->getProducts($key);
-
         $this->mapProducts($response[0]['plan']['coreProducts']);
         $this->mapProducts($response[0]['plan']['addOnProducts']);
 
+        // Add to recommendation to core session
         $this->_coreSession->setQuizId($response[0]['id']);
         $this->_coreSession->setZipCode($zip);
 
@@ -205,23 +258,34 @@ class Recommendation implements RecommendationInterface
      * @param int $lawnSize
      * @return array
      * @throws SecurityViolationException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
+     * @throws LocalizedException
      * @api
      */
     public function getResult($key, $id, $zip, $lawnType = '', $lawnSize = 0)
     {
         // Test the form key
         if ( ! $this->formValidation($key) ) {
+            $this->_logger->error('Form key validation error.');
             throw new SecurityViolationException(__('Unauthorized'));
         }
 
-        //getQuizResultApiPath
-        if (empty($id) || ! $this->_recommendationHelper->getQuizResultApiPath()) {
-            return;
+        // Make sure that the config path is available
+        if (! $this->_recommendationHelper->getQuizResultApiPath()) {
+            $error = 'Quiz Result API Path not set in config.';
+            $this->_logger->error($error);
+            throw new LocalizedException(__($error));
         }
 
-        $id = filter_var($id, FILTER_SANITIZE_SPECIAL_CHARS);
+        // Check that we have minimum input
+        if (empty($id)) {
+            $error = 'Minimum input invalid for getting result';
+            $this->_logger->error($error);
+            throw new LocalizedException(__($error));
+        }
 
+        // Get the response
+        $id = filter_var($id, FILTER_SANITIZE_SPECIAL_CHARS);
         $url = filter_var(
             trim(
                 str_replace('{completedQuizId}', $id, $this->_recommendationHelper->getQuizResultApiPath()),
@@ -229,26 +293,35 @@ class Recommendation implements RecommendationInterface
             ),
             FILTER_SANITIZE_URL
         );
-
         $response = $this->request($url, '', 'GET');
 
-        if (empty($response)) {
-            return null;
+        // Check that the response is valid
+        if (empty($response) || ! isset($response[0]['id'])) {
+            $error = 'Recommendation Engine returned a malformed or invalid response';
+            $this->_logger->error($error . ": " . json_encode($response));
+            throw new LocalizedException(__($error));
         }
 
-        $subscription = $this->findOrCreateSubscription(
-            $response,
-            $zip,
-            $lawnSize,
-            $lawnType
-        );
+        // Get the subscription
+        try {
+            $this->findOrCreateSubscription(
+                $response,
+                $zip,
+                $lawnSize,
+                $lawnType
+            );
+        } catch (\Exception $e) {
+            $error = "Failed to find or create a subscription";
+            $this->_logger->error($error . ": " . $e->getMessage());
+            throw new LocalizedException(__($error));
+        }
 
         // Get the product flat file so it is accessible.
         $this->getProducts($key);
-
         $this->mapProducts($response[0]['plan']['coreProducts']);
         $this->mapProducts($response[0]['plan']['addOnProducts']);
 
+        // Set the session variables
         $this->_coreSession->setQuizId($response[0]['id']);
         $this->_coreSession->setZipCode($zip);
 
@@ -261,13 +334,14 @@ class Recommendation implements RecommendationInterface
      * @param mixed $key
      * @return array
      * @throws SecurityViolationException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      * @api
      */
     public function getCompleted($key)
     {
         // Test the form key
         if ( ! $this->formValidation($key) ) {
+            $this->_logger->error('Form key validation error.');
             throw new SecurityViolationException(__('Unauthorized'));
         }
 
@@ -296,7 +370,7 @@ class Recommendation implements RecommendationInterface
      * @param string $quiz_id
      * @return bool|string|void
      * @throws SecurityViolationException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      * @api
      */
     public function mapToUser($key, $user_id, $quiz_id)
@@ -304,6 +378,7 @@ class Recommendation implements RecommendationInterface
 
         // Test the form key
         if ( ! $this->formValidation($key) ) {
+            $this->_logger->error('Form key validation error.');
             throw new SecurityViolationException(__('Unauthorized'));
         }
 
@@ -344,13 +419,14 @@ class Recommendation implements RecommendationInterface
      * @param $key
      * @return array|bool|string|void
      * @throws SecurityViolationException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      * @api
      */
     public function getProducts($key)
     {
         // Test the form key
         if ( ! $this->formValidation($key) ) {
+            $this->_logger->error('Form key validation error.');
             throw new SecurityViolationException(__('Unauthorized'));
         }
 
@@ -386,7 +462,7 @@ class Recommendation implements RecommendationInterface
      *
      * @param $key
      * @return bool
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     public function formValidation($key)
     {
@@ -492,7 +568,7 @@ class Recommendation implements RecommendationInterface
                 try {
                     $model = $this->_productRepository->get($product['sku']);
                     $model = $model->toFlatArray();
-                } catch (\Magento\Framework\Exception\NoSuchEntityException $ex) {
+                } catch (NoSuchEntityException $ex) {
                     $model = [];
                 }
 
