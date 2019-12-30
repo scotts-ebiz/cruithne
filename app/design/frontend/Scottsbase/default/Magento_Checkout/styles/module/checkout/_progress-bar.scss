@@ -1,4 +1,4 @@
-//
+//  ---------------------------------------------
 //  Variables
 //  _____________________________________________
 
@@ -18,13 +18,14 @@ $checkout-progress-bar-item__complete__color                   : $link__color !d
 $checkout-progress-bar-item-element__width                     : 10px !default;
 $checkout-progress-bar-item-element__height                    : $checkout-progress-bar-item-element__width !default;
 
-//new var for active span
+//new vars for active span
 $checkout-progress-bar-item-element__active__width             : 30px !default;
 $checkout-progress-bar-item-element__active__height            : $checkout-progress-bar-item-element__active__width !default;
 $checkout-progress-bar-item-element__active__after__width      : $checkout-progress-bar-item-element__active__width - 4 !default;
 $checkout-progress-bar-item-element__active__after__height     : $checkout-progress-bar-item-element__active__after__width !default;
 $checkout-progress-bar-item-element__active__after__margin     : (- $checkout-progress-bar-item-element__active__after__width) / 2 !default;
 
+//vars for inner circle
 $checkout-progress-bar-item-element-inner__background-color    : $page__background-color !default;
 $checkout-progress-bar-item-element-inner__color               : $checkout-progress-bar-item__color !default;
 $checkout-progress-bar-item-element-outer-radius__width        : 6px !default;
@@ -36,7 +37,8 @@ $checkout-progress-bar-item-element-inner__active__line-height : 1 !default;
 
 $checkout-progress-bar-item-element-outer-radius__width: 6px;
 
-//
+
+//  ---------------------------------------------
 //  Checkout Progress Bar
 //  ---------------------------------------------
 
@@ -141,7 +143,6 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
             }
         }
     }
-
     &._complete {
         &:before {
           background: $checkout-progress-bar__active__background-color;
