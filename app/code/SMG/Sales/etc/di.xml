@@ -16,4 +16,7 @@
 	<type name="Magento\Backend\Block\Widget\Button\Toolbar">
         <plugin name="smg_plugin_order_toolbarbuttons" type="SMG\Sales\Plugin\Block\Widget\Button\Toolbar" />
     </type>
+    <type name="Magento\Sales\Block\Adminhtml\Order\Create\Billing\Method\Form">
+        <plugin name="smg_plugin_block_billing_method_form" type="SMG\Sales\Plugin\Block\Adminhtml\Order\Create\Billing\Method\Form" />
+    </type>
 </config>

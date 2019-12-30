@@ -6716,6 +6716,80 @@
             "description": "N/A"
         },
         {
+            "name": "magento/module-elasticsearch-6",
+            "version": "100.3.1",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-elasticsearch-6/magento-module-elasticsearch-6-100.3.1.0.zip",
+                "shasum": "1ad56707d488f98b60a2386246a1357716413434"
+            },
+            "require": {
+                "elasticsearch/elasticsearch": "~2.0|~5.1|~6.1",
+                "magento/framework": "102.0.*",
+                "magento/module-advanced-search": "100.3.*",
+                "magento/module-catalog-search": "101.0.*",
+                "magento/module-elasticsearch": "100.3.*",
+                "magento/module-search": "101.0.*",
+                "magento/module-store": "101.0.*",
+                "php": "~7.1.3||~7.2.0"
+            },
+            "suggest": {
+                "magento/module-config": "101.1.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\Elasticsearch6\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-elasticsearch-catalog-permissions",
+            "version": "100.3.0",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-elasticsearch-catalog-permissions/magento-module-elasticsearch-catalog-permissions-100.3.0.0.zip",
+                "shasum": "a2bdc291d4321bc81794a370cbab8fafdf7c3f9e"
+            },
+            "require": {
+                "magento/framework": "102.0.*",
+                "magento/module-advanced-search": "100.3.*",
+                "magento/module-catalog": "103.0.*",
+                "magento/module-catalog-permissions": "100.3.*",
+                "magento/module-catalog-search": "101.0.*",
+                "magento/module-customer": "102.0.*",
+                "magento/module-elasticsearch": "100.3.*",
+                "magento/module-search": "101.0.*",
+                "magento/module-store": "101.0.*",
+                "php": "~7.1.3||~7.2.0"
+            },
+            "suggest": {
+                "magento/module-config": "101.1.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\ElasticsearchCatalogPermissions\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
             "name": "magento/module-email",
             "version": "101.0.2-p2",
             "dist": {
@@ -9555,6 +9629,66 @@
             "description": "N/A"
         },
         {
+            "name": "magento/module-msrp-configurable-product",
+            "version": "100.3.1",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-msrp-configurable-product/magento-module-msrp-configurable-product-100.3.1.0.zip",
+                "shasum": "f7dc4eb52ddf97bc122350a0c5f2c06192d3e457"
+            },
+            "require": {
+                "magento/framework": "102.0.*",
+                "magento/module-catalog": "103.0.*",
+                "magento/module-configurable-product": "100.3.*",
+                "magento/module-msrp": "100.3.*",
+                "php": "~7.1.3||~7.2.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\MsrpConfigurableProduct\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-msrp-grouped-product",
+            "version": "100.3.1",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-msrp-grouped-product/magento-module-msrp-grouped-product-100.3.1.0.zip",
+                "shasum": "fba5c63f4bba4ea5ea49e30e4222d313f58de0e7"
+            },
+            "require": {
+                "magento/framework": "102.0.*",
+                "magento/module-catalog": "103.0.*",
+                "magento/module-grouped-product": "100.3.*",
+                "magento/module-msrp": "100.3.*",
+                "php": "~7.1.3||~7.2.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\MsrpGroupedProduct\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
             "name": "magento/module-msrp-staging",
             "version": "100.3.2",
             "dist": {
@@ -11196,6 +11330,38 @@
             "description": "N/A"
         },
         {
+            "name": "magento/module-sales-graph-ql",
+            "version": "100.3.1",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-sales-graph-ql/magento-module-sales-graph-ql-100.3.1.0.zip",
+                "shasum": "0b5a4a2ddd8ddc2d1c9a6865aaf221aeb2e7dc80"
+            },
+            "require": {
+                "magento/framework": "102.0.*",
+                "magento/module-customer-graph-ql": "100.3.*",
+                "magento/module-sales": "102.0.*",
+                "php": "~7.1.3||~7.2.0"
+            },
+            "suggest": {
+                "magento/module-graph-ql": "100.3.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\SalesGraphQl\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
             "name": "magento/module-sales-inventory",
             "version": "100.3.2",
             "dist": {
@@ -12359,6 +12525,36 @@
             "description": "N/A"
         },
         {
+            "name": "magento/module-theme-graph-ql",
+            "version": "100.3.1",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-theme-graph-ql/magento-module-theme-graph-ql-100.3.1.0.zip",
+                "shasum": "d552fc284209e91fb83f8aa5fbeb2bceb20f659b"
+            },
+            "require": {
+                "magento/framework": "102.0.*",
+                "php": "~7.1.3||~7.2.0"
+            },
+            "suggest": {
+                "magento/module-store-graph-ql": "100.3.*"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\ThemeGraphQl\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
             "name": "magento/module-tinymce-3",
             "version": "100.3.2",
             "dist": {
@@ -13183,6 +13379,36 @@
                 ],
                 "psr-4": {
                     "Magento\\WishlistAnalytics\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "description": "N/A"
+        },
+        {
+            "name": "magento/module-wishlist-graph-ql",
+            "version": "100.3.1",
+            "dist": {
+                "type": "zip",
+                "url": "https://repo.magento.com/archives/magento/module-wishlist-graph-ql/magento-module-wishlist-graph-ql-100.3.1.0.zip",
+                "shasum": "c087857ff3efe2069fe17d2e6f9d2270d0f316e4"
+            },
+            "require": {
+                "magento/framework": "102.0.*",
+                "magento/module-catalog-graph-ql": "100.3.*",
+                "magento/module-store": "101.0.*",
+                "magento/module-wishlist": "101.1.*",
+                "php": "~7.1.3||~7.2.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Magento\\WishlistGraphQl\\": ""
                 }
             },
             "license": [

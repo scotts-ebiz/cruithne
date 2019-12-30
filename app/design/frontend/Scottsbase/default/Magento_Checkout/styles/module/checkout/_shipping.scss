@@ -259,10 +259,6 @@ $checkout-shipping-method__padding              : $indent__base !default;
 @include min-screen($screen__m) {
     .checkout-shipping-method {
         .actions-toolbar {
-            > .primary {
-                float: right;
-            }
-
             .action {
                 &.primary {
                     margin: 0;

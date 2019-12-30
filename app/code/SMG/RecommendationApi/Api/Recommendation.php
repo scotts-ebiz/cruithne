@@ -190,6 +190,7 @@ class Recommendation implements RecommendationInterface
         $this->mapProducts($response[0]['plan']['addOnProducts']);
 
         $this->_coreSession->setQuizId($response[0]['id']);
+        $this->_coreSession->setZipCode($zip);
 
         return $response;
     }
@@ -249,6 +250,7 @@ class Recommendation implements RecommendationInterface
         $this->mapProducts($response[0]['plan']['addOnProducts']);
 
         $this->_coreSession->setQuizId($response[0]['id']);
+        $this->_coreSession->setZipCode($zip);
 
         return $response;
     }

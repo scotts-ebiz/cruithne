@@ -44,6 +44,14 @@
   order: 2;
 }
 
+.line-1{
+  height:7rem;
+  margin-top: 4rem;
+}
+.line-2{
+  height:7rem;
+}
+
 @media (min-width: 768px) {
   .sp-home__history-container {
     flex-direction: row;
@@ -73,9 +81,53 @@
   .sp-home__history-description {
     order: 0;
   }
+
+  .line-1{
+    height:9rem;
+    margin-top: 1rem;
+  }
+  .line-2{
+      height:9rem;
+  }
 }
 
 .sp-app-image {
   max-width: 10rem;
 }
 
+ /* New Style for countdown */
+ #countdown{
+  width: 7.5rem;
+  color: #1d5632;
+  margin: -1rem auto;
+  font-size: 4rem;
+  font-weight: 800;
+  /* font-family:'Lato', sans-serif; */
+  font-family: Impact, fantasy;
+}
+
+/*Animate the line*/
+.line-1_anim {
+      stroke-dasharray: 172;
+      stroke-dashoffset: 172;
+      animation: dash .5s linear;
+      animation-fill-mode: forwards;
+      }
+
+.line-2_anim {
+      stroke-dasharray: 172;
+      stroke-dashoffset: 172;
+      animation: dash .5s linear;
+      animation-fill-mode: forwards;
+      }
+      
+      @keyframes dash {
+      0%{
+          opacity: 0;
+          stroke-dashoffset: 172;
+      }
+      100%{
+          opacity: 1;
+          stroke-dashoffset:0;
+      }
+     }
