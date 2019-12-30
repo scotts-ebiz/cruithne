@@ -17,7 +17,7 @@ $item = $smghelper->getCheckoutSession()->getDtmAddToCart();
                 unitPrice: <?php echo $block->escapeHtml($pro["unitPrice"]);?>,
                 sku: '<?php echo $block->escapeHtml($pro["sku"]);?>',
                 <?php if (!empty($pro['drupalproductid'])): ?>
-                drupalproductid:  '<?php echo $pro['drupalproductid'] ?>',
+                drupalproductid:  '<?php echo $block->escapeHtml($pro['drupalproductid']) ?>',
                 <?php endif; ?>
                 quantity: <?php echo $block->escapeHtml($pro["quantity"]);?>
                 <?php } ?>
