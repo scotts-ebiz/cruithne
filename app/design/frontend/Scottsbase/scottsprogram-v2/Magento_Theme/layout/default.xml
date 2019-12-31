@@ -34,7 +34,7 @@
 			<container name="header.panel.wrapper" htmlClass="panel wrapper" htmlTag="div" before="-">
 			</container>
 			<container name="header-wrapper" label="Page Header" as="header-wrapper" htmlTag="div" htmlClass="sp-container">
-				<block class="Magento\Theme\Block\Html\Header\Logo" name="logo">
+				<block class="Magento\Theme\Block\Html\Header\Logo" name="logo" cacheable="false">
 					<arguments>
 						<argument name="logo_file" xsi:type="string">images/scotts_logo@2x.png</argument>
 						<argument name="logo_img_width" xsi:type="number">113</argument>
@@ -106,5 +106,8 @@
 			<block name="customer.section.config" class="Magento\Customer\Block\SectionConfig" template="Magento_Customer::js/section-config.phtml"/>
 			<block name="customer.customer.data" class="Magento\Customer\Block\CustomerData" template="Magento_Customer::js/customer-data.phtml"/>
 		</referenceContainer>
+		<referenceBlock name="catalog.compare.link" remove="true"/>
+    	<referenceBlock name="catalog.compare.sidebar" remove="true"/>
+    	<referenceBlock name="sale.reorder.sidebar" remove="true"/>
 	</body>
 </page>

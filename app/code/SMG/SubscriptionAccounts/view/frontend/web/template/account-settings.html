@@ -1,0 +1,94 @@
+<!-- ko if: success() -->
+<div
+	class="sp-bg-green-4 sp-p1 sp-px-4 sp-py-2 sp-mb-4 sp-rounded sp-text-green-1 sp-text-bold"
+	data-bind="text: success()"
+>
+</div>
+<!-- /ko -->
+
+<h2 class="sp-h2 sp-mt-0 sp-text-center lg:sp-text-left">Account Settings</h2>
+<!-- ko if: account().recurly_account_code -->
+<form method="POST"
+	  class="sp-flex sp-flex-column lg:sp-flex-row">
+	<div class="sp-flex-auto sp-p-4 lg:sp-p-0 lg:sp-w-1/2">
+		<h4 class="sp-h4 sp-m-0 sp-pb-4 sp-mb-8">Account Information</h4>
+		<div class="sp-form-group">
+			<input type="text"
+				   class="sp-input"
+				   placeholder="First Name"
+				   name="firstname"
+				   id="firstname"
+				   data-bind="value: account().firstname" />
+			<label class="sp-form-label"
+				   for="firstname">First Name</label>
+		</div>
+		<div class="sp-form-group">
+			<input type="text"
+				   class="sp-input"
+				   placeholder="Last Name"
+				   name="lastname"
+				   id="lastname"
+				   data-bind="value: account().lastname" />
+			<label class="sp-form-label"
+				   for="lastname">Last Name</label>
+		</div>
+	</div>
+
+	<div class="sp-flex-auto sp-p-4 lg:sp-p-0 lg:sp-ml-4 lg:sp-w-1/2">
+		<h4 class="sp-h4 sp-m-0 sp-pb-4 sp-mb-8">Change Email and Password</h4>
+		<div class="sp-form-group">
+			<input type="email"
+				   class="sp-input"
+				   placeholder="Email"
+				   name="email"
+				   id="email"
+				   data-bind="value: account().email" />
+			<label class="sp-form-label"
+				   for="email">Email</label>
+		</div>
+
+		<div class="sp-form-group">
+			<input type="password"
+				   placeholder="Current Password"
+				   class="sp-input"
+				   name="password"
+				   id="password"
+				   value="" />
+			<label class="sp-form-label"
+				   for="current_password">Current Password</label>
+		</div>
+
+		<div class="sp-form-group">
+			<input type="password"
+				   class="sp-input"
+				   placeholder="New Password"
+				   name="newPassword"
+				   id="newPassword"
+				   value="" />
+			<label class="sp-form-label"
+				   for="newPassword">New Password</label>
+		</div>
+
+		<div class="sp-form-group">
+			<input type="password"
+				   placeholder="Confirm New Password"
+				   class="sp-input"
+				   name="passwordRetype"
+				   id="passwordRetype"
+				   value="" />
+			<label class="sp-form-label"
+				   for="passwordRetype">Confirm New Password</label>
+		</div>
+
+		<div class="sp-flex sp-justify-end">
+			<button type="submit"
+					class="sp-button sp-button--primary"
+					data-bind="click: saveAccount">Save</button>
+		</div>
+	</div>
+	<div class="sp-flex-auto sp-p-4">
+</form>
+<!-- ko ifnot: account().recurly_account_code -->
+<p>It looks like you don't have a complete account. Please complete the quiz.</p>
+<a href="/quiz" class="sp-button sp-button--primary">Get started</a>
+<!-- /ko -->
