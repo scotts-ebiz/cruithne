@@ -4,6 +4,7 @@ namespace SMG\SubscriptionApi\Model;
 
 use Magento\Directory\Model\ResourceModel\Region\CollectionFactory;
 use Magento\Framework\Exception\LocalizedException;
+use Psr\Log\LoggerInterface;
 use Recurly_Account;
 use Recurly_Adjustment;
 use Recurly_BillingInfo;
@@ -18,6 +19,7 @@ use Recurly_ShippingAddressList;
 use Recurly_Subscription;
 use Recurly_SubscriptionList;
 use Recurly_ValidationError;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrderItem\Collection;
 
 /**
  * Class RecurlySubscription
@@ -87,6 +89,11 @@ class RecurlySubscription
     protected $_customerUrl;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $_logger;
+
+    /**
      * RecurlySubscription constructor.
      * @param \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper
      * @param \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper
@@ -98,6 +105,7 @@ class RecurlySubscription
      * @param \Magento\Checkout\Model\Session $checkoutSession
      * @param CollectionFactory $collectionFactory
      * @param \Magento\Customer\Model\Url $customerUrl
+     * @param LoggerInterface $logger
      */
     public function __construct(
         \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper,
@@ -109,7 +117,8 @@ class RecurlySubscription
         \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
         \Magento\Checkout\Model\Session $checkoutSession,
         CollectionFactory $collectionFactory,
-        \Magento\Customer\Model\Url $customerUrl
+        \Magento\Customer\Model\Url $customerUrl,
+        LoggerInterface $logger
     ) {
         $this->_recurlyHelper = $recurlyHelper;
         $this->_subscriptionHelper = $subscriptionHelper;
@@ -124,6 +133,7 @@ class RecurlySubscription
         $this->_customerUrl = $customerUrl;
         $this->_couponCode = 'annual_subscription_discount';
         $this->_currency = 'USD';
+        $this->_logger = $logger;
     }
 
     /**
@@ -157,14 +167,18 @@ class RecurlySubscription
                 $subscription->setGigyaId($customer->getGigyaUid());
                 $subscription->save();
             } catch (\Exception $e) {
-                throw new LocalizedException(__('Failed to assign subscription to user account.'));
+                $error = 'Failed to assign subscription to user account.';
+                $this->_logger->error($error . " : " . $e->getMessage() );
+                throw new LocalizedException(__($error));
             }
 
             // Get Customer's Recurly account
             try {
                 $account = ($this->getRecurlyAccount()) ? $this->getRecurlyAccount() : $this->createRecurlyAccount($checkoutData);
             } catch (\Exception $e) {
-                throw new LocalizedException(__('There was a problem with the subscription account.'));
+                $error = 'There was a problem with the subscription account.';
+                $this->_logger->error($error . " : " . $e->getMessage() );
+                throw new LocalizedException(__($error));
             }
 
             // Create Recurly Purchase
@@ -178,38 +192,45 @@ class RecurlySubscription
                 try {
                     $purchase->account->billing_info = $this->createBillingInfo($account->account_code, $token);
                 } catch (\Exception $e) {
-                    throw new LocalizedException(__('There is a problem with the billing information.'));
+                    $error = 'There is a problem with the billing information.';
+                    $this->_logger->error($error . " : " . $e->getMessage() );
+                    throw new LocalizedException(__($error));
                 }
 
                 // Set shipping information
                 try {
                     $purchase->account->shipping_address = [ $this->getRecurlyAccountShippingAddress($account->account_code) ];
                 } catch (\Exception $e) {
-                    throw new LocalizedException(__('There is a problem with the shipping information.'));
+                    $error = 'There is a problem with the shipping information.';
+                    $this->_logger->error($error . " : " . $e->getMessage() );
+                    throw new LocalizedException(__($error));
                 }
 
                 // Create Master Subscription
                 try {
                     $subscriptions[] = $this->createMasterSubscription($subscription);
                 } catch (\Exception $e) {
-                    throw new LocalizedException(__('There is a problem creating the subscription'));
+                    $error = 'There is a problem creating the subscription';
+                    $this->_logger->error($error . " : " . $e->getMessage() );
+                    throw new LocalizedException(__($error));
                 }
 
                 // Create Seasonal Subscriptions
                 try {
                     $subscriptions = array_merge($subscriptions, $this->createSeasonalSubscriptions($subscription));
                 } catch (\Exception $e) {
-                    throw new LocalizedException(__('There is a problem creating the subscription'));
+                    $error = 'There is a problem creating the subscription';
+                    $this->_logger->error($error . " : " . $e->getMessage() );
+                    throw new LocalizedException(__($error));
                 }
 
                 // Create Add-on Charges
                 try {
-                    $addonCharges = $this->createAddonCharges($subscription, $account);
-                    if ($subscription->getSubscriptionType() == 'annual') {
-                        $purchase->adjustments = $addonCharges;
-                    }
+                    $subscriptions = array_merge($subscriptions, $this->createAddonSubscription($subscription));
                 } catch (\Exception $e) {
-                    throw new LocalizedException(__('There is a problem creating the add-ons'));
+                    $error = 'There is a problem creating the add-ons';
+                    $this->_logger->error($error . " : " . $e->getMessage() );
+                    throw new LocalizedException(__($error));
                 }
 
                 // Add Coupon Code if annual
@@ -218,7 +239,9 @@ class RecurlySubscription
                         $purchase->coupon_codes = [ $this->getCouponCode() ];
                     }
                 } catch (\Exception $e) {
-                    throw new LocalizedException(__('There was a problem applying the discount code.'));
+                    $error = 'There was a problem applying the discount code.';
+                    $this->_logger->error($error . " : " . $e->getMessage() );
+                    throw new LocalizedException(__($error));
                 }
 
                 $purchase->subscriptions = $subscriptions;
@@ -226,17 +249,23 @@ class RecurlySubscription
                 try {
                     Recurly_Purchase::invoice($purchase);
                 } catch (\Exception $e) {
-                    throw new LocalizedException(__('There was an issue invoicing the subscription.'));
+                    $error = 'There was an issue invoicing the subscription.';
+                    $this->_logger->error($error . " : " . $e->getMessage() );
+                    throw new LocalizedException(__($error));
                 }
             } catch (\Exception $e) {
-                throw new LocalizedException(__($e->getMessage()));
+                $error = 'There was a problem creating the subscription';
+                $this->_logger->error($error . " : " . $e->getMessage() );
+                throw new LocalizedException(__($error));
             }
 
             try {
                 $this->getSubscriptionIds($checkoutData, $account, $subscription);
                 $subscription->setSubscriptionStatus('pending_order')->save();
             } catch (\Exception $e) {
-                throw new LocalizedException(__('There was an issue getting the subscription ids.'));
+                $error = 'There was an issue getting the subscription ids.';
+                $this->_logger->error($error . " : " . $e->getMessage() );
+                throw new LocalizedException(__($error));
             }
         }
     }
@@ -710,46 +739,61 @@ class RecurlySubscription
     }
 
     /**
-     * Create Addon Charges
+     * Create Addon Subscription
      * @param Subscription $subscription
-     * @param $account
      * @return array
      * @throws \Exception
      */
-    private function createAddonCharges(Subscription $subscription, $account)
+    private function createAddonSubscription(Subscription $subscription)
     {
+        $subOrders = [];
+
         try {
-            $charges = [];
             $subscriptionAddonOrders = $subscription->getSubscriptionAddonOrders();
+
 
             /** @var SubscriptionAddonOrder $subscriptionAddonOrder */
             foreach ($subscriptionAddonOrders as $subscriptionAddonOrder) {
+
+                /** @var Collection $subscriptionAddonOrderItems */
                 $subscriptionAddonOrderItems = $subscriptionAddonOrder->getOrderItems(true);
+
+                if ( $subscriptionAddonOrderItems->getSize() === 0 ) {
+                    break;
+                }
+
+                $productSkus = [];
+                $productNames = [];
+                $addonPrice = 0;
+                $addonQty = 0;
 
                 /** @var SubscriptionAddonOrderItem $subscriptionAddonOrderItem */
                 foreach ($subscriptionAddonOrderItems as $subscriptionAddonOrderItem) {
-                    $product = $subscriptionAddonOrderItem->getProduct();
-
-                    $charge = new Recurly_Adjustment();
-                    $charge->account_code = $account->account_code;
-                    $charge->currency = $this->_currency;
-                    $charge->description = $product->getName() . ' (SKU: ' . $product->getSku() . ')';
-                    $charge->unit_amount_in_cents = $this->convertAmountToCents($product->getPrice());
-                    $charge->quantity = $subscriptionAddonOrderItem->getQty();
-                    $charge->product_code = $product->getSku();
-                    if ($subscription->getSubscriptionType() != 'annual') {
-                        $charge->start_date = $subscription->getFirstSubscriptionOrder()->getShipStartDate();
-                        $charge->revenue_schedule_date = 'at_range_start';
-                    }
-                    $charge->create();
-                    $charges[] = $charge;
+                    $productSkus[] = $subscriptionAddonOrderItem->getProduct()->getSku();
+                    $productNames[] = $subscriptionAddonOrderItem->getProduct()->getName();
+                    $addonPrice += $subscriptionAddonOrderItem->getPrice();
+                    $addonQty += $subscriptionAddonOrderItem->getQty();
                 }
+
+                $subOrder = new Recurly_Subscription();
+                $subOrder->plan_code = 'add-ons';
+                $subOrder->auto_renew = false;
+                $subOrder->total_billing_cycles = 1;
+                $subOrder->unit_amount_in_cents = $this->convertAmountToCents($addonPrice);
+                $subOrder->quantity = $addonQty;
+                $subOrder->custom_fields[] = new Recurly_CustomField('quiz_id', $subscription->getQuizId());
+                $subOrder->custom_fields[] = new Recurly_CustomField('is_addon', true );
+                $subOrder->custom_fields[] = new Recurly_CustomField('addon_skus', implode(',', $productSkus ) );
+                if ($subscription->getSubscriptionType() != 'annual') {
+                    $subOrder->starts_at = $subscriptionAddonOrder->getShipStartDate();
+                }
+                $subOrders[] = $subOrder;
             }
         } catch (\Exception $e) {
             throw $e;
         }
 
-        return $charges;
+        return $subOrders;
     }
 
     /**
