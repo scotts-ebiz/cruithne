@@ -88,17 +88,27 @@ define(
                         'billing_same_as_shipping': isBillingSameAsShipping,
                     } ),
                     success: function (response) {
-                        if (response[0] === true) {
-                            window.location.href = '/checkout/onepage/success';
+                        if (Array.isArray(response)) {
+                            response = response[0];
+                        }
+
+                        if (response.success === true) {
+                            window.sessionStorage.setItem('subscription_id', response.subscription_id);
+                            window.location.href = '/success';
                         }
                     },
                     error: function (response) {
                         response = JSON.parse(response.responseText);
 
+                        if (Array.isArray(response)) {
+                            response = response[0];
+                        }
+
                         // This exists because sending invoices is return 500
                         // error codes, however, the response was successful.
-                        if (response[0] === true) {
-                            window.location.href = '/checkout/onepage/success';
+                        if (response.success === true) {
+                            window.sessionStorage.setItem('subscription_id', response.subscription_id);
+                            window.location.href = '/success';
                         }
                     }
                 })
