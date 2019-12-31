@@ -2,6 +2,7 @@
 namespace SMG\SubscriptionApi\Controller\Adminhtml\Cancel;
 
 use Magento\Framework\Controller\ResultFactory;
+use Psr\Log\LoggerInterface;
 use Recurly_Client;
 use Recurly_Error;
 use Recurly_NotFoundError;
@@ -14,7 +15,6 @@ use Recurly_SubscriptionList;
  */
 class Index extends \Magento\Backend\App\Action
 {
-
     /**
      * @var \SMG\SubscriptionApi\Helper\RecurlyHelper
      */
@@ -46,6 +46,11 @@ class Index extends \Magento\Backend\App\Action
     protected $_formKey;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $_logger;
+
+    /**
      * Index constructor.
      * @param \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper
      * @param \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper
@@ -62,7 +67,8 @@ class Index extends \Magento\Backend\App\Action
         \Magento\Backend\App\Action\Context $context,
         \Magento\Framework\App\RequestInterface $request,
         \Magento\Framework\Message\ManagerInterface $messageManager,
-        \Magento\Framework\Data\Form\FormKey $formKey
+        \Magento\Framework\Data\Form\FormKey $formKey,
+        LoggerInterface $logger
     ) {
         $this->_recurlyHelper = $recurlyHelper;
         $this->_subscriptionHelper = $subscriptionHelper;
@@ -70,6 +76,7 @@ class Index extends \Magento\Backend\App\Action
         $this->_request = $request;
         $this->_messageManager = $messageManager;
         $this->_formKey = $formKey;
+        $this->_logger = $logger;
         parent::__construct($context);
     }
 
@@ -87,7 +94,7 @@ class Index extends \Magento\Backend\App\Action
         }
 
         // Check if subscription id, type and Recurly account code are in the request
-        if ( ! empty($this->_request->getParam('recurly_account_code') ) ) {
+        if (! empty($this->_request->getParam('recurly_account_code'))) {
             Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
             Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
@@ -108,11 +115,15 @@ class Index extends \Magento\Backend\App\Action
                 }
 
                 $this->_messageManager->addSuccessMessage('Subscriptions cancelled.');
-            } catch( Recurly_NotFoundError $e ) {
-                $this->_messageManager->addErrorMessage('There was an error with the cancellation. (' . $e->getMessage() . ')');
+            } catch (Recurly_NotFoundError $e) {
+                $error = 'There was an error with the cancellation. (' . $e->getMessage() . ')';
+                $this->_logger->error($error);
+                $this->_messageManager->addErrorMessage($error);
             }
         } else {
-            $this->_messageManager->addErrorMessage('There was an error with the cancellation.');
+            $error = 'There was an error with the cancellation.';
+            $this->_logger->error($error);
+            $this->_messageManager->addErrorMessage($error);
         }
 
         // Redirect back to the customer page with a success or error message

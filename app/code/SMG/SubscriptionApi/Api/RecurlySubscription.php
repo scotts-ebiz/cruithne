@@ -2,6 +2,7 @@
 
 namespace SMG\SubscriptionApi\Api;
 
+use Psr\Log\LoggerInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Session\SessionManagerInterface as CoreSession;
 use SMG\SubscriptionApi\Api\Interfaces\RecurlyInterface;
@@ -26,6 +27,11 @@ class RecurlySubscription implements RecurlyInterface
     private $_coreSession;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $_logger;
+
+    /**
      * @var SubscriptionOrderHelper
      */
     protected $_subscriptionOrderHelper;
@@ -40,11 +46,13 @@ class RecurlySubscription implements RecurlyInterface
         RecurlySubscriptionModel $recurlySubscriptionModel,
         SubscriptionModel $subscriptionModel,
         CoreSession $coreSession,
+        LoggerInterface $logger,
         SubscriptionOrderHelper $subscriptionOrderHelper
     ) {
         $this->_recurlySubscriptionModel = $recurlySubscriptionModel;
         $this->_subscriptionModel = $subscriptionModel;
         $this->_coreSession = $coreSession;
+        $this->_logger = $logger;
         $this->_subscriptionOrderHelper = $subscriptionOrderHelper;
     }
 
@@ -53,7 +61,7 @@ class RecurlySubscription implements RecurlyInterface
      * otherwise create new Recurly account for the customer
      *
      * @param string $token
-     * @return array
+     * @return string|array
      *
      * @api
      */
@@ -70,6 +78,8 @@ class RecurlySubscription implements RecurlyInterface
                 'message' => 'Subscription successfully created.'
             ]);
         } catch (\Exception $e) {
+            $this->_logger->error($e->getMessage());
+
             return json_encode([
                 'success' => false,
                 'message' => $e->getMessage()
@@ -107,7 +117,9 @@ class RecurlySubscription implements RecurlyInterface
                 }
             }
             if (is_null($masterSubscriptionId)) {
-                throw new LocalizedException(__("Couldn't find the master subscription id."));
+                $error = "Couldn't find the master subscription id.";
+                $this->_logger->error($error);
+                throw new LocalizedException(__($error));
             }
 
             // Find the subscription
@@ -117,6 +129,8 @@ class RecurlySubscription implements RecurlyInterface
             // Cancel subscription orders
             $subscription->cancelSubscriptions($this->_recurlySubscriptionModel);
         } catch (LocalizedException $e) {
+            $this->_logger->error($e->getMessage());
+
             return json_encode([
                 'success' => false,
                 'message' => $e->getMessage()
@@ -145,6 +159,8 @@ class RecurlySubscription implements RecurlyInterface
         try {
             $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionId);
         } catch (SubscriptionException $e) {
+            $this->_logger->error($e->getMessage());
+
             return ['success' => false, 'error' => $e->getMessage()];
         }
 

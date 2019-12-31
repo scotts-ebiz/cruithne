@@ -2,6 +2,7 @@
 
 namespace SMG\SubscriptionApi\Model;
 
+use Psr\Log\LoggerInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ProductFactory;
 use Magento\Catalog\Model\ProductRepository;
@@ -60,28 +61,33 @@ class Subscription extends AbstractModel
     protected $_checkoutSession;
 
     /**  @var CartManagementInterface */
-    private $_cartManagementInterface;
+    protected $_cartManagementInterface;
 
     /** @var CartRepositoryInterface */
-    private $_cartRepositoryInterface;
+    protected $_cartRepositoryInterface;
 
     /** @var StoreManager */
-    private $_storeManager;
+    protected $_storeManager;
 
     /** @var Quote */
-    private $_quote;
+    protected $_quote;
 
     /** @var Product */
-    private $_product;
+    protected $_product;
 
     /**  @var ProductFactory */
-    private $_productFactory;
+    protected $_productFactory;
 
     /** @var ProductRepository */
-    private $_productRepository;
+    protected $_productRepository;
 
     /** @var OrderCollectionFactory */
-    private $_orderCollectionFactory;
+    protected $_orderCollectionFactory;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $_logger;
 
     /**
      * Constructor.
@@ -97,6 +103,7 @@ class Subscription extends AbstractModel
      * Subscription constructor.
      * @param Context $context
      * @param Registry $registry
+     * @param LoggerInterface $logger
      * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
      * @param SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory
      * @param Cart $cart
@@ -109,14 +116,15 @@ class Subscription extends AbstractModel
      * @param Product $product
      * @param ProductFactory $productFactory
      * @param ProductRepository $productRepository
+     * @param OrderCollectionFactory $orderCollectionFactory
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
-     * @param OrderCollectionFactory $orderCollectionFactory
      * @param array $data
      */
     public function __construct(
         Context $context,
         Registry $registry,
+        LoggerInterface $logger,
         SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
         SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory,
         Cart $cart,
@@ -136,6 +144,7 @@ class Subscription extends AbstractModel
     ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
 
+        $this->_logger = $logger;
         $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
         $this->_subscriptionAddonOrderCollectionFactory = $subscriptionAddonOrderCollectionFactory;
         $this->_cart = $cart;
@@ -588,7 +597,9 @@ class Subscription extends AbstractModel
                 $subscriptionOrder->createCreditMemo();
                 $subscriptionOrders[] = $subscriptionOrder;
             } catch (\Exception $e) {
-                throw new LocalizedException(__('There was a problem making a credit memo for subscription cancellation.' . $e->getMessage()));
+                $error = 'There was a problem making a credit memo for subscription cancellation.' . $e->getMessage();
+                $this->_logger->error($error);
+                throw new LocalizedException(__($error));
             }
         }
 
@@ -596,14 +607,18 @@ class Subscription extends AbstractModel
         try {
             $this->generateRefund($orders, $service);
         } catch (\Exception $e) {
-            throw new LocalizedException(__('There was a problem generating a refund.' . $e->getMessage()));
+            $error = 'There was a problem generating a refund.' . $e->getMessage();
+            $this->_logger->error($error);
+            throw new LocalizedException(__($error));
         }
 
         // Update Subscription statuses
         try {
             $this->updateCanceledStatuses($subscriptionOrders);
         } catch (\Exception $e) {
-            throw new LocalizedException(__('There was a problem updating statuses.' . $e->getMessage()));
+            $error = 'There was a problem updating statuses.' . $e->getMessage();
+            $this->_logger->error($error);
+            throw new LocalizedException(__($error));
         }
     }
 
@@ -623,7 +638,10 @@ class Subscription extends AbstractModel
         try {
             $orders = $this->_orderCollectionFactory->create()->addFieldToFilter('master_subscription_id', $this->getSubscriptionId());
         } catch (\Exception $e) {
-            throw new LocalizedException(__('There was an issue returning orders to cancel.'));
+
+            $error = 'There was an issue returning orders to cancel.';
+            $this->_logger->error($error);
+            throw new LocalizedException(__($error));
         }
 
         /** @var Order $order */
@@ -660,7 +678,9 @@ class Subscription extends AbstractModel
             /** @var RecurlySubscription $service */
             $service->createCredit($totalRefund, $this->getGigyaId());
         } catch (\Exeception $e) {
-            throw new LocalizedException(__('Cannot generate refund.'));
+            $error = 'Cannot generate refund.';
+            $this->_logger->error($error);
+            throw new LocalizedException(__($error));
         }
     }
 

@@ -2,17 +2,19 @@
 
 namespace SMG\SubscriptionApi\Api;
 
+use Recurly_NotFoundError;
 use Magento\Customer\Model\Address;
-use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\AddressFactory;
+use Magento\Customer\Model\Customer;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use SMG\SubscriptionApi\Helper\SubscriptionOrderHelper;
-use SMG\SubscriptionApi\Exception\SubscriptionException;
 use Magento\Framework\Exception\SecurityViolationException;
+use Psr\Log\LoggerInterface;
 use Recurly_Client;
 use Recurly_SubscriptionList;
 use SMG\SubscriptionApi\Api\Interfaces\SubscriptionInterface;
+use SMG\SubscriptionApi\Exception\SubscriptionException;
+use SMG\SubscriptionApi\Helper\SubscriptionOrderHelper;
 
 /**
  * Class Subscription
@@ -20,6 +22,8 @@ use SMG\SubscriptionApi\Api\Interfaces\SubscriptionInterface;
  */
 class Subscription implements SubscriptionInterface
 {
+    /** @var LoggerInterface */
+    protected $_logger;
 
     /** @var \SMG\RecommendationApi\Helper\RecommendationHelper */
     protected $_recommendationHelper;
@@ -123,6 +127,7 @@ class Subscription implements SubscriptionInterface
      * @param SubscriptionOrderHelper $subscriptionOrderHelper
      */
     public function __construct(
+        LoggerInterface $logger,
         \SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper,
         \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper,
         \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper,
@@ -147,6 +152,7 @@ class Subscription implements SubscriptionInterface
         AddressFactory $addressFactory,
         SubscriptionOrderHelper $subscriptionOrderHelper
     ) {
+        $this->_logger = $logger;
         $this->_recommendationHelper = $recommendationHelper;
         $this->_recurlyHelper = $recurlyHelper;
         $this->_subscriptionHelper = $subscriptionHelper;
@@ -201,6 +207,7 @@ class Subscription implements SubscriptionInterface
             $subscription->generateShipDates();
             $subscription->addSubscriptionToCart($addons);
         } catch (\Exception $e) {
+            $this->_logger->error($e->getMessage());
             $response = ['success' => false, 'message' => $e->getMessage()];
             return json_encode($response);
         }
@@ -319,6 +326,8 @@ class Subscription implements SubscriptionInterface
             try {
                 $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionOrder);
             } catch (SubscriptionException $ex) {
+                $this->_logger->error($ex->getMessage());
+
                 return ['success' => false, 'error' => $ex->getMessage()];
             }
         }
@@ -332,6 +341,8 @@ class Subscription implements SubscriptionInterface
 
                 $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionAddonOrder);
             } catch (SubscriptionException $ex) {
+                $this->_logger->error($ex->getMessage());
+
                 return ['success' => false, 'error' => $ex->getMessage()];
             }
         }
@@ -369,7 +380,9 @@ class Subscription implements SubscriptionInterface
 
             return $activeSubscriptions;
         } catch (Recurly_NotFoundError $e) {
-            print "Account Not Found: $e";
+            $this->_logger->error($e->getMessage());
+
+            return [];
         }
     }
 
@@ -407,10 +420,13 @@ class Subscription implements SubscriptionInterface
 
             $customer->save();
         } catch (NoSuchEntityException $ex) {
+            $this->_logger->error($ex->getMessage());
             return;
         } catch (LocalizedException $ex) {
+            $this->_logger->error($ex->getMessage());
             return;
         } catch (\Exception $e) {
+            $this->_logger->error($ex->getMessage());
             return;
         }
     }

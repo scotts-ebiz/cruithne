@@ -2,6 +2,7 @@
 
 namespace SMG\SubscriptionApi\Model;
 
+use Psr\Log\LoggerInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DB\Transaction;
 use Magento\Framework\Exception\LocalizedException;
@@ -69,7 +70,12 @@ class SubscriptionOrder extends AbstractModel
     protected $_creditmemoFactory;
 
     /** @var CreditmemoService */
-    private $_creditmemoService;
+    protected $_creditmemoService;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $_logger;
 
     /**
      * Constructor.
@@ -102,6 +108,7 @@ class SubscriptionOrder extends AbstractModel
     public function __construct(
         Context $context,
         Registry $registry,
+        LoggerInterface $logger,
         SubscriptionHelper $subscriptionHelper,
         Subscription $subscription,
         SubscriptionOrderItemCollectionFactory $subscriptionOrderItemCollectionFactory,
@@ -125,6 +132,7 @@ class SubscriptionOrder extends AbstractModel
             $data
         );
 
+        $this->_logger = $logger;
         $this->_subscriptionHelper = $subscriptionHelper;
         $this->_subscription = $subscription;
         $this->_subscriptionOrderItemCollectionFactory = $subscriptionOrderItemCollectionFactory;
@@ -381,22 +389,21 @@ class SubscriptionOrder extends AbstractModel
      */
     public function createCreditMemo()
     {
-//        try {
-//            /** @var Order $order */
-//            $order = $this->getOrder();
-//            echo "<pre>"; var_dump($order); die;
-//            $invoices = $order->getInvoiceCollection();
-//            /** @var Invoice $invoice */
-//            foreach ( $invoices as $invoice ) {
-//                /** @var Creditmemo $creditmemo */
-//                $creditmemo = $this->_creditmemoFactory->createByOrder( $order );
-//                $creditmemo->setInvoice( $invoice );
-//                $creditmemo->save();
-//            }
-//
-//            echo "<pre>"; var_dump($order->getCreditmemosCollection()->count()); die;
-//        } catch ( \Exception $e ) {
-//            throw new LocalizedException( __('Could not create credit memo for order.') );
-//        }
+        try {
+            /** @var Order $order */
+            $order = $this->getOrder();
+            $invoices = $order->getInvoiceCollection();
+            /** @var Invoice $invoice */
+            foreach ($invoices as $invoice) {
+                /** @var Creditmemo $creditmemo */
+                $creditmemo = $this->_creditmemoFactory->createByOrder($order);
+                $creditmemo->setInvoice($invoice);
+                $creditmemo->save();
+            }
+        } catch (\Exception $e) {
+            $error = 'Could not create credit memo for order.';
+            $this->_logger->error($e->getMessage() . ' - ' . $error);
+            throw new LocalizedException(__($error));
+        }
     }
 }
