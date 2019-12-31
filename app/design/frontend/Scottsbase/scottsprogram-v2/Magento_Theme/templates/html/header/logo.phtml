@@ -4,10 +4,8 @@ $currentUrl = $block->getRequest()->getUriString();
 $currentUrl = explode('/', $currentUrl);
 $currentSlug = end( $currentUrl );
 ?>
-<div
-    class="sp-flex sp-items-center sp-justify-between"
-    data-bind="scope: 'navigation'"
->
+
+<div class="sp-flex sp-items-center sp-justify-between">
     <?php if ($block->getData('hide_links') == true) { ?>
         <div class="sp-header__logo">
             <img
@@ -141,19 +139,3 @@ $currentSlug = end( $currentUrl );
         </nav>
     <?php } ?>
 </div>
-
-<script type="text/x-magento-init">
-{
-    "*": {
-        "Magento_Ui/js/core/app": {
-            "components": {
-                "navigation": {
-                    "component": "Magento_Theme/js/navigation",
-                    "hasSubscriptions": <?php echo $block->hasSubscriptions() ? "true" : "false"; ?>,
-                    "isLoggedIn": <?php echo $block->isLoggedIn() ? "true" : "false"; ?>
-                }
-            }
-        }
-    }
-}
-</script>
