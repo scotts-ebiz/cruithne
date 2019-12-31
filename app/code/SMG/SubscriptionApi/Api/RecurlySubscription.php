@@ -96,7 +96,6 @@ class RecurlySubscription implements RecurlyInterface
     {
         // Cancel Recurly Subscriptions
         try {
-
             // Cancel recurly subscriptions
             $cancelledSubscriptionIds = $this->_recurlySubscriptionModel->cancelRecurlySubscriptions(true, true);
 

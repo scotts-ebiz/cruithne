@@ -3,14 +3,14 @@
 namespace SMG\SubscriptionApi\Helper;
 
 use Magento\Customer\Model\Customer;
+use Magento\Quote\Model\QuoteFactory;
+use Magento\Quote\Model\QuoteManagement;
+use Magento\Customer\Model\AddressFactory;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
-use Magento\Quote\Api\CartManagementInterface;
-use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Store\Model\StoreManagerInterface;
 use SMG\SubscriptionApi\Exception\SubscriptionException;
-use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\Collection as SubscriptionAddonOrderCollection;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\CollectionFactory as SubscriptionAddonOrderCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection as SubscriptionOrderCollection;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
@@ -24,6 +24,11 @@ use SMG\SubscriptionApi\Model\SubscriptionOrder;
  */
 class SubscriptionOrderHelper extends AbstractHelper
 {
+    /**
+     * @var AddressFactory
+     */
+    protected $_addressFactory;
+
     /**
      * @var SubscriptionOrder
      */
@@ -53,15 +58,6 @@ class SubscriptionOrderHelper extends AbstractHelper
     private $_store;
 
     /**
-     * @var CartRepositoryInterface
-     */
-    protected $_cartRepository;
-
-    /**
-     * @var CartManagementInterface
-     */
-    protected $_cartManagement;
-    /**
      * @var Order
      */
     protected $_order;
@@ -77,12 +73,22 @@ class SubscriptionOrderHelper extends AbstractHelper
     protected $_subscriptionAddonOrderCollectionFactory;
 
     /**
+     * @var QuoteManagement
+     */
+    protected $_quoteManagement;
+
+    /**
+     * @var QuoteFactory
+     */
+    protected $_quoteFactory;
+
+    /**
      * SubscriptionOrderHelper constructor.
      * @param Context $context
-     * @param CartRepositoryInterface $cartRepository
-     * @param CartManagementInterface $cartManagement
      * @param Customer $customer
      * @param Order $order
+     * @param QuoteFactory $quoteFactory
+     * @param QuoteManagement $quoteManagement
      * @param StoreManagerInterface $storeManager
      * @param SubscriptionAddonOrder $subscriptionAddonOrder
      * @param SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory
@@ -92,10 +98,11 @@ class SubscriptionOrderHelper extends AbstractHelper
      */
     public function __construct(
         Context $context,
-        CartRepositoryInterface $cartRepository,
-        CartManagementInterface $cartManagement,
+        AddressFactory $addressFactory,
         Customer $customer,
         Order $order,
+        QuoteFactory $quoteFactory,
+        QuoteManagement $quoteManagement,
         StoreManagerInterface $storeManager,
         SubscriptionAddonOrder $subscriptionAddonOrder,
         SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory,
@@ -104,10 +111,11 @@ class SubscriptionOrderHelper extends AbstractHelper
     ) {
         parent::__construct($context);
 
-        $this->_cartManagement = $cartManagement;
-        $this->_cartRepository = $cartRepository;
+        $this->_addressFactory = $addressFactory;
         $this->_customer = $customer;
         $this->_order = $order;
+        $this->_quoteFactory = $quoteFactory;
+        $this->_quoteManagement = $quoteManagement;
         $this->_storeManager = $storeManager;
         $this->_subscriptionAddonOrder = $subscriptionAddonOrder;
         $this->_subscriptionAddonOrderCollectionFactory = $subscriptionAddonOrderCollectionFactory;
@@ -121,7 +129,7 @@ class SubscriptionOrderHelper extends AbstractHelper
     /**
      * Process orders with the given subscription ID.
      *
-     * @param string $subscriptionId
+     * @param SubscriptionOrder|SubscriptionAddonOrder|string $subscriptionId
      * @throws SubscriptionException
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      * @throws \Magento\Framework\Exception\LocalizedException
@@ -130,12 +138,16 @@ class SubscriptionOrderHelper extends AbstractHelper
     public function processInvoiceWithSubscriptionId($subscriptionId)
     {
         // Get the subscription order.
-        $subscriptionOrder = $this->getSubscriptionOrderBySubscriptionId($subscriptionId);
+        if (is_string($subscriptionId)) {
+            $subscriptionOrder = $this->getSubscriptionOrderBySubscriptionId($subscriptionId);
+        } else {
+            $subscriptionOrder = $subscriptionId;
+        }
 
         // Check if we found a subscription order.
         if (! $subscriptionOrder) {
             $this->errorResponse(
-                "Could not find a subscription order with subscription ID: {$subscriptionId}",
+                "Could not find a subscription order with subscription ID: {$subscriptionOrder->getSubscriptionId()}",
                 404
             );
         }
@@ -143,7 +155,7 @@ class SubscriptionOrderHelper extends AbstractHelper
         // Check if the subscription order is valid.
         if ($subscriptionOrder->getSubscriptionOrderStatus() != 'pending') {
             $this->errorResponse(
-                "Subscription order with subscription ID {$subscriptionId} has already been completed or canceled.",
+                "Subscription order with subscription ID {$subscriptionOrder->getSubscriptionId()} has already been completed or canceled.",
                 400
             );
         }
@@ -155,7 +167,7 @@ class SubscriptionOrderHelper extends AbstractHelper
         $customer = $this->_customer->load($subscription->getCustomerId());
         if (! $customer->getId()) {
             $this->errorResponse(
-                "Customer {$customer->getId()} does not have an address.",
+                "Customer {$customer->getId()} not found.",
                 404
             );
         }
@@ -228,34 +240,11 @@ class SubscriptionOrderHelper extends AbstractHelper
      */
     protected function processOrder(Customer $customer, $subscriptionOrder)
     {
-        $cartId = $this->_cartManagement->createEmptyCartForCustomer($customer->getId());
-
-        /** @var \Magento\Quote\Model\Quote $quote */
-        $quote = $this->_cartRepository->get($cartId);
+        // Create a new quote.
+        $quote = $this->_quoteFactory->create();
         $quote->setStore($this->_store);
         $quote->setCurrency();
         $quote->assignCustomer($customer->getDataModel());
-
-        $customer->cleanAllAddresses();
-        $customerShippingAddress = $customer->getDefaultShippingAddress();
-        $customerBillingAddress = $customer->getDefaultBillingAddress();
-        $quoteShipping = $quote->getShippingAddress();
-        $quoteShipping->setData($customerShippingAddress->getData());
-        $quoteShipping->setCustomerId($customer->getId());
-        $quoteBilling = $quote->getBillingAddress();
-        $quoteBilling->setData($customerBillingAddress->getData());
-        $quoteBilling->setCustomerId($customer->getId());
-        $quote->setShippingAddress($quoteShipping);
-        $quote->setBillingAddress($quoteBilling);
-
-        $shippingAddress = $quote->getShippingAddress();
-        $shippingAddress->unsetData('cached_items_nominal');
-        $shippingAddress->unsetData('cached_items_nonnominal');
-        $shippingAddress->unsetData('cached_items_all');
-        $shippingAddress
-            ->setCollectShippingRates(true)
-            ->collectShippingRates()
-            ->setShippingMethod('freeshipping_freeshipping');
 
         foreach ($subscriptionOrder->getOrderItems() as $item) {
             // Check if the item has the selected field and if it is set.
@@ -263,7 +252,7 @@ class SubscriptionOrderHelper extends AbstractHelper
                 // This is an add-on product and is not selected, so continue.
                 continue;
             }
-                // Add product to the cart
+            // Add product to the cart
             try {
                 $product = $item->getProduct();
             } catch (\Exception $e) {
@@ -276,15 +265,34 @@ class SubscriptionOrderHelper extends AbstractHelper
             $quote->addProduct($product, (int) $item->getQty());
         }
 
-        $quote->setInventoryProcessed(true);
+        // Set addressees.
+        $customerBilling = $this->_addressFactory->create()->load($customer->getDefaultBilling());
+        $customerShipping = $this->_addressFactory->create()->load($customer->getDefaultShipping());
+
+        $quote->getBillingAddress()->addData($this->formatAddress($customerBilling));
+        $quote->getShippingAddress()->addData($this->formatAddress($customerShipping));
+
+        // Collect rates and set shipping and payment method.
+        $shippingAddress = $quote->getShippingAddress();
+        $shippingAddress->unsetData('cached_items_nominal');
+        $shippingAddress->unsetData('cached_items_nonnominal');
+        $shippingAddress->unsetData('cached_items_all');
+        $shippingAddress
+            ->setCollectShippingRates(true)
+            ->collectShippingRates()
+            ->setShippingMethod('freeshipping_freeshipping');
         $quote->setPaymentMethod('recurly');
-        $quote->getPayment()->importData(['method' => 'recurly']);
-        $quote->collectTotals();
+        $quote->setInventoryProcessed(false);
         $quote->save();
 
-        $quote = $this->_cartRepository->get($quote->getId());
-        $orderId = $this->_cartManagement->placeOrder($quote->getId());
-        $order = $this->_order->load($orderId);
+        // Set sales order payment.
+        $quote->getPayment()->importData(['method' => 'recurly']);
+
+        // Collect the totals and save the quote.
+        $quote->collectTotals()->save();
+
+        // Create an order from the quote.
+        $order = $this->_quoteManagement->submit($quote);
         $order->setEmailSent(0);
 
         // Set customer Gigya ID
@@ -329,5 +337,20 @@ class SubscriptionOrderHelper extends AbstractHelper
         http_response_code($status);
 
         throw new SubscriptionException($error);
+    }
+
+    protected function formatAddress($address)
+    {
+        return [
+            'firstname' => $address->getFirstname(),
+            'lastname' => $address->getLastname(),
+            'street' => $address->getStreet(),
+            'city' => $address->getCity(),
+            'county_id' => $address->getCountryId(),
+            'region' => $address->getRegion(),
+            'postcode' => $address->getPostcode(),
+            'telephone' => $address->getTelephone(),
+            'save_in_address_book' => 1,
+        ];
     }
 }

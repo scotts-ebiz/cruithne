@@ -84,7 +84,8 @@ define(
                     data: JSON.stringify( {
                         'key': formKey,
                         'quiz_id': quizID,
-                        'billing_address': address
+                        'billing_address': address,
+                        'billing_same_as_shipping': isBillingSameAsShipping,
                     } ),
                     success: function (response) {
                         if (response[0] === true) {
