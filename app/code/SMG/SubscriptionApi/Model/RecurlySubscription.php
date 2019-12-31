@@ -18,6 +18,7 @@ use Recurly_ShippingAddressList;
 use Recurly_Subscription;
 use Recurly_SubscriptionList;
 use Recurly_ValidationError;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrderItem\Collection;
 
 /**
  * Class RecurlySubscription
@@ -204,10 +205,7 @@ class RecurlySubscription
 
                 // Create Add-on Charges
                 try {
-                    $addonCharges = $this->createAddonCharges($subscription, $account);
-                    if ($subscription->getSubscriptionType() == 'annual') {
-                        $purchase->adjustments = $addonCharges;
-                    }
+                    $subscriptions = array_merge($subscriptions, $this->createAddonSubscription($subscription));
                 } catch (\Exception $e) {
                     throw new LocalizedException(__('There is a problem creating the add-ons'));
                 }
@@ -226,11 +224,14 @@ class RecurlySubscription
                 try {
                     Recurly_Purchase::invoice($purchase);
                 } catch (\Exception $e) {
+                    echo "<pre>"; var_dump($e->getMessage()); die;
                     throw new LocalizedException(__('There was an issue invoicing the subscription.'));
                 }
             } catch (\Exception $e) {
                 throw new LocalizedException(__($e->getMessage()));
             }
+
+            echo "<pre>"; var_dump('test'); die;
 
             try {
                 $this->getSubscriptionIds($checkoutData, $account, $subscription);
@@ -710,46 +711,61 @@ class RecurlySubscription
     }
 
     /**
-     * Create Addon Charges
+     * Create Addon Subscription
      * @param Subscription $subscription
-     * @param $account
      * @return array
      * @throws \Exception
      */
-    private function createAddonCharges(Subscription $subscription, $account)
+    private function createAddonSubscription(Subscription $subscription)
     {
+        $subOrders = [];
+
         try {
-            $charges = [];
             $subscriptionAddonOrders = $subscription->getSubscriptionAddonOrders();
+
 
             /** @var SubscriptionAddonOrder $subscriptionAddonOrder */
             foreach ($subscriptionAddonOrders as $subscriptionAddonOrder) {
+
+                /** @var Collection $subscriptionAddonOrderItems */
                 $subscriptionAddonOrderItems = $subscriptionAddonOrder->getOrderItems(true);
+
+                if ( $subscriptionAddonOrderItems->getSize() === 0 ) {
+                    break;
+                }
+
+                $productSkus = [];
+                $productNames = [];
+                $addonPrice = 0;
+                $addonQty = 0;
 
                 /** @var SubscriptionAddonOrderItem $subscriptionAddonOrderItem */
                 foreach ($subscriptionAddonOrderItems as $subscriptionAddonOrderItem) {
-                    $product = $subscriptionAddonOrderItem->getProduct();
-
-                    $charge = new Recurly_Adjustment();
-                    $charge->account_code = $account->account_code;
-                    $charge->currency = $this->_currency;
-                    $charge->description = $product->getName() . ' (SKU: ' . $product->getSku() . ')';
-                    $charge->unit_amount_in_cents = $this->convertAmountToCents($product->getPrice());
-                    $charge->quantity = $subscriptionAddonOrderItem->getQty();
-                    $charge->product_code = $product->getSku();
-                    if ($subscription->getSubscriptionType() != 'annual') {
-                        $charge->start_date = $subscription->getFirstSubscriptionOrder()->getShipStartDate();
-                        $charge->revenue_schedule_date = 'at_range_start';
-                    }
-                    $charge->create();
-                    $charges[] = $charge;
+                    $productSkus[] = $subscriptionAddonOrderItem->getProduct()->getSku();
+                    $productNames[] = $subscriptionAddonOrderItem->getProduct()->getName();
+                    $addonPrice += $subscriptionAddonOrderItem->getPrice();
+                    $addonQty += $subscriptionAddonOrderItem->getQty();
                 }
+
+                $subOrder = new Recurly_Subscription();
+                $subOrder->plan_code = 'add-ons';
+                $subOrder->auto_renew = false;
+                $subOrder->total_billing_cycles = 1;
+                $subOrder->unit_amount_in_cents = $this->convertAmountToCents($addonPrice);
+                $subOrder->quantity = $addonQty;
+                $subOrder->custom_fields[] = new Recurly_CustomField('quiz_id', $subscription->getQuizId());
+                $subOrder->custom_fields[] = new Recurly_CustomField('is_addon', true );
+                $subOrder->custom_fields[] = new Recurly_CustomField('addon_skus', implode(',', $productSkus ) );
+                if ($subscription->getSubscriptionType() != 'annual') {
+                    $subOrder->starts_at = $subscriptionAddonOrder->getShipStartDate();
+                }
+                $subOrders[] = $subOrder;
             }
         } catch (\Exception $e) {
             throw $e;
         }
 
-        return $charges;
+        return $subOrders;
     }
 
     /**

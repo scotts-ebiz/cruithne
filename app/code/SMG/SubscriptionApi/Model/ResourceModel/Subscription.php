@@ -228,7 +228,8 @@ class Subscription extends AbstractDb
             $subscriptionAddonOrderPrice = 0;
 
             // Create the Subscription Order Items
-            foreach ($recommendationSubscriptionAddonOrder['subscriptionOrderItems'] as $item) {
+            if (isset($recommendationSubscriptionAddonOrder['subscriptionOrderItems'][0])) {
+                $item = $recommendationSubscriptionAddonOrder['subscriptionOrderItems'][0];
                 $subscriptionAddonOrderItem = $this->_subscriptionAddonOrderItemFactory->create();
                 $subscriptionAddonOrderItem->setSubscriptionAddonOrderEntityId($subscriptionAddonOrder->getEntityId());
                 $subscriptionAddonOrderItem->setCatalogProductSku($item['catalog_product_sku']);
