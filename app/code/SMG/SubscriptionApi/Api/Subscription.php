@@ -350,7 +350,13 @@ class Subscription implements SubscriptionInterface
         $subscription->setSubscriptionStatus('active');
         $subscription->save();
 
-        return ['success' => true, 'message' => 'Magento orders created'];
+        return [
+            [
+                'success' => true,
+                'subscription_id' => $subscription->getSubscriptionId(),
+                'message' => 'Magento orders created',
+            ],
+        ];
     }
 
     /**
