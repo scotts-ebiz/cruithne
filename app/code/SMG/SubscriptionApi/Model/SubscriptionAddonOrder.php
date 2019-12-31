@@ -2,14 +2,19 @@
 
 namespace SMG\SubscriptionApi\Model;
 
+use Psr\Log\LoggerInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DB\Transaction;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Creditmemo;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
+use Magento\Sales\Model\Order\Invoice;
+use Magento\Sales\Model\OrderRepository;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use Magento\Sales\Model\Service\InvoiceService;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
@@ -33,6 +38,9 @@ class SubscriptionAddonOrder extends AbstractModel
     /** @var SubscriptionOrderItemInterface */
     protected $_subscriptionAddonOrderItems;
 
+    /** @var OrderRepository */
+    protected $_orderRepository;
+
     /** @var Order */
     protected $_order;
 
@@ -52,7 +60,22 @@ class SubscriptionAddonOrder extends AbstractModel
     protected $_sapOrderBatch;
 
     /** @var SapOrderBatchCollectionFactory */
-    private $_sapOrderBatchCollectionFactory;
+    protected $_sapOrderBatchCollectionFactory;
+
+    /**
+     * @var Subscription
+     */
+    protected $_subscription;
+
+    /**
+     * @var Order\CreditmemoFactory
+     */
+    protected $_creditmemoFactory;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $_logger;
 
     /**
      * Constructor.
@@ -68,12 +91,17 @@ class SubscriptionAddonOrder extends AbstractModel
      * SubscriptionOrder constructor.
      * @param Context $context
      * @param Registry $registry
+     * @param LoggerInterface $logger
+     * @param Order\CreditmemoFactory $creditmemoFactory
+     * @param Subscription $subscription
      * @param SubscriptionHelper $subscriptionHelper
      * @param SubscriptionAddonOrderItemCollectionFactory $subscriptionAddonOrderItemCollectionFactory
+     * @param OrderRepository $orderRepository
      * @param OrderCollectionFactory $orderCollectionFactory
      * @param InvoiceService $invoiceService
      * @param Transaction $transaction
      * @param InvoiceSender $invoiceSender
+     * @param SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -81,8 +109,12 @@ class SubscriptionAddonOrder extends AbstractModel
     public function __construct(
         Context $context,
         Registry $registry,
+        LoggerInterface $logger,
+        Order\CreditmemoFactory $creditmemoFactory,
+        Subscription $subscription,
         SubscriptionHelper $subscriptionHelper,
         SubscriptionAddonOrderItemCollectionFactory $subscriptionAddonOrderItemCollectionFactory,
+        OrderRepository $orderRepository,
         OrderCollectionFactory $orderCollectionFactory,
         InvoiceService $invoiceService,
         Transaction $transaction,
@@ -100,6 +132,8 @@ class SubscriptionAddonOrder extends AbstractModel
             $data
         );
 
+        $this->_logger = $logger;
+        $this->_creditmemoFactory = $creditmemoFactory;
         $this->_subscriptionHelper = $subscriptionHelper;
         $this->_subscriptionAddonOrderItemCollectionFactory = $subscriptionAddonOrderItemCollectionFactory;
         $this->_orderCollectionFactory = $orderCollectionFactory;
@@ -107,6 +141,8 @@ class SubscriptionAddonOrder extends AbstractModel
         $this->_transaction = $transaction;
         $this->_invoiceSender = $invoiceSender;
         $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
+        $this->_orderRepository = $orderRepository;
+        $this->_subscription = $subscription;
     }
 
     /**
@@ -348,5 +384,30 @@ class SubscriptionAddonOrder extends AbstractModel
         }
 
         $this->save();
+    }
+
+    /**
+     * Create Credit Memo for Order
+     * @throws LocalizedException
+     */
+    public function createCreditMemo()
+    {
+        try {
+            /** @var Order $order */
+            $order = $this->getOrder();
+            $invoices = $order->getInvoiceCollection();
+
+            /** @var Invoice $invoice */
+            foreach ($invoices as $invoice) {
+                /** @var Creditmemo $creditmemo */
+                $creditmemo = $this->_creditmemoFactory->createByOrder($order);
+                $creditmemo->setInvoice($invoice);
+                $creditmemo->save();
+            }
+        } catch (\Exception $e) {
+            $error = 'Could not create credit memo for order.';
+            $this->_logger->error($e->getMessage() . ' - ' . $error);
+            throw new LocalizedException(__($error));
+        }
     }
 }

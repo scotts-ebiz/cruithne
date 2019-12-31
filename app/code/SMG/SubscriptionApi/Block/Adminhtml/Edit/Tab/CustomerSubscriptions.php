@@ -1,20 +1,44 @@
 <?php
 namespace SMG\SubscriptionApi\Block\Adminhtml\Edit\Tab;
 
+use Psr\Log\LoggerInterface;
 use Magento\Customer\Controller\RegistryConstants;
 use Magento\Ui\Component\Layout\Tabs\TabInterface;
 use Recurly_Client;
-use Recurly_SubscriptionList;
 use Recurly_NotFoundError;
+use Recurly_SubscriptionList;
 
 class CustomerSubscriptions extends \Magento\Framework\View\Element\Template implements TabInterface
 {
-
+    /**
+     * @var \Magento\Framework\Registry
+     */
     protected $_coreRegistry;
+
+    /**
+     * @var \Magento\Customer\Model\Customer
+     */
     protected $_customer;
+
+    /**
+     * @var \SMG\SubscriptionApi\Helper\RecurlyHelper
+     */
     protected $_helper;
+
+    /**
+     * @var \Magento\Framework\UrlInterface
+     */
     protected $_urlInterface;
+
+    /**
+     * @var \Magento\Framework\Data\Form\FormKey
+     */
     protected $_formKey;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $_logger;
 
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -23,6 +47,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         \SMG\SubscriptionApi\Helper\RecurlyHelper $helper,
         \Magento\Framework\UrlInterface $urlInterface,
         \Magento\Framework\Data\Form\FormKey $formKey,
+        LoggerInterface $logger,
         array $data = []
     ) {
         $this->_coreRegistry = $registry;
@@ -30,12 +55,13 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         $this->_helper = $helper;
         $this->_urlInterface = $urlInterface;
         $this->_formKey = $formKey;
+        $this->_logger = $logger;
         parent::__construct($context, $data);
     }
 
     /**
      * Return form key
-     * 
+     *
      * @return string
      */
     public function getFormKey()
@@ -45,33 +71,35 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
     /**
      * Return customer id
-     * 
+     *
      * @return string
      */
     public function getCustomerId()
     {
-        return $this->_coreRegistry->registry( RegistryConstants::CURRENT_CUSTOMER_ID );
+        return $this->_coreRegistry->registry(RegistryConstants::CURRENT_CUSTOMER_ID);
     }
 
     /**
      * Return customer's Recurly account code
-     * 
+     *
      * @return string|bool
      */
     public function getCustomerRecurlyAccountCode()
     {
-        $customer = $this->_customer->load( $this->getCustomerId() );
+        $customer = $this->_customer->load($this->getCustomerId());
 
-        if( $customer->getRecurlyAccountCode() ) {
-            return $customer->getRecurlyAccountCode();
+        if ($customer->getGigyaUid()) {
+            return $customer->getGigyaUid();
         }
+
+        $this->_logger->error('Could not find customer Gigya ID');
 
         return false;
     }
 
     /**
      * Return active and future subscriptions of the customer
-     * 
+     *
      * @return array
      * @throws Recurly_NotFoundError if Recurly account doesn't exist
      */
@@ -81,31 +109,39 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         Recurly_Client::$subdomain = $this->_helper->getRecurlySubdomain();
 
         // Create empty array so we can merge active and future subscriptions
-        $currentSubscriptions = array();
+        $subscriptions = [];
 
-        // Used for the displaying logic for the cancel subscription button in the customer view
-        $isAnnualSubscription = false;
+        // Store refund amount
+        $totalAmount = false;
 
         try {
-            $activeSubscriptions = Recurly_SubscriptionList::getForAccount( $this->getCustomerRecurlyAccountCode(), [ 'state' => 'active' ] );
-            $futureSubscriptions = Recurly_SubscriptionList::getForAccount( $this->getCustomerRecurlyAccountCode(), [ 'state' => 'future' ] );
+            $activeSubscriptions = Recurly_SubscriptionList::getForAccount($this->getCustomerRecurlyAccountCode(), [ 'state' => 'active' ]);
+            $futureSubscriptions = Recurly_SubscriptionList::getForAccount($this->getCustomerRecurlyAccountCode(), [ 'state' => 'future' ]);
 
-            foreach( $activeSubscriptions as $activeSubscription ) {
-                array_push( $currentSubscriptions, $activeSubscription);
-
-                if( $activeSubscription->plan->plan_code == 'annual' ) {
-                    $isAnnualSubscription = true;
-                }
+            foreach ($activeSubscriptions as $subscription) {
+                array_push($subscriptions, $subscription);
+                $totalAmount += $subscription->unit_amount_in_cents;
             }
 
-            foreach( $futureSubscriptions as $futureSubscription ) {
-                array_push( $currentSubscriptions, $futureSubscription);
+            foreach ($futureSubscriptions as $subscription) {
+                array_push($subscriptions, $subscription);
+                $totalAmount += $subscription->unit_amount_in_cents;
             }
 
-            return array( 'success' => true, 'is_annual' => $isAnnualSubscription, 'subscriptions' => $currentSubscriptions );
+            return [ 'success' => true, 'subscriptions' => $subscriptions, 'total_amount' => $this->convertAmountToDollars($totalAmount) ];
         } catch (Recurly_NotFoundError $e) {
-            return array( 'success' => false, 'error_message' => $e->getMessage() );
+            $this->_logger->error($e->getMessage());
+            return [ 'success' => false, 'error_message' => $e->getMessage() ];
         }
+    }
+
+    /**
+     * Convert cents to dollars
+     *
+     */
+    public function convertAmountToDollars($amount)
+    {
+        return number_format(($amount/100), 2, '.', ' ');
     }
 
     public function getCancelUrl()
@@ -118,12 +154,10 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         return 'Scott\'s Subscriptions';
     }
 
-
     public function getTabTitle()
     {
         return 'Scott\'s Subscriptions';
     }
-
 
     public function canShowTab()
     {
@@ -132,7 +166,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         }
         return false;
     }
- 
+
     public function isHidden()
     {
         if ($this->getCustomerId()) {
@@ -148,12 +182,11 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
     public function getTabUrl()
     {
-        return $this->getUrl( 'customersubscriptions/*/customersubscriptions',[ '_current' => true ] );
+        return $this->getUrl('customersubscriptions/*/customersubscriptions', [ '_current' => true ]);
     }
 
     public function isAjaxLoaded()
     {
         return true;
     }
-
 }

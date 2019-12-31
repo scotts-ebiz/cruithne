@@ -4,11 +4,10 @@ namespace SMG\SubscriptionApi\Model;
 
 use Magento\Directory\Model\ResourceModel\Region\CollectionFactory;
 use Magento\Framework\Exception\LocalizedException;
-use SMG\SubscriptionApi\Api\Interfaces\RecurlyInterface;
-use Recurly_Client;
 use Recurly_Account;
 use Recurly_Adjustment;
 use Recurly_BillingInfo;
+use Recurly_Client;
 use Recurly_Coupon;
 use Recurly_CustomField;
 use Recurly_Error;
@@ -30,62 +29,62 @@ class RecurlySubscription
     /**
      * @var \SMG\SubscriptionApi\Helper\RecurlyHelper
      */
-	protected $_recurlyHelper;
+    protected $_recurlyHelper;
 
     /**
      * @var \SMG\SubscriptionApi\Helper\SubscriptionHelper
      */
-	protected $_subscriptionHelper;
+    protected $_subscriptionHelper;
 
     /**
      * @var \SMG\RecommendationApi\Helper\RecommendationHelper
      */
-	protected $_recommendationHelper;
+    protected $_recommendationHelper;
 
     /**
      * @var \Magento\Customer\Model\Session
      */
-	protected $_customerSession;
+    protected $_customerSession;
 
     /**
      * @var \Magento\Customer\Model\Customer
      */
-	protected $_customer;
+    protected $_customer;
 
     /**
      * @var \Magento\Customer\Model\ResourceModel\CustomerFactory
      */
-	protected $_customerFactory;
+    protected $_customerFactory;
 
     /**
      * @var string
      */
-	protected $_couponCode;
+    protected $_couponCode;
 
     /**
      * @var string
      */
-	protected $_currency;
+    protected $_currency;
 
     /**
      * @var \Magento\Catalog\Api\ProductRepositoryInterface
      */
-	protected $_productRepository;
+    protected $_productRepository;
 
     /**
      * @var \Magento\Checkout\Model\Session
      */
-	protected $_checkoutSession;
+    protected $_checkoutSession;
 
     /**
      * @var CollectionFactory
      */
-	protected $_collectionFactory;
+    protected $_collectionFactory;
 
     /**
      * @var \Magento\Customer\Model\Url
      */
-	protected $_customerUrl;
+    protected $_customerUrl;
 
     /**
      * RecurlySubscription constructor.
@@ -100,33 +99,32 @@ class RecurlySubscription
      * @param CollectionFactory $collectionFactory
      * @param \Magento\Customer\Model\Url $customerUrl
      */
-	public function __construct(
-		\SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper,
+    public function __construct(
+        \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper,
         \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper,
-		\SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper,
-		\Magento\Customer\Model\Session $customerSession,
-		\Magento\Customer\Model\Customer $customer,
-    	\Magento\Customer\Model\ResourceModel\CustomerFactory $customerFactory,
-    	\Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
-		\Magento\Checkout\Model\Session $checkoutSession,
-		CollectionFactory $collectionFactory,
-		\Magento\Customer\Model\Url $customerUrl
-	)
-	{
+        \SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper,
+        \Magento\Customer\Model\Session $customerSession,
+        \Magento\Customer\Model\Customer $customer,
+        \Magento\Customer\Model\ResourceModel\CustomerFactory $customerFactory,
+        \Magento\Catalog\Api\ProductRepositoryInterface $productRepository,
+        \Magento\Checkout\Model\Session $checkoutSession,
+        CollectionFactory $collectionFactory,
+        \Magento\Customer\Model\Url $customerUrl
+    ) {
         $this->_recurlyHelper = $recurlyHelper;
         $this->_subscriptionHelper = $subscriptionHelper;
         $this->_recommendationHelper = $recommendationHelper;
-		$this->_recommendationHelper = $recommendationHelper;
-		$this->_customerSession = $customerSession;
-		$this->_customer = $customer;
-		$this->_customerFactory = $customerFactory;
-		$this->_productRepository = $productRepository;
-		$this->_checkoutSession = $checkoutSession;
-		$this->_collectionFactory = $collectionFactory;
-		$this->_customerUrl = $customerUrl;
-		$this->_couponCode = 'annual_subscription_discount';
-		$this->_currency = 'USD';
-	}
+        $this->_recommendationHelper = $recommendationHelper;
+        $this->_customerSession = $customerSession;
+        $this->_customer = $customer;
+        $this->_customerFactory = $customerFactory;
+        $this->_productRepository = $productRepository;
+        $this->_checkoutSession = $checkoutSession;
+        $this->_collectionFactory = $collectionFactory;
+        $this->_customerUrl = $customerUrl;
+        $this->_couponCode = 'annual_subscription_discount';
+        $this->_currency = 'USD';
+    }
 
     /**
      * Create new Recurly subscription for the customer. Use it's existing Recurly account if there is one,
@@ -138,10 +136,10 @@ class RecurlySubscription
      * @throws LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-	public function createSubscription( $token, $subscription )
-	{
-	    $quizId = $subscription->getQuizId();
-	    $subscriptionType = $subscription->getSubscriptionType();
+    public function createSubscription($token, $subscription)
+    {
+        $quizId = $subscription->getQuizId();
+        $subscriptionType = $subscription->getSubscriptionType();
 
         // If there is Recurly token, plan code and quiz data
         if (true || ! empty($token) && ! empty($subscriptionType) && ! empty($quizId)) {
@@ -155,18 +153,18 @@ class RecurlySubscription
             // Update Subscription with Gigya ID
             try {
                 $customer = $this->_customer->load($checkoutData['customer_id']);
-                $subscription->setCustomerId( $checkoutData['customer_id'] );
-                $subscription->setGigyaId( $customer->getGigyaUid() );
+                $subscription->setCustomerId($checkoutData['customer_id']);
+                $subscription->setGigyaId($customer->getGigyaUid());
                 $subscription->save();
-            } catch ( \Exception $e ) {
-                throw new LocalizedException( __('Failed to assign subscription to user account.') );
+            } catch (\Exception $e) {
+                throw new LocalizedException(__('Failed to assign subscription to user account.'));
             }
 
             // Get Customer's Recurly account
             try {
-                $account = ( $this->getRecurlyAccount()) ? $this->getRecurlyAccount() : $this->createRecurlyAccount( $checkoutData );
-            } catch ( \Exception $e ) {
-                throw new LocalizedException( __('There was a problem with the subscription account.') );
+                $account = ($this->getRecurlyAccount()) ? $this->getRecurlyAccount() : $this->createRecurlyAccount($checkoutData);
+            } catch (\Exception $e) {
+                throw new LocalizedException(__('There was a problem with the subscription account.'));
             }
 
             // Create Recurly Purchase
@@ -178,79 +176,78 @@ class RecurlySubscription
 
                 // Create billing information with the token from Recurly.js
                 try {
-                    $purchase->account->billing_info = $this->createBillingInfo( $account->account_code, $token );
-                } catch ( \Exception $e ) {
-                    throw new LocalizedException( __('There is a problem with the billing information.') );
+                    $purchase->account->billing_info = $this->createBillingInfo($account->account_code, $token);
+                } catch (\Exception $e) {
+                    throw new LocalizedException(__('There is a problem with the billing information.'));
                 }
 
                 // Set shipping information
                 try {
-                    $purchase->account->shipping_address = [ $this->getRecurlyAccountShippingAddress( $account->account_code ) ];
-                } catch ( \Exception $e ) {
-                    throw new LocalizedException( __('There is a problem with the shipping information.') );
+                    $purchase->account->shipping_address = [ $this->getRecurlyAccountShippingAddress($account->account_code) ];
+                } catch (\Exception $e) {
+                    throw new LocalizedException(__('There is a problem with the shipping information.'));
                 }
 
                 // Create Master Subscription
                 try {
-                    $subscriptions[] = $this->createMasterSubscription( $subscription );
-                } catch ( \Exception $e ) {
-                    throw new LocalizedException( __('There is a problem creating the subscription') );
+                    $subscriptions[] = $this->createMasterSubscription($subscription);
+                } catch (\Exception $e) {
+                    throw new LocalizedException(__('There is a problem creating the subscription'));
                 }
 
                 // Create Seasonal Subscriptions
                 try {
-                    $subscriptions = array_merge( $subscriptions, $this->createSeasonalSubscriptions( $subscription ) );
-                } catch ( \Exception $e ) {
-                    throw new LocalizedException( __('There is a problem creating the subscription') );
+                    $subscriptions = array_merge($subscriptions, $this->createSeasonalSubscriptions($subscription));
+                } catch (\Exception $e) {
+                    throw new LocalizedException(__('There is a problem creating the subscription'));
                 }
 
                 // Create Add-on Charges
                 try {
-                    $addonCharges = $this->createAddonCharges( $subscription, $account );
-                    if ( $subscription->getSubscriptionType() == 'annual' ) {
+                    $addonCharges = $this->createAddonCharges($subscription, $account);
+                    if ($subscription->getSubscriptionType() == 'annual') {
                         $purchase->adjustments = $addonCharges;
                     }
-                } catch ( \Exception $e ) {
-                    throw new LocalizedException( __('There is a problem creating the add-ons') );
+                } catch (\Exception $e) {
+                    throw new LocalizedException(__('There is a problem creating the add-ons'));
                 }
 
                 // Add Coupon Code if annual
                 try {
-                    if ( $subscription->getSubscriptionType() == 'annual' ) {
+                    if ($subscription->getSubscriptionType() == 'annual') {
                         $purchase->coupon_codes = [ $this->getCouponCode() ];
                     }
-                } catch ( \Exception $e ) {
-                    throw new LocalizedException( __('There was a problem applying the discount code.') );
+                } catch (\Exception $e) {
+                    throw new LocalizedException(__('There was a problem applying the discount code.'));
                 }
 
                 $purchase->subscriptions = $subscriptions;
 
                 try {
                     Recurly_Purchase::invoice($purchase);
-                } catch ( \Exception $e ) {
-                    throw new LocalizedException( __('There was an issue invoicing the subscription.') );
+                } catch (\Exception $e) {
+                    throw new LocalizedException(__('There was an issue invoicing the subscription.'));
                 }
-
-            } catch ( \Exception $e ) {
-                throw new LocalizedException( __( $e->getMessage() ) );
+            } catch (\Exception $e) {
+                throw new LocalizedException(__($e->getMessage()));
             }
 
             try {
-                $this->getSubscriptionIds( $checkoutData, $account, $subscription );
-                $subscription->setSubscriptionStatus( 'pending_order' )->save();
-            } catch ( \Exception $e ) {
-                throw new LocalizedException( __('There was an issue getting the subscription ids.') );
+                $this->getSubscriptionIds($checkoutData, $account, $subscription);
+                $subscription->setSubscriptionStatus('pending_order')->save();
+            } catch (\Exception $e) {
+                throw new LocalizedException(__('There was an issue getting the subscription ids.'));
             }
         }
-	}
+    }
 
-	/**
-	 * Check if the customer already has a Recurly subscription
-	 *
-	 * @api
-	 */
-	public function checkRecurlySubscription()
-	{
+    /**
+     * Check if the customer already has a Recurly subscription
+     *
+     * @api
+     */
+    public function checkRecurlySubscription()
+    {
         // Configure Recurly Client using the API Key and Subdomain entered in the settings page
         Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
@@ -262,78 +259,104 @@ class RecurlySubscription
         $account = ($this->getRecurlyAccount()) ? $this->getRecurlyAccount() : $this->createRecurlyAccount($checkoutData);
 
         // Check if the customer has an active subscription
-        $activeSubscriptions = $this->hasRecurlySubscription( $account->account_code );
-        if( $activeSubscriptions['has_subscriptions'] === true ) {
-            $response = array(
+        $activeSubscriptions = $this->hasRecurlySubscription($account->account_code);
+        if ($activeSubscriptions['has_subscriptions'] === true) {
+            $response = [
                 'success'           => true,
                 'has_subscription'  => true,
                 'refund_amount'     => $activeSubscriptions['refund_amount'],
                 'redirect_url'      => $this->_customerUrl->getAccountUrl()
-            );
+            ];
         } else {
-            $response = array(
+            $response = [
                 'success'           => true,
                 'has_subscription'  => false,
-            );
+            ];
         }
 
-        return json_encode( $response );
-	}
+        return json_encode($response);
+    }
 
     /**
      * Cancel customer Recurly Subscription
      *
+     * @param bool $cancelActive
+     * @param bool $cancelFuture
+     * @return array
+     * @throws Recurly_Error
+     * @throws LocalizedException
      * @api
      */
-    public function cancelRecurlySubscription()
-	{
-        // Configure Recurly Client using the API Key and Subdomain entered in the settings page
-        Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
-        Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
+    public function cancelRecurlySubscriptions(bool $cancelActive = true, bool $cancelFuture = true)
+    {
+        $cancelledSubscriptionIds = [];
 
-        // Get customer's Recurly account code
-        $account_code = $this->_customerSession->getCustomer()->getGigyaUid();
-
+        // Configure Recurly Client using the API Key and Subdomain entered in the settings page and get account
         try {
-            $active_subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => 'active' ]);
-            $future_subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => 'future' ]);
+            Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
+            Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
-            foreach ($active_subscriptions as $subscription) {
-                $_subscription = Recurly_Subscription::get($subscription->uuid);
-                $_subscription->cancel();
-            }
-
-            foreach ($future_subscriptions as $subscription) {
-                $_subscription = Recurly_Subscription::get($subscription->uuid);
-                $_subscription->cancel();
-            }
-
-            $response = array(
-                'success'   => true,
-                'message'   => 'Recurly subscriptions canceled'
-            );
-
-            return json_encode( $response );
-        } catch (Recurly_NotFoundError $e) {
-            $response = array(
-                'success'   => false,
-                'message'   => 'Recurly subscriptions can not be cancelled (' . $e->getMessage() . ')'
-            );
-
-            return json_encode( $response );
+            $account_code = $this->_customerSession->getCustomer()->getGigyaUid();
+        } catch (\Exception $e) {
+            throw new LocalizedException(__('Failed to retrieve subscription account.'));
         }
-	}
 
-	/**
-	 * Create billing information with the token provided from Recurly.js
-	 *
-	 * @param string $account_code
-	 * @param string $token
-	 *
-	 * @return object|bool
-	 */
-	private function createBillingInfo($account_code, $token)
-	{
+        // Handle Cancelling Active Subscriptions
+        if ($cancelActive) {
+            try {
+                $cancelledSubscriptionIds = array_merge($cancelledSubscriptionIds, $this->cancelRecurlySubscriptionsByAccountCodeAndStatus($account_code, 'active'));
+            } catch (LocalizedException $e) {
+                throw $e;
+            }
+        }
+
+        // Handle Cancelling Future Subscriptions
+        if ($cancelFuture) {
+            try {
+                $cancelledSubscriptionIds = array_merge($cancelledSubscriptionIds, $this->cancelRecurlySubscriptionsByAccountCodeAndStatus($account_code, 'future'));
+            } catch (LocalizedException $e) {
+                throw $e;
+            }
+        }
+
+        return $cancelledSubscriptionIds;
+    }
+
+    /**
+     * Cancel Recurly subscriptions By Account Code and Status
+     * @param string $account_code
+     * @param string $status
+     * @return array
+     * @throws LocalizedException
+     * @throws Recurly_Error
+     */
+    private function cancelRecurlySubscriptionsByAccountCodeAndStatus(string $account_code, string $status)
+    {
+        $cancelledSubscriptionIds = [];
+        try {
+            $subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => $status ]);
+
+            foreach ($subscriptions as $subscription) {
+                $_subscription = Recurly_Subscription::get($subscription->uuid);
+                $_subscription->cancel();
+                $cancelledSubscriptionIds[$subscription->getValues()['plan']->getValues()['plan_code']] = $subscription->uuid;
+            }
+        } catch (Recurly_NotFoundError $e) {
+            throw new LocalizedException(__('Failed to cancel active subscriptions.'));
+        }
+        return $cancelledSubscriptionIds;
+    }
+
+    /**
+     * Create billing information with the token provided from Recurly.js
+     *
+     * @param string $account_code
+     * @param string $token
+     *
+     * @return object|bool
+     */
+    private function createBillingInfo($account_code, $token)
+    {
         try {
             $billing_info = new Recurly_BillingInfo();
             $billing_info->account_code = $account_code;
@@ -344,7 +367,7 @@ class RecurlySubscription
         } catch (Recurly_NotFoundError $e) {
             return false;
         }
-	}
+    }
 
     /**
      * Check if customer already has a subscription
@@ -356,63 +379,64 @@ class RecurlySubscription
         // Configure Recurly Client using the API Key and Subdomain entered in the settings page
         Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
-        
+
         try {
             $subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => 'active' ]);
             $subscriptions_amount = 0;
 
-            foreach( $subscriptions as $subscription ) {
+            foreach ($subscriptions as $subscription) {
                 $subscriptions_amount += $subscription->unit_amount_in_cents;
             }
 
-            if ( count($subscriptions) > 0 ) {
-                return array(
+            if (count($subscriptions) > 0) {
+                return [
                     'has_subscriptions' => true,
-                    'refund_amount'     => $this->convertAmountToDollars( $subscriptions_amount )
-                );
+                    'refund_amount'     => $this->convertAmountToDollars($subscriptions_amount)
+                ];
             }
 
-            return array(
+            return [
                 'has_subscriptions' => false,
                 'refund_amount'     => 0
-            );
+            ];
         } catch (Recurly_NotFoundError $e) {
-            return array(
+            return [
                 'has_subscriptions' => false,
                 'refund_amount'     => 0
-            );
+            ];
         }
-	}
+    }
 
-	/**
-	 * Return Recurly Plan Code base on the name of the core product
-	 *
-	 * @return string
-	 */
-	private function getPlanCodeByName($name) {
-		switch($name) {
-			case 'Early Spring Feeding':
-				return 'early-spring';
-			case 'Late Spring Feeding':
-				return 'late-spring';
-			case 'Early Summer Feeding':
-				return 'early-summer';
-			case 'Early Fall Feeding':
-				return 'early-fall';
-			default:
-				return '';
-		}
-	}
+    /**
+     * Return Recurly Plan Code base on the name of the core product
+     *
+     * @return string
+     */
+    private function getPlanCodeByName($name)
+    {
+        switch ($name) {
+            case 'Early Spring Feeding':
+                return 'early-spring';
+            case 'Late Spring Feeding':
+                return 'late-spring';
+            case 'Early Summer Feeding':
+                return 'early-summer';
+            case 'Early Fall Feeding':
+                return 'early-fall';
+            default:
+                return '';
+        }
+    }
 
-	/**
-	 * Convert order grand total from dollars to cents
-	 *
-	 * @return int
-	 */
-	private function convertAmountToCents($amount)
-	{
+    /**
+     * Convert order grand total from dollars to cents
+     *
+     * @return int
+     */
+    private function convertAmountToCents($amount)
+    {
         return (float) $amount*100;
-	}
+    }
 
     /**
      * Convert cents to dollars
@@ -423,17 +447,21 @@ class RecurlySubscription
         return number_format(($amount/100), 2, '.', ' ');
     }
 
-	/**
-	 * Check if the current customer has a Recurly account.
-	 * If it does, return it's account, otherwise return false.
-	 *
-	 * @return object|bool
-	 */
-	private function getRecurlyAccount()
-	{
-        if (! empty($this->_customerSession->getCustomer()->getGigyaUid())) {
+    /**
+     * Check if the current customer has a Recurly account.
+     * If it does, return it's account, otherwise return false.
+     *
+     * @param string $gigyaId
+     * @return object|bool
+     */
+    private function getRecurlyAccount(string $gigyaId = null)
+    {
+        if (is_null($gigyaId)) {
+            $gigyaId = $this->_customerSession->getCustomer()->getGigyaUid();
+        }
+        if (! empty($gigyaId)) {
             try {
-                $account = Recurly_Account::get($this->_customerSession->getCustomer()->getGigyaUid());
+                $account = Recurly_Account::get($gigyaId);
                 return $account;
             } catch (Recurly_NotFoundError $e) {
                 if ($e->getCode() == 0) {
@@ -444,26 +472,25 @@ class RecurlySubscription
         }
 
         return false;
-	}
+    }
 
-	/**
-	 * Get customer's current shipping addresses and use it for the purchase
-	 *
-	 * @return object|gool
-	 */
-	private function getRecurlyAccountShippingAddress($account_code)
-	{
+    /**
+     * Get customer's current shipping addresses and use it for the purchase
+     *
+     * @return object|gool
+     */
+    private function getRecurlyAccountShippingAddress($account_code)
+    {
+        $shipping_addresses = Recurly_ShippingAddressList::get($account_code);
 
-		$shipping_addresses = Recurly_ShippingAddressList::get($account_code);
+        if (! empty($shipping_addresses)) {
+            foreach ($shipping_addresses as $address) {
+                return $address;
+            }
+        }
 
-		if( ! empty( $shipping_addresses ) ) {
-			foreach( $shipping_addresses as $address ) {
-				return $address;
-			}
-		}
-
-		return false;
-	}
+        return false;
+    }
 
     /**
      * Create Recurly account using the data from the checkout page
@@ -471,8 +498,8 @@ class RecurlySubscription
      * @param $data
      * @return object $account
      */
-	private function createRecurlyAccount($data)
-	{
+    private function createRecurlyAccount($data)
+    {
         try {
             // Generate account code from customer's email
             $customer = $this->_customer->load($data['customer_id']);
@@ -512,15 +539,15 @@ class RecurlySubscription
                 return $this->getRecurlyAccount();
             }
         }
-	}
+    }
 
-	/**
-	 * Get current customer and save it's Recurly account code as a custom attribute,
-	 * generated from customer's email
-	 *
-	 */
-	private function saveRecurlyAccountCode($customer_email, $customer_id)
-	{
+    /**
+     * Get current customer and save it's Recurly account code as a custom attribute,
+     * generated from customer's email
+     *
+     */
+    private function saveRecurlyAccountCode($customer_email, $customer_id)
+    {
         if (! empty($customer_email) && ! empty($customer_id) && filter_var($customer_email, FILTER_VALIDATE_EMAIL)) {
             $recurly_account_code = md5($customer_email);
 
@@ -532,7 +559,7 @@ class RecurlySubscription
             $customerResource = $this->_customerFactory->create();
             $customerResource->saveAttribute($customer, 'recurly_account_code');
         }
-	}
+    }
 
     /**
      * Check if coupon code exists on Recurly and return it,
@@ -621,35 +648,33 @@ class RecurlySubscription
      * @return Recurly_Subscription
      * @throws \Exception
      */
-    private function createMasterSubscription( Subscription $subscription )
+    private function createMasterSubscription(Subscription $subscription)
     {
         try {
             $masterSubscription = new Recurly_Subscription();
 
-            if ( $subscription->getSubscriptionType() == 'annual' ) {
+            if ($subscription->getSubscriptionType() == 'annual') {
 
                 // Create Annual Subscription (Master Subscription)
                 $masterSubscription->plan_code = $subscription->getSubscriptionType();
                 $masterSubscription->auto_renew = true;
                 $masterSubscription->total_billing_cycles = 1;
-                $masterSubscription->unit_amount_in_cents = $this->convertAmountToCents( $subscription->getPrice() );
+                $masterSubscription->unit_amount_in_cents = $this->convertAmountToCents($subscription->getPrice());
                 $masterSubscription->
-                $masterSubscription->custom_fields[] = new Recurly_CustomField('quiz_id', $subscription->getQuizId() );
-
+                $masterSubscription->custom_fields[] = new Recurly_CustomField('quiz_id', $subscription->getQuizId());
             } else {
 
                 // Create Seasonal Subscription (Master Subscription)
                 $masterSubscription->plan_code = $subscription->getSubscriptionType();
                 $masterSubscription->auto_renew = true;
                 $masterSubscription->unit_amount_in_cents = 0;
-                $masterSubscription->custom_fields[] = new Recurly_CustomField('quiz_id', $subscription->getQuizId() );
+                $masterSubscription->custom_fields[] = new Recurly_CustomField('quiz_id', $subscription->getQuizId());
             }
 
             return $masterSubscription;
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             throw $e;
         }
-
     }
 
     /**
@@ -658,29 +683,28 @@ class RecurlySubscription
      * @return array
      * @throws \Exception
      */
-    private function createSeasonalSubscriptions( Subscription $subscription )
+    private function createSeasonalSubscriptions(Subscription $subscription)
     {
         try {
             $subscriptionOrders = $subscription->getSubscriptionOrders();
             $subOrders = [];
 
             /** @var \SMG\SubscriptionApi\Model\SubscriptionOrder $subscriptionOrder */
-            foreach ( $subscriptionOrders as $subscriptionOrder ) {
-
+            foreach ($subscriptionOrders as $subscriptionOrder) {
                 $subOrder = new Recurly_Subscription();
-                $subOrder->plan_code = $this->_recurlyHelper->getSeasonSlugByName( $subscriptionOrder->getSeasonName() );
+                $subOrder->plan_code = $this->_recurlyHelper->getSeasonSlugByName($subscriptionOrder->getSeasonName());
                 $subOrder->auto_renew = true;
                 $subOrder->total_billing_cycles = 1;
-                if ( $subscription->getSubscriptionType() != 'annual' ) {
-                    $subOrder->unit_amount_in_cents = $this->convertAmountToCents( $subscriptionOrder->getPrice() );
+                if ($subscription->getSubscriptionType() != 'annual') {
+                    $subOrder->unit_amount_in_cents = $this->convertAmountToCents($subscriptionOrder->getPrice());
                 }
-                $subOrder->custom_fields[] = new Recurly_CustomField('quiz_id', $subscription->getQuizId() );
+                $subOrder->custom_fields[] = new Recurly_CustomField('quiz_id', $subscription->getQuizId());
                 $subOrder->starts_at = $subscriptionOrder->getShipStartDate();
                 $subOrders[] = $subOrder;
             }
 
             return $subOrders;
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             throw $e;
         }
     }
@@ -692,30 +716,28 @@ class RecurlySubscription
      * @return array
      * @throws \Exception
      */
-    private function createAddonCharges( Subscription $subscription, $account )
+    private function createAddonCharges(Subscription $subscription, $account)
     {
         try {
             $charges = [];
             $subscriptionAddonOrders = $subscription->getSubscriptionAddonOrders();
 
             /** @var SubscriptionAddonOrder $subscriptionAddonOrder */
-            foreach( $subscriptionAddonOrders as $subscriptionAddonOrder) {
-
-                $subscriptionAddonOrderItems = $subscriptionAddonOrder->getOrderItems( true );
+            foreach ($subscriptionAddonOrders as $subscriptionAddonOrder) {
+                $subscriptionAddonOrderItems = $subscriptionAddonOrder->getOrderItems(true);
 
                 /** @var SubscriptionAddonOrderItem $subscriptionAddonOrderItem */
-                foreach ( $subscriptionAddonOrderItems as $subscriptionAddonOrderItem ) {
-
+                foreach ($subscriptionAddonOrderItems as $subscriptionAddonOrderItem) {
                     $product = $subscriptionAddonOrderItem->getProduct();
 
                     $charge = new Recurly_Adjustment();
                     $charge->account_code = $account->account_code;
                     $charge->currency = $this->_currency;
                     $charge->description = $product->getName() . ' (SKU: ' . $product->getSku() . ')';
-                    $charge->unit_amount_in_cents = $this->convertAmountToCents( $product->getPrice() );
+                    $charge->unit_amount_in_cents = $this->convertAmountToCents($product->getPrice());
                     $charge->quantity = $subscriptionAddonOrderItem->getQty();
                     $charge->product_code = $product->getSku();
-                    if ( $subscription->getSubscriptionType() != 'annual' ) {
+                    if ($subscription->getSubscriptionType() != 'annual') {
                         $charge->start_date = $subscription->getFirstSubscriptionOrder()->getShipStartDate();
                         $charge->revenue_schedule_date = 'at_range_start';
                     }
@@ -723,7 +745,7 @@ class RecurlySubscription
                     $charges[] = $charge;
                 }
             }
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             throw $e;
         }
 
@@ -737,7 +759,7 @@ class RecurlySubscription
      * @param $subscription
      * @throws \Exception
      */
-    private function getSubscriptionIds( $checkoutData, $account, $subscription )
+    private function getSubscriptionIds($checkoutData, $account, $subscription)
     {
         try {
             Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
@@ -747,30 +769,59 @@ class RecurlySubscription
             $futureSubs = Recurly_SubscriptionList::getForAccount($account->account_code, [ 'state' => 'future' ]);
 
             $subCodes = [];
-            foreach ( $activeSubs as $sub ) {
+            foreach ($activeSubs as $sub) {
                 $subCodes[] = [
                     'subscription_id' => $sub->getValues()['uuid'],
                     'plan_code' => $sub->getValues()['plan']->getValues()['plan_code']
                 ];
             }
-            foreach ( $futureSubs as $sub ) {
+            foreach ($futureSubs as $sub) {
                 $subCodes[] = [
                     'subscription_id' => $sub->getValues()['uuid'],
                     'plan_code' => $sub->getValues()['plan']->getValues()['plan_code']
                 ];
             }
 
-            foreach ( $subCodes as $subCode ) {
-
-                if ( in_array( $subCode['plan_code'], ['annual', 'seasonal'] ) ) {
-                    $subscription->setSubscriptionId( $subCode['subscription_id'] )->save();
+            foreach ($subCodes as $subCode) {
+                if (in_array($subCode['plan_code'], ['annual', 'seasonal'])) {
+                    $subscription->setSubscriptionId($subCode['subscription_id'])->save();
                 } else {
-                    $subscription->getSubscriptionOrderBySeasonSlug( $subCode['plan_code'] )->setSubscriptionId( $subCode['subscription_id'] )->save();
+                    $subscription->getSubscriptionOrderBySeasonSlug($subCode['plan_code'])->setSubscriptionId($subCode['subscription_id'])->save();
                 }
             }
-        } catch ( \Exception $e ) {
+        } catch (\Exception $e) {
             throw $e;
         }
     }
 
+    /**
+     * Create Credit for Recurly
+     * @param $totalRefund
+     * @param $gigyaId
+     * @throws LocalizedException
+     */
+    public function createCredit($totalRefund, $gigyaId)
+    {
+        try {
+            Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
+            Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
+
+            $purchase = new Recurly_Purchase();
+            $purchase->currency = $this->_currency;
+            $purchase->collection = 'automatic';
+            $purchase->account = $this->getRecurlyAccount($gigyaId);
+
+            $credit = new Recurly_Adjustment();
+            $credit->account_code = $gigyaId;
+            $credit->currency = $this->_currency;
+            $credit->description = 'Partial refund for subscription cancellation';
+            $credit->unit_amount_in_cents = $this->convertAmountToCents($totalRefund);
+            $credit->create();
+
+            $purchase->adjustments = [ $credit ];
+            Recurly_Purchase::invoice($purchase);
+        } catch (\Exception $e) {
+            throw new LocalizedException(__('Credit failed to apply.' . $e->getMessage()));
+        }
+    }
 }

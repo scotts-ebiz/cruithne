@@ -2,16 +2,17 @@
 
 namespace SMG\SubscriptionApi\Model\ResourceModel;
 
+use Psr\Log\LoggerInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\Framework\Model\ResourceModel\Db\Context;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
+use SMG\SubscriptionApi\Model\SubscriptionAddonOrderFactory;
+use SMG\SubscriptionApi\Model\SubscriptionAddonOrderItemFactory;
 use SMG\SubscriptionApi\Model\SubscriptionFactory;
 use SMG\SubscriptionApi\Model\SubscriptionOrderFactory;
 use SMG\SubscriptionApi\Model\SubscriptionOrderItemFactory;
-use SMG\SubscriptionApi\Model\SubscriptionAddonOrderFactory;
-use SMG\SubscriptionApi\Model\SubscriptionAddonOrderItemFactory;
-use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
-
 
 /**
  * Class Subscription
@@ -44,6 +45,9 @@ class Subscription extends AbstractDb
     /** @var ProductRepositoryInterface  */
     protected $_productRepository;
 
+    /** @var LoggerInterface  */
+    protected $_logger;
+
     /**
      * Constructor
      */
@@ -65,6 +69,7 @@ class Subscription extends AbstractDb
      * @param SubscriptionAddonOrderItemFactory $subscriptionAddonOrderItemFactory
      * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
      * @param ProductRepositoryInterface $productRepository
+     * @param LoggerInterface $logger
      * @param null $connectionName
      */
     public function __construct(
@@ -76,9 +81,9 @@ class Subscription extends AbstractDb
         SubscriptionAddonOrderItemFactory $subscriptionAddonOrderItemFactory,
         SubscriptionCollectionFactory $subscriptionCollectionFactory,
         ProductRepositoryInterface $productRepository,
+        LoggerInterface $logger,
         $connectionName = null
-    )
-    {
+    ) {
         parent::__construct($context, $connectionName);
 
         $this->_subscriptionFactory = $subscriptionFactory;
@@ -88,33 +93,57 @@ class Subscription extends AbstractDb
         $this->_subscriptionAddonOrderItemFactory = $subscriptionAddonOrderItemFactory;
         $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
         $this->_productRepository = $productRepository;
+        $this->_logger = $logger;
     }
 
     /**
      * Get the subscription by quiz_id
-     * @param $quizId
+     * @param string $quizId
      * @return \SMG\SubscriptionApi\Model\Subscription|mixed
-     * @throws \Exception
+     * @throws LocalizedException
      */
-    public function getSubscriptionByQuizId( $quizId )
+    public function getSubscriptionByQuizId(string $quizId)
     {
-
-        if ( ! empty( $quizId ) )
-        {
-            // get the list of sapOrders for the provided orderId
+        if (! empty($quizId)) {
             $subscriptions = $this->_subscriptionCollectionFactory->create();
-            $subscriptions->addFieldToFilter('quiz_id', $quizId );
+            $subscriptions->addFieldToFilter('quiz_id', $quizId);
 
-            foreach( $subscriptions as $subscription )
-            {
-                if ( ! empty($subscription) )
-                {
+            foreach ($subscriptions as $subscription) {
+                if (! empty($subscription)) {
                     return $subscription;
                 }
             }
         }
 
-        throw new \Exception('Subscription could not be found with quiz id.');
+        $error = 'Subscription could not be found with quiz id.';
+        $this->_logger->error($error);
+
+        throw new LocalizedException(__($error));
+    }
+
+    /**
+     * Get subscription from master subscription id
+     * @param string $masterSubscription
+     * @return mixed
+     * @throws LocalizedException
+     */
+    public function getSubscriptionByMasterSubscriptionId(string $masterSubscription)
+    {
+        if (! empty($masterSubscription)) {
+            $subscriptions = $this->_subscriptionCollectionFactory->create();
+            $subscriptions->addFieldToFilter('subscription_id', $masterSubscription);
+
+            foreach ($subscriptions as $subscription) {
+                if (! empty($subscription)) {
+                    return $subscription;
+                }
+            }
+        }
+
+        $error = 'Subscription could not be found with Master Subscription Id.';
+        $this->_logger->error($error);
+
+        throw new LocalizedException(__($error));
     }
 
     /**
@@ -127,18 +156,19 @@ class Subscription extends AbstractDb
      * @return \SMG\SubscriptionApi\Model\Subscription
      * @throws \Exception
      */
-    public function createFromRecommendation($recommendation, $zip, $lawnSize = null, $lawnType = null, $origin = 'web') {
+    public function createFromRecommendation($recommendation, $zip, $lawnSize = null, $lawnType = null, $origin = 'web')
+    {
 
         // Create Subscription
         $subscription = $this->_subscriptionFactory->create();
-        $subscription->setQuizId( $recommendation[0]['id'] );
-        $subscription->setQuizCompletedAt( $recommendation[0]['completedAt'] );
-        $subscription->setLawnZip( $zip );
-        $subscription->setLawnSize( (int)$lawnSize );
-        $subscription->setLawnType( $lawnType );
-        $subscription->setZoneName( $recommendation[0]['plan']['zoneName'] );
-        $subscription->setOrigin( 'web' );
-        $subscription->setSubscriptionStatus( 'pending' );
+        $subscription->setQuizId($recommendation[0]['id']);
+        $subscription->setQuizCompletedAt($recommendation[0]['completedAt']);
+        $subscription->setLawnZip($zip);
+        $subscription->setLawnSize((int)$lawnSize);
+        $subscription->setLawnType($lawnType);
+        $subscription->setZoneName($recommendation[0]['plan']['zoneName']);
+        $subscription->setOrigin('web');
+        $subscription->setSubscriptionStatus('pending');
         $subscription->save();
 
         $this->_subscription = $subscription;
@@ -148,68 +178,68 @@ class Subscription extends AbstractDb
 
         $subscriptionPrice = 0;
 
-        foreach ( $recommendationSubscriptionOrders as $recommendationSubscriptionOrder ) {
+        foreach ($recommendationSubscriptionOrders as $recommendationSubscriptionOrder) {
             $subscriptionOrder = $this->_subscriptionOrderFactory->create();
-            $subscriptionOrder->setSubscriptionEntityId( $subscription->getEntityId() );
-            $subscriptionOrder->setSeasonName( $recommendationSubscriptionOrder['season_name'] );
-            $subscriptionOrder->setSeasonSlug( $this->getPlanCodeByName( $recommendationSubscriptionOrder['season_name'] ) );
-            $subscriptionOrder->setApplicationStartDate( $recommendationSubscriptionOrder['application_start_date'] );
-            $subscriptionOrder->setApplicationEndDate( $recommendationSubscriptionOrder['application_end_date'] );
-            $subscriptionOrder->setSubscriptionOrderStatus( $recommendationSubscriptionOrder['subscription_order_status'] );
+            $subscriptionOrder->setSubscriptionEntityId($subscription->getEntityId());
+            $subscriptionOrder->setSeasonName($recommendationSubscriptionOrder['season_name']);
+            $subscriptionOrder->setSeasonSlug($this->getPlanCodeByName($recommendationSubscriptionOrder['season_name']));
+            $subscriptionOrder->setApplicationStartDate($recommendationSubscriptionOrder['application_start_date']);
+            $subscriptionOrder->setApplicationEndDate($recommendationSubscriptionOrder['application_end_date']);
+            $subscriptionOrder->setSubscriptionOrderStatus($recommendationSubscriptionOrder['subscription_order_status']);
             $subscriptionOrder->save();
 
             $subscriptionOrderPrice = 0;
 
             // Create the Subscription Order Items
-            foreach ( $recommendationSubscriptionOrder['subscriptionOrderItems'] as $item ) {
+            foreach ($recommendationSubscriptionOrder['subscriptionOrderItems'] as $item) {
                 $subscriptionOrderItem = $this->_subscriptionOrderItemFactory->create();
-                $subscriptionOrderItem->setSubscriptionOrderEntityId( $subscriptionOrder->getEntityId() );
-                $subscriptionOrderItem->setCatalogProductSku( $item['catalog_product_sku'] );
-                $subscriptionOrderItem->setQty( $item['qty'] );
-                $product = $this->_productRepository->get( $item['catalog_product_sku'] );
-                $subscriptionOrderItem->setPrice( $product->getPrice() );
+                $subscriptionOrderItem->setSubscriptionOrderEntityId($subscriptionOrder->getEntityId());
+                $subscriptionOrderItem->setCatalogProductSku($item['catalog_product_sku']);
+                $subscriptionOrderItem->setQty($item['qty']);
+                $product = $this->_productRepository->get($item['catalog_product_sku']);
+                $subscriptionOrderItem->setPrice($product->getPrice());
                 $subscriptionOrderItem->save();
                 $subscriptionOrderPrice += $product->getPrice() * $item['qty'];
             }
 
             $subscriptionPrice += $subscriptionOrderPrice;
-            $subscriptionOrder->setApplicationStartDate( $recommendationSubscriptionOrder['application_start_date'] );
-            $subscriptionOrder->setApplicationEndDate( $recommendationSubscriptionOrder['application_end_date'] );
-            $subscriptionOrder->setPrice( $subscriptionOrderPrice );
+            $subscriptionOrder->setApplicationStartDate($recommendationSubscriptionOrder['application_start_date']);
+            $subscriptionOrder->setApplicationEndDate($recommendationSubscriptionOrder['application_end_date']);
+            $subscriptionOrder->setPrice($subscriptionOrderPrice);
             $subscriptionOrder->save();
         }
 
         // Set Subscription Total Price
-        $subscription->setPrice( $subscriptionPrice );
+        $subscription->setPrice($subscriptionPrice);
         $subscription->save();
 
         // Create Subscription Addon Orders
         $recommendationSubscriptionAddonOrder = $this->organizeSubscriptionAddonOrdersFromRecommendation($recommendation[0]['plan']['addOnProducts']);
 
-        if ( ! empty($recommendationSubscriptionAddonOrder)) {
+        if (! empty($recommendationSubscriptionAddonOrder)) {
             $subscriptionAddonOrder = $this->_subscriptionAddonOrderFactory->create();
-            $subscriptionAddonOrder->setSubscriptionEntityId( $subscription->getEntityId() );
-            $subscriptionAddonOrder->setSeasonName( $recommendationSubscriptionAddonOrder['season_name'] );
-            $subscriptionAddonOrder->setApplicationStartDate( $recommendationSubscriptionAddonOrder['application_start_date'] );
-            $subscriptionAddonOrder->setApplicationEndDate( $recommendationSubscriptionAddonOrder['application_end_date'] );
-            $subscriptionAddonOrder->setSubscriptionOrderStatus( $recommendationSubscriptionAddonOrder['subscription_order_status'] );
+            $subscriptionAddonOrder->setSubscriptionEntityId($subscription->getEntityId());
+            $subscriptionAddonOrder->setSeasonName($recommendationSubscriptionAddonOrder['season_name']);
+            $subscriptionAddonOrder->setApplicationStartDate($recommendationSubscriptionAddonOrder['application_start_date']);
+            $subscriptionAddonOrder->setApplicationEndDate($recommendationSubscriptionAddonOrder['application_end_date']);
+            $subscriptionAddonOrder->setSubscriptionOrderStatus($recommendationSubscriptionAddonOrder['subscription_order_status']);
             $subscriptionAddonOrder->save();
 
             $subscriptionAddonOrderPrice = 0;
 
             // Create the Subscription Order Items
-            foreach ( $recommendationSubscriptionAddonOrder['subscriptionOrderItems'] as $item ) {
+            foreach ($recommendationSubscriptionAddonOrder['subscriptionOrderItems'] as $item) {
                 $subscriptionAddonOrderItem = $this->_subscriptionAddonOrderItemFactory->create();
-                $subscriptionAddonOrderItem->setSubscriptionAddonOrderEntityId( $subscriptionAddonOrder->getEntityId() );
-                $subscriptionAddonOrderItem->setCatalogProductSku( $item['catalog_product_sku'] );
-                $subscriptionAddonOrderItem->setQty( $item['qty'] );
-                $product = $this->_productRepository->get( $item['catalog_product_sku'] );
-                $subscriptionAddonOrderItem->setPrice( $product->getPrice() );
+                $subscriptionAddonOrderItem->setSubscriptionAddonOrderEntityId($subscriptionAddonOrder->getEntityId());
+                $subscriptionAddonOrderItem->setCatalogProductSku($item['catalog_product_sku']);
+                $subscriptionAddonOrderItem->setQty($item['qty']);
+                $product = $this->_productRepository->get($item['catalog_product_sku']);
+                $subscriptionAddonOrderItem->setPrice($product->getPrice());
                 $subscriptionAddonOrderItem->save();
                 $subscriptionAddonOrderPrice += $product->getPrice() * $item['qty'];
             }
 
-            $subscriptionAddonOrder->setPrice( $subscriptionAddonOrderPrice );
+            $subscriptionAddonOrder->setPrice($subscriptionAddonOrderPrice);
             $subscriptionAddonOrder->save();
         }
 
@@ -222,18 +252,18 @@ class Subscription extends AbstractDb
      * @return array
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    private function organizeSubscriptionOrdersFromRecommendation($recommendedProducts) {
+    private function organizeSubscriptionOrdersFromRecommendation($recommendedProducts)
+    {
 
         // Process the recommendation results
         $subscriptionOrders = [];
-        foreach ( $recommendedProducts as $recommendedProduct ) {
+        foreach ($recommendedProducts as $recommendedProduct) {
 
             // Going to want to sort this date time ascending later
-            $key = strtotime( $recommendedProduct['applicationStartDate'] );
+            $key = strtotime($recommendedProduct['applicationStartDate']);
 
             // If there isn't a parent subscription, let's capture that
-            if ( ! isset( $subscriptionOrders[$key] ) ) {
-
+            if (! isset($subscriptionOrders[$key])) {
                 $subscriptionOrders[$key] = [
                     'season_name' => $recommendedProduct['season'],
                     'application_start_date' => $recommendedProduct['applicationStartDate'],
@@ -243,14 +273,13 @@ class Subscription extends AbstractDb
             }
 
             // If there is a parent subscription order (which there must be now) let's add subscription order items
-            if ( ! isset( $seasons[$key]['subscriptionOrderItems'][0] ) ) {
+            if (! isset($seasons[$key]['subscriptionOrderItems'][0])) {
 
                 // Get the corresponding product
                 $product = $this->_productRepository->get($recommendedProduct['sku']);
 
                 // @todo Error state with sku mismatch... what to do?
-                if ( ! $product->getEntityId()) {
-
+                if (! $product->getEntityId()) {
                 }
 
                 $subscriptionOrders[$key]['subscriptionOrderItems'][] = [
@@ -258,7 +287,6 @@ class Subscription extends AbstractDb
                     'qty' => $recommendedProduct['quantity']
                 ];
             }
-
         }
 
         // Sort by date ascending and return
@@ -273,13 +301,14 @@ class Subscription extends AbstractDb
      * @return array
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function organizeSubscriptionAddonOrdersFromRecommendation($recommendedProducts) {
+    public function organizeSubscriptionAddonOrdersFromRecommendation($recommendedProducts)
+    {
 
         // We are only concerned with the first season of addons
         $subscriptionAddonOrdersAll = $this->organizeSubscriptionOrdersFromRecommendation($recommendedProducts);
-        return array_shift( $subscriptionAddonOrdersAll );
-    }
 
+        return array_shift($subscriptionAddonOrdersAll);
+    }
 
     /**
      * Return Recurly Plan Code base on the name of the core product
@@ -287,8 +316,9 @@ class Subscription extends AbstractDb
      * @param $name
      * @return string
      */
-    private function getPlanCodeByName($name) {
-        switch($name) {
+    private function getPlanCodeByName($name)
+    {
+        switch ($name) {
             case 'Early Spring Feeding':
                 return 'early-spring';
             case 'Late Spring Feeding':

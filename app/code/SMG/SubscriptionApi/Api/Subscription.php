@@ -2,18 +2,19 @@
 
 namespace SMG\SubscriptionApi\Api;
 
+use Recurly_NotFoundError;
 use Magento\Customer\Model\Address;
-use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\AddressFactory;
-use SMG\SubscriptionApi\Model\SubscriptionOrder;
+use Magento\Customer\Model\Customer;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use SMG\SubscriptionApi\Helper\SubscriptionOrderHelper;
-use SMG\SubscriptionApi\Exception\SubscriptionException;
 use Magento\Framework\Exception\SecurityViolationException;
+use Psr\Log\LoggerInterface;
 use Recurly_Client;
 use Recurly_SubscriptionList;
 use SMG\SubscriptionApi\Api\Interfaces\SubscriptionInterface;
+use SMG\SubscriptionApi\Exception\SubscriptionException;
+use SMG\SubscriptionApi\Helper\SubscriptionOrderHelper;
 
 /**
  * Class Subscription
@@ -21,6 +22,8 @@ use SMG\SubscriptionApi\Api\Interfaces\SubscriptionInterface;
  */
 class Subscription implements SubscriptionInterface
 {
+    /** @var LoggerInterface */
+    protected $_logger;
 
     /** @var \SMG\RecommendationApi\Helper\RecommendationHelper */
     protected $_recommendationHelper;
@@ -73,9 +76,6 @@ class Subscription implements SubscriptionInterface
     /** @var \Magento\Customer\Api\AddressRepositoryInterface */
     protected $_addressRepository;
 
-    /**  @var \Magento\Customer\Api\Data\AddressInterfaceFactory */
-    protected $_dataAddressFactory;
-
     /**
      * @var \Magento\Customer\Model\Address
      */
@@ -119,14 +119,15 @@ class Subscription implements SubscriptionInterface
      * @param \Magento\Sales\Model\Order $order
      * @param \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory
      * @param \Magento\Customer\Api\AddressRepositoryInterface $addressRepository
-     * @param \Magento\Customer\Api\Data\AddressInterfaceFactory $dataAddressFactory
      * @param \Magento\Customer\Model\Address $customerAddress
      * @param \SMG\SubscriptionApi\Model\ResourceModel\Subscription $subscription
      * @param \SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory $subscriptionCollectionFactory
      * @param \Magento\Framework\Session\SessionManagerInterface $coreSession
      * @param AddressFactory $addressFactory
+     * @param SubscriptionOrderHelper $subscriptionOrderHelper
      */
     public function __construct(
+        LoggerInterface $logger,
         \SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper,
         \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper,
         \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper,
@@ -144,7 +145,6 @@ class Subscription implements SubscriptionInterface
         \Magento\Sales\Model\Order $order,
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
         \Magento\Customer\Api\AddressRepositoryInterface $addressRepository,
-        \Magento\Customer\Api\Data\AddressInterfaceFactory $dataAddressFactory,
         \Magento\Customer\Model\Address $customerAddress,
         \SMG\SubscriptionApi\Model\ResourceModel\Subscription $subscription,
         \SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory $subscriptionCollectionFactory,
@@ -152,6 +152,7 @@ class Subscription implements SubscriptionInterface
         AddressFactory $addressFactory,
         SubscriptionOrderHelper $subscriptionOrderHelper
     ) {
+        $this->_logger = $logger;
         $this->_recommendationHelper = $recommendationHelper;
         $this->_recurlyHelper = $recurlyHelper;
         $this->_subscriptionHelper = $subscriptionHelper;
@@ -170,7 +171,6 @@ class Subscription implements SubscriptionInterface
         $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->_recurlyHelper = $recurlyHelper;
         $this->_addressRepository = $addressRepository;
-        $this->_dataAddressFactory = $dataAddressFactory;
         $this->_customerAddress = $customerAddress;
         $this->_subscription = $subscription;
         $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
@@ -194,9 +194,8 @@ class Subscription implements SubscriptionInterface
      */
     public function addSubscriptionToCart($key, $subscription_plan, $data, $addons = [])
     {
-
         // Test the form key
-        if (!$this->formValidation($key)) {
+        if (! $this->formValidation($key)) {
             throw new SecurityViolationException(__('Unauthorized'));
         }
 
@@ -208,6 +207,7 @@ class Subscription implements SubscriptionInterface
             $subscription->generateShipDates();
             $subscription->addSubscriptionToCart($addons);
         } catch (\Exception $e) {
+            $this->_logger->error($e->getMessage());
             $response = ['success' => false, 'message' => $e->getMessage()];
             return json_encode($response);
         }
@@ -246,6 +246,7 @@ class Subscription implements SubscriptionInterface
      * @param string $key
      * @param string $quiz_id
      * @param mixed $billing_address
+     * @param bool $billing_same_as_shipping
      * @return array|false|string
      *
      * @throws \Magento\Framework\Exception\CouldNotSaveException
@@ -253,18 +254,16 @@ class Subscription implements SubscriptionInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @api
      */
-    public function createOrders($key, $quiz_id, $billing_address)
+    public function createOrders($key, $quiz_id, $billing_address, $billing_same_as_shipping)
     {
         // Get store and website information
         $store = $this->_storeManager->getStore();
-        $websiteId = $this->_storeManager->getStore()->getWebsiteId();
+        $websiteId = $store->getWebsiteId();
 
         // Get customer
         $customer = $this->_customerFactory->create();
         $customer->setWebsiteId($websiteId);
         $customer->loadByEmail($this->_checkoutSession->getQuote()->getCustomerEmail());
-        $customerData = $customer->getData();
-        $customerGigyaId = $customerData['gigya_uid'];
         $customerId = $customer->getId();
         $customer = $this->_customerFactory->create()->load($customerId);
 
@@ -282,21 +281,27 @@ class Subscription implements SubscriptionInterface
 
         // Save the customer addresses.
         $this->clearCustomerAddresses($customer);
+
         /** @var Address $customerShippingAddress */
         $customerShippingAddress = $this->_addressFactory
             ->create()
-            ->setData($orderShippingAddress)
-            ->setCustomerId($customerId)
-            ->save();
-        /** @var Address $customerBillingAddress */
-        $customerBillingAddress = $this->_addressFactory
-            ->create()
-            ->setData($billing_address)
+            ->addData($orderShippingAddress)
             ->setCustomerId($customerId)
             ->save();
         $customer->setDefaultShipping($customerShippingAddress->getId());
-        $customer->setDefaultBilling($customerBillingAddress->getId());
-        $customer->cleanAllAddresses();
+
+        if ($billing_same_as_shipping) {
+            $customer->setDefaultBilling($customerShippingAddress->getId());
+        } else {
+            /** @var Address $customerBillingAddress */
+            $customerBillingAddress = $this->_addressFactory
+                ->create()
+                ->addData($billing_address)
+                ->setCustomerId($customerId)
+                ->save();
+            $customer->setDefaultBilling($customerBillingAddress->getId());
+        }
+
         $customer->save();
 
         // Get the subscription
@@ -319,17 +324,25 @@ class Subscription implements SubscriptionInterface
         // Process the seasonal orders.
         foreach ($subscription->getSubscriptionOrders() as $subscriptionOrder) {
             try {
-                $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionOrder->getSubscriptionId());
+                $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionOrder);
             } catch (SubscriptionException $ex) {
+                $this->_logger->error($ex->getMessage());
+
                 return ['success' => false, 'error' => $ex->getMessage()];
             }
         }
 
         // Process the add-on orders.
-        foreach ($subscription->getAddOnOrderItems() as $subscriptionAddonOrder) {
+        foreach ($subscription->getSubscriptionAddonOrders() as $subscriptionAddonOrder) {
             try {
-                $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionAddonOrder->getSubscriptionId());
+                if (! $subscriptionAddonOrder->getSubscriptionId()) {
+                    continue;
+                }
+
+                $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionAddonOrder);
             } catch (SubscriptionException $ex) {
+                $this->_logger->error($ex->getMessage());
+
                 return ['success' => false, 'error' => $ex->getMessage()];
             }
         }
@@ -367,7 +380,9 @@ class Subscription implements SubscriptionInterface
 
             return $activeSubscriptions;
         } catch (Recurly_NotFoundError $e) {
-            print "Account Not Found: $e";
+            $this->_logger->error($e->getMessage());
+
+            return [];
         }
     }
 
@@ -395,17 +410,23 @@ class Subscription implements SubscriptionInterface
      */
     private function clearCustomerAddresses($customer)
     {
-        $customer->cleanAllAddresses();
+        $customer->setDefaultBilling(null);
+        $customer->setDefaultShipping(null);
 
         try {
             foreach ($customer->getAddresses() as $address) {
                 $this->_addressRepository->deleteById($address->getId());
             }
+
+            $customer->save();
         } catch (NoSuchEntityException $ex) {
+            $this->_logger->error($ex->getMessage());
             return;
         } catch (LocalizedException $ex) {
+            $this->_logger->error($ex->getMessage());
             return;
         } catch (\Exception $e) {
+            $this->_logger->error($ex->getMessage());
             return;
         }
     }
