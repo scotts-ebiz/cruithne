@@ -231,8 +231,6 @@ class RecurlySubscription
                 throw new LocalizedException(__($e->getMessage()));
             }
 
-            echo "<pre>"; var_dump('test'); die;
-
             try {
                 $this->getSubscriptionIds($checkoutData, $account, $subscription);
                 $subscription->setSubscriptionStatus('pending_order')->save();
