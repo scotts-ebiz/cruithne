@@ -37,6 +37,8 @@ define([
            var	wH = $(window).height();
            var	wS = $(this).scrollTop();
            if (wS > (hT+hH-wH) && (hT > wS)){
+               //Animate images fade in out
+               fadeimg();
                //Animate line1
                line1_get.classList.add("line-1_anim");
                //timer(parseInt(range.value));
@@ -45,4 +47,18 @@ define([
                setTimeout(function(){ line2_get.classList.add("line-2_anim"); },400);
            } 
            });
+
+           function fadeimg(){
+            //for the images
+            var current_img = 0,
+            slides = document.getElementsByClassName("season-img");
+            setInterval(function(){
+                for (var i = 0; i < slides.length; i++) {
+                    slides[i].style.opacity = 0;
+                }
+                current_img = (current_img != slides.length - 1) ? current_img + 1 : 4;
+                slides[current_img].style.opacity = 1;
+                
+                },500);
+            }
 });
