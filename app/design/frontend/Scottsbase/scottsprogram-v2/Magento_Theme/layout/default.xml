@@ -80,13 +80,7 @@
 			</block>
 			<container name="top.container" as="topContainer" label="After Page Header Top" htmlTag="div" htmlClass="top-container"/>
 		</referenceContainer>
-		<referenceContainer name="columns.top">
-			<block class="Magento\Theme\Block\Html\Title" name="page.main.title" template="Magento_Theme::html/title.phtml"/>
-			<container name="page.messages" htmlTag="div" htmlClass="page messages">
-				<block class="Magento\Framework\View\Element\Template" name="ajax.message.placeholder" template="Magento_Theme::html/messages.phtml"/>
-				<block class="Magento\Framework\View\Element\Messages" name="messages" as="messages" template="Magento_Theme::messages.phtml"/>
-			</container>
-		</referenceContainer>
+		<referenceContainer name="columns.top" remove="true" />
 		<referenceContainer name="main" htmlClass="sp-content">
 			<container name="content" label="Main Content Area" />
 		</referenceContainer>

@@ -2,15 +2,16 @@
 
 namespace SMG\SubscriptionApi\Api;
 
-use Recurly_NotFoundError;
 use Magento\Customer\Model\Address;
 use Magento\Customer\Model\AddressFactory;
 use Magento\Customer\Model\Customer;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\SecurityViolationException;
+use Magento\Framework\Webapi\Rest\Response;
 use Psr\Log\LoggerInterface;
 use Recurly_Client;
+use Recurly_NotFoundError;
 use Recurly_SubscriptionList;
 use SMG\SubscriptionApi\Api\Interfaces\SubscriptionInterface;
 use SMG\SubscriptionApi\Exception\SubscriptionException;
@@ -101,11 +102,17 @@ class Subscription implements SubscriptionInterface
     protected $_subscriptionOrderHelper;
 
     /**
+     * @var Response
+     */
+    protected $_response;
+
+    /**
      * Subscription constructor.
+     * @param LoggerInterface $logger
      * @param \SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper
      * @param \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper
      * @param \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper
-     * @param \Magento\Checkout\Model\Session $customerSession
+     * @param \Magento\Customer\Model\Session $customerSession
      * @param \Magento\Framework\Data\Form\FormKey $formKey
      * @param \Magento\Checkout\Model\Cart $cart
      * @param \Magento\Checkout\Model\Session $checkoutSession
@@ -125,13 +132,14 @@ class Subscription implements SubscriptionInterface
      * @param \Magento\Framework\Session\SessionManagerInterface $coreSession
      * @param AddressFactory $addressFactory
      * @param SubscriptionOrderHelper $subscriptionOrderHelper
+     * @param Response $response
      */
     public function __construct(
         LoggerInterface $logger,
         \SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper,
         \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper,
         \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper,
-        \Magento\Checkout\Model\Session $customerSession,
+        \Magento\Customer\Model\Session $customerSession,
         \Magento\Framework\Data\Form\FormKey $formKey,
         \Magento\Checkout\Model\Cart $cart,
         \Magento\Checkout\Model\Session $checkoutSession,
@@ -150,7 +158,8 @@ class Subscription implements SubscriptionInterface
         \SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory $subscriptionCollectionFactory,
         \Magento\Framework\Session\SessionManagerInterface $coreSession,
         AddressFactory $addressFactory,
-        SubscriptionOrderHelper $subscriptionOrderHelper
+        SubscriptionOrderHelper $subscriptionOrderHelper,
+        Response $response
     ) {
         $this->_logger = $logger;
         $this->_recommendationHelper = $recommendationHelper;
@@ -177,6 +186,7 @@ class Subscription implements SubscriptionInterface
         $this->_coreSession = $coreSession;
         $this->_addressFactory = $addressFactory;
         $this->_subscriptionOrderHelper = $subscriptionOrderHelper;
+        $this->_response = $response;
     }
 
     /**
@@ -203,6 +213,25 @@ class Subscription implements SubscriptionInterface
         try {
             /** @var \SMG\SubscriptionApi\Model\Subscription $subscription */
             $subscription = $this->_subscription->getSubscriptionByQuizId($this->_coreSession->getQuizId());
+
+            if ($subscription->getSubscriptionStatus() != 'pending') {
+                // Subscription is already active or has been canceled, so return.
+                $this->_logger->error("Subscription with quiz ID '{$subscription->getQuizId()}' cannot be added to cart since it is active or canceled.");
+
+                $redirect = '/quiz';
+
+                if ($this->_customerSession->isLoggedIn()) {
+                    $redirect = '/account/subscription';
+                }
+
+                $this->_response->setHttpResponseCode(400);
+
+                return [[
+                    'success' => false,
+                    'redirect' => $redirect,
+                ]];
+            }
+
             $subscription->setSubscriptionType($subscription_plan)->save();
             $subscription->generateShipDates();
             $subscription->addSubscriptionToCart($addons);
@@ -431,7 +460,7 @@ class Subscription implements SubscriptionInterface
         } catch (LocalizedException $ex) {
             $this->_logger->error($ex->getMessage());
             return;
-        } catch (\Exception $e) {
+        } catch (\Exception $ex) {
             $this->_logger->error($ex->getMessage());
             return;
         }
