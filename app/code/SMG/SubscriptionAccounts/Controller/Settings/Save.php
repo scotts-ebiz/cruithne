@@ -181,9 +181,6 @@ class Save extends Action
         // Get current customer
         $customer = $this->getCustomer();
 
-        // $gigyaProfile = $gigyaUser->getProfile();
-        // print_r( $gigyaProfile );
-
         if( ! empty( $request->firstname ) && ! empty( $request->lastname ) && ! empty( $request->email ) ) {
             Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
             Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
@@ -202,11 +199,13 @@ class Save extends Action
                 $this->_gigyaMageHelper->updateGigyaAccount( $this->getGigyaUid(), $gigyaData );
 
                 // Update Recurly customer data
-                $account = Recurly_Account::get( $this->getGigyaUid() );
-                $account->email = $request->email;
-                $account->first_name = $request->firstname;
-                $account->last_name = $request->lastname;
-                $account->update();
+                if( ! empty( $customer->getRecurlyAccountCode() ) ) {
+                    $account = Recurly_Account::get( $this->getGigyaUid() );
+                    $account->email = $request->email;
+                    $account->first_name = $request->firstname;
+                    $account->last_name = $request->lastname;
+                    $account->update();
+                }
             } catch(\Exception $e) {
                 $error = 'There was a problem with updating the account details ( '. $e->getMessage() .' )';
                 $this->_logger->error($error);
@@ -229,9 +228,9 @@ class Save extends Action
         $isPasswordChanged = false;
 
         // If current password is not empty
-        if( ! empty( $request->current_password ) ) {
-            if( ! empty( $request->new_password ) && ! empty( $request->confirm_new_password ) ) {
-                if( $request->new_password != $request->confirm_new_password ) {
+        if( ! empty( $request->password ) ) {
+            if( ! empty( $request->newPassword ) && ! empty( $request->passwordRetype ) ) {
+                if( $request->newPassword != $request->passwordRetype ) {
                     $data = array(
                         'success'   => false,
                         'message'   => 'New password do not match.'
@@ -242,11 +241,11 @@ class Save extends Action
                 
                 try {
                     // Update Magento password
-                    $isPasswordChanged = $this->_accountManagement->changePassword( $customer->getEmail(), $request->current_password, $request->new_password );
+                    $isPasswordChanged = $this->_accountManagement->changePassword( $customer->getEmail(), $request->password, $request->newPassword );
 
                     // Update Gigya password
-                    $gigyaPasswordData['password'] = $request->current_password;
-                    $gigyaPasswordData['newPassword'] = $request->new_password;
+                    $gigyaPasswordData['password'] = $request->password;
+                    $gigyaPasswordData['newPassword'] = $request->newPassword;
                     $this->_gigyaMageHelper->updateGigyaAccount( $this->getGigyaUid(), $gigyaPasswordData);
                 } catch(\Exception $e) {
                     $error = 'There was a problem with updating the password ( ' . $e->getMessage() . ')';
