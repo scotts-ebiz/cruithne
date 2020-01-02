@@ -1,0 +1,41 @@
+<div
+    id="pdp-modal-wrapper"
+    data-bind="click: toggleSaveAndSendModal"
+>
+    <div
+        id="pdp-modal"
+        class="sp-max-w-lg sp-bg-white sp-px-8 sp-py-12 sp-text-center md:sp-text-left sp-rounded"
+        data-bind="click: function () { return true;}, clickBubble: false"
+    >
+
+        <button
+            class="pdp-modal-close"
+            data-bind="click: toggleSaveAndSendModal"
+        ></button>
+
+        <div class="sp-max-w-xl sp-mx-auto">
+            <div class="sp-text-center sp-mb-8">
+                <h2 class="sp-h2 sp-text-black">Save And Send Results</h2>
+                <p class="sp-p1 sp-text-black">Save your results by sending a copy of your lawn care plan to your email address.</p>
+            </div>
+
+            <form class="form save-and-send">
+                <fieldset class="fieldset">
+                    <div class="sp-flex sp-flex-row">
+                        <div class="sp-form-group sp-w-3/4">
+                            <input type="email" name="email" id="email" class="input-text sp-input sp-w-full" />
+                            <label class="label sp-form-label required" for="name">Email</label>
+                        </div>
+                        <div class="sp-form-group sp-w-1/4 sp-text-right">
+                            <button type="submit" class="action sp-button sp-button--primary">SEND RESULTS</button>    
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+
+            <hr />
+            <p class="sp-p2 sp-text-black">By subscribing, you will receive emails focused on brands marketed by Scotts Miracle-Gro, its affiliates, and select partners, and related tips, information and promotions.</p>
+        </div>
+
+    </div>
+</div>

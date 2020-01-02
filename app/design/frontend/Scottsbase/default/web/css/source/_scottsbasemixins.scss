@@ -34,22 +34,13 @@
     @if $ls { letter-spacing: $ls; }
 }
 
-@mixin font-oswald($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
-    font-family: $oswald;
-    @if $size { font-size: $size; }
-    @if $color { color: $color; }
-    @if $weight { font-weight: $weight; }
-    @if $lh { line-height: $lh; }
-    @if $ls { letter-spacing: $ls; }
-}
-
 @mixin font-rokkitt($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
-    font-family: $rokkitt;
-    @if $size { font-size: $size; }
-    @if $color { color: $color; }
-    @if $weight { font-weight: $weight; }
-    @if $lh { line-height: $lh; }
-    @if $ls { letter-spacing: $ls; }
+  font-family: $rokkitt;
+  @if $size { font-size: $size; }
+  @if $color { color: $color; }
+  @if $weight { font-weight: $weight; }
+  @if $lh { line-height: $lh; }
+  @if $ls { letter-spacing: $ls; }
 }
 
 @mixin defaultwrap($center: true) {

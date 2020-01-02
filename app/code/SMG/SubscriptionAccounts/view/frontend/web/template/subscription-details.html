@@ -1,0 +1,183 @@
+<!-- ko if: success() -->
+<div
+    class="sp-bg-green-4 sp-p1 sp-px-4 sp-py-2 sp-mb-4 sp-rounded sp-text-green-1 sp-text-bold"
+    data-bind="text: success()"
+>
+</div>
+<!-- /ko -->
+
+<div class="sp-flex sp-justify-center md:sp-justify-between sp-items-center">
+    <h2 class="sp-h2 sp-mt-0  sp-text-center md:sp-text-left">
+        <!-- ko if: subscriptions().success -->
+        Subscription Details
+        <!-- /ko -->
+
+        <!-- ko ifnot: subscriptions().success -->
+        No Subscriptions
+        <!-- /ko -->
+    </h2>
+    <a class="sp-link sp-hide md:sp-block"
+       href="/customer/account/logout">Log Out</a>
+</div>
+
+<!-- ko if: subscriptions().success -->
+<div class="sp-flex sp-items-center sp-py-8 sp-px-4 sp-mt-8 sp-subscription-details--border-bottom">
+    <h3 class="sp-h4 sp-uppercase">subscription</h3>
+    <div class="sp-subscription-details__subscription-active sp-label sp-uppercase md:sp-ml-4">active</div>
+
+    <div class="sp-hide md:sp-block sp-subscription-details__desktop-links">
+        <a href="/quiz"
+           class="sp-link">Lawn conditions changed?</a>
+        <a href="#"
+           data-bind="click: displaySubscriptionModal"
+           class="sp-link sp-inline-block sp-ml-4 cancel-subscription-modal">Cancel Subscription</a>
+    </div>
+</div>
+
+<div class="md:sp-flex md:sp-mt-12">
+    <div class="sp-p-8 sp-flex-auto">
+        <table>
+            <tbody>
+                <tr>
+                    <th class="sp-label">Type</th>
+                    <td data-bind="text: subscriptions().subscription_type"></td>
+                </tr>
+                <tr>
+                    <th class="sp-label">Start date</th>
+                    <td data-bind="text: subscriptions().main_subscription.starts_at"></td>
+                </tr>
+                <tr>
+                    <th class="sp-label">Renewal date</th>
+                    <td data-bind="text: subscriptions().main_subscription.ends_at"></td>
+                </tr>
+                <tr>
+                    <th class="sp-label">Latest invoice</th>
+                    <td><a class="sp-link"
+                           data-bind="attr: { href: '/account/subscription/pdf/invoice/' + subscriptions().active_subscription.invoice_number }">#<span
+                                  data-bind="text: subscriptions().active_subscription.invoice_number"></span></a>
+                    </td>
+                </tr>
+                <tr>
+                    <th class="sp-label">Billing Information</th>
+                    <td>Ending in <span data-bind="text: subscriptions().main_subscription.cc_last_four"></span>
+                        <a class="sp-link"
+                           href="/account/billing">Edit</a></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="md:sp-hide sp-mt-8">
+            <a class="sp-link sp-block">Lawn conditions changed?</a>
+            <a class="sp-link sp-block">Cancel Subscription</a>
+        </div>
+    </div>
+
+
+    <div class="sp-subscription-details__next-billing sp-p-8 md:sp-p-16 sp-flex-auto">
+        <h3 class="sp-label">Next Billing on <span
+                  data-bind="text: subscriptions().main_subscription.next_billing_date"></span></h3>
+        <table>
+            <tbody>
+                <tr class="screen-reader-text">
+                    <th class="sp-label">Item</th>
+                    <th class="sp-label">cost</th>
+                </tr>
+                <tr>
+                    <td>1 x <span
+                              data-bind="text: ( subscriptions().is_annual === true ) ? 'Annual' : 'Seasonally'"></span>
+                    </td>
+                    <td>$<span data-bind="text: subscriptions().main_subscription.main_total_amount"></span> USD</td>
+                </tr>
+                <tr class="--dense">
+                    <td><span data-bind="text: subscriptions().main_subscription.addon_count"></span> Add On Item(s)
+                    </td>
+                    <td>$<span data-bind="text: subscriptions().main_subscription.addon_total_amount"></span> USD</td>
+                </tr>
+                <tr class="sp-subscription-details__next-billing-total">
+                    <td>Current Total</td>
+                    <td>$<span data-bind="text: subscriptions().main_subscription.total_amount"></span> USD</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- ko if: subscriptions().invoices && subscriptions().invoices.length > 0 -->
+<div class="sp-flex sp-justify-between sp-items-center sp-py-8 sp-px-4 sp-subscription-details--border-bottom">
+    <h3 class="sp-h4">INVOICES</h3>
+</div>
+
+<div class="sm:sp-px-8">
+    <table class="sp-subscription-details__invoices">
+        <thead>
+            <tr>
+                <th class="sp-label">Invoice Number</th>
+                <th class="sp-label">Issued On</th>
+                <th class="sp-label">Due On</th>
+                <th class="sp-label">Paid</th>
+                <th class="sp-label">Total</th>
+            </tr>
+        </thead>
+        <tbody data-bind="foreach: { data: subscriptions().invoices, as: 'invoice' }">
+            <tr>
+                <td data-label="Invoice Number"><a class="sp-link"
+                       data-bind="attr: { href: '/account/subscription/pdf/invoice/' + invoice.invoice_number }">#<span
+                              data-bind="text: invoice.invoice_number"></span></a></td>
+                <td data-label="Issued On"
+                    data-bind="text: invoice.created_at"></td>
+                <td data-label="Due On"
+                    data-bind="text: invoice.due_on"></td>
+                <td data-label="Paid"
+                    data-bind="attr: { class: ( invoice.paid == 'YES' ) ? '' : 'sp-text-red-1' }"><span
+                          data-bind="text: invoice.paid"></span></td>
+                <td data-label="Total"
+                    class="sp-subscription-details__bold"
+                    data-bind="text: '$' + invoice.total"></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<!-- /ko -->
+<!-- /ko -->
+
+<div id="popup-modal"
+     class="modal-popup--subscriptions sp-hide sp-p-8">
+    <h2 class="sp-h2 sp-text-black sp-text-center">Before you cancel</h2>
+    <p class="sp-text-black sp-text-center">We understand that lawn care can be tough. Can we help you get your best
+        results?</p>
+    <div class="content">
+        <div>
+            <p class="sp-mb-0"><strong>Still seeing weeds?</strong></p>
+            <p>You should see results from weed control after about 30 days</p>
+        </div>
+        <div>
+            <p class="sp-mb-0"><strong>Lawn looking brown?</strong></p>
+            <p>Your lawn can get really stressed from really hot or dry conditions.</p>
+        </div>
+        <div>
+            <p class="sp-mb-0"><strong>Grass not growing?</strong></p>
+            <p>Starting from seed requires daily watering for best results</p>
+        </div>
+        <div class="divider"></div>
+        <p class="sp-text-center">Our service team is here to help you get your best lawn. Contact us between Xam and
+            Xpm EST at 1-800-000-000.</p>
+    </div>
+
+    <hr class="sp-my-8" />
+
+    <div class="sp-flex sp-flex-column sp-justify-center sp-items-center">
+        <button
+            class="sp-button sp-button--primary"
+            type="button"
+            data-bind="
+                click: cancelSubscription,
+                css: { 'sp-button--inactive sp-button--loading': loading() }
+            "
+        >
+            I want to cancel
+        </button>
+        <a href="sp-link"
+           data-bind="click: closeSubscriptionModal"
+           class="close-subscription-modal sp-block sp-mt-4">Nevermind, take me back</a>
+    </div>
+</div>

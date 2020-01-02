@@ -3,36 +3,43 @@
 <!--Your Plan-->
 <div class="sp-bg-green-4">
 	<div class="sp-container">
-		<div class="sp-mx-auto sp-pb-8 lg:sp-w-1/2">
-			<h1 class="sp-h1 sp-mx-auto sp-text-green-1 sp-text-center">Choose Your Subscription</h1>
-			<p class="sp-text-base sp-text-center">
-				Select a subscription option to continue with your purchase.
-			</p>
+		<div class="sp-text-center">
+			<div class="sp-mx-auto lg:sp-w-1/2">
+				<h1 class="sp-h1 sp-mx-auto sp-text-green-1 sp-text-center">Choose Your Subscription</h1>
+				<p class="sp-text-base sp-text-center">
+					Select a subscription option to continue with your purchase.
+				</p>
+			</div>
+			<div>
+				<div class="sp-options__your-plan sp-inline-block sp-bg-white sp-pt-8 sp-pb-4 sp-px-4 lg:sp-mx-8 md:sp-mx-auto sp-relative sp-rounded sp-my-8 md:sp-my-12">
+					<h2 class="sp-text-center sp-h4 sp-m-0 sp-mb-4 sp-uppercase">Your Plan</h2>
 
-			<div class="sp-options__your-plan sp-bg-white sp-pt-8 sp-pb-4 lg:sp-mx-8 md:sp-mx-auto sp-relative sp-rounded sp-my-8 md:sp-my-12">
-				<h2 class="sp-text-center sp-h4 sp-m-0 sp-mb-4 sp-uppercase">Your Plan</h2>
-
-				<ul
-					class="sp-options__list sp-flex sp-flex-row sp-flex-wrap sp-m-0 sp-p-0 sp-justify-around sp-relative"
-					data-bind="foreach: products()"
-				>
-					<li class="sp-options__your-plan-product sp-text-center sp-mx-4 md:sp-mx-0">
-						<img
-							class="sp-align-center sp-mb-1 sp-options__product-image"
-							data-bind="attr: { src: $data.thumbnailImage }"
-						/>
-						<div
-							class="sp-options__your-plan-label sp-text-center sp-p2"
-							data-bind="text: season"
-						>
-						</div>
-						<strong
-							class="sp-text-center sp-label"
-							data-bind="text: $parent.formatCurrency($data.price * $data.quantity)"
-						>
-						</strong>
-					</li>
-				</ul>
+					<ul
+						class="sp-options__list sp-flex sp-flex-row sp-flex-wrap lg:sp-flex-no-wrap sp-m-0 sp-mb-6 sp--mx-2 sp-p-0 sp-justify-around sp-relative"
+						data-bind="foreach: seasons()"
+					>
+						<li class="sp-options__your-plan-product sp-text-center sp-mx-4 md:sp-mx-0 sp-px-2">
+							<div class="sp-flex sp-items-center sp-justify-center sp--mx-1" data-bind="foreach: products">
+								<div class="sp-px-1">
+									<img
+										class="sp-align-center sp-block sp-mb-1 sp-options__product-image"
+										data-bind="attr: { src: thumbnailImage }"
+									/>
+								</div>
+							</div>
+							<div
+								class="sp-options__your-plan-label sp-text-center sp-p2"
+								data-bind="html: season"
+							>
+							</div>
+							<strong
+								class="sp-text-center sp-label"
+								data-bind="html: $parent.formatCurrency(total)"
+							>
+							</strong>
+						</li>
+					</ul>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -58,8 +65,8 @@
 							<h3 class="sp-h2--long sp-mb-6">Annual Subscription</h3>
 							<p class="sp-mb-0 sp-p1 sp-text-green-1">Subscribe annually and save 10% off MSRP</p>
 							<div class="subscription-card-price sp-mb-6">
-								<span class="--old-price" data-bind="text: formatCurrency(total())"></span>
-								<span class="--current-price sp-h4--long sp-text-green-1" data-bind="text: formatCurrency(total() * .9)"></span>
+								<span class="--old-price" data-bind="html: formatCurrency(total())"></span>
+								<span class="--current-price sp-h4--long sp-text-green-1" data-bind="html: formatCurrency(total() * .9)"></span>
 							</div>
 							<ul class="sp-pl-4">
 								<li class="sp-p1">Full amount charged now</li>
@@ -99,10 +106,10 @@
 						</h2>
 						<div class="sp-flex sp-flex-column sp-flex-auto sp-px-6 lg:sp-px-12">
 							<h3 class="sp-h2--long sp-mb-6">Seasonal Subscription</h3>
-							<ul class="sp-pl-0" data-bind="foreach: products()" style="list-style: none">
+							<ul class="sp-pl-0" data-bind="foreach: seasons()" style="list-style: none">
 								<li class="sp-p1">
-									<span data-bind="text: $data.season"></span>
-									<strong data-bind="text: $parent.formatCurrency($data.price * $data.quantity)"></strong>
+									<span data-bind="html: season"></span>
+									<strong data-bind="html: $parent.formatCurrency(total)"></strong>
 								</li>
 							</ul>
 							<ul class="sp-pl-4">
@@ -148,7 +155,7 @@
 			<!-- ko if: addOn().mentioned -->
 			<div class="sp-p1 sp-mb-4">
 				Because you mentioned
-				<strong data-bind="text: addOn().mentioned.toLowerCase()"></strong>
+				<strong data-bind="html: addOn().mentioned.toLowerCase()"></strong>
 			</div>
             <!-- /ko -->
 
@@ -164,20 +171,16 @@
 					<div class="sp-flex-auto sp-text-center md:sp-text-left">
 						<div
 							class="sp-label sp-mb-4"
-							data-bind="text: formatCurrency(addOn().price)"
+							data-bind="html: formatCurrency(addOn().price)"
 						>
 						</div>
-						<h4 class="sp-h4--long sp-mb-4 sp-mt-0" data-bind="text: addOn().season"></h4>
-                        <p class="sp-p1 sp-hide md:sp-block" data-bind="text: addOn().description"></p>
+						<h4 class="sp-h4--long sp-mb-4 sp-mt-0" data-bind="html: addOn().season"></h4>
+                        <p class="sp-p1 sp-hide md:sp-block" data-bind="html: addOn().description"></p>
 
-						<!--
-							@todo: Rasa - Add this once PDP is completed
-							@author: Sean Kegel
-							@date: 12/12/2019
-						<a class="sp-options__add-on-link sp-link" href="#">
+						<button type="button" class="sp-options__add-on-link sp-link" data-bind="click: togglePDP.bind($data, addOn())">
 							More About This Product
-						</a>
-						-->
+						</button>
+
 
 						<hr class="sp-options__divider sp-mb-6 sp-mt-4">
 
@@ -185,9 +188,9 @@
 							<label class="sp-flex-none sp-mb-2 md:sp-mb-0 md:sp-mr-8">
 								<input
 									class="sp-checkbox sp-options__add-on-checkbox sp-mr-1"
-									data-bind="checkedValue: $data.sku"
 									name="addon_products"
 									type="checkbox"
+									data-bind="checkedValue: addOn().sku, checked: selectedAddOns, attr: { checked: selectedAddOns.indexOf(addOn().sku) >= 0 }"
 								/>
 								<span class="sp-options__add sp-label sp-text-green-1">
 									Add to Order
@@ -222,4 +225,7 @@
         </a>
     </div>
 </div>
+
+<!-- ko if: pdp().visible && pdp().product  -->
+<!-- ko template: "SMG_RecommendationResults/product-detail-modal.html" --><!-- /ko -->
 <!-- /ko -->

@@ -2,29 +2,32 @@
 
 namespace SMG\SubscriptionApi\Model;
 
+use Psr\Log\LoggerInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ProductFactory;
 use Magento\Catalog\Model\ProductRepository;
-use Magento\Checkout\Model\Session as CheckoutSession;
-use Magento\Framework\Data\Form\FormKey;
-use Magento\Framework\Registry;
 use Magento\Checkout\Model\Cart;
+use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\Data\Collection\AbstractDb;
+use Magento\Framework\Data\Form\FormKey;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Registry;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\Quote;
-use Magento\Setup\Exception;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use Magento\Store\Model\StoreManager;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
-use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection as SubscriptionOrderCollection;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\Collection as SubscriptionAddonOrderCollection;
-use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection\Interceptor as SubscriptionOrderCollectionInterceptor;
-use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\Collection\Interceptor as SubscriptionAddonOrderCollectionInterceptor;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\CollectionFactory as SubscriptionAddonOrderCollectionFactory;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection as SubscriptionOrderCollection;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection\Interceptor as SubscriptionOrderCollectionInterceptor;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
 
 /**
  * Class Subscription
@@ -58,25 +61,33 @@ class Subscription extends AbstractModel
     protected $_checkoutSession;
 
     /**  @var CartManagementInterface */
-    private $_cartManagementInterface;
+    protected $_cartManagementInterface;
 
     /** @var CartRepositoryInterface */
-    private $_cartRepositoryInterface;
+    protected $_cartRepositoryInterface;
 
     /** @var StoreManager */
-    private $_storeManager;
+    protected $_storeManager;
 
     /** @var Quote */
-    private $_quote;
+    protected $_quote;
 
     /** @var Product */
-    private $_product;
+    protected $_product;
 
     /**  @var ProductFactory */
-    private $_productFactory;
+    protected $_productFactory;
 
     /** @var ProductRepository */
-    private $_productRepository;
+    protected $_productRepository;
+
+    /** @var OrderCollectionFactory */
+    protected $_orderCollectionFactory;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $_logger;
 
     /**
      * Constructor.
@@ -92,6 +103,7 @@ class Subscription extends AbstractModel
      * Subscription constructor.
      * @param Context $context
      * @param Registry $registry
+     * @param LoggerInterface $logger
      * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
      * @param SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory
      * @param Cart $cart
@@ -104,6 +116,7 @@ class Subscription extends AbstractModel
      * @param Product $product
      * @param ProductFactory $productFactory
      * @param ProductRepository $productRepository
+     * @param OrderCollectionFactory $orderCollectionFactory
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -111,6 +124,7 @@ class Subscription extends AbstractModel
     public function __construct(
         Context $context,
         Registry $registry,
+        LoggerInterface $logger,
         SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
         SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory,
         Cart $cart,
@@ -123,12 +137,14 @@ class Subscription extends AbstractModel
         Product $product,
         ProductFactory $productFactory,
         ProductRepository $productRepository,
+        OrderCollectionFactory $orderCollectionFactory,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
     ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
 
+        $this->_logger = $logger;
         $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
         $this->_subscriptionAddonOrderCollectionFactory = $subscriptionAddonOrderCollectionFactory;
         $this->_cart = $cart;
@@ -141,6 +157,7 @@ class Subscription extends AbstractModel
         $this->_product = $product;
         $this->_productFactory = $productFactory;
         $this->_productRepository = $productRepository;
+        $this->_orderCollectionFactory = $orderCollectionFactory;
     }
 
     /**
@@ -149,16 +166,15 @@ class Subscription extends AbstractModel
      */
     public function getSubscriptionOrders()
     {
-
         // Make sure we have an actual subscription
-        if ( is_null( $this->getEntityId() ) ) {
+        if (empty($this->getEntityId())) {
             return false;
         }
 
         // If subscription orders is local, send them, if not, pull them and send them
-        if ( ! isset($this->_subscriptionOrders) ) {
+        if (! isset($this->_subscriptionOrders)) {
             $subscriptionOrders = $this->_subscriptionOrderCollectionFactory->create();
-            $subscriptionOrders->addFieldToFilter( 'subscription_entity_id', $this->getEntityId() );
+            $subscriptionOrders->addFieldToFilter('subscription_entity_id', $this->getEntityId());
             $this->_subscriptionOrders = $subscriptionOrders;
         }
 
@@ -166,42 +182,141 @@ class Subscription extends AbstractModel
     }
 
     /**
+     * Get the core product order items for the subscription.
+     *
+     * @return SubscriptionOrderItem[]
+     */
+    public function getOrderItems()
+    {
+        $items = [];
+        $orders = $this->getSubscriptionOrders() ?: [];
+
+        foreach ($orders as $order) {
+            /** @var SubscriptionOrder $order */
+            $orderItems = $order->getOrderItems() ?: [];
+
+            foreach ($orderItems as $item) {
+                /** @var SubscriptionOrderItem $item */
+                try {
+                    $items[] = $item;
+                } catch (\Exception $ex) {
+                    continue;
+                }
+            }
+        }
+
+        return $items;
+    }
+
+    /**
+     * Get the add-on order items for the subscription.
+     *
+     * @return SubscriptionAddonOrderItem[]
+     */
+    public function getAddOnOrderItems()
+    {
+        $items = [];
+        $orders = $this->getSubscriptionAddonOrders() ?: [];
+
+        foreach ($orders as $order) {
+            /** @var SubscriptionAddonOrder $order */
+            $orderItems = $order->getOrderItems() ?: [];
+
+            foreach ($orderItems as $item) {
+                /** @var SubscriptionOrderItem $item */
+                try {
+                    $items[] = $item;
+                } catch (\Exception $ex) {
+                    continue;
+                }
+            }
+        }
+
+        return $items;
+    }
+
+    /**
+     * Get the core products for the subscription.
+     *
+     * @return Product[]
+     */
+    public function getCoreProducts()
+    {
+        $coreProducts = [];
+        $orderItems = $this->getOrderItems();
+
+        foreach ($orderItems as $item) {
+            /** @var SubscriptionOrderItem $item */
+            try {
+                $product = $item->getProduct();
+                $coreProducts[] = $product;
+            } catch (\Exception $ex) {
+                continue;
+            }
+        }
+
+        return $coreProducts;
+    }
+
+    /**
+     * Get the add-on products for the subscription.
+     *
+     * @return Product[]
+     */
+    public function getAddOnProducts()
+    {
+        $addOnProducts = [];
+        $orderItems = $this->getAddOnOrderItems();
+
+        foreach ($orderItems as $item) {
+            /** @var SubscriptionAddonOrderItem $item */
+            try {
+                $product = $item->getProduct();
+                $addOnProducts[] = $product;
+            } catch (\Exception $ex) {
+                continue;
+            }
+        }
+
+        return $addOnProducts;
+    }
+
+    /**
      * Get subscription order by season slug
      * @param string $seasonSlug
      * @return SubscriptionOrderCollection|mixed
      */
-    public function getSubscriptionOrderBySeasonSlug( string $seasonSlug )
+    public function getSubscriptionOrderBySeasonSlug(string $seasonSlug)
     {
 
         // Make sure we have an actual subscription
-        if ( is_null( $this->getEntityId() ) ) {
+        if (empty($this->getEntityId())) {
             return false;
         }
 
         $subscriptionOrders = $this->_subscriptionOrderCollectionFactory->create();
-        $subscriptionOrders->addFieldToFilter( 'subscription_entity_id', $this->getEntityId() );
-        $subscriptionOrders->addFieldToFilter( 'season_slug', $seasonSlug );
+        $subscriptionOrders->addFieldToFilter('subscription_entity_id', $this->getEntityId());
+        $subscriptionOrders->addFieldToFilter('season_slug', $seasonSlug);
 
         return $subscriptionOrders->fetchItem();
     }
-
 
     /**
      * Get subscription addon orders
      * @return SubscriptionAddonOrderCollection|mixed
      */
-    public function getSubscriptionAddonOrders( )
+    public function getSubscriptionAddonOrders()
     {
 
         // Make sure we have an actual subscription
-        if ( is_null( $this->getEntityId() ) ) {
+        if (empty($this->getEntityId())) {
             return false;
         }
 
         // If subscription orders is local, send them, if not, pull them and send them
-        if ( ! isset( $this->_subscriptionAddonOrders ) ) {
+        if (! isset($this->_subscriptionAddonOrders)) {
             $subscriptionAddonOrders = $this->_subscriptionAddonOrderCollectionFactory->create();
-            $subscriptionAddonOrders->addFieldToFilter( 'subscription_entity_id', $this->getEntityId() );
+            $subscriptionAddonOrders->addFieldToFilter('subscription_entity_id', $this->getEntityId());
             $this->_subscriptionAddonOrders = $subscriptionAddonOrders;
         }
 
@@ -213,22 +328,23 @@ class Subscription extends AbstractModel
      * @return bool
      * @throws \Exception
      */
-    public function generateShipDates() {
+    public function generateShipDates()
+    {
 
         // Make sure we have an actual subscription and that we have a subscription type
-        if ( is_null( $this->getEntityId() ) || is_null( $this->getSubscriptionType() ) ) {
+        if (empty($this->getEntityId()) || empty($this->getSubscriptionType())) {
             return false;
         }
 
         // For each subscription order, generate shipment dates
         /** @var SubscriptionOrder $subscriptionOrder */
-        foreach ( $this->getSubscriptionOrders() as $subscriptionOrder ) {
+        foreach ($this->getSubscriptionOrders() as $subscriptionOrder) {
             $subscriptionOrder->generateShipDates();
         }
 
         // For each subscription order, generate shipment dates
         /** @var SubscriptionAddonOrder $subscriptionAddonOrder */
-        foreach ( $this->getSubscriptionAddonOrders() as $subscriptionAddonOrder ) {
+        foreach ($this->getSubscriptionAddonOrders() as $subscriptionAddonOrder) {
             $subscriptionAddonOrder->generateShipDates();
         }
     }
@@ -238,17 +354,19 @@ class Subscription extends AbstractModel
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function addSubscriptionToCart( $addons ) {
-
+    public function addSubscriptionToCart($addons)
+    {
         try {
             $quote = $this->_checkoutSession->getQuote();
             $quoteItems = $quote->getItemsCollection();
-            foreach( $quoteItems as $item ) {
-                $this->_cart->removeItem( $item->getItemId() );
+            foreach ($quoteItems as $item) {
+                $this->_cart->removeItem($item->getItemId());
             }
+        } catch (\Exception $e) {
+            $error = 'Could not add remove items from cart. - ' . $e->getMessage();
+            $this->_logger->error($error);
 
-        } catch ( \Exception $e ) {
-            throw new \Exception("Oops 1: " . $e->getMessage() );
+            throw new \Exception($error);
         }
 
         // We will have to calculate the price differently for the subscription than we normally would
@@ -256,9 +374,8 @@ class Subscription extends AbstractModel
 
         // Go through all the core products, add them to cart and calculate
         // the total subscription price which will be applied to the Annual Subscription product
-        foreach ( $this->getSubscriptionOrders() as $subscriptionOrder ) {
-
-            foreach ($subscriptionOrder->getSubscriptionOrderItems() as $subscriptionOrderItem) {
+        foreach ($this->getSubscriptionOrders() as $subscriptionOrder) {
+            foreach ($subscriptionOrder->getOrderItems() as $subscriptionOrderItem) {
                 $product = $subscriptionOrderItem->getProduct();
                 $product = $this->_productRepository->get($product->getSku());
                 $totalSubscriptionPrice += $product->getPrice() * $subscriptionOrderItem->getQty();
@@ -270,16 +387,15 @@ class Subscription extends AbstractModel
         }
 
         try {
-
             // Get the first seasonal product or annual depending on type
             $subscriptionOrders = $this->getSubscriptionOrders();
             $planSku = 'annual';
             if ($this->getSubscriptionType() !== 'annual') {
                 $firstSeason = $subscriptionOrders->getFirstItem();
-                $planSku = $this->getPlanCodeByName( $firstSeason->getSeasonName() );
+                $planSku = $this->getPlanCodeByName($firstSeason->getSeasonName());
             }
 
-            $seasonalProduct = $this->_productRepository->get( $planSku );
+            $seasonalProduct = $this->_productRepository->get($planSku);
             $params = [
                 'form_key'  => $this->_formKey->getFormKey(),
                 'qty'       => 1
@@ -287,22 +403,21 @@ class Subscription extends AbstractModel
             $this->_cart->addProduct($seasonalProduct->getId(), $params)->save();
 
             // Add the discount if it's annual
-            if ( $this->getSubscriptionType() == 'annual') {
+            if ($this->getSubscriptionType() == 'annual') {
                 $this->_cart->getQuote()->setCouponCode('annual_discount')->collectTotals()->save();
             }
+        } catch (\Exception $e) {
+            $error = 'There was an issue adding the subscription to the cart. - ' . $e->getMessage();
+            $this->_logger->error($error);
 
-        } catch ( \Exception $e ) {
-            throw new \Exception("Oops 2: " . $e->getMessage() );
+            throw new \Exception($error);
         }
 
         try {
             // Go through all selected AddOn Products and add them to the cart
             foreach ($this->getSubscriptionAddonOrders() as $subscriptionAddonOrder) {
-
-                foreach ($subscriptionAddonOrder->getSubscriptionAddonOrderItems() as $subscriptionAddonOrderItem) {
-
+                foreach ($subscriptionAddonOrder->getOrderItems() as $subscriptionAddonOrderItem) {
                     if (in_array($subscriptionAddonOrderItem->getCatalogProductSku(), $addons)) {
-
                         try {
                             $product = $subscriptionAddonOrderItem->getProduct();
                             $product = $this->_productRepository->get($product->getSku());
@@ -318,9 +433,11 @@ class Subscription extends AbstractModel
                             $item->setCustomPrice((float)$price);
                             $item->setOriginalCustomPrice((float)$price);
                             $item->getProduct()->setIsSuperMode(true);
-
                         } catch (\Exception $e) {
-                            throw new \Exception("Oops 3: " . $e->getMessage());
+                            $error = 'There were issues adding add-on products to the cart. - ' . $e->getMessage();
+                            $this->_logger->error($error);
+
+                            throw new \Exception($error);
                         }
 
                         $subscriptionAddonOrderItem->setSelected(1);
@@ -333,9 +450,11 @@ class Subscription extends AbstractModel
 
             $quote->save();
         } catch (\Exception $e) {
-            throw new \Exception("Oops Subscr: " . $e->getMessage());
-        }
+            $error = 'There was an issue saving the quote. - ' . $e->getMessage();
+            $this->_logger->error($error);
 
+            throw new \Exception($error);
+        }
 
         // Go through the cart items and modify their prices for the current customer order
         try {
@@ -352,9 +471,11 @@ class Subscription extends AbstractModel
 
             // Update Cart
             $quote->collectTotals()->save();
+        } catch (\Exception $e) {
+            $error = 'There was an issue updating the cart item pricing. - ' . $e->getMessage();
+            $this->_logger->error($error);
 
-        } catch ( \Exception $e ) {
-            throw new \Exception("Oops 4: " . $e->getMessage() );
+            throw new \Exception($error);
         }
     }
 
@@ -362,8 +483,9 @@ class Subscription extends AbstractModel
      * @return bool
      * @throws \Exception
      */
-    public function isCurrentlyShippable() {
-        if ( $this->getSubscriptionType() !== 'annual' ) {
+    public function isCurrentlyShippable()
+    {
+        if ($this->getSubscriptionType() !== 'annual') {
 
             // Test of seasonal is not shippable
             $today = new \DateTime();
@@ -377,7 +499,8 @@ class Subscription extends AbstractModel
      * Return the first subscription order
      * @return SubscriptionOrder|mixed
      */
-    public function getFirstSubscriptionOrder() {
+    public function getFirstSubscriptionOrder()
+    {
         $subscriptionOrders = $this->getSubscriptionOrders();
         if (! $subscriptionOrders) {
             return false;
@@ -404,7 +527,7 @@ class Subscription extends AbstractModel
             return false;
         }
 
-        $items = $order->getSubscriptionOrderItems();
+        $items = $order->getOrderItems();
 
         if (! $items) {
             return false;
@@ -422,10 +545,11 @@ class Subscription extends AbstractModel
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function createSubscriptionService( $token, $service ) {
+    public function createSubscriptionService($token, $service)
+    {
 
         /** @var RecurlySubscription $service */
-        $service->createSubscription( $token, $this );
+        $service->createSubscription($token, $this);
     }
 
     /**
@@ -433,8 +557,9 @@ class Subscription extends AbstractModel
      * @param $name
      * @return string
      */
-    private function getPlanCodeByName($name) {
-        switch($name) {
+    private function getPlanCodeByName($name)
+    {
+        switch ($name) {
             case 'Early Spring Feeding':
                 return 'early-spring';
             case 'Late Spring Feeding':
@@ -448,4 +573,126 @@ class Subscription extends AbstractModel
         }
     }
 
+    /**
+     * Cancel Subscriptions
+     * @param $service
+     * @throws LocalizedException
+     */
+    public function cancelSubscriptions($service)
+    {
+        $subscriptionOrders = [];
+
+        // Get orders that apply
+        $orders = $this->getOrders(true, false);
+
+        // Create Credit Memos
+        foreach ($orders as $order) {
+            try {
+                /** @var SubscriptionOrder $subscriptionOrder */
+                if ($order->getSubscriptionAddon()) {
+                    $subscriptionOrder = $this->_subscriptionOrderCollectionFactory->create()->addFieldToFilter('sales_order_id', $order->getEntityId())->getFirstItem();
+                } else {
+                    $subscriptionOrder = $this->_subscriptionOrderCollectionFactory->create()->addFieldToFilter('sales_order_id', $order->getEntityId())->getFirstItem();
+                }
+                $subscriptionOrder->createCreditMemo();
+                $subscriptionOrders[] = $subscriptionOrder;
+            } catch (\Exception $e) {
+                $error = 'There was a problem making a credit memo for subscription cancellation.' . $e->getMessage();
+                $this->_logger->error($error);
+                throw new LocalizedException(__($error));
+            }
+        }
+
+        // Generate Refund
+        try {
+            $this->generateRefund($orders, $service);
+        } catch (\Exception $e) {
+            $error = 'There was a problem generating a refund.' . $e->getMessage();
+            $this->_logger->error($error);
+            throw new LocalizedException(__($error));
+        }
+
+        // Update Subscription statuses
+        try {
+            $this->updateCanceledStatuses($subscriptionOrders);
+        } catch (\Exception $e) {
+            $error = 'There was a problem updating statuses.' . $e->getMessage();
+            $this->_logger->error($error);
+            throw new LocalizedException(__($error));
+        }
+    }
+
+    /**
+     * Return a filtered array of Orders associated with this subscription
+     * @param bool|null $filterByInvoiced null to ignore filter, true to filter positively (has invoices), false to
+     *  filter negatively
+     * @param bool|null $filterByShipped null to ignore filter, true to filter positively (has shipments), false to
+     *  filter negatively
+     * @return array
+     * @throws LocalizedException
+     */
+    public function getOrders(bool $filterByInvoiced = null, bool $filterByShipped = null)
+    {
+        $ordersArray = [];
+
+        try {
+            $orders = $this->_orderCollectionFactory->create()->addFieldToFilter('master_subscription_id', $this->getSubscriptionId());
+        } catch (\Exception $e) {
+
+            $error = 'There was an issue returning orders to cancel.';
+            $this->_logger->error($error);
+            throw new LocalizedException(__($error));
+        }
+
+        /** @var Order $order */
+        foreach ($orders as $order) {
+            $hasInvoices = $order->getInvoiceCollection()->count() > 0;
+            $hasShipments = $order->getShipmentsCollection()->count() > 0;
+
+            if (
+                (is_null($filterByInvoiced) || $filterByInvoiced === $hasInvoices)
+                    &&
+                (is_null($filterByShipped) || $filterByShipped === $hasShipments)
+            ) {
+                $ordersArray[] = $order;
+            }
+        }
+
+        return $ordersArray;
+    }
+
+    /**
+     * Generate Refund
+     * @param array $orders
+     * @param $service
+     * @throws LocalizedException
+     */
+    private function generateRefund($orders, $service)
+    {
+        try {
+            $totalRefund = 0;
+            /** @var \SMG\Sales\Model\Order $order */
+            foreach ($orders as $order) {
+                $totalRefund += (float) $order->getGrandTotal();
+            }
+            /** @var RecurlySubscription $service */
+            $service->createCredit($totalRefund, $this->getGigyaId());
+        } catch (\Exeception $e) {
+            $error = 'Cannot generate refund.';
+            $this->_logger->error($error);
+            throw new LocalizedException(__($error));
+        }
+    }
+
+    /**
+     * Update Canceled Statuses
+     * @param $subscriptionOrders
+     */
+    private function updateCanceledStatuses($subscriptionOrders)
+    {
+        foreach ($subscriptionOrders as $subscriptionOrder) {
+            $subscriptionOrder->setSubscriptionOrderStatus('canceled')->save();
+        }
+        $this->setSubscriptionStatus('canceled')->save();
+    }
 }
