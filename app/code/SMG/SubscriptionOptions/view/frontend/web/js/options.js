@@ -126,6 +126,18 @@ define([
                             self.results(data);
                             window.sessionStorage.setItem('result', JSON.stringify(data));
                             window.sessionStorage.setItem('quiz-id', data.id);
+                            window.sessionStorage.setItem('lawn-zip', request.zip);
+                        }
+                    },
+                    error(response) {
+                        response = JSON.parse(response.responseText);
+
+                        if (Array.isArray(response)) {
+                            response = response[0];
+                        }
+
+                        if (response.redirect) {
+                            window.location.href = response.redirect;
                         }
                     },
                     complete() {
@@ -185,8 +197,17 @@ define([
                             alert( 'Error creating your order ' + data.message + '. Please try again.' );
                         }
                     },
-                    error() {
+                    error(response) {
                         self.loading(false);
+                        response = JSON.parse(response.responseText);
+
+                        if (Array.isArray(response)) {
+                            response = response[0];
+                        }
+
+                        if (response.redirect) {
+                            window.location.href = response.redirect;
+                        }
                     },
                 },
             );

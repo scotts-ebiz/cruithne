@@ -28,14 +28,20 @@ define([
         }),
 
         initialize(config) {
-            const self = this
+            const self = this;
 
             if (config.zip) {
                 window.sessionStorage.setItem('lawn-zip', config.zip);
+            } else {
+                config.zip = window.sessionStorage.getItem('lawn-zip');
             }
 
-            if (!window.sessionStorage.getItem('lawn-zip')) {
+            if (!config.zip) {
                 window.location.href = '/quiz';
+            }
+
+            if (!config.quiz_id) {
+                config.quiz_id = window.sessionStorage.getItem('quiz-id');
             }
 
             if (!config.quiz_id) {
@@ -44,14 +50,14 @@ define([
                 self.loadQuizResults(config.quiz_id, config.zip);
             }
 
-            const lawnArea = window.sessionStorage.getItem('lawn-area')
+            const lawnArea = window.sessionStorage.getItem('lawn-area');
             if (lawnArea) {
-                self.lawnArea(lawnArea)
+                self.lawnArea(lawnArea);
             }
 
-            const lawnType = window.sessionStorage.getItem('lawn-type')
+            const lawnType = window.sessionStorage.getItem('lawn-type');
             if (lawnType) {
-                self.lawnType(lawnType)
+                self.lawnType(lawnType);
             }
 
             self.products = ko.computed(function () {
@@ -153,6 +159,17 @@ define([
                             window.sessionStorage.setItem('quiz-id', data.id);
                         }
                     },
+                    error(response) {
+                        response = JSON.parse(response.responseText);
+
+                        if (Array.isArray(response)) {
+                            response = response[0];
+                        }
+
+                        if (response.redirect) {
+                            window.location.href = response.redirect;
+                        }
+                    },
                 },
             );
         },
@@ -168,6 +185,7 @@ define([
                 this.completeQuiz();
             } else {
                 // Quiz not found, need to redirect.
+                console.log('loading quiz responses');
                 window.location.href = '/quiz';
             }
         },

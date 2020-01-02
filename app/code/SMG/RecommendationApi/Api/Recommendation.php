@@ -5,6 +5,7 @@ namespace SMG\RecommendationApi\Api;
 use Exception;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\ProductRepository;
+use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Controller\Result\JsonFactory;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\Exception\LocalizedException;
@@ -13,11 +14,13 @@ use Magento\Framework\Exception\NotFoundException;
 use Magento\Framework\Exception\SecurityViolationException;
 use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Framework\Webapi\Request;
+use Magento\Framework\Webapi\Rest\Response;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use SMG\RecommendationApi\Api\Interfaces\RecommendationInterface;
 use SMG\RecommendationApi\Helper\RecommendationHelper;
-use SMG\SubscriptionApi\Model\ResourceModel\Subscription;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
+use SMG\SubscriptionApi\Model\Subscription;
 
 /**
  * Class Recommendation
@@ -25,7 +28,6 @@ use SMG\SubscriptionApi\Model\ResourceModel\Subscription;
  */
 class Recommendation implements RecommendationInterface
 {
-
     /**
      * @var RecommendationHelper
      */
@@ -77,6 +79,21 @@ class Recommendation implements RecommendationInterface
     private $_logger;
 
     /**
+     * @var CustomerSession
+     */
+    protected $_customerSession;
+
+    /**
+     * @var SubscriptionCollectionFactory
+     */
+    protected $_subscriptionCollectionFactory;
+
+    /**
+     * @var Response
+     */
+    protected $_response;
+
+    /**
      * Recommendation constructor.
      * @param RecommendationHelper $recommendationHelper
      * @param StoreManagerInterface $storeManager
@@ -87,6 +104,9 @@ class Recommendation implements RecommendationInterface
      * @param SessionManagerInterface $coreSession
      * @param Subscription $subscription
      * @param LoggerInterface $logger
+     * @param CustomerSession $customerSession
+     * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
+     * @param Response $response
      * @throws NoSuchEntityException
      * @throws NotFoundException
      */
@@ -99,7 +119,10 @@ class Recommendation implements RecommendationInterface
         ProductRepositoryInterface $productRepository,
         SessionManagerInterface $coreSession,
         Subscription $subscription,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        CustomerSession $customerSession,
+        SubscriptionCollectionFactory $subscriptionCollectionFactory,
+        Response $response
     ) {
         $this->_recommendationHelper = $recommendationHelper;
         $this->_storeManager = $storeManager;
@@ -110,6 +133,9 @@ class Recommendation implements RecommendationInterface
         $this->_coreSession = $coreSession;
         $this->_subscription = $subscription;
         $this->_logger = $logger;
+        $this->_customerSession = $customerSession;
+        $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
+        $this->_response = $response;
 
         // Check to make sure that the module is enabled at the store level
         if (! $this->_recommendationHelper->isActive($this->_storeManager->getStore()->getId())) {
@@ -132,7 +158,7 @@ class Recommendation implements RecommendationInterface
     {
 
         // Test the form key
-        if ( ! $this->formValidation($key) ) {
+        if (! $this->formValidation($key)) {
             $this->_logger->error('Form key validation error.');
             throw new SecurityViolationException(__('Unauthorized'));
         }
@@ -158,7 +184,7 @@ class Recommendation implements RecommendationInterface
         }
 
         // Set Quiz Template ID
-        if ( ! $this->_coreSession->getQuizTemplateId()) {
+        if (! $this->_coreSession->getQuizTemplateId()) {
             $this->_coreSession->setQuizTemplateId($response[0]['id']);
         }
 
@@ -184,7 +210,7 @@ class Recommendation implements RecommendationInterface
     public function save($key, $id, $answers, $zip, $lawnType, $lawnSize)
     {
         // Test the form key
-        if ( ! $this->formValidation($key) ) {
+        if (! $this->formValidation($key)) {
             $this->_logger->error('Form key validation error.');
             throw new SecurityViolationException(__('Unauthorized'));
         }
@@ -196,7 +222,7 @@ class Recommendation implements RecommendationInterface
         }
 
         // Make sure that the config path is set up
-        if (! $this->_recommendationHelper->getSaveQuizApiPath() ){
+        if (! $this->_recommendationHelper->getSaveQuizApiPath()) {
             $error = 'Quiz Save API Path not set in config.';
             $this->_logger->error($error);
             throw new LocalizedException(__($error));
@@ -265,13 +291,13 @@ class Recommendation implements RecommendationInterface
     public function getResult($key, $id, $zip, $lawnType = '', $lawnSize = 0)
     {
         // Test the form key
-        if ( ! $this->formValidation($key) ) {
+        if (!$this->formValidation($key)) {
             $this->_logger->error('Form key validation error.');
             throw new SecurityViolationException(__('Unauthorized'));
         }
 
         // Make sure that the config path is available
-        if (! $this->_recommendationHelper->getQuizResultApiPath()) {
+        if (!$this->_recommendationHelper->getQuizResultApiPath()) {
             $error = 'Quiz Result API Path not set in config.';
             $this->_logger->error($error);
             throw new LocalizedException(__($error));
@@ -282,6 +308,31 @@ class Recommendation implements RecommendationInterface
             $error = 'Minimum input invalid for getting result';
             $this->_logger->error($error);
             throw new LocalizedException(__($error));
+        }
+
+        // See if the subscription already exists.
+        /**
+         * @var SubscriptionCollection
+         */
+        $subscriptionCollection = $this->_subscriptionCollectionFactory->create();
+        $subscription = $subscriptionCollection->getItemByColumnValue('quiz_id', $id);
+
+        // Subscription has been cancelled or is already active.
+        if ($subscription && $subscription->getId() && $subscription->getSubscriptionStatus() !== 'pending') {
+            $this->_logger->error("Subscription with quiz ID '{$subscription->getQuizId()}' results cannot be loaded since it is already active or cancelled.");
+
+            $redirect = '/quiz';
+
+            if ($this->_customerSession->isLoggedIn()) {
+                $redirect = '/account/subscription';
+            }
+
+            $this->_response->setHttpResponseCode(400);
+
+            return [[
+                'success' => false,
+                'redirect' => $redirect,
+            ]];
         }
 
         // Get the response
@@ -340,7 +391,7 @@ class Recommendation implements RecommendationInterface
     public function getCompleted($key)
     {
         // Test the form key
-        if ( ! $this->formValidation($key) ) {
+        if (! $this->formValidation($key)) {
             $this->_logger->error('Form key validation error.');
             throw new SecurityViolationException(__('Unauthorized'));
         }
@@ -377,7 +428,7 @@ class Recommendation implements RecommendationInterface
     {
 
         // Test the form key
-        if ( ! $this->formValidation($key) ) {
+        if (! $this->formValidation($key)) {
             $this->_logger->error('Form key validation error.');
             throw new SecurityViolationException(__('Unauthorized'));
         }
@@ -425,7 +476,7 @@ class Recommendation implements RecommendationInterface
     public function getProducts($key)
     {
         // Test the form key
-        if ( ! $this->formValidation($key) ) {
+        if (! $this->formValidation($key)) {
             $this->_logger->error('Form key validation error.');
             throw new SecurityViolationException(__('Unauthorized'));
         }
@@ -466,7 +517,7 @@ class Recommendation implements RecommendationInterface
      */
     public function formValidation($key)
     {
-        if ( $this->_recommendationHelper->useCsrf( $this->_storeManager->getStore()->getId() ) ) {
+        if ($this->_recommendationHelper->useCsrf($this->_storeManager->getStore()->getId())) {
             return $this->_formKey->getFormKey() === $key;
         }
         return true;
