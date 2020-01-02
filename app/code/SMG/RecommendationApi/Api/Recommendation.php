@@ -20,7 +20,7 @@ use Psr\Log\LoggerInterface;
 use SMG\RecommendationApi\Api\Interfaces\RecommendationInterface;
 use SMG\RecommendationApi\Helper\RecommendationHelper;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
-use SMG\SubscriptionApi\Model\Subscription;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription;
 
 /**
  * Class Recommendation
