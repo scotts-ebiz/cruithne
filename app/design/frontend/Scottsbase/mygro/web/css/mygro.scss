@@ -7,7 +7,6 @@
 
 // Theme variables
 @import 'variables';
-@import 'mygromixins';
 
 // Override Block Styles
 @import 'blocks/extends';
@@ -19,6 +18,7 @@
 @import '../../Magento_Checkout/styles/module';
 
 // Mygro Defaults
+@import 'source/mygromixins';
 @import 'source/mygrobase';
 @import 'source/mygropdp';
 @import 'source/mygrocart';
