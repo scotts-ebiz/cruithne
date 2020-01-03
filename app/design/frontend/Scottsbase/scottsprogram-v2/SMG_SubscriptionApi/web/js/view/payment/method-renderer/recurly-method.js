@@ -143,11 +143,11 @@ define(
                 var rsco = $('input[name="rsco_accept"]');
 
                 if (!rsco[0].checked) {
-                    rsco[0].setCustomValidity(true);
+                    rsco[0].setCustomValidity('This field is required.');
 
                     return false;
                 } else {
-                    rsco[0].setCustomValidity(false);
+                    rsco[0].setCustomValidity('');
                 }
 
                 self.updateRecurlyFormData();
