@@ -106,12 +106,10 @@ class Subscription extends AbstractDb
     {
         if (! empty($quizId)) {
             $subscriptions = $this->_subscriptionCollectionFactory->create();
-            $subscriptions->addFieldToFilter('quiz_id', $quizId);
+            $subscription = $subscriptions->getItemByColumnValue('quiz_id', $quizId);
 
-            foreach ($subscriptions as $subscription) {
-                if (! empty($subscription)) {
-                    return $subscription;
-                }
+            if ($subscription && $subscription->getId()) {
+                return $subscription;
             }
         }
 
