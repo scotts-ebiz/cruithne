@@ -341,13 +341,13 @@ class Subscription implements SubscriptionInterface
             $subscription->setSubscriptionStatus('active');
             $subscription->save();
 
-            return ['success' => true, 'message' => 'No products currently shippable.'];
+            return [['success' => true, 'message' => 'No products currently shippable.']];
         }
 
         if (! $subscription) {
             http_response_code(404);
 
-            return ['error' => 'Subscription not found.'];
+            return [['error' => 'Subscription not found.', 'success' => false]];
         }
 
         // Process the seasonal orders.
@@ -357,7 +357,7 @@ class Subscription implements SubscriptionInterface
             } catch (SubscriptionException $ex) {
                 $this->_logger->error($ex->getMessage());
 
-                return ['success' => false, 'error' => $ex->getMessage()];
+                return [['success' => false, 'error' => $ex->getMessage()]];
             }
         }
 
@@ -372,7 +372,7 @@ class Subscription implements SubscriptionInterface
             } catch (SubscriptionException $ex) {
                 $this->_logger->error($ex->getMessage());
 
-                return ['success' => false, 'error' => $ex->getMessage()];
+                return [['success' => false, 'error' => $ex->getMessage()]];
             }
         }
 

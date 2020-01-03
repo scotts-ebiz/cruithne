@@ -1058,6 +1058,10 @@ define([
 
         initialize: function () {
             this._super();
+
+            // Clear out any session cache for the new quiz.
+            window.sessionStorage.clear();
+
             this.quiz = new Quiz();
             this.loadTemplate();
         },
