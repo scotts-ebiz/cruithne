@@ -689,7 +689,6 @@ class RecurlySubscription
                 $masterSubscription->auto_renew = true;
                 $masterSubscription->total_billing_cycles = 1;
                 $masterSubscription->unit_amount_in_cents = $this->convertAmountToCents($subscription->getPrice());
-                $masterSubscription->
                 $masterSubscription->custom_fields[] = new Recurly_CustomField('quiz_id', $subscription->getQuizId());
             } else {
 
