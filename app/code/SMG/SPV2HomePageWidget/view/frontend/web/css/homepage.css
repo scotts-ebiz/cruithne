@@ -42,6 +42,7 @@
 
 .sp-home__history-description {
   order: 2;
+  margin-top: 100%;
 }
 
 .line-1{
@@ -50,6 +51,21 @@
 }
 .line-2{
   height:7rem;
+}
+
+/*Style the images fade in out*/
+img.season-img {
+  position: absolute;
+  transition: opacity .5s ease-in;
+  }
+
+img.season-img + img.season-img { 
+  opacity: 0; 
+  }
+.season-img{
+  width: 90%;
+  height: auto;
+  transform:translate(-50%,0%);
 }
 
 @media (min-width: 768px) {
@@ -79,7 +95,8 @@
   }
 
   .sp-home__history-description {
-    order: 0;
+    margin-top: 0rem;
+    padding: 2rem;
   }
 
   .line-1{
@@ -87,7 +104,21 @@
     margin-top: 1rem;
   }
   .line-2{
-      height:9rem;
+    height:9rem;
+  }
+
+  .season-img{
+    width: auto;
+    max-height: 22rem;
+    transform:translate(0%,-50%);
+  }
+  }
+
+  @media (min-width: 1150px){
+  .season-img{
+    width: auto;
+    max-height: 22rem;
+    transform:translate(10%,-50%);
   }
 }
 
