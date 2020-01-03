@@ -288,3 +288,12 @@ input[type="email"].sp-textarea.mage-error  {
 div.mage-error[generated] {
   font-size: 14px;
 }
+
+.gigya-login {
+  margin: 0!important;
+}
+
+.gigya-social-login-container,
+.gigya-social-login-container > *  {
+  width: auto!important;
+}
