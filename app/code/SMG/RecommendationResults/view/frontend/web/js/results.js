@@ -315,7 +315,7 @@ define([
                 $('body').addClass('no-scroll')
             }
 
-            this.ssm({
+            this.saveAndSendModal({
                 ...this.saveAndSendModal(),
                 visible: !this.saveAndSendModal().visible
             })
@@ -328,7 +328,7 @@ define([
                 $('body').addClass('no-scroll')
             }
 
-            this.ssm({
+            this.saveAndSendSuccessModal({
                 ...this.saveAndSendSuccessModal(),
                 visible: !this.saveAndSendSuccessModal().visible
             })
