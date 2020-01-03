@@ -149,3 +149,9 @@ PDP MODAL
 .no-scroll {
   overflow: hidden;
 }
+
+.sp-options__footer {
+  position: sticky;
+  bottom: 0px;
+  z-index: 100;
+}
