@@ -123,8 +123,9 @@ class LoginPost
                 $this->_gigyaMageHelper->updateGigyaAccount( $gigyaId, $gigyaData );
             }
 
-            return $result;
         }
+        
+        return $result;
     }
 
     /**
