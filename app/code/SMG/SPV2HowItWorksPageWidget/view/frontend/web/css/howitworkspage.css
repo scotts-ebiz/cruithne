@@ -63,6 +63,7 @@
   }
 }
 
+
 /* Transition for seasons in focus*/
 /* Fall*/
 
@@ -501,4 +502,257 @@
       transform: rotate(-45deg);
       transform-origin: center center;
     }
+}
+
+/*Anim the how it works widget*/
+.sp-hr-mt-howitworks{
+  margin-top: 8rem;
+}
+
+.anim_widget{
+  text-align:center;
+}
+.svg1{
+  position:absolute;
+  width: 519px;
+  height: 519px;
+}
+
+.svg2{
+  position: relative;
+  width: 485px;
+  height: 241px;
+  margin-top: 225px;
+  margin-left: 14px;
+}
+
+.arc_circle_1_anim{
+  stroke-dasharray: 803;
+  stroke-dashoffset: 813;
+  animation: dash 2s ease;
+  animation-fill-mode: forwards;
+}
+.arc_circle_2_anim{
+ stroke-dasharray: 334;
+ stroke-dashoffset: 334;
+ animation: dash2 1s linear 1s;
+ animation-fill-mode:forwards;
+}
+
+#window2_img {
+  animation: left_window .75s ease-in-out 0.5s forwards;
+}
+#window1_img{
+  animation: right_window .75s ease-in-out 0.2S forwards;
+}
+#windowBig_img{
+  animation: big_window .75s ease-in-out 1s forwards;
+}
+
+@keyframes big_window{
+  0%{
+      opacity: 0;
+      height: 13%;
+  }
+  50%{
+      opacity: 0;
+      height:  17%;
+  }
+  100%{
+      opacity: 1;
+      height: 15%;
+  }
+
+}
+
+@keyframes right_window{
+  0%{
+      opacity: 0;
+      height: 10%;
+  }
+  50%{
+      opacity: .5;
+      height:  15%;
+  }
+  100%{
+      opacity: 1;
+      height: 12%;
+  }
+
+}
+
+@keyframes left_window{
+  0%{
+      opacity: 0;
+      height: 10%;
+  }
+  50%{
+      opacity: .5;
+      height:  15%;
+  }
+  100%{
+      opacity: 1;
+      height: 12%;
+  }
+}
+
+@keyframes dash{
+  0%{
+      stroke-dashoffset: 813;
+      stroke-dasharray: 813;
+  }
+  100%{
+      stroke-dashoffset: 0;
+  }
+}
+
+@keyframes dash2{
+  0%{
+     stroke-dashoffset: 334;
+     stroke-dasharray: 334;
+  }
+  100%{
+      stroke-dashoffset: 0;
+  }
+}
+
+/*Text animation*/
+#let_1{
+stroke-dasharray: 383;
+stroke-dashoffset: 383;
+animation: let_1-anim 2s linear;
+animation-fill-mode:forwards;
+}
+#let_2{
+stroke-dasharray: 300;
+stroke-dashoffset: 300;
+animation: let_1-anim 2s linear;
+animation-fill-mode:forwards; 
+}
+#let_3{
+stroke-dasharray: 80;
+stroke-dashoffset: 80;
+animation: let_1-anim 2s linear 0s forwards;  
+}
+#let_4{
+stroke-dasharray: 220;
+stroke-dashoffset: 220;
+animation: let_1-anim 2s linear;
+animation-fill-mode:forwards; 
+}
+#let_5{
+stroke-dasharray: 300;
+stroke-dashoffset: 300;
+animation: let_1-anim 2s linear;
+animation-fill-mode:forwards; 
+}
+#let_6{
+stroke-dasharray: 80;
+stroke-dashoffset: 80;
+animation: let_1-anim 2s linear 0s forwards;  
+}
+#let_7{
+stroke-dasharray: 150;
+stroke-dashoffset: 150;
+animation: let_1-anim 2s linear;
+animation-fill-mode:forwards;
+}
+#let_8{
+stroke-dasharray: 300;
+stroke-dashoffset: 300;
+animation: let_1-anim 2s linear 0s forwards;
+}
+#let_9{
+stroke-dasharray: 383;
+stroke-dashoffset: -383;
+animation: let_1-anim 1.5s linear;
+animation-fill-mode:forwards;
+
+}
+#let_10{
+stroke-dasharray: 320;
+stroke-dashoffset: 320;
+animation: let_1-anim 2s linear 0s forwards;
+
+}
+#let_11{
+stroke-dasharray: 120;
+stroke-dashoffset: 120;
+animation: let_1-anim 2s linear 0s forwards;  
+}
+#let_12{
+stroke-dasharray: 380;
+stroke-dashoffset: 380;
+animation: let_1-anim 2s linear 0s forwards;
+
+}
+#let_13{
+stroke-dasharray: 220;
+stroke-dashoffset: 220;
+animation: let_1-anim 2s linear 0s forwards;
+}
+#let_14{
+stroke-dasharray: 220;
+stroke-dashoffset: 220;
+animation: let_1-anim 2s linear 0s forwards;
+
+}
+#let_15{
+stroke-dasharray: 550;
+stroke-dashoffset: 550;
+animation: let_1-anim 2s linear 0s forwards;
+
+}
+#let_16{
+stroke-dasharray: 320;
+stroke-dashoffset: 320;
+animation: let_1-anim 2s linear 0s forwards;
+}
+#let_17{
+stroke-dasharray: 120;
+stroke-dashoffset: 120;
+animation: let_1-anim 2s linear 0s forwards;
+
+}
+#let_18{
+stroke-dasharray: 220;
+stroke-dashoffset: 220;
+animation: let_1-anim 2s linear;
+animation-fill-mode:forwards; 
+}
+#let_19{
+stroke-dasharray: 300;
+stroke-dashoffset: 300;
+animation: let_1-anim 2s linear 0s forwards;
+}
+#let_20{
+stroke-dasharray: 300;
+stroke-dashoffset: 300;
+animation: let_1-anim 2s linear 0s forwards;
+
+}
+@keyframes let_1-anim{
+from{
+  opacity:0;
+}
+to{
+ opacity:1;
+ stroke-dashoffset: 0;
+} 
+}
+
+@media (max-width: 430px){
+.svg1{
+  width:  319px;
+  height: 319px;
+}
+.svg2{
+ width:285px;
+ height: 141px;
+ margin-top:150px;
+}
+.anim_widget{
+  text-align: justify;
+  margin-top: 0px;
+}
 }

@@ -1,8 +1,58 @@
 define([
+    'uiComponent',
     'jquery'
-], function ($) {
-        //It focuses on the summer initialy (when the page load)
-	    //get the door and each window image
+], function (Component, $) {
+  return Component.extend({
+
+      //Countup animation
+      initialize() {
+        var count = 1868;
+        var loop = 50;
+        var interval;
+
+        var text = document.getElementById('countdown');
+        var line1_get = document.getElementById("line-1-id");
+        var line2_get = document.getElementById("line-2-id");
+
+
+        function timer(time) {
+            if (count < 2020) {
+                count = count + 1;
+                text.innerHTML = count;
+
+                interval = setTimeout(function () {
+                    timer(300);
+                }, loop);
+
+                if (count >= 2020) {
+                    clearTimeout(interval);
+                    return;
+                }
+            }
+        }
+
+        //trigger the countdown animation
+        $(window).scroll(function () {
+            var hT = $('#trigger-anim').offset().top;
+            var hH = $('#trigger-anim').outerHeight();
+            var wH = $(window).height();
+            var wS = $(this).scrollTop();
+            if (wS > (hT + hH - wH) && (hT > wS)) {
+                //Animate line1
+                line1_get.classList.add("line-1_anim");
+                setTimeout(function () {
+                    timer(30);
+                }, 200);
+
+                //Animate line 2
+                setTimeout(function () {
+                    line2_get.classList.add("line-2_anim");
+                }, 400);
+            }
+        });
+    //Seasons animation
+    //It focuses on the summer initialy (when the page load)
+	  //get the door and each window image
 		var door = document.getElementById("door_img");
 		var window1 = document.getElementById("window1_img");
 		var window2 = document.getElementById("window2_img");
@@ -340,6 +390,7 @@ define([
 		  setTimeout(function(){
 			circle_frame.classList.remove("circle_frame_anim");
 		  },1000);
-		} 
+		}  
+     }
+  });
 });
-

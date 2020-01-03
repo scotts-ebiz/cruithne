@@ -2,11 +2,20 @@
 
 namespace SMG\SubscriptionApi\Api;
 
+use Magento\Customer\Model\Address;
+use Magento\Customer\Model\AddressFactory;
+use Magento\Customer\Model\Customer;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\SecurityViolationException;
-use Magento\Setup\Exception;
+use Magento\Framework\Webapi\Rest\Response;
+use Psr\Log\LoggerInterface;
 use Recurly_Client;
+use Recurly_NotFoundError;
 use Recurly_SubscriptionList;
 use SMG\SubscriptionApi\Api\Interfaces\SubscriptionInterface;
+use SMG\SubscriptionApi\Exception\SubscriptionException;
+use SMG\SubscriptionApi\Helper\SubscriptionOrderHelper;
 
 /**
  * Class Subscription
@@ -14,6 +23,8 @@ use SMG\SubscriptionApi\Api\Interfaces\SubscriptionInterface;
  */
 class Subscription implements SubscriptionInterface
 {
+    /** @var LoggerInterface */
+    protected $_logger;
 
     /** @var \SMG\RecommendationApi\Helper\RecommendationHelper */
     protected $_recommendationHelper;
@@ -60,11 +71,11 @@ class Subscription implements SubscriptionInterface
     /** @var \Magento\Sales\Model\Order */
     protected $_order;
 
+    /** @var \Magento\Sales\Model\ResourceModel\Order\CollectionFactory */
+    protected $_orderCollectionFactory;
+
     /** @var \Magento\Customer\Api\AddressRepositoryInterface */
     protected $_addressRepository;
-
-    /**  @var \Magento\Customer\Api\Data\AddressInterfaceFactory */
-    protected $_dataAddressFactory;
 
     /**
      * @var \Magento\Customer\Model\Address
@@ -74,15 +85,34 @@ class Subscription implements SubscriptionInterface
     /**  @var \SMG\SubscriptionApi\Model\ResourceModel\Subscription */
     protected $_subscription;
 
+    /** @var \SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory */
+    protected $_subscriptionCollectionFactory;
+
     /** @var \Magento\Framework\Session\SessionManagerInterface */
     protected $_coreSession;
 
     /**
+     * @var AddressFactory
+     */
+    protected $_addressFactory;
+
+    /**
+     * @var SubscriptionOrderHelper
+     */
+    protected $_subscriptionOrderHelper;
+
+    /**
+     * @var Response
+     */
+    protected $_response;
+
+    /**
      * Subscription constructor.
+     * @param LoggerInterface $logger
      * @param \SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper
      * @param \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper
      * @param \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper
-     * @param \Magento\Checkout\Model\Session $customerSession
+     * @param \Magento\Customer\Model\Session $customerSession
      * @param \Magento\Framework\Data\Form\FormKey $formKey
      * @param \Magento\Checkout\Model\Cart $cart
      * @param \Magento\Checkout\Model\Session $checkoutSession
@@ -94,16 +124,22 @@ class Subscription implements SubscriptionInterface
      * @param \Magento\Customer\Model\CustomerFactory $customerFactory
      * @param \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository
      * @param \Magento\Sales\Model\Order $order
+     * @param \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory
      * @param \Magento\Customer\Api\AddressRepositoryInterface $addressRepository
-     * @param \Magento\Customer\Api\Data\AddressInterfaceFactory $dataAddressFactory
      * @param \Magento\Customer\Model\Address $customerAddress
      * @param \SMG\SubscriptionApi\Model\ResourceModel\Subscription $subscription
+     * @param \SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory $subscriptionCollectionFactory
+     * @param \Magento\Framework\Session\SessionManagerInterface $coreSession
+     * @param AddressFactory $addressFactory
+     * @param SubscriptionOrderHelper $subscriptionOrderHelper
+     * @param Response $response
      */
     public function __construct(
+        LoggerInterface $logger,
         \SMG\RecommendationApi\Helper\RecommendationHelper $recommendationHelper,
         \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper,
         \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper,
-        \Magento\Checkout\Model\Session $customerSession,
+        \Magento\Customer\Model\Session $customerSession,
         \Magento\Framework\Data\Form\FormKey $formKey,
         \Magento\Checkout\Model\Cart $cart,
         \Magento\Checkout\Model\Session $checkoutSession,
@@ -115,12 +151,17 @@ class Subscription implements SubscriptionInterface
         \Magento\Customer\Model\CustomerFactory $customerFactory,
         \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository,
         \Magento\Sales\Model\Order $order,
+        \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
         \Magento\Customer\Api\AddressRepositoryInterface $addressRepository,
-        \Magento\Customer\Api\Data\AddressInterfaceFactory $dataAddressFactory,
         \Magento\Customer\Model\Address $customerAddress,
         \SMG\SubscriptionApi\Model\ResourceModel\Subscription $subscription,
-        \Magento\Framework\Session\SessionManagerInterface $coreSession
+        \SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory $subscriptionCollectionFactory,
+        \Magento\Framework\Session\SessionManagerInterface $coreSession,
+        AddressFactory $addressFactory,
+        SubscriptionOrderHelper $subscriptionOrderHelper,
+        Response $response
     ) {
+        $this->_logger = $logger;
         $this->_recommendationHelper = $recommendationHelper;
         $this->_recurlyHelper = $recurlyHelper;
         $this->_subscriptionHelper = $subscriptionHelper;
@@ -136,19 +177,21 @@ class Subscription implements SubscriptionInterface
         $this->_customerFactory = $customerFactory;
         $this->_customerRepository = $customerRepository;
         $this->_order = $order;
+        $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->_recurlyHelper = $recurlyHelper;
         $this->_addressRepository = $addressRepository;
-        $this->_dataAddressFactory = $dataAddressFactory;
         $this->_customerAddress = $customerAddress;
         $this->_subscription = $subscription;
+        $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
         $this->_coreSession = $coreSession;
+        $this->_addressFactory = $addressFactory;
+        $this->_subscriptionOrderHelper = $subscriptionOrderHelper;
+        $this->_response = $response;
     }
 
     /**
      * Process quiz data, build order object and send customer to checkout. Note that we are hijacking the cart for
      * the addition of subscriptions and to make the display easier.
-     * @todo Wes this needs to be refactored. We should be able to just add all of the orders for any
-     *
      * @param string $key
      * @param string $subscription_plan
      * @param mixed $data
@@ -161,7 +204,6 @@ class Subscription implements SubscriptionInterface
      */
     public function addSubscriptionToCart($key, $subscription_plan, $data, $addons = [])
     {
-
         // Test the form key
         if (! $this->formValidation($key)) {
             throw new SecurityViolationException(__('Unauthorized'));
@@ -170,16 +212,36 @@ class Subscription implements SubscriptionInterface
         // Add subscription to cart
         try {
             /** @var \SMG\SubscriptionApi\Model\Subscription $subscription */
-            $subscription = $this->_subscription->getSubscriptionByQuizId( $this->_coreSession->getQuizId() );
-            $subscription->setSubscriptionType( $subscription_plan )->save();
+            $subscription = $this->_subscription->getSubscriptionByQuizId($this->_coreSession->getQuizId());
+
+            if ($subscription->getSubscriptionStatus() != 'pending') {
+                // Subscription is already active or has been canceled, so return.
+                $this->_logger->error("Subscription with quiz ID '{$subscription->getQuizId()}' cannot be added to cart since it is active or canceled.");
+
+                $redirect = '/quiz';
+
+                if ($this->_customerSession->isLoggedIn()) {
+                    $redirect = '/account/subscription';
+                }
+
+                $this->_response->setHttpResponseCode(400);
+
+                return [[
+                    'success' => false,
+                    'redirect' => $redirect,
+                ]];
+            }
+
+            $subscription->setSubscriptionType($subscription_plan)->save();
             $subscription->generateShipDates();
-            $subscription->addSubscriptionToCart( $addons );
-        } catch ( Exception $e ) {
-            $response = array( 'success' => false, 'message' => $e->getMessage() );
+            $subscription->addSubscriptionToCart($addons);
+        } catch (\Exception $e) {
+            $this->_logger->error($e->getMessage());
+            $response = ['success' => false, 'message' => $e->getMessage()];
             return json_encode($response);
         }
 
-        $response = array( 'success' => true );
+        $response = ['success' => true];
         return json_encode($response);
     }
 
@@ -194,16 +256,17 @@ class Subscription implements SubscriptionInterface
      *
      * @api
      */
-    public function clean($key) {
+    public function clean($key)
+    {
         $quote = $this->_checkoutSession->getQuote();
         $quoteItems = $quote->getItemsCollection();
-        foreach( $quoteItems as $item ) {
-            $this->_cart->removeItem( $item->getItemId() );
+        foreach ($quoteItems as $item) {
+            $this->_cart->removeItem($item->getItemId());
         }
-        return json_encode(array(
+        return json_encode([
             'success' => true,
             'message' => 'Clean slate.'
-        ));
+        ]);
     }
 
     /**
@@ -212,6 +275,7 @@ class Subscription implements SubscriptionInterface
      * @param string $key
      * @param string $quiz_id
      * @param mixed $billing_address
+     * @param bool $billing_same_as_shipping
      * @return array|false|string
      *
      * @throws \Magento\Framework\Exception\CouldNotSaveException
@@ -219,208 +283,109 @@ class Subscription implements SubscriptionInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @api
      */
-    public function createOrders($key, $quiz_id, $billing_address) {
-
+    public function createOrders($key, $quiz_id, $billing_address, $billing_same_as_shipping)
+    {
         // Get store and website information
         $store = $this->_storeManager->getStore();
-        $websiteId = $this->_storeManager->getStore()->getWebsiteId();
+        $websiteId = $store->getWebsiteId();
 
         // Get customer
         $customer = $this->_customerFactory->create();
         $customer->setWebsiteId($websiteId);
         $customer->loadByEmail($this->_checkoutSession->getQuote()->getCustomerEmail());
-        $customerData = $customer->getData();
-        $customerGigyaId = $customerData['gigya_uid'];
-
-        // Get customer's current subscriptions
-        $recurlySubscriptions = $this->getAccountSubscriptions( $customerGigyaId, $quiz_id );
+        $customerId = $customer->getId();
+        $customer = $this->_customerFactory->create()->load($customerId);
 
         // Get all items in the cart
         $mainQuote = $this->_checkoutSession->getQuote();
         $quoteItems = $mainQuote->getItemsCollection();
 
         // Remove items from the quote, because there will be duplicate orders create
-
-        foreach( $quoteItems as $item ) {
+        foreach ($quoteItems as $item) {
             $this->_cart->removeItem($item->getItemId())->save();
         }
 
-        // Get customer
-        $customerId = $customer->getId();
-        $customer = $this->_customerRepository->getById($customerId);
-
         // Get customer shipping and billing address
         $orderShippingAddress = $mainQuote->getShippingAddress()->getData();
-        $orderBillingAddress = $billing_address;
-        
-        // Get seasonal products
-        $completedQuizUrl = filter_var(
-            trim(
-                str_replace('{completedQuizId}', $quiz_id, $this->_recommendationHelper->getQuizResultApiPath()),
-                '/'
-            ),
-            FILTER_SANITIZE_URL
-        );
 
-        // Get quiz results data
-        $completedQuizResult = $this->_recommendationHelper->request($completedQuizUrl, '', 'GET' );
+        // Save the customer addresses.
+        $this->clearCustomerAddresses($customer);
 
-        // Get seasonal products
-        $seasonalProducts = $completedQuizResult['plan']['coreProducts'];
+        /** @var Address $customerShippingAddress */
+        $customerShippingAddress = $this->_addressFactory
+            ->create()
+            ->addData($orderShippingAddress)
+            ->setCustomerId($customerId)
+            ->save();
+        $customer->setDefaultShipping($customerShippingAddress->getId());
 
-        if( ! empty( $seasonalProducts ) ) {
-            // Go through the seasonal products
-            foreach( $seasonalProducts as $item ) {
-                // Create empty cart for every seasonal product
-                $cartId = $this->_cartManagementInterface->createEmptyCartForCustomer($customerId);
-                $quote = $this->_cartRepositoryInterface->get($cartId);
-                $quote->setStore($store);
-                $quote->setCurrency();
-                $quote->assignCustomer($customer);
+        if ($billing_same_as_shipping) {
+            $customer->setDefaultBilling($customerShippingAddress->getId());
+        } else {
+            /** @var Address $customerBillingAddress */
+            $customerBillingAddress = $this->_addressFactory
+                ->create()
+                ->addData($billing_address)
+                ->setCustomerId($customerId)
+                ->save();
+            $customer->setDefaultBilling($customerBillingAddress->getId());
+        }
 
-                // Add product to the cart
-                $product = $this->_productRepository->get( $item['sku'] );
-                $product = $this->_product->load( $product->getId() );
-                $quote->addProduct( $product, 1 );
+        $customer->save();
 
-                // Set shipping information
-                $quote->getShippingAddress()->addData($orderShippingAddress);
-                $quote->getBillingAddress()->addData($orderBillingAddress);
-                $shippingAddress = $quote->getShippingAddress();
-                $shippingAddress->setCollectShippingRates(true)->collectShippingRates()->setShippingMethod('freeshipping_freeshipping');
+        // Get the subscription
+        /** @var \SMG\SubscriptionApi\Model\Subscription $subscription */
+        $subscription = $this->_subscriptionCollectionFactory->create()->getItemByColumnValue('quiz_id', $quiz_id);
 
-                // Update inventory of the products
-                $quote->setInventoryProcessed(true);
+        if (! $subscription->isCurrentlyShippable()) {
+            $subscription->setSubscriptionStatus('active');
+            $subscription->save();
 
-                // Set payment information
-                $quote->setPaymentMethod('recurly');
-                $quote->getPayment()->importData(['method' => 'recurly']);
+            return ['success' => true, 'message' => 'No products currently shippable.'];
+        }
 
-                // Collect totals
-                $quote->collectTotals();
+        if (! $subscription) {
+            http_response_code(404);
 
-                // Save quote
-                $quote->save();
-         
-                // Create order from the quote
-                $quote = $this->_cartRepositoryInterface->get($quote->getId());
-                $orderId = $this->_cartManagementInterface->placeOrder($quote->getId());
-                $order = $this->_order->load($orderId);
-                $order->setEmailSent(0);
+            return ['error' => 'Subscription not found.'];
+        }
 
-                // Set customer gigya id
-                $order->setGigyaId( $customerGigyaId );
+        // Process the seasonal orders.
+        foreach ($subscription->getSubscriptionOrders() as $subscriptionOrder) {
+            try {
+                $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionOrder);
+            } catch (SubscriptionException $ex) {
+                $this->_logger->error($ex->getMessage());
 
-                // Set master subscription id based on the recurly subscription plan code
-                if( isset( $recurlySubscriptions['annual']['subscription_id'] ) ) {
-                    $order->setMasterSubscriptionId( $recurlySubscriptions['annual']['subscription_id'] );
-                }
-                if( isset( $recurlySubscriptions['seasonal']['subscription_id'] ) ) {
-                    $order->setMasterSubscriptionId( $recurlySubscriptions['seasonal']['subscription_id'] );
+                return ['success' => false, 'error' => $ex->getMessage()];
+            }
+        }
+
+        // Process the add-on orders.
+        foreach ($subscription->getSubscriptionAddonOrders() as $subscriptionAddonOrder) {
+            try {
+                if (! $subscriptionAddonOrder->getSubscriptionId()) {
+                    continue;
                 }
 
-                // Get Recurly plan code based on the season name, so we can map the subscription id and start date fields
-                $seasonCode = $this->_recurlyHelper->getSeasonSlugByName( $item['season'] );
+                $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionAddonOrder);
+            } catch (SubscriptionException $ex) {
+                $this->_logger->error($ex->getMessage());
 
-                // Set subscription id
-                $order->setSubscriptionId( $recurlySubscriptions[$seasonCode]['subscription_id'] );
-
-                // Set ship date for the subscription/order
-                $order->setShipStartDate( $recurlySubscriptions[$seasonCode]['starts_at'] );
-
-                // Set is addon subscription flag
-                $order->setSubscriptionAddon(false);
-
-                // Save order
-                $order->save();
+                return ['success' => false, 'error' => $ex->getMessage()];
             }
         }
 
-        // Get addon products
-        $addOnProducts = $completedQuizResult['plan']['addOnProducts'];
+        $subscription->setSubscriptionStatus('active');
+        $subscription->save();
 
-        if (! empty($addOnProducts)) {
-            // Create cart for the addons
-            $addonCartId = $this->_cartManagementInterface->createEmptyCartForCustomer($customerId);
-            $addonQuote = $this->_cartRepositoryInterface->get($addonCartId);
-            $addonQuote->setStore($store);
-            $addonQuote->setCurrency();
-            $addonQuote->assignCustomer($customer);
-
-            // Go through the addon products
-            foreach ($addOnProducts as $addon) {
-                // Create cart for the addon
-                $addonCartId = $this->_cartManagementInterface->createEmptyCartForCustomer($customerId);
-                $addonQuote = $this->_cartRepositoryInterface->get($addonCartId);
-                $addonQuote->setStore($store);
-                $addonQuote->setCurrency();
-                $addonQuote->assignCustomer($customer);
-
-                // Add addon products to the cart
-                $product = $this->_productRepository->get( $addon['sku'] );
-                $product = $this->_product->load( $product->getId() );
-                $addonQuote->addProduct( $product, 1 );
-
-                // Collect totals
-                $addonQuote->collectTotals();
-
-                // Save quote
-                $addonQuote->save();
-            }
-
-            // Set shipping address for the cart
-            $addonQuote->getShippingAddress()->addData($orderShippingAddress);
-            $addonQuote->getBillingAddress()->addData($orderBillingAddress);
-            $shippingAddress = $addonQuote->getShippingAddress();
-            $shippingAddress->setCollectShippingRates(true)->collectShippingRates()->setShippingMethod('freeshipping_freeshipping');
-
-            // Update inventory for the addon products
-            $addonQuote->setInventoryProcessed(true);
-
-            // Set payment method
-            $addonQuote->setPaymentMethod('recurly');
-            $addonQuote->getPayment()->importData([ 'method' => 'recurly' ]);
-
-            // Create order
-            $addonQuote = $this->_cartRepositoryInterface->get($addonQuote->getId());
-            $addonOrderId = $this->_cartManagementInterface->placeOrder($addonQuote->getId());
-            $addonOrder = $this->_order->load($addonOrderId);
-            $addonOrder->setEmailSent(0);
-
-            // Set customer gigya id
-            $addonOrder->setGigyaId($customerGigyaId);
-
-            // Set master subscription id based on the recurly subscription plan code
-            if (isset($recurlySubscriptions['annual']['subscription_id'])) {
-                $order->setMasterSubscriptionId($recurlySubscriptions['annual']['subscription_id']);
-            }
-            if (isset($recurlySubscriptions['seasonal']['subscription_id'])) {
-                $order->setMasterSubscriptionId($recurlySubscriptions['seasonal']['subscription_id']);
-            }
-
-            // Set subscription id
-            if (isset($recurlySubscriptions['add-ons']['subscription_id'])) {
-
-                $addonOrder->setSubscriptionId($recurlySubscriptions['add-ons']['subscription_id']);
-
-                // Set ship date
-                $addonOrder->setShipDate($recurlySubscriptions['add-ons']['starts_at']);
-
-                // Set is addon subscription flag
-                $addonOrder->setSubscriptionAddon(true);
-
-                // Save order
-                $addonOrder->save();
-            }
-        }
-
-        // Delete customer addresses, because we don't want to store them in the address book,
-        // so they will always need to enter their shipping/billing details on checkout
-        foreach( $customer->getAddresses() as $adr ) {
-            $this->_addressRepository->deleteById( $adr->getId() );
-        }
-
-        return array( 'success' => true, 'message' => 'Magento orders created' );
+        return [
+            [
+                'success' => true,
+                'subscription_id' => $subscription->getSubscriptionId(),
+                'message' => 'Magento orders created',
+            ],
+        ];
     }
 
     /**
@@ -450,7 +415,9 @@ class Subscription implements SubscriptionInterface
 
             return $activeSubscriptions;
         } catch (Recurly_NotFoundError $e) {
-            print "Account Not Found: $e";
+            $this->_logger->error($e->getMessage());
+
+            return [];
         }
     }
 
@@ -468,5 +435,34 @@ class Subscription implements SubscriptionInterface
         }
 
         return true;
+    }
+
+    /**
+     * Delete customer addresses, because we don't want to store them in the address book,
+     * so they will always need to enter their shipping/billing details on checkout
+     *
+     * @param Customer $customer
+     */
+    private function clearCustomerAddresses($customer)
+    {
+        $customer->setDefaultBilling(null);
+        $customer->setDefaultShipping(null);
+
+        try {
+            foreach ($customer->getAddresses() as $address) {
+                $this->_addressRepository->deleteById($address->getId());
+            }
+
+            $customer->save();
+        } catch (NoSuchEntityException $ex) {
+            $this->_logger->error($ex->getMessage());
+            return;
+        } catch (LocalizedException $ex) {
+            $this->_logger->error($ex->getMessage());
+            return;
+        } catch (\Exception $ex) {
+            $this->_logger->error($ex->getMessage());
+            return;
+        }
     }
 }

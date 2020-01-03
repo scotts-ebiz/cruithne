@@ -131,6 +131,10 @@ class OrderRepositoryInterface
                 {
                     // get the allowed states
                     $statesNotAllowed = $product->getStatesNotAllowed();
+
+                    //check the state values from product
+                   if (!empty($statesNotAllowed))
+                   {
                     $statesNotAllowedList = explode(',', $statesNotAllowed);
 
                     // initialize the list of
@@ -154,6 +158,7 @@ class OrderRepositoryInterface
                     if (in_array($state, $statesNotAllowedArray)) {
                         $validate = true;
                     }
+                   }
                 }
             }
 

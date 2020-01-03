@@ -1,0 +1,21 @@
+<div
+    class="sp-subscription-details sp-max-w-xl md:sp-mr-8"
+    data-bind="scope: 'subscriptionDetails'"
+>
+    <!-- ko template: "SMG_SubscriptionAccounts/subscription-details.html" --><!-- /ko -->
+</div>
+
+<script type="text/x-magento-init">
+   {
+        "*": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "subscriptionDetails": {
+						"component": "SMG_SubscriptionAccounts/js/subscription-details",
+						"subscriptions": <?php echo json_encode($block->getSubscriptions()); ?>
+					}
+                }
+            }
+        }
+    }
+</script>
