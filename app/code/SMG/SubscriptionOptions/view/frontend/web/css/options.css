@@ -156,3 +156,9 @@ PDP MODAL
   width: 17px;
   height: 22px;
 }
+
+.sp-options__footer {
+  position: sticky;
+  bottom: 0px;
+  z-index: 100;
+}

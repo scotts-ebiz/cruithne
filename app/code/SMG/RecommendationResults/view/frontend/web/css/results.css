@@ -175,3 +175,8 @@ PDP MODAL
 .sp-results__product-addon-image {
   flex: 0 1 75px;
 }
+
+.sp-results__footer {
+  position: sticky;
+  bottom: 0px;
+}
