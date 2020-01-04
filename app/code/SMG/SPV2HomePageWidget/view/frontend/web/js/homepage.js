@@ -67,30 +67,10 @@ define([
                     }
                 }, 500);
             }
-        }
 
-        //trigger the countdown animation
-        $(window).scroll(function () {
-            var hT = $('#trigger-anim').offset().top;
-            var hH = $('#trigger-anim').outerHeight();
-            var wH = $(window).height();
-            var wS = $(this).scrollTop();
-            if (wS > (hT + hH - wH) && (hT > wS)) {
-                //Animate line1
-                line1_get.classList.add("line-1_anim");
-                setTimeout(function () {
-                    timer(30);
-                }, 200);
-
-                //Animate line 2
-                setTimeout(function () {
-                    line2_get.classList.add("line-2_anim");
-                }, 400);
-            }
-        });
-    //Seasons animation
+            //Seasons animation
     //It focuses on the summer initialy (when the page load)
-	  //get the door and each window image
+	//get the door and each window image
 		var door = document.getElementById("door_img");
 		var window1 = document.getElementById("window1_img");
 		var window2 = document.getElementById("window2_img");
@@ -428,7 +408,7 @@ define([
 		  setTimeout(function(){
 			circle_frame.classList.remove("circle_frame_anim");
 		  },1000);
-		}  
+		} 
      }
   });
 });

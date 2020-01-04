@@ -1,3 +1,12 @@
+html,
+body,
+.page-main,
+.columns,
+.page-wrapper,
+.sp-content {
+  height: 100%;
+}
+
 .sp-quiz__content {
   overflow: auto;
   order: 1;

@@ -539,13 +539,13 @@
  animation-fill-mode:forwards;
 }
 
-#window2_img {
+#window2_img_hw {
   animation: left_window .75s ease-in-out 0.5s forwards;
 }
-#window1_img{
+#window1_img_hw{
   animation: right_window .75s ease-in-out 0.2S forwards;
 }
-#windowBig_img{
+#windowBig_img_hw{
   animation: big_window .75s ease-in-out 1s forwards;
 }
 
