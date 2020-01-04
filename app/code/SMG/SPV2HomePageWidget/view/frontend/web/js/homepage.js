@@ -59,8 +59,8 @@ define([
                 }
 
                 let interval = setInterval(function () {
-                    slides[current_img].style.opacity = 1;
                     current_img++;
+                    slides[current_img].style.opacity = 1;
 
                     if (current_img === slides.length - 1) {
                         clearInterval(interval);
