@@ -11,6 +11,7 @@ use Recurly_Client;
 use Recurly_Invoice;
 use Recurly_SubscriptionList;
 use SMG\SubscriptionApi\Helper\RecurlyHelper;
+use \SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
 
 /**
  * Class Subscription
@@ -32,6 +33,10 @@ class Subscription extends Template
      * @var RecurlyHelper
      */
     protected $_recurlyHelper;
+    /**
+     * @var SubscriptionCollectionFactory
+     */
+    protected $_subscriptionCollectionFactory;
 
     /**
      * Subscriptions block constructor.
@@ -46,11 +51,13 @@ class Subscription extends Template
         CustomerSession $customerSession,
         Customer $customer,
         RecurlyHelper $recurlyHelper,
+        SubscriptionCollectionFactory $subscriptionCollectionFactory,
         array $data = []
     ) {
         $this->_customerSession = $customerSession;
         $this->_customer = $customer;
         $this->_recurlyHelper = $recurlyHelper;
+        $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
         parent::__construct($context, $data);
     }
 
@@ -87,6 +94,12 @@ class Subscription extends Template
      */
     public function getSubscriptions()
     {
+        $subscriptionFactory = $this->_subscriptionCollectionFactory->create();
+        $hasActiveSubscription = $subscriptionFactory
+            ->addFilter('subscription_status', 'active')
+            ->addFilter('customer_id', $this->getCustomerId())
+            ->count();
+
         Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
@@ -97,6 +110,10 @@ class Subscription extends Template
         $invoices = [];
 
         try {
+            if (! $hasActiveSubscription) {
+                throw new \Exception('No active subscriptions found.');
+            }
+
             // Get active, future and expired subscriptions
             $activeSubscriptions = Recurly_SubscriptionList::getForAccount($this->getGigyaUid(), [ 'state' => 'active' ]);
             $futureSubscriptions = Recurly_SubscriptionList::getForAccount($this->getGigyaUid(), [ 'state' => 'future' ]);
@@ -127,6 +144,7 @@ class Subscription extends Template
                     $totalAddonAmount = 0;
                     $totalMainAmount = 0;
                     $numberOfAddonProducts = 0;
+
                     foreach ($mainInvoice->line_items as $item) {
                         if (! in_array($item->product_code, $notAddonProduct)) {
                             $totalAddonAmount += $item->total_in_cents;
@@ -166,6 +184,7 @@ class Subscription extends Template
             ];
         } catch (\Exception $e) {
             $this->_logger->error($e->getMessage());
+
             return [
                 'success' => false,
                 'error_message' => $e->getMessage(),
