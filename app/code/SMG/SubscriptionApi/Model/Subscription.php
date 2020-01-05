@@ -515,7 +515,7 @@ class Subscription extends AbstractModel
      */
     public function getAddOn()
     {
-        $addOnOrders = $this->getSubscriptionOrders();
+        $addOnOrders = $this->getSubscriptionAddonOrders();
 
         if (! $addOnOrders) {
             return false;
