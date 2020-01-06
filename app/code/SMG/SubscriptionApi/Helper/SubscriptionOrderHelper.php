@@ -3,11 +3,12 @@
 namespace SMG\SubscriptionApi\Helper;
 
 use Magento\Customer\Model\Customer;
-use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\QuoteManagement;
 use Magento\Customer\Model\AddressFactory;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
+use Magento\Quote\Api\CartManagementInterface;
+use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Store\Model\StoreManagerInterface;
 use SMG\SubscriptionApi\Exception\SubscriptionException;
@@ -78,22 +79,29 @@ class SubscriptionOrderHelper extends AbstractHelper
     protected $_quoteManagement;
 
     /**
-     * @var QuoteFactory
+     * @var CartManagementInterface
      */
-    protected $_quoteFactory;
+    protected $_cartManagement;
+
+    /**
+     * @var CartRepositoryInterface
+     */
+    protected $_cartRepository;
 
     /**
      * SubscriptionOrderHelper constructor.
      * @param Context $context
+     * @param AddressFactory $addressFactory
      * @param Customer $customer
      * @param Order $order
-     * @param QuoteFactory $quoteFactory
      * @param QuoteManagement $quoteManagement
      * @param StoreManagerInterface $storeManager
      * @param SubscriptionAddonOrder $subscriptionAddonOrder
      * @param SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory
      * @param SubscriptionOrder $subscriptionOrder
      * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
+     * @param CartRepositoryInterface $cartRepository
+     * @param CartManagementInterface $cartManagement
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function __construct(
@@ -101,26 +109,29 @@ class SubscriptionOrderHelper extends AbstractHelper
         AddressFactory $addressFactory,
         Customer $customer,
         Order $order,
-        QuoteFactory $quoteFactory,
         QuoteManagement $quoteManagement,
         StoreManagerInterface $storeManager,
         SubscriptionAddonOrder $subscriptionAddonOrder,
         SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory,
         SubscriptionOrder $subscriptionOrder,
-        SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
+        SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
+        CartRepositoryInterface $cartRepository,
+        CartManagementInterface $cartManagement
     ) {
         parent::__construct($context);
 
         $this->_addressFactory = $addressFactory;
         $this->_customer = $customer;
         $this->_order = $order;
-        $this->_quoteFactory = $quoteFactory;
         $this->_quoteManagement = $quoteManagement;
         $this->_storeManager = $storeManager;
         $this->_subscriptionAddonOrder = $subscriptionAddonOrder;
         $this->_subscriptionAddonOrderCollectionFactory = $subscriptionAddonOrderCollectionFactory;
         $this->_subscriptionOrder = $subscriptionOrder;
         $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
+
+        $this->_cartManagement = $cartManagement;
+        $this->_cartRepository = $cartRepository;
 
         $this->_store = $storeManager->getStore();
         $this->_websiteId = $this->_store->getWebsiteId();
@@ -241,10 +252,19 @@ class SubscriptionOrderHelper extends AbstractHelper
     protected function processOrder(Customer $customer, $subscriptionOrder)
     {
         // Create a new quote.
-        $quote = $this->_quoteFactory->create();
+
+        $cartId = $this->_cartManagement->createEmptyCartForCustomer($customer->getId());
+
+        /** @var \Magento\Quote\Model\Quote $quote */
+        $quote = $this->_cartRepository->get($cartId);
+
         $quote->setStore($this->_store);
         $quote->setCurrency();
         $quote->assignCustomer($customer->getDataModel());
+
+        if ($subscriptionOrder->getSubscriptionType() == 'annual') {
+            $quote->setCouponCode('annual_discount');
+        }
 
         foreach ($subscriptionOrder->getOrderItems() as $item) {
             // Check if the item has the selected field and if it is set.

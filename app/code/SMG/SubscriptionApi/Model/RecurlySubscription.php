@@ -866,6 +866,7 @@ class RecurlySubscription
             $credit->currency = $this->_currency;
             $credit->description = 'Partial refund for subscription cancellation';
             $credit->unit_amount_in_cents = $this->convertAmountToCents($totalRefund);
+            $credit->tax_exempt = true;
             $credit->create();
 
             $purchase->adjustments = [ $credit ];
