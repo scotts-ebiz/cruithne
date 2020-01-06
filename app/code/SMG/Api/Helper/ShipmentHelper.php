@@ -405,7 +405,7 @@ class ShipmentHelper
 
        // load order from orderId
        $this->_orderResource->load($order, $orderId);
-
+     
        // get send shipment status
        $shipmentstatus = $this->getSendShipmentStatus();
 
@@ -417,31 +417,29 @@ class ShipmentHelper
 
             // get customer email
             $email = $order->getCustomerEmail();
-            $productid = array();
-            foreach ($order->getAllVisibleItems() as $_item) {
-                    $productid[] = $_item->getProductId();                    
-            }
+            $shipmentId = $order->getIncrementId();
             
-            $proid = implode(',', $productid);
-
-            // take event as a array and add parameters
+            foreach ($order->getAllVisibleItems() as $_item) {
+            $productid = $_item->getProductId();  
+                      // take event as a array and add parameters
             $event = array();
             $event['type'] = 'product';
             $event['action'] = 'shipped';
             $event['identifiers'] = ['email'=>$email];
-            $event['data'] = ['product_id'=>$proid];
+            $event['data'] = ['product_id'=>$productid, 'shipment_id'=>$shipmentId];
 
             // get postevent function
-            $zaiusstatus = $zaiusClient->postEvent($event);
+            $zaiusstatus = $zaiusClient->postEvent($event);                 
+            }
             
             // check return values from the postevent function
             if($zaiusstatus)
             {
-                $this->_logger->info("The order Id " . $orderId . " is passed successfully to zaius."); //saved in var/log/system.log
+                $this->_logger->info("The order Id " . $orderId . " with product Id " . $productId . " is passed successfully to zaius."); //saved in var/log/system.log
             }
             else
             {
-                $this->_logger->info("The order Id " . $orderId . " is failed to zaius."); //saved in var/log/system.log
+                $this->_logger->info("The order Id " . $orderId . " with product id " . $productId . " is failed to zaius."); //saved in var/log/system.log
             }
         }
     }
