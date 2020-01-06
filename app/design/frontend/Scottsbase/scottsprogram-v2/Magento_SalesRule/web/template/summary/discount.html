@@ -1,0 +1,10 @@
+<!-- ko if: isDisplayed() -->
+<tr class="totals discount sp-py-1">
+    <th class="mark" scope="row">
+        <span class="discount coupon sp-py-2" data-bind="text: getCouponLabel()"></span>
+    </th>
+    <td class="amount">
+        <span class="price sp-py-2" data-bind="text: getValue(), attr: {'data-th': name}"></span>
+    </td>
+</tr>
+<!-- /ko -->

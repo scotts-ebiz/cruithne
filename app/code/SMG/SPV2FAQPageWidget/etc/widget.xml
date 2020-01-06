@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+	<widget class="SMG\SPV2FAQPageWidget\Block\Widget\FAQPage" id="smg_scottsprogram_faqpage">
+		<label>Scotts Program FAQ Page</label>
+		<description>A widget for the Scotts Program FAQ page</description>
+        <parameters>
+			<parameter name="faqCategory1Name" visible="true" xsi:type="text">
+				<label>Category 1 Name</label>
+			</parameter>
+			<parameter name="faqCategory1Block" visible="true" xsi:type="text">
+				<label>Category 1 Block Identifier</label>
+				<value>faq_1</value>
+			</parameter>
+			<parameter name="faqCategory2Name" visible="true" xsi:type="text">
+				<label>Category 2 Name (leave empty to disable)</label>
+			</parameter>
+			<parameter name="faqCategory2Block" visible="true" xsi:type="text">
+				<label>Category 2 Block Identifier</label>
+				<value>faq_2</value>
+			</parameter>
+		</parameters>
+	</widget>
+	<widget class="SMG\SPV2FAQPageWidget\Block\Widget\FAQ" id="smg_scottsprogram_faq">
+		<label>Scotts Program FAQ</label>
+		<description>A frequently asked question and answer entry.</description>
+		<parameters>
+			<parameter name="faqQuestion" visible="true" xsi:type="text">
+				<label>Question</label>
+			</parameter>
+			<parameter name="faqAnswer" visible="true" xsi:type="text">
+				<label>Answer</label>
+			</parameter>
+		</parameters>
+	</widget>
+</widgets>

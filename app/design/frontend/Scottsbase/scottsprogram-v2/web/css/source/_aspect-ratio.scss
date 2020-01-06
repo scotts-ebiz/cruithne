@@ -1,0 +1,31 @@
+.sp-aspect-ratio {
+  height: 0;
+  position: relative;
+}
+
+.sp-aspect-ratio--object {
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+  z-index: 10;
+}
+
+@each $size in $breakpoints {
+  @include breakpoint($size) {
+    @if $size {
+      $size: #{$size}\:;
+    }
+
+    .#{$size}sp-aspect-ratio--1x1 {
+      padding-bottom: 100%;
+    }
+
+    .#{$size}sp-aspect-ratio--4x3 {
+      padding-bottom: 75%;
+    }
+  }
+}

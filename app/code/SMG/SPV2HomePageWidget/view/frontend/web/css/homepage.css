@@ -1,0 +1,81 @@
+.sp-home__how-it-works {
+  margin-bottom: 6.5rem;
+}
+
+/* What to expect section */
+.sp-home__what-to-expect-img {
+  height: 0;
+  margin-bottom: 25.625%;
+  margin-top: -25.625%;
+  padding-bottom: 56.25%;
+  transform: translateY(50%);
+}
+
+.sp-home__what-to-expect-img img {
+  bottom: 0;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+  width: 100%;
+  z-index: 1;
+}
+
+.sp-home__what-to-expect-heading{
+  margin-bottom: 4.5rem;
+}
+
+/* History section */
+.sp-home__history-container {
+  flex-direction: column;
+}
+
+.sp-home__history-date {
+  margin-top: -168px;
+  order: 0;
+}
+
+.sp-home__history-image {
+  order: 1;
+}
+
+.sp-home__history-description {
+  order: 2;
+}
+
+@media (min-width: 768px) {
+  .sp-home__history-container {
+    flex-direction: row;
+  }
+
+  .sp-home__history-date,
+  .sp-home__history-description {
+    padding: 2rem;
+  }
+
+  .sp-home__history-date {
+    flex: 0 0 auto;
+    margin-top: 0;
+    order: 1;
+  }
+
+  .sp-home__history-description {
+    flex: 1;
+    order: 0;
+  }
+
+  .sp-home__history-image {
+    flex: 1;
+    order: 2
+  }
+
+  .sp-home__history-description {
+    order: 0;
+  }
+}
+
+.sp-app-image {
+  max-width: 10rem;
+}
+

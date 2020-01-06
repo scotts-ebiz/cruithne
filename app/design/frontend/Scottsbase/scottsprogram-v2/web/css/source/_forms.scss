@@ -1,0 +1,290 @@
+.sp-form-group {
+  margin-bottom: 2rem;
+  position: relative;
+}
+
+.sp-form-label {
+  position: absolute;
+  padding: 0 1rem;
+  left: 0;
+  top: 0;
+  opacity: 0;
+  transition: all .25s ease;
+  transform: translateY(50%);
+  z-index: 1;
+
+  :focus + &,
+  :not(:placeholder-shown) + & {
+    opacity: 1;
+    transform: translateY(-25%);
+  }
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.sp-input {
+  background-color: transparent;
+  border: none;
+  border-bottom: 1px solid $gray-2;
+  font-size: $font-size-p2--mobile;
+  outline: none;
+  padding: 1rem;
+  position: relative;
+  z-index: 1;
+
+  &::-moz-focus-inner {
+    outline: none !important;
+  }
+
+  &:-moz-focusring {
+    outline: none !important;
+  }
+
+  &::-moz-focus-outer {
+    outline: none !important;
+  }
+
+  &:focus {
+    border-color: $gray-1;
+
+    &::placeholder,
+    &::-webkit-input-placeholder {
+      color: transparent;
+    }
+
+    &:-moz-placeholder,
+    &:-ms-input-placeholder {
+      color: transparent;
+    }
+  }
+
+  &[aria-invalid="true"],
+  .sp-has-error & {
+    background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='16px' height='16px' viewBox='0 0 16 16' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E%3Cg transform='translate(-999.000000, -257.000000)' fill='%23CB0000'%3E%3Cg transform='translate(803.000000, 219.000000)'%3E%3Cg transform='translate(196.000000, 38.000000)'%3E%3Cg%3E%3Cpath d='M8,16 C12.418278,16 16,12.418278 16,8 C16,3.581722 12.418278,0 8,0 C3.581722,0 0,3.581722 0,8 C0,12.418278 3.581722,16 8,16 Z M8,15 C4.13400675,15 1,11.8659932 1,8 C1,4.13400675 4.13400675,1 8,1 C11.8659932,1 15,4.13400675 15,8 C15,11.8659932 11.8659932,15 8,15 Z' fill-rule='nonzero'%3E%3C/path%3E%3Cg transform='translate(7.500000, 4.000000)'%3E%3Ccircle cx='0.5' cy='7.5' r='1'%3E%3C/circle%3E%3Cpath d='M0,0.5 L0,5.5 C0,5.77614237 0.223857625,6 0.5,6 C0.776142375,6 1,5.77614237 1,5.5 L1,0.5 C1,0.223857625 0.776142375,0 0.5,0 C0.223857625,0 0,0.223857625 0,0.5 Z' fill-rule='nonzero'%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center right;
+    border-color: $red-1;
+    padding-right: 1.25rem;
+  }
+
+  @media (min-width: $screen-md) {
+    font-size: $font-size-p2;
+  }
+}
+
+.sp-input--valid:focus {
+  border-color: $green-3;
+}
+
+.sp-input--error,
+.sp-input--error:focus {
+  border-color: $red-1;
+}
+
+.sp-select {
+  display: inline-block;
+  position: relative;
+
+  select {
+    -webkit-appearance: none;
+    background-color: $white;
+    border: 1px solid $gray-2;
+    border-radius: 0;
+    padding: 1rem 1.75rem 1rem 1rem;
+    outline: none;
+  }
+
+  &:focus {
+    border-color: $gray-1;
+  }
+
+  &:after {
+    content: '\25bc';
+    font-size: .5rem;
+    position: absolute;
+    right: .75rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+
+  &[aria-invalid="true"],
+  .sp-has-error & {
+    border-color: $red-1;
+  }
+}
+
+.sp-checkbox,
+.sp-radio {
+  @include appearance;
+  @include user-select;
+
+  background-color: $white;
+  background-origin: border-box;
+  border: 2px solid;
+  color: $green-1;
+  color-adjust: exact;
+  display: inline-block;
+  flex-shrink: 0;
+  font-size: inherit;
+  height: 1em;
+  -webkit-print-color-adjust: exact;
+  vertical-align: middle;
+  width: 1em;
+
+  &:checked {
+    background-color: currentColor;
+    background-size: 100% 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+  }
+
+  &:invalid,
+  .sp-has-error & {
+    color: $red-1;
+  }
+}
+
+.sp-textarea,
+input[type="text"].sp-textarea,
+input[type="email"].sp-textarea {
+  border: 1px solid $gray-2;
+  font-size: $font-size-p2--mobile;
+  outline: none;
+  padding: 1rem;
+  position: relative;
+  z-index: 1;
+
+  &:focus {
+    border-color: $gray-1;
+
+    &::placeholder,
+    &::-webkit-input-placeholder {
+      color: transparent;
+    }
+
+    &:-moz-placeholder,
+    &:-ms-input-placeholder {
+      color: transparent;
+    }
+  }
+
+  .sp-has-error & {
+    background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='16px' height='16px' viewBox='0 0 16 16' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E%3Cg transform='translate(-999.000000, -257.000000)' fill='%23CB0000'%3E%3Cg transform='translate(803.000000, 219.000000)'%3E%3Cg transform='translate(196.000000, 38.000000)'%3E%3Cg%3E%3Cpath d='M8,16 C12.418278,16 16,12.418278 16,8 C16,3.581722 12.418278,0 8,0 C3.581722,0 0,3.581722 0,8 C0,12.418278 3.581722,16 8,16 Z M8,15 C4.13400675,15 1,11.8659932 1,8 C1,4.13400675 4.13400675,1 8,1 C11.8659932,1 15,4.13400675 15,8 C15,11.8659932 11.8659932,15 8,15 Z' fill-rule='nonzero'%3E%3C/path%3E%3Cg transform='translate(7.500000, 4.000000)'%3E%3Ccircle cx='0.5' cy='7.5' r='1'%3E%3C/circle%3E%3Cpath d='M0,0.5 L0,5.5 C0,5.77614237 0.223857625,6 0.5,6 C0.776142375,6 1,5.77614237 1,5.5 L1,0.5 C1,0.223857625 0.776142375,0 0.5,0 C0.223857625,0 0,0.223857625 0,0.5 Z' fill-rule='nonzero'%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: center right;
+    border-color: $red-1;
+    padding-right: 1.25rem;
+  }
+
+  @media (min-width: $screen-md) {
+    font-size: $font-size-p2;
+  }
+}
+
+.sp-checkbox:checked {
+  background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='white' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M5.707 7.293a1 1 0 0 0-1.414 1.414l2 2a1 1 0 0 0 1.414 0l4-4a1 1 0 0 0-1.414-1.414L7 8.586 5.707 7.293z'/%3e%3c/svg%3e");
+}
+
+.sp-radio {
+  border-radius: 100%;
+
+  &:checked {
+    background-color: $white;
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='%231d5632' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
+  }
+
+  .sp-has-error & {
+    background-color: $white;
+    background-image: url("data:image/svg+xml,%3csvg viewBox='0 0 16 16' fill='%23cb0000' xmlns='http://www.w3.org/2000/svg'%3e%3ccircle cx='8' cy='8' r='3'/%3e%3c/svg%3e");
+    color: $red-1;
+  }
+}
+
+.sp-input-group {
+  display: flex;
+  > *:first-child {
+    margin-right: .25rem;
+  }
+
+  > *:last-child {
+    margin-left: .25rem;
+  }
+}
+
+#customer-email-error,
+.sp-form-error {
+  color: $red-1;
+  font-size: 0.75rem;
+  margin-top: 0.25rem;
+}
+
+@mixin rangeThumb {
+  appearance: none;
+  background: $green-1;
+  border: 0 !important;
+  border-radius: 50%;
+  height: 1rem;
+  cursor: pointer;
+  width: 1rem;
+}
+
+.sp-slider {
+  -webkit-appearance: none;
+  background-color: transparent;
+  width: 100%;
+
+  // Thumb
+  &::-webkit-slider-thumb {
+    -webkit-appearance: none; // needed again for Chrome & Safari
+    @include rangeThumb;
+  }
+
+  &::-moz-range-thumb {
+    @include rangeThumb;
+  }
+
+  &::-ms-thumb {
+    @include rangeThumb;
+  }
+
+  &:focus { // override outline/background on focus
+    background: none;
+    outline: none;
+  }
+
+  &::-ms-track { // A little somethin' somethin' for IE
+    width: 100%;
+    cursor: pointer;
+    background: transparent;
+    border-color: transparent;
+    color: transparent;
+  }
+}
+
+/* Override Magento 2 default classes */
+.fieldset {
+  margin: 0;
+}
+
+input[type="text"].sp-input.mage-error,
+input[type="email"].sp-input.mage-error,
+input[type="text"].sp-textarea.mage-error,
+input[type="email"].sp-textarea.mage-error  {
+  background-image: url("data:image/svg+xml,%3C%3Fxml version='1.0' encoding='UTF-8'%3F%3E%3Csvg width='16px' height='16px' viewBox='0 0 16 16' version='1.1' xmlns='http://www.w3.org/2000/svg' xmlns:xlink='http://www.w3.org/1999/xlink'%3E%3Cg stroke='none' stroke-width='1' fill='none' fill-rule='evenodd'%3E%3Cg transform='translate(-999.000000, -257.000000)' fill='%23CB0000'%3E%3Cg transform='translate(803.000000, 219.000000)'%3E%3Cg transform='translate(196.000000, 38.000000)'%3E%3Cg%3E%3Cpath d='M8,16 C12.418278,16 16,12.418278 16,8 C16,3.581722 12.418278,0 8,0 C3.581722,0 0,3.581722 0,8 C0,12.418278 3.581722,16 8,16 Z M8,15 C4.13400675,15 1,11.8659932 1,8 C1,4.13400675 4.13400675,1 8,1 C11.8659932,1 15,4.13400675 15,8 C15,11.8659932 11.8659932,15 8,15 Z' fill-rule='nonzero'%3E%3C/path%3E%3Cg transform='translate(7.500000, 4.000000)'%3E%3Ccircle cx='0.5' cy='7.5' r='1'%3E%3C/circle%3E%3Cpath d='M0,0.5 L0,5.5 C0,5.77614237 0.223857625,6 0.5,6 C0.776142375,6 1,5.77614237 1,5.5 L1,0.5 C1,0.223857625 0.776142375,0 0.5,0 C0.223857625,0 0,0.223857625 0,0.5 Z' fill-rule='nonzero'%3E%3C/path%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: center right;
+  border-color: $red-1;
+  padding-right: 1.25rem;
+}
+
+div.mage-error[generated] {
+  font-size: 14px;
+}

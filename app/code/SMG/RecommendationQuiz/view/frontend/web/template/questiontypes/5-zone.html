@@ -1,0 +1,169 @@
+<!-- ko if: quiz.questions()[0] && quiz.questions()[0].questionType == 5 && quiz.usingGoogleMaps -->
+<div class="sp-quiz__question sp-container md:sp-mb-4 sp-overflow-hidden">
+    <!-- Process Questions -->
+    <div class="sp-h-full sp-mx-auto md:sp-w-5/6">
+        <div class="sp-flex sp-flex-column md:sp-flex-row sp-h-full sp--mx-6">
+            <div class="sp-w-full lg:sp-w-2/5 sp-px-6 md:sp-p-6 sp-text-center md:sp-text-left">
+                <div class="md:sp-block" data-bind="css: { 'sp-hide': quiz.map() && quiz.map().address() }">
+                    <h2
+                        class="sp-quiz__question-title sp-h2 sp-max-w-lg sp-mt-0 sp-mx-auto"
+                        data-bind="text: quiz.currentGroup().title"
+                    >
+                    </h2>
+
+                    <p
+                        class="sp-text-left"
+                        data-bind="text: quiz.currentGroup().subtitle"
+                    ></p>
+
+                    <!-- Link to manual lawn square footage are input screen -->
+                    <button
+                        class="sp-quiz__manual-entry sp-mb-4 md:sp-block"
+                        data-bind="
+                            text: quiz.currentGroup().displayMainPageCTA,
+                            click: quiz.toggleGoogleMaps
+                        "
+                    ></button>
+                </div>
+
+                <div
+                    class="sp-quiz-map--step-1 md:sp-mb-8 sp-p-6 md:sp-p-8 sp-rounded sp-shadow-md sp-text-black sp-text-left"
+                    data-bind="css: {
+                        'sp-bg-green-4': !quiz.map() || !quiz.map().address(),
+                        'sp-bg-white': quiz.map() && quiz.map().address()
+                    }"
+                >
+                    <label
+                        class="sp-block sp-p1 sp-mb-4"
+                        for="address-autocomplete"
+                    >
+                        1. Where is your lawn?
+                    </label>
+                    <div
+                        class="sp-form-group sp-mb-0"
+                        data-bind="visible: quiz.map() && !quiz.map().address()"
+                    >
+                        <input
+                            id="address-autocomplete"
+                            class="sp-input sp-w-full"
+                            type="text"
+                            placeholder="Address"
+                        />
+                        <label class="sp-form-label" for="address-autocomplete">Address</label>
+                    </div>
+                    <div
+                        class="sp-p2 sp-flex sp-items-center sp-justify-between sp-font-bold"
+                        data-bind="visible: quiz.map() && quiz.map().address()"
+                    >
+                        <span
+                            data-bind="text: quiz.map() && quiz.map().address()"
+                        >
+                        </span>
+                        <button class="sp-link sp-ml-2" data-bind="click: quiz.map() && quiz.map().clearAddress" type="button">Change</button>
+                    </div>
+                    <!-- ko if: quiz.invalidZipCode() -->
+                    <div class="sp-form-error">Please select a location within the continental United States.</div>
+                    <!-- /ko -->
+                </div>
+
+                <div class="sp-quiz-map--step-2 sp-hide md:sp-block sp-bg-white sp-mb-8 sp-p-8 sp-rounded sp-shadow-md sp-text-black">
+                    <p
+                        class="sp-p1"
+                        data-bind="css: {
+                            'sp-mb-0': !quiz.map() || !quiz.map().address(),
+                            'sp-mb-4': quiz.map() && quiz.map().address()
+                        }"
+                    >
+                        2. Outline your lawn.
+                    </p>
+                    <p
+                        class="sp-p2 sp-mb-0"
+                        data-bind="visible: quiz.map() && quiz.map().address()"
+                    >
+                        No need to be too precise--we're just looking for an
+                        approximate size.
+                    </p>
+                    <p
+                        class="sp-p2 sp-font-bold sp-mb-0 sp-mt-4"
+                        data-bind="visible: quiz.map() && quiz.map().lawnSize(), text: quiz.map() && ('Total Lawn Size: ' + quiz.map().lawnSize() + ' SQFT')"
+                    >
+                    </p>
+                </div>
+            </div>
+
+            <div
+                class="sp-flex-auto md:sp-flex-none sp-w-full md:sp-block md:sp-w-3/5 sp-px-6 md:sp-p-6"
+                data-bind="css: { 'sp-hide': !quiz.map() || !quiz.map().address() }"
+            >
+                <div class="sp-quiz-map sp-relative sp-aspect-ratio md:sp-aspect-ratio--4x3">
+                    <div id="map" class="sp-quiz-map__placeholder sp-aspect-ratio--object">
+                    </div>
+
+                    <!-- ko if: quiz.map() && quiz.map().polygons().length -->
+                    <button
+                        class="sp-quiz-map__undo sp-button sp-button--inverted sp-shadow-md"
+                        type="button"
+                        data-bind="click: quiz.map() && quiz.map().undo"
+                    >
+                        Undo
+                    </button>
+                    <!-- /ko -->
+
+                    <div
+                        class="sp-quiz-map__helper sp-bg-white sp-flex sp-flex-column sp-justify-center sp-p-8 sp-rounded sp-text-black"
+                        data-bind="visible: quiz.map() && quiz.map().showInstructions()"
+                    >
+                        <p class="sp-p1 sp-text-center">
+                            <img src="https://test_magento_image_repo.storage.googleapis.com/mapHelperIcon.svg" alt="Calculate Lawn Size">
+                        </p>
+
+                        <p class="sp-p1 sp-max-w-sm sp-mx-auto sp-text-center">
+                                Here’s how to measure your lawn size:
+                                tap once on the map to begin a line and trace the outline of your lawn by adding more lines. Close the shape to complete the outline. You can tap and drag the dots to edit, use the undo button to undo an action, and pinch to zoom.
+                                
+                        </p>
+
+                        <p class="sp-p1 sp-text-center">
+                            <img src="https://test_magento_image_repo.storage.googleapis.com/mapDraw.png" alt="Draw Lawn Area">
+                        </p>
+
+                        <div class="sp-text-center">
+                            <button
+                                class="sp-button sp-button--primary"
+                                type="button"
+                                data-bind="click: quiz.map() && quiz.map().hideInstructions"
+                            >
+                                Start
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div
+                class="sp-w-full md:sp-hide sp-px-6"
+                data-bind="css: { 'sp-hide': !quiz.map() || !quiz.map().address() }"
+            >
+                <div
+                    class="sp-quiz-map--step-2 sp-bg-green-4 sp-p-6 sp-rounded sp-shadow-md sp-text-black sp-text-center"
+                >
+                    <p
+                        class="sp-p1"
+                        data-bind="css: {
+                            'sp-mb-0': !quiz.map() || !quiz.map().lawnSize(),
+                            'sp-mb-2': quiz.map() && quiz.map().lawnSize()
+                        }"
+                    >
+                        2. Outline your lawn.
+                    </p>
+                    <p
+                        class="sp-p2 sp-font-bold sp-mb-0"
+                        data-bind="visible: quiz.map() && quiz.map().lawnSize(), text: quiz.map() && ('Total Lawn Size: ' + quiz.map().lawnSize() + ' SQFT')"
+                    >
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- /ko -->

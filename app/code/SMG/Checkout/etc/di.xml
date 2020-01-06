@@ -3,7 +3,6 @@
     <preference for="Magento\Checkout\Block\Cart\Coupon" type="SMG\Checkout\Block\Cart\Coupon" />
     <preference for="Magento\Checkout\Controller\Cart\Add" type="SMG\Checkout\Controller\Cart\Add" />
     <preference for="Magento\Checkout\Controller\Cart\CouponPost" type="SMG\Checkout\Controller\Cart\CouponPost" />
-    <preference for="Magento\Checkout\Controller\Cart\Index" type="SMG\Checkout\Controller\Cart\Index" />
 	<preference for="Magento\Checkout\CustomerData\Cart" type="SMG\Checkout\CustomerData\Cart" />
 
 	<type name="Magento\Checkout\Api\GuestPaymentInformationManagementInterface">
@@ -14,5 +13,8 @@
 	</type>
 	<type name="Magento\Checkout\Model\ShippingInformationManagement">
 		<plugin name="SMG_Checkout_Model_ShippingInformationManagement" type="SMG\Checkout\Plugin\Model\ShippingInformationManagement" sortOrder="1"/>
+	</type>
+	<type name="Magento\Checkout\Controller\Cart\Index">
+		<plugin name="smg_checkout_plugin_controller_cart_index" type="SMG\Checkout\Plugin\Controller\Cart\Index" />
 	</type>
 </config>

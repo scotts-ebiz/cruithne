@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+	<widget class="SMG\SPV2ContactWidget\Block\Widget\ContactAddress" id="smg_scottsprogram_contact_address">
+		<label>Scotts Program Contact Address</label>
+		<description>A widget for displaying contact address and phone.</description>
+        <parameters>
+			<parameter name="contactAddress" visible="true" xsi:type="text">
+				<label>Address</label>
+			</parameter>
+			<parameter name="contactPhone" visible="true" xsi:type="text">
+				<label>Phone</label>
+			</parameter>
+		</parameters>
+	</widget>
+	<widget class="SMG\SPV2ContactWidget\Block\Widget\ContactForm" id="smg_scottsprogram_contact_form">
+		<label>Scotts Program Contact Form</label>
+		<description>A widget for displaying the contact form.</description>
+		<parameters>
+			<parameter name="contactFormHeading" visible="true" xsi:type="text">
+				<label>Heading</label>
+			</parameter>
+			<parameter name="contactFormText" visible="true" xsi:type="text">
+				<label>Text</label>
+			</parameter>
+		</parameters>
+	</widget>
+</widgets>
