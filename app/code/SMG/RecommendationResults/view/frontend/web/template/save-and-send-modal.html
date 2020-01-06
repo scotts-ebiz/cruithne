@@ -20,17 +20,15 @@
             </div>
 
             <form class="form save-and-send">
-                <fieldset class="fieldset">
-                    <div class="sp-flex sp-flex-row">
-                        <div class="sp-form-group sp-w-3/4">
-                            <input type="email" name="email" id="email" class="input-text sp-input sp-w-full" />
-                            <label class="label sp-form-label required" for="name">Email</label>
-                        </div>
-                        <div class="sp-form-group sp-w-1/4 sp-text-right">
-                            <button type="submit" class="action sp-button sp-button--primary">SEND RESULTS</button>    
-                        </div>
+                <div class="sp-flex sp-flex-column md:sp-flex-row sp-pb-8">
+                    <div class="sp-form-group md:sp-w-3/4">
+                        <input type="email" placeholder="Email" name="email" id="email" class="input-text sp-input sp-w-full" />
+                        <label class="label sp-form-label required" for="email">Email</label>
                     </div>
-                </fieldset>
+                    <div class="sp-form-group md:sp-w-1/4 sp-text-right">
+                        <button type="submit" class="action sp-button sp-button--primary">SEND RESULTS</button>
+                    </div>
+                </div>
             </form>
 
             <hr />
