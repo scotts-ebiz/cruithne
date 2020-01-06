@@ -121,7 +121,7 @@ class Index
                     );
 
                     $customerLoginUrl = $this->_url->getUrl(
-                        'customer/account/login',
+                        'customer/account/create',
                         array(
                             'referer' => $this->_urlHelper->getEncodedUrl($this->_url->getCurrentUrl()),
                             '_query' => $params

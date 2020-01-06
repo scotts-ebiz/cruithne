@@ -159,6 +159,10 @@ PDP MODAL
 
 .sp-options__footer {
   position: sticky;
-  bottom: 0px;
-  z-index: 100;
+  bottom: 0;
+  z-index: 10;
+}
+
+.sp-footer {
+  border-top: 2px solid #fff;
 }

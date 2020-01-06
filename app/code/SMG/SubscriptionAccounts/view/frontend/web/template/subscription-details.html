@@ -20,6 +20,13 @@
        href="/customer/account/logout">Log Out</a>
 </div>
 
+<!-- ko ifnot: subscriptions().success -->
+<div class="sp-my-8 sp-text-center">
+    <p class="sp-p1 sp-max-w-md sp-mx-auto">Sign up for Scotts Program and you'll receive exactly what your lawn needs at just the right time to apply it. Kiss confusion goodbye—we do all the thinking and planning for you.</p>
+    <a href="/quiz" class="sp-button sp-button--primary sp-button--get-started sp-relative sp-text-center sp-mt-4">GET YOUR PLAN</a>
+</div>
+<!-- /ko -->
+
 <!-- ko if: subscriptions().success -->
 <div class="sp-flex sp-items-center sp-py-8 sp-px-4 sp-mt-8 sp-subscription-details--border-bottom">
     <h3 class="sp-h4 sp-uppercase">subscription</h3>

@@ -799,7 +799,7 @@ class RecurlySubscription
      * Get Subscription Ids and save them
      * @param $checkoutData
      * @param $account
-     * @param $subscription
+     * @param Subscription $subscription
      * @throws \Exception
      */
     private function getSubscriptionIds($checkoutData, $account, $subscription)
@@ -828,6 +828,13 @@ class RecurlySubscription
             foreach ($subCodes as $subCode) {
                 if (in_array($subCode['plan_code'], ['annual', 'seasonal'])) {
                     $subscription->setSubscriptionId($subCode['subscription_id'])->save();
+                } elseif($subCode['plan_code'] === 'add-ons') {
+                    $addOns = $subscription->getSubscriptionAddonOrders();
+
+                    if ($addOns && $addOns->getFirstItem()) {
+                        $addOn = $addOns->getFirstItem();
+                        $addOn->setSubscriptionId($subCode['subscription_id'])->save();
+                    }
                 } else {
                     $subscription->getSubscriptionOrderBySeasonSlug($subCode['plan_code'])->setSubscriptionId($subCode['subscription_id'])->save();
                 }
