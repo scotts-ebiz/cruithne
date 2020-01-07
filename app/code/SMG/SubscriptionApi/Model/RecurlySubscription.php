@@ -19,6 +19,7 @@ use Recurly_Subscription;
 use Recurly_SubscriptionList;
 use Recurly_ValidationError;
 use SMG\SubscriptionApi\Helper\SubscriptionOrderHelper;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrderItem\Collection;
 
 /**
@@ -96,6 +97,10 @@ class RecurlySubscription
      * @var SubscriptionOrderHelper
      */
     protected $_subscriptionOrderHelper;
+    /**
+     * @var SubscriptionCollectionFactory
+     */
+    protected $_subscriptionCollectionFactory;
 
     /**
      * RecurlySubscription constructor.
@@ -111,6 +116,7 @@ class RecurlySubscription
      * @param \Magento\Customer\Model\Url $customerUrl
      * @param LoggerInterface $logger
      * @param SubscriptionOrderHelper $subscriptionOrderHelper
+     * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
      */
     public function __construct(
         \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper,
@@ -124,7 +130,8 @@ class RecurlySubscription
         CollectionFactory $collectionFactory,
         \Magento\Customer\Model\Url $customerUrl,
         LoggerInterface $logger,
-        SubscriptionOrderHelper $subscriptionOrderHelper
+        SubscriptionOrderHelper $subscriptionOrderHelper,
+        SubscriptionCollectionFactory $subscriptionCollectionFactory
     ) {
         $this->_recurlyHelper = $recurlyHelper;
         $this->_subscriptionHelper = $subscriptionHelper;
@@ -141,6 +148,7 @@ class RecurlySubscription
         $this->_currency = 'USD';
         $this->_logger = $logger;
         $this->_subscriptionOrderHelper = $subscriptionOrderHelper;
+        $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
     }
 
     /**
@@ -306,6 +314,21 @@ class RecurlySubscription
         // Configure Recurly Client using the API Key and Subdomain entered in the settings page
         Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
+
+        $subscriptionFactory = $this->_subscriptionCollectionFactory->create();
+        $hasActiveSubscription = $subscriptionFactory
+            ->addFilter('subscription_status', 'active')
+            ->addFilter('customer_id', $this->_customerSession->getCustomerId())
+            ->count();
+
+        if (! $hasActiveSubscription) {
+            $response = [
+                'success'           => true,
+                'has_subscription'  => false,
+            ];
+
+            return json_encode($response);
+        }
 
         // Get checkout data
         $checkoutData = $this->_checkoutSession->getQuote()->getShippingAddress()->getData();
