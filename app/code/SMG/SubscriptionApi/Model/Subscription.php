@@ -545,11 +545,11 @@ class Subscription extends AbstractModel
      * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    public function createSubscriptionService($token, $service, $billing_address)
+    public function createSubscriptionService($token, $service)
     {
 
         /** @var RecurlySubscription $service */
-        $service->createSubscription($token, $this, $billing_address);
+        $service->createSubscription($token, $this);
     }
 
     /**

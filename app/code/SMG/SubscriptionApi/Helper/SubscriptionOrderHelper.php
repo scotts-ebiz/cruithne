@@ -2,23 +2,23 @@
 
 namespace SMG\SubscriptionApi\Helper;
 
-use Magento\Customer\Model\Customer;
-use Magento\Quote\Model\QuoteManagement;
 use Magento\Customer\Model\AddressFactory;
+use Magento\Customer\Model\Customer;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Quote\Model\QuoteManagement;
 use Magento\Sales\Model\Order;
 use Magento\Store\Model\StoreManagerInterface;
-use SMG\SubscriptionApi\Model\SubscriptionOrderItem;
 use SMG\SubscriptionApi\Exception\SubscriptionException;
-use SMG\SubscriptionApi\Model\SubscriptionAddonOrderItem;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\CollectionFactory as SubscriptionAddonOrderCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection as SubscriptionOrderCollection;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
 use SMG\SubscriptionApi\Model\SubscriptionAddonOrder;
+use SMG\SubscriptionApi\Model\SubscriptionAddonOrderItem;
 use SMG\SubscriptionApi\Model\SubscriptionOrder;
+use SMG\SubscriptionApi\Model\SubscriptionOrderItem;
 
 /**
  * Class SubscriptionOrderHelper
@@ -285,10 +285,6 @@ class SubscriptionOrderHelper extends AbstractHelper
         $quote->setCurrency();
         $quote->assignCustomer($customer->getDataModel());
 
-        if ($subscriptionOrder->getSubscriptionType() == 'annual') {
-            $quote->setCouponCode('annual_discount');
-        }
-
         foreach ($subscriptionOrder->getOrderItems() as $item) {
             // Check if the item has the selected field and if it is set.
             /**
@@ -298,6 +294,15 @@ class SubscriptionOrderHelper extends AbstractHelper
                 // This is an add-on product and is not selected, so continue.
                 continue;
             }
+
+            $isAddon = $item->hasData('selected') && $item->getSelected();
+
+            // Add the annual discount for annual subscription items that are
+            // not add-ons.
+            if (! $isAddon && $subscriptionOrder->getSubscriptionType() == 'annual') {
+                $quote->setCouponCode('annual_discount_order');
+            }
+
             // Add product to the cart
             try {
                 $product = $item->getProduct();
