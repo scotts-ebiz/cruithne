@@ -3,12 +3,6 @@
     width: 100%;
 }
 
-.sp-account-billing .sp-select select {
-    border-left: none;
-    border-right: none;
-    border-top: none;
-}
-
 .sp-account-billing .sp-form-group {
     padding-top: 1rem;
     margin-bottom: 2rem;
