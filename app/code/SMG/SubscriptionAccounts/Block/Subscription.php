@@ -11,7 +11,7 @@ use Recurly_Client;
 use Recurly_Invoice;
 use Recurly_SubscriptionList;
 use SMG\SubscriptionApi\Helper\RecurlyHelper;
-use \SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
 
 /**
  * Class Subscription
@@ -140,7 +140,7 @@ class Subscription extends Template
 
                     // Get items from the main invoice
                     $mainInvoice = $this->getInvoice($mainSubscription['invoice_number']);
-                    $notAddonProduct = [ 'annual', 'add-ons', 'early-spring', 'late-spring', 'early-summer', 'early-fall', 'seasonal' ];
+                    $notAddonProduct = [ 'annual', 'early-spring', 'late-spring', 'early-summer', 'early-fall', 'seasonal' ];
                     $totalAddonAmount = 0;
                     $totalMainAmount = 0;
                     $numberOfAddonProducts = 0;
@@ -150,6 +150,7 @@ class Subscription extends Template
                             $totalAddonAmount += $item->total_in_cents;
                             $numberOfAddonProducts++;
                         }
+
                         if ($item->product_code == 'annual' || $item->product_code == 'seasonal') {
                             $totalMainAmount = $item->total_in_cents;
                         }
