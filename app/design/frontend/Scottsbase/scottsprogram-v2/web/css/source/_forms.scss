@@ -299,7 +299,11 @@ div.mage-error[generated] {
   margin: 0!important;
 }
 
+.gigya-screen.portrait.mobile::before {
+  max-width: 100%;
+}
+
 .gigya-social-login-container,
-.gigya-social-login-container > *  {
+.gigya-social-login-container > * {
   width: auto!important;
 }
