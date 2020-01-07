@@ -140,7 +140,16 @@ class Subscription extends Template
 
                     // Get items from the main invoice
                     $mainInvoice = $this->getInvoice($mainSubscription['invoice_number']);
-                    $notAddonProduct = [ 'annual', 'early-spring', 'late-spring', 'early-summer', 'early-fall', 'seasonal' ];
+                    $notAddonProduct = [
+                        'annual',
+                        'early-spring',
+                        'late-spring',
+                        'early-summer',
+                        'late-summer',
+                        'early-fall',
+                        'late-fall',
+                        'seasonal',
+                    ];
                     $totalAddonAmount = 0;
                     $totalMainAmount = 0;
                     $numberOfAddonProducts = 0;
