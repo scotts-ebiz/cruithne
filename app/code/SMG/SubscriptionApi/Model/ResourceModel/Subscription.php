@@ -2,11 +2,12 @@
 
 namespace SMG\SubscriptionApi\Model\ResourceModel;
 
-use Psr\Log\LoggerInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\Framework\Model\ResourceModel\Db\Context;
+use Psr\Log\LoggerInterface;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
 use SMG\SubscriptionApi\Model\SubscriptionAddonOrderFactory;
 use SMG\SubscriptionApi\Model\SubscriptionAddonOrderItemFactory;
@@ -273,12 +274,11 @@ class Subscription extends AbstractDb
 
             // If there is a parent subscription order (which there must be now) let's add subscription order items
             if (! isset($seasons[$key]['subscriptionOrderItems'][0])) {
-
                 // Get the corresponding product
-                $product = $this->_productRepository->get($recommendedProduct['sku']);
-
-                // @todo Error state with sku mismatch... what to do?
-                if (! $product->getEntityId()) {
+                try {
+                    $product = $this->_productRepository->get($recommendedProduct['sku']);
+                } catch (NoSuchEntityException $e) {
+                    throw new NoSuchEntityException(__($e->getMessage() . ' - SKU: ' . $recommendedProduct['sku']));
                 }
 
                 $subscriptionOrders[$key]['subscriptionOrderItems'][] = [

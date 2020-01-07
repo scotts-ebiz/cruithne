@@ -11,7 +11,9 @@ use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Sales\Model\Order;
 use Magento\Store\Model\StoreManagerInterface;
+use SMG\SubscriptionApi\Model\SubscriptionOrderItem;
 use SMG\SubscriptionApi\Exception\SubscriptionException;
+use SMG\SubscriptionApi\Model\SubscriptionAddonOrderItem;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\CollectionFactory as SubscriptionAddonOrderCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection as SubscriptionOrderCollection;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
@@ -202,6 +204,27 @@ class SubscriptionOrderHelper extends AbstractHelper
     }
 
     /**
+     * Format the provided address to use only the required fields.
+     *
+     * @param $address
+     * @return array
+     */
+    public function formatAddress($address)
+    {
+        return [
+            'firstname' => $address->getFirstname(),
+            'lastname' => $address->getLastname(),
+            'street' => $address->getStreet(),
+            'city' => $address->getCity(),
+            'country_id' => $address->getCountryId(),
+            'region' => $address->getRegion(),
+            'postcode' => $address->getPostcode(),
+            'telephone' => $address->getTelephone(),
+            'save_in_address_book' => 1,
+        ];
+    }
+
+    /**
      * Get the subscription order by subscription ID.
      *
      * @param string $subscriptionId
@@ -268,6 +291,9 @@ class SubscriptionOrderHelper extends AbstractHelper
 
         foreach ($subscriptionOrder->getOrderItems() as $item) {
             // Check if the item has the selected field and if it is set.
+            /**
+             * @var SubscriptionOrderItem|SubscriptionAddonOrderItem $item
+             */
             if ($item->hasData('selected') && ! $item->getSelected()) {
                 // This is an add-on product and is not selected, so continue.
                 continue;
@@ -357,20 +383,5 @@ class SubscriptionOrderHelper extends AbstractHelper
         http_response_code($status);
 
         throw new SubscriptionException($error);
-    }
-
-    protected function formatAddress($address)
-    {
-        return [
-            'firstname' => $address->getFirstname(),
-            'lastname' => $address->getLastname(),
-            'street' => $address->getStreet(),
-            'city' => $address->getCity(),
-            'county_id' => $address->getCountryId(),
-            'region' => $address->getRegion(),
-            'postcode' => $address->getPostcode(),
-            'telephone' => $address->getTelephone(),
-            'save_in_address_book' => 1,
-        ];
     }
 }
