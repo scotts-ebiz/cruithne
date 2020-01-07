@@ -2,6 +2,7 @@
 
 namespace SMG\SubscriptionApi\Model\ResourceModel;
 
+use SMG\SubscriptionApi\Helper\RecurlyHelper;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
@@ -50,6 +51,11 @@ class Subscription extends AbstractDb
     protected $_logger;
 
     /**
+     * @var RecurlyHelper
+     */
+    protected $_recurlyHelper;
+
+    /**
      * Constructor
      */
     protected function _construct()
@@ -83,6 +89,7 @@ class Subscription extends AbstractDb
         SubscriptionCollectionFactory $subscriptionCollectionFactory,
         ProductRepositoryInterface $productRepository,
         LoggerInterface $logger,
+        RecurlyHelper $recurlyHelper,
         $connectionName = null
     ) {
         parent::__construct($context, $connectionName);
@@ -95,6 +102,7 @@ class Subscription extends AbstractDb
         $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
         $this->_productRepository = $productRepository;
         $this->_logger = $logger;
+        $this->_recurlyHelper = $recurlyHelper;
     }
 
     /**
@@ -317,17 +325,6 @@ class Subscription extends AbstractDb
      */
     private function getPlanCodeByName($name)
     {
-        switch ($name) {
-            case 'Early Spring Feeding':
-                return 'early-spring';
-            case 'Late Spring Feeding':
-                return 'late-spring';
-            case 'Early Summer Feeding':
-                return 'early-summer';
-            case 'Early Fall Feeding':
-                return 'early-fall';
-            default:
-                return '';
-        }
+        return $this->_recurlyHelper->getSeasonSlugByName($name);
     }
 }

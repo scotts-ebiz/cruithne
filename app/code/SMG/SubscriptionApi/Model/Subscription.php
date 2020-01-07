@@ -28,6 +28,7 @@ use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\CollectionFac
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection as SubscriptionOrderCollection;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection\Interceptor as SubscriptionOrderCollectionInterceptor;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
+use SMG\SubscriptionApi\Helper\RecurlyHelper;
 
 /**
  * Class Subscription
@@ -90,6 +91,11 @@ class Subscription extends AbstractModel
     protected $_logger;
 
     /**
+     * @var RecurlyHelper
+     */
+    protected $_recurlyHelper;
+
+    /**
      * Constructor.
      */
     protected function _construct()
@@ -117,6 +123,7 @@ class Subscription extends AbstractModel
      * @param ProductFactory $productFactory
      * @param ProductRepository $productRepository
      * @param OrderCollectionFactory $orderCollectionFactory
+     * @param RecurlyHelper $recurlyHelper
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -138,6 +145,7 @@ class Subscription extends AbstractModel
         ProductFactory $productFactory,
         ProductRepository $productRepository,
         OrderCollectionFactory $orderCollectionFactory,
+        RecurlyHelper $recurlyHelper,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -158,6 +166,7 @@ class Subscription extends AbstractModel
         $this->_productFactory = $productFactory;
         $this->_productRepository = $productRepository;
         $this->_orderCollectionFactory = $orderCollectionFactory;
+        $this->_recurlyHelper = $recurlyHelper;
     }
 
     /**
@@ -559,18 +568,7 @@ class Subscription extends AbstractModel
      */
     private function getPlanCodeByName($name)
     {
-        switch ($name) {
-            case 'Early Spring Feeding':
-                return 'early-spring';
-            case 'Late Spring Feeding':
-                return 'late-spring';
-            case 'Early Summer Feeding':
-                return 'early-summer';
-            case 'Early Fall Feeding':
-                return 'early-fall';
-            default:
-                return false;
-        }
+        return $this->_recurlyHelper->getSeasonSlugByName($name);
     }
 
     /**
