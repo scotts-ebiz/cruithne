@@ -418,15 +418,11 @@ class ShipmentHelper
             // get customer email
             $email = $order->getCustomerEmail();
             
-            // get shipment increment Id
-            $shipmentId = 0;
-            $shipmentAll = $order->getShipmentsCollection();
-            foreach ($shipmentAll as $shipment) {
-               $shipmentId = $shipment->getIncrementId();
-            }
-
+            // get order increment Id
+            $shipmentId = $order->getIncrementId();
+			
             foreach ($order->getAllVisibleItems() as $_item) {
-            $productid = $_item->getProductId();  
+            $productid = $_item->getProductId();
                       // take event as a array and add parameters
             $event = array();
             $event['type'] = 'product';
