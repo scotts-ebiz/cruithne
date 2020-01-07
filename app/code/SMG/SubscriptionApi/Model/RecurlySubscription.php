@@ -15,7 +15,6 @@ use Recurly_Error;
 use Recurly_NotFoundError;
 use Recurly_Purchase;
 use Recurly_ShippingAddress;
-use Recurly_ShippingAddressList;
 use Recurly_Subscription;
 use Recurly_SubscriptionList;
 use Recurly_ValidationError;
@@ -824,7 +823,7 @@ class RecurlySubscription
             foreach ($subCodes as $subCode) {
                 if (in_array($subCode['plan_code'], ['annual', 'seasonal'])) {
                     $subscription->setSubscriptionId($subCode['subscription_id'])->save();
-                } elseif($subCode['plan_code'] === 'add-ons') {
+                } elseif ($subCode['plan_code'] === 'add-ons') {
                     $addOns = $subscription->getSubscriptionAddonOrders();
 
                     if ($addOns && $addOns->getFirstItem()) {
