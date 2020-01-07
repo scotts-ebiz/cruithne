@@ -1,12 +1,21 @@
-// Mixins
-@import "mixins/media-queries";
-
 // Vendor libs
 @import 'vendor/normalize/lib'; // Normalize.css
 @import 'vendor/magento-ui/lib'; // Magento UI
 
+// Mixins
+@import "mixins/media-queries";
+
 // Theme variables
 @import 'variables';
+
+// Scotts Base Defaults
+@import 'source/scottsbasevars';
+@import 'source/scottsbasemixins';
+@import 'source/scottsbase';
+@import 'source/scottsbasecart';
+@import 'source/scottsbasecheckout';
+@import 'source/scottsbasegrid';
+
 
 // Reset default styles with magento-reset
 @import 'blocks/reset';
@@ -88,13 +97,7 @@
 @import '../../SMG_SpecList/styles/widgets';
 @import '../../SMG_IconList/styles/widgets';
 
-// Scotts Base Defaults
-@import 'source/scottsbasevars';
-@import 'source/scottsbasemixins';
-@import 'source/scottsbase';
-@import 'source/scottsbasecart';
-@import 'source/scottsbasecheckout';
-@import 'source/scottsbasegrid';
+
 
 
 
