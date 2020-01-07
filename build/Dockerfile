@@ -23,19 +23,17 @@ RUN mkdir -p $MAGENTO_DIR/var/import/images && gsutil -q -m rsync -r -u gs://mag
 RUN git fetch --all
 RUN git reset --hard
 RUN git pull
-
 RUN composer install
-
 RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools
 
 RUN php /var/www/html/magento2/bin/magento setup:di:compile
 RUN rm /var/www/html/magento2/tools/yarn.lock && cd /var/www/html/magento2/tools && npm install && npm rebuild node-sass && gulp clean -f /var/www/html/magento2/tools/gulpfile.esm.js && gulp styles -f /var/www/html/magento2/tools/gulpfile.esm.js
 
 # Move env.php to avoid Magento reading it
-RUN mv /var/www/html/magento2/app/etc/env.php /var/www/html/magento2/app/etc/__env.php
+RUN mv /var/www/html/magento2/bin/magento/app/etc/env.php /var/www/html/magento2/bin/magento/app/etc/__env.php
 RUN php /var/www/html/magento2/bin/magento setup:static-content:deploy
 # Move env.php back
-RUN mv /var/www/html/magento2/app/etc/__env.php /var/www/html/magento2/app/etc/env.php
+RUN mv /var/www/html/magento2/bin/magento/app/etc/__env.php /var/www/html/magento2/bin/magento/app/etc/env.php
 
 USER root
 
