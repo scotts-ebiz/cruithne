@@ -1,0 +1,184 @@
+.sp-button {
+  border: none;
+  border-radius: $border-radius;
+  cursor: pointer;
+  display: inline-block;
+  font-size: $font-size-label;
+  font-weight: 700;
+  padding: 1rem;
+  text-align: center;
+  text-transform: uppercase;
+  transition: background-color .25s ease-in-out, box-shadow .25s ease-in-out, transform .25s ease-in-out;
+  white-space: nowrap;
+
+  &:active {
+    color: $white;
+  }
+
+  &:hover {
+    border: none;
+    box-shadow: $shadow-md;
+    color: $white;
+    text-decoration: none;
+    transform: translateY(-1px);
+  }
+
+  &:focus {
+    color: $white;
+    outline: 2px auto;
+    outline-offset: 1px;
+    text-decoration: none;
+  }
+}
+
+.sp-button--primary {
+  background-color: $green-1;
+  color: $white;
+
+  &:visited {
+    color: $white;
+  }
+
+  &:hover {
+    background-color: $green-1;
+    color: $white;
+  }
+
+  &:active {
+    background-color: $black;
+    color: $white;
+  }
+
+  &:focus {
+    background-color: $green-1;
+    color: $white;
+    outline-color: $green-1;
+  }
+}
+
+.sp-button--secondary {
+  background-color: $black;
+  color: $white;
+
+  &:visited {
+    color: $white;
+  }
+
+  &:hover {
+    background-color: $black;
+    color: $white;
+  }
+
+  &:active {
+    background-color: $gray-1;
+    color: $white;
+  }
+
+  &:focus {
+    color: $white;
+    outline-color: $black;
+  }
+}
+
+.sp-button--inverted {
+  background-color: $white;
+  color: $green-1;
+
+  &:visited {
+    color: $black;
+  }
+
+  &:hover {
+    background-color: $white;
+    color: $green-1;
+  }
+
+  &:active {
+    background-color: $green-4;
+    color: $green-1;
+  }
+
+  &:focus {
+    color: $green-1;
+    outline-color: $white;
+  }
+}
+
+.sp-button--inactive {
+  background-color: $gray-2;
+  color: $gray-1;
+  cursor: not-allowed;
+
+  &:visited {
+    color: $gray-1;
+  }
+
+  &:hover {
+    background-color: $gray-2;
+    color: $gray-1;
+    box-shadow: none;
+    transform: none;
+  }
+
+  &:focus {
+    color: $gray-1;
+    outline-color: $gray-1;
+  }
+}
+
+.sp-button--get-started {
+  min-width: 250px;
+}
+
+
+.sp-options__footer {
+  border-bottom: 2px solid #fff;
+}
+
+.gigya-composite-control-submit input[type=submit].gigya-input-submit {
+  @extend .sp-button, .sp-button--primary;
+
+  box-sizing: border-box;
+  height: auto;
+}
+
+.sp-button--loading {
+  color: transparent !important;
+  cursor: not-allowed;
+  position: relative;
+  pointer-events: none;
+
+  &::after {
+    animation: spinAround 500ms infinite linear;
+    border-bottom-color: #fff;
+    border-left-color: #fff;
+    border-radius: 100%;
+    border-right-color: transparent;
+    border-top-color: transparent;
+    border-style: solid;
+    border-width: .25rem;
+    content: "";
+    display: block;
+    height: 1.5em;
+    left: calc(50% - (1.5em / 2));
+    opacity: 0.75;
+    position: absolute !important;
+    top: calc(50% - (1.5em / 2));
+    width: 1.5em;
+  }
+
+  &.sp-button--inactive::after,
+  &.sp-button--inverted::after {
+    border-bottom-color: $green-1;
+    border-left-color: $green-1;
+  }
+}
+
+@keyframes spinAround {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(359deg);
+  }
+}

@@ -1,0 +1,29 @@
+<?php
+// @codingStandardsIgnoreFile
+?>
+
+<?php /** @var $block \Magento\Checkout\Block\Onepage\Success */ ?>
+<div
+    class="checkout-success"
+    data-bind="scope: 'success'"
+>
+    <!-- ko template: "Magento_Checkout/success.html" --><!-- /ko -->
+
+    <?= $block->getAdditionalInfoHtml() ?>
+</div>
+
+<script type="text/x-magento-init">
+   {
+        "*": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "success": {
+                        "component": "Magento_Checkout/js/success",
+                        "order_number": "<?php echo $block->getOrderId() ?>",
+                        "order_url": "<?php echo $block->getViewOrderUrl() ?>"
+                    }
+                }
+            }
+        }
+    }
+</script>

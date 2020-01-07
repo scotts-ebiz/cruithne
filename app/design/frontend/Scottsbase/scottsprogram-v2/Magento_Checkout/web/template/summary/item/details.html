@@ -1,0 +1,47 @@
+<!-- ko foreach: getRegion('before_details') -->
+    <!-- ko template: getTemplate() --><!-- /ko -->
+<!-- /ko -->
+<div class="product-item-details">
+
+    <div class="product-item-inner">
+        <div class="product-item-name-block">
+            <div class="sp-block sp-p1 product-item-name" data-bind="html: $parent.name"></div>
+            <div
+                class="sp-block sp-text-xs sp-text-gray-5"
+                data-bind="text: $parents[1].subscriptionData().is_shippable
+                    ? 'You will be charged today'
+                    : ($parents[1].isAddOn(item)
+                        ? 'You will be charged at the time of the first shipment'
+                        : 'You will be charged before each shipment'
+                        )
+                "
+            >
+            </div>
+        </div>
+        <!-- ko if: $parents[1].subscriptionData().subscription_type === 'annual' -->
+            <!-- ko foreach: getRegion('after_details') -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
+            <!-- /ko -->
+        <!-- /ko -->
+    </div>
+
+    <!-- ko if: (JSON.parse($parent.options).length > 0)-->
+    <div class="product options" data-bind="mageInit: {'collapsible':{'openedState': 'active'}}">
+        <span data-role="title" class="toggle"><!-- ko i18n: 'View Details' --><!-- /ko --></span>
+        <div data-role="content" class="content">
+            <strong class="subtitle"><!-- ko i18n: 'Options Details' --><!-- /ko --></strong>
+            <dl class="item-options">
+                <!--ko foreach: JSON.parse($parent.options)-->
+                <dt class="label" data-bind="text: label"></dt>
+                    <!-- ko if: ($data.full_view)-->
+                    <dd class="values" data-bind="html: full_view"></dd>
+                    <!-- /ko -->
+                    <!-- ko ifnot: ($data.full_view)-->
+                    <dd class="values" data-bind="html: value"></dd>
+                    <!-- /ko -->
+                <!-- /ko -->
+            </dl>
+        </div>
+    </div>
+    <!-- /ko -->
+</div>

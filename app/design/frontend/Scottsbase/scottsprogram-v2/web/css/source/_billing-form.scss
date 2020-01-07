@@ -1,0 +1,74 @@
+.sp-billing-address-form {
+  .sp-form-group {
+    margin-bottom: 1rem;
+    padding: 1rem;
+    width: 100%;
+  }
+
+  .field.street {
+    border: 0;
+    padding: 0;
+    margin: 0;
+    width: 100%;
+
+    .control {
+      float: none;
+      width: 100%;
+    }
+
+    legend {
+      display: none !important;
+    }
+  }
+
+  .cust-btn-add {
+    display: none;
+  }
+
+  div[name="billingAddressrecurly.street.0"] {
+    margin-bottom: 0;
+  }
+
+  div[name="billingAddressrecurly.street.1"] {
+    label {
+      opacity: 0;
+    }
+  }
+
+  div[name="billingAddressrecurly.street.2"] {
+    display: none;
+  }
+
+  div[name="billingAddressrecurly.company"] {
+    display: none;
+  }
+
+  div[name="billingAddressrecurly.firstname"],
+  div[name="billingAddressrecurly.lastname"],
+  div[name="billingAddressrecurly.region_id"],
+  div[name="billingAddressrecurly.postcode"] {
+    @media (min-width: $screen-md) {
+      width: 50%;
+    }
+  }
+}
+
+.recurly-hosted-field {
+  @extend .sp-input;
+}
+
+.recurly-form {
+  .recurly-hosted-field {
+    border: none;
+    border-bottom: 1px solid $gray-2;
+    border-radius: 0;
+    height: 3.75rem;
+    margin-top: 0;
+  }
+
+  .recurly-hosted-field-focus {
+    border: none;
+    border-bottom: 1px solid $gray-1;
+  }
+}
+

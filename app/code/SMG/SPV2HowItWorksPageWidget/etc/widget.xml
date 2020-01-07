@@ -1,0 +1,7 @@
+<?xml version="1.0"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+	<widget class="SMG\SPV2HowItWorksPageWidget\Block\Widget\HowItWorksPage" id="smg_scottsprogram_howitworkspage">
+		<label>Scotts Program How It Works Page</label>
+		<description>Scotts Program widget for the How It Works page.</description>
+	</widget>
+</widgets>

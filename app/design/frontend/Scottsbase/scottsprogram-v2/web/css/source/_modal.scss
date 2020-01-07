@@ -1,0 +1,46 @@
+.modal-popup.modal-slide {
+  left: 1rem;
+  right: 1rem;
+}
+
+.modal-popup.modal-slide._inner-scroll .modal-inner-wrap {
+  margin: 2rem auto;
+}
+
+.modal-popup._inner-scroll .modal-inner-wrap {
+  border: 2px solid $green-1;
+}
+
+.modal-custom .action-close:before, .modal-popup .action-close:before, .modal-slide .action-close:before {
+  color: $green-1;
+}
+
+.modal-popup.modal-slide .modal-footer {
+  border-top: 0;
+  padding: 0 0 30px 0;
+  text-align: center;
+}
+
+.modal-popup--subscriptions {
+  .modal-popup-cta {
+    margin-bottom: 15px;
+  }
+}
+
+.modal-popup .modal-inner-wrap {
+  max-width: 640px;
+}
+
+.modal-popup.modal-slide._inner-scroll .modal-inner-wrap {
+  min-height: unset;
+}
+
+.checkout-index-index .modal-popup .modal-inner-wrap {
+  margin: 0 auto;
+  max-width: 640px;
+  left: 0;
+}
+
+.modal-popup.modal-slide .modal-inner-wrap[class] {
+  background-color: #fff;
+}
