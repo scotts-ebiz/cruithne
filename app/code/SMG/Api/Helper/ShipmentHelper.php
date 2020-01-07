@@ -417,8 +417,14 @@ class ShipmentHelper
 
             // get customer email
             $email = $order->getCustomerEmail();
-            $shipmentId = $order->getIncrementId();
             
+            // get shipment increment Id
+            $shipmentId = 0;
+            $shipmentAll = $order->getShipmentsCollection();
+            foreach ($shipmentAll as $shipment) {
+               $shipmentId = $shipment->getIncrementId();
+            }
+
             foreach ($order->getAllVisibleItems() as $_item) {
             $productid = $_item->getProductId();  
                       // take event as a array and add parameters
@@ -429,17 +435,17 @@ class ShipmentHelper
             $event['data'] = ['product_id'=>$productid, 'shipment_id'=>$shipmentId];
 
             // get postevent function
-            $zaiusstatus = $zaiusClient->postEvent($event);                 
-            }
-            
-            // check return values from the postevent function
-            if($zaiusstatus)
-            {
-                $this->_logger->info("The order Id " . $orderId . " with product Id " . $productId . " is passed successfully to zaius."); //saved in var/log/system.log
-            }
-            else
-            {
-                $this->_logger->info("The order Id " . $orderId . " with product id " . $productId . " is failed to zaius."); //saved in var/log/system.log
+            $zaiusstatus = $zaiusClient->postEvent($event); 
+
+                 // check return values from the postevent function
+                if($zaiusstatus)
+                {
+                    $this->_logger->info("The order Id " . $orderId . " is passed successfully to zaius."); //saved in var/log/system.log
+                }
+                else
+                {
+                    $this->_logger->info("The order Id " . $orderId . " is failed to zaius."); //saved in var/log/system.log
+                }           
             }
         }
     }
