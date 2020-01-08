@@ -174,6 +174,8 @@ Options -Indexes
 
 ############################################
 ## GOM1-118 Redirect STORE roots (used by keep-shopping links) to brand sites.
+## Updated per DTECH-558 for new evironment mappings.
+## BUT!! This .htaccess isn't used! SEE .htaccess in M2_PRIMER Repo.
 ## PROD
     RewriteCond %{HTTP_HOST} ^(store\.|shop\.)?roundup\.com$ [NC]
     RewriteRule ^$   https://www.roundup.com/ [R=301,L,QSA]
@@ -185,38 +187,27 @@ Options -Indexes
     RewriteRule ^$   https://www.ortho.com/ [R=301,L,QSA]
     RewriteCond %{HTTP_HOST} ^(store\.|shop\.)?tomcatbrand\.com$ [NC]
     RewriteRule ^$   https://www.tomcatbrand.com/ [R=301,L,QSA]
-## STAGE
-    RewriteCond %{HTTP_HOST} ^staging\.roundup\.com$ [NC]
+## RC (release-candidate)
+    RewriteCond %{HTTP_HOST} ^rc\.roundup\.com$ [NC]
     RewriteRule ^$   https://acsftest.roundup.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^staging\.scotts\.com$ [NC]
+    RewriteCond %{HTTP_HOST} ^rc\.scotts\.com$ [NC]
     RewriteRule ^$   https://acsftest.scotts.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^staging\.miraclegro\.com$ [NC]
+    RewriteCond %{HTTP_HOST} ^rc\.miraclegro\.com$ [NC]
     RewriteRule ^$   https://acsftest.miraclegro.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^staging\.ortho\.com$ [NC]
+    RewriteCond %{HTTP_HOST} ^rc\.ortho\.com$ [NC]
     RewriteRule ^$   https://acsftest.ortho.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^staging\.tomcatbrand\.com$ [NC]
+    RewriteCond %{HTTP_HOST} ^rc\.tomcatbrand\.com$ [NC]
     RewriteRule ^$   https://acsftest.tomcatbrand.com/ [R=301,L,QSA]
-## TEST
-    RewriteCond %{HTTP_HOST} ^test\.roundup\.com$ [NC]
+## DEV, TEST, STAGING
+    RewriteCond %{HTTP_HOST} ^(dev|test|staging)\.roundup\.com$ [NC]
     RewriteRule ^$   https://acsfdev.roundup.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^test\.scotts\.com$ [NC]
+    RewriteCond %{HTTP_HOST} ^(dev|test|staging)\.scotts\.com$ [NC]
     RewriteRule ^$   https://acsfdev.scotts.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^test\.miraclegro\.com$ [NC]
+    RewriteCond %{HTTP_HOST} ^(dev|test|staging)\.miraclegro\.com$ [NC]
     RewriteRule ^$   https://acsfdev.miraclegro.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^test\.ortho\.com$ [NC]
+    RewriteCond %{HTTP_HOST} ^(dev|test|staging)\.ortho\.com$ [NC]
     RewriteRule ^$   https://acsfdev.ortho.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^test\.tomcatbrand\.com$ [NC]
-    RewriteRule ^$   https://acsfdev.tomcatbrand.com/ [R=301,L,QSA]
-## DEV
-    RewriteCond %{HTTP_HOST} ^dev\.roundup\.com$ [NC]
-    RewriteRule ^$   https://acsfdev.roundup.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^dev\.scotts\.com$ [NC]
-    RewriteRule ^$   https://acsfdev.scotts.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^dev\.miraclegro\.com$ [NC]
-    RewriteRule ^$   https://acsfdev.miraclegro.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^dev\.ortho\.com$ [NC]
-    RewriteRule ^$   https://acsfdev.ortho.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^dev\.tomcatbrand\.com$ [NC]
+    RewriteCond %{HTTP_HOST} ^(dev|test|staging)\.tomcatbrand\.com$ [NC]
     RewriteRule ^$   https://acsfdev.tomcatbrand.com/ [R=301,L,QSA]
 ## LOCAL
     RewriteCond %{HTTP_HOST} ^cruithne\.roundup\.local$ [NC]
