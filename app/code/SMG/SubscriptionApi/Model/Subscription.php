@@ -2,7 +2,6 @@
 
 namespace SMG\SubscriptionApi\Model;
 
-use Psr\Log\LoggerInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ProductFactory;
 use Magento\Catalog\Model\ProductRepository;
@@ -21,6 +20,8 @@ use Magento\Quote\Model\Quote;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use Magento\Store\Model\StoreManager;
+use Psr\Log\LoggerInterface;
+use SMG\SubscriptionApi\Helper\RecurlyHelper;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\Collection as SubscriptionAddonOrderCollection;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\Collection\Interceptor as SubscriptionAddonOrderCollectionInterceptor;
@@ -28,7 +29,6 @@ use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\CollectionFac
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection as SubscriptionOrderCollection;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection\Interceptor as SubscriptionOrderCollectionInterceptor;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
-use SMG\SubscriptionApi\Helper\RecurlyHelper;
 
 /**
  * Class Subscription
@@ -636,7 +636,6 @@ class Subscription extends AbstractModel
         try {
             $orders = $this->_orderCollectionFactory->create()->addFieldToFilter('master_subscription_id', $this->getSubscriptionId());
         } catch (\Exception $e) {
-
             $error = 'There was an issue returning orders to cancel.';
             $this->_logger->error($error);
             throw new LocalizedException(__($error));
@@ -671,8 +670,9 @@ class Subscription extends AbstractModel
             $totalRefund = 0;
             /** @var \SMG\Sales\Model\Order $order */
             foreach ($orders as $order) {
-                $totalRefund += (float) $order->getGrandTotal();
+                $totalRefund += (float) $order->getDiscountAmount() + $order->getSubtotal();
             }
+
             /** @var RecurlySubscription $service */
             $service->createCredit($totalRefund, $this->getGigyaId());
         } catch (\Exeception $e) {
