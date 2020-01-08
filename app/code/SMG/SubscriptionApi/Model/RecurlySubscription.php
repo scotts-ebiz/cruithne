@@ -208,7 +208,7 @@ class RecurlySubscription
                 'zip' => $shippingAddress['postcode'],
                 'phone' => $shippingAddress['telephone'],
                 'address1' => $shippingAddress['street'][0],
-                'address2' => isset($shippingAddress['street'][1]) ? $shippingAddress['street'][2] : '',
+                'address2' => isset($shippingAddress['street'][1]) ? $shippingAddress['street'][1] : '',
                 'country' => $shippingAddress['country_id'],
             ];
             $recurlyShippingAddress = new Recurly_ShippingAddress();
