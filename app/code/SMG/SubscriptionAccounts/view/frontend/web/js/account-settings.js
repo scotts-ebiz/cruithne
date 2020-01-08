@@ -1,14 +1,29 @@
 define([
     'uiComponent',
     'ko',
+    'Magento_Ui/js/modal/modal',
     'jquery'
-], function (Component, ko, $) {
+], function (Component, ko, modal, $) {
+    let successModal;
+
     return Component.extend({
         initialize(config) {
             let self = this;
 
             this.account = ko.observable(config.account);
-            this.success = ko.observable(null);
+
+            setTimeout(function() {
+                successModal = modal({
+                    type: 'popup',
+                    responsive: true,
+                    innerScroll: true,
+                    buttons: [],
+                    opened: function ($Event) {
+                        $('.modal-header').remove();
+                    }
+                }, $('#popup-modal'));
+
+            }, 1000);
         },
 
         saveAccount: function() {
@@ -29,13 +44,17 @@ define([
                     passwordRetype: $('input[name="passwordRetype"]').val(),
                 } ),
                 success() {
-                    self.success('Your account has been saved.');
-
-                    setTimeout(() => {
-                        self.success(null);
-                    }, 5000);
+                    self.showSuccess()
                 }
             })
+        },
+
+        hideSuccess() {
+            successModal.closeModal();
+        },
+
+        showSuccess() {
+            successModal.openModal();
         }
     });
 });

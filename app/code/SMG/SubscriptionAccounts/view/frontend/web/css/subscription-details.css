@@ -12,6 +12,9 @@
     padding: 0;
 }
 
+.sp-subscription-details .sp-subscription-details__title {
+    margin-bottom: 2rem;
+}
 
 .sp-subscription-details tr + tr th,
 .sp-subscription-details tr + tr td {

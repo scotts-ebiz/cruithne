@@ -1,12 +1,4 @@
-<!-- ko if: success() -->
-<div
-	class="sp-bg-green-4 sp-p1 sp-px-4 sp-py-2 sp-mb-4 sp-rounded sp-text-green-1 sp-text-bold"
-	data-bind="text: success()"
->
-</div>
-<!-- /ko -->
-
-<div class="sp-flex sp-justify-center md:sp-justify-between sp-items-center">
+<div class="sp-flex sp-flex-column md:sp-flex-row sp-justify-center md:sp-justify-between sp-items-center sp-mt-8 md:sp-mt-0">
 	<h2 class="sp-h2 sp-mt-0 sp-text-center md:sp-text-left">Account Settings</h2>
     <a class="sp-link" href="/customer/account/logout">Log Out</a>
 </div>
@@ -96,3 +88,23 @@
 <p>It looks like you don't have a complete account. Please complete the quiz.</p>
 <a href="/quiz" class="sp-button sp-button--primary">Get started</a>
 <!-- /ko -->
+
+<div id="popup-modal"
+     class="modal-popup--subscriptions sp-hide sp-p-8">
+    <button
+        class="modal-popup--subscriptions__close"
+        data-bind="click: hideSuccess"
+    ></button>
+    <h2 class="sp-h2 sp-text-black sp-text-center">Changes Saved</h2>
+    <p class="sp-text-black sp-text-center">The changes to your account have been saved.</p>
+
+    <div class="sp-flex sp-justify-center sp-items-center">
+        <button
+            class="sp-button sp-button--primary"
+            type="button"
+            data-bind="click: hideSuccess"
+        >
+            Close
+        </button>
+    </div>
+</div>
