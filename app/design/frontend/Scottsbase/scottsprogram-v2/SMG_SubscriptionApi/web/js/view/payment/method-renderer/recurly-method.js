@@ -154,7 +154,7 @@ define(
 
                 recurly.token(recurlyForm, function (err, token) {
                     if (err) {
-                        alert(err.message);
+                        $('.recurly-form-error').text(err.message);
                     } else {
                         self.createNewSubscription( token.id );
                     }
