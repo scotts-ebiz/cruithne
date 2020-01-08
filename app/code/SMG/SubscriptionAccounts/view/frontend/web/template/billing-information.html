@@ -3,7 +3,6 @@
     <a class="sp-link" href="/customer/account/logout">Log Out</a>
 </div>
 
-<!-- TODO: Replace this if check with the actual if condition of no subscriptions -->
 <!-- ko if: false -->
 <div class="sp-px-4 md:sp-px-0 sp-my-8 sp-text-center md:sp-text-left">
     <p class="sp-p1 sp-strong">You do not have a current subscription with Scotts Program.</p>
@@ -83,15 +82,6 @@
             <label class="sp-form-label">City</label>
         </div>
         <div class="sp-form-group">
-            <input type="text"
-                placeholder="Zip/Postal Code"
-                class="sp-input"
-                data-recurly="postal_code"
-                data-bind="value: billing().zip"
-                name="zip_code">
-            <label class="sp-form-label">Zip/Postal Code</label>
-        </div>
-        <div class="sp-form-group">
             <div class="sp-select">
                 <select name="state"
                         placeholder="State"
@@ -99,6 +89,15 @@
                         data-bind="options: Object.values(states()), optionsText: function(item) { return item.text }, optionsValue: function(item) { return item.value }, value: billing().state"></select>
             </div>
             <label class="sp-form-label">State</label>
+        </div>
+        <div class="sp-form-group">
+            <input type="text"
+                placeholder="Zip/Postal Code"
+                class="sp-input"
+                data-recurly="postal_code"
+                data-bind="value: billing().zip"
+                name="zip_code">
+            <label class="sp-form-label">Zip/Postal Code</label>
         </div>
         <div class="sp-flex sp-justify-end">
             <input type="hidden"
