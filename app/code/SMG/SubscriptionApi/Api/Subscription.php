@@ -308,9 +308,6 @@ class Subscription implements SubscriptionInterface
         // Get customer shipping and billing address
         $orderShippingAddress = $mainQuote->getShippingAddress()->getData();
 
-        // Save the customer addresses.
-        $this->clearCustomerAddresses($customer);
-
         /** @var Address $customerShippingAddress */
         $customerShippingAddress = $this->_addressFactory
             ->create()
@@ -435,34 +432,5 @@ class Subscription implements SubscriptionInterface
         }
 
         return true;
-    }
-
-    /**
-     * Delete customer addresses, because we don't want to store them in the address book,
-     * so they will always need to enter their shipping/billing details on checkout
-     *
-     * @param Customer $customer
-     */
-    private function clearCustomerAddresses($customer)
-    {
-        $customer->setDefaultBilling(null);
-        $customer->setDefaultShipping(null);
-
-        try {
-            foreach ($customer->getAddresses() as $address) {
-                $this->_addressRepository->deleteById($address->getId());
-            }
-
-            $customer->save();
-        } catch (NoSuchEntityException $ex) {
-            $this->_logger->error($ex->getMessage());
-            return;
-        } catch (LocalizedException $ex) {
-            $this->_logger->error($ex->getMessage());
-            return;
-        } catch (\Exception $ex) {
-            $this->_logger->error($ex->getMessage());
-            return;
-        }
     }
 }
