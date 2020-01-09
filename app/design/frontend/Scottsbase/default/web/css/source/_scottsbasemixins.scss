@@ -59,8 +59,9 @@
 
 
 //Cart & Checkout Body Font
-@mixin cart-checkout-body-font($lh: 20px) {
+@mixin cart-checkout-body-font($size: $font-size__base, $lh: 20px) {
   @include roboto-regular();
+  @if $size { font-size: $size; }
   @if $lh { line-height: $lh; }
 }
 

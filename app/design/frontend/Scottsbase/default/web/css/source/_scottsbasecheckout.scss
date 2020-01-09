@@ -1,5 +1,15 @@
 /** Checkout Page - Start **/
 .checkout-index-index {
+    @include cart-checkout-body-font();
+    @include max-screen($screen__m) {
+        @include cart-checkout-body-font-mobile();
+    }
+    table > tbody > tr > td {
+        @include cart-checkout-body-font($size: $font-size__m, $lh: 21px);
+        @include max-screen($screen__m) {
+            font-size: $font-size__base;
+        }
+    }
     .page-header {
         .header.content {
             .logo {
@@ -19,10 +29,8 @@
     }
     .page-main {
         p {
-            @include cart-checkout-body-font();
             padding: 23px 0 0 0;
             @include max-screen($screen__m) {
-              @include cart-checkout-body-font-mobile();
               padding: 16px 0 0 0;
             }
         }
