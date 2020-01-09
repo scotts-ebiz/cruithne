@@ -154,7 +154,15 @@ define(
 
                 recurly.token(recurlyForm, function (err, token) {
                     if (err) {
-                        $('.recurly-form-error').text(err.message);
+                        if( err.code == 'validation' ) {
+                            if( err.fields.includes('number') === true ) {
+                                $('.recurly-form-error').text('Please enter a valid card number.');
+                            } else {
+                                $('.recurly-form-error').text(err.message);
+                            }
+                        } else {
+                            $('.recurly-form-error').text(err.message);
+                        }
                     } else {
                         self.createNewSubscription( token.id );
                     }
