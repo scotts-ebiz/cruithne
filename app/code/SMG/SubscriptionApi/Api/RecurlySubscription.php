@@ -3,6 +3,7 @@
 namespace SMG\SubscriptionApi\Api;
 
 use Psr\Log\LoggerInterface;
+use SMG\SubscriptionApi\Helper\SeasonalHelper;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Session\SessionManagerInterface as CoreSession;
 use SMG\SubscriptionApi\Api\Interfaces\RecurlyInterface;
@@ -47,13 +48,15 @@ class RecurlySubscription implements RecurlyInterface
         SubscriptionModel $subscriptionModel,
         CoreSession $coreSession,
         LoggerInterface $logger,
-        SubscriptionOrderHelper $subscriptionOrderHelper
+        SubscriptionOrderHelper $subscriptionOrderHelper,
+        SeasonalHelper $seasonalHelper
     ) {
         $this->_recurlySubscriptionModel = $recurlySubscriptionModel;
         $this->_subscriptionModel = $subscriptionModel;
         $this->_coreSession = $coreSession;
         $this->_logger = $logger;
         $this->_subscriptionOrderHelper = $subscriptionOrderHelper;
+        $this->_seasonalHelper = $seasonalHelper;
     }
 
     /**
@@ -146,7 +149,6 @@ class RecurlySubscription implements RecurlyInterface
     /**
      * Process seasonal invoices sent from Recurly
      *
-     * @param string $subscriptionId
      * @return array
      *
      * @throws \Magento\Framework\Exception\CouldNotSaveException
@@ -154,16 +156,8 @@ class RecurlySubscription implements RecurlyInterface
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @api
      */
-    public function processSeasonalInvoice($subscriptionId)
+    public function processSeasonalInvoice()
     {
-        try {
-            $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionId);
-        } catch (SubscriptionException $e) {
-            $this->_logger->error($e->getMessage());
-
-            return ['success' => false, 'error' => $e->getMessage()];
-        }
-
-        return ['success' => true, 'Subscription order has been processed'];
+        $this->_seasonalHelper->processSeasonalOrders();
     }
 }

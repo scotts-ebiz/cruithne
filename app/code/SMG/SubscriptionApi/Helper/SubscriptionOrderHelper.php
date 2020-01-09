@@ -4,6 +4,7 @@ namespace SMG\SubscriptionApi\Helper;
 
 use Magento\Customer\Model\AddressFactory;
 use Magento\Customer\Model\Customer;
+use Magento\Customer\Model\CustomerFactory;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Quote\Api\CartManagementInterface;
@@ -89,12 +90,17 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @var CartRepositoryInterface
      */
     protected $_cartRepository;
+    /**
+     * @var CustomerFactory
+     */
+    protected $_customerFactory;
 
     /**
      * SubscriptionOrderHelper constructor.
      * @param Context $context
      * @param AddressFactory $addressFactory
      * @param Customer $customer
+     * @param CustomerFactory $customerFactory
      * @param Order $order
      * @param QuoteManagement $quoteManagement
      * @param StoreManagerInterface $storeManager
@@ -110,6 +116,7 @@ class SubscriptionOrderHelper extends AbstractHelper
         Context $context,
         AddressFactory $addressFactory,
         Customer $customer,
+        CustomerFactory $customerFactory,
         Order $order,
         QuoteManagement $quoteManagement,
         StoreManagerInterface $storeManager,
@@ -124,6 +131,7 @@ class SubscriptionOrderHelper extends AbstractHelper
 
         $this->_addressFactory = $addressFactory;
         $this->_customer = $customer;
+        $this->_customerFactory = $customerFactory;
         $this->_order = $order;
         $this->_quoteManagement = $quoteManagement;
         $this->_storeManager = $storeManager;
@@ -177,7 +185,8 @@ class SubscriptionOrderHelper extends AbstractHelper
         $subscription = $subscriptionOrder->getSubscription();
 
         // Get the customer.
-        $customer = $this->_customer->load($subscription->getCustomerId());
+        $customer = $this->_customerFactory->create();
+        $customer->load($subscription->getData('customer_id'));
         if (! $customer->getId()) {
             $this->errorResponse(
                 "Customer {$customer->getId()} not found.",
@@ -275,7 +284,6 @@ class SubscriptionOrderHelper extends AbstractHelper
     protected function processOrder(Customer $customer, $subscriptionOrder)
     {
         // Create a new quote.
-
         $cartId = $this->_cartManagement->createEmptyCartForCustomer($customer->getId());
 
         /** @var \Magento\Quote\Model\Quote $quote */

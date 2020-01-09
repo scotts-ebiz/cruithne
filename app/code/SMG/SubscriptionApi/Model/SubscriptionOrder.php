@@ -31,7 +31,6 @@ use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrderItem\CollectionFact
  */
 class SubscriptionOrder extends AbstractModel
 {
-
     /** @var SubscriptionHelper */
     protected $_subscriptionHelper;
 
@@ -58,8 +57,14 @@ class SubscriptionOrder extends AbstractModel
 
     /** @var SapOrderBatchCollectionFactory */
     private $_sapOrderBatchCollectionFactory;
+
     /**
-     * @var \SMG\SubscriptionApi\Model\Subscription
+     * @var SubscriptionFactory
+     */
+    protected $_subscriptionFactory;
+
+    /**
+     * @var Subscription
      */
     protected $_subscription;
 
@@ -91,16 +96,18 @@ class SubscriptionOrder extends AbstractModel
      * SubscriptionOrder constructor.
      * @param Context $context
      * @param Registry $registry
+     * @param LoggerInterface $logger
      * @param SubscriptionHelper $subscriptionHelper
-     * @param Subscription $subscription
+     * @param SubscriptionFactory $subscriptionFactory
      * @param SubscriptionOrderItemCollectionFactory $subscriptionOrderItemCollectionFactory
-     * @param OrderRepository $orderRepository
-     * @param CreditmemoFactory $creditmemoFactory
-     * @param CreditmemoService $creditmemoService
      * @param OrderCollectionFactory $orderCollectionFactory
      * @param InvoiceService $invoiceService
      * @param Transaction $transaction
      * @param InvoiceSender $invoiceSender
+     * @param SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
+     * @param OrderRepository $orderRepository
+     * @param CreditmemoFactory $creditmemoFactory
+     * @param CreditmemoService $creditmemoService
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -110,7 +117,7 @@ class SubscriptionOrder extends AbstractModel
         Registry $registry,
         LoggerInterface $logger,
         SubscriptionHelper $subscriptionHelper,
-        Subscription $subscription,
+        SubscriptionFactory $subscriptionFactory,
         SubscriptionOrderItemCollectionFactory $subscriptionOrderItemCollectionFactory,
         OrderCollectionFactory $orderCollectionFactory,
         InvoiceService $invoiceService,
@@ -134,7 +141,7 @@ class SubscriptionOrder extends AbstractModel
 
         $this->_logger = $logger;
         $this->_subscriptionHelper = $subscriptionHelper;
-        $this->_subscription = $subscription;
+        $this->_subscriptionFactory = $subscriptionFactory;
         $this->_subscriptionOrderItemCollectionFactory = $subscriptionOrderItemCollectionFactory;
         $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->_invoiceService = $invoiceService;
@@ -165,17 +172,21 @@ class SubscriptionOrder extends AbstractModel
      */
     public function getSubscription()
     {
-        if ($this->_subscription->getId()) {
+        if ($this->_subscription) {
             return $this->_subscription;
         }
 
-        $subscription = $this->_subscription->load($this->getSubscriptionEntityId());
+        $subscription = $this->_subscriptionFactory
+            ->create()
+            ->load($this->getSubscriptionEntityId());
 
-        if (!$subscription->getId()) {
+        if (! $subscription->getId()) {
             return false;
         }
 
-        return $subscription;
+        $this->_subscription = $subscription;
+
+        return $this->_subscription;
     }
 
     /**
@@ -204,7 +215,7 @@ class SubscriptionOrder extends AbstractModel
         $subscription = $this->getSubscription();
 
         if ($subscription) {
-            return $subscription->getSubscriptionType();
+            return $subscription->getData('subscription_type');
         }
 
         return '';
@@ -338,6 +349,7 @@ class SubscriptionOrder extends AbstractModel
     {
         // Grab the shipment open window from the admin
         $shippingOpenWindow = 0;
+
         if (!empty($this->_subscriptionHelper->getShipDaysStart())) {
             $shippingOpenWindow = filter_var($this->_subscriptionHelper->getShipDaysStart(), FILTER_SANITIZE_NUMBER_INT);
         }

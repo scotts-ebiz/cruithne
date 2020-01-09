@@ -19,6 +19,7 @@ use Recurly_Subscription;
 use Recurly_SubscriptionList;
 use Recurly_ValidationError;
 use SMG\SubscriptionApi\Helper\SubscriptionOrderHelper;
+use SMG\SubscriptionApi\Helper\TestHelper;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrderItem\Collection;
 
@@ -103,6 +104,11 @@ class RecurlySubscription
     protected $_subscriptionCollectionFactory;
 
     /**
+     * @var TestHelper
+     */
+    protected $_testHelper;
+
+    /**
      * RecurlySubscription constructor.
      * @param \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper
      * @param \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper
@@ -131,7 +137,8 @@ class RecurlySubscription
         \Magento\Customer\Model\Url $customerUrl,
         LoggerInterface $logger,
         SubscriptionOrderHelper $subscriptionOrderHelper,
-        SubscriptionCollectionFactory $subscriptionCollectionFactory
+        SubscriptionCollectionFactory $subscriptionCollectionFactory,
+        TestHelper $testHelper
     ) {
         $this->_recurlyHelper = $recurlyHelper;
         $this->_subscriptionHelper = $subscriptionHelper;
@@ -149,6 +156,7 @@ class RecurlySubscription
         $this->_logger = $logger;
         $this->_subscriptionOrderHelper = $subscriptionOrderHelper;
         $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
+        $this->_testHelper = $testHelper;
     }
 
     /**
@@ -167,8 +175,7 @@ class RecurlySubscription
         $subscriptionType = $subscription->getSubscriptionType();
 
         // If there is Recurly token, plan code and quiz data
-        if (true || ! empty($token) && ! empty($subscriptionType) && ! empty($quizId)) {
-
+        if (! empty($token) && ! empty($subscriptionType) && ! empty($quizId)) {
             // Configure Recurly Client
             Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
             Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
@@ -721,7 +728,6 @@ class RecurlySubscription
             $masterSubscription = new Recurly_Subscription();
 
             if ($subscription->getSubscriptionType() == 'annual') {
-
                 // Create Annual Subscription (Master Subscription)
                 $masterSubscription->plan_code = $subscription->getSubscriptionType();
                 $masterSubscription->auto_renew = true;
@@ -729,7 +735,6 @@ class RecurlySubscription
                 $masterSubscription->unit_amount_in_cents = $this->convertAmountToCents($subscription->getPrice());
                 $masterSubscription->custom_fields[] = new Recurly_CustomField('quiz_id', $subscription->getQuizId());
             } else {
-
                 // Create Seasonal Subscription (Master Subscription)
                 $masterSubscription->plan_code = $subscription->getSubscriptionType();
                 $masterSubscription->auto_renew = true;
@@ -755,17 +760,49 @@ class RecurlySubscription
             $subscriptionOrders = $subscription->getSubscriptionOrders();
             $subOrders = [];
 
-            /** @var \SMG\SubscriptionApi\Model\SubscriptionOrder $subscriptionOrder */
+            /** @var \DateTime|\DateTimeImmutable|null $lastShipDate */
+            $lastShipDate = null;
+
+            /** @var SubscriptionOrder $subscriptionOrder */
             foreach ($subscriptionOrders as $subscriptionOrder) {
                 $subOrder = new Recurly_Subscription();
                 $subOrder->plan_code = $this->_recurlyHelper->getSeasonSlugByName($subscriptionOrder->getSeasonName());
                 $subOrder->auto_renew = true;
                 $subOrder->total_billing_cycles = 1;
+
                 if ($subscription->getSubscriptionType() != 'annual') {
                     $subOrder->unit_amount_in_cents = $this->convertAmountToCents($subscriptionOrder->getPrice());
                 }
+
                 $subOrder->custom_fields[] = new Recurly_CustomField('quiz_id', $subscription->getQuizId());
                 $subOrder->starts_at = $subscriptionOrder->getShipStartDate();
+                $today = new \DateTimeImmutable();
+
+                if ($this->_testHelper->inTestMode()) {
+                    $start = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $subOrder->starts_at);
+
+                    // No last ship date so this is the first order.
+                    if (! $lastShipDate && $start <= $today) {
+                        // Since it is available to ship, lets just set it to now.
+                        $start = $today;
+                    } elseif (! $lastShipDate && $start > $today) {
+                        $start = $today->add(new \DateInterval('PT' . $this->_testHelper->getTestMinutes() . 'M'));
+                    }
+
+                    // We have a last ship date, so lets add the test time to it.
+                    if ($lastShipDate) {
+                        $start = $lastShipDate->add(new \DateInterval('PT' . $this->_testHelper->getTestMinutes() . 'M'));
+                    }
+
+                    // Set the ship dates on the Recurly subscription and subscription order.
+                    $subOrder->starts_at = $start->format('Y-m-d H:i:s');
+                    $subscriptionOrder->setData(
+                        'ship_start_date',
+                        $start->format('Y-m-d H:i:s')
+                    )->save();
+                    $lastShipDate = $start;
+                }
+
                 $subOrders[] = $subOrder;
             }
 
@@ -822,6 +859,29 @@ class RecurlySubscription
                 $subOrder->custom_fields[] = new Recurly_CustomField('addon_skus', implode(',', $productSkus));
                 if ($subscription->getSubscriptionType() != 'annual') {
                     $subOrder->starts_at = $subscriptionAddonOrder->getShipStartDate();
+
+                    if ($this->_testHelper->inTestMode()) {
+                        $today = new \DateTimeImmutable();
+                        $start = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $subOrder->starts_at);
+
+                        // If the ship date is before today, lets just set it to
+                        // today for testing.
+                        if ($start < $today) {
+                            // Since it is available to ship, lets just set it to now.
+                            $start = $today;
+                        } else {
+                            // Ship date is later than today, so lets set it ahead
+                            // by the test time.
+                            $start = $today->add(new \DateInterval('PT' . $this->_testHelper->getTestMinutes() . 'M'));
+                        }
+
+                        // Set the ship dates on the Recurly subscription and subscription order.
+                        $subOrder->starts_at = $start->format('Y-m-d H:i:s');
+                        $subscriptionAddonOrder->setData(
+                            'ship_start_date',
+                            $start->format('Y-m-d H:i:s')
+                        )->save();
+                    }
                 }
                 $subOrders[] = $subOrder;
             }
