@@ -281,7 +281,19 @@ class RecurlySubscription
                 $purchase->subscriptions = $subscriptions;
 
                 try {
-                    Recurly_Purchase::invoice($purchase);
+                    /* @var \Recurly_InvoiceCollection $invoiceCollection */
+                    $invoiceCollection = Recurly_Purchase::invoice($purchase);
+                    $invoices = $invoiceCollection->getValues();
+                    if ($subscription->getSubscriptionType() == 'annual' && ! empty($invoices)) {
+                        /* @var \Recurly_Invoice $invoice */
+                        $invoice = reset($invoices);
+                        $subscription->setRecurlyInvoice($invoice->invoice_number);
+                        $subscription->setPaid($this->convertAmountToDollars($invoice->total_in_cents));
+                        $subscription->setPrice($this->convertAmountToDollars($invoice->subtotal_before_discount_in_cents));
+                        $subscription->setDiscount($this->convertAmountToDollars(-$invoice->discount_in_cents));
+                        $subscription->setTax($this->convertAmountToDollars($invoice->tax_in_cents));
+                        $subscription->save();
+                    }
                 } catch (\Exception $e) {
                     $error = 'There was an issue invoicing the subscription.';
                     $this->_logger->error($error . " : " . $e->getMessage());
@@ -509,11 +521,18 @@ class RecurlySubscription
     /**
      * Convert order grand total from dollars to cents
      *
+     * @param int|float $amount
      * @return int
      */
     private function convertAmountToCents($amount)
     {
-        return (float) $amount*100;
+        $cents = number_format((float) $amount * 100, 2, '.', '');
+
+        if (explode('.', $cents)[1] > 0) {
+            $cents = (int) $cents + 1;
+        }
+
+        return (int) $cents;
     }
 
     /**
@@ -864,11 +883,11 @@ class RecurlySubscription
 
     /**
      * Create Credit for Recurly
-     * @param $totalRefund
      * @param $gigyaId
+     * @param float|int $totalRefund
      * @throws LocalizedException
      */
-    public function createCredit($totalRefund, $gigyaId)
+    public function createCredit($gigyaId, $totalRefund = 0)
     {
         try {
             Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
@@ -884,6 +903,7 @@ class RecurlySubscription
             $credit->currency = $this->_currency;
             $credit->description = 'Partial refund for subscription cancellation';
             $credit->unit_amount_in_cents = $this->convertAmountToCents($totalRefund);
+            $credit->tax_exempt = true;
             $credit->create();
 
             $purchase->adjustments = [ $credit ];
