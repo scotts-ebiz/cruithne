@@ -240,6 +240,8 @@ input[type="email"].sp-textarea {
   height: 1rem;
   cursor: pointer;
   width: 1rem;
+  padding: 1rem;
+  background-clip: content-box;
 }
 
 .sp-slider {
