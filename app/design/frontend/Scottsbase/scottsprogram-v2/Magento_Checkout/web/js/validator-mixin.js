@@ -86,6 +86,24 @@ define([
 			$.mage.__('Please use letters only (a-z or A-Z) in this field.')
 		);
 		validator.addRule(
+			'required-entry-city',
+			function (value) {
+				if ($("input[name='city']").val() != '') {
+					if (!isNaN(value)) {
+						return false;
+					}
+					if( value.match( /^[a-zA-Z ]*$/) ) {
+						 return true
+					}else{
+						return false;
+					}
+				} else {
+					return !$.mage.isEmpty(value);
+				}
+			},
+			$.mage.__('Please enter a valid city')
+		);
+		validator.addRule(
 			'required-entry-bcity',
 			function (value) {
 				if ($(".billing-address-form input[name='city']").val() != '') {
