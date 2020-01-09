@@ -25,7 +25,7 @@ define([
 					return !$.mage.isEmpty(value);
 				}
 			},
-			$.mage.__('Please use letters only (a-z or A-Z) in this field.')
+			$.mage.__('Please enter a first name.')
 		);
 		validator.addRule(
 			'required-entry-bfirstname',
@@ -46,7 +46,7 @@ define([
 					return !$.mage.isEmpty(value);
 				}
 			},
-			$.mage.__('Please use letters only (a-z or A-Z) in this field.')
+			$.mage.__('Please enter a first name.')
 		);
 		validator.addRule(
 			'required-entry-lastname',
@@ -64,7 +64,7 @@ define([
 					return !$.mage.isEmpty(value);
 				}
 			},
-			$.mage.__('Please use letters only (a-z or A-Z) in this field.')
+			$.mage.__('Please enter a last name.')
 		);
 		validator.addRule(
 			'required-entry-blastname',
@@ -83,7 +83,7 @@ define([
 					return !$.mage.isEmpty(value);
 				}
 			},
-			$.mage.__('Please use letters only (a-z or A-Z) in this field.')
+			$.mage.__('Please enter a last name.')
 		);
 		validator.addRule(
 			'required-entry-city',
