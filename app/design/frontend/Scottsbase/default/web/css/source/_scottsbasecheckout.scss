@@ -6,6 +6,9 @@
     }
     table > tbody > tr > td {
         @include cart-checkout-body-font($size: $font-size__m, $lh: 21px);
+        @include max-screen($screen__m) {
+            font-size: $font-size__base;
+        }
     }
     .page-header {
         .header.content {
