@@ -588,7 +588,7 @@ class Subscription extends AbstractModel
             try {
                 /** @var SubscriptionOrder $subscriptionOrder */
                 if ($order->getSubscriptionAddon()) {
-                    $subscriptionOrder = $this->_subscriptionOrderCollectionFactory->create()->addFieldToFilter('sales_order_id', $order->getEntityId())->getFirstItem();
+                    $subscriptionOrder = $this->_subscriptionAddonOrderCollectionFactory->create()->addFieldToFilter('sales_order_id', $order->getEntityId())->getFirstItem();
                 } else {
                     $subscriptionOrder = $this->_subscriptionOrderCollectionFactory->create()->addFieldToFilter('sales_order_id', $order->getEntityId())->getFirstItem();
                 }
@@ -681,6 +681,7 @@ class Subscription extends AbstractModel
             $totalRefund = 0;
 
             if ($refundingEntireSubscription) {
+                $this->setData('is_full_refund', 1);
                 $totalRefund = $this->getPaid();
             } else {
                 /** @var \SMG\Sales\Model\Order $order */
@@ -691,6 +692,7 @@ class Subscription extends AbstractModel
 
             /** @var RecurlySubscription $service */
             $service->createCredit($this->getGigyaId(), $totalRefund);
+            $this->save();
         } catch (\Exeception $e) {
             $error = 'Cannot generate refund.';
             $this->_logger->error($error);
