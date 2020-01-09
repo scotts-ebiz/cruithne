@@ -595,7 +595,7 @@ class Subscription extends AbstractModel
                 $subscriptionOrder->createCreditMemo();
                 $subscriptionOrders[] = $subscriptionOrder;
             } catch (\Exception $e) {
-                $error = 'There was a problem making a credit memo for subscription cancellation.' . $e->getMessage();
+                $error = 'There was a problem making a credit memo for subscription cancellation. ' . $e->getMessage();
                 $this->_logger->error($error);
                 throw new LocalizedException(__($error));
             }
@@ -618,6 +618,15 @@ class Subscription extends AbstractModel
             $this->_logger->error($error);
             throw new LocalizedException(__($error));
         }
+    }
+
+    /**
+     * Get the total number of orders for this subscription.
+     * @return int
+     */
+    public function getOrderCount()
+    {
+        return $this->_orderCollectionFactory->create()->addFieldToFilter('master_subscription_id', $this->getSubscriptionId())->count();
     }
 
     /**
@@ -666,15 +675,22 @@ class Subscription extends AbstractModel
      */
     private function generateRefund($orders, $service)
     {
+        $refundingEntireSubscription = count($orders) == $this->getOrderCount();
+
         try {
             $totalRefund = 0;
-            /** @var \SMG\Sales\Model\Order $order */
-            foreach ($orders as $order) {
-                $totalRefund += (float) $order->getDiscountAmount() + $order->getSubtotal();
+
+            if ($refundingEntireSubscription) {
+                $totalRefund = $this->getPaid();
+            } else {
+                /** @var \SMG\Sales\Model\Order $order */
+                foreach ($orders as $order) {
+                    $totalRefund += $order->getSubtotal() + $order->getDiscountAmount();
+                }
             }
 
             /** @var RecurlySubscription $service */
-            $service->createCredit($totalRefund, $this->getGigyaId());
+            $service->createCredit($this->getGigyaId(), $totalRefund);
         } catch (\Exeception $e) {
             $error = 'Cannot generate refund.';
             $this->_logger->error($error);

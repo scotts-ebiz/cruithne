@@ -95,10 +95,10 @@ class Subscription extends Template
     public function getSubscriptions()
     {
         $subscriptionFactory = $this->_subscriptionCollectionFactory->create();
-        $hasActiveSubscription = $subscriptionFactory
+        $currentSubscription = $subscriptionFactory
             ->addFilter('subscription_status', 'active')
             ->addFilter('customer_id', $this->getCustomerId())
-            ->count();
+            ->getFirstItem();
 
         Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
@@ -110,7 +110,7 @@ class Subscription extends Template
         $invoices = [];
 
         try {
-            if (! $hasActiveSubscription) {
+            if (! $currentSubscription || ! $currentSubscription->getId()) {
                 throw new \Exception('No active subscriptions found.');
             }
 
@@ -122,6 +122,7 @@ class Subscription extends Template
             foreach ($activeSubscriptions as $subscription) {
                 array_push($subscriptions, $subscription);
             }
+
             foreach ($futureSubscriptions as $subscription) {
                 array_push($subscriptions, $subscription);
             }
@@ -183,6 +184,12 @@ class Subscription extends Template
             }
 
             $invoices = $this->getInvoices(array_unique($invoices));
+
+            if (empty($mainSubscription)) {
+                // Update the active subscription to reflect Recurly.
+                $currentSubscription->setSubscriptionStatus('canceled')->save();
+                throw new \Exception('No active subscriptions found.');
+            }
 
             return [
                 'success'               => true,
