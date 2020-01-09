@@ -90,15 +90,20 @@ class Index
      * Check to see if it is a subscription and if the user is logged in before continuing
      *
      * @param \Magento\Checkout\Controller\Index\Index $subject
-     * @return Redirect
+     * @param callable $proceed
+     * @return Redirect|void
      */
-    public function beforeExecute(\Magento\Checkout\Controller\Index\Index $subject)
+    public function aroundExecute(
+        \Magento\Checkout\Controller\Index\Index $subject,
+        callable $proceed
+    )
     {
         try
         {
             // if this store uses subscription then check for login before continuing
             if ($this->_subscriptionHelper->isActive($this->_storeManager->getStore()->getId()))
             {
+
                 // get the onepage quote to see if the user is a logged in user or a guest user
                 $quote = $subject->getOnepage()->getQuote();
 
@@ -116,7 +121,7 @@ class Index
                     );
 
                     $customerLoginUrl = $this->_url->getUrl(
-                        'customer/account/login',
+                        'customer/account/create',
                         array(
                             'referer' => $this->_urlHelper->getEncodedUrl($this->_url->getCurrentUrl()),
                             '_query' => $params
@@ -125,12 +130,17 @@ class Index
 
                     // return the login page
                     return $resultRedirect->setPath($customerLoginUrl);
+                } else {
+                    return $proceed();
                 }
+            } else {
+                return $proceed();
             }
         }
         catch (\Exception $e)
         {
             $this->_logger->error($e);
+            return $proceed();
         }
     }
 }

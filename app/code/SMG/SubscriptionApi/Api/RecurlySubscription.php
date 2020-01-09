@@ -2,9 +2,11 @@
 
 namespace SMG\SubscriptionApi\Api;
 
-use SMG\SubscriptionApi\Exception\SubscriptionException;
+use Psr\Log\LoggerInterface;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Session\SessionManagerInterface as CoreSession;
 use SMG\SubscriptionApi\Api\Interfaces\RecurlyInterface;
+use SMG\SubscriptionApi\Exception\SubscriptionException;
 use SMG\SubscriptionApi\Helper\SubscriptionOrderHelper;
 use SMG\SubscriptionApi\Model\RecurlySubscription as RecurlySubscriptionModel;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionModel;
@@ -23,6 +25,12 @@ class RecurlySubscription implements RecurlyInterface
 
     /** @var CoreSession */
     private $_coreSession;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $_logger;
+
     /**
      * @var SubscriptionOrderHelper
      */
@@ -38,11 +46,13 @@ class RecurlySubscription implements RecurlyInterface
         RecurlySubscriptionModel $recurlySubscriptionModel,
         SubscriptionModel $subscriptionModel,
         CoreSession $coreSession,
+        LoggerInterface $logger,
         SubscriptionOrderHelper $subscriptionOrderHelper
     ) {
         $this->_recurlySubscriptionModel = $recurlySubscriptionModel;
         $this->_subscriptionModel = $subscriptionModel;
         $this->_coreSession = $coreSession;
+        $this->_logger = $logger;
         $this->_subscriptionOrderHelper = $subscriptionOrderHelper;
     }
 
@@ -51,7 +61,7 @@ class RecurlySubscription implements RecurlyInterface
      * otherwise create new Recurly account for the customer
      *
      * @param string $token
-     * @return array
+     * @return string|array
      *
      * @api
      */
@@ -68,6 +78,8 @@ class RecurlySubscription implements RecurlyInterface
                 'message' => 'Subscription successfully created.'
             ]);
         } catch (\Exception $e) {
+            $this->_logger->error($e->getMessage());
+
             return json_encode([
                 'success' => false,
                 'message' => $e->getMessage()
@@ -92,7 +104,43 @@ class RecurlySubscription implements RecurlyInterface
      */
     public function cancelRecurlySubscription()
     {
-        return $this->_recurlySubscriptionModel->cancelRecurlySubscription();
+        // Cancel Recurly Subscriptions
+        try {
+            // Cancel recurly subscriptions
+            $cancelledSubscriptionIds = $this->_recurlySubscriptionModel->cancelRecurlySubscriptions(true, true);
+
+            // Find the master subscription id
+            $masterSubscriptionId = null;
+            foreach ($cancelledSubscriptionIds as $planCode => $cancelledSubscriptionId) {
+                if (in_array($planCode, ['annual', 'seasonal'])) {
+                    $masterSubscriptionId = $cancelledSubscriptionId;
+                }
+            }
+            if (is_null($masterSubscriptionId)) {
+                $error = "Couldn't find the master subscription id.";
+                $this->_logger->error($error);
+                throw new LocalizedException(__($error));
+            }
+
+            // Find the subscription
+            /** @var \SMG\SubscriptionApi\Model\Subscription $subscription */
+            $subscription = $this->_subscriptionModel->getSubscriptionByMasterSubscriptionId($masterSubscriptionId);
+
+            // Cancel subscription orders
+            $subscription->cancelSubscriptions($this->_recurlySubscriptionModel);
+        } catch (LocalizedException $e) {
+            $this->_logger->error($e->getMessage());
+
+            return json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
+
+        return json_encode([
+            'success' => true,
+            'message' => 'Subscriptions successfully cancelled.'
+        ]);
     }
 
     /**
@@ -111,6 +159,8 @@ class RecurlySubscription implements RecurlyInterface
         try {
             $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionId);
         } catch (SubscriptionException $e) {
+            $this->_logger->error($e->getMessage());
+
             return ['success' => false, 'error' => $e->getMessage()];
         }
 

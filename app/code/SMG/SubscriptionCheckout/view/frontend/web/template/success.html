@@ -1,3 +1,4 @@
+<!-- ko if: subscriptionID() -->
 <div class="sp-container">
     <div class="sp-flex sp-flex-column sp-items-center sp-max-w-md sp-mt-8 sp-mx-auto">
         <img class="sp-block sp-mb-2" src="https://test_magento_image_repo.storage.googleapis.com/Check.svg" alt="Success">
@@ -8,10 +9,10 @@
 <div class="sp-container md:sp-pb-8 sp-mb-12 md:sp-mb-24">
     <div class="sp-text-center">
         <p class="sp-mb-0">Your order confirmation, complete with tracking details, will soon be arriving in your inbox.</p>
-        <p class="sp-mb-8">Your order number is: #<span data-bind="text: orderNumber()"></span></p>
+        <p class="sp-mb-8">Your order number is: #<span data-bind="text: subscriptionID()"></span></p>
         <a
             class="sp-button sp-button--primary"
-            data-bind="attr: { href: orderUrl() }"
+            href="/account/subscription"
         >
             View Your Lawn Care Plan
         </a>
@@ -156,4 +157,4 @@
         </div>
     </div>
 </div>
-
+<!-- /ko -->

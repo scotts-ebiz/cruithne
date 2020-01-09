@@ -84,20 +84,31 @@ define(
                     data: JSON.stringify( {
                         'key': formKey,
                         'quiz_id': quizID,
-                        'billing_address': address
+                        'billing_address': address,
+                        'billing_same_as_shipping': isBillingSameAsShipping,
                     } ),
                     success: function (response) {
-                        if (response[0] === true) {
-                            window.location.href = '/checkout/onepage/success';
+                        if (Array.isArray(response)) {
+                            response = response[0];
+                        }
+
+                        if (response.success === true) {
+                            window.sessionStorage.setItem('subscription_id', response.subscription_id);
+                            window.location.href = '/success';
                         }
                     },
                     error: function (response) {
                         response = JSON.parse(response.responseText);
 
+                        if (Array.isArray(response)) {
+                            response = response[0];
+                        }
+
                         // This exists because sending invoices is return 500
                         // error codes, however, the response was successful.
-                        if (response[0] === true) {
-                            window.location.href = '/checkout/onepage/success';
+                        if (response.success === true) {
+                            window.sessionStorage.setItem('subscription_id', response.subscription_id);
+                            window.location.href = '/success';
                         }
                     }
                 })
@@ -132,11 +143,11 @@ define(
                 var rsco = $('input[name="rsco_accept"]');
 
                 if (!rsco[0].checked) {
-                    rsco[0].setCustomValidity(true);
+                    rsco[0].setCustomValidity('This field is required.');
 
                     return false;
                 } else {
-                    rsco[0].setCustomValidity(false);
+                    rsco[0].setCustomValidity('');
                 }
 
                 self.updateRecurlyFormData();

@@ -5,26 +5,17 @@ require(['jquery'], function($){
 
 		this.init = function () {
 			this.$toggle = this.$header.find('.sp-header__nav-toggle');
-			this.$list = this.$header.find('.sp-header__nav-list');
 
-			this.addEvents();
-		}
+			$(document).on('click', '.sp-header__nav-toggle', function(e) {
+				self.$header.toggleClass('sp-is-active');
+				$('body').toggleClass('sp-menu-active');
 
-		this.addEvents = function () {
-			this.$toggle.on('click', this.toggleMenu);
-		}
-
-		this.toggleMenu = function (event) {
-			event.preventDefault();
-
-			self.$header.toggleClass('sp-is-active');
-			$('body').toggleClass('sp-menu-active');
-
-			if (self.$toggle.attr('aria-expanded') === 'true') {
-				self.$toggle.attr('aria-expanded', false);
-			} else {
-				self.$toggle.attr('aria-expanded', true);
-			}
+				if (self.$toggle.attr('aria-expanded') === 'true') {
+					self.$toggle.attr('aria-expanded', false);
+				} else {
+					self.$toggle.attr('aria-expanded', true);
+				}
+			})
 		}
 	}
 

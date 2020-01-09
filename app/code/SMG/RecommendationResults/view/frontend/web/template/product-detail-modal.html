@@ -15,7 +15,7 @@
 
         <div class="md:sp-flex sp-max-w-xl sp-mx-auto sp-mb-8">
             <img
-                data-bind="attr: { src: activeProduct().mediumImage }"
+                data-bind="attr: { src: pdp().product.mediumImage }"
                 class="sp-mx-auto sp-block sp-w-1/3 sp-max-w-xs md:sp-w-2/5 sp-mb-8"
             />
 
@@ -23,18 +23,18 @@
                 <!-- ko if: pdp().mode === 'subscription' -->
                 <strong
                     class="sp-block sp-h4 sp-my-0 sp-mb-2"
-                    data-bind="text: formatCurrency(activeProduct().price)"
+                    data-bind="html: formatCurrency(pdp().product.price)"
                 ></strong>
                 <!-- /ko -->
 
                 <h2
                     class="sp-h2 sp-my-0 sp-mb-4"
-                    data-bind="text: activeProduct().displayName"
+                    data-bind="html: pdp().product.displayName"
                 ></h2>
 
                 <div
                     class="sp-p2"
-                    data-bind="html: activeProduct().description"
+                    data-bind="html: pdp().product.description"
                 >
                 </div>
 
@@ -101,13 +101,13 @@
             class="sp-px-8 sp-max-w-lg sp-mx-auto"
         >
             <h3 class="sp-h4">How To Use</h3>
-            <div data-bind="html: activeProduct().howToApply"></div>
+            <div data-bind="html: pdp().product.howToApply"></div>
 
             <h3 class="sp-h4">When To Use</h3>
-            <p data-bind="text: activeProduct().season"></p>
+            <p data-bind="html: pdp().product.season"></p>
 
             <h3 class="sp-h4">Spreader Settings</h3>
-            <div data-bind="html: activeProduct().spreaderSettings"></div>
+            <div data-bind="html: pdp().product.spreaderSettings"></div>
 
             <hr/>
             <p>Please always follow package instructions.</p>
@@ -118,21 +118,21 @@
             class="sp-px-8 sp-max-w-lg sp-mx-auto"
         >
             <h3 class="sp-h4">Label</h3>
-            <div data-bind="html: activeProduct().howToApply"></div>
-            <img data-bind="attr { src: activeProduct().image_label }"/>
+            <div data-bind="html: pdp().product.howToApply"></div>
+            <img data-bind="attr { src: pdp().product.image_label }"/>
 
             <h3 class="sp-h4">Weight</h3>
             <div>
-                <span data-bind="text: activeProduct().weight"></span>
-                <span data-bind="text: activeProduct()['Product Weight UOM']"></span>
+                <span data-bind="html: pdp().product.weight"></span>
+                <span data-bind="html: pdp().product['Product Weight UOM']"></span>
             </div>
 
             <h3 class="sp-h4">Coverage Area</h3>
-            <div data-bind="html: activeProduct().coverageArea"></div>
+            <div data-bind="html: pdp().product.coverageArea"></div>
 
-            <!-- ko if: activeProduct().fertilizerAnalysis -->
+            <!-- ko if: pdp().product.fertilizerAnalysis -->
             <h3 class="sp-h4">Fertilizer Analysis</h3>
-            <div data-bind="html: activeProduct().fertilizerAnalysis"></div>
+            <div data-bind="html: pdp().product.fertilizerAnalysis"></div>
             <!-- /ko -->
         </div>
     </div>

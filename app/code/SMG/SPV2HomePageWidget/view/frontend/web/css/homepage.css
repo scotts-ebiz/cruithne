@@ -22,21 +22,25 @@
   z-index: 1;
 }
 
-.sp-home__what-to-expect-heading{
+.sp-home__what-to-expect-heading {
   margin-bottom: 4.5rem;
 }
 
 /* History section */
 .sp-home__history-container {
   flex-direction: column;
+  max-width: 480px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .sp-home__history-date {
-  margin-top: -168px;
+  margin-top: -18.25rem;
   order: 0;
 }
 
 .sp-home__history-image {
+  max-width: 480px;
   order: 1;
 }
 
@@ -44,9 +48,35 @@
   order: 2;
 }
 
-@media (min-width: 768px) {
+.line-1 {
+  height: 7rem;
+  margin-top: 4rem;
+}
+
+.line-2 {
+  height: 7rem;
+}
+
+.season-img {
+  transition: opacity 0.5s ease-in;
+}
+
+.season-img + .season-img {
+  opacity: 0;
+}
+
+.sp-home__history {
+  margin-top: 12rem;
+}
+
+@media (min-width: 1024px) {
+  .sp-home__history {
+    margin-top: 0;
+  }
+
   .sp-home__history-container {
     flex-direction: row;
+    max-width: 100%;
   }
 
   .sp-home__history-date,
@@ -67,11 +97,21 @@
 
   .sp-home__history-image {
     flex: 1;
-    order: 2
+    order: 2;
   }
 
   .sp-home__history-description {
-    order: 0;
+    margin-top: 0rem;
+    padding: 2rem;
+  }
+
+  .line-1 {
+    height: 9rem;
+    margin-top: 1rem;
+  }
+
+  .line-2 {
+    height: 9rem;
   }
 }
 
@@ -79,3 +119,35 @@
   max-width: 10rem;
 }
 
+.sp-home__countdown {
+  color: #1d5632;
+  margin: 0 auto;
+  font-size: 4rem;
+  font-weight: 800;
+}
+
+/*Animate the line*/
+.line-1_anim {
+  stroke-dasharray: 172;
+  stroke-dashoffset: 172;
+  animation: dash 0.5s linear;
+  animation-fill-mode: forwards;
+}
+
+.line-2_anim {
+  stroke-dasharray: 172;
+  stroke-dashoffset: 172;
+  animation: dash .5s linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes dash {
+  0% {
+    opacity: 0;
+    stroke-dashoffset: 172;
+  }
+  100% {
+    opacity: 1;
+    stroke-dashoffset: 0;
+  }
+}

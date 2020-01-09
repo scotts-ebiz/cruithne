@@ -33,6 +33,7 @@
 
 .sp-options__your-plan-label {
   line-height: 1.25;
+  margin: 0 auto;
   max-width: 6rem;
 }
 
@@ -147,4 +148,21 @@ PDP MODAL
 
 .no-scroll {
   overflow: hidden;
+}
+
+.sp-options-count {
+  background-image: url(https://test_magento_image_repo.storage.googleapis.com/bag-count.svg);
+  color: white;
+  width: 17px;
+  height: 22px;
+}
+
+.sp-options__footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+}
+
+.sp-footer {
+  border-top: 2px solid #fff;
 }

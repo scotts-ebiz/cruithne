@@ -7,11 +7,11 @@ define([
         hasResults: ko.observable(false),
         results: ko.observable({}),
 
-        activeProduct: ko.observable(null),
         pdp: ko.observable({
             visible: false,
             activeTab: 'learn', // 'learn' or 'product_specs'
             mode: 'subscription', // 'plan' or 'subscription'
+            product: null,
         }),
 
         initialize(config) {
@@ -38,6 +38,34 @@ define([
                 return this.results().plan
                     ? this.results().plan.coreProducts
                     : [];
+            });
+
+            this.seasons = ko.computed(() => {
+                const uniqueSeasons = self.products().reduce((items, product) => {
+                    if (items.indexOf(product.season) === -1) {
+                        items.push(product.season);
+                    }
+
+                    return items;
+                }, []);
+
+                const seasons = uniqueSeasons.map((season) => {
+                    const products = self.products().filter((product) => {
+                        return product.season === season;
+                    });
+
+                    return {
+                        season: season,
+                        products: self.products().filter((product) => {
+                            return product.season === season;
+                        }),
+                        total: products.reduce((price, product) => {
+                            return price + (+product.price * +product.quantity);
+                        }, 0),
+                    }
+                });
+
+                return seasons;
             });
 
             this.total = ko.computed(() => {
@@ -98,6 +126,18 @@ define([
                             self.results(data);
                             window.sessionStorage.setItem('result', JSON.stringify(data));
                             window.sessionStorage.setItem('quiz-id', data.id);
+                            window.sessionStorage.setItem('lawn-zip', request.zip);
+                        }
+                    },
+                    error(response) {
+                        response = JSON.parse(response.responseText);
+
+                        if (Array.isArray(response)) {
+                            response = response[0];
+                        }
+
+                        if (response.redirect) {
+                            window.location.href = response.redirect;
                         }
                     },
                     complete() {
@@ -157,8 +197,17 @@ define([
                             alert( 'Error creating your order ' + data.message + '. Please try again.' );
                         }
                     },
-                    error() {
+                    error(response) {
                         self.loading(false);
+                        response = JSON.parse(response.responseText);
+
+                        if (Array.isArray(response)) {
+                            response = response[0];
+                        }
+
+                        if (response.redirect) {
+                            window.location.href = response.redirect;
+                        }
                     },
                 },
             );
@@ -209,10 +258,10 @@ define([
                 $('body').addClass('no-scroll');
             }
 
-            this.activeProduct(product);
             this.pdp({
                 ...this.pdp(),
-                visible: !this.pdp().visible
+                visible: !this.pdp().visible,
+                product: product
             });
         },
 

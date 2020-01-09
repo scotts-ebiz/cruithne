@@ -2,15 +2,23 @@
 
 namespace SMG\SubscriptionApi\Model;
 
+use Psr\Log\LoggerInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DB\Transaction;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Creditmemo;
+use Magento\Sales\Model\Order\CreditmemoFactory;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
+use Magento\Sales\Model\Order\Invoice;
+use Magento\Sales\Model\OrderRepository;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
+use Magento\Sales\Model\ResourceModel\Order\Creditmemo\CollectionFactory as CreditmemoCollectionFactory;
+use Magento\Sales\Model\Service\CreditmemoService;
 use Magento\Sales\Model\Service\InvoiceService;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\Sap\Model\SapOrderBatch;
@@ -55,6 +63,20 @@ class SubscriptionOrder extends AbstractModel
      */
     protected $_subscription;
 
+    /** @var OrderRepository */
+    protected $_orderRepository;
+
+    /** @var CreditmemoCollectionFactory */
+    protected $_creditmemoFactory;
+
+    /** @var CreditmemoService */
+    protected $_creditmemoService;
+
+    /**
+     * @var LoggerInterface
+     */
+    protected $_logger;
+
     /**
      * Constructor.
      */
@@ -72,6 +94,9 @@ class SubscriptionOrder extends AbstractModel
      * @param SubscriptionHelper $subscriptionHelper
      * @param Subscription $subscription
      * @param SubscriptionOrderItemCollectionFactory $subscriptionOrderItemCollectionFactory
+     * @param OrderRepository $orderRepository
+     * @param CreditmemoFactory $creditmemoFactory
+     * @param CreditmemoService $creditmemoService
      * @param OrderCollectionFactory $orderCollectionFactory
      * @param InvoiceService $invoiceService
      * @param Transaction $transaction
@@ -83,6 +108,7 @@ class SubscriptionOrder extends AbstractModel
     public function __construct(
         Context $context,
         Registry $registry,
+        LoggerInterface $logger,
         SubscriptionHelper $subscriptionHelper,
         Subscription $subscription,
         SubscriptionOrderItemCollectionFactory $subscriptionOrderItemCollectionFactory,
@@ -91,6 +117,9 @@ class SubscriptionOrder extends AbstractModel
         Transaction $transaction,
         InvoiceSender $invoiceSender,
         SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory,
+        OrderRepository $orderRepository,
+        CreditmemoFactory $creditmemoFactory,
+        CreditmemoService $creditmemoService,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -103,6 +132,7 @@ class SubscriptionOrder extends AbstractModel
             $data
         );
 
+        $this->_logger = $logger;
         $this->_subscriptionHelper = $subscriptionHelper;
         $this->_subscription = $subscription;
         $this->_subscriptionOrderItemCollectionFactory = $subscriptionOrderItemCollectionFactory;
@@ -111,6 +141,9 @@ class SubscriptionOrder extends AbstractModel
         $this->_transaction = $transaction;
         $this->_invoiceSender = $invoiceSender;
         $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
+        $this->_orderRepository = $orderRepository;
+        $this->_creditmemoFactory = $creditmemoFactory;
+        $this->_creditmemoService = $creditmemoService;
     }
 
     /**
@@ -138,7 +171,7 @@ class SubscriptionOrder extends AbstractModel
 
         $subscription = $this->_subscription->load($this->getSubscriptionEntityId());
 
-        if (! $subscription->getId()) {
+        if (!$subscription->getId()) {
             return false;
         }
 
@@ -190,7 +223,7 @@ class SubscriptionOrder extends AbstractModel
         }
 
         // If subscription orders is local, send them, if not, pull them and send them
-        if (! isset($this->_subscriptionOrderItems)) {
+        if (!isset($this->_subscriptionOrderItems)) {
             $subscriptionOrderItems = $this->_subscriptionOrderItemCollectionFactory->create();
             $subscriptionOrderItems->addFieldToFilter('subscription_order_entity_id', $this->getEntityId());
             $this->_subscriptionOrderItems = $subscriptionOrderItems;
@@ -209,13 +242,13 @@ class SubscriptionOrder extends AbstractModel
     {
         $order = $this->getOrder();
 
-        if (! $order || $order->hasInvoices() || ! $order->canInvoice()) {
+        if (!$order || $order->hasInvoices() || !$order->canInvoice()) {
             return false;
         }
 
         $invoice = $this->_invoiceService->prepareInvoice($order);
 
-        if (! $invoice->getTotalQty()) {
+        if (!$invoice->getTotalQty()) {
             throw new \Magento\Framework\Exception\LocalizedException(
                 __('You can\'t create an invoice without products.')
             );
@@ -305,7 +338,7 @@ class SubscriptionOrder extends AbstractModel
     {
         // Grab the shipment open window from the admin
         $shippingOpenWindow = 0;
-        if (! empty($this->_subscriptionHelper->getShipDaysStart())) {
+        if (!empty($this->_subscriptionHelper->getShipDaysStart())) {
             $shippingOpenWindow = filter_var($this->_subscriptionHelper->getShipDaysStart(), FILTER_SANITIZE_NUMBER_INT);
         }
 
@@ -331,7 +364,7 @@ class SubscriptionOrder extends AbstractModel
 
         // Grab the shipment open window from the admin
         $shippingCloseWindow = 0;
-        if (! empty($this->_subscriptionHelper->getShipDaysEnd())) {
+        if (!empty($this->_subscriptionHelper->getShipDaysEnd())) {
             $shippingCloseWindow = filter_var($this->_subscriptionHelper->getShipDaysEnd(), FILTER_SANITIZE_NUMBER_INT);
         }
 
@@ -348,5 +381,29 @@ class SubscriptionOrder extends AbstractModel
         }
 
         $this->save();
+    }
+
+    /**
+     * Create Credit Memo for Order
+     * @throws LocalizedException
+     */
+    public function createCreditMemo()
+    {
+        try {
+            /** @var Order $order */
+            $order = $this->getOrder();
+            $invoices = $order->getInvoiceCollection();
+            /** @var Invoice $invoice */
+            foreach ($invoices as $invoice) {
+                /** @var Creditmemo $creditmemo */
+                $creditmemo = $this->_creditmemoFactory->createByOrder($order);
+                $creditmemo->setInvoice($invoice);
+                $creditmemo->save();
+            }
+        } catch (\Exception $e) {
+            $error = 'Could not create credit memo for order.';
+            $this->_logger->error($e->getMessage() . ' - ' . $error);
+            throw new LocalizedException(__($error));
+        }
     }
 }

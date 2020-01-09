@@ -12,6 +12,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use SMG\RecommendationApi\Helper\RecommendationHelper;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
+use Gigya\GigyaIM\Helper\GigyaMageHelper;
 
 /**
  * Class LoginPost
@@ -35,6 +36,11 @@ class LoginPost
      * @var StoreManagerInterface
      */
     protected $_storeManager;
+
+    /**
+     * @var GigyaMageHelper
+     */
+    protected $_gigyaMageHelper;
 
     /**
      * @var RecommendationHelper
@@ -65,6 +71,7 @@ class LoginPost
      * @param SessionManagerInterface $coreSession
      * @param CustomerSession $customerSession
      * @param LoggerInterface $logger
+     * @param GigyaMageHelper $gigyaMageHelper
      */
     public function __construct(
         RequestInterface $request,
@@ -73,8 +80,8 @@ class LoginPost
         RecommendationHelper $recommendationHelper,
         SessionManagerInterface $coreSession,
         CustomerSession $customerSession,
-        LoggerInterface $logger
-
+        LoggerInterface $logger,
+        GigyaMageHelper $gigyaMageHelper
     ) {
         $this->_request = $request;
         $this->_subscriptionHelper = $subscriptionHelper;
@@ -83,6 +90,7 @@ class LoginPost
         $this->_coreSession = $coreSession;
         $this->_customerSession = $customerSession;
         $this->_logger = $logger;
+        $this->_gigyaMageHelper = $gigyaMageHelper;
     }
 
     /**
@@ -102,14 +110,22 @@ class LoginPost
         if ($this->_subscriptionHelper->isActive( $this->_storeManager->getStore()->getId()))
         {
             $quizId = $this->_coreSession->getQuizId();
+            $zipCode = $this->_coreSession->getZipCode();
             $customer = $this->_customerSession->getCustomer();
             $gigyaId = $customer->getGigyaUid();
 
             if ( $quizId && $gigyaId ) {
                 $this->mapToUser( $gigyaId, $quizId );
             }
-            return $result;
+
+            if ( $gigyaId && $zipCode ) {
+                $gigyaData['profile']['address'] = $zipCode;
+                $this->_gigyaMageHelper->updateGigyaAccount( $gigyaId, $gigyaData );
+            }
+
         }
+        
+        return $result;
     }
 
     /**
