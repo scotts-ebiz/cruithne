@@ -2,13 +2,13 @@
 
 namespace SMG\SubscriptionApi\Helper;
 
-use Magento\Customer\Model\Customer;
-use Magento\Quote\Model\QuoteManagement;
 use Magento\Customer\Model\AddressFactory;
+use Magento\Customer\Model\Customer;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Quote\Model\QuoteManagement;
 use Magento\Sales\Model\Order;
 use Magento\Store\Model\StoreManagerInterface;
 use SMG\SubscriptionApi\Exception\SubscriptionException;
@@ -16,7 +16,9 @@ use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\CollectionFac
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection as SubscriptionOrderCollection;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
 use SMG\SubscriptionApi\Model\SubscriptionAddonOrder;
+use SMG\SubscriptionApi\Model\SubscriptionAddonOrderItem;
 use SMG\SubscriptionApi\Model\SubscriptionOrder;
+use SMG\SubscriptionApi\Model\SubscriptionOrderItem;
 
 /**
  * Class SubscriptionOrderHelper
@@ -202,6 +204,27 @@ class SubscriptionOrderHelper extends AbstractHelper
     }
 
     /**
+     * Format the provided address to use only the required fields.
+     *
+     * @param $address
+     * @return array
+     */
+    public function formatAddress($address)
+    {
+        return [
+            'firstname' => $address->getFirstname(),
+            'lastname' => $address->getLastname(),
+            'street' => $address->getStreet(),
+            'city' => $address->getCity(),
+            'country_id' => $address->getCountryId(),
+            'region' => $address->getRegion(),
+            'postcode' => $address->getPostcode(),
+            'telephone' => $address->getTelephone(),
+            'save_in_address_book' => 1,
+        ];
+    }
+
+    /**
      * Get the subscription order by subscription ID.
      *
      * @param string $subscriptionId
@@ -262,16 +285,24 @@ class SubscriptionOrderHelper extends AbstractHelper
         $quote->setCurrency();
         $quote->assignCustomer($customer->getDataModel());
 
-        if ($subscriptionOrder->getSubscriptionType() == 'annual') {
-            $quote->setCouponCode('annual_discount');
-        }
-
         foreach ($subscriptionOrder->getOrderItems() as $item) {
             // Check if the item has the selected field and if it is set.
+            /**
+             * @var SubscriptionOrderItem|SubscriptionAddonOrderItem $item
+             */
             if ($item->hasData('selected') && ! $item->getSelected()) {
                 // This is an add-on product and is not selected, so continue.
                 continue;
             }
+
+            $isAddon = $item->hasData('selected') && $item->getSelected();
+
+            // Add the annual discount for annual subscription items that are
+            // not add-ons.
+            if (! $isAddon && $subscriptionOrder->getSubscriptionType() == 'annual') {
+                $quote->setCouponCode('annual_discount_order');
+            }
+
             // Add product to the cart
             try {
                 $product = $item->getProduct();
@@ -357,20 +388,5 @@ class SubscriptionOrderHelper extends AbstractHelper
         http_response_code($status);
 
         throw new SubscriptionException($error);
-    }
-
-    protected function formatAddress($address)
-    {
-        return [
-            'firstname' => $address->getFirstname(),
-            'lastname' => $address->getLastname(),
-            'street' => $address->getStreet(),
-            'city' => $address->getCity(),
-            'county_id' => $address->getCountryId(),
-            'region' => $address->getRegion(),
-            'postcode' => $address->getPostcode(),
-            'telephone' => $address->getTelephone(),
-            'save_in_address_book' => 1,
-        ];
     }
 }
