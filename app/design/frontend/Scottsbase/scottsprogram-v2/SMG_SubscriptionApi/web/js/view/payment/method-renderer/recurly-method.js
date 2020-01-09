@@ -60,7 +60,7 @@ define(
                         if (response.success === true) {
                             self.createNewOrders();
                         } else {
-                            alert(response.message);
+                            $('.recurly-form-error').text(response.message);
                         }
                     }
                 });
