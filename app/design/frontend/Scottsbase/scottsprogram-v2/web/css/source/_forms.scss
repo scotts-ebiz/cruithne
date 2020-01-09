@@ -313,3 +313,15 @@ div.mage-error[generated] {
 .gigya-social-login-container > * {
   width: auto!important;
 }
+
+.after-gigya-landscape {
+  padding-top: 0 !important;
+
+  p {
+    margin-bottom: 30px;
+  }
+
+  a {
+    color: $green-1 !important;
+  }
+}
