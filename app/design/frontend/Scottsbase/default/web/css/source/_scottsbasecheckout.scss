@@ -4,7 +4,8 @@
     @include max-screen($screen__m) {
         @include cart-checkout-body-font-mobile();
     }
-    h2 {
+    h2,
+    .opc-wrapper .step-title {
         @include cart-checkout-h2-font();// test - do you see this?
     }
     table > tbody > tr > td {
@@ -803,15 +804,7 @@
 
 
 //Style Titles / Steps
-.opc-wrapper {
-    .step-title {
-        //font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;// test - remove this?
-        //font-size: 1.6rem;
-        //font-weight: 500;
-        padding: 0 0 10px 0;// test - do I need this? where should I define this?
-        border-bottom: 1px solid #ccc;//test - where should I define this?
-    }
-}
+
 
 //Estimate Shipping link on summary div
 .cart-summary>.pop-cust-click.title {
