@@ -193,6 +193,10 @@ input[type="email"].sp-textarea {
   @media (min-width: $screen-md) {
     font-size: $font-size-p2;
   }
+
+  & ~ label {
+    top: -1rem;
+  }
 }
 
 .sp-checkbox:checked {
@@ -235,11 +239,12 @@ input[type="email"].sp-textarea {
 @mixin rangeThumb {
   appearance: none;
   background: $green-1;
+  background: radial-gradient($green-1 48%, transparent 50%);
   border: 0 !important;
   border-radius: 50%;
-  height: 1rem;
+  height: 2rem;
   cursor: pointer;
-  width: 1rem;
+  width: 2rem;
 }
 
 .sp-slider {
