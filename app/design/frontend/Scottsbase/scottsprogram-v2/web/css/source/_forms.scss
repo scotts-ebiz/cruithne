@@ -193,6 +193,10 @@ input[type="email"].sp-textarea {
   @media (min-width: $screen-md) {
     font-size: $font-size-p2;
   }
+
+  & ~ label {
+    top: -1rem;
+  }
 }
 
 .sp-checkbox:checked {
