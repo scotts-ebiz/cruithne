@@ -20,11 +20,11 @@ define(
                     let zipInterval = setInterval(() => {
                         const input = $("input[name='postcode']");
                         if (input.length) {
-                            input.val(window.sessionStorage.getItem('lawn-zip')).attr('readonly', true);
+                            input.val(window.sessionStorage.getItem('lawn-zip'));
                             input.change();
                             clearInterval(zipInterval);
                         }
-                    }, 100);
+                    }, 500);
                 }
             },
         });
