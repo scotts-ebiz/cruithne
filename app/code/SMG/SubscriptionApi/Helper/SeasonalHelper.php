@@ -117,7 +117,8 @@ class SeasonalHelper extends AbstractHelper
                 // Process the seasonal subscription.
                 $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($order->getData('subscription_id'));
             } catch (\Exception $e) {
-                $this->_logger->error($e->getMessage());
+                $this->_logger->error("Subscription Order: {$order->getData('subscription_id')} has failed to process. - " . $e->getMessage());
+                $order->setData('subscription_order_status', 'failed')->save();
 
                 continue;
             }
