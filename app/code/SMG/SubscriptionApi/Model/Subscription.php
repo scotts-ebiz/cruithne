@@ -2,7 +2,6 @@
 
 namespace SMG\SubscriptionApi\Model;
 
-use Psr\Log\LoggerInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ProductFactory;
 use Magento\Catalog\Model\ProductRepository;
@@ -21,6 +20,8 @@ use Magento\Quote\Model\Quote;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use Magento\Store\Model\StoreManager;
+use Psr\Log\LoggerInterface;
+use SMG\SubscriptionApi\Helper\RecurlyHelper;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\Collection as SubscriptionAddonOrderCollection;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\Collection\Interceptor as SubscriptionAddonOrderCollectionInterceptor;
@@ -90,6 +91,11 @@ class Subscription extends AbstractModel
     protected $_logger;
 
     /**
+     * @var RecurlyHelper
+     */
+    protected $_recurlyHelper;
+
+    /**
      * Constructor.
      */
     protected function _construct()
@@ -117,6 +123,7 @@ class Subscription extends AbstractModel
      * @param ProductFactory $productFactory
      * @param ProductRepository $productRepository
      * @param OrderCollectionFactory $orderCollectionFactory
+     * @param RecurlyHelper $recurlyHelper
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -138,6 +145,7 @@ class Subscription extends AbstractModel
         ProductFactory $productFactory,
         ProductRepository $productRepository,
         OrderCollectionFactory $orderCollectionFactory,
+        RecurlyHelper $recurlyHelper,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -158,6 +166,7 @@ class Subscription extends AbstractModel
         $this->_productFactory = $productFactory;
         $this->_productRepository = $productRepository;
         $this->_orderCollectionFactory = $orderCollectionFactory;
+        $this->_recurlyHelper = $recurlyHelper;
     }
 
     /**
@@ -559,18 +568,7 @@ class Subscription extends AbstractModel
      */
     private function getPlanCodeByName($name)
     {
-        switch ($name) {
-            case 'Early Spring Feeding':
-                return 'early-spring';
-            case 'Late Spring Feeding':
-                return 'late-spring';
-            case 'Early Summer Feeding':
-                return 'early-summer';
-            case 'Early Fall Feeding':
-                return 'early-fall';
-            default:
-                return false;
-        }
+        return $this->_recurlyHelper->getSeasonSlugByName($name);
     }
 
     /**
@@ -590,14 +588,14 @@ class Subscription extends AbstractModel
             try {
                 /** @var SubscriptionOrder $subscriptionOrder */
                 if ($order->getSubscriptionAddon()) {
-                    $subscriptionOrder = $this->_subscriptionOrderCollectionFactory->create()->addFieldToFilter('sales_order_id', $order->getEntityId())->getFirstItem();
+                    $subscriptionOrder = $this->_subscriptionAddonOrderCollectionFactory->create()->addFieldToFilter('sales_order_id', $order->getEntityId())->getFirstItem();
                 } else {
                     $subscriptionOrder = $this->_subscriptionOrderCollectionFactory->create()->addFieldToFilter('sales_order_id', $order->getEntityId())->getFirstItem();
                 }
                 $subscriptionOrder->createCreditMemo();
                 $subscriptionOrders[] = $subscriptionOrder;
             } catch (\Exception $e) {
-                $error = 'There was a problem making a credit memo for subscription cancellation.' . $e->getMessage();
+                $error = 'There was a problem making a credit memo for subscription cancellation. ' . $e->getMessage();
                 $this->_logger->error($error);
                 throw new LocalizedException(__($error));
             }
@@ -623,6 +621,15 @@ class Subscription extends AbstractModel
     }
 
     /**
+     * Get the total number of orders for this subscription.
+     * @return int
+     */
+    public function getOrderCount()
+    {
+        return $this->_orderCollectionFactory->create()->addFieldToFilter('master_subscription_id', $this->getSubscriptionId())->count();
+    }
+
+    /**
      * Return a filtered array of Orders associated with this subscription
      * @param bool|null $filterByInvoiced null to ignore filter, true to filter positively (has invoices), false to
      *  filter negatively
@@ -638,7 +645,6 @@ class Subscription extends AbstractModel
         try {
             $orders = $this->_orderCollectionFactory->create()->addFieldToFilter('master_subscription_id', $this->getSubscriptionId());
         } catch (\Exception $e) {
-
             $error = 'There was an issue returning orders to cancel.';
             $this->_logger->error($error);
             throw new LocalizedException(__($error));
@@ -669,14 +675,24 @@ class Subscription extends AbstractModel
      */
     private function generateRefund($orders, $service)
     {
+        $refundingEntireSubscription = count($orders) == $this->getOrderCount();
+
         try {
             $totalRefund = 0;
-            /** @var \SMG\Sales\Model\Order $order */
-            foreach ($orders as $order) {
-                $totalRefund += (float) $order->getGrandTotal();
+
+            if ($refundingEntireSubscription) {
+                $this->setData('is_full_refund', 1);
+                $totalRefund = $this->getPaid();
+            } else {
+                /** @var \SMG\Sales\Model\Order $order */
+                foreach ($orders as $order) {
+                    $totalRefund += $order->getSubtotal() + $order->getDiscountAmount();
+                }
             }
+
             /** @var RecurlySubscription $service */
-            $service->createCredit($totalRefund, $this->getGigyaId());
+            $service->createCredit($this->getGigyaId(), $totalRefund);
+            $this->save();
         } catch (\Exeception $e) {
             $error = 'Cannot generate refund.';
             $this->_logger->error($error);
