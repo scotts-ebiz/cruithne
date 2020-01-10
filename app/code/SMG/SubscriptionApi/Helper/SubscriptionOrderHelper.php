@@ -2,13 +2,14 @@
 
 namespace SMG\SubscriptionApi\Helper;
 
+use Magento\Quote\Model\QuoteFactory;
+use Magento\Quote\Model\QuoteRepository;
+use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Customer\Model\AddressFactory;
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
-use Magento\Quote\Api\CartManagementInterface;
-use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\QuoteManagement;
 use Magento\Sales\Model\Order;
 use Magento\Store\Model\StoreManagerInterface;
@@ -82,18 +83,22 @@ class SubscriptionOrderHelper extends AbstractHelper
     protected $_quoteManagement;
 
     /**
-     * @var CartManagementInterface
-     */
-    protected $_cartManagement;
-
-    /**
-     * @var CartRepositoryInterface
-     */
-    protected $_cartRepository;
-    /**
      * @var CustomerFactory
      */
     protected $_customerFactory;
+
+    /**
+     * @var CheckoutSession
+     */
+    protected $_checkoutSession;
+    /**
+     * @var QuoteFactory
+     */
+    protected $_quoteFactory;
+    /**
+     * @var QuoteRepository
+     */
+    protected $_quoteRepository;
 
     /**
      * SubscriptionOrderHelper constructor.
@@ -108,8 +113,6 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @param SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory
      * @param SubscriptionOrder $subscriptionOrder
      * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
-     * @param CartRepositoryInterface $cartRepository
-     * @param CartManagementInterface $cartManagement
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function __construct(
@@ -118,14 +121,15 @@ class SubscriptionOrderHelper extends AbstractHelper
         Customer $customer,
         CustomerFactory $customerFactory,
         Order $order,
+        QuoteFactory $quoteFactory,
         QuoteManagement $quoteManagement,
+        QuoteRepository $quoteRepository,
         StoreManagerInterface $storeManager,
         SubscriptionAddonOrder $subscriptionAddonOrder,
         SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory,
         SubscriptionOrder $subscriptionOrder,
         SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
-        CartRepositoryInterface $cartRepository,
-        CartManagementInterface $cartManagement
+        CheckoutSession $checkoutSession
     ) {
         parent::__construct($context);
 
@@ -133,15 +137,15 @@ class SubscriptionOrderHelper extends AbstractHelper
         $this->_customer = $customer;
         $this->_customerFactory = $customerFactory;
         $this->_order = $order;
+        $this->_quoteFactory = $quoteFactory;
         $this->_quoteManagement = $quoteManagement;
+        $this->_quoteRepository = $quoteRepository;
         $this->_storeManager = $storeManager;
         $this->_subscriptionAddonOrder = $subscriptionAddonOrder;
         $this->_subscriptionAddonOrderCollectionFactory = $subscriptionAddonOrderCollectionFactory;
         $this->_subscriptionOrder = $subscriptionOrder;
         $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
-
-        $this->_cartManagement = $cartManagement;
-        $this->_cartRepository = $cartRepository;
+        $this->_checkoutSession = $checkoutSession;
 
         $this->_store = $storeManager->getStore();
         $this->_websiteId = $this->_store->getWebsiteId();
@@ -223,7 +227,7 @@ class SubscriptionOrderHelper extends AbstractHelper
         return [
             'firstname' => $address->getFirstname(),
             'lastname' => $address->getLastname(),
-            'street' => $address->getStreet(),
+            'street' => $address->getStreetFull(),
             'city' => $address->getCity(),
             'country_id' => $address->getCountryId(),
             'region' => $address->getRegion(),
@@ -283,15 +287,14 @@ class SubscriptionOrderHelper extends AbstractHelper
      */
     protected function processOrder(Customer $customer, $subscriptionOrder)
     {
-        // Create a new quote.
-        $cartId = $this->_cartManagement->createEmptyCartForCustomer($customer->getId());
-
-        /** @var \Magento\Quote\Model\Quote $quote */
-        $quote = $this->_cartRepository->get($cartId);
-
+        $this->_checkoutSession->resetCheckout();
+        $quoteID = $this->_quoteManagement->createEmptyCartForCustomer($customer->getId());
+        $quote = $this->_quoteRepository->get($quoteID);
         $quote->setStore($this->_store);
         $quote->setCurrency();
         $quote->assignCustomer($customer->getDataModel());
+        $this->_checkoutSession->setQuoteId($quote->getId());
+
 
         foreach ($subscriptionOrder->getOrderItems() as $item) {
             // Check if the item has the selected field and if it is set.
