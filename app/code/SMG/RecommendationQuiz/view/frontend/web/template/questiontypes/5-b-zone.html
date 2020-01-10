@@ -39,6 +39,10 @@
             <label class="sp-form-label">
                 Total square footage of your lawn
             </label>
+
+            <!-- ko if: quiz.invalidArea() -->
+            <div class="sp-form-error">Please enter numbers only.</div>
+            <!-- /ko -->
         </div>
 
         <div
