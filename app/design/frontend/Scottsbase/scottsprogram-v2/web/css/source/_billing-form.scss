@@ -74,5 +74,10 @@
     border: none;
     border-bottom: 1px solid $gray-1;
   }
+  .recurly-form-error {
+    color: $red-1;
+    font-size: 0.75rem;
+    margin-bottom: 2rem;
+  }
 }
 

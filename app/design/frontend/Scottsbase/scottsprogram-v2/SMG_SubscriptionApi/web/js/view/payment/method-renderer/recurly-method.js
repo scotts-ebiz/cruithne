@@ -60,7 +60,7 @@ define(
                         if (response.success === true) {
                             self.createNewOrders();
                         } else {
-                            alert(response.message);
+                            $('.recurly-form-error').text(response.message);
                         }
                     }
                 });
@@ -154,7 +154,15 @@ define(
 
                 recurly.token(recurlyForm, function (err, token) {
                     if (err) {
-                        console.log(err);
+                        if( err.code == 'validation' ) {
+                            if( err.fields.includes('number') === true ) {
+                                $('.recurly-form-error').text('Please enter a valid card number.');
+                            } else {
+                                $('.recurly-form-error').text(err.message);
+                            }
+                        } else {
+                            $('.recurly-form-error').text(err.message);
+                        }
                     } else {
                         self.createNewSubscription( token.id );
                     }
