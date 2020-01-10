@@ -29,8 +29,8 @@ $checkout-shipping-item-mobile__active__padding : 15px ($indent__l + 5px) 15px 1
 $checkout-shipping-item-before__border-color    : $color-gray80 !default;
 $checkout-shipping-item-before__height          : calc(100% - 20px) !default;
 
-$checkout-shipping-method__border               : $checkout-step-title__border !default;
-$checkout-shipping-method__padding              : $indent__base !default;
+$checkout-shipping-method__border               : none !default;
+$checkout-shipping-method__padding              : 8px !default;
 
 //
 //  Common
@@ -163,10 +163,16 @@ $checkout-shipping-method__padding              : $indent__base !default;
 
     tbody {
         td {
-            @include lib-css(border-top, $checkout-shipping-method__border);
-            @include lib-css(padding-bottom, $checkout-shipping-method__padding);
-            @include lib-css(padding-top, $checkout-shipping-method__padding);
+            @include lib-css(border-top, $checkout-shipping-method__border);.
+            @include lib-css(padding, $checkout-shipping-method__padding);
+            @include cart-checkout-body-font($size: $font-size__m, $lh: 21px);
+            float: none;
+            display: table-cell;
+            @include max-screen($screen__m) {
+                font-size: $font-size__base;
+            }
 
+            //test - Ian vet to see if you need any of this
             &:first-child {
                 padding-left: 0;
                 padding-right: 0;
@@ -174,13 +180,14 @@ $checkout-shipping-method__padding              : $indent__base !default;
             }
         }
 
-        tr {
-            &:first-child {
-                td {
-                    border-top: none;
-                }
-            }
-        }
+        //tr {
+        //    &:first-child {// test - what happened to the border as it should still be none.
+        //        td {
+        //            border-top: none;
+        //        }
+        //    }
+        //}
+
         .row-error {
             td {
                 border-top: none;

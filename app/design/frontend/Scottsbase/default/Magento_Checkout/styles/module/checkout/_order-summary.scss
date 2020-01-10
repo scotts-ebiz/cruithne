@@ -22,7 +22,8 @@ $checkout-summary-items__padding    : 15px !default;
     margin: 0 0 $indent__base;
 
     > .title {
-        @extend .abs-checkout-title;
+        //@extend .abs-checkout-title;// test - do I need any other part of this?
+        @include cart-checkout-h2-font();
         display: block;
     }
 

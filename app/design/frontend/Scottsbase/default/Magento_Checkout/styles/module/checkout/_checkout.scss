@@ -25,13 +25,18 @@ $checkout-step-title-mobile__font-size : 18px !default;
 
 .opc-wrapper {
     @include lib-css(margin, 0 0 $checkout-wrapper__margin);
-
+    @include cart-checkout-body-font();
+    @include max-screen($screen__m) {
+        @include cart-checkout-body-font-mobile();
+    }
     .opc {
         @extend .abs-reset-list;
     }
 
     .step-title {
-        @extend .abs-checkout-title;
+        //@extend .abs-checkout-title;// test - do I need this?
+        @include cart-checkout-h2-font();
+        border-bottom: 2px solid $color_dark40_green_shade;
     }
 
     .step-content {

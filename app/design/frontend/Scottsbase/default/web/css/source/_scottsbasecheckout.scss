@@ -1,20 +1,5 @@
 /** Checkout Page - Start **/
 .checkout-index-index {
-    @include cart-checkout-body-font();
-    @include max-screen($screen__m) {
-        @include cart-checkout-body-font-mobile();
-    }
-    h2,
-    .opc-wrapper .step-title {
-        @include cart-checkout-h2-font();
-        border-bottom: 2px solid $color_dark40_green_shade;
-    }
-    table > tbody > tr > td {
-        @include cart-checkout-body-font($size: $font-size__m, $lh: 21px);
-        @include max-screen($screen__m) {
-            font-size: $font-size__base;
-        }
-    }
     .page-header {
         .header.content {
             .logo {
@@ -518,7 +503,7 @@
                                 #opc-sidebar {
                                     .opc-block-summary {
                                         .title {
-                                            font-size: 16px;
+                                            //@include cart-checkout-h2-font();//test - moving this to _checkout.scss
                                         }
                                         .table-totals {
                                             @media screen and (max-width: $screen__l) and (min-width: $screen__m) {
@@ -712,7 +697,7 @@
                 .abs-checkout-title, .opc-wrapper .step-title, .opc-block-shipping-information .shipping-information-title, .checkout-agreements-items .checkout-agreements-item-title {
                     //font-weight: 500;
                     //font-size: 1.6rem;
-                    border-bottom: 2px solid $color_dark40_green_shade; //test - where should I define this?
+                    //border-bottom: 2px solid $color_dark40_green_shade; //test - where should I define this?
                     //color: $color_black20_shade;
                     //font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
                 }
@@ -851,10 +836,6 @@ td#label_carrier_flat-rate-shipping_flatrate, td#label_carrier_fedex-2ndday_flat
             margin-bottom: 24px;
         }
         tbody td {
-            border: none;
-            float: none;
-            display: table-cell;
-            padding: 8px;
             &.col-price {
                 width: 64px;
                 padding-left: 0;
