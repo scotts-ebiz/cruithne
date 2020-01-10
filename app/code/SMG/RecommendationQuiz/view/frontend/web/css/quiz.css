@@ -119,9 +119,9 @@ body,
 .sp-quiz__option-image {
   display: block;
   height: auto;
-  max-width: 100px;
+  max-width: 125px;
   margin: 0 auto;
-  width: 5rem;
+  width: 125px;
 }
 
 .sp-quiz__tooltip-container {

@@ -6,8 +6,8 @@
 </div>
 <!-- /ko -->
 
-<div class="sp-flex sp-justify-center md:sp-justify-between sp-items-center">
-    <h2 class="sp-h2 sp-mt-0  sp-text-center md:sp-text-left">
+<div class="sp-flex sp-flex-column md:sp-flex-row sp-justify-center md:sp-justify-between sp-items-center sp-mt-8 md:sp-mt-0">
+    <h2 class="sp-h2 sp-mt-0 sp-text-center md:sp-text-left sp-mb-8 sp-subscription-details__title">
         <!-- ko if: subscriptions().success -->
         Subscription Details
         <!-- /ko -->
@@ -16,14 +16,13 @@
         No Subscriptions
         <!-- /ko -->
     </h2>
-    <a class="sp-link sp-hide md:sp-block"
-       href="/customer/account/logout">Log Out</a>
 </div>
 
 <!-- ko ifnot: subscriptions().success -->
-<div class="sp-my-8 sp-text-center">
-    <p class="sp-p1 sp-max-w-md sp-mx-auto">Sign up for Scotts Program and you'll receive exactly what your lawn needs at just the right time to apply it. Kiss confusion goodbye—we do all the thinking and planning for you.</p>
-    <a href="/quiz" class="sp-button sp-button--primary sp-button--get-started sp-relative sp-text-center sp-mt-4">GET YOUR PLAN</a>
+<div class="sp-px-4 md:sp-px-0 sp-my-8 sp-text-center md:sp-text-left">
+    <p class="sp-p1 sp-strong">You do not have a current subscription with Scotts Program.</p>
+    <p class="sp-p1 sp-max-w-md">Ready to get a subscription lawn care plan made just for your yard?</p>
+    <a href="/quiz" class="sp-button sp-button--primary sp-button--get-started sp-relative sp-text-center sp-mt-4">Get Started</a>
 </div>
 <!-- /ko -->
 
@@ -187,6 +186,29 @@
         </button>
         <a href="sp-link"
            data-bind="click: closeSubscriptionModal"
-           class="close-subscription-modal sp-block sp-mt-4">Never Mind, take me back</a>
+           class="close-subscription-modal sp-block sp-mt-4"
+        >
+            Never mind, take me back
+        </a>
+    </div>
+</div>
+
+<div id="popup-modal"
+     class="modal-popup--subscriptions sp-hide sp-p-8">
+    <button
+        class="modal-popup--subscriptions__close"
+        data-bind="click: hideSuccess"
+    ></button>
+    <h2 class="sp-h2 sp-text-black sp-text-center">Changes Saved</h2>
+    <p class="sp-text-black sp-text-center">The changes to your account have been saved.</p>
+
+    <div class="sp-flex sp-justify-center sp-items-center">
+        <button
+            class="sp-button sp-button--primary"
+            type="button"
+            data-bind="click: hideSuccess"
+        >
+            Close
+        </button>
     </div>
 </div>

@@ -11,7 +11,7 @@ use Recurly_Client;
 use Recurly_Invoice;
 use Recurly_SubscriptionList;
 use SMG\SubscriptionApi\Helper\RecurlyHelper;
-use \SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
 
 /**
  * Class Subscription
@@ -95,10 +95,10 @@ class Subscription extends Template
     public function getSubscriptions()
     {
         $subscriptionFactory = $this->_subscriptionCollectionFactory->create();
-        $hasActiveSubscription = $subscriptionFactory
+        $currentSubscription = $subscriptionFactory
             ->addFilter('subscription_status', 'active')
             ->addFilter('customer_id', $this->getCustomerId())
-            ->count();
+            ->getFirstItem();
 
         Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
@@ -110,7 +110,7 @@ class Subscription extends Template
         $invoices = [];
 
         try {
-            if (! $hasActiveSubscription) {
+            if (! $currentSubscription || ! $currentSubscription->getId()) {
                 throw new \Exception('No active subscriptions found.');
             }
 
@@ -122,6 +122,7 @@ class Subscription extends Template
             foreach ($activeSubscriptions as $subscription) {
                 array_push($subscriptions, $subscription);
             }
+
             foreach ($futureSubscriptions as $subscription) {
                 array_push($subscriptions, $subscription);
             }
@@ -140,7 +141,16 @@ class Subscription extends Template
 
                     // Get items from the main invoice
                     $mainInvoice = $this->getInvoice($mainSubscription['invoice_number']);
-                    $notAddonProduct = [ 'annual', 'add-ons', 'early-spring', 'late-spring', 'early-summer', 'early-fall', 'seasonal' ];
+                    $notAddonProduct = [
+                        'annual',
+                        'early-spring',
+                        'late-spring',
+                        'early-summer',
+                        'late-summer',
+                        'early-fall',
+                        'late-fall',
+                        'seasonal',
+                    ];
                     $totalAddonAmount = 0;
                     $totalMainAmount = 0;
                     $numberOfAddonProducts = 0;
@@ -150,6 +160,7 @@ class Subscription extends Template
                             $totalAddonAmount += $item->total_in_cents;
                             $numberOfAddonProducts++;
                         }
+
                         if ($item->product_code == 'annual' || $item->product_code == 'seasonal') {
                             $totalMainAmount = $item->total_in_cents;
                         }
@@ -173,6 +184,12 @@ class Subscription extends Template
             }
 
             $invoices = $this->getInvoices(array_unique($invoices));
+
+            if (empty($mainSubscription)) {
+                // Update the active subscription to reflect Recurly.
+                $currentSubscription->setSubscriptionStatus('canceled')->save();
+                throw new \Exception('No active subscriptions found.');
+            }
 
             return [
                 'success'               => true,
