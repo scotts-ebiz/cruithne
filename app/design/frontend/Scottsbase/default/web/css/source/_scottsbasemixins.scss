@@ -77,12 +77,13 @@
 
 
 //Cart & Checkout - H2 Font
-@mixin cart-checkout-h2-font($size: $font-size__xl, $color: $color-black, $weight: false, $ls: false) {
-  font-family: $font-family__quinary;
+@mixin cart-checkout-h2-font($size: $font-size__xl, $color: $color-black, $weight: 700, $ls: 2px, $text-transform: uppercase) {
+  font-family: $font-family__quaternary;
   @if $size { font-size: $size; }
   @if $color { color: $color; }
   @if $weight { font-weight: $weight; }
   @if $ls { letter-spacing: $ls; }
+  @if $text-transform { text-transform: $text-transform; }
 }
 
 

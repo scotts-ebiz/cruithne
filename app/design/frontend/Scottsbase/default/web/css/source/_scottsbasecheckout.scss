@@ -6,7 +6,8 @@
     }
     h2,
     .opc-wrapper .step-title {
-        @include cart-checkout-h2-font();// test - do you see this?
+        @include cart-checkout-h2-font();
+        border-bottom: 2px solid $color_dark40_green_shade;
     }
     table > tbody > tr > td {
         @include cart-checkout-body-font($size: $font-size__m, $lh: 21px);
