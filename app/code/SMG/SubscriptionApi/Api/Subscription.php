@@ -341,7 +341,11 @@ class Subscription implements SubscriptionInterface
             $subscription->setSubscriptionStatus('active');
             $subscription->save();
 
-            return [['success' => true, 'message' => 'No products currently shippable.']];
+            return [[
+                'success' => true,
+                'subscription_id' => $subscription->getSubscriptionId(),
+                'message' => 'No products currently shippable.'
+            ]];
         }
 
         if (! $subscription) {

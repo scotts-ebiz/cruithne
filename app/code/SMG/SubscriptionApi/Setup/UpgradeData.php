@@ -65,6 +65,11 @@ class UpgradeData implements UpgradeDataInterface
         if ( version_compare( $context->getVersion(), '1.1.4', '<' ) ) {
             $this->addDataVersion114($setup);
         }
+
+        // Version 1.1.5
+        if ( version_compare( $context->getVersion(), '1.1.5', '<' ) ) {
+            $this->addDataVersion115($setup);
+        }
     }
 
     /**
@@ -130,5 +135,24 @@ class UpgradeData implements UpgradeDataInterface
             ['status' => 'canceled', 'label' => 'Canceled']
         ];
         $setup->getConnection()->insertMultiple($tableName, $data);
+    }
+
+    /**
+     * Add Data for Version 1.1.4
+     *
+     * @param ModuleDataSetupInterface $setup
+     */
+    private function addDataVersion115(ModuleDataSetupInterface $setup)
+    {
+        // Upgrade Subscription Status
+        $tableName = $setup->getTable('subscription_order_status');
+        $exists = $setup->getConnection()->fetchOne("SELECT * FROM `subscription_status` WHERE status = 'failed'");
+
+        if (! $exists) {
+            $data = [
+                ['status' => 'failed', 'label' => 'Failed']
+            ];
+            $setup->getConnection()->insertMultiple($tableName, $data);
+        }
     }
 }
