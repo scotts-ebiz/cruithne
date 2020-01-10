@@ -4,6 +4,9 @@
     @include max-screen($screen__m) {
         @include cart-checkout-body-font-mobile();
     }
+    h2 {
+        @include cart-checkout-h2-font();// test - do you see this?
+    }
     table > tbody > tr > td {
         @include cart-checkout-body-font($size: $font-size__m, $lh: 21px);
         @include max-screen($screen__m) {
@@ -705,11 +708,11 @@
                 }
                 //Vet this
                 .abs-checkout-title, .opc-wrapper .step-title, .opc-block-shipping-information .shipping-information-title, .checkout-agreements-items .checkout-agreements-item-title {
-                    font-weight: 500;
-                    font-size: 1.6rem;
-                    border-bottom: 2px solid $color_dark40_green_shade;
-                    color: $color_black20_shade;
-                    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                    //font-weight: 500;
+                    //font-size: 1.6rem;
+                    border-bottom: 2px solid $color_dark40_green_shade; //test - where should I define this?
+                    //color: $color_black20_shade;
+                    //font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
                 }
                 .cust-btn-add {
                     font-size: 14px;
@@ -802,11 +805,11 @@
 //Style Titles / Steps
 .opc-wrapper {
     .step-title {
-        font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-        font-size: 1.6rem;
-        font-weight: 500;
-        padding: 0 0 10px 0;
-        border-bottom: 1px solid #ccc;
+        //font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;// test - remove this?
+        //font-size: 1.6rem;
+        //font-weight: 500;
+        padding: 0 0 10px 0;// test - do I need this? where should I define this?
+        border-bottom: 1px solid #ccc;//test - where should I define this?
     }
 }
 

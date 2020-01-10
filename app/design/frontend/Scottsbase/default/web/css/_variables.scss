@@ -27,7 +27,7 @@ $link__active__text-decoration                                : underline;
 
 
 //  Sizes
-$font-size__base                                              : $font-size-unit-ratio * $font-size-ratio__base * 1px; // Base font size value in px
+$font-size__base                                              : $font-size-unit-ratio * $font-size-ratio__base * 1px; // 14px - Default body font size
 $font-size__xl                                                : ceil(1.5 * $font-size__base); // 21px
 $font-size__l                                                 : ceil(1.25 * $font-size__base); // 18px
 $font-size__s                                                 : ceil(0.85 * $font-size__base); // 12px
@@ -35,16 +35,16 @@ $font-size__xs                                                : floor(0.75 * $fo
 
 
 //  Fonts
-$font-family-name__base                                       : 'Open-Sans-Cond';
+$font-family-name__base                                       : 'Lato';
 $font-family__sans-serif                                      : 'Helvetica Neue', Helvetica, Arial, sans-serif !default;
-$font-family__base                                            : $font-family-name__base, $font-family__sans-serif;
+$font-family__base                                            : $font-family-name__base, $font-family__sans-serif; // Default body font
 
 
 //  Headings
 $h1__margin-bottom__desktop                                   : $indent__xl !default;
 $h1__font-size                                                : $font-size__xl;
 $h1__font-color                                               : $primary__color;
-$h1__font-family                                              : $font-family__quinary;
+$h1__font-family                                              : $font-family__secondary;
 $h1__font-weight                                              : $font-weight__bold;
 
 $h2__font-size                                                : $font-size__xxl;

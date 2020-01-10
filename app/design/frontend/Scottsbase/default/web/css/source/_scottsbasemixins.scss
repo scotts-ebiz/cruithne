@@ -60,7 +60,6 @@
 
 //Cart & Checkout - Body Font
 @mixin cart-checkout-body-font($size: $font-size__base, $color: $color-black, $weight: false, $lh: 20px, $ls: false) {
-  //@include roboto-regular();
   font-family: $font-family__quaternary;
   @if $size { font-size: $size; }
   @if $color { color: $color; }
@@ -71,17 +70,21 @@
 
 
 //Cart & Checkout - Body Font (Mobile)
-@mixin cart-checkout-body-font-mobile($lh: 18px) {
-  @include roboto-regular($size: $font-size__s);
-  @if $lh { line-height: $lh; }
-}
-
-//Cart & Checkout - h2
-@mixin cart-checkout-body-font($size: $font-size__base, $lh: 20px) {
-  @include roboto-bold();
+@mixin cart-checkout-body-font-mobile($size: $font-size__s, $lh: 18px) {
   @if $size { font-size: $size; }
   @if $lh { line-height: $lh; }
 }
+
+
+//Cart & Checkout - H2 Font
+@mixin cart-checkout-h2-font($size: $font-size__xl, $color: $color-black, $weight: false, $ls: false) {
+  font-family: $font-family__quinary;
+  @if $size { font-size: $size; }
+  @if $color { color: $color; }
+  @if $weight { font-weight: $weight; }
+  @if $ls { letter-spacing: $ls; }
+}
+
 
 @mixin defaultwrap($center: true) {
     @if $center == false {
