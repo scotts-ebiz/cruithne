@@ -232,17 +232,23 @@ class Subscription implements SubscriptionInterface
                 ]];
             }
 
-            $subscription->setSubscriptionType($subscription_plan)->save();
-            $subscription->generateShipDates();
-            $subscription->addSubscriptionToCart($addons);
+            // Set the subscription details into the session.
+            $this->_coreSession->setData('subscription_details', [
+                'subscription_plan' => $subscription_plan,
+                'addons' => $addons,
+            ]);
+
+            return json_encode(['success' => true]);
+
+            // $subscription->setSubscriptionType($subscription_plan)->save();
+            // $subscription->generateShipDates();
+            // $subscription->addSubscriptionToCart($addons);
         } catch (\Exception $e) {
             $this->_logger->error($e->getMessage());
             $response = ['success' => false, 'message' => $e->getMessage()];
+
             return json_encode($response);
         }
-
-        $response = ['success' => true];
-        return json_encode($response);
     }
 
     /**
