@@ -68,10 +68,6 @@
   align-items: flex-start;
 }
 
-.sp-results__in-this-box {
-  border-bottom: 2px solid #1d5632;
-}
-
 .sp-results__tabs-button {
   border: none;
   background: transparent;
