@@ -443,7 +443,7 @@ class OrdersHelper
                 $annualOrders = $this->_orderCollectionFactory->create();
                 $annualOrders->addFieldToFilter('master_subscription_id', ['eq' => $masterSubscriptionId]);
                 $annualOrders->setOrder('master_subscription_id', 'asc');
-                $annualOrders->setOrder('ship_date', 'asc');
+                $annualOrders->setOrder('ship_start_date', 'asc');
                 $annualOrders->setOrder('entity_id', 'asc');
 
                 // make sure that there are orders
