@@ -5,9 +5,12 @@
 //  Summary block
 
 .checkout-cart-index {
-    h1 {
-        @include cart-checkout-h2-font($border: 0);
-    }
+  .page-wrapper .page-title-wrapper{
+      display: block;
+      h1 {
+          @include cart-checkout-h2-font($border: 0);
+      }
+  }
 }
 
 .no-margin{
