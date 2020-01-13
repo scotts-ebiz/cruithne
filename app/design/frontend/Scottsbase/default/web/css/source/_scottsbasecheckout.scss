@@ -502,9 +502,6 @@
                             .modal-content {
                                 #opc-sidebar {
                                     .opc-block-summary {
-                                        .title {
-                                            //@include cart-checkout-h2-font();//test - moving this to _checkout.scss
-                                        }
                                         .table-totals {
                                             @media screen and (max-width: $screen__l) and (min-width: $screen__m) {
                                                 font-size: 14px;
@@ -582,12 +579,12 @@
                                     .opc-block-shipping-information {
                                         .shipping-information-title {
                                             .action-edit {
-                                                &:before {
-                                                    content: 'Edit';
-                                                    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                                                    font-size: 0.8rem;
-                                                    text-transform: none;
-                                                }
+                                                //&:before {//test - can I delete this?
+                                                //    content: 'Edit';
+                                                //    font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+                                                //    font-size: 0.8rem;
+                                                //    text-transform: none;
+                                                //}
                                             }
                                         }
                                     }

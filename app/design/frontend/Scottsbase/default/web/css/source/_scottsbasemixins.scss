@@ -47,17 +47,6 @@
 }
 
 
-@mixin roboto-bold($size: $font-size__s, $color: $color-black, $text-transform: uppercase, $weight: false, $lh: false, $ls: false) {
-  font-family: $font-family__quinary;
-  @if $size { font-size: $size; }
-  @if $color { color: $color; }
-  @if $weight { font-weight: $weight; }
-  @if $text-transform { text-transform: $text-transform; }
-  @if $lh { line-height: $lh; }
-  @if $ls { letter-spacing: $ls; }
-}
-
-
 //Cart & Checkout - Body Font
 @mixin cart-checkout-body-font($size: $font-size__base, $color: $color-black, $weight: false, $lh: 20px, $ls: false) {
   font-family: $font-family__quaternary;
@@ -77,13 +66,20 @@
 
 
 //Cart & Checkout - H2 Font
-@mixin cart-checkout-h2-font($size: $font-size__xl, $color: $color-black, $weight: 700, $ls: 2px, $text-transform: uppercase) {
+@mixin cart-checkout-h2-font($size: $font-size__xl, $color: $color-black, $weight: 700, $ls: $cart-checkout-h2-letter-spacing, $text-transform: uppercase, $padding: $cart-checkout-h2-padding) {
   font-family: $font-family__quaternary;
   @if $size { font-size: $size; }
   @if $color { color: $color; }
   @if $weight { font-weight: $weight; }
   @if $ls { letter-spacing: $ls; }
   @if $text-transform { text-transform: $text-transform; }
+  @if $padding { padding: $padding; }
+}
+
+//Cart & Checkout - H2 Font (Mobile)
+@mixin cart-checkout-h2-font-mobile($size: $font-size__l, $ls: $cart-checkout-h2-letter-spacing-mobile) {
+  @if $size { font-size: $size; }
+  @if $ls { letter-spacing: $ls; }
 }
 
 

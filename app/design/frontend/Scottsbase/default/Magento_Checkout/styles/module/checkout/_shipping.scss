@@ -163,7 +163,7 @@ $checkout-shipping-method__padding              : 8px !default;
 
     tbody {
         td {
-            @include lib-css(border-top, $checkout-shipping-method__border);.
+            @include lib-css(border-top, $checkout-shipping-method__border);
             @include lib-css(padding, $checkout-shipping-method__padding);
             @include cart-checkout-body-font($size: $font-size__m, $lh: 21px);
             float: none;

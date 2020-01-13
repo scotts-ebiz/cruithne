@@ -17,10 +17,10 @@ $checkout-billing-address-form__max-width      : $checkout-shipping-address__max
 //  _____________________________________________
 
 .checkout-payment-method {
-    .step-title {
-        border-bottom: 0;
-        margin-bottom: 0;
-    }
+    //.step-title {//test - make sure that bottom border green is there now
+    //    border-bottom: 0;
+    //    margin-bottom: 0;
+    //}
 
     .payment-method {
         &:first-child {
@@ -151,14 +151,14 @@ $checkout-billing-address-form__max-width      : $checkout-shipping-address__max
 
 @include max-screen($screen__m) {
     .checkout-payment-method {
-        .payment-methods {
-            @include lib-css(margin, 0 -($checkout-payment-method-title-mobile__padding));
-        }
+        //.payment-methods {// test - make sure -15 margin is removed from mobile
+        //    @include lib-css(margin, 0 -($checkout-payment-method-title-mobile__padding));
+        //}
 
-        .step-title {
-            @include lib-css(padding-left, $checkout-payment-method-title-mobile__padding);
-            @include lib-css(padding-right, $checkout-payment-method-title-mobile__padding);
-        }
+        //.step-title {// test - make sure that paddings in mobile aren't there for title
+        //    @include lib-css(padding-left, $checkout-payment-method-title-mobile__padding);
+        //    @include lib-css(padding-right, $checkout-payment-method-title-mobile__padding);
+        //}
 
         .payment-method-title {
             @include lib-css(padding, $checkout-payment-method-title-mobile__padding)
