@@ -104,8 +104,6 @@ class Subscription extends Template
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
         $isAnnualSubscription = false;
-        $activeSubscription = []; // Used for storing the active subscription, can be of any type
-        $mainSubscription = []; // Used for storing the main subscription, annual or seasonal
         $subscriptions = []; // Used for merging the active and future subscriptions
         $invoices = [];
 
@@ -122,82 +120,84 @@ class Subscription extends Template
             foreach ($activeSubscriptions as $subscription) {
                 array_push($subscriptions, $subscription);
             }
-
             foreach ($futureSubscriptions as $subscription) {
                 array_push($subscriptions, $subscription);
             }
 
+            // Sort subscriptions
+            $episodics = [];
+            $master = null;
+            $current = null;
+            $next = null;
+            $addon = null;
             foreach ($subscriptions as $subscription) {
-                if ($subscription->plan->plan_code == 'annual' || $subscription->plan->plan_code == 'seasonal') {
-                    // Get Subscription Type
-                    $isAnnualSubscription = ($subscription->plan->plan_code == 'annual') ? true : false;
+                if ($subscription->plan->plan_code != 'annual' && $subscription->plan->plan_code != 'seasonal' && $subscription->plan->plan_code != 'add-ons') {
+                    $episodics[(int)$subscription->activated_at->format('YmdHis')] = $subscription;
+                } elseif ($subscription->plan->plan_code == 'annual') {
+                    $master = $subscription;
+                    $current = $subscription;
+                    $subscription->activated_at = $subscription->activated_at->add(new \DateInterval('P1Y'));
+                    $next = $subscription;
+                } elseif ($subscription->plan->plan_code == 'seasonal') {
+                    $master = $subscription;
+                } elseif ($subscription->plan->plan_code == 'add-ons') {
+                    $addon = $subscription;
+                }
+            }
 
-                    // Get main subscription
-                    $mainSubscription['invoice_number'] = $subscription->invoice->get()->invoice_number;
-                    $mainSubscription['starts_at'] = $subscription->current_period_started_at->format('M d, Y');
-                    $mainSubscription['ends_at'] = $subscription->current_period_ends_at->format('M d, Y');
-                    $mainSubscription['next_billing_date'] = $subscription->current_period_ends_at->format('F d, Y');
-                    $mainSubscription['cc_last_four'] = $this->getBillingInformation()->last_four;
-
-                    // Get items from the main invoice
-                    $mainInvoice = $this->getInvoice($mainSubscription['invoice_number']);
-                    $notAddonProduct = [
-                        'annual',
-                        'early-spring',
-                        'late-spring',
-                        'early-summer',
-                        'late-summer',
-                        'early-fall',
-                        'late-fall',
-                        'seasonal',
-                    ];
-                    $totalAddonAmount = 0;
-                    $totalMainAmount = 0;
-                    $numberOfAddonProducts = 0;
-
-                    foreach ($mainInvoice->line_items as $item) {
-                        if (! in_array($item->product_code, $notAddonProduct)) {
-                            $totalAddonAmount += $item->total_in_cents;
-                            $numberOfAddonProducts++;
-                        }
-
-                        if ($item->product_code == 'annual' || $item->product_code == 'seasonal') {
-                            $totalMainAmount = $item->total_in_cents;
-                        }
+            if ($master->plan->plan_code == 'seasonal') {
+                ksort($episodics);
+                foreach ($episodics as $subscription) {
+                    if ($subscription->state == 'active') {
+                        $current = $subscription;
+                    } else {
+                        $next = $subscription;
+                        break;
                     }
-
-                    $mainSubscription['addon_count'] = $numberOfAddonProducts;
-                    $mainSubscription['addon_total_amount'] = $this->convertAmountToDollars($totalAddonAmount);
-                    $mainSubscription['main_total_amount'] = $this->convertAmountToDollars($totalMainAmount);
-                    $mainSubscription['total_amount'] = $this->convertAmountToDollars($mainInvoice->total_in_cents);
-                }
-
-                // Get active subscription, and it's not addons
-                if ($subscription->state == 'active' && $subscription->plan->plan_code != 'add-ons') {
-                    $activeSubscription['invoice_number'] = $subscription->invoice->get()->invoice_number;
-                }
-
-                // Get invoice numbers if there is an invoice generated for the subscription
-                if ($subscription->invoice) {
-                    array_push($invoices, $subscription->invoice->get()->invoice_number);
                 }
             }
 
-            $invoices = $this->getInvoices(array_unique($invoices));
-
-            if (empty($mainSubscription)) {
-                // Update the active subscription to reflect Recurly.
-                $currentSubscription->setSubscriptionStatus('canceled')->save();
-                throw new \Exception('No active subscriptions found.');
+            // Get invoices
+            $invoices[] = $master->invoice->get()->invoice_number;
+            foreach ($episodics as $subscription) {
+                if ($subscription->invoice && $invoice = $subscription->invoice->get()) {
+                    $invoices[] = $invoice->invoice_number;
+                }
             }
+            $invoices = $this->getInvoices($invoices);
+
+            $activeTotal = is_null($current) || $current->unit_amount_in_cents == 0 ? $this->convertAmountToDollars($next->unit_amount_in_cents) : $this->convertAmountToDollars($current->unit_amount_in_cents - $current->invoice->get()->discount_in_cents );
+            $addonTotal = is_null($addon) ? 0 : $this->convertAmountToDollars($addon->unit_amount_in_cents) * $addon->quantity;
 
             return [
                 'success'               => true,
-                'is_annual'             => $isAnnualSubscription,
+                'is_annual'             => $master->plan->plan_code == 'annual',
                 'subscription_type'     => ($isAnnualSubscription) ? 'Annual' : 'Seasonal',
-                'main_subscription'     => $mainSubscription,
-                'active_subscription'   => $activeSubscription,
+                'billing_information'   => [
+                    'last_four'             => $this->getBillingInformation()->last_four
+                ],
+                'master_subscription' => [
+                    'subscription_type'     => $master->plan->plan_code,
+                    'invoice_number'        => $master->invoice->get()->invoice_number,
+                    'starts_at'             => $master->current_period_started_at->format('M d, Y'),
+                    'ends_at'               => $master->current_period_ends_at->format('M d, Y'),
+                    'total_amount'          => $this->convertAmountToDollars($master->total_in_cents)
+                ],
+                'active_subscription'   => [
+                    'invoice_number'        => is_null($current) ? null : $current->invoice->get()->invoice_number,
+                    'total_amount'          => $activeTotal,
+                    'is_invoiced'           => ! is_null($current) && $current->unit_amount_in_cents > 0
+                ],
+                'addon_subscription'    => [
+                    'quantity'              => is_null($addon) ? 0 : $addon->quantity,
+                    'total_amount'          => $addonTotal
+                ],
+                'total_row' => [
+                    'total_text'            => is_null($current) || $current->invoice->get()->total_in_cents == 0 ? 'Total' : 'Current Total',
+                    'total_amount'          => $addonTotal + $activeTotal
+                ],
                 'invoices'              => $invoices,
+                'next_billing_date'     => $next->activated_at->format('F d, Y')
             ];
         } catch (\Exception $e) {
             $this->_logger->error($e->getMessage());
@@ -223,11 +223,13 @@ class Subscription extends Template
 
         foreach ($invoices as $index => $invoiceId) {
             $invoice = $this->getInvoice($invoiceId);
-            $invoicesArray[$index]['invoice_number'] = $invoiceId;
-            $invoicesArray[$index]['created_at'] = $invoice->created_at->format('M d, Y');
-            $invoicesArray[$index]['due_on'] = $invoice->created_at->format('M d, Y');
-            $invoicesArray[$index]['paid'] = ($invoice->state == 'paid') ? 'YES' : 'NO';
-            $invoicesArray[$index]['total'] = $this->convertAmountToDollars($invoice->total_in_cents);
+            if ($this->convertAmountToDollars($invoice->total_in_cents) > 0) {
+                $invoicesArray[$index]['invoice_number'] = $invoiceId;
+                $invoicesArray[$index]['created_at'] = $invoice->created_at->format('M d, Y');
+                $invoicesArray[$index]['due_on'] = $invoice->created_at->format('M d, Y');
+                $invoicesArray[$index]['paid'] = ($invoice->state == 'paid') ? 'YES' : 'NO';
+                $invoicesArray[$index]['total'] = $this->convertAmountToDollars($invoice->total_in_cents);
+            }
         }
 
         return $invoicesArray;

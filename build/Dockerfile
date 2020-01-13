@@ -22,6 +22,8 @@ RUN mkdir -p $MAGENTO_DIR/var/import/images && gsutil -q -m rsync -r -u gs://mag
 
 RUN git fetch --all
 RUN git reset --hard
+RUN git config --global user.email "someone@example.com"
+RUN git config --global user.name "Deploy Key"
 RUN git pull
 RUN composer install
 RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools

@@ -49,9 +49,11 @@ define([
             self.autocomplete.setFields(['geometry']);
             self.autocomplete.setTypes(['address']);
             self.autocomplete.addListener('place_changed', function () {
+                self.quiz.invalidZipCode(false);
                 var place = self.autocomplete.getPlace();
 
                 if (!place.geometry) {
+                    self.quiz.invalidZipCode(true);
                     return;
                 }
 
@@ -157,10 +159,6 @@ define([
 
         self.calculateLawnSize = function () {
             self.lawnSize(0);
-
-            if (!self.polygons().length) {
-                return;
-            }
 
             for (polygon of self.polygons()) {
                 var squareMeters = google.maps.geometry.spherical.computeArea(polygon.getPath());
@@ -275,6 +273,7 @@ define([
      */
     function Quiz(data) {
         var self = this;
+        const NUMBERPATTERN = /^[0-9]+$/;
 
         // Grab question content block for use in finding callback event
         self.questionContentBlock = document.querySelector('.sp-quiz__question-wrapper');
@@ -296,6 +295,7 @@ define([
         self.animation = ko.observable({});
         self.usingGoogleMaps = ko.observable(true);
         self.invalidZipCode = ko.observable(false);
+        self.invalidArea = ko.observable(false);
         self.isAnimating = ko.observable(false);
         self.zipCode = '';
 
@@ -971,6 +971,11 @@ define([
                 zip = data;
             } else {
                 zip = event.target.value;
+                self.invalidZipCode(false);
+                if (zip.length > 0 && !zip.toString().match(NUMBERPATTERN)) {
+                    self.invalidZipCode(true);
+                    return;
+                }
             }
 
             const zoneQuestion = self.questions().find((question) => +question.questionType === 5);
@@ -987,7 +992,7 @@ define([
                 return;
             }
 
-            if (zip.length === 5) {
+            if (zip.length === 5 && zip.toString().match(NUMBERPATTERN)) {
                 const zoneOption = self.getZone(zip);
 
                 if (zoneOption) {
@@ -1011,16 +1016,21 @@ define([
          */
         self.setArea = function (data, event) {
             let area = 0;
+            self.invalidArea(false);
             if (typeof data === 'number') {
                 area = data;
             } else {
-                area = parseInt(event.target.value);
+                let areaInput = event.target.value;
+                let areaAsString = areaInput.toString();
+                if (!areaAsString.match(NUMBERPATTERN)) {
+                    self.invalidArea(true);
+                } else {
+                    area = parseInt(areaInput);
+                }
             }
 
-            if (area > 0) {
-               self.addOrReplaceAnswer(self.questions()[1].id, self.questions()[1].options[0].id, area);
-               window.sessionStorage.setItem('lawn-area', String(area));
-            }
+            self.addOrReplaceAnswer(self.questions()[1].id, self.questions()[1].options[0].id, area);
+            window.sessionStorage.setItem('lawn-area', String(area));
         }
     }
 
@@ -1037,9 +1047,7 @@ define([
        self.questionGroups = data.questionGroups;
 
        // Remove the Alaska and Hawaii zones.
-       self.zipCodesOptionMappings = data.zipCodesOptionMappings.filter((zone) => {
-           return !['eb4c247b-9100-40b0-95fd-bd319dd4393f', 'a028c078-f881-4019-95c8-f4b209ba00bc'].includes(zone.optionId);
-       });
+       self.zipCodesOptionMappings = data.zipCodesOptionMappings;
     }
 
     function setSliderTrack(el) {

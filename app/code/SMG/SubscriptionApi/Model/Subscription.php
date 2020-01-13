@@ -5,7 +5,6 @@ namespace SMG\SubscriptionApi\Model;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ProductFactory;
 use Magento\Catalog\Model\ProductRepository;
-use Magento\Checkout\Model\Cart;
 use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Data\Form\FormKey;
@@ -14,9 +13,10 @@ use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
-use Magento\Quote\Api\CartManagementInterface;
-use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Quote\Model\Quote;
+use Magento\Quote\Model\QuoteManagement;
+use Magento\Quote\Model\QuoteRepository;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use Magento\Store\Model\StoreManager;
@@ -36,15 +36,11 @@ use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory 
  */
 class Subscription extends AbstractModel
 {
-
     /** @var SubscriptionOrderCollectionFactory */
     protected $_subscriptionOrderCollectionFactory;
 
     /** @var SubscriptionAddonOrderCollectionFactory */
     protected $_subscriptionAddonOrderCollectionFactory;
-
-    /** @var Cart */
-    protected $_cart;
 
     /**  @var SubscriptionHelper */
     protected $_subscriptionHelper;
@@ -60,12 +56,6 @@ class Subscription extends AbstractModel
 
     /** @var CheckoutSession */
     protected $_checkoutSession;
-
-    /**  @var CartManagementInterface */
-    protected $_cartManagementInterface;
-
-    /** @var CartRepositoryInterface */
-    protected $_cartRepositoryInterface;
 
     /** @var StoreManager */
     protected $_storeManager;
@@ -96,6 +86,20 @@ class Subscription extends AbstractModel
     protected $_recurlyHelper;
 
     /**
+     * @var QuoteManagement
+     */
+    protected $_quoteManagement;
+
+    /**
+     * @var QuoteRepository
+     */
+    protected $_quoteRepository;
+    /**
+     * @var CustomerSession
+     */
+    protected $_customerSession;
+
+    /**
      * Constructor.
      */
     protected function _construct()
@@ -112,18 +116,18 @@ class Subscription extends AbstractModel
      * @param LoggerInterface $logger
      * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
      * @param SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory
-     * @param Cart $cart
      * @param SubscriptionHelper $subscriptionHelper
      * @param FormKey $formKey
      * @param CheckoutSession $checkoutSession
-     * @param CartManagementInterface $cartManagementInterface
-     * @param CartRepositoryInterface $cartRepositoryInterface
+     * @param CustomerSession $customerSession
      * @param StoreManager $storeManager
      * @param Product $product
      * @param ProductFactory $productFactory
      * @param ProductRepository $productRepository
      * @param OrderCollectionFactory $orderCollectionFactory
      * @param RecurlyHelper $recurlyHelper
+     * @param QuoteManagement $quoteManagement
+     * @param QuoteRepository $quoteRepository
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -134,18 +138,18 @@ class Subscription extends AbstractModel
         LoggerInterface $logger,
         SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
         SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory,
-        Cart $cart,
         SubscriptionHelper $subscriptionHelper,
         FormKey $formKey,
         CheckoutSession $checkoutSession,
-        CartManagementInterface $cartManagementInterface,
-        CartRepositoryInterface $cartRepositoryInterface,
+        CustomerSession $customerSession,
         StoreManager $storeManager,
         Product $product,
         ProductFactory $productFactory,
         ProductRepository $productRepository,
         OrderCollectionFactory $orderCollectionFactory,
         RecurlyHelper $recurlyHelper,
+        QuoteManagement $quoteManagement,
+        QuoteRepository $quoteRepository,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -155,18 +159,18 @@ class Subscription extends AbstractModel
         $this->_logger = $logger;
         $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
         $this->_subscriptionAddonOrderCollectionFactory = $subscriptionAddonOrderCollectionFactory;
-        $this->_cart = $cart;
-        $this->_cartManagementInterface = $cartManagementInterface;
-        $this->_cartRepositoryInterface = $cartRepositoryInterface;
         $this->_storeManager = $storeManager;
         $this->_subscriptionHelper = $subscriptionHelper;
         $this->_formKey = $formKey;
         $this->_checkoutSession = $checkoutSession;
+        $this->_customerSession = $customerSession;
         $this->_product = $product;
         $this->_productFactory = $productFactory;
         $this->_productRepository = $productRepository;
         $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->_recurlyHelper = $recurlyHelper;
+        $this->_quoteManagement = $quoteManagement;
+        $this->_quoteRepository = $quoteRepository;
     }
 
     /**
@@ -366,13 +370,13 @@ class Subscription extends AbstractModel
     public function addSubscriptionToCart($addons)
     {
         try {
-            $quote = $this->_checkoutSession->getQuote();
-            $quoteItems = $quote->getItemsCollection();
-            foreach ($quoteItems as $item) {
-                $this->_cart->removeItem($item->getItemId());
-            }
+            $this->_checkoutSession->resetCheckout();
+            $this->_checkoutSession->clearQuote();
+            $quoteID = $this->_quoteManagement->createEmptyCartForCustomer($this->_customerSession->getCustomerId());
+            $quote = $this->_quoteRepository->get($quoteID);
+            $quote->removeAllAddresses();
         } catch (\Exception $e) {
-            $error = 'Could not add remove items from cart. - ' . $e->getMessage();
+            $error = 'Could not create empty cart for customer. - ' . $e->getMessage();
             $this->_logger->error($error);
 
             throw new \Exception($error);
@@ -405,15 +409,11 @@ class Subscription extends AbstractModel
             }
 
             $seasonalProduct = $this->_productRepository->get($planSku);
-            $params = [
-                'form_key'  => $this->_formKey->getFormKey(),
-                'qty'       => 1
-            ];
-            $this->_cart->addProduct($seasonalProduct->getId(), $params)->save();
+            $quote->addProduct($seasonalProduct, 1)->save();
 
             // Add the discount if it's annual
             if ($this->getSubscriptionType() == 'annual') {
-                $this->_cart->getQuote()->setCouponCode('annual_discount')->collectTotals()->save();
+                $quote->setCouponCode('annual_discount');
             }
         } catch (\Exception $e) {
             $error = 'There was an issue adding the subscription to the cart. - ' . $e->getMessage();
@@ -429,13 +429,7 @@ class Subscription extends AbstractModel
                     if (in_array($subscriptionAddonOrderItem->getCatalogProductSku(), $addons)) {
                         try {
                             $product = $subscriptionAddonOrderItem->getProduct();
-                            $product = $this->_productRepository->get($product->getSku());
-                            $productId = $product->getId();
-                            $params = [
-                                'form_key' => $this->_formKey->getFormKey(),
-                                'qty' => 1,
-                            ];
-                            $this->_cart->addProduct($productId, $params)->save();
+                            $quote->addProduct($product, 1)->save();
 
                             $price = (float)$product->getPrice() * (int)$subscriptionAddonOrderItem->getQty();
                             $item = $quote->getItemByProduct($product);
@@ -458,6 +452,7 @@ class Subscription extends AbstractModel
             }
 
             $quote->save();
+            $this->_checkoutSession->replaceQuote($quote);
         } catch (\Exception $e) {
             $error = 'There was an issue saving the quote. - ' . $e->getMessage();
             $this->_logger->error($error);
@@ -498,7 +493,7 @@ class Subscription extends AbstractModel
 
             // Test of seasonal is not shippable
             $today = new \DateTime();
-            $shipStart = new \DateTime($this->getFirstSubscriptionOrder()->getShipStartDate());
+            $shipStart = \DateTime::createFromFormat('Y-m-d H:i:s', $this->getFirstSubscriptionOrder()->getShipStartDate());
             return $today >= $shipStart;
         }
         return true;

@@ -2,7 +2,6 @@
 
 namespace SMG\SubscriptionApi\Model;
 
-use Psr\Log\LoggerInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DB\Transaction;
 use Magento\Framework\Exception\LocalizedException;
@@ -17,10 +16,12 @@ use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use Magento\Sales\Model\Service\InvoiceService;
+use Psr\Log\LoggerInterface;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\Sap\Model\SapOrderBatch;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrderItem\CollectionFactory as SubscriptionAddonOrderItemCollectionFactory;
+use SMG\SubscriptionApi\Model\SubscriptionFactory;
 
 /**
  * Class SubscriptionAddonOrder
@@ -28,7 +29,6 @@ use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrderItem\Collectio
  */
 class SubscriptionAddonOrder extends AbstractModel
 {
-
     /** @var SubscriptionHelper */
     protected $_subscriptionHelper;
 
@@ -63,7 +63,12 @@ class SubscriptionAddonOrder extends AbstractModel
     protected $_sapOrderBatchCollectionFactory;
 
     /**
-     * @var Subscription
+     * @var SubscriptionFactory
+     */
+    protected $_subscriptionFactory;
+
+    /**
+     * @var Subscription|null
      */
     protected $_subscription;
 
@@ -93,7 +98,7 @@ class SubscriptionAddonOrder extends AbstractModel
      * @param Registry $registry
      * @param LoggerInterface $logger
      * @param Order\CreditmemoFactory $creditmemoFactory
-     * @param Subscription $subscription
+     * @param \SMG\SubscriptionApi\Model\SubscriptionFactory $subscriptionFactory
      * @param SubscriptionHelper $subscriptionHelper
      * @param SubscriptionAddonOrderItemCollectionFactory $subscriptionAddonOrderItemCollectionFactory
      * @param OrderRepository $orderRepository
@@ -111,7 +116,7 @@ class SubscriptionAddonOrder extends AbstractModel
         Registry $registry,
         LoggerInterface $logger,
         Order\CreditmemoFactory $creditmemoFactory,
-        Subscription $subscription,
+        SubscriptionFactory $subscriptionFactory,
         SubscriptionHelper $subscriptionHelper,
         SubscriptionAddonOrderItemCollectionFactory $subscriptionAddonOrderItemCollectionFactory,
         OrderRepository $orderRepository,
@@ -142,7 +147,7 @@ class SubscriptionAddonOrder extends AbstractModel
         $this->_invoiceSender = $invoiceSender;
         $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
         $this->_orderRepository = $orderRepository;
-        $this->_subscription = $subscription;
+        $this->_subscriptionFactory = $subscriptionFactory;
     }
 
     /**
@@ -164,17 +169,21 @@ class SubscriptionAddonOrder extends AbstractModel
      */
     public function getSubscription()
     {
-        if ($this->_subscription->getId()) {
+        if ($this->_subscription) {
             return $this->_subscription;
         }
 
-        $subscription = $this->_subscription->load($this->getSubscriptionEntityId());
+        $subscription = $this->_subscriptionFactory
+            ->create()
+            ->load($this->getSubscriptionEntityId());
 
         if (! $subscription->getId()) {
             return false;
         }
 
-        return $subscription;
+        $this->_subscription = $subscription;
+
+        return $this->_subscription;
     }
 
     /**
@@ -341,6 +350,7 @@ class SubscriptionAddonOrder extends AbstractModel
     {
         // Grab the shipment open window from the admin
         $shippingOpenWindow = 0;
+
         if (! empty($this->_subscriptionHelper->getShipDaysStart())) {
             $shippingOpenWindow = filter_var($this->_subscriptionHelper->getShipDaysStart(), FILTER_SANITIZE_NUMBER_INT);
         }
