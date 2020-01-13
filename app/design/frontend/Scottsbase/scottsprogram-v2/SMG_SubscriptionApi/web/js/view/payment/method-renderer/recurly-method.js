@@ -3,11 +3,12 @@ define(
         'ko',
         'jquery',
         'Magento_Checkout/js/view/payment/default',
+        'Magento_Ui/js/modal/modal',
         'Magento_Checkout/js/action/place-order',
         'Magento_Checkout/js/action/redirect-on-success',
         'domReady!',
     ],
-    function (ko, $, Component) {
+    function (ko, $, Component, Modal) {
         'use strict';
 
         return Component.extend({
@@ -23,6 +24,24 @@ define(
                 setTimeout(function () {
                     recurly.configure('ewr1-aefvtq9Ri3MILWsXFPHyv2');
                 }, 2000);
+
+                // Setup zip modal
+                this.zipModalOptions = {
+                    type: 'popup',
+                    responsive: true,
+                    innerScroll: true,
+                    buttons: [],
+                    opened: function() {
+                        $('.modal-header').remove();
+                    },
+                    closed() {
+                        window.location.hash = 'shipping';
+                    },
+                };
+            },
+
+            closeZipModal() {
+                $('#zip-popup-modal').modal('closeModal');
             },
 
             getShippingAddress: function () {
@@ -60,7 +79,7 @@ define(
                         if (response.success === true) {
                             self.createNewOrders();
                         } else {
-                            alert(response.message);
+                            $('.recurly-form-error').text(response.message);
                         }
                     }
                 });
@@ -127,6 +146,13 @@ define(
                 // Get full country name by it's id
                 var countryName = $('select[name="country_id"] option[value="' + address.country_id + '"]').attr('data-title');
 
+                if (address.postcode != window.sessionStorage.getItem('lawn-zip')) {
+                    Modal(this.zipModalOptions, $('#zip-popup-modal'));
+                    $('#zip-popup-modal').modal('openModal');
+
+                    return false;
+                }
+
                 // Update Recurly form
                 $('input[data-recurly="first_name"]').val(address.firstname);
                 $('input[data-recurly="last_name"]').val(address.lastname);
@@ -135,6 +161,8 @@ define(
                 $('input[data-recurly="state"]').val(stateName);
                 $('input[data-recurly="country"]').val(countryName);
                 $('input[data-recurly="postal_code"]').val(address.postcode);
+
+                return true;
             },
 
             myPlaceOrder: function () {
@@ -150,11 +178,21 @@ define(
                     rsco[0].setCustomValidity('');
                 }
 
-                self.updateRecurlyFormData();
+                if (! self.updateRecurlyFormData()) {
+                    return false;
+                }
 
                 recurly.token(recurlyForm, function (err, token) {
                     if (err) {
-                        console.log(err);
+                        if( err.code == 'validation' ) {
+                            if( err.fields.includes('number') === true ) {
+                                $('.recurly-form-error').text('Please enter a valid card number.');
+                            } else {
+                                $('.recurly-form-error').text(err.message);
+                            }
+                        } else {
+                            $('.recurly-form-error').text(err.message);
+                        }
                     } else {
                         self.createNewSubscription( token.id );
                     }
