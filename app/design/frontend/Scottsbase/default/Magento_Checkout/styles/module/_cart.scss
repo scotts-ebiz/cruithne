@@ -3,6 +3,17 @@
 //  ---------------------------------------------
 
 //  Summary block
+
+.checkout-cart-index {
+    h1 {
+        @include cart-checkout-h2-font($border: 0);
+    }
+}
+
+.no-margin{
+  margin:0px;
+}
+
 .cart-summary {
     @extend .abs-add-box-sizing;
     @extend .abs-adjustment-incl-excl-tax;
@@ -124,8 +135,6 @@
         @extend .abs-add-clearfix;
 
         > .action {
-            @extend button;
-            @include lib-link-as-button();
             margin-bottom: $indent__s;
             margin-right: $indent__s;
 

@@ -21,10 +21,10 @@
             border-bottom:0;
             margin-top: 0rem;
             h1.page-title {
-                text-transform: inherit;
-                padding: 0 0 10px 0;
-                width: 100%;
-                border-bottom: 1px solid #ccc;
+                //text-transform: inherit;// test - moved to a mixin
+                //padding: 0 0 10px 0;
+                //width: 100%;
+                //border-bottom: 1px solid #ccc;
             }
         }
         .columns {
