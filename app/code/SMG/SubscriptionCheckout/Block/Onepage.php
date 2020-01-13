@@ -3,6 +3,7 @@ namespace SMG\SubscriptionCheckout\Block;
 
 use Magento\Framework\Session\SessionManagerInterface;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription;
+use SMG\SubscriptionApi\Helper\RecurlyHelper;
 
 /**
  * Onepage checkout block
@@ -19,11 +20,17 @@ class Onepage extends \Magento\Checkout\Block\Onepage
     private $_coreSession;
 
     /**
+     * @var RecurlyHelper
+     */
+    protected $_recurlyHelper;
+
+    /**
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magento\Framework\Data\Form\FormKey $formKey
      * @param \Magento\Checkout\Model\CompositeConfigProvider $configProvider
      * @param SessionManagerInterface $coreSession
      * @param Subscription $subscription
+     * @param RecurlyHelper $recurlyHelper
      * @param array $layoutProcessors
      * @param array $data
      * @param \Magento\Framework\Serialize\Serializer\Json $serializer
@@ -36,6 +43,7 @@ class Onepage extends \Magento\Checkout\Block\Onepage
         \Magento\Checkout\Model\CompositeConfigProvider $configProvider,
         SessionManagerInterface $coreSession,
         Subscription $subscription,
+        RecurlyHelper $recurlyHelper,
         array $layoutProcessors = [],
         array $data = [],
         \Magento\Framework\Serialize\Serializer\Json $serializer = null,
@@ -45,6 +53,17 @@ class Onepage extends \Magento\Checkout\Block\Onepage
 
         $this->_coreSession = $coreSession;
         $this->_subscription = $subscription;
+        $this->_recurlyHelper = $recurlyHelper;
+    }
+
+    /**
+     * Get the Recurly Public API Key.
+     *
+     * @return string
+     */
+    public function getRecurlyPublicApiKey()
+    {
+        return $this->_recurlyHelper->getRecurlyPublicApiKey();
     }
 
     /**
