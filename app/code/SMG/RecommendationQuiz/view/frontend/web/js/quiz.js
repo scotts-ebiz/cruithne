@@ -42,9 +42,18 @@ define([
         };
 
         self.initialize = function () {
+            const autocompleteElement = document.getElementById('address-autocomplete');
             self.autocomplete = new google.maps.places.Autocomplete(
-                document.getElementById('address-autocomplete'), { types: ['geocode'] }
+                autocompleteElement, { types: ['geocode'] }
             );
+            google.maps.event.addDomListener(autocompleteElement, 'blur', function() {
+                if ($('.pac-item:hover').length === 0 ) {
+                    google.maps.event.trigger(this, 'focus', {});
+                    google.maps.event.trigger(this, 'keydown', {
+                        keyCode: 13
+                    });
+                }
+            });
             self.autocomplete.setComponentRestrictions({ 'country': 'us' });
             self.autocomplete.setFields(['geometry']);
             self.autocomplete.setTypes(['address']);
@@ -52,7 +61,7 @@ define([
                 self.quiz.invalidZipCode(false);
                 var place = self.autocomplete.getPlace();
 
-                if (!place.geometry) {
+                if (!place || !place.geometry) {
                     self.quiz.invalidZipCode(true);
                     return;
                 }
