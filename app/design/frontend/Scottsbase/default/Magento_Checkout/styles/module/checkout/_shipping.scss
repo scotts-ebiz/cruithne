@@ -32,6 +32,8 @@ $checkout-shipping-item-before__height          : calc(100% - 20px) !default;
 $checkout-shipping-method__border               : none !default;
 $checkout-shipping-method__padding              : 8px !default;
 
+
+
 //
 //  Common
 //  _____________________________________________
@@ -129,6 +131,8 @@ $checkout-shipping-method__padding              : 8px !default;
     }
 }
 
+
+
 //
 //  Shipping Methods
 //  ---------------------------------------------
@@ -172,21 +176,12 @@ $checkout-shipping-method__padding              : 8px !default;
                 font-size: $font-size__base;
             }
 
-            //test - Ian vet to see if you need any of this
             &:first-child {
                 padding-left: 0;
                 padding-right: 0;
                 width: 20px;
             }
         }
-
-        //tr {
-        //    &:first-child {// test - what happened to the border as it should still be none.
-        //        td {
-        //            border-top: none;
-        //        }
-        //    }
-        //}
 
         .row-error {
             td {
@@ -197,6 +192,8 @@ $checkout-shipping-method__padding              : 8px !default;
         }
     }
 }
+
+
 
 //
 //  Mobile
@@ -258,6 +255,8 @@ $checkout-shipping-method__padding              : 8px !default;
         }
     }
 }
+
+
 
 //
 //  Desktop

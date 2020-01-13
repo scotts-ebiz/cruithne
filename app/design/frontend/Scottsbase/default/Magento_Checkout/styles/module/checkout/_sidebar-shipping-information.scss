@@ -12,20 +12,20 @@ $checkout-sidebar-shipping-information-edit-icon__line-height  : 28px !default;
 $checkout-sidebar-shipping-information-edit-icon__top          : 2px !default;
 $checkout-sidebar-shipping-information-edit-icon__hover__color : $primary__color !default;
 
+
+
 //
 //  Shipping Information
 //  ---------------------------------------------
 
 .opc-block-shipping-information {
-    //@include lib-css(padding, 0 $checkout-sidebar-shipping-information__padding);// test - make sure you see padding taken away on both sides of this section.
-    @include cart-checkout-body-font($size: $font-size__m);
+    @include cart-checkout-body-font($size: $font-size__m, $lh: 21px);
+    @include max-screen($screen__m) {
+        font-size: $font-size__base;
+    }
 
     .shipping-information-title {
         @include cart-checkout-h2-font();
-        border-bottom: $cart-checkout-h2-border;//test - make sure you see 2px bottom green
-        //@extend .abs-checkout-title;
-        //@include lib-css(border-bottom, $checkout-step-title__border);
-        //margin: 0 0 $indent__base;
         position: relative;
 
         .action-edit {
@@ -44,22 +44,19 @@ $checkout-sidebar-shipping-information-edit-icon__hover__color : $primary__color
             position: absolute;
             right: 0;
             &:before {
-              content: 'Edit';
-              @include cart-checkout-h2-font($size: $font-size__s, $ls:normal);
-              //font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;// test - is this in roboto?
-              //font-size: 0.8rem; //test - what is the default size?
-              //text-transform: none;//test - what is the story behind this?
+                content: 'Edit';
+                @include cart-checkout-h2-font($size: $font-size__s, $ls:normal, $border: 0);
+                @include max-screen($screen__m) {
+                    @include cart-checkout-h2-font-mobile($size: $font-size__s); //needed to override mixin's media query
+                }
             }
         }
     }
-
     .shipping-information-content {
-        @include lib-css(line-height, $checkout-sidebar-shipping-information__line-height);
         .actions-toolbar {
             margin-left: 0;
         }
     }
-
     .ship-to,
     .ship-via {
         margin: 0 0 $indent__base;

@@ -26,13 +26,15 @@ $checkout-step-title-mobile__font-size : 18px !default;
 .opc-wrapper {
     @include lib-css(margin, 0 0 $checkout-wrapper__margin);
     @include cart-checkout-body-font();
+    @include max-screen($screen__m) {
+        @include cart-checkout-body-font-mobile();
+    }
     .opc {
         @extend .abs-reset-list;
     }
 
     .step-title {
         @include cart-checkout-h2-font();
-        border-bottom:  $cart-checkout-h2-border;
     }
 
     .step-content {
@@ -59,19 +61,6 @@ $checkout-step-title-mobile__font-size : 18px !default;
     }
 }
 
-
-//
-//  Mobile
-//  _____________________________________________
-
-@include max-screen($screen__m) {
-    .opc-wrapper {
-        @include cart-checkout-body-font-mobile();
-        .step-title {
-            @include cart-checkout-h2-font-mobile();
-        }
-    }
-}
 
 
 //
