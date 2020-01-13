@@ -49,9 +49,11 @@ define([
             self.autocomplete.setFields(['geometry']);
             self.autocomplete.setTypes(['address']);
             self.autocomplete.addListener('place_changed', function () {
+                self.quiz.invalidZipCode(false);
                 var place = self.autocomplete.getPlace();
 
                 if (!place.geometry) {
+                    self.quiz.invalidZipCode(true);
                     return;
                 }
 

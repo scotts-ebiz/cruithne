@@ -60,6 +60,8 @@ define([
                 self.lawnType(lawnType);
             }
 
+            self.hasValidZone = ko.observable(true);
+
             self.products = ko.computed(function () {
                 return self.results().plan
                     ? self.results().plan.coreProducts
@@ -155,6 +157,7 @@ define([
                             }
                             self.hasResults(true);
                             self.results(data);
+                            self.checkZone();
                             window.sessionStorage.setItem('result', JSON.stringify(data));
                             window.sessionStorage.setItem('quiz-id', data.id);
                         }
@@ -172,6 +175,17 @@ define([
                     },
                 },
             );
+        },
+
+        /**
+         * Check if we have an invalid zone.
+         */
+        checkZone() {
+            if (['Zone 11', 'Zone 12'].indexOf(this.results().plan.zoneName) >= 0) {
+                this.hasValidZone(false);
+            } else {
+                this.hasValidZone(true);
+            }
         },
 
         /**
@@ -231,6 +245,7 @@ define([
                             }
                             self.hasResults(true);
                             self.results(data);
+                            self.checkZone();
                             window.sessionStorage.setItem('result', JSON.stringify(data));
                             window.sessionStorage.setItem('quiz-id', data.id);
                         }
