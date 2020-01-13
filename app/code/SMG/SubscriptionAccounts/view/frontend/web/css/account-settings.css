@@ -1,0 +1,11 @@
+.sp-account-settings input[type=text],
+.sp-account-settings input[type=email],
+.sp-account-settings input[type=password] {
+    display: block;
+    width: 100%;
+}
+
+.sp-account-settings .sp-form-group {
+    padding-top: 1rem;
+    margin-bottom: 2rem;
+}

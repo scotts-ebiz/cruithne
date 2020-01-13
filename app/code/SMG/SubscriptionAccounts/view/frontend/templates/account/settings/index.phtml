@@ -1,0 +1,21 @@
+<div
+    class="sp-account-settings sp-max-w-xl md:sp-mr-8"
+    data-bind="scope: 'accountDetails'"
+>
+    <!-- ko template: "SMG_SubscriptionAccounts/account-settings.html" --><!-- /ko -->
+</div>
+
+<script type="text/x-magento-init">
+   {
+        "*": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "accountDetails": {
+						"component": "SMG_SubscriptionAccounts/js/account-settings",
+						"account": <?php echo json_encode( $block->getCustomerData() ); ?>
+					}
+                }
+            }
+        }
+    }
+</script>

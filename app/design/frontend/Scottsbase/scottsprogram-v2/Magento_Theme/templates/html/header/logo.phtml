@@ -1,0 +1,168 @@
+<?php
+$storeName = $block->escapeHtml($block->getThemeName() ? $block->getThemeName() : $block->getLogoAlt());
+$currentUrl = $block->getRequest()->getUriString();
+
+$page = '';
+if (strpos($currentUrl, '/account/settings') !== false
+    || strpos($currentUrl, '/account/billing') !== false
+    || strpos($currentUrl, '/customer/account') !== false
+) {
+    $page = 'account';
+} elseif (strpos($currentUrl, '/how-it-works') !== false) {
+    $page = 'howitworks';
+} elseif (strpos($currentUrl, '/account/subscription') !== false) {
+    $page = 'myplan';
+} elseif (strpos($currentUrl, '/quiz') !== false
+    || strpos($currentUrl, '/your-results') !== false
+    || strpos($currentUrl, '/subscription-options') !== false
+) {
+    $page = 'quiz';
+}
+?>
+
+<div class="sp-flex sp-items-center sp-justify-between">
+    <?php if ($block->getData('hide_links') == true) { ?>
+        <div class="sp-header__logo">
+            <img
+                src="<?= $block->escapeUrl($block->getLogoSrc()) ?>"
+                title="<?= $block->escapeHtml($block->getLogoAlt()) ?>"
+                alt="<?= $block->escapeHtml($block->getLogoAlt()) ?>"
+                <?= $block->getLogoWidth() ? 'width="' . $block->escapeHtml($block->getLogoWidth()) . '"' : '' ?>
+                <?= $block->getLogoHeight() ? 'height="' . $block->escapeHtml($block->getLogoHeight()) . '"' : '' ?>
+            />
+        </div>
+    <?php } else { ?>
+        <a
+            class="sp-header__home sp-header__home-link sp-flex sp-items-center"
+            href="<?= $block->escapeUrl($block->getBaseUrl()) ?>"
+            title="<?= $block->escapeHtml($storeName) ?>"
+        >
+            <div class="sp-header__logo">
+                <img
+                    src="<?= $block->escapeUrl($block->getLogoSrc()) ?>"
+                    title="<?= $block->escapeHtml($block->getLogoAlt()) ?>"
+                    alt="<?= $block->escapeHtml($block->getLogoAlt()) ?>"
+                    <?= $block->getLogoWidth() ? 'width="' . $block->escapeHtml($block->getLogoWidth()) . '"' : '' ?>
+                    <?= $block->getLogoHeight() ? 'height="' . $block->escapeHtml($block->getLogoHeight()) . '"' : '' ?>
+                />
+            </div>
+        </a>
+    <?php } ?>
+
+    <?php if ($block->getData('hide_links') != true) { ?>
+        <button
+            class="sp-header__nav-toggle sp-block md:sp-hide"
+            type="button"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+        >
+            Menu
+        </button>
+        <nav id="sp-main-nav" class="sp-header__nav">
+            <ul class="sp-nav-list sp-header__nav-list sp-header__nav-list--left">
+                <li>
+                    <?php if ($block->isLoggedIn() && $block->hasSubscriptions()) { ?>
+                        <a
+                            class="sp-link <?php echo ($page == 'myplan') ? 'active' : ''; ?>"
+                            href="/account/subscription"
+                        >
+                            My Plan
+                        </a>
+                    <?php } else { ?>
+                        <a
+                            class="sp-link <?php echo ($page == 'quiz') ? 'active' : ''; ?>"
+                            href="/quiz"
+                        >
+                            Get Started
+                        </a>
+                    <?php } ?>
+                </li>
+                <li>
+                    <a class="sp-link <?php echo ($page == 'howitworks') ? 'active' : ''; ?>" href="/how-it-works">
+                        How It Works
+                    </a>
+                </li>
+            </ul>
+            <ul
+                class="sp-nav-list sp-header__nav-list sp-header__nav-list--right"
+            >
+                <li>
+                    <?php if ($block->isLoggedIn()) { ?>
+                        <a class="sp-link sp-login <?php echo ($page == 'account') ? 'active' : ''; ?>" href="/account/settings">My Account</a>
+                    <?php } else { ?>
+                        <a class="sp-link sp-login <?php echo ($page == 'account') ? 'active' : ''; ?>" href="/customer/account/login">Log In</a>
+                    <?php } ?>
+                </li>
+            </ul>
+            <address class="sp-header__address">
+                14111 Scottslawn Rd.<br/>
+                Marysville, OH 43041
+            </address>
+            <a class="sp-header__phone" href="tel:+18772203091">877-220-3091</a>
+            <ul class="sp-header__social">
+                <li>
+                    <a class="sp-link sp-text-white" href="https://www.facebook.com/scottslawn" target="_blank">
+                        <img
+                            class="sp-social-icon"
+                            src="https://test_magento_image_repo.storage.googleapis.com/facebook.png"
+                            alt="Facebook"
+                        >
+                    </a>
+                </li>
+                <li>
+                    <a class="sp-link sp-text-white" href="https://twitter.com/ScottsLawnCare" target="_blank">
+                        <img
+                            class="sp-social-icon"
+                            src="https://test_magento_image_repo.storage.googleapis.com/twitter.png"
+                            alt="Twitter"
+                        >
+                    </a>
+                </li>
+                <li>
+                    <a class="sp-link sp-text-white" href="https://www.instagram.com/scottslawn/" target="_blank">
+                        <img
+                            class="sp-social-icon"
+                            src="https://test_magento_image_repo.storage.googleapis.com/instagram.png"
+                            alt="Instagram"
+                        >
+                    </a>
+                </li>
+                <li>
+                    <a class="sp-link sp-text-white" href="https://www.youtube.com/user/ScottsMiracleGro" target="_blank">
+                        <img
+                            class="sp-social-icon"
+                            src="https://test_magento_image_repo.storage.googleapis.com/youtube.png"
+                            alt="YouTube"
+                        >
+                    </a>
+                </li>
+            </ul>
+            <ul class="sp-header__nav-secondary">
+                <li>
+                    <a class="sp-link" href="/faq">FAQ</a>
+                </li>
+                <li>
+                    <a
+                        class="sp-link"
+                        href="https://scottsmiraclegro.com/terms-conditions/"
+                        target="_blank"
+                    >Terms</a>
+                </li>
+                <li>
+                    <a
+                        class="sp-link"
+                        href="https://scottsmiraclegro.com/privacy/"
+                        target="_blank"
+                    >Privacy</a>
+                </li>
+                <li>
+                    <a class="sp-link" href="/return-policy">Returns</a>
+                </li>
+                <li>
+                    <a class="sp-link" href="/contact">Contact</a>
+                </li>
+            </ul>
+        </nav>
+    <?php } ?>
+</div>

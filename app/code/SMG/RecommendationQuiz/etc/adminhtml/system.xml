@@ -1,0 +1,16 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="recommendation" >
+            <group id="quiz" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Quiz Settings</label>
+                <field id="new_quiz_api_path" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Google Maps API Key</label>
+                    <comment>Key must have associated billing account and the ability to pull from: Places API, Geocoding API, and Maps JavaScript API.</comment>
+                    <validate>validate-no-html-tags</validate>
+                    <config_path>recommendation/quiz/googlemapsapi</config_path>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

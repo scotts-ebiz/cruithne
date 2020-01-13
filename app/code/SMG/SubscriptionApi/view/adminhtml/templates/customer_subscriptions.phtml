@@ -1,0 +1,52 @@
+<div class="fieldset-wrapper">
+	<div class="fieldset-wrapper-title"><span class="title">Scott's Subscriptions</span></div>
+	<?php
+	$subscriptions = $block->getCustomerSubscriptions();
+
+	if( $subscriptions['success'] == true && ! empty( $subscriptions['subscriptions'] ) ) {
+		$subscriptionsList = $subscriptions['subscriptions'];
+	?>
+	<div class="admin__data-grid-wrap admin__data-grid-wrap-static">
+		<table class="data-grid">
+			<thead>
+				<tr>
+					<th class="data-grid-th no-link">Subscription ID</th>
+					<th class="data-grid-th no-link">Quiz ID</th>
+					<th class="data-grid-th no-link">Subscription Plan</th>
+					<th class="data-grid-th no-link">Status</th>
+					<th class="data-grid-th no-link">Subscribed On</th>
+					<th class="data-grid-th no-link">Starts On</th>
+					<th class="data-grid-th no-link">Amount</th>
+				</tr>
+			</thead>
+			<tbody>
+				<?php foreach( $subscriptionsList as $subscription ) { ?>
+					<tr>
+						<td><?php echo $subscription->uuid; ?></td>
+						<td><?php echo ( isset( $subscription->custom_fields['quiz_id'] ) ) ? $subscription->custom_fields['quiz_id']->value : 'Quiz ID does not exist for this subscription.'; ?></td>
+						<td><?php echo $subscription->plan->name; ?></td>
+						<td><?php echo $subscription->state; ?></td>
+						<td><?php echo $subscription->activated_at->format( 'd F, Y' ); ?></td>
+						<td><?php echo $subscription->current_term_started_at->format( 'd F, Y' ); ?></td>
+						<td>$<?php echo $block->convertAmountToDollars( $subscription->unit_amount_in_cents ); ?></td>
+					</tr>
+				<?php } ?>
+			</tbody>
+		</table>
+		<div>
+			<p>Clicking "Cancel Subscription" will cancel all of it's active and future subscriptions. The customer will get <strong>$<?php echo $subscriptions['total_amount']; ?></strong> refund. </p>
+			<form action="<?php echo $block->getCancelUrl(); ?>" method="POST">
+				<input type="hidden" name="form_key" value="<?php echo $block->getFormKey(); ?>" />
+				<input type="hidden" name="recurly_account_code" value="<?php echo $block->getCustomerRecurlyAccountCode(); ?>" />
+				<button type="submit">Cancel Subscription</button>
+			</form>
+		</div>
+	</div>
+	<?php } else { ?>
+		<?php if( $subscriptions['success'] == false ) { ?>
+			<p><?php echo $subscriptions['error_message']; ?></p>
+		<?php } else { ?>
+			<p>This customer does not have any active or future subscriptions.</p>
+		<?php } ?>
+	<?php } ?>
+</div>

@@ -1,0 +1,20 @@
+<div
+    class="checkout-success"
+    data-bind="scope: 'success'"
+>
+    <!-- ko template: "SMG_SubscriptionCheckout/success.html" --><!-- /ko -->
+</div>
+
+<script type="text/x-magento-init">
+   {
+        "*": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "success": {
+                        "component": "SMG_SubscriptionCheckout/js/success"
+                    }
+                }
+            }
+        }
+    }
+</script>

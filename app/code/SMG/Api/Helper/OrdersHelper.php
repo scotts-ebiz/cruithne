@@ -19,23 +19,27 @@ use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollection
 use Magento\Sales\Model\ResourceModel\Order\Item as ItemResource;
 use Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory as OrderItemCollectionFactory;
 use Psr\Log\LoggerInterface;
+use SMG\CreditReason\Model\CreditReasonCodeFactory;
+use SMG\CreditReason\Model\ResourceModel\CreditReasonCode as CreditReasonCodeReource;
+use SMG\CreditReason\Model\ResourceModel\CreditReasonCode\CollectionFactory as CreditReasonCodeCollectionFactory;
 use SMG\OfflineShipping\Model\ShippingConditionCodeFactory;
 use SMG\OfflineShipping\Model\ResourceModel\ShippingConditionCode as ShippingConditionCodeResource;
+use SMG\OrderDiscount\Helper\Data as DiscountHelper;
 use SMG\Sap\Model\SapOrderFactory;
+use SMG\Sap\Model\SapOrderBatchFactory;
 use SMG\Sap\Model\ResourceModel\SapOrder as SapOrderResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch as SapOrderBatchResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo\CollectionFactory as SapOrderBatchCreditmemoCollectionFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderBatchRma\CollectionFactory as SapOrderBatchRmaCollectionFactory;
-use SMG\OrderDiscount\Helper\Data as DiscountHelper;
-use SMG\CreditReason\Model\CreditReasonCodeFactory;
-use SMG\CreditReason\Model\ResourceModel\CreditReasonCode as CreditReasonCodeReource;
-use SMG\CreditReason\Model\ResourceModel\CreditReasonCode\CollectionFactory as CreditReasonCodeCollectionFactory;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
 
 class OrdersHelper
 {
     // Output JSON file constants
     const ORDER_NUMBER = 'OrderNumber';
+    const SUBSCRIPTION_ORDER = 'SubscriptOrder';
+    const SUBSCRIPTION_TYPE = 'SubscriptType';
     const DATE_PLACED = 'DatePlaced';
     const SAP_DELIVERY_DATE = 'SAPDeliveryDate';
     const CUSTOMER_NAME = 'CustomerName';
@@ -80,6 +84,9 @@ class OrdersHelper
     const DISCOUNT_PERCENT_AMOUNT = 'DiscPercAmt';
     const SURCH_PERCENT_AMOUNT = 'SurchPercAmt';
     const DISCOUNT_REASON = 'ReasonCode';
+    const SUBSCRIPTION_SHIP_START = 'SubscriptLineShipStart';
+    const SUBSCRIPTION_SHIP_END = 'SubscriptLineShipEnd';
+
     /**
      * @var LoggerInterface
      */
@@ -185,7 +192,7 @@ class OrdersHelper
      */
     protected $_sapOrderBatchCollectionFactory;
 
-     /**
+    /**
      * @var DiscountHelper
      */
     protected $_discountHelper;
@@ -194,6 +201,21 @@ class OrdersHelper
      * @var SapOrderBatchResource
      */
     protected $_sapOrderBatchResource;
+
+    /**
+     * @var SubscriptionResource
+     */
+    protected $_subscriptionResource;
+
+    /**
+     * @var array
+     */
+    protected $_masterSubscriptionIds = [];
+
+    /**
+     * @var SapOrderBatchFactory
+     */
+    protected $_sapOrderBatchFactory;
 
     /**
      * OrdersHelper constructor.
@@ -221,6 +243,8 @@ class OrdersHelper
      * @param SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
      * @param DiscountHelper $discountHelper
      * @param SapOrderBatchResource $sapOrderBatchResource
+     * @param SubscriptionResource $subscriptionResource
+     * @param SapOrderBatchFactory $sapOrderBatchFactory
      */
     public function __construct(LoggerInterface $logger,
         ResourceConnection $resourceConnection,
@@ -244,7 +268,9 @@ class OrdersHelper
         RmaRepositoryInterface $rmaRepository,
         SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory,
         DiscountHelper $discountHelper,
-        SapOrderBatchResource $sapOrderBatchResource)
+        SapOrderBatchResource $sapOrderBatchResource,
+        SubscriptionResource $subscriptionResource,
+        SapOrderBatchFactory $sapOrderBatchFactory)
     {
         $this->_logger = $logger;
         $this->_resourceConnection = $resourceConnection;
@@ -269,6 +295,8 @@ class OrdersHelper
         $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
         $this->_discountHelper = $discountHelper;
         $this->_sapOrderBatchResource = $sapOrderBatchResource;
+        $this->_subscriptionResource = $subscriptionResource;
+        $this->_sapOrderBatchFactory = $sapOrderBatchFactory;
     }
 
     /**
@@ -281,6 +309,9 @@ class OrdersHelper
         // get the debit order data
         $debitArray = $this->getDebitOrderData();
 
+        // get the annual subscription data
+        $annualSubscriptionArray = $this->getAnnualSubscriptionData();
+
         // get the credit order data
         $creditArray = $this->getCreditOrderData();
 
@@ -288,7 +319,7 @@ class OrdersHelper
         $rmaArray = $this->getRmaOrderData();
 
         // merge the debits and credits
-        $ordersArray = array_merge($debitArray, $creditArray, $rmaArray);
+        $ordersArray = array_merge($debitArray, $annualSubscriptionArray, $creditArray, $rmaArray);
 
         // determine if there is anything there to send
         if (empty($ordersArray))
@@ -304,7 +335,7 @@ class OrdersHelper
         }
 
         // return..
-        
+
         return $orders;
     }
 
@@ -335,14 +366,31 @@ class OrdersHelper
 
                 // Get the sales order
                 /**
-                 * @var \Magento\Sales\Model\Order $order
+                 * @var \SMG\Sales\Model\Order $order
                  */
                 $order = $this->_orderFactory->create();
                 $this->_orderResource->load($order, $orderId);
 
+                // we do not want to process annual subscriptions here
+                // annual subscriptions need to be placed together in the file
+                // otherwise they will not add properly in SAP.  Season subscriptions
+                // are different because they are processed like regular orders
+                $subscriptionType = $order->getData('subscription_type');
+                if ($order->isSubscription() && $subscriptionType == 'annual')
+                {
+                    // get the master subscription id
+                    $masterSubscriptionId = $order->getData('master_subscription_id');
+
+                    // make sure that the value was not already added
+                    if (!in_array($masterSubscriptionId, $this->_masterSubscriptionIds))
+                    {
+                        // add to the array
+                        array_push($this->_masterSubscriptionIds, $masterSubscriptionId);
+                    }
+                }
                 // make sure that this order was not canceled before continuing
                 // we do not want to send canceled orders
-                if ($order->isCanceled())
+                else if ($order->isCanceled())
                 {
                     // get the date for today
                     $today = date('Y-m-d H:i:s');
@@ -377,6 +425,83 @@ class OrdersHelper
     }
 
     /**
+     * Process annual subscription data
+     *
+     * @return array
+     */
+    private function getAnnualSubscriptionData()
+    {
+        $ordersArray = array();
+
+        // loop through the list of subscriptions if there are any
+        if (!empty($this->_masterSubscriptionIds))
+        {
+            // loop through the list of master subscription ids
+            foreach ($this->_masterSubscriptionIds as $masterSubscriptionId)
+            {
+                // get the list of orders for this master subscription id
+                $annualOrders = $this->_orderCollectionFactory->create();
+                $annualOrders->addFieldToFilter('master_subscription_id', ['eq' => $masterSubscriptionId]);
+                $annualOrders->setOrder('master_subscription_id', 'asc');
+                $annualOrders->setOrder('ship_start_date', 'asc');
+                $annualOrders->setOrder('entity_id', 'asc');
+
+                // make sure that there are orders
+                // check if there are orders to process
+                if ($annualOrders->count() > 0)
+                {
+                    /**
+                     * @var \SMG\Sales\Model\Order $annualOrder
+                     */
+                    foreach ($annualOrders as $annualOrder)
+                    {
+                        // get the required fields needed for processing
+                        $orderId = $annualOrder->getId();
+
+                        if ($annualOrder->isCanceled())
+                        {
+                            // Get the sap sales order
+                            /**
+                             * @var \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
+                             */
+                            $sapOrderBatch = $this->_sapOrderBatchFactory->create();
+                            $this->_sapOrderBatchResource->load($sapOrderBatch, $orderId);
+
+                            // get the date for today
+                            $today = date('Y-m-d H:i:s');
+
+                            // update the process date so it isn't picked up again
+                            $sapOrderBatch->setData('order_process_date', $today);
+
+                            // save to the database
+                            $this->_sapOrderBatchResource->save($sapOrderBatch);
+                        }
+                        else
+                        {
+                            // get the list of items for this order
+                            $orderItems = $this->_orderItemCollectionFactory->create();
+                            $orderItems->addFieldToFilter("order_id", ['eq' => $orderId]);
+                            $orderItems->addFieldToFilter("product_type", ['neq' => 'bundle']);
+                            $orderItems->addFieldToFilter("product_type", ['neq' => 'configurable']);
+
+                            /**
+                             * @var \Magento\Sales\Model\Order\Item $orderItem
+                             */
+                            foreach ($orderItems as $orderItem)
+                            {
+                                $ordersArray[] = $this->addRecordToOrdersArray($annualOrder, $orderItem);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        // return
+        return $ordersArray;
+    }
+
+    /**
      * Takes the order and item details and puts it in an array
      *
      * @param Order $order
@@ -400,20 +525,16 @@ class OrdersHelper
         $shippingCondition = $this->_shippingConditionCodeFactory->create();
         $this->_shippingConditionCodeResource->load($shippingCondition, $order->getShippingMethod(), 'shipping_method');
 
-        // check to see if there was a value
-        $invoiceAmount = $order->getData('total_invoiced');
-        if (empty($invoiceAmount))
-        {
-            $invoiceAmount = '';
-        }
-
-        // get the quantity
+        // get the values that change depending on the type of order
         $quantity = $orderItem->getQtyOrdered();
+        $grossSales = $order->getData('grand_total');
         $shippingAmount = $order->getData('shipping_amount');
         $taxAmount = $order->getData('tax_amount');
         $hdrDiscFixedAmount = '';
         $hdrDiscPerc = '';
         $hdrDiscCondCode = '';
+        $subtotal = $order->getData('subtotal');
+        $invoiceAmount = $order->getData('total_invoiced');
 
         // get the shipping address
         /**
@@ -445,7 +566,7 @@ class OrdersHelper
         $itemDiscount = $this->_discountHelper->CatalogCode($order->getId(), $orderItem);
 
         if(!empty($itemDiscount))
-        { 
+        {
             $discFixedAmt = $itemDiscount['disc_fixed_amount'];
             $discPerAmt  = $itemDiscount['disc_percent_amount'];
             $discCondCode = $itemDiscount['disc_condition_code'];
@@ -463,13 +584,43 @@ class OrdersHelper
         $surchFixedAmt='';
         $surchPerAmt='';
 
+        // determine if this is a subscription
+        $subscriptionType = $order->getData('subscription_type');
+        if ($order->isSubscription() && $subscriptionType == 'annual')
+        {
+            // get the subscription
+            /**
+             * @var \SMG\SubscriptionApi\Model\Subscription $subscription
+             */
+            $masterSubscriptionId = $order->getData('master_subscription_id');
+
+            $subscription = $this->_subscriptionResource->getSubscriptionByMasterSubscriptionId($masterSubscriptionId);
+
+            // get the gross sales from the subscription order
+            $grossSales = $subscription->getData('paid');
+
+            // get the shipping amount.  Currently we don't have a shipping amount
+            // for subscriptions.  this will need to be changed if we ever start adding
+            // a shipping amount for subscriptions.
+            $shippingAmount = '0';
+
+            // get the subtotal of the subscription
+            $subtotal = $subscription->getData('price');
+
+            // get the tax of the subscription
+            $taxAmount = $subscription->getData('tax');
+
+            // get the invoice amount which is the same as the gross sales
+            $invoiceAmount = $subscription->getData('paid');
+        }
+
         // determine what type of order
         $debitCreditFlag = 'DR';
         if (!empty($creditMemo) && !empty($creditMemoItem))
         {
             $debitCreditFlag = 'CR';
 
-            // set other credit memeo type fields
+            // set other credit memo type fields
             $quantity = $creditMemoItem->getQty();
             $shippingAmount = $creditMemo->getShippingAmount();
             $creditAmount = $creditMemoItem->getRowTotalInclTax();
@@ -558,9 +709,17 @@ class OrdersHelper
             }
         }
 
+        // check to see if there was a value for invoiceAmount
+        if (empty($invoiceAmount))
+        {
+            $invoiceAmount = '';
+        }
+
         // return
         return array_map('trim', array(
             self::ORDER_NUMBER => $order->getIncrementId(),
+            self::SUBSCRIPTION_ORDER => $order->getSubscriptionOrderId(),
+            self::SUBSCRIPTION_TYPE => $subscriptionType,
             self::DATE_PLACED => $order->getData('created_at'),
             self::SAP_DELIVERY_DATE => $tomorrow,
             self::CUSTOMER_NAME => $customerName,
@@ -573,7 +732,7 @@ class OrdersHelper
             self::QUANTITY => $quantity,
             self::UNIT => 'EA',
             self::UNIT_PRICE => $price,
-            self::GROSS_SALES => $order->getData('grand_total'),
+            self::GROSS_SALES => $grossSales,
             self::SHIPPING_AMOUNT => $shippingAmount,
             self::EXEMPT_AMOUNT => '0',
             self::HDR_DISC_FIXED_AMOUNT => $hdrDiscFixedAmount,
@@ -583,7 +742,7 @@ class OrdersHelper
             self::HDR_SURCH_PERC => $hdrSurchPerc,
             self::HDR_SURCH_COND_CODE => $hdrSurchCondCode,
             self::DISCOUNT_AMOUNT => '',
-            self::SUBTOTAL => $order->getData('subtotal'),
+            self::SUBTOTAL => $subtotal,
             self::TAX_RATE => $orderItem->getTaxPercent(),
             self::SALES_TAX => $taxAmount,
             self::INVOICE_AMOUNT => $invoiceAmount,
@@ -604,7 +763,9 @@ class OrdersHelper
             self::SURCH_FIXED_AMOUNT => $surchFixedAmt,
             self::DISCOUNT_PERCENT_AMOUNT => $discPerAmt,
             self::SURCH_PERCENT_AMOUNT => $surchPerAmt,
-            self::DISCOUNT_REASON => $orderItem->getReasonCode()
+            self::DISCOUNT_REASON => $orderItem->getReasonCode(),
+            self::SUBSCRIPTION_SHIP_START => $order->getData('ship_start_date'),
+            self::SUBSCRIPTION_SHIP_END => $order->getData('ship_end_date')
         ));
     }
 
