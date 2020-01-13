@@ -1047,9 +1047,7 @@ define([
        self.questionGroups = data.questionGroups;
 
        // Remove the Alaska and Hawaii zones.
-       self.zipCodesOptionMappings = data.zipCodesOptionMappings.filter((zone) => {
-           return !['eb4c247b-9100-40b0-95fd-bd319dd4393f', 'a028c078-f881-4019-95c8-f4b209ba00bc'].includes(zone.optionId);
-       });
+       self.zipCodesOptionMappings = data.zipCodesOptionMappings;
     }
 
     function setSliderTrack(el) {
