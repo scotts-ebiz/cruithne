@@ -1,6 +1,6 @@
 # Base image is Google's Optimized Ubuntu Image
 
-ARG IMAGE=gcr.io/ecommerce-platform-211419/magento-test-primer:latest
+ARG IMAGE=gcr.io/ecommerce-platform-211419/magento-stage-primer:latest
 FROM $IMAGE
 ENTRYPOINT []
 
@@ -14,6 +14,9 @@ USER root
 WORKDIR $MAGENTO_DIR
 RUN chown -R magento:www-data .git
 
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN apt-get install -y nodejs
+
 USER magento
 WORKDIR $MAGENTO_DIR
 
@@ -24,6 +27,8 @@ RUN git fetch --all
 RUN git reset --hard
 RUN git pull
 RUN composer install
+
+RUN node -v && cd /var/www/html/magento2/tools && npm install
 
 # Temporary patch for VendorVertex
 COPY vendor-vertex-compilation-issue.patch /tmp/vendor-vertex-compilation-issue.patch
