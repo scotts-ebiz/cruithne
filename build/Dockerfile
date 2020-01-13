@@ -14,6 +14,9 @@ USER root
 WORKDIR $MAGENTO_DIR
 RUN chown -R magento:www-data .git
 
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN apt-get install -y nodejs
+
 USER magento
 WORKDIR $MAGENTO_DIR
 
