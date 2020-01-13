@@ -79,26 +79,27 @@ define([
 				sm_stk_all[i].classList.add("ls-stroke-focus");
 			}
 
-			setTimeout(function () { exec_rotation(); }, 3000);
-
+			var rotation_timeout = 5000;
 			function exec_rotation() {
-				setTimeout(function () {
-					fall_in_focus();
-				}, 3000);
+				fall_in_focus();
 
 				setTimeout(function () {
 					earlySpring_in_focus();
-				}, 6000)
+				}, rotation_timeout)
 
 				setTimeout(function () {
 					lateSpring_in_focus();
-				}, 9000);
+				}, rotation_timeout * 2);
 
 				setTimeout(function () {
 					summer_in_focus();
+				}, rotation_timeout * 3);
+
+				setTimeout(function () {
 					exec_rotation();
-				}, 12000);
+				}, rotation_timeout * 4);
 			}
+			setTimeout(exec_rotation, rotation_timeout);
 
 			//Implement each season rotation
 			//summer in focus
