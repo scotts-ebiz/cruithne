@@ -1,6 +1,6 @@
 # Base image is Google's Optimized Ubuntu Image
 
-ARG IMAGE=gcr.io/ecommerce-platform-211419/magento-staging-primer:latest
+ARG IMAGE=gcr.io/ecommerce-platform-211419/magento-stage-primer:latest
 FROM $IMAGE
 ENTRYPOINT []
 
