@@ -27,11 +27,11 @@
 		</div>
 
 		<div class="sp-text-center sp-mt-8 md:sp-mt-0">
-			<a href="<?php echo $block->escapeUrl($block->getUrl('how-it-works')) ?>" class="sp-button sp-button--primary">TELL ME MORE</a>
+			<a href="<?php echo $block->escapeUrl($block->getUrl('how-it-works')) ?>" class="sp-button sp-button--primary sp-button--get-started">TELL ME MORE</a>
 		</div>
 	</div>
 
-	<div class="sp-home__what-to-expect sp-my-20 sp-pb-12 md:sp-mx-4">
+	<div class="sp-home__what-to-expect sp-my-20 sp-pb-12 md:sp-mx-4 lg:sp-pb-8">
 		<div class="sp-bg-green-4">
 			<div class="sp-container sp-py-8">
 				<h2 class="sp-h2 sp-max-w-md sp-mx-auto sp-text-center sp-text-green-1 sp-home__what-to-expect-heading">Lawn Care Made Beautifully Simple</h2>
@@ -160,19 +160,19 @@
 		</div>
 	</div>
 
-	<div class="sp-home__history sp-bg-green-4 sp-mb-24 sp-mt-24 md:sp-mt-0">
+	<div class="sp-home__history sp-bg-green-4 sp-mb-24 sp-mt-24 lg:sp-mt-0">
 		<div class="sp-container sp-py-16">
-			<div class="sp-home__history-container sp-flex sp-items-center">
-				<div class="sp-home__history-description md:sp-w-1/2 sp-px-4 sp-text-center md:sp-text-left">
+			<div class="sp-home__history-container sp-flex sp-items-center sp-mx-auto">
+				<div class="sp-home__history-description lg:sp-w-1/2 sp-px-4 sp-text-center lg:sp-text-left">
 					<h3 class="sp-h3 sp-max-w-xs sp-mx-auto sp-text-center">Over 150 Years of Lawn Care Innovation</h3>
-					<p> Scotts has been your trusted lawn care partner for more than 150 years—and we put that expertise and innovative spirit to work for you with a personalized Lawn Care Program. Additionally, we offer our exclusive No Quibble Guarantee on every product we sell.</p>
+					<p class="sp-text-center">Scotts has been your trusted lawn care partner for more than 150 years—and we put that expertise and innovative spirit to work for you with a personalized Lawn Care Program. Additionally, we offer our exclusive No Quibble Guarantee on every product we sell.</p>
 					<div class="sp-mt-8 sp-text-center">
 						<a href="<?php echo $block->escapeUrl($block->getUrl('quiz')) ?>" class="sp-button sp-button--primary sp-button--get-started sp-mb-12 sp-relative">CUSTOMIZE YOUR PLAN</a>
 					</div>
 				</div>
-				<div class="sp-home__history-date sp-mb-8 md:sp-mb-0">
-					<div class="sp-text-center sp-mt-1">
-						<svg class="line-1" id="line-1-id" width="3px" viewBox="0 0 2 174" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+				<div class="sp-home__history-date sp-mb-8 lg:sp-mb-0">
+					<div class="sp-text-center">
+						<svg class="line-1" id="line-1-id" width="4px" viewBox="0 0 2 174" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 							<g id="Page-1" stroke="none" fill="none" fill-rule="evenodd">
 								<g id="D-HomePage-" transform="translate(-639.000000, -3435.000000)" stroke="#1d5632" stroke-width="2">
 									<g id="Expertise" transform="translate(0.000000, 3056.000000)">
@@ -185,10 +185,10 @@
 						</svg>
 					</div>
 
-					<p id="countdown">1868</p>
+					<p id="countdown" class="sp-home__countdown">1868</p>
 
-					<div class="sp-text-center" id="trigger-anim">
-						<svg class="line-2" id="line-2-id" width="3px" viewBox="0 0 2 174" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+					<div class="sp-hide lg:sp-block sp-text-center">
+						<svg class="line-2" id="line-2-id" width="4px" viewBox="0 0 2 174" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
 							<g id="Page-1" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd" stroke-linecap="square">
 								<g id="D-HomePage-" transform="translate(-639.000000, -3435.000000)" stroke="#1d5632" stroke-width="2">
 									<g id="Expertise" transform="translate(0.000000, 3056.000000)">
@@ -201,40 +201,43 @@
 						</svg>
 					</div>
 				</div>
-				<div class="sp-home__history-image md:sp-w-1/2 sp-px-4">
-				    <div>
-						<img
-							alt="History"
-							class="sp-block sp-mx-auto season-img"
-							src="https://test_magento_image_repo.storage.googleapis.com/history_img3.jpg"
-						/>
-						<img
-							alt="History"
-							class="sp-block sp-mx-auto season-img"
-							src="https://test_magento_image_repo.storage.googleapis.com/history_img2.jpg"
-						/>
-						<img
-							alt="History"
-							class="sp-block sp-mx-auto season-img"
-							src="https://test_magento_image_repo.storage.googleapis.com/history_img1.jpg"
-						/>
-						<img 
-							alt="History"
-							class="sp-block sp-mx-auto season-img"
-							src="https://test_magento_image_repo.storage.googleapis.com/history_img4.jpg" 
-						/>
-						<img 
-							alt="History"
-							class="sp-block sp-mx-auto season-img"
-							src="https://test_magento_image_repo.storage.googleapis.com/history_img5.jpg"
-						/>
-					</div>
+				<div class="sp-home__history-image sp-w-full lg:sp-w-1/2 sp-px-4">
+                    <div
+                        class="sp-aspect-ratio sp-aspect-ratio--1x1"
+                        id="trigger-anim"
+                    >
+                        <img
+                            alt="History"
+                            class="season-img sp-aspect-ratio--object"
+                            src="https://test_magento_image_repo.storage.googleapis.com/history_img3.jpg"
+                        />
+                        <img
+                            alt="History"
+                            class="season-img sp-aspect-ratio--object"
+                            src="https://test_magento_image_repo.storage.googleapis.com/history_img2.jpg"
+                        />
+                        <img
+                            alt="History"
+                            class="season-img sp-aspect-ratio--object"
+                            src="https://test_magento_image_repo.storage.googleapis.com/history_img1.jpg"
+                        />
+                        <img
+                            alt="History"
+                            class="season-img sp-aspect-ratio--object"
+                            src="https://test_magento_image_repo.storage.googleapis.com/history_img4.jpg"
+                        />
+                        <img
+                            alt="History"
+                            class="season-img sp-aspect-ratio--object"
+                            src="https://test_magento_image_repo.storage.googleapis.com/history_img5.jpg"
+                        />
+                    </div>
 				</div>
 			</div>
 		</div>
 	</div>
 
-	<div class="sp-home__apps sp-mt-12">
+	<div class="sp-home__apps sp-overflow-hidden sp-mt-12">
 		<div class="sp-container">
 			<div class="sp-flex sp-flex-column md:sp-flex-row sp-items-center md:sp--mx-8">
 				<div class="sp-order-1 md:sp-order-0 md:sp-w-1/2 sp-px-8">

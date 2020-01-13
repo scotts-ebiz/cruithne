@@ -2,12 +2,15 @@
 
 namespace SMG\SubscriptionApi\Helper;
 
-use Magento\Customer\Model\Customer;
 use Magento\Quote\Model\QuoteFactory;
-use Magento\Quote\Model\QuoteManagement;
+use Magento\Quote\Model\QuoteRepository;
+use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Customer\Model\AddressFactory;
+use Magento\Customer\Model\Customer;
+use Magento\Customer\Model\CustomerFactory;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
+use Magento\Quote\Model\QuoteManagement;
 use Magento\Sales\Model\Order;
 use Magento\Store\Model\StoreManagerInterface;
 use SMG\SubscriptionApi\Exception\SubscriptionException;
@@ -15,7 +18,9 @@ use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\CollectionFac
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection as SubscriptionOrderCollection;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
 use SMG\SubscriptionApi\Model\SubscriptionAddonOrder;
+use SMG\SubscriptionApi\Model\SubscriptionAddonOrderItem;
 use SMG\SubscriptionApi\Model\SubscriptionOrder;
+use SMG\SubscriptionApi\Model\SubscriptionOrderItem;
 
 /**
  * Class SubscriptionOrderHelper
@@ -78,16 +83,30 @@ class SubscriptionOrderHelper extends AbstractHelper
     protected $_quoteManagement;
 
     /**
+     * @var CustomerFactory
+     */
+    protected $_customerFactory;
+
+    /**
+     * @var CheckoutSession
+     */
+    protected $_checkoutSession;
+    /**
      * @var QuoteFactory
      */
     protected $_quoteFactory;
+    /**
+     * @var QuoteRepository
+     */
+    protected $_quoteRepository;
 
     /**
      * SubscriptionOrderHelper constructor.
      * @param Context $context
+     * @param AddressFactory $addressFactory
      * @param Customer $customer
+     * @param CustomerFactory $customerFactory
      * @param Order $order
-     * @param QuoteFactory $quoteFactory
      * @param QuoteManagement $quoteManagement
      * @param StoreManagerInterface $storeManager
      * @param SubscriptionAddonOrder $subscriptionAddonOrder
@@ -100,27 +119,33 @@ class SubscriptionOrderHelper extends AbstractHelper
         Context $context,
         AddressFactory $addressFactory,
         Customer $customer,
+        CustomerFactory $customerFactory,
         Order $order,
         QuoteFactory $quoteFactory,
         QuoteManagement $quoteManagement,
+        QuoteRepository $quoteRepository,
         StoreManagerInterface $storeManager,
         SubscriptionAddonOrder $subscriptionAddonOrder,
         SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory,
         SubscriptionOrder $subscriptionOrder,
-        SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
+        SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
+        CheckoutSession $checkoutSession
     ) {
         parent::__construct($context);
 
         $this->_addressFactory = $addressFactory;
         $this->_customer = $customer;
+        $this->_customerFactory = $customerFactory;
         $this->_order = $order;
         $this->_quoteFactory = $quoteFactory;
         $this->_quoteManagement = $quoteManagement;
+        $this->_quoteRepository = $quoteRepository;
         $this->_storeManager = $storeManager;
         $this->_subscriptionAddonOrder = $subscriptionAddonOrder;
         $this->_subscriptionAddonOrderCollectionFactory = $subscriptionAddonOrderCollectionFactory;
         $this->_subscriptionOrder = $subscriptionOrder;
         $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
+        $this->_checkoutSession = $checkoutSession;
 
         $this->_store = $storeManager->getStore();
         $this->_websiteId = $this->_store->getWebsiteId();
@@ -164,7 +189,8 @@ class SubscriptionOrderHelper extends AbstractHelper
         $subscription = $subscriptionOrder->getSubscription();
 
         // Get the customer.
-        $customer = $this->_customer->load($subscription->getCustomerId());
+        $customer = $this->_customerFactory->create();
+        $customer->load($subscription->getData('customer_id'));
         if (! $customer->getId()) {
             $this->errorResponse(
                 "Customer {$customer->getId()} not found.",
@@ -188,6 +214,27 @@ class SubscriptionOrderHelper extends AbstractHelper
                 400
             );
         }
+    }
+
+    /**
+     * Format the provided address to use only the required fields.
+     *
+     * @param $address
+     * @return array
+     */
+    public function formatAddress($address)
+    {
+        return [
+            'firstname' => $address->getFirstname(),
+            'lastname' => $address->getLastname(),
+            'street' => $address->getStreetFull(),
+            'city' => $address->getCity(),
+            'country_id' => $address->getCountryId(),
+            'region' => $address->getRegion(),
+            'postcode' => $address->getPostcode(),
+            'telephone' => $address->getTelephone(),
+            'save_in_address_book' => 1,
+        ];
     }
 
     /**
@@ -240,18 +287,33 @@ class SubscriptionOrderHelper extends AbstractHelper
      */
     protected function processOrder(Customer $customer, $subscriptionOrder)
     {
-        // Create a new quote.
-        $quote = $this->_quoteFactory->create();
+        $this->_checkoutSession->resetCheckout();
+        $quoteID = $this->_quoteManagement->createEmptyCartForCustomer($customer->getId());
+        $quote = $this->_quoteRepository->get($quoteID);
         $quote->setStore($this->_store);
         $quote->setCurrency();
         $quote->assignCustomer($customer->getDataModel());
+        $this->_checkoutSession->setQuoteId($quote->getId());
+
 
         foreach ($subscriptionOrder->getOrderItems() as $item) {
             // Check if the item has the selected field and if it is set.
+            /**
+             * @var SubscriptionOrderItem|SubscriptionAddonOrderItem $item
+             */
             if ($item->hasData('selected') && ! $item->getSelected()) {
                 // This is an add-on product and is not selected, so continue.
                 continue;
             }
+
+            $isAddon = $item->hasData('selected') && $item->getSelected();
+
+            // Add the annual discount for annual subscription items that are
+            // not add-ons.
+            if (! $isAddon && $subscriptionOrder->getSubscriptionType() == 'annual') {
+                $quote->setCouponCode('annual_discount_order');
+            }
+
             // Add product to the cart
             try {
                 $product = $item->getProduct();
@@ -337,20 +399,5 @@ class SubscriptionOrderHelper extends AbstractHelper
         http_response_code($status);
 
         throw new SubscriptionException($error);
-    }
-
-    protected function formatAddress($address)
-    {
-        return [
-            'firstname' => $address->getFirstname(),
-            'lastname' => $address->getLastname(),
-            'street' => $address->getStreet(),
-            'city' => $address->getCity(),
-            'county_id' => $address->getCountryId(),
-            'region' => $address->getRegion(),
-            'postcode' => $address->getPostcode(),
-            'telephone' => $address->getTelephone(),
-            'save_in_address_book' => 1,
-        ];
     }
 }

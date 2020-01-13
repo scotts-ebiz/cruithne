@@ -158,10 +158,6 @@ define([
         self.calculateLawnSize = function () {
             self.lawnSize(0);
 
-            if (!self.polygons().length) {
-                return;
-            }
-
             for (polygon of self.polygons()) {
                 var squareMeters = google.maps.geometry.spherical.computeArea(polygon.getPath());
                 var squareFeet = Math.round(squareMeters * 10.76391);
@@ -275,6 +271,7 @@ define([
      */
     function Quiz(data) {
         var self = this;
+        const NUMBERPATTERN = /^[0-9]+$/;
 
         // Grab question content block for use in finding callback event
         self.questionContentBlock = document.querySelector('.sp-quiz__question-wrapper');
@@ -296,6 +293,7 @@ define([
         self.animation = ko.observable({});
         self.usingGoogleMaps = ko.observable(true);
         self.invalidZipCode = ko.observable(false);
+        self.invalidArea = ko.observable(false);
         self.isAnimating = ko.observable(false);
         self.zipCode = '';
 
@@ -971,6 +969,11 @@ define([
                 zip = data;
             } else {
                 zip = event.target.value;
+                self.invalidZipCode(false);
+                if (zip.length > 0 && !zip.toString().match(NUMBERPATTERN)) {
+                    self.invalidZipCode(true);
+                    return;
+                }
             }
 
             const zoneQuestion = self.questions().find((question) => +question.questionType === 5);
@@ -987,7 +990,7 @@ define([
                 return;
             }
 
-            if (zip.length === 5) {
+            if (zip.length === 5 && zip.toString().match(NUMBERPATTERN)) {
                 const zoneOption = self.getZone(zip);
 
                 if (zoneOption) {
@@ -1011,16 +1014,21 @@ define([
          */
         self.setArea = function (data, event) {
             let area = 0;
+            self.invalidArea(false);
             if (typeof data === 'number') {
                 area = data;
             } else {
-                area = parseInt(event.target.value);
+                let areaInput = event.target.value;
+                let areaAsString = areaInput.toString();
+                if (!areaAsString.match(NUMBERPATTERN)) {
+                    self.invalidArea(true);
+                } else {
+                    area = parseInt(areaInput);
+                }
             }
 
-            if (area > 0) {
-               self.addOrReplaceAnswer(self.questions()[1].id, self.questions()[1].options[0].id, area);
-               window.sessionStorage.setItem('lawn-area', String(area));
-            }
+            self.addOrReplaceAnswer(self.questions()[1].id, self.questions()[1].options[0].id, area);
+            window.sessionStorage.setItem('lawn-area', String(area));
         }
     }
 

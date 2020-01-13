@@ -46,7 +46,7 @@ class Post extends \Magento\Contact\Controller\Index\Post {
         ConfigInterface $contactsConfig,
         MailInterface $mail,
         DataPersistorInterface $dataPersistor,
-        LoggerInterface $logger = null,
+        LoggerInterface $logger,
         \Magento\Framework\Translate\Inline\StateInterface $inlineTranslation,
         \Magento\Framework\Controller\Result\JsonFactory $resultJsonFactory
     ) {

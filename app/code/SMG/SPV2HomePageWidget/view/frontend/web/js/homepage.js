@@ -35,15 +35,17 @@ define([
                 var wS = $(this).scrollTop();
                 if (wS > (hT + hH - wH) && (hT > wS)) {
                     animationRan = true;
+
                     //Animate images fade in out
                     fadeimg();
 
+                    // Animation countdown
                     timer();
 
-                    //Animate line1
+                    // Animate line1
                     line1_get.classList.add("line-1_anim");
 
-                    //Animate line 2
+                    // Animate line 2
                     setTimeout(function () {
                         line2_get.classList.add("line-2_anim");
                     }, 400);
@@ -59,8 +61,8 @@ define([
                 }
 
                 let interval = setInterval(function () {
-                    slides[current_img].style.opacity = 1;
                     current_img++;
+                    slides[current_img].style.opacity = 1;
 
                     if (current_img === slides.length - 1) {
                         clearInterval(interval);
