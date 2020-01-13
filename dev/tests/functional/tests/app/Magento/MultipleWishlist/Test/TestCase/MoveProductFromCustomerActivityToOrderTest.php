@@ -6,10 +6,10 @@
 
 namespace Magento\MultipleWishlist\Test\TestCase;
 
+use Magento\Mtf\Util\Command\Cli\EnvWhitelist;
 use Magento\MultipleWishlist\Test\Fixture\MultipleWishlist;
 use Magento\Mtf\TestCase\Injectable;
 use Magento\MultipleWishlist\Test\TestStep\CreateOrderForCustomerMultipleWishlistStep;
-use Magento\Mtf\Util\Command\Cli\EnvWhitelist;
 
 /**
  * Preconditions:
@@ -113,7 +113,7 @@ class MoveProductFromCustomerActivityToOrderTest extends Injectable
      *
      * @return void
      */
-    protected function tearDown()
+    public function tearDown()
     {
         $this->envWhitelist->removeHost('example.com');
         // TODO: Move set default configuration to "tearDownAfterClass" method after fix bug MAGETWO-29331
