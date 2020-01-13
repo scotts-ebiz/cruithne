@@ -2,9 +2,9 @@
 
 namespace SMG\SubscriptionApi\Setup;
 
-use Magento\Framework\Setup\UpgradeDataInterface;
-use Magento\Framework\Setup\ModuleDataSetupInterface;
 use Magento\Framework\Setup\ModuleContextInterface;
+use Magento\Framework\Setup\ModuleDataSetupInterface;
+use Magento\Framework\Setup\UpgradeDataInterface;
 
 class UpgradeData implements UpgradeDataInterface
 {
@@ -33,8 +33,7 @@ class UpgradeData implements UpgradeDataInterface
         \SMG\SubscriptionApi\Model\SubscriptionStatusFactory $subscriptionStatusFactory,
         \SMG\SubscriptionApi\Model\SubscriptionTypeFactory $subscriptionTypeFactory,
         \SMG\SubscriptionApi\Model\SubscriptionOrderStatusFactory $subscriptionOrderStatusFactory
-    )
-    {
+    ) {
         $this->_subscriptionStatusFactory = $subscriptionStatusFactory;
         $this->_subscriptionTypeFactory = $subscriptionTypeFactory;
         $this->_subscriptionOrderStatusFactory = $subscriptionOrderStatusFactory;
@@ -48,26 +47,25 @@ class UpgradeData implements UpgradeDataInterface
     public function upgrade(
         ModuleDataSetupInterface $setup,
         ModuleContextInterface $context
-    )
-    {
+    ) {
 
         // Version 1.1.2
-        if ( version_compare( $context->getVersion(), '1.1.2', '<' ) ) {
+        if (version_compare($context->getVersion(), '1.1.2', '<')) {
             $this->addDataVersion112($setup);
         }
 
         // Version 1.1.3
-        if ( version_compare( $context->getVersion(), '1.1.3', '<' ) ) {
+        if (version_compare($context->getVersion(), '1.1.3', '<')) {
             $this->addDataVersion113($setup);
         }
 
         // Version 1.1.4
-        if ( version_compare( $context->getVersion(), '1.1.4', '<' ) ) {
+        if (version_compare($context->getVersion(), '1.1.4', '<')) {
             $this->addDataVersion114($setup);
         }
 
         // Version 1.1.5
-        if ( version_compare( $context->getVersion(), '1.1.5', '<' ) ) {
+        if (version_compare($context->getVersion(), '1.1.5', '<')) {
             $this->addDataVersion115($setup);
         }
     }
@@ -146,13 +144,11 @@ class UpgradeData implements UpgradeDataInterface
     {
         // Upgrade Subscription Status
         $tableName = $setup->getTable('subscription_order_status');
-        $exists = $setup->getConnection()->fetchOne("SELECT * FROM `subscription_status` WHERE status = 'failed'");
 
-        if (! $exists) {
-            $data = [
-                ['status' => 'failed', 'label' => 'Failed']
-            ];
-            $setup->getConnection()->insertMultiple($tableName, $data);
-        }
+        $data = [
+            ['status' => 'failed', 'label' => 'Failed']
+        ];
+
+        $setup->getConnection()->insertMultiple($tableName, $data);
     }
 }
