@@ -1,6 +1,6 @@
 # Base image is Google's Optimized Ubuntu Image
 
-ARG IMAGE=gcr.io/ecommerce-platform-211419/magento-stage-primer:latest
+ARG IMAGE=gcr.io/ecommerce-platform-211419/magento-test-primer:latest
 FROM $IMAGE
 ENTRYPOINT []
 
@@ -24,6 +24,11 @@ RUN git fetch --all
 RUN git reset --hard
 RUN git pull
 RUN composer install
+
+# Temporary patch for VendorVertex
+COPY vendor-vertex-compilation-issue.patch /tmp/vendor-vertex-compilation-issue.patch
+RUN git apply /tmp/vendor-vertex-compilation-issue.patch
+
 RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools
 
 USER root
