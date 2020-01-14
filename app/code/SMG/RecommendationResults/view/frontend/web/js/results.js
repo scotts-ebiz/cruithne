@@ -70,31 +70,57 @@ define([
 
             self.seasons = ko.computed(() => {
                 const uniqueSeasons = self.products().reduce((items, product) => {
-                    if (items.indexOf(product.season) === -1) {
-                        items.push(product.season);
-                    }
+                  if (items.indexOf(product.season) === -1) {
+                    items.push(product.season);
+                  }
 
-                    return items;
+                  return items;
                 }, []);
 
-                const seasons = uniqueSeasons.map((season) => {
-                    const products = self.products().filter((product) => {
-                        return product.season === season;
-                    });
+                const seasons = uniqueSeasons.map(season => {
+                  const products = self.products().filter(product => {
+                    return product.season === season;
+                  });
 
-                    return {
-                        season: season,
-                        products: self.products().filter((product) => {
-                            return product.season === season;
-                        }),
-                        total: products.reduce((price, product) => {
-                            return price + (+product.price * +product.quantity);
-                        }, 0),
+                  let prodMap = {};
+
+                  products.forEach(product => {
+                    if (prodMap[product.prodId]) {
+                      prodMap[product.prodId] += 1;
+                      return;
                     }
+
+                    prodMap[product.prodId] = product.quantity;
+                  });
+
+                  const newProducts = [];
+
+                  products.forEach(product => {
+                    if (
+                      !newProducts.some(prod => {
+                        return prod.prodId === product.prodId
+                      })
+                    ) {
+                      let newProd = {
+                        ...product
+                      };
+                      newProd.quantity = prodMap[newProd.prodId];
+                      newProducts.push(newProd);
+                    }
+                  });
+
+
+                  return {
+                    season,
+                    products: newProducts,
+                    total: products.reduce((price, product) => {
+                      return price + +product.price * +product.quantity;
+                    }, 0)
+                  };
                 });
 
                 return seasons;
-            });
+              });
 
             // used to indicate which product is up next for delivery
             self.nextAvailableProduct = ko.computed(function () {
@@ -288,34 +314,12 @@ define([
         },
 
         getSeasonIcon: function (product) {
-            let icon = '';
+            let icon = ''
             switch (product.season) {
-                // Summer
-                case 'Early Summer': icon = 'icon-summer.svg'; break;
-                case 'Early Summer Seeding': icon = 'icon-summer.svg'; break;
                 case 'Early Summer Feeding': icon = 'icon-summer.svg'; break;
-
-                case 'Late Summer': icon = 'icon-summer.svg'; break;
-                case 'Late Summer Feeding': icon = 'icon-summer.svg'; break;
-
-                // Spring
-                case 'Early Spring': icon = 'icon-early-spring.svg'; break;
                 case 'Early Spring Feeding': icon = 'icon-early-spring.svg'; break;
-                case 'Late Spring Seeding': icon = 'icon-early-spring.svg'; break;
-                
-                case 'Late Spring': icon = 'icon-late-spring.svg'; break;
                 case 'Late Spring Feeding': icon = 'icon-late-spring.svg'; break;
-                case 'Late Spring Seeding': icon = 'icon-late-spring.svg'; break;
-                case 'Late Spring Grub': icon = 'icon-late-spring.svg'; break;
-
-
-                // Fall
-                case 'Early Fall': icon = 'icon-fall.svg'; break;
-                case 'Early Fall Seeding': icon = 'icon-fall.svg'; break;
                 case 'Early Fall Feeding': icon = 'icon-fall.svg'; break;
-
-                case 'Late Fall': icon = 'icon-fall.svg'; break;
-                case 'Late Fall Feeding': icon = 'icon-fall.svg'; break;
             }
 
             return 'https://test_magento_image_repo.storage.googleapis.com/' + icon
@@ -372,4 +376,3 @@ define([
         }
     });
 });
-
