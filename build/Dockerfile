@@ -22,7 +22,7 @@ RUN mkdir -p $MAGENTO_DIR/var/import/images && gsutil -q -m rsync -r -u gs://mag
 
 RUN git fetch --all
 RUN git reset --hard
-RUN git checkout ECOM-1478_UpgradeTest233
+RUN git pull
 RUN composer install
 RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools
 
