@@ -304,12 +304,10 @@ define([
                 case 'Early Spring': icon = 'icon-early-spring.svg'; break;
                 case 'Early Spring Feeding': icon = 'icon-early-spring.svg'; break;
                 case 'Late Spring Seeding': icon = 'icon-early-spring.svg'; break;
-
                 case 'Late Spring': icon = 'icon-late-spring.svg'; break;
                 case 'Late Spring Feeding': icon = 'icon-late-spring.svg'; break;
                 case 'Late Spring Seeding': icon = 'icon-late-spring.svg'; break;
                 case 'Late Spring Grub': icon = 'icon-late-spring.svg'; break;
-
 
                 // Fall
                 case 'Early Fall': icon = 'icon-fall.svg'; break;
