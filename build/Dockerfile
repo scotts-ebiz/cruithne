@@ -22,20 +22,15 @@ RUN mkdir -p $MAGENTO_DIR/var/import/images && gsutil -q -m rsync -r -u gs://mag
 
 RUN git fetch --all
 RUN git reset --hard
-RUN git pull
+RUN git checkout ECOM-1478_UpgradeTest233
 RUN composer install
 RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools
 
+# Temporary patch for VendorVertex
+COPY vendor-vertex-compilation-issue.patch /tmp/vendor-vertex-compilation-issue.patch
+RUN git apply /tmp/vendor-vertex-compilation-issue.patch
+
 USER root
-
-RUN REV=$(git rev-parse HEAD)
-
-RUN \
-	curl -X POST 'https://api.newrelic.com/v2/applications/203206085/deployments.json' \
-     -H 'X-Api-Key:abb8c9f78734ce8444b721b2ad8f0474899a8932522d942' -i \
-     -H 'Content-Type: application/json' \
-     -d \
-	'{ "deployment": { "revision": "$REV" } }'
 
 # Expose Ports for Apache
 EXPOSE 80/tcp 443/tcp
