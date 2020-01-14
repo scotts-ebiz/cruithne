@@ -52,7 +52,7 @@ class Index extends Action
     }
 
     /**
-     * Check customer authentication
+     * Check that the user should have access
      *
      * @param RequestInterface $request
      * @return Redirect|ResponseInterface
@@ -92,7 +92,7 @@ class Index extends Action
     }
 
     /**
-     * Display subscriptions bought by customer
+     * Display reset password page
      *
      * @return void
      */
