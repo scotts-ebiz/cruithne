@@ -3,12 +3,12 @@
 //  _____________________________________________
 
 $checkout-wrapper__margin              : $indent__base !default;
-$checkout-wrapper__columns             : 8 !default;
+$checkout-wrapper__columns             : 6 !default; //Change to 6 for 50% width
 
-$checkout-step-title__border           : $border-width__base solid $color-gray80 !default;
-$checkout-step-title__font-size        : 26px !default;
+$checkout-step-title__border           : $cart-checkout-h2-border;
+$checkout-step-title__font-size        : 26px;
 $checkout-step-title__font-weight      : $font-weight__light !default;
-$checkout-step-title__padding          : $indent__s !default;
+$checkout-step-title__padding          : 0 0 20px 0;
 
 $checkout-step-title-mobile__font-size : 18px !default;
 
@@ -25,13 +25,16 @@ $checkout-step-title-mobile__font-size : 18px !default;
 
 .opc-wrapper {
     @include lib-css(margin, 0 0 $checkout-wrapper__margin);
-
+    @include cart-checkout-body-font();
+    @include max-screen($screen__m) {
+        @include cart-checkout-body-font-mobile();
+    }
     .opc {
         @extend .abs-reset-list;
     }
 
     .step-title {
-        @extend .abs-checkout-title;
+        @include cart-checkout-h2-font();
     }
 
     .step-content {
@@ -58,19 +61,7 @@ $checkout-step-title-mobile__font-size : 18px !default;
     }
 }
 
-//
-//  Mobile
-//  _____________________________________________
 
-@include max-screen($screen__s) {
-    .opc-wrapper {
-        .step-title {
-            @include lib-css(font-size, $checkout-step-title-mobile__font-size);
-            border-bottom: 0;
-            padding-bottom: 0;
-        }
-    }
-}
 
 //
 //  Desktop
@@ -79,7 +70,7 @@ $checkout-step-title-mobile__font-size : 18px !default;
 @include min-screen($screen__m) {
     .opc-wrapper {
         @extend .abs-add-box-sizing-desktop-m;
-        @include lib-layout-column(2, 1, $checkout-wrapper__columns);
+        @include lib-layout-column(2, 1, 50%); //Width was $checkout-sidebar__columns "grid-cols"
         padding-right: $indent__l;
     }
 
