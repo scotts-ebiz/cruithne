@@ -28,7 +28,7 @@ RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento
 
 # Temporary patch for VendorVertex
 COPY vendor-vertex-compilation-issue.patch /tmp/vendor-vertex-compilation-issue.patch
-RUN git apply /tmp/vendor-vertex-compilation-issue.patch
+RUN git apply /tmp/vendor-vertex-compilation-issue.patch; exit 0
 
 USER root
 
