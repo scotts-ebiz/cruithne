@@ -20,6 +20,8 @@ $checkout-summary-items__padding    : 15px !default;
     @include lib-css(background, $checkout-summary__background-color);
     @include lib-css(padding, $checkout-summary__padding);
     margin: 0 0 $indent__base;
+    width: 75%;//test - see if this is 75%
+    float: right;
 
     > .title {
         @include cart-checkout-h2-font($border: 2px solid $color_light_grey_40);

@@ -70,7 +70,7 @@ $checkout-step-title-mobile__font-size : 18px !default;
 @include min-screen($screen__m) {
     .opc-wrapper {
         @extend .abs-add-box-sizing-desktop-m;
-        @include lib-layout-column(2, 1, 49%);
+        @include lib-layout-column(2, 1, 50%); //Width was $checkout-sidebar__columns "grid-cols"
         padding-right: $indent__l;
     }
 
