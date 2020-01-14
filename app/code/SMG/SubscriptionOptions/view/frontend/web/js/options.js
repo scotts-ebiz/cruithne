@@ -54,11 +54,36 @@ define([
                         return product.season === season;
                     });
 
+                    let prodMap = {};
+
+                    products.forEach((product) => {
+                        if (prodMap[product.prodId]) {
+                            prodMap[product.prodId] += 1;
+                            return;
+                        }
+
+                        prodMap[product.prodId] = product.quantity;
+                    });
+
+                    const newProducts = [];
+
+                    products.forEach(product => {
+                        if (
+                            !newProducts.some(prod => {
+                                return prod.prodId === product.prodId
+                            })
+                        ) {
+                            let newProd = {
+                                ...product
+                            };
+                            newProd.quantity = prodMap[newProd.prodId]
+                            newProducts.push(newProd);
+                        }
+                    });
+
                     return {
-                        season: season,
-                        products: self.products().filter((product) => {
-                            return product.season === season;
-                        }),
+                        season,
+                        products: newProducts,
                         total: products.reduce((price, product) => {
                             return price + (+product.price * +product.quantity);
                         }, 0),
@@ -187,14 +212,14 @@ define([
             }
 
             const self = this;
-          
+
             this.loading(true);
 
             if (!self.hasValidZone()) {
                 return;
             }
 
-            $.ajax(			
+            $.ajax(
                 `/rest/V1/subscription/process`,
                 {
                     contentType: 'application/json; charset=utf-8',
