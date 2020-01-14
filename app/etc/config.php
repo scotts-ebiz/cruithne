@@ -570,8 +570,8 @@ return [
                     'minify_html' => '1'
                 ],
                 'js' => [
-                    'merge_files' => '1',
-                    'enable_js_bundling' => '1',
+                    'merge_files' => '0',
+                    'enable_js_bundling' => '0',
                     'minify_files' => '1'
                 ],
                 // CSS Managed by gulp, if anything should change in regards to compiling it should be done from ulp not here.
