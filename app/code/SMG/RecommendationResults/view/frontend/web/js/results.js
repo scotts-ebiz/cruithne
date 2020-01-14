@@ -314,7 +314,7 @@ define([
         },
 
         getSeasonIcon: function (product) {
-            let icon = ''
+            let icon = '';
             switch (product.season) {
                 // Summer
                 case 'Early Summer': icon = 'icon-summer.svg'; break;
