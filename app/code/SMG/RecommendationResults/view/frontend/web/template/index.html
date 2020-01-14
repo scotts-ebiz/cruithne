@@ -145,16 +145,24 @@
 
 <div class="sp-bg-green-1 sp-py-4 sp-results__footer">
     <div class="sp-container sp-flex sp-flex-column md:sp-flex-row sp-justify-end">
+        <!-- ko if: !hasValidZone() -->
+        <p class="sp-my-0 sp-text-center md:sp-text-left sp-text-white sp-text-sm sp-mb-2 md:sp-mb-0 md:sp-pr-2">We are unable to ship to Alaska and Hawaii at this time. You can save and send your result via email and buy your recommended plan at a local retailer. </p>
+        <!-- /ko -->
+
         <button
-            class="sp-link sp-link--inverted md:sp-mr-12 sp-order-1 md:sp-order-0"
+            class="sp-link sp-link--inverted sp-flex-none md:sp-mr-12 sp-order-1 md:sp-order-0"
             data-bind="click: toggleSaveAndSendModal"
         >
             Save and Send Results
         </button>
+
+        <!-- ko if: hasValidZone() -->
         <a class="sp-button sp-button--inverted sp-order-0 md:sp-order-1 sp-mb-4 md:sp-mb-0"
            href="/subscription-options">
             Continue to Subscription Options
         </a>
+        <!-- /ko -->
+
     </div>
 </div>
 <!-- /ko results().plan -->
