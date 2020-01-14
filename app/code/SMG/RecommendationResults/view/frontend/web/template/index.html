@@ -46,7 +46,7 @@
 </div>
 
 <div class="sp-container sp-mb-16">
-    <div class="sp-max-w-xl sp-mx-auto sp-w-full lg:sp-w-5/6">
+    <div class="sp-mx-auto sp-w-full lg:sp-w-5/6">
         <div class="sp-flex sp-justify-end sp-mr-8 md:sp-mr-0 sp-my-4">
             <button class="sp-link" data-bind="click: toggleSaveAndSendModal">Save and Send Plan</button>
         </div>
@@ -63,7 +63,7 @@
                         <img class="sp-mr-4 sp-results__icon--small"
                              data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]) }" />
                         <div>
-                            <strong class="sp-h4"
+                            <strong class="sp-h4 sp-mb-2 lg:sp-mb-0"
                                     data-bind="html: $data.products[0].season"></strong>
                             <div class="sp-p2"
                                  data-bind="if: $parent.nextAvailableProduct() === $index()">(Next Shipment)</div>
@@ -71,67 +71,25 @@
                                 <span data-bind="html: $parent.formatDate($data.products[0].applicationEndDate)"></span></div>
                         </div>
                     </button>
-
+                    <!-- ko if: $index() === $parent.activeSeasonIndex() -->
+                    <!-- ko with: { activeSeason: $parent.activeSeason, formatDate: $parent.formatDate, productFeatures: $parent.productFeatures } -->
+                        <div class="lg:sp-hide">
+                            <!-- ko template: "SMG_RecommendationResults/active-season.html" --><!-- /ko -->
+                        </div>
+                    <!-- /ko -->
+                    <!-- /ko -->
                 </li>
             </ul>
 
             <!-- Product Detail -->
             <!-- ko if: activeSeason() -->
-            <div class="sp-results__tabs-detail sp-bg-green-4 sp-flex-auto sp-p-8 md:sp-p-12">
-                <div class="md:sp-flex sp-mb-12">
-                    <div class="md:sp-w-1/2">
-                        <h3 class="sp-my-0 sp-h2 sp-text-green-1"
-                            data-bind="html: activeSeason().products[0].season"></h3>
-                        <div class="sp-p1">Apply between</div>
-                        <div class="sp-p1"><span data-bind="html: formatDate(activeSeason().products[0].applicationStartDate)"></span> - <span
-                            data-bind="html: formatDate(activeSeason().products[0].applicationEndDate)"></span></div>
-                    </div>
-
-                    <ul class="sp-results__list sp-p-0 sp-m-0 md:sp-w-1/2 md:sp-justify-end sp-flex sp-flex-wrap sp--mx-2"
-                        data-bind="foreach: productFeatures(activeSeason().products[0])">
-                        <li class="sp-results__product-addon-image sp-text-center sp-m-0 sp-mx-1 sp-flex sp-flex-column sp-justify-start sp-items-center ">
-                            <img class="sp-results__icon--medium sp-mb-2"
-                                 data-bind="attr: { src: $data.image }" />
-                            <span class="sp-p2" data-bind="html: $data.text"></span>
-                        </li>
-                    </ul>
+                <div class="sp-hide lg:sp-block">
+                    <!-- ko template: "SMG_RecommendationResults/active-season.html" --><!-- /ko -->
                 </div>
-
-                <div class="sp-results__in-this-box sp-flex sp-flex-wrap sp-justify-between sp-mb-4">
-                    <h4 class="sp-my-0 sp-h4 sp-uppercase">Products in this box</h4>
-                </div>
-
-                <div data-bind="foreach: activeSeason().products">
-
-                    <div class="sp-results__product sp-m--4 sp-bg-white sp-flex sp-rounded">
-
-                        <img class="sp-mx-auto sp-m-4 sp-results__product-image sp-block"
-                             data-bind="attr: { src: $data.thumbnailImage }" />
-
-                        <div class="sp-m-4">
-                            <div class="sp-flex sp-mb-2">
-                                <div class="sp-results__bag-count sp-label sp-mr-2 sp-flex sp-justify-center sp-items-center sp-label sp-uppercase"
-                                     data-bind="html: $data.quantity"></div>
-                                <span>Bag Count</span>
-                            </div>
-
-                            <h5 class="sp-mt-0 sp-mb-4 sp-h4"
-                                data-bind="html: $data.displayName">
-                            </h5>
-                            <div class="sp-p2"
-                                 data-bind="html: $data.short_description">
-                            </div>
-                            <button class="sp-link sp-uppercase"
-                                    data-bind="click: function() { $parent.togglePDP($data) }">more about this product</button>
-                        </div>
-                    </div>
-                </div>
-            </div>
             <!-- /ko -->
         </div>
     </div>
 </div>
-
 
 <!-- ko if: pdp().visible && pdp().product -->
 <!-- ko template: "SMG_RecommendationResults/product-detail-modal.html" -->
