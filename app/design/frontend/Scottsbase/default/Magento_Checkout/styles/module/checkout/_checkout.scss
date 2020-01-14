@@ -3,7 +3,7 @@
 //  _____________________________________________
 
 $checkout-wrapper__margin              : $indent__base !default;
-$checkout-wrapper__columns             : 8 !default;
+$checkout-wrapper__columns             : 6 !default; //Change to 6 for 50% width
 
 $checkout-step-title__border           : $cart-checkout-h2-border;
 $checkout-step-title__font-size        : 26px;
@@ -70,7 +70,7 @@ $checkout-step-title-mobile__font-size : 18px !default;
 @include min-screen($screen__m) {
     .opc-wrapper {
         @extend .abs-add-box-sizing-desktop-m;
-        @include lib-layout-column(2, 1, $checkout-wrapper__columns);
+        @include lib-layout-column(2, 1, 49%);
         padding-right: $indent__l;
     }
 
