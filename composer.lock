@@ -305,16 +305,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.132.3",
+            "version": "3.132.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "f814995664d4ad616f674e664ae069b9f4e340bf"
+                "reference": "5dcf2fb87a3cde87a5fa0b9df03b8688dcfc4f19"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/f814995664d4ad616f674e664ae069b9f4e340bf",
-                "reference": "f814995664d4ad616f674e664ae069b9f4e340bf",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/5dcf2fb87a3cde87a5fa0b9df03b8688dcfc4f19",
+                "reference": "5dcf2fb87a3cde87a5fa0b9df03b8688dcfc4f19",
                 "shasum": ""
             },
             "require": {
@@ -385,7 +385,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2020-01-10T19:14:49+00:00"
+            "time": "2020-01-13T19:11:21+00:00"
         },
         {
             "name": "bacon/bacon-qr-code",
@@ -16947,11 +16947,11 @@
         },
         {
             "name": "vertex/sdk",
-            "version": "1.2.0",
+            "version": "1.2.1",
             "dist": {
                 "type": "zip",
-                "url": "https://repo.magento.com/archives/vertex/sdk/vertex-sdk-1.2.0.0.zip",
-                "shasum": "036e1e11e38abca8bfb664e1610ec3f83ae0ba7f"
+                "url": "https://repo.magento.com/archives/vertex/sdk/vertex-sdk-1.2.1.0.zip",
+                "shasum": "ddfddd5168725c4e0752d2a141ed215d3a48b627"
             },
             "require": {
                 "ext-mbstring": "*",
