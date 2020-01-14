@@ -14,7 +14,8 @@
                         "component": "SMG_SubscriptionAccounts/js/billing-information",
                         "billing": <?php echo json_encode( $block->getBillingInformation() ); ?>,
                         "states": <?php echo json_encode( $block->getStates() ); ?>,
-                        "countries": <?php echo json_encode( $block->getCountries() ); ?>
+                        "countries": <?php echo json_encode( $block->getCountries() ); ?>,
+                        "recurlyApi": "<?php echo $block->escapeHtml($block->getRecurlyPublicApiKey()); ?>"
                     }
                 }
             }

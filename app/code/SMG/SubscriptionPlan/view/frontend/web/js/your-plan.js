@@ -1,9 +1,8 @@
 define([
     'uiComponent',
     'ko',
-    'jquery',
-    'Magento_Customer/js/customer-data'
-], function (Component, ko, $, customerData) {
+    'jquery'
+], function (Component, ko, $) {
     return Component.extend({
         hasResults: ko.observable(false),
         lawnArea: ko.observable(0),
@@ -20,50 +19,13 @@ define([
             product: null,
         }),
 
-        saveAndSendModal: ko.observable({
-            visible: false
-        }),
-
-        saveAndSendSuccessModal: ko.observable({
-            visible: false
-        }),
-
         initialize(config) {
             const self = this;
 
-            self.customer = customerData.get('customer');
+            self.subscription = ko.observable(config.subscription);
+            self.customerFirstName = ko.observable(config.customer_first_name);
 
-            if (config.zip) {
-                window.sessionStorage.setItem('lawn-zip', config.zip);
-            } else {
-                config.zip = window.sessionStorage.getItem('lawn-zip');
-            }
-
-            if (!config.zip) {
-                window.location.href = '/quiz';
-            }
-
-            if (!config.quiz_id) {
-                config.quiz_id = window.sessionStorage.getItem('quiz-id');
-            }
-
-            if (!config.quiz_id) {
-                self.loadQuizResponses();
-            } else {
-                self.loadQuizResults(config.quiz_id, config.zip);
-            }
-
-            const lawnArea = window.sessionStorage.getItem('lawn-area');
-            if (lawnArea) {
-                self.lawnArea(lawnArea);
-            }
-
-            const lawnType = window.sessionStorage.getItem('lawn-type');
-            if (lawnType) {
-                self.lawnType(lawnType);
-            }
-
-            self.hasValidZone = ko.observable(true);
+            self.loadQuizResults(self.subscription().quiz_id, self.subscription().lawn_zip);
 
             self.products = ko.computed(function () {
                 return self.results().plan
@@ -99,7 +61,7 @@ define([
                 return seasons;
             });
 
-            // used to indicate which product is up next for delivery
+            // Used to indicate which product is up next for delivery
             self.nextAvailableProduct = ko.computed(function () {
                 const currentDate = new Date();
                 const products = self.products().slice();
@@ -155,21 +117,11 @@ define([
                             }
 
                             // Initialize the quiz with the template data.
-                            if (minTimePassed) {
-                                self.isLoading(false);
-                            }
-
-                            // An active or subscription with this quiz ID already exists.
-                            if (data.subscription && data.subscription.status !== 'pending') {
-                                window.location.href = self.customer().firstname ? '/your-plan' : '/quiz';
-                                return;
-                            }
-
                             self.hasResults(true);
                             self.results(data);
-                            self.checkZone();
-                            window.sessionStorage.setItem('result', JSON.stringify(data));
-                            window.sessionStorage.setItem('quiz-id', data.id);
+
+                            // window.sessionStorage.setItem('result', JSON.stringify(data));
+                            // window.sessionStorage.setItem('quiz-id', data.id);
                         }
                     },
                     error(response) {
@@ -181,89 +133,6 @@ define([
 
                         if (response.redirect) {
                             window.location.href = response.redirect;
-                        }
-                    },
-                },
-            );
-        },
-
-        /**
-         * Check if we have an invalid zone.
-         */
-        checkZone() {
-            if (['Zone 11', 'Zone 12'].indexOf(this.results().plan.zoneName) >= 0) {
-                this.hasValidZone(false);
-            } else {
-                this.hasValidZone(true);
-            }
-        },
-
-        /**
-         * Load the quiz from the session storage.
-         */
-        loadQuizResponses() {
-            const quiz = window.sessionStorage.getItem('quiz');
-
-            if (quiz && JSON.parse(quiz)) {
-                this.quiz(JSON.parse(quiz));
-                this.completeQuiz();
-            } else {
-                // Quiz not found, need to redirect.
-                window.location.href = '/quiz';
-            }
-        },
-
-        /**
-         * Load the results from you quiz answers.
-         */
-        completeQuiz() {
-            const self = this;
-            let minTimePassed = false;
-            let formKey = document.querySelector('input[name=form_key]').value;
-            let quiz = self.quiz();
-            quiz["key"] = formKey;
-            quiz["lawnType"] = window.sessionStorage.getItem('lawn-type');
-            quiz["lawnSize"] = window.sessionStorage.getItem('lawn-area');
-
-            // Make sure loading screen appears for at least 3 seconds.
-            setTimeout(() => {
-                minTimePassed = true;
-                if (self.hasResults()) {
-                    self.isLoading(false);
-                }
-            }, 3000);
-
-            $.ajax(
-                `/rest/V1/recommendations/quiz/save`,
-                {
-                    contentType: 'application/json; charset=utf-8',
-                    data: JSON.stringify(self.quiz()),
-                    dataType: 'json',
-                    method: 'post',
-                    success(data) {
-                        if (data.error_message) {
-                            alert('Error getting quiz data: ' + data.error_message + '. Please try again.');
-                        } else {
-                            if (Array.isArray(data)) {
-                                data = data[0];
-                            }
-
-                            // Initialize the quiz with the template data.
-                            if (minTimePassed) {
-                                self.isLoading(false);
-                            }
-
-                            // An active or subscription with this quiz ID already exists.
-                            if (data.subscription && data.subscription.status !== 'pending') {
-                                window.location.href = self.customer().firstname ? '/your-plan' : '/quiz';
-                                return;
-                            }
-
-                            self.hasResults(true);
-                            self.results(data);
-                            self.checkZone();
-                            window.sessionStorage.setItem('result', JSON.stringify(data));
-                            window.sessionStorage.setItem('quiz-id', data.id);
                         }
                     },
                 },
@@ -303,7 +172,7 @@ define([
             }
         },
 
-        getSeasonIcon: function (product) {
+        getSeasonIcon(product) {
             let icon = '';
 
             switch (product.season) {
@@ -342,7 +211,7 @@ define([
             return 'https://test_magento_image_repo.storage.googleapis.com/' + icon
         },
 
-        togglePDP: function (product) {
+        togglePDP(product) {
             if (this.pdp().visible) {
                 // hide
                 $('body').removeClass('no-scroll');
@@ -362,35 +231,6 @@ define([
         setPDPTab: function (tab) {
             this.pdp({ ...this.pdp(), activeTab: tab })
         },
-
-        preventDefault: function () {
-        },
-
-        toggleSaveAndSendModal: function() {
-            if( this.saveAndSendModal().visible) {
-                $('body').removeClass('no-scroll');
-            } else {
-                $('body').addClass('no-scroll')
-            }
-
-            this.saveAndSendModal({
-                ...this.saveAndSendModal(),
-                visible: !this.saveAndSendModal().visible
-            })
-        },
-
-        toggleSaveAndSendSuccessModal: function() {
-            if( this.saveAndSendSuccessModal().visible) {
-                $('body').removeClass('no-scroll');
-            } else {
-                $('body').addClass('no-scroll')
-            }
-
-            this.saveAndSendSuccessModal({
-                ...this.saveAndSendSuccessModal(),
-                visible: !this.saveAndSendSuccessModal().visible
-            })
-        }
     });
 });
 
