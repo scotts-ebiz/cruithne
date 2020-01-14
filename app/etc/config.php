@@ -577,7 +577,7 @@ return [
                 // CSS Managed by gulp, if anything should change in regards to compiling it should be done from ulp not here.
                 'css' => [
                     'merge_css_files' => '0',
-                    'minify_files' => '0'
+                    'minify_files' => '1'
                 ]
             ]
         ]
