@@ -105,9 +105,13 @@ class SeasonalHelper extends AbstractHelper
             if (! $this->verifyRecurlySeasonalOrder($order)) {
                 // Order is not ready to process, set a timestamp to be
                 // available the next day.
+                $cronDate = $order->getData('next_cron_date')
+                    ? $this->_today->add(new DateInterval('P1D'))->format('Y-m-d H:i:s')
+                    : $this->_today->add(new DateInterval('PT3H'))->format('Y-m-d H:i:s');
+
                 $order->setData(
                     'next_cron_date',
-                    $this->_today->add(new DateInterval('P1D'))->format('Y-m-d H:i:s')
+                    $cronDate
                 )->save();
 
                 continue;
