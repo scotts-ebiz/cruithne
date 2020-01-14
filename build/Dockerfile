@@ -22,8 +22,7 @@ WORKDIR $MAGENTO_DIR
 # Temporary add to test mass import of images
 RUN mkdir -p $MAGENTO_DIR/var/import/images && gsutil -q -m rsync -r -u gs://magento-image-repo/import/ $MAGENTO_DIR/var/import/images ; exit 0
 
-RUN git fetch --all && git reset --hard && git pull
-RUN composer install
+RUN git fetch --all && git reset --hard && git pull && composer install
 
 # Temporary patch for VendorVertex
 COPY vendor-vertex-compilation-issue.patch /tmp/vendor-vertex-compilation-issue.patch
