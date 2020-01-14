@@ -2,7 +2,7 @@
 //  Variables
 //  _____________________________________________
 
-$checkout-sidebar-shipping-information__padding                : $indent__l !default;
+$checkout-sidebar-shipping-information__padding                : 22px $indent__l !default;
 $checkout-sidebar-shipping-information__line-height            : $checkout-billing-address-details__line-height !default;
 
 $checkout-sidebar-shipping-information-edit-icon__color        : $minicart-icons-color !default;
@@ -12,6 +12,10 @@ $checkout-sidebar-shipping-information-edit-icon__line-height  : 28px !default;
 $checkout-sidebar-shipping-information-edit-icon__top          : 2px !default;
 $checkout-sidebar-shipping-information-edit-icon__hover__color : $primary__color !default;
 
+$checkout-sidebar-shipping-information__width                  :75%;
+$checkout-sidebar-shipping-information-mobile__width           :100%;
+
+
 
 
 //
@@ -19,10 +23,10 @@ $checkout-sidebar-shipping-information-edit-icon__hover__color : $primary__color
 //  ---------------------------------------------
 
 .opc-block-shipping-information {
+    @extend .abs-add-box-sizing;
+    @include lib-css(width, $checkout-sidebar-shipping-information__width);
     @include cart-checkout-body-font($size: $font-size__m, $lh: 21px);
-    @include max-screen($screen__m) {
-        font-size: $font-size__base;
-    }
+    float: right;
 
     .shipping-information-title {
         @include cart-checkout-h2-font();
@@ -72,6 +76,8 @@ $checkout-sidebar-shipping-information-edit-icon__hover__color : $primary__color
 @include max-screen($screen__m) {
 
     .opc-block-shipping-information {
-        @include lib-css(padding, 0 $checkout-sidebar-shipping-information__padding)
+        @include lib-css(padding, $checkout-sidebar-shipping-information__padding);
+        @include lib-css(font-size, $font-size__base);
+        @include lib-css(width, $checkout-sidebar-shipping-information-mobile__width);
     }
 }
