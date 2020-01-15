@@ -353,5 +353,352 @@ return [
         'SMG_Vantiv' => 1,
         'Vertex_Tax' => 1,
         'Zaius_Engage' => 1
+    ],
+    'scopes' => [
+        'websites' => [
+            'admin' => [
+                'website_id' => '0',
+                'code' => 'admin',
+                'name' => 'Admin',
+                'sort_order' => '0',
+                'default_group_id' => '0',
+                'is_default' => '0'
+            ],
+            'base' => [
+                'website_id' => '1',
+                'code' => 'base',
+                'name' => 'Main Website',
+                'sort_order' => '0',
+                'default_group_id' => '1',
+                'is_default' => '1'
+            ],
+            'mygro' => [
+                'website_id' => '2',
+                'code' => 'mygro',
+                'name' => 'MyGro',
+                'sort_order' => '0',
+                'default_group_id' => '2',
+                'is_default' => '0'
+            ],
+            'roundup' => [
+                'website_id' => '3',
+                'code' => 'roundup',
+                'name' => 'Roundup',
+                'sort_order' => '0',
+                'default_group_id' => '4',
+                'is_default' => '0'
+            ],
+            'scotts' => [
+                'website_id' => '4',
+                'code' => 'scotts',
+                'name' => 'Scotts',
+                'sort_order' => '0',
+                'default_group_id' => '4',
+                'is_default' => '0'
+            ],
+            'miraclegro' => [
+                'website_id' => '5',
+                'code' => 'base',
+                'name' => 'Miraclegro',
+                'sort_order' => '0',
+                'default_group_id' => '5',
+                'is_default' => '0'
+            ],
+            'ortho' => [
+                'website_id' => '6',
+                'code' => 'ortho',
+                'name' => 'Ortho',
+                'sort_order' => '0',
+                'default_group_id' => '6',
+                'is_default' => '0'
+            ],
+            'tomcat' => [
+                'website_id' => '7',
+                'code' => 'tomcat',
+                'name' => 'Tomcat',
+                'sort_order' => '0',
+                'default_group_id' => '7',
+                'is_default' => '0'
+            ]
+        ],
+        'groups' => [
+            [
+                'group_id' => '0',
+                'website_id' => '0',
+                'name' => 'Default',
+                'root_category_id' => '0',
+                'default_store_id' => '0',
+                'code' => 'default'
+            ],
+            [
+                'group_id' => '1',
+                'website_id' => '1',
+                'name' => 'Main Website Store',
+                'root_category_id' => '2',
+                'default_store_id' => '1',
+                'code' => 'main_website_store'
+            ],
+            [
+                'group_id' => '2',
+                'website_id' => '2',
+                'name' => 'MyGro',
+                'root_category_id' => '3',
+                'default_store_id' => '2',
+                'code' => 'mygro'
+            ],
+            [
+                'group_id' => '3',
+                'website_id' => '3',
+                'name' => 'Roundup Store',
+                'root_category_id' => '2',
+                'default_store_id' => '3',
+                'code' => 'roundup_store'
+            ],
+            [
+                'group_id' => '4',
+                'website_id' => '4',
+                'name' => 'Scotts Store',
+                'root_category_id' => '2',
+                'default_store_id' => '4',
+                'code' => 'scotts_store'
+            ],
+            [
+                'group_id' => '5',
+                'website_id' => '5',
+                'name' => 'Miraclegro Store',
+                'root_category_id' => '2',
+                'default_store_id' => '5',
+                'code' => 'miraclegro_store'
+            ],
+            [
+                'group_id' => '6',
+                'website_id' => '6',
+                'name' => 'Ortho Store',
+                'root_category_id' => '2',
+                'default_store_id' => '6',
+                'code' => 'ortho_store'
+            ],
+            [
+                'group_id' => '7',
+                'website_id' => '7',
+                'name' => 'Tomcat Store',
+                'root_category_id' => '2',
+                'default_store_id' => '7',
+                'code' => 'tomcat_store'
+            ]
+        ],
+        'stores' => [
+            'admin' => [
+                'store_id' => '0',
+                'code' => 'admin',
+                'website_id' => '0',
+                'group_id' => '0',
+                'name' => 'Admin',
+                'sort_order' => '0',
+                'is_active' => '1'
+            ],
+            'default' => [
+                'store_id' => '1',
+                'code' => 'default',
+                'website_id' => '1',
+                'group_id' => '1',
+                'name' => 'Default Store View',
+                'sort_order' => '0',
+                'is_active' => '1'
+            ],
+            'mygro' => [
+                'store_id' => '2',
+                'code' => 'mygro',
+                'website_id' => '2',
+                'group_id' => '2',
+                'name' => 'MyGro Store',
+                'sort_order' => '0',
+                'is_active' => '1'
+            ],
+            'roundup_view' => [
+                'store_id' => '3',
+                'code' => 'roundup_view',
+                'website_id' => '3',
+                'group_id' => '3',
+                'name' => 'Roundup View',
+                'sort_order' => '0',
+                'is_active' => '1'
+            ],
+            'scotts_view' => [
+                'store_id' => '4',
+                'code' => 'scotts_view',
+                'website_id' => '4',
+                'group_id' => '4',
+                'name' => 'Scotts View',
+                'sort_order' => '0',
+                'is_active' => '1'
+            ],
+            'miraclegro_view' => [
+                'store_id' => '5',
+                'code' => 'miraclegro_view',
+                'website_id' => '5',
+                'group_id' => '5',
+                'name' => 'Miraclegro View',
+                'sort_order' => '0',
+                'is_active' => '1'
+            ],
+            'ortho_view' => [
+                'store_id' => '6',
+                'code' => 'ortho_view',
+                'website_id' => '6',
+                'group_id' => '6',
+                'name' => 'Ortho View',
+                'sort_order' => '0',
+                'is_active' => '1'
+            ],
+            'tomcat_view' => [
+                'store_id' => '7',
+                'code' => 'tomcat_view',
+                'website_id' => '7',
+                'group_id' => '7',
+                'name' => 'Tomcat View',
+                'sort_order' => '0',
+                'is_active' => '1'
+            ],
+        ]
+    ],
+    'system' => [
+        'default' => [
+            'dev' => [
+                'template' => [
+                    'allow_symlink' => '0',
+                    'minify_html' => '1'
+                ],
+                'js' => [
+                    'merge_files' => '0',
+                    'enable_js_bundling' => '0',
+                    'minify_files' => '1'
+                ],
+                // CSS Managed by gulp, if anything should change in regards to compiling it should be done from ulp not here.
+                'css' => [
+                    'merge_css_files' => '0',
+                    'minify_files' => '1'
+                ]
+            ]
+        ]
+    ],
+    'themes' => [
+        'frontend/Base/theme-blank-sass' => [
+            'parent_id' => NULL,
+            'theme_path' => 'Base/theme-blank-sass',
+            'theme_title' => 'Base theme blank sass',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Base/theme-blank-sass'
+        ],
+        'frontend/Scottsbase/default' => [
+            'parent_id' => 'Base/theme-blank-sass',
+            'theme_path' => 'Scottsbase/default',
+            'theme_title' => 'Scottsbase default',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Scottsbase/default'
+        ],
+        'frontend/Scottsbase/mygro' => [
+            'parent_id' => 'Scottsbase/default',
+            'theme_path' => 'Scottsbase/mygro',
+            'theme_title' => 'Scottsbase mygro',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Scottsbase/mygro'
+        ],
+        'frontend/Scottsbase/scottsprogram' => [
+            'parent_id' => 'Scottsbase/default',
+            'theme_path' => 'Scottsbase/scottsprogram',
+            'theme_title' => 'Scottsbase scottsprogram',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Scottsbase/scottsprogram'
+        ],
+        'frontend/Drupal/default' => [
+            'parent_id' => 'Scottsbase/mygro',
+            'theme_path' => 'Drupal/default',
+            'theme_title' => 'Drupal default',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Drupal/default'
+        ],
+        'frontend/Drupal/miraclegro' => [
+            'parent_id' => 'Drupal/default',
+            'theme_path' => 'Drupal/miraclegro',
+            'theme_title' => 'Drupal miraclegro',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Drupal/miraclegro'
+        ],
+        'frontend/Drupal/ortho' => [
+            'parent_id' => 'Drupal/default',
+            'theme_path' => 'Drupal/ortho',
+            'theme_title' => 'Drupal ortho',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Drupal/ortho'
+        ],
+        'frontend/Drupal/roundup' => [
+            'parent_id' => 'Drupal/default',
+            'theme_path' => 'Drupal/roundup',
+            'theme_title' => 'Drupal roundup',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Drupal/roundup'
+        ],
+        'frontend/Drupal/scotts' => [
+            'parent_id' => 'Drupal/default',
+            'theme_path' => 'Drupal/scotts',
+            'theme_title' => 'Drupal scotts',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Drupal/scotts'
+        ],
+        'frontend/Drupal/tomcat' => [
+            'parent_id' => 'Drupal/default',
+            'theme_path' => 'Drupal/tomcat',
+            'theme_title' => 'Drupal tomcat',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Drupal/tomcat'
+        ],
+        'frontend/Magento/blank' => [
+            'parent_id' => NULL,
+            'theme_path' => 'Magento/blank',
+            'theme_title' => 'Magento Blank',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Magento/blank'
+        ],
+        'frontend/Magento/luma' => [
+            'parent_id' => 'Magento/blank',
+            'theme_path' => 'Magento/luma',
+            'theme_title' => 'Magento Luma',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Magento/luma'
+        ],
+        'adminhtml/Magento/backend' => [
+            'parent_id' => NULL,
+            'theme_path' => 'Magento/backend',
+            'theme_title' => 'Magento 2 backend',
+            'is_featured' => '0',
+            'area' => 'adminhtml',
+            'type' => '0',
+            'code' => 'Magento/backend'
+        ]
     ]
 ];
