@@ -308,14 +308,6 @@ define([
         self.isAnimating = ko.observable(false);
         self.zipCode = '';
 
-        // Animation States for self.transitionToNextState() to iterate over
-        self.animationStates = [
-            () => self.contentDown(),
-            () => self.transitionUp(),
-            () => self.transitionDown(),
-            () => self.contentUp()
-        ];
-
         // Track current animation state
         self.currentAnimationState = 0;
 
@@ -371,7 +363,6 @@ define([
          */
         self.transitionUp = function () {
             $('.sp-quiz-option').removeClass('sp-quiz-option-fullopacity');
-            $('.sp-quiz__question-wrapper').addClass('sp-quiz__displaynone');
             $('.sp-quiz__transition-inner').removeClass('sp-quiz__displaynone');
             $('.sp-quiz__transition-wrapper').addClass('sp-quiz__displayblock');
             $('.sp-quiz__transition-inner').addClass('sp-quiz__transition-slideup');
@@ -452,16 +443,13 @@ define([
             // Get the transition.
             const animations = self.currentGroup().animationScreens;
             self.animation({});
-            if (animations.length === 1) {
-                self.animation(animations[0]);
-            } else {
-                // Find the animation based on the answer.
-                for (const animation of animations) {
-                    // No required conditions for this animation, so just use it.
-                    if (!animation.conditions.length || self.testConditions(animation.conditions)) {
-                        self.animation(animation);
-                        break;
-                    }
+
+            // Find the animation based on the answer.
+            for (const animation of animations) {
+                // No required conditions for this animation, so just use it.
+                if (!animation.conditions.length || self.testConditions(animation.conditions)) {
+                    self.animation(animation);
+                    break;
                 }
             }
 
@@ -470,7 +458,6 @@ define([
                 self.animationStates = [
                     () => self.contentDown(),
                     () => self.contentUp(),
-                    () => self.contentUp()
                 ];
             } else {
                 // Reset animation states to default values
@@ -511,6 +498,8 @@ define([
                     window.requestAnimationFrame(self.step(start, self.currentAnimationState));
                 } else {
                     window.requestAnimationFrame(self.step(start, self.currentAnimationState));
+                    self.previousGroups.push(self.currentGroup());
+                    self.setGroup(group);
                 }
             }, 2000);
         };
