@@ -359,6 +359,7 @@ return [
         'SMG_SubscriptionApi' => 1,
         'SMG_SubscriptionOptions' => 1,
         'SMG_SubscriptionCheckout' => 1,
+        'SMG_SubscriptionPlan' => 1,
         'SMG_Theme' => 1,
         'Vantiv_Payment' => 1,
         'Zaius_Engage' => 1,
