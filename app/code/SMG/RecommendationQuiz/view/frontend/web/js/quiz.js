@@ -478,10 +478,7 @@ define([
              */
             let animInterval = setInterval(() => {
                 self.currentAnimationState++;
-
                 let start = null;
-
-                console.log(self.currentAnimationState)
                 if (self.currentAnimationState >= 5) {
                     self.currentAnimationState = 0;
                     clearInterval(animInterval);
