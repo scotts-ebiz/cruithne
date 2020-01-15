@@ -27,7 +27,7 @@ $link__active__text-decoration                                : underline;
 
 
 //  Sizes
-$font-size__base                                              : $font-size-unit-ratio * $font-size-ratio__base * 1px; // Base font size value in px
+$font-size__base                                              : $font-size-unit-ratio * $font-size-ratio__base * 1px; // 14px - Will display in px
 $font-size__xl                                                : ceil(1.5 * $font-size__base); // 21px
 $font-size__l                                                 : ceil(1.25 * $font-size__base); // 18px
 $font-size__s                                                 : ceil(0.85 * $font-size__base); // 12px
@@ -40,13 +40,20 @@ $font-family__sans-serif                                      : 'Helvetica Neue'
 $font-family__base                                            : $font-family-name__base, $font-family__sans-serif;
 
 
-//  Navigation
+//  Navigation - Desktop
 $navigation-desktop-level0-item__color                        : $mygro-black;
 $navigation-desktop-level0-item__hover__color                 : $primary__color;
 $navigation-desktop-level0-item__active__color                : $primary__color;
 $navigation-desktop__font-size                                : $font-size__base;
-$navigation-desktop_letter-spacing                            : $letter-spacing_l; // custom var
-$navigation-level0-item__text-transform                       : uppercase;// test - do you see uppercase for nav?
+$navigation-desktop-level0-item__active__border-style         : none;
+
+
+//  Navigation - Main (Setting styles for mobile menu)
+$navigation-level0-item__active__color                        : $primary__color;
+$navigation-level0-item__font-size                            : $font-size__base;
+$navigation-level0-item__active__border-style                 : none;
+$navigation-level0-item__border                               : 0;
+$navigation-level0-item__color                                : $mygro-black;
 
 
 //  Headings

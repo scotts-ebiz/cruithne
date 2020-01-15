@@ -27,7 +27,7 @@ $link__active__text-decoration                                : underline;
 
 
 //  Sizes
-$font-size__base                                              : $font-size-unit-ratio * $font-size-ratio__base * 1px; // 14px - Default body font size
+$font-size__base                                              : $font-size-unit-ratio * $font-size-ratio__base * 1px; // 14px - Will display in px
 $font-size__xl                                                : ceil(1.5 * $font-size__base); // 21px
 $font-size__l                                                 : ceil(1.25 * $font-size__base); // 18px
 $font-size__s                                                 : ceil(0.85 * $font-size__base); // 12px

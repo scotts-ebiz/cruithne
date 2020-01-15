@@ -1,8 +1,8 @@
 // MyGro Base
 
 .nav-sections {
-  @include lib-css(letter-spacing, $navigation-desktop_letter-spacing);//test do you see letting spacing?
-  @include lib-css(text-transform, $navigation-level0-item__text-transform);//test do you see letting spacing?
+  @include lib-css(letter-spacing, $navigation-desktop_letter-spacing);
+  @include lib-css(text-transform, $navigation-level0-item__text-transform);
 }
 
 h3 {
@@ -25,7 +25,6 @@ h3 {
 .skip-content-header{
     display:none;
 }
-
 
 .page-wrapper {
     .page-header {
@@ -68,7 +67,7 @@ h3 {
             }
             .logo {
                 @include max-screen($screen__l) {
-                    max-width: 6rem;
+                    max-width: 10rem;
                     position: absolute!important;
                     left: 50%;
                     transform: translateX(-50%);
@@ -125,7 +124,7 @@ h3 {
                             font-size: $font-size__l;
 
                             @include max-screen($screen__s) {
-                                font-size: 1rem;
+                                font-size: $font-size__m;
                                 font-weight: 700;
                             }
                             .price {
@@ -210,12 +209,6 @@ h3 {
                     }
                     .navigation {
                         background: transparent;
-                        .level0 {
-                            @include max-screen($screen__l) {
-                                border: none;
-                                font-size: 0.875rem;
-                            }
-                        }
                         ul {
                             li.level-top {
                                 a.level-top {
@@ -224,12 +217,6 @@ h3 {
                                             margin-left: 0;
                                         }
                                     }
-                                }
-                            }
-                            li.level0.active.level-top {
-                                a.level-top {
-                                    @include font-hellix-heavy;
-                                    border-style: none;
                                 }
                             }
                         }
