@@ -1,8 +1,9 @@
 define([
     'uiComponent',
     'ko',
-    'jquery'
-], function (Component, ko, $) {
+    'jquery',
+    'Magento_Customer/js/customer-data'
+], function (Component, ko, $, customerData) {
     return Component.extend({
         hasResults: ko.observable(false),
         results: ko.observable({}),
@@ -16,6 +17,9 @@ define([
 
         initialize(config) {
             const self = this;
+
+            this.customer = customerData.get('customer');
+
             this.loading = ko.observable(false);
 
             if (config.zip) {
@@ -141,6 +145,12 @@ define([
                     success(data) {
                         if (Array.isArray(data) && data[0]) {
                             data = data[0];
+                        }
+
+                        // An active or subscription with this quiz ID already exists.
+                        if (data.subscription && data.subscription.status !== 'pending') {
+                            window.location.href = self.customer().firstname ? '/your-plan' : '/quiz';
+                            return;
                         }
 
                         if (data.error_message) {
