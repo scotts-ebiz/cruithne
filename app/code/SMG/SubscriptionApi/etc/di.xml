@@ -2,4 +2,8 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="SMG\SubscriptionApi\Api\Interfaces\SubscriptionInterface" type="SMG\SubscriptionApi\Api\Subscription" />
     <preference for="SMG\SubscriptionApi\Api\Interfaces\RecurlyInterface" type="SMG\SubscriptionApi\Api\RecurlySubscription" />
+
+    <type name="Magento\Sales\Model\Order">
+        <plugin name="smg_plugin_model_order" type="SMG\SubscriptionApi\Plugin\Model\Order" sortOrder="1" />
+    </type>
 </config>
