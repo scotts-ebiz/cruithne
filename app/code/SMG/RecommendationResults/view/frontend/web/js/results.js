@@ -73,31 +73,57 @@ define([
 
             self.seasons = ko.computed(() => {
                 const uniqueSeasons = self.products().reduce((items, product) => {
-                    if (items.indexOf(product.season) === -1) {
-                        items.push(product.season);
-                    }
+                  if (items.indexOf(product.season) === -1) {
+                    items.push(product.season);
+                  }
 
-                    return items;
+                  return items;
                 }, []);
 
-                const seasons = uniqueSeasons.map((season) => {
-                    const products = self.products().filter((product) => {
-                        return product.season === season;
-                    });
+                const seasons = uniqueSeasons.map(season => {
+                  const products = self.products().filter(product => {
+                    return product.season === season;
+                  });
 
-                    return {
-                        season: season,
-                        products: self.products().filter((product) => {
-                            return product.season === season;
-                        }),
-                        total: products.reduce((price, product) => {
-                            return price + (+product.price * +product.quantity);
-                        }, 0),
+                  let prodMap = {};
+
+                  products.forEach(product => {
+                    if (prodMap[product.prodId]) {
+                      prodMap[product.prodId] += 1;
+                      return;
                     }
+
+                    prodMap[product.prodId] = product.quantity;
+                  });
+
+                  const newProducts = [];
+
+                  products.forEach(product => {
+                    if (
+                      !newProducts.some(prod => {
+                        return prod.prodId === product.prodId
+                      })
+                    ) {
+                      let newProd = {
+                        ...product
+                      };
+                      newProd.quantity = prodMap[newProd.prodId];
+                      newProducts.push(newProd);
+                    }
+                  });
+
+
+                  return {
+                    season,
+                    products: newProducts,
+                    total: products.reduce((price, product) => {
+                      return price + +product.price * +product.quantity;
+                    }, 0)
+                  };
                 });
 
                 return seasons;
-            });
+              });
 
             // used to indicate which product is up next for delivery
             self.nextAvailableProduct = ko.computed(function () {
@@ -393,4 +419,3 @@ define([
         }
     });
 });
-
