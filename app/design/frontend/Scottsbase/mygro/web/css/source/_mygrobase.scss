@@ -2,6 +2,7 @@
 
 .nav-sections {
   @include lib-css(letter-spacing, $navigation-desktop_letter-spacing);//test do you see letting spacing?
+  @include lib-css(text-transform, $navigation-level0-item__text-transform);//test do you see letting spacing?
 }
 
 h3 {
