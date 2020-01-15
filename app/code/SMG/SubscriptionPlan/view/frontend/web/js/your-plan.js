@@ -119,9 +119,6 @@ define([
                             // Initialize the quiz with the template data.
                             self.hasResults(true);
                             self.results(data);
-
-                            // window.sessionStorage.setItem('result', JSON.stringify(data));
-                            // window.sessionStorage.setItem('quiz-id', data.id);
                         }
                     },
                     error(response) {
