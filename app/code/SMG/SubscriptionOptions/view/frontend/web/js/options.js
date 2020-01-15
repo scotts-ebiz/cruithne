@@ -54,11 +54,36 @@ define([
                         return product.season === season;
                     });
 
+                    let prodMap = {};
+
+                    products.forEach((product) => {
+                        if (prodMap[product.prodId]) {
+                            prodMap[product.prodId] += 1;
+                            return;
+                        }
+
+                        prodMap[product.prodId] = product.quantity;
+                    });
+
+                    const newProducts = [];
+
+                    products.forEach(product => {
+                        if (
+                            !newProducts.some(prod => {
+                                return prod.prodId === product.prodId
+                            })
+                        ) {
+                            let newProd = {
+                                ...product
+                            };
+                            newProd.quantity = prodMap[newProd.prodId]
+                            newProducts.push(newProd);
+                        }
+                    });
+
                     return {
-                        season: season,
-                        products: self.products().filter((product) => {
-                            return product.season === season;
-                        }),
+                        season,
+                        products: newProducts,
                         total: products.reduce((price, product) => {
                             return price + (+product.price * +product.quantity);
                         }, 0),
@@ -127,6 +152,9 @@ define([
                             window.sessionStorage.setItem('result', JSON.stringify(data));
                             window.sessionStorage.setItem('quiz-id', data.id);
                             window.sessionStorage.setItem('lawn-zip', request.zip);
+
+                            // Check if we are using invalid zones (Hawaii, Alaska)
+                            self.hasValidZone();
                         }
                     },
                     error(response) {
@@ -148,6 +176,18 @@ define([
         },
 
         /**
+         * Check if we have an invalid zone.
+         */
+        hasValidZone() {
+            if (['Zone 11', 'Zone 12'].indexOf(this.results().plan.zoneName) >= 0) {
+                window.location.href = '/your-results';
+                return false;
+            }
+
+            return true;
+        },
+
+        /**
          * Load the quiz from the session storage.
          */
         getResults() {
@@ -156,6 +196,7 @@ define([
             if (result && JSON.parse(result)) {
                 this.hasResults(true);
                 this.results(JSON.parse(result));
+                this.hasValidZone();
             } else {
                 // Quiz not found, need to redirect.
                 window.location.href = '/quiz';
@@ -171,10 +212,14 @@ define([
             }
 
             const self = this;
-          
+
             this.loading(true);
 
-            $.ajax(			
+            if (!self.hasValidZone()) {
+                return;
+            }
+
+            $.ajax(
                 `/rest/V1/subscription/process`,
                 {
                     contentType: 'application/json; charset=utf-8',

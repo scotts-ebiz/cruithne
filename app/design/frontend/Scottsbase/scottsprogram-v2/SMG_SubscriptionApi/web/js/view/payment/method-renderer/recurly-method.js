@@ -22,7 +22,7 @@ define(
                 this.loading = ko.observable(false);
 
                 setTimeout(function () {
-                    recurly.configure('ewr1-aefvtq9Ri3MILWsXFPHyv2');
+                    recurly.configure(window.recurlyApi);
                 }, 2000);
 
                 // Setup zip modal

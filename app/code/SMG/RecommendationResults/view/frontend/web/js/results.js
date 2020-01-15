@@ -60,6 +60,8 @@ define([
                 self.lawnType(lawnType);
             }
 
+            self.hasValidZone = ko.observable(true);
+
             self.products = ko.computed(function () {
                 return self.results().plan
                     ? self.results().plan.coreProducts
@@ -68,31 +70,57 @@ define([
 
             self.seasons = ko.computed(() => {
                 const uniqueSeasons = self.products().reduce((items, product) => {
-                    if (items.indexOf(product.season) === -1) {
-                        items.push(product.season);
-                    }
+                  if (items.indexOf(product.season) === -1) {
+                    items.push(product.season);
+                  }
 
-                    return items;
+                  return items;
                 }, []);
 
-                const seasons = uniqueSeasons.map((season) => {
-                    const products = self.products().filter((product) => {
-                        return product.season === season;
-                    });
+                const seasons = uniqueSeasons.map(season => {
+                  const products = self.products().filter(product => {
+                    return product.season === season;
+                  });
 
-                    return {
-                        season: season,
-                        products: self.products().filter((product) => {
-                            return product.season === season;
-                        }),
-                        total: products.reduce((price, product) => {
-                            return price + (+product.price * +product.quantity);
-                        }, 0),
+                  let prodMap = {};
+
+                  products.forEach(product => {
+                    if (prodMap[product.prodId]) {
+                      prodMap[product.prodId] += 1;
+                      return;
                     }
+
+                    prodMap[product.prodId] = product.quantity;
+                  });
+
+                  const newProducts = [];
+
+                  products.forEach(product => {
+                    if (
+                      !newProducts.some(prod => {
+                        return prod.prodId === product.prodId
+                      })
+                    ) {
+                      let newProd = {
+                        ...product
+                      };
+                      newProd.quantity = prodMap[newProd.prodId];
+                      newProducts.push(newProd);
+                    }
+                  });
+
+
+                  return {
+                    season,
+                    products: newProducts,
+                    total: products.reduce((price, product) => {
+                      return price + +product.price * +product.quantity;
+                    }, 0)
+                  };
                 });
 
                 return seasons;
-            });
+              });
 
             // used to indicate which product is up next for delivery
             self.nextAvailableProduct = ko.computed(function () {
@@ -155,6 +183,7 @@ define([
                             }
                             self.hasResults(true);
                             self.results(data);
+                            self.checkZone();
                             window.sessionStorage.setItem('result', JSON.stringify(data));
                             window.sessionStorage.setItem('quiz-id', data.id);
                         }
@@ -172,6 +201,17 @@ define([
                     },
                 },
             );
+        },
+
+        /**
+         * Check if we have an invalid zone.
+         */
+        checkZone() {
+            if (['Zone 11', 'Zone 12'].indexOf(this.results().plan.zoneName) >= 0) {
+                this.hasValidZone(false);
+            } else {
+                this.hasValidZone(true);
+            }
         },
 
         /**
@@ -231,6 +271,7 @@ define([
                             }
                             self.hasResults(true);
                             self.results(data);
+                            self.checkZone();
                             window.sessionStorage.setItem('result', JSON.stringify(data));
                             window.sessionStorage.setItem('quiz-id', data.id);
                         }
@@ -286,13 +327,11 @@ define([
                 // Spring
                 case 'Early Spring': icon = 'icon-early-spring.svg'; break;
                 case 'Early Spring Feeding': icon = 'icon-early-spring.svg'; break;
-                case 'Late Spring Seeding': icon = 'icon-early-spring.svg'; break;
-                
+
                 case 'Late Spring': icon = 'icon-late-spring.svg'; break;
                 case 'Late Spring Feeding': icon = 'icon-late-spring.svg'; break;
                 case 'Late Spring Seeding': icon = 'icon-late-spring.svg'; break;
                 case 'Late Spring Grub': icon = 'icon-late-spring.svg'; break;
-
 
                 // Fall
                 case 'Early Fall': icon = 'icon-fall.svg'; break;
@@ -357,4 +396,3 @@ define([
         }
     });
 });
-
