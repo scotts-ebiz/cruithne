@@ -1,9 +1,6 @@
 define([
-    'uiComponent',
-    'ko',
-    'Magento_Ui/js/modal/modal',
-    'jquery'
-], function (Component, ko, modal, $) {
+    'uiComponent'
+], function (Component) {
 
     return Component.extend({
         initialize(config) {

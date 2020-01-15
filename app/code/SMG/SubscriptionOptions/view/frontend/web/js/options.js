@@ -229,7 +229,7 @@ define([
                 return;
             }
 
-            $.ajax(			
+            $.ajax(
                 `/rest/V1/subscription/process`,
                 {
                     contentType: 'application/json; charset=utf-8',
