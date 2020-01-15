@@ -2,9 +2,9 @@
 
 namespace SMG\SubscriptionApi\Cron;
 
+use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use SMG\SubscriptionApi\Helper\SeasonalHelper;
-use Magento\Store\Model\StoreManagerInterface;
 
 /**
  * Class SubscriptionCron
@@ -39,8 +39,13 @@ class SubscriptionCron
     public function execute()
     {
         $this->_logger->info("Running Seasonal Subscription Cron");
-        $store = 'main_website_store';
-        $this->_storeManager->setCurrentStore($store);
+
+        foreach ($this->_storeManager->getStores() as $store) {
+            if ($store->getCode() == 'default') {
+                $this->_storeManager->setCurrentStore($store->getId());
+            }
+        }
+
         $this->_seasonalHelper->processSeasonalOrders();
     }
 }

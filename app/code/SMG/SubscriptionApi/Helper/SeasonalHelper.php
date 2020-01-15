@@ -88,7 +88,7 @@ class SeasonalHelper extends AbstractHelper
         $this->_subscriptionAddonOrderCollectionFactory = $subscriptionAddonOrderCollectionFactory;
 
         $this->_today = new DateTimeImmutable();
-        $this->_maxShipDate = $this->_today->sub(new DateInterval('PT90M'));
+        $this->_maxShipDate = $this->_today->sub(new DateInterval('PT30M'));
 
         // Give 10 days to have a successful process.
         $this->_failDate = $this->_today->sub(new DateInterval('P10D'));
@@ -104,7 +104,7 @@ class SeasonalHelper extends AbstractHelper
         if (empty($orders)) {
             // We have nothing to process so end.
             $this->_logger->info('No seasonal orders required processing.');
-            exit;
+            return;
         }
 
         foreach ($orders as $order) {
@@ -119,8 +119,6 @@ class SeasonalHelper extends AbstractHelper
                     'next_cron_date',
                     $cronDate
                 )->save();
-
-                $this->_logger->debug("Subscription order {$order->getData('subscription_id')} was not ready to be processed. Next attempt after {$cronDate->format('Y-m-d H:i:s')}");
 
                 continue;
             }
