@@ -1,5 +1,9 @@
 // MyGro Base
 
+.nav-sections {
+  @include lib-css(letter-spacing, $navigation-desktop_letter-spacing);//test do you see letting spacing?
+}
+
 h3 {
   letter-spacing: 0.5px;
 }

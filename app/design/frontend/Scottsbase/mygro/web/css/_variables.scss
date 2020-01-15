@@ -44,8 +44,9 @@ $font-family__base                                            : $font-family-nam
 $navigation-desktop-level0-item__color                        : $mygro-black;
 $navigation-desktop-level0-item__hover__color                 : $primary__color;
 $navigation-desktop-level0-item__active__color                : $primary__color;
-$navigation-desktop__font-size                                : $font-size__base;
+$navigation-desktop__font-size                                : 29px;
 $navigation-desktop_letter-spacing                            : $letter-spacing_l; // custom var
+$navigation-level0-item__text-transform                       : uppercase;// test - do you see uppercase for nav?
 
 
 //  Headings
