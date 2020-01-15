@@ -1,21 +1,9 @@
 // Scotts Base Default
-html,
-body {
-    font-size: 16px;
-}
 
-.page-wrapper{
+.page-wrapper {
     .page-title-wrapper {
       display: none;
     }
-}
-
-a {
-    color: $scotts-green
-}
-
-a:hover {
-    color: $scotts-secondary-green;
 }
 
 .checkout-index-index {

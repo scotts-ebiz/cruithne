@@ -4,7 +4,7 @@
 
 $checkout-sidebar__margin: $indent__base !default;
 $checkout-sidebar__margin__xl: 46px !default;
-$checkout-sidebar__columns: 4 !default;
+$checkout-sidebar__columns: 4;
 
 //
 //  Desktop
@@ -13,6 +13,6 @@ $checkout-sidebar__columns: 4 !default;
 @include min-screen($screen__m) {
     .opc-sidebar {
         @include lib-css(margin, $checkout-sidebar__margin__xl 0 $checkout-sidebar__margin);
-        @include lib-layout-column(2, 2, $checkout-sidebar__columns);
+        @include lib-layout-column(2, 2, 50%); //Width was $checkout-sidebar__columns "grid-cols"
     }
 }

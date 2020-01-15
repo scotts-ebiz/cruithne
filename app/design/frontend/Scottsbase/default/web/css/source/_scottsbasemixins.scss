@@ -9,6 +9,7 @@
     &::-webkit-input-placeholder { @content; }
 }
 
+
 @mixin pseudo($display: block, $pos: absolute, $content: '') {
     content: $content;
     display: $display;
@@ -25,6 +26,7 @@
     @if $ls { letter-spacing: $ls; }
 }
 
+
 @mixin font-open-sans($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
     font-family: $opensans;
     @if $size { font-size: $size; }
@@ -34,14 +36,57 @@
     @if $ls { letter-spacing: $ls; }
 }
 
-@mixin font-rokkitt($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
-  font-family: $rokkitt;
+
+@mixin roboto-regular($size: $font-size__base, $color: $color-black, $weight: false, $lh: false, $ls: false) {
+  font-family: $font-family__quaternary;
   @if $size { font-size: $size; }
   @if $color { color: $color; }
   @if $weight { font-weight: $weight; }
   @if $lh { line-height: $lh; }
   @if $ls { letter-spacing: $ls; }
 }
+
+
+//Cart & Checkout - Body Font (Mobile)
+@mixin cart-checkout-body-font-mobile($size: $font-size__s, $lh: 18px) {
+  @if $size { font-size: $size; }
+  @if $lh { line-height: $lh; }
+}
+
+
+//Cart & Checkout - Body Font
+@mixin cart-checkout-body-font($size: $font-size__base, $color: $color-black, $weight: false, $lh: 20px, $ls: false) {
+  font-family: $font-family__quaternary;
+  @if $size { font-size: $size; }
+  @if $color { color: $color; }
+  @if $weight { font-weight: $weight; }
+  @if $lh { line-height: $lh; }
+  @if $ls { letter-spacing: $ls; }
+}
+
+
+//Cart & Checkout - H2 Font (Mobile)
+@mixin cart-checkout-h2-font-mobile($size: $font-size__l, $ls: $cart-checkout-h2-letter-spacing-mobile) {
+  @if $size { font-size: $size; }
+  @if $ls { letter-spacing: $ls; }
+}
+
+
+//Cart & Checkout - H2 Font
+@mixin cart-checkout-h2-font($size: $font-size__xl, $color: $color-black, $weight: 700, $ls: $cart-checkout-h2-letter-spacing, $text-transform: uppercase, $padding: $cart-checkout-h2-padding, $border: $cart-checkout-h2-border) {
+  font-family: $font-family__quaternary;
+  @if $size { font-size: $size; }
+  @if $color { color: $color; }
+  @if $weight { font-weight: $weight; }
+  @if $ls { letter-spacing: $ls; }
+  @if $text-transform { text-transform: $text-transform; }
+  @if $padding { padding: $padding; }
+  @if $border { border-bottom: $border; }
+  @include max-screen($screen__m) {
+      @include cart-checkout-h2-font-mobile()
+  }
+}
+
 
 @mixin defaultwrap($center: true) {
     @if $center == false {
@@ -74,3 +119,7 @@
   -o-transition: $x;
   transition: $x;
 }
+
+
+
+

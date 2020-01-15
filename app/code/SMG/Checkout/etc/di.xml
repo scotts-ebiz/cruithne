@@ -4,8 +4,6 @@
     <preference for="Magento\Checkout\Controller\Cart\Add" type="SMG\Checkout\Controller\Cart\Add" />
     <preference for="Magento\Checkout\Controller\Cart\CouponPost" type="SMG\Checkout\Controller\Cart\CouponPost" />
 	<preference for="Magento\Checkout\CustomerData\Cart" type="SMG\Checkout\CustomerData\Cart" />
-    <preference for="Magento\Checkout\Block\Checkout\AttributeMerger"
-                type="SMG\Checkout\Block\Checkout\AttributeMerger" />
 
 	<type name="Magento\Checkout\Api\GuestPaymentInformationManagementInterface">
 		<plugin  name="SMG_Checkout_Api_GuestPaymentInformationManagementInterface" type="SMG\Checkout\Plugin\Api\GuestPaymentInformationManagementInterface" sortOrder="1" />

@@ -1,13 +1,22 @@
-// MyGro Brand Colors //
-$mygro-green                    : #008065;
-$mygro-dark-green               : #00634f;
-$mygro-light-green              : #59988b;
-$mygro-dark-gray                : #383838;
-$mygro-gray                     : #909090;
-$mygro-gray-alt                 : #636363;
-$mygro-accent-blue              : #2c5999;
-$mygro-black                    : #222222;
-$mygro-black-alt                : #231f20;
+// Import scottsbasevars
+@import '../../../../default/web/css/source/scottsbasevars';
+
+//  MyGro Brand Colors
+$mygro-green                                                  : #008065;
+$mygro-dark-green                                             : #00634f;
+$mygro-light-green                                            : #59988b;
+$mygro-dark-gray                                              : #383838;
+$mygro-gray                                                   : #909090;
+$mygro-gray-alt                                               : #636363;
+$mygro-accent-blue                                            : #2c5999;
+$mygro-black                                                  : #222222;
+$mygro-black-alt                                              : #231f20;
+
+
+//  Fonts
+$font-family-name__secondary                                  : 'Hellix-Heavy';
+$font-family__secondary                                       : $font-family-name__secondary, $font-family__sans-serif;
+
 
 // Font Sizes //
 $font10: 10px;
@@ -23,11 +32,14 @@ $font32: 32px;
 
 $font_normal: normal;
 
+
+// Navigation //
+$navigation-desktop_letter-spacing                            : $letter-spacing_l;
+
+
 // Screen Sizes //
 $screen_1023: 1023px;
 $screen_1024: 1024px;
 $screen_768: 768px;
 $screen_769: 769px;
 $screen_568: 568px;
-
-

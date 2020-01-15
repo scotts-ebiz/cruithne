@@ -666,14 +666,6 @@
 //  ---------------------------------------------
 
 .abs-adjustment-incl-excl-tax {
-    .price-including-tax,
-    .price-excluding-tax,
-    .weee {
-        @include lib-font-size(14);
-        display: inline-block;
-        white-space: nowrap;
-    }
-
     .price-including-tax + .price-excluding-tax {
         display: inline-block;
         @include lib-font-size(11);
