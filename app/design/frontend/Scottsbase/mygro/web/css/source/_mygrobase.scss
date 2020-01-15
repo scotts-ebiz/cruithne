@@ -219,6 +219,11 @@ h3 {
                                     }
                                 }
                             }
+                            li.level0.active.level-top {
+                                a.level-top {
+                                    @include font-hellix-heavy;
+                                }
+                            }
                         }
                     }
                 }
