@@ -20,7 +20,8 @@ define([
         }),
 
         saveAndSendModal: ko.observable({
-            visible: false
+            visible: false,
+            email: ''
         }),
 
         saveAndSendSuccessModal: ko.observable({
@@ -278,6 +279,15 @@ define([
                     },
                 },
             );
+        },
+
+        // TODO: Update this function with the submit action for save and send modal
+        saveAndSendResults: function (e) {
+            if (e && e.preventDefault && typeof e.preventDefault === 'function')
+                e.preventDefault()
+
+            this.toggleSaveAndSendModal();
+            this.toggleSaveAndSendSuccessModal();
         },
 
         formatDate: function (_date) {
