@@ -14,7 +14,7 @@ define([
             this.countries = ko.observable(config.countries);
 
             setTimeout( function() {
-                recurly.configure('ewr1-aefvtq9Ri3MILWsXFPHyv2');
+                recurly.configure(config.recurlyApi);
 
                 successModal = modal({
                     type: 'popup',
