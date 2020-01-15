@@ -481,6 +481,7 @@ define([
 
                 let start = null;
 
+                console.log(self.currentAnimationState)
                 if (self.currentAnimationState >= 5) {
                     self.currentAnimationState = 0;
                     clearInterval(animInterval);
@@ -496,9 +497,12 @@ define([
                     self.setGroup(group);
 
                     window.requestAnimationFrame(self.step(start, self.currentAnimationState));
+                } else if (self.currentAnimationState == 2) {
+                    self.setGroup(group);
+                    window.requestAnimationFrame(self.step(start, self.currentAnimationState));
                 } else {
                     window.requestAnimationFrame(self.step(start, self.currentAnimationState));
-                    self.previousGroups.push(self.currentGroup());
+                    // self.previousGroups.push(self.currentGroup());
                     self.setGroup(group);
                 }
             }, 2000);
