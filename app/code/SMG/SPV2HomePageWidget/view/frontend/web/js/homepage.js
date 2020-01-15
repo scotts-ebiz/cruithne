@@ -20,7 +20,7 @@ define([
 
 				setTimeout(function () {
 					timer();
-				}, 16);
+				}, 58);
 			}
 
 			//trigger the countdown animation
@@ -53,21 +53,37 @@ define([
 			});
 
 			function fadeimg() {
-				var current_img = 0,
-					slides = document.getElementsByClassName("season-img");
+				let current_img = 0,
+					slides = document.querySelectorAll('.season-img');
 
-				for (var i = 0; i < slides.length; i++) {
-					slides[i].style.opacity = 0;
-				}
+				/**
+				 * Invoke the first iteration immediately, instead of waiting the 3 seconds
+				 */
+					current_img++
+					Array.prototype.forEach.call(slides, (slide, i) => {
+						if (slides[current_img] === slide) {
+							slide.style.opacity = 1;
+							return;
+						}
+						slide.style.opacity = 0;
+					});
 
-				let interval = setInterval(function () {
+				setInterval(() => {
 					current_img++;
-					slides[current_img].style.opacity = 1;
 
-					if (current_img === slides.length - 1) {
-						clearInterval(interval);
+					Array.prototype.forEach.call(slides, (slide, i) => {
+						if (slides[current_img] === slide) {
+							slide.style.opacity = 1;
+							return;
+						}
+						slide.style.opacity = 0;
+					});
+
+					if (current_img === slides.length) {
+						current_img = 0;
+						slides[0].style.opacity = 1;
 					}
-				}, 500);
+				}, 3000);
 			}
 
 			//Seasons animation
