@@ -105,7 +105,7 @@
                         type="button"
                         data-bind="click: quiz.map() && quiz.map().undo"
                     >
-                        Undo
+                        Clear
                     </button>
                     <!-- /ko -->
 
@@ -117,10 +117,16 @@
                             <img src="https://test_magento_image_repo.storage.googleapis.com/mapHelperIcon.svg" alt="Calculate Lawn Size">
                         </p>
 
-                        <p class="sp-p1 sp-max-w-sm sp-mx-auto sp-text-center">
+                        <p class="sp-p1 sp-max-w-sm sp-mx-auto sp-text-center lg:sp-hide">
                                 Here’s how to measure your lawn size:
-                                tap once on the map to begin a line and trace the outline of your lawn by adding more lines. Close the shape to complete the outline. You can tap and drag the dots to edit, use the undo button to undo an action, and pinch to zoom.
-                                
+                                tap once on the map to begin a line and trace the outline of your lawn by adding more lines. Close the shape to complete the outline. You can tap and drag the dots to edit, use the clear button to clear your selection, and pinch to zoom.
+
+                        </p>
+
+                        <p class="sp-p1 sp-max-w-sm sp-mx-auto sp-text-center lg:sp-block sp-hide">
+                                Here’s how to measure your lawn size:
+                                click once on the map to begin a line and trace the outline of your lawn by adding more lines. Close the shape to complete the outline. You can tap and drag the dots to edit, use the clear button to clear your selection.
+
                         </p>
 
                         <p class="sp-p1 sp-text-center">
