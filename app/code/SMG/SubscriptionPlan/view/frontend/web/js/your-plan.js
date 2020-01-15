@@ -42,20 +42,46 @@ define([
                     return items;
                 }, []);
 
-                const seasons = uniqueSeasons.map((season) => {
-                    const products = self.products().filter((product) => {
+                const seasons = uniqueSeasons.map(season => {
+                    const products = self.products().filter(product => {
                         return product.season === season;
                     });
 
+                    let prodMap = {};
+
+                    products.forEach(product => {
+                        if (prodMap[product.prodId]) {
+                            prodMap[product.prodId] += 1;
+                            return;
+                        }
+
+                        prodMap[product.prodId] = product.quantity;
+                    });
+
+                    const newProducts = [];
+
+                    products.forEach(product => {
+                        if (
+                            !newProducts.some(prod => {
+                                return prod.prodId === product.prodId
+                            })
+                        ) {
+                            let newProd = {
+                                ...product
+                            };
+                            newProd.quantity = prodMap[newProd.prodId];
+                            newProducts.push(newProd);
+                        }
+                    });
+
+
                     return {
-                        season: season,
-                        products: self.products().filter((product) => {
-                            return product.season === season;
-                        }),
+                        season,
+                        products: newProducts,
                         total: products.reduce((price, product) => {
-                            return price + (+product.price * +product.quantity);
-                        }, 0),
-                    }
+                            return price + +product.price * +product.quantity;
+                        }, 0)
+                    };
                 });
 
                 return seasons;
