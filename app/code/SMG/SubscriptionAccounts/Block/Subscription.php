@@ -130,6 +130,7 @@ class Subscription extends Template
             $current = null;
             $next = null;
             $addon = null;
+
             foreach ($subscriptions as $subscription) {
                 if ($subscription->plan->plan_code != 'annual' && $subscription->plan->plan_code != 'seasonal' && $subscription->plan->plan_code != 'add-ons') {
                     $episodics[(int)$subscription->activated_at->format('YmdHis')] = $subscription;
@@ -159,6 +160,7 @@ class Subscription extends Template
 
             // Get invoices
             $invoices[] = $master->invoice->get()->invoice_number;
+
             foreach ($episodics as $subscription) {
                 if ($subscription->invoice && $invoice = $subscription->invoice->get()) {
                     $invoices[] = $invoice->invoice_number;
@@ -166,7 +168,7 @@ class Subscription extends Template
             }
             $invoices = $this->getInvoices($invoices);
 
-            $activeTotal = is_null($current) || $current->unit_amount_in_cents == 0 ? $this->convertAmountToDollars($next->unit_amount_in_cents) : $this->convertAmountToDollars($current->unit_amount_in_cents - $current->invoice->get()->discount_in_cents );
+            $activeTotal = is_null($current) || $current->unit_amount_in_cents == 0 ? $this->convertAmountToDollars($next ? $next->unit_amount_in_cents : 0) : $this->convertAmountToDollars($current->unit_amount_in_cents - $current->invoice->get()->discount_in_cents );
             $addonTotal = is_null($addon) ? 0 : $this->convertAmountToDollars($addon->unit_amount_in_cents) * $addon->quantity;
 
             return [
@@ -197,7 +199,7 @@ class Subscription extends Template
                     'total_amount'          => $addonTotal + $activeTotal
                 ],
                 'invoices'              => $invoices,
-                'next_billing_date'     => $next->activated_at->format('F d, Y')
+                'next_billing_date'     => $next ? $next->activated_at->format('F d, Y') : '',
             ];
         } catch (\Exception $e) {
             $this->_logger->error($e->getMessage());

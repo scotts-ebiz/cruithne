@@ -1,5 +1,6 @@
 .sp-options__your-plan {
   border: 2px solid #1d5632;
+  min-width: 50%;
 }
 
 .sp-options__your-plan::after {
