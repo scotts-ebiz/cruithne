@@ -1,8 +1,9 @@
 define([
     'uiComponent',
     'ko',
-    'jquery'
-], function (Component, ko, $) {
+    'jquery',
+    'Magento_Customer/js/customer-data'
+], function (Component, ko, $, customerData) {
     return Component.extend({
         hasResults: ko.observable(false),
         lawnArea: ko.observable(0),
@@ -29,6 +30,8 @@ define([
 
         initialize(config) {
             const self = this;
+
+            self.customer = customerData.get('customer');
 
             if (config.zip) {
                 window.sessionStorage.setItem('lawn-zip', config.zip);
@@ -181,6 +184,13 @@ define([
                             if (minTimePassed) {
                                 self.isLoading(false);
                             }
+
+                            // An active or subscription with this quiz ID already exists.
+                            if (data.subscription && data.subscription.status !== 'pending') {
+                                window.location.href = self.customer().firstname ? '/your-plan' : '/quiz';
+                                return;
+                            }
+
                             self.hasResults(true);
                             self.results(data);
                             self.checkZone();
@@ -225,7 +235,6 @@ define([
                 this.completeQuiz();
             } else {
                 // Quiz not found, need to redirect.
-                console.log('loading quiz responses');
                 window.location.href = '/quiz';
             }
         },
@@ -269,6 +278,13 @@ define([
                             if (minTimePassed) {
                                 self.isLoading(false);
                             }
+
+                            // An active or subscription with this quiz ID already exists.
+                            if (data.subscription && data.subscription.status !== 'pending') {
+                                window.location.href = self.customer().firstname ? '/your-plan' : '/quiz';
+                                return;
+                            }
+
                             self.hasResults(true);
                             self.results(data);
                             self.checkZone();
@@ -315,31 +331,38 @@ define([
 
         getSeasonIcon: function (product) {
             let icon = '';
+
             switch (product.season) {
                 // Summer
-                case 'Early Summer': icon = 'icon-summer.svg'; break;
-                case 'Early Summer Seeding': icon = 'icon-summer.svg'; break;
-                case 'Early Summer Feeding': icon = 'icon-summer.svg'; break;
-
-                case 'Late Summer': icon = 'icon-summer.svg'; break;
-                case 'Late Summer Feeding': icon = 'icon-summer.svg'; break;
+                case 'Early Summer':
+                case 'Early Summer Seeding':
+                case 'Early Summer Feeding':
+                case 'Late Summer':
+                case 'Late Summer Feeding':
+                    icon = 'icon-summer.svg';
+                    break;
 
                 // Spring
-                case 'Early Spring': icon = 'icon-early-spring.svg'; break;
-                case 'Early Spring Feeding': icon = 'icon-early-spring.svg'; break;
+                case 'Early Spring':
+                case 'Early Spring Feeding':
+                    icon = 'icon-early-spring.svg';
+                    break;
 
-                case 'Late Spring': icon = 'icon-late-spring.svg'; break;
-                case 'Late Spring Feeding': icon = 'icon-late-spring.svg'; break;
-                case 'Late Spring Seeding': icon = 'icon-late-spring.svg'; break;
-                case 'Late Spring Grub': icon = 'icon-late-spring.svg'; break;
+                case 'Late Spring':
+                case 'Late Spring Feeding':
+                case 'Late Spring Seeding':
+                case 'Late Spring Grub':
+                    icon = 'icon-late-spring.svg';
+                    break;
 
                 // Fall
-                case 'Early Fall': icon = 'icon-fall.svg'; break;
-                case 'Early Fall Seeding': icon = 'icon-fall.svg'; break;
-                case 'Early Fall Feeding': icon = 'icon-fall.svg'; break;
-
-                case 'Late Fall': icon = 'icon-fall.svg'; break;
-                case 'Late Fall Feeding': icon = 'icon-fall.svg'; break;
+                case 'Early Fall':
+                case 'Early Fall Seeding':
+                case 'Early Fall Feeding':
+                case 'Late Fall':
+                case 'Late Fall Feeding':
+                    icon = 'icon-fall.svg';
+                    break;
             }
 
             return 'https://test_magento_image_repo.storage.googleapis.com/' + icon
