@@ -14,7 +14,8 @@ USER root
 WORKDIR $MAGENTO_DIR
 RUN chown -R magento:www-data .git
 
-RUN curl -sL https://deb.nodesource.com/setup_10.x | bash - && apt-get install -y nodejs
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN apt-get install -y nodejs
 
 USER magento
 WORKDIR $MAGENTO_DIR
@@ -38,10 +39,20 @@ RUN mv /var/www/html/magento2/app/etc/env.php /var/www/html/magento2/app/etc/__e
 
 USER root
 
+RUN REV=$(git rev-parse HEAD)
+
+RUN \
+	curl -X POST 'https://api.newrelic.com/v2/applications/203206085/deployments.json' \
+     -H 'X-Api-Key:abb8c9f78734ce8444b721b2ad8f0474899a8932522d942' -i \
+     -H 'Content-Type: application/json' \
+     -d \
+	'{ "deployment": { "revision": "$REV" } }'
+
 # Expose Ports for Apache
 EXPOSE 80/tcp 443/tcp
 
-RUN find var pub/static pub/media app/etc -type f -exec chmod g+w {} +  && find var pub/static pub/media app/etc -type d -exec chmod g+ws {} +
+RUN find var pub/static pub/media app/etc -type f -exec chmod g+w {} + 
+RUN find var pub/static pub/media app/etc -type d -exec chmod g+ws {} +
 
 # Run entrypoint file
 COPY ondemand-entrypoint.sh /usr/local/bin/entrypoint.sh
