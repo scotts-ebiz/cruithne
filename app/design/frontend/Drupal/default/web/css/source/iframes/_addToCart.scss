@@ -17,7 +17,7 @@
       display: none !important;
     }
     .price {
-      @include font-iframe(1.375rem);
+      @include font-iframe(22px);
     }
   }
 
@@ -76,12 +76,14 @@
             // Plus and Minus Sign buttons.
             .minus, .plus {
               color: $color-gray19;
+              font-family: $lato;
               font-size: 20px;
-              padding: 10px;
+              padding: 12px;
               background-color: $color-gray-light0;
               border: none;
               border-radius: 0;
               border-left: 1px solid $color-gray-light2;
+              line-height: 0;
             }
           }
 
