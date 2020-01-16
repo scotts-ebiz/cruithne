@@ -184,9 +184,14 @@ define(
 
                 recurly.token(recurlyForm, function (err, token) {
                     if (err) {
-                        if( err.code == 'validation' ) {
-                            if( err.fields.includes('number') === true ) {
+                        if( err.code === 'validation' ) {
+                            if (err.fields.includes('number')) {
                                 $('.recurly-form-error').text('Please enter a valid card number.');
+                            } else if (
+                                !err.fields.includes('number') &&
+                                (err.fields.includes('month') || err.fields.includes('year'))
+                            ) {
+                                $('.recurly-form-error').text('Please enter a valid expiration date.');
                             } else {
                                 $('.recurly-form-error').text(err.message);
                             }
