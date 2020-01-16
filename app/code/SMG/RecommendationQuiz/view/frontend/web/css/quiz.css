@@ -439,6 +439,15 @@ li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot::before {
   position: relative;
 }
 
+@media (max-width: 1024px) {
+  .sp-quiz__footer {
+    position: fixed;
+    bottom: 0;
+    width: 100vw;
+    z-index: 50;
+  }
+}
+
 @media (max-width: 767px) {
   .sp-quiz--has-address {
     padding: 0;

@@ -287,6 +287,48 @@ define([
         // Grab question content block for use in finding callback event
         self.questionContentBlock = document.querySelector('.sp-quiz__question-wrapper');
 
+        self.debounce = function (func, wait, immediate = false) {
+            let timeout;
+            return function() {
+                let context = this, args = arguments;
+                let later = function() {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                }
+                let callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
+            }
+
+        }
+
+        self.handleResize = function() {
+            const content = document.querySelector('.sp-quiz__content');
+
+            if (window.innerWidth < 1024) {
+                const height = document.querySelector('.sp-quiz__footer').offsetHeight;
+                content.style.marginBottom = height+'px';
+                return;
+            }
+
+            content.style.marginBottom = '0px';
+
+        }
+
+        window.addEventListener('resize', self.debounce(self.handleResize, 250));
+
+        let observer = new MutationObserver(function(mutations) {
+            if (document.contains(document.querySelector('.sp-quiz__footer'))) {
+                if (document.querySelector('.sp-quiz__footer').offsetHeight > 0) {
+                    self.handleResize();
+                    observer.disconnect();
+                }
+            }
+        })
+
+        observer.observe(document, {attributes: false, childList: true, characterData: false, subtree: true})
+
         self.progressBarCategories = ko.observableArray([
             {label: "Goals"},
             {label: "Routine"},
