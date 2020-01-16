@@ -171,9 +171,10 @@ class Subscription extends Template
             $activeTotal = is_null($current) || $current->unit_amount_in_cents == 0 ? $this->convertAmountToDollars($next ? $next->unit_amount_in_cents : 0) : $this->convertAmountToDollars($current->unit_amount_in_cents - $current->invoice->get()->discount_in_cents );
             $addonTotal = is_null($addon) ? 0 : $this->convertAmountToDollars($addon->unit_amount_in_cents) * $addon->quantity;
 
+            $isAnnualSubscription = $master->plan->plan_code == 'annual';
             return [
                 'success'               => true,
-                'is_annual'             => $master->plan->plan_code == 'annual',
+                'is_annual'             => $isAnnualSubscription,
                 'subscription_type'     => ($isAnnualSubscription) ? 'Annual' : 'Seasonal',
                 'billing_information'   => [
                     'last_four'             => $this->getBillingInformation()->last_four
