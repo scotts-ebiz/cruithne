@@ -354,8 +354,8 @@ class SubscriptionOrderHelper extends AbstractHelper
         $quote->collectTotals()->save();
 
         // Create an order from the quote.
-        $order = $this->_quoteManagement->submit($quote);
-        $order->setEmailSent(0);
+        $order = $this->_quoteManagement->submit($quote, ['email_sent' => 1, 'send_email' => 0]);
+//        $order->setEmailSent(0);
 
         // Set customer Gigya ID
         $order->setGigyaId($customer->getGigyaUid());
