@@ -297,7 +297,6 @@ define([
             );
         },
 
-        // TODO: Update this function with the submit action for save and send modal
         saveAndSendResults: function (e) {
             if (e && e.preventDefault && typeof e.preventDefault === 'function') {
                 e.preventDefault();
