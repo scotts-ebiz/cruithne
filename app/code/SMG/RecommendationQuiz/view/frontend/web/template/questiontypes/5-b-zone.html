@@ -24,6 +24,7 @@
     >
         <div class="sp-form-group">
             <input
+                id="manual-sqft"
                 class="sp-input sp-w-full"
                 min="1"
                 pattern="[0-9]*"
@@ -36,7 +37,7 @@
                 "
             />
 
-            <label class="sp-form-label">
+            <label class="sp-form-label" for="manual-sqft">
                 Total square footage of your lawn
             </label>
 
@@ -50,6 +51,7 @@
             data-bind="css: { 'sp-has-error': quiz.invalidZipCode() }"
         >
             <input
+                id="manual-zip"
                 class="sp-input sp-w-full"
                 minlength="5"
                 maxlength="5"
@@ -59,7 +61,7 @@
                 data-bind="attr: { name: quiz.questions()[0].id }, event: { input: quiz.setZipCode }"
             />
 
-            <label class="sp-form-label">
+            <label class="sp-form-label" for="manual-zip">
                 ZIP code
             </label>
 

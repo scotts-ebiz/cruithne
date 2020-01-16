@@ -140,8 +140,13 @@ class Index
                     if ($this->_coreSession->getData('subscription_details')) {
                         // We are adding the subscription to the cart so clear
                         // out the onepage quote.
+                        $addresses = $quote->getAllAddresses();
+                        foreach ($addresses as $address) {
+                            $address->delete();
+                        }
                         $quote->removeAllItems();
                         $quote->removeAllAddresses();
+                        $quote->save();
                         $quote->collectTotals()->save();
                         $this->_subscriptionHelper->addSessionSubscriptionToCart();
                     }

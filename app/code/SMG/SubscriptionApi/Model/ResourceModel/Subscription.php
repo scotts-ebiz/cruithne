@@ -131,20 +131,20 @@ class Subscription extends AbstractDb
     /**
      * Get subscription from master subscription id
      * @param string $masterSubscription
-     * @return mixed
+     * @return Subscription|\Magento\Framework\DataObject|null
      * @throws LocalizedException
      */
     public function getSubscriptionByMasterSubscriptionId(string $masterSubscription)
     {
         if (! empty($masterSubscription)) {
             $subscriptions = $this->_subscriptionCollectionFactory->create();
-            $subscriptions->addFieldToFilter('subscription_id', $masterSubscription);
+            $subscription = $subscriptions->getItemByColumnValue('subscription_id', $masterSubscription);
 
-            foreach ($subscriptions as $subscription) {
-                if (! empty($subscription)) {
-                    return $subscription;
-                }
+            if (! $subscription->getId()) {
+                return null;
             }
+
+            return $subscription;
         }
 
         $error = 'Subscription could not be found with Master Subscription Id.';

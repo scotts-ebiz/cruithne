@@ -3,8 +3,11 @@
 namespace SMG\SubscriptionApi\Api;
 
 use Psr\Log\LoggerInterface;
+use Magento\Customer\Model\Customer;
 use SMG\SubscriptionApi\Helper\SeasonalHelper;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Customer\Api\AddressRepositoryInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Session\SessionManagerInterface as CoreSession;
 use SMG\SubscriptionApi\Api\Interfaces\RecurlyInterface;
 use SMG\SubscriptionApi\Exception\SubscriptionException;
@@ -18,6 +21,9 @@ use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionModel;
  */
 class RecurlySubscription implements RecurlyInterface
 {
+    /** @var \Magento\Customer\Api\AddressRepositoryInterface */
+    protected $_addressRepository;
+
     /** @var RecurlySubscriptionModel  */
     protected $_recurlySubscriptionModel;
 
@@ -39,11 +45,16 @@ class RecurlySubscription implements RecurlyInterface
 
     /**
      * RecurlySubscription constructor.
+     * @param AddressRepositoryInterface $addressRepository
      * @param RecurlySubscriptionModel $recurlySubscriptionModel
      * @param SubscriptionModel $subscriptionModel
      * @param CoreSession $coreSession
+     * @param LoggerInterface $logger
+     * @param SubscriptionOrderHelper $subscriptionOrderHelper
+     * @param SeasonalHelper $seasonalHelper
      */
     public function __construct(
+        AddressRepositoryInterface $addressRepository,
         RecurlySubscriptionModel $recurlySubscriptionModel,
         SubscriptionModel $subscriptionModel,
         CoreSession $coreSession,
@@ -51,6 +62,7 @@ class RecurlySubscription implements RecurlyInterface
         SubscriptionOrderHelper $subscriptionOrderHelper,
         SeasonalHelper $seasonalHelper
     ) {
+        $this->_addressRepository = $addressRepository;
         $this->_recurlySubscriptionModel = $recurlySubscriptionModel;
         $this->_subscriptionModel = $subscriptionModel;
         $this->_coreSession = $coreSession;
@@ -140,6 +152,13 @@ class RecurlySubscription implements RecurlyInterface
             ]);
         }
 
+        // We canceled the subscription, so clear customer addresses.
+        $customer = $subscription->getCustomer();
+
+        if ($customer) {
+            $this->clearCustomerAddresses($customer);
+        }
+
         return json_encode([
             'success' => true,
             'message' => 'Subscriptions successfully cancelled.'
@@ -159,5 +178,36 @@ class RecurlySubscription implements RecurlyInterface
     public function processSeasonalInvoice()
     {
         $this->_seasonalHelper->processSeasonalOrders();
+    }
+
+
+    /**
+     * Delete customer addresses, because we don't want to store them in the address book,
+     * so they will always need to enter their shipping/billing details on checkout
+     *
+     * @param Customer $customer
+     */
+    private function clearCustomerAddresses($customer)
+    {
+        $customer->setDefaultBilling(null);
+        $customer->setDefaultShipping(null);
+
+        try {
+            foreach ($customer->getAddresses() as $address) {
+                $this->_addressRepository->deleteById($address->getId());
+            }
+
+            $customer->cleanAllAddresses();
+            $customer->save();
+        } catch (NoSuchEntityException $ex) {
+            $this->_logger->error($ex->getMessage());
+            return;
+        } catch (LocalizedException $ex) {
+            $this->_logger->error($ex->getMessage());
+            return;
+        } catch (\Exception $ex) {
+            $this->_logger->error($ex->getMessage());
+            return;
+        }
     }
 }
