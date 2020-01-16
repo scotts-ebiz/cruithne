@@ -574,6 +574,10 @@ li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot::before {
   font-size: 48px;
 }
 
+.sp-quiz__safari-bugfix {
+  flex: 1 1 100%;
+}
+
 @keyframes transition-slideup {
   0% {
     opacity: 0;
