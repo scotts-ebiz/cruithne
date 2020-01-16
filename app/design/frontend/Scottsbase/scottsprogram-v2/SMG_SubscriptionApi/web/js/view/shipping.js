@@ -68,7 +68,7 @@ define([
         /**
          * @return {exports}
          */
-        initialize: function () {            
+        initialize: function () {
             var self = this,
                 hasNewAddress,
                 fieldsetName = 'checkout.steps.shipping-step.shippingAddress.shipping-address-fieldset';
@@ -153,7 +153,7 @@ define([
                         self.hasSubscription(true);
 
                         // Show modal
-                        $('body').append('<div id="popup-modal" class="modal-popup--subscriptions"><h5 class="sp-h5 sp-text-black sp-text-center">Confirm Your Cancellation</h5><h6 class="sp-h6 sp-text-black sp-text-center">By cancelling your subscription, the following will happen:</h6><div class="content"><ul><li>You will be refunded the following amount, which will appear in your account within 7 days: $' + response.refund_amount + '</li><li>You will no longer be billed</li><li>You will no longer receive product shipments</li><li>You will still have an online account with Scotts</li></ul><p class="sp-text-center"><strong>Questions or concerns? Contact us Monday through Friday between 8am and 5pm EST at <a href="tel:18882703714">1-888-270-3714</a></strong></p><div class="modal-popup-cta sp-text-center"><button type="button" id="cancelSubscription" class="sp-button sp-button--primary">Cancel My Subscription</button></div><div class="sp-text-center"><a href="' + response.redirect_url + '">Nevermind, Take Me Back</a></div></div></div>');
+                        $('body').append('<div id="popup-modal" class="modal-popup--subscriptions"><h5 class="sp-h5 sp-text-black sp-text-center">Confirm Your Cancellation</h5><h6 class="sp-h6 sp-text-black sp-text-center">By cancelling your subscription, the following will happen:</h6><div class="content"><ul><li>Please see your email for your refund amount. This should appear in your account within 7 days.</li><li>You will no longer be billed</li><li>You will no longer receive product shipments</li><li>You will still have an online account with Scotts</li></ul><p class="sp-text-center"><strong>Questions or concerns? Contact us Monday through Friday between 8am and 5pm EST at <a href="tel:18882703714">1-888-270-3714</a></strong></p><div class="modal-popup-cta sp-text-center"><button type="button" id="cancelSubscription" class="sp-button sp-button--primary">Cancel My Subscription</button></div><div class="sp-text-center"><a href="' + response.redirect_url + '">Nevermind, Take Me Back</a></div></div></div>');
 
                         var options = {
                             type: 'popup',
