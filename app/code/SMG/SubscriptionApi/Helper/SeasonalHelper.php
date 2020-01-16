@@ -54,6 +54,11 @@ class SeasonalHelper extends AbstractHelper
     protected $_failDate;
 
     /**
+     * @var DateTimeImmutable|false
+     */
+    protected $_maxShipDate;
+
+    /**
      * SeasonalHelper constructor.
      * @param Context $context
      * @param LoggerInterface $logger
@@ -83,6 +88,7 @@ class SeasonalHelper extends AbstractHelper
         $this->_subscriptionAddonOrderCollectionFactory = $subscriptionAddonOrderCollectionFactory;
 
         $this->_today = new DateTimeImmutable();
+        $this->_maxShipDate = $this->_today->sub(new DateInterval('PT30M'));
 
         // Give 10 days to have a successful process.
         $this->_failDate = $this->_today->sub(new DateInterval('P10D'));
@@ -98,16 +104,20 @@ class SeasonalHelper extends AbstractHelper
         if (empty($orders)) {
             // We have nothing to process so end.
             $this->_logger->info('No seasonal orders required processing.');
-            exit;
+            return;
         }
 
         foreach ($orders as $order) {
             if (! $this->verifyRecurlySeasonalOrder($order)) {
                 // Order is not ready to process, set a timestamp to be
                 // available the next day.
+                $cronDate = $order->getData('next_cron_date')
+                    ? $this->_today->add(new DateInterval('P1D'))->format('Y-m-d H:i:s')
+                    : $this->_today->add(new DateInterval('PT3H'))->format('Y-m-d H:i:s');
+
                 $order->setData(
                     'next_cron_date',
-                    $this->_today->add(new DateInterval('P1D'))->format('Y-m-d H:i:s')
+                    $cronDate
                 )->save();
 
                 continue;
@@ -139,14 +149,14 @@ class SeasonalHelper extends AbstractHelper
         $subscriptionOrders = $subscriptionOrderCollection
             ->addFilter('subscription_order_status', 'pending')
             ->addFieldToFilter('subscription_id', ['notnull' => true])
-            ->addFieldToFilter('ship_start_date', ['lteq' => $this->_today->format('Y-m-d H:i:s')])
+            ->addFieldToFilter('ship_start_date', ['lteq' => $this->_maxShipDate->format('Y-m-d H:i:s')])
             ->addFieldToFilter(['next_cron_date', 'next_cron_date'], [['lteq' => $this->_today->format('Y-m-d H:i:s')], ['null' => true]])
             ->getItems();
 
         $subscriptionAddonOrders = $subscriptionAddonOrderCollection
             ->addFilter('subscription_order_status', 'pending')
             ->addFieldToFilter('subscription_id', ['notnull' => true])
-            ->addFieldToFilter('ship_start_date', ['lteq' => $this->_today->format('Y-m-d H:i:s')])
+            ->addFieldToFilter('ship_start_date', ['lteq' => $this->_maxShipDate->format('Y-m-d H:i:s')])
             ->addFieldToFilter(['next_cron_date', 'next_cron_date'], [['lteq' => $this->_today->format('Y-m-d H:i:s')], ['null' => true]])
             ->getItems();
 
@@ -220,6 +230,8 @@ class SeasonalHelper extends AbstractHelper
 
             return false;
         } catch (\Exception $e) {
+            $this->_logger->error('Could not verify Recurly subscription - ' . $e->getMessage());
+
             return false;
         }
     }
