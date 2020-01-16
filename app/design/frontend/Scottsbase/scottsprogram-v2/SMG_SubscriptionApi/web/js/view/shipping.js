@@ -165,7 +165,7 @@ define([
                             },
                             closed() {
                                 if (self.hasSubscription() && !self.cancellingSubscription()) {
-                                    self.cancelRecurlySubscription();
+                                    window.location.href = '/your-plan';
                                 }
                             },
                         };
@@ -212,6 +212,7 @@ define([
                 complete() {
                     self.loading(false);
                     self.cancellingSubscription(false);
+                    window.location.reload();
 
                     $('button#cancelSubscription')
                         .removeClass('sp-button--loading')
