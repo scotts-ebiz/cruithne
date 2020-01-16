@@ -222,7 +222,7 @@ class SubscriptionOrderHelper extends AbstractHelper
         return [
             'firstname' => $address->getFirstname(),
             'lastname' => $address->getLastname(),
-            'street' => $address->getStreetFull(),
+            'street' => $address->getStreet(),
             'city' => $address->getCity(),
             'country_id' => $address->getCountryId(),
             'region' => $address->getRegion(),
