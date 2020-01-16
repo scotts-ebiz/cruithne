@@ -1,6 +1,6 @@
 <?php
 namespace SMG\Customer\Plugin\Model;
-class EmailNotification  extends \Magento\Customer\Model\EmailNotification
+class EmailNotification
 {
     public function aroundNewAccount(\Magento\Customer\Model\EmailNotification $subject, \Closure $proceed)
     {
