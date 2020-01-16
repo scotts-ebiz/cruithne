@@ -20,7 +20,7 @@ define([
                 cancelSubscriptionModal = cancelSubscriptionModal({
                     type: 'popup',
                     responsive: true,
-                    innerScroll: true,
+                    innerScroll: false,
                     buttons: [],
                     opened: function ($Event) {
                         $('.modal-header').remove();

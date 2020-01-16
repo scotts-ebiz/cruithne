@@ -1,0 +1,20 @@
+<page
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd"
+>
+    <head>
+        <css src="SMG_SubscriptionPlan::css/your-plan.css" />
+        <title>Here's Your Plan</title>
+    </head>
+
+    <body>
+        <referenceContainer name="content">
+            <block
+                class="SMG\SubscriptionPlan\Block\YourPlan"
+                name="smg_subscriptionplan_yourplan"
+                template="SMG_SubscriptionPlan::your-plan.phtml"
+                cacheable="false"
+            />
+        </referenceContainer>
+    </body>
+</page>

@@ -34,9 +34,9 @@
     <div class="sp-hide md:sp-block sp-subscription-details__desktop-links">
         <a href="/quiz"
            class="sp-link">Lawn conditions changed?</a>
-        <a href="#"
+        <button
            data-bind="click: displaySubscriptionModal"
-           class="sp-link sp-inline-block sp-ml-4 cancel-subscription-modal">Cancel Subscription</a>
+           class="sp-link sp-inline-block sp-ml-4 cancel-subscription-modal">Cancel Subscription</button>
     </div>
 </div>
 
@@ -88,8 +88,8 @@
         </table>
 
         <div class="md:sp-hide sp-mt-8">
-            <a class="sp-link sp-block">Lawn conditions changed?</a>
-            <a class="sp-link sp-block">Cancel Subscription</a>
+            <a href="/quiz" class="sp-link sp-block">Lawn conditions changed?</a>
+            <button data-bind="click: displaySubscriptionModal" class="sp-link sp-block">Cancel Subscription</button>
         </div>
     </div>
 
@@ -162,7 +162,7 @@
 <!-- /ko -->
 
 <div id="popup-modal"
-     class="modal-popup--subscriptions sp-hide sp-p-8">
+     class="modal-popup--subscriptions sp-hide md:sp-p-8">
     <button
         class="modal-popup--subscriptions__close"
         data-bind="click: closeSubscriptionModal"
@@ -199,31 +199,11 @@
         >
             I want to cancel
         </button>
-        <a href="sp-link"
+        <button
            data-bind="click: closeSubscriptionModal"
-           class="close-subscription-modal sp-block sp-mt-4"
+           class="sp-link close-subscription-modal sp-block sp-mt-4"
         >
             Never mind, take me back
-        </a>
-    </div>
-</div>
-
-<div id="popup-modal"
-     class="modal-popup--subscriptions sp-hide sp-p-8">
-    <button
-        class="modal-popup--subscriptions__close"
-        data-bind="click: hideSuccess"
-    ></button>
-    <h2 class="sp-h2 sp-text-black sp-text-center">Changes Saved</h2>
-    <p class="sp-text-black sp-text-center">The changes to your account have been saved.</p>
-
-    <div class="sp-flex sp-justify-center sp-items-center">
-        <button
-            class="sp-button sp-button--primary"
-            type="button"
-            data-bind="click: hideSuccess"
-        >
-            Close
         </button>
     </div>
 </div>

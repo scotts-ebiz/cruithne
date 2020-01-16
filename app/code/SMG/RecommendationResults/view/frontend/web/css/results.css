@@ -7,6 +7,7 @@
 .sp-results__your-plan {
   border: 2px solid #1d5632;
   margin: 0 auto;
+  min-width: 50%;
   position: relative;
 }
 

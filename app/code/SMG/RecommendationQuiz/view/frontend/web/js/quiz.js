@@ -42,16 +42,27 @@ define([
         };
 
         self.initialize = function () {
+            const autocompleteElement = document.getElementById('address-autocomplete');
             self.autocomplete = new google.maps.places.Autocomplete(
-                document.getElementById('address-autocomplete'), { types: ['geocode'] }
+                autocompleteElement, { types: ['geocode'] }
             );
+            google.maps.event.addDomListener(autocompleteElement, 'blur', function() {
+                if ($('.pac-item:hover').length === 0 ) {
+                    google.maps.event.trigger(this, 'focus', {});
+                    google.maps.event.trigger(this, 'keydown', {
+                        keyCode: 13
+                    });
+                }
+            });
             self.autocomplete.setComponentRestrictions({ 'country': 'us' });
             self.autocomplete.setFields(['geometry']);
             self.autocomplete.setTypes(['address']);
             self.autocomplete.addListener('place_changed', function () {
+                self.quiz.invalidZipCode(false);
                 var place = self.autocomplete.getPlace();
 
-                if (!place.geometry) {
+                if (!place || !place.geometry) {
+                    self.quiz.invalidZipCode(true);
                     return;
                 }
 
@@ -418,8 +429,12 @@ define([
             return function () {
                 if (currentAnimationState <= 5) {
                     setTimeout(() => {
-                        window.requestAnimationFrame(() => {
-                            self.animationStates[currentAnimationState - 1]();
+                        let animationFrame = window.requestAnimationFrame(() => {
+                            try {
+                                self.animationStates[currentAnimationState - 1]();
+                            } catch (err) {
+                                window.cancelAnimationFrame(animationFrame);
+                            }
                         });
                     }, 1000);
                 }
@@ -441,16 +456,13 @@ define([
             // Get the transition.
             const animations = self.currentGroup().animationScreens;
             self.animation({});
-            if (animations.length === 1) {
-                self.animation(animations[0]);
-            } else {
+
                 // Find the animation based on the answer.
-                for (const animation of animations) {
-                    // No required conditions for this animation, so just use it.
-                    if (!animation.conditions.length || self.testConditions(animation.conditions)) {
-                        self.animation(animation);
-                        break;
-                    }
+            for (const animation of animations) {
+                // No required conditions for this animation, so just use it.
+                if (!animation.conditions.length || self.testConditions(animation.conditions)) {
+                    self.animation(animation);
+                    break;
                 }
             }
 
@@ -493,11 +505,12 @@ define([
                     window.requestAnimationFrame(self.step(start, self.currentAnimationState));
 
                     clearInterval(animInterval);
-                } else if (self.currentAnimationState == 1 && !self.animation().title) {
+                } else if (self.currentAnimationState == 2 && !self.animation().title) {
                     self.previousGroups.push(self.currentGroup());
                     self.setGroup(group);
 
                     window.requestAnimationFrame(self.step(start, self.currentAnimationState));
+                    clearInterval(animInterval);
                 } else {
                     window.requestAnimationFrame(self.step(start, self.currentAnimationState));
                 }
@@ -602,7 +615,10 @@ define([
                 self.answers.push(new QuestionResult(event.target.name, event.target.value));
 
                 // This is the grass type question, so store the grass type.
-                if (self.currentGroup().label === 'LAWN DETAILS' && event.target.dataset.label) {
+                if (
+                    self.currentGroup().label === 'LAWN DETAILS' && event.target.dataset.label &&
+                    !event.target.dataset.label.includes('not sure')
+                ) {
                     window.sessionStorage.setItem('lawn-type', event.target.dataset.label);
                 }
             }
@@ -1045,9 +1061,7 @@ define([
        self.questionGroups = data.questionGroups;
 
        // Remove the Alaska and Hawaii zones.
-       self.zipCodesOptionMappings = data.zipCodesOptionMappings.filter((zone) => {
-           return !['eb4c247b-9100-40b0-95fd-bd319dd4393f', 'a028c078-f881-4019-95c8-f4b209ba00bc'].includes(zone.optionId);
-       });
+       self.zipCodesOptionMappings = data.zipCodesOptionMappings;
     }
 
     function setSliderTrack(el) {
