@@ -61,6 +61,8 @@ define([
             const lawnType = window.sessionStorage.getItem('lawn-type');
             if (lawnType) {
                 self.lawnType(lawnType);
+            } else {
+                self.lawnType('');
             }
 
             self.hasValidZone = ko.observable(true);
@@ -248,7 +250,7 @@ define([
             let formKey = document.querySelector('input[name=form_key]').value;
             let quiz = self.quiz();
             quiz["key"] = formKey;
-            quiz["lawnType"] = window.sessionStorage.getItem('lawn-type');
+            quiz["lawnType"] = window.sessionStorage.getItem('lawn-type') || '';
             quiz["lawnSize"] = window.sessionStorage.getItem('lawn-area');
 
             // Make sure loading screen appears for at least 3 seconds.
