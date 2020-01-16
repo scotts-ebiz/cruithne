@@ -429,8 +429,12 @@ define([
             return function () {
                 if (currentAnimationState <= 5) {
                     setTimeout(() => {
-                        window.requestAnimationFrame(() => {
-                            self.animationStates[currentAnimationState - 1]();
+                        let animationFrame = window.requestAnimationFrame(() => {
+                            try {
+                                self.animationStates[currentAnimationState - 1]();
+                            } catch (err) {
+                                window.cancelAnimationFrame(animationFrame);
+                            }
                         });
                     }, 1000);
                 }
@@ -452,16 +456,13 @@ define([
             // Get the transition.
             const animations = self.currentGroup().animationScreens;
             self.animation({});
-            if (animations.length === 1) {
-                self.animation(animations[0]);
-            } else {
+
                 // Find the animation based on the answer.
-                for (const animation of animations) {
-                    // No required conditions for this animation, so just use it.
-                    if (!animation.conditions.length || self.testConditions(animation.conditions)) {
-                        self.animation(animation);
-                        break;
-                    }
+            for (const animation of animations) {
+                // No required conditions for this animation, so just use it.
+                if (!animation.conditions.length || self.testConditions(animation.conditions)) {
+                    self.animation(animation);
+                    break;
                 }
             }
 
@@ -504,11 +505,12 @@ define([
                     window.requestAnimationFrame(self.step(start, self.currentAnimationState));
 
                     clearInterval(animInterval);
-                } else if (self.currentAnimationState == 1 && !self.animation().title) {
+                } else if (self.currentAnimationState == 2 && !self.animation().title) {
                     self.previousGroups.push(self.currentGroup());
                     self.setGroup(group);
 
                     window.requestAnimationFrame(self.step(start, self.currentAnimationState));
+                    clearInterval(animInterval);
                 } else {
                     window.requestAnimationFrame(self.step(start, self.currentAnimationState));
                 }
