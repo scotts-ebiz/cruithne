@@ -88,7 +88,7 @@ class SeasonalHelper extends AbstractHelper
         $this->_subscriptionAddonOrderCollectionFactory = $subscriptionAddonOrderCollectionFactory;
 
         $this->_today = new DateTimeImmutable();
-        $this->_maxShipDate = $this->_today->sub(new DateInterval('PT30M'));
+        $this->_maxShipDate = $this->_today->sub(new DateInterval('PT90M'));
 
         // Give 10 days to have a successful process.
         $this->_failDate = $this->_today->sub(new DateInterval('P10D'));
@@ -126,11 +126,10 @@ class SeasonalHelper extends AbstractHelper
             try {
                 // Process the seasonal subscription.
                 $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($order->getData('subscription_id'));
+                $this->_logger->debug("Subscription Order: {$order->getData('subscription_id')} has successfully processed.");
             } catch (\Exception $e) {
                 $this->_logger->error("Subscription Order: {$order->getData('subscription_id')} has failed to process. - " . $e->getMessage());
                 $order->setData('subscription_order_status', 'failed')->save();
-
-                continue;
             }
         }
     }
@@ -172,6 +171,7 @@ class SeasonalHelper extends AbstractHelper
 
             $shipDate = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $order->getData('ship_start_date'));
 
+            // If a ship date is older than 10 days, it means something is
             // If a ship date is older than 10 days, it means something is
             // causing the process to fail, so lets mark it as such.
             if ($shipDate < $this->_failDate) {
