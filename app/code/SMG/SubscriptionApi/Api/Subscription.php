@@ -463,6 +463,7 @@ class Subscription implements SubscriptionInterface
                 $this->_addressRepository->deleteById($address->getId());
             }
 
+            $customer->cleanAllAddresses();
             $customer->save();
         } catch (NoSuchEntityException $ex) {
             $this->_logger->error($ex->getMessage());

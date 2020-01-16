@@ -6,6 +6,8 @@ use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ProductFactory;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Checkout\Model\Session as CheckoutSession;
+use Magento\Customer\Model\CustomerFactory;
+use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\Exception\LocalizedException;
@@ -13,7 +15,6 @@ use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
-use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Quote\Model\Quote;
 use Magento\Quote\Model\QuoteManagement;
 use Magento\Quote\Model\QuoteRepository;
@@ -100,6 +101,11 @@ class Subscription extends AbstractModel
     protected $_customerSession;
 
     /**
+     * @var CustomerFactory
+     */
+    protected $_customerFactory;
+
+    /**
      * Constructor.
      */
     protected function _construct()
@@ -142,6 +148,7 @@ class Subscription extends AbstractModel
         FormKey $formKey,
         CheckoutSession $checkoutSession,
         CustomerSession $customerSession,
+        CustomerFactory $customerFactory,
         StoreManager $storeManager,
         Product $product,
         ProductFactory $productFactory,
@@ -164,6 +171,7 @@ class Subscription extends AbstractModel
         $this->_formKey = $formKey;
         $this->_checkoutSession = $checkoutSession;
         $this->_customerSession = $customerSession;
+        $this->_customerFactory = $customerFactory;
         $this->_product = $product;
         $this->_productFactory = $productFactory;
         $this->_productRepository = $productRepository;
@@ -171,6 +179,27 @@ class Subscription extends AbstractModel
         $this->_recurlyHelper = $recurlyHelper;
         $this->_quoteManagement = $quoteManagement;
         $this->_quoteRepository = $quoteRepository;
+    }
+
+    /**
+     * Get the associated customer.
+     *
+     * @return \Magento\Customer\Model\Customer|null
+     */
+    public function getCustomer()
+    {
+        if (! $this->getData('customer_id')) {
+            return null;
+        }
+
+        $customer = $this->_customerFactory->create();
+        $customer->load($this->getData('customer_id'));
+
+        if (! $customer->getId()) {
+            return null;
+        }
+
+        return $customer;
     }
 
     /**
