@@ -33,7 +33,7 @@ define(
                 setTimeout(function () {
                     recurly.configure(window.recurlyApi);
                     /**
-                     * Change cardInputToched boolean when recurly returns a field state change
+                     * Change cardInputTouched boolean when recurly returns a field state change
                      * that includes a false valid for either number, cvv or expiry
                      */
                     recurly.on('change', (state) => {
