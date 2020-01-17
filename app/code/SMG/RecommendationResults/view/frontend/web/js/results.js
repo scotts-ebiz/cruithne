@@ -22,7 +22,7 @@ define([
 
         saveAndSendModal: ko.observable({
             visible: false,
-            email: ''
+            email: '',
         }),
 
         saveAndSendSuccessModal: ko.observable({
@@ -299,7 +299,7 @@ define([
             );
         },
 
-        saveAndSendResults: function (e) {
+        saveAndSendResults(e) {
             if (e && e.preventDefault && typeof e.preventDefault === 'function') {
                 e.preventDefault();
             }
