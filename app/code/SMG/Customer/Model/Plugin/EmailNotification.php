@@ -4,8 +4,8 @@ namespace SMG\Customer\Model\Plugin;
 class EmailNotification
 {
 	const XML_CONFIG_SEND_WELCOME_EMAIL = 'customer/create_account/send_welcome_email';
-	private $logger;
-	private $scopeConfig;
+	private $_logger;
+	private $_scopeConfig;
 	
 	public function __construct(
         \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
