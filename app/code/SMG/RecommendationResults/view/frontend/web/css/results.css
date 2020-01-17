@@ -46,6 +46,14 @@
   max-width: 6rem;
 }
 
+.sp-results-tabs-container {
+  display: flex;
+}
+@media(max-width: 1024px) {
+  .sp-results-tabs-container {
+    display: block;
+  }
+}
 .sp-results__tabs {
   flex-shrink: 0;
 }
@@ -69,6 +77,20 @@
   align-items: flex-start;
 }
 
+.sp-results__product button {
+  margin: 0 auto 1rem;
+  text-align: center;
+  width: 100%;
+}
+@media (min-width: 768px) {
+  .sp-results__product button {
+    margin-left: 7.2rem;
+    width: auto;
+  }
+}
+.sp-results__product ul {
+  padding-inline-start: 18px;
+}
 .sp-results__tabs-button {
   border: none;
   background: transparent;
