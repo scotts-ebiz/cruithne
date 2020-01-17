@@ -20,8 +20,8 @@ use Psr\Log\LoggerInterface;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\Sap\Model\SapOrderBatch;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrderItem\CollectionFactory as SubscriptionAddonOrderItemCollectionFactory;
-use SMG\SubscriptionApi\Model\SubscriptionFactory;
 
 /**
  * Class SubscriptionAddonOrder
@@ -63,9 +63,9 @@ class SubscriptionAddonOrder extends AbstractModel
     protected $_sapOrderBatchCollectionFactory;
 
     /**
-     * @var SubscriptionFactory
+     * @var SubscriptionCollectionFactory
      */
-    protected $_subscriptionFactory;
+    protected $_subscriptionCollectionFactory;
 
     /**
      * @var Subscription|null
@@ -147,7 +147,7 @@ class SubscriptionAddonOrder extends AbstractModel
         $this->_invoiceSender = $invoiceSender;
         $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
         $this->_orderRepository = $orderRepository;
-        $this->_subscriptionFactory = $subscriptionFactory;
+        $this->_subscriptionCollectionFactory = $subscriptionFactory;
     }
 
     /**
@@ -173,9 +173,9 @@ class SubscriptionAddonOrder extends AbstractModel
             return $this->_subscription;
         }
 
-        $subscription = $this->_subscriptionFactory
+        $subscription = $this->_subscriptionCollectionFactory
             ->create()
-            ->load($this->getSubscriptionEntityId());
+            ->getItemById($this->getData('subscription_entity_id'));
 
         if (! $subscription->getId()) {
             return false;

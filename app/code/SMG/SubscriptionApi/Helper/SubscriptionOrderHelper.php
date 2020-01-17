@@ -4,7 +4,6 @@ namespace SMG\SubscriptionApi\Helper;
 
 use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\QuoteRepository;
-use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Customer\Model\AddressFactory;
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerFactory;
@@ -88,10 +87,6 @@ class SubscriptionOrderHelper extends AbstractHelper
     protected $_customerFactory;
 
     /**
-     * @var CheckoutSession
-     */
-    protected $_checkoutSession;
-    /**
      * @var QuoteFactory
      */
     protected $_quoteFactory;
@@ -107,7 +102,9 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @param Customer $customer
      * @param CustomerFactory $customerFactory
      * @param Order $order
+     * @param QuoteFactory $quoteFactory
      * @param QuoteManagement $quoteManagement
+     * @param QuoteRepository $quoteRepository
      * @param StoreManagerInterface $storeManager
      * @param SubscriptionAddonOrder $subscriptionAddonOrder
      * @param SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory
@@ -128,8 +125,7 @@ class SubscriptionOrderHelper extends AbstractHelper
         SubscriptionAddonOrder $subscriptionAddonOrder,
         SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory,
         SubscriptionOrder $subscriptionOrder,
-        SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
-        CheckoutSession $checkoutSession
+        SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
     ) {
         parent::__construct($context);
 
@@ -145,7 +141,6 @@ class SubscriptionOrderHelper extends AbstractHelper
         $this->_subscriptionAddonOrderCollectionFactory = $subscriptionAddonOrderCollectionFactory;
         $this->_subscriptionOrder = $subscriptionOrder;
         $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
-        $this->_checkoutSession = $checkoutSession;
 
         $this->_store = $storeManager->getStore();
         $this->_websiteId = $this->_store->getWebsiteId();
@@ -227,7 +222,7 @@ class SubscriptionOrderHelper extends AbstractHelper
         return [
             'firstname' => $address->getFirstname(),
             'lastname' => $address->getLastname(),
-            'street' => $address->getStreetFull(),
+            'street' => $address->getStreet(),
             'city' => $address->getCity(),
             'country_id' => $address->getCountryId(),
             'region' => $address->getRegion(),
@@ -287,13 +282,11 @@ class SubscriptionOrderHelper extends AbstractHelper
      */
     protected function processOrder(Customer $customer, $subscriptionOrder)
     {
-        $this->_checkoutSession->resetCheckout();
         $quoteID = $this->_quoteManagement->createEmptyCartForCustomer($customer->getId());
         $quote = $this->_quoteRepository->get($quoteID);
         $quote->setStore($this->_store);
         $quote->setCurrency();
         $quote->assignCustomer($customer->getDataModel());
-        $this->_checkoutSession->setQuoteId($quote->getId());
 
 
         foreach ($subscriptionOrder->getOrderItems() as $item) {

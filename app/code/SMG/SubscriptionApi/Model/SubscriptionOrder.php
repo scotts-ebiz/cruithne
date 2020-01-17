@@ -23,6 +23,7 @@ use Magento\Sales\Model\Service\InvoiceService;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\Sap\Model\SapOrderBatch;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrderItem\CollectionFactory as SubscriptionOrderItemCollectionFactory;
 
 /**
@@ -59,9 +60,9 @@ class SubscriptionOrder extends AbstractModel
     private $_sapOrderBatchCollectionFactory;
 
     /**
-     * @var SubscriptionFactory
+     * @var SubscriptionCollectionFactory
      */
-    protected $_subscriptionFactory;
+    protected $_subscriptionCollectionFactory;
 
     /**
      * @var Subscription
@@ -98,7 +99,7 @@ class SubscriptionOrder extends AbstractModel
      * @param Registry $registry
      * @param LoggerInterface $logger
      * @param SubscriptionHelper $subscriptionHelper
-     * @param SubscriptionFactory $subscriptionFactory
+     * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
      * @param SubscriptionOrderItemCollectionFactory $subscriptionOrderItemCollectionFactory
      * @param OrderCollectionFactory $orderCollectionFactory
      * @param InvoiceService $invoiceService
@@ -117,7 +118,7 @@ class SubscriptionOrder extends AbstractModel
         Registry $registry,
         LoggerInterface $logger,
         SubscriptionHelper $subscriptionHelper,
-        SubscriptionFactory $subscriptionFactory,
+        SubscriptionCollectionFactory $subscriptionCollectionFactory,
         SubscriptionOrderItemCollectionFactory $subscriptionOrderItemCollectionFactory,
         OrderCollectionFactory $orderCollectionFactory,
         InvoiceService $invoiceService,
@@ -141,7 +142,7 @@ class SubscriptionOrder extends AbstractModel
 
         $this->_logger = $logger;
         $this->_subscriptionHelper = $subscriptionHelper;
-        $this->_subscriptionFactory = $subscriptionFactory;
+        $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
         $this->_subscriptionOrderItemCollectionFactory = $subscriptionOrderItemCollectionFactory;
         $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->_invoiceService = $invoiceService;
@@ -176,9 +177,9 @@ class SubscriptionOrder extends AbstractModel
             return $this->_subscription;
         }
 
-        $subscription = $this->_subscriptionFactory
+        $subscription = $this->_subscriptionCollectionFactory
             ->create()
-            ->load($this->getSubscriptionEntityId());
+            ->getItemById($this->getData('subscription_entity_id'));
 
         if (! $subscription->getId()) {
             return false;
