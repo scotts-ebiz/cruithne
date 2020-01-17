@@ -30,25 +30,28 @@ define(
                 this.subscriptionType = ko.observable(window.sessionStorage.getItem('subscription_plan'));
                 this.loading = ko.observable(false);
 
-                setTimeout(function () {
-                    recurly.configure(window.recurlyApi);
-                    /**
-                     * Change cardInputTouched boolean when recurly returns a field state change
-                     * that includes a false valid for either number, cvv or expiry
-                     */
-                    recurly.on('change', (state) => {
-                        if (
-                            state.fields.card &&
-                            (
-                                !state.fields.card.number.empty ||
-                                !state.fields.card.cvv.empty ||
-                                !state.fields.card.expiry.empty
-                            )
-                        ) {
-                            self.cardInputTouched(true);
-                        }
-                    });
-                }, 2000);
+                let interval = setInterval(() => {
+                    if (recurly) {
+                        recurly.configure(window.recurlyApi);
+                        /**
+                         * Change cardInputTouched boolean when recurly returns a field state change
+                         * that includes a false valid for either number, cvv or expiry
+                         */
+                        recurly.on('change', (state) => {
+                            if (
+                                state.fields.card &&
+                                (
+                                    !state.fields.card.number.empty ||
+                                    !state.fields.card.cvv.empty ||
+                                    !state.fields.card.expiry.empty
+                                )
+                            ) {
+                                self.cardInputTouched(true);
+                            }
+                        });
+                        clearInterval(interval);
+                    }
+                }, 250);
 
                 // Setup zip modal
                 this.zipModalOptions = {
