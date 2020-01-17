@@ -173,6 +173,7 @@ class RecurlySubscription
     {
         $quizId = $subscription->getQuizId();
         $subscriptionType = $subscription->getSubscriptionType();
+        $cvvError = '';
 
         // If there is Recurly token, plan code and quiz data
         if (! empty($token) && ! empty($subscriptionType) && ! empty($quizId)) {
@@ -233,6 +234,9 @@ class RecurlySubscription
                 try {
                     $purchase->account->billing_info = $this->createBillingInfo($account->account_code, $token);
                 } catch (\Exception $e) {
+                    if ( strpos($e->getMessage(), 'security code') !== false ) {
+                        $cvvError = 'The security code you entered does not match. Please update the CVV and try again.';
+                    }
                     $error = 'There is a problem with the billing information.';
                     $this->_logger->error($error . " : " . $e->getMessage());
                     throw new LocalizedException(__($error));
@@ -309,6 +313,9 @@ class RecurlySubscription
             } catch (\Exception $e) {
                 $error = 'There was a problem creating the subscription';
                 $this->_logger->error($error . " : " . $e->getMessage());
+                if ($cvvError) {
+                    $error = $cvvError;
+                }
                 throw new LocalizedException(__($error));
             }
 

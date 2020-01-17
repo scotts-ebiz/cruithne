@@ -79,6 +79,7 @@
 }
 
 .sp-plan__tabs-button:hover,
+.sp-plan__tabs-button:focus,
 .sp-plan__tabs-button:active {
   /* Not ideal, should be styling the li */
   background-color: #edf4e1;
