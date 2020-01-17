@@ -79,6 +79,7 @@
 }
 
 .sp-results__tabs-button:hover,
+.sp-results__tabs-button:focus,
 .sp-results__tabs-button:active {
   /* Not ideal, should be styling the li */
   background-color: #edf4e1;
