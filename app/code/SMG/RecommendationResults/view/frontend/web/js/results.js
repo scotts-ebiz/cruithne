@@ -68,7 +68,7 @@ define([
 
             self.hasValidZone = ko.observable(true);
 
-            self.products = ko.computed(function () {
+            self.products = ko.computed(() => {
                 return self.results().plan
                     ? self.results().plan.coreProducts
                     : []
@@ -76,60 +76,60 @@ define([
 
             self.seasons = ko.computed(() => {
                 const uniqueSeasons = self.products().reduce((items, product) => {
-                  if (items.indexOf(product.season) === -1) {
-                    items.push(product.season);
-                  }
+                    if (items.indexOf(product.season) === -1) {
+                        items.push(product.season);
+                    }
 
-                  return items;
+                    return items;
                 }, []);
 
                 const seasons = uniqueSeasons.map(season => {
-                  const products = self.products().filter(product => {
-                    return product.season === season;
-                  });
+                    const products = self.products().filter(product => {
+                        return product.season === season;
+                    });
 
-                  let prodMap = {};
+                    let prodMap = {};
 
-                  products.forEach(product => {
-                    if (prodMap[product.prodId]) {
-                      prodMap[product.prodId] += 1;
-                      return;
-                    }
+                    products.forEach(product => {
+                        if (prodMap[product.prodId]) {
+                            prodMap[product.prodId] += 1;
+                            return;
+                        }
 
-                    prodMap[product.prodId] = product.quantity;
-                  });
+                        prodMap[product.prodId] = product.quantity;
+                    });
 
-                  const newProducts = [];
+                    const newProducts = [];
 
-                  products.forEach(product => {
-                    if (
-                      !newProducts.some(prod => {
-                        return prod.prodId === product.prodId
-                      })
-                    ) {
-                      let newProd = {
-                        ...product
-                      };
-                      newProd.quantity = prodMap[newProd.prodId];
-                      newProducts.push(newProd);
-                    }
-                  });
+                    products.forEach(product => {
+                        if (
+                            !newProducts.some(prod => {
+                                return prod.prodId === product.prodId
+                            })
+                        ) {
+                            let newProd = {
+                                ...product
+                            };
+                            newProd.quantity = prodMap[newProd.prodId];
+                            newProducts.push(newProd);
+                        }
+                    });
 
 
-                  return {
-                    season,
-                    products: newProducts,
-                    total: products.reduce((price, product) => {
-                      return price + +product.price * +product.quantity;
-                    }, 0)
-                  };
+                    return {
+                        season,
+                        products: newProducts,
+                        total: products.reduce((price, product) => {
+                            return price + +product.price * +product.quantity;
+                        }, 0)
+                    };
                 });
 
                 return seasons;
-              });
+            });
 
             // used to indicate which product is up next for delivery
-            self.nextAvailableProduct = ko.computed(function () {
+            self.nextAvailableProduct = ko.computed(() => {
                 const currentDate = new Date();
                 const products = self.products().slice();
 
@@ -145,7 +145,6 @@ define([
             self.activeSeason = ko.computed(function () {
                 return self.seasons()[self.activeSeasonIndex()]
             });
-
         },
 
         loadQuizResults(id, zip) {
@@ -320,9 +319,9 @@ define([
 
         productFeatures: function (product) {
             return [
-                { image: product.miniClaim1, text: product.miniClaim1Description },
-                { image: product.miniClaim2, text: product.miniClaim2Description },
-                { image: product.miniClaim3, text: product.miniClaim3Description },
+                {image: product.miniClaim1, text: product.miniClaim1Description},
+                {image: product.miniClaim2, text: product.miniClaim2Description},
+                {image: product.miniClaim3, text: product.miniClaim3Description},
             ].filter(x => !!x.image)
         },
 
@@ -398,14 +397,14 @@ define([
         },
 
         setPDPTab: function (tab) {
-            this.pdp({ ...this.pdp(), activeTab: tab })
+            this.pdp({...this.pdp(), activeTab: tab})
         },
 
         preventDefault: function () {
         },
 
-        toggleSaveAndSendModal: function() {
-            if( this.saveAndSendModal().visible) {
+        toggleSaveAndSendModal: function () {
+            if (this.saveAndSendModal().visible) {
                 $('body').removeClass('no-scroll');
             } else {
                 $('body').addClass('no-scroll')
@@ -417,8 +416,8 @@ define([
             })
         },
 
-        toggleSaveAndSendSuccessModal: function() {
-            if( this.saveAndSendSuccessModal().visible) {
+        toggleSaveAndSendSuccessModal: function () {
+            if (this.saveAndSendSuccessModal().visible) {
                 $('body').removeClass('no-scroll');
             } else {
                 $('body').addClass('no-scroll')
