@@ -1,5 +1,5 @@
 <?php
-namespace SMG\Customer\Model\Plugin;
+namespace SMG\Customer\Plugin\Model;
 
 class EmailNotification
 {
