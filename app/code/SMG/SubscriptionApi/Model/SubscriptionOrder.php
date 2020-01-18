@@ -181,7 +181,7 @@ class SubscriptionOrder extends AbstractModel
             ->create()
             ->getItemById($this->getData('subscription_entity_id'));
 
-        if (! $subscription->getId()) {
+        if (is_null($subscription) || ! $subscription->getId()) {
             return false;
         }
 

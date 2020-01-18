@@ -3,6 +3,7 @@
 namespace SMG\SubscriptionApi\Helper;
 
 use DateInterval;
+use Exception;
 use Recurly_Client;
 use DateTimeImmutable;
 use Recurly_Subscription;
@@ -67,7 +68,7 @@ class SeasonalHelper extends AbstractHelper
      * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
      * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
      * @param SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory
-     * @throws \Exception
+     * @throws Exception
      */
     public function __construct(
         Context $context,
@@ -97,6 +98,10 @@ class SeasonalHelper extends AbstractHelper
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
     }
 
+    /**
+     * Process Seasonal Orders
+     * @throws Exception
+     */
     public function processSeasonalOrders()
     {
         $orders = $this->getOrders();
@@ -127,7 +132,7 @@ class SeasonalHelper extends AbstractHelper
                 // Process the seasonal subscription.
                 $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($order->getData('subscription_id'));
                 $this->_logger->debug("Subscription Order: {$order->getData('subscription_id')} has successfully processed.");
-            } catch (\Exception $e) {
+            } catch (Exception $e) {
                 $this->_logger->error("Subscription Order: {$order->getData('subscription_id')} has failed to process. - " . $e->getMessage());
                 $order->setData('subscription_order_status', 'failed')->save();
             }
@@ -138,7 +143,7 @@ class SeasonalHelper extends AbstractHelper
      * Get the subscription and subscription add-on orders within the ship date.
      *
      * @return SubscriptionOrder[]|SubscriptionAddonOrder[];
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getOrders()
     {
@@ -148,6 +153,7 @@ class SeasonalHelper extends AbstractHelper
         $subscriptionOrders = $subscriptionOrderCollection
             ->addFilter('subscription_order_status', 'pending')
             ->addFieldToFilter('subscription_id', ['notnull' => true])
+            ->addFieldToFilter('ship_start_date', ['notnull' => true])
             ->addFieldToFilter('ship_start_date', ['lteq' => $this->_maxShipDate->format('Y-m-d H:i:s')])
             ->addFieldToFilter(['next_cron_date', 'next_cron_date'], [['lteq' => $this->_today->format('Y-m-d H:i:s')], ['null' => true]])
             ->getItems();
@@ -155,6 +161,7 @@ class SeasonalHelper extends AbstractHelper
         $subscriptionAddonOrders = $subscriptionAddonOrderCollection
             ->addFilter('subscription_order_status', 'pending')
             ->addFieldToFilter('subscription_id', ['notnull' => true])
+            ->addFieldToFilter('ship_start_date', ['notnull' => true])
             ->addFieldToFilter('ship_start_date', ['lteq' => $this->_maxShipDate->format('Y-m-d H:i:s')])
             ->addFieldToFilter(['next_cron_date', 'next_cron_date'], [['lteq' => $this->_today->format('Y-m-d H:i:s')], ['null' => true]])
             ->getItems();
@@ -197,7 +204,7 @@ class SeasonalHelper extends AbstractHelper
      *
      * @param SubscriptionOrder|SubscriptionAddonOrder $order
      * @return Recurly_Subscription
-     * @throws \Exception
+     * @throws Exception
      */
     protected function getRecurlySubscriptionFromOrder($order)
     {
@@ -205,7 +212,7 @@ class SeasonalHelper extends AbstractHelper
             return Recurly_Subscription::get($order->getData('subscription_id'));
         } catch (\Recurly_Error $error) {
             $this->_logger->error($error->getMessage());
-            throw new \Exception($error->getMessage());
+            throw new Exception($error->getMessage());
         }
     }
 
@@ -229,7 +236,7 @@ class SeasonalHelper extends AbstractHelper
             }
 
             return false;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $this->_logger->error('Could not verify Recurly subscription - ' . $e->getMessage());
 
             return false;
