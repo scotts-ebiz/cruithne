@@ -246,7 +246,7 @@ class SeasonalHelper extends AbstractHelper
                 $this->_logger->debug("Subscription Order: {$subscriptionOrder->getData('subscription_id')} has successfully processed.");
             } catch (Exception $e) {
                 $this->_logger->error("Subscription Order: {$subscriptionOrder->getData('subscription_id')} has failed to process. - " . $e->getMessage());
-//                $subscriptionOrder->setData('subscription_order_status', 'failed')->save();
+                $subscriptionOrder->setData('subscription_order_status', 'failed')->save();
             }
         }
     }
