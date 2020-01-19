@@ -180,20 +180,20 @@ class SeasonalHelper extends AbstractHelper
         foreach ($subscriptionOrders as $subscriptionOrder) {
 
             // Check to make sure the order is active (invoiced)
-//            if (! $this->verifyRecurlySeasonalOrder($subscriptionOrder)) {
-//                // Order is not ready to process, set a timestamp to be
-//                // available the next day.
-//                $cronDate = $subscriptionOrder->getData('next_cron_date')
-//                    ? $this->_today->add(new DateInterval('P1D'))->format('Y-m-d H:i:s')
-//                    : $this->_today->add(new DateInterval('PT3H'))->format('Y-m-d H:i:s');
-//
-//                $subscriptionOrder->setData(
-//                    'next_cron_date',
-//                    $cronDate
-//                )->save();
-//
-//                continue;
-//            }
+            if (! $this->verifyRecurlySeasonalOrder($subscriptionOrder)) {
+                // Order is not ready to process, set a timestamp to be
+                // available the next day.
+                $cronDate = $subscriptionOrder->getData('next_cron_date')
+                    ? $this->_today->add(new DateInterval('P1D'))->format('Y-m-d H:i:s')
+                    : $this->_today->add(new DateInterval('PT3H'))->format('Y-m-d H:i:s');
+
+                $subscriptionOrder->setData(
+                    'next_cron_date',
+                    $cronDate
+                )->save();
+
+                continue;
+            }
 
             try {
 
