@@ -12,7 +12,6 @@ use Magento\Customer\Model\ResourceModel\Address\Collection as AddressCollection
 use Magento\Directory\Model\RegionFactory;
 use Magento\Directory\Model\ResourceModel\Region\Collection as RegionCollection;
 use Magento\Framework\Exception\LocalizedException;
-use Recurly_BillingInfo;
 use Recurly_Client;
 use DateTimeImmutable;
 use Recurly_Subscription;
@@ -180,23 +179,21 @@ class SeasonalHelper extends AbstractHelper
 
         foreach ($subscriptionOrders as $subscriptionOrder) {
 
-            $recurlyAccount = null;
-
             // Check to make sure the order is active (invoiced)
-            if (! $this->verifyRecurlySeasonalOrder($subscriptionOrder)) {
-                // Order is not ready to process, set a timestamp to be
-                // available the next day.
-                $cronDate = $subscriptionOrder->getData('next_cron_date')
-                    ? $this->_today->add(new DateInterval('P1D'))->format('Y-m-d H:i:s')
-                    : $this->_today->add(new DateInterval('PT3H'))->format('Y-m-d H:i:s');
-
-                $subscriptionOrder->setData(
-                    'next_cron_date',
-                    $cronDate
-                )->save();
-
-                continue;
-            }
+//            if (! $this->verifyRecurlySeasonalOrder($subscriptionOrder)) {
+//                // Order is not ready to process, set a timestamp to be
+//                // available the next day.
+//                $cronDate = $subscriptionOrder->getData('next_cron_date')
+//                    ? $this->_today->add(new DateInterval('P1D'))->format('Y-m-d H:i:s')
+//                    : $this->_today->add(new DateInterval('PT3H'))->format('Y-m-d H:i:s');
+//
+//                $subscriptionOrder->setData(
+//                    'next_cron_date',
+//                    $cronDate
+//                )->save();
+//
+//                continue;
+//            }
 
             try {
 
@@ -212,28 +209,10 @@ class SeasonalHelper extends AbstractHelper
                     throw new LocalizedException(__('Customer could not be found in the database for master subscription id ' . $masterSubscription->getData('subscription_id')));
                 }
 
-                // Does customer have any addresses
-                /** @var AddressCollection $addresses */
-                $addresses = $customer->getAddressesCollection();
-                if (is_null($addresses)) {
-                    throw new LocalizedException(__('Customer did not have any addresses. Master subscription id ' . $masterSubscription->getData('subscription_id')));
-                }
-
                 // Does customer have default billing address
-                $defaultBillingAddressId = $customer->getDefaultBillingAddress();
-                if (is_null($defaultBillingAddressId)) {
-                    throw new LocalizedException(__('Customer does not have a default billing address. Master subscription id ' . $masterSubscription->getData('subscription_id')));
-                }
-
-                // Does customer default billing address exist for customer
-                if ( ! in_array($defaultBillingAddressId, $addresses->getAllIds())) {
-                    throw new LocalizedException(__('Customer\'s default billing address doesn\'t exist. Master subscription id ' . $masterSubscription->getData('subscription_id')));
-                }
-
-                // Get default billing address
-                $defaultBillingAddress = $addresses->getItemById($defaultBillingAddressId);
+                $defaultBillingAddress = $customer->getDefaultBillingAddress();
                 if (is_null($defaultBillingAddress)) {
-                    throw new LocalizedException(__('Failed to retrieve default billing address for ' . $masterSubscription->getData('subscription_id')));
+                    throw new LocalizedException(__('Customer does not have a default billing address. Master subscription id ' . $masterSubscription->getData('subscription_id')));
                 }
 
                 // Patch up regionId if null
@@ -247,20 +226,9 @@ class SeasonalHelper extends AbstractHelper
                 }
 
                 // Does customer have default shipping address
-                $defaultShippingAddressId = $customer->getDefaultShippingAddress();
-                if (is_null($defaultShippingAddressId)) {
-                    throw new LocalizedException(__('Customer does not have a default billing address. Master subscription id ' . $masterSubscription->getData('subscription_id')));
-                }
-
-                // Does customer default shipping address exist for customer
-                if ( ! in_array($defaultShippingAddressId, $addresses->getAllIds())) {
-                    throw new LocalizedException(__('Customer\'s default shipping address doesn\'t exist. Master subscription id ' . $masterSubscription->getData('subscription_id')));
-                }
-
-                // Get default billing address
-                $defaultShippingAddress = $addresses->getItemById($defaultShippingAddressId);
+                $defaultShippingAddress = $customer->getDefaultShippingAddress();
                 if (is_null($defaultShippingAddress)) {
-                    throw new LocalizedException(__('Failed to retrieve default shipping address for ' . $masterSubscription->getData('subscription_id')));
+                    throw new LocalizedException(__('Customer does not have a default billing address. Master subscription id ' . $masterSubscription->getData('subscription_id')));
                 }
 
                 // Patch up regionId if null
@@ -278,7 +246,7 @@ class SeasonalHelper extends AbstractHelper
                 $this->_logger->debug("Subscription Order: {$subscriptionOrder->getData('subscription_id')} has successfully processed.");
             } catch (Exception $e) {
                 $this->_logger->error("Subscription Order: {$subscriptionOrder->getData('subscription_id')} has failed to process. - " . $e->getMessage());
-                $subscriptionOrder->setData('subscription_order_status', 'failed')->save();
+//                $subscriptionOrder->setData('subscription_order_status', 'failed')->save();
             }
         }
     }
