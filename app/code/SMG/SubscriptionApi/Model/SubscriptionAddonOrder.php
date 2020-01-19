@@ -83,6 +83,11 @@ class SubscriptionAddonOrder extends AbstractModel
     protected $_logger;
 
     /**
+     * @var Subscription
+     */
+    protected $_masterSubscription;
+
+    /**
      * Constructor.
      */
     protected function _construct()
@@ -98,7 +103,7 @@ class SubscriptionAddonOrder extends AbstractModel
      * @param Registry $registry
      * @param LoggerInterface $logger
      * @param Order\CreditmemoFactory $creditmemoFactory
-     * @param \SMG\SubscriptionApi\Model\SubscriptionFactory $subscriptionFactory
+     * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
      * @param SubscriptionHelper $subscriptionHelper
      * @param SubscriptionAddonOrderItemCollectionFactory $subscriptionAddonOrderItemCollectionFactory
      * @param OrderRepository $orderRepository
@@ -116,7 +121,7 @@ class SubscriptionAddonOrder extends AbstractModel
         Registry $registry,
         LoggerInterface $logger,
         Order\CreditmemoFactory $creditmemoFactory,
-        SubscriptionFactory $subscriptionFactory,
+        SubscriptionCollectionFactory $subscriptionCollectionFactory,
         SubscriptionHelper $subscriptionHelper,
         SubscriptionAddonOrderItemCollectionFactory $subscriptionAddonOrderItemCollectionFactory,
         OrderRepository $orderRepository,
@@ -147,7 +152,7 @@ class SubscriptionAddonOrder extends AbstractModel
         $this->_invoiceSender = $invoiceSender;
         $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
         $this->_orderRepository = $orderRepository;
-        $this->_subscriptionCollectionFactory = $subscriptionFactory;
+        $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
     }
 
     /**
@@ -200,6 +205,22 @@ class SubscriptionAddonOrder extends AbstractModel
         }
 
         return '';
+    }
+
+    /**
+     * Get Master Subscription
+     */
+    public function getMasterSubscription()
+    {
+        $masterSubscriptionId = $this->getMasterSubscriptionId();
+
+        if (is_null($this->_masterSubscription)) {
+            $this->_masterSubscription = $this->_subscriptionCollectionFactory->create()
+                ->addFilter('subscription_id', $masterSubscriptionId)
+                ->getFirstItem();
+        }
+
+        return $this->_masterSubscription;
     }
 
     /**

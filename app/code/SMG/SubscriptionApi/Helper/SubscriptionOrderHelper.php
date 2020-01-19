@@ -2,6 +2,7 @@
 
 namespace SMG\SubscriptionApi\Helper;
 
+use Magento\Directory\Model\ResourceModel\Region\Collection as RegionCollection;
 use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\QuoteRepository;
 use Magento\Customer\Model\AddressFactory;
@@ -90,10 +91,16 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @var QuoteFactory
      */
     protected $_quoteFactory;
+
     /**
      * @var QuoteRepository
      */
     protected $_quoteRepository;
+
+    /**
+     * @var RegionCollection
+     */
+    protected $_regionCollection;
 
     /**
      * SubscriptionOrderHelper constructor.
@@ -110,6 +117,7 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @param SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory
      * @param SubscriptionOrder $subscriptionOrder
      * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
+     * @param RegionCollection $regionCollection
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function __construct(
@@ -125,7 +133,8 @@ class SubscriptionOrderHelper extends AbstractHelper
         SubscriptionAddonOrder $subscriptionAddonOrder,
         SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory,
         SubscriptionOrder $subscriptionOrder,
-        SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
+        SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
+        RegionCollection $regionCollection
     ) {
         parent::__construct($context);
 
@@ -141,6 +150,7 @@ class SubscriptionOrderHelper extends AbstractHelper
         $this->_subscriptionAddonOrderCollectionFactory = $subscriptionAddonOrderCollectionFactory;
         $this->_subscriptionOrder = $subscriptionOrder;
         $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
+        $this->_regionCollection = $regionCollection;
 
         $this->_store = $storeManager->getStore();
         $this->_websiteId = $this->_store->getWebsiteId();
@@ -239,7 +249,7 @@ class SubscriptionOrderHelper extends AbstractHelper
      *
      * @return \Magento\Framework\DataObject|SubscriptionOrder|SubscriptionAddonOrder
      */
-    protected function getSubscriptionOrderBySubscriptionId($subscriptionId)
+    public function getSubscriptionOrderBySubscriptionId($subscriptionId)
     {
         /** @var SubscriptionOrderCollection $subscriptionOrderCollection */
         $subscriptionOrderCollection = $this->_subscriptionOrderCollectionFactory->create();
@@ -288,8 +298,8 @@ class SubscriptionOrderHelper extends AbstractHelper
         $quote->setCurrency();
         $quote->assignCustomer($customer->getDataModel());
 
-
         foreach ($subscriptionOrder->getOrderItems() as $item) {
+
             // Check if the item has the selected field and if it is set.
             /**
              * @var SubscriptionOrderItem|SubscriptionAddonOrderItem $item

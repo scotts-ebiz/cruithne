@@ -84,6 +84,11 @@ class SubscriptionOrder extends AbstractModel
     protected $_logger;
 
     /**
+     * @var Subscription
+     */
+    protected $_masterSubscription;
+
+    /**
      * Constructor.
      */
     protected function _construct()
@@ -204,6 +209,22 @@ class SubscriptionOrder extends AbstractModel
         }
 
         return '';
+    }
+
+    /**
+     * Get Master Subscription
+     */
+    public function getMasterSubscription()
+    {
+        $masterSubscriptionId = $this->getMasterSubscriptionId();
+
+        if (is_null($this->_masterSubscription)) {
+            $this->_masterSubscription = $this->_subscriptionCollectionFactory->create()
+                ->addFilter('subscription_id', $masterSubscriptionId)
+                ->getFirstItem();
+        }
+
+        return $this->_masterSubscription;
     }
 
     /**

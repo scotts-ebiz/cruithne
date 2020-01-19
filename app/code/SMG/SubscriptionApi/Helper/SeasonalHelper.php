@@ -4,12 +4,22 @@ namespace SMG\SubscriptionApi\Helper;
 
 use DateInterval;
 use Exception;
+use Magento\Customer\Api\AddressRepositoryInterface;
+use Magento\Customer\Api\Data\AddressInterfaceFactory;
+use Magento\Customer\Api\Data\RegionInterface;
+use Magento\Customer\Model\AddressFactory;
+use Magento\Customer\Model\ResourceModel\Address\Collection as AddressCollection;
+use Magento\Directory\Model\RegionFactory;
+use Magento\Directory\Model\ResourceModel\Region\Collection as RegionCollection;
+use Magento\Framework\Exception\LocalizedException;
+use Recurly_BillingInfo;
 use Recurly_Client;
 use DateTimeImmutable;
 use Recurly_Subscription;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Psr\Log\LoggerInterface;
+use SMG\SubscriptionApi\Model\RecurlySubscription;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\CollectionFactory as SubscriptionAddonOrderCollectionFactory;
@@ -60,6 +70,41 @@ class SeasonalHelper extends AbstractHelper
     protected $_maxShipDate;
 
     /**
+     * @var RegionCollection
+     */
+    protected $_regionCollection;
+
+    /**
+     * @var RegionFactory
+     */
+    protected $_regionFactory;
+
+    /**
+     * @var RegionInterface
+     */
+    protected $_regionInterface;
+
+    /**
+     * @var RecurlySubscription
+     */
+    protected $_recurlySubscription;
+
+    /**
+     * @var AddressRepositoryInterface
+     */
+    protected $_addressRepository;
+
+    /**
+     * @var AddressInterfaceFactory
+     */
+    protected $_addressInterfaceFactory;
+
+    /**
+     * @var AddressFactory
+     */
+    protected $_addressFactory;
+
+    /**
      * SeasonalHelper constructor.
      * @param Context $context
      * @param LoggerInterface $logger
@@ -68,6 +113,13 @@ class SeasonalHelper extends AbstractHelper
      * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
      * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
      * @param SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory
+     * @param RecurlySubscription $recurlySubscription
+     * @param RegionCollection $regionCollection
+     * @param RegionFactory $regionFactory
+     * @param RegionInterface $regionInterface
+     * @param AddressRepositoryInterface $addressRepository
+     * @param AddressInterfaceFactory $addressInterfaceFactory
+     * @param AddressFactory $addressFactory
      * @throws Exception
      */
     public function __construct(
@@ -77,7 +129,14 @@ class SeasonalHelper extends AbstractHelper
         SubscriptionOrderHelper $subscriptionOrderHelper,
         SubscriptionCollectionFactory $subscriptionCollectionFactory,
         SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
-        SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory
+        SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory,
+        RecurlySubscription $recurlySubscription,
+        RegionCollection $regionCollection,
+        RegionFactory $regionFactory,
+        RegionInterface $regionInterface,
+        AddressRepositoryInterface $addressRepository,
+        AddressInterfaceFactory $addressInterfaceFactory,
+        AddressFactory $addressFactory
     ) {
         parent::__construct($context);
 
@@ -87,6 +146,13 @@ class SeasonalHelper extends AbstractHelper
         $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
         $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
         $this->_subscriptionAddonOrderCollectionFactory = $subscriptionAddonOrderCollectionFactory;
+        $this->_recurlySubscription = $recurlySubscription;
+        $this->_regionCollection = $regionCollection;
+        $this->_regionFactory = $regionFactory;
+        $this->_regionInterface = $regionInterface;
+        $this->_addressRepository = $addressRepository;
+        $this->_addressInterfaceFactory = $addressInterfaceFactory;
+        $this->_addressFactory = $addressFactory;
 
         $this->_today = new DateTimeImmutable();
         $this->_maxShipDate = $this->_today->sub(new DateInterval('PT90M'));
@@ -104,23 +170,27 @@ class SeasonalHelper extends AbstractHelper
      */
     public function processSeasonalOrders()
     {
-        $orders = $this->getOrders();
+        $subscriptionOrders = $this->getSubscriptionOrders();
 
-        if (empty($orders)) {
+        if (empty($subscriptionOrders)) {
             // We have nothing to process so end.
             $this->_logger->info('No seasonal orders required processing.');
             return;
         }
 
-        foreach ($orders as $order) {
-            if (! $this->verifyRecurlySeasonalOrder($order)) {
+        foreach ($subscriptionOrders as $subscriptionOrder) {
+
+            $recurlyAccount = null;
+
+            // Check to make sure the order is active (invoiced)
+            if (! $this->verifyRecurlySeasonalOrder($subscriptionOrder)) {
                 // Order is not ready to process, set a timestamp to be
                 // available the next day.
-                $cronDate = $order->getData('next_cron_date')
+                $cronDate = $subscriptionOrder->getData('next_cron_date')
                     ? $this->_today->add(new DateInterval('P1D'))->format('Y-m-d H:i:s')
                     : $this->_today->add(new DateInterval('PT3H'))->format('Y-m-d H:i:s');
 
-                $order->setData(
+                $subscriptionOrder->setData(
                     'next_cron_date',
                     $cronDate
                 )->save();
@@ -129,12 +199,86 @@ class SeasonalHelper extends AbstractHelper
             }
 
             try {
+
+                // Get the master subscription
+                $masterSubscription = $subscriptionOrder->getMasterSubscription();
+                if (is_null($masterSubscription)) {
+                    throw new LocalizedException(__('Master Subscription could not be found in the database for subscription order / addon_order id ' . $subscriptionOrder->getData('subscription_id')));
+                }
+
+                // Get customer from order
+                $customer = $masterSubscription->getCustomer();
+                if (is_null($customer)) {
+                    throw new LocalizedException(__('Customer could not be found in the database for master subscription id ' . $masterSubscription->getData('subscription_id')));
+                }
+
+                // Does customer have any addresses
+                /** @var AddressCollection $addresses */
+                $addresses = $customer->getAddressesCollection();
+                if (is_null($addresses)) {
+                    throw new LocalizedException(__('Customer did not have any addresses. Master subscription id ' . $masterSubscription->getData('subscription_id')));
+                }
+
+                // Does customer have default billing address
+                $defaultBillingAddressId = $customer->getDefaultBillingAddress();
+                if (is_null($defaultBillingAddressId)) {
+                    throw new LocalizedException(__('Customer does not have a default billing address. Master subscription id ' . $masterSubscription->getData('subscription_id')));
+                }
+
+                // Does customer default billing address exist for customer
+                if ( ! in_array($defaultBillingAddressId, $addresses->getAllIds())) {
+                    throw new LocalizedException(__('Customer\'s default billing address doesn\'t exist. Master subscription id ' . $masterSubscription->getData('subscription_id')));
+                }
+
+                // Get default billing address
+                $defaultBillingAddress = $addresses->getItemById($defaultBillingAddressId);
+                if (is_null($defaultBillingAddress)) {
+                    throw new LocalizedException(__('Failed to retrieve default billing address for ' . $masterSubscription->getData('subscription_id')));
+                }
+
+                // Patch up regionId if null
+                if (is_null($defaultBillingAddress->getData('region_id'))) {
+                    $this->_logger->info("Subscription {$masterSubscription->getData('subscription_id')} billing address had no regionId. Setting now.");
+                    $region = $this->_regionCollection
+                        ->addRegionNameFilter($defaultBillingAddress->getData('region'))
+                        ->getFirstItem();
+                    $defaultBillingAddress->setData('region_id', $region->getId());
+                    $defaultBillingAddress->save();
+                }
+
+                // Does customer have default shipping address
+                $defaultShippingAddressId = $customer->getDefaultShippingAddress();
+                if (is_null($defaultShippingAddressId)) {
+                    throw new LocalizedException(__('Customer does not have a default billing address. Master subscription id ' . $masterSubscription->getData('subscription_id')));
+                }
+
+                // Does customer default shipping address exist for customer
+                if ( ! in_array($defaultShippingAddressId, $addresses->getAllIds())) {
+                    throw new LocalizedException(__('Customer\'s default shipping address doesn\'t exist. Master subscription id ' . $masterSubscription->getData('subscription_id')));
+                }
+
+                // Get default billing address
+                $defaultShippingAddress = $addresses->getItemById($defaultShippingAddressId);
+                if (is_null($defaultShippingAddress)) {
+                    throw new LocalizedException(__('Failed to retrieve default shipping address for ' . $masterSubscription->getData('subscription_id')));
+                }
+
+                // Patch up regionId if null
+                if (is_null($defaultShippingAddress->getData('region_id'))) {
+                    $this->_logger->info("Subscription {$masterSubscription->getData('subscription_id')} shipping address had no regionId. Setting now.");
+                    $region = $this->_regionCollection
+                        ->addRegionNameFilter($defaultShippingAddress->getData('region'))
+                        ->getFirstItem();
+                    $defaultShippingAddress->setData('region_id', $region->getId());
+                    $defaultShippingAddress->save();
+                }
+
                 // Process the seasonal subscription.
-                $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($order->getData('subscription_id'));
-                $this->_logger->debug("Subscription Order: {$order->getData('subscription_id')} has successfully processed.");
+                $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionOrder->getData('subscription_id'));
+                $this->_logger->debug("Subscription Order: {$subscriptionOrder->getData('subscription_id')} has successfully processed.");
             } catch (Exception $e) {
-                $this->_logger->error("Subscription Order: {$order->getData('subscription_id')} has failed to process. - " . $e->getMessage());
-                $order->setData('subscription_order_status', 'failed')->save();
+                $this->_logger->error("Subscription Order: {$subscriptionOrder->getData('subscription_id')} has failed to process. - " . $e->getMessage());
+                $subscriptionOrder->setData('subscription_order_status', 'failed')->save();
             }
         }
     }
@@ -145,7 +289,7 @@ class SeasonalHelper extends AbstractHelper
      * @return SubscriptionOrder[]|SubscriptionAddonOrder[];
      * @throws Exception
      */
-    protected function getOrders()
+    protected function getSubscriptionOrders()
     {
         $subscriptionOrderCollection = $this->_subscriptionOrderCollectionFactory->create();
         $subscriptionAddonOrderCollection = $this->_subscriptionAddonOrderCollectionFactory->create();

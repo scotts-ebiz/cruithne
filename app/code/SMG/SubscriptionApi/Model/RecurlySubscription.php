@@ -565,7 +565,7 @@ class RecurlySubscription
      * @param string $gigyaId
      * @return Recurly_Account|bool
      */
-    private function getRecurlyAccount(string $gigyaId = null)
+    public function getRecurlyAccount(string $gigyaId = null)
     {
         if (is_null($gigyaId)) {
             $gigyaId = $this->_customerSession->getCustomer()->getGigyaUid();
