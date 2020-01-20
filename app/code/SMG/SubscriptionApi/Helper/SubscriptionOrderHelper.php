@@ -3,6 +3,7 @@
 namespace SMG\SubscriptionApi\Helper;
 
 use Magento\Directory\Model\ResourceModel\Region\Collection as RegionCollection;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\QuoteRepository;
 use Magento\Customer\Model\AddressFactory;
@@ -13,6 +14,7 @@ use Magento\Framework\App\Helper\Context;
 use Magento\Quote\Model\QuoteManagement;
 use Magento\Sales\Model\Order;
 use Magento\Store\Model\StoreManagerInterface;
+use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\SubscriptionApi\Exception\SubscriptionException;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\CollectionFactory as SubscriptionAddonOrderCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection as SubscriptionOrderCollection;
@@ -103,6 +105,11 @@ class SubscriptionOrderHelper extends AbstractHelper
     protected $_regionCollection;
 
     /**
+     * @var SapOrderBatchCollectionFactory
+     */
+    protected $_sapOrderBatchCollectionFactory;
+
+    /**
      * SubscriptionOrderHelper constructor.
      * @param Context $context
      * @param AddressFactory $addressFactory
@@ -118,6 +125,7 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @param SubscriptionOrder $subscriptionOrder
      * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
      * @param RegionCollection $regionCollection
+     * @param SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function __construct(
@@ -134,7 +142,8 @@ class SubscriptionOrderHelper extends AbstractHelper
         SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory,
         SubscriptionOrder $subscriptionOrder,
         SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
-        RegionCollection $regionCollection
+        RegionCollection $regionCollection,
+        SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
     ) {
         parent::__construct($context);
 
@@ -151,6 +160,7 @@ class SubscriptionOrderHelper extends AbstractHelper
         $this->_subscriptionOrder = $subscriptionOrder;
         $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
         $this->_regionCollection = $regionCollection;
+        $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
 
         $this->_store = $storeManager->getStore();
         $this->_websiteId = $this->_store->getWebsiteId();
@@ -160,9 +170,9 @@ class SubscriptionOrderHelper extends AbstractHelper
      * Process orders with the given subscription ID.
      *
      * @param SubscriptionOrder|SubscriptionAddonOrder|string $subscriptionId
+     * @throws LocalizedException
      * @throws SubscriptionException
      * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function processInvoiceWithSubscriptionId($subscriptionId)
@@ -284,11 +294,11 @@ class SubscriptionOrderHelper extends AbstractHelper
      *
      * @param Customer $customer
      * @param SubscriptionOrder|SubscriptionAddonOrder $subscriptionOrder
-     * @return \Magento\Quote\Model\Quote
+     * @return bool
+     * @throws LocalizedException
+     * @throws SubscriptionException
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws SubscriptionException
      */
     protected function processOrder(Customer $customer, $subscriptionOrder)
     {
@@ -380,11 +390,35 @@ class SubscriptionOrderHelper extends AbstractHelper
 
         // Add the order ID to teh subscription order.
         $subscriptionOrder->setSalesOrderId($order->getEntityId());
-        $subscriptionOrder->setSubscriptionOrderStatus('complete');
         $subscriptionOrder->save();
 
-        // Create the order invoice.
-        $subscriptionOrder->createInvoice();
+        if ($subscriptionOrder->isCurrenltyShippable()) {
+
+            // Complete the order
+            $subscriptionOrder
+                ->setSubscriptionOrderStatus('complete')
+                ->save();
+
+            // Create the order invoice.
+            $subscriptionOrder->createInvoice();
+        } else {
+            $sapOrderBatch = $this->_sapOrderBatchCollectionFactory
+                ->create()
+                ->addFilter('order_id', $order->getId())
+                ->getFirstItem();
+
+            if (is_null($sapOrderBatch)) {
+                $error = 'Create Orders: Failed to find Sap Batch Order for order ' . $order->getId();
+                $this->_logger->error($error);
+                throw new LocalizedException(__($error));
+            }
+
+            // Prevent SAP from processing
+            $sapOrderBatch
+                ->setData('is_order', 0)
+                ->setData('order_process_date', null)
+                ->save();
+        }
 
         return true;
     }
