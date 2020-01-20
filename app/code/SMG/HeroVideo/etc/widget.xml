@@ -70,7 +70,7 @@
             </parameter>
             <parameter name="videotextsize" visible="true" xsi:type="select"
                        source_model="SMG\HeroVideo\Model\Source\VideoTextSize">
-                <label>Video CTA Size (rem)</label>
+                <label>Video CTA Size</label>
             </parameter>
             <parameter name="iconcolor" visible="true" xsi:type="text">
                 <label>Icon Color (#xxxxxx)</label>
