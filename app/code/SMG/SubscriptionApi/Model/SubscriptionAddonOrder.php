@@ -347,7 +347,7 @@ class SubscriptionAddonOrder extends AbstractModel
         }
 
         try {
-            $this->_sapOrderBatch = $this->_sapOrderCollectionFactory->create()->getItemById($this->getSalesOrderId());
+            $this->_sapOrderBatch = $this->_sapOrderBatchCollectionFactory->create()->getItemById($this->getSalesOrderId());
 
             return $this->_sapOrderBatch;
         } catch (\Exception $e) {
@@ -387,6 +387,20 @@ class SubscriptionAddonOrder extends AbstractModel
         } else {
             $this->setShipStartDate($todayDate);
         }
+    }
+
+    /**
+     * Is Order Currently Shippable
+     * @return bool
+     * @throws \Exception
+     */
+    public function isCurrenltyShippable() {
+        if ($this->getSubscriptionType() !== 'annual') {
+            $today = new \DateTime();
+            $shipStart = \DateTime::createFromFormat('Y-m-d H:i:s', $this->getShipStartDate());
+            return $today >= $shipStart;
+        }
+        return true;
     }
 
     /**
