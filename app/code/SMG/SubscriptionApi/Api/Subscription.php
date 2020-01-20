@@ -343,17 +343,6 @@ class Subscription implements SubscriptionInterface
         /** @var \SMG\SubscriptionApi\Model\Subscription $subscription */
         $subscription = $this->_subscriptionCollectionFactory->create()->getItemByColumnValue('quiz_id', $quiz_id);
 
-        if (! $subscription->isCurrentlyShippable()) {
-            $subscription->setSubscriptionStatus('active');
-            $subscription->save();
-
-            return [[
-                'success' => true,
-                'subscription_id' => $subscription->getSubscriptionId(),
-                'message' => 'No products currently shippable.'
-            ]];
-        }
-
         if (! $subscription) {
             http_response_code(404);
 

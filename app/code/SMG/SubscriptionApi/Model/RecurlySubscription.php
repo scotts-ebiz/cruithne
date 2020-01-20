@@ -558,7 +558,7 @@ class RecurlySubscription
      * @param string $gigyaId
      * @return Recurly_Account|bool
      */
-    private function getRecurlyAccount(string $gigyaId = null)
+    public function getRecurlyAccount(string $gigyaId = null)
     {
         if (is_null($gigyaId)) {
             $gigyaId = $this->_customerSession->getCustomer()->getGigyaUid();
@@ -779,6 +779,7 @@ class RecurlySubscription
                 $today = new \DateTimeImmutable();
 
                 if ($this->_testHelper->inTestMode()) {
+                    $this->_logger->info('Test mode subscription_order');
                     $start = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $subOrder->starts_at);
 
                     // No last ship date so this is the first order.
@@ -861,6 +862,7 @@ class RecurlySubscription
                     $subOrder->starts_at = $subscriptionAddonOrder->getShipStartDate();
 
                     if ($this->_testHelper->inTestMode()) {
+                        $this->_logger->info('Test mode subscription_addon_order');
                         $today = new \DateTimeImmutable();
                         $start = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $subOrder->starts_at);
 
