@@ -119,7 +119,7 @@
             </parameter>
             <parameter name="HeroCalloutButtonTextSize" visible="true" xsi:type="select"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutButtonTextSize">
-                <label>Button Text Size (rem)</label>
+                <label>Button Text Size</label>
             </parameter>
             <parameter name="HeroCalloutButtonTextStyle" visible="true" xsi:type="multiselect"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutButtonTextStyle">
