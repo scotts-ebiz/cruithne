@@ -67,6 +67,20 @@ body,
   z-index: 12;
 }
 
+@media (max-height: 625px) {
+  .sp-quiz-map__helper p {
+    font-size: 12px;
+  }
+
+  .sp-quiz__question-mark-icon {
+    display: none;
+  }
+
+  .sp-quiz__question-draw-image {
+    max-height: 90px;
+  }
+}
+
 .sp-quiz__previous:focus {
   outline: 2px auto #454545;
   outline-offset: 1px;
