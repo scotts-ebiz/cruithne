@@ -9,7 +9,11 @@ body,
 
 .sp-quiz__content {
   overflow: auto;
-  order: 1;
+  order: 2;
+}
+
+.sp-quiz__question.sp-container.sp-mb-8 {
+  padding-bottom: 5.5rem;
 }
 
 .sp-quiz__banner {
@@ -306,9 +310,9 @@ li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot::before {
   padding: 20px 0;
 }
 
-.sp-quiz__content {
+/* .sp-quiz__content {
   order: 2;
-}
+} */
 
 .sp-quiz__progress-buttons {
   order: 3;
