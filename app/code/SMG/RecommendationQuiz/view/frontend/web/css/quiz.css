@@ -310,10 +310,6 @@ li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot::before {
   padding: 20px 0;
 }
 
-/* .sp-quiz__content {
-  order: 2;
-} */
-
 .sp-quiz__progress-buttons {
   order: 3;
 }
