@@ -10,6 +10,7 @@ body,
 .sp-quiz__content {
   overflow: auto;
   order: 1;
+  overflow-x: hidden;
 }
 
 .sp-quiz__banner {
