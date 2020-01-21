@@ -76,7 +76,7 @@
             </parameter>
             <parameter name="HeroCalloutBannerTextHighlightSize" visible="true" xsi:type="select"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextHighlightSize">
-                <label>Small Blurb Size (rem)</label>
+                <label>Small Blurb Size</label>
             </parameter>
             <parameter name="HeroCalloutBannerTextHighlightColor" visible="true" xsi:type="text">
                 <label>Small Blurb Text Color (#xxxxxx)</label>
