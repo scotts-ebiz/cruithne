@@ -9,6 +9,7 @@ body,
 
 .sp-quiz__content {
   overflow: auto;
+  overflow-x: hidden;
   order: 2;
 }
 
@@ -64,6 +65,20 @@ body,
   right: 1rem;
   top: 1rem;
   z-index: 12;
+}
+
+@media (max-height: 625px) {
+  .sp-quiz-map__helper p {
+    font-size: 12px;
+  }
+
+  .sp-quiz__question-mark-icon {
+    display: none;
+  }
+
+  .sp-quiz__question-draw-image {
+    max-height: 90px;
+  }
 }
 
 .sp-quiz__previous:focus {
