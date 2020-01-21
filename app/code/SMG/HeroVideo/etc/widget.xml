@@ -60,9 +60,8 @@
                 <label>CUSTOMIZE VIDEO SECTION</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
-            <parameter name="videotext" visible="true" xsi:type="block">
+            <parameter name="videotext" visible="true" xsi:type="text">
                 <label>Video CTA</label>
-                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
             </parameter>
             <parameter name="videotextcolor" visible="true" xsi:type="text">
                 <label>Video CTA Color (#xxxxxx)</label>
