@@ -48,7 +48,7 @@
             </parameter>
             <parameter name="HeroCalloutBannerTextSize" visible="true" xsi:type="select"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextSize">
-                <label>Blurb Text Size (rem)</label>
+                <label>Blurb Text Size</label>
             </parameter>
             <parameter name="HeroCalloutBannerTextColor" visible="true" xsi:type="text">
                 <label>Blurb Desktop Text Color (#xxxxxx)</label>
