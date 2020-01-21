@@ -1176,6 +1176,37 @@ define([
             );
         },
 
+        handleTouchEnd(e, quiz) {
+            e = e.originalEvent;
+            const target = e.target;
+            const elWidth = target.clientWidth;
+            const bound = target.getBoundingClientRect();
+            const x = e.pageX - bound.left;
+            const section = elWidth / 8;
+
+            if (x < section) {
+                target.value = 1;
+                setSliderTrack(target);
+                quiz.setAnswer(1, event, 'tap');
+            } else if (x >= section && (x < (section * 3))) {
+                target.value = 2;
+                setSliderTrack(target);
+                quiz.setAnswer(2, event, 'tap');
+            } else if (x >= section * 3 && x < section * 5) {
+                target.value = 3;
+                setSliderTrack(target);
+                quiz.setAnswer(3, event, 'tap');
+            } else if (x >= section * 5 && x < section * 7) {
+                target.value = 4;
+                setSliderTrack(target);
+                quiz.setAnswer(4, event, 'tap');
+            } else {
+                target.value = 5;
+                setSliderTrack(target);
+                quiz.setAnswer(5, event, 'tap');
+            }
+        },
+
         initializeSlider(el) {
             setSliderTrack(el);
         },

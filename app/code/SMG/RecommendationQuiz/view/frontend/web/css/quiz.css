@@ -396,6 +396,10 @@ li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot::before {
   text-align: right;
 }
 
+.sp-slider {
+  -webkit-tap-highlight-color: transparent;
+}
+
 .sliderContainer {
   padding: 20px 0;
 }
