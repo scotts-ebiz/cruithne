@@ -23,10 +23,6 @@ class LayoutProcessor {
             ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['1']
             ['label'] = __('Apartment/Suite/Other (Optional)');
 
-            $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
-            ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['2']
-            ['validation'] = ['required-entry-street-2' => true];
-
             /* State/Provision label change*/
             $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
             ['shippingAddress']['children']['shipping-address-fieldset']['children']['region_id']
