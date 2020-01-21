@@ -10,6 +10,7 @@ body,
 .sp-quiz__content {
   overflow: auto;
   order: 2;
+  overflow-x: hidden;
 }
 
 .sp-quiz__question.sp-container.sp-mb-8 {
