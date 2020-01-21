@@ -1,0 +1,128 @@
+.sp-options__your-plan {
+  border: 2px solid #1d5632;
+  min-width: 50%;
+}
+
+.sp-options__your-plan::after {
+  content: '';
+  background-color: #fff;
+  background-image: url(https://test_magento_image_repo.storage.googleapis.com/grass-icon.svg);
+  border-radius: 100%;
+  display: block;
+  height: 38px;
+  left: 50%;
+  margin-left: -19px;
+  position: absolute;
+  top: -20px;
+  width: 38px;
+}
+
+.sp-options__list {
+  list-style: none;
+}
+
+.sp-options__product-image {
+  flex-shrink: 0;
+  height: 100px;
+  width: 68px;
+}
+
+.sp-options__product-image--lg {
+  height: 224px;
+  width: 174px;
+}
+
+.sp-options__your-plan-label {
+  line-height: 1.25;
+  margin: 0 auto;
+  max-width: 6rem;
+}
+
+.sp-options__plan-container {
+  border: 2px solid #d8d8d8;
+  border-radius: 0.25rem;
+  transition: all 0.25s ease;
+}
+
+.sp-options__plan--selected .sp-options__plan-container {
+  border-color: #1d5632;
+}
+
+.sp-options__plan-bg {
+  bottom: 25%;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+@media (min-width: 768px) {
+  .sp-options__plan-bg {
+    bottom: 50%;
+  }
+}
+
+.sp-options__plan-header {
+  border-bottom: 2px solid #d8d8d8;
+  transition: all 0.25s ease;
+}
+
+.sp-options__plan--selected .sp-options__plan-header {
+  background-color: #1d5632;
+  border-color: #1d5632;
+  color: #fff;
+}
+
+.sp-options__add-ons hr {
+  border: 2px solid #1d5632;
+}
+
+.sp-options__add-on {
+  border: 2px solid #d8d8d8;
+}
+
+hr.sp-options__divider {
+  border: 2px solid #d8d8d8;
+  border-radius: .25rem;
+}
+
+.sp-options__add-on-link {
+  text-decoration: none;
+}
+
+.sp-options__add-on-checkbox:checked ~ .sp-options__add {
+  display: none;
+}
+
+.sp-options__add-on-checkbox:checked ~ .sp-options__added {
+  display: inline;
+}
+
+.subscription-card-price .--old-price {
+  text-decoration: line-through;
+}
+
+.subscription-card-price .--old-price {
+  text-decoration: line-through;
+}
+
+.sp-options__plan-selector {
+  justify-self: flex-end;
+}
+
+.sp-options-count {
+  background-image: url(https://test_magento_image_repo.storage.googleapis.com/bag-count.svg);
+  color: white;
+  width: 17px;
+  height: 22px;
+}
+
+.sp-options__footer {
+  position: sticky;
+  bottom: 0;
+  z-index: 10;
+}
+
+.sp-footer {
+  border-top: 2px solid #fff;
+}

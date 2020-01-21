@@ -1,0 +1,28 @@
+<div class="sp-select sp-w-full">
+    <select class="sp-input-group__input sp-w-full" data-bind="
+        attr: {
+            name: inputName,
+            id: uid,
+            disabled: disabled,
+            'aria-describedby': getDescriptionId(),
+            'aria-required': required,
+            'aria-invalid': error() ? true : 'false',
+            placeholder: placeholder
+        },
+        hasFocus: focused,
+        optgroup: options,
+        value: value,
+        optionsCaption: caption,
+        optionsValue: 'value',
+        optionsText: 'label',
+        optionsAfterRender: function(option, item) {
+            if (item && item.disabled) {
+                ko.applyBindingsToNode(option, {attr: {disabled: true}}, item);
+            }
+
+            if (option && option.innerText == 'Please select a region, state or province.') {
+                option.innerText = 'Select State';
+            }
+        }"
+    />
+</div>

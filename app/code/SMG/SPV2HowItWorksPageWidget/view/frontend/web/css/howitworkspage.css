@@ -1,0 +1,758 @@
+/* How It Works page styling */
+.sp-how-it-works__heading-image {
+  display: block;
+  margin: 0 auto;
+  max-width: 320px;
+}
+
+.sp-how-it-works__heading-image--bottom {
+  max-width: 212px !important;
+}
+
+.sp-how-it-works_lawn-condition{
+  padding-right:0rem;
+}
+
+.sp-how-it-works__title {
+  font-size: 50px;
+}
+
+@media (min-width: 768px) {
+  .sp-how-it-works__heading-image {
+    max-width: unset;
+  }
+
+  .sp-how-it-works__heading-image--bottom {
+    max-width: unset !important;
+  }
+
+  .sp-how-it-works__title {
+    font-size: 100px;
+  }
+}
+
+.sp-vertical-divider {
+  border-color: #1d5632;
+  border-width: 2px;
+  width: 6rem;
+  transform: rotate(90deg);
+  margin: 6rem auto;
+}
+
+.sp-quiz-preview {
+  background-color: #edf4e1;
+  padding: 2rem;
+}
+
+@media (min-width: 1024px) {
+  .sp-quiz-preview {
+    background-color: transparent;
+  }
+
+  .sp-quiz-preview__question {
+    margin-right: 6rem;
+  }
+
+  .sp-quiz-preview__description {
+    margin-left: -12rem;
+    padding-left: 12rem;
+  }
+
+  .sp-how-it-works_lawn-condition{
+    padding-right: 6.5rem;
+  }
+}
+
+
+/* Transition for seasons in focus*/
+/* Fall*/
+
+.fall_sm_in_focus{
+  animation: rot_fall .5s linear;   
+  animation-fill-mode: forwards;
+}
+
+@keyframes rot_fall{
+  0%{
+  opacity: 0.5;
+  transform:translate(187px, 0px);
+  }
+  25%{
+  transform:translate(310px, 30px);
+  }
+  50%{
+    transform:translate(330px, 60px);
+  }
+  75%{
+    transform:translate(365px, 150px);
+  }
+  100%{
+  opacity: 1;
+  transform:translate(378px,189px);
+  }
+}
+
+.fl-stroke-focus{
+  animation: icon_in_focus_bg 2s linear;
+  animation-fill-mode: forwards;
+}
+.fl-stroke-no-focus{
+  animation: previous_icon_in_focus_bg 2s linear;
+  animation-fill-mode: forwards;
+}
+
+/* Late Spring */
+.lateSpring_sm_in_focus{
+  animation: rot_l_spring .5s linear;   
+  animation-fill-mode: forwards;
+}
+
+@keyframes rot_l_spring{
+  0%{
+  opacity: 0.5;
+  transform:translate(186px, 380px);
+  }
+  20%{
+       opacity: .7;
+       transform:translate(80px,370px);
+   }
+   40%{
+       opacity: .8;
+       transform:translate(5px,250px);
+   }
+  100%{
+  opacity: 1;
+  transform:translate(0px,189px);
+  }
+}
+
+.ls-stroke-focus{
+  animation: icon_in_focus_bg 2s linear;
+  animation-fill-mode: forwards;
+}
+.ls-stroke-no-focus{
+  animation: previous_icon_in_focus_bg 2s linear;
+  animation-fill-mode: forwards;
+}
+
+/* Early Spring */
+
+.earlySpring_sm_in_focus{
+  animation: rot_e_spring .5s linear;   
+  animation-fill-mode: forwards;
+}
+
+@keyframes rot_e_spring{
+  0%{
+  opacity: 0.5;
+  transform:translate(0px, 189px);
+  }
+  20%{
+      transform:translate(18px,85px);
+  }
+  30%{
+      transform:translate(55px,45px);
+  }
+  100%{
+  opacity: 1;
+  transform:translate(187px,0px);
+  }
+}
+
+/* Summer */
+.summer_sm_in_focus{
+  animation: rot_summer .5s linear;   
+  animation-fill-mode: forwards;
+}
+
+@keyframes rot_summer{
+  0%{
+  opacity: 0.3;
+  transform:translate(379px, 189px);
+  }
+  10%{
+     transform:translate(370px,250px);
+  }
+  20%{
+      transform:translate(365px,255px);
+  }
+  30%{
+      opacity: .6s;
+      transform:translate(350px,275px);
+  }
+  40%{
+      transform:translate(340px,300px);
+  }
+  50%{
+      opacity: .7s;
+      transform:translate(320px,330px);
+  }
+  100%{
+  opacity: 1;
+  transform:translate(186px,380px);
+  }
+}
+
+.sm_stroke_in_focus{
+  animation: icon_in_focus_bg 2s linear;
+  animation-fill-mode: forwards;
+}
+
+.sm_stroke_out_of_focus{
+  animation: previous_icon_in_focus_bg 2s linear;
+  animation-fill-mode: forwards;
+}
+
+/* Icon apply based on focus */
+
+@keyframes previous_icon_in_focus_bg{
+ 0%{
+     opacity: .8;
+     stroke: white;
+     fill: rgb(29, 86, 50);
+ }
+ 20%{
+      opacity: 1;
+      stroke: rgb(29, 86, 50);
+      fill: white;
+ }
+ 100%{
+     opacity: 1;
+     stroke: rgb(29, 86, 50);
+     fill: white;
+ }
+}
+
+@keyframes icon_in_focus_bg{
+  0%{
+     opacity: .6;
+     fill: white;
+     stroke: rgb(29, 86, 50);
+  }
+  50%{
+      opacity: 1;
+      stroke: white;
+      fill: rgb(29, 86, 50);
+  }
+  100%{
+      opacity: 1;
+      stroke: white;
+      fill: rgb(29, 86, 50);
+  }
+}
+
+/* Text and center image */
+.group7Anim{
+  animation: group-7_anim .75s linear;
+  animation-fill-mode: forwards;
+}
+
+@keyframes group-7_anim{
+  0%{
+      opacity: 1;
+      transform:translate(74px, 58px);
+  }
+  50%{
+      opacity: 0;
+      transform:translate(74px, 350px);
+  }
+  75%{
+      opacity: .2;
+      transform:translate(74px, 200px);
+  }
+  100%{
+      opacity: 1;
+      transform:translate(74px, 58px);
+  }
+}
+/*Anim each window element*/
+.door_anim_go{
+  animation: door_anim .70s linear;
+  animation-fill-mode: forwards;
+}
+@keyframes door_anim{
+  0%{
+      opacity: 1;
+      transform:translate(0px, 0px);
+  }
+  50%{
+      opacity: 0;
+      transform:translate(0px, 350px);
+  }
+  75%{
+      opacity: .2;
+      transform:translate(0px, 200px);
+  }
+  100%{
+      opacity: 1;
+      transform:translate(0px, 0px);
+  }
+}
+
+.window1_anim_go{
+  animation: window_1_anim .75s linear .04s;
+  animation-fill-mode: forwards;
+}
+@keyframes window_1_anim{
+  0%{
+      opacity: 1;
+      transform:translate(0px, 0px);
+  }
+  50%{
+      opacity: 0;
+      transform:translate(0px, 350px);
+  }
+  75%{
+      opacity: .2;
+      transform:translate(0px, 200px);
+  }
+  100%{
+      opacity: 1;
+      transform:translate(0px, 0px);
+  }
+
+}
+
+.window2_anim_go{
+  animation: window_2_anim .75s linear .04s;
+  animation-fill-mode: forwards;
+}
+@keyframes window_2_anim{
+  0%{
+      opacity: 1;
+      transform:translate(0px, 0px);
+  }
+  50%{
+      opacity: 0;
+      transform:translate(0px, 350px);
+  }
+  75%{
+      opacity: .2;
+      transform:translate(0px, 200px);
+  }
+  100%{
+      opacity: 1;
+      transform:translate(0px, 0px);
+  }
+
+}
+
+.windowBig_anim_go{
+  animation: window_big_anim .75s linear .09s;
+  animation-fill-mode: forwards;
+}
+@keyframes window_big_anim{
+  0%{
+      opacity: 1;
+      transform:translate(0px, 0px);
+  }
+  50%{
+      opacity: 0;
+      transform:translate(0px, 350px);
+  }
+  75%{
+      opacity: .2;
+      transform:translate(0px, 200px);
+  }
+  100%{
+      opacity: 1;
+      transform:translate(0px, 0px);
+  }
+
+}
+/* -----------End Windows animations -------------*/
+.txt_anim_global{
+  animation: txt_anim 1s linear;
+  animation-direction: alternate;
+  animation-fill-mode: forwards;
+}
+.e_spring_txt{
+  animation: txt_anim 1s linear;
+  animation-direction: alternate;
+  animation-fill-mode: forwards;
+}
+.l_spring_txt{
+  animation: txt_anim 1s linear;
+  animation-direction: alternate;
+  animation-fill-mode: forwards;
+}
+.summer_txtAnim{
+  animation: txt_anim 1s linear;
+  animation-direction: alternate;
+  animation-fill-mode: forwards;
+}
+.fall_txtAnim{
+  animation: txt_anim 1s linear;
+  animation-direction: alternate;
+  animation-fill-mode: forwards;
+}
+
+@keyframes txt_anim{
+  0%{
+      opacity: 1;
+      transform:translateY(20px);
+  }
+  50%{
+      opacity: 0;
+      transform:translateY(350px)
+  }
+  75%{
+      opacity: .2;
+      transform:translateY(200px)
+  }
+  100%{
+      opacity: 1;
+      transform:translateY(20px);
+  }
+
+}
+
+.anim_check {
+  animation-name: example;
+  animation-duration: 5s;
+  animation-timing-function: linear;
+  animation-delay: 2s;
+  animation-iteration-count: infinite;
+  animation-direction: alternate;
+}
+
+.anim_check_shorthand {
+  animation: example 5s linear 2s infinite alternate;
+}
+
+
+/* Classes will switch based on the season in focus */
+     /* Fall */
+      .fall_fl_in_focus{
+          animation: rot_summer .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+      /* Late Spring */
+      .lateSpring_fl_in_focus{
+          animation: rot_e_spring .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+      /* Early Spring */
+      .earlySpring_fl_in_focus{
+          animation: rot_fall .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+      /* Summer */
+      .summer_fl_in_focus{
+          animation: rot_l_spring .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+/* Transition for Early Spring in focus*/
+      .fall_es_in_focus{
+          animation: rot_l_spring .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+      .lateSpring_es_in_focus{
+          animation: rot_fall .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+      .earlySpring_es_in_focus{
+          animation: rot_summer .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+      .summer_es_in_focus{
+          animation: rot_e_spring .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+/* Transition for late Spring in focus*/
+      .fall_ls_in_focus{
+          animation: rot_e_spring .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+      .lateSpring_ls_in_focus{
+          animation: rot_summer .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+      .earlySpring_ls_in_focus{
+          animation: rot_l_spring .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+      .summer_ls_in_focus{
+          animation: rot_fall .5s linear;   
+          animation-fill-mode: forwards;
+      }
+
+
+/*circle animation*/
+.circle_frame_anim{
+  animation: circle_anim .5s linear;
+}
+@keyframes circle_anim{
+    0%{
+      transform: rotate(0deg);
+      transform-origin: center center;
+    }
+    100%{
+      transform: rotate(-45deg);
+      transform-origin: center center;
+    }
+}
+
+/*Anim the how it works widget*/
+.sp-hr-mt-howitworks{
+  margin-top: 8rem;
+}
+
+.anim_widget{
+  text-align:center;
+}
+.svg1{
+  position:absolute;
+  width: 519px;
+  height: 519px;
+}
+
+.svg2{
+  position: relative;
+  width: 485px;
+  height: 241px;
+  margin-top: 225px;
+  margin-left: 14px;
+}
+
+.arc_circle_1_anim{
+  stroke-dasharray: 803;
+  stroke-dashoffset: 813;
+  animation: dash 2s ease;
+  animation-fill-mode: forwards;
+}
+.arc_circle_2_anim{
+ stroke-dasharray: 334;
+ stroke-dashoffset: 334;
+ animation: dash2 1s linear 1s;
+ animation-fill-mode:forwards;
+}
+
+#window2_img_hw {
+  animation: left_window .75s ease-in-out 0.5s forwards;
+}
+#window1_img_hw{
+  animation: right_window .75s ease-in-out 0.2S forwards;
+}
+#windowBig_img_hw{
+  animation: big_window .75s ease-in-out 1s forwards;
+}
+
+@keyframes big_window{
+  0%{
+      opacity: 0;
+      height: 13%;
+  }
+  50%{
+      opacity: 0;
+      height:  17%;
+  }
+  100%{
+      opacity: 1;
+      height: 15%;
+  }
+
+}
+
+@keyframes right_window{
+  0%{
+      opacity: 0;
+      height: 10%;
+  }
+  50%{
+      opacity: .5;
+      height:  15%;
+  }
+  100%{
+      opacity: 1;
+      height: 12%;
+  }
+
+}
+
+@keyframes left_window{
+  0%{
+      opacity: 0;
+      height: 10%;
+  }
+  50%{
+      opacity: .5;
+      height:  15%;
+  }
+  100%{
+      opacity: 1;
+      height: 12%;
+  }
+}
+
+@keyframes dash{
+  0%{
+      stroke-dashoffset: 813;
+      stroke-dasharray: 813;
+  }
+  100%{
+      stroke-dashoffset: 0;
+  }
+}
+
+@keyframes dash2{
+  0%{
+     stroke-dashoffset: 334;
+     stroke-dasharray: 334;
+  }
+  100%{
+      stroke-dashoffset: 0;
+  }
+}
+
+/*Text animation*/
+#let_1{
+stroke-dasharray: 383;
+stroke-dashoffset: 383;
+animation: let_1-anim 2s linear;
+animation-fill-mode:forwards;
+}
+#let_2{
+stroke-dasharray: 300;
+stroke-dashoffset: 300;
+animation: let_1-anim 2s linear;
+animation-fill-mode:forwards; 
+}
+#let_3{
+stroke-dasharray: 80;
+stroke-dashoffset: 80;
+animation: let_1-anim 2s linear 0s forwards;  
+}
+#let_4{
+stroke-dasharray: 220;
+stroke-dashoffset: 220;
+animation: let_1-anim 2s linear;
+animation-fill-mode:forwards; 
+}
+#let_5{
+stroke-dasharray: 300;
+stroke-dashoffset: 300;
+animation: let_1-anim 2s linear;
+animation-fill-mode:forwards; 
+}
+#let_6{
+stroke-dasharray: 80;
+stroke-dashoffset: 80;
+animation: let_1-anim 2s linear 0s forwards;  
+}
+#let_7{
+stroke-dasharray: 150;
+stroke-dashoffset: 150;
+animation: let_1-anim 2s linear;
+animation-fill-mode:forwards;
+}
+#let_8{
+stroke-dasharray: 300;
+stroke-dashoffset: 300;
+animation: let_1-anim 2s linear 0s forwards;
+}
+#let_9{
+stroke-dasharray: 383;
+stroke-dashoffset: -383;
+animation: let_1-anim 1.5s linear;
+animation-fill-mode:forwards;
+
+}
+#let_10{
+stroke-dasharray: 320;
+stroke-dashoffset: 320;
+animation: let_1-anim 2s linear 0s forwards;
+
+}
+#let_11{
+stroke-dasharray: 120;
+stroke-dashoffset: 120;
+animation: let_1-anim 2s linear 0s forwards;  
+}
+#let_12{
+stroke-dasharray: 380;
+stroke-dashoffset: 380;
+animation: let_1-anim 2s linear 0s forwards;
+
+}
+#let_13{
+stroke-dasharray: 220;
+stroke-dashoffset: 220;
+animation: let_1-anim 2s linear 0s forwards;
+}
+#let_14{
+stroke-dasharray: 220;
+stroke-dashoffset: 220;
+animation: let_1-anim 2s linear 0s forwards;
+
+}
+#let_15{
+stroke-dasharray: 550;
+stroke-dashoffset: 550;
+animation: let_1-anim 2s linear 0s forwards;
+
+}
+#let_16{
+stroke-dasharray: 320;
+stroke-dashoffset: 320;
+animation: let_1-anim 2s linear 0s forwards;
+}
+#let_17{
+stroke-dasharray: 120;
+stroke-dashoffset: 120;
+animation: let_1-anim 2s linear 0s forwards;
+
+}
+#let_18{
+stroke-dasharray: 220;
+stroke-dashoffset: 220;
+animation: let_1-anim 2s linear;
+animation-fill-mode:forwards; 
+}
+#let_19{
+stroke-dasharray: 300;
+stroke-dashoffset: 300;
+animation: let_1-anim 2s linear 0s forwards;
+}
+#let_20{
+stroke-dasharray: 300;
+stroke-dashoffset: 300;
+animation: let_1-anim 2s linear 0s forwards;
+
+}
+@keyframes let_1-anim{
+from{
+  opacity:0;
+}
+to{
+ opacity:1;
+ stroke-dashoffset: 0;
+} 
+}
+
+@media (max-width: 430px){
+.svg1{
+  width:  319px;
+  height: 319px;
+}
+.svg2{
+ width:285px;
+ height: 141px;
+ margin-top:150px;
+}
+.anim_widget{
+  text-align: justify;
+  margin-top: 0px;
+}
+}

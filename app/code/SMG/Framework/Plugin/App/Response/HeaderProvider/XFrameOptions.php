@@ -23,8 +23,11 @@ class XFrameOptions
     if ($subdomain === 'store' || $subdomain === 'shop') {
       $xfValue = 'ALLOW-FROM https://www.' . $domain . '.com/';
     }
-    else if ($subdomain === 'staging') {
+    else if ($subdomain === 'rc') {
       $xfValue = ' ALLOW-FROM https://acsftest.' . $domain . '.com/';
+    }
+    else if ($subdomain === 'staging') {
+      $xfValue = ' ALLOW-FROM https://acsfdev.' . $domain . '.com/';
     }
     else if ($subdomain === 'test') {
       $xfValue = 'ALLOW-FROM https://acsfdev.' . $domain . '.com/';

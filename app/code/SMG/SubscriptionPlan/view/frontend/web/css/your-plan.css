@@ -1,0 +1,148 @@
+.sp-plan__loading-screen {
+  position: absolute;
+  top: 0;
+  width: 100vw;
+}
+
+.sp-plan__your-plan {
+  border: 2px solid #1d5632;
+  margin: 0 auto;
+  min-width: 50%;
+  position: relative;
+}
+
+.sp-plan__your-plan::after {
+  content: '';
+  background-color: #fff;
+  background-image: url(https://test_magento_image_repo.storage.googleapis.com/grass-icon.svg);
+  border-radius: 100%;
+  display: block;
+  height: 38px;
+  left: 50%;
+  margin-left: -19px;
+  position: absolute;
+  top: -20px;
+  width: 38px;
+}
+
+.sp-plan__list {
+  list-style: none;
+}
+
+.sp-plan__product-image {
+  flex-shrink: 0;
+  height: 100px;
+  width: 68px;
+}
+
+.sp-plan__product-image--lg {
+  height: 224px;
+  width: 174px;
+}
+
+.sp-plan__your-plan-label {
+  line-height: 1.25;
+  margin: 0 auto;
+  max-width: 6rem;
+}
+
+.sp-plan__tabs {
+  flex-shrink: 0;
+}
+
+.sp-plan__tabs-tab {
+  list-style: none;
+}
+
+.sp-plan__icon--small {
+  width: 40px;
+  height: auto;
+}
+
+.sp-plan__icon--medium {
+  width: 50px;
+  height: auto;
+}
+
+.sp-plan__product {
+  border: 2px solid #1d5632;
+  align-items: flex-start;
+}
+
+.sp-plan__tabs-button {
+  border: none;
+  background: transparent;
+  color: inherit;
+  align-items: center;
+  text-align: left;
+  width: 100%;
+}
+
+.sp-plan__tabs-button:hover,
+.sp-plan__tabs-button:focus,
+.sp-plan__tabs-button:active {
+  /* Not ideal, should be styling the li */
+  background-color: #edf4e1;
+  outline: none;
+  border: none;
+}
+
+.sp-plan__bag-count {
+  background-image: url(https://test_magento_image_repo.storage.googleapis.com/bag-count.svg);
+  color: white;
+  width: 17px;
+  height: 22px;
+}
+
+.sp-plan__title {
+  max-width: 50rem;
+  margin-left: auto;
+  margin-right: auto;
+  display: flex;
+  justify-content: center;
+  align-items: flex-end;
+}
+
+.sp-plan__title::before,
+.sp-plan__title::after {
+  content: '';
+  background-image: url(https://test_magento_image_repo.storage.googleapis.com/grass-land.svg);
+  display: block;
+  height: 22px;
+  flex: 0 0 45px;
+  position: relative;
+  bottom: 7px;
+}
+
+.sp-plan__title::before {
+  margin-right: 1rem;
+  transform: scaleX(-1);
+}
+
+.sp-plan__title::after {
+  margin-left: 1rem;
+  filter: FlipH;
+}
+
+.sp-plan__your-plan-product {
+  text-align: center;
+}
+
+.sp-plan__link {
+  text-transform: unset;
+}
+
+.sp-plan__product-addon-image {
+  flex: 0 1 84px;
+}
+
+.sp-footer {
+  border-top: 2px solid #fff;
+}
+
+.sp-success__article-link:active,
+.sp-success__article-link:focus,
+.sp-success__article-link:visited {
+  color: #fff;
+  outline: none;
+}
