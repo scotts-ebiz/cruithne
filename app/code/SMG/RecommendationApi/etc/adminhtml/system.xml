@@ -22,6 +22,12 @@
             </group>
             <group id="recommendation_api_paths" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Recommendations API Paths</label>
+                <field id="quiz_api_key" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>API Key</label>
+                    <comment>Set the API key required to authenticate the recommendation requests</comment>
+                    <validate>validate-no-html-tags</validate>
+                    <config_path>recommendations/api/key</config_path>
+                </field>
                 <field id="new_quiz_api_path" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>New Quiz API Path</label>
                     <comment>[GET] Fetches quizzes data</comment>
