@@ -42,7 +42,22 @@ define([
         };
 
         self.initialize = function () {
-            const autocompleteElement = document.getElementById('address-autocomplete');
+            const autocompleteElement = document.querySelector('#address-autocomplete');
+            const footerBar = document.querySelector('.sp-quiz__footer');
+            let isAndroid = navigator.userAgent.toLowerCase().indexOf('android') !== -1;
+
+            autocompleteElement.onfocus = () => {
+                if (isAndroid) {
+                    footerBar.style.display = 'none';
+                }
+            }
+
+            autocompleteElement.onblur = () => {
+                if (isAndroid) {
+                    footerBar.style.display = 'block';
+                }
+            }
+
             self.autocomplete = new google.maps.places.Autocomplete(
                 autocompleteElement, { types: ['geocode'] }
             );
