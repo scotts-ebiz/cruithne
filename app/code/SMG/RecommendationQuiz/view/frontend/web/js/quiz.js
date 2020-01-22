@@ -154,7 +154,10 @@ define([
             var path = polygon.getPath();
             var point = path.getAt(0);
 
+            // Not a polygon since there are less then 3 points, so remove it.
             if (path.getLength() < 3) {
+                polygon.setMap(null);
+
                 return;
             }
 
