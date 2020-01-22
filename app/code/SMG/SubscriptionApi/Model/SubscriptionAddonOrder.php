@@ -83,6 +83,11 @@ class SubscriptionAddonOrder extends AbstractModel
     protected $_logger;
 
     /**
+     * @var Subscription
+     */
+    protected $_masterSubscription;
+
+    /**
      * Constructor.
      */
     protected function _construct()
@@ -98,7 +103,7 @@ class SubscriptionAddonOrder extends AbstractModel
      * @param Registry $registry
      * @param LoggerInterface $logger
      * @param Order\CreditmemoFactory $creditmemoFactory
-     * @param \SMG\SubscriptionApi\Model\SubscriptionFactory $subscriptionFactory
+     * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
      * @param SubscriptionHelper $subscriptionHelper
      * @param SubscriptionAddonOrderItemCollectionFactory $subscriptionAddonOrderItemCollectionFactory
      * @param OrderRepository $orderRepository
@@ -116,7 +121,7 @@ class SubscriptionAddonOrder extends AbstractModel
         Registry $registry,
         LoggerInterface $logger,
         Order\CreditmemoFactory $creditmemoFactory,
-        SubscriptionFactory $subscriptionFactory,
+        SubscriptionCollectionFactory $subscriptionCollectionFactory,
         SubscriptionHelper $subscriptionHelper,
         SubscriptionAddonOrderItemCollectionFactory $subscriptionAddonOrderItemCollectionFactory,
         OrderRepository $orderRepository,
@@ -147,7 +152,7 @@ class SubscriptionAddonOrder extends AbstractModel
         $this->_invoiceSender = $invoiceSender;
         $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
         $this->_orderRepository = $orderRepository;
-        $this->_subscriptionCollectionFactory = $subscriptionFactory;
+        $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
     }
 
     /**
@@ -177,7 +182,7 @@ class SubscriptionAddonOrder extends AbstractModel
             ->create()
             ->getItemById($this->getData('subscription_entity_id'));
 
-        if (! $subscription->getId()) {
+        if (is_null($subscription) || ! $subscription->getId()) {
             return false;
         }
 
@@ -200,6 +205,22 @@ class SubscriptionAddonOrder extends AbstractModel
         }
 
         return '';
+    }
+
+    /**
+     * Get Master Subscription
+     */
+    public function getMasterSubscription()
+    {
+        $masterSubscriptionId = $this->getMasterSubscriptionId();
+
+        if (is_null($this->_masterSubscription)) {
+            $this->_masterSubscription = $this->_subscriptionCollectionFactory->create()
+                ->addFilter('subscription_id', $masterSubscriptionId)
+                ->getFirstItem();
+        }
+
+        return $this->_masterSubscription;
     }
 
     /**
@@ -326,7 +347,7 @@ class SubscriptionAddonOrder extends AbstractModel
         }
 
         try {
-            $this->_sapOrderBatch = $this->_sapOrderCollectionFactory->create()->getItemById($this->getSalesOrderId());
+            $this->_sapOrderBatch = $this->_sapOrderBatchCollectionFactory->create()->getItemById($this->getSalesOrderId());
 
             return $this->_sapOrderBatch;
         } catch (\Exception $e) {
@@ -366,6 +387,20 @@ class SubscriptionAddonOrder extends AbstractModel
         } else {
             $this->setShipStartDate($todayDate);
         }
+    }
+
+    /**
+     * Is Order Currently Shippable
+     * @return bool
+     * @throws \Exception
+     */
+    public function isCurrenltyShippable() {
+        if ($this->getSubscriptionType() !== 'annual') {
+            $today = new \DateTime();
+            $shipStart = \DateTime::createFromFormat('Y-m-d H:i:s', $this->getShipStartDate());
+            return $today >= $shipStart;
+        }
+        return true;
     }
 
     /**

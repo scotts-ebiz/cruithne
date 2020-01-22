@@ -84,6 +84,11 @@ class SubscriptionOrder extends AbstractModel
     protected $_logger;
 
     /**
+     * @var Subscription
+     */
+    protected $_masterSubscription;
+
+    /**
      * Constructor.
      */
     protected function _construct()
@@ -181,7 +186,7 @@ class SubscriptionOrder extends AbstractModel
             ->create()
             ->getItemById($this->getData('subscription_entity_id'));
 
-        if (! $subscription->getId()) {
+        if (is_null($subscription) || ! $subscription->getId()) {
             return false;
         }
 
@@ -204,6 +209,22 @@ class SubscriptionOrder extends AbstractModel
         }
 
         return '';
+    }
+
+    /**
+     * Get Master Subscription
+     */
+    public function getMasterSubscription()
+    {
+        $masterSubscriptionId = $this->getMasterSubscriptionId();
+
+        if (is_null($this->_masterSubscription)) {
+            $this->_masterSubscription = $this->_subscriptionCollectionFactory->create()
+                ->addFilter('subscription_id', $masterSubscriptionId)
+                ->getFirstItem();
+        }
+
+        return $this->_masterSubscription;
     }
 
     /**
@@ -366,6 +387,20 @@ class SubscriptionOrder extends AbstractModel
         } else {
             $this->setShipStartDate($todayDate);
         }
+    }
+
+    /**
+     * Is Order Currently Shippable
+     * @return bool
+     * @throws \Exception
+     */
+    public function isCurrenltyShippable() {
+        if ($this->getSubscriptionType() !== 'annual') {
+            $today = new \DateTime();
+            $shipStart = \DateTime::createFromFormat('Y-m-d H:i:s', $this->getShipStartDate());
+            return $today >= $shipStart;
+        }
+        return true;
     }
 
     /**

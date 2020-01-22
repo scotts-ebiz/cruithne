@@ -2,6 +2,8 @@
 
 namespace SMG\SubscriptionApi\Helper;
 
+use Magento\Directory\Model\ResourceModel\Region\Collection as RegionCollection;
+use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\QuoteRepository;
 use Magento\Customer\Model\AddressFactory;
@@ -12,6 +14,7 @@ use Magento\Framework\App\Helper\Context;
 use Magento\Quote\Model\QuoteManagement;
 use Magento\Sales\Model\Order;
 use Magento\Store\Model\StoreManagerInterface;
+use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\SubscriptionApi\Exception\SubscriptionException;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\CollectionFactory as SubscriptionAddonOrderCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection as SubscriptionOrderCollection;
@@ -90,10 +93,21 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @var QuoteFactory
      */
     protected $_quoteFactory;
+
     /**
      * @var QuoteRepository
      */
     protected $_quoteRepository;
+
+    /**
+     * @var RegionCollection
+     */
+    protected $_regionCollection;
+
+    /**
+     * @var SapOrderBatchCollectionFactory
+     */
+    protected $_sapOrderBatchCollectionFactory;
 
     /**
      * SubscriptionOrderHelper constructor.
@@ -110,6 +124,8 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @param SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory
      * @param SubscriptionOrder $subscriptionOrder
      * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
+     * @param RegionCollection $regionCollection
+     * @param SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function __construct(
@@ -125,7 +141,9 @@ class SubscriptionOrderHelper extends AbstractHelper
         SubscriptionAddonOrder $subscriptionAddonOrder,
         SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory,
         SubscriptionOrder $subscriptionOrder,
-        SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
+        SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
+        RegionCollection $regionCollection,
+        SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
     ) {
         parent::__construct($context);
 
@@ -141,6 +159,8 @@ class SubscriptionOrderHelper extends AbstractHelper
         $this->_subscriptionAddonOrderCollectionFactory = $subscriptionAddonOrderCollectionFactory;
         $this->_subscriptionOrder = $subscriptionOrder;
         $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
+        $this->_regionCollection = $regionCollection;
+        $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
 
         $this->_store = $storeManager->getStore();
         $this->_websiteId = $this->_store->getWebsiteId();
@@ -150,9 +170,9 @@ class SubscriptionOrderHelper extends AbstractHelper
      * Process orders with the given subscription ID.
      *
      * @param SubscriptionOrder|SubscriptionAddonOrder|string $subscriptionId
+     * @throws LocalizedException
      * @throws SubscriptionException
      * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function processInvoiceWithSubscriptionId($subscriptionId)
@@ -239,7 +259,7 @@ class SubscriptionOrderHelper extends AbstractHelper
      *
      * @return \Magento\Framework\DataObject|SubscriptionOrder|SubscriptionAddonOrder
      */
-    protected function getSubscriptionOrderBySubscriptionId($subscriptionId)
+    public function getSubscriptionOrderBySubscriptionId($subscriptionId)
     {
         /** @var SubscriptionOrderCollection $subscriptionOrderCollection */
         $subscriptionOrderCollection = $this->_subscriptionOrderCollectionFactory->create();
@@ -274,11 +294,11 @@ class SubscriptionOrderHelper extends AbstractHelper
      *
      * @param Customer $customer
      * @param SubscriptionOrder|SubscriptionAddonOrder $subscriptionOrder
-     * @return \Magento\Quote\Model\Quote
+     * @return bool
+     * @throws LocalizedException
+     * @throws SubscriptionException
      * @throws \Magento\Framework\Exception\CouldNotSaveException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws SubscriptionException
      */
     protected function processOrder(Customer $customer, $subscriptionOrder)
     {
@@ -288,8 +308,8 @@ class SubscriptionOrderHelper extends AbstractHelper
         $quote->setCurrency();
         $quote->assignCustomer($customer->getDataModel());
 
-
         foreach ($subscriptionOrder->getOrderItems() as $item) {
+
             // Check if the item has the selected field and if it is set.
             /**
              * @var SubscriptionOrderItem|SubscriptionAddonOrderItem $item
@@ -370,11 +390,35 @@ class SubscriptionOrderHelper extends AbstractHelper
 
         // Add the order ID to teh subscription order.
         $subscriptionOrder->setSalesOrderId($order->getEntityId());
-        $subscriptionOrder->setSubscriptionOrderStatus('complete');
         $subscriptionOrder->save();
 
-        // Create the order invoice.
-        $subscriptionOrder->createInvoice();
+        if ($subscriptionOrder->isCurrenltyShippable()) {
+
+            // Complete the order
+            $subscriptionOrder
+                ->setSubscriptionOrderStatus('complete')
+                ->save();
+
+            // Create the order invoice.
+            $subscriptionOrder->createInvoice();
+        } else {
+            $sapOrderBatch = $this->_sapOrderBatchCollectionFactory
+                ->create()
+                ->addFilter('order_id', $order->getId())
+                ->getFirstItem();
+
+            if (is_null($sapOrderBatch)) {
+                $error = 'Create Orders: Failed to find Sap Batch Order for order ' . $order->getId();
+                $this->_logger->error($error);
+                throw new LocalizedException(__($error));
+            }
+
+            // Prevent SAP from processing
+            $sapOrderBatch
+                ->setData('is_order', 0)
+                ->setData('order_process_date', null)
+                ->save();
+        }
 
         return true;
     }

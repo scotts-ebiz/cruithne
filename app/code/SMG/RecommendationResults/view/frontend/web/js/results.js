@@ -21,7 +21,8 @@ define([
         }),
 
         saveAndSendModal: ko.observable({
-            visible: false
+            visible: false,
+            email: '',
         }),
 
         saveAndSendSuccessModal: ko.observable({
@@ -298,13 +299,22 @@ define([
             );
         },
 
+        saveAndSendResults(e) {
+            if (e && e.preventDefault && typeof e.preventDefault === 'function') {
+                e.preventDefault();
+            }
+
+            this.toggleSaveAndSendModal();
+            this.toggleSaveAndSendSuccessModal();
+        },
+
         formatDate: function (_date) {
             const date = new Date(_date);
 
             return [
-                date.getMonth() + 1, // Months are 0 based
-                date.getDate(),
-                date.getFullYear().toString().slice(2)
+                date.getUTCMonth() + 1, // Months are 0 based
+                date.getUTCDate(),
+                date.getUTCFullYear().toString().slice(2),
             ].join('/')
         },
 

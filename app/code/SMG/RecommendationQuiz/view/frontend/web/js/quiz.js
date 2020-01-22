@@ -139,7 +139,10 @@ define([
             var path = polygon.getPath();
             var point = path.getAt(0);
 
+            // Not a polygon since there are less then 3 points, so remove it.
             if (path.getLength() < 3) {
+                polygon.setMap(null);
+
                 return;
             }
 
@@ -304,16 +307,17 @@ define([
         }
 
         self.handleResize = function() {
+            const wrapper = document.querySelector('.sp-quiz__wrapper');
             const content = document.querySelector('.sp-quiz__content');
 
             if (window.innerWidth < 1024) {
                 const height = document.querySelector('.sp-quiz__footer').offsetHeight;
-                content.style.marginBottom = height+'px';
+                wrapper.style.marginBottom = height + 'px';
+                content.style.paddingBottom = height + 'px';
                 return;
             }
 
-            content.style.marginBottom = '0px';
-
+            wrapper.style.marginBottom = '0px';
         }
 
         window.addEventListener('resize', self.debounce(self.handleResize, 250));
@@ -1158,6 +1162,37 @@ define([
                     }.bind(self),
                 },
             );
+        },
+
+        handleTouchEnd(e, quiz) {
+            e = e.originalEvent;
+            const target = e.target;
+            const elWidth = target.clientWidth;
+            const bound = target.getBoundingClientRect();
+            const x = e.pageX - bound.left;
+            const section = elWidth / 8;
+
+            if (x < section) {
+                target.value = 1;
+                setSliderTrack(target);
+                quiz.setAnswer(1, event, 'tap');
+            } else if (x >= section && (x < (section * 3))) {
+                target.value = 2;
+                setSliderTrack(target);
+                quiz.setAnswer(2, event, 'tap');
+            } else if (x >= section * 3 && x < section * 5) {
+                target.value = 3;
+                setSliderTrack(target);
+                quiz.setAnswer(3, event, 'tap');
+            } else if (x >= section * 5 && x < section * 7) {
+                target.value = 4;
+                setSliderTrack(target);
+                quiz.setAnswer(4, event, 'tap');
+            } else {
+                target.value = 5;
+                setSliderTrack(target);
+                quiz.setAnswer(5, event, 'tap');
+            }
         },
 
         initializeSlider(el) {
