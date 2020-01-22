@@ -2,9 +2,6 @@
 
 namespace SMG\Theme\Block\Html\Header;
 
-use Magento\Customer\Model\Session\Proxy as SessionProxy;
-use SMG\Launch\Model\Session;
-
 /**
  * Logo page header block
  *

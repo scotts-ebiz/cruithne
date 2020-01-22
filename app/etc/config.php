@@ -317,7 +317,6 @@ return [
         'SMG_CustomFields' => 1,
         'SMG_CustomerServiceEmail' => 1,
         'SMG_Directory' => 1,
-        'SMG_Dtm' => 1,
         'SMG_FeaturesList' => 1,
         'SMG_Framework' => 1,
         'SMG_GroupedAssociatedProducts' => 1,
