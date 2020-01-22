@@ -20,7 +20,7 @@ define([
 
 				setTimeout(function () {
 					timer();
-				}, 58);
+				}, 78);
 			}
 
 			//trigger the countdown animation
@@ -53,35 +53,25 @@ define([
 			});
 
 			function fadeimg() {
-				let current_img = 0,
-					slides = document.querySelectorAll('.season-img');
-
-				/**
-				 * Invoke the first iteration immediately, instead of waiting the 3 seconds
-				 */
-					current_img++
-					Array.prototype.forEach.call(slides, (slide, i) => {
-						if (slides[current_img] === slide) {
-							slide.style.opacity = 1;
-							return;
-						}
+				let current_img = 1,
+					slides = Array.from(document.querySelectorAll('.season-img'));
+					/**
+					 * Invoke the first iteration immediately, instead of waiting the 3 seconds
+					 */
+					slides.forEach((slide, i) => {
 						slide.style.opacity = 0;
 					});
+					slides[0].style.opacity = 1;
 
-				setInterval(() => {
-					current_img++;
-
-					Array.prototype.forEach.call(slides, (slide, i) => {
-						if (slides[current_img] === slide) {
-							slide.style.opacity = 1;
-							return;
-						}
-						slide.style.opacity = 0;
-					});
-
-					if (current_img === slides.length) {
-						current_img = 0;
-						slides[0].style.opacity = 1;
+				const imgInt = setInterval(() => {
+					if(current_img !== slides.length - 1) {
+						current_img++;
+						slides.forEach((slide, i) => {
+							slide.style.opacity = 0;
+						});
+						slides[current_img].style.opacity = 1;
+					} else {
+						clearInterval(imgInt);
 					}
 				}, 3000);
 			}
