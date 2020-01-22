@@ -2,10 +2,10 @@
 	<div class="sp-widget-line"></div>
 	<?php if( ! empty( $this->getData('contactAddress') ) ) { ?>
 	<address class="sp-widget-address">
-		<?php echo $block->escapeHtml($block->getData('contactAddress')) ?>
+		<?php echo $block->escapeHtml($block->getData('contactAddress'), array('br')); ?>
 	</address>
 	<?php } ?>
 	<?php if( ! empty( $this->getData('contactPhone') ) ) { ?>
-		<p class="sp-text-base"><?php echo $block->escapeHtml($block->getData('contactPhone')) ?></p>
+		<p class="sp-text-base"><?php echo $block->escapeHtml($block->getData('contactPhone')); ?></p>
 	<?php } ?>
 </div>
