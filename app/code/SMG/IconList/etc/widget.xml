@@ -20,7 +20,7 @@
                 <value>#000000</value>
             </parameter>
             <parameter name="itemTextSize" visible="true" xsi:type="select" source_model="SMG\IconList\Model\Source\TextSize">
-                <label>Item Text Size (in rem)</label>
+                <label>Item Text Size</label>
             </parameter>
             <parameter name="itemTextStyle" visible="true" xsi:type="multiselect" source_model="SMG\IconList\Model\Source\TextStyle">
                 <label>Item Text Style</label>
