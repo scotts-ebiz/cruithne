@@ -307,16 +307,17 @@ define([
         }
 
         self.handleResize = function() {
+            const wrapper = document.querySelector('.sp-quiz__wrapper');
             const content = document.querySelector('.sp-quiz__content');
 
             if (window.innerWidth < 1024) {
                 const height = document.querySelector('.sp-quiz__footer').offsetHeight;
-                content.style.marginBottom = height+'px';
+                wrapper.style.marginBottom = height + 'px';
+                content.style.paddingBottom = height + 'px';
                 return;
             }
 
-            content.style.marginBottom = '0px';
-
+            wrapper.style.marginBottom = '0px';
         }
 
         window.addEventListener('resize', self.debounce(self.handleResize, 250));
