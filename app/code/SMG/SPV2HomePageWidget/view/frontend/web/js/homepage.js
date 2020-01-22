@@ -20,7 +20,7 @@ define([
 
 				setTimeout(function () {
 					timer();
-				}, 16);
+				}, 18);
 			}
 
 			//trigger the countdown animation
