@@ -130,6 +130,45 @@ define([
             return this;
         },
 
+        getAlreadySubscribedModalContent(response) {
+            return `<h5 class="sp-h5 sp-text-black sp-text-center">You're Already Subscribed</h5>
+                    <h6 class="sp-h6 sp-text-black sp-text-center">Looks like you already have a Scotts Program Subscription.</h6>
+                    <p><strong>Start a new subscription</strong><br />
+                        Did you move or have your lawn conditions changed? We can cancel your current subscription and start a new one.
+                    </p>
+                    <p><strong>Keep my current subscription</strong><br />
+                        Don’t want to cancel? You can keep your current plan and subscription option. 
+                    </p>
+                     <p class="sp-text-center"><strong>For questions, email us at scotts-orders@scotts.com or call us at <a href="tel:18772203091">1-877-220-3091</a>.</strong></p>
+                    <div class="modal-popup-cta sp-text-center">
+                        <button id="startNewSubscription" class="sp-button sp-button--primary">Start a new subscription</button>
+                    </div>
+                    <div class="sp-text-center">
+                        <a href="${response.redirect_url}">Keep my current subscription</a>
+                    </div>`;
+        },
+
+        getCancellationModalContent(response) {
+            return `
+                <h5 class="sp-h5 sp-text-black sp-text-center">Confirm Your Cancellation</h5>
+                <h6 class="sp-h6 sp-text-black sp-text-center">By cancelling your subscription, the following will happen:</h6>
+                <div class="content">
+                    <ul>
+                        <li>Please see your email for your refund amount. This should appear in your account within 7 days.</li>
+                        <li>You will no longer be billed</li>
+                        <li>You will no longer receive product shipments</li>
+                        <li>You will still have an online account with Scotts</li>
+                    </ul>
+                    <p class="sp-text-center"><strong>For questions, email us at scotts-orders@scotts.com or call us at <a href="tel:18772203091">1-877-220-3091</a>.</strong></p>
+                    <div class="modal-popup-cta sp-text-center">
+                        <button type="button" id="cancelSubscription" class="sp-button sp-button--primary">Cancel My Subscription</button>
+                    </div>
+                    <div class="sp-text-center">
+                        <a href="${response.redirect_url}">Never mind, Take Me Back</a>
+                    </div>
+                </div>`;
+        },
+
         /**
          * Check if the customer has an active Recurly Subscription
          *
@@ -153,26 +192,9 @@ define([
                         self.hasSubscription(true);
 
                         // Show modal
-                        $('body').append(
-                            '<div id="popup-modal" class="modal-popup--subscriptions">'
-                                + '<h5 class="sp-h5 sp-text-black sp-text-center">Confirm Your Cancellation</h5>'
-                                + '<h6 class="sp-h6 sp-text-black sp-text-center">By cancelling your subscription, the following will happen:</h6>'
-                                + '<div class="content">'
-                                    + '<ul>'
-                                        + '<li>Please see your email for your refund amount. This should appear in your account within 7 days.</li>'
-                                        + '<li>You will no longer be billed</li>'
-                                        + '<li>You will no longer receive product shipments</li>'
-                                        + '<li>You will still have an online account with Scotts</li>'
-                                    + '</ul>'
-                                    + '<p class="sp-text-center"><strong>Questions or concerns? Contact us Monday through Friday between 8am and 5pm EST at <a href="tel:18882703714">1-888-270-3714</a></strong></p>'
-                                    + '<div class="modal-popup-cta sp-text-center">'
-                                        + '<button type="button" id="cancelSubscription" class="sp-button sp-button--primary">Cancel My Subscription</button>'
-                                    + '</div>'
-                                    + '<div class="sp-text-center">'
-                                        + '<a href="' + response.redirect_url + '">Never mind, Take Me Back</a>'
-                                    + '</div>'
-                                + '</div>'
-                            + '</div>'
+                        $('body').append(`<section id="popup-modal" class="modal-popup--subscriptions">
+                            ${self.getAlreadySubscribedModalContent(response)}
+                            </section>`
                         );
 
                         var options = {
@@ -190,8 +212,16 @@ define([
                             },
                         };
 
+                        document.getElementById('startNewSubscription').addEventListener('click', (event) => {
+                            event.preventDefault();
+                            $('#popup-modal').html(self.getCancellationModalContent(response));
+                        });
+
                         var popup = modal(options, $('#popup-modal'));
                         $('#popup-modal').modal('openModal');
+
+
+
                     }
                 },
                 complete() {
