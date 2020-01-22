@@ -134,6 +134,8 @@ define(
             },
 
             updateRecurlyFormData: function () {
+                var shippingAddress = this.getShippingAddress();
+
                 // Check if customer has selected to use the same address for both billing and shipping
                 var isBillingSameAsShipping = ($('input[name="billing-address-same-as-shipping"]:checked').val() == 'on') ? true : false;
 
@@ -146,7 +148,7 @@ define(
                 // Get full country name by it's id
                 var countryName = $('select[name="country_id"] option[value="' + address.country_id + '"]').attr('data-title');
 
-                if (address.postcode != window.sessionStorage.getItem('lawn-zip')) {
+                if (shippingAddress.postcode != window.sessionStorage.getItem('lawn-zip')) {
                     Modal(this.zipModalOptions, $('#zip-popup-modal'));
                     $('#zip-popup-modal').modal('openModal');
 
