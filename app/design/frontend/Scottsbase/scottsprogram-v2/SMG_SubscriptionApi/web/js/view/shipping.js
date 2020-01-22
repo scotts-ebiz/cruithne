@@ -164,7 +164,7 @@ define([
                                         + '<li>You will no longer receive product shipments</li>'
                                         + '<li>You will still have an online account with Scotts</li>'
                                     + '</ul>'
-                                    + '<p class="sp-text-center"><strong>Questions or concerns? Contact us Monday through Friday between 8am and 5pm EST at <a href="tel:18882703714">1-888-270-3714</a></strong></p>'
+                                    + '<p class="sp-text-center"><strong>For questions, email us at scotts-orders@scotts.com or call us at <a href="tel:18772203091">1-877-220-3091</a>.</strong></p>'
                                     + '<div class="modal-popup-cta sp-text-center">'
                                         + '<button type="button" id="cancelSubscription" class="sp-button sp-button--primary">Cancel My Subscription</button>'
                                     + '</div>'
