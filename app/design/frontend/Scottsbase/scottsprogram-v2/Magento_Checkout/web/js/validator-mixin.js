@@ -11,12 +11,12 @@ return function (validator) {
   validator.addRule(
     'required-entry-firstname',
     function (value) {
-      let regexSpecials = 'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸåÅæÆœŒ';
       if ($("input[name='firstname']").val() != '') {
         if (!isNaN(value)) {
           return false;
         }
         if( value.match(/^[a-zA-Z\.\-\'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸåÅæÆœŒ]*$/) ) {
+
            return true
         }else{
           return false;
@@ -57,6 +57,7 @@ return function (validator) {
           return false;
         }
         if( value.match(/^[a-zA-Z\.\-\'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸåÅæÆœŒ]*$/) ) {
+
            return true
         }else{
           return false;
@@ -78,7 +79,7 @@ return function (validator) {
         if( value.match(/^[a-zA-Z\.\-\'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸåÅæÆœŒ]*$/) ) {
            return true
         }else{
-          return false; 
+          return false;
         }
       } else {
         return !$.mage.isEmpty(value);

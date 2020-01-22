@@ -316,6 +316,7 @@ return [
         'SMG_CreditReason' => 1,
         'SMG_Creditvantiv' => 1,
         'SMG_CustomFields' => 1,
+        'SMG_Customer' => 1,
         'SMG_CustomerServiceEmail' => 1,
         'SMG_Directory' => 1,
         'SMG_Dtm' => 1,
