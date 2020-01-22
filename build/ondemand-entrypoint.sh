@@ -22,6 +22,7 @@ service collector start
 
 # always start cron
 service cron start
+service logstash start
 
 # CMD "exec /usr/sbin/apachectl -DFOREGROUND -k start"
 exec /usr/sbin/apachectl -DFOREGROUND
