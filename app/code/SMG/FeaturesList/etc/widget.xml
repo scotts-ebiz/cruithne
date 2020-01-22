@@ -22,7 +22,7 @@
 
             <parameter name="featuresListHeadlineSize" visible="false" xsi:type="select"
                        source_model="SMG\FeaturesList\Model\Source\FeaturesListHeadlineSize">
-                <label>Main Headline Size (rem)</label>
+                <label>Main Headline Size</label>
             </parameter>
 
             <parameter name="featuresListHeadlineColor" visible="true" xsi:type="text">
@@ -44,7 +44,7 @@
 
             <parameter name="featureHeadlineSize" visible="true" xsi:type="select"
                        source_model="SMG\FeaturesList\Model\Source\FeatureHeadlineSize">
-                <label>Feature Headline Size (rem)</label>
+                <label>Feature Headline Size</label>
             </parameter>
 
             <parameter name="featureHeadlineColor" visible="true" xsi:type="text">
@@ -66,7 +66,7 @@
 
             <parameter name="featureTextSize" visible="true" xsi:type="select"
                        source_model="SMG\FeaturesList\Model\Source\FeatureTextSize">
-                <label>Feature Text Size (rem)</label>
+                <label>Feature Text Size</label>
             </parameter>
 
             <parameter name="featureTextColor" visible="true" xsi:type="text">
