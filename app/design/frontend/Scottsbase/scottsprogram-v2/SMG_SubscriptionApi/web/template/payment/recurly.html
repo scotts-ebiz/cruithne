@@ -33,6 +33,7 @@
                             aria-required="true"
                             type="checkbox"
                             value="true"
+                            data-bind="checked: rscoChecked"
                         >
                         <span
                             class="sp-p2 sp-text-green-1"
@@ -88,7 +89,11 @@
                 class="primary checkout sp-button sp-button--primary sp-button--get-started"
                 data-bind="
                     click: myPlaceOrder,
-                    attr: {title: $t('Place Order')}
+                    attr: {
+                        title: $t('Place Order'),
+                        disabled: checkoutButtonDisabled
+                    },
+                    css: { 'sp-button--inactive': checkoutButtonDisabled }
                     "
                 type="submit"
             >
