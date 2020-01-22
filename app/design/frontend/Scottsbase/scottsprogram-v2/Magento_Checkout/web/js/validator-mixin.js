@@ -15,7 +15,7 @@ return function (validator) {
         if (!isNaN(value)) {
           return false;
         }
-        if( value.match(/^[a-zA-Z\.\-\'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸåÅæÆœŒ]*$/) ) {
+        if( value.match(/^[a-zA-Z\.\-\'\sàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸåÅæÆœŒœŒçÇðÐøØ¿¡ß]*$/) ) {
 
            return true
         }else{
@@ -37,7 +37,7 @@ return function (validator) {
         if (!isNaN(value)) {
           return false;
         }
-        if( value.match(/^[a-zA-Z\.\-\'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸåÅæÆœŒ]*$/) ) {
+        if( value.match(/^[a-zA-Z\.\-\'\sàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸåÅæÆœŒœŒçÇðÐøØ¿¡ß]*$/) ) {
            return true
         }else{
           return false;
@@ -56,7 +56,7 @@ return function (validator) {
         if (!isNaN(value)) {
           return false;
         }
-        if( value.match(/^[a-zA-Z\.\-\'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸåÅæÆœŒ]*$/) ) {
+        if( value.match(/^[a-zA-Z\.\-\'\sàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸåÅæÆœŒœŒçÇðÐøØ¿¡ß]*$/) ) {
 
            return true
         }else{
@@ -76,7 +76,7 @@ return function (validator) {
         if (!isNaN(value)) {
           return false;
         }
-        if( value.match(/^[a-zA-Z\.\-\'àèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸåÅæÆœŒ]*$/) ) {
+        if( value.match(/^[a-zA-Z\.\-\'\sàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸåÅæÆœŒœŒçÇðÐøØ¿¡ß]*$/) ) {
            return true
         }else{
           return false;
