@@ -21,6 +21,10 @@ $color_black20_shade                                          : #333333;
 $color_lightyellow_shade                                      : #ffc;
 
 
+// Cart / Checkout Colors
+$checkout-green                                               : #1d5632;
+
+
 
 
 //  ---------------------------------------------
@@ -64,3 +68,27 @@ $opensans: 'Open Sans', sans-serif;
 
 
 
+//  ---------------------------------------------
+//  Scotts Base - Cart / Checkout Buttons
+//  ---------------------------------------------
+
+
+//  Cart / Checkout - Generic button
+$cart-checkout-button__font-family                            : $font-family__quaternary !default;
+$cart-checkout-button__font-weight                            : $font-weight__bold !default;
+$cart-checkout-button__line-height                            : 0 !default;
+$cart-checkout-button__border-radius                          : 3px !default;
+
+$cart-checkout-button__color                                  : $checkout-green !default;
+$cart-checkout-button__hover__color                           : $checkout-green !default;
+$cart-checkout-button__active__color                          : $checkout-green !default;
+
+
+//  Cart / Checkout - Large button
+$cart-checkout-button__font-size__l                           : $font-size__s !default;
+$cart-checkout-button__padding__l                             : 14px 17px !default;
+
+
+//  Cart / Checkout - Small button
+$cart-checkout-button__font-size__s                           : $font-size__s !default;
+$cart-checkout-button__padding__s                             : $indent__xs 8px !default;
