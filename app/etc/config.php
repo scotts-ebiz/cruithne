@@ -353,6 +353,7 @@ return [
         'SMG_ShipTracking' => 1,
         'SMG_Shipping' => 1,
         'SMG_SpecsList' => 1,
+        'SMG_SubscriptionAccounts' => 1,
         'SMG_SubscriptionApi' => 1,
         'SMG_SubscriptionOptions' => 1,
         'SMG_SubscriptionCheckout' => 1,

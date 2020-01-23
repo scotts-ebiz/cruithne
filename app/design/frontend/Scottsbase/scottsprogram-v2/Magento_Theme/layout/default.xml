@@ -34,7 +34,7 @@
 			<container name="header.panel.wrapper" htmlClass="panel wrapper" htmlTag="div" before="-">
 			</container>
 			<container name="header-wrapper" label="Page Header" as="header-wrapper" htmlTag="div" htmlClass="sp-container">
-				<block class="Magento\Theme\Block\Html\Header\Logo" name="logo">
+				<block class="Magento\Theme\Block\Html\Header\Logo" name="logo" cacheable="false">
 					<arguments>
 						<argument name="logo_file" xsi:type="string">images/scotts_logo@2x.png</argument>
 						<argument name="logo_img_width" xsi:type="number">113</argument>
@@ -82,10 +82,7 @@
 		</referenceContainer>
 		<referenceContainer name="columns.top">
 			<block class="Magento\Theme\Block\Html\Title" name="page.main.title" template="Magento_Theme::html/title.phtml"/>
-			<container name="page.messages" htmlTag="div" htmlClass="page messages">
-				<block class="Magento\Framework\View\Element\Template" name="ajax.message.placeholder" template="Magento_Theme::html/messages.phtml"/>
-				<block class="Magento\Framework\View\Element\Messages" name="messages" as="messages" template="Magento_Theme::messages.phtml"/>
-			</container>
+			<referenceContainer name="page.messages" remove="true"/>
 		</referenceContainer>
 		<referenceContainer name="main" htmlClass="sp-content">
 			<container name="content" label="Main Content Area" />
@@ -106,5 +103,8 @@
 			<block name="customer.section.config" class="Magento\Customer\Block\SectionConfig" template="Magento_Customer::js/section-config.phtml"/>
 			<block name="customer.customer.data" class="Magento\Customer\Block\CustomerData" template="Magento_Customer::js/customer-data.phtml"/>
 		</referenceContainer>
+		<referenceBlock name="catalog.compare.link" remove="true"/>
+    	<referenceBlock name="catalog.compare.sidebar" remove="true"/>
+    	<referenceBlock name="sale.reorder.sidebar" remove="true"/>
 	</body>
 </page>

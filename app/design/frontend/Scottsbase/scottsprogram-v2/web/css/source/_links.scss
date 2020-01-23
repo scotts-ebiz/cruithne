@@ -1,6 +1,8 @@
 a,
 .gigya-screen a.gigya-composite-control-link,
-.gigya-screen a:link.gigya-composite-control-link {
+.gigya-screen a:link.gigya-composite-control-link,
+.gigya-screen a.gigya-terms-of-use,
+.gigya-screen a:link.gigya-terms-of-use {
   @extend .sp-p1;
 
   color: $green-1;

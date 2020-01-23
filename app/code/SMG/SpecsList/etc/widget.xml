@@ -35,7 +35,7 @@
 
             <parameter name="headertextsize" visible="true" xsi:type="select"
                        source_model="SMG\SpecsList\Model\Source\HeaderTextSize">
-                <label>Header Text Size (in rem)</label>
+                <label>Header Text Size</label>
             </parameter>
 
             <parameter name="headerTextStyle" visible="true" xsi:type="multiselect"
@@ -55,7 +55,7 @@
 
             <parameter name="listvaluetextsize" visible="true" xsi:type="select"
                        source_model="SMG\SpecsList\Model\Source\TextSize">
-                <label>List Value Text Size (in rem)</label>
+                <label>List Value Text Size</label>
             </parameter>
 
             <parameter name="listvaluetextstyle" visible="true" xsi:type="multiselect"

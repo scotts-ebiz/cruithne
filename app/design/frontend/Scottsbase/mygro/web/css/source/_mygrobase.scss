@@ -1,42 +1,12 @@
 // MyGro Base
-body { 
-    @include font-hellix-regular();
-    font-size: 1.2rem;
-    h1 {
-        color: #333;
-    }
-    h2 {
-        font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
-        font-size: 2.5rem;
-        letter-spacing: 0.5px;
-        @media only screen and (max-width: $screen__l) {
-        font-size: 2.1rem;
-        }
-    }
-    h3 {
-        font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
-        font-size: 1.8rem;
-        letter-spacing: 0.5px;
-        @media only screen and (max-width: $screen__l) {
-            font-size: 1.5rem;
-        }
-    }
-    p {
-      @include font-hellix-regular();
-      font-size: 1.0rem;
-    }
+
+.nav-sections {
+  @include lib-css(letter-spacing, $navigation-desktop_letter-spacing);
+  @include lib-css(text-transform, $navigation-level0-item__text-transform);
 }
 
-a, alink {
-    color: $mygro-green;
-}
-
-a:visited, .alink:visited {
-    color: $mygro-green;
-}
-
-a:hover {
-    color: $mygro-dark-green;
+h3 {
+  letter-spacing: 0.5px;
 }
 
 [class^="icon-"],
@@ -55,7 +25,6 @@ a:hover {
 .skip-content-header{
     display:none;
 }
-
 
 .page-wrapper {
     .page-header {
@@ -98,7 +67,7 @@ a:hover {
             }
             .logo {
                 @include max-screen($screen__l) {
-                    max-width: 6rem;
+                    max-width: 10rem;
                     position: absolute!important;
                     left: 50%;
                     transform: translateX(-50%);
@@ -116,7 +85,6 @@ a:hover {
                     display: flex;
                     align-items: center;
                     color: $mygro-green;
-                    font-size: 1rem;
                     position: relative;
                     text-decoration: none;
                     text-align: right;
@@ -127,12 +95,12 @@ a:hover {
                     }
                     .icon-bag {
                         color: $mygro-green;
-                        font-size: 1.5rem;
                         display: block;
                         padding-right: 5px;
 
                         &:before {
                             content: '\e902';
+                            font-size: 2.5rem;
                         }
                     }
                     .cart-total-container {
@@ -140,12 +108,10 @@ a:hover {
                         display: inline-block;
                         position: relative;
                         text-transform: uppercase;
-                        font-size: $font10;
-                        font-size: inherit;
                         text-align: left;
 
                         .cart-total-title {
-                            font-size: 0.7rem;
+                            font-size: $font-size__s;
                             text-transform: uppercase;
                             display: block;
 
@@ -155,10 +121,10 @@ a:hover {
                         }
                         .total-amt {
                             display: block;
-                            font-size: 1.2rem;
+                            font-size: $font-size__l;
 
                             @include max-screen($screen__s) {
-                                font-size: 1rem;
+                                font-size: $font-size__m;
                                 font-weight: 700;
                             }
                             .price {
@@ -237,45 +203,25 @@ a:hover {
                     }
                 }
                 .nav-sections-item-content {
-                    @include font-hellix-regular(0.875rem, $mygro-black, false, false, 1px);
-                    text-transform: uppercase;
                     @include max-screen($screen__l) {
                         margin-top: 0;
                         padding: 0;
                     }
                     .navigation {
                         background: transparent;
-                        .level0 {
-                            @include max-screen($screen__l) {
-                                border: none;
-                                font-size: 0.875rem;
-                            }
-                        }
                         ul {
                             li.level-top {
                                 a.level-top {
-                                    color: $mygro-black;
-                                    &:hover {
-                                        color: $mygro-green;
-                                        transition: color 0.2s linear;
-                                    }
                                     span {
                                         @media only screen and (max-width: 1023px) {
                                             margin-left: 0;
                                         }
                                     }
                                 }
-                                a.level-top.active {
-                                    color: $mygro-green;
-                                    @include font-hellix-heavy;
-                                    border-style: none;
-                                }
                             }
                             li.level0.active.level-top {
                                 a.level-top {
-                                    color: $mygro-green;
                                     @include font-hellix-heavy;
-                                    border-style: none;
                                 }
                             }
                         }
@@ -286,9 +232,7 @@ a:hover {
     }
 
     .page-main {
-        color: $mygro-gray;
-        font-size: 1rem;
-        margin-top: 6rem;
+        margin-top: 95px;
 
         a:active,
         .alink:active {
@@ -300,11 +244,6 @@ a:hover {
             text-decoration: none;
         }
 
-        .column.main {
-            .cart-empty {
-                font-size: 1rem;
-            }
-        }
         body > section,
         .column.main > section {
             max-width: 1440px;
@@ -474,8 +413,6 @@ a:hover {
                 }
             }
             h3 {
-                font-size: 1.2rem;
-                color: $mygro-black-alt;
                 margin-bottom: 0.25rem;
             }
             ul {
@@ -485,13 +422,17 @@ a:hover {
                 display: inline-block;
                 li {
                     text-align: left;
-                  @media only screen and (max-width: $screen__s){
-                    text-align: center;
-                  }
-                    @include font-hellix-regular(0.875rem, $mygro-gray);
-
+                    color: $mygro-gray;
+                    font-size: $font-size__s;
+                    @media only screen and (max-width: $screen__s){
+                        text-align: center;
+                    }
                     a {
-                        @include font-hellix-regular(0.875rem, $mygro-gray);
+                        color: $mygro-gray;
+                        font-size: $font-size__s;
+                        &:hover {
+                            color: $mygro-gray;
+                        }
                     }
                 }
             }

@@ -4,7 +4,6 @@
 	$subscriptions = $block->getCustomerSubscriptions();
 
 	if( $subscriptions['success'] == true && ! empty( $subscriptions['subscriptions'] ) ) {
-		$isAnnualSubscription = $subscriptions['is_annual'];
 		$subscriptionsList = $subscriptions['subscriptions'];
 	?>
 	<div class="admin__data-grid-wrap admin__data-grid-wrap-static">
@@ -17,9 +16,7 @@
 					<th class="data-grid-th no-link">Status</th>
 					<th class="data-grid-th no-link">Subscribed On</th>
 					<th class="data-grid-th no-link">Starts On</th>
-					<?php if( ! $isAnnualSubscription ) { ?>
-					<th class="data-grid-th no-link">Actions</th>
-					<?php } ?>
+					<th class="data-grid-th no-link">Amount</th>
 				</tr>
 			</thead>
 			<tbody>
@@ -31,33 +28,19 @@
 						<td><?php echo $subscription->state; ?></td>
 						<td><?php echo $subscription->activated_at->format( 'd F, Y' ); ?></td>
 						<td><?php echo $subscription->current_term_started_at->format( 'd F, Y' ); ?></td>
-						<?php if( ! $isAnnualSubscription ) { ?>
-						<td>
-							<form action="<?php echo $block->getCancelUrl(); ?>" method="POST">
-								<input type="hidden" name="form_key" value="<?php echo $block->getFormKey(); ?>" />
-								<input type="hidden" name="subscription_id" value="<?php echo $subscription->uuid; ?>" />
-								<input type="hidden" name="subscription_type" value="<?php echo $subscription->plan->plan_code; ?>" />
-								<input type="hidden" name="recurly_account_code" value="<?php echo $block->getCustomerRecurlyAccountCode(); ?>" />
-								<button type="submit">Cancel Subscription</button>
-							</form>
-						</td>
-						<?php } ?>
+						<td>$<?php echo $block->convertAmountToDollars( $subscription->unit_amount_in_cents ); ?></td>
 					</tr>
 				<?php } ?>
 			</tbody>
 		</table>
-		<?php if( $isAnnualSubscription ) { ?>
 		<div>
-			<p>This customer has an <strong>annual subscription</strong>. Clicking "Cancel Subscription" will cancel all of it's active and future subscriptions.</p>
+			<p>Clicking "Cancel Subscription" will cancel all of it's active and future subscriptions. The customer will get <strong>$<?php echo $subscriptions['total_amount']; ?></strong> refund. </p>
 			<form action="<?php echo $block->getCancelUrl(); ?>" method="POST">
 				<input type="hidden" name="form_key" value="<?php echo $block->getFormKey(); ?>" />
-				<input type="hidden" name="subscription_id" value="Not necessary for annual" />
-				<input type="hidden" name="subscription_type" value="annual" />
 				<input type="hidden" name="recurly_account_code" value="<?php echo $block->getCustomerRecurlyAccountCode(); ?>" />
 				<button type="submit">Cancel Subscription</button>
 			</form>
 		</div>
-		<?php } ?>
 	</div>
 	<?php } else { ?>
 		<?php if( $subscriptions['success'] == false ) { ?>

@@ -22,8 +22,26 @@
 }
 
 .modal-popup--subscriptions {
+  position: relative;
+
   .modal-popup-cta {
     margin-bottom: 15px;
+  }
+
+  .modal-popup--subscriptions__close,
+  .modal-popup--subscriptions__close:hover {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    background-image: url(https://test_magento_image_repo.storage.googleapis.com/icon-close.svg);
+    width: 20px;
+    height: 20px;
+    display: block;
+    border: none;
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-color: transparent;
+    padding: 0;
   }
 }
 

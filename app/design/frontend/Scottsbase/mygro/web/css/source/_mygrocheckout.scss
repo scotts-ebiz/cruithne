@@ -5,20 +5,6 @@
             .columns {
                 .column.main {
                     .checkout-container {
-                        .opc-progress-bar {
-                            .opc-progress-bar-item {
-                                &._active {
-                                    &:before {
-                                        background: $color_dark30_green_shade;
-                                    }
-                                    span {
-                                        &:before {
-                                            background: $color_dark30_green_shade;
-                                        }
-                                    }
-                                }
-                            }
-                        }
                         .opc-wrapper {
                             .checkout-shipping-method {
                                 .actions-toolbar {

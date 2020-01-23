@@ -10,23 +10,38 @@ define([
         isLoading: ko.observable(true),
         quiz: ko.observable(null),
         results: ko.observable({}),
-        activeProductIndex: ko.observable(0), // for the tab menu
+        activeSeasonIndex: ko.observable(0), // for the tab menu
 
         pdp: ko.observable({
             visible: false,
             activeTab: 'learn', // 'learn' or 'product_specs'
             mode: 'plan', // 'plan' or 'subscription'
+            product: null,
+        }),
+
+        saveAndSendModal: ko.observable({
+            visible: false
+        }),
+
+        saveAndSendSuccessModal: ko.observable({
+            visible: false
         }),
 
         initialize(config) {
-            const self = this
+            const self = this;
 
             if (config.zip) {
                 window.sessionStorage.setItem('lawn-zip', config.zip);
+            } else {
+                config.zip = window.sessionStorage.getItem('lawn-zip');
             }
 
-            if (!window.sessionStorage.getItem('lawn-zip')) {
+            if (!config.zip) {
                 window.location.href = '/quiz';
+            }
+
+            if (!config.quiz_id) {
+                config.quiz_id = window.sessionStorage.getItem('quiz-id');
             }
 
             if (!config.quiz_id) {
@@ -35,20 +50,48 @@ define([
                 self.loadQuizResults(config.quiz_id, config.zip);
             }
 
-            const lawnArea = window.sessionStorage.getItem('lawn-area')
+            const lawnArea = window.sessionStorage.getItem('lawn-area');
             if (lawnArea) {
-                self.lawnArea(lawnArea)
+                self.lawnArea(lawnArea);
             }
 
-            const lawnType = window.sessionStorage.getItem('lawn-type')
+            const lawnType = window.sessionStorage.getItem('lawn-type');
             if (lawnType) {
-                self.lawnType(lawnType)
+                self.lawnType(lawnType);
             }
 
             self.products = ko.computed(function () {
                 return self.results().plan
                     ? self.results().plan.coreProducts
                     : []
+            });
+
+            self.seasons = ko.computed(() => {
+                const uniqueSeasons = self.products().reduce((items, product) => {
+                    if (items.indexOf(product.season) === -1) {
+                        items.push(product.season);
+                    }
+
+                    return items;
+                }, []);
+
+                const seasons = uniqueSeasons.map((season) => {
+                    const products = self.products().filter((product) => {
+                        return product.season === season;
+                    });
+
+                    return {
+                        season: season,
+                        products: self.products().filter((product) => {
+                            return product.season === season;
+                        }),
+                        total: products.reduce((price, product) => {
+                            return price + (+product.price * +product.quantity);
+                        }, 0),
+                    }
+                });
+
+                return seasons;
             });
 
             // used to indicate which product is up next for delivery
@@ -65,9 +108,10 @@ define([
                 return (nextProductIndex + 1) % products.length
             });
 
-            self.activeProduct = ko.computed(function () {
-                return self.products()[self.activeProductIndex()]
+            self.activeSeason = ko.computed(function () {
+                return self.seasons()[self.activeSeasonIndex()]
             });
+
         },
 
         loadQuizResults(id, zip) {
@@ -115,6 +159,17 @@ define([
                             window.sessionStorage.setItem('quiz-id', data.id);
                         }
                     },
+                    error(response) {
+                        response = JSON.parse(response.responseText);
+
+                        if (Array.isArray(response)) {
+                            response = response[0];
+                        }
+
+                        if (response.redirect) {
+                            window.location.href = response.redirect;
+                        }
+                    },
                 },
             );
         },
@@ -130,6 +185,7 @@ define([
                 this.completeQuiz();
             } else {
                 // Quiz not found, need to redirect.
+                console.log('loading quiz responses');
                 window.location.href = '/quiz';
             }
         },
@@ -195,10 +251,10 @@ define([
 
         productFeatures: function (product) {
             return [
-                product.miniClaim1,
-                product.miniClaim2,
-                product.miniClaim3,
-            ].filter(x => !!x)
+                { image: product.miniClaim1, text: product.miniClaim1Description },
+                { image: product.miniClaim2, text: product.miniClaim2Description },
+                { image: product.miniClaim3, text: product.miniClaim3Description },
+            ].filter(x => !!x.image)
         },
 
         formatCurrency: function (num) {
@@ -228,7 +284,7 @@ define([
             return 'https://test_magento_image_repo.storage.googleapis.com/' + icon
         },
 
-        togglePDP: function () {
+        togglePDP: function (product) {
             if (this.pdp().visible) {
                 // hide
                 $('body').removeClass('no-scroll');
@@ -240,7 +296,8 @@ define([
 
             this.pdp({
                 ...this.pdp(),
-                visible: !this.pdp().visible
+                visible: !this.pdp().visible,
+                product: product
             });
         },
 
@@ -248,12 +305,33 @@ define([
             this.pdp({ ...this.pdp(), activeTab: tab })
         },
 
-        addToOrder: function () {
-            // TODO: Add the product to the order
-            this.togglePDP();
+        preventDefault: function () {
         },
 
-        preventDefault: function () {
+        toggleSaveAndSendModal: function() {
+            if( this.saveAndSendModal().visible) {
+                $('body').removeClass('no-scroll');
+            } else {
+                $('body').addClass('no-scroll')
+            }
+
+            this.saveAndSendModal({
+                ...this.saveAndSendModal(),
+                visible: !this.saveAndSendModal().visible
+            })
+        },
+
+        toggleSaveAndSendSuccessModal: function() {
+            if( this.saveAndSendSuccessModal().visible) {
+                $('body').removeClass('no-scroll');
+            } else {
+                $('body').addClass('no-scroll')
+            }
+
+            this.saveAndSendSuccessModal({
+                ...this.saveAndSendSuccessModal(),
+                visible: !this.saveAndSendSuccessModal().visible
+            })
         }
     });
 });
