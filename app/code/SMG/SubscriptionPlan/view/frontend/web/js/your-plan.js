@@ -107,6 +107,11 @@ define([
 
         },
 
+        toggleAccordion(index) {
+            const accordionTabs = Array.from(document.querySelectorAll('.accordion > li'));
+            accordionTabs[index].classList.contains('active') ? accordionTabs[index].classList.remove('active') : accordionTabs[index].classList.add('active');
+        },
+
         loadQuizResults(id, zip) {
             const self = this;
             let minTimePassed = false;
@@ -166,9 +171,9 @@ define([
             const date = new Date(_date);
 
             return [
-                date.getMonth() + 1, // Months are 0 based
-                date.getDate(),
-                date.getFullYear().toString().slice(2)
+                date.getUTCMonth() + 1, // Months are 0 based
+                date.getUTCDate(),
+                date.getUTCFullYear().toString().slice(2)
             ].join('/')
         },
 
