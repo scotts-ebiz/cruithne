@@ -18,12 +18,39 @@ define(
 
             initialize: function () {
                 this._super();
+                this.rscoChecked = ko.observable(false);
+                this.cardInputTouched = ko.observable(false);
+                let self = this;
+                this.checkoutButtonDisabled = ko.computed(function() {
+                    return (
+                        !self.rscoChecked() ||
+                        !self.cardInputTouched()
+                    );
+                });
                 this.subscriptionType = ko.observable(window.sessionStorage.getItem('subscription_plan'));
                 this.loading = ko.observable(false);
 
-                setTimeout(function () {
-                    recurly.configure(window.recurlyApi);
-                }, 2000);
+                let interval = setInterval(() => {
+                    if (recurly) {
+                        recurly.configure(window.recurlyApi);
+                        /**
+                         * Change cardInputTouched boolean when recurly returns a field state change
+                         * that includes a false valid for either number, cvv or expiry
+                         */
+                        recurly.on('change', (state) => {
+                            if (
+                                !state.fields.card.number.empty ||
+                                !state.fields.card.cvv.empty ||
+                                !state.fields.card.expiry.empty
+                            ) {
+                                self.cardInputTouched(true);
+                            } else {
+                                self.cardInputTouched(false);
+                            }
+                        });
+                        clearInterval(interval);
+                    }
+                }, 250);
 
                 // Setup zip modal
                 this.zipModalOptions = {
@@ -134,6 +161,8 @@ define(
             },
 
             updateRecurlyFormData: function () {
+                var shippingAddress = this.getShippingAddress();
+
                 // Check if customer has selected to use the same address for both billing and shipping
                 var isBillingSameAsShipping = ($('input[name="billing-address-same-as-shipping"]:checked').val() == 'on') ? true : false;
 
@@ -146,7 +175,7 @@ define(
                 // Get full country name by it's id
                 var countryName = $('select[name="country_id"] option[value="' + address.country_id + '"]').attr('data-title');
 
-                if (address.postcode != window.sessionStorage.getItem('lawn-zip')) {
+                if (shippingAddress.postcode != window.sessionStorage.getItem('lawn-zip')) {
                     Modal(this.zipModalOptions, $('#zip-popup-modal'));
                     $('#zip-popup-modal').modal('openModal');
 
