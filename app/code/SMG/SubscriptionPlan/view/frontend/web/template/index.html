@@ -88,7 +88,7 @@
                                         <span data-bind="html: $parent.formatDate($data.products[0].applicationEndDate)"></span></div>
                                 </div>
                             </button>
-                            <!-- ko with: { season: $data, formatDate: $parent.formatDate, productFeatures: $parent.productFeatures } -->
+                            <!-- ko with: { season: $data, formatDate: $parent.formatDate, productFeatures: $parent.productFeatures, context: $parentContext.$rawData } -->
                                 <div class="lg:sp-hide">
                                     <!-- ko template: "SMG_SubscriptionPlan/active-season.html" --><!-- /ko -->
                                 </div>
@@ -98,7 +98,7 @@
 
                     <!-- Product Detail -->
                     <!-- ko if: activeSeason() -->
-                    <!-- ko with: { season: $data.activeSeason(), formatDate: $data.formatDate, productFeatures: $data.productFeatures } -->
+                    <!-- ko with: { season: $data.activeSeason(), formatDate: $data.formatDate, productFeatures: $data.productFeatures, context: $context.$rawData } -->
                     <div class="sp-hide lg:sp-block">
                         <!-- ko template: "SMG_SubscriptionPlan/active-season.html" --><!-- /ko -->
                     </div>
