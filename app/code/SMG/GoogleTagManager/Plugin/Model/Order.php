@@ -1,11 +1,11 @@
 <?php
 
-namespace SMG\Launch\Plugin\Model;
+namespace SMG\GoogleTagManager\Plugin\Model;
 
-use MagePal\GoogleTagManager\Model\Cart as MagePalCart;
+use MagePal\GoogleTagManager\Model\Order as MagePalOrder;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 
-class Cart {
+class Order {
 
     protected $_productRepository;
 
@@ -13,7 +13,7 @@ class Cart {
         $this->_productRepository = $productRepository;
     }
 
-    public function afterGetCart(MagePalCart $shipping, $result) {
+    public function afterGetOrderDataLayer(MagePalOrder $shipping, $result) {
         if (!empty($result['items'])) {
             for ($i = 0; $i < count($result['items']); $i++) {
                 $product = $this->_productRepository->get($result['items'][$i]['sku']);
