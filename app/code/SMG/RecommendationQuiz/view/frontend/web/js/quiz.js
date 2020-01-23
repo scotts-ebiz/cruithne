@@ -87,12 +87,14 @@ define([
                 $('#address-autocomplete').val(self.address());
                 self.showInstructions(true);
 
+                const zoom = window.outerWidth >= 1024 ? 22 : 21;
+
                 if (place.geometry.viewport) {
                     self.map.fitBounds(place.geometry.viewport);
-                    self.map.setZoom(22);
+                    self.map.setZoom(zoom);
                 } else {
                     self.map.setCenter(place.geometry.location);
-                    self.map.setZoom(22);
+                    self.map.setZoom(zoom);
                 }
 
                 self.getLocation(place.geometry.location);
@@ -506,7 +508,7 @@ define([
         self.loadNextGroup = async group => {
             // No group specified so load the first group.
             if (!group) {
-                self.setGroup(self.template.questionGroups[0]);
+                self.setGroup(self.template.questionGroups[4]);
 
                 return;
             }
