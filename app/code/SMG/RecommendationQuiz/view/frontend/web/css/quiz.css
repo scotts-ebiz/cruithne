@@ -11,6 +11,7 @@ body,
   overflow: auto;
   overflow-x: hidden;
   order: 2;
+  overflow-x: hidden;
 }
 
 .sp-quiz__question.sp-container.sp-mb-8 {

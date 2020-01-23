@@ -50,13 +50,13 @@ define([
                 if (isAndroid) {
                     footerBar.style.display = 'none';
                 }
-            }
+            };
 
             autocompleteElement.onblur = () => {
                 if (isAndroid) {
                     footerBar.style.display = 'block';
                 }
-            }
+            };
 
             self.autocomplete = new google.maps.places.Autocomplete(
                 autocompleteElement, { types: ['geocode'] }
@@ -333,7 +333,8 @@ define([
             }
 
             wrapper.style.marginBottom = '0px';
-        }
+            content.style.marginBottom = '0px';
+        };
 
         window.addEventListener('resize', self.debounce(self.handleResize, 250));
 
