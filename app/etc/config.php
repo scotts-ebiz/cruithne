@@ -314,7 +314,6 @@ return [
         'ClassyLlama_AvaTax' => 1,
         'Dotdigitalgroup_Email' => 1,
         'Dotdigitalgroup_Enterprise' => 1,
-        'Gigya_GigyaIM' => 1,
         'Klarna_Core' => 1,
         'Klarna_Ordermanagement' => 1,
         'Klarna_Kp' => 1,
