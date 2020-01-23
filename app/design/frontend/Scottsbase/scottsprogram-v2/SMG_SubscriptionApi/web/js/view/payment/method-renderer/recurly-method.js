@@ -107,7 +107,14 @@ define(
                         if (response.success === true) {
                             self.createNewOrders();
                         } else {
-                            $('.recurly-form-error').text(response.message);
+                            if (response.message === 'ZIP CODE MISMATCH') {
+                                Modal(this.zipModalOptions, $('#zip-popup-modal'));
+                                $('#zip-popup-modal').modal('openModal');
+
+                                return false;
+                            } else {
+                                $('.recurly-form-error').text(response.message);
+                            }
                         }
                     }
                 });
@@ -175,13 +182,6 @@ define(
 
                 // Get full country name by it's id
                 var countryName = $('select[name="country_id"] option[value="' + address.country_id + '"]').attr('data-title');
-
-                if (shippingAddress.postcode != window.sessionStorage.getItem('lawn-zip')) {
-                    Modal(this.zipModalOptions, $('#zip-popup-modal'));
-                    $('#zip-popup-modal').modal('openModal');
-
-                    return false;
-                }
 
                 // Update Recurly form
                 $('input[data-recurly="first_name"]').val(address.firstname);
