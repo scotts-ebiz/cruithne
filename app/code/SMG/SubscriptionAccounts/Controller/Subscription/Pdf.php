@@ -81,15 +81,19 @@ class Pdf extends Action
     {
         $request = $this->_request->getParams();
 
+        // Check whether user is logged in, if not - authenticate and redirect to invoice url
+        if(! $this->_customerSession->isLoggedIn()) {
+            $urlInterface = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\UrlInterface');
+            $this->_customerSession->setAfterAuthUrl($urlInterface->getCurrentUrl());
+            $this->_customerSession->authenticate();
+        }
+
         // Check if invoice ID exists and this is current customer's invoice
         if( ! empty( $request['invoice'] ) && in_array( $request['invoice'], $this->getCustomerInvoices() ) ) {
             header( 'Content-type: application/pdf' );
             echo $this->getInvoicePdf( $request['invoice'] );
         } else {
-            echo 'Invoice does\'t exist or is not yours. Redirecting back...';
-            $resultRedirect = $this->resultFactory->create( ResultFactory::TYPE_REDIRECT );
-            $resultRedirect->setUrl( $this->_redirect->getRefererUrl() );
-            return $resultRedirect;
+            throw new \Magento\Framework\Exception\NotFoundException(__('Invoice doesn\'t exist or is not yours.'));
         }
     }
 
@@ -137,7 +141,7 @@ class Pdf extends Action
         } catch (\Exception $e) {
             $error = "Account not found: $e";
             $this->_logger->error($error);
-            echo $error;
+            return $customerInvoiceNumbers;
         }
     }
 
