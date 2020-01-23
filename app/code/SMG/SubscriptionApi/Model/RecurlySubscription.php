@@ -173,6 +173,7 @@ class RecurlySubscription
     {
         $quizId = $subscription->getQuizId();
         $subscriptionType = $subscription->getSubscriptionType();
+        $cvvError = '';
 
         // If there is Recurly token, plan code and quiz data
         if (! empty($token) && ! empty($subscriptionType) && ! empty($quizId)) {
@@ -233,6 +234,9 @@ class RecurlySubscription
                 try {
                     $purchase->account->billing_info = $this->createBillingInfo($account->account_code, $token);
                 } catch (\Exception $e) {
+                    if ( strpos($e->getMessage(), 'security code') !== false ) {
+                        $cvvError = 'The security code you entered does not match. Please update the CVV and try again.';
+                    }
                     $error = 'There is a problem with the billing information.';
                     $this->_logger->error($error . " : " . $e->getMessage());
                     throw new LocalizedException(__($error));
@@ -309,6 +313,9 @@ class RecurlySubscription
             } catch (\Exception $e) {
                 $error = 'There was a problem creating the subscription';
                 $this->_logger->error($error . " : " . $e->getMessage());
+                if ($cvvError) {
+                    $error = $cvvError;
+                }
                 throw new LocalizedException(__($error));
             }
 
@@ -558,7 +565,7 @@ class RecurlySubscription
      * @param string $gigyaId
      * @return Recurly_Account|bool
      */
-    private function getRecurlyAccount(string $gigyaId = null)
+    public function getRecurlyAccount(string $gigyaId = null)
     {
         if (is_null($gigyaId)) {
             $gigyaId = $this->_customerSession->getCustomer()->getGigyaUid();
@@ -779,6 +786,7 @@ class RecurlySubscription
                 $today = new \DateTimeImmutable();
 
                 if ($this->_testHelper->inTestMode()) {
+                    $this->_logger->info('Test mode subscription_order');
                     $start = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $subOrder->starts_at);
 
                     // No last ship date so this is the first order.
@@ -861,6 +869,7 @@ class RecurlySubscription
                     $subOrder->starts_at = $subscriptionAddonOrder->getShipStartDate();
 
                     if ($this->_testHelper->inTestMode()) {
+                        $this->_logger->info('Test mode subscription_addon_order');
                         $today = new \DateTimeImmutable();
                         $start = \DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $subOrder->starts_at);
 

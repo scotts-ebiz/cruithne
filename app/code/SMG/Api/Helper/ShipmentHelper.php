@@ -420,7 +420,7 @@ class ShipmentHelper
             
             // get order increment Id
             $shipmentId = $order->getIncrementId();
-			
+            
             foreach ($order->getAllVisibleItems() as $_item) {
             $productid = $_item->getProductId();
                       // take event as a array and add parameters
@@ -428,7 +428,7 @@ class ShipmentHelper
             $event['type'] = 'product';
             $event['action'] = 'shipped';
             $event['identifiers'] = ['email'=>$email];
-            $event['data'] = ['product_id'=>$productid, 'shipment_id'=>$shipmentId];
+            $event['data'] = ['product_id'=>$productid, 'shipment_id'=>$shipmentId, 'magento_store_view'=>'Default Store View'];
 
             // get postevent function
             $zaiusstatus = $zaiusClient->postEvent($event); 

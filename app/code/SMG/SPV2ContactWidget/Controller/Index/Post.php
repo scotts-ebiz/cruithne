@@ -107,6 +107,9 @@ class Post extends \Magento\Contact\Controller\Index\Post {
         if (trim($request->getParam('name')) === '') {
             throw new LocalizedException(__('Enter the Name and try again.'));
         }
+        if (trim($request->getParam('street')) === '') {
+            throw new LocalizedException(__('Enter Street Address and try again.'));
+        }
         if (trim($request->getParam('comment')) === '') {
             throw new LocalizedException(__('Enter the comment and try again.'));
         }

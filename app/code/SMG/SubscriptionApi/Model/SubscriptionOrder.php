@@ -23,6 +23,7 @@ use Magento\Sales\Model\Service\InvoiceService;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\Sap\Model\SapOrderBatch;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrderItem\CollectionFactory as SubscriptionOrderItemCollectionFactory;
 
 /**
@@ -59,9 +60,9 @@ class SubscriptionOrder extends AbstractModel
     private $_sapOrderBatchCollectionFactory;
 
     /**
-     * @var SubscriptionFactory
+     * @var SubscriptionCollectionFactory
      */
-    protected $_subscriptionFactory;
+    protected $_subscriptionCollectionFactory;
 
     /**
      * @var Subscription
@@ -83,6 +84,11 @@ class SubscriptionOrder extends AbstractModel
     protected $_logger;
 
     /**
+     * @var Subscription
+     */
+    protected $_masterSubscription;
+
+    /**
      * Constructor.
      */
     protected function _construct()
@@ -98,7 +104,7 @@ class SubscriptionOrder extends AbstractModel
      * @param Registry $registry
      * @param LoggerInterface $logger
      * @param SubscriptionHelper $subscriptionHelper
-     * @param SubscriptionFactory $subscriptionFactory
+     * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
      * @param SubscriptionOrderItemCollectionFactory $subscriptionOrderItemCollectionFactory
      * @param OrderCollectionFactory $orderCollectionFactory
      * @param InvoiceService $invoiceService
@@ -117,7 +123,7 @@ class SubscriptionOrder extends AbstractModel
         Registry $registry,
         LoggerInterface $logger,
         SubscriptionHelper $subscriptionHelper,
-        SubscriptionFactory $subscriptionFactory,
+        SubscriptionCollectionFactory $subscriptionCollectionFactory,
         SubscriptionOrderItemCollectionFactory $subscriptionOrderItemCollectionFactory,
         OrderCollectionFactory $orderCollectionFactory,
         InvoiceService $invoiceService,
@@ -141,7 +147,7 @@ class SubscriptionOrder extends AbstractModel
 
         $this->_logger = $logger;
         $this->_subscriptionHelper = $subscriptionHelper;
-        $this->_subscriptionFactory = $subscriptionFactory;
+        $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
         $this->_subscriptionOrderItemCollectionFactory = $subscriptionOrderItemCollectionFactory;
         $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->_invoiceService = $invoiceService;
@@ -176,11 +182,11 @@ class SubscriptionOrder extends AbstractModel
             return $this->_subscription;
         }
 
-        $subscription = $this->_subscriptionFactory
+        $subscription = $this->_subscriptionCollectionFactory
             ->create()
-            ->load($this->getSubscriptionEntityId());
+            ->getItemById($this->getData('subscription_entity_id'));
 
-        if (! $subscription->getId()) {
+        if (is_null($subscription) || ! $subscription->getId()) {
             return false;
         }
 
@@ -203,6 +209,22 @@ class SubscriptionOrder extends AbstractModel
         }
 
         return '';
+    }
+
+    /**
+     * Get Master Subscription
+     */
+    public function getMasterSubscription()
+    {
+        $masterSubscriptionId = $this->getMasterSubscriptionId();
+
+        if (is_null($this->_masterSubscription)) {
+            $this->_masterSubscription = $this->_subscriptionCollectionFactory->create()
+                ->addFilter('subscription_id', $masterSubscriptionId)
+                ->getFirstItem();
+        }
+
+        return $this->_masterSubscription;
     }
 
     /**
@@ -365,6 +387,20 @@ class SubscriptionOrder extends AbstractModel
         } else {
             $this->setShipStartDate($todayDate);
         }
+    }
+
+    /**
+     * Is Order Currently Shippable
+     * @return bool
+     * @throws \Exception
+     */
+    public function isCurrenltyShippable() {
+        if ($this->getSubscriptionType() !== 'annual') {
+            $today = new \DateTime();
+            $shipStart = \DateTime::createFromFormat('Y-m-d H:i:s', $this->getShipStartDate());
+            return $today >= $shipStart;
+        }
+        return true;
     }
 
     /**
