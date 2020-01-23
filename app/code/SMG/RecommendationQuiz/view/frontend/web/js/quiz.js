@@ -87,7 +87,7 @@ define([
                 $('#address-autocomplete').val(self.address());
                 self.showInstructions(true);
 
-                const zoom = window.outerWidth >= 1024 ? 22 : 21;
+                const zoom = window.outerWidth >= 1024 ? 22 : 20;
 
                 if (place.geometry.viewport) {
                     self.map.fitBounds(place.geometry.viewport);
