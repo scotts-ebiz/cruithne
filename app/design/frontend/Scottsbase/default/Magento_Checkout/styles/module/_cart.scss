@@ -215,6 +215,7 @@
         text-align: center;
 
         .action.primary {
+
             @extend .abs-button-l;
             width: 100%;
         }
