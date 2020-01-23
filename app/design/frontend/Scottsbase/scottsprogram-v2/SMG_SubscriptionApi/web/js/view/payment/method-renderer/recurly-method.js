@@ -39,14 +39,13 @@ define(
                          */
                         recurly.on('change', (state) => {
                             if (
-                                state.fields.card &&
-                                (
-                                    !state.fields.card.number.empty ||
-                                    !state.fields.card.cvv.empty ||
-                                    !state.fields.card.expiry.empty
-                                )
+                                !state.fields.card.number.empty ||
+                                !state.fields.card.cvv.empty ||
+                                !state.fields.card.expiry.empty
                             ) {
                                 self.cardInputTouched(true);
+                            } else {
+                                self.cardInputTouched(false);
                             }
                         });
                         clearInterval(interval);
