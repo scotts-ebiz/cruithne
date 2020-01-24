@@ -4,6 +4,7 @@ namespace SMG\SubscriptionApi\Model;
 
 use Magento\Directory\Model\ResourceModel\Region\CollectionFactory;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Session\SessionManagerInterface;
 use Psr\Log\LoggerInterface;
 use Recurly_Account;
 use Recurly_Adjustment;
@@ -109,6 +110,11 @@ class RecurlySubscription
     protected $_testHelper;
 
     /**
+     * @var SessionManagerInterface
+     */
+    protected $_coreSession;
+
+    /**
      * RecurlySubscription constructor.
      * @param \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper
      * @param \SMG\SubscriptionApi\Helper\SubscriptionHelper $subscriptionHelper
@@ -123,6 +129,8 @@ class RecurlySubscription
      * @param LoggerInterface $logger
      * @param SubscriptionOrderHelper $subscriptionOrderHelper
      * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
+     * @param TestHelper $testHelper
+     * @param SessionManagerInterface $coreSession
      */
     public function __construct(
         \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper,
@@ -138,7 +146,8 @@ class RecurlySubscription
         LoggerInterface $logger,
         SubscriptionOrderHelper $subscriptionOrderHelper,
         SubscriptionCollectionFactory $subscriptionCollectionFactory,
-        TestHelper $testHelper
+        TestHelper $testHelper,
+        SessionManagerInterface $coreSession
     ) {
         $this->_recurlyHelper = $recurlyHelper;
         $this->_subscriptionHelper = $subscriptionHelper;
@@ -157,6 +166,7 @@ class RecurlySubscription
         $this->_subscriptionOrderHelper = $subscriptionOrderHelper;
         $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
         $this->_testHelper = $testHelper;
+        $this->_coreSession = $coreSession;
     }
 
     /**
@@ -184,6 +194,16 @@ class RecurlySubscription
             $checkoutAddress = $this->_checkoutSession->getQuote()->getShippingAddress();
             $checkoutData = $checkoutAddress->getData();
             $shippingAddress = $this->_subscriptionOrderHelper->formatAddress($checkoutAddress);
+
+            // Check the zip code to make sure that it is what they entered during the quiz
+            if (
+                is_null($this->_coreSession->getZipCode())
+                || empty($shippingAddress['postcode'])
+                || strpos($shippingAddress['postcode'], $this->_coreSession->getZipCode()) !== 0 // if the provided quiz zip does not match the first five of the avatax corrected zip then error
+            ) {
+                $error = 'ZIP CODE MISMATCH';
+                throw new LocalizedException(__($error));
+            }
 
             // Update Subscription with Gigya ID
             try {
