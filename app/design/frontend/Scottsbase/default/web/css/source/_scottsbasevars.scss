@@ -75,17 +75,18 @@ $opensans: 'Open Sans', sans-serif;
 //  Cart / Checkout - Generic button
 $cart-checkout-button__font-family                            : $font-family__quaternary !default;
 $cart-checkout-button__font-weight                            : $font-weight__bold !default;
+$cart-checkout-button__font-color                             : $color-white !default;
 $cart-checkout-button__line-height                            : 0 !default;
 $cart-checkout-button__border-radius                          : 3px !default;
 
-$cart-checkout-button__color                                  : $checkout-green !default;
-$cart-checkout-button__hover__color                           : $checkout-green !default;
+$cart-checkout-button__background                             : $checkout-green !default;
+$cart-checkout-button__background_hover                       : $checkout-green !default;
 $cart-checkout-button__active__color                          : $checkout-green !default;
 
 
 //  Cart / Checkout - Large button
 $cart-checkout-button__font-size__l                           : $font-size__s !default;
-$cart-checkout-button__padding__l                             : 14px 17px !default;
+$cart-checkout-button__padding__l                             : 23px 17px !default;
 
 
 //  Cart / Checkout - Small button

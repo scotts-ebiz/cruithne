@@ -215,9 +215,9 @@
         text-align: center;
 
         .action.primary {
-
-            @extend .abs-button-l;
-            width: 100%;
+            @include cart-checkout-button-l();//test - do you see your styles?
+            //@extend .abs-button-l;
+            //width: 100%;
         }
 
         .item {
