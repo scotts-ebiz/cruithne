@@ -4,7 +4,7 @@ define([
     'Magento_Ui/js/modal/modal',
     'jquery'
 ], function (Component, ko, modal, $) {
-    let successModal;
+    let messageModal;
 
     return Component.extend({
         initialize(config) {
@@ -14,7 +14,7 @@ define([
             this.modalValues = ko.observable({});
 
             setTimeout(function() {
-                successModal = modal({
+                messageModal = modal({
                     type: 'popup',
                     responsive: true,
                     innerScroll: true,
@@ -58,7 +58,7 @@ define([
                         });
                     }
 
-                    self.showSuccess()
+                    self.showModal()
                 },
                 error(err) {
                     console.log(err);
@@ -66,12 +66,12 @@ define([
             })
         },
 
-        hideSuccess() {
-            successModal.closeModal();
+        hideModal() {
+            messageModal.closeModal();
         },
 
-        showSuccess() {
-            successModal.openModal();
+        showModal() {
+            messageModal.openModal();
         }
     });
 });
