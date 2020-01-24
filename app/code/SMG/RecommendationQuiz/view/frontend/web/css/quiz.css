@@ -71,41 +71,21 @@ body,
   right: 1rem;
   top: 1rem;
   z-index: 12;
-  overflow-y: auto;
-  max-width: 30rem;
-  margin: 0 auto;
 }
-.sp-quiz-map__helper > div {
-  position: absolute;
-  left: 0;
-  right: 0;
-  top: 50%;
-  transform: translateY(-50%);
-  padding: 2rem 0;
-}
-.sp-quiz-map__helper h5 {
-  margin: 1rem auto;
-}
+
 .sp-quiz-map__helper ul {
-  width: 90%;
-  max-width: 300px;
-  margin: 0 auto 1rem;
+  padding-left: 1rem;
 }
-.sp-quiz-map__helper img {
-  max-width: 30%;
+
+.sp-quiz__question-draw-image {
+  flex: 0 1 auto;
+  min-height: 0;
+  object-fit: contain;
 }
 
 @media (max-height: 625px) {
-  .sp-quiz-map__helper p {
-    font-size: 12px;
-  }
-
   .sp-quiz__question-mark-icon {
     display: none;
-  }
-
-  .sp-quiz__question-draw-image {
-    max-height: 90px;
   }
 }
 

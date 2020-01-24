@@ -1,7 +1,7 @@
 <!-- ko if: quiz.questions()[0] && quiz.questions()[0].questionType == 5 && quiz.usingGoogleMaps -->
 <div class="sp-quiz__question sp-container md:sp-mb-4 sp-overflow-hidden">
     <!-- Process Questions -->
-    <div class="sp-h-full sp-mx-auto md:sp-w-5/6">
+    <div class="sp-h-full sp-mx-auto lg:sp-w-5/6">
         <div class="sp-flex sp-flex-column md:sp-flex-row sp-h-full sp--mx-6">
             <div class="sp-w-full lg:sp-w-2/5 sp-px-6 md:sp-p-6 sp-text-center md:sp-text-left">
                 <div class="md:sp-block" data-bind="css: { 'sp-hide': quiz.map() && quiz.map().address() }">
@@ -110,37 +110,34 @@
                     <!-- /ko -->
 
                     <div
-                        class="sp-quiz-map__helper sp-bg-white sp-p-6 sp-rounded sp-text-black"
+                        class="sp-quiz-map__helper sp-bg-white sp-flex sp-flex-column sp-items-center sp-justify-center sp-p-6 sp-rounded sp-text-black"
                         data-bind="visible: quiz.map() && quiz.map().showInstructions()"
                     >
-                        <div>
-                            <p class="sp-p1 sp-text-center">
-                                <img src="https://test_magento_image_repo.storage.googleapis.com/mapHelperIcon.svg" class="sp-quiz__question-mark-icon" alt="Calculate Lawn Size">
-                            </p>
-    
-                            <h5 class="sp-p1 sp-max-w-sm sp-mx-auto sp-text-center">
-                                Tap Tap Taparoo<br/>
-                            </h5>
-                            <ul>
-                                <li class="sp-p2 sp-mb-0"><strong>TAP a corner</strong> of your lawn</li>
-                                <li class="sp-p2 sp-mb-0">Tap the <strong>next corner</strong> to make a line</li>
-                                <li class="sp-p2 sp-mb-0"><strong>Keep tapping</strong> to make a shape</li>
-                                <li class="sp-p2 sp-mb-0">You can make <strong>multiple shapes</strong></li>
-                            </ul>
-    
-                            <p class="sp-p1 sp-text-center">
-                                <img src="https://test_magento_image_repo.storage.googleapis.com/mapDraw.png" class="sp-quiz__question-draw-image" alt="Draw Lawn Area">
-                            </p>
-    
-                            <div class="sp-text-center">
-                                <button
-                                    class="sp-button sp-button--primary"
-                                    type="button"
-                                    data-bind="click: quiz.map() && quiz.map().hideInstructions"
-                                >
-                                    Start
-                                </button>
-                            </div>
+                        <div class="sp-quiz__question-mark-icon sp-mb-2 md:sp-mb-4 sp-text-center">
+                            <img src="https://test_magento_image_repo.storage.googleapis.com/mapHelperIcon.svg" alt="Calculate Lawn Size">
+                        </div>
+
+                        <h5 class="sp-h4--long sp-mt-0 sp-mb-2 md:sp-mb-4 sp-text-center sp-uppercase">
+                            Tap Tap Taparoo<br/>
+                        </h5>
+
+                        <ul class="sp-mb-2 md:sp-mb-4">
+                            <li class="sp-p2 sp-mb-0"><strong>TAP a corner</strong> of your lawn</li>
+                            <li class="sp-p2 sp-mb-0">Tap the <strong>next corner</strong> to make a line</li>
+                            <li class="sp-p2 sp-mb-0"><strong>Keep tapping</strong> to make a shape</li>
+                            <li class="sp-p2 sp-mb-0">You can make <strong>multiple shapes</strong></li>
+                        </ul>
+
+                        <img src="https://test_magento_image_repo.storage.googleapis.com/mapDraw.png" class="sp-quiz__question-draw-image sp-mb-2 md:sp-mb-4" alt="Draw Lawn Area">
+
+                        <div class="sp-text-center">
+                            <button
+                                class="sp-button sp-button--primary"
+                                type="button"
+                                data-bind="click: quiz.map() && quiz.map().hideInstructions"
+                            >
+                                Start
+                            </button>
                         </div>
                     </div>
                 </div>
