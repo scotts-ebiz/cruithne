@@ -1,6 +1,11 @@
 // Mixins
 
-// General //
+
+//  ---------------------------------------------
+//  General Styling
+//  ---------------------------------------------
+
+
 @mixin input-placeholder {
     &.placeholder { @content; }
     &:-moz-placeholder { @content; }
@@ -16,7 +21,48 @@
     position: $pos;
 }
 
-// Fonts //
+
+@mixin defaultwrap($center: true) {
+  @if $center == false {
+    margin: 0;
+  }
+  @else {
+    margin: 0 auto;
+  }
+
+  max-width: 90em;
+  width: 95%;
+}
+
+
+@mixin translate ($x, $y) {
+  @include transform(translate($x, $y));
+}
+
+
+@mixin transform($transforms) {
+  -moz-transform: $transforms;
+  -o-transform: $transforms;
+  -ms-transform: $transforms;
+  -webkit-transform: $transforms;
+  transform: $transforms;
+}
+
+@mixin transition($x...){
+  -webkit-transition: $x;
+  -moz-transition: $x;
+  -ms-transition: $x;
+  -o-transition: $x;
+  transition: $x;
+}
+
+
+
+
+//  ---------------------------------------------
+//  Typography
+//  ---------------------------------------------
+
 @mixin font-lato($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
     font-family: $lato;
     @if $size { font-size: $size; }
@@ -88,37 +134,38 @@
 }
 
 
-@mixin defaultwrap($center: true) {
-    @if $center == false {
-        margin: 0;
+
+
+//  ---------------------------------------------
+//  Buttons
+//  ---------------------------------------------
+
+
+//Cart / Checkout - Buttons
+@mixin cart-checkout-button-l ($_button-border-radius: $cart-checkout-button__border-radius) {
+    @include lib-button(
+            $_button-font-family:         $cart-checkout-button__font-family,
+            $_button-font-weight:         $cart-checkout-button__font-weight,
+            $_button-line-height:         $cart-checkout-button__line-height,
+            $_button-background:          $cart-checkout-button__background,
+            $_button-background-hover:    $cart-checkout-button__background_hover,
+            $_button-color:               $cart-checkout-button__font-color,
+            $_button-color-active:        $cart-checkout-button__active__color,
+            $_button-font-size:           $cart-checkout-button__font-size__l,
+            $_button-padding:             $cart-checkout-button__padding__l);
+    border-radius: $_button-border-radius;
+    width: 100%;
+    text-transform: uppercase;
+    &:hover {
+        @include lib-css(background, $cart-checkout-button__background_hover);
+        @include lib-css(color, $cart-checkout-button__font-color);
     }
-    @else {
-        margin: 0 auto;
-    }
-
-    max-width: 90em;
-    width: 95%;
 }
 
-@mixin translate ($x, $y) {
-  @include transform(translate($x, $y));
-}
 
-@mixin transform($transforms) {
-  -moz-transform: $transforms;
-  -o-transform: $transforms;
-  -ms-transform: $transforms;
-  -webkit-transform: $transforms;
-  transform: $transforms;
-}
 
-@mixin transition($x...){
-  -webkit-transition: $x;
-  -moz-transition: $x;
-  -ms-transition: $x;
-  -o-transition: $x;
-  transition: $x;
-}
+
+
 
 
 
