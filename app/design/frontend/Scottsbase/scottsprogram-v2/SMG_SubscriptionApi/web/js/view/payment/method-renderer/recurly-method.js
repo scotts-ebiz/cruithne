@@ -55,12 +55,19 @@ define(
                 // Setup zip modal
                 this.zipModalOptions = {
                     type: 'popup',
-                    responsive: true,
                     innerScroll: true,
-                    buttons: [],
-                    opened: function() {
-                        $('.modal-header').remove();
-                    },
+                    title: 'Your Zip Code Has Changed',
+                    closeText: 'Cancel',
+                    focus: 'none',
+                    buttons: [{
+                        text: 'Cancel',
+                        class: 'sp-link sp-mx-4',
+                        click: self.closeZipModal(),
+                    }, {
+                        text: 'Create New Plan',
+                        class: 'sp-button sp-button--primary sp-mx-4',
+                        click() { window.location.href = '/quiz' }
+                    }],
                     closed() {
                         window.location.hash = 'shipping';
                     },
@@ -106,7 +113,14 @@ define(
                         if (response.success === true) {
                             self.createNewOrders();
                         } else {
-                            $('.recurly-form-error').text(response.message);
+                            if (response.message === 'ZIP CODE MISMATCH') {
+                                Modal(self.zipModalOptions, $('#zip-popup-modal'));
+                                $('#zip-popup-modal').modal('openModal');
+
+                                return false;
+                            } else {
+                                $('.recurly-form-error').text(response.message);
+                            }
                         }
                     }
                 });
@@ -174,13 +188,6 @@ define(
 
                 // Get full country name by it's id
                 var countryName = $('select[name="country_id"] option[value="' + address.country_id + '"]').attr('data-title');
-
-                if (shippingAddress.postcode != window.sessionStorage.getItem('lawn-zip')) {
-                    Modal(this.zipModalOptions, $('#zip-popup-modal'));
-                    $('#zip-popup-modal').modal('openModal');
-
-                    return false;
-                }
 
                 // Update Recurly form
                 $('input[data-recurly="first_name"]').val(address.firstname);
