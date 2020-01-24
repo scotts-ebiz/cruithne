@@ -155,7 +155,11 @@ class Save extends Action
         $this->_recurlyHelper = $recurlyHelper;
         $this->_logger = $logger;
         $this->_gigyaMageHelper = $gigyaMageHelper;
+
         parent::__construct($context);
+
+        Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
+        Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
     }
 
     /**
@@ -181,33 +185,46 @@ class Save extends Action
         // Get current customer
         $customer = $this->getCustomer();
 
-        // $gigyaProfile = $gigyaUser->getProfile();
-        // print_r( $gigyaProfile );
+        // Check for required fields
+        if (empty($request->firstname)) {
+            $error = 'First name is required.';
+            $this->_logger->debug($error);
+            throw new LocalizedException(__($error));
+        }
+        if (empty($request->lastname)) {
+            $error = 'Last name is required';
+            $this->_logger->debug($error);
+            throw new LocalizedException(__($error));
+        }
+        if (empty($request->email)) {
+            $error = 'Email is required';
+            $this->_logger->debug($error);
+            throw new LocalizedException(__($error));
+        }
 
-        if( ! empty( $request->firstname ) && ! empty( $request->lastname ) && ! empty( $request->email ) ) {
-            Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
-            Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
+        try {
+            // Update Magento customer data
+            $customer->setData( 'firstname', $request->firstname );
+            $customer->setData( 'lastname', $request->lastname );
+            $customer->setData( 'email', $request->email );
+            $customer->save();
 
-            try {
-                // Update Magento customer data
-                $customer->setData( 'firstname', $request->firstname );
-                $customer->setData( 'lastname', $request->lastname );
-                $customer->setData( 'email', $request->email );
-                $customer->save();
+            // Update Gigya customer data
+            $gigyaData['profile']['firstName'] = $request->firstname;
+            $gigyaData['profile']['lastName'] = $request->lastname;
+            $gigyaData['profile']['email'] = $request->email;
+            $this->_gigyaMageHelper->updateGigyaAccount( $this->getGigyaUid(), $gigyaData );
 
-                // Update Gigya customer data
-                $gigyaData['profile']['firstName'] = $request->firstname;
-                $gigyaData['profile']['lastName'] = $request->lastname;
-                $gigyaData['profile']['email'] = $request->email;
-                $this->_gigyaMageHelper->updateGigyaAccount( $this->getGigyaUid(), $gigyaData );
+            // Update Recurly customer data
+            $account = Recurly_Account::get( $this->getGigyaUid() );
+            $account->email = $request->email;
+            $account->first_name = $request->firstname;
+            $account->last_name = $request->lastname;
+            $account->update();
+        } catch(\Exception $e) {
 
-                // Update Recurly customer data
-                $account = Recurly_Account::get( $this->getGigyaUid() );
-                $account->email = $request->email;
-                $account->first_name = $request->firstname;
-                $account->last_name = $request->lastname;
-                $account->update();
-            } catch(\Exception $e) {
+            // It is OK to ignore error if no Recurly account exists
+            if ($e->getMessage() != "Couldn't find Account") {
                 $error = 'There was a problem with updating the account details ( '. $e->getMessage() .' )';
                 $this->_logger->error($error);
                 $data = array(
@@ -217,13 +234,6 @@ class Save extends Action
                 $result->setData( $data );
                 return $result;
             }
-        } else {
-            $data = array(
-                'success'   => false,
-                'message'   => 'First name, last name or email is missing.'
-            );
-            $result->setData( $data );
-            return $result;
         }
 
         $isPasswordChanged = false;
