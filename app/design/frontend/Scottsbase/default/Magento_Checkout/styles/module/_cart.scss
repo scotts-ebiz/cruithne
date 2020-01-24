@@ -212,12 +212,13 @@
     .checkout-methods-items {
         @extend .abs-reset-list;
         margin-top: $indent__base;
-        text-align: center;
+        text-align: right;
+        @media screen and (max-width: $screen__xs) {
+            text-align: center;
+        }
 
         .action.primary {
-            @include cart-checkout-button-l();//test - do you see your styles?
-            //@extend .abs-button-l;
-            //width: 100%;
+            @include cart-checkout-button-l();
         }
 
         .item {
