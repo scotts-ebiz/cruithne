@@ -130,7 +130,7 @@ define([
             return this;
         },
 
-        getAlreadySubscribedModalContent(response) {
+        getAlreadySubscribedModalContent() {
             return `<h5 class="sp-h5 sp-text-black sp-text-center">You're Already Subscribed</h5>
                     <h6 class="sp-h6 sp-text-black sp-text-center">Looks like you already have a Scotts Program Subscription.</h6>
                     <p><strong>Start a new subscription</strong><br />
@@ -143,12 +143,12 @@ define([
                     <div class="modal-popup-cta sp-text-center">
                         <button id="startNewSubscription" class="sp-button sp-button--primary">Start a new subscription</button>
                     </div>
-                    <div class="sp-text-center">
-                        <a href="${response.redirect_url}">Keep my current subscription</a>
+                    <div class="sp-text-center sp-mb-8">
+                        <a href="/your-plan">Keep my current subscription</a>
                     </div>`;
         },
 
-        getCancellationModalContent(response) {
+        getCancellationModalContent() {
             return `
                 <h5 class="sp-h5 sp-text-black sp-text-center">Confirm Your Cancellation</h5>
                 <h6 class="sp-h6 sp-text-black sp-text-center">By cancelling your subscription, the following will happen:</h6>
@@ -163,8 +163,8 @@ define([
                     <div class="modal-popup-cta sp-text-center">
                         <button type="button" id="cancelSubscription" class="sp-button sp-button--primary">Cancel My Subscription</button>
                     </div>
-                    <div class="sp-text-center">
-                        <a href="${response.redirect_url}">Never mind, Take Me Back</a>
+                    <div class="sp-text-center sp-mb-8">
+                        <a href="/your-plan">Never mind, take me back</a>
                     </div>
                 </div>`;
         },
@@ -192,24 +192,9 @@ define([
                         self.hasSubscription(true);
 
                         // Show modal
-                        $('body').append(
-                            '<div id="popup-modal" class="modal-popup--subscriptions">'
-                                + '<div class="content">'
-                                    + '<ul>'
-                                        + '<li>Please see your email for your refund amount. This should appear in your account within 7 days.</li>'
-                                        + '<li>You will no longer be billed</li>'
-                                        + '<li>You will no longer receive product shipments</li>'
-                                        + '<li>You will still have an online account with Scotts</li>'
-                                    + '</ul>'
-                                    + '<p class="sp-text-center"><strong>For questions, email us at scotts-orders@scotts.com or call us at <a href="tel:18772203091">1-877-220-3091</a>.</strong></p>'
-                                    + '<div class="modal-popup-cta sp-text-center">'
-                                        + '<button type="button" id="cancelSubscription" class="sp-button sp-button--primary">Cancel My Subscription</button>'
-                                    + '</div>'
-                                    + '<div class="sp-text-center sp-mb-8">'
-                                        + '<a href="' + response.redirect_url + '">Never mind, Take Me Back</a>'
-                                    + '</div>'
-                                + '</div>'
-                            + '</div>'
+                        $('body').append(`<section id="popup-modal" class="modal-popup--subscriptions">
+                            ${self.getAlreadySubscribedModalContent()}
+                            </section>`
                         );
 
                         var options = {
@@ -217,8 +202,9 @@ define([
                             innerScroll: true,
                             focus: 'none',
                             buttons: [],
-                            title: 'Confirm Your Cancellation',
-                            subTitle: 'By cancelling your subscription, the following will happen:',
+                            opened: function($Event) {
+                                $('.modal-header').remove();
+                            },
                             closed() {
                                 if (self.hasSubscription() && !self.cancellingSubscription()) {
                                     window.location.href = '/your-plan';
@@ -228,7 +214,7 @@ define([
 
                         document.getElementById('startNewSubscription').addEventListener('click', (event) => {
                             event.preventDefault();
-                            $('#popup-modal').html(self.getCancellationModalContent(response));
+                            $('#popup-modal').html(self.getCancellationModalContent());
                         });
 
                         var popup = modal(options, $('#popup-modal'));
