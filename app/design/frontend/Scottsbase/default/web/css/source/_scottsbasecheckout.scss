@@ -169,27 +169,27 @@
                                     float: none;
                                     margin-left: 0;
                                     .action.primary {
-                                        font-family: Roboto, Arial, sans-serif;
-                                        text-transform: uppercase;
-                                        background: $scotts-green;
-                                        color: $color-white;
-                                        margin-top: 15px;
-                                        font-size: 12px;
-                                        font-weight: 700;
-                                        letter-spacing: 1px;
-                                        border-radius: 3px;
-                                        padding: 14px 40px;
-                                        line-height: 1.3;
-                                        opacity: 1;
-                                        transition: background 0.2s;
+                                        //font-family: Roboto, Arial, sans-serif;
+                                        //text-transform: uppercase;
+                                        //background: $scotts-green;
+                                        //color: $color-white;
+                                        //margin-top: 15px;
+                                        //font-size: 12px;
+                                        //font-weight: 700;
+                                        //letter-spacing: 1px;
+                                        //border-radius: 3px;
+                                        //padding: 14px 40px;
+                                        //line-height: 1.3;
+                                        //opacity: 1;
+                                        //transition: background 0.2s;
                                         float: none;
-                                        &:hover {
-                                            background: $scotts-secondary-green;
-                                        }
-                                        &:disabled {
-                                            color: $color-black;
-                                            background: $color-gray82;
-                                        }
+                                        //&:hover {
+                                        //    background: $scotts-secondary-green;
+                                        //}
+                                        //&:disabled {// test - moved to shipping.scss
+                                        //    color: $color-black;
+                                        //    background: $color-gray82;
+                                        //}
                                         @media screen and (max-width: $screen__s) {
                                             padding: 14px 30px;
                                         }
@@ -671,10 +671,6 @@
                     pointer-events: none;
                     color: #909090;
                 }
-                //Vet this
-                .actions-toolbar>.primary .action:last-child {
-                    margin-top: 10px;
-                }
                 .form.form-discount .actions-toolbar>.primary .action:last-child {
                     margin-top: 0px;
                 }
@@ -875,9 +871,9 @@ td#label_carrier_flat-rate-shipping_flatrate, td#label_carrier_fedex-2ndday_flat
     }
     /** Shipping Page - End **/
 
-    .checkout-index-index .checkout-billing-address .fieldset .actions-toolbar {
-        margin-top: 10px;
-    }
+    //.checkout-index-index .checkout-billing-address .fieldset .actions-toolbar {
+    //    margin-top: 10px;
+    //}
 }
 
 @media screen and (max-width: $screen__l) {

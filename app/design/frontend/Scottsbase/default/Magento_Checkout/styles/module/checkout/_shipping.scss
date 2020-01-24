@@ -151,8 +151,12 @@ $checkout-shipping-method__padding              : 8px !default;
     .actions-toolbar {
         .action {
             &.primary {
-                @extend .abs-button-l;
+                @include cart-checkout-button-l();
                 margin: $indent__base 0 0;
+            }
+            &.disabled,
+            &[disabled]{
+                @include cart-checkout-button-disabled();
             }
         }
     }
@@ -267,7 +271,7 @@ $checkout-shipping-method__padding              : 8px !default;
         .actions-toolbar {
             .action {
                 &.primary {
-                    margin: 0;
+                    margin: 15px 0 0 0;
                 }
             }
         }
