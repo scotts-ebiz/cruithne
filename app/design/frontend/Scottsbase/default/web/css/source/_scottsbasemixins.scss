@@ -48,6 +48,7 @@
   transform: $transforms;
 }
 
+
 @mixin transition($x...){
   -webkit-transition: $x;
   -moz-transition: $x;
@@ -55,8 +56,6 @@
   -o-transition: $x;
   transition: $x;
 }
-
-
 
 
 //  ---------------------------------------------
@@ -152,7 +151,8 @@
             $_button-color:               $cart-checkout-button__font-color,
             $_button-color-active:        $cart-checkout-button__active__color,
             $_button-font-size:           $cart-checkout-button__font-size__l,
-            $_button-padding:             $cart-checkout-button__padding__l);
+            $_button-padding:             $cart-checkout-button__padding__l
+    );
     border-radius: $_button-border-radius;
     width: 100%;
     text-transform: uppercase;
@@ -162,6 +162,41 @@
     }
 }
 
+
+@mixin cart-checkout-button-s ($_button-border-radius: $cart-checkout-button__border-radius) {
+  @include lib-button(
+          $_button-font-family          : $cart-checkout-button__font-family,
+          $_button-font-weight          : $cart-checkout-button__font-weight,
+          $_button-line-height          : $cart-checkout-button__line-height,
+          $_button-background           : $cart-checkout-button__background,
+          $_button-background-hover     : $cart-checkout-button__background_hover,
+          $_button-color                : $cart-checkout-button__font-color,
+          $_button-color-active         : $cart-checkout-button__active__color,
+          $_button-font-size            : $cart-checkout-button__font-size__s,
+          $_button-padding              :$cart-checkout-button__padding__s
+  );
+  border-radius: $_button-border-radius;
+  width: 100%;
+  text-transform: uppercase;
+  &:hover {
+    @include lib-css(background, $cart-checkout-button__background_hover);
+    @include lib-css(color, $cart-checkout-button__font-color);
+  }
+}
+
+
+@mixin cart-checkout-button-disabled (){
+    @include lib-button(
+        $_button-background           : $checkout-light_grey,
+        $_button-color                : $color-black,
+        $_button-disabled-opacity     : $cart-checkout-button__disabled__opacity,
+        $_button-font-family          : $cart-checkout-button__font-family,
+        $_button-font-weight          : $cart-checkout-button-disabled__font-weight,
+        $_button-line-height          : $cart-checkout-button__line-height,
+        $_button-font-size            : $cart-checkout-button__font-size__l,
+        $_button-padding              : $cart-checkout-button__padding__l
+    );
+}
 
 
 
