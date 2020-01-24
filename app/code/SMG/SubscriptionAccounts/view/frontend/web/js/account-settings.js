@@ -11,6 +11,7 @@ define([
             let self = this;
 
             this.account = ko.observable(config.account);
+            this.modalValues = ko.observable({});
 
             setTimeout(function() {
                 successModal = modal({
@@ -33,7 +34,7 @@ define([
             $.ajax({
                 type: 'POST',
                 url: '/account/settings/save',
-            
+
                 data: JSON.stringify( {
                     form_key: formKey,
                     firstname: $('input[name="firstname"]').val(),
@@ -42,9 +43,25 @@ define([
                     password: $('input[name="password"]').val(),
                     newPassword: $('input[name="newPassword"]').val(),
                     passwordRetype: $('input[name="passwordRetype"]').val(),
-                } ),
-                success() {
+                }),
+                success(data) {
+                    console.log(data);
+                    if (data.success) {
+                        self.modalValues({
+                            header: "Changes Saved",
+                            copy: "The changes to your account have been saved."
+                        });
+                    } else {
+                        self.modalValues({
+                            header: "Issue",
+                            copy: "There was a problem with updating your account details, please try again later."
+                        });
+                    }
+
                     self.showSuccess()
+                },
+                error(err) {
+                    console.log(err);
                 }
             })
         },
