@@ -42,26 +42,6 @@
                     padding-left: 15px;
                     padding-right: 15px;
                     position: relative;
-                    .custom-checkout-btn-wrap {
-                        position: absolute;
-                        top: 20px;
-                        right: 0;
-                        width: 27.25%;
-                        padding: 0px 30px 0px;
-                        @media screen and (max-width: $screen__l) {
-                            width: 100% !important;
-                            padding: 0 !important;
-                        }
-                        @media screen and (max-width: $screen__m) {
-                            display: none;
-                        }
-                        .action.primary.checkout {
-                          text-transform: uppercase;
-                          font-family: Lato, Arial, sans-serif;
-                          width: 100%;
-                          padding: 23px 0;
-                        }
-                    }
                     .custom-checkout-btn-wrap.stickyCart{
                         @media screen and (max-width: $screen__m) {
                             position: fixed;
@@ -71,17 +51,9 @@
                             padding: 0;
                             z-index: 9999;
                             display:block;
-                            @include transition(all 0.2s ease-in-out);
-                            .action.primary.checkout{
-                              border-radius: 0px;
-                            }
                         }
                     }
                     .form-cart {
-                        margin-top: 100px;
-                        @media screen and (max-width: $screen__m) {
-                            margin-top: 20px;
-                        }
                         .cart.table-wrapper {
                             #shopping-cart-table {
                                 td {
@@ -393,36 +365,36 @@
                             .checkout-methods-items {
                                 .item {
                                     .action.checkout {
-                                        -webkit-transition: background 0.2s;
-                                        -moz-transition: background 0.2s;
-                                        -ms-transition: background 0.2s;
-                                        -o-transition: background 0.2s;
-                                        transition: background 0.2s;
-                                        border: none;
-                                        &:hover {
-                                            -webkit-transition: background 0.2s;
-                                            -moz-transition: background 0.2s;
-                                            -ms-transition: background 0.2s;
-                                            -o-transition: background 0.2s;
-                                            transition: background 0.2s;
-                                        }
+                                        //-webkit-transition: background 0.2s;
+                                        //-moz-transition: background 0.2s;
+                                        //-ms-transition: background 0.2s;
+                                        //-o-transition: background 0.2s;
+                                        //transition: background 0.2s;
+                                        //border: none;
+                                        //&:hover {
+                                        //    -webkit-transition: background 0.2s;
+                                        //    -moz-transition: background 0.2s;
+                                        //    -ms-transition: background 0.2s;
+                                        //    -o-transition: background 0.2s;
+                                        //    transition: background 0.2s;
+                                        //}
                                     }
                                 }
                                 .upd-cust-btn {
                                     .action.checkout {
-                                        padding: 23px 0;
-                                        text-transform: uppercase;
-                                        font-size: 15px;
-                                        line-height: 0px;
-                                        font-family: Lato, Arial, sans-serif;
-                                        width: 100%;
-                                        border-radius: 0.313rem;
-                                        transition: background 0.2s linear;
-                                        -webkit-transition: background 0.2s;
-                                        -moz-transition: background 0.2s;
-                                        -ms-transition: background 0.2s;
-                                        -o-transition: background 0.2s;
-                                        letter-spacing: 0.5px;
+                                        //padding: 23px 0;
+                                        //text-transform: uppercase;
+                                        //font-size: 15px;
+                                        //line-height: 0px;
+                                        //font-family: Lato, Arial, sans-serif;
+                                        //width: 100%;
+                                        //border-radius: 0.313rem;
+                                        //transition: background 0.2s linear;
+                                        //-webkit-transition: background 0.2s;
+                                        //-moz-transition: background 0.2s;
+                                        //-ms-transition: background 0.2s;
+                                        //-o-transition: background 0.2s;
+                                        //letter-spacing: 0.5px;
                                     }
                                 }
                             }
