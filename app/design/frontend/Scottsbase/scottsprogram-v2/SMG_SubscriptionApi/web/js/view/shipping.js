@@ -155,8 +155,6 @@ define([
                         // Show modal
                         $('body').append(
                             '<div id="popup-modal" class="modal-popup--subscriptions">'
-                                + '<h5 class="sp-h5 sp-text-black sp-text-center">Confirm Your Cancellation</h5>'
-                                + '<h6 class="sp-h6 sp-text-black sp-text-center">By cancelling your subscription, the following will happen:</h6>'
                                 + '<div class="content">'
                                     + '<ul>'
                                         + '<li>Please see your email for your refund amount. This should appear in your account within 7 days.</li>'
@@ -168,7 +166,7 @@ define([
                                     + '<div class="modal-popup-cta sp-text-center">'
                                         + '<button type="button" id="cancelSubscription" class="sp-button sp-button--primary">Cancel My Subscription</button>'
                                     + '</div>'
-                                    + '<div class="sp-text-center">'
+                                    + '<div class="sp-text-center sp-mb-8">'
                                         + '<a href="' + response.redirect_url + '">Never mind, Take Me Back</a>'
                                     + '</div>'
                                 + '</div>'
@@ -177,12 +175,11 @@ define([
 
                         var options = {
                             type: 'popup',
-                            responsive: true,
                             innerScroll: true,
+                            focus: 'none',
                             buttons: [],
-                            opened: function($Event) {
-                                $('.modal-header').remove();
-                            },
+                            title: 'Confirm Your Cancellation',
+                            subTitle: 'By cancelling your subscription, the following will happen:',
                             closed() {
                                 if (self.hasSubscription() && !self.cancellingSubscription()) {
                                     window.location.href = '/your-plan';
