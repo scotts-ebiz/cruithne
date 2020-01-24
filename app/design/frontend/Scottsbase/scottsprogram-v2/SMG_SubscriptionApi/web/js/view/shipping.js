@@ -143,7 +143,7 @@ define([
                     <div class="modal-popup-cta sp-text-center">
                         <button id="startNewSubscription" class="sp-button sp-button--primary">Start a new subscription</button>
                     </div>
-                    <div class="sp-text-center">
+                    <div class="sp-text-center sp-mb-8">
                         <a href="/your-plan">Keep my current subscription</a>
                     </div>`;
         },
@@ -163,8 +163,8 @@ define([
                     <div class="modal-popup-cta sp-text-center">
                         <button type="button" id="cancelSubscription" class="sp-button sp-button--primary">Cancel My Subscription</button>
                     </div>
-                    <div class="sp-text-center">
-                        <a href="/your-plan">Never mind, Take Me Back</a>
+                    <div class="sp-text-center sp-mb-8">
+                        <a href="/your-plan">Never mind, take me back</a>
                     </div>
                 </div>`;
         },
