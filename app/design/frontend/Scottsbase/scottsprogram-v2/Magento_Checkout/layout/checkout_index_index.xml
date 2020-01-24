@@ -1,4 +1,4 @@
-<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="checkout" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
     <head>
         <!-- Add external resources -->
         <script src="https://js.recurly.com/v4/recurly.js" src_type="url" />
@@ -117,6 +117,6 @@
                 </argument>
             </arguments>
         </referenceBlock>
-		<referenceContainer name="footer-container" remove="false" />
+        <referenceContainer name="footer-container" remove="false" />
     </body>
 </page>
