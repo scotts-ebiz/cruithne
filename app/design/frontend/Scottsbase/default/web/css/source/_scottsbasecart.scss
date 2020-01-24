@@ -348,7 +348,7 @@
                         }
                         .cart-summary {
                             width: 30%;
-                            background: #dfe6ee;
+                            //background: #dfe6ee; test - removed this!
 
                             @media screen and (max-width: $screen__m) {
                                 order:2;

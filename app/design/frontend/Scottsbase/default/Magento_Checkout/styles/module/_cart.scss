@@ -20,9 +20,8 @@
 .cart-summary {
     @extend .abs-add-box-sizing;
     @extend .abs-adjustment-incl-excl-tax;
-    @include lib-css(background, $sidebar__background-color);
     margin-bottom: $indent__m;
-    padding: 1px 15px $indent__m;
+    padding: 0;
 
     > .title {
         display: block;
@@ -76,8 +75,8 @@
 //  Totals block
 .cart-totals {
     @extend .abs-sidebar-totals;
-    border-top: 1px solid $border-color__base;
-    padding-top: $indent__s;
+    background-color: $color-gray-light01;
+    padding: 15px;
 
     .table-wrapper {
         margin-bottom: 0;
