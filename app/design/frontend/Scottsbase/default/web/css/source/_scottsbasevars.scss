@@ -80,15 +80,18 @@ $cart-checkout-button__line-height                            : 0 !default;
 $cart-checkout-button__border-radius                          : 3px !default;
 $cart-checkout-button__disabled__opacity                      : 1.0;
 $cart-checkout-button-disabled__font-weight                   : 700;
-
 $cart-checkout-button__background                             : $checkout-green !default;
 $cart-checkout-button__background_hover                       : $checkout-green !default;
 $cart-checkout-button__active__color                          : $checkout-green !default;
+$cart-checkout-button__border                                 : 0;
+$cart-checkout-button__letter-spacing                         : 1px;
+$cart-checkout-button__width                                  : auto;
+$cart-checkout-button__txt-transform                          : uppercase;
 
 
 //  Cart / Checkout - Large button
 $cart-checkout-button__font-size__l                           : $font-size__s !default;
-$cart-checkout-button__padding__l                             : 21px 39px !default;
+$cart-checkout-button__padding__l                             : 21px 38px !default;
 
 
 //  Cart / Checkout - Small button
