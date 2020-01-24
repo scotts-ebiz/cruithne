@@ -6,16 +6,6 @@
                 .column.main {
                     .checkout-container {
                         .opc-wrapper {
-                            .checkout-shipping-method {
-                                .actions-toolbar {
-                                    .action.primary {
-                                        background: $mygro-green;
-                                        &:hover {
-                                            background: $mygro-dark-green;
-                                        }
-                                    }
-                                }
-                            }
                             .checkout-validate-address {
                                 .step-content {
                                     .instructions.noError {
@@ -36,9 +26,9 @@
                                                                     .primary {
                                                                         .action.primary.checkout:last-child {
                                                                             background: $mygro-green;
-                                                                            &:hover {
-                                                                                background: $mygro-dark-green;
-                                                                            }
+                                                                            //&:hover {// test - this should be removed
+                                                                            //    background: $mygro-dark-green;
+                                                                            //}
                                                                         }
                                                                     }
                                                                 }
