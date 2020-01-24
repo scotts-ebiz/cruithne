@@ -130,7 +130,7 @@ define([
             return this;
         },
 
-        getAlreadySubscribedModalContent(response) {
+        getAlreadySubscribedModalContent() {
             return `<h5 class="sp-h5 sp-text-black sp-text-center">You're Already Subscribed</h5>
                     <h6 class="sp-h6 sp-text-black sp-text-center">Looks like you already have a Scotts Program Subscription.</h6>
                     <p><strong>Start a new subscription</strong><br />
@@ -144,11 +144,11 @@ define([
                         <button id="startNewSubscription" class="sp-button sp-button--primary">Start a new subscription</button>
                     </div>
                     <div class="sp-text-center">
-                        <a href="${response.redirect_url}">Keep my current subscription</a>
+                        <a href="/your-plan">Keep my current subscription</a>
                     </div>`;
         },
 
-        getCancellationModalContent(response) {
+        getCancellationModalContent() {
             return `
                 <h5 class="sp-h5 sp-text-black sp-text-center">Confirm Your Cancellation</h5>
                 <h6 class="sp-h6 sp-text-black sp-text-center">By cancelling your subscription, the following will happen:</h6>
@@ -164,7 +164,7 @@ define([
                         <button type="button" id="cancelSubscription" class="sp-button sp-button--primary">Cancel My Subscription</button>
                     </div>
                     <div class="sp-text-center">
-                        <a href="${response.redirect_url}">Never mind, Take Me Back</a>
+                        <a href="/your-plan">Never mind, Take Me Back</a>
                     </div>
                 </div>`;
         },
@@ -193,7 +193,7 @@ define([
 
                         // Show modal
                         $('body').append(`<section id="popup-modal" class="modal-popup--subscriptions">
-                            ${self.getAlreadySubscribedModalContent(response)}
+                            ${self.getAlreadySubscribedModalContent()}
                             </section>`
                         );
 
@@ -214,7 +214,7 @@ define([
 
                         document.getElementById('startNewSubscription').addEventListener('click', (event) => {
                             event.preventDefault();
-                            $('#popup-modal').html(self.getCancellationModalContent(response));
+                            $('#popup-modal').html(self.getCancellationModalContent());
                         });
 
                         var popup = modal(options, $('#popup-modal'));
