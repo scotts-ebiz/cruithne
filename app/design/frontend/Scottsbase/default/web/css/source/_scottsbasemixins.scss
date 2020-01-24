@@ -141,47 +141,53 @@
 
 
 //Cart / Checkout - Buttons
-@mixin cart-checkout-button-l ($_button-border-radius: $cart-checkout-button__border-radius) {
+@mixin cart-checkout-button-l () {
     @include lib-button(
-            $_button-font-family:         $cart-checkout-button__font-family,
-            $_button-font-weight:         $cart-checkout-button__font-weight,
-            $_button-line-height:         $cart-checkout-button__line-height,
-            $_button-background:          $cart-checkout-button__background,
-            $_button-background-hover:    $cart-checkout-button__background_hover,
-            $_button-color:               $cart-checkout-button__font-color,
-            $_button-color-active:        $cart-checkout-button__active__color,
-            $_button-font-size:           $cart-checkout-button__font-size__l,
-            $_button-padding:             $cart-checkout-button__padding__l
+            $_button-font-family         : $cart-checkout-button__font-family,
+            $_button-font-weight         : $cart-checkout-button__font-weight,
+            $_button-line-height         : $cart-checkout-button__line-height,
+            $_button-background          : $cart-checkout-button__background,
+            $_button-background-hover    : $cart-checkout-button__background_hover,
+            $_button-color               : $cart-checkout-button__font-color,
+            $_button-color-active        : $cart-checkout-button__active__color,
+            $_button-font-size           : $cart-checkout-button__font-size__l,
+            $_button-padding             : $cart-checkout-button__padding__l,
+            $_button-border              : $cart-checkout-button__border,
+            $_button-width               : $cart-checkout-button__width
     );
-    border-radius: $_button-border-radius;
-    width: 100%;
-    text-transform: uppercase;
+    @include lib-css(letter-spacing, $cart-checkout-button__letter-spacing);
+    @include lib-css(border-radius, $cart-checkout-button__border-radius);
+    @include lib-css(text-transform, $cart-checkout-button__txt-transform);
     &:hover {
         @include lib-css(background, $cart-checkout-button__background_hover);
         @include lib-css(color, $cart-checkout-button__font-color);
+        @include lib-css(border, $cart-checkout-button__border);
     }
 }
 
 
-@mixin cart-checkout-button-s ($_button-border-radius: $cart-checkout-button__border-radius) {
-  @include lib-button(
-          $_button-font-family          : $cart-checkout-button__font-family,
-          $_button-font-weight          : $cart-checkout-button__font-weight,
-          $_button-line-height          : $cart-checkout-button__line-height,
-          $_button-background           : $cart-checkout-button__background,
-          $_button-background-hover     : $cart-checkout-button__background_hover,
-          $_button-color                : $cart-checkout-button__font-color,
-          $_button-color-active         : $cart-checkout-button__active__color,
-          $_button-font-size            : $cart-checkout-button__font-size__s,
-          $_button-padding              :$cart-checkout-button__padding__s
-  );
-  border-radius: $_button-border-radius;
-  width: 100%;
-  text-transform: uppercase;
-  &:hover {
-    @include lib-css(background, $cart-checkout-button__background_hover);
-    @include lib-css(color, $cart-checkout-button__font-color);
-  }
+@mixin cart-checkout-button-s () {
+    @include lib-button(
+            $_button-font-family          : $cart-checkout-button__font-family,
+            $_button-font-weight          : $cart-checkout-button__font-weight,
+            $_button-line-height          : $cart-checkout-button__line-height,
+            $_button-background           : $cart-checkout-button__background,
+            $_button-background-hover     : $cart-checkout-button__background_hover,
+            $_button-color                : $cart-checkout-button__font-color,
+            $_button-color-active         : $cart-checkout-button__active__color,
+            $_button-font-size            : $cart-checkout-button__font-size__s,
+            $_button-padding              : $cart-checkout-button__padding__s,
+            $_button-border               : $cart-checkout-button__border,
+            $_button-width                : $cart-checkout-button__width
+    );
+    @include lib-css(border-radius, $cart-checkout-button__border-radius);
+    @include lib-css(letter-spacing, $cart-checkout-button__letter-spacing);
+    @include lib-css(text-transform, $cart-checkout-button__txt-transform);
+    &:hover {
+        @include lib-css(background, $cart-checkout-button__background_hover);
+        @include lib-css(color, $cart-checkout-button__font-color);
+        @include lib-css(border, $cart-checkout-button__border);
+    }
 }
 
 
