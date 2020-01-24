@@ -55,12 +55,19 @@ define(
                 // Setup zip modal
                 this.zipModalOptions = {
                     type: 'popup',
-                    responsive: true,
                     innerScroll: true,
-                    buttons: [],
-                    opened: function() {
-                        $('.modal-header').remove();
-                    },
+                    title: 'Your Zip Code Has Changed',
+                    closeText: 'Cancel',
+                    focus: 'none',
+                    buttons: [{
+                        text: 'Cancel',
+                        class: 'sp-link sp-mx-4',
+                        click: self.closeZipModal(),
+                    }, {
+                        text: 'Create New Plan',
+                        class: 'sp-button sp-button--primary sp-mx-4',
+                        click() { window.location.href = '/quiz' }
+                    }],
                     closed() {
                         window.location.hash = 'shipping';
                     },
@@ -107,7 +114,7 @@ define(
                             self.createNewOrders();
                         } else {
                             if (response.message === 'ZIP CODE MISMATCH') {
-                                Modal(this.zipModalOptions, $('#zip-popup-modal'));
+                                Modal(self.zipModalOptions, $('#zip-popup-modal'));
                                 $('#zip-popup-modal').modal('openModal');
 
                                 return false;
