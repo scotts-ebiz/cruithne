@@ -1,14 +1,4 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <virtualType name="SMG\Launch\Model\Session\Storage" type="Magento\Framework\Session\Storage">
-        <arguments>
-            <argument name="namespace" xsi:type="string">smg_launch</argument>
-        </arguments>
-    </virtualType>
-    <type name="SMG\Launch\Model\Session">
-        <arguments>
-            <argument name="storage" xsi:type="object">SMG\Launch\Model\Session\Storage</argument>
-        </arguments>
-    </type>
-	<preference for="Magento\Contact\Controller\Index\Post" type="SMG\Launch\Controller\Index\Post" />
+
 </config>
