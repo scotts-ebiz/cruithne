@@ -2,13 +2,14 @@ define(
     [
         'ko',
         'jquery',
+        'recurly',
         'Magento_Checkout/js/view/payment/default',
         'Magento_Ui/js/modal/modal',
         'Magento_Checkout/js/action/place-order',
         'Magento_Checkout/js/action/redirect-on-success',
         'domReady!',
     ],
-    function (ko, $, Component, Modal) {
+    function (ko, $, recurly, Component, Modal) {
         'use strict';
 
         return Component.extend({
@@ -88,28 +89,6 @@ define(
                     }
                 }, 100);
 
-                let recurlyInterval = setInterval(() => {
-                    if (recurly) {
-                        recurly.configure(window.recurlyApi);
-                        /**
-                         * Change cardInputTouched boolean when recurly returns a field state change
-                         * that includes a false valid for either number, cvv or expiry
-                         */
-                        recurly.on('change', (state) => {
-                            if (
-                                !state.fields.card.number.empty ||
-                                !state.fields.card.cvv.empty ||
-                                !state.fields.card.expiry.empty
-                            ) {
-                                self.cardInputTouched(true);
-                            } else {
-                                self.cardInputTouched(false);
-                            }
-                        });
-                        clearInterval(recurlyInterval);
-                    }
-                }, 250);
-
                 let billingFormInterval = setInterval(() => {
                     if (document.querySelector('input[name="billing-address-same-as-shipping"]')) {
                         if (
@@ -148,6 +127,24 @@ define(
                         window.location.hash = 'shipping';
                     },
                 };
+            },
+
+            initializeRecurly() {
+                const self = this;
+
+                recurly.configure(window.recurlyApi);
+
+                recurly.on('change', (state) => {
+                    if (
+                        !state.fields.card.number.empty ||
+                        !state.fields.card.cvv.empty ||
+                        !state.fields.card.expiry.empty
+                    ) {
+                        self.cardInputTouched(true);
+                    } else {
+                        self.cardInputTouched(false);
+                    }
+                });
             },
 
             closeZipModal() {

@@ -21,7 +21,12 @@
                 <input type="hidden" data-recurly="postal_code">
                 <input type="hidden" data-recurly="state">
                 <div class="sp-flex sp-flex-wrap sp--mx-2">
-                    <div data-recurly="card" class="sp-form-group sp-px-2 sp-w-full"></div>
+                    <div
+                        data-recurly="card"
+                        class="sp-form-group sp-px-2 sp-w-full"
+                        data-bind="afterRender: initializeRecurly"
+                    >
+                    </div>
                     <p class="sp-form-error recurly-form-error"></p>
                 </div>
 
