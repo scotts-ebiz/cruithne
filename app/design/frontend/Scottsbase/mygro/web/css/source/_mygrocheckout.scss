@@ -16,28 +16,6 @@
                             .checkout-payment-method {
                                 .step-content {
                                     .form.payments {
-                                        .fieldset {
-                                            .opc-payment {
-                                                .items.payment-methods {
-                                                    .payment-group {
-                                                        .payment-method._active {
-                                                            .payment-method-content {
-                                                                .actions-toolbar {
-                                                                    .primary {
-                                                                        .action.primary.checkout:last-child {
-                                                                            //background: $mygro-green;
-                                                                            //&:hover {// test - this should be removed
-                                                                            //    background: $mygro-dark-green;
-                                                                            //}
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
                                         .opc-payment-additional {
                                             .payment-option-title {
                                                 .action-toggle {

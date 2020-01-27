@@ -316,24 +316,6 @@
                                             }
                                         }
                                     }
-                                    .actions-toolbar {
-                                        .action.cancel.primary {
-                                            height:30px;
-                                            font-size: 0.8rem;
-                                            font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                                            padding: 5px 10px 5px 10px !important;
-                                            background: #4d4d4e;
-                                            line-height: 0;
-                                            margin-left: 20px;
-                                            @include max-screen($screen__s) {
-                                              margin-left:0px;
-                                            }
-                                            &:hover {
-                                              background: #333333;
-                                            }
-
-                                        }
-                                    }
                                 }
                                 .fieldset.coupon > .field:not(.choice) > .control {
                                     width: auto;
@@ -348,8 +330,6 @@
                         }
                         .cart-summary {
                             width: 30%;
-                            //background: #dfe6ee; test - removed this!
-
                             @media screen and (max-width: $screen__m) {
                                 order:2;
                             }
@@ -411,29 +391,6 @@
         .block.crosssell {
             margin-top: 0px;
             margin-left: 15px;
-        }
-    }
-
-    // Style Apply Discount Code - Button
-    .actions-toolbar {
-        > .primary,
-        > .secondary {
-            //text-align: center; //test - apply discount still centered in button?
-            .action {
-
-              //@include cart-checkout-button-s();//test - I added this for the smll button style
-              //margin-left: 10px;
-
-              //@extend .abs-button-responsive;// test - remove the margin-bottom
-              //margin-bottom: $indent__s;//test - break anything?
-              //&:last-child {
-              //  margin-bottom: 0;
-              //}
-            }
-            //margin-bottom: $indent__s;//test - break anything?
-            //&:last-child {
-            //    margin-bottom: 0;
-            //}
         }
     }
 
