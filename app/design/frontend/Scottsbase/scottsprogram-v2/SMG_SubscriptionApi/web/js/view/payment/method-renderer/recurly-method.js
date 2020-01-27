@@ -2,13 +2,14 @@ define(
     [
         'ko',
         'jquery',
+        'recurly',
         'Magento_Checkout/js/view/payment/default',
         'Magento_Ui/js/modal/modal',
         'Magento_Checkout/js/action/place-order',
         'Magento_Checkout/js/action/redirect-on-success',
         'domReady!',
     ],
-    function (ko, $, Component, Modal) {
+    function (ko, $, recurly, Component, Modal) {
         'use strict';
 
         return Component.extend({
@@ -18,39 +19,93 @@ define(
 
             initialize: function () {
                 this._super();
+                let self = this;
                 this.rscoChecked = ko.observable(false);
                 this.cardInputTouched = ko.observable(false);
-                let self = this;
+
+                /** Can get current value of the checkbox (checked or not) on this observable */
+                this.sameBillingShippingChecked = ko.observable(true);
+                this.billingInfo = ko.observable(self.getBillingAddress());
+                this.subscriptionType = ko.observable(window.sessionStorage.getItem('subscription_plan'));
+                this.loading = ko.observable(false);
+
+                /** Can query children of the form element (the inputs) based on this observable, only when it != null */
+                this.billingForm = ko.observable(null);
+
                 this.checkoutButtonDisabled = ko.computed(function() {
+                    if (!self.sameBillingShippingChecked()) {
+                        const billingInfoValid = Array.prototype.every.call(
+                            Object.keys(self.billingInfo()),
+                            key => {
+                                if (
+                                    key === 'street' &&
+                                    self.billingInfo()[key][0] !== ''
+                                ) {
+                                    return true;
+                                }
+
+                                if (
+                                    key === 'company' ||
+                                    key === 'region'
+                                ) {
+                                    return true;
+                                }
+
+                                return self.billingInfo()[key] !== '';
+                            }
+                        );
+                        return (
+                            !billingInfoValid ||
+                            !self.rscoChecked() ||
+                            !self.cardInputTouched()
+                        );
+                    }
+
                     return (
                         !self.rscoChecked() ||
                         !self.cardInputTouched()
                     );
                 });
-                this.subscriptionType = ko.observable(window.sessionStorage.getItem('subscription_plan'));
-                this.loading = ko.observable(false);
 
-                let interval = setInterval(() => {
-                    if (recurly) {
-                        recurly.configure(window.recurlyApi);
-                        /**
-                         * Change cardInputTouched boolean when recurly returns a field state change
-                         * that includes a false valid for either number, cvv or expiry
-                         */
-                        recurly.on('change', (state) => {
-                            if (
-                                !state.fields.card.number.empty ||
-                                !state.fields.card.cvv.empty ||
-                                !state.fields.card.expiry.empty
-                            ) {
-                                self.cardInputTouched(true);
-                            } else {
-                                self.cardInputTouched(false);
-                            }
+              let billingListenerInterval = setInterval(() => {
+                    if (self.billingForm() != null) {
+                        const inputs = self.billingForm().querySelectorAll('input');
+
+                        Array.prototype.forEach.call(inputs, input => {
+                            input.addEventListener('change', e => {
+                                self.billingInfo(
+                                    Object.assign(
+                                        {},
+                                        self.getBillingAddress(),
+                                        {
+                                            [e.target.name]: e.target.value
+                                        }
+                                    )
+                                );
+                            });
                         });
-                        clearInterval(interval);
+
+                        clearInterval(billingListenerInterval);
                     }
-                }, 250);
+                }, 100);
+
+              let billingFormInterval = setInterval(() => {
+                    if (document.querySelector('input[name="billing-address-same-as-shipping"]')) {
+                        if (
+                            document.querySelector('.billing-address-form')
+                        ) {
+                            const checkbox = document.querySelector('input[name="billing-address-same-as-shipping"]')
+                            self.billingForm(document.querySelector('.billing-address-form'));
+
+                            checkbox.addEventListener('change', e => {
+                                const currentVal = self.sameBillingShippingChecked();
+                                self.sameBillingShippingChecked(!currentVal);
+                            });
+
+                            clearInterval(billingFormInterval);
+                        }
+                    }
+                }, 100);
 
                 // Setup zip modal
                 this.zipModalOptions = {
@@ -72,6 +127,24 @@ define(
                         window.location.hash = 'shipping';
                     },
                 };
+            },
+
+            initializeRecurly() {
+                const self = this;
+
+                recurly.configure(window.recurlyApi);
+
+                recurly.on('change', (state) => {
+                    if (
+                        !state.fields.card.number.empty ||
+                        !state.fields.card.cvv.empty ||
+                        !state.fields.card.expiry.empty
+                    ) {
+                        self.cardInputTouched(true);
+                    } else {
+                        self.cardInputTouched(false);
+                    }
+                });
             },
 
             closeZipModal() {
