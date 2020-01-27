@@ -356,11 +356,9 @@ class Subscription extends AbstractModel
         }
 
         // If subscription orders is local, send them, if not, pull them and send them
-        // if (! isset($this->_subscriptionAddonOrders)) {
-            $subscriptionAddonOrders = $this->_subscriptionAddonOrderCollectionFactory->create();
-            $subscriptionAddonOrders->addFieldToFilter('subscription_entity_id', $this->getEntityId());
-            $this->_subscriptionAddonOrders = $subscriptionAddonOrders;
-        // }
+        $subscriptionAddonOrders = $this->_subscriptionAddonOrderCollectionFactory->create();
+        $subscriptionAddonOrders->addFieldToFilter('subscription_entity_id', $this->getEntityId());
+        $this->_subscriptionAddonOrders = $subscriptionAddonOrders;
 
         return $this->_subscriptionAddonOrders;
     }
