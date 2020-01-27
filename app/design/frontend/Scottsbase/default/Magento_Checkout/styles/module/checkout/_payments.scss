@@ -41,10 +41,12 @@ $checkout-billing-address-form__max-width      : $checkout-shipping-address__max
 
     .payment-method-content {
         > .actions-toolbar {
+            margin-left: 0;
             > .primary {
                 .action {
                     &.primary {
-                        @extend .abs-button-l;
+                        @include cart-checkout-button();
+                        //@extend .abs-button-l;
                     }
                 }
             }
@@ -174,7 +176,7 @@ $checkout-billing-address-form__max-width      : $checkout-shipping-address__max
     .checkout-payment-method {
         .actions-toolbar {
             .primary {
-                float: right;
+                float: left;//test - is this floated?
                 margin: 0;
             }
         }

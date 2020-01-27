@@ -67,33 +67,39 @@ $opensans: 'Open Sans', sans-serif;
 
 
 
+
 //  ---------------------------------------------
-//  Scotts Base - Cart / Checkout Buttons
+//  Scotts Base - Cart / Checkout Button
 //  ---------------------------------------------
 
 
-//  Cart / Checkout - Generic button
+// Generic Button
 $cart-checkout-button__font-family                            : $font-family__quaternary !default;
+$cart-checkout-button__font-size                              : $font-size__s !default;
 $cart-checkout-button__font-weight                            : normal !default;
 $cart-checkout-button__font-color                             : $color-white !default;
+$cart-checkout-button__font-color-hover                       : $color-white !default;
 $cart-checkout-button__line-height                            : 0 !default;
 $cart-checkout-button__border-radius                          : 3px !default;
 $cart-checkout-button__disabled__opacity                      : 1.0;
-$cart-checkout-button-disabled__font-weight                   : 700;
-$cart-checkout-button__background                             : $checkout-green !default;
-$cart-checkout-button__background_hover                       : $checkout-green !default;
+$cart-checkout-button__disabled__font-weight                  : 700;
+$cart-checkout-button__background-color                       : $checkout-green !default;
+$cart-checkout-button__background-hover                       : $checkout-green !default;
 $cart-checkout-button__active__color                          : $checkout-green !default;
 $cart-checkout-button__border                                 : 0;
 $cart-checkout-button__letter-spacing                         : 1px;
-$cart-checkout-button__width                                  : auto;
+$cart-checkout-button__width                                  : 250px;
+$cart-checkout-button__height                                 : 44px;
+$cart-checkout-button__padding                                : 0;
 $cart-checkout-button__txt-transform                          : uppercase;
 
 
-//  Cart / Checkout - Large button
-$cart-checkout-button__font-size__l                           : $font-size__s !default;
-$cart-checkout-button__padding__l                             : 21px 38px !default;
+// Large Button
+$cart-checkout-button-l__width                                  : 250px;
 
+// Small Button
+$cart-checkout-button-s__width                                  : 74px;
 
-//  Cart / Checkout - Small button
-$cart-checkout-button__font-size__s                           : $font-size__s !default;
-$cart-checkout-button__padding__s                             : 15px !default;
+$cart-checkout-button__font-size__s :13px;
+$cart-checkout-button__padding__s : 15px;
+
