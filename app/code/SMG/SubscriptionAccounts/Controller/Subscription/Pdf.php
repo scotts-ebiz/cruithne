@@ -9,6 +9,7 @@ use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\UrlInterface;
 use Psr\Log\LoggerInterface;
 use Recurly_Client;
 use Recurly_Invoice;
@@ -48,6 +49,11 @@ class Pdf extends Action
     protected $_logger;
 
     /**
+     * @var URLInterface
+     */
+    protected $_urlInterface;
+
+    /**
      * Pdf constructor.
      * @param Context $context
      * @param RequestInterface $request
@@ -55,6 +61,7 @@ class Pdf extends Action
      * @param Customer $customer
      * @param RecurlyHelper $recurlyHelper
      * @param LoggerInterface $logger
+     * @param UrlInterface $urlInterface
      */
     public function __construct(
         Context $context,
@@ -62,13 +69,15 @@ class Pdf extends Action
         CustomerSession $customerSession,
         Customer $customer,
         RecurlyHelper $recurlyHelper,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        UrlInterface $urlInterface
     ) {
         $this->_request = $request;
         $this->_customerSession = $customerSession;
         $this->_customer = $customer;
         $this->_recurlyHelper = $recurlyHelper;
         $this->_logger = $logger;
+        $this->_urlInterface = $urlInterface;
         parent::__construct($context);
     }
 
@@ -82,8 +91,7 @@ class Pdf extends Action
 
         // Check whether user is logged in, if not - authenticate and redirect to invoice url
         if(! $this->_customerSession->isLoggedIn()) {
-            $urlInterface = \Magento\Framework\App\ObjectManager::getInstance()->get('Magento\Framework\UrlInterface');
-            $this->_customerSession->setAfterAuthUrl($urlInterface->getCurrentUrl());
+            $this->_customerSession->setAfterAuthUrl($this->_urlInterface->getCurrentUrl());
             $this->_customerSession->authenticate();
         }
 

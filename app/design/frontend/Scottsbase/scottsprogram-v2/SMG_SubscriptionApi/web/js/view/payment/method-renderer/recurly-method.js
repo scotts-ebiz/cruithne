@@ -67,7 +67,7 @@ define(
                     );
                 });
 
-                let billingListenerInterval = setInterval(() => {
+              let billingListenerInterval = setInterval(() => {
                     if (self.billingForm() != null) {
                         const inputs = self.billingForm().querySelectorAll('input');
 
@@ -89,7 +89,7 @@ define(
                     }
                 }, 100);
 
-                let billingFormInterval = setInterval(() => {
+              let billingFormInterval = setInterval(() => {
                     if (document.querySelector('input[name="billing-address-same-as-shipping"]')) {
                         if (
                             document.querySelector('.billing-address-form')
