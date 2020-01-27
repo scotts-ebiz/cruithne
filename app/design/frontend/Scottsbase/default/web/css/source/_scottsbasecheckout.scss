@@ -273,21 +273,6 @@
                                                                 .actions-toolbar {
                                                                     .primary {
                                                                         .action.primary.checkout:last-child {
-                                                                            //-webkit-transition: background 0.2s;
-                                                                            //-moz-transition: background 0.2s;
-                                                                            //-ms-transition: background 0.2s;
-                                                                            //-o-transition: background 0.2s;
-                                                                            //transition: background 0.2s;
-                                                                            //font-family: Lato, Arial, sans-serif;
-                                                                            //font-size: 15px;
-                                                                            //text-transform: uppercase;
-                                                                            //color: $color-white;
-                                                                            //background: $scotts-green;
-                                                                            //padding: 23px 35px;
-                                                                            //line-height: 0;
-                                                                            //border: none;
-                                                                            //display: inline-block;
-                                                                            //height: auto;
                                                                             &:hover {
                                                                                 -webkit-transition: background 0.2s;
                                                                                 -moz-transition: background 0.2s;
@@ -805,16 +790,9 @@ td#label_carrier_flat-rate-shipping_flatrate, td#label_carrier_fedex-2ndday_flat
     .checkout-cart-index #shopping-cart-table thead {
         display: none;
     }
-    .checkout-cart-index .cart-summary-divlink #discount-coupon-form .action.apply.primary {
-        margin: 0 0 25px 0;
-        margin-left: 0 !important;
-    }
 
 
     /** Shipping Page - Start **/
-    //.checkout-index-index #shipping-method-buttons-container {
-    //    width: 100%;
-    //}
     .checkout-index-index .page-wrapper .page-main .columns .column.main .checkout-container .opc-estimated-wrapper .minicart-wrapper .action.showcart {
         background: #fff;
         border: 1px solid #ccc;

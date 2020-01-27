@@ -63,23 +63,6 @@
             }
         }
     }
-    //.actions-toolbar > {
-    //      .primary,
-    //      .secondary {
-    //          .action {
-    //              &:last-child {
-    //                  @include cart-checkout-button-s();//test - I added this for the smll button style
-    //                  margin-left: 10px;
-    //              }
-    //          }
-    //          //text-align: center;
-    //          //button {
-    //          //    @include cart-checkout-button();//test - I added this for the smll button style
-    //          //    margin-left: 10px;
-    //          //    //@extend .abs-revert-secondary-color;// test - did this break anything?
-    //          //}
-    //      }
-    //}
 }
 
 //  Totals block
@@ -243,8 +226,14 @@
 
 //  Discount Code
 .actions-toolbar .primary .action {
-    @include cart-checkout-button-s();//test - I added this for the smll button style
+    @include cart-checkout-button-s();
     margin-left: 10px;
+    &:last-child {
+        @media screen and (max-width: $screen__m) {
+            margin-left: 0;
+            margin-bottom: 25px;
+        }
+    }
 }
 
 

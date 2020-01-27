@@ -152,7 +152,7 @@ $checkout-shipping-method__padding              : 8px !default;
     .actions-toolbar {
         .action {
             &.primary {
-                @include cart-checkout-button();
+                @include cart-checkout-button($_button-width:313px);
                 margin: $indent__base 0 0;
             }
             &.disabled,
