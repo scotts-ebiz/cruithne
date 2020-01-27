@@ -133,6 +133,7 @@ $checkout-shipping-method__padding              : 8px !default;
 
 
 
+
 //
 //  Shipping Methods
 //  ---------------------------------------------
@@ -151,7 +152,7 @@ $checkout-shipping-method__padding              : 8px !default;
     .actions-toolbar {
         .action {
             &.primary {
-                @include cart-checkout-button-l();
+                @include cart-checkout-button();
                 margin: $indent__base 0 0;
             }
             &.disabled,
@@ -196,6 +197,8 @@ $checkout-shipping-method__padding              : 8px !default;
         }
     }
 }
+
+
 
 
 
