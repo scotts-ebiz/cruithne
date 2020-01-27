@@ -18,7 +18,6 @@ define([
 
         $(document).on('submit', '#contact-form', function() {
             event.preventDefault();
-            console.log(dataForm.valid());
             if( dataForm.valid() ) {
                 $.ajax({
                     type: 'POST',
