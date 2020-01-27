@@ -162,6 +162,11 @@
       &.active,
       &:hover {
         border-bottom: 2px solid $white;
+
+        @media (min-width: $screen-md) {
+          border-color: $green-1;
+        }
+
         text-decoration: none;
       }
     }
