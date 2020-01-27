@@ -418,11 +418,11 @@
     .actions-toolbar {
         > .primary,
         > .secondary {
-            text-align: center;
+            //text-align: center; //test - apply discount still centered in button?
             .action {
 
-              @include cart-checkout-button-s();//test - I added this for the smll button style
-              margin-left: 10px;
+              //@include cart-checkout-button-s();//test - I added this for the smll button style
+              //margin-left: 10px;
 
               //@extend .abs-button-responsive;// test - remove the margin-bottom
               //margin-bottom: $indent__s;//test - break anything?

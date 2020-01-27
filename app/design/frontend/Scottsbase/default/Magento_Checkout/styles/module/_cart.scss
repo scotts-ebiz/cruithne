@@ -63,13 +63,23 @@
             }
         }
     }
-    .actions-toolbar {
-        > .primary {
-            button {
-                @extend .abs-revert-secondary-color;
-            }
-        }
-    }
+    //.actions-toolbar > {
+    //      .primary,
+    //      .secondary {
+    //          .action {
+    //              &:last-child {
+    //                  @include cart-checkout-button-s();//test - I added this for the smll button style
+    //                  margin-left: 10px;
+    //              }
+    //          }
+    //          //text-align: center;
+    //          //button {
+    //          //    @include cart-checkout-button();//test - I added this for the smll button style
+    //          //    margin-left: 10px;
+    //          //    //@extend .abs-revert-secondary-color;// test - did this break anything?
+    //          //}
+    //      }
+    //}
 }
 
 //  Totals block
@@ -217,7 +227,7 @@
         }
 
         .action.primary {
-            @include cart-checkout-button-l();
+            @include cart-checkout-button();
         }
 
         .item {
@@ -227,6 +237,18 @@
         }
     }
 }
+
+
+
+
+//  Discount Code
+.actions-toolbar .primary .action {
+    @include cart-checkout-button-s();//test - I added this for the smll button style
+    margin-left: 10px;
+}
+
+
+
 
 //  Products pager
 .cart-products-toolbar {
