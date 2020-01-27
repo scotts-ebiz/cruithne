@@ -9,6 +9,10 @@ define(
     ) {
         'use strict';
 
+        if (window.location.hash === '#payment') {
+            window.location.href = '/checkout';
+        }
+
         rendererList.push(
             {
                 type: 'recurly',
