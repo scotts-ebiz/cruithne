@@ -241,9 +241,6 @@ define([
 
         self.toggleInfo = function () {
             self.showInstructions(!self.showInstructions());
-            // const info = $('.gm-style-pbc');
-            // $('.gm-style-pbt', info).html('<p>Tap to create an outline</p> <p class="gm-info-text">Use two fingers to move the map</p>');
-            // Number(info.css('opacity')) ? info.css('opacity', 0) : info.css('opacity', 1);
         };
 
         /**
