@@ -65,8 +65,8 @@ define([
                     }
                 }
 
-                $('body').trigger('mpCustomerSession', [customer, cart, _gtmDataLayer]);
                 _gtmDataLayer.push({'event': 'mpCustomerSession', 'actions': actions, 'coupons': coupons, 'customer': customer, 'cart': cart});
+                $('body').trigger('mpCustomerSession', [customer, cart, _gtmDataLayer, actions]);
 
                 lastPushedCustomer = customer;
                 lastPushedCart = cart;
