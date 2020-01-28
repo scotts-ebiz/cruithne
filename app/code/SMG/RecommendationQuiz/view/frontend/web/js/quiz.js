@@ -230,23 +230,16 @@ define([
          * Undo the last point placed on the map.
          */
         self.undo = function () {
-            if (!self.activePolygon && !self.polygons().length) {
-                return;
-            }
-
-            var shape = null;
-
-            if (self.activePolygon) {
-                shape = self.activePolygon;
-                self.polygons.remove(shape);
-                shape.setMap(null);
-                self.activePolygon = null;
-            } else {
-                shape = self.polygons.pop();
-                shape.setMap(null);
-            }
+            self.drawingManager.setDrawingMode(null);
+            self.polygons().forEach(polygon => polygon.setMap(null));
+            self.polygons([]);
+            self.activePolygon = null;
 
             self.calculateLawnSize();
+        };
+
+        self.toggleInfo = function () {
+            self.showInstructions(!self.showInstructions());
         };
 
         /**
