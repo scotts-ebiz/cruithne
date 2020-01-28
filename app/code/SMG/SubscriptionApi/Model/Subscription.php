@@ -206,11 +206,6 @@ class Subscription extends AbstractModel
      */
     public function getSubscriptionOrders()
     {
-        // Make sure we have an actual subscription
-        if (empty($this->getEntityId())) {
-            return false;
-        }
-
         // If subscription orders is local, send them, if not, pull them and send them
         if (! isset($this->_subscriptionOrders)) {
             $subscriptionOrders = $this->_subscriptionOrderCollectionFactory->create();
@@ -349,12 +344,6 @@ class Subscription extends AbstractModel
      */
     public function getSubscriptionAddonOrders()
     {
-
-        // Make sure we have an actual subscription
-        if (empty($this->getEntityId())) {
-            return false;
-        }
-
         // If subscription orders is local, send them, if not, pull them and send them
         $subscriptionAddonOrders = $this->_subscriptionAddonOrderCollectionFactory->create();
         $subscriptionAddonOrders->addFieldToFilter('subscription_entity_id', $this->getEntityId());
