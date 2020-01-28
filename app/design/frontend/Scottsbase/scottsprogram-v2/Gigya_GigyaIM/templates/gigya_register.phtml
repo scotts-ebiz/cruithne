@@ -1,0 +1,62 @@
+<?php
+/**
+ * output Gigya registration form html.
+ * defined in GigyaIM\view\frontend\layout\customer_account_create.xml
+ * The block for this form is - GigyaIM\Block\Form\GigyaRegister.php
+ *
+ * Here: add accounts.showScreenSet to gigyaInit array
+ * Full flow (on gigya_script):
+ * Call gigya screen sets.
+ * Capture Gigya login event.
+ * Create and submit registration form.
+ * Submit to Gigya model Controller.
+**/
+
+/** @var \Gigya\GigyaIM\Block\Form\GigyaRegister $block */
+?>
+
+<div id="gigya-register" class="gigya-register gigya-loader-location"></div>
+<script>
+    window.gigyaInit = window.gigyaInit || [];
+    customLangParams = {
+        email_already_exists: "<span class='gigya-error-msg-title'>This email is already associated with an account.</span><br><span class='gigya-error-msg-body'>You can log in to your account if you've created one with My Lawn app, Scotts.com, the My Garden app, the Blossom Smart Watering app, the Gro Connect app, or the MiracleGro Twelve app.</span><br><span class='gigya-error-msg-links'><a href='/customer/account/login'>Log In</a> &nbsp;&nbsp; <a href='/customer/account/login#forgot'>Forgot Password?</a></span>"
+    };
+    var screenSetParams = {
+        screenSet : "<?php echo $block->getLoginDesktopScreensetId() ?>",
+        containerID : "gigya-register",
+        startScreen : "gigya-register-screen",
+        mobileScreenSet : "<?php echo $block->getLoginMobileScreensetId() ?>", // optional - for using separate mobile screen set.
+        customLang : customLangParams
+    };
+    var raasRegisterScreen = {"function": "accounts.showScreenSet", "parameters": screenSetParams};
+    window.gigyaInit.push(raasRegisterScreen);
+</script>
+<style>
+    .gigya-error-msg-title,
+    .gigya-error-msg-body
+    {
+        width: 100%;
+        font-size: 13px;
+        line-height: 15px;
+        color: #e76468;
+        display: inline-block;
+        text-align: left;
+        font-weight: 700;
+    }
+    .gigya-error-msg-body {
+        font-weight: 300;
+        margin-top: 10px;
+    }
+    .gigya-error-msg-links {
+        display: inline-block;
+        font-weight: 300;
+        font-size: 13px;
+        line-height: 15px;
+        margin-top: 10px;
+        text-align: left;
+        width: 100%;
+    }
+    .gigya-error-msg-links a {
+        text-decoration: underline !important;
+    }
+</style>
