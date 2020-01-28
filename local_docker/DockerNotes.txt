@@ -1,0 +1,119 @@
+Directions for First Time Setup
+
+1. Install Docker Desktop
+    # Docker can be installed from different places.  We have chosen to download from the
+    # Docker website
+    https://docs.docker.com/docker-for-mac/install/  
+
+2. Install Docker Sync
+    # This is a work in progress.  I received some errors while trying to install the 
+    docker-sync
+    https://dev.to/kovah/cut-your-docker-for-mac-response-times-in-half-with-docker-sync-1e8j
+    
+3. Start Docker Containers
+    # This command will pull down images to local image repository and starts the 
+    # different containers
+    # This needs to be ran from <magento_root>/local
+    docker-compose up -d
+
+    
+Directions for Daily Use
+
+# Start Docker For Magento
+docker-compose start magento
+
+# Start Docker for MySql
+docker-compose start mysql
+
+# Start Docker Containers
+docker-compose up -d
+
+# Destroy Docker Containers
+docker-compose down
+
+# After Destorying Docker Containers clean up shared volumes
+docker volume prune
+
+# SSH into magento container
+docker exec -it magento /bin/bash
+
+
+Directions for Server Updates Including Composer Updates
+
+1. Destroy Docker Containers
+    docker-compose down
+    
+2. Remove the local images
+    docker image rm --force gcr.io/ecommerce-platform-211419/magento-local-primer
+    docker image rm --force gcr.io/ecommerce-platform-211419/magento-local-db-primer
+    
+3. Start Docker Containers
+    docker-compose up -d
+    
+    
+Misc Commands
+
+Stop all containers: docker ps -aq | xargs docker stop
+Remove all containers: docker ps -aq | xargs docker rm
+Remove all images: docker images -aq | xargs docker rmi
+Remove all networks: docker network ls -q | xargs docker network rm
+Remove all volumes: docker volume ls -q | xargs docker volume rm
+Remove all stopped containers, unused networks, dangling images, and build cache: docker system prune
+
+
+Old Notes
+
+1. install docker
+    # Docker can be installed from different places.  We have chosen to download from the
+    # Docker website
+    https://docs.docker.com/docker-for-mac/install/
+    
+2. create local docker network
+    # This will create a local docker network called my-local-net
+    docker network create my-local-net
+
+2. build/run mysql image
+	# This pulls down latest mysql server from MySql
+	# We can pull different builds but we currently choose
+	# latest here.
+	# This is only needed to pull the build image for the docker run command
+	# docker pull mysql/mysql-server:5.7.28
+	
+	# copy the staging database and rename to database.sql for the docker run process to
+	# start the database and load the data.  follow the directions to download the sql file
+	# from google cloud.  This can be automated once the authentication piece is figured out
+	docker build -t gcr.io/ecommerce-platform-211419/magento-local-db-primer:latest .
+	
+	# This command starts the mysql server and loads the downloaded database
+	#docker run --name=mysql --ip 172.17.0.2 -p 3306:3306 --network=my-local-net -e MYSQL_ROOT_PASSWORD=dfDF34#$ --mount type=bind,src=/local/Projects/dtc/magento2_primer/nathan/scripts/,dst=/docker-entrypoint-initdb.d/ --mount type=bind,source=/local/Projects/dtc/magento2_primer/nathan/,target=/local/ -d mysql/mysql-server:latest
+	docker run --name=mysql --network=my-local-net -p 3306:3306 -e MYSQL_ROOT_PASSWORD=dfDF34#$ --mount type=bind,src=/local/Projects/dtc/magento2_primer/local/scripts/,dst=/docker-entrypoint-initdb.d/ --mount type=bind,source=/local/Projects/dtc/magento2_primer/local/,target=/local/ -d mysql/mysql-server:5.7.28
+
+	# This command displays the log file for the mysql container during the run
+	# This can be checked for errors when things are not working correctly.
+	docker logs mysql
+	
+	# SSH into the mysql container
+	docker exec -it mysql /bin/bash
+	
+	# This is how you start and stop mysql container
+	docker stop mysql
+	docker start mysql
+	docker restart mysql
+	
+	# This command removes the container which will need to be done if the server
+	# needs to be upgraded
+	docker rm --force mysql
+    
+3. build/run magento image
+	# This is the build for the magento-local-primer image
+	docker build -t gcr.io/ecommerce-platform-211419/magento-local-primer:latest .
+	
+    # This command builds the magento2 image
+    docker build -t magento2/magento2-server:latest .
+    
+	# This command starts the magento2 webserver
+    #docker run --name=magento2 --network=my-local-net --mount type=bind,source=/local/Projects/dtc/cruithne/,target=/var/www/html/magento2/ -d magento2/magento2-server:latest
+    #docker run --name=magento2 --network=my-local-net -p 80:80 -p 8080:80 -p 443:443 -d magento2/magento2-server:latest
+    docker run --name=magento2 --network=my-local-net -p 80:80 -p 8080:80 -p 443:443 --mount type=bind,source=/local/Projects/dtc/docker_cruithne/,target=/var/www/html/magento2/ -d magento2/magento2-server:latest
+ 
+ 

@@ -14,7 +14,7 @@ for branch in $BRANCHES;
 do
     # check if the branch is not test or master as
     # we do not want to delete those branches
-    if [ "$branch" != "test" ] && [ "$branch" != "master" ]
+    if [ "$branch" != "develop" ] && [ "$branch" != "master" ] && [ "$branch" != "release-candidate" ] && [ "$branch" != "staging" ] && [ "$branch" != "test" ]
     then
         git branch -D $branch
     fi
