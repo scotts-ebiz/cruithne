@@ -96,10 +96,10 @@
                 data-bind="css: { 'sp-hide': !quiz.map() || !quiz.map().address() }"
             >
                 <div class="sp-quiz-map sp-relative sp-aspect-ratio md:sp-aspect-ratio--4x3">
-                    <div id="map" class="sp-quiz-map__placeholder sp-aspect-ratio--object">
-                    </div>
+                    <img class="sp-quiz-map__info" src="https://test_magento_image_repo.storage.googleapis.com/mapHelperIcon.svg" alt="Calculate Lawn Size" data-bind="click: quiz.map() && quiz.map().toggleInfo">
+                    <div id="map" class="sp-quiz-map__placeholder sp-aspect-ratio--object"></div>
 
-                    <!-- ko if: quiz.map() && quiz.map().polygons().length -->
+                    <!-- ko if: quiz.map() -->
                     <button
                         class="sp-quiz-map__undo sp-button sp-button--inverted sp-shadow-md"
                         type="button"

@@ -9,6 +9,7 @@ body,
 
 .sp-quiz__content {
   overflow: auto;
+  overflow-x: hidden;
   order: 2;
   overflow-x: hidden;
 }
@@ -70,7 +71,7 @@ body,
   position: absolute;
   right: 1rem;
   top: 1rem;
-  z-index: 12;
+  z-index: 100;
 }
 
 .sp-quiz-map__helper ul {
@@ -613,6 +614,24 @@ li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot::before {
 .sp-quiz__safari-bugfix {
   flex: 1 1 100%;
 }
+.sp-quiz-map__info {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 100;
+  width: 24px;
+}
+.gm-style-pbt {
+  transform: none;
+  top: 25%;
+}
+
+@media(min-width: 767px) {
+  .gm-style-pbt p.gm-info-text {
+    display: none;
+  }
+}
+
 
 @keyframes transition-slideup {
   0% {

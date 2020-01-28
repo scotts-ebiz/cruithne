@@ -128,7 +128,6 @@ define([
                 return seasons;
             });
 
-
             // used to indicate which product is up next for delivery
             self.nextAvailableProduct = ko.computed(() => {
                 const currentDate = new Date();
@@ -146,7 +145,6 @@ define([
             self.activeSeason = ko.computed(function () {
                 return self.seasons()[self.activeSeasonIndex()]
             });
-
         },
 
         toggleAccordion(index) {
