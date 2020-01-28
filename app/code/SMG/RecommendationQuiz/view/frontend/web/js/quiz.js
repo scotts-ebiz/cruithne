@@ -234,7 +234,6 @@ define([
             self.polygons().forEach(polygon => polygon.setMap(null));
             self.polygons([]);
             self.activePolygon = null;
-            // self.lawnSize(0);
 
             self.calculateLawnSize();
         };
