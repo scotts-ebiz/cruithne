@@ -109,7 +109,11 @@ define([
 
         toggleAccordion(index) {
             const accordionTabs = Array.from(document.querySelectorAll('.accordion > li'));
-            accordionTabs[index].classList.contains('active') ? accordionTabs[index].classList.remove('active') : accordionTabs[index].classList.add('active');
+            const isActive = accordionTabs[index].classList.contains('active');
+
+            isActive ? accordionTabs[index].classList.remove('active') : accordionTabs[index].classList.add('active');
+
+            accordionTabs[index].scrollIntoView({behavior: "smooth"});
         },
 
         loadQuizResults(id, zip) {
