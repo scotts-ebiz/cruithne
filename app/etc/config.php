@@ -583,96 +583,6 @@ return [
         ]
     ],
     'themes' => [
-        'frontend/Base/theme-blank-sass' => [
-            'parent_id' => NULL,
-            'theme_path' => 'Base/theme-blank-sass',
-            'theme_title' => 'Base theme blank sass',
-            'is_featured' => '0',
-            'area' => 'frontend',
-            'type' => '0',
-            'code' => 'Base/theme-blank-sass'
-        ],
-        'frontend/Scottsbase/default' => [
-            'parent_id' => 'Base/theme-blank-sass',
-            'theme_path' => 'Scottsbase/default',
-            'theme_title' => 'Scottsbase default',
-            'is_featured' => '0',
-            'area' => 'frontend',
-            'type' => '0',
-            'code' => 'Scottsbase/default'
-        ],
-        'frontend/Scottsbase/mygro' => [
-            'parent_id' => 'Scottsbase/default',
-            'theme_path' => 'Scottsbase/mygro',
-            'theme_title' => 'Scottsbase mygro',
-            'is_featured' => '0',
-            'area' => 'frontend',
-            'type' => '0',
-            'code' => 'Scottsbase/mygro'
-        ],
-        'frontend/Scottsbase/scottsprogram' => [
-            'parent_id' => 'Scottsbase/default',
-            'theme_path' => 'Scottsbase/scottsprogram',
-            'theme_title' => 'Scottsbase scottsprogram',
-            'is_featured' => '0',
-            'area' => 'frontend',
-            'type' => '0',
-            'code' => 'Scottsbase/scottsprogram'
-        ],
-        'frontend/Drupal/default' => [
-            'parent_id' => 'Scottsbase/mygro',
-            'theme_path' => 'Drupal/default',
-            'theme_title' => 'Drupal default',
-            'is_featured' => '0',
-            'area' => 'frontend',
-            'type' => '0',
-            'code' => 'Drupal/default'
-        ],
-        'frontend/Drupal/miraclegro' => [
-            'parent_id' => 'Drupal/default',
-            'theme_path' => 'Drupal/miraclegro',
-            'theme_title' => 'Drupal miraclegro',
-            'is_featured' => '0',
-            'area' => 'frontend',
-            'type' => '0',
-            'code' => 'Drupal/miraclegro'
-        ],
-        'frontend/Drupal/ortho' => [
-            'parent_id' => 'Drupal/default',
-            'theme_path' => 'Drupal/ortho',
-            'theme_title' => 'Drupal ortho',
-            'is_featured' => '0',
-            'area' => 'frontend',
-            'type' => '0',
-            'code' => 'Drupal/ortho'
-        ],
-        'frontend/Drupal/roundup' => [
-            'parent_id' => 'Drupal/default',
-            'theme_path' => 'Drupal/roundup',
-            'theme_title' => 'Drupal roundup',
-            'is_featured' => '0',
-            'area' => 'frontend',
-            'type' => '0',
-            'code' => 'Drupal/roundup'
-        ],
-        'frontend/Drupal/scotts' => [
-            'parent_id' => 'Drupal/default',
-            'theme_path' => 'Drupal/scotts',
-            'theme_title' => 'Drupal scotts',
-            'is_featured' => '0',
-            'area' => 'frontend',
-            'type' => '0',
-            'code' => 'Drupal/scotts'
-        ],
-        'frontend/Drupal/tomcat' => [
-            'parent_id' => 'Drupal/default',
-            'theme_path' => 'Drupal/tomcat',
-            'theme_title' => 'Drupal tomcat',
-            'is_featured' => '0',
-            'area' => 'frontend',
-            'type' => '0',
-            'code' => 'Drupal/tomcat'
-        ],
         'frontend/Magento/blank' => [
             'parent_id' => NULL,
             'theme_path' => 'Magento/blank',
@@ -699,6 +609,114 @@ return [
             'area' => 'adminhtml',
             'type' => '0',
             'code' => 'Magento/backend'
+        ],
+        'frontend/Snowdog/blank' => [
+            'parent_id' => NULL,
+            'theme_path' => 'Snowdog/blank',
+            'theme_title' => 'Snowdog Blank',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '1',
+            'code' => 'Snowdog/blank'
+        ],
+        'frontend/Base/theme-blank-sass' => [
+            'parent_id' => NULL,
+            'theme_path' => 'Base/theme-blank-sass',
+            'theme_title' => 'Base Default (SASS)',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Base/theme-blank-sass'
+        ],
+        'frontend/Scottsbase/default' => [
+            'parent_id' => 'Base/theme-blank-sass',
+            'theme_path' => 'Scottsbase/default',
+            'theme_title' => 'Scotts Base Default',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Scottsbase/default'
+        ],
+        'frontend/Scottsbase/scottsprogram' => [
+            'parent_id' => 'Scottsbase/default',
+            'theme_path' => 'Scottsbase/scottsprogram',
+            'theme_title' => 'Scotts Program',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Scottsbase/scottsprogram'
+        ],
+        'frontend/Scottsbase/mygro' => [
+            'parent_id' => 'Scottsbase/default',
+            'theme_path' => 'Scottsbase/mygro',
+            'theme_title' => 'MyGro',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Scottsbase/mygro'
+        ],
+        'frontend/Scottsbase/scottsprogram-v2' => [
+            'parent_id' => 'Scottsbase/default',
+            'theme_path' => 'Scottsbase/scottsprogram-v2',
+            'theme_title' => 'Scotts Program V2',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Scottsbase/scottsprogram-v2'
+        ],
+        'frontend/Drupal/default' => [
+            'parent_id' => 'Scottsbase/mygro',
+            'theme_path' => 'Drupal/default',
+            'theme_title' => 'Drupal Default',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Drupal/default'
+        ],
+        'frontend/Drupal/roundup' => [
+            'parent_id' => 'Drupal/default',
+            'theme_path' => 'Drupal/roundup',
+            'theme_title' => 'Drupal Roundup',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Drupal/roundup'
+        ],
+        'frontend/Drupal/scotts' => [
+            'parent_id' => 'Drupal/default',
+            'theme_path' => 'Drupal/scotts',
+            'theme_title' => 'Drupal Scotts',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Drupal/scotts'
+        ],
+        'frontend/Drupal/tomcat' => [
+            'parent_id' => 'Drupal/default',
+            'theme_path' => 'Drupal/tomcat',
+            'theme_title' => 'Drupal Tomcat',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Drupal/tomcat'
+        ],
+        'frontend/Drupal/miraclegro' => [
+            'parent_id' => 'Drupal/default',
+            'theme_path' => 'Drupal/miraclegro',
+            'theme_title' => 'Drupal MiracleGro',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Drupal/miraclegro'
+        ],
+        'frontend/Drupal/ortho' => [
+            'parent_id' => 'Drupal/default',
+            'theme_path' => 'Drupal/ortho',
+            'theme_title' => 'Drupal Ortho',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Drupal/ortho'
         ]
     ]
 ];
