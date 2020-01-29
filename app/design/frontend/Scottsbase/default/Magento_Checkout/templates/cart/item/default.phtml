@@ -18,20 +18,9 @@ $canApplyMsrp = $helper->isShowBeforeOrderConfirm($product) && $helper->isMinima
 <tbody class="cart item">
     <tr class="item-info">
         <td data-th="<?= $block->escapeHtml(__('Item')) ?>" class="col item">
-            <?php if ($block->hasProductUrl()):?>
-                <a href="<?= /* @escapeNotVerified */ $block->getProductUrl() ?>"
-                   title="<?= $block->escapeHtml($block->getProductName()) ?>"
-                   tabindex="-1"
-                   class="product-item-photo">
-            <?php else:?>
-                <span class="product-item-photo">
-            <?php endif;?>
-            <?= $block->getImage($block->getProductForThumbnail(), 'cart_page_product_thumbnail')->toHtml() ?>
-            <?php if ($block->hasProductUrl()):?>
-                </a>
-            <?php else: ?>
-                </span>
-            <?php endif; ?>
+            <span class="product-item-photo">
+                <?= $block->getImage($block->getProductForThumbnail(), 'cart_page_product_thumbnail')->toHtml() ?>
+            </span>
             <div class="product-item-details">
                 <strong class="product-item-name">
                     <?php if ($block->hasProductUrl()):?>
