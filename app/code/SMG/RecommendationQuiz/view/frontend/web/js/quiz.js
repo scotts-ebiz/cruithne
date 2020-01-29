@@ -31,6 +31,7 @@ define([
         self.quiz = quiz;
         self.polygons = ko.observableArray([]);
         self.activePolygon = null;
+        self.mapInstructionsDisabled = ko.observable(true);
 
         self.addListeners = function () {
             google.maps.event.addListener(self.drawingManager, 'polygoncomplete', self.handlePolygonComplete);
@@ -86,6 +87,10 @@ define([
                 self.address($('#address-autocomplete').val().replace(', USA', ''));
                 $('#address-autocomplete').val(self.address());
                 self.showInstructions(true);
+
+                setTimeout(() => {
+                    self.mapInstructionsDisabled(false);
+                }, 5000);
 
                 const zoom = window.outerWidth >= 1024 ? 22 : 20;
 
