@@ -73,7 +73,6 @@ define([
 					} else {
 						clearInterval(imgInt);
 					}
-					
 				}, 3000);
 			}
 

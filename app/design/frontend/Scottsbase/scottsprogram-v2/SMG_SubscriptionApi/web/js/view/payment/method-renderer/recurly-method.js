@@ -23,7 +23,7 @@ define(
                 this.rscoChecked = ko.observable(false);
                 this.cardInputTouched = ko.observable(false);
                 this.billingFormInputs = ko.observableArray([]);
-
+                this.orderProcessing = ko.observable(false);
                 /** Can get current value of the checkbox (checked or not) on this observable */
                 this.sameBillingShippingChecked = ko.observable(true);
                 this.billingInfo = ko.observable(self.getBillingAddress());
@@ -313,6 +313,7 @@ define(
                         if (response.success === true) {
                             self.createNewOrders();
                         } else {
+                            self.orderProcessing(false)
                             if (response.message === 'ZIP CODE MISMATCH') {
                                 Modal(self.zipModalOptions, $('#zip-popup-modal'));
                                 $('#zip-popup-modal').modal('openModal');
@@ -359,6 +360,7 @@ define(
                     },
                     error: function (response) {
                         response = JSON.parse(response.responseText);
+                        self.orderProcessing(false);
 
                         if (Array.isArray(response)) {
                             response = response[0];
@@ -403,23 +405,26 @@ define(
 
             myPlaceOrder: function () {
                 var self = this;
+                self.orderProcessing(true);
                 var recurlyForm = $('.recurly-form');
                 var rsco = $('input[name="rsco_accept"]');
 
                 if (!rsco[0].checked) {
                     rsco[0].setCustomValidity('This field is required.');
-
+                    self.orderProcessing(false);
                     return false;
                 } else {
                     rsco[0].setCustomValidity('');
                 }
 
                 if (! self.updateRecurlyFormData()) {
+                    self.orderProcessing(false);
                     return false;
                 }
 
                 recurly.token(recurlyForm, function (err, token) {
                     if (err) {
+                        self.orderProcessing(false);
                         if( err.code === 'validation' ) {
                             if (err.fields.includes('number')) {
                                 $('.recurly-form-error').text('Please enter a valid card number.');
