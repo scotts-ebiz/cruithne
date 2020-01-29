@@ -22,6 +22,7 @@ define(
                 let self = this;
                 this.rscoChecked = ko.observable(false);
                 this.cardInputTouched = ko.observable(false);
+                this.orderProcessing = ko.observable(false);
                 this.billingFormInputs = ko.observableArray([]);
 
                 /** Can get current value of the checkbox (checked or not) on this observable */
