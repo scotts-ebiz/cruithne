@@ -118,23 +118,24 @@
                         </div>
 
                         <h5 class="sp-h4--long sp-mt-0 sp-mb-2 md:sp-mb-4 sp-text-center sp-uppercase">
-                            Tap Tap Taparoo<br/>
+                            "Tap Tap Taparoo"<br/>
                         </h5>
 
                         <ul class="sp-mb-2 md:sp-mb-4">
-                            <li class="sp-p2 sp-mb-0"><strong>TAP a corner</strong> of your lawn</li>
-                            <li class="sp-p2 sp-mb-0">Tap the <strong>next corner</strong> to make a line</li>
-                            <li class="sp-p2 sp-mb-0"><strong>Keep tapping</strong> to make a shape</li>
-                            <li class="sp-p2 sp-mb-0">You can make <strong>multiple shapes</strong></li>
+                            <li class="sp-p2 sp-mb-0">TAP a corner of your lawn</li>
+                            <li class="sp-p2 sp-mb-0">Continue tapping points at the corners of your lawn</li>
+                            <li class="sp-p2 sp-mb-0">You can make multiple shapes for different parts of your lawn</li>
                         </ul>
 
-                        <img src="https://test_magento_image_repo.storage.googleapis.com/mapDraw.png" class="sp-quiz__question-draw-image sp-mb-2 md:sp-mb-4" alt="Draw Lawn Area">
+                        <img src="https://test_magento_image_repo.storage.googleapis.com/LawnSizeCalc_InstructionOverlayAnimation_01242020.gif" class="sp-quiz__question-draw-image sp-mb-2 md:sp-mb-4" alt="Draw Lawn Area">
 
                         <div class="sp-text-center">
                             <button
                                 class="sp-button sp-button--primary"
                                 type="button"
-                                data-bind="click: quiz.map() && quiz.map().hideInstructions"
+                                disabled="disabled"
+                                data-bind="click: quiz.map() && quiz.map().hideInstructions,
+                                attr: { disabled: quiz.map() && quiz.map().mapInstructionsDisabled() }"
                             >
                                 Start
                             </button>
