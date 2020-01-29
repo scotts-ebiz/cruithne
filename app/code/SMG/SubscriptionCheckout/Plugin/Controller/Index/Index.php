@@ -111,6 +111,7 @@ class Index
 
                 // get the onepage quote to see if the user is a logged in user or a guest user
                 $quote = $subject->getOnepage()->getQuote();
+                $quote->setCouponCode('')->save();
 
                 /**
                  * If the customer is not logged in and guest checkout is not allowed,
@@ -149,6 +150,13 @@ class Index
                         $quote->save();
                         $quote->collectTotals()->save();
                         $this->_subscriptionHelper->addSessionSubscriptionToCart();
+
+                        $details = $this->_coreSession->getData('subscription_details');
+
+                        // Set coupon code if annual subscription.
+                        if (isset($details['subscription_plan']) && $details['subscription_plan'] == 'annual') {
+                            $quote->setCouponCode('annual_discount')->save();
+                        }
                     }
 
                     return $proceed();
