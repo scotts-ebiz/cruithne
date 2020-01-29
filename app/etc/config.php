@@ -380,25 +380,25 @@ return [
                 'default_group_id' => '2',
                 'is_default' => '0'
             ],
-            'roundup' => [
+            'scotts' => [
                 'website_id' => '3',
+                'code' => 'scotts',
+                'name' => 'Scotts',
+                'sort_order' => '0',
+                'default_group_id' => '3',
+                'is_default' => '0'
+            ],
+            'roundup' => [
+                'website_id' => '4',
                 'code' => 'roundup',
                 'name' => 'Roundup',
                 'sort_order' => '0',
                 'default_group_id' => '4',
                 'is_default' => '0'
             ],
-            'scotts' => [
-                'website_id' => '4',
-                'code' => 'scotts',
-                'name' => 'Scotts',
-                'sort_order' => '0',
-                'default_group_id' => '4',
-                'is_default' => '0'
-            ],
             'miraclegro' => [
                 'website_id' => '5',
-                'code' => 'base',
+                'code' => 'miraclegro',
                 'name' => 'Miraclegro',
                 'sort_order' => '0',
                 'default_group_id' => '5',
@@ -449,18 +449,18 @@ return [
             [
                 'group_id' => '3',
                 'website_id' => '3',
-                'name' => 'Roundup Store',
+                'name' => 'Scotts Store',
                 'root_category_id' => '2',
                 'default_store_id' => '3',
-                'code' => 'roundup_store'
+                'code' => 'scotts'
             ],
             [
                 'group_id' => '4',
                 'website_id' => '4',
-                'name' => 'Scotts Store',
+                'name' => 'Roundup Store',
                 'root_category_id' => '2',
                 'default_store_id' => '4',
-                'code' => 'scotts_store'
+                'code' => 'roundup'
             ],
             [
                 'group_id' => '5',
@@ -468,7 +468,7 @@ return [
                 'name' => 'Miraclegro Store',
                 'root_category_id' => '2',
                 'default_store_id' => '5',
-                'code' => 'miraclegro_store'
+                'code' => 'miraclegro'
             ],
             [
                 'group_id' => '6',
@@ -476,7 +476,7 @@ return [
                 'name' => 'Ortho Store',
                 'root_category_id' => '2',
                 'default_store_id' => '6',
-                'code' => 'ortho_store'
+                'code' => 'ortho'
             ],
             [
                 'group_id' => '7',
@@ -484,7 +484,7 @@ return [
                 'name' => 'Tomcat Store',
                 'root_category_id' => '2',
                 'default_store_id' => '7',
-                'code' => 'tomcat_store'
+                'code' => 'tomcat'
             ]
         ],
         'stores' => [
@@ -515,51 +515,51 @@ return [
                 'sort_order' => '0',
                 'is_active' => '1'
             ],
-            'roundup_view' => [
+            'scotts' => [
                 'store_id' => '3',
-                'code' => 'roundup_view',
+                'code' => 'scotts',
                 'website_id' => '3',
                 'group_id' => '3',
-                'name' => 'Roundup View',
-                'sort_order' => '0',
-                'is_active' => '1'
-            ],
-            'scotts_view' => [
-                'store_id' => '4',
-                'code' => 'scotts_view',
-                'website_id' => '4',
-                'group_id' => '4',
                 'name' => 'Scotts View',
                 'sort_order' => '0',
                 'is_active' => '1'
             ],
-            'miraclegro_view' => [
-                'store_id' => '5',
-                'code' => 'miraclegro_view',
-                'website_id' => '5',
-                'group_id' => '5',
-                'name' => 'Miraclegro View',
+            'roundup' => [
+                'store_id' => '4',
+                'code' => 'roundup',
+                'website_id' => '4',
+                'group_id' => '4',
+                'name' => 'Roundup View',
                 'sort_order' => '0',
                 'is_active' => '1'
             ],
-            'ortho_view' => [
+            'miraclegro' => [
+                'store_id' => '5',
+                'code' => 'miraclegro',
+                'website_id' => '5',
+                'group_id' => '5',
+                'name' => 'Miraclegro',
+                'sort_order' => '0',
+                'is_active' => '1'
+            ],
+            'ortho' => [
                 'store_id' => '6',
-                'code' => 'ortho_view',
+                'code' => 'ortho',
                 'website_id' => '6',
                 'group_id' => '6',
                 'name' => 'Ortho View',
                 'sort_order' => '0',
                 'is_active' => '1'
             ],
-            'tomcat_view' => [
+            'tomcat' => [
                 'store_id' => '7',
-                'code' => 'tomcat_view',
+                'code' => 'tomcat',
                 'website_id' => '7',
                 'group_id' => '7',
                 'name' => 'Tomcat View',
                 'sort_order' => '0',
                 'is_active' => '1'
-            ],
+            ]
         ]
     ],
     'system' => [
