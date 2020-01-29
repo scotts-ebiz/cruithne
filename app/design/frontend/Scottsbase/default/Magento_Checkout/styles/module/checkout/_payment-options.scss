@@ -30,6 +30,7 @@ $checkout-payment-option-content__padding__xl     : $checkout-payment-method-con
         &._collapsible {
             .payment-option-title {
                 cursor: pointer;
+                height: 0 !important; //overriding base form height that's needed
             }
 
             .payment-option-content {
@@ -62,7 +63,7 @@ $checkout-payment-option-content__padding__xl     : $checkout-payment-method-con
     }
 
     .payment-option-inner {
-        margin: 0 0 $indent__base;
+        float: left;
     }
 
     .credit-card-types {
