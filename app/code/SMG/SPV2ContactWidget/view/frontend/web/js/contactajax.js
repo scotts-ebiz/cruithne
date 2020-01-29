@@ -1,7 +1,6 @@
 define([
     'jquery',
     'Magento_Ui/js/modal/modal',
-    'mage/validation',
     'domReady!'
 ], function($, modal){
     'use strict';
@@ -11,13 +10,9 @@ define([
         var dataForm = $('#contact-form');
         dataForm.mage('validation', {});
 
-        $(document).on('blur', '#contact-form input, #contact-form textarea', function () {
-            $('.sp-input[aria-invalid="true"]').removeAttr('aria-invalid');
-            dataForm.valid();
-        });
-
         $(document).on('submit', '#contact-form', function() {
             event.preventDefault();
+
             if( dataForm.valid() ) {
                 $.ajax({
                     type: 'POST',
@@ -41,10 +36,6 @@ define([
                             };
 
                             var popup = modal(options, $('#popup-modal'));
-                            $('#popup-modal').modal('openModal');
-                        } else {
-                            var popup = modal(options, $('#popup-modal'));
-                            $('#popup-modal').html('<h3 style="text-align: center">' + response.message + '</h3>')
                             $('#popup-modal').modal('openModal');
                         }
                     }

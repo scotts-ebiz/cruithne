@@ -6,12 +6,11 @@ $page = '';
 if (strpos($currentUrl, '/account/settings') !== false
     || strpos($currentUrl, '/account/billing') !== false
     || strpos($currentUrl, '/customer/account') !== false
-    || strpos($currentUrl, '/account/subscription') !== false
 ) {
     $page = 'account';
 } elseif (strpos($currentUrl, '/how-it-works') !== false) {
     $page = 'howitworks';
-} elseif (strpos($currentUrl, '/your-plan') !== false) {
+} elseif (strpos($currentUrl, '/account/subscription') !== false) {
     $page = 'myplan';
 } elseif (strpos($currentUrl, '/quiz') !== false
     || strpos($currentUrl, '/your-results') !== false
@@ -66,7 +65,7 @@ if (strpos($currentUrl, '/account/settings') !== false
                     <?php if ($block->isLoggedIn() && $block->hasSubscriptions()) { ?>
                         <a
                             class="sp-link <?php echo ($page == 'myplan') ? 'active' : ''; ?>"
-                            href="/your-plan"
+                            href="/account/subscription"
                         >
                             My Plan
                         </a>
@@ -98,9 +97,9 @@ if (strpos($currentUrl, '/account/settings') !== false
             </ul>
             <address class="sp-header__address">
                 14111 Scottslawn Rd.<br/>
-                Marysville, OH 43040
+                Marysville, OH 43041
             </address>
-            <a class="sp-header__phone" href="tel:+18882703714">1-888-270-3714</a>
+            <a class="sp-header__phone" href="tel:+18772203091">877-220-3091</a>
             <ul class="sp-header__social">
                 <li>
                     <a class="sp-link sp-text-white" href="https://www.facebook.com/scottslawn" target="_blank">
@@ -147,18 +146,16 @@ if (strpos($currentUrl, '/account/settings') !== false
                     <a
                         class="sp-link"
                         href="https://scottsmiraclegro.com/terms-conditions/"
-                        target="_blank"
                     >Terms</a>
                 </li>
                 <li>
                     <a
                         class="sp-link"
                         href="https://scottsmiraclegro.com/privacy/"
-                        target="_blank"
                     >Privacy</a>
                 </li>
                 <li>
-                    <a class="sp-link" href="/returns">Returns</a>
+                    <a class="sp-link" href="/return-policy">Returns</a>
                 </li>
                 <li>
                     <a class="sp-link" href="/contact">Contact</a>

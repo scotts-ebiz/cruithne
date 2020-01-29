@@ -106,7 +106,7 @@ class ShippingInformationManagement
 
             foreach($data as $value)
             {
-                $attr = $product->getResource()->getAttribute('state_not_allowed');
+                $attr = $product->getResource()->getAttribute('states_not_allowed');
                 $option_value[] = $attr->getSource()->getOptionText($value);
             }
 

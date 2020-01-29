@@ -22,6 +22,7 @@
 
 <div class="sp-hero <?php echo $block->getData('heroFullScreen') ? 'sp-hero--full' : '' ?> sp-mb-12">
     <div class="sp-hero__background <?php echo $block->escapeHtml($block->getData('heroImageClass')) ?>"></div>
+    <div class="sp-hero__overlay"></div>
     <?php if ($block->getData('heroHeadline')) { ?>
         <?php if( ! $block->getData('heroFullScreen' ) ) { ?>
         <div class="sp-hero__headline sp-container sp-my-8">

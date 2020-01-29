@@ -2,9 +2,6 @@
 
 namespace SMG\SubscriptionAccounts\Block;
 
-use DateInterval;
-use DateTime;
-use DateTimeImmutable;
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\View\Element\Template;
@@ -12,13 +9,9 @@ use Magento\Framework\View\Element\Template\Context;
 use Recurly_BillingInfo;
 use Recurly_Client;
 use Recurly_Invoice;
-use Recurly_InvoiceList;
-use Recurly_Subscription;
 use Recurly_SubscriptionList;
 use SMG\SubscriptionApi\Helper\RecurlyHelper;
-use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
-use SMG\SubscriptionApi\Model\SubscriptionAddonOrder;
-use SMG\SubscriptionApi\Model\SubscriptionOrder;
+use \SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
 
 /**
  * Class Subscription
@@ -51,7 +44,6 @@ class Subscription extends Template
      * @param CustomerSession $customerSession
      * @param Customer $customer
      * @param RecurlyHelper $recurlyHelper
-     * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
      * @param array $data
      */
     public function __construct(
@@ -67,9 +59,6 @@ class Subscription extends Template
         $this->_recurlyHelper = $recurlyHelper;
         $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
         parent::__construct($context, $data);
-
-        Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
-        Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
     }
 
     /**
@@ -102,139 +91,107 @@ class Subscription extends Template
      * Return customer subscriptions
      *
      * @return array
-     * @throws \Exception
      */
     public function getSubscriptions()
     {
-        $subscriptionCollection = $this->_subscriptionCollectionFactory->create();
-
-        /** @var \SMG\SubscriptionApi\Model\Subscription $currentSubscription */
-        $currentSubscription = $subscriptionCollection
+        $subscriptionFactory = $this->_subscriptionCollectionFactory->create();
+        $hasActiveSubscription = $subscriptionFactory
             ->addFilter('subscription_status', 'active')
             ->addFilter('customer_id', $this->getCustomerId())
-            ->getFirstItem();
+            ->count();
 
-        // We don't have a subscription so return empty object.
-        if (! $currentSubscription || ! $currentSubscription->getData('entity_id')) {
-            return [
-                'subscription' => [],
-            ];
-        }
+        Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
+        Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
 
-        $subscriptionOrders = $currentSubscription
-            ->getSubscriptionOrders()
-            ->getItems();
-
-        $subscriptionAddonOrders = $currentSubscription
-            ->getSubscriptionAddonOrders()
-            ->addFieldToFilter('subscription_id', ['notnull' => true])
-            ->getItems();
-
-        // Get the subscriptions from Recurly.
-        $recurlySubscriptions = Recurly_SubscriptionList::getForAccount(
-            $currentSubscription->getData('gigya_id'),
-            ['state' => 'active']
-        );
-
-        foreach ($recurlySubscriptions as $recurlySubscription) {
-            /** @var Recurly_Subscription $recurlySubscription */
-            if ($recurlySubscription->uuid == $currentSubscription->getData('subscription_id')) {
-                $currentSubscription->setData('recurly', $recurlySubscription->getValues());
-                break;
-            }
-        }
-
-        $subscriptionOrders = array_values(array_map(function ($subscriptionOrder) use ($recurlySubscriptions) {
-            /** @var SubscriptionOrder $subscriptionOrder */
-            foreach ($recurlySubscriptions as $recurlySubscription) {
-                /** @var Recurly_Subscription $recurlySubscription */
-                if ($recurlySubscription->uuid == $subscriptionOrder->getData('subscription_id')) {
-                    $subscriptionOrder->setData('recurly', $recurlySubscription->getValues());
-                    break;
-                }
-            }
-
-            $order = $subscriptionOrder->getOrder();
-            $order = $order ? $order->toArray() : null;
-            $subscriptionOrder->setData('order', $order);
-
-            return $subscriptionOrder->toArray();
-        }, $subscriptionOrders));
-
-        $subscriptionAddonOrders = array_values(array_map(function ($subscriptionAddonOrder) use ($recurlySubscriptions) {
-            /** @var SubscriptionAddonOrder $subscriptionAddonOrder */
-            foreach ($recurlySubscriptions as $recurlySubscription) {
-                /** @var Recurly_Subscription $recurlySubscription */
-                if ($recurlySubscription->uuid == $subscriptionAddonOrder->getData('subscription_id')) {
-                    $subscriptionAddonOrder->setData('recurly', $recurlySubscription->getValues());
-                    break;
-                }
-            }
-
-            $order = $subscriptionAddonOrder->getOrder();
-            $order = $order ? $order->toArray() : null;
-            $subscriptionAddonOrder->setData('order', $order);
-
-            return $subscriptionAddonOrder->toArray();
-        }, $subscriptionAddonOrders));
-
-        $addonOrder = count($subscriptionAddonOrders) ? $subscriptionAddonOrders[0] : null;
-
-        // Get the next billing date.
-        $startDate = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $subscriptionOrders[0]['ship_start_date'])
-            ->add(new DateInterval('P1Y'));
-        $renewalDate = $startDate->add(new DateInterval('P1Y'));
-        $nextBilling = null;
-        $nextOrder = null;
-
-        // Get the next billing date for seasonal subscription.
-        $initialOrder = true;
-        if ($currentSubscription->getData('subscription_type') == 'seasonal') {
-            foreach ($subscriptionOrders as $subscriptionOrder) {
-                $shipStartDate = DateTime::createFromFormat(
-                    'Y-m-d H:i:s',
-                    $subscriptionOrder['ship_start_date']
-                );
-
-                // Find the first order that has not yet been invoiced by Recurly.
-                if (empty($subscriptionOrder['recurly'])) {
-                    $nextOrder = $subscriptionOrder;
-                    $nextBilling = $shipStartDate;
-                    break;
-                }
-
-                $initialOrder = false;
-            }
-        }
-
-        $invoiceList = Recurly_InvoiceList::getForAccount(
-            $currentSubscription->getData('gigya_id')
-        );
-
+        $isAnnualSubscription = false;
+        $activeSubscription = []; // Used for storing the active subscription, can be of any type
+        $mainSubscription = []; // Used for storing the main subscription, annual or seasonal
+        $subscriptions = []; // Used for merging the active and future subscriptions
         $invoices = [];
 
-        // Loop through the invoices to filter out zero dollar invoices.
-        foreach ($invoiceList as $invoice) {
-            /** @var Recurly_Invoice $invoice */
-            if ($invoice->total_in_cents > 0) {
-                $invoice->due_on = $invoice->due_on->format('M d, Y');
-                $invoice->created_at = $invoice->created_at->format('M d, Y');
-                $invoices[] = $invoice->getValues();
+        try {
+            if (! $hasActiveSubscription) {
+                throw new \Exception('No active subscriptions found.');
             }
-        }
 
-        return [
-            'addonOrder' => $addonOrder,
-            'initialOrder' => $initialOrder,
-            'invoices' => $invoices,
-            'lastFour' => $this->getBillingInformation()->last_four,
-            'nextBillingDate' => $nextBilling ? $nextBilling->format('M d, Y') : null,
-            'nextOrder' => $nextOrder,
-            'orders' => $subscriptionOrders,
-            'renewalDate' => $renewalDate->format('M d, Y'),
-            'startDate' => $startDate->format('M d, Y'),
-            'subscription' => $currentSubscription->toArray(),
-        ];
+            // Get active, future and expired subscriptions
+            $activeSubscriptions = Recurly_SubscriptionList::getForAccount($this->getGigyaUid(), [ 'state' => 'active' ]);
+            $futureSubscriptions = Recurly_SubscriptionList::getForAccount($this->getGigyaUid(), [ 'state' => 'future' ]);
+
+            // Merge active and future subscriptions
+            foreach ($activeSubscriptions as $subscription) {
+                array_push($subscriptions, $subscription);
+            }
+            foreach ($futureSubscriptions as $subscription) {
+                array_push($subscriptions, $subscription);
+            }
+
+            foreach ($subscriptions as $subscription) {
+                if ($subscription->plan->plan_code == 'annual' || $subscription->plan->plan_code == 'seasonal') {
+                    // Get Subscription Type
+                    $isAnnualSubscription = ($subscription->plan->plan_code == 'annual') ? true : false;
+
+                    // Get main subscription
+                    $mainSubscription['invoice_number'] = $subscription->invoice->get()->invoice_number;
+                    $mainSubscription['starts_at'] = $subscription->current_period_started_at->format('M d, Y');
+                    $mainSubscription['ends_at'] = $subscription->current_period_ends_at->format('M d, Y');
+                    $mainSubscription['next_billing_date'] = $subscription->current_period_ends_at->format('F d, Y');
+                    $mainSubscription['cc_last_four'] = $this->getBillingInformation()->last_four;
+
+                    // Get items from the main invoice
+                    $mainInvoice = $this->getInvoice($mainSubscription['invoice_number']);
+                    $notAddonProduct = [ 'annual', 'add-ons', 'early-spring', 'late-spring', 'early-summer', 'early-fall', 'seasonal' ];
+                    $totalAddonAmount = 0;
+                    $totalMainAmount = 0;
+                    $numberOfAddonProducts = 0;
+
+                    foreach ($mainInvoice->line_items as $item) {
+                        if (! in_array($item->product_code, $notAddonProduct)) {
+                            $totalAddonAmount += $item->total_in_cents;
+                            $numberOfAddonProducts++;
+                        }
+                        if ($item->product_code == 'annual' || $item->product_code == 'seasonal') {
+                            $totalMainAmount = $item->total_in_cents;
+                        }
+                    }
+
+                    $mainSubscription['addon_count'] = $numberOfAddonProducts;
+                    $mainSubscription['addon_total_amount'] = $this->convertAmountToDollars($totalAddonAmount);
+                    $mainSubscription['main_total_amount'] = $this->convertAmountToDollars($totalMainAmount);
+                    $mainSubscription['total_amount'] = $this->convertAmountToDollars($mainInvoice->total_in_cents);
+                }
+
+                // Get active subscription, and it's not addons
+                if ($subscription->state == 'active' && $subscription->plan->plan_code != 'add-ons') {
+                    $activeSubscription['invoice_number'] = $subscription->invoice->get()->invoice_number;
+                }
+
+                // Get invoice numbers if there is an invoice generated for the subscription
+                if ($subscription->invoice) {
+                    array_push($invoices, $subscription->invoice->get()->invoice_number);
+                }
+            }
+
+            $invoices = $this->getInvoices(array_unique($invoices));
+
+            return [
+                'success'               => true,
+                'is_annual'             => $isAnnualSubscription,
+                'subscription_type'     => ($isAnnualSubscription) ? 'Annual' : 'Seasonal',
+                'main_subscription'     => $mainSubscription,
+                'active_subscription'   => $activeSubscription,
+                'invoices'              => $invoices,
+            ];
+        } catch (\Exception $e) {
+            $this->_logger->error($e->getMessage());
+
+            return [
+                'success' => false,
+                'error_message' => $e->getMessage(),
+                'api' => Recurly_Client::$apiKey,
+                'subdomain' => Recurly_Client::$subdomain,
+            ];
+        }
     }
 
     /**
@@ -249,13 +206,11 @@ class Subscription extends Template
 
         foreach ($invoices as $index => $invoiceId) {
             $invoice = $this->getInvoice($invoiceId);
-            if ($this->convertAmountToDollars($invoice->total_in_cents) > 0) {
-                $invoicesArray[$index]['invoice_number'] = $invoiceId;
-                $invoicesArray[$index]['created_at'] = $invoice->created_at->format('M d, Y');
-                $invoicesArray[$index]['due_on'] = $invoice->created_at->format('M d, Y');
-                $invoicesArray[$index]['paid'] = ($invoice->state == 'paid') ? 'YES' : 'NO';
-                $invoicesArray[$index]['total'] = $this->convertAmountToDollars($invoice->total_in_cents);
-            }
+            $invoicesArray[$index]['invoice_number'] = $invoiceId;
+            $invoicesArray[$index]['created_at'] = $invoice->created_at->format('M d, Y');
+            $invoicesArray[$index]['due_on'] = $invoice->created_at->format('M d, Y');
+            $invoicesArray[$index]['paid'] = ($invoice->state == 'paid') ? 'YES' : 'NO';
+            $invoicesArray[$index]['total'] = $this->convertAmountToDollars($invoice->total_in_cents);
         }
 
         return $invoicesArray;
@@ -269,6 +224,9 @@ class Subscription extends Template
      */
     public function getInvoice($id)
     {
+        Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
+        Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
+
         try {
             return Recurly_Invoice::get($id);
         } catch (\Exception $e) {
@@ -295,6 +253,9 @@ class Subscription extends Template
      */
     public function getBillingInformation()
     {
+        Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
+        Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
+
         try {
             return Recurly_BillingInfo::get($this->getGigyaUid());
         } catch (\Exception $e) {

@@ -21,25 +21,12 @@
                 <input type="hidden" data-recurly="postal_code">
                 <input type="hidden" data-recurly="state">
                 <div class="sp-flex sp-flex-wrap sp--mx-2">
-                    <div
-                        data-recurly="card"
-                        class="sp-form-group sp-px-2 sp-w-full"
-                        data-bind="afterRender: initializeRecurly"
-                    >
-                    </div>
-                    <p class="sp-form-error recurly-form-error"></p>
+                    <div data-recurly="card" class="sp-form-group sp-px-2 sp-w-full"></div>
                 </div>
 
                 <div class="form-group sp-px-2 sp-w-full">
                     <label class="sp-flex">
-                        <input
-                            class="sp-checkbox sp-mr-2"
-                            name="rsco_accept"
-                            aria-required="true"
-                            type="checkbox"
-                            value="true"
-                            data-bind="checked: rscoChecked"
-                        >
+                        <input class="sp-checkbox sp-mr-2" name="rsco_accept" aria-required="true" type="checkbox" value="true">
                         <span
                             class="sp-p2 sp-text-green-1"
                             data-bind="if: subscriptionType() === 'annual'"
@@ -86,7 +73,7 @@
         </div>
         <div class="checkout-agreements-block">
             <!-- ko foreach: $parent.getRegion('before-place-order') -->
-            <!-- ko template: getTemplate() --><!-- /ko -->
+                <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
         </div>
         <div class="sp-mt-6 sp-text-center md:sp-text-left">
@@ -94,28 +81,11 @@
                 class="primary checkout sp-button sp-button--primary sp-button--get-started"
                 data-bind="
                     click: myPlaceOrder,
-                    attr: {
-                        title: $t('Place Order'),
-                        disabled: checkoutButtonDisabled
-                    },
-                    css: {
-                        'sp-button--inactive': checkoutButtonDisabled,
-                        'sp-button--inactive sp-button--loading': orderProcessing()
-                    }
+                    attr: {title: $t('Place Order')}
                     "
-                type="submit"
-            >
+                type="submit">
                 <span data-bind="i18n: 'Place Order'"></span>
             </button>
         </div>
     </div>
-</div>
-
-<div id="zip-popup-modal" class="content sp-hide">
-    <p class="sp-text-center">
-        The products in your plan are based on the ZIP code provided previously. To change your ZIP code for shipping, you will need to create a new plan to ensure the products are suitable for your area.
-    </p>
-    <p class="sp-text-center"><strong>
-        For questions, email us at scotts-orders@scotts.com or call us at <a href="tel:18772203091">1-877-220-3091</a>.</strong>
-    </p>
 </div>

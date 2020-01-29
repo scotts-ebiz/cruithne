@@ -141,7 +141,7 @@ class OrderRepositoryInterface
                     $statesNotAllowedArray = array();
                     foreach ($statesNotAllowedList as $stateNotAllowed)
                     {
-                        $attr = $this->_productResource->getAttribute('state_not_allowed');
+                        $attr = $this->_productResource->getAttribute('states_not_allowed');
                         $statesNotAllowedArray = [];
 
                         try
