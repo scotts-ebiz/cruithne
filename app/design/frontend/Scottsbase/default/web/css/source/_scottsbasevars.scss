@@ -21,7 +21,9 @@ $color_lightyellow_shade                                      : #ffc;
 
 // Cart / Checkout Colors
 $checkout-green                                               : #1d5632;
+$checkout-light-green                                        : #028c45;
 $checkout-light_grey                                          : #d3d3d3;
+
 
 
 
@@ -92,14 +94,16 @@ $cart-checkout-button__width                                  : 250px;
 $cart-checkout-button__height                                 : 44px;
 $cart-checkout-button__padding                                : 0;
 $cart-checkout-button__txt-transform                          : uppercase;
+$cart-checkout-button__position                               : relative;
+$cart-checkout-button__bottom-position                        : 1px;
+$cart-checkout-button__boxshadow                              : 0px 10px 15px -10px rgba(0,0,0,0.4);
+$cart-checkout-button__background-active                      : $checkout-light-green !default;
 
 
 // Large Button
-$cart-checkout-button-l__width                                  : 250px;
+$cart-checkout-button-l__width                                : 250px;
 
 // Small Button
-$cart-checkout-button-s__width                                  : 74px;
+$cart-checkout-button-s__width                                : 74px;
 
-$cart-checkout-button__font-size__s :13px;
-$cart-checkout-button__padding__s : 15px;
 

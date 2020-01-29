@@ -140,16 +140,27 @@
 //  ---------------------------------------------
 
 
+// Cart / Checkout - Hover State
+@mixin cart-checkout-button-hover(
+  $_button-background-hover         : $cart-checkout-button__background-hover,
+  $_button-color-hover              : $cart-checkout-button__font-color-hover,
+  $_button-boxshadow                : $cart-checkout-button__boxshadow,
+  $_button-bottom-position          : $cart-checkout-button__bottom-position)
+{
+  @if $_button-background-hover { background-color: $_button-background-hover; };
+  @if $_button-color-hover { color: $_button-color-hover; };
+  @if $_button-boxshadow { box-shadow: $_button-boxshadow; };
+  @if $_button-bottom-position { bottom: $_button-bottom-position; };
+}
 
-// Generic Button
+
+// Cart / Checkout - Generic Button
 @mixin cart-checkout-button(
     $_button-font-family              : $cart-checkout-button__font-family,
     $_button-font-weight              : $cart-checkout-button__font-weight,
     $_button-line-height              : $cart-checkout-button__line-height,
     $_button-background               : $cart-checkout-button__background-color,
-    $_button-background-hover         : $cart-checkout-button__background-hover,
     $_button-color                    : $cart-checkout-button__font-color,
-    $_button-color-hover              :$cart-checkout-button__font-color-hover,
     $_button-font-size                : $cart-checkout-button__font-size,
     $_button-border                   : $cart-checkout-button__border,
     $_button-width                    : $cart-checkout-button-l__width,
@@ -157,25 +168,32 @@
     $_button-padding                  : $cart-checkout-button__padding,
     $_button-letter-spacing           : $cart-checkout-button__letter-spacing,
     $_button-border-radius            : $cart-checkout-button__border-radius,
-    $_button-text-transform           : $cart-checkout-button__txt-transform) {
-        @if $_button-font-family { font-family: $_button-font-family; };
-        @if $_button-font-weight { font-weight: $_button-font-weight; };
-        @if $_button-line-height { line-height: $_button-line-height; };
-        @if $_button-background { background-color: $_button-background; };
-        @if $_button-color { color: $_button-color; };
-        @if $_button-font-size { font-size: $_button-font-size; };
-        @if $_button-border { border: $_button-border; };
-        @if $_button-width { width: $_button-width; };
-        @if $_button-height { height: $_button-height; };
-        @if $_button-padding { padding: $_button-padding; };
-        @if $_button-letter-spacing { letter-spacing: $_button-letter-spacing; };
-        @if $_button-border-radius { border-radius: $_button-border-radius; };
-        @if $_button-text-transform { text-transform: $_button-text-transform; };
-        &:hover {
-            @if $_button-background-hover { background-color: $_button-background-hover; };
-            @if $_button-color-hover { color: $_button-color-hover; };
-
-        }
+    $_button-text-transform           : $cart-checkout-button__txt-transform,
+    $_button-position                 : $cart-checkout-button__position,
+    $_button-bottom-position          : $cart-checkout-button__bottom-position,
+    $_button-background-active        : $cart-checkout-button__background-active
+)
+    {
+    @if $_button-font-family { font-family: $_button-font-family; };
+    @if $_button-font-weight { font-weight: $_button-font-weight; };
+    @if $_button-line-height { line-height: $_button-line-height; };
+    @if $_button-background { background-color: $_button-background; };
+    @if $_button-color { color: $_button-color; };
+    @if $_button-font-size { font-size: $_button-font-size; };
+    @if $_button-border { border: $_button-border; };
+    @if $_button-width { width: $_button-width; };
+    @if $_button-height { height: $_button-height; };
+    @if $_button-padding { padding: $_button-padding; };
+    @if $_button-letter-spacing { letter-spacing: $_button-letter-spacing; };
+    @if $_button-border-radius { border-radius: $_button-border-radius; };
+    @if $_button-text-transform { text-transform: $_button-text-transform; };
+    @if $_button-position { position: $_button-position; };
+    &:hover {
+        @include cart-checkout-button-hover();
+    }
+    &:active {
+        @if $_button-background-active { background-color: $_button-background-active; };
+    }
 }
 
 
