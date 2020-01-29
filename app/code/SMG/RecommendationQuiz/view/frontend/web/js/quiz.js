@@ -364,7 +364,7 @@ define([
         self.previousGroups = ko.observableArray([]);
         self.sliderImages = ko.observable({});
         self.animation = ko.observable({});
-        self.usingGoogleMaps = ko.observable(true);
+        self.usingGoogleMaps = ko.observable(false);
         self.invalidZipCode = ko.observable(false);
         self.invalidArea = ko.observable(false);
         self.isAnimating = ko.observable(false);
@@ -506,7 +506,7 @@ define([
         self.loadNextGroup = async group => {
             // No group specified so load the first group.
             if (!group) {
-                self.setGroup(self.template.questionGroups[0]);
+                self.setGroup(self.template.questionGroups[4]);
 
                 return;
             }
