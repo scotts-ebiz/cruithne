@@ -61,6 +61,8 @@
                             padding: 1rem;
                         }
                         .opc {
+
+
                             /** General Form styles - Start **/
                             .fieldset {
                                 .field {
@@ -285,7 +287,7 @@
                                         }
                                         .opc-payment-additional {
                                             .payment-option-title {
-                                                padding-bottom: 10px;
+                                                padding-bottom: 30px;
                                                 .action-toggle {
                                                     color: $scotts-green;
                                                     span {
@@ -307,7 +309,6 @@
                                                         label {
                                                             padding: 6px 15px 0 0;
                                                             text-align: right;
-                                                            width: 25.8%;
                                                             box-sizing: border-box;
                                                             float: left;
                                                             position: relative;
@@ -334,8 +335,6 @@
                                                         }
                                                     }
                                                     .actions-toolbar {
-                                                        margin-left: 25.8%;
-                                                        margin-top: -43px;
                                                         @media screen and (max-width: $screen__l) {
                                                             margin-left: 0;
                                                             margin-top: 10px;
@@ -350,26 +349,8 @@
                                                                 margin-left: 0;
                                                             }
                                                             button {
-                                                                font-family: $opensans;
-                                                                font-size: 0.8rem;
-                                                                color: $color-white;
-                                                                padding: 5px 10px 5px 10px;
+                                                                width: 150px;
                                                                 height: 30px;
-                                                                -webkit-transition: background 0.2s;
-                                                                -moz-transition: background 0.2s;
-                                                                -ms-transition: background 0.2s;
-                                                                -o-transition: background 0.2s;
-                                                                transition: background 0.2s;
-                                                                background: $scotts-gray;
-                                                                border: none;
-                                                                &:hover {
-                                                                    -webkit-transition: background 0.2s;
-                                                                    -moz-transition: background 0.2s;
-                                                                    -ms-transition: background 0.2s;
-                                                                    -o-transition: background 0.2s;
-                                                                    transition: background 0.2s;
-                                                                    background: $color_black15_shade;
-                                                                }
                                                             }
                                                         }
                                                     }
