@@ -2,12 +2,14 @@ define(
     [
         'ko',
         'jquery',
+        'recurly',
         'Magento_Checkout/js/view/payment/default',
+        'Magento_Ui/js/modal/modal',
         'Magento_Checkout/js/action/place-order',
         'Magento_Checkout/js/action/redirect-on-success',
         'domReady!',
     ],
-    function (ko, $, Component) {
+    function (ko, $, recurly, Component, Modal) {
         'use strict';
 
         return Component.extend({
@@ -17,12 +19,137 @@ define(
 
             initialize: function () {
                 this._super();
+                let self = this;
+                this.rscoChecked = ko.observable(false);
+                this.cardInputTouched = ko.observable(false);
+                this.orderProcessing = ko.observable(false);
+
+                /** Can get current value of the checkbox (checked or not) on this observable */
+                this.sameBillingShippingChecked = ko.observable(true);
+                this.billingInfo = ko.observable(self.getBillingAddress());
                 this.subscriptionType = ko.observable(window.sessionStorage.getItem('subscription_plan'));
                 this.loading = ko.observable(false);
 
-                setTimeout(function () {
-                    recurly.configure('ewr1-aefvtq9Ri3MILWsXFPHyv2');
-                }, 2000);
+                /** Can query children of the form element (the inputs) based on this observable, only when it != null */
+                this.billingForm = ko.observable(null);
+
+                this.checkoutButtonDisabled = ko.computed(function() {
+                    if (!self.sameBillingShippingChecked()) {
+                        const billingInfoValid = Array.prototype.every.call(
+                            Object.keys(self.billingInfo()),
+                            key => {
+                                if (
+                                    key === 'street' &&
+                                    self.billingInfo()[key][0] !== ''
+                                ) {
+                                    return true;
+                                }
+
+                                if (
+                                    key === 'company' ||
+                                    key === 'region'
+                                ) {
+                                    return true;
+                                }
+
+                                return self.billingInfo()[key] !== '';
+                            }
+                        );
+                        return (
+                            !billingInfoValid ||
+                            !self.rscoChecked() ||
+                            !self.cardInputTouched()
+                        );
+                    }
+
+                    return (
+                        !self.rscoChecked() ||
+                        !self.cardInputTouched()
+                    );
+                });
+
+              let billingListenerInterval = setInterval(() => {
+                    if (self.billingForm() != null) {
+                        const inputs = self.billingForm().querySelectorAll('input');
+
+                        Array.prototype.forEach.call(inputs, input => {
+                            input.addEventListener('change', e => {
+                                self.billingInfo(
+                                    Object.assign(
+                                        {},
+                                        self.getBillingAddress(),
+                                        {
+                                            [e.target.name]: e.target.value
+                                        }
+                                    )
+                                );
+                            });
+                        });
+
+                        clearInterval(billingListenerInterval);
+                    }
+                }, 100);
+
+              let billingFormInterval = setInterval(() => {
+                    if (document.querySelector('input[name="billing-address-same-as-shipping"]')) {
+                        if (
+                            document.querySelector('.billing-address-form')
+                        ) {
+                            const checkbox = document.querySelector('input[name="billing-address-same-as-shipping"]')
+                            self.billingForm(document.querySelector('.billing-address-form'));
+
+                            checkbox.addEventListener('change', e => {
+                                const currentVal = self.sameBillingShippingChecked();
+                                self.sameBillingShippingChecked(!currentVal);
+                            });
+
+                            clearInterval(billingFormInterval);
+                        }
+                    }
+                }, 100);
+
+                // Setup zip modal
+                this.zipModalOptions = {
+                    type: 'popup',
+                    innerScroll: true,
+                    title: 'Your Zip Code Has Changed',
+                    closeText: 'Cancel',
+                    focus: 'none',
+                    buttons: [{
+                        text: 'Cancel',
+                        class: 'sp-link sp-mx-4',
+                        click: self.closeZipModal(),
+                    }, {
+                        text: 'Create New Plan',
+                        class: 'sp-button sp-button--primary sp-mx-4',
+                        click() { window.location.href = '/quiz' }
+                    }],
+                    closed() {
+                        window.location.hash = 'shipping';
+                    },
+                };
+            },
+
+            initializeRecurly() {
+                const self = this;
+
+                recurly.configure(window.recurlyApi);
+
+                recurly.on('change', (state) => {
+                    if (
+                        !state.fields.card.number.empty ||
+                        !state.fields.card.cvv.empty ||
+                        !state.fields.card.expiry.empty
+                    ) {
+                        self.cardInputTouched(true);
+                    } else {
+                        self.cardInputTouched(false);
+                    }
+                });
+            },
+
+            closeZipModal() {
+                $('#zip-popup-modal').modal('closeModal');
             },
 
             getShippingAddress: function () {
@@ -60,7 +187,15 @@ define(
                         if (response.success === true) {
                             self.createNewOrders();
                         } else {
-                            alert(response.message);
+                            self.orderProcessing(false)
+                            if (response.message === 'ZIP CODE MISMATCH') {
+                                Modal(self.zipModalOptions, $('#zip-popup-modal'));
+                                $('#zip-popup-modal').modal('openModal');
+
+                                return false;
+                            } else {
+                                $('.recurly-form-error').text(response.message);
+                            }
                         }
                     }
                 });
@@ -99,6 +234,7 @@ define(
                     },
                     error: function (response) {
                         response = JSON.parse(response.responseText);
+                        self.orderProcessing(false);
 
                         if (Array.isArray(response)) {
                             response = response[0];
@@ -115,6 +251,8 @@ define(
             },
 
             updateRecurlyFormData: function () {
+                var shippingAddress = this.getShippingAddress();
+
                 // Check if customer has selected to use the same address for both billing and shipping
                 var isBillingSameAsShipping = ($('input[name="billing-address-same-as-shipping"]:checked').val() == 'on') ? true : false;
 
@@ -135,26 +273,46 @@ define(
                 $('input[data-recurly="state"]').val(stateName);
                 $('input[data-recurly="country"]').val(countryName);
                 $('input[data-recurly="postal_code"]').val(address.postcode);
+
+                return true;
             },
 
             myPlaceOrder: function () {
                 var self = this;
+                self.orderProcessing(true);
                 var recurlyForm = $('.recurly-form');
                 var rsco = $('input[name="rsco_accept"]');
 
                 if (!rsco[0].checked) {
                     rsco[0].setCustomValidity('This field is required.');
-
+                    self.orderProcessing(false);
                     return false;
                 } else {
                     rsco[0].setCustomValidity('');
                 }
 
-                self.updateRecurlyFormData();
+                if (! self.updateRecurlyFormData()) {
+                    self.orderProcessing(false);
+                    return false;
+                }
 
                 recurly.token(recurlyForm, function (err, token) {
                     if (err) {
-                        console.log(err);
+                        self.orderProcessing(false);
+                        if( err.code === 'validation' ) {
+                            if (err.fields.includes('number')) {
+                                $('.recurly-form-error').text('Please enter a valid card number.');
+                            } else if (
+                                !err.fields.includes('number') &&
+                                (err.fields.includes('month') || err.fields.includes('year'))
+                            ) {
+                                $('.recurly-form-error').text('Please enter a valid expiration date.');
+                            } else {
+                                $('.recurly-form-error').text(err.message);
+                            }
+                        } else {
+                            $('.recurly-form-error').text(err.message);
+                        }
                     } else {
                         self.createNewSubscription( token.id );
                     }

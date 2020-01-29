@@ -22,37 +22,43 @@
             </group>
             <group id="recommendation_api_paths" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                 <label>Recommendations API Paths</label>
-                <field id="new_quiz_api_path" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="quiz_api_key" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>API Key</label>
+                    <comment>Set the API key required to authenticate the recommendation requests</comment>
+                    <validate>validate-no-html-tags</validate>
+                    <config_path>recommendations/api/key</config_path>
+                </field>
+                <field id="new_quiz_api_path" translate="label" type="text" sortOrder="2" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>New Quiz API Path</label>
                     <comment>[GET] Fetches quizzes data</comment>
                     <validate>validate-no-html-tags</validate>
                     <config_path>recommendations/api/new</config_path>
                 </field>
-                <field id="save_quiz_api_path" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="save_quiz_api_path" translate="label" type="text" sortOrder="3" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Save Quiz API Path</label>
                     <comment>[POST] Saves quizzes data. Accepts array of IDs. Use the markup {quizTemplateId} to inject the returned Quiz Template ID.</comment>
                     <validate>validate-no-html-tags</validate>
                     <config_path>recommendations/api/save</config_path>
                 </field>
-                <field id="quiz_results_api_path" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="quiz_results_api_path" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Quiz Results API Path</label>
                     <comment>[GET] Returns quiz data by ID</comment>
                     <validate>validate-no-html-tags</validate>
                     <config_path>recommendations/api/result</config_path>
                 </field>
-                <field id="map_to_user_api_path" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="map_to_user_api_path" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Map to User API Path</label>
                     <comment>[PUT] Updates Quiz to a specific user by Gigya ID</comment>
                     <validate>validate-no-html-tags</validate>
                     <config_path>recommendations/api/map</config_path>
                 </field>
-                <field id="completed_quizzes_api_path" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="completed_quizzes_api_path" translate="label" type="text" sortOrder="6" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Completed Quizzes API Path</label>
                     <comment>[GET] Returns completed quizzes</comment>
                     <validate>validate-no-html-tags</validate>
                     <config_path>recommendations/api/previous</config_path>
                 </field>
-                <field id="products_api_path" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <field id="products_api_path" translate="label" type="text" sortOrder="7" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Products Flat File Path</label>
                     <comment>[GET] Returns the information for the Scotts products</comment>
                     <validate>validate-no-html-tags</validate>

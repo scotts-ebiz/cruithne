@@ -1,17 +1,31 @@
 define([
     'uiComponent',
     'ko',
+    'Magento_Ui/js/modal/modal',
     'jquery'
-], function (Component, ko, $) {
+], function (Component, ko, modal, $) {
+    let successModal;
+
     return Component.extend({
         initialize(config) {
+            const self = this;
             this.billing = ko.observable(config.billing);
             this.states = ko.observable(config.states);
             this.countries = ko.observable(config.countries);
-            this.success = ko.observable(null);
 
             setTimeout( function() {
-                recurly.configure('ewr1-aefvtq9Ri3MILWsXFPHyv2');
+                recurly.configure(config.recurlyApi);
+
+                successModal = modal({
+                    type: 'popup',
+                    responsive: true,
+                    innerScroll: true,
+                    buttons: [],
+                    opened: function ($Event) {
+                        $('.modal-header').remove();
+                    }
+                }, $('#popup-modal'));
+
             }, 2000);
         },
 
@@ -19,7 +33,6 @@ define([
             const self = this;
             const recurlyForm = $('form#recurlyForm');
             const formKey = document.querySelector('input[name=form_key]').value;
-            console.log(recurlyForm.serializeArray());
 
             recurly.token( recurlyForm, function( err, token ) {
                 if( err ) {
@@ -35,16 +48,20 @@ define([
                                 form: recurlyForm.serializeArray()
                             } ),
                             success: function( response ) {
-                                self.success('Your billing information has been updated.');
-
-                                setTimeout(() => {
-                                    self.success(null);
-                                }, 5000);
+                                self.hideSuccess();
                             }
                         })
                     }
                 }
             })
+        },
+
+        hideSuccess() {
+            successModal.closeModal();
+        },
+
+        showSuccess() {
+            successModal.openModal();
         }
     });
 });

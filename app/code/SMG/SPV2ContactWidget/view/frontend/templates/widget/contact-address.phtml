@@ -1,11 +1,12 @@
 <div class="sp-widget sp-widget--contact-address">
 	<div class="sp-widget-line"></div>
-	<?php if( ! empty( $this->getData('contactAddress') ) ) { ?>
+	<?php if( ! empty( $this->getData('contactStreetAddress') ) ) { ?>
 	<address class="sp-widget-address">
-		<?php echo $block->escapeHtml($block->getData('contactAddress')) ?>
+		<?php echo $block->escapeHtml($block->getData('contactStreetAddress')) ?><br />
+		<?php echo $block->escapeHtml($block->getData('contactCity')) ?>, <?php echo $block->escapeHtml($block->getData('contactState')) ?> <?php echo $block->escapeHtml($block->getData('contactZip')) ?>
 	</address>
 	<?php } ?>
 	<?php if( ! empty( $this->getData('contactPhone') ) ) { ?>
-		<p class="sp-text-base"><?php echo $block->escapeHtml($block->getData('contactPhone')) ?></p>
+		<p class="sp-text-base"><a href="tel:<?php echo $block->escapeHtml($block->getData('contactPhone')); ?>"><?php echo $block->escapeHtml($block->getData('contactPhone')); ?></a></p>
 	<?php } ?>
 </div>

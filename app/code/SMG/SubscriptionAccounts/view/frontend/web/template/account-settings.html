@@ -1,15 +1,9 @@
-<!-- ko if: success() -->
-<div
-	class="sp-bg-green-4 sp-p1 sp-px-4 sp-py-2 sp-mb-4 sp-rounded sp-text-green-1 sp-text-bold"
-	data-bind="text: success()"
->
+<div class="sp-flex sp-flex-column md:sp-flex-row sp-justify-center md:sp-justify-between sp-items-center sp-mt-8 md:sp-mt-0">
+	<h2 class="sp-h2 sp-mt-0 sp-text-center md:sp-text-left">Account Settings</h2>
 </div>
-<!-- /ko -->
 
-<h2 class="sp-h2 sp-mt-0 sp-text-center lg:sp-text-left">Account Settings</h2>
-<!-- ko if: account().recurly_account_code -->
 <form method="POST"
-	  class="sp-flex sp-flex-column lg:sp-flex-row">
+	  class="sp-flex sp-flex-column lg:sp-flex-row sp-my-8 md:sp-my-0">
 	<div class="sp-flex-auto sp-p-4 lg:sp-p-0 lg:sp-w-1/2">
 		<h4 class="sp-h4 sp-m-0 sp-pb-4 sp-mb-8">Account Information</h4>
 		<div class="sp-form-group">
@@ -88,7 +82,23 @@
 	</div>
 	<div class="sp-flex-auto sp-p-4">
 </form>
-<!-- ko ifnot: account().recurly_account_code -->
-<p>It looks like you don't have a complete account. Please complete the quiz.</p>
-<a href="/quiz" class="sp-button sp-button--primary">Get started</a>
-<!-- /ko -->
+
+<div id="popup-modal"
+     class="modal-popup--subscriptions sp-hide sp-p-8">
+    <button
+        class="modal-popup--subscriptions__close"
+        data-bind="click: hideModal"
+    ></button>
+    <h2 class="sp-h2 sp-text-black sp-text-center" data-bind="text: modalValues().header"></h2>
+    <p class="sp-text-black sp-mb-10 sp-text-center" data-bind="text: modalValues().message"></p>
+
+    <div class="sp-flex sp-justify-center sp-items-center">
+        <button
+            class="sp-button sp-button--primary"
+            type="button"
+            data-bind="click: hideModal"
+        >
+            Close
+        </button>
+    </div>
+</div>

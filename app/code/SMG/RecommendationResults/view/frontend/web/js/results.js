@@ -1,8 +1,9 @@
 define([
     'uiComponent',
     'ko',
-    'jquery'
-], function (Component, ko, $) {
+    'jquery',
+    'Magento_Customer/js/customer-data'
+], function (Component, ko, $, customerData) {
     return Component.extend({
         hasResults: ko.observable(false),
         lawnArea: ko.observable(0),
@@ -20,7 +21,8 @@ define([
         }),
 
         saveAndSendModal: ko.observable({
-            visible: false
+            visible: false,
+            email: '',
         }),
 
         saveAndSendSuccessModal: ko.observable({
@@ -29,6 +31,8 @@ define([
 
         initialize(config) {
             const self = this;
+
+            self.customer = customerData.get('customer');
 
             if (config.zip) {
                 window.sessionStorage.setItem('lawn-zip', config.zip);
@@ -58,9 +62,13 @@ define([
             const lawnType = window.sessionStorage.getItem('lawn-type');
             if (lawnType) {
                 self.lawnType(lawnType);
+            } else {
+                self.lawnType('');
             }
 
-            self.products = ko.computed(function () {
+            self.hasValidZone = ko.observable(true);
+
+            self.products = ko.computed(() => {
                 return self.results().plan
                     ? self.results().plan.coreProducts
                     : []
@@ -75,27 +83,54 @@ define([
                     return items;
                 }, []);
 
-                const seasons = uniqueSeasons.map((season) => {
-                    const products = self.products().filter((product) => {
+                const seasons = uniqueSeasons.map(season => {
+                    const products = self.products().filter(product => {
                         return product.season === season;
                     });
 
+                    let prodMap = {};
+
+                    products.forEach(product => {
+                        if (prodMap[product.prodId]) {
+                            prodMap[product.prodId] += 1;
+                            return;
+                        }
+
+                        prodMap[product.prodId] = product.quantity;
+                    });
+
+                    const newProducts = [];
+
+                    products.forEach(product => {
+                        if (
+                            !newProducts.some(prod => {
+                                return prod.prodId === product.prodId
+                            })
+                        ) {
+                            let newProd = {
+                                ...product
+                            };
+                            newProd.quantity = prodMap[newProd.prodId];
+                            newProducts.push(newProd);
+                        }
+                    });
+
+
                     return {
-                        season: season,
-                        products: self.products().filter((product) => {
-                            return product.season === season;
-                        }),
+                        season,
+                        products: newProducts,
                         total: products.reduce((price, product) => {
-                            return price + (+product.price * +product.quantity);
-                        }, 0),
-                    }
+                            return price + +product.price * +product.quantity;
+                        }, 0)
+                    };
                 });
 
                 return seasons;
             });
 
+
             // used to indicate which product is up next for delivery
-            self.nextAvailableProduct = ko.computed(function () {
+            self.nextAvailableProduct = ko.computed(() => {
                 const currentDate = new Date();
                 const products = self.products().slice();
 
@@ -112,6 +147,15 @@ define([
                 return self.seasons()[self.activeSeasonIndex()]
             });
 
+        },
+
+        toggleAccordion(index) {
+            const accordionTabs = Array.from(document.querySelectorAll('.accordion > li'));
+            const isActive = accordionTabs[index].classList.contains('active');
+
+            isActive ? accordionTabs[index].classList.remove('active') : accordionTabs[index].classList.add('active');
+
+            accordionTabs[index].scrollIntoView({behavior: "smooth"});
         },
 
         loadQuizResults(id, zip) {
@@ -153,8 +197,16 @@ define([
                             if (minTimePassed) {
                                 self.isLoading(false);
                             }
+
+                            // An active or subscription with this quiz ID already exists.
+                            if (data.subscription && data.subscription.status !== 'pending') {
+                                window.location.href = self.customer().firstname ? '/your-plan' : '/quiz';
+                                return;
+                            }
+
                             self.hasResults(true);
                             self.results(data);
+                            self.checkZone();
                             window.sessionStorage.setItem('result', JSON.stringify(data));
                             window.sessionStorage.setItem('quiz-id', data.id);
                         }
@@ -175,6 +227,17 @@ define([
         },
 
         /**
+         * Check if we have an invalid zone.
+         */
+        checkZone() {
+            if (['Zone 11', 'Zone 12'].indexOf(this.results().plan.zoneName) >= 0) {
+                this.hasValidZone(false);
+            } else {
+                this.hasValidZone(true);
+            }
+        },
+
+        /**
          * Load the quiz from the session storage.
          */
         loadQuizResponses() {
@@ -185,7 +248,6 @@ define([
                 this.completeQuiz();
             } else {
                 // Quiz not found, need to redirect.
-                console.log('loading quiz responses');
                 window.location.href = '/quiz';
             }
         },
@@ -199,7 +261,7 @@ define([
             let formKey = document.querySelector('input[name=form_key]').value;
             let quiz = self.quiz();
             quiz["key"] = formKey;
-            quiz["lawnType"] = window.sessionStorage.getItem('lawn-type');
+            quiz["lawnType"] = window.sessionStorage.getItem('lawn-type') || '';
             quiz["lawnSize"] = window.sessionStorage.getItem('lawn-area');
 
             // Make sure loading screen appears for at least 3 seconds.
@@ -229,8 +291,16 @@ define([
                             if (minTimePassed) {
                                 self.isLoading(false);
                             }
+
+                            // An active or subscription with this quiz ID already exists.
+                            if (data.subscription && data.subscription.status !== 'pending') {
+                                window.location.href = self.customer().firstname ? '/your-plan' : '/quiz';
+                                return;
+                            }
+
                             self.hasResults(true);
                             self.results(data);
+                            self.checkZone();
                             window.sessionStorage.setItem('result', JSON.stringify(data));
                             window.sessionStorage.setItem('quiz-id', data.id);
                         }
@@ -239,21 +309,30 @@ define([
             );
         },
 
+        saveAndSendResults(e) {
+            if (e && e.preventDefault && typeof e.preventDefault === 'function') {
+                e.preventDefault();
+            }
+
+            this.toggleSaveAndSendModal();
+            this.toggleSaveAndSendSuccessModal();
+        },
+
         formatDate: function (_date) {
             const date = new Date(_date);
 
             return [
-                date.getMonth() + 1, // Months are 0 based
-                date.getDate(),
-                date.getFullYear().toString().slice(2)
+                date.getUTCMonth() + 1, // Months are 0 based
+                date.getUTCDate(),
+                date.getUTCFullYear().toString().slice(2),
             ].join('/')
         },
 
         productFeatures: function (product) {
             return [
-                { image: product.miniClaim1, text: product.miniClaim1Description },
-                { image: product.miniClaim2, text: product.miniClaim2Description },
-                { image: product.miniClaim3, text: product.miniClaim3Description },
+                {image: product.miniClaim1, text: product.miniClaim1Description},
+                {image: product.miniClaim2, text: product.miniClaim2Description},
+                {image: product.miniClaim3, text: product.miniClaim3Description},
             ].filter(x => !!x.image)
         },
 
@@ -273,12 +352,39 @@ define([
         },
 
         getSeasonIcon: function (product) {
-            let icon = ''
+            let icon = '';
+
             switch (product.season) {
-                case 'Early Summer Feeding': icon = 'icon-summer.svg'; break;
-                case 'Early Spring Feeding': icon = 'icon-early-spring.svg'; break;
-                case 'Late Spring Feeding': icon = 'icon-late-spring.svg'; break;
-                case 'Early Fall Feeding': icon = 'icon-fall.svg'; break;
+                // Summer
+                case 'Early Summer':
+                case 'Early Summer Seeding':
+                case 'Early Summer Feeding':
+                case 'Late Summer':
+                case 'Late Summer Feeding':
+                    icon = 'icon-summer.svg';
+                    break;
+
+                // Spring
+                case 'Early Spring':
+                case 'Early Spring Feeding':
+                    icon = 'icon-early-spring.svg';
+                    break;
+
+                case 'Late Spring':
+                case 'Late Spring Feeding':
+                case 'Late Spring Seeding':
+                case 'Late Spring Grub':
+                    icon = 'icon-late-spring.svg';
+                    break;
+
+                // Fall
+                case 'Early Fall':
+                case 'Early Fall Seeding':
+                case 'Early Fall Feeding':
+                case 'Late Fall':
+                case 'Late Fall Feeding':
+                    icon = 'icon-fall.svg';
+                    break;
             }
 
             return 'https://test_magento_image_repo.storage.googleapis.com/' + icon
@@ -302,14 +408,14 @@ define([
         },
 
         setPDPTab: function (tab) {
-            this.pdp({ ...this.pdp(), activeTab: tab })
+            this.pdp({...this.pdp(), activeTab: tab})
         },
 
         preventDefault: function () {
         },
 
-        toggleSaveAndSendModal: function() {
-            if( this.saveAndSendModal().visible) {
+        toggleSaveAndSendModal: function () {
+            if (this.saveAndSendModal().visible) {
                 $('body').removeClass('no-scroll');
             } else {
                 $('body').addClass('no-scroll')
@@ -321,8 +427,8 @@ define([
             })
         },
 
-        toggleSaveAndSendSuccessModal: function() {
-            if( this.saveAndSendSuccessModal().visible) {
+        toggleSaveAndSendSuccessModal: function () {
+            if (this.saveAndSendSuccessModal().visible) {
                 $('body').removeClass('no-scroll');
             } else {
                 $('body').addClass('no-scroll')
@@ -335,4 +441,3 @@ define([
         }
     });
 });
-

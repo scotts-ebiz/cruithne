@@ -19,10 +19,10 @@
                 <p class="sp-p1 sp-text-black">Save your results by sending a copy of your lawn care plan to your email address.</p>
             </div>
 
-            <form class="form save-and-send">
+            <form class="form save-and-send" data-bind="submit: saveAndSendResults">
                 <div class="sp-flex sp-flex-column md:sp-flex-row sp-pb-8">
                     <div class="sp-form-group md:sp-w-3/4">
-                        <input type="email" placeholder="Email" name="email" id="email" class="input-text sp-input sp-w-full" />
+                        <input type="email" placeholder="Email" name="email" id="email" class="input-text sp-input sp-w-full" data-bind="value: saveAndSendModal().email" />
                         <label class="label sp-form-label required" for="email">Email</label>
                     </div>
                     <div class="sp-form-group md:sp-w-1/4 sp-text-right">
@@ -32,7 +32,7 @@
             </form>
 
             <hr />
-            <p class="sp-p2 sp-text-black">By subscribing, you will receive emails focused on brands marketed by Scotts Miracle-Gro, its affiliates, and select partners, and related tips, information and promotions.</p>
+            <p class="sp-p2 sp-text-black">By signing up, you will receive emails focused on brands marketed by Scotts Miracle-Gro, its affiliates, and select partners, and related tips, information, and promotions.</p>
         </div>
 
     </div>

@@ -1,4 +1,8 @@
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <!-- Add external resources -->
+        <css src="https://js.recurly.com/v4/recurly.css" src_type="url" />
+    </head>
     <body>
         <referenceContainer name="header.container" htmlId="sp-header" htmlClass="sp-header">
             <container name="header.panel.wrapper" htmlClass="panel wrapper" htmlTag="div" before="-">
@@ -25,7 +29,27 @@
                                         <item name="shipping-step" xsi:type="array">
                                             <item name="children" xsi:type="array">
                                                 <item name="shippingAddress" xsi:type="array">
-                                                    <item name="component" xsi:type="string">Magento_Checkout/js/view/custom-shipping</item>
+                                                    <item name="children" xsi:type="array">
+                                                        <item name="shipping-address-fieldset" xsi:type="array">
+                                                            <item name="children" xsi:type="array">
+                                                                <item name="company" xsi:type="array">
+                                                                    <item name="visible" xsi:type="boolean">false</item>
+                                                                </item>
+                                                                <item name="firstname" xsi:type="array">
+                                                                    <item name="validation" xsi:type="array">
+                                                                        <item name="validate-alpha" xsi:type="boolean">false</item>
+                                                                        <item name="required-entry-firstname" xsi:type="boolean">true</item>
+                                                                    </item>
+                                                                </item>
+                                                                <item name="lastname" xsi:type="array">
+                                                                    <item name="validation" xsi:type="array">
+                                                                        <item name="validate-alpha" xsi:type="boolean">false</item>
+                                                                        <item name="required-entry-lastname" xsi:type="boolean">true</item>
+                                                                    </item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                    </item>
                                                 </item>
                                             </item>
                                         </item>
@@ -38,6 +62,18 @@
                                                                 <item name="giftCardAccount" xsi:type="array">
                                                                     <item name="config" xsi:type="array">
                                                                         <item name="componentDisabled" xsi:type="boolean">true</item>
+                                                                    </item>
+                                                                </item>
+                                                            </item>
+                                                        </item>
+                                                        <item name="renders" xsi:type="array">
+                                                            <item name="children" xsi:type="array">
+                                                                <item name="payment-recurly" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">SMG_SubscriptionApi/js/view/payment/recurly</item>
+                                                                    <item name="methods" xsi:type="array">
+                                                                         <item name="recurly" xsi:type="array">
+                                                                            <item name="isBillingAddressRequired" xsi:type="boolean">true</item>
+                                                                        </item>
                                                                     </item>
                                                                 </item>
                                                             </item>
@@ -80,6 +116,6 @@
                 </argument>
             </arguments>
         </referenceBlock>
-		<referenceContainer name="footer-container" remove="false" />
+        <referenceContainer name="footer-container" remove="false" />
     </body>
 </page>
