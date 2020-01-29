@@ -31,6 +31,7 @@ define([
         self.quiz = quiz;
         self.polygons = ko.observableArray([]);
         self.activePolygon = null;
+        self.mapInstructionsDisabled = ko.observable(true);
 
         self.addListeners = function () {
             google.maps.event.addListener(self.drawingManager, 'polygoncomplete', self.handlePolygonComplete);
@@ -86,6 +87,10 @@ define([
                 self.address($('#address-autocomplete').val().replace(', USA', ''));
                 $('#address-autocomplete').val(self.address());
                 self.showInstructions(true);
+
+                setTimeout(() => {
+                    self.mapInstructionsDisabled(false);
+                }, 5000);
 
                 const zoom = window.outerWidth >= 1024 ? 22 : 20;
 
@@ -359,7 +364,7 @@ define([
         self.previousGroups = ko.observableArray([]);
         self.sliderImages = ko.observable({});
         self.animation = ko.observable({});
-        self.usingGoogleMaps = ko.observable(true);
+        self.usingGoogleMaps = ko.observable(false);
         self.invalidZipCode = ko.observable(false);
         self.invalidArea = ko.observable(false);
         self.isAnimating = ko.observable(false);
