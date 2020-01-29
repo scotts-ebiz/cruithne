@@ -364,7 +364,7 @@ define([
         self.previousGroups = ko.observableArray([]);
         self.sliderImages = ko.observable({});
         self.animation = ko.observable({});
-        self.usingGoogleMaps = ko.observable(true);
+        self.usingGoogleMaps = ko.observable(false);
         self.invalidZipCode = ko.observable(false);
         self.invalidArea = ko.observable(false);
         self.isAnimating = ko.observable(false);
