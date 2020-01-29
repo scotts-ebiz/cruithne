@@ -4,14 +4,6 @@
   padding-bottom: 1.25rem;
 }
 
-.checkout-loader {
-  display: none;
-}
-
-.checkout-index-index > .loading-mask {
-  display: none !important;
-}
-
 .opc-wrapper {
   @media (min-width: $screen-md) {
     max-width: 50%;
@@ -222,7 +214,7 @@
     top: 3px;
     transform: translateX(-50%);
     width: 33px;
-    z-index: 1;
+    z-index: 10;
   }
 }
 

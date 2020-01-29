@@ -75,11 +75,7 @@ class SubscriptionAddonOrderItem extends AbstractModel
 
         // If subscription orders is local, send them, if not, pull them and send them
         if (! isset($this->_product)) {
-            try {
-                $this->_product = $this->_productRepository->get($this->getCatalogProductSku());
-            } catch (\Exception $ex) {
-                $this->_logger->error(__($ex->getMessage() . ' SKU: ' . $this->getCatalogProductSku()));
-            }
+            $this->_product = $this->_productRepository->get($this->getCatalogProductSku());
         }
 
         return $this->_product;

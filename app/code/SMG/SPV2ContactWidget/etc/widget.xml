@@ -4,17 +4,8 @@
 		<label>Scotts Program Contact Address</label>
 		<description>A widget for displaying contact address and phone.</description>
         <parameters>
-			<parameter name="contactStreetAddress" visible="true" xsi:type="text">
-				<label>Street Address</label>
-			</parameter>
-			<parameter name="contactCity" visible="true" xsi:type="text">
-				<label>City</label>
-			</parameter>
-			<parameter name="contactState" visible="true" xsi:type="text">
-				<label>State</label>
-			</parameter>
-			<parameter name="contactZip" visible="true" xsi:type="text">
-				<label>Zip</label>
+			<parameter name="contactAddress" visible="true" xsi:type="text">
+				<label>Address</label>
 			</parameter>
 			<parameter name="contactPhone" visible="true" xsi:type="text">
 				<label>Phone</label>

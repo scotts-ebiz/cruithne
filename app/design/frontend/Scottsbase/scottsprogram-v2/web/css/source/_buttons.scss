@@ -167,10 +167,6 @@
     border-bottom-color: $green-1;
     border-left-color: $green-1;
   }
-
-  &.sp-button--inactive:focus {
-    background-color: $gray-2;
-  }
 }
 
 @keyframes spinAround {

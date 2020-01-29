@@ -31,4 +31,5 @@ class Quiz extends \Magento\Framework\View\Element\Template
     public function getGoogleMapsApiKey(){
         return $this->_helper->getGoogleMapsApiKey();
     }
+
 }

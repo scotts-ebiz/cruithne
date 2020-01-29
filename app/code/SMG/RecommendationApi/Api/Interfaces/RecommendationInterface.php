@@ -14,7 +14,7 @@ interface RecommendationInterface
      * Retrieve quiz templates from LSPaaS
      *
      * @param string $key
-     * @return mixed
+     * @return array
      */
     public function new($key);
 
@@ -27,7 +27,7 @@ interface RecommendationInterface
      * @param string $zip
      * @param string $lawnType
      * @param string $lawnSize
-     * @return mixed
+     * @return array
      */
     public function save($key, $id, $answers, $zip, $lawnType, $lawnSize);
 
@@ -39,7 +39,7 @@ interface RecommendationInterface
      * @param string $zip
      * @param string $lawnType
      * @param int $lawnSize
-     * @return mixed
+     * @return array
      */
     public function getResult($key, $id, $zip, $lawnType = '', $lawnSize = 0);
 
@@ -47,7 +47,7 @@ interface RecommendationInterface
      * Get completed quizzes
      *
      * @param string $key
-     * @return mixed
+     * @return string
      */
     public function getCompleted($key);
 
@@ -57,7 +57,7 @@ interface RecommendationInterface
      * @param string $key
      * @param string $user_id
      * @param string $quiz_id
-     * @return mixed
+     * @return string
      */
     public function mapToUser($key, $user_id, $quiz_id);
 
@@ -65,7 +65,7 @@ interface RecommendationInterface
      * Get product flat file information
      *
      * @param string $key
-     * @return mixed
+     * @return array
      */
     public function getProducts($key);
 }

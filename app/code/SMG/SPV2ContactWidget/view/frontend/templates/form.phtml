@@ -6,7 +6,6 @@
                 data-validate="{required:true}"
                 id="name"
                 name="name"
-                maxLength="100"
                 placeholder="<?= $block->escapeHtml(__('Name')) ?>*"
                 title="<?= $block->escapeHtmlAttr(__('Name')) ?>"
                 type="text"
@@ -29,6 +28,7 @@
         </div>
         <div class="sp-form-group">
             <div class="sp-select sp-w-full">
+                <label class="label sp-form-label required" for="topic"><?= $block->escapeHtml(__('Topic')) ?></label>
                 <select name="topic" id="topic" class="sp-w-full">
                     <option value="0" selected disabled style="display: none;">-- Choose --</option>
                     <option value="Information about products or my lawn care plan">Information about products or my lawn care plan</option>
@@ -38,9 +38,8 @@
                     <option value="General question or commen">General question or comment</option>
                 </select>
             </div>
-            <label class="label sp-form-label required" for="topic"><?= $block->escapeHtml(__('Topic')) ?></label>
         </div>
-        <div class="sp-form-group sp-mt-12">
+        <div class="sp-form-group">
             <textarea
                 class="input-text sp-textarea sp-input sp-w-full"
                 cols="5"
@@ -71,11 +70,11 @@
 
 <?php $ajaxurl = $block->escapeurl( $block->getFormAction() ); ?>
 <script type="text/x-magento-init">
-    {
-        "*": {
-            "SMG_SPV2ContactWidget/js/contactajax": {
-                "AjaxUrl": "<?php echo $ajaxurl; ?>"
+        {
+            "*": {
+                "SMG_SPV2ContactWidget/js/contactajax": {
+                    "AjaxUrl": "<?php echo $ajaxurl; ?>"
+                }
             }
         }
-    }
 </script>
