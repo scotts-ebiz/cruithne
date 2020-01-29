@@ -272,16 +272,6 @@
                                                                 }
                                                                 .actions-toolbar {
                                                                     .primary {
-                                                                        .action.primary.checkout:last-child {
-                                                                            &:hover {
-                                                                                -webkit-transition: background 0.2s;
-                                                                                -moz-transition: background 0.2s;
-                                                                                -ms-transition: background 0.2s;
-                                                                                -o-transition: background 0.2s;
-                                                                                transition: background 0.2s;
-                                                                                background: $scotts-secondary-green;
-                                                                            }
-                                                                        }
                                                                         .action.primary.disabled {
                                                                             background: #4d4e4e !important;
                                                                         }

@@ -193,6 +193,7 @@
     }
     &:active {
         @if $_button-background-active { background-color: $_button-background-active; };
+        @include transition(0.2);
     }
 }
 
