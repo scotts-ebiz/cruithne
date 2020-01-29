@@ -89,9 +89,9 @@ define(
                     if (document.querySelector('input[name="rsco_accept"]')) {
                         document.querySelector('input[name="rsco_accept"]').addEventListener('click', () => {
                             Array.prototype.forEach.call(self.billingFormInputs(), input => {
-                                $(input).focusout();
+                                $(input).blur();
                             });
-                            $('select[name="region_id"]').blur();
+                            $('select[name="region_id"]').focusout();
                         });
                         clearInterval(rscoCheckboxInterval);
                     }
