@@ -111,7 +111,6 @@ class Index
 
                 // get the onepage quote to see if the user is a logged in user or a guest user
                 $quote = $subject->getOnepage()->getQuote();
-                $quote->setCouponCode('')->save();
 
                 /**
                  * If the customer is not logged in and guest checkout is not allowed,
