@@ -234,16 +234,12 @@ define([
             self.polygons().forEach(polygon => polygon.setMap(null));
             self.polygons([]);
             self.activePolygon = null;
-            // self.lawnSize(0);
 
             self.calculateLawnSize();
         };
 
         self.toggleInfo = function () {
             self.showInstructions(!self.showInstructions());
-            // const info = $('.gm-style-pbc');
-            // $('.gm-style-pbt', info).html('<p>Tap to create an outline</p> <p class="gm-info-text">Use two fingers to move the map</p>');
-            // Number(info.css('opacity')) ? info.css('opacity', 0) : info.css('opacity', 1);
         };
 
         /**
