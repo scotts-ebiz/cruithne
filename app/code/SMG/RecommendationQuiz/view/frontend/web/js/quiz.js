@@ -821,6 +821,10 @@ define([
             }
         };
 
+        self.formatNumber = function(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        };
+
         /**
          * Toggle Google Maps and manual entry.
          */

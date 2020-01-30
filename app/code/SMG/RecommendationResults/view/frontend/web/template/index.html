@@ -4,7 +4,7 @@
 
     <p class="sp-text-center sp-max-w-md sp-mx-auto">
         Get ready to grow a thick, strong, green lawn! Your plan contains everything you need to take care of all
-        <strong data-bind="if: lawnArea() > 0"><span data-bind="html: lawnArea()"></span> square feet</strong> of your
+        <strong data-bind="if: lawnArea() > 0"><span data-bind="html: formatNumber(lawnArea())"></span> square feet</strong> of your
         <span data-bind="if: lawnType()"><strong data-bind="html: lawnType()"></strong></span> lawn in every season.
     </p>
 
