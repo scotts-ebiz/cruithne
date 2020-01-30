@@ -55,20 +55,17 @@ define([
                 return total.toFixed(2);
             });
 
-            console.log(this.taxes(), this.total());
-
             // We need some reliable way to tell when the dom is finished
             // loading. domReady! doesn't seem to be working, so we delay
             // instantiating the modal for a second
             setTimeout(() => {
                 cancelSubscriptionModal = cancelSubscriptionModal({
                     type: 'popup',
-                    responsive: true,
                     innerScroll: false,
                     buttons: [],
-                    opened: function ($Event) {
-                        $('.modal-header').remove();
-                    }
+                    focus: 'none',
+                    title: 'Before You Cancel',
+                    subTitle: 'We understand lawn care can be tough. Can we help you get your best results?'
                 }, $('#popup-modal'));
             }, 1000)
         },
