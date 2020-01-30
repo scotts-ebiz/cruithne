@@ -162,9 +162,13 @@
     width: 2em;
   }
 
+  &.sp-button--inactive,
+  &.sp-button--inverted {
+    color: rgba(0, 0, 0, 0.5);
+  }
+
   &.sp-button--inactive::after,
   &.sp-button--inverted::after {
-    color: rgba(0, 0, 0, 0.5);
     border-bottom-color: $green-1;
     border-left-color: $green-1;
   }
