@@ -3,6 +3,7 @@
 namespace SMG\SubscriptionCheckout\Plugin\Controller\Index;
 
 use Magento\Checkout\Helper\Data as CheckoutHelper;
+use Magento\Checkout\Model\Session as CheckoutSession;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\Result\RedirectFactory;
@@ -61,6 +62,11 @@ class Index
     protected $_urlHelper;
 
     /**
+     * @var CheckoutSession
+     */
+    protected $_checkoutSession;
+
+    /**
      * Index constructor.
      * @param LoggerInterface $logger
      * @param SubscriptionHelper $subscriptionHelper
@@ -77,6 +83,7 @@ class Index
         SubscriptionHelper $subscriptionHelper,
         StoreManagerInterface $storeManager,
         CustomerSession $customerSession,
+        CheckoutSession $checkoutSession,
         CheckoutHelper $checkoutHelper,
         RedirectFactory $resultRedirectFactory,
         CoreSession $coreSession,
@@ -87,6 +94,7 @@ class Index
         $this->_subscriptionHelper = $subscriptionHelper;
         $this->_storeManager = $storeManager;
         $this->_customerSession = $customerSession;
+        $this->_checkoutSession = $checkoutSession;
         $this->_checkoutHelper = $checkoutHelper;
         $this->_resultRedirectFactory = $resultRedirectFactory;
         $this->_coreSession = $coreSession;
@@ -144,6 +152,7 @@ class Index
                         foreach ($addresses as $address) {
                             $address->delete();
                         }
+
                         $quote->removeAllItems();
                         $quote->removeAllAddresses();
                         $quote->save();
@@ -154,7 +163,7 @@ class Index
 
                         // Set coupon code if annual subscription.
                         if (isset($details['subscription_plan']) && $details['subscription_plan'] == 'annual') {
-                            $quote->setCouponCode('annual_discount')->save();
+                            $this->_checkoutSession->getQuote()->setCouponCode('annual_discount')->save();
                         }
                     }
 
