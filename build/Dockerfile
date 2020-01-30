@@ -23,8 +23,8 @@ RUN mkdir -p $MAGENTO_DIR/var/import/images && gsutil -q -m rsync -r -u gs://mag
 RUN git fetch --all && git reset --hard && git pull && composer install
 
 # Temporary patch for VendorVertex
-COPY vendor-vertex-compilation-issue.patch /tmp/vendor-vertex-compilation-issue.patch
-RUN git apply /tmp/vendor-vertex-compilation-issue.patch
+# COPY vendor-vertex-compilation-issue.patch /tmp/vendor-vertex-compilation-issue.patch
+# RUN git apply /tmp/vendor-vertex-compilation-issue.patch
 
 RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools
 
