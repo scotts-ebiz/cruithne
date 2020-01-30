@@ -30,7 +30,7 @@ $checkout-summary-items__padding    : 15px !default;
     }
 
     > .title {
-        @include cart-checkout-h2-font($border: 2px solid $color_light_grey_40);
+        @include cart-checkout-h2-font($border: 2px solid $checkout-light_grey);
         display: block;
     }
 
