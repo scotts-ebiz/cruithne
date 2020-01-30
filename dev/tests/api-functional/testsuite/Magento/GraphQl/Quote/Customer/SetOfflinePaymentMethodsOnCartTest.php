@@ -47,11 +47,7 @@ class SetOfflinePaymentMethodsOnCartTest extends GraphQlAbstract
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/customer/create_empty_cart.php
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/add_simple_product.php
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/set_new_shipping_address.php
-     * @magentoConfigFixture default_store payment/banktransfer/active 1
-     * @magentoConfigFixture default_store payment/cashondelivery/active 1
-     * @magentoConfigFixture default_store payment/checkmo/active 1
-     * @magentoConfigFixture default_store payment/purchaseorder/active 1
-     * @magentoConfigFixture default_store payment/authorizenet_acceptjs/active 1
+     * @magentoApiDataFixture Magento/GraphQl/Quote/_files/enable_offline_payment_methods.php
      *
      * @param string $methodCode
      * @param string $methodTitle
@@ -94,11 +90,7 @@ class SetOfflinePaymentMethodsOnCartTest extends GraphQlAbstract
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/customer/create_empty_cart.php
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/add_simple_product.php
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/set_new_shipping_address.php
-     * @magentoConfigFixture default_store payment/banktransfer/active 1
-     * @magentoConfigFixture default_store payment/cashondelivery/active 1
-     * @magentoConfigFixture default_store payment/checkmo/active 1
-     * @magentoConfigFixture default_store payment/purchaseorder/active 1
-     * @magentoConfigFixture default_store payment/authorizenet_acceptjs/active 1
+     * @magentoApiDataFixture Magento/GraphQl/Quote/_files/enable_offline_payment_methods.php
      */
     public function testSetPurchaseOrderPaymentMethod()
     {

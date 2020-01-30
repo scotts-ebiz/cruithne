@@ -69,22 +69,5 @@ define([
                 expect(expandable.getLabel).toHaveBeenCalled();
             });
         });
-
-        describe('getLabelsArray method', function () {
-            it('check if label array sort alphabetically case insensitive', function () {
-                record['shared_catalog'].push(1, 2, 3);
-                expandable.options.push({
-                    label: 'Default',
-                    value: '1'
-                }, {
-                    label: 'Label',
-                    value: '2'
-                }, {
-                    label: 'default',
-                    value: '3'
-                });
-                expect(expandable.getLabelsArray(record)).toEqual(['Default', 'default', 'Label']);
-            });
-        });
     });
 });

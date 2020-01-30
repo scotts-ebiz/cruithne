@@ -15,9 +15,6 @@ use Magento\Framework\App\Config\ScopeConfigInterface;
 use Magento\TestFramework\ObjectManager;
 use Magento\TestFramework\TestCase\GraphQlAbstract;
 
-/**
- * Bundle product view test
- */
 class BundleProductViewTest extends GraphQlAbstract
 {
     const KEY_PRICE_TYPE_FIXED = 'FIXED';
@@ -58,7 +55,7 @@ class BundleProductViewTest extends GraphQlAbstract
               sku              
               options {
                 id
-                quantity
+                qty
                 position
                 is_default
                 price
@@ -111,7 +108,7 @@ QUERY;
     /**
      * @magentoApiDataFixture Magento/Bundle/_files/bundle_product_with_not_visible_children.php
      */
-    public function testBundleProductWithNotVisibleChildren()
+    public function testBundleProdutWithNotVisibleChildren()
     {
         $productSku = 'bundle-product-1';
         $query
@@ -143,7 +140,7 @@ QUERY;
               sku              
               options {
                 id
-                quantity
+                qty
                 position
                 is_default
                 price
@@ -269,7 +266,7 @@ QUERY;
             $actualResponse['items'][0]['options'][0],
             [
                 'id' => $bundleProductLink->getId(),
-                'quantity' => (int)$bundleProductLink->getQty(),
+                'qty' => (int)$bundleProductLink->getQty(),
                 'position' => $bundleProductLink->getPosition(),
                 'is_default' => (bool)$bundleProductLink->getIsDefault(),
                  'price_type' => self::KEY_PRICE_TYPE_FIXED,
@@ -428,9 +425,8 @@ QUERY;
 QUERY;
 
         $this->expectException(\Exception::class);
-        $this->expectExceptionMessage(
-            'GraphQL response contains errors: Cannot query field "qty" on type "ProductInterface".'
-        );
+        $this->expectExceptionMessage('GraphQL response contains errors: Cannot'. ' ' .
+            'query field "qty" on type "ProductInterface".');
         $this->graphQlQuery($query);
     }
 }

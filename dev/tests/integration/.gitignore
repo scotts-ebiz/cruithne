@@ -2,4 +2,3 @@
 !/etc/integration-tests-config.xml
 /var/
 /etc/*.php
-/framework/tests/unit/var/allure-results/

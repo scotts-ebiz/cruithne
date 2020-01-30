@@ -9,7 +9,6 @@ namespace Magento\Catalog\Model;
 
 use Magento\Backend\Model\Auth;
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
 use Magento\Framework\Api\SearchCriteriaBuilder;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\Bootstrap as TestBootstrap;
@@ -20,6 +19,7 @@ use Magento\Framework\Acl\Builder;
  *
  * @magentoDbIsolation enabled
  * @magentoAppIsolation enabled
+ *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class ProductRepositoryTest extends \PHPUnit\Framework\TestCase
@@ -37,16 +37,6 @@ class ProductRepositoryTest extends \PHPUnit\Framework\TestCase
     private $searchCriteriaBuilder;
 
     /**
-     * @var ProductFactory
-     */
-    private $productFactory;
-
-    /**
-     * @var ProductResource
-     */
-    private $productResource;
-
-    /*
      * @var Auth
      */
     private $auth;
@@ -65,8 +55,6 @@ class ProductRepositoryTest extends \PHPUnit\Framework\TestCase
         $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
         $this->auth = Bootstrap::getObjectManager()->get(Auth::class);
         $this->aclBuilder = Bootstrap::getObjectManager()->get(Builder::class);
-        $this->productFactory = Bootstrap::getObjectManager()->get(ProductFactory::class);
-        $this->productResource = Bootstrap::getObjectManager()->get(ProductResource::class);
     }
 
     /**
@@ -152,15 +140,10 @@ class ProductRepositoryTest extends \PHPUnit\Framework\TestCase
 
         $path = $mediaConfig->getBaseMediaPath() . '/magento_image.jpg';
         $absolutePath = $mediaDirectory->getAbsolutePath() . $path;
-        $product->addImageToMediaGallery(
-            $absolutePath,
-            [
+        $product->addImageToMediaGallery($absolutePath, [
             'image',
             'small_image',
-            ],
-            false,
-            false
-        );
+        ], false, false);
 
         /** @var \Magento\Catalog\Api\ProductRepositoryInterface $productRepository */
         $productRepository = Bootstrap::getObjectManager()
@@ -178,31 +161,6 @@ class ProductRepositoryTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('image', $images[0]['media_type']);
         $this->assertStringStartsWith('/m/a/magento_image', $product->getData('image'));
         $this->assertStringStartsWith('/m/a/magento_image', $product->getData('small_image'));
-    }
-
-    /**
-     * Test Product Repository can change(update) "sku" for given product.
-     *
-     * @magentoDataFixture Magento/Catalog/_files/product_simple.php
-     * @magentoDbIsolation enabled
-     * @magentoAppArea adminhtml
-     */
-    public function testUpdateProductSku()
-    {
-        $newSku = 'simple-edited';
-        $productId = $this->productResource->getIdBySku('simple');
-        $initialProduct = $this->productFactory->create();
-        $this->productResource->load($initialProduct, $productId);
-
-        $initialProduct->setSku($newSku);
-        $this->productRepository->save($initialProduct);
-
-        $updatedProduct = $this->productFactory->create();
-        $this->productResource->load($updatedProduct, $productId);
-        self::assertSame($newSku, $updatedProduct->getSku());
-
-        //clean up.
-        $this->productRepository->delete($updatedProduct);
     }
 
     /**

@@ -11,6 +11,7 @@ use Magento\Framework\Config\ConfigOptionsListConstants;
 use Magento\Framework\Encryption\KeyValidator;
 use Magento\Framework\Setup\ConfigOptionsListInterface;
 use Magento\Framework\Setup\Option\FlagConfigOption;
+use Magento\Framework\Setup\Option\SelectConfigOption;
 use Magento\Framework\Setup\Option\TextConfigOption;
 use Magento\Setup\Validator\DbValidator;
 
@@ -76,6 +77,7 @@ class ConfigOptionsList implements ConfigOptionsListInterface
 
     /**
      * @inheritdoc
+     *
      * @SuppressWarnings(PHPMD.ExcessiveMethodLength)
      */
     public function getOptions()
@@ -165,7 +167,6 @@ class ConfigOptionsList implements ConfigOptionsListInterface
         ];
 
         foreach ($this->configOptionsCollection as $configOptionsList) {
-            // phpcs:ignore Magento2.Performance.ForeachArrayMerge
             $options = array_merge($options, $configOptionsList->getOptions());
         }
 
@@ -222,7 +223,6 @@ class ConfigOptionsList implements ConfigOptionsListInterface
         }
 
         foreach ($this->configOptionsCollection as $configOptionsList) {
-            // phpcs:ignore Magento2.Performance.ForeachArrayMerge
             $errors = array_merge($errors, $configOptionsList->validate($options, $deploymentConfig));
         }
 

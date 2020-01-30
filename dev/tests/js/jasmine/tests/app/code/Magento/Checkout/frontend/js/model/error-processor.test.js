@@ -46,17 +46,14 @@ define([
             });
 
             it('check on success response with invalid response data', function () {
-                var messageContainer = jasmine.createSpyObj('globalMessageList', ['addErrorMessage']),
-                    messageObject = {
-                        message: 'Something went wrong with your request. Please try again later.'
-                    };
+                var messageContainer = jasmine.createSpyObj('globalMessageList', ['addErrorMessage']);
 
                 model.process({
                     status: 200,
                     responseText: ''
                 }, messageContainer);
                 expect(messageContainer.addErrorMessage)
-                    .toHaveBeenCalledWith(messageObject);
+                    .toHaveBeenCalledWith('Something went wrong with your request. Please try again later.');
             });
 
             it('check on failed status', function () {

@@ -3,7 +3,6 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
 
 namespace Magento\Quote\Api;
 
@@ -67,7 +66,7 @@ class CartManagementTest extends WebapiAbstract
     }
 
     /**
-     * @magentoApiDataFixture Magento/Customer/_files/customer_one_address.php
+     * @magentoApiDataFixture Magento/Customer/_files/customer.php
      */
     public function testCreateEmptyCartForCustomer()
     {
@@ -95,7 +94,7 @@ class CartManagementTest extends WebapiAbstract
     }
 
     /**
-     * @magentoApiDataFixture Magento/Customer/_files/customer_one_address.php
+     * @magentoApiDataFixture Magento/Customer/_files/customer.php
      */
     public function testCreateEmptyCartAndGetCartForCustomer()
     {
@@ -106,10 +105,7 @@ class CartManagementTest extends WebapiAbstract
         $customerTokenService = $this->objectManager->create(
             \Magento\Integration\Api\CustomerTokenServiceInterface::class
         );
-        $token = $customerTokenService->createCustomerAccessToken(
-            'customer_one_address@test.com',
-            'password'
-        );
+        $token = $customerTokenService->createCustomerAccessToken('customer@example.com', 'password');
 
         $serviceInfo = [
             'rest' => [

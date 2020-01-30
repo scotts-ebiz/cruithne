@@ -12,9 +12,6 @@ use Magento\Framework\Config\Data\ConfigData;
 use Magento\Framework\Config\Data\ConfigDataFactory;
 use Magento\Setup\Model\ConfigGenerator;
 
-/**
- * Test for Magento\Setup\Model\ConfigGenerator class.
- */
 class ConfigGeneratorTest extends \PHPUnit\Framework\TestCase
 {
     /**

@@ -7,7 +7,7 @@ namespace Magento\Setup\Validator;
 
 use Magento\Framework\Config\ConfigOptionsListConstants as ConfigOption;
 use Magento\Setup\Model\AdminAccount;
-use Magento\Setup\Model\ConfigOptionsList\DriverOptions;
+use Magento\Setup\Model\Installer;
 
 /**
  * Admin user credentials validator
@@ -55,15 +55,13 @@ class AdminCredentialsValidator
      */
     public function validate(array $data)
     {
-        $dbConnection = $this->connectionFactory->create(
-            [
-                ConfigOption::KEY_NAME => $data[ConfigOption::INPUT_KEY_DB_NAME],
-                ConfigOption::KEY_HOST => $data[ConfigOption::INPUT_KEY_DB_HOST],
-                ConfigOption::KEY_USER => $data[ConfigOption::INPUT_KEY_DB_USER],
-                ConfigOption::KEY_PASSWORD => $data[ConfigOption::INPUT_KEY_DB_PASSWORD],
-                ConfigOption::KEY_PREFIX => $data[ConfigOption::INPUT_KEY_DB_PREFIX],
-            ]
-        );
+        $dbConnection = $this->connectionFactory->create([
+            ConfigOption::KEY_NAME => $data[ConfigOption::INPUT_KEY_DB_NAME],
+            ConfigOption::KEY_HOST => $data[ConfigOption::INPUT_KEY_DB_HOST],
+            ConfigOption::KEY_USER => $data[ConfigOption::INPUT_KEY_DB_USER],
+            ConfigOption::KEY_PASSWORD => $data[ConfigOption::INPUT_KEY_DB_PASSWORD],
+            ConfigOption::KEY_PREFIX => $data[ConfigOption::INPUT_KEY_DB_PREFIX]
+        ]);
 
         $adminAccount = $this->adminAccountFactory->create(
             $dbConnection,

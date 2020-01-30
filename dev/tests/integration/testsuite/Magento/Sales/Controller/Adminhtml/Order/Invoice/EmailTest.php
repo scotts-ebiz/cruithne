@@ -59,7 +59,7 @@ class EmailTest extends AbstractInvoiceControllerTest
         );
 
         $this->assertEquals($message->getSubject(), $subject);
-        $this->assertThat($message->getBody()->getParts()[0]->getRawContent(), $messageConstraint);
+        $this->assertThat($message->getRawMessage(), $messageConstraint);
     }
 
     /**

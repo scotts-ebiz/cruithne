@@ -10,8 +10,6 @@ use Magento\Composer\RequireUpdateDryRunCommand;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\Composer\ComposerJsonFinder;
 use Magento\Framework\Composer\MagentoComposerApplicationFactory;
-use Magento\Framework\Escaper;
-use Magento\Framework\App\ObjectManager;
 use Magento\Framework\Filesystem\Driver\File;
 
 /**
@@ -19,11 +17,6 @@ use Magento\Framework\Filesystem\Driver\File;
  */
 class DependencyReadinessCheck
 {
-    /**
-     * @var Escaper
-     */
-    private $escaper;
-
     /**
      * @var ComposerJsonFinder
      */
@@ -56,23 +49,18 @@ class DependencyReadinessCheck
      * @param DirectoryList $directoryList
      * @param File $file
      * @param MagentoComposerApplicationFactory $composerAppFactory
-     * @param Escaper|null $escaper
      */
     public function __construct(
         ComposerJsonFinder $composerJsonFinder,
         DirectoryList $directoryList,
         File $file,
-        MagentoComposerApplicationFactory $composerAppFactory,
-        Escaper $escaper = null
+        MagentoComposerApplicationFactory $composerAppFactory
     ) {
         $this->composerJsonFinder = $composerJsonFinder;
         $this->directoryList = $directoryList;
         $this->file = $file;
         $this->requireUpdateDryRunCommand = $composerAppFactory->createRequireUpdateDryRunCommand();
         $this->magentoComposerApplication = $composerAppFactory->create();
-        $this->escaper = $escaper ?? ObjectManager::getInstance()->get(
-            Escaper::class
-        );
     }
 
     /**
@@ -103,7 +91,7 @@ class DependencyReadinessCheck
             $this->requireUpdateDryRunCommand->run($packages, $workingDir);
             return ['success' => true];
         } catch (\RuntimeException $e) {
-            $message = str_replace(PHP_EOL, '<br/>', $this->escaper->escapeHtml($e->getMessage()));
+            $message = str_replace(PHP_EOL, '<br/>', htmlspecialchars($e->getMessage()));
             return ['success' => false, 'error' => $message];
         }
     }

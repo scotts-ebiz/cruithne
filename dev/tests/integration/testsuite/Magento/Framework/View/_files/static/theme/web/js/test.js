@@ -5,7 +5,7 @@
 define([
     "jquery",
     "matchMedia",
-    "jquery-ui-modules/menu",
+    "jquery/ui",
     "jquery/jquery.mobile.custom",
     "mage/translate"
 ], function ($, mediaCheck) {

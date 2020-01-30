@@ -184,14 +184,6 @@ class ObsoleteCodeTest extends \PHPUnit\Framework\TestCase
             function ($file) {
                 $content = file_get_contents($file);
                 $this->_testObsoletePropertySkipCalculate($content);
-                if (strpos($file, 'requirejs-config.js') === false
-                    && (
-                        strpos($file, '/view/frontend/web/') !== false
-                        || strpos($file, '/view/base/web/') !== false
-                    )
-                ) {
-                    $this->_testJqueryUiLibraryIsNotUsedInJs($content);
-                }
             },
             Files::init()->getJsFiles()
         );
@@ -711,16 +703,14 @@ class ObsoleteCodeTest extends \PHPUnit\Framework\TestCase
         }
         $pathWithConstParts = explode('\\', $pathWithConst);
         $pathInUseNamespace = trim($matchClassString['classPath'], '\\');
-        $pathInUseNamespaceTruncated = trim(
-            trim(
-                preg_replace(
-                    '/' . preg_quote($pathWithConstParts[0]) . '$/',
-                    '',
-                    $pathInUseNamespace
-                ),
-                '\\'
-            )
-        );
+        $pathInUseNamespaceTruncated = trim(trim(
+            preg_replace(
+                '/' . preg_quote($pathWithConstParts[0]) . '$/',
+                '',
+                $pathInUseNamespace
+            ),
+            '\\'
+        ));
         if ($this->_checkClasspathProperDivisionNoConstantPath(
             $pathInUseNamespaceTruncated,
             $pathInUseNamespace,
@@ -956,22 +946,5 @@ class ObsoleteCodeTest extends \PHPUnit\Framework\TestCase
             }
         }
         return $ignored;
-    }
-
-    /**
-     * Assert that jquery/ui library is not used in JS content.
-     *
-     * @param string $fileContent
-     */
-    private function _testJqueryUiLibraryIsNotUsedInJs($fileContent)
-    {
-        $this->_assertNotRegexp(
-            '/(["\'])jquery\/ui\1/',
-            $fileContent,
-            $this->_suggestReplacement(
-                sprintf("Dependency '%s' is redundant.", 'jquery/ui'),
-                'Use separate jquery ui widget instead of all library.'
-            )
-        );
     }
 }

@@ -66,7 +66,6 @@ class CommandList
             \Magento\Setup\Console\Command\ModuleDisableCommand::class,
             \Magento\Setup\Console\Command\ModuleStatusCommand::class,
             \Magento\Setup\Console\Command\ModuleUninstallCommand::class,
-            \Magento\Setup\Console\Command\ModuleConfigStatusCommand::class,
             \Magento\Setup\Console\Command\MaintenanceAllowIpsCommand::class,
             \Magento\Setup\Console\Command\MaintenanceDisableCommand::class,
             \Magento\Setup\Console\Command\MaintenanceEnableCommand::class,
@@ -92,7 +91,6 @@ class CommandList
             if (class_exists($class)) {
                 $commands[] = $this->serviceManager->get($class);
             } else {
-                // phpcs:ignore Magento2.Exceptions.DirectThrow
                 throw new \Exception('Class ' . $class . ' does not exist');
             }
         }

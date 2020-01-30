@@ -18,12 +18,11 @@ require 'order.php';
 
 $orderItems = [
     [
-        OrderItemInterface::SKU => 'bundle_1',
-        OrderItemInterface::NAME => 'bundle_1',
         OrderItemInterface::PRODUCT_ID => 2,
         OrderItemInterface::BASE_PRICE => 100,
         OrderItemInterface::ORDER_ID => $order->getId(),
         OrderItemInterface::QTY_ORDERED => 2,
+        OrderItemInterface::QTY_INVOICED => 2,
         OrderItemInterface::PRICE => 100,
         OrderItemInterface::ROW_TOTAL => 102,
         OrderItemInterface::PRODUCT_TYPE => 'bundle',
@@ -36,17 +35,18 @@ $orderItems = [
         ],
         'children' => [
             [
-                OrderItemInterface::SKU => 'bundle_simple_1',
-                OrderItemInterface::NAME => 'bundle_simple_1',
                 OrderItemInterface::PRODUCT_ID => 13,
                 OrderItemInterface::ORDER_ID => $order->getId(),
                 OrderItemInterface::QTY_ORDERED => 10,
+                OrderItemInterface::QTY_INVOICED => 10,
                 OrderItemInterface::BASE_PRICE => 90,
                 OrderItemInterface::PRICE => 90,
                 OrderItemInterface::ROW_TOTAL => 92,
                 OrderItemInterface::PRODUCT_TYPE => 'simple',
                 'product_options' => [
-                    'bundle_selection_attributes' => '{"qty":5}',
+                    'bundle_selection_attributes' => [
+                        'qty' => 2,
+                    ],
                 ],
             ],
         ],

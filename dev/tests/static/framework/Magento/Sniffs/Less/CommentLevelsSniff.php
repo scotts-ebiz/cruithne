@@ -5,8 +5,8 @@
  */
 namespace Magento\Sniffs\Less;
 
-use PHP_CodeSniffer\Files\File;
 use PHP_CodeSniffer\Sniffs\Sniff;
+use PHP_CodeSniffer\Files\File;
 
 /**
  * Class CommentLevelsSniff
@@ -72,7 +72,14 @@ class CommentLevelsSniff implements Sniff
             return;
         }
 
-        $this->validateCommentLevel($phpcsFile, $stackPtr, $tokens);
+        // validation of levels comments
+        if (!in_array($tokens[$stackPtr + 1]['content'], [
+                TokenizerSymbolsInterface::DOUBLE_WHITESPACE,
+                TokenizerSymbolsInterface::NEW_LINE,
+            ])
+        ) {
+            $phpcsFile->addError('Level\'s comment does not have 2 spaces after "//"', $stackPtr, 'SpacesMissed');
+        }
 
         if (!$this->isNthLevelComment($phpcsFile, $stackPtr, $tokens)) {
             return;
@@ -187,28 +194,5 @@ class CommentLevelsSniff implements Sniff
         }
 
         return $correct;
-    }
-
-    /**
-     * Validation of comment level.
-     *
-     * @param File $phpcsFile
-     * @param int $stackPtr
-     * @param array $tokens
-     */
-    private function validateCommentLevel(File $phpcsFile, int $stackPtr, array $tokens): void
-    {
-        if ($tokens[$stackPtr + 2]['content'] !== 'magento_import' &&
-            !in_array(
-                $tokens[$stackPtr + 1]['content'],
-                [
-                    TokenizerSymbolsInterface::DOUBLE_WHITESPACE,
-                    TokenizerSymbolsInterface::NEW_LINE,
-                ],
-                true
-            )
-        ) {
-            $phpcsFile->addError('Level\'s comment does not have 2 spaces after "//"', $stackPtr, 'SpacesMissed');
-        }
     }
 }

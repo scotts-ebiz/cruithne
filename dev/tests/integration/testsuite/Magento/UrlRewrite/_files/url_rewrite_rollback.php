@@ -21,6 +21,7 @@ $urlRewriteCollection = \Magento\TestFramework\Helper\Bootstrap::getObjectManage
 $collection = $urlRewriteCollection
     ->addFieldToFilter('entity_type', 'custom')
     ->addFieldToFilter('request_path', ['page-a', 'page-b', 'page-c'])
+    ->addFieldToFilter('entity_id', '333')
     ->load()
     ->walk('delete');
 

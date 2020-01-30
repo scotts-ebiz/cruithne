@@ -17,7 +17,7 @@ use Magento\Mtf\TestCase\Scenario;
  * 5. Perform assertions.
  *
  * @group One_Page_Checkout
- * @ZephyrId MC-18203
+ * @ZephyrId MAGETWO-59697
  */
 class OnePageCheckoutJsValidationTest extends Scenario
 {

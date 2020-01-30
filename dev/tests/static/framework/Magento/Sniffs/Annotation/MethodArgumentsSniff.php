@@ -3,6 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+
 declare(strict_types=1);
 
 namespace Magento\Sniffs\Annotation;
@@ -123,9 +124,10 @@ class MethodArgumentsSniff implements Sniff
     private function getMethodParameters(array $paramDefinitions): array
     {
         $paramName = [];
-        foreach ($paramDefinitions as $paramDefinition) {
-            if (isset($paramDefinition['paramName'])) {
-                $paramName[] = $paramDefinition['paramName'];
+        $paramCount = count($paramDefinitions);
+        for ($i = 0; $i < $paramCount; $i++) {
+            if (isset($paramDefinitions[$i]['paramName'])) {
+                $paramName[] = $paramDefinitions[$i]['paramName'];
             }
         }
         return $paramName;
@@ -370,12 +372,13 @@ class MethodArgumentsSniff implements Sniff
         $parametersCount = count($paramPointers);
         if ($argumentsCount <= $parametersCount && $argumentsCount > 0) {
             $duplicateParameters = [];
-            foreach ($paramDefinitions as $i => $paramDefinition) {
-                if (isset($paramDefinition['paramName'])) {
-                    $parameterContent = $paramDefinition['paramName'];
-                    foreach (array_slice($paramDefinitions, $i + 1) as $nextParamDefinition) {
-                        if (isset($nextParamDefinition['paramName'])
-                            && $parameterContent === $nextParamDefinition['paramName']
+            $paramCount = count($paramDefinitions);
+            for ($i = 0; $i < $paramCount; $i++) {
+                if (isset($paramDefinitions[$i]['paramName'])) {
+                    $parameterContent = $paramDefinitions[$i]['paramName'];
+                    for ($j = $i + 1; $j < $paramCount; $j++) {
+                        if (isset($paramDefinitions[$j]['paramName'])
+                            && $parameterContent === $paramDefinitions[$j]['paramName']
                         ) {
                             $duplicateParameters[] = $parameterContent;
                         }
@@ -470,8 +473,6 @@ class MethodArgumentsSniff implements Sniff
      * @param array $methodArguments
      * @param int $previousCommentOpenPtr
      * @param int $previousCommentClosePtr
-     *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
     private function validateMethodParameterAnnotations(
         int $stackPtr,
@@ -518,8 +519,7 @@ class MethodArgumentsSniff implements Sniff
             $paramPointers
         );
         $tokens = $phpcsFile->getTokens();
-
-        foreach ($methodArguments as $ptr => $methodArgument) {
+        for ($ptr = 0; $ptr < $argumentCount; $ptr++) {
             if (isset($paramPointers[$ptr])) {
                 $this->validateArgumentNameInParameterAnnotationExists(
                     $stackPtr,
@@ -550,12 +550,8 @@ class MethodArgumentsSniff implements Sniff
         $numTokens = count($tokens);
         $previousCommentOpenPtr = $phpcsFile->findPrevious(T_DOC_COMMENT_OPEN_TAG, $stackPtr - 1, 0);
         $previousCommentClosePtr = $phpcsFile->findPrevious(T_DOC_COMMENT_CLOSE_TAG, $stackPtr - 1, 0);
-        if ($previousCommentClosePtr && $previousCommentOpenPtr) {
-            if (!$this->validateCommentBlockExists($phpcsFile, $previousCommentClosePtr, $stackPtr)) {
-                $phpcsFile->addError('Comment block is missing', $stackPtr, 'MethodArguments');
-                return;
-            }
-        } else {
+        if (!$this->validateCommentBlockExists($phpcsFile, $previousCommentClosePtr, $stackPtr)) {
+            $phpcsFile->addError('Comment block is missing', $stackPtr, 'MethodArguments');
             return;
         }
         $openParenthesisPtr = $phpcsFile->findNext(T_OPEN_PARENTHESIS, $stackPtr + 1, $numTokens);
@@ -609,8 +605,6 @@ class MethodArgumentsSniff implements Sniff
      * @param File $phpcsFile
      * @param array $paramPointers
      *
-     * @SuppressWarnings(PHPMD.UnusedLocalVariable)
-     *
      * @see https://devdocs.magento.com/guides/v2.3/coding-standards/docblock-standard-general.html#format-consistency
      */
     private function validateFormattingConsistency(
@@ -622,19 +616,20 @@ class MethodArgumentsSniff implements Sniff
         $argumentPositions = [];
         $commentPositions = [];
         $tokens = $phpcsFile->getTokens();
-        foreach ($methodArguments as $ptr => $methodArgument) {
+        $argumentCount = count($methodArguments);
+        for ($ptr = 0; $ptr < $argumentCount; $ptr++) {
             if (isset($paramPointers[$ptr])) {
                 $paramContent = $tokens[$paramPointers[$ptr] + 2]['content'];
                 $paramDefinition = $paramDefinitions[$ptr];
                 $argumentPositions[] = strpos($paramContent, $paramDefinition['paramName']);
                 $commentPositions[] = $paramDefinition['comment']
-                    ? strrpos($paramContent, $paramDefinition['comment']) : null;
+                    ? strpos($paramContent, $paramDefinition['comment']) : null;
             }
         }
         if (!$this->allParamsAligned($argumentPositions, $commentPositions)
             && !$this->noneParamsAligned($argumentPositions, $commentPositions, $paramDefinitions)) {
             $phpcsFile->addFixableError(
-                'Method arguments visual alignment must be consistent',
+                'Visual alignment must be consistent',
                 $paramPointers[0],
                 'MethodArguments'
             );
@@ -668,9 +663,6 @@ class MethodArgumentsSniff implements Sniff
         foreach ($argumentPositions as $index => $argumentPosition) {
             $commentPosition = $commentPositions[$index];
             $type = $paramDefinitions[$index]['type'];
-            if ($type === null) {
-                continue;
-            }
             $paramName = $paramDefinitions[$index]['paramName'];
             if (($argumentPosition !== strlen($type) + 1) ||
                 (isset($commentPosition) && ($commentPosition !== $argumentPosition + strlen($paramName) + 1))) {

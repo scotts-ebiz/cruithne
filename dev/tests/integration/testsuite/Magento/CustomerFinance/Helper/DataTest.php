@@ -5,9 +5,6 @@
  */
 namespace Magento\CustomerFinance\Helper;
 
-/**
- * Helper data test.
- */
 class DataTest extends \PHPUnit\Framework\TestCase
 {
     /**

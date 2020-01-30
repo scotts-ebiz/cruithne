@@ -9,9 +9,6 @@ namespace Magento\Customer\Block\Account\Dashboard;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 
-/**
- * Class address test.
- */
 class AddressTest extends \PHPUnit\Framework\TestCase
 {
     /**

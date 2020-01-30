@@ -11,6 +11,7 @@ use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\CatalogInventory\Api\Data\StockItemInterface;
 use Magento\Downloadable\Api\DomainManagerInterface;
 use Magento\Downloadable\Model\Link;
+use Magento\Framework\ObjectManagerInterface;
 use Magento\Store\Model\Store;
 use Magento\Store\Model\Website;
 use Magento\Store\Model\WebsiteRepository;
@@ -57,29 +58,33 @@ class ProductRepositoryInterfaceTest extends WebapiAbstract
     ];
 
     /**
-     * @inheritDoc
+     * @var ObjectManagerInterface
+     */
+    private $objectManager;
+
+    /**
+     * @var DomainManagerInterface
+     */
+    private $domainManager;
+
+    /**
+     * @inheritdoc
      */
     protected function setUp()
     {
         parent::setUp();
-
-        $objectManager = Bootstrap::getObjectManager();
-        /** @var DomainManagerInterface $domainManager */
-        $domainManager = $objectManager->get(DomainManagerInterface::class);
-        $domainManager->addDomains(['example.com']);
+        $this->objectManager = Bootstrap::getObjectManager();
+        $this->domainManager = $this->objectManager->get(DomainManagerInterface::class);
+        $this->domainManager->addDomains(['example.com']);
     }
 
     /**
-     * @inheritDoc
+     * @inheritdoc
      */
     protected function tearDown()
     {
         parent::tearDown();
-
-        $objectManager = Bootstrap::getObjectManager();
-        /** @var DomainManagerInterface $domainManager */
-        $domainManager = $objectManager->get(DomainManagerInterface::class);
-        $domainManager->removeDomains(['example.com']);
+        $this->domainManager->removeDomains(['example.com']);
     }
 
     /**
@@ -210,7 +215,8 @@ class ProductRepositoryInterfaceTest extends WebapiAbstract
     }
 
     /**
-     * Test removing all website associations
+     * Test removing all website associations.
+     *
      * @magentoApiDataFixture Magento/Catalog/_files/product_with_two_websites.php
      */
     public function testDeleteAllWebsiteAssociations()
@@ -242,7 +248,7 @@ class ProductRepositoryInterfaceTest extends WebapiAbstract
         $websitesData = [
             'website_ids' => [
                 1,
-                (int) $website->getId(),
+                (int)$website->getId(),
             ]
         ];
         $productBuilder[ProductInterface::EXTENSION_ATTRIBUTES_KEY] = $websitesData;
@@ -445,7 +451,6 @@ class ProductRepositoryInterfaceTest extends WebapiAbstract
             ProductInterface::TYPE_ID => 'simple',
             ProductInterface::PRICE => 100,
             ProductInterface::STATUS => 1,
-            ProductInterface::TYPE_ID => 'simple',
             ProductInterface::ATTRIBUTE_SET_ID => 4,
             ProductInterface::EXTENSION_ATTRIBUTES_KEY => [
                 'stock_item' => $this->getStockItemData()
@@ -468,7 +473,6 @@ class ProductRepositoryInterfaceTest extends WebapiAbstract
             ProductInterface::TYPE_ID => 'simple',
             ProductInterface::PRICE => 100,
             ProductInterface::STATUS => 1,
-            ProductInterface::TYPE_ID => 'simple',
             ProductInterface::ATTRIBUTE_SET_ID => 4,
             "product_links" => [$productLinkData]
         ];
@@ -634,7 +638,7 @@ class ProductRepositoryInterfaceTest extends WebapiAbstract
     public function testProductWithMediaGallery()
     {
         $testImagePath = __DIR__ . DIRECTORY_SEPARATOR . '_files' . DIRECTORY_SEPARATOR . 'test_image.jpg';
-        // @codingStandardsIgnoreLine
+        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $encodedImage = base64_encode(file_get_contents($testImagePath));
         //create a product with media gallery
         $filename1 = 'tiny1' . time() . '.jpg';
@@ -754,13 +758,13 @@ class ProductRepositoryInterfaceTest extends WebapiAbstract
 
     /**
      * @param array $product
-     * @return array|bool|float|int|string
+     * @return mixed
      */
     protected function updateProduct($product)
     {
         if (isset($product['custom_attributes'])) {
             foreach ($product['custom_attributes'] as &$customAttribute) {
-                if ($customAttribute['attribute_code'] == 'category_ids'
+                if ($customAttribute['attribute_code'] === 'category_ids'
                     && !is_array($customAttribute['value'])
                 ) {
                     $customAttribute['value'] = [""];
@@ -848,7 +852,7 @@ class ProductRepositoryInterfaceTest extends WebapiAbstract
 
         $index = null;
         foreach ($response['items'][0]['custom_attributes'] as $key => $customAttribute) {
-            if ($customAttribute['attribute_code'] == 'category_ids') {
+            if ($customAttribute['attribute_code'] === 'category_ids') {
                 $index = $key;
                 break;
             }
@@ -888,7 +892,7 @@ class ProductRepositoryInterfaceTest extends WebapiAbstract
 
         $indexDescription = null;
         foreach ($response['items'][0]['custom_attributes'] as $key => $customAttribute) {
-            if ($customAttribute['attribute_code'] == 'description') {
+            if ($customAttribute['attribute_code'] === 'description') {
                 $indexDescription = $key;
             }
         }
@@ -1059,7 +1063,7 @@ class ProductRepositoryInterfaceTest extends WebapiAbstract
         $sortOrder = $sortOrderBuilder->setField('meta_title')->setDirection(SortOrder::SORT_DESC)->create();
 
         /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
-        $searchCriteriaBuilder =  Bootstrap::getObjectManager()->create(SearchCriteriaBuilder::class);
+        $searchCriteriaBuilder = Bootstrap::getObjectManager()->create(SearchCriteriaBuilder::class);
 
         $searchCriteriaBuilder->addFilters([$filter1, $filter2, $filter3, $filter4]);
         $searchCriteriaBuilder->addFilters([$filter5]);
@@ -1181,7 +1185,7 @@ class ProductRepositoryInterfaceTest extends WebapiAbstract
     {
         if (isset($product['custom_attributes'])) {
             foreach ($product['custom_attributes'] as &$customAttribute) {
-                if ($customAttribute['attribute_code'] == 'category_ids'
+                if ($customAttribute['attribute_code'] === 'category_ids'
                     && !is_array($customAttribute['value'])
                 ) {
                     $customAttribute['value'] = [""];
@@ -1509,7 +1513,6 @@ class ProductRepositoryInterfaceTest extends WebapiAbstract
             ProductInterface::TYPE_ID => 'simple',
             ProductInterface::PRICE => 100,
             ProductInterface::STATUS => 0,
-            ProductInterface::TYPE_ID => 'simple',
             ProductInterface::ATTRIBUTE_SET_ID => 4,
         ];
 
@@ -1603,7 +1606,7 @@ class ProductRepositoryInterfaceTest extends WebapiAbstract
         $this->assertNotEmpty($customAttributes);
         $multiselectValue = null;
         foreach ($customAttributes as $customAttribute) {
-            if ($customAttribute['attribute_code'] == $multiselectAttributeCode) {
+            if ($customAttribute['attribute_code'] === $multiselectAttributeCode) {
                 $multiselectValue = $customAttribute['value'];
                 break;
             }

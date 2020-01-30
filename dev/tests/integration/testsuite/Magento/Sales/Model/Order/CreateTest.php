@@ -95,6 +95,6 @@ class CreateTest extends \PHPUnit\Framework\TestCase
         );
 
         $this->assertEquals($message->getSubject(), $subject);
-        $this->assertThat($message->getBody()->getParts()[0]->getRawContent(), $assert);
+        $this->assertThat($message->getRawMessage(), $assert);
     }
 }

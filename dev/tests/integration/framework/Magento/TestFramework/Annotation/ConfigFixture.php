@@ -40,11 +40,6 @@ class ConfigFixture
     private $_storeConfigValues = [];
 
     /**
-     * @var string
-     */
-    protected $annotation = 'magentoConfigFixture';
-
-    /**
      * Retrieve configuration node value
      *
      * @param string $configPath
@@ -109,10 +104,10 @@ class ConfigFixture
     protected function _assignConfigData(\PHPUnit\Framework\TestCase $test)
     {
         $annotations = $test->getAnnotations();
-        if (!isset($annotations['method'][$this->annotation])) {
+        if (!isset($annotations['method']['magentoConfigFixture'])) {
             return;
         }
-        foreach ($annotations['method'][$this->annotation] as $configPathAndValue) {
+        foreach ($annotations['method']['magentoConfigFixture'] as $configPathAndValue) {
             if (preg_match('/^.+?(?=_store\s)/', $configPathAndValue, $matches)) {
                 /* Store-scoped config value */
                 $storeCode = $matches[0] != 'current' ? $matches[0] : null;

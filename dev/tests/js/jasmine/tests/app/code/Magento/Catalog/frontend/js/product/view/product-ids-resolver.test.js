@@ -7,7 +7,8 @@
 define([
     'squire',
     'jquery',
-    'ko'
+    'ko',
+    'jquery/ui'
 ], function (Squire, $, ko) {
     'use strict';
 

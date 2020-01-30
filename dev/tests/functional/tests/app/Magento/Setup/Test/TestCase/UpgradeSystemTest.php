@@ -132,8 +132,6 @@ class UpgradeSystemTest extends Injectable
 
         // Check application version
         $this->adminDashboard->open();
-        $this->adminDashboard->getModalMessage()->dismissIfModalAppears();
-        $this->adminDashboard->getModalMessage()->waitModalWindowToDisappear();
         $assertApplicationVersion->processAssert($this->adminDashboard, $version);
     }
 }

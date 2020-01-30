@@ -8,9 +8,11 @@ declare(strict_types=1);
 namespace Magento\GraphQl\Customer;
 
 use Magento\TestFramework\TestCase\GraphQlAbstract;
+use PHPUnit\Framework\TestResult;
 
 /**
- * API-functional tests cases for generateCustomerToken mutation
+ * Class GenerateCustomerTokenTest
+ * @package Magento\GraphQl\Customer
  */
 class GenerateCustomerTokenTest extends GraphQlAbstract
 {
@@ -21,10 +23,20 @@ class GenerateCustomerTokenTest extends GraphQlAbstract
      */
     public function testGenerateCustomerValidToken()
     {
-        $email = 'customer@example.com';
+        $userName = 'customer@example.com';
         $password = 'password';
 
-        $mutation = $this->getQuery($email, $password);
+        $mutation
+            = <<<MUTATION
+mutation {
+	generateCustomerToken(
+        email: "{$userName}"
+        password: "{$password}"
+    ) {
+        token
+    }
+}
+MUTATION;
 
         $response = $this->graphQlMutation($mutation);
         $this->assertArrayHasKey('generateCustomerToken', $response);
@@ -32,93 +44,29 @@ class GenerateCustomerTokenTest extends GraphQlAbstract
     }
 
     /**
-     * Test customer with invalid data.
-     *
-     * @magentoApiDataFixture Magento/Customer/_files/customer.php
-     * @expectedException \Exception
-     *
-     * @dataProvider dataProviderInvalidCustomerInfo
-     * @param string $email
-     * @param string $password
-     * @param string $message
+     * Verify customer with invalid credentials
      */
-    public function testGenerateCustomerTokenInvalidData(string $email, string $password, string $message)
+    public function testGenerateCustomerTokenWithInvalidCredentials()
     {
-        $mutation = $this->getQuery($email, $password);
-        $this->expectExceptionMessage($message);
-        $this->graphQlMutation($mutation);
-    }
+        $userName = 'customer@example.com';
+        $password = 'bad-password';
 
-    /**
-     * Test customer token regeneration.
-     *
-     * @magentoApiDataFixture Magento/Customer/_files/customer.php
-     */
-    public function testRegenerateCustomerToken()
-    {
-        $email = 'customer@example.com';
-        $password = 'password';
-
-        $mutation = $this->getQuery($email, $password);
-
-        $response1 = $this->graphQlMutation($mutation);
-        $token1 = $response1['generateCustomerToken']['token'];
-
-        $response2 = $this->graphQlMutation($mutation);
-        $token2 = $response2['generateCustomerToken']['token'];
-
-        $this->assertNotEquals($token1, $token2, 'Tokens should not be identical!');
-    }
-
-    /**
-     * @return array
-     */
-    public function dataProviderInvalidCustomerInfo(): array
-    {
-        return [
-            'invalid_email' => [
-                'invalid_email@example.com',
-                'password',
-                'The account sign-in was incorrect or your account is disabled temporarily. ' .
-                'Please wait and try again later.'
-            ],
-            'empty_email' => [
-                '',
-                'password',
-                'Specify the "email" value.'
-            ],
-            'invalid_password' => [
-                'customer@example.com',
-                'invalid_password',
-                'The account sign-in was incorrect or your account is disabled temporarily. ' .
-                'Please wait and try again later.'
-            ],
-            'empty_password' => [
-                'customer@example.com',
-                '',
-                'Specify the "password" value.'
-
-            ]
-        ];
-    }
-
-    /**
-     * @param string $email
-     * @param string $password
-     * @return string
-     */
-    private function getQuery(string $email, string $password) : string
-    {
-        return <<<MUTATION
+        $mutation
+            = <<<MUTATION
 mutation {
 	generateCustomerToken(
-        email: "{$email}"
+        email: "{$userName}"
         password: "{$password}"
     ) {
         token
     }
 }
 MUTATION;
+
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('GraphQL response contains errors: The account sign-in' . ' ' .
+            'was incorrect or your account is disabled temporarily. Please wait and try again later.');
+        $this->graphQlMutation($mutation);
     }
 
     /**

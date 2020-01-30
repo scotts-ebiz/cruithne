@@ -23,7 +23,10 @@ class MutableScopeConfig implements MutableScopeConfigInterface
     private $testAppConfig;
 
     /**
-     * @inheritdoc
+     * @param string $path
+     * @param string $scopeType
+     * @param null $scopeCode
+     * @return bool
      */
     public function isSetFlag($path, $scopeType = ScopeConfigInterface::SCOPE_TYPE_DEFAULT, $scopeCode = null)
     {

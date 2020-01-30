@@ -71,15 +71,34 @@ class CouponCodesFixture extends Fixture
 
         /** @var \Magento\Store\Model\StoreManager $storeManager */
         $storeManager = $this->fixtureModel->getObjectManager()->create(\Magento\Store\Model\StoreManager::class);
+        /** @var $category \Magento\Catalog\Model\Category */
+        $category = $this->fixtureModel->getObjectManager()->get(\Magento\Catalog\Model\Category::class);
 
         //Get all websites
-        $websitesArray = [];
+        $categoriesArray = [];
         $websites = $storeManager->getWebsites();
         foreach ($websites as $website) {
-            $websitesArray[] = $website->getId();
+            //Get all groups
+            $websiteGroups = $website->getGroups();
+            foreach ($websiteGroups as $websiteGroup) {
+                $websiteGroupRootCategory = $websiteGroup->getRootCategoryId();
+                $category->load($websiteGroupRootCategory);
+                $categoryResource = $category->getResource();
+                //Get all categories
+                $resultsCategories = $categoryResource->getAllChildren($category);
+                foreach ($resultsCategories as $resultsCategory) {
+                    $category->load($resultsCategory);
+                    $structure = explode('/', $category->getPath());
+                    if (count($structure) > 2) {
+                        $categoriesArray[] = [$category->getId(), $website->getId()];
+                    }
+                }
+            }
         }
+        asort($categoriesArray);
+        $categoriesArray = array_values($categoriesArray);
 
-        $this->generateCouponCodes($this->ruleFactory, $this->couponCodeFactory, $websitesArray);
+        $this->generateCouponCodes($this->ruleFactory, $this->couponCodeFactory, $categoriesArray);
     }
 
     /**
@@ -87,11 +106,11 @@ class CouponCodesFixture extends Fixture
      *
      * @param \Magento\SalesRule\Model\RuleFactory $ruleFactory
      * @param \Magento\SalesRule\Model\CouponFactory $couponCodeFactory
-     * @param array $websitesArray
+     * @param array $categoriesArray
      *
      * @return void
      */
-    public function generateCouponCodes($ruleFactory, $couponCodeFactory, $websitesArray)
+    public function generateCouponCodes($ruleFactory, $couponCodeFactory, $categoriesArray)
     {
         for ($i = 0; $i < $this->couponCodesCount; $i++) {
             $ruleName = sprintf('Coupon Code %1$d', $i);
@@ -99,7 +118,7 @@ class CouponCodesFixture extends Fixture
                 'rule_id'               => null,
                 'name'                  => $ruleName,
                 'is_active'             => '1',
-                'website_ids'           => $websitesArray,
+                'website_ids'           => $categoriesArray[$i % count($categoriesArray)][1],
                 'customer_group_ids'    => [
                     0 => '0',
                     1 => '1',

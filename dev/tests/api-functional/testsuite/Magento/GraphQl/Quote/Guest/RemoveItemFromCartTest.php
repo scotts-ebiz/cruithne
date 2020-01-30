@@ -117,7 +117,7 @@ QUERY;
                 'Required parameter "cart_id" is missing.'
             ],
             'missed_cart_item_id' => [
-                'cart_id: "test_quote"',
+                'cart_id: "test"',
                 'Required parameter "cart_item_id" is missing.'
             ],
         ];

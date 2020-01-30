@@ -5,19 +5,10 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\TestFramework\Dependency;
 
 use Magento\Framework\App\Utility\Files;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\UrlInterface;
-use Magento\TestFramework\Dependency\Route\RouteMapper;
-use Magento\TestFramework\Exception\NoSuchActionException;
 
-/**
- * Rule to check the dependencies between modules based on references, getUrl and layout blocks
- */
 class PhpRule implements RuleInterface
 {
     /**
@@ -43,7 +34,7 @@ class PhpRule implements RuleInterface
      *
      * @var array
      */
-    private $_mapRouters = [];
+    protected $_mapRouters = [];
 
     /**
      * List of layout blocks
@@ -68,36 +59,18 @@ class PhpRule implements RuleInterface
     ];
 
     /**
-     * @var RouteMapper
-     */
-    private $routeMapper;
-
-    /**
-     * Whitelists for dependency check
+     * Constructor
      *
-     * @var array
-     */
-    private $whitelists;
-
-    /**
      * @param array $mapRouters
      * @param array $mapLayoutBlocks
      * @param array $pluginMap
-     * @param array $whitelists
-     * @throws \Exception
      */
-    public function __construct(
-        array $mapRouters,
-        array $mapLayoutBlocks,
-        array $pluginMap = [],
-        array $whitelists = []
-    ) {
+    public function __construct(array $mapRouters, array $mapLayoutBlocks, array $pluginMap = [])
+    {
         $this->_mapRouters = $mapRouters;
         $this->_mapLayoutBlocks = $mapLayoutBlocks;
         $this->_namespaces = implode('|', \Magento\Framework\App\Utility\Files::init()->getNamespaces());
         $this->pluginMap = $pluginMap ?: null;
-        $this->routeMapper = new RouteMapper();
-        $this->whitelists = $whitelists;
     }
 
     /**
@@ -108,7 +81,6 @@ class PhpRule implements RuleInterface
      * @param string $file
      * @param string $contents
      * @return array
-     * @throws \Exception
      */
     public function getDependencyInfo($currentModule, $fileType, $file, &$contents)
     {
@@ -133,23 +105,12 @@ class PhpRule implements RuleInterface
     }
 
     /**
-     * Get routes whitelist
-     *
-     * @return array
-     */
-    private function getRoutesWhitelist(): array
-    {
-        return $this->whitelists['routes'] ?? [];
-    }
-
-    /**
      * Check references to classes and identifiers defined in other modules
      *
      * @param string $currentModule
      * @param string $file
      * @param string $contents
      * @return array
-     * @throws \Exception
      */
     private function caseClassesAndIdentifiers($currentModule, $file, &$contents)
     {
@@ -208,8 +169,6 @@ class PhpRule implements RuleInterface
     }
 
     /**
-     * Load DI configuration files
-     *
      * @return array
      * @throws \Exception
      */
@@ -225,14 +184,12 @@ class PhpRule implements RuleInterface
      * Generate an array of plugin info
      *
      * @return array
-     * @throws \Exception
      */
     private function loadPluginMap()
     {
         if (!$this->pluginMap) {
             foreach ($this->loadDiFiles() as $filepath) {
                 $dom = new \DOMDocument();
-                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 $dom->loadXML(file_get_contents($filepath));
                 $typeNodes = $dom->getElementsByTagName('type');
                 /** @var \DOMElement $type */
@@ -257,7 +214,6 @@ class PhpRule implements RuleInterface
      * @param string $dependent
      * @param string $dependency
      * @return bool
-     * @throws \Exception
      */
     private function isPluginDependency($dependent, $dependency)
     {
@@ -280,59 +236,47 @@ class PhpRule implements RuleInterface
      *
      * Ex.: getUrl('{path}')
      *
-     * @param string $currentModule
-     * @param string $contents
+     * @param $currentModule
+     * @param $contents
      * @return array
-     * @throws LocalizedException
-     * @throws \Exception
      */
-    protected function _caseGetUrl(string $currentModule, string &$contents): array
+    protected function _caseGetUrl($currentModule, &$contents)
     {
-        $pattern = '#(\->|:)(?<source>getUrl\(([\'"])(?<route_id>[a-z0-9\-_]{3,})'
-            .'(/(?<controller_name>[a-z0-9\-_]+))?(/(?<action_name>[a-z0-9\-_]+))?\3)#i';
+        $pattern = '/[\->:]+(?<source>getUrl\([\'"](?<router>[\w\/*]+)[\'"])/';
 
         $dependencies = [];
         if (!preg_match_all($pattern, $contents, $matches, PREG_SET_ORDER)) {
             return $dependencies;
         }
 
-        try {
-            foreach ($matches as $item) {
-                $modules = $this->routeMapper->getDependencyByRoutePath(
-                    $item['route_id'],
-                    $item['controller_name'] ?? UrlInterface::DEFAULT_CONTROLLER_NAME,
-                    $item['action_name'] ?? UrlInterface::DEFAULT_ACTION_NAME
-                );
+        foreach ($matches as $item) {
+            $router = str_replace('/', '\\', $item['router']);
+            if (isset($this->_mapRouters[$router])) {
+                $modules = $this->_mapRouters[$router];
                 if (!in_array($currentModule, $modules)) {
-                    if (count($modules) === 1) {
-                        $modules = reset($modules);
+                    foreach ($modules as $module) {
+                        $dependencies[] = [
+                            'module' => $module,
+                            'type' => RuleInterface::TYPE_HARD,
+                            'source' => $item['source'],
+                        ];
                     }
-                    $dependencies[] = [
-                        'module' => $modules,
-                        'type' => RuleInterface::TYPE_HARD,
-                        'source' => $item['source'],
-                    ];
                 }
             }
-        } catch (NoSuchActionException $e) {
-            if (array_search($e->getMessage(), $this->getRoutesWhitelist()) === false) {
-                throw new LocalizedException(__('Invalid URL path: %1', $e->getMessage()), $e);
-            }
         }
-
         return $dependencies;
     }
 
     /**
      * Check layout blocks
      *
-     * @param string $currentModule
-     * @param string $fileType
-     * @param string $file
-     * @param string $contents
+     * @param $currentModule
+     * @param $fileType
+     * @param $file
+     * @param $contents
      * @return array
      */
-    protected function _caseLayoutBlock(string $currentModule, string $fileType, string $file, string &$contents): array
+    protected function _caseLayoutBlock($currentModule, $fileType, $file, &$contents)
     {
         $pattern = '/[\->:]+(?<source>(?:getBlock|getBlockHtml)\([\'"](?<block>[\w\.\-]+)[\'"]\))/';
 
@@ -362,11 +306,11 @@ class PhpRule implements RuleInterface
     /**
      * Get area from file path
      *
-     * @param string $file
-     * @param string $fileType
+     * @param $file
+     * @param $fileType
      * @return string|null
      */
-    protected function _getAreaByFile(string $file, string $fileType): ?string
+    protected function _getAreaByFile($file, $fileType)
     {
         if ($fileType == 'php') {
             return null;
@@ -386,12 +330,12 @@ class PhpRule implements RuleInterface
      *  'source'  // source text
      * )
      *
-     * @param string $currentModule
-     * @param string|null $area
-     * @param string $block
+     * @param $currentModule
+     * @param $area
+     * @param $block
      * @return array
      */
-    protected function _checkDependencyLayoutBlock(string $currentModule, ?string $area, string $block): array
+    protected function _checkDependencyLayoutBlock($currentModule, $area, $block)
     {
         if (isset($this->_mapLayoutBlocks[$area][$block]) || $area === null) {
             // CASE 1: No dependencies
@@ -452,8 +396,6 @@ class PhpRule implements RuleInterface
     }
 
     /**
-     * Merge dependencies
-     *
      * @param array $known
      * @param array $new
      * @return array

@@ -70,9 +70,6 @@ class CustomerMetadataTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    /**
-     * @magentoAppIsolation enabled
-     */
     public function testGetNestedOptionsCustomerAttributesMetadata()
     {
         $nestedOptionsAttribute = 'store_id';

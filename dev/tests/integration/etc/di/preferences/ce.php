@@ -30,5 +30,4 @@ return [
     \Magento\Framework\Lock\Backend\Cache::class =>
         \Magento\TestFramework\Lock\Backend\DummyLocker::class,
     \Magento\Framework\Session\SessionStartChecker::class => \Magento\TestFramework\Session\SessionStartChecker::class,
-    \Magento\Framework\HTTP\AsyncClientInterface::class => \Magento\TestFramework\HTTP\AsyncClientInterfaceMock::class,
 ];

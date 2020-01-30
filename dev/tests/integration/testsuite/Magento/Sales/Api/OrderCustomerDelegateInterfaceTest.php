@@ -11,7 +11,6 @@ use Magento\Customer\Api\AccountManagementInterface;
 use Magento\Customer\Api\Data\AddressInterface;
 use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Api\Data\CustomerInterfaceFactory;
-use Magento\Framework\Api\AttributeInterface;
 use Magento\Sales\Api\Data\OrderAddressInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\OrderFactory;
@@ -127,7 +126,6 @@ class OrderCustomerDelegateInterfaceTest extends TestCase
     /**
      * @magentoDbIsolation enabled
      * @magentoAppIsolation enabled
-     * @magentoDataFixture Magento/Customer/_files/attribute_user_defined_address.php
      * @magentoDataFixture Magento/Sales/_files/order.php
      * @return void
      */

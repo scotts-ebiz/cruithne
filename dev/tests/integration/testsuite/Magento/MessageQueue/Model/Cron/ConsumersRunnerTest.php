@@ -6,7 +6,7 @@
 namespace Magento\MessageQueue\Model\Cron;
 
 use Magento\Framework\MessageQueue\Consumer\ConfigInterface as ConsumerConfigInterface;
-use Magento\Framework\Lock\LockManagerInterface;
+use Magento\MessageQueue\Model\Cron\ConsumersRunner\PidConsumerManager;
 use Magento\Framework\App\DeploymentConfig\FileReader;
 use Magento\Framework\App\DeploymentConfig\Writer;
 use Magento\Framework\Config\File\ConfigFilePool;
@@ -36,9 +36,9 @@ class ConsumersRunnerTest extends \PHPUnit\Framework\TestCase
     private $consumerConfig;
 
     /**
-     * @var LockManagerInterface
+     * @var PidConsumerManager
      */
-    private $lockManager;
+    private $pid;
 
     /**
      * @var FileReader
@@ -83,7 +83,7 @@ class ConsumersRunnerTest extends \PHPUnit\Framework\TestCase
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $this->shellMock = $this->getMockBuilder(ShellInterface::class)
             ->getMockForAbstractClass();
-        $this->lockManager = $this->objectManager->get(LockManagerInterface::class);
+        $this->pid = $this->objectManager->get(PidConsumerManager::class);
         $this->consumerConfig = $this->objectManager->get(ConsumerConfigInterface::class);
         $this->reader = $this->objectManager->get(FileReader::class);
         $this->filesystem = $this->objectManager->get(Filesystem::class);
@@ -97,18 +97,16 @@ class ConsumersRunnerTest extends \PHPUnit\Framework\TestCase
 
         $this->shellMock->expects($this->any())
             ->method('execute')
-            ->willReturnCallback(
-                function ($command, $arguments) {
-                    $command = vsprintf($command, $arguments);
-                    $params = \Magento\TestFramework\Helper\Bootstrap::getInstance()->getAppInitParams();
-                    $params['MAGE_DIRS']['base']['path'] = BP;
-                    $params = 'INTEGRATION_TEST_PARAMS="' . urldecode(http_build_query($params)) . '"';
-                    $command = str_replace('bin/magento', 'dev/tests/integration/bin/magento', $command);
-                    $command = $params . ' ' . $command;
+            ->willReturnCallback(function ($command, $arguments) {
+                $command = vsprintf($command, $arguments);
+                $params = \Magento\TestFramework\Helper\Bootstrap::getInstance()->getAppInitParams();
+                $params['MAGE_DIRS']['base']['path'] = BP;
+                $params = 'INTEGRATION_TEST_PARAMS="' . urldecode(http_build_query($params)) . '"';
+                $command = str_replace('bin/magento', 'dev/tests/integration/bin/magento', $command);
+                $command = $params . ' ' . $command;
 
-                    return exec("{$command} >/dev/null &"); //phpcs:ignore
-                }
-            );
+                return exec("{$command} >/dev/null &");
+            });
     }
 
     /**
@@ -118,20 +116,23 @@ class ConsumersRunnerTest extends \PHPUnit\Framework\TestCase
      */
     public function testSpecificConsumerAndRerun()
     {
-        $specificConsumer = 'exportProcessor';
+        $specificConsumer = 'quoteItemCleaner';
+        $pidFilePath = $this->getPidFileName($specificConsumer);
         $config = $this->config;
         $config['cron_consumers_runner'] = ['consumers' => [$specificConsumer], 'max_messages' => 0];
+
         $this->writeConfig($config);
-        $this->reRunConsumersAndCheckLocks($specificConsumer);
-        $this->reRunConsumersAndCheckLocks($specificConsumer);
-        $this->assertTrue($this->lockManager->isLocked(md5($specificConsumer))); //phpcs:ignore
+        $this->reRunConsumersAndCheckPidFiles($specificConsumer);
+        $pid = $this->pid->getPid($pidFilePath);
+        $this->reRunConsumersAndCheckPidFiles($specificConsumer);
+        $this->assertSame($pid, $this->pid->getPid($pidFilePath));
     }
 
     /**
      * @param string $specificConsumer
      * @return void
      */
-    private function reRunConsumersAndCheckLocks($specificConsumer)
+    private function reRunConsumersAndCheckPidFiles($specificConsumer)
     {
         $this->consumersRunner->run();
 
@@ -139,11 +140,12 @@ class ConsumersRunnerTest extends \PHPUnit\Framework\TestCase
 
         foreach ($this->consumerConfig->getConsumers() as $consumer) {
             $consumerName = $consumer->getName();
+            $pidFileFullPath = $this->getPidFileFullPath($consumerName);
 
             if ($consumerName === $specificConsumer) {
-                $this->assertTrue($this->lockManager->isLocked(md5($consumerName))); //phpcs:ignore
+                $this->assertTrue(file_exists($pidFileFullPath));
             } else {
-                $this->assertFalse($this->lockManager->isLocked(md5($consumerName))); //phpcs:ignore
+                $this->assertFalse(file_exists($pidFileFullPath));
             }
         }
     }
@@ -165,7 +167,8 @@ class ConsumersRunnerTest extends \PHPUnit\Framework\TestCase
         sleep(20);
 
         foreach ($this->consumerConfig->getConsumers() as $consumer) {
-            $this->assertFalse($this->lockManager->isLocked(md5($consumer->getName()))); //phpcs:ignore
+            $pidFileFullPath = $this->getPidFileFullPath($consumer->getName());
+            $this->assertFalse(file_exists($pidFileFullPath));
         }
     }
 
@@ -189,13 +192,32 @@ class ConsumersRunnerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @param string $consumerName
+     * @return string
+     */
+    private function getPidFileFullPath($consumerName)
+    {
+        $directoryList = $this->objectManager->get(DirectoryList::class);
+        return $directoryList->getPath(DirectoryList::VAR_DIR) . '/' . $this->getPidFileName($consumerName);
+    }
+
+    /**
      * @inheritdoc
      */
     protected function tearDown()
     {
         foreach ($this->consumerConfig->getConsumers() as $consumer) {
-            foreach ($this->getConsumerProcessIds($consumer->getName()) as $consumerProcessId) {
-                exec("kill {$consumerProcessId}"); //phpcs:ignore
+            $consumerName = $consumer->getName();
+            $pidFileFullPath = $this->getPidFileFullPath($consumerName);
+            $pidFilePath = $this->getPidFileName($consumerName);
+            $pid = $this->pid->getPid($pidFilePath);
+
+            if ($pid && $this->pid->isRun($pidFilePath)) {
+                posix_kill($pid, SIGKILL);
+            }
+
+            if (file_exists($pidFileFullPath)) {
+                unlink($pidFileFullPath);
             }
         }
 
@@ -208,15 +230,13 @@ class ConsumersRunnerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Get Consumer ProcessIds
-     *
-     * @param string $consumer
-     * @return string[]
+     * @param string $consumerName The consumers name
+     * @return string The name to file with PID
      */
-    private function getConsumerProcessIds($consumer)
+    private function getPidFileName($consumerName)
     {
-        //phpcs:ignore
-        exec("ps ax | grep -v grep | grep 'queue:consumers:start {$consumer}' | awk '{print $1}'", $output);
-        return $output;
+        $sanitizedHostname = preg_replace('/[^a-z0-9]/i', '', gethostname());
+
+        return $consumerName . '-' . $sanitizedHostname . ConsumersRunner::PID_FILE_EXT;
     }
 }

@@ -6,7 +6,8 @@
 /* eslint-disable max-nested-callbacks */
 define([
     'squire',
-    'jquery'
+    'jquery',
+    'jquery/ui'
 ], function (Squire, $) {
     'use strict';
 
@@ -42,7 +43,8 @@ define([
         injector.require(
             [
                 'Magento_Catalog/js/product/breadcrumbs',
-                'Magento_Theme/js/view/breadcrumbs'
+                'Magento_Theme/js/view/breadcrumbs',
+                'jquery/ui'
             ], function (mixin, breadcrumb) {
                 widget = mixin(breadcrumb);
                 done();

@@ -8,15 +8,8 @@ namespace Magento\Setup\Model\FixtureGenerator;
 
 use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
-use Magento\Catalog\Model\ProductFactory;
-use Magento\Catalog\Model\ResourceModel\Category\CollectionFactory as CategoryCollectionFactory;
 use Magento\CatalogUrlRewrite\Model\ProductUrlPathGenerator;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Store\Model\ResourceModel\Store\CollectionFactory as StoreCollectionFactory;
 use Magento\Store\Model\ScopeInterface;
-use Magento\Framework\App\Config\ScopeConfigInterface;
-use Magento\Store\Model\StoreManagerInterface;
-use Magento\UrlRewrite\Service\V1\Data\UrlRewriteFactory;
 
 /**
  * Generate specified amount of products based on passed fixture
@@ -46,22 +39,22 @@ use Magento\UrlRewrite\Service\V1\Data\UrlRewriteFactory;
 class ProductGenerator
 {
     /**
-     * @var ProductFactory
+     * @var \Magento\Catalog\Model\ProductFactory
      */
     private $productFactory;
 
     /**
-     * @var CategoryCollectionFactory
+     * @var \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory
      */
     private $categoryCollectionFactory;
 
     /**
-     * @var UrlRewriteFactory
+     * @var \Magento\UrlRewrite\Service\V1\Data\UrlRewriteFactory
      */
     private $urlRewriteFactory;
 
     /**
-     * @var StoreCollectionFactory
+     * @var \Magento\Store\Model\ResourceModel\Store\CollectionFactory
      */
     private $storeCollectionFactory;
 
@@ -81,7 +74,7 @@ class ProductGenerator
     private $entityGeneratorFactory;
 
     /**
-     * @var StoreManagerInterface
+     * @var \Magento\Store\Model\StoreManagerInterface
      */
     private $storeManager;
 
@@ -96,7 +89,7 @@ class ProductGenerator
     private $productUrlSuffix = [];
 
     /**
-     * @var ScopeConfigInterface
+     * @var \Magento\Framework\App\Config\ScopeConfigInterface
      */
     private $scopeConfig;
 
@@ -106,25 +99,25 @@ class ProductGenerator
     private $customTableMap;
 
     /**
-     * @param ProductFactory $productFactory
-     * @param CategoryCollectionFactory $categoryCollectionFactory
-     * @param UrlRewriteFactory $urlRewriteFactory
-     * @param StoreCollectionFactory $storeCollectionFactory
+     * @param \Magento\Catalog\Model\ProductFactory $productFactory
+     * @param \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory
+     * @param \Magento\UrlRewrite\Service\V1\Data\UrlRewriteFactory $urlRewriteFactory
+     * @param \Magento\Store\Model\ResourceModel\Store\CollectionFactory $storeCollectionFactory
      * @param EntityGeneratorFactory $entityGeneratorFactory
-     * @param StoreManagerInterface $storeManager
+     * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @param ProductTemplateGeneratorFactory $productTemplateGeneratorFactory
-     * @param ScopeConfigInterface $scopeConfig
+     * @param \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig
      * @param array $customTableMap
      */
     public function __construct(
-        ProductFactory $productFactory,
-        CategoryCollectionFactory $categoryCollectionFactory,
-        UrlRewriteFactory $urlRewriteFactory,
-        StoreCollectionFactory $storeCollectionFactory,
+        \Magento\Catalog\Model\ProductFactory $productFactory,
+        \Magento\Catalog\Model\ResourceModel\Category\CollectionFactory $categoryCollectionFactory,
+        \Magento\UrlRewrite\Service\V1\Data\UrlRewriteFactory $urlRewriteFactory,
+        \Magento\Store\Model\ResourceModel\Store\CollectionFactory $storeCollectionFactory,
         EntityGeneratorFactory $entityGeneratorFactory,
-        StoreManagerInterface $storeManager,
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
         ProductTemplateGeneratorFactory $productTemplateGeneratorFactory,
-        ScopeConfigInterface $scopeConfig,
+        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
         $customTableMap = []
     ) {
         $this->productFactory = $productFactory;
@@ -209,8 +202,6 @@ class ProductGenerator
     }
 
     /**
-     * Initialize fixture default values
-     *
      * @param array $fixture
      * @return void
      */
@@ -239,8 +230,6 @@ class ProductGenerator
     }
 
     /**
-     * Get fixture value
-     *
      * @param string $fixtureKey
      * @param int $productId
      * @param int $entityNumber
@@ -254,8 +243,6 @@ class ProductGenerator
     }
 
     /**
-     * Get bind value
-     *
      * @param callable|mixed $fixtureValue
      * @param int $productId
      * @param int $entityNumber
@@ -264,7 +251,7 @@ class ProductGenerator
     private function getBindValue($fixtureValue, $productId, $entityNumber)
     {
         return is_callable($fixtureValue)
-            ? $fixtureValue($productId, $entityNumber)
+            ? call_user_func($fixtureValue, $productId, $entityNumber)
             : $fixtureValue;
     }
 
@@ -275,7 +262,6 @@ class ProductGenerator
      * @param int $entityNumber
      * @param array $fixtureMap
      * @return array
-     * @throws LocalizedException
      */
     private function urlRewriteHandler($productId, $entityNumber, $fixtureMap)
     {
@@ -294,7 +280,7 @@ class ProductGenerator
             ->setEntityType('product');
         $binds[] = $urlRewrite->toArray();
 
-        if (isset($fixtureMap['category_ids']) && $this->isCategoryProductUrlRewriteGenerationEnabled()) {
+        if (isset($fixtureMap['category_ids'])) {
             $categoryId = $fixtureMap['category_ids']($productId, $entityNumber);
             if (!isset($this->categories[$categoryId])) {
                 $this->categories[$categoryId] = $this->categoryCollectionFactory
@@ -346,15 +332,5 @@ class ProductGenerator
             );
         }
         return $this->productUrlSuffix[$storeId];
-    }
-
-    /**
-     * Check config value of generate_category_product_rewrites
-     *
-     * @return bool
-     */
-    private function isCategoryProductUrlRewriteGenerationEnabled()
-    {
-        return (bool)$this->scopeConfig->getValue('catalog/seo/generate_category_product_rewrites');
     }
 }

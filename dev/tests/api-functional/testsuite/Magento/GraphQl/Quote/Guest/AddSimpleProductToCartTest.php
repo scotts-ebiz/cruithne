@@ -7,7 +7,6 @@ declare(strict_types=1);
 
 namespace Magento\GraphQl\Quote\Guest;
 
-use Exception;
 use Magento\GraphQl\Quote\GetMaskedQuoteIdByReservedOrderId;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\TestCase\GraphQlAbstract;
@@ -50,111 +49,9 @@ class AddSimpleProductToCartTest extends GraphQlAbstract
     }
 
     /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Required parameter "cart_id" is missing
-     */
-    public function testAddSimpleProductToCartIfCartIdIsMissed()
-    {
-        $query = <<<QUERY
-mutation {
-  addSimpleProductsToCart(
-    input: {
-      cart_items: []
-    }
-  ) {
-    cart {
-      items {
-        id
-      }
-    }
-  }
-}
-QUERY;
-
-        $this->graphQlMutation($query);
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Required parameter "cart_id" is missing
-     */
-    public function testAddSimpleProductToCartIfCartIdIsEmpty()
-    {
-        $query = <<<QUERY
-mutation {
-  addSimpleProductsToCart(
-    input: {
-      cart_id: "",
-      cart_items: []
-    }
-  ) {
-    cart {
-      items {
-        id
-      }
-    }
-  }
-}
-QUERY;
-
-        $this->graphQlMutation($query);
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Required parameter "cart_items" is missing
-     */
-    public function testAddSimpleProductToCartIfCartItemsAreMissed()
-    {
-        $query = <<<QUERY
-mutation {
-  addSimpleProductsToCart(
-    input: {
-      cart_id: "cart_id"
-    }
-  ) {
-    cart {
-      items {
-        id
-      }
-    }
-  }
-}
-QUERY;
-
-        $this->graphQlMutation($query);
-    }
-
-    /**
-     * @expectedException Exception
-     * @expectedExceptionMessage Required parameter "cart_items" is missing
-     */
-    public function testAddSimpleProductToCartIfCartItemsAreEmpty()
-    {
-        $query = <<<QUERY
-mutation {
-  addSimpleProductsToCart(
-    input: {
-      cart_id: "cart_id",
-      cart_items: []
-    }
-  ) {
-    cart {
-      items {
-        id
-      }
-    }
-  }
-}
-QUERY;
-
-        $this->graphQlMutation($query);
-    }
-
-    /**
      * @magentoApiDataFixture Magento/GraphQl/Catalog/_files/simple_product.php
      *
-     * @expectedException Exception
+     * @expectedException \Exception
      * @expectedExceptionMessage Could not find a cart with ID "non_existent_masked_id"
      */
     public function testAddProductToNonExistentCart()
@@ -170,7 +67,7 @@ QUERY;
     /**
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/guest/create_empty_cart.php
      *
-     * @expectedException Exception
+     * @expectedException \Exception
      * @expectedExceptionMessage Could not find a product with SKU "simple_product"
      */
     public function testNonExistentProductToCart()

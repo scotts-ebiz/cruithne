@@ -3,17 +3,11 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
-declare(strict_types=1);
-
 namespace Magento\Catalog\Api;
 
 use Magento\Framework\Webapi\Rest\Request;
 use Magento\TestFramework\TestCase\WebapiAbstract;
 
-/**
- * Checks the categories/list api
- */
 class CategoryListTest extends WebapiAbstract
 {
     const RESOURCE_PATH = '/V1/categories/list';
@@ -41,11 +35,14 @@ class CategoryListTest extends WebapiAbstract
                             ],
                         ],
                     ],
-                ],
-                'sort_orders' => [
                     [
-                        'field' => 'name',
-                        'direction' => 'DESC',
+                        'filters' => [
+                            [
+                                'field' => 'level',
+                                'value' => 2,
+                                'condition_type' => 'eq',
+                            ],
+                        ],
                     ],
                 ],
                 'current_page' => 1,
@@ -72,10 +69,9 @@ class CategoryListTest extends WebapiAbstract
 
         $this->assertEquals($searchCriteria['searchCriteria'], $response['search_criteria']);
         $this->assertTrue($response['total_count'] > 0);
-        $this->assertTrue(count($response['items']) === 2);
+        $this->assertTrue(count($response['items']) > 0);
 
         $this->assertNotNull($response['items'][0]['name']);
-        $this->assertEquals('Category 1.1', $response['items'][0]['name']);
-        $this->assertEquals('Category 1', $response['items'][1]['name']);
+        $this->assertEquals('Category 1', $response['items'][0]['name']);
     }
 }

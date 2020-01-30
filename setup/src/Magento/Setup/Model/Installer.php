@@ -28,8 +28,7 @@ use Magento\Framework\Setup\InstallDataInterface;
 use Magento\Framework\Setup\InstallSchemaInterface;
 use Magento\Framework\Setup\LoggerInterface;
 use Magento\Framework\Setup\ModuleDataSetupInterface;
-use Magento\Framework\Setup\Patch\PatchApplier;
-use Magento\Framework\Setup\Patch\PatchApplierFactory;
+use Magento\Framework\Setup\PatchApplierInterface;
 use Magento\Framework\Setup\SchemaPersistor;
 use Magento\Framework\Setup\SchemaSetupInterface;
 use Magento\Framework\Setup\UpgradeDataInterface;
@@ -37,6 +36,8 @@ use Magento\Framework\Setup\UpgradeSchemaInterface;
 use Magento\Setup\Console\Command\InstallCommand;
 use Magento\Setup\Controller\ResponseTypeInterface;
 use Magento\Setup\Model\ConfigModel as SetupConfigModel;
+use Magento\Framework\Setup\Patch\PatchApplier;
+use Magento\Framework\Setup\Patch\PatchApplierFactory;
 use Magento\Setup\Module\ConnectionFactory;
 use Magento\Setup\Module\DataSetupFactory;
 use Magento\Setup\Module\SetupFactory;
@@ -363,7 +364,6 @@ class Installer
         foreach ($script as $item) {
             list($message, $method, $params) = $item;
             $this->log->log($message);
-            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             call_user_func_array([$this, $method], $params);
             $this->logProgress();
         }
@@ -516,7 +516,6 @@ class Installer
         ) {
             $errorMsg = "Missing following extensions: '"
                 . implode("' '", $phpExtensionsCheckResult['data']['missing']) . "'";
-            // phpcs:ignore Magento2.Exceptions.DirectThrow
             throw new \Exception($errorMsg);
         }
     }
@@ -901,7 +900,6 @@ class Installer
     {
         if ($paths) {
             $errorMsg = "Missing write permissions to the following paths:" . PHP_EOL . implode(PHP_EOL, $paths);
-            // phpcs:ignore Magento2.Exceptions.DirectThrow
             throw new \Exception($errorMsg);
         }
     }
@@ -943,12 +941,10 @@ class Installer
         if ($type === 'schema') {
             $patchApplier = $this->patchApplierFactory->create(['schemaSetup' => $setup]);
         } elseif ($type === 'data') {
-            $patchApplier = $this->patchApplierFactory->create(
-                [
-                    'moduleDataSetup' => $setup,
-                    'objectManager' => $this->objectManagerProvider->get()
-                ]
-            );
+            $patchApplier = $this->patchApplierFactory->create([
+                'moduleDataSetup' => $setup,
+                'objectManager' => $this->objectManagerProvider->get()
+            ]);
         }
 
         foreach ($moduleNames as $moduleName) {
@@ -1201,17 +1197,6 @@ class Installer
     }
 
     /**
-     * Get the modules config as Magento sees it
-     *
-     * @return array
-     * @throws \LogicException
-     */
-    public function getModulesConfig()
-    {
-        return $this->createModulesConfig([], true);
-    }
-
-    /**
      * Uninstall Magento application
      *
      * @return void
@@ -1259,7 +1244,6 @@ class Installer
         $cacheManager->clean($enabledTypes);
 
         $this->log->log('Current status:');
-        // phpcs:ignore Magento2.Functions.DiscouragedFunction
         $this->log->log(print_r($cacheManager->getStatus(), true));
     }
 
@@ -1327,9 +1311,7 @@ class Installer
             //If for different shards one database was specified - no need to clean it few times
             if (!in_array($dbName, $cleanedUpDatabases)) {
                 $this->log->log("Cleaning up database {$dbName}");
-                // phpcs:ignore Magento2.SQL.RawQuery
                 $connection->query("DROP DATABASE IF EXISTS {$dbName}");
-                // phpcs:ignore Magento2.SQL.RawQuery
                 $connection->query("CREATE DATABASE IF NOT EXISTS {$dbName}");
                 $cleanedUpDatabases[] = $dbName;
             }
@@ -1503,22 +1485,18 @@ class Installer
      */
     private function isAdminDataSet($request)
     {
-        $adminData = array_filter(
-            $request,
-            function ($value, $key) {
-                return in_array(
-                    $key,
-                    [
-                        AdminAccount::KEY_EMAIL,
-                        AdminAccount::KEY_FIRST_NAME,
-                        AdminAccount::KEY_LAST_NAME,
-                        AdminAccount::KEY_USER,
-                        AdminAccount::KEY_PASSWORD,
-                    ]
-                ) && $value !== null;
-            },
-            ARRAY_FILTER_USE_BOTH
-        );
+        $adminData = array_filter($request, function ($value, $key) {
+            return in_array(
+                $key,
+                [
+                    AdminAccount::KEY_EMAIL,
+                    AdminAccount::KEY_FIRST_NAME,
+                    AdminAccount::KEY_LAST_NAME,
+                    AdminAccount::KEY_USER,
+                    AdminAccount::KEY_PASSWORD,
+                ]
+            ) && $value !== null;
+        }, ARRAY_FILTER_USE_BOTH);
 
         return !empty($adminData);
     }

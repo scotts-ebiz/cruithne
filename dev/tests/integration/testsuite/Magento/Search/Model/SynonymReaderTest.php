@@ -25,7 +25,7 @@ class SynonymReaderTest extends \PHPUnit\Framework\TestCase
     /**
      * @return array
      */
-    public function loadByPhraseDataProvider(): array
+    public static function loadByPhraseDataProvider()
     {
         return [
             [
@@ -70,15 +70,6 @@ class SynonymReaderTest extends \PHPUnit\Framework\TestCase
             [
                 'query_value+@', []
             ],
-            [
-                '<', []
-            ],
-            [
-                '>', []
-            ],
-            [
-                '<english>', [['synonyms' => 'british,english', 'store_id' => 1, 'website_id' => 0]]
-            ],
         ];
     }
 
@@ -87,7 +78,7 @@ class SynonymReaderTest extends \PHPUnit\Framework\TestCase
      * @param array $expectedResult
      * @dataProvider loadByPhraseDataProvider
      */
-    public function testLoadByPhrase(string $phrase, array $expectedResult)
+    public function testLoadByPhrase($phrase, $expectedResult)
     {
         $data = $this->model->loadByPhrase($phrase)->getData();
 

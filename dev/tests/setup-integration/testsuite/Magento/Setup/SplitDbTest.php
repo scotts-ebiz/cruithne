@@ -82,6 +82,8 @@ class SplitDbTest extends SetupTestCase
      */
     public function testUpgradeWithSplitDb()
     {
+        $this->markTestSkipped('MAGETWO-99922');
+
         $this->cliCommand->install(
             [
                 'Magento_TestSetupDeclarationModule9OverrideSplit',

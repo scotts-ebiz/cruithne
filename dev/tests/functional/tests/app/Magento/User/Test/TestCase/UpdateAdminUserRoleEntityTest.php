@@ -102,8 +102,6 @@ class UpdateAdminUserRoleEntityTest extends Injectable
         $this->adminAuthLogin->open();
         $this->adminAuthLogin->getLoginBlock()->fill($user);
         $this->adminAuthLogin->getLoginBlock()->submit();
-        $this->adminAuthLogin->waitForHeaderBlock();
-        $this->adminAuthLogin->dismissAdminUsageNotification();
         $this->rolePage->open();
         $this->rolePage->getRoleGrid()->searchAndOpen($filter);
         $this->userRoleEditRole->getRoleFormTabs()->fill($role);
