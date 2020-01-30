@@ -586,17 +586,17 @@ return [
             'dev' => [
                 'template' => [
                     'allow_symlink' => '0',
-                    'minify_html' => '1'
+                    'minify_html' => '0'
                 ],
                 'js' => [
                     'merge_files' => '0',
                     'enable_js_bundling' => '0',
-                    'minify_files' => '1'
+                    'minify_files' => '0'
                 ],
                 // CSS Managed by gulp, if anything should change in regards to compiling it should be done from ulp not here.
                 'css' => [
                     'merge_css_files' => '0',
-                    'minify_files' => '1'
+                    'minify_files' => '0'
                 ]
             ]
         ]
