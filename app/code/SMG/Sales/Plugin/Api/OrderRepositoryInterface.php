@@ -130,7 +130,7 @@ class OrderRepositoryInterface
                 if (!empty($product))
                 {
                     // get the allowed states
-                    $statesNotAllowed = $product->getStateNotAllowed();
+                    $statesNotAllowed = $product->getData('state_not_allowed');
 
                     //check the state values from product
                    if (!empty($statesNotAllowed))
