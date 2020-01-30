@@ -314,7 +314,7 @@ define(
                         if (response.success === true) {
                             self.createNewOrders();
                         } else {
-                            self.orderProcessing(true);
+                            self.orderProcessing(false);
                             if (response.message === 'ZIP CODE MISMATCH') {
                                 Modal(self.zipModalOptions, $('#zip-popup-modal'));
                                 $('#zip-popup-modal').modal('openModal');
@@ -361,6 +361,7 @@ define(
                     },
                     error: function (response) {
                         response = JSON.parse(response.responseText);
+                        self.orderProcessing(false);
 
                         if (Array.isArray(response)) {
                             response = response[0];
@@ -411,15 +412,14 @@ define(
 
                 if (!rsco[0].checked) {
                     rsco[0].setCustomValidity('This field is required.');
-                    self.orderProcessing(false)
-
+                    self.orderProcessing(false);
                     return false;
                 } else {
                     rsco[0].setCustomValidity('');
                 }
 
                 if (! self.updateRecurlyFormData()) {
-                    self.orderProcessing(true)
+                    self.orderProcessing(false);
                     return false;
                 }
 
