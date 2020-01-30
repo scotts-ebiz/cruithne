@@ -31,6 +31,7 @@ define([
         self.quiz = quiz;
         self.polygons = ko.observableArray([]);
         self.activePolygon = null;
+        self.mapInstructionsDisabled = ko.observable(true);
 
         self.addListeners = function () {
             google.maps.event.addListener(self.drawingManager, 'polygoncomplete', self.handlePolygonComplete);
@@ -86,6 +87,10 @@ define([
                 self.address($('#address-autocomplete').val().replace(', USA', ''));
                 $('#address-autocomplete').val(self.address());
                 self.showInstructions(true);
+
+                setTimeout(() => {
+                    self.mapInstructionsDisabled(false);
+                }, 5000);
 
                 const zoom = window.outerWidth >= 1024 ? 22 : 20;
 
@@ -230,23 +235,16 @@ define([
          * Undo the last point placed on the map.
          */
         self.undo = function () {
-            if (!self.activePolygon && !self.polygons().length) {
-                return;
-            }
-
-            var shape = null;
-
-            if (self.activePolygon) {
-                shape = self.activePolygon;
-                self.polygons.remove(shape);
-                shape.setMap(null);
-                self.activePolygon = null;
-            } else {
-                shape = self.polygons.pop();
-                shape.setMap(null);
-            }
+            self.drawingManager.setDrawingMode(null);
+            self.polygons().forEach(polygon => polygon.setMap(null));
+            self.polygons([]);
+            self.activePolygon = null;
 
             self.calculateLawnSize();
+        };
+
+        self.toggleInfo = function () {
+            self.showInstructions(!self.showInstructions());
         };
 
         /**
@@ -366,7 +364,7 @@ define([
         self.previousGroups = ko.observableArray([]);
         self.sliderImages = ko.observable({});
         self.animation = ko.observable({});
-        self.usingGoogleMaps = ko.observable(true);
+        self.usingGoogleMaps = ko.observable(false);
         self.invalidZipCode = ko.observable(false);
         self.invalidArea = ko.observable(false);
         self.isAnimating = ko.observable(false);
@@ -500,7 +498,7 @@ define([
                                 window.cancelAnimationFrame(animationFrame);
                             }
                         });
-                    }, 1000);
+                    }, 500);
                 }
             }
         };
@@ -578,7 +576,7 @@ define([
                 } else {
                     window.requestAnimationFrame(self.step(start, self.currentAnimationState));
                 }
-            }, 2000);
+            }, 1000);
         };
 
 
@@ -1150,6 +1148,53 @@ define([
 
             this.quiz = new Quiz();
             this.loadTemplate();
+            this.setupRangeListener(this.quiz);
+        },
+
+        setupRangeListener: function(quiz) {
+            let interval = setInterval(() => {
+                if (!navigator.platform.match(/iPhone|iPod|iPad/)) {
+                    clearInterval(interval);
+                }
+
+                if (document.querySelectorAll('.sp-slider-container input.sp-slider').length > 0) {
+                    const sliders = document.querySelectorAll('.sp-slider-container input.sp-slider');
+
+                    Array.prototype.forEach.call(sliders, slider => {
+                        slider.addEventListener(
+                            "touchend",
+                            (e) => this.iosPolyfill(e, quiz), { passive: true }
+                        );
+                    });
+
+                    clearInterval(interval);
+                }
+            }, 100);
+        },
+
+        iosPolyfill: function(e, quiz) {
+            let slider = e.target;
+            let val =
+                (e.pageX - slider.getBoundingClientRect().left) /
+                (slider.getBoundingClientRect().right -
+                slider.getBoundingClientRect().left),
+            max = slider.getAttribute("max"),
+                segment = 1 / (max - 1),
+                segmentArr = [];
+
+            max++;
+
+            for (let i = 0; i < max; i++) {
+                segmentArr.push(segment * i);
+            }
+
+            let segCopy = JSON.parse(JSON.stringify(segmentArr)),
+                index = segmentArr.sort((a, b) => Math.abs(val - a) - Math.abs(val - b))[0];
+
+            let newValue = segCopy.indexOf(index) + 1;
+            slider.value = newValue;
+            setSliderTrack(slider);
+            quiz.setAnswer(newValue + 1, e);
         },
 
         /**
@@ -1180,37 +1225,6 @@ define([
                     }.bind(self),
                 },
             );
-        },
-
-        handleTouchEnd(e, quiz) {
-            e = e.originalEvent;
-            const target = e.target;
-            const elWidth = target.clientWidth;
-            const bound = target.getBoundingClientRect();
-            const x = e.pageX - bound.left;
-            const section = elWidth / 8;
-
-            if (x < section) {
-                target.value = 1;
-                setSliderTrack(target);
-                quiz.setAnswer(1, event, 'tap');
-            } else if (x >= section && (x < (section * 3))) {
-                target.value = 2;
-                setSliderTrack(target);
-                quiz.setAnswer(2, event, 'tap');
-            } else if (x >= section * 3 && x < section * 5) {
-                target.value = 3;
-                setSliderTrack(target);
-                quiz.setAnswer(3, event, 'tap');
-            } else if (x >= section * 5 && x < section * 7) {
-                target.value = 4;
-                setSliderTrack(target);
-                quiz.setAnswer(4, event, 'tap');
-            } else {
-                target.value = 5;
-                setSliderTrack(target);
-                quiz.setAnswer(5, event, 'tap');
-            }
         },
 
         initializeSlider(el) {

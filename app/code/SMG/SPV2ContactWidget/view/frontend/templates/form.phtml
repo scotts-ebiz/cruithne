@@ -6,6 +6,7 @@
                 data-validate="{required:true}"
                 id="name"
                 name="name"
+                maxLength="100"
                 placeholder="<?= $block->escapeHtml(__('Name')) ?>*"
                 title="<?= $block->escapeHtmlAttr(__('Name')) ?>"
                 type="text"
@@ -25,19 +26,6 @@
                 value="<?= $block->escapeHtmlAttr($this->helper('Magento\Contact\Helper\Data')->getPostValue('email') ?: $this->helper('Magento\Contact\Helper\Data')->getUserEmail()) ?>"
             />
             <label class="label sp-form-label required" for="email"><?= $block->escapeHtml(__('Email')) ?>*</label>
-        </div>
-        <div class="sp-form-group">
-            <input
-                class="input-text sp-input sp-w-full"
-                data-validate="{required:true}"
-                id="street"
-                name="street"
-                placeholder="<?= $block->escapeHtml(__('Street Address')) ?>*"
-                title="<?= $block->escapeHtmlAttr(__('Street Address')) ?>"
-                type="text"
-                value="<?= $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('street')) ?>"
-            />
-            <label class="label sp-form-label required" for="street"><?= $block->escapeHtml(__('Street Address')) ?>*</label>
         </div>
         <div class="sp-form-group">
             <div class="sp-select sp-w-full">
@@ -83,11 +71,11 @@
 
 <?php $ajaxurl = $block->escapeurl( $block->getFormAction() ); ?>
 <script type="text/x-magento-init">
-        {
-            "*": {
-                "SMG_SPV2ContactWidget/js/contactajax": {
-                    "AjaxUrl": "<?php echo $ajaxurl; ?>"
-                }
+    {
+        "*": {
+            "SMG_SPV2ContactWidget/js/contactajax": {
+                "AjaxUrl": "<?php echo $ajaxurl; ?>"
             }
         }
+    }
 </script>
