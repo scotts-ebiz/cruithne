@@ -149,6 +149,13 @@ class Index
                         $quote->save();
                         $quote->collectTotals()->save();
                         $this->_subscriptionHelper->addSessionSubscriptionToCart();
+
+                        $details = $this->_coreSession->getData('subscription_details');
+
+                        // Set coupon code if annual subscription.
+                        if (isset($details['subscription_plan']) && $details['subscription_plan'] == 'annual') {
+                            $quote->setCouponCode('annual_discount')->save();
+                        }
                     }
 
                     return $proceed();
