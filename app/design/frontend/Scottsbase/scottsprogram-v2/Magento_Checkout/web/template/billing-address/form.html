@@ -1,0 +1,20 @@
+<div class="billing-address-form">
+    <!-- ko foreach: getRegion('before-fields') -->
+    <!-- ko template: getTemplate() --><!-- /ko -->
+    <!--/ko-->
+    <form id="billing-address-form" data-bind="attr: {'data-hasrequired': $t('* Required Fields')}">
+        <div class="fieldset address sp-billing-address-form sp-flex sp-flex-wrap sp--mx-4" data-form="billing-new-address">
+            <!-- ko foreach: getRegion('additional-fieldsets') -->
+            <!-- ko template: getTemplate() --><!-- /ko -->
+            <!--/ko-->
+            <!-- ko if: (isCustomerLoggedIn && customerHasAddresses) -->
+            <div class="choice field" style="display: none;">
+                <input type="checkbox" class="checkbox" />
+                <label class="label" data-bind="attr: {for: 'billing-save-in-address-book-' + getCode($parent)}" >
+                    <span data-bind="i18n: 'Save in address book'"></span>
+                </label>
+            </div>
+            <!-- /ko -->
+        </div>
+    </form>
+</div>

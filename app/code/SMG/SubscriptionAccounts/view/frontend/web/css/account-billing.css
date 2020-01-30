@@ -1,0 +1,18 @@
+.sp-account-billing input[type=text] {
+    display: block;
+    width: 100%;
+}
+
+.sp-account-billing .sp-form-group {
+    padding-top: 1rem;
+    margin-bottom: 2rem;
+}
+
+.sp-account-billing .recurly-hosted-field-card {
+    padding-bottom: .5rem;
+    height: 3em;
+    border-left: none;
+    border-right: none;
+    border-top: none;
+    margin: 0;
+}

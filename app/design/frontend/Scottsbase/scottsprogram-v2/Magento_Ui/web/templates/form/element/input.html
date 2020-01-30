@@ -1,0 +1,13 @@
+<input class="sp-input sp-w-full" type="text" data-bind="
+    value: value,
+    valueUpdate: 'change',
+    hasFocus: focused,
+    attr: {
+        name: inputName,
+        placeholder: inputName == 'street[0]' && 'Street Address' || inputName == 'street[1]' && 'Apartment/Suite/Other (optional)' || placeholder || element.label,
+        'aria-describedby': getDescriptionId(),
+        'aria-required': required,
+        'aria-invalid': error() ? true : 'false',
+        id: uid,
+        disabled: disabled
+    }" />

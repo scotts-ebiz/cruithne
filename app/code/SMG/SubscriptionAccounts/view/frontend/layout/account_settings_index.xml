@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="customer_account"/>
+    <head>
+        <css src="SMG_SubscriptionAccounts::css/account-general.css" />
+        <css src="SMG_SubscriptionAccounts::css/account-settings.css" />
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="SMG\SubscriptionAccounts\Block\Settings" name="smg_account_settings" template="account/settings/index.phtml" cacheable="false"/>
+        </referenceContainer>
+        <referenceBlock name="root">
+            <action method="setHeaderTitle">
+                <argument translate="true" name="title" xsi:type="string">Account Settings</argument>
+            </action>
+        </referenceBlock>
+    </body>
+</page>

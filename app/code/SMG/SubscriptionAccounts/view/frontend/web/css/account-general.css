@@ -1,0 +1,25 @@
+#maincontent {
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+}
+
+#maincontent > .columns {
+    display: flex;
+    flex-wrap: wrap;
+}
+
+@media screen and (max-width: 768px) {
+    #maincontent > .columns {
+        flex-flow: column;
+    }
+}
+
+.sp-content {
+    flex: 1 1 auto;
+}
+
+.sidebar.sidebar-main {
+    flex: 0 0 auto;
+    order: -1;
+}
+

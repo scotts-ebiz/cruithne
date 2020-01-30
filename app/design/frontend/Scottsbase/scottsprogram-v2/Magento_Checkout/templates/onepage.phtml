@@ -1,0 +1,31 @@
+<?php
+// @codingStandardsIgnoreFile
+?>
+<div id="checkout" data-bind="scope:'checkout'" class="checkout-container sp-container sp-mx-auto lg:sp-w-5/6">
+    
+    <!-- ko template: getTemplate() --><!-- /ko -->
+    <script type="text/x-magento-init">
+        {
+            "#checkout": {
+                "Magento_Ui/js/core/app": <?= /* @escapeNotVerified */ $block->getJsLayout() ?>
+            }
+        }
+    </script>
+    <script>
+        window.checkoutConfig = <?= /* @escapeNotVerified */ $block->getSerializedCheckoutConfig() ?>;
+        window.subscriptionData = <?= /* @escapeNotVerified */ $block->getSubscription() ?>;
+        window.recurlyApi = '<?= $block->escapeHtml($block->getRecurlyPublicApiKey()); ?>';
+        // Create aliases for customer.js model from customer module
+        window.isCustomerLoggedIn = window.checkoutConfig.isCustomerLoggedIn;
+        window.customerData = window.checkoutConfig.customerData;
+    </script>
+    <script>
+        require([
+            'mage/url',
+            'Magento_Ui/js/block-loader'
+        ], function(url, blockLoader) {
+            blockLoader("<?= /* @escapeNotVerified */ $block->getViewFileUrl('images/loader-1.gif') ?>");
+            return url.setBaseUrl('<?= /* @escapeNotVerified */ $block->getBaseUrl() ?>');
+        })
+    </script>
+</div>

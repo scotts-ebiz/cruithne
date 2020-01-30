@@ -144,6 +144,15 @@ echo ">>> HTTPS configuration completed!"
 echo ">>> Restarting apache..."
 service apache2 restart
 
+echo ">>> Upgrading to PHP7.2..."
+add-apt-repository ppa:ondrej/php
+sudo -y apt update
+apt install -y php7.2 php7.2-common php7.2-cli php7.2-fpm
+apt-get install -y php7.2-soap php7.2-curl php7.2-gd php7.2-mysql php7.2-xml php7.2-xdebug php7.2-imap php7.2-intl php7.2-zip php7.2-mbstring
+
+echo ">>> Restarting apache..."
+service apache2 restart
+
 echo ">>> Setting permissions and groups..."
 chown -R www-data:www-data /var/www/
 chmod -R 666 /var/www/

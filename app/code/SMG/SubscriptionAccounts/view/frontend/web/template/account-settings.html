@@ -1,0 +1,104 @@
+<div class="sp-flex sp-flex-column md:sp-flex-row sp-justify-center md:sp-justify-between sp-items-center sp-mt-8 md:sp-mt-0">
+	<h2 class="sp-h2 sp-mt-0 sp-text-center md:sp-text-left">Account Settings</h2>
+</div>
+
+<form method="POST"
+	  class="sp-flex sp-flex-column lg:sp-flex-row sp-my-8 md:sp-my-0">
+	<div class="sp-flex-auto sp-p-4 lg:sp-p-0 lg:sp-w-1/2">
+		<h4 class="sp-h4 sp-m-0 sp-pb-4 sp-mb-8">Account Information</h4>
+		<div class="sp-form-group">
+			<input type="text"
+				   class="sp-input"
+				   placeholder="First Name"
+				   name="firstname"
+				   id="firstname"
+				   data-bind="value: account().firstname" />
+			<label class="sp-form-label"
+				   for="firstname">First Name</label>
+		</div>
+		<div class="sp-form-group">
+			<input type="text"
+				   class="sp-input"
+				   placeholder="Last Name"
+				   name="lastname"
+				   id="lastname"
+				   data-bind="value: account().lastname" />
+			<label class="sp-form-label"
+				   for="lastname">Last Name</label>
+		</div>
+	</div>
+
+	<div class="sp-flex-auto sp-p-4 lg:sp-p-0 lg:sp-ml-4 lg:sp-w-1/2">
+		<h4 class="sp-h4 sp-m-0 sp-pb-4 sp-mb-8">Change Email and Password</h4>
+		<div class="sp-form-group">
+			<input type="email"
+				   class="sp-input"
+				   placeholder="Email"
+				   name="email"
+				   id="email"
+				   data-bind="value: account().email" />
+			<label class="sp-form-label"
+				   for="email">Email</label>
+		</div>
+
+		<div class="sp-form-group">
+			<input type="password"
+				   placeholder="Current Password"
+				   class="sp-input"
+				   name="password"
+				   id="password"
+				   value="" />
+			<label class="sp-form-label"
+				   for="current_password">Current Password</label>
+		</div>
+
+		<div class="sp-form-group">
+			<input type="password"
+				   class="sp-input"
+				   placeholder="New Password"
+				   name="newPassword"
+				   id="newPassword"
+				   value="" />
+			<label class="sp-form-label"
+				   for="newPassword">New Password</label>
+		</div>
+
+		<div class="sp-form-group">
+			<input type="password"
+				   placeholder="Confirm New Password"
+				   class="sp-input"
+				   name="passwordRetype"
+				   id="passwordRetype"
+				   value="" />
+			<label class="sp-form-label"
+				   for="passwordRetype">Confirm New Password</label>
+		</div>
+
+		<div class="sp-flex sp-justify-end">
+			<button type="submit"
+					class="sp-button sp-button--primary"
+					data-bind="click: saveAccount">Save</button>
+		</div>
+	</div>
+	<div class="sp-flex-auto sp-p-4">
+</form>
+
+<div id="popup-modal"
+     class="modal-popup--subscriptions sp-hide sp-p-8">
+    <button
+        class="modal-popup--subscriptions__close"
+        data-bind="click: hideModal"
+    ></button>
+    <h2 class="sp-h2 sp-text-black sp-text-center" data-bind="text: modalValues().header"></h2>
+    <p class="sp-text-black sp-mb-10 sp-text-center" data-bind="text: modalValues().message"></p>
+
+    <div class="sp-flex sp-justify-center sp-items-center">
+        <button
+            class="sp-button sp-button--primary"
+            type="button"
+            data-bind="click: hideModal"
+        >
+            Close
+        </button>
+    </div>
+</div>

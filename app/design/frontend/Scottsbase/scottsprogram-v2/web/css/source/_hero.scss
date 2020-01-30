@@ -1,0 +1,47 @@
+/**
+ * General styling for the hero sections on the various pages.
+ */
+
+.sp-hero {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 300px;
+  position: relative;
+}
+
+.sp-hero--full {
+  min-height: calc(100vh - #{$header-height});
+  text-align: center;
+  
+  @media(min-width: $screen-md) {
+    text-align: left;
+  }
+}
+
+.sp-hero__background {
+  background-color: $green-1;
+  background-position: center top;
+  background-size: cover;
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.sp-hero__overlay {
+  background-color: rgba(0, 0, 0, .4);
+  bottom: 0;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
+}
+
+.sp-hero__headline {
+  position: relative;
+  max-width: 768px;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, .5);
+}

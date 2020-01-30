@@ -1,0 +1,6 @@
+.sp-success__article-link:active,
+.sp-success__article-link:focus,
+.sp-success__article-link:visited {
+  color: #fff;
+  outline: none;
+}

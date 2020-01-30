@@ -1,0 +1,75 @@
+a,
+.gigya-screen a.gigya-composite-control-link,
+.gigya-screen a:link.gigya-composite-control-link,
+.gigya-screen a.gigya-terms-of-use,
+.gigya-screen a:link.gigya-terms-of-use {
+  @extend .sp-p1;
+
+  color: $green-1;
+  text-decoration: none;
+  transition: color .25s ease-in-out;
+
+  &:visited {
+    color: $green-1;
+  }
+
+  &:active,
+  &:hover {
+    color: $gray-1;
+    text-decoration: underline;
+  }
+
+  &:focus {
+    outline: 2px auto $gray-1;
+    outline-offset: 1px;
+    text-decoration: underline;
+  }
+}
+
+.sp-link {
+  @extend .sp-label;
+
+  background-color: transparent;
+  border: none;
+  color: $green-1;
+  margin: 0;
+  padding: 0;
+  text-decoration: underline;
+  text-transform: uppercase;
+
+  &:active,
+  &:hover {
+    border: none;
+    background-color: transparent;
+    color: $gray-1;
+    text-decoration: underline;
+  }
+
+  &:focus {
+    border: none;
+    background-color: transparent;
+    outline-color: $green-1;
+    text-decoration: underline;
+  }
+}
+
+.sp-link--no-underline {
+  text-decoration: none;
+
+  &:hover {
+    text-decoration: none;
+  }
+}
+
+.sp-link--inverted {
+  color: $white;
+
+  &:active,
+  &:focus,
+  &:hover {
+    border: none;
+    background-color: transparent;
+    color: $white;
+    text-decoration: underline;
+  }
+}

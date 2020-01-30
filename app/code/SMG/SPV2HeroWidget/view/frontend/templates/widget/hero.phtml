@@ -1,0 +1,52 @@
+<style>
+    .sp-hero__background {
+        <?php if ($block->getData('heroMobileImage') || $block->getData('heroImage')) { ?>
+            <?php if ($block->getData('heroMobileImage')) { ?>
+                background-image: url('<?php echo $block->escapeUrl($block->getData('heroMobileImage')); ?>') !important;
+            <?php } else { ?>
+                background-image: url('<?php echo $block->escapeUrl($block->getData('heroImage')); ?>') !important;
+            <?php } ?>
+        <?php } else { ?>
+            background-image: url('https://test_magento_image_repo.storage.googleapis.com/homePageHero.jpg') !important;
+    <?php } ?>
+    }
+
+    <?php if ($block->getData('heroImage')) { ?>
+        @media (min-width: 768px) {
+            .sp-hero__background {
+                background-image: url('<?php echo $block->escapeUrl($block->getData('heroImage')); ?>') !important;
+            }
+        }
+    <?php } ?>
+</style>
+
+<div class="sp-hero <?php echo $block->getData('heroFullScreen') ? 'sp-hero--full' : '' ?> sp-mb-12">
+    <div class="sp-hero__background <?php echo $block->escapeHtml($block->getData('heroImageClass')) ?>"></div>
+    <?php if ($block->getData('heroHeadline')) { ?>
+        <?php if( ! $block->getData('heroFullScreen' ) ) { ?>
+        <div class="sp-hero__headline sp-container sp-my-8">
+            <h1 class="sp-h1 sp-relative sp-text-white sp-text-center sp-my-0"><?php echo $block->escapeHtml($block->getData('heroHeadline')) ?></h1>
+        </div>
+        <?php } else { ?>
+        <div class="sp-container">
+            <div class="sp-hero__headline sp-my-8">
+                <h1 class="sp-h1 sp-relative sp-text-white sp-my-0"><?php echo $block->escapeHtml($block->getData('heroHeadline')) ?></h1>
+            </div>
+            <?php if ($block->getData('heroCallToActionText') && $block->getData('heroCallToActionLink')) { ?>
+            <a href="<?php echo $block->escapeUrl($block->getData('heroCallToActionLink')) ?>" class="sp-button sp-button--inverted sp-button--get-started sp-mb-8 sp-relative sp-text-center">
+                <?php echo $block->escapeHtml($block->getData('heroCallToActionText')) ?>
+            </a>
+            <?php } ?>
+        </div>
+        <?php } ?>
+    <?php } ?>
+
+    <?php if ($block->getData('heroCallToActionText') && $block->getData('heroCallToActionLink') && ! $block->getData('heroFullScreen') ) { ?>
+        <a
+            href="<?php echo $block->escapeUrl($block->getData('heroCallToActionLink')) ?>"
+            class="sp-button sp-button--inverted sp-button--get-started sp-mb-8 sp-relative sp-text-center"
+        >
+            <?php echo $block->escapeHtml($block->getData('heroCallToActionText')) ?>
+        </a>
+    <?php } ?>
+</div>
