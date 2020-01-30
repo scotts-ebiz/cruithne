@@ -65,7 +65,7 @@ define([
                     buttons: [],
                     focus: 'none',
                     title: 'Before You Cancel',
-                    subTitle: 'We understand lawn care can be tough. Can we help you get your best results?'
+                    subTitle: 'We understand lawn care can be tough. Can we help you get your best results?',
                 }, $('#popup-modal'));
             }, 1000)
         },
