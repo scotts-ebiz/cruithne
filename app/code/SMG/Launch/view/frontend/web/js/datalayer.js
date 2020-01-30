@@ -33,7 +33,7 @@ define([
                 cart = _dataObject.cart;
             }
 
-            if (!_.isEqual(lastPushedCart, cart) || !_.isEqual(lastPushedCustomer, customer)) {
+            if (!_.isEqual(lastPushedCart, cart)) {
                 var actions = { remove: [], add: [], update: []};
                 var coupons = [];
 
@@ -65,12 +65,36 @@ define([
                     }
                 }
 
-                _gtmDataLayer.push({'event': 'mpCustomerSession', 'actions': actions, 'coupons': coupons, 'customer': customer, 'cart': cart});
-                $('body').trigger('mpCustomerSession', [customer, cart, _gtmDataLayer, actions]);
+                if (actions.add.length) {
+                    _gtmDataLayer.push({'event': 'addToCart', 'added': actions.add, 'cart': cart});
+
+                }
+
+                if (actions.remove.length) {
+                    _gtmDataLayer.push({'event': 'removeFromCart', 'removed': actions.remove, 'cart': cart});
+
+                }
+
+                if (actions.update.length) {
+                    _gtmDataLayer.push({'event': 'updateCart', 'updated': actions.update, 'cart': cart});
+
+                }
+
+                if (coupons.length) {
+                    _gtmDataLayer.push({'event': 'couponApplied', 'coupons': coupons, 'cart': cart});
+                }
+
+                lastPushedCart = cart;
+                $('body').trigger('dataLayerUpdate', [_gtmDataLayer]);
+                localStorage.setItem('launch-cart', JSON.stringify(cart));
+            }
+
+            if (!_.isEqual(lastPushedCustomer, customer)) {
+                _gtmDataLayer.push({'event': 'customer', 'customer': customer});
 
                 lastPushedCustomer = customer;
-                lastPushedCart = cart;
-                localStorage.setItem('launch-cart', JSON.stringify(cart));
+                $('body').trigger('dataLayerUpdate', [_gtmDataLayer]);
+
             }
 
         }
@@ -112,11 +136,6 @@ define([
                 'gtm.start':
                     new Date().getTime(), event: 'gtm.js'
             });
-            var f = d.getElementsByTagName(s)[0],
-                j = d.createElement(s), dl = l != dataLayerName ? '&l=' + l : '';
-            j.async = true;
-            j.src = '//www.googletagmanager.com/gtm.js?id=' + i + dl;
-            f.parentNode.insertBefore(j, f);
         })(window, document, 'script', dataLayerName, accountId);
     }
 
@@ -145,8 +164,19 @@ define([
         }
 
         var dataObject = customerData.get('magepal-gtm-jsdatalayer');
+        var messagesObject = customerData.get('messages');
         var gtmDataLayer = window[config.dataLayer];
-
+        // Add any error message to dataLayer
+        messagesObject.subscribe(function (data) {
+            if (data && data.messages.length) {
+                _.each(data.messages, function (message) {
+                    if (message.type === 'error') {
+                        gtmDataLayer.push({'event': 'errorMessage', 'errorMessage': message.text});
+                        $('body').trigger('dataLayerUpdate', [gtmDataLayer]);
+                    }
+                });
+            }
+        });
 
         dataObject.subscribe(function (_dataObject) {
             updateDataLayer(gtmDataLayer, _dataObject, true);
