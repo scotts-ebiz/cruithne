@@ -5,10 +5,12 @@ services:
     container_name: m2
     image: gcr.io/ecommerce-platform-211419/magento-local-primer
     ports:
-      - 80:80
-      - 443:443
+      - "80:80"
+      - "443:443"
     volumes:
       - magento-data-sync:/var/www/html/magento2
+    depends_on:
+      - mysql
   mysql:
     container_name: mysql
     image: gcr.io/ecommerce-platform-211419/magento-local-db-primer
