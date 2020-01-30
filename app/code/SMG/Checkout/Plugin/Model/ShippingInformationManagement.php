@@ -100,7 +100,7 @@ class ShippingInformationManagement
             $productId=$item->getProductId();
             $product=$this->_productloader->create()->load($productId);
             $productname[] = $product->getName();
-            $statesNotAllowed= $product->getStatesNotAllowed();
+            $statesNotAllowed= $product->getStateNotAllowed();
             $data = explode(',', $statesNotAllowed);
             $option_value = array();
 
