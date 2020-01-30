@@ -314,7 +314,7 @@ define(
                         if (response.success === true) {
                             self.createNewOrders();
                         } else {
-                            self.orderProcessing(false)
+                            self.orderProcessing(false);
                             if (response.message === 'ZIP CODE MISMATCH') {
                                 Modal(self.zipModalOptions, $('#zip-popup-modal'));
                                 $('#zip-popup-modal').modal('openModal');
