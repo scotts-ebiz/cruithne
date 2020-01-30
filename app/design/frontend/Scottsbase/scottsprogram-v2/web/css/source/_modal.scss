@@ -1,3 +1,11 @@
+.checkout-index-index .modal-popup .modal-inner-wrap {
+  margin-left: auto;
+  margin-right: auto;
+  transform: none;
+  position: static;
+  width: 90%;
+}
+
 .modal-popup.modal-slide {
   left: 1rem;
   right: 1rem;
@@ -5,6 +13,10 @@
 
 .modal-popup.modal-slide._inner-scroll .modal-inner-wrap {
   margin: 2rem auto;
+}
+
+.modal-popup._inner-scroll {
+  margin-bottom: 4rem;
 }
 
 .modal-popup._inner-scroll .modal-inner-wrap {
@@ -49,6 +61,8 @@
 
 .modal-popup .modal-inner-wrap {
   max-width: 640px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .modal-popup.modal-slide._inner-scroll .modal-inner-wrap {
@@ -135,4 +149,15 @@
     max-width: 640px;
     width: 90%;
   }
+}
+
+.modal-popup .action-close {
+  padding: 0.25rem;
+}
+
+.modal-custom .action-close::before,
+.modal-popup .action-close::before,
+.modal-slide .action-close::before {
+  font-size: 3rem;
+  line-height: 3rem;
 }
