@@ -39,9 +39,9 @@ requirejs(['catalogAddToCart'], function(catalogAddToCart) {
                     }, "*");
             });
             // Check for onSuccess of add to cart and set pixel
-            $(document).on('mpCustomerSession', function (event, customer, cart, gtmDataLayer, actions) {
+            $(document).on('dataLayerUpdate', function (gtmDataLayer, actions) {
 
-                if (actions && actions.add.length) {
+                if (actions && actions.add && actions.add.length) {
                     window.parent.postMessage({event: 'productAdded', dataLayer: JSON.stringify(window.dataLayer)}, '*');
 
                     actions.add.forEach(function(item) {
