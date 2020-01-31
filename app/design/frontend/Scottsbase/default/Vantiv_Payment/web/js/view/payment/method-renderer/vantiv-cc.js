@@ -39,6 +39,8 @@ define(
                 this.vaultEnabler = new VaultEnabler();
                 this.vaultEnabler.setPaymentCode(this.getVaultCode());
 
+                this.selectPaymentMethod(); // Preselect radio button
+
                 return this;
             },
 
