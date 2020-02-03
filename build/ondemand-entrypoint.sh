@@ -8,7 +8,7 @@ set -euxo pipefail
 COMMAND="$@"
 
 # Runs setup upgrade and clears cache keeps all materialized files that is generated during the container build process.
-# su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade --keep-generated'
+su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade --keep-generated'
 
 # Notify of deploy
 curl -X POST --data-urlencode "payload={\"channel\": \"#magento2-botalerts\", \"username\": \"m2deploybot\", \"text\": \"The most recent commit below has been deployed to the $(git rev-parse --abbrev-ref HEAD) environment $(git show | head -n 10)\", \"icon_emoji\": \":rocket:\"}" https://hooks.slack.com/services/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
