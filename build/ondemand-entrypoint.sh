@@ -7,19 +7,8 @@
 set -euxo pipefail
 COMMAND="$@"
 
-# Run Setup Upgrade
-su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade'
-su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile' 
-
-# Set Styles
-su - magento -c 'rm /var/www/html/magento2/tools/yarn.lock'
-su - magento -c 'cd /var/www/html/magento2/tools/ && ls -la'
-su - magento -c 'cd /var/www/html/magento2/tools && npm install && npm rebuild node-sass && gulp clean -f /var/www/html/magento2/tools/gulpfile.esm.js && gulp styles -f /var/www/html/magento2/tools/gulpfile.esm.js'
-su - magento -c '/var/www/html/magento2/bin/magento setup:static-content:deploy'
-
-# Reindex and Cache Flush
-su - magento -c '/var/www/html/magento2/bin/magento -v index:reindex'
-su - magento -c '/var/www/html/magento2/bin/magento -v cache:flush'
+# Runs setup upgrade and clears cache keeps all materialized files that is generated during the container build process.
+# su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade --keep-generated'
 
 # Notify of deploy
 curl -X POST --data-urlencode "payload={\"channel\": \"#magento2-botalerts\", \"username\": \"m2deploybot\", \"text\": \"The most recent commit below has been deployed to the $(git rev-parse --abbrev-ref HEAD) environment $(git show | head -n 10)\", \"icon_emoji\": \":rocket:\"}" https://hooks.slack.com/services/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
