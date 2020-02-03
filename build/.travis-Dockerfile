@@ -1,11 +1,11 @@
 # Base image is Google's Optimized Ubuntu Image
 
 ARG IMAGE=gcr.io/ecommerce-platform-211419/magento-stage-primer:latest
-ARG TRAVIS_BRANCH=staging
-ENV TRAVIS_BRANCH=$TRAVIS_BRANCH
-
 FROM $IMAGE
 ENTRYPOINT []
+
+ARG TRAVIS_BRANCH=staging
+ENV TRAVIS_BRANCH=$TRAVIS_BRANCH
 
 ENV NVM_DIR /home/magento/.nvm
 ENV MAGENTO_DIR /var/www/html/magento2
