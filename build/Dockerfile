@@ -23,8 +23,8 @@ RUN mkdir -p $MAGENTO_DIR/var/import/images && gsutil -q -m rsync -r -u gs://mag
 RUN git fetch --all && git reset --hard && git pull && composer install
 
 # Temporary patch for VendorVertex
-COPY vendor-vertex-compilation-issue.patch /tmp/vendor-vertex-compilation-issue.patch
-RUN git apply /tmp/vendor-vertex-compilation-issue.patch
+# COPY vendor-vertex-compilation-issue.patch /tmp/vendor-vertex-compilation-issue.patch
+# RUN git apply /tmp/vendor-vertex-compilation-issue.patch
 
 RUN php /var/www/html/magento2/bin/magento setup:di:compile
 RUN rm /var/www/html/magento2/tools/yarn.lock && cd /var/www/html/magento2/tools && npm install &&  npm rebuild node-sass && gulp clean -f /var/www/html/magento2/tools/gulpfile.esm.js && gulp styles --prod -f /var/www/html/magento2/tools/gulpfile.esm.js
