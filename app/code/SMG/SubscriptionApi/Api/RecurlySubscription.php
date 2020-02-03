@@ -2,12 +2,12 @@
 
 namespace SMG\SubscriptionApi\Api;
 
-use Psr\Log\LoggerInterface;
-use Magento\Framework\Exception\LocalizedException;
+use Exception;
 use Magento\Framework\Session\SessionManagerInterface as CoreSession;
+use Psr\Log\LoggerInterface;
 use SMG\SubscriptionApi\Api\Interfaces\RecurlyInterface;
-use SMG\SubscriptionApi\Exception\SubscriptionException;
-use SMG\SubscriptionApi\Helper\SubscriptionOrderHelper;
+use SMG\SubscriptionApi\Helper\CancelHelper;
+use SMG\SubscriptionApi\Helper\SeasonalHelper;
 use SMG\SubscriptionApi\Model\RecurlySubscription as RecurlySubscriptionModel;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionModel;
 
@@ -32,28 +32,38 @@ class RecurlySubscription implements RecurlyInterface
     protected $_logger;
 
     /**
-     * @var SubscriptionOrderHelper
+     * @var CancelHelper
      */
-    protected $_subscriptionOrderHelper;
+    protected $_cancelHelper;
+
+    /**
+     * @var SeasonalHelper
+     */
+    protected $_seasonalHelper;
 
     /**
      * RecurlySubscription constructor.
      * @param RecurlySubscriptionModel $recurlySubscriptionModel
      * @param SubscriptionModel $subscriptionModel
      * @param CoreSession $coreSession
+     * @param LoggerInterface $logger
+     * @param SeasonalHelper $seasonalHelper
+     * @param CancelHelper $cancelHelper
      */
     public function __construct(
         RecurlySubscriptionModel $recurlySubscriptionModel,
         SubscriptionModel $subscriptionModel,
         CoreSession $coreSession,
         LoggerInterface $logger,
-        SubscriptionOrderHelper $subscriptionOrderHelper
+        SeasonalHelper $seasonalHelper,
+        CancelHelper $cancelHelper
     ) {
         $this->_recurlySubscriptionModel = $recurlySubscriptionModel;
         $this->_subscriptionModel = $subscriptionModel;
         $this->_coreSession = $coreSession;
         $this->_logger = $logger;
-        $this->_subscriptionOrderHelper = $subscriptionOrderHelper;
+        $this->_seasonalHelper = $seasonalHelper;
+        $this->_cancelHelper = $cancelHelper;
     }
 
     /**
@@ -68,7 +78,6 @@ class RecurlySubscription implements RecurlyInterface
     public function createRecurlySubscription($token)
     {
         try {
-
             /** @var \SMG\SubscriptionApi\Model\Subscription $subscription */
             $subscription = $this->_subscriptionModel->getSubscriptionByQuizId($this->_coreSession->getQuizId());
             $subscription->createSubscriptionService($token, $this->_recurlySubscriptionModel);
@@ -106,29 +115,8 @@ class RecurlySubscription implements RecurlyInterface
     {
         // Cancel Recurly Subscriptions
         try {
-            // Cancel recurly subscriptions
-            $cancelledSubscriptionIds = $this->_recurlySubscriptionModel->cancelRecurlySubscriptions(true, true);
-
-            // Find the master subscription id
-            $masterSubscriptionId = null;
-            foreach ($cancelledSubscriptionIds as $planCode => $cancelledSubscriptionId) {
-                if (in_array($planCode, ['annual', 'seasonal'])) {
-                    $masterSubscriptionId = $cancelledSubscriptionId;
-                }
-            }
-            if (is_null($masterSubscriptionId)) {
-                $error = "Couldn't find the master subscription id.";
-                $this->_logger->error($error);
-                throw new LocalizedException(__($error));
-            }
-
-            // Find the subscription
-            /** @var \SMG\SubscriptionApi\Model\Subscription $subscription */
-            $subscription = $this->_subscriptionModel->getSubscriptionByMasterSubscriptionId($masterSubscriptionId);
-
-            // Cancel subscription orders
-            $subscription->cancelSubscriptions($this->_recurlySubscriptionModel);
-        } catch (LocalizedException $e) {
+            $this->_cancelHelper->cancelSubscriptions(true, true);
+        } catch (Exception $e) {
             $this->_logger->error($e->getMessage());
 
             return json_encode([
@@ -146,24 +134,13 @@ class RecurlySubscription implements RecurlyInterface
     /**
      * Process seasonal invoices sent from Recurly
      *
-     * @param string $subscriptionId
      * @return array
      *
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws Exception
      * @api
      */
-    public function processSeasonalInvoice($subscriptionId)
+    public function processSeasonalInvoice()
     {
-        try {
-            $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionId);
-        } catch (SubscriptionException $e) {
-            $this->_logger->error($e->getMessage());
-
-            return ['success' => false, 'error' => $e->getMessage()];
-        }
-
-        return ['success' => true, 'Subscription order has been processed'];
+        $this->_seasonalHelper->processSeasonalOrders();
     }
 }

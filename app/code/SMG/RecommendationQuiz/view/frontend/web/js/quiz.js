@@ -423,7 +423,7 @@ define([
                         window.requestAnimationFrame(() => {
                             self.animationStates[currentAnimationState - 1]();
                         });
-                    }, 1000);
+                    }, 500);
                 }
             }
         };
@@ -503,7 +503,7 @@ define([
                 } else {
                     window.requestAnimationFrame(self.step(start, self.currentAnimationState));
                 }
-            }, 2000);
+            }, 1000);
         };
 
 
