@@ -8,6 +8,7 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../../../../../vendor/magento/mtf/etc/variations.xsd">
     <testCase name="Magento\Sales\Test\TestCase\CreateCreditMemoEntityTest">
         <variation name="CreateCreditMemoEntityTestVariation3" summary="Assert money return to StoreCredit">
+            <data name="tag" xsi:type="string">mftf_migrated:yes</data>
             <data name="order/data/refund" xsi:type="array">
                 <item name="0" xsi:type="array">
                     <item name="invoiceId" xsi:type="string">0</item>
