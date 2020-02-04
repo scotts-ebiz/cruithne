@@ -7,16 +7,6 @@ namespace SMG\SubscriptionApi\Api\Interfaces;
 interface RecurlyInterface
 {
     /**
-     * Create new Recurly subscription
-     *
-     * @param string $token
-     * @return array
-     *
-     * @api
-     */
-    public function createRecurlySubscription($token);
-
-    /**
      * Check existing Recurly subscriptions
      *
      * @return array

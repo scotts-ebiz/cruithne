@@ -309,7 +309,6 @@ class SubscriptionOrderHelper extends AbstractHelper
         $quote->assignCustomer($customer->getDataModel());
 
         foreach ($subscriptionOrder->getOrderItems() as $item) {
-
             // Check if the item has the selected field and if it is set.
             /**
              * @var SubscriptionOrderItem|SubscriptionAddonOrderItem $item
@@ -373,12 +372,6 @@ class SubscriptionOrderHelper extends AbstractHelper
         // Set customer Gigya ID
         $order->setGigyaId($customer->getGigyaUid());
 
-        // Set master subscription id based on the Recurly subscription plan code
-        $order->setMasterSubscriptionId($subscriptionOrder->getMasterSubscriptionId());
-
-        // Set subscription ID
-        $order->setSubscriptionId($subscriptionOrder->getSubscriptionId());
-
         // Set ship date for the subscription/order
         $order->setShipStartDate($subscriptionOrder->getShipStartDate());
         $order->setShipEndDate($subscriptionOrder->getShipEndDate());
@@ -392,12 +385,9 @@ class SubscriptionOrderHelper extends AbstractHelper
         $subscriptionOrder->setSalesOrderId($order->getEntityId());
         $subscriptionOrder->save();
 
-        if ($subscriptionOrder->isCurrenltyShippable()) {
-
+        if ($subscriptionOrder->isCurrentlyShippable()) {
             // Complete the order
-            $subscriptionOrder
-                ->setSubscriptionOrderStatus('complete')
-                ->save();
+            $subscriptionOrder->setData('subscription_order_status', 'complete')->save();
 
             // Create the order invoice.
             $subscriptionOrder->createInvoice();

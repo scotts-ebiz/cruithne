@@ -35,9 +35,6 @@ class SubscriptionAddonOrder extends AbstractModel
     /** @var SubscriptionAddonOrderItemCollectionFactory */
     protected $_subscriptionAddonOrderItemCollectionFactory;
 
-    /** @var SubscriptionOrderItemInterface */
-    protected $_subscriptionAddonOrderItems;
-
     /** @var OrderRepository */
     protected $_orderRepository;
 
@@ -242,27 +239,24 @@ class SubscriptionAddonOrder extends AbstractModel
     /**
      * Get subscription addon orders
      * @param bool $selectedOnly
-     * @return mixed
+     * @return bool|ResourceModel\SubscriptionAddonOrderItem\Collection
      */
     public function getOrderItems(bool $selectedOnly = false)
     {
-
         // Make sure we have an actual subscription
         if (empty($this->getEntityId())) {
             return false;
         }
 
         // If subscription orders is local, send them, if not, pull them and send them
-        if (! isset($this->_subscriptionAddonOrderItems)) {
-            $subscriptionAddonOrderItems = $this->_subscriptionAddonOrderItemCollectionFactory->create();
-            $subscriptionAddonOrderItems->addFieldToFilter('subscription_addon_order_entity_id', $this->getEntityId());
-            if ($selectedOnly) {
-                $subscriptionAddonOrderItems->addFieldToFilter('selected', 1);
-            }
-            $this->_subscriptionAddonOrderItems = $subscriptionAddonOrderItems;
+        $subscriptionAddonOrderItems = $this->_subscriptionAddonOrderItemCollectionFactory->create();
+        $subscriptionAddonOrderItems->addFieldToFilter('subscription_addon_order_entity_id', $this->getEntityId());
+
+        if ($selectedOnly) {
+            $subscriptionAddonOrderItems->addFieldToFilter('selected', 1);
         }
 
-        return $this->_subscriptionAddonOrderItems;
+        return $subscriptionAddonOrderItems;
     }
 
     /**
@@ -356,6 +350,18 @@ class SubscriptionAddonOrder extends AbstractModel
     }
 
     /**
+     * See if any add-on items were selected for the subscription.
+     *
+     * @return bool
+     */
+    public function isSelected()
+    {
+        $addOnItem = $this->getOrderItems(true);
+
+        return $addOnItem->count() > 0;
+    }
+
+    /**
      * @return string
      */
     public function type()
@@ -379,14 +385,27 @@ class SubscriptionAddonOrder extends AbstractModel
         // Calculate the Earliest Ship Start Date
         $earliestShipStartDate = new \DateTime($this->getApplicationStartDate());
         $earliestShipStartDate->sub(new \DateInterval('P' . $shippingOpenWindow . 'D'));
+
+        // We have a seasonal subscription, so add-on ship date should be based
+        // on first seasonal order.
+        if ($this->getSubscriptionType() == 'seasonal') {
+            $subscription = $this->getSubscription();
+            $subscriptionOrder = $subscription->getSubscriptionOrders()
+                ->setOrder('ship_start_date', 'asc')
+                ->fetchItem();
+
+            if ($subscriptionOrder) {
+                $earliestShipStartDate = \DateTime::createFromFormat('Y-m-d H:i:s', $subscriptionOrder->getData('ship_start_date'));
+            }
+        }
+
         $todayDate = new \DateTime(date('Y-m-d 00:00:00'));
 
         // Take either Earliest Ship Start date of Today, whichever is greater
-        if ($todayDate <= $earliestShipStartDate) {
-            $this->setShipStartDate($earliestShipStartDate);
-        } else {
-            $this->setShipStartDate($todayDate);
-        }
+        $this->setData(
+            'ship_start_date',
+            $todayDate <= $earliestShipStartDate ? $earliestShipStartDate : $todayDate
+        );
     }
 
     /**
@@ -394,12 +413,16 @@ class SubscriptionAddonOrder extends AbstractModel
      * @return bool
      * @throws \Exception
      */
-    public function isCurrenltyShippable() {
+    public function isCurrentlyShippable()
+    {
+        // Seasonal subscription, so base ship date on first seasonal order.
         if ($this->getSubscriptionType() !== 'annual') {
+            $shipStart = \DateTime::createFromFormat('Y-m-d H:i:s', $this->getData('ship_start_date'));
             $today = new \DateTime();
-            $shipStart = \DateTime::createFromFormat('Y-m-d H:i:s', $this->getShipStartDate());
+
             return $today >= $shipStart;
         }
+
         return true;
     }
 

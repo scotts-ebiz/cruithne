@@ -187,7 +187,6 @@ class SeasonalHelper extends AbstractHelper
         }
 
         foreach ($subscriptionOrders as $subscriptionOrder) {
-
             // Check to make sure the order is active (invoiced)
             if (! $this->verifyRecurlySeasonalOrder($subscriptionOrder)) {
                 // Order is not ready to process, set a timestamp to be
@@ -205,7 +204,6 @@ class SeasonalHelper extends AbstractHelper
             }
 
             try {
-
                 // Process Invoice
                 $subscriptionOrder->createInvoice();
 

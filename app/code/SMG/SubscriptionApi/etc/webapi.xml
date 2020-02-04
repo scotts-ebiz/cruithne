@@ -6,8 +6,8 @@
             <resource ref="anonymous" />
         </resources>
     </route>
-    <route url="/V1/subscription/createorders" method="POST">
-        <service class="SMG\SubscriptionApi\Api\Interfaces\SubscriptionInterface" method="createOrders" />
+    <route url="/V1/subscription/createSubscription" method="POST">
+        <service class="SMG\SubscriptionApi\Api\Interfaces\SubscriptionInterface" method="createSubscription" />
         <resources>
             <resource ref="anonymous" />
         </resources>
