@@ -195,14 +195,4 @@ class Billing extends Template
     {
         return $this->_collectionFactory->create()->addRegionNameFilter($region)->getFirstItem()->toArray();
     }
-
-    /**
-     * Return Recurly public API key
-     *
-     * @return string
-     */
-    public function getRecurlyPublicApiKey()
-    {
-        return $this->_recurlyHelper->getRecurlyPublicApiKey();
-    }
 }

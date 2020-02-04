@@ -2,13 +2,12 @@
 
 namespace SMG\SubscriptionCheckout\Controller\Index;
 
-use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Customer\Model\Session;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\Action\Context;
 use Magento\Framework\Controller\Result\RedirectFactory;
 use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Result\PageFactory;
-use Magento\Framework\Session\SessionManagerInterface as Session;
 
 class Index extends Action
 {
@@ -18,7 +17,7 @@ class Index extends Action
     protected $_pageFactory;
 
     /**
-     * @var CustomerSession
+     * @var Session
      */
     protected $_customerSession;
 
@@ -28,26 +27,19 @@ class Index extends Action
     protected $_redirectFactory;
 
     /**
-     * @var Session
-     */
-    protected $_session;
-
-    /**
      * Index constructor.
      *
      * @param Context $context
      * @param PageFactory $pageFactory
      * @param RedirectFactory $redirectFactory
-     * @param CustomerSession $customerSession
-     * @param Session $session
+     * @param Session $customerSession
      * @param UrlInterface $url
      */
     public function __construct(
         Context $context,
         PageFactory $pageFactory,
         RedirectFactory $redirectFactory,
-        CustomerSession $customerSession,
-        Session $session,
+        Session $customerSession,
         UrlInterface $url
     ) {
         parent::__construct($context);
@@ -55,7 +47,6 @@ class Index extends Action
         $this->_pageFactory = $pageFactory;
         $this->_redirectFactory = $redirectFactory;
         $this->_customerSession = $customerSession;
-        $this->_session = $session;
         $this->_url = $url;
     }
 
@@ -71,10 +62,6 @@ class Index extends Action
 
             return $redirect->setPath($url);
         }
-
-        // We have reached the success page, so clear out any quiz data.
-        $this->_session->unsetData('quiz_id');
-        $this->_session->unsetData('subscription_details');
 
         return $this->_pageFactory->create();
     }

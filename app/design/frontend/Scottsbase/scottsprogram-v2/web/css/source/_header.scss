@@ -132,7 +132,7 @@
   }
 
   a {
-    display: inline-block;
+    display: block;
     color: $white;
     font-size: $font-size-h2--mobile;
     text-transform: none;
@@ -161,12 +161,7 @@
 
       &.active,
       &:hover {
-        border-bottom: 2px solid $white;
-
-        @media (min-width: $screen-md) {
-          border-color: $green-1;
-        }
-
+        border-bottom: 2px solid $green-1;
         text-decoration: none;
       }
     }
@@ -224,10 +219,8 @@
 
 .sp-header__phone {
   color: $white;
-  display: inline-block;
-  margin-bottom: 2rem;
-  align-self: center;
-  border-bottom: 1px solid transparent;
+  display: block;
+  padding-bottom: 2rem;
 
   &:focus {
     outline: none;
@@ -235,13 +228,6 @@
 
   @media (min-width: $screen-md) {
     display: none;
-  }
-
-  &.active,
-  &:hover {
-    color: $white;
-    border-bottom: 1px solid $white;
-    text-decoration: none;
   }
 }
 

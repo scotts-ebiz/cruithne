@@ -14,12 +14,10 @@
         ></button>
 
         <div class="md:sp-flex sp-max-w-xl sp-mx-auto sp-mb-8">
-            <div class="sp-mx-auto sp-flex-none sp-w-1/3 sp-max-w-xs sp-mb-8">
-                <img
-                    data-bind="attr: { src: pdp().product.mediumImage }"
-                    class="sp-mx-auto sp-block"
-                />
-            </div>
+            <img
+                data-bind="attr: { src: pdp().product.mediumImage }"
+                class="sp-mx-auto sp-block sp-w-1/3 sp-max-w-xs md:sp-w-2/5 sp-mb-8"
+            />
 
             <div class="md:sp-ml-8">
                 <!-- ko if: pdp().mode === 'subscription' -->

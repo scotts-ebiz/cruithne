@@ -2,6 +2,7 @@
 
 namespace SMG\SubscriptionApi\Model;
 
+use Psr\Log\LoggerInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DB\Transaction;
 use Magento\Framework\Exception\LocalizedException;
@@ -16,11 +17,9 @@ use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Model\OrderRepository;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use Magento\Sales\Model\Service\InvoiceService;
-use Psr\Log\LoggerInterface;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\Sap\Model\SapOrderBatch;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
-use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrderItem\CollectionFactory as SubscriptionAddonOrderItemCollectionFactory;
 
 /**
@@ -29,6 +28,7 @@ use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrderItem\Collectio
  */
 class SubscriptionAddonOrder extends AbstractModel
 {
+
     /** @var SubscriptionHelper */
     protected $_subscriptionHelper;
 
@@ -63,12 +63,7 @@ class SubscriptionAddonOrder extends AbstractModel
     protected $_sapOrderBatchCollectionFactory;
 
     /**
-     * @var SubscriptionCollectionFactory
-     */
-    protected $_subscriptionCollectionFactory;
-
-    /**
-     * @var Subscription|null
+     * @var Subscription
      */
     protected $_subscription;
 
@@ -81,11 +76,6 @@ class SubscriptionAddonOrder extends AbstractModel
      * @var LoggerInterface
      */
     protected $_logger;
-
-    /**
-     * @var Subscription
-     */
-    protected $_masterSubscription;
 
     /**
      * Constructor.
@@ -103,7 +93,7 @@ class SubscriptionAddonOrder extends AbstractModel
      * @param Registry $registry
      * @param LoggerInterface $logger
      * @param Order\CreditmemoFactory $creditmemoFactory
-     * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
+     * @param Subscription $subscription
      * @param SubscriptionHelper $subscriptionHelper
      * @param SubscriptionAddonOrderItemCollectionFactory $subscriptionAddonOrderItemCollectionFactory
      * @param OrderRepository $orderRepository
@@ -121,7 +111,7 @@ class SubscriptionAddonOrder extends AbstractModel
         Registry $registry,
         LoggerInterface $logger,
         Order\CreditmemoFactory $creditmemoFactory,
-        SubscriptionCollectionFactory $subscriptionCollectionFactory,
+        Subscription $subscription,
         SubscriptionHelper $subscriptionHelper,
         SubscriptionAddonOrderItemCollectionFactory $subscriptionAddonOrderItemCollectionFactory,
         OrderRepository $orderRepository,
@@ -152,7 +142,7 @@ class SubscriptionAddonOrder extends AbstractModel
         $this->_invoiceSender = $invoiceSender;
         $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
         $this->_orderRepository = $orderRepository;
-        $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
+        $this->_subscription = $subscription;
     }
 
     /**
@@ -174,21 +164,17 @@ class SubscriptionAddonOrder extends AbstractModel
      */
     public function getSubscription()
     {
-        if ($this->_subscription) {
+        if ($this->_subscription->getId()) {
             return $this->_subscription;
         }
 
-        $subscription = $this->_subscriptionCollectionFactory
-            ->create()
-            ->getItemById($this->getData('subscription_entity_id'));
+        $subscription = $this->_subscription->load($this->getSubscriptionEntityId());
 
-        if (is_null($subscription) || ! $subscription->getId()) {
+        if (! $subscription->getId()) {
             return false;
         }
 
-        $this->_subscription = $subscription;
-
-        return $this->_subscription;
+        return $subscription;
     }
 
     /**
@@ -205,22 +191,6 @@ class SubscriptionAddonOrder extends AbstractModel
         }
 
         return '';
-    }
-
-    /**
-     * Get Master Subscription
-     */
-    public function getMasterSubscription()
-    {
-        $masterSubscriptionId = $this->getMasterSubscriptionId();
-
-        if (is_null($this->_masterSubscription)) {
-            $this->_masterSubscription = $this->_subscriptionCollectionFactory->create()
-                ->addFilter('subscription_id', $masterSubscriptionId)
-                ->getFirstItem();
-        }
-
-        return $this->_masterSubscription;
     }
 
     /**
@@ -347,7 +317,7 @@ class SubscriptionAddonOrder extends AbstractModel
         }
 
         try {
-            $this->_sapOrderBatch = $this->_sapOrderBatchCollectionFactory->create()->getItemById($this->getSalesOrderId());
+            $this->_sapOrderBatch = $this->_sapOrderCollectionFactory->create()->getItemById($this->getSalesOrderId());
 
             return $this->_sapOrderBatch;
         } catch (\Exception $e) {
@@ -371,7 +341,6 @@ class SubscriptionAddonOrder extends AbstractModel
     {
         // Grab the shipment open window from the admin
         $shippingOpenWindow = 0;
-
         if (! empty($this->_subscriptionHelper->getShipDaysStart())) {
             $shippingOpenWindow = filter_var($this->_subscriptionHelper->getShipDaysStart(), FILTER_SANITIZE_NUMBER_INT);
         }
@@ -387,20 +356,6 @@ class SubscriptionAddonOrder extends AbstractModel
         } else {
             $this->setShipStartDate($todayDate);
         }
-    }
-
-    /**
-     * Is Order Currently Shippable
-     * @return bool
-     * @throws \Exception
-     */
-    public function isCurrenltyShippable() {
-        if ($this->getSubscriptionType() !== 'annual') {
-            $today = new \DateTime();
-            $shipStart = \DateTime::createFromFormat('Y-m-d H:i:s', $this->getShipStartDate());
-            return $today >= $shipStart;
-        }
-        return true;
     }
 
     /**

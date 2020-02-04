@@ -2,12 +2,12 @@
 
 namespace SMG\SubscriptionApi\Model;
 
+use Psr\Log\LoggerInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ProductFactory;
 use Magento\Catalog\Model\ProductRepository;
+use Magento\Checkout\Model\Cart;
 use Magento\Checkout\Model\Session as CheckoutSession;
-use Magento\Customer\Model\CustomerFactory;
-use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\Exception\LocalizedException;
@@ -15,18 +15,18 @@ use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
+use Magento\Quote\Api\CartManagementInterface;
+use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\Quote;
-use Magento\Quote\Model\QuoteManagement;
-use Magento\Quote\Model\QuoteRepository;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use Magento\Store\Model\StoreManager;
-use Psr\Log\LoggerInterface;
-use SMG\SubscriptionApi\Helper\RecurlyHelper;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\Collection as SubscriptionAddonOrderCollection;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\Collection\Interceptor as SubscriptionAddonOrderCollectionInterceptor;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\CollectionFactory as SubscriptionAddonOrderCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection as SubscriptionOrderCollection;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection\Interceptor as SubscriptionOrderCollectionInterceptor;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
 
 /**
@@ -35,19 +35,23 @@ use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory 
  */
 class Subscription extends AbstractModel
 {
+
     /** @var SubscriptionOrderCollectionFactory */
     protected $_subscriptionOrderCollectionFactory;
 
     /** @var SubscriptionAddonOrderCollectionFactory */
     protected $_subscriptionAddonOrderCollectionFactory;
 
+    /** @var Cart */
+    protected $_cart;
+
     /**  @var SubscriptionHelper */
     protected $_subscriptionHelper;
 
-    /** @var SubscriptionOrderCollection */
+    /** @var SubscriptionOrderCollectionInterceptor */
     protected $_subscriptionOrders;
 
-    /** @var SubscriptionAddonOrderCollection */
+    /** @var SubscriptionAddonOrderCollectionInterceptor */
     protected $_subscriptionAddonOrders;
 
     /** @var FormKey */
@@ -55,6 +59,12 @@ class Subscription extends AbstractModel
 
     /** @var CheckoutSession */
     protected $_checkoutSession;
+
+    /**  @var CartManagementInterface */
+    protected $_cartManagementInterface;
+
+    /** @var CartRepositoryInterface */
+    protected $_cartRepositoryInterface;
 
     /** @var StoreManager */
     protected $_storeManager;
@@ -80,30 +90,6 @@ class Subscription extends AbstractModel
     protected $_logger;
 
     /**
-     * @var RecurlyHelper
-     */
-    protected $_recurlyHelper;
-
-    /**
-     * @var QuoteManagement
-     */
-    protected $_quoteManagement;
-
-    /**
-     * @var QuoteRepository
-     */
-    protected $_quoteRepository;
-    /**
-     * @var CustomerSession
-     */
-    protected $_customerSession;
-
-    /**
-     * @var CustomerFactory
-     */
-    protected $_customerFactory;
-
-    /**
      * Constructor.
      */
     protected function _construct()
@@ -120,18 +106,17 @@ class Subscription extends AbstractModel
      * @param LoggerInterface $logger
      * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
      * @param SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory
+     * @param Cart $cart
      * @param SubscriptionHelper $subscriptionHelper
      * @param FormKey $formKey
      * @param CheckoutSession $checkoutSession
-     * @param CustomerSession $customerSession
+     * @param CartManagementInterface $cartManagementInterface
+     * @param CartRepositoryInterface $cartRepositoryInterface
      * @param StoreManager $storeManager
      * @param Product $product
      * @param ProductFactory $productFactory
      * @param ProductRepository $productRepository
      * @param OrderCollectionFactory $orderCollectionFactory
-     * @param RecurlyHelper $recurlyHelper
-     * @param QuoteManagement $quoteManagement
-     * @param QuoteRepository $quoteRepository
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -142,19 +127,17 @@ class Subscription extends AbstractModel
         LoggerInterface $logger,
         SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
         SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory,
+        Cart $cart,
         SubscriptionHelper $subscriptionHelper,
         FormKey $formKey,
         CheckoutSession $checkoutSession,
-        CustomerSession $customerSession,
-        CustomerFactory $customerFactory,
+        CartManagementInterface $cartManagementInterface,
+        CartRepositoryInterface $cartRepositoryInterface,
         StoreManager $storeManager,
         Product $product,
         ProductFactory $productFactory,
         ProductRepository $productRepository,
         OrderCollectionFactory $orderCollectionFactory,
-        RecurlyHelper $recurlyHelper,
-        QuoteManagement $quoteManagement,
-        QuoteRepository $quoteRepository,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -164,40 +147,17 @@ class Subscription extends AbstractModel
         $this->_logger = $logger;
         $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
         $this->_subscriptionAddonOrderCollectionFactory = $subscriptionAddonOrderCollectionFactory;
+        $this->_cart = $cart;
+        $this->_cartManagementInterface = $cartManagementInterface;
+        $this->_cartRepositoryInterface = $cartRepositoryInterface;
         $this->_storeManager = $storeManager;
         $this->_subscriptionHelper = $subscriptionHelper;
         $this->_formKey = $formKey;
         $this->_checkoutSession = $checkoutSession;
-        $this->_customerSession = $customerSession;
-        $this->_customerFactory = $customerFactory;
         $this->_product = $product;
         $this->_productFactory = $productFactory;
         $this->_productRepository = $productRepository;
         $this->_orderCollectionFactory = $orderCollectionFactory;
-        $this->_recurlyHelper = $recurlyHelper;
-        $this->_quoteManagement = $quoteManagement;
-        $this->_quoteRepository = $quoteRepository;
-    }
-
-    /**
-     * Get the associated customer.
-     *
-     * @return \Magento\Customer\Model\Customer|null
-     */
-    public function getCustomer()
-    {
-        if (! $this->getData('customer_id')) {
-            return null;
-        }
-
-        $customer = $this->_customerFactory->create();
-        $customer->load($this->getData('customer_id'));
-
-        if (! $customer->getId()) {
-            return null;
-        }
-
-        return $customer;
     }
 
     /**
@@ -206,12 +166,15 @@ class Subscription extends AbstractModel
      */
     public function getSubscriptionOrders()
     {
+        // Make sure we have an actual subscription
+        if (empty($this->getEntityId())) {
+            return false;
+        }
+
         // If subscription orders is local, send them, if not, pull them and send them
         if (! isset($this->_subscriptionOrders)) {
             $subscriptionOrders = $this->_subscriptionOrderCollectionFactory->create();
-            $subscriptionOrders
-                ->setOrder('ship_start_date', 'asc')
-                ->addFieldToFilter('subscription_entity_id', $this->getEntityId());
+            $subscriptionOrders->addFieldToFilter('subscription_entity_id', $this->getEntityId());
             $this->_subscriptionOrders = $subscriptionOrders;
         }
 
@@ -344,10 +307,18 @@ class Subscription extends AbstractModel
      */
     public function getSubscriptionAddonOrders()
     {
+
+        // Make sure we have an actual subscription
+        if (empty($this->getEntityId())) {
+            return false;
+        }
+
         // If subscription orders is local, send them, if not, pull them and send them
-        $subscriptionAddonOrders = $this->_subscriptionAddonOrderCollectionFactory->create();
-        $subscriptionAddonOrders->addFieldToFilter('subscription_entity_id', $this->getEntityId());
-        $this->_subscriptionAddonOrders = $subscriptionAddonOrders;
+        if (! isset($this->_subscriptionAddonOrders)) {
+            $subscriptionAddonOrders = $this->_subscriptionAddonOrderCollectionFactory->create();
+            $subscriptionAddonOrders->addFieldToFilter('subscription_entity_id', $this->getEntityId());
+            $this->_subscriptionAddonOrders = $subscriptionAddonOrders;
+        }
 
         return $this->_subscriptionAddonOrders;
     }
@@ -386,13 +357,13 @@ class Subscription extends AbstractModel
     public function addSubscriptionToCart($addons)
     {
         try {
-            $this->_checkoutSession->resetCheckout();
-            $this->_checkoutSession->clearQuote();
-            $quoteID = $this->_quoteManagement->createEmptyCartForCustomer($this->_customerSession->getCustomerId());
-            $quote = $this->_quoteRepository->get($quoteID);
-            $quote->removeAllAddresses();
+            $quote = $this->_checkoutSession->getQuote();
+            $quoteItems = $quote->getItemsCollection();
+            foreach ($quoteItems as $item) {
+                $this->_cart->removeItem($item->getItemId());
+            }
         } catch (\Exception $e) {
-            $error = 'Could not create empty cart for customer. - ' . $e->getMessage();
+            $error = 'Could not add remove items from cart. - ' . $e->getMessage();
             $this->_logger->error($error);
 
             throw new \Exception($error);
@@ -425,11 +396,15 @@ class Subscription extends AbstractModel
             }
 
             $seasonalProduct = $this->_productRepository->get($planSku);
-            $quote->addProduct($seasonalProduct, 1)->save();
+            $params = [
+                'form_key'  => $this->_formKey->getFormKey(),
+                'qty'       => 1
+            ];
+            $this->_cart->addProduct($seasonalProduct->getId(), $params)->save();
 
             // Add the discount if it's annual
             if ($this->getSubscriptionType() == 'annual') {
-                $quote->setCouponCode('annual_discount');
+                $this->_cart->getQuote()->setCouponCode('annual_discount')->collectTotals()->save();
             }
 
             $quote->save();
@@ -447,7 +422,13 @@ class Subscription extends AbstractModel
                     if (in_array($subscriptionAddonOrderItem->getCatalogProductSku(), $addons)) {
                         try {
                             $product = $subscriptionAddonOrderItem->getProduct();
-                            $quote->addProduct($product, 1)->save();
+                            $product = $this->_productRepository->get($product->getSku());
+                            $productId = $product->getId();
+                            $params = [
+                                'form_key' => $this->_formKey->getFormKey(),
+                                'qty' => 1,
+                            ];
+                            $this->_cart->addProduct($productId, $params)->save();
 
                             $price = (float)$product->getPrice() * (int)$subscriptionAddonOrderItem->getQty();
                             $item = $quote->getItemByProduct($product);
@@ -470,7 +451,6 @@ class Subscription extends AbstractModel
             }
 
             $quote->save();
-            $this->_checkoutSession->replaceQuote($quote);
         } catch (\Exception $e) {
             $error = 'There was an issue saving the quote. - ' . $e->getMessage();
             $this->_logger->error($error);
@@ -511,7 +491,7 @@ class Subscription extends AbstractModel
 
             // Test of seasonal is not shippable
             $today = new \DateTime();
-            $shipStart = \DateTime::createFromFormat('Y-m-d H:i:s', $this->getFirstSubscriptionOrder()->getShipStartDate());
+            $shipStart = new \DateTime($this->getFirstSubscriptionOrder()->getShipStartDate());
             return $today >= $shipStart;
         }
         return true;
@@ -581,7 +561,18 @@ class Subscription extends AbstractModel
      */
     private function getPlanCodeByName($name)
     {
-        return $this->_recurlyHelper->getSeasonSlugByName($name);
+        switch ($name) {
+            case 'Early Spring Feeding':
+                return 'early-spring';
+            case 'Late Spring Feeding':
+                return 'late-spring';
+            case 'Early Summer Feeding':
+                return 'early-summer';
+            case 'Early Fall Feeding':
+                return 'early-fall';
+            default:
+                return false;
+        }
     }
 
     /**
@@ -601,14 +592,14 @@ class Subscription extends AbstractModel
             try {
                 /** @var SubscriptionOrder $subscriptionOrder */
                 if ($order->getSubscriptionAddon()) {
-                    $subscriptionOrder = $this->_subscriptionAddonOrderCollectionFactory->create()->addFieldToFilter('sales_order_id', $order->getEntityId())->getFirstItem();
+                    $subscriptionOrder = $this->_subscriptionOrderCollectionFactory->create()->addFieldToFilter('sales_order_id', $order->getEntityId())->getFirstItem();
                 } else {
                     $subscriptionOrder = $this->_subscriptionOrderCollectionFactory->create()->addFieldToFilter('sales_order_id', $order->getEntityId())->getFirstItem();
                 }
                 $subscriptionOrder->createCreditMemo();
                 $subscriptionOrders[] = $subscriptionOrder;
             } catch (\Exception $e) {
-                $error = 'There was a problem making a credit memo for subscription cancellation. ' . $e->getMessage();
+                $error = 'There was a problem making a credit memo for subscription cancellation.' . $e->getMessage();
                 $this->_logger->error($error);
                 throw new LocalizedException(__($error));
             }
@@ -634,15 +625,6 @@ class Subscription extends AbstractModel
     }
 
     /**
-     * Get the total number of orders for this subscription.
-     * @return int
-     */
-    public function getOrderCount()
-    {
-        return $this->_orderCollectionFactory->create()->addFieldToFilter('master_subscription_id', $this->getSubscriptionId())->count();
-    }
-
-    /**
      * Return a filtered array of Orders associated with this subscription
      * @param bool|null $filterByInvoiced null to ignore filter, true to filter positively (has invoices), false to
      *  filter negatively
@@ -658,6 +640,7 @@ class Subscription extends AbstractModel
         try {
             $orders = $this->_orderCollectionFactory->create()->addFieldToFilter('master_subscription_id', $this->getSubscriptionId());
         } catch (\Exception $e) {
+
             $error = 'There was an issue returning orders to cancel.';
             $this->_logger->error($error);
             throw new LocalizedException(__($error));
@@ -688,24 +671,14 @@ class Subscription extends AbstractModel
      */
     private function generateRefund($orders, $service)
     {
-        $refundingEntireSubscription = count($orders) == $this->getOrderCount();
-
         try {
             $totalRefund = 0;
-
-            if ($refundingEntireSubscription) {
-                $this->setData('is_full_refund', 1);
-                $totalRefund = $this->getPaid();
-            } else {
-                /** @var \SMG\Sales\Model\Order $order */
-                foreach ($orders as $order) {
-                    $totalRefund += $order->getSubtotal() + $order->getDiscountAmount();
-                }
+            /** @var \SMG\Sales\Model\Order $order */
+            foreach ($orders as $order) {
+                $totalRefund += (float) $order->getGrandTotal();
             }
-
             /** @var RecurlySubscription $service */
-            $service->createCredit($this->getGigyaId(), $totalRefund);
-            $this->save();
+            $service->createCredit($totalRefund, $this->getGigyaId());
         } catch (\Exeception $e) {
             $error = 'Cannot generate refund.';
             $this->_logger->error($error);

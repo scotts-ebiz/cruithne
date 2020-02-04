@@ -8,8 +8,8 @@ use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\Action\Action;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\App\ResponseInterface;
+use Magento\Framework\Controller\ResultFactory;
 use Magento\Framework\Controller\ResultInterface;
-use Magento\Framework\UrlInterface;
 use Psr\Log\LoggerInterface;
 use Recurly_Client;
 use Recurly_Invoice;
@@ -49,11 +49,6 @@ class Pdf extends Action
     protected $_logger;
 
     /**
-     * @var URLInterface
-     */
-    protected $_urlInterface;
-
-    /**
      * Pdf constructor.
      * @param Context $context
      * @param RequestInterface $request
@@ -61,7 +56,6 @@ class Pdf extends Action
      * @param Customer $customer
      * @param RecurlyHelper $recurlyHelper
      * @param LoggerInterface $logger
-     * @param UrlInterface $urlInterface
      */
     public function __construct(
         Context $context,
@@ -69,15 +63,13 @@ class Pdf extends Action
         CustomerSession $customerSession,
         Customer $customer,
         RecurlyHelper $recurlyHelper,
-        LoggerInterface $logger,
-        UrlInterface $urlInterface
+        LoggerInterface $logger
     ) {
         $this->_request = $request;
         $this->_customerSession = $customerSession;
         $this->_customer = $customer;
         $this->_recurlyHelper = $recurlyHelper;
         $this->_logger = $logger;
-        $this->_urlInterface = $urlInterface;
         parent::__construct($context);
     }
 
@@ -89,18 +81,15 @@ class Pdf extends Action
     {
         $request = $this->_request->getParams();
 
-        // Check whether user is logged in, if not - authenticate and redirect to invoice url
-        if(! $this->_customerSession->isLoggedIn()) {
-            $this->_customerSession->setAfterAuthUrl($this->_urlInterface->getCurrentUrl());
-            $this->_customerSession->authenticate();
-        }
-
         // Check if invoice ID exists and this is current customer's invoice
         if( ! empty( $request['invoice'] ) && in_array( $request['invoice'], $this->getCustomerInvoices() ) ) {
             header( 'Content-type: application/pdf' );
             echo $this->getInvoicePdf( $request['invoice'] );
         } else {
-            throw new \Magento\Framework\Exception\NotFoundException(__('Invoice doesn\'t exist or is not yours.'));
+            echo 'Invoice does\'t exist or is not yours. Redirecting back...';
+            $resultRedirect = $this->resultFactory->create( ResultFactory::TYPE_REDIRECT );
+            $resultRedirect->setUrl( $this->_redirect->getRefererUrl() );
+            return $resultRedirect;
         }
     }
 
@@ -148,7 +137,7 @@ class Pdf extends Action
         } catch (\Exception $e) {
             $error = "Account not found: $e";
             $this->_logger->error($error);
-            return $customerInvoiceNumbers;
+            echo $error;
         }
     }
 

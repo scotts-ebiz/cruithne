@@ -2,13 +2,11 @@
 
 namespace SMG\SubscriptionApi\Model\ResourceModel;
 
-use SMG\SubscriptionApi\Helper\RecurlyHelper;
+use Psr\Log\LoggerInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Exception\LocalizedException;
-use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Model\ResourceModel\Db\AbstractDb;
 use Magento\Framework\Model\ResourceModel\Db\Context;
-use Psr\Log\LoggerInterface;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
 use SMG\SubscriptionApi\Model\SubscriptionAddonOrderFactory;
 use SMG\SubscriptionApi\Model\SubscriptionAddonOrderItemFactory;
@@ -51,11 +49,6 @@ class Subscription extends AbstractDb
     protected $_logger;
 
     /**
-     * @var RecurlyHelper
-     */
-    protected $_recurlyHelper;
-
-    /**
      * Constructor
      */
     protected function _construct()
@@ -89,7 +82,6 @@ class Subscription extends AbstractDb
         SubscriptionCollectionFactory $subscriptionCollectionFactory,
         ProductRepositoryInterface $productRepository,
         LoggerInterface $logger,
-        RecurlyHelper $recurlyHelper,
         $connectionName = null
     ) {
         parent::__construct($context, $connectionName);
@@ -102,7 +94,6 @@ class Subscription extends AbstractDb
         $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
         $this->_productRepository = $productRepository;
         $this->_logger = $logger;
-        $this->_recurlyHelper = $recurlyHelper;
     }
 
     /**
@@ -131,20 +122,20 @@ class Subscription extends AbstractDb
     /**
      * Get subscription from master subscription id
      * @param string $masterSubscription
-     * @return Subscription|\Magento\Framework\DataObject|null
+     * @return mixed
      * @throws LocalizedException
      */
     public function getSubscriptionByMasterSubscriptionId(string $masterSubscription)
     {
         if (! empty($masterSubscription)) {
             $subscriptions = $this->_subscriptionCollectionFactory->create();
-            $subscription = $subscriptions->getItemByColumnValue('subscription_id', $masterSubscription);
+            $subscriptions->addFieldToFilter('subscription_id', $masterSubscription);
 
-            if (! $subscription->getId()) {
-                return null;
+            foreach ($subscriptions as $subscription) {
+                if (! empty($subscription)) {
+                    return $subscription;
+                }
             }
-
-            return $subscription;
         }
 
         $error = 'Subscription could not be found with Master Subscription Id.';
@@ -282,11 +273,12 @@ class Subscription extends AbstractDb
 
             // If there is a parent subscription order (which there must be now) let's add subscription order items
             if (! isset($seasons[$key]['subscriptionOrderItems'][0])) {
+
                 // Get the corresponding product
-                try {
-                    $product = $this->_productRepository->get($recommendedProduct['sku']);
-                } catch (NoSuchEntityException $e) {
-                    throw new NoSuchEntityException(__($e->getMessage() . ' - SKU: ' . $recommendedProduct['sku']));
+                $product = $this->_productRepository->get($recommendedProduct['sku']);
+
+                // @todo Error state with sku mismatch... what to do?
+                if (! $product->getEntityId()) {
                 }
 
                 $subscriptionOrders[$key]['subscriptionOrderItems'][] = [
@@ -325,6 +317,17 @@ class Subscription extends AbstractDb
      */
     private function getPlanCodeByName($name)
     {
-        return $this->_recurlyHelper->getSeasonSlugByName($name);
+        switch ($name) {
+            case 'Early Spring Feeding':
+                return 'early-spring';
+            case 'Late Spring Feeding':
+                return 'late-spring';
+            case 'Early Summer Feeding':
+                return 'early-summer';
+            case 'Early Fall Feeding':
+                return 'early-fall';
+            default:
+                return '';
+        }
     }
 }

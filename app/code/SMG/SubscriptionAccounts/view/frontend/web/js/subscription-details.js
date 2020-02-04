@@ -9,51 +9,9 @@ define([
 
     return Component.extend({
         initialize(config) {
-			this.subscriptions = ko.observable(config.subscriptions);
+            this.subscriptions = ko.observable(config.subscriptions);
             this.success = ko.observable(null);
             this.loading = ko.observable(false);
-            this.type = ko.computed(() => {
-                return this.subscriptions().subscription.subscription_type;
-            });
-
-            this.latestInvoice = ko.computed(() => {
-                return Array.isArray(this.subscriptions().invoices) && this.subscriptions().invoices[0];
-            });
-
-            // Calculate the taxes of the next order.
-            this.taxes = ko.computed(() => {
-                const order = this.subscriptions().nextOrder;
-                const addon = this.subscriptions().addonOrder;
-                let taxes = 0;
-
-                if (order) {
-                    taxes += +order.order.tax_amount;
-                }
-
-
-                if (this.subscriptions().initialOrder && addon) {
-                    taxes += +addon.order.tax_amount;
-                }
-
-                return taxes.toFixed(2);
-            });
-
-            // Calculate the grand total of the next order.
-            this.total = ko.computed(() => {
-                const order = this.subscriptions().nextOrder;
-                const addon = this.subscriptions().addonOrder;
-                let total = 0;
-
-                if (order) {
-                    total += +order.order.grand_total;
-                }
-
-                if (this.subscriptions().initialOrder && addon) {
-                    total += +addon.order.grand_total;
-                }
-
-                return total.toFixed(2);
-            });
 
             // We need some reliable way to tell when the dom is finished
             // loading. domReady! doesn't seem to be working, so we delay
@@ -61,17 +19,14 @@ define([
             setTimeout(() => {
                 cancelSubscriptionModal = cancelSubscriptionModal({
                     type: 'popup',
-                    innerScroll: false,
+                    responsive: true,
+                    innerScroll: true,
                     buttons: [],
-                    focus: 'none',
-                    title: 'Before You Cancel',
-                    subTitle: 'We understand lawn care can be tough. Can we help you get your best results?',
+                    opened: function ($Event) {
+                        $('.modal-header').remove();
+                    }
                 }, $('#popup-modal'));
             }, 1000)
-        },
-
-        capitalizeString(string) {
-            return string[0].toUpperCase() + string.slice(1).toLowerCase();
         },
 
         displaySubscriptionModal: function () {

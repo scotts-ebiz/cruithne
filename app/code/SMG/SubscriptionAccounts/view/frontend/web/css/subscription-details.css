@@ -1,139 +1,145 @@
-.sp-content {
-  padding-left: 1rem;
-  padding-right: 1rem;
+/* ===========================
+    Tag resets
+=========================== */
+.sp-subscription-details tr,
+.sp-subscription-details th,
+.sp-subscription-details td,
+.sp-subscription-details h2,
+.sp-subscription-details h3,
+.sp-subscription-details h4
+{
+    margin: 0;
+    padding: 0;
 }
 
-@media (min-width: 813px) {
-  .sp-content {
-    padding-left: 0;
-    padding-right: 0;
-  }
+
+.sp-subscription-details tr + tr th,
+.sp-subscription-details tr + tr td {
+    padding-top: 1.5rem;
 }
 
-.sp-subscription-details .sp-subscription-details__title {
-  margin-bottom: 2rem;
-}
-
-table > thead > tr > th,
-table > thead > tr > td,
-table > tbody > tr > th,
-table > tbody > tr > td,
-table > tfoot > tr > th,
-table > tfoot > tr > td {
-  padding: 0;
-}
-
-table tr:not(:last-child) th,
-table tr:not(:last-child) td {
-  padding-bottom: 0.5rem;
+tr.--dense th,
+tr.--dense td {
+    padding-top: 0.5rem!important;
+    padding-bottom: 1.5rem!important;
 }
 
 /* ===========================
     Utilities
 =========================== */
 .sp-subscription-details--border-bottom {
-  border-bottom: 2px solid #1d5632;
+    border-bottom: 2px solid black;
 }
 
 .screen-reader-text {
-  border: 0;
-  clip: rect(1px, 1px, 1px, 1px);
-  clip-path: inset(50%);
-  height: 1px;
-  margin: -1px;
-  overflow: hidden;
-  padding: 0;
-  position: absolute;
-  width: 1px;
-  word-wrap: normal !important;
-}
-
-
-/* ===========================
-    Specifics
-=========================== */
-.sp-subscription-details__bold {
-  font-weight: bold;
-}
-
-.sp-subscription-details__next-billing {
-  background-color: rgba(211, 211, 211, 0.25);
-}
-
-.sp-subscription-details__next-billing-taxes td,
-.sp-subscription-details__next-billing-taxes th {
-  margin-top: 1.5rem;
-  border-top: 2px solid #1d5632;
-}
-
-.sp-subscription-details__next-billing-total td,
-.sp-subscription-details__next-billing-total th {
-  font-weight: 700;
-}
-
-@media screen and (max-width: 640px) {
-  .sp-subscription-details__invoices thead {
-    clip: rect(0 0 0 0);
+    border: 0;
+    clip: rect(1px, 1px, 1px, 1px);
+    clip-path: inset(50%);
     height: 1px;
     margin: -1px;
     overflow: hidden;
     padding: 0;
     position: absolute;
     width: 1px;
+    word-wrap: normal !important;
   }
 
-  .sp-subscription-details__invoices tr {
-    display: block;
-    background-color: rgba(211, 211, 211, 0.25);
-    margin-top: 1.5rem;
-    padding: 2rem;
-  }
 
-  .sp-subscription-details__invoices td {
-    display: block;
-    text-align: right;
-    padding: 0;
-  }
-
-  .sp-subscription-details__invoices td::before {
-    content: attr(data-label);
-    float: left;
-    text-transform: uppercase;
+/* ===========================
+    Specifics
+=========================== */
+.sp-subscription-details__bold {
     font-weight: bold;
-    color: black;
-  }
+}
+
+.sp-subscription-details__next-billing {
+    background-color: rgba(211, 211, 211, 0.25);
+}
+
+
+.sp-subscription-details__next-billing-total td,
+.sp-subscription-details__next-billing-total th {
+    font-weight: bold;
+    margin-top: 1.5rem;
+    border-top: 2px solid black;
+}
+
+.sp-subscription-details__invoices thead th {
+    padding: 1.5rem 0;
+}
+
+@media screen and (max-width: 640px) {
+    .sp-subscription-details__invoices thead {
+      clip: rect(0 0 0 0);
+      height: 1px;
+      margin: -1px;
+      overflow: hidden;
+      padding: 0;
+      position: absolute;
+      width: 1px;
+    }
+
+    .sp-subscription-details__invoices tr {
+      display: block;
+      background-color: rgba(211, 211, 211, 0.25);
+      margin-top: 1.5rem;
+      padding: 2rem;
+    }
+
+    .sp-subscription-details__invoices td {
+      display: block;
+      text-align: right;
+      padding: 0;
+    }
+
+    .sp-subscription-details__invoices td  + td {
+        padding-top: 1.5rem;
+    }
+
+    .sp-subscription-details__invoices td::before {
+      content: attr(data-label);
+      float: left;
+      text-transform: uppercase;
+      font-weight: bold;
+      color: black;
+    }
 }
 
 .sp-subscription-details__desktop-links {
-  margin-left: auto;
+    margin-left: auto;
 }
+
+.sp-subscription-details__subscription-active {
+    margin-left: auto;
+}
+
 
 /* These styles should go elsewhere */
 #maincontent {
-  padding-top: 1rem;
+    padding-top: 1rem;
 }
 
 #maincontent > .columns {
-  display: flex;
-  flex-wrap: wrap;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 @media screen and (max-width: 768px) {
-  #maincontent > .columns {
-    flex-flow: column;
-  }
+    #maincontent > .columns {
+        flex-flow: column;
+    }
 }
 
 .sp-content {
-  flex: 1 1 auto;
+    flex: 1 1 auto;
 }
 
 .sidebar.sidebar-main {
-  flex: 0 0 auto;
-  order: -1;
+    flex: 0 0 auto;
+    order: -1;
 }
 
 
 .modal-inner-wrap {
-  max-width: 640px;
+    max-width: 640px;
 }

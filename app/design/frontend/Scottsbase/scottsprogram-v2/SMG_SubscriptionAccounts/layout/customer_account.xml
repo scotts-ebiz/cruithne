@@ -44,13 +44,5 @@
                 </arguments>
             </block>
         </referenceBlock>
-        <referenceBlock name="customer_account_navigation">
-            <block class="Magento\Framework\View\Element\Html\Link\Current" name="customer-account-navigation-logout" after="-">
-                <arguments>
-                    <argument name="path" xsi:type="string">customer/account/logout</argument>
-                    <argument name="label" xsi:type="string">Log Out</argument>
-                </arguments>
-            </block>
-        </referenceBlock>
     </body>
 </page>

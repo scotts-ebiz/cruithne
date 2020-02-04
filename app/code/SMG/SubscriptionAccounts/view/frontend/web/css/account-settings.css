@@ -5,6 +5,12 @@
     width: 100%;
 }
 
+.sp-account-settings .sp-select select {
+    border-left: none;
+    border-right: none;
+    border-top: none;
+}
+
 .sp-account-settings .sp-form-group {
     padding-top: 1rem;
     margin-bottom: 2rem;

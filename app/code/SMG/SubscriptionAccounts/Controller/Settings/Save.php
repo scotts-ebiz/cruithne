@@ -94,7 +94,7 @@ class Save extends Action
      * @var RecurlyHelper
      */
     protected $_recurlyHelper;
-
+    
     /**
      * @var LoggerInterface
      */
@@ -166,7 +166,7 @@ class Save extends Action
      * @throws NoSuchEntityException
      */
     public function execute()
-    {
+    {        
         $request = json_decode( $this->_request->getContent() );
 
         // Check form key
@@ -181,97 +181,57 @@ class Save extends Action
         // Get current customer
         $customer = $this->getCustomer();
 
-        // Validate first name
-        if (empty($request->firstname)) {
-            $error = 'First name is required';
-            $this->_logger->error($error);
-            $data = array(
-                'success'   => false,
-                'message'   => $error
-            );
-            $result->setData( $data );
-            return $result;
-        }
+        // $gigyaProfile = $gigyaUser->getProfile();
+        // print_r( $gigyaProfile );
 
-        // Validate last name
-        if (empty($request->lastname)) {
-            $error = 'Last name is required';
-            $this->_logger->error($error);
-            $data = array(
-                'success'   => false,
-                'message'   => $error
-            );
-            $result->setData( $data );
-            return $result;
-        }
-
-        // Validate email name
-        if (empty($request->email)) {
-            $error = 'Email is required';
-            $this->_logger->error($error);
-            $data = array(
-                'success'   => false,
-                'message'   => $error
-            );
-            $result->setData( $data );
-            return $result;
-        }
-
-        try {
-            // Update Magento customer data
-            $customer->setData( 'firstname', $request->firstname );
-            $customer->setData( 'lastname', $request->lastname );
-            $customer->setData( 'email', $request->email );
-            $customer->save();
-
-            // Update Gigya customer data
-            $gigyaData['profile']['firstName'] = $request->firstname;
-            $gigyaData['profile']['lastName'] = $request->lastname;
-            $gigyaData['profile']['email'] = $request->email;
-            $this->_gigyaMageHelper->updateGigyaAccount( $this->getGigyaUid(), $gigyaData );
-        } catch(\Exception $e) {
-            $error = 'There was a problem with updating the account details ( '. $e->getMessage() .' )';
-            $this->_logger->error($error);
-            $data = array(
-                'success'   => false,
-                'message'   => $error
-            );
-            $result->setData( $data );
-            return $result;
-        }
-
-        // Update Recurly customer data
-        try {
+        if( ! empty( $request->firstname ) && ! empty( $request->lastname ) && ! empty( $request->email ) ) {
             Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
             Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
-            $account = Recurly_Account::get($this->getGigyaUid());
-            $account->email = $request->email;
-            $account->first_name = $request->firstname;
-            $account->last_name = $request->lastname;
-            $account->update();
-        } catch (\Exception $e) {
 
-            // It's ok if there isn't a Recurly account, if there is, there was a problem
-            if ($e->getMessage() != 'Couldn\'t find Account') {
-                $error = 'There was a problem with updating the account details ( ' . $e->getMessage() . ' )';
+            try {
+                // Update Magento customer data
+                $customer->setData( 'firstname', $request->firstname );
+                $customer->setData( 'lastname', $request->lastname );
+                $customer->setData( 'email', $request->email );
+                $customer->save();
+
+                // Update Gigya customer data
+                $gigyaData['profile']['firstName'] = $request->firstname;
+                $gigyaData['profile']['lastName'] = $request->lastname;
+                $gigyaData['profile']['email'] = $request->email;
+                $this->_gigyaMageHelper->updateGigyaAccount( $this->getGigyaUid(), $gigyaData );
+
+                // Update Recurly customer data
+                $account = Recurly_Account::get( $this->getGigyaUid() );
+                $account->email = $request->email;
+                $account->first_name = $request->firstname;
+                $account->last_name = $request->lastname;
+                $account->update();
+            } catch(\Exception $e) {
+                $error = 'There was a problem with updating the account details ( '. $e->getMessage() .' )';
                 $this->_logger->error($error);
                 $data = array(
-                    'success' => false,
-                    'message' => $error
+                    'success'   => false,
+                    'message'   => $error
                 );
-                $result->setData($data);
+                $result->setData( $data );
                 return $result;
             }
+        } else {
+            $data = array(
+                'success'   => false,
+                'message'   => 'First name, last name or email is missing.'
+            );
+            $result->setData( $data );
+            return $result;
         }
 
         $isPasswordChanged = false;
 
-        // If current password is not empty, let's update the passwords
-        if( ! empty( $request->password ) ) {
-            if( ! empty( $request->newPassword ) && ! empty( $request->passwordRetype ) ) {
-
-                // Make sure the new passwords match
-                if( $request->newPassword != $request->passwordRetype ) {
+        // If current password is not empty
+        if( ! empty( $request->current_password ) ) {
+            if( ! empty( $request->new_password ) && ! empty( $request->confirm_new_password ) ) {
+                if( $request->new_password != $request->confirm_new_password ) {
                     $data = array(
                         'success'   => false,
                         'message'   => 'New password do not match.'
@@ -279,13 +239,15 @@ class Save extends Action
                     $result->setData( $data );
                     return $result;
                 }
-
+                
                 try {
+                    // Update Magento password
+                    $isPasswordChanged = $this->_accountManagement->changePassword( $customer->getEmail(), $request->current_password, $request->new_password );
+
                     // Update Gigya password
-                    $gigyaPasswordData['password'] = $request->password;
-                    $gigyaPasswordData['newPassword'] = $request->newPassword;
+                    $gigyaPasswordData['password'] = $request->current_password;
+                    $gigyaPasswordData['newPassword'] = $request->new_password;
                     $this->_gigyaMageHelper->updateGigyaAccount( $this->getGigyaUid(), $gigyaPasswordData);
-                    $isPasswordChanged = true;
                 } catch(\Exception $e) {
                     $error = 'There was a problem with updating the password ( ' . $e->getMessage() . ')';
                     $this->_logger->error( $error );
@@ -299,7 +261,6 @@ class Save extends Action
             }
         }
 
-        // Success states
         if( $isPasswordChanged == true ) {
             $data = array(
                 'success'   => true,
@@ -320,7 +281,7 @@ class Save extends Action
 
      /**
      * Return customer data to use it in the frontend form
-     *
+     * 
      */
     private function getCustomer()
     {
@@ -329,7 +290,7 @@ class Save extends Action
 
     /**
      * Return customer id
-     *
+     * 
      * @return string
      */
     private function getCustomerId()
@@ -339,7 +300,7 @@ class Save extends Action
 
     /**
      * Return Gigya Uid / customer's Recurly account code
-     *
+     * 
      * @return string|bool
      */
     private function getGigyaUid()

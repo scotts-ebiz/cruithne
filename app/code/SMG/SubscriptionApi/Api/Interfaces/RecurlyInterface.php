@@ -37,9 +37,10 @@ interface RecurlyInterface
     /**
      * Process seasonal invoices sent from Recurly
      *
+     * @param string $subscriptionId
      * @return array
      *
      * @api
      */
-    public function processSeasonalInvoice();
+    public function processSeasonalInvoice($subscriptionId);
 }

@@ -1,11 +1,11 @@
 <!-- ko if: quiz && quiz.currentGroup() && quiz.currentGroup().tooltipLabel -->
 <div class="sp-quiz__question sp-container sp-quiz__tooltip-container sp-mt-12 sp-px-12 sp-py-10 sp-text-center md:sp-w-7/12">
-    <h4 class="sp-h4--long sp-mb-6 sp-mt-0" data-bind="visible: quiz.currentGroup().tooltipTitle, html: quiz.currentGroup().tooltipTitle"></h4>
+    <h4 class="sp-h4--long sp-mb-6 sp-mt-0" data-bind="visible: quiz.currentGroup().tooltipTitle, text: quiz.currentGroup().tooltipTitle"></h4>
 
-    <div
+    <p 
         class="sp-p2 sp-mb-0"
-        data-bind="html: quiz.currentGroup().tooltipLabel"
+        data-bind="text: quiz.currentGroup().tooltipLabel"
     > 
-    </div>
+    </p>
 </div>
 <!-- /ko -->

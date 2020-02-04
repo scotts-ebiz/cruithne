@@ -24,7 +24,6 @@
     >
         <div class="sp-form-group">
             <input
-                id="manual-sqft"
                 class="sp-input sp-w-full"
                 min="1"
                 pattern="[0-9]*"
@@ -37,13 +36,9 @@
                 "
             />
 
-            <label class="sp-form-label" for="manual-sqft">
+            <label class="sp-form-label">
                 Total square footage of your lawn
             </label>
-
-            <!-- ko if: quiz.invalidArea() -->
-            <div class="sp-form-error">Please enter numbers only.</div>
-            <!-- /ko -->
         </div>
 
         <div
@@ -51,7 +46,6 @@
             data-bind="css: { 'sp-has-error': quiz.invalidZipCode() }"
         >
             <input
-                id="manual-zip"
                 class="sp-input sp-w-full"
                 minlength="5"
                 maxlength="5"
@@ -61,18 +55,14 @@
                 data-bind="attr: { name: quiz.questions()[0].id }, event: { input: quiz.setZipCode }"
             />
 
-            <label class="sp-form-label" for="manual-zip">
+            <label class="sp-form-label">
                 ZIP code
             </label>
 
             <!-- ko if: quiz.invalidZipCode() -->
-            <div class="sp-form-error">Scotts Program is available in the continental US only</div>
+            <div class="sp-form-error">Please enter a valid US zip code.</div>
             <!-- /ko -->
         </div>
-    </div>
-
-    <div class="sp-my-12">
-        <!-- ko template: "SMG_RecommendationQuiz/tooltip-general" --><!-- /ko -->
     </div>
 
     <div class="sp-text-center">
