@@ -267,7 +267,7 @@ class Save extends Action
         $isPasswordChanged = false;
 
         // If current password is not empty, let's update the passwords
-        if( ! empty( $request->password ) ) {
+        if( ! empty( $request->password ) || ! empty( $request->newPassword) || ! empty( $request->passwordRetype ) ) {
             if( ! empty( $request->newPassword ) && ! empty( $request->passwordRetype ) ) {
 
                 // Make sure the new passwords match
@@ -296,6 +296,15 @@ class Save extends Action
                     $result->setData($data);
                     return $result;
                 }
+            } else {
+                $error = 'There was a problem with updating the password.';
+                $this->_logger->error( $error );
+                $data = array(
+                    'success'   => false,
+                    'message'   => $error,
+                );
+                $result->setData($data);
+                return $result;
             }
         }
 
