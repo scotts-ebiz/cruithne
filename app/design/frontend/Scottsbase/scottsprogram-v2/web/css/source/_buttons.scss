@@ -138,7 +138,7 @@
 }
 
 .sp-button--loading {
-  color: transparent !important;
+  color: rgba(255, 255, 255, 0.5);
   cursor: not-allowed;
   position: relative;
   pointer-events: none;
@@ -151,15 +151,20 @@
     border-right-color: transparent;
     border-top-color: transparent;
     border-style: solid;
-    border-width: .25rem;
+    border-width: 0.25rem;
     content: "";
     display: block;
-    height: 1.5em;
-    left: calc(50% - (1.5em / 2));
+    height: 2em;
+    left: calc(50% - (2em / 2));
     opacity: 0.75;
     position: absolute !important;
-    top: calc(50% - (1.5em / 2));
-    width: 1.5em;
+    top: calc(50% - (2em / 2));
+    width: 2em;
+  }
+
+  &.sp-button--inactive,
+  &.sp-button--inverted {
+    color: rgba(0, 0, 0, 0.5);
   }
 
   &.sp-button--inactive::after,

@@ -9,6 +9,7 @@ body,
 
 .sp-quiz__content {
   overflow: auto;
+  overflow-x: hidden;
   order: 2;
   overflow-x: hidden;
 }
