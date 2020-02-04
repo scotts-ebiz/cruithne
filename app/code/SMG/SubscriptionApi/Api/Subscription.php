@@ -232,19 +232,17 @@ class Subscription implements SubscriptionInterface
                 ]];
             }
 
-            // Set the subscription details into the session.
-            $this->_coreSession->setData('subscription_details', [
-                'subscription_plan' => $subscription_plan,
-                'addons' => $addons,
-            ]);
-
-            return json_encode(['success' => true]);
+            $subscription->setSubscriptionType($subscription_plan)->save();
+            $subscription->generateShipDates();
+            $subscription->addSubscriptionToCart($addons);
         } catch (\Exception $e) {
             $this->_logger->error($e->getMessage());
             $response = ['success' => false, 'message' => $e->getMessage()];
-
             return json_encode($response);
         }
+
+        $response = ['success' => true];
+        return json_encode($response);
     }
 
     /**
@@ -338,6 +336,13 @@ class Subscription implements SubscriptionInterface
         // Get the subscription
         /** @var \SMG\SubscriptionApi\Model\Subscription $subscription */
         $subscription = $this->_subscriptionCollectionFactory->create()->getItemByColumnValue('quiz_id', $quiz_id);
+
+        if (! $subscription->isCurrentlyShippable()) {
+            $subscription->setSubscriptionStatus('active');
+            $subscription->save();
+
+            return [['success' => true, 'message' => 'No products currently shippable.']];
+        }
 
         if (! $subscription) {
             http_response_code(404);
@@ -448,7 +453,6 @@ class Subscription implements SubscriptionInterface
                 $this->_addressRepository->deleteById($address->getId());
             }
 
-            $customer->cleanAllAddresses();
             $customer->save();
         } catch (NoSuchEntityException $ex) {
             $this->_logger->error($ex->getMessage());
