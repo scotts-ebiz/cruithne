@@ -239,10 +239,6 @@ class Subscription implements SubscriptionInterface
             ]);
 
             return json_encode(['success' => true]);
-
-            // $subscription->setSubscriptionType($subscription_plan)->save();
-            // $subscription->generateShipDates();
-            // $subscription->addSubscriptionToCart($addons);
         } catch (\Exception $e) {
             $this->_logger->error($e->getMessage());
             $response = ['success' => false, 'message' => $e->getMessage()];
