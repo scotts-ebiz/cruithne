@@ -16,39 +16,16 @@
 ?>
 
 <div id="gigya-register" class="gigya-register gigya-loader-location"></div>
-<script>
-    window.gigyaInit = window.gigyaInit || [];
-    customLangParams = {
-        email_already_exists: `
-            <div class="sp-gigya-error sp-form-error sp-font-bold sp-mb-4 sp--mt-2">This email is already associated with an account.</div>
-            <div class="sp-gigya-error sp-form-error sp-mb-4">
-                You can log in to your account if you've created one with the My Lawn app, Scotts.com, the My Garden app, the Blossom Smart Watering app, the Gro Connect app, or the MiracleGro Twelve app.
-            </div>
-            <div class="sp-flex">
-                <a class="sp-gigya-link sp-mr-4" href="javascript: void(0)" onclick="
-                    gigya.accounts.switchScreen({
-                        screen: 'gigya-login-screen',
-                        screenSet: 'ScottsProgram-RegistrationLogin',
-                        containerID: 'gigya-register'
-                    });
-                ">Log In</a>
-                <a class="sp-gigya-link" href="javascript: void(0)" onclick="
-                    gigya.accounts.switchScreen({
-                        screen: 'gigya-forgot-password-screen',
-                        screenSet: 'ScottsProgram-RegistrationLogin',
-                        containerID: 'gigya-register'
-                    });
-                ">Forgot Password</a>
-            </div>
-        `
-    };
-    var screenSetParams = {
-        screenSet : "<?php echo $block->getLoginDesktopScreensetId() ?>",
-        containerID : "gigya-register",
-        startScreen : "gigya-register-screen",
-        mobileScreenSet : "<?php echo $block->getLoginMobileScreensetId() ?>", // optional - for using separate mobile screen set.
-        customLang : customLangParams
-    };
-    var raasRegisterScreen = {"function": "accounts.showScreenSet", "parameters": screenSetParams};
-    window.gigyaInit.push(raasRegisterScreen);
+
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "Gigya_GigyaIM/js/gigya-init": {
+                "screenSet": "<?php echo $block->getLoginDesktopScreensetId() ?>",
+                "containerID": "gigya-register",
+                "startScreen": "gigya-register-screen",
+                "mobileScreenSet": "<?php echo $block->getLoginMobileScreensetId() ?>"
+            }
+        }
+    }
 </script>

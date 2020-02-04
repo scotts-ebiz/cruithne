@@ -23,6 +23,7 @@ define(
                 this.rscoChecked = ko.observable(false);
                 this.cardInputTouched = ko.observable(false);
                 this.orderProcessing = ko.observable(false);
+                this.billingFormInputs = ko.observableArray([]);
 
                 /** Can get current value of the checkbox (checked or not) on this observable */
                 this.sameBillingShippingChecked = ko.observable(true);
@@ -33,8 +34,20 @@ define(
                 /** Can query children of the form element (the inputs) based on this observable, only when it != null */
                 this.billingForm = ko.observable(null);
 
+                /**
+                 * Computed function that returns whether or not the the checkout
+                 * button is disabled. Validates based on the following:
+                 * - Billing info having input for all required fields
+                 * - RSCO checkbox checked
+                 * - Any character typed into the recurly card iframe
+                 */
                 this.checkoutButtonDisabled = ko.computed(function() {
                     if (!self.sameBillingShippingChecked()) {
+
+                        /**
+                         * Check and ensure that every required field on the billing info
+                         * has some input before enabled the checkout button.
+                         */
                         const billingInfoValid = Array.prototype.every.call(
                             Object.keys(self.billingInfo()),
                             key => {
@@ -68,11 +81,101 @@ define(
                     );
                 });
 
-              let billingListenerInterval = setInterval(() => {
+                /**
+                 * Set an interval to add an event listener to the rsco checkbox
+                 * when the element enters the dom. Clear the interval once the
+                 * click listener to blur all billing field inputs is set.
+                 */
+                let rscoCheckboxInterval = setInterval(() => {
+                    if (document.querySelector('input[name="rsco_accept"]')) {
+                        document.querySelector('input[name="rsco_accept"]').addEventListener('click', () => {
+                            Array.prototype.forEach.call(self.billingFormInputs(), input => {
+                                $(input).blur();
+                            });
+                            $('select[name="region_id"]').focusout();
+                        });
+                        clearInterval(rscoCheckboxInterval);
+                    }
+                }, 250);
+
+                /**
+                 * An interval to set the observable for billing form input fields.
+                 * It also sets blur and focus listeners for the input fields on the
+                 * billing form to ensure that validation is handled on this form.
+                 */
+                let billingListenerInterval = setInterval(() => {
                     if (self.billingForm() != null) {
                         const inputs = self.billingForm().querySelectorAll('input');
+                        self.billingFormInputs(inputs);
+
+                        // Handle select case for region_id
+                        $('select[name="region_id"]').focusout(() => {
+                            if ($('select[name="region_id"]').length && $('[name="billingAddressrecurly.region_id"] .sp-form-error').length) {
+                                $('.sp-form-error-region').remove();
+                            }
+                            if ($('select[name="region_id"]').val() && $('[name="billingAddressrecurly.region_id"] .sp-form-error').length) {
+                                $('.sp-form-error-region').remove();
+                            }
+                        });
 
                         Array.prototype.forEach.call(inputs, input => {
+                            // Perform manual required validation
+                            $(input).blur(() => {
+                                if (!$(input).val()) {
+                                    if ($(input).attr("name") === "telephone" && !$('[name="billingAddressrecurly.telephone"] .sp-form-error').length) {
+                                        $('[name="billingAddressrecurly.telephone"]').append(`
+                                        <div class="sp-form-error sp-form-error-telephone">
+                                            <span>This is a required field.</span>
+                                        </div>
+                                        `);
+                                    }
+                                    if ($(input).attr("name") === "postcode" && !$('[name="billingAddressrecurly.postcode"] .sp-form-error').length) {
+                                        $('[name="billingAddressrecurly.postcode"]').append(`
+                                        <div class="sp-form-error sp-form-error-postcode">
+                                            <span>This is a required field.</span>
+                                        </div>
+                                        `);
+                                    }
+                                    if ($(input).attr("name") === "city" && !$('[name="billingAddressrecurly.city"] .sp-form-error').length) {
+                                        $('[name="billingAddressrecurly.city"]').append(`
+                                        <div class="sp-form-error sp-form-error-city">
+                                            <span>This is a required field.</span>
+                                        </div>
+                                        `);
+                                    }
+                                    if ($(input).attr("name") === "street[0]" && !$('[name="billingAddressrecurly.street.0"] .sp-form-error').length) {
+                                        $('[name="billingAddressrecurly.street.0"]').append(`
+                                        <div class="sp-form-error sp-form-error-street-0">
+                                            <span>This is a required field.</span>
+                                        </div>
+                                        `);
+                                    }
+                                }
+                            });
+
+                            // Remove manually generated validation fields when magento validation takes over
+                            $(input).focus(function() {
+                                if ($(input).attr("name") === "telephone" && $('[name="billingAddressrecurly.telephone"] .sp-form-error').length) {
+                                    $('.sp-form-error-telephone').remove();
+                                }
+                                if ($(input).attr("name") === "postcode" && $('[name="billingAddressrecurly.postcode"] .sp-form-error').length) {
+                                    $('.sp-form-error-postcode').remove();
+                                }
+                                if ($(input).attr("name") === "region" && $('[name="billingAddressrecurly.region_id"] .sp-form-error').length) {
+                                    $('.sp-form-error-region').remove();
+                                }
+                                if ($(input).attr("name") === "city" && $('[name="billingAddressrecurly.city"] .sp-form-error').length) {
+                                    $('.sp-form-error-city').remove();
+                                }
+                                if ($(input).attr("name") === "street[0]" && $('[name="billingAddressrecurly.street.0"] .sp-form-error').length) {
+                                    $('.sp-form-error-street-0').remove();
+                                }
+                            });
+
+                            /**
+                             * Listen on all input fields and set the billing info to
+                             * a newly created object with the current information set
+                             */
                             input.addEventListener('change', e => {
                                 self.billingInfo(
                                     Object.assign(
@@ -84,12 +187,29 @@ define(
                                     )
                                 );
                             });
+
+                            self.billingInfo(
+                                Object.assign(
+                                    {},
+                                    self.getBillingAddress(),
+                                    {
+                                        [input.name]: input.value
+                                    }
+                                )
+                            );
+
                         });
 
                         clearInterval(billingListenerInterval);
                     }
                 }, 100);
 
+                /**
+                 * An interval for checking whether or not the billing form has
+                 * entered the DOM. Once it has entered the dom, set a listener on
+                 * the checkbox input for the shipping and billing info being the same.
+                 * Update observable value accordingly.
+                 */
               let billingFormInterval = setInterval(() => {
                     if (document.querySelector('input[name="billing-address-same-as-shipping"]')) {
                         if (
@@ -135,6 +255,13 @@ define(
 
                 recurly.configure(window.recurlyApi);
 
+                /**
+                 * Change listener on the recurly hosted card field.
+                 * Sets the cardInputTouched observable true if any of
+                 * the card fields has been touched.
+                 *
+                 * @param {object} state recurly form state
+                 */
                 recurly.on('change', (state) => {
                     if (
                         !state.fields.card.number.empty ||
@@ -187,7 +314,7 @@ define(
                         if (response.success === true) {
                             self.createNewOrders();
                         } else {
-                            self.orderProcessing(false)
+                            self.orderProcessing(false);
                             if (response.message === 'ZIP CODE MISMATCH') {
                                 Modal(self.zipModalOptions, $('#zip-popup-modal'));
                                 $('#zip-popup-modal').modal('openModal');
