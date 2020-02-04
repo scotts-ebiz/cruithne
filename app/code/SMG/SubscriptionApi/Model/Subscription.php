@@ -406,8 +406,6 @@ class Subscription extends AbstractModel
             if ($this->getSubscriptionType() == 'annual') {
                 $this->_cart->getQuote()->setCouponCode('annual_discount')->collectTotals()->save();
             }
-
-            $quote->save();
         } catch (\Exception $e) {
             $error = 'There was an issue adding the subscription to the cart. - ' . $e->getMessage();
             $this->_logger->error($error);
