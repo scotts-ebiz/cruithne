@@ -123,6 +123,10 @@ $colors: (
   width: 1px;
 }
 
+.sp-nobr {
+  white-space: nowrap;
+}
+
 // Flex
 @each $size in $breakpoints {
   @include breakpoint($size) {
