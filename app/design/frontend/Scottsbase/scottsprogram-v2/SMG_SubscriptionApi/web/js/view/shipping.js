@@ -64,6 +64,7 @@ define([
         isNewAddressAdded: ko.observable(false),
         saveInAddressBook: 1,
         quoteIsVirtual: quote.isVirtual(),
+        summary: ko.observable(null),
 
         /**
          * @return {exports}
@@ -138,6 +139,13 @@ define([
                 shippingRatesValidator.initFields(fieldsetName);
             });
 
+            const summaryInterval = setInterval(() => {
+                if(document.querySelector('.opc-block-summary')) {
+                    self.summary(document.querySelector('.opc-block-summary'));
+                    clearInterval(summaryInterval);
+                }
+            }, 100);
+
             return this;
         },
 
@@ -180,12 +188,41 @@ define([
                 </div>`;
         },
 
+        isStyleSupported(prop, value) {
+            // If no value is supplied, use "inherit"
+            value = arguments.length === 2 ? value : 'inherit';
+            // Try the native standard method first
+            if ('CSS' in window && 'supports' in window.CSS) {
+                return window.CSS.supports(prop, value);
+            }
+            // Check Opera's native method
+            if('supportsCSS' in window){
+                return window.supportsCSS(prop, value);
+            }
+            // Convert to camel-case for DOM interactions
+            var camel = prop.replace(/-([a-z]|[0-9])/ig, function(all, letter) {
+                return (letter + '').toUpperCase();                          
+            });
+            // Check if the property is supported
+            var support = (camel in el.style);
+            // Create test element
+            var el = document.createElement('div');
+            // Assign the property and value to invoke
+            // the CSS interpreter
+            el.style.cssText = prop + ':' + value;
+            // Ensure both the property and value are
+            // supported and return
+            return support && (el.style[camel] !== '');
+        },
+
         /**
          * Check if the customer has an active Recurly Subscription
          *
          */
         checkRecurlySubscriptions: function() {
             var self = this;
+            let loader = null;
+            let loaderBgStyle = null;
 
             self.loading(true);
 
@@ -202,6 +239,13 @@ define([
                     if( response.success === true && response.has_subscription === true ) {
                         self.hasSubscription(true);
 
+                        if(!self.isStyleSupported('mix-blend-mode')){
+                            loader = self.summary().querySelector('.loading-mask');
+                            if(loader) {
+                                loaderBgStyle = window.getComputedStyle(loader).getPropertyValue('background');
+                                loader.style.background = 'none';
+                            }
+                        }
                         // Show modal
                         $('body').append(`<section id="popup-modal" class="modal-popup--subscriptions">
                             ${self.getAlreadySubscribedModalContent()}
@@ -224,6 +268,9 @@ define([
                                     }
 
                                     window.location.href = '/your-plan';
+                                }
+                                if(loader) {
+                                    loader.style.background = loaderBgStyle;
                                 }
                             },
                         };
