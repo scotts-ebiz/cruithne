@@ -45,6 +45,7 @@ define([
         self.initialize = function () {
             const autocompleteElement = document.querySelector('#address-autocomplete');
             const footerBar = document.querySelector('.sp-quiz__footer');
+            self.quiz.invalidZipCode(false);
             let isAndroid = navigator.userAgent.toLowerCase().indexOf('android') !== -1;
 
             autocompleteElement.onfocus = () => {
