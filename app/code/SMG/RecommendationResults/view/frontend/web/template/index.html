@@ -28,7 +28,7 @@
                     <div class="sp-px-1">
                         <img
                             class="sp-align-center sp-block sp-mb-1 sp-results__product-image"
-                            data-bind="attr: { src: thumbnailImage }"
+                            data-bind="attr: { src: thumbnailImage, alt: meta_title }"
                         />
                     </div>
                 </div>
@@ -67,7 +67,7 @@
                     >
                         <img
                             class="sp-mr-4 sp-results__icon--small"
-                            data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]) }"
+                            data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]), alt: $data.products[0].season }"
                         />
                         <div>
                             <strong
@@ -88,7 +88,7 @@
                     >
                         <img
                             class="sp-mr-4 sp-results__icon--small"
-                            data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]) }"
+                            data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]), alt: $data.products[0].season }"
                         />
                         <div>
                             <strong

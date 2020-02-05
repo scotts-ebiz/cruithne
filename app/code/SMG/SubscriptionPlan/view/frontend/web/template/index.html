@@ -31,7 +31,7 @@
                             <div class="sp-px-1">
                                 <img
                                     class="sp-align-center sp-block sp-mb-1 sp-plan__product-image"
-                                    data-bind="attr: { src: thumbnailImage }"
+                                    data-bind="attr: { src: thumbnailImage, alt: meta_title }"
                                 />
                             </div>
                         </div>
@@ -65,7 +65,7 @@
                                     data-bind="click: function() { $parent.toggleAccordion($index()) }"
                                     class="sp-plan__tabs-button sp-flex sp-align-center sp-py-8 sp-px-4 lg:sp-hide mobile">
                                 <img class="sp-mr-4 sp-results__icon--small"
-                                     data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]) }" />
+                                     data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]), alt: $data.products[0].season }"  />
                                 <div>
                                     <strong class="sp-h4 sp-mb-2 lg:sp-mb-0"
                                             data-bind="html: $data.products[0].season"></strong>
@@ -78,7 +78,7 @@
                                     data-bind="click: function() { $parent.activeSeasonIndex($index()) }, css: {'sp-bg-green-4': ($index() === $parent.activeSeasonIndex())}"
                                     >
                                 <img class="sp-mr-4 sp-plan__icon--small"
-                                     data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]) }" />
+                                     data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]), alt: $data.products[0].season }" />
                                 <div>
                                     <strong class="sp-h4 sp-mb-2 lg:sp-mb-0"
                                             data-bind="html: $data.products[0].season"></strong>
