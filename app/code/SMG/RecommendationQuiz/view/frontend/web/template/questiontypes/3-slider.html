@@ -80,6 +80,7 @@
                     <input
                         class="sp-slider sp-flex-auto sp-relative"
                         min="1"
+                        max="5"
                         step="1"
                         type="range"
                         value="3"
@@ -94,21 +95,6 @@
                                     input: function (data, event) {
                                         $parents[0].updateSlider(data, event);
                                         $parents[0].quiz.setAnswer(data, event);
-                                    },
-                                    touchend: function (data, event) {
-                                        if (
-                                            'ontouchstart' in document.documentElement &&
-                                            (
-                                                /iPad|iPhone|iPod/.test(navigator.platform) ||
-                                                (
-                                                    navigator.platform === 'MacIntel' &&
-                                                    navigator.maxTouchPoints > 1
-                                                )
-                                            ) &&
-                                            !window.MSStream
-                                        ) {
-                                            $parents[0].handleTouchEnd(event, $parents[0].quiz);
-                                        }
                                     }
                                 },
                                 afterRender: $parents[0].initializeSlider
