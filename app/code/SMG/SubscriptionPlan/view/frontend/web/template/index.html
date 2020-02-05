@@ -9,7 +9,7 @@
 
         <p class="sp-text-center sp-max-w-md sp-mx-auto">
             Get ready to grow! You'll receive everything you need each season, so that all
-            <strong data-bind="if: subscription().lawn_size > 0"><span data-bind="html: subscription().lawn_size"></span> square feet</strong>
+            <strong data-bind="if: subscription().lawn_size > 0"><span data-bind="html: formatNumber(subscription().lawn_size)"></span> square feet</strong>
             of your
             <span data-bind="if: subscription().lawn_type"><strong data-bind="html: subscription().lawn_type"></strong></span>
             lawn is taken care of.
