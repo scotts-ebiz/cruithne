@@ -599,6 +599,8 @@ define([
         self.setGroup = function (group) {
             self.currentGroup(group);
 
+            if(group.label === 'CONDITION') setupRangeListener(new Quiz());
+
             var results = {};
             var initializedMap = false;
             var sliderQuestion = false;
@@ -1134,6 +1136,53 @@ define([
         progress.style.background = 'linear-gradient(to right, #1d5632 0%, #1d5632 ' + percentage + '%, transparent ' + percentage + '%, transparent 100%)';
     }
 
+    function setupRangeListener(quiz) {
+        let interval = setInterval(() => {
+            if (!navigator.platform.match(/iPhone|iPod|iPad/)) {
+                clearInterval(interval);
+            }
+
+            if (document.querySelectorAll('.sp-slider-container input.sp-slider').length > 0) {
+                const sliders = document.querySelectorAll('.sp-slider-container input.sp-slider');
+
+                sliders.forEach(slider => {
+                    slider.addEventListener(
+                        "touchend",
+                        (e) => iosPolyfill(e, quiz), 
+                        { passive: true }
+                    );
+                });
+
+                clearInterval(interval);
+            }
+        }, 100);
+    }
+
+    function iosPolyfill(e, quiz) {
+        let slider = e.target;
+        let val =
+            (e.changedTouches[0].pageX - slider.getBoundingClientRect().left) /
+            (slider.getBoundingClientRect().right -
+            slider.getBoundingClientRect().left),
+        max = slider.getAttribute("max"),
+            segment = 1 / (max - 1),
+            segmentArr = [];
+
+        max++;
+
+        for (let i = 0; i < max; i++) {
+            segmentArr.push(segment * i);
+        }
+
+        let segCopy = JSON.parse(JSON.stringify(segmentArr)),
+            index = segmentArr.sort((a, b) => Math.abs(val - a) - Math.abs(val - b))[0];
+
+        let newValue = segCopy.indexOf(index) + 1;
+        slider.value = newValue;
+        setSliderTrack(slider);
+        quiz.setAnswer(newValue + 1, e);
+    }
+
     return Component.extend({
         questionGroup: ko.observable(null),
         questions: ko.observable({}),
@@ -1148,53 +1197,6 @@ define([
 
             this.quiz = new Quiz();
             this.loadTemplate();
-            this.setupRangeListener(this.quiz);
-        },
-
-        setupRangeListener: function(quiz) {
-            let interval = setInterval(() => {
-                if (!navigator.platform.match(/iPhone|iPod|iPad/)) {
-                    clearInterval(interval);
-                }
-
-                if (document.querySelectorAll('.sp-slider-container input.sp-slider').length > 0) {
-                    const sliders = document.querySelectorAll('.sp-slider-container input.sp-slider');
-
-                    Array.prototype.forEach.call(sliders, slider => {
-                        slider.addEventListener(
-                            "touchend",
-                            (e) => this.iosPolyfill(e, quiz), { passive: true }
-                        );
-                    });
-
-                    clearInterval(interval);
-                }
-            }, 100);
-        },
-
-        iosPolyfill: function(e, quiz) {
-            let slider = e.target;
-            let val =
-                (e.pageX - slider.getBoundingClientRect().left) /
-                (slider.getBoundingClientRect().right -
-                slider.getBoundingClientRect().left),
-            max = slider.getAttribute("max"),
-                segment = 1 / (max - 1),
-                segmentArr = [];
-
-            max++;
-
-            for (let i = 0; i < max; i++) {
-                segmentArr.push(segment * i);
-            }
-
-            let segCopy = JSON.parse(JSON.stringify(segmentArr)),
-                index = segmentArr.sort((a, b) => Math.abs(val - a) - Math.abs(val - b))[0];
-
-            let newValue = segCopy.indexOf(index) + 1;
-            slider.value = newValue;
-            setSliderTrack(slider);
-            quiz.setAnswer(newValue + 1, e);
         },
 
         /**
