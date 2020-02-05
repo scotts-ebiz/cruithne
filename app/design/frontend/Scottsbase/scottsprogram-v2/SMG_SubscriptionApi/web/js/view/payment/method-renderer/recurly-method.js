@@ -32,6 +32,7 @@ define(
                 this.billingInfo = ko.observable(self.getBillingAddress());
                 this.subscriptionType = ko.observable(window.sessionStorage.getItem('subscription_plan'));
                 this.loading = ko.observable(false);
+                this.loadingMask = ko.observable(null);
 
                 /** Can query children of the form element (the inputs) based on this observable, only when it != null */
                 this.billingForm = ko.observable(null);
@@ -99,6 +100,13 @@ define(
                         clearInterval(rscoCheckboxInterval);
                     }
                 }, 250);
+
+                let loadingMaskInterval = setInterval(() => {
+                    if (document.querySelector('.loading-mask')) {
+                        self.loadingMask(document.querySelector('.loading-mask'));
+                        clearInterval(loadingMaskInterval);
+                    }
+                }, 200);
 
                 /**
                  * An interval to set the observable for billing form input fields.
@@ -270,6 +278,7 @@ define(
                             class: 'sp-button sp-button--primary sp-mx-4',
                             click() {
                                 if (self.refreshCheckout()) {
+                                    self.loadingMask().style.display = 'block';
                                     window.location.hash = 'shipping';
                                     window.location.reload();
                                 }
