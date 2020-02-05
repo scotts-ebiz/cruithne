@@ -12,7 +12,7 @@
     >
     </h2>
 
-    <p 
+    <p
         class="sp-max-w-lg sp-mx-auto sp-text-center"
         data-bind="text: quiz.currentGroup().alternativeSubtitle"
     >
@@ -31,6 +31,7 @@
                 placeholder="Total Square Footage of your lawn"
                 step="1"
                 type="number"
+                inputmode="numeric"
                 data-bind="
                     attr: { name: quiz.questions()[1].id },
                     event: { input: quiz.setArea }
@@ -53,11 +54,11 @@
             <input
                 id="manual-zip"
                 class="sp-input sp-w-full"
-                minlength="5"
-                maxlength="5"
+                step="1"
                 pattern="[0-9]{5}"
                 placeholder="ZIP code"
-                type="text"
+                type="number"
+                inputmode="numeric"
                 data-bind="attr: { name: quiz.questions()[0].id }, event: { input: quiz.setZipCode }"
             />
 
