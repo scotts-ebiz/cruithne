@@ -369,7 +369,7 @@ define([
         self.invalidZipCode = ko.observable(false);
         self.invalidArea = ko.observable(false);
         self.isAnimating = ko.observable(false);
-        self.zipCode = 0;
+        self.zipCode = '';
 
         // Animation States for self.transitionToNextState() to iterate over
         self.animationStates = [
@@ -828,7 +828,7 @@ define([
         self.toggleGoogleMaps = function () {
             self.usingGoogleMaps(!self.usingGoogleMaps());
             self.setArea(0);
-            self.setZipCode(0);
+            self.setZipCode('');
 
             if (self.usingGoogleMaps()) {
                 self.initializeMap();
