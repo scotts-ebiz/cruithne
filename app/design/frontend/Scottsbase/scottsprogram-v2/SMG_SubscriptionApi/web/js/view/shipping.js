@@ -85,6 +85,17 @@ define([
                 self.cancelRecurlySubscription();
             });
 
+            let telephoneInterval = setInterval(() => {
+                if ($('input[name="telephone"]').length) {
+                    const telephoneInput = $('input[name="telephone"]');
+                    telephoneInput.on('input propertychange', e => {
+                        telephoneInput.blur();
+                        telephoneInput.focus();
+                    });
+                    clearInterval(telephoneInterval);
+                }
+            }, 250);
+
             if (!quote.isVirtual()) {
                 stepNavigator.registerStep(
                     'shipping',
