@@ -45,6 +45,7 @@ define([
         self.initialize = function () {
             const autocompleteElement = document.querySelector('#address-autocomplete');
             const footerBar = document.querySelector('.sp-quiz__footer');
+            self.quiz.invalidZipCode(false);
             let isAndroid = navigator.userAgent.toLowerCase().indexOf('android') !== -1;
 
             autocompleteElement.onfocus = () => {
@@ -368,7 +369,7 @@ define([
         self.invalidZipCode = ko.observable(false);
         self.invalidArea = ko.observable(false);
         self.isAnimating = ko.observable(false);
-        self.zipCode = '';
+        self.zipCode = 0;
 
         // Animation States for self.transitionToNextState() to iterate over
         self.animationStates = [
@@ -827,7 +828,7 @@ define([
         self.toggleGoogleMaps = function () {
             self.usingGoogleMaps(!self.usingGoogleMaps());
             self.setArea(0);
-            self.setZipCode('');
+            self.setZipCode(0);
 
             if (self.usingGoogleMaps()) {
                 self.initializeMap();
