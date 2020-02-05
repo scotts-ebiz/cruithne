@@ -85,6 +85,17 @@ define([
                 self.cancelRecurlySubscription();
             });
 
+            let telephoneInterval = setInterval(() => {
+                if ($('input[name="telephone"]').length) {
+                    const telephoneInput = $('input[name="telephone"]');
+                    telephoneInput.on('input propertychange', e => {
+                        telephoneInput.blur();
+                        telephoneInput.focus();
+                    });
+                    clearInterval(telephoneInterval);
+                }
+            }, 250);
+
             if (!quote.isVirtual()) {
                 stepNavigator.registerStep(
                     'shipping',
@@ -137,7 +148,7 @@ define([
                         Did you move or have your lawn conditions changed? We can cancel your current subscription and start a new one.
                     </p>
                     <p><strong>Keep my current subscription</strong><br />
-                        Don’t want to cancel? You can keep your current plan and subscription option. 
+                        Don’t want to cancel? You can keep your current plan and subscription option.
                     </p>
                      <p class="sp-text-center"><strong>For questions, email us at scotts-orders@scotts.com or call us at <a href="tel:18772203091">1-877-220-3091</a>.</strong></p>
                     <div class="modal-popup-cta sp-text-center">
