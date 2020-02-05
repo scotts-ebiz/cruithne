@@ -7,6 +7,14 @@ body,
   height: 100%;
 }
 
+@media (max-width: 1024px) {
+  .quiz-index-index .page-wrapper {
+    width: 100%;
+    position: fixed;
+    top: 0;
+  }
+}
+
 .sp-quiz__content {
   overflow: auto;
   overflow-x: hidden;
