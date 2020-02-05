@@ -38,5 +38,7 @@ class OrderInterface{
 			$quoteItem->setReasonCode($params['item'][$quoteItemId]['reason_code']);
 		 }
 	  }
+
+	  return $subject;
    }
 }
