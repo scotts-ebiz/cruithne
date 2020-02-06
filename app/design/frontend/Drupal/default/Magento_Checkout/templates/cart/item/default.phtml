@@ -40,7 +40,7 @@ foreach($selections as $selc){
                     <dl class="item-options">
                         <dd><i><?php //echo $_item->getSku() ?></i></dd>
                         <?php foreach ($_options as $key=>$_option) : ?>
-                            <?php $_formatedOptionValue = $block->getFormatedOptionValue($_option) ?>
+                            <?php $_formatedOptionValue = /* @noEscape */ $block->getFormatedOptionValue($_option) ?>
 
                             <div class="simple-img-wrapper">
                                 <?php if ($product->getData("type_id") == "bundle"):?>
