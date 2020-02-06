@@ -100,13 +100,13 @@ class ShippingInformationManagement
             $productId=$item->getProductId();
             $product=$this->_productloader->create()->load($productId);
             $productname[] = $product->getName();
-            $statesNotAllowed= $product->getStatesNotAllowed();
+            $statesNotAllowed = $product->getData('state_not_allowed');
             $data = explode(',', $statesNotAllowed);
             $option_value = array();
 
             foreach($data as $value)
             {
-                $attr = $product->getResource()->getAttribute('states_not_allowed');
+                $attr = $product->getResource()->getAttribute('state_not_allowed');
                 $option_value[] = $attr->getSource()->getOptionText($value);
             }
 

@@ -23,6 +23,7 @@ use Magento\Sales\Model\Service\InvoiceService;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\Sap\Model\SapOrderBatch;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrderItem\CollectionFactory as SubscriptionOrderItemCollectionFactory;
 
 /**
@@ -31,7 +32,6 @@ use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrderItem\CollectionFact
  */
 class SubscriptionOrder extends AbstractModel
 {
-
     /** @var SubscriptionHelper */
     protected $_subscriptionHelper;
 
@@ -58,8 +58,14 @@ class SubscriptionOrder extends AbstractModel
 
     /** @var SapOrderBatchCollectionFactory */
     private $_sapOrderBatchCollectionFactory;
+
     /**
-     * @var \SMG\SubscriptionApi\Model\Subscription
+     * @var SubscriptionCollectionFactory
+     */
+    protected $_subscriptionCollectionFactory;
+
+    /**
+     * @var Subscription
      */
     protected $_subscription;
 
@@ -78,6 +84,11 @@ class SubscriptionOrder extends AbstractModel
     protected $_logger;
 
     /**
+     * @var Subscription
+     */
+    protected $_masterSubscription;
+
+    /**
      * Constructor.
      */
     protected function _construct()
@@ -91,16 +102,18 @@ class SubscriptionOrder extends AbstractModel
      * SubscriptionOrder constructor.
      * @param Context $context
      * @param Registry $registry
+     * @param LoggerInterface $logger
      * @param SubscriptionHelper $subscriptionHelper
-     * @param Subscription $subscription
+     * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
      * @param SubscriptionOrderItemCollectionFactory $subscriptionOrderItemCollectionFactory
-     * @param OrderRepository $orderRepository
-     * @param CreditmemoFactory $creditmemoFactory
-     * @param CreditmemoService $creditmemoService
      * @param OrderCollectionFactory $orderCollectionFactory
      * @param InvoiceService $invoiceService
      * @param Transaction $transaction
      * @param InvoiceSender $invoiceSender
+     * @param SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
+     * @param OrderRepository $orderRepository
+     * @param CreditmemoFactory $creditmemoFactory
+     * @param CreditmemoService $creditmemoService
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -110,7 +123,7 @@ class SubscriptionOrder extends AbstractModel
         Registry $registry,
         LoggerInterface $logger,
         SubscriptionHelper $subscriptionHelper,
-        Subscription $subscription,
+        SubscriptionCollectionFactory $subscriptionCollectionFactory,
         SubscriptionOrderItemCollectionFactory $subscriptionOrderItemCollectionFactory,
         OrderCollectionFactory $orderCollectionFactory,
         InvoiceService $invoiceService,
@@ -134,7 +147,7 @@ class SubscriptionOrder extends AbstractModel
 
         $this->_logger = $logger;
         $this->_subscriptionHelper = $subscriptionHelper;
-        $this->_subscription = $subscription;
+        $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
         $this->_subscriptionOrderItemCollectionFactory = $subscriptionOrderItemCollectionFactory;
         $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->_invoiceService = $invoiceService;
@@ -165,17 +178,21 @@ class SubscriptionOrder extends AbstractModel
      */
     public function getSubscription()
     {
-        if ($this->_subscription->getId()) {
+        if ($this->_subscription) {
             return $this->_subscription;
         }
 
-        $subscription = $this->_subscription->load($this->getSubscriptionEntityId());
+        $subscription = $this->_subscriptionCollectionFactory
+            ->create()
+            ->getItemById($this->getData('subscription_entity_id'));
 
-        if (!$subscription->getId()) {
+        if (is_null($subscription) || ! $subscription->getId()) {
             return false;
         }
 
-        return $subscription;
+        $this->_subscription = $subscription;
+
+        return $this->_subscription;
     }
 
     /**
@@ -195,6 +212,22 @@ class SubscriptionOrder extends AbstractModel
     }
 
     /**
+     * Get Master Subscription
+     */
+    public function getMasterSubscription()
+    {
+        $masterSubscriptionId = $this->getMasterSubscriptionId();
+
+        if (is_null($this->_masterSubscription)) {
+            $this->_masterSubscription = $this->_subscriptionCollectionFactory->create()
+                ->addFilter('subscription_id', $masterSubscriptionId)
+                ->getFirstItem();
+        }
+
+        return $this->_masterSubscription;
+    }
+
+    /**
      * Get the subscription type.
      *
      * @return string
@@ -204,7 +237,7 @@ class SubscriptionOrder extends AbstractModel
         $subscription = $this->getSubscription();
 
         if ($subscription) {
-            return $subscription->getSubscriptionType();
+            return $subscription->getData('subscription_type');
         }
 
         return '';
@@ -338,6 +371,7 @@ class SubscriptionOrder extends AbstractModel
     {
         // Grab the shipment open window from the admin
         $shippingOpenWindow = 0;
+
         if (!empty($this->_subscriptionHelper->getShipDaysStart())) {
             $shippingOpenWindow = filter_var($this->_subscriptionHelper->getShipDaysStart(), FILTER_SANITIZE_NUMBER_INT);
         }
@@ -353,6 +387,20 @@ class SubscriptionOrder extends AbstractModel
         } else {
             $this->setShipStartDate($todayDate);
         }
+    }
+
+    /**
+     * Is Order Currently Shippable
+     * @return bool
+     * @throws \Exception
+     */
+    public function isCurrenltyShippable() {
+        if ($this->getSubscriptionType() !== 'annual') {
+            $today = new \DateTime();
+            $shipStart = \DateTime::createFromFormat('Y-m-d H:i:s', $this->getShipStartDate());
+            return $today >= $shipStart;
+        }
+        return true;
     }
 
     /**

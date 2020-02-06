@@ -12,7 +12,7 @@
         <p class="sp-mb-8">Your order number is: #<span data-bind="text: subscriptionID()"></span></p>
         <a
             class="sp-button sp-button--primary"
-            href="/account/subscription"
+            href="/your-plan"
         >
             View Your Lawn Care Plan
         </a>
@@ -22,7 +22,7 @@
 <div class="sp-bg-green-4 sp-mb-16">
     <div class="sp-container">
         <div class="sp-flex sp-flex-column md:sp-flex-row sp--mx-2">
-            <div class="sp-flex sp-justify-center sp-order-1 md:sp-order-0 sp-px-2 sp-relative sp-text-center md:sp-w-1/2">
+            <div class="md:sp-flex sp-justify-center sp-order-1 md:sp-order-0 sp-px-2 sp-relative sp-text-center md:sp-w-1/2">
                 <img
                     alt="My Lawn App"
                     class="sp-success__app-image sp-block sp-px-12 md:sp-px-0"
@@ -70,91 +70,94 @@
     </div>
 </div>
 
-<div class="sp-success__articles sp-container sp-mb-16 sp-w-5/6 md:sp-w-full lg:sp-w-5/6">
-    <h4 class="sp-h4 sp-mb-4 sp-mt-0 sp-uppercase">How to make the most of your lawn</h4>
-    <hr class="sp-mt-4 sp-mb-8">
-    <div class="sp-flex sp-flex-column md:sp-flex-row sp--mx-2 lg:sp--mx-8">
-        <div class="sp-mb-8 sp-px-2 lg:sp-px-8 md:sp-w-1/3">
-            <div class="sp-success__article-image-container sp-mb-4 sp-relative">
-                <img
-                    alt="Article"
-                    class="sp-success__article-image"
-                    src="https://test_magento_image_repo.storage.googleapis.com/article1.png"
-                >
-                <a
-                    class="sp-success__article-link sp-bg-green-1 sp-text-center sp-text-white sp-uppercase"
-                    href="https://www.scotts.com/en-us/library/lawn-food/what-do-grass-clippings"
-                    target="_blank"
-                >
-                    Read More
+<div class="sp-container">
+    <div class="sp-success__articles sp-mx-auto sp-mb-16 sp-w-5/6 md:sp-w-full lg:sp-w-5/6">
+        <h4 class="sp-h4 sp-mb-4 sp-mt-0 sp-uppercase">How to make the most of your lawn</h4>
+        <hr class="sp-mt-4 sp-mb-8">
+        <div class="sp-flex sp-flex-column md:sp-flex-row sp--mx-2 lg:sp--mx-8">
+            <div class="sp-mb-8 sp-px-2 lg:sp-px-8 md:sp-w-1/3">
+                <div class="sp-success__article-image-container sp-mb-4 sp-relative">
                     <img
-                        alt="Read More"
-                        class="sp-success__article-link-out"
-                        src="https://test_magento_image_repo.storage.googleapis.com/LinkOut.svg"
-                    />
-                </a>
+                        alt="Article"
+                        class="sp-success__article-image"
+                        src="https://test_magento_image_repo.storage.googleapis.com/article1.png"
+                    >
+                    <a
+                        class="sp-success__article-link sp-bg-green-1 sp-text-center sp-text-white sp-uppercase"
+                        href="https://www.scotts.com/en-us/library/lawn-food/what-do-grass-clippings"
+                        target="_blank"
+                    >
+                        Read More
+                        <img
+                            alt="Read More"
+                            class="sp-success__article-link-out"
+                            src="https://test_magento_image_repo.storage.googleapis.com/LinkOut.svg"
+                        />
+                    </a>
+                </div>
+                <div>
+                    <h3 class="sp-h3 sp-mb-2 sp-mt-0">
+                        What to Do With Grass Clippings
+                    </h3>
+                    <p class="sp-p1">Don't throw those grass clippings away! They're cheap and nourishing mulch for your lawn.</p>
+                </div>
             </div>
-            <div>
-                <h3 class="sp-h3 sp-mb-2 sp-mt-0">
-                    What to Do With Grass Clippings
-                </h3>
-                <p class="sp-p1">Don't throw those grass clippings away! They're cheap and nourishing mulch for your lawn.</p>
-            </div>
-        </div>
-        <div class="sp-mb-8 sp-px-2 lg:sp-px-8 md:sp-w-1/3">
-            <div class="sp-success__article-image-container sp-mb-4 sp-relative">
-                <img
-                    alt="Article"
-                    class="sp-success__article-image"
-                    src="https://test_magento_image_repo.storage.googleapis.com/article2.png"
-                >
-                <a
-                    class="sp-success__article-link sp-bg-green-1 sp-text-center sp-text-white sp-uppercase"
-                    href="https://www.scotts.com/en-us/library/mulch-garden/benefits-mulching"
-                    target="_blank"
-                >
-                    Read More
+            <div class="sp-mb-8 sp-px-2 lg:sp-px-8 md:sp-w-1/3">
+                <div class="sp-success__article-image-container sp-mb-4 sp-relative">
                     <img
-                        alt="Read More"
-                        class="sp-success__article-link-out"
-                        src="https://test_magento_image_repo.storage.googleapis.com/LinkOut.svg"
-                    />
-                </a>
+                        alt="Article"
+                        class="sp-success__article-image"
+                        src="https://test_magento_image_repo.storage.googleapis.com/article2.png"
+                    >
+                    <a
+                        class="sp-success__article-link sp-bg-green-1 sp-text-center sp-text-white sp-uppercase"
+                        href="https://www.scotts.com/en-us/library/mulch-garden/benefits-mulching"
+                        target="_blank"
+                    >
+                        Read More
+                        <img
+                            alt="Read More"
+                            class="sp-success__article-link-out"
+                            src="https://test_magento_image_repo.storage.googleapis.com/LinkOut.svg"
+                        />
+                    </a>
+                </div>
+                <div>
+                    <h3 class="sp-h3 sp-mb-2 sp-mt-0">
+                        Benefits of Mulching
+                    </h3>
+                    <p class="sp-p1">Learn about this simple way to turn your landscape from blah to beautiful.</p>
+                </div>
             </div>
-            <div>
-                <h3 class="sp-h3 sp-mb-2 sp-mt-0">
-                    Benefits of Mulching
-                </h3>
-                <p class="sp-p1">Learn about this simple way to turn your landscape from blah to beautiful.</p>
-            </div>
-        </div>
-        <div class="sp-mb-8 sp-px-2 lg:sp-px-8 md:sp-w-1/3">
-            <div class="sp-success__article-image-container sp-mb-4 sp-relative">
-                <img
-                    alt="Article"
-                    class="sp-success__article-image"
-                    src="https://test_magento_image_repo.storage.googleapis.com/article3.png"
-                >
-                <a
-                    class="sp-success__article-link sp-bg-green-1 sp-text-center sp-text-white sp-uppercase"
-                    href="https://www.scotts.com/en-us/library/spreaders-mowing-tools/how-ready-your-lawn-mower-spring"
-                    target="_blank"
-                >
-                    Read More
+            <div class="sp-mb-8 sp-px-2 lg:sp-px-8 md:sp-w-1/3">
+                <div class="sp-success__article-image-container sp-mb-4 sp-relative">
                     <img
-                        alt="Read More"
-                        class="sp-success__article-link-out"
-                        src="https://test_magento_image_repo.storage.googleapis.com/LinkOut.svg"
-                    />
-                </a>
-            </div>
-            <div>
-                <h3 class="sp-h3 sp-mb-2 sp-mt-0">
-                    How to Ready Your Lawn Mower For Spring
-                </h3>
-                <p class="sp-p1">Have your mower ready to go with this checklist of basic annual maintenance for power mowers.</p>
+                        alt="Article"
+                        class="sp-success__article-image"
+                        src="https://test_magento_image_repo.storage.googleapis.com/article3.png"
+                    >
+                    <a
+                        class="sp-success__article-link sp-bg-green-1 sp-text-center sp-text-white sp-uppercase"
+                        href="https://www.scotts.com/en-us/library/spreaders-mowing-tools/how-ready-your-lawn-mower-spring"
+                        target="_blank"
+                    >
+                        Read More
+                        <img
+                            alt="Read More"
+                            class="sp-success__article-link-out"
+                            src="https://test_magento_image_repo.storage.googleapis.com/LinkOut.svg"
+                        />
+                    </a>
+                </div>
+                <div>
+                    <h3 class="sp-h3 sp-mb-2 sp-mt-0">
+                        How to Ready Your Lawn Mower For Spring
+                    </h3>
+                    <p class="sp-p1">Have your mower ready to go with this checklist of basic annual maintenance for power mowers.</p>
+                </div>
             </div>
         </div>
     </div>
 </div>
+
 <!-- /ko -->

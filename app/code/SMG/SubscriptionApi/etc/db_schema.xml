@@ -18,7 +18,11 @@
         <column name="subscription_start_date" xsi:type="timestamp" nullable="true" on_update="false" comment="Subscription Start Date"/>
         <column name="subscription_end_date" xsi:type="timestamp" nullable="true" on_update="false" comment="Subscription End Date"/>
         <column name="price" xsi:type="decimal" scale="2" precision="10" nullable="false" comment="Subscription Cost"/>
-        <column name="discount" xsi:type="decimal" scale="2" precision="10" nullable="false" comment="Discount Savings"/>
+        <column name="tax" xsi:type="decimal" scale="2" precision="10" nullable="false" comment="Recurly Tax"/>
+        <column name="discount" xsi:type="decimal" scale="2" precision="10" nullable="false" comment="Recurly Discount"/>
+        <column name="paid" xsi:type="decimal" scale="2" precision="10" nullable="false" comment="Recurly Paid"/>
+        <column name="recurly_invoice" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Recurly Invoice Number"/>
+        <column name="is_full_refund" xsi:type="int" nullable="false" default="0" unsigned="true" padding="2" comment="Is full refund"/>
         <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
         <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Updated"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
@@ -75,6 +79,7 @@
         <column name="price"  xsi:type="decimal" scale="2" precision="10"  nullable="false" comment="Subscription Cost"/>
         <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
         <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Updated"/>
+        <column name="next_cron_date" xsi:type="timestamp" nullable="true" comment="Next time order can be processed with cron"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id" />
         </constraint>
@@ -140,6 +145,7 @@
         <column name="price"  xsi:type="decimal" scale="2" precision="10"  nullable="false" comment="Subscription Cost"/>
         <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
         <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Updated"/>
+        <column name="next_cron_date" xsi:type="timestamp" nullable="true" comment="Next time order can be processed with cron"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
             <column name="entity_id" />
         </constraint>

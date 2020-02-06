@@ -1,0 +1,20 @@
+<div
+    class="sp-account-reset sp-max-w-xl lg:sp-mr-8"
+    data-bind="scope: 'reset'"
+>
+    <!-- ko template: "SMG_SubscriptionAccounts/reset.html" --><!-- /ko -->
+</div>
+
+<script type="text/x-magento-init">
+   {
+        "*": {
+            "Magento_Ui/js/core/app": {
+                "components": {
+                    "reset": {
+                        "component": "SMG_SubscriptionAccounts/js/reset"
+                    }
+                }
+            }
+        }
+    }
+</script>
