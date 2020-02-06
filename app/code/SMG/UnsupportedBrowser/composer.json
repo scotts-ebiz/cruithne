@@ -8,9 +8,6 @@
     "magento/framework": "~100.0.4"
   },
   "autoload": {
-    "files": [ "registration.php" ],
-    "psr-4": {
-      "Magento\\SampleNewPage\\": ""
-    }
+    "files": [ "registration.php" ]
   }
 }
