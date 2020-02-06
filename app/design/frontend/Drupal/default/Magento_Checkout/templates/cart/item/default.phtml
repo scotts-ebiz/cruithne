@@ -88,7 +88,7 @@ foreach($selections as $selc){
             </td>
         <?php else: ?>
             <td class="col price" data-th="<?= $block->escapeHtml(__('Price')) ?>">
-                <?= $block->getUnitPriceHtml($_item) ?>
+                <?= /* @noEscape */ $block->getUnitPriceHtml($_item) ?>
             </td>
         <?php endif; ?>
 
