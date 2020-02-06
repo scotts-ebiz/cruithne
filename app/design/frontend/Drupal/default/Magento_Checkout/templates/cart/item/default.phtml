@@ -29,7 +29,8 @@ foreach($selections as $selc){
     <tr class="item-info">
         <td data-th="<?= $block->escapeHtml(__('Item')) ?>" class="col item">
             <span class="product-item-photo">
-                <?= $block->getImage($block->getProductForThumbnail(), 'cart_page_product_thumbnail')->toHtml() ?>
+                <?= /* @noEscape */ $block->getImage( /* @noEscape */ $block->getProductForThumbnail(),
+                  'cart_page_product_thumbnail')->toHtml() ?>
             </span>
             <div class="product-item-details">
                 <strong class="product-item-name">
