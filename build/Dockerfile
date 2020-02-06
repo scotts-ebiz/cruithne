@@ -24,6 +24,7 @@ RUN git fetch --all
 RUN git reset --hard
 RUN git pull
 RUN composer install
+RUN git checkout origin .htaccess
 RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools
 
 USER root
