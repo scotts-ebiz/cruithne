@@ -599,7 +599,7 @@ define([
         self.setGroup = function (group) {
             self.currentGroup(group);
 
-            if(group.label === 'CONDITION') setupRangeListener(new Quiz());
+            if(group.label === 'CONDITION') setupRangeListener(this);
 
             var results = {};
             var initializedMap = false;
