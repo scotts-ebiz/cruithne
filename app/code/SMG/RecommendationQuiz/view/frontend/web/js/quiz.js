@@ -31,6 +31,7 @@ define([
         self.quiz = quiz;
         self.polygons = ko.observableArray([]);
         self.activePolygon = null;
+        self.mapInstructionsDisabled = ko.observable(true);
 
         self.addListeners = function () {
             google.maps.event.addListener(self.drawingManager, 'polygoncomplete', self.handlePolygonComplete);
@@ -42,16 +43,42 @@ define([
         };
 
         self.initialize = function () {
+            const autocompleteElement = document.querySelector('#address-autocomplete');
+            const footerBar = document.querySelector('.sp-quiz__footer');
+            let isAndroid = navigator.userAgent.toLowerCase().indexOf('android') !== -1;
+
+            autocompleteElement.onfocus = () => {
+                if (isAndroid) {
+                    footerBar.style.display = 'none';
+                }
+            };
+
+            autocompleteElement.onblur = () => {
+                if (isAndroid) {
+                    footerBar.style.display = 'block';
+                }
+            };
+
             self.autocomplete = new google.maps.places.Autocomplete(
-                document.getElementById('address-autocomplete'), { types: ['geocode'] }
+                autocompleteElement, { types: ['geocode'] }
             );
+            google.maps.event.addDomListener(autocompleteElement, 'blur', function() {
+                if ($('.pac-item:hover').length === 0 ) {
+                    google.maps.event.trigger(this, 'focus', {});
+                    google.maps.event.trigger(this, 'keydown', {
+                        keyCode: 13
+                    });
+                }
+            });
             self.autocomplete.setComponentRestrictions({ 'country': 'us' });
             self.autocomplete.setFields(['geometry']);
             self.autocomplete.setTypes(['address']);
             self.autocomplete.addListener('place_changed', function () {
+                self.quiz.invalidZipCode(false);
                 var place = self.autocomplete.getPlace();
 
-                if (!place.geometry) {
+                if (!place || !place.geometry) {
+                    self.quiz.invalidZipCode(true);
                     return;
                 }
 
@@ -61,12 +88,18 @@ define([
                 $('#address-autocomplete').val(self.address());
                 self.showInstructions(true);
 
+                setTimeout(() => {
+                    self.mapInstructionsDisabled(false);
+                }, 5000);
+
+                const zoom = window.outerWidth >= 1024 ? 22 : 20;
+
                 if (place.geometry.viewport) {
                     self.map.fitBounds(place.geometry.viewport);
-                    self.map.setZoom(22);
+                    self.map.setZoom(zoom);
                 } else {
                     self.map.setCenter(place.geometry.location);
-                    self.map.setZoom(22);
+                    self.map.setZoom(zoom);
                 }
 
                 self.getLocation(place.geometry.location);
@@ -128,7 +161,10 @@ define([
             var path = polygon.getPath();
             var point = path.getAt(0);
 
+            // Not a polygon since there are less then 3 points, so remove it.
             if (path.getLength() < 3) {
+                polygon.setMap(null);
+
                 return;
             }
 
@@ -157,10 +193,6 @@ define([
 
         self.calculateLawnSize = function () {
             self.lawnSize(0);
-
-            if (!self.polygons().length) {
-                return;
-            }
 
             for (polygon of self.polygons()) {
                 var squareMeters = google.maps.geometry.spherical.computeArea(polygon.getPath());
@@ -203,23 +235,16 @@ define([
          * Undo the last point placed on the map.
          */
         self.undo = function () {
-            if (!self.activePolygon && !self.polygons().length) {
-                return;
-            }
-
-            var shape = null;
-
-            if (self.activePolygon) {
-                shape = self.activePolygon;
-                self.polygons.remove(shape);
-                shape.setMap(null);
-                self.activePolygon = null;
-            } else {
-                shape = self.polygons.pop();
-                shape.setMap(null);
-            }
+            self.drawingManager.setDrawingMode(null);
+            self.polygons().forEach(polygon => polygon.setMap(null));
+            self.polygons([]);
+            self.activePolygon = null;
 
             self.calculateLawnSize();
+        };
+
+        self.toggleInfo = function () {
+            self.showInstructions(!self.showInstructions());
         };
 
         /**
@@ -275,9 +300,54 @@ define([
      */
     function Quiz(data) {
         var self = this;
+        const NUMBERPATTERN = /^[0-9]+$/;
 
         // Grab question content block for use in finding callback event
         self.questionContentBlock = document.querySelector('.sp-quiz__question-wrapper');
+
+        self.debounce = function (func, wait, immediate = false) {
+            let timeout;
+            return function() {
+                let context = this, args = arguments;
+                let later = function() {
+                    timeout = null;
+                    if (!immediate) func.apply(context, args);
+                }
+                let callNow = immediate && !timeout;
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+                if (callNow) func.apply(context, args);
+            }
+
+        }
+
+        self.handleResize = function() {
+            const wrapper = document.querySelector('.sp-quiz__wrapper');
+            const content = document.querySelector('.sp-quiz__content');
+
+            if (window.innerWidth < 1024) {
+                const height = document.querySelector('.sp-quiz__footer').offsetHeight;
+                wrapper.style.marginBottom = height + 'px';
+                content.style.paddingBottom = height + 'px';
+                return;
+            }
+
+            wrapper.style.marginBottom = '0px';
+            content.style.marginBottom = '0px';
+        };
+
+        window.addEventListener('resize', self.debounce(self.handleResize, 250));
+
+        let observer = new MutationObserver(function(mutations) {
+            if (document.contains(document.querySelector('.sp-quiz__footer'))) {
+                if (document.querySelector('.sp-quiz__footer').offsetHeight > 0) {
+                    self.handleResize();
+                    observer.disconnect();
+                }
+            }
+        })
+
+        observer.observe(document, {attributes: false, childList: true, characterData: false, subtree: true})
 
         self.progressBarCategories = ko.observableArray([
             {label: "Goals"},
@@ -294,8 +364,9 @@ define([
         self.previousGroups = ko.observableArray([]);
         self.sliderImages = ko.observable({});
         self.animation = ko.observable({});
-        self.usingGoogleMaps = ko.observable(true);
+        self.usingGoogleMaps = ko.observable(false);
         self.invalidZipCode = ko.observable(false);
+        self.invalidArea = ko.observable(false);
         self.isAnimating = ko.observable(false);
         self.zipCode = '';
 
@@ -420,10 +491,14 @@ define([
             return function () {
                 if (currentAnimationState <= 5) {
                     setTimeout(() => {
-                        window.requestAnimationFrame(() => {
-                            self.animationStates[currentAnimationState - 1]();
+                        let animationFrame = window.requestAnimationFrame(() => {
+                            try {
+                                self.animationStates[currentAnimationState - 1]();
+                            } catch (err) {
+                                window.cancelAnimationFrame(animationFrame);
+                            }
                         });
-                    }, 1000);
+                    }, 500);
                 }
             }
         };
@@ -443,16 +518,13 @@ define([
             // Get the transition.
             const animations = self.currentGroup().animationScreens;
             self.animation({});
-            if (animations.length === 1) {
-                self.animation(animations[0]);
-            } else {
+
                 // Find the animation based on the answer.
-                for (const animation of animations) {
-                    // No required conditions for this animation, so just use it.
-                    if (!animation.conditions.length || self.testConditions(animation.conditions)) {
-                        self.animation(animation);
-                        break;
-                    }
+            for (const animation of animations) {
+                // No required conditions for this animation, so just use it.
+                if (!animation.conditions.length || self.testConditions(animation.conditions)) {
+                    self.animation(animation);
+                    break;
                 }
             }
 
@@ -495,15 +567,16 @@ define([
                     window.requestAnimationFrame(self.step(start, self.currentAnimationState));
 
                     clearInterval(animInterval);
-                } else if (self.currentAnimationState == 1 && !self.animation().title) {
+                } else if (self.currentAnimationState == 2 && !self.animation().title) {
                     self.previousGroups.push(self.currentGroup());
                     self.setGroup(group);
 
                     window.requestAnimationFrame(self.step(start, self.currentAnimationState));
+                    clearInterval(animInterval);
                 } else {
                     window.requestAnimationFrame(self.step(start, self.currentAnimationState));
                 }
-            }, 2000);
+            }, 1000);
         };
 
 
@@ -604,7 +677,10 @@ define([
                 self.answers.push(new QuestionResult(event.target.name, event.target.value));
 
                 // This is the grass type question, so store the grass type.
-                if (self.currentGroup().label === 'LAWN DETAILS' && event.target.dataset.label) {
+                if (
+                    self.currentGroup().label === 'LAWN DETAILS' && event.target.dataset.label &&
+                    !event.target.dataset.label.includes('not sure')
+                ) {
                     window.sessionStorage.setItem('lawn-type', event.target.dataset.label);
                 }
             }
@@ -971,6 +1047,11 @@ define([
                 zip = data;
             } else {
                 zip = event.target.value;
+                self.invalidZipCode(false);
+                if (zip.length > 0 && !zip.toString().match(NUMBERPATTERN)) {
+                    self.invalidZipCode(true);
+                    return;
+                }
             }
 
             const zoneQuestion = self.questions().find((question) => +question.questionType === 5);
@@ -987,7 +1068,7 @@ define([
                 return;
             }
 
-            if (zip.length === 5) {
+            if (zip.length === 5 && zip.toString().match(NUMBERPATTERN)) {
                 const zoneOption = self.getZone(zip);
 
                 if (zoneOption) {
@@ -1011,16 +1092,21 @@ define([
          */
         self.setArea = function (data, event) {
             let area = 0;
+            self.invalidArea(false);
             if (typeof data === 'number') {
                 area = data;
             } else {
-                area = parseInt(event.target.value);
+                let areaInput = event.target.value;
+                let areaAsString = areaInput.toString();
+                if (!areaAsString.match(NUMBERPATTERN)) {
+                    self.invalidArea(true);
+                } else {
+                    area = parseInt(areaInput);
+                }
             }
 
-            if (area > 0) {
-               self.addOrReplaceAnswer(self.questions()[1].id, self.questions()[1].options[0].id, area);
-               window.sessionStorage.setItem('lawn-area', String(area));
-            }
+            self.addOrReplaceAnswer(self.questions()[1].id, self.questions()[1].options[0].id, area);
+            window.sessionStorage.setItem('lawn-area', String(area));
         }
     }
 
@@ -1037,9 +1123,7 @@ define([
        self.questionGroups = data.questionGroups;
 
        // Remove the Alaska and Hawaii zones.
-       self.zipCodesOptionMappings = data.zipCodesOptionMappings.filter((zone) => {
-           return !['eb4c247b-9100-40b0-95fd-bd319dd4393f', 'a028c078-f881-4019-95c8-f4b209ba00bc'].includes(zone.optionId);
-       });
+       self.zipCodesOptionMappings = data.zipCodesOptionMappings;
     }
 
     function setSliderTrack(el) {
@@ -1064,6 +1148,53 @@ define([
 
             this.quiz = new Quiz();
             this.loadTemplate();
+            this.setupRangeListener(this.quiz);
+        },
+
+        setupRangeListener: function(quiz) {
+            let interval = setInterval(() => {
+                if (!navigator.platform.match(/iPhone|iPod|iPad/)) {
+                    clearInterval(interval);
+                }
+
+                if (document.querySelectorAll('.sp-slider-container input.sp-slider').length > 0) {
+                    const sliders = document.querySelectorAll('.sp-slider-container input.sp-slider');
+
+                    Array.prototype.forEach.call(sliders, slider => {
+                        slider.addEventListener(
+                            "touchend",
+                            (e) => this.iosPolyfill(e, quiz), { passive: true }
+                        );
+                    });
+
+                    clearInterval(interval);
+                }
+            }, 100);
+        },
+
+        iosPolyfill: function(e, quiz) {
+            let slider = e.target;
+            let val =
+                (e.pageX - slider.getBoundingClientRect().left) /
+                (slider.getBoundingClientRect().right -
+                slider.getBoundingClientRect().left),
+            max = slider.getAttribute("max"),
+                segment = 1 / (max - 1),
+                segmentArr = [];
+
+            max++;
+
+            for (let i = 0; i < max; i++) {
+                segmentArr.push(segment * i);
+            }
+
+            let segCopy = JSON.parse(JSON.stringify(segmentArr)),
+                index = segmentArr.sort((a, b) => Math.abs(val - a) - Math.abs(val - b))[0];
+
+            let newValue = segCopy.indexOf(index) + 1;
+            slider.value = newValue;
+            setSliderTrack(slider);
+            quiz.setAnswer(newValue + 1, e);
         },
 
         /**

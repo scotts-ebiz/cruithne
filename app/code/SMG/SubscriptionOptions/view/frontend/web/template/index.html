@@ -152,13 +152,6 @@
 			</h4>
 			<hr class="sp-mt-4 sp-mb-8">
 
-			<!-- ko if: addOn().mentioned -->
-			<div class="sp-p1 sp-mb-4">
-				Because you mentioned
-				<strong data-bind="html: addOn().mentioned.toLowerCase()"></strong>
-			</div>
-            <!-- /ko -->
-
 			<div class="sp-options__add-on sp-px-4 sp-py-8 md:sp-p-8">
 				<div class="sp-flex sp-flex-column md:sp-flex-row sp-py-4 sp-px-8">
 					<div class="sp-flex-none sp-mb-2 md:sp-mb-0 md:sp-mr-8 sp-text-center">
@@ -174,11 +167,18 @@
 							data-bind="html: formatCurrency(addOn().price * addOn().quantity)"
 						>
 						</div>
+						<!-- ko if: addOn().quanityMeasuredinBags === 'no' -->
+						<div class="sp-flex sp-justify-center md:sp-justify-start sp-mb-2">
+							<div>Qty: 1</div>
+						</div>
+						<!-- /ko -->
+						<!-- ko if: addOn().quanityMeasuredinBags === 'yes' -->
 						<div class="sp-flex sp-justify-center md:sp-justify-start sp-mb-2">
 							<div class="sp-options-count sp-label sp-text-sm sp-mr-2 sp-flex sp-justify-center sp-items-center sp-label sp-uppercase"
 								 data-bind="html: addOn().quantity"></div>
 							<span>Bag Count</span>
 						</div>
+						<!-- /ko -->
 						<h4 class="sp-h4--long sp-mb-4 sp-mt-0" data-bind="html: addOn().displayName">
 						</h4>
 						<p class="sp-p1 sp-hide md:sp-block" data-bind="html: addOn().description"></p>

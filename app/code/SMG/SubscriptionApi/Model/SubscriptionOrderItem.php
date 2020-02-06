@@ -3,11 +3,11 @@
 namespace SMG\SubscriptionApi\Model;
 
 use Magento\Catalog\Model\ProductRepository;
-use Magento\Framework\Registry;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
+use Magento\Framework\Registry;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
 
 /**
@@ -53,8 +53,7 @@ class SubscriptionOrderItem extends AbstractModel
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
-    )
-    {
+    ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
 
         $this->_productRepository = $productRepository;
@@ -68,15 +67,18 @@ class SubscriptionOrderItem extends AbstractModel
      */
     public function getProduct()
     {
-
         // Make sure we have an actual subscription order item
-        if ( empty( $this->getEntityId() ) || empty( $this->getCatalogProductSku() ) ) {
+        if (empty($this->getEntityId()) || empty($this->getCatalogProductSku())) {
             return false;
         }
 
         // If subscription orders is local, send them, if not, pull them and send them
-        if ( ! isset($this->_product) ) {
-            $this->_product = $this->_productRepository->get( $this->getCatalogProductSku() );
+        if (! isset($this->_product)) {
+            try {
+                $this->_product = $this->_productRepository->get($this->getCatalogProductSku());
+            } catch (\Exception $ex) {
+                $this->_logger->error(__($ex->getMessage() . ' SKU: ' . $this->getCatalogProductSku()));
+            }
         }
 
         return $this->_product;
