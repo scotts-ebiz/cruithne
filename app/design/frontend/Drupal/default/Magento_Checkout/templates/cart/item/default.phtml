@@ -29,7 +29,8 @@ foreach($selections as $selc){
     <tr class="item-info">
         <td data-th="<?= $block->escapeHtml(__('Item')) ?>" class="col item">
             <span class="product-item-photo">
-                <?= $block->getImage($block->getProductForThumbnail(), 'cart_page_product_thumbnail')->toHtml() ?>
+                <?= /* @noEscape */ $block->getImage( /* @noEscape */ $block->getProductForThumbnail(),
+                  'cart_page_product_thumbnail')->toHtml() ?>
             </span>
             <div class="product-item-details">
                 <strong class="product-item-name">
@@ -39,7 +40,7 @@ foreach($selections as $selc){
                     <dl class="item-options">
                         <dd><i><?php //echo $_item->getSku() ?></i></dd>
                         <?php foreach ($_options as $key=>$_option) : ?>
-                            <?php $_formatedOptionValue = $block->getFormatedOptionValue($_option) ?>
+                            <?php $_formatedOptionValue = /* @noEscape */ $block->getFormatedOptionValue($_option) ?>
 
                             <div class="simple-img-wrapper">
                                 <?php if ($product->getData("type_id") == "bundle"):?>
@@ -87,7 +88,7 @@ foreach($selections as $selc){
             </td>
         <?php else: ?>
             <td class="col price" data-th="<?= $block->escapeHtml(__('Price')) ?>">
-                <?= $block->getUnitPriceHtml($_item) ?>
+                <?= /* @noEscape */ $block->getUnitPriceHtml($_item) ?>
             </td>
         <?php endif; ?>
 
@@ -143,4 +144,3 @@ foreach($selections as $selc){
     }
 }
 </script>
-
