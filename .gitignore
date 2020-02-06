@@ -18,7 +18,6 @@ atlassian*
 /pub/sitemap.xml
 /.idea
 .github
-.htaccess
 /.gitattributes
 /app/config_sandbox
 /app/etc/env.php
