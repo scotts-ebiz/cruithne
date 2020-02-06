@@ -45,3 +45,7 @@
   margin-bottom: 3rem;
   margin-top: 3rem;
 }
+
+.sp-faq-pointer{
+  cursor: pointer;
+}

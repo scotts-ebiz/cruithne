@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <css src="SMG_SubscriptionAccounts::css/account-general.css" />
+        <css src="SMG_SubscriptionAccounts::css/account-reset.css" />
+    </head>
+    <body>
+        <referenceContainer name="content">
+            <block class="SMG\SubscriptionAccounts\Block\Reset" name="smg_account_reset" template="account/reset/index.phtml" cacheable="false"/>
+        </referenceContainer>
+        <referenceBlock name="root">
+            <action method="setHeaderTitle">
+                <argument translate="true" name="title" xsi:type="string">Reset Password</argument>
+            </action>
+        </referenceBlock>
+    </body>
+</page>

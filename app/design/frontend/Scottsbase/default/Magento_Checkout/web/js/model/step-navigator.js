@@ -152,10 +152,9 @@ define([
 							});
 
 							$(".checkout-billing-address input[name='telephone']").focusout(function() {
-								var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.telephone';
-								var str = $("div[name='"+inpt+"'] input[name='telephone']").val();
+								var str = $(this).val()
 								var nval = str.replace(/^[(]?(\d{3})[)]?[-|\s]?(\d{3})[-|\s]?(\d{4})$/,'$1-$2-$3')
-								$("div[name='"+inpt+"'] input[name='telephone']").val(nval);
+								$(this).val(nval);
 							});
 
 						}, 7000);

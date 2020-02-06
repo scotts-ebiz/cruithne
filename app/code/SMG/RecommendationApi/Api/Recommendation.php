@@ -19,6 +19,7 @@ use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use SMG\RecommendationApi\Api\Interfaces\RecommendationInterface;
 use SMG\RecommendationApi\Helper\RecommendationHelper;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription\Collection as SubscriptionCollection;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription;
 
@@ -147,7 +148,7 @@ class Recommendation implements RecommendationInterface
      * Get quiz template and store it's id in session
      *
      * @param string $key
-     * @return array|void
+     * @return mixed
      * @throws SecurityViolationException
      * @throws NoSuchEntityException
      * @throws LocalizedException
@@ -200,7 +201,7 @@ class Recommendation implements RecommendationInterface
      * @param string $zip
      * @param string $lawnType
      * @param string $lawnSize
-     * @return array|null
+     * @return mixed
      * @throws SecurityViolationException
      * @throws NoSuchEntityException
      * @throws LocalizedException
@@ -282,7 +283,7 @@ class Recommendation implements RecommendationInterface
      * @param string $zip
      * @param string $lawnType
      * @param int $lawnSize
-     * @return array
+     * @return mixed
      * @throws SecurityViolationException
      * @throws NoSuchEntityException
      * @throws LocalizedException
@@ -312,28 +313,10 @@ class Recommendation implements RecommendationInterface
 
         // See if the subscription already exists.
         /**
-         * @var SubscriptionCollection
+         * @var SubscriptionCollection $subscriptionCollection
          */
         $subscriptionCollection = $this->_subscriptionCollectionFactory->create();
         $subscription = $subscriptionCollection->getItemByColumnValue('quiz_id', $id);
-
-        // Subscription has been cancelled or is already active.
-        if ($subscription && $subscription->getId() && $subscription->getSubscriptionStatus() !== 'pending') {
-            $this->_logger->error("Subscription with quiz ID '{$subscription->getQuizId()}' results cannot be loaded since it is already active or cancelled.");
-
-            $redirect = '/quiz';
-
-            if ($this->_customerSession->isLoggedIn()) {
-                $redirect = '/account/subscription';
-            }
-
-            $this->_response->setHttpResponseCode(400);
-
-            return [[
-                'success' => false,
-                'redirect' => $redirect,
-            ]];
-        }
 
         // Get the response
         $id = filter_var($id, FILTER_SANITIZE_SPECIAL_CHARS);
@@ -376,6 +359,13 @@ class Recommendation implements RecommendationInterface
         $this->_coreSession->setQuizId($response[0]['id']);
         $this->_coreSession->setZipCode($zip);
 
+        $response[0]['subscription'] = [
+            'lawn_size' => $subscription->getData('lawn_size'),
+            'lawn_zip' => $subscription->getData('lawn_zip'),
+            'status' => $subscription->getData('subscription_status'),
+            'zone_name' => $subscription->getData('zone_name'),
+        ];
+
         return $response;
     }
 
@@ -383,7 +373,7 @@ class Recommendation implements RecommendationInterface
      * Return completed quizzes
      *
      * @param mixed $key
-     * @return array
+     * @return mixed
      * @throws SecurityViolationException
      * @throws NoSuchEntityException
      * @api
@@ -419,7 +409,7 @@ class Recommendation implements RecommendationInterface
      * @param string $key
      * @param string $user_id
      * @param string $quiz_id
-     * @return bool|string|void
+     * @return mixed
      * @throws SecurityViolationException
      * @throws NoSuchEntityException
      * @api
@@ -468,7 +458,7 @@ class Recommendation implements RecommendationInterface
      * Get the products flat file
      *
      * @param $key
-     * @return array|bool|string|void
+     * @return mixed
      * @throws SecurityViolationException
      * @throws NoSuchEntityException
      * @api

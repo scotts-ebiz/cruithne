@@ -1,12 +1,14 @@
-<!-- ko if: success() -->
-<div
-    class="sp-bg-green-4 sp-p1 sp-px-4 sp-py-2 sp-mb-4 sp-rounded sp-text-green-1 sp-text-bold"
-    data-bind="text: success()"
->
+<div class="sp-flex sp-flex-column md:sp-flex-row sp-justify-center md:sp-justify-between sp-items-center sp-mt-8 md:sp-mt-0">
+    <h2 class="sp-h2 sp-mt-0 sp-text-center md:sp-text-left">Billing Information</h2>
+</div>
+
+<!-- ko if: false -->
+<div class="sp-px-4 md:sp-px-0 sp-my-8 sp-text-center md:sp-text-left">
+    <p class="sp-p1 sp-strong">You do not have a current subscription with Scotts Program.</p>
+    <p class="sp-p1 sp-max-w-md">Ready to get a subscription lawn care plan made just for your yard?</p>
+    <a href="/quiz" class="sp-button sp-button--primary sp-button--get-started sp-relative sp-text-center sp-mt-4">Get Started</a>
 </div>
 <!-- /ko -->
-
-<h2 class="sp-h2 sp-mt-0 sp-text-center lg:sp-text-left">Billing Information</h2>
 
 <form id="recurlyForm" class="sp-flex sp-flex-column lg:sp-flex-row">
 	<div class="sp-flex-auto sp-p-4 lg:sp-p-0">
@@ -79,15 +81,6 @@
             <label class="sp-form-label">City</label>
         </div>
         <div class="sp-form-group">
-            <input type="text"
-                placeholder="Zip/Postal Code"
-                class="sp-input"
-                data-recurly="postal_code"
-                data-bind="value: billing().zip"
-                name="zip_code">
-            <label class="sp-form-label">Zip/Postal Code</label>
-        </div>
-        <div class="sp-form-group">
             <div class="sp-select">
                 <select name="state"
                         placeholder="State"
@@ -95,6 +88,15 @@
                         data-bind="options: Object.values(states()), optionsText: function(item) { return item.text }, optionsValue: function(item) { return item.value }, value: billing().state"></select>
             </div>
             <label class="sp-form-label">State</label>
+        </div>
+        <div class="sp-form-group">
+            <input type="text"
+                placeholder="Zip/Postal Code"
+                class="sp-input"
+                data-recurly="postal_code"
+                data-bind="value: billing().zip"
+                name="zip_code">
+            <label class="sp-form-label">Zip/Postal Code</label>
         </div>
         <div class="sp-flex sp-justify-end">
             <input type="hidden"
@@ -106,3 +108,23 @@
         </div>
     </div>
 </form>
+
+<div id="popup-modal"
+     class="modal-popup--subscriptions sp-hide sp-p-8">
+    <button
+        class="modal-popup--subscriptions__close"
+        data-bind="click: hideSuccess"
+    ></button>
+    <h2 class="sp-h2 sp-text-black sp-text-center">Changes Saved</h2>
+    <p class="sp-text-black sp-text-center">The changes to your account have been saved.</p>
+
+    <div class="sp-flex sp-justify-center sp-items-center">
+        <button
+            class="sp-button sp-button--primary"
+            type="button"
+            data-bind="click: hideSuccess"
+        >
+            Close
+        </button>
+    </div>
+</div>
