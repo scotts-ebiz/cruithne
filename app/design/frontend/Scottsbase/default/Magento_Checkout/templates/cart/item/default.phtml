@@ -28,33 +28,19 @@ foreach($selections as $selc){
 <tbody class="cart item">
 <tr class="item-info">
     <td data-th="<?= $block->escapeHtml(__('Item')) ?>" class="col item">
-        <?php if ($block->hasProductUrl()):?>
-        <a href="<?= /* @escapeNotVerified */ $block->getProductUrl() ?>"
-           title="<?= $block->escapeHtml($block->getProductName()) ?>"
-           tabindex="-1"
-           class="product-item-photo">
-            <?php else:?>
             <span class="product-item-photo">
-            <?php endif;?>
-            <?= $block->getImage($block->getProductForThumbnail(), 'cart_page_product_thumbnail')->toHtml() ?>
-            <?php if ($block->hasProductUrl()):?>
-        </a>
-    <?php else: ?>
-        </span>
-    <?php endif; ?>
+                <?= /* @noEscape */ $block->getImage( /* @noEscape */ $block->getProductForThumbnail(),
+                    'cart_page_product_thumbnail')->toHtml() ?>
+            </span>
         <div class="product-item-details">
             <strong class="product-item-name">
-                <?php if ($block->hasProductUrl()):?>
-                    <a href="<?= /* @escapeNotVerified */ $block->getProductUrl() ?>"><?= $block->escapeHtml($block->getProductName()) ?></a>
-                <?php else: ?>
-                    <?= $block->escapeHtml($block->getProductName()) ?>
-                <?php endif; ?>
+                <?= $block->escapeHtml($block->getProductName()) ?>
             </strong>
             <?php if ($_options = $block->getOptionList()):?>
                 <dl class="item-options">
                     <dd><i><?php //echo $_item->getSku() ?></i></dd>
                     <?php foreach ($_options as $key=>$_option) : ?>
-                        <?php $_formatedOptionValue = $block->getFormatedOptionValue($_option) ?>
+                        <?php $_formatedOptionValue = /* @noEscape */ $block->getFormatedOptionValue($_option) ?>
 
                         <div class="simple-img-wrapper">
                             <?php if ($product->getData("type_id") == "bundle"):?>
@@ -92,17 +78,17 @@ foreach($selections as $selc){
 
     <?php if ($canApplyMsrp): ?>
         <td class="col msrp" data-th="<?= $block->escapeHtml(__('Price')) ?>">
-                <span class="pricing msrp">
-                    <span class="msrp notice"><?= /* @escapeNotVerified */ __('See price before order confirmation.') ?></span>
-                    <?php $helpLinkId = 'cart-msrp-help-' . $_item->getId(); ?>
-                    <a href="#" class="action help map" id="<?= /* @escapeNotVerified */ ($helpLinkId) ?>" data-mage-init='{"addToCart":{"helpLinkId": "#<?= /* @escapeNotVerified */ $helpLinkId ?>","productName": "<?= /* @escapeNotVerified */ $product->getName() ?>","showAddToCart": false}}'>
-                        <span><?= /* @escapeNotVerified */ __("What's this?") ?></span>
-                    </a>
-                </span>
+                    <span class="pricing msrp">
+                        <span class="msrp notice"><?= /* @escapeNotVerified */ __('See price before order confirmation.') ?></span>
+                        <?php $helpLinkId = 'cart-msrp-help-' . $_item->getId(); ?>
+                        <a href="#" class="action help map" id="<?= /* @escapeNotVerified */ ($helpLinkId) ?>" data-mage-init='{"addToCart":{"helpLinkId": "#<?= /* @escapeNotVerified */ $helpLinkId ?>","productName": "<?= /* @escapeNotVerified */ $product->getName() ?>","showAddToCart": false}}'>
+                            <span><?= /* @escapeNotVerified */ __("What's this?") ?></span>
+                        </a>
+                    </span>
         </td>
     <?php else: ?>
         <td class="col price" data-th="<?= $block->escapeHtml(__('Price')) ?>">
-            <?= $block->getUnitPriceHtml($_item) ?>
+            <?= /* @noEscape */ $block->getUnitPriceHtml($_item) ?>
         </td>
     <?php endif; ?>
 
@@ -158,4 +144,3 @@ foreach($selections as $selc){
     }
 }
 </script>
-

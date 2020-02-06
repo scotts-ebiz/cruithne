@@ -7,12 +7,14 @@
 // @codingStandardsIgnoreFile
 ?>
 <div id="checkout" data-bind="scope:'checkout'" class="checkout-container">
-    <div class="actions">
-        <a class="action continue"
-           href="<?= $block->getUrl('') ?>"
-           title="<?= $block->escapeHtml(__('Continue Shopping')) ?>">
-            <span><?= /* @escapeNotVerified */ __('Continue Shopping') ?></span>
-        </a>
+    <div class="custom-checkout-nav-btns">
+        <div class="actions backbtn">
+            <a class="action back"
+               href="<?= $block->getUrl('checkout/cart/') ?>"
+               title="<?= $block->escapeHtml(__('Back to Cart')) ?>">
+                <span><?= /* @escapeNotVerified */ __('Back to Cart') ?></span>
+            </a>
+        </div>
     </div>
     <div id="checkout-loader" data-role="checkout-loader" class="loading-mask" data-mage-init='{"checkoutLoader": {}}'>
         <div class="loader">
