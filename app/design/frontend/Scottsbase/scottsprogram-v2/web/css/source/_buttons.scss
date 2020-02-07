@@ -135,6 +135,10 @@
 
   box-sizing: border-box;
   height: auto;
+
+  &.sp-button--inactive {
+    @extend .sp-button--inactive;
+  }
 }
 
 .sp-button--loading {
