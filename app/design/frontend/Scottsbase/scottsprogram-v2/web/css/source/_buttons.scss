@@ -138,6 +138,8 @@
 
   &.sp-button--inactive {
     @extend .sp-button--inactive;
+
+    pointer-events: none;
   }
 }
 
