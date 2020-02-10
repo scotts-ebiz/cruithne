@@ -220,7 +220,7 @@
                                                                 display: inline-block;
                                                             }
                                                             [type="radio"]:checked+label:before, [type="radio"]:not(:checked)+label:before {
-                                                                top: 2px;
+                                                                top: 1px;
                                                             }
                                                             [type="radio"]:checked+label:after, [type="radio"]:not(:checked)+label:after {
                                                                 top: 6px;
