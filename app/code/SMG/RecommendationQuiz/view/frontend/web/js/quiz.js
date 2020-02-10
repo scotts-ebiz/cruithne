@@ -832,6 +832,7 @@ define([
          * Toggle Google Maps and manual entry.
          */
         self.toggleGoogleMaps = function () {
+            self.invalidZipCode(false);
             self.usingGoogleMaps(!self.usingGoogleMaps());
             self.setArea(0);
             self.setZipCode('');
