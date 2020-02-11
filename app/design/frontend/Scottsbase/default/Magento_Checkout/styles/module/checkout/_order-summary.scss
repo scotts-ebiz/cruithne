@@ -4,6 +4,9 @@
 
 $checkout-summary__background-color : $color-white-smoke !default;
 $checkout-summary__padding          : 22px $indent__l !default;
+$checkout-summary__width            : 75%;
+$checkout-summary-mobile__width     : 100%;
+$checkout-summary__float            : right;
 
 $checkout-summary-title__margin     : $indent__s !default;
 $checkout-summary-mark-value__color : $color-gray60 !default;
@@ -19,10 +22,15 @@ $checkout-summary-items__padding    : 15px !default;
     @extend .abs-add-box-sizing;
     @include lib-css(background, $checkout-summary__background-color);
     @include lib-css(padding, $checkout-summary__padding);
+    @include lib-css(width, $checkout-summary__width);
     margin: 0 0 $indent__base;
+    float: right;
+    @include max-screen($screen__m) {
+        @include lib-css(width, $checkout-summary-mobile__width);
+    }
 
     > .title {
-        @extend .abs-checkout-title;
+        @include cart-checkout-h2-font($border: 2px solid $checkout-light_grey);
         display: block;
     }
 

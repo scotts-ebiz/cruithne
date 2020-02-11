@@ -4,23 +4,22 @@ namespace SMG\FeaturesList\Model\Source;
 
 class FeatureTextSize implements \Magento\Framework\Option\ArrayInterface
 {
-  public function toOptionArray()
-  {
-    return [
-        ['value' => 'font-size: 0.7rem; ', 'label' => __('0.7')],
-        ['value' => 'font-size: 0.8rem; ', 'label' => __('0.8')],
-        ['value' => 'font-size: 0.9rem; ', 'label' => __('0.9')],
-        ['value' => 'font-size: 1.0rem; ', 'label' => __('1.0')],
-        ['value' => 'font-size: 1.1rem; ', 'label' => __('1.1')],
-        ['value' => 'font-size: 1.2rem; ', 'label' => __('1.2')],
-        ['value' => 'font-size: 1.3rem; ', 'label' => __('1.3')],
-        ['value' => 'font-size: 1.4rem; ', 'label' => __('1.4')],
-        ['value' => 'font-size: 1.5rem; ', 'label' => __('1.5')],
-        ['value' => 'font-size: 1.6rem; ', 'label' => __('1.6')],
-        ['value' => 'font-size: 1.7rem; ', 'label' => __('1.7')],
-        ['value' => 'font-size: 1.8rem; ', 'label' => __('1.8')],
-        ['value' => 'font-size: 1.9rem; ', 'label' => __('1.9')],
-        ['value' => 'font-size: 2.0rem; ', 'label' => __('2.0')]
-    ];
-  }
+    public function toOptionArray()
+    {
+        return [
+            ['value' => 'font-size: 8px; ', 'label' => __('8px')],
+            ['value' => 'font-size: 9px; ', 'label' => __('9px')],
+            ['value' => 'font-size: 10px; ', 'label' => __('10px')],
+            ['value' => 'font-size: 11px; ', 'label' => __('11px')],
+            ['value' => 'font-size: 12px; ', 'label' => __('12px')],
+            ['value' => 'font-size: 13px; ', 'label' => __('13px')],
+            ['value' => 'font-size: 14px; ', 'label' => __('14px')],
+            ['value' => 'font-size: 15px; ', 'label' => __('15px')],
+            ['value' => 'font-size: 16px; ', 'label' => __('16px')],
+            ['value' => 'font-size: 17px; ', 'label' => __('17px')],
+            ['value' => 'font-size: 18px; ', 'label' => __('18px')],
+            ['value' => 'font-size: 19px; ', 'label' => __('19px')],
+            ['value' => 'font-size: 20px; ', 'label' => __('20px')]
+        ];
+    }
 }
