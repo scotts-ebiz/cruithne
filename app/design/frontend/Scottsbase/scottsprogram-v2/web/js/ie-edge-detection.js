@@ -7,7 +7,7 @@ require(["jquery"], function($) {
         !!window.StyleMedia)) /** Edge non-chromium detection */ &&
         window.location.pathname != "/browser"
      ) {
-      const headerInterval = setInterval(() => {
+      var headerInterval = setInterval(function() {
         if (document.querySelector('header#sp-header')) {
           document.querySelector('header#sp-header').style.flex = '0 0 auto';
 
