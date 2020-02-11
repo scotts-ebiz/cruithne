@@ -13,6 +13,7 @@ use Recurly_Client;
 use Recurly_Coupon;
 use Recurly_CustomField;
 use Recurly_Error;
+use Recurly_Invoice;
 use Recurly_NotFoundError;
 use Recurly_Purchase;
 use Recurly_ShippingAddress;
@@ -167,6 +168,9 @@ class RecurlySubscription
         $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
         $this->_testHelper = $testHelper;
         $this->_coreSession = $coreSession;
+
+        Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
+        Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
     }
 
     /**
@@ -187,10 +191,6 @@ class RecurlySubscription
 
         // If there is Recurly token, plan code and quiz data
         if (! empty($token) && ! empty($subscriptionType) && ! empty($quizId)) {
-            // Configure Recurly Client
-            Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
-            Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
-
             $checkoutAddress = $this->_checkoutSession->getQuote()->getShippingAddress();
             $checkoutData = $checkoutAddress->getData();
             $shippingAddress = $this->_subscriptionOrderHelper->formatAddress($checkoutAddress);
@@ -254,7 +254,7 @@ class RecurlySubscription
                 try {
                     $purchase->account->billing_info = $this->createBillingInfo($account->account_code, $token);
                 } catch (\Exception $e) {
-                    if ( strpos($e->getMessage(), 'security code') !== false ) {
+                    if (strpos($e->getMessage(), 'security code') !== false) {
                         $cvvError = 'The security code you entered does not match. Please update the CVV and try again.';
                     }
                     $error = 'There is a problem with the billing information.';
@@ -357,10 +357,6 @@ class RecurlySubscription
      */
     public function checkRecurlySubscription()
     {
-        // Configure Recurly Client using the API Key and Subdomain entered in the settings page
-        Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
-        Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
-
         $subscriptionFactory = $this->_subscriptionCollectionFactory->create();
         $hasActiveSubscription = $subscriptionFactory
             ->addFilter('subscription_status', 'active')
@@ -417,9 +413,6 @@ class RecurlySubscription
 
         // Configure Recurly Client using the API Key and Subdomain entered in the settings page and get account
         try {
-            Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
-            Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
-
             $account_code = $account_code ?: $this->_customerSession->getCustomer()->getGigyaUid();
         } catch (\Exception $e) {
             throw new LocalizedException(__('Failed to retrieve subscription account.'));
@@ -500,10 +493,6 @@ class RecurlySubscription
      */
     public function hasRecurlySubscription($account_code)
     {
-        // Configure Recurly Client using the API Key and Subdomain entered in the settings page
-        Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
-        Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
-
         try {
             $subscriptions = Recurly_SubscriptionList::getForAccount($account_code, [ 'state' => 'active' ]);
             $subscriptions_amount = 0;
@@ -931,9 +920,6 @@ class RecurlySubscription
     private function getSubscriptionIds($checkoutData, $account, $subscription)
     {
         try {
-            Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
-            Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
-
             $activeSubs = Recurly_SubscriptionList::getForAccount($account->account_code, [ 'state' => 'active' ]);
             $futureSubs = Recurly_SubscriptionList::getForAccount($account->account_code, [ 'state' => 'future' ]);
 
@@ -979,9 +965,6 @@ class RecurlySubscription
     public function createCredit($gigyaId, $totalRefund = 0)
     {
         try {
-            Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
-            Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
-
             $purchase = new Recurly_Purchase();
             $purchase->currency = $this->_currency;
             $purchase->collection = 'automatic';
@@ -990,13 +973,13 @@ class RecurlySubscription
             $credit = new Recurly_Adjustment();
             $credit->account_code = $gigyaId;
             $credit->currency = $this->_currency;
-            $credit->description = 'Partial refund for subscription cancellation';
-            $credit->unit_amount_in_cents = $this->convertAmountToCents($totalRefund);
+            $credit->description = 'Refund for subscription cancellation';
+            $credit->unit_amount_in_cents = -$this->convertAmountToCents($totalRefund);
             $credit->tax_exempt = true;
+            $credit->type = 'credit';
             $credit->create();
 
-            $purchase->adjustments = [ $credit ];
-            Recurly_Purchase::invoice($purchase);
+            Recurly_Invoice::invoicePendingCharges($gigyaId);
         } catch (\Exception $e) {
             throw new LocalizedException(__('Credit failed to apply.' . $e->getMessage()));
         }
