@@ -96,7 +96,7 @@ class CancelHelper extends AbstractHelper
             if (! $subscription) {
                 $error = 'Could not find subscription with ID ' . $masterSubscriptionId;
                 $this->_logger->error($error);
-                throw new LocalizedException(_($error));
+                throw new LocalizedException(__($error));
             }
 
             // Cancel subscription orders
@@ -104,7 +104,7 @@ class CancelHelper extends AbstractHelper
         } catch (Exception $e) {
             $this->_logger->error($e->getMessage());
 
-            throw new LocalizedException(_('There was an issue cancelling subscriptions.'));
+            throw new LocalizedException(__('There was an issue cancelling subscriptions.'));
         }
 
         // We canceled the subscription, so clear customer addresses.

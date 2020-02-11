@@ -1140,14 +1140,14 @@ class RecurlySubscription
             $credit = new Recurly_Adjustment();
             $credit->account_code = $gigyaId;
             $credit->currency = $this->_currency;
-            $credit->description = 'Partial refund for subscription cancellation';
-            $credit->unit_amount_in_cents = $this->convertAmountToCents($totalRefund);
+            $credit->description = 'Refund for subscription cancellation';
+            $credit->unit_amount_in_cents = -$this->convertAmountToCents($totalRefund);
             $credit->tax_exempt = true;
+            $credit->type = 'credit';
             $credit->create();
 
-            $purchase->adjustments = [ $credit ];
-            Recurly_Purchase::invoice($purchase);
-        } catch (Exception $e) {
+            Recurly_Invoice::invoicePendingCharges($gigyaId);
+        } catch (\Exception $e) {
             throw new LocalizedException(__('Credit failed to apply.' . $e->getMessage()));
         }
     }
