@@ -168,7 +168,7 @@ define([
         var gtmDataLayer = window[config.dataLayer];
         // Add any error message to dataLayer
         messagesObject.subscribe(function (data) {
-            if (data && data.messages.length) {
+            if (data && data.messages && data.messages.length) {
                 _.each(data.messages, function (message) {
                     if (message.type === 'error') {
                         gtmDataLayer.push({'event': 'errorMessage', 'errorMessage': message.text});
