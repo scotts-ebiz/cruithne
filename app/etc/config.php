@@ -362,6 +362,7 @@ return [
         'SMG_SubscriptionCheckout' => 1,
         'SMG_SubscriptionPlan' => 1,
         'SMG_Theme' => 1,
+        'SMG_UnsupportedBrowser' => 1,
         'Vantiv_Payment' => 1,
         'Zaius_Engage' => 1,
         'SMG_Zip' => 1,

@@ -13,8 +13,45 @@ define([
             this.states = ko.observable(config.states);
             this.countries = ko.observable(config.countries);
 
+
             setTimeout( function() {
-                recurly.configure(config.recurlyApi);
+                recurly.configure({
+                    publicKey: config.recurlyApi,
+                    fields: {
+                        card: {
+                            // Field style properties
+                            style: {
+                                fontSize: '12px',
+                            }
+                        }
+                    }
+                });
+
+                $(window).on('resize init', function (event) {
+                    if ($(this).width() <= 767) {
+                        recurly.configure({
+                            fields: {
+                                card: {
+                                    // Field style properties
+                                    style: {
+                                        fontSize: '12px',
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        recurly.configure({
+                            fields: {
+                                card: {
+                                    // Field style properties
+                                    style: {
+                                        fontSize: '14px',
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }).triggerHandler('init');
 
                 successModal = modal({
                     type: 'popup',

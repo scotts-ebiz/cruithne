@@ -32,6 +32,7 @@ define([
         initialize(config) {
             const self = this;
 
+            window.scrollTo(0, 0);
             self.customer = customerData.get('customer');
 
             if (config.zip) {
@@ -128,7 +129,6 @@ define([
                 return seasons;
             });
 
-
             // used to indicate which product is up next for delivery
             self.nextAvailableProduct = ko.computed(() => {
                 const currentDate = new Date();
@@ -146,7 +146,6 @@ define([
             self.activeSeason = ko.computed(function () {
                 return self.seasons()[self.activeSeasonIndex()]
             });
-
         },
 
         toggleAccordion(index) {
@@ -438,6 +437,10 @@ define([
                 ...this.saveAndSendSuccessModal(),
                 visible: !this.saveAndSendSuccessModal().visible
             })
+        },
+
+        formatNumber: function(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
     });
 });

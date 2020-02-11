@@ -1,4 +1,5 @@
 define([
+
   "jquery",
   "Magento_Ui/js/modal/modal",
   "mage/validation",
@@ -71,8 +72,10 @@ define([
     Array.prototype.forEach.call(inputs, function(input) {
         input.addEventListener('blur', function() {
             $.validator.validateSingleElement($(input));
+
         });
     });
+
 
     $(document).on("submit", "#contact-form", function() {
       event.preventDefault();
@@ -93,6 +96,7 @@ define([
                     class: "sp-button sp-button--primary",
                     click: function() {
                       this.closeModal();
+
                     }
                   }
                 ]
