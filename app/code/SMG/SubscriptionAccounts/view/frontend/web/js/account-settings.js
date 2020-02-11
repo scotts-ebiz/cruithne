@@ -11,6 +11,7 @@ define([
             let self = this;
 
             this.account = ko.observable(config.account);
+            this.accountEmail = ko.observable(config.account.email);
             this.modalValues = ko.observable({
                 header: 'Changes Saved',
                 message: 'The changes to your account have been saved.'
@@ -87,6 +88,18 @@ define([
                             });
                         }
                         if (message.indexOf('customer with the same email address') >= 0) {
+                            /**
+                             * On a failed email address update, pull the ref to the old
+                             * email address and update the stored account accordingly
+                             * in order to update email input field to correspond to
+                             * actual account values.
+                             */
+                            const newAccount = {
+                                ...self.account(),
+                                email: self.accountEmail()
+                            }
+                            self.account(newAccount);
+
                             self.modalValues({
                                 header: 'Problem saving changes',
                                 message: 'An account already exists with the email address you entered, please use a different email address.'

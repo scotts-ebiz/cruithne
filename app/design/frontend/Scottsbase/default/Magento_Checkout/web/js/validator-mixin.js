@@ -239,6 +239,22 @@ define([
 			$.mage.__('Please enter a valid ZIP code.')
 		);
 		validator.addRule(
+			'required-entry-exceptpost',
+			function (value) {
+				var zipcodesTemp = ['967', '968', '995', '996', '997', '998', '999'];
+				var temp = value.substring(0, 3);			
+				if ($("input[name='postcode']").val() != '') {
+					if($.inArray(temp, zipcodesTemp) >= 0){
+						return false;
+					}
+					return true;
+				} else {
+					return !$.mage.isEmpty(value);
+				}
+			},
+			$.mage.__('We are unable to ship to Alaska and Hawaii at this time.')
+		);
+		validator.addRule(
 			'required-entry-bpcode',
 			function (value) {
 				var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.postcode';

@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="MagePal\GoogleTagManager\Model\Cart">
+        <plugin name="smg_googletagmanager_plugin_model_cart" type="SMG\GoogleTagManager\Plugin\Model\Cart" />
+    </type>
+    <type name="MagePal\GoogleTagManager\Model\Order">
+        <plugin name="smg_googletagmanager_plugin_model_order" type="SMG\GoogleTagManager\Plugin\Model\Order" />
+    </type>
+</config>
