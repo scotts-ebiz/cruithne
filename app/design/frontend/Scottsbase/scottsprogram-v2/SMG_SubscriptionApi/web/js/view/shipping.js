@@ -137,7 +137,7 @@ define([
                         Did you move or have your lawn conditions changed? We can cancel your current subscription and start a new one.
                     </p>
                     <p><strong>Keep my current subscription</strong><br />
-                        Don’t want to cancel? You can keep your current plan and subscription option. 
+                        Don’t want to cancel? You can keep your current plan and subscription option.
                     </p>
                      <p class="sp-text-center"><strong>For questions, email us at scotts-orders@scotts.com or call us at <a href="tel:18772203091">1-877-220-3091</a>.</strong></p>
                     <div class="modal-popup-cta sp-text-center">
@@ -203,7 +203,15 @@ define([
                             focus: 'none',
                             buttons: [],
                             closed() {
+                                const zip = window.sessionStorage.getItem('lawn-zip');
+                                const quizId = window.sessionStorage.getItem('quiz-id');
+
                                 if (self.hasSubscription() && !self.cancellingSubscription()) {
+                                    if(zip && quizId) {
+                                        window.location.href = `/subscription-options/index/index/id/${quizId}/zip/${zip}`;
+                                        return;
+                                    }
+
                                     window.location.href = '/your-plan';
                                 }
                             },
