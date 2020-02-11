@@ -62,8 +62,6 @@ define([
         $.mage.__('Please enter a valid message.')
     );
 
-
-
     const nameInput = document.querySelector('input[name="name"]');
     const emailInput = document.querySelector('input[name="email"]');
     const messageTextarea = document.querySelector('textarea[name="comment"]');
