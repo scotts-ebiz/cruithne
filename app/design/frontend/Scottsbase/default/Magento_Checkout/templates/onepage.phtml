@@ -10,7 +10,7 @@
     <div class="custom-checkout-nav-btns">
         <div class="actions backbtn">
             <a class="action back"
-               href="<?= $block->getUrl('checkout/cart/') ?>"
+               href="<?= $block->escapeUrl($block->getUrl('checkout/cart/')) ?>"
                title="<?= $block->escapeHtmlAttr(__('Back to Cart')) ?>">
                 <span><?= $block->escapeHtml(__('Back to Cart')) ?></span>
             </a>
