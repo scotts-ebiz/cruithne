@@ -6,6 +6,24 @@ define([
     return function (config) {
         window.gigyaInit = window.gigyaInit || [];
 
+        let gigInt = setInterval(() => {
+            if (document.querySelector('#gigya-reset-password-form')) {
+                const form = document.querySelector('#gigya-reset-password-form');
+                const input = form.querySelector('input[type="text"].gigya-input-text');
+                const button = form.querySelector('.gigya-input-submit');
+
+                button.classList.add('sp-button--inactive');
+
+                input.addEventListener('input', e => {
+                    /^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$/.test(e.target.value) ?
+                    button.classList.remove('sp-button--inactive') :
+                    button.classList.add('sp-button--inactive');
+                });
+
+                clearInterval(gigInt);
+            }
+        }, 50);
+
         const customLangParams = {
             email_already_exists: `
                 <div class="sp-gigya-error sp-form-error sp-font-bold sp-mb-4 sp--mt-2">This email is already associated with an account.</div>
