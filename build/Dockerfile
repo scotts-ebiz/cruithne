@@ -1,6 +1,6 @@
 # Base image is Google's Optimized Ubuntu Image
 
-ARG IMAGE=gcr.io/ecommerce-platform-211419/magento-test-primer:latest
+ARG IMAGE=gcr.io/ecommerce-platform-211419/magento-stage-primer:latest
 FROM $IMAGE
 ENTRYPOINT []
 
@@ -52,3 +52,4 @@ RUN ["chmod", "+x", "/usr/local/bin/entrypoint.sh"]
 
 # The apachectl command is in entrypoint :-)
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
+
