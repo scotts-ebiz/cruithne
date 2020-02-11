@@ -4,7 +4,7 @@
 
     <p class="sp-text-center sp-max-w-md sp-mx-auto">
         Get ready to grow a thick, strong, green lawn! Your plan contains everything you need to take care of all
-        <strong data-bind="if: lawnArea() > 0"><span data-bind="html: lawnArea()"></span> square feet</strong> of your
+        <strong data-bind="if: lawnArea() > 0"><span data-bind="html: formatNumber(lawnArea())"></span> square feet</strong> of your
         <span data-bind="if: lawnType()"><strong data-bind="html: lawnType()"></strong></span> lawn in every season.
     </p>
 
@@ -28,7 +28,7 @@
                     <div class="sp-px-1">
                         <img
                             class="sp-align-center sp-block sp-mb-1 sp-results__product-image"
-                            data-bind="attr: { src: thumbnailImage }"
+                            data-bind="attr: { src: thumbnailImage, alt: meta_title }"
                         />
                     </div>
                 </div>
@@ -50,7 +50,7 @@
 <div class="sp-container sp-mb-16">
     <div class="sp-mx-auto sp-w-full lg:sp-w-5/6">
         <div class="sp-flex sp-justify-end sp-mr-8 md:sp-mr-0 sp-my-4">
-            <button class="sp-link" data-bind="click: toggleSaveAndSendModal">Save and Send Plan</button>
+            <button class="sp-link" data-bind="click: toggleSaveAndSendModal">Save and Send Results</button>
         </div>
 
         <!-- Sidebar -->
@@ -67,7 +67,7 @@
                     >
                         <img
                             class="sp-mr-4 sp-results__icon--small"
-                            data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]) }"
+                            data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]), alt: $data.products[0].season }"
                         />
                         <div>
                             <strong
@@ -88,7 +88,7 @@
                     >
                         <img
                             class="sp-mr-4 sp-results__icon--small"
-                            data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]) }"
+                            data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]), alt: $data.products[0].season }"
                         />
                         <div>
                             <strong
@@ -166,4 +166,3 @@
 </div>
 <!-- /ko -->
 <!-- /ko -->
-

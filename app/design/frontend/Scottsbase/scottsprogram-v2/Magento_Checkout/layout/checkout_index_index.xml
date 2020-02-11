@@ -38,13 +38,46 @@
                                                                 <item name="firstname" xsi:type="array">
                                                                     <item name="validation" xsi:type="array">
                                                                         <item name="validate-alpha" xsi:type="boolean">false</item>
+                                                                        <item name="required-entry" xsi:type="boolean">false</item>
                                                                         <item name="required-entry-firstname" xsi:type="boolean">true</item>
                                                                     </item>
                                                                 </item>
                                                                 <item name="lastname" xsi:type="array">
                                                                     <item name="validation" xsi:type="array">
                                                                         <item name="validate-alpha" xsi:type="boolean">false</item>
+                                                                        <item name="required-entry" xsi:type="boolean">false</item>
                                                                         <item name="required-entry-lastname" xsi:type="boolean">true</item>
+                                                                    </item>
+                                                                </item>
+                                                                <item name="city" xsi:type="array">
+                                                                    <item name="validation" xsi:type="array">
+
+                                                                        <item name="required-entry" xsi:type="boolean">false</item>
+                                                                        <item name="validate-alpha" xsi:type="boolean">false</item>
+                                                                        <item name="required-entry-city" xsi:type="boolean">true</item>
+                                                                    </item>
+                                                                </item>
+                                                                <item name="region" xsi:type="array">
+                                                                    <item name="validation" xsi:type="array">
+                                                                        <item name="required-entry" xsi:type="boolean">false</item>
+                                                                        <item name="validate-alpha" xsi:type="boolean">false</item>
+                                                                        <item name="required-entry-regionid" xsi:type="boolean">true</item>
+                                                                    </item>
+                                                                </item>
+                                                                <item name="postcode" xsi:type="array">
+                                                                    <item name="component" xsi:type="string">Magento_Ui/js/form/element/post-code</item>
+                                                                    <item name="validation" xsi:type="array">
+                                                                        <item name="required-entry" xsi:type="boolean">false</item>
+                                                                        <item name="validate-alpha" xsi:type="boolean">false</item>
+                                                                        <item name="required-entry-pcode" xsi:type="boolean">true</item>
+                                                                    </item>
+                                                                </item>
+                                                                <item name="telephone" xsi:type="array">
+                                                                    <item name="validation" xsi:type="array">
+                                                                        <item name="required-entry" xsi:type="boolean">false</item>
+                                                                        <item name="validate-alpha" xsi:type="boolean">false</item>
+                                                                        <item name="required-entry-telephone" xsi:type="boolean">true</item>
+
                                                                     </item>
                                                                 </item>
                                                             </item>

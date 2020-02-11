@@ -16,7 +16,7 @@
         <div class="md:sp-flex sp-max-w-xl sp-mx-auto sp-mb-8">
             <div class="sp-mx-auto sp-flex-none sp-w-1/3 sp-max-w-xs sp-mb-8">
                 <img
-                    data-bind="attr: { src: pdp().product.mediumImage }"
+                    data-bind="attr: { src: pdp().product.mediumImage, alt: pdp().product.meta_title }"
                     class="sp-mx-auto sp-block"
                 />
             </div>
@@ -121,7 +121,7 @@
         >
             <h3 class="sp-h4">Label</h3>
             <div data-bind="html: pdp().product.howToApply"></div>
-            <img data-bind="attr { src: pdp().product.image_label }"/>
+            <img data-bind="attr { src: pdp().product.image_label }" alt="Product Label" />
 
             <h3 class="sp-h4">Weight</h3>
             <div>

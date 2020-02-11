@@ -64,6 +64,7 @@ define([
         isNewAddressAdded: ko.observable(false),
         saveInAddressBook: 1,
         quoteIsVirtual: quote.isVirtual(),
+        summary: ko.observable(null),
 
         /**
          * @return {exports}
@@ -84,6 +85,17 @@ define([
             $(document).on( 'click', 'button#cancelSubscription', function() {
                 self.cancelRecurlySubscription();
             });
+
+            let telephoneInterval = setInterval(() => {
+                if ($('input[name="telephone"]').length) {
+                    const telephoneInput = $('input[name="telephone"]');
+                    telephoneInput.on('input propertychange', e => {
+                        telephoneInput.blur();
+                        telephoneInput.focus();
+                    });
+                    clearInterval(telephoneInterval);
+                }
+            }, 250);
 
             if (!quote.isVirtual()) {
                 stepNavigator.registerStep(
@@ -127,17 +139,24 @@ define([
                 shippingRatesValidator.initFields(fieldsetName);
             });
 
+            const summaryInterval = setInterval(() => {
+                if(document.querySelector('.opc-block-summary')) {
+                    self.summary(document.querySelector('.opc-block-summary'));
+                    clearInterval(summaryInterval);
+                }
+            }, 100);
+
             return this;
         },
 
         getAlreadySubscribedModalContent() {
-            return `<h5 class="sp-h5 sp-text-black sp-text-center">You're Already Subscribed</h5>
-                    <h6 class="sp-h6 sp-text-black sp-text-center">Looks like you already have a Scotts Program Subscription.</h6>
+            return `<h5 class="sp-h5 sp-mt-0 sp-mb-2 sp-text-black sp-text-center">You're Already Subscribed</h5>
+                    <h6 class="sp-h6 sp-mt-0 sp-mb-4 sp-text-black sp-text-center">Looks like you already have a Scotts Program Subscription.</h6>
                     <p><strong>Start a new subscription</strong><br />
                         Did you move or have your lawn conditions changed? We can cancel your current subscription and start a new one.
                     </p>
                     <p><strong>Keep my current subscription</strong><br />
-                        Don’t want to cancel? You can keep your current plan and subscription option. 
+                        Don’t want to cancel? You can keep your current plan and subscription option.
                     </p>
                      <p class="sp-text-center"><strong>For questions, email us at scotts-orders@scotts.com or call us at <a href="tel:18772203091">1-877-220-3091</a>.</strong></p>
                     <div class="modal-popup-cta sp-text-center">
@@ -150,8 +169,8 @@ define([
 
         getCancellationModalContent() {
             return `
-                <h5 class="sp-h5 sp-text-black sp-text-center">Confirm Your Cancellation</h5>
-                <h6 class="sp-h6 sp-text-black sp-text-center">By cancelling your subscription, the following will happen:</h6>
+                <h5 class="sp-h5 sp-mt-0 sp-mb-2 sp-text-black sp-text-center">Confirm Your Cancellation</h5>
+                <h6 class="sp-h6 sp-mt-0 sp-mb-4 sp-text-black sp-text-center">By cancelling your subscription, the following will happen:</h6>
                 <div class="content">
                     <ul>
                         <li>Please see your email for your refund amount. This should appear in your account within 7 days.</li>
@@ -169,12 +188,41 @@ define([
                 </div>`;
         },
 
+        isStyleSupported(prop, value) {
+            // If no value is supplied, use "inherit"
+            value = arguments.length === 2 ? value : 'inherit';
+            // Try the native standard method first
+            if ('CSS' in window && 'supports' in window.CSS) {
+                return window.CSS.supports(prop, value);
+            }
+            // Check Opera's native method
+            if('supportsCSS' in window){
+                return window.supportsCSS(prop, value);
+            }
+            // Convert to camel-case for DOM interactions
+            var camel = prop.replace(/-([a-z]|[0-9])/ig, function(all, letter) {
+                return (letter + '').toUpperCase();                          
+            });
+            // Check if the property is supported
+            var support = (camel in el.style);
+            // Create test element
+            var el = document.createElement('div');
+            // Assign the property and value to invoke
+            // the CSS interpreter
+            el.style.cssText = prop + ':' + value;
+            // Ensure both the property and value are
+            // supported and return
+            return support && (el.style[camel] !== '');
+        },
+
         /**
          * Check if the customer has an active Recurly Subscription
          *
          */
         checkRecurlySubscriptions: function() {
             var self = this;
+            let loader = null;
+            let loaderBgStyle = null;
 
             self.loading(true);
 
@@ -191,6 +239,13 @@ define([
                     if( response.success === true && response.has_subscription === true ) {
                         self.hasSubscription(true);
 
+                        if(!self.isStyleSupported('mix-blend-mode')){
+                            loader = self.summary().querySelector('.loading-mask');
+                            if(loader) {
+                                loaderBgStyle = window.getComputedStyle(loader).getPropertyValue('background');
+                                loader.style.background = 'none';
+                            }
+                        }
                         // Show modal
                         $('body').append(`<section id="popup-modal" class="modal-popup--subscriptions">
                             ${self.getAlreadySubscribedModalContent()}
@@ -202,12 +257,20 @@ define([
                             innerScroll: true,
                             focus: 'none',
                             buttons: [],
-                            opened: function($Event) {
-                                $('.modal-header').remove();
-                            },
                             closed() {
+                                const zip = window.sessionStorage.getItem('lawn-zip');
+                                const quizId = window.sessionStorage.getItem('quiz-id');
+
                                 if (self.hasSubscription() && !self.cancellingSubscription()) {
+                                    if(zip && quizId) {
+                                        window.location.href = `/subscription-options/index/index/id/${quizId}/zip/${zip}`;
+                                        return;
+                                    }
+
                                     window.location.href = '/your-plan';
+                                }
+                                if(loader) {
+                                    loader.style.background = loaderBgStyle;
                                 }
                             },
                         };
@@ -219,9 +282,6 @@ define([
 
                         var popup = modal(options, $('#popup-modal'));
                         $('#popup-modal').modal('openModal');
-
-
-
                     }
                 },
                 complete() {
