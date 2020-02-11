@@ -129,7 +129,7 @@ before_script:
   --admin-password="$ADMIN_PASSWORD" --language="en_US" --backend-frontname="admin"
   --base-url="$LOCAL_URL" --db-host="localhost" --db-name="$DB_NAME" --db-user="$DB_APP_USER"
   --db-password="$DB_APP_PASSWORD" --currency="USD" --timezone="America/New_York" --use-rewrites="1"
-  --use-secure="1"
+  --use-secure="1" -n
 
 # Copy repo to /var/www
 - sudo cp -r $TRAVIS_BUILD_DIR /var/www/
