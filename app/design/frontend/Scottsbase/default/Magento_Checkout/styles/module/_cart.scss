@@ -3,12 +3,25 @@
 //  ---------------------------------------------
 
 //  Summary block
+
+.checkout-cart-index {
+  .page-wrapper .page-title-wrapper{
+      display: block;
+      h1 {
+          @include cart-checkout-h2-font($border: 0);
+      }
+  }
+}
+
+.no-margin{
+  margin:0px;
+}
+
 .cart-summary {
     @extend .abs-add-box-sizing;
     @extend .abs-adjustment-incl-excl-tax;
-    @include lib-css(background, $sidebar__background-color);
     margin-bottom: $indent__m;
-    padding: 1px 15px $indent__m;
+    padding: 0;
 
     > .title {
         display: block;
@@ -50,20 +63,13 @@
             }
         }
     }
-    .actions-toolbar {
-        > .primary {
-            button {
-                @extend .abs-revert-secondary-color;
-            }
-        }
-    }
 }
 
 //  Totals block
 .cart-totals {
     @extend .abs-sidebar-totals;
-    border-top: 1px solid $border-color__base;
-    padding-top: $indent__s;
+    background-color: $color-gray-light01;
+    padding: 15px;
 
     .table-wrapper {
         margin-bottom: 0;
@@ -124,8 +130,6 @@
         @extend .abs-add-clearfix;
 
         > .action {
-            @extend button;
-            @include lib-link-as-button();
             margin-bottom: $indent__s;
             margin-right: $indent__s;
 
@@ -200,11 +204,13 @@
     .checkout-methods-items {
         @extend .abs-reset-list;
         margin-top: $indent__base;
-        text-align: center;
+        text-align: right;
+        @media screen and (max-width: $screen__xs) {
+            text-align: center;
+        }
 
         .action.primary {
-            @extend .abs-button-l;
-            width: 100%;
+            @include cart-checkout-button();
         }
 
         .item {
@@ -214,6 +220,24 @@
         }
     }
 }
+
+
+
+
+//  Discount Code
+.actions-toolbar .primary .action {
+    @include cart-checkout-button-s();
+    margin-left: 10px;
+    &:last-child {
+        @media screen and (max-width: $screen__m) {
+            margin-left: 0;
+            margin-bottom: 25px;
+        }
+    }
+}
+
+
+
 
 //  Products pager
 .cart-products-toolbar {
