@@ -25,6 +25,9 @@ a,
     text-decoration: underline;
   }
 }
+.gigya-screen a:link.gigya-composite-control-link.button {
+    display: flex;
+}
 
 .sp-link {
   @extend .sp-label;
