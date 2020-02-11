@@ -48,7 +48,7 @@
             </parameter>
             <parameter name="HeroCalloutBannerTextSize" visible="true" xsi:type="select"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextSize">
-                <label>Blurb Text Size (rem)</label>
+                <label>Blurb Text Size</label>
             </parameter>
             <parameter name="HeroCalloutBannerTextColor" visible="true" xsi:type="text">
                 <label>Blurb Desktop Text Color (#xxxxxx)</label>
@@ -76,7 +76,7 @@
             </parameter>
             <parameter name="HeroCalloutBannerTextHighlightSize" visible="true" xsi:type="select"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutBannerTextHighlightSize">
-                <label>Small Blurb Size (rem)</label>
+                <label>Small Blurb Size</label>
             </parameter>
             <parameter name="HeroCalloutBannerTextHighlightColor" visible="true" xsi:type="text">
                 <label>Small Blurb Text Color (#xxxxxx)</label>
@@ -119,7 +119,7 @@
             </parameter>
             <parameter name="HeroCalloutButtonTextSize" visible="true" xsi:type="select"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutButtonTextSize">
-                <label>Button Text Size (rem)</label>
+                <label>Button Text Size</label>
             </parameter>
             <parameter name="HeroCalloutButtonTextStyle" visible="true" xsi:type="multiselect"
                        source_model="SMG\HeroCallout\Model\Source\HeroCalloutButtonTextStyle">

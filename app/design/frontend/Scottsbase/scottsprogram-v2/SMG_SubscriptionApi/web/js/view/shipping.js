@@ -131,8 +131,8 @@ define([
         },
 
         getAlreadySubscribedModalContent() {
-            return `<h5 class="sp-h5 sp-text-black sp-text-center">You're Already Subscribed</h5>
-                    <h6 class="sp-h6 sp-text-black sp-text-center">Looks like you already have a Scotts Program Subscription.</h6>
+            return `<h5 class="sp-h5 sp-mt-0 sp-mb-2 sp-text-black sp-text-center">You're Already Subscribed</h5>
+                    <h6 class="sp-h6 sp-mt-0 sp-mb-4 sp-text-black sp-text-center">Looks like you already have a Scotts Program Subscription.</h6>
                     <p><strong>Start a new subscription</strong><br />
                         Did you move or have your lawn conditions changed? We can cancel your current subscription and start a new one.
                     </p>
@@ -150,8 +150,8 @@ define([
 
         getCancellationModalContent() {
             return `
-                <h5 class="sp-h5 sp-text-black sp-text-center">Confirm Your Cancellation</h5>
-                <h6 class="sp-h6 sp-text-black sp-text-center">By cancelling your subscription, the following will happen:</h6>
+                <h5 class="sp-h5 sp-mt-0 sp-mb-2 sp-text-black sp-text-center">Confirm Your Cancellation</h5>
+                <h6 class="sp-h6 sp-mt-0 sp-mb-4 sp-text-black sp-text-center">By cancelling your subscription, the following will happen:</h6>
                 <div class="content">
                     <ul>
                         <li>Please see your email for your refund amount. This should appear in your account within 7 days.</li>
@@ -202,9 +202,6 @@ define([
                             innerScroll: true,
                             focus: 'none',
                             buttons: [],
-                            opened: function($Event) {
-                                $('.modal-header').remove();
-                            },
                             closed() {
                                 const zip = window.sessionStorage.getItem('lawn-zip');
                                 const quizId = window.sessionStorage.getItem('quiz-id');
@@ -227,9 +224,6 @@ define([
 
                         var popup = modal(options, $('#popup-modal'));
                         $('#popup-modal').modal('openModal');
-
-
-
                     }
                 },
                 complete() {
