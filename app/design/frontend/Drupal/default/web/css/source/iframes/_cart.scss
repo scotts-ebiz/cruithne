@@ -18,8 +18,8 @@
         &:before {
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
-          font-size: 35px;
-          line-height: 33px;
+          font-size: 32px;
+          line-height: 18px;
           color: $color-gray56;
           content: "";
           font-family: "icons-blank-theme";
@@ -30,11 +30,12 @@
         }
       }
       .nav__cart--label {
+        font-family: $lato;
         color: $color-gray56;
         display: inline-block;
-        line-height: 1;
-        font-size: 0.813rem;
+        font-size: $font-size__base;
         text-transform: uppercase;
+        margin: 2px 0 0 10px;
 
         .count {
           display: inline-block;
@@ -56,10 +57,12 @@
         }
       }
       .checkout-now {
+        font-family: $lato;
         text-transform: uppercase;
-        font-size: 10px;
+        font-size: $font-size__xxs;
         color: $iframe-cart-checkout-now-txt;
         text-align: center;
+        line-height: 1.8rem;
       }
     }
   }

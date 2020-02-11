@@ -8,11 +8,6 @@
     <body>
         <referenceBlock name="head.additional">
             <block class="SMG\Launch\Block\AbstractBlock" name="smg_launch_visitor" template="SMG_Launch::smg/launch/visitor.phtml"/>
-            <block class="SMG\Launch\Block\AbstractBlock" name="smg_launch_events" template="SMG_Launch::smg/launch/events.phtml" />
         </referenceBlock>
-        <referenceContainer name="main.content">
-            <block class="SMG\Launch\Block\AbstractBlock" name="smg_launch_ajax_events"
-                   template="SMG_Launch::smg/launch/ajaxevent.phtml"/>
-        </referenceContainer>
     </body>
 </page>
