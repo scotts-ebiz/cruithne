@@ -60,7 +60,7 @@ define([
             setTimeout(() => {
                 cancelSubscriptionModal = cancelSubscriptionModal({
                     type: 'popup',
-                    innerScroll: false,
+                    innerScroll: true,
                     buttons: [],
                     focus: 'none',
                 }, $('#popup-modal'));
