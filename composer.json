@@ -14,7 +14,7 @@
         "avalara/avatax-magento": "^1.5",
         "composer/composer": "@alpha",
         "magento/composer-root-update-plugin": "~0.1",
-        "magento/product-enterprise-edition": "2.3.2-p2",
+        "magento/product-enterprise-edition": "2.3.3-p1",
         "gigya/magento2-im": "^5.4",
         "magepal/magento2-googletagmanager": "^2.3",
         "mageplaza/module-smtp": "^1.2",
