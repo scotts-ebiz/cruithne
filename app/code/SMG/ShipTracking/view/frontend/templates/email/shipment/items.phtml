@@ -1,14 +1,14 @@
 <?php
-   /**
-    * Copyright © Magento, Inc. All rights reserved.
-    * See COPYING.txt for license details.
-    */
-   
-   ?>
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+
+?>
 <?php $_shipment = $block->getShipment() ?>
 <?php $_order    = $block->getOrder() ?>
 <?php if ($_shipment && $_order) : ?>
-<table class="email-items">
+   <table class="email-items">
    <thead>
       <table class="row green-row" style="background-color:#1d5632;border-collapse:collapse;border-spacing:0;display:table;padding:0;position:relative;text-align:left;vertical-align:top;width:100%">
          <tbody>
@@ -39,12 +39,12 @@
          </tbody>
       </table>
    </thead>
-   <?php foreach ($_shipment->getAllItems() as $_item) : ?>
-   <?php if (!$_item->getOrderItem()->getParentItem()) : ?>
-   <tbody>
-      <?= $block->getItemHtml($_item) ?>
-   </tbody>
-   <?php endif; ?>
-   <?php endforeach; ?>
-</table>
+        <?php foreach ($_shipment->getAllItems() as $_item) : ?>
+            <?php if (!$_item->getOrderItem()->getParentItem()) : ?>
+                <tbody>
+                    <?= $block->getItemHtml($_item) ?>
+                </tbody>
+            <?php endif; ?>
+        <?php endforeach; ?>
+    </table>
 <?php endif; ?>
