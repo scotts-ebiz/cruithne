@@ -1,5 +1,4 @@
 html {
-  font-family: hellix, sans-serif;
   font-size: $font-size-base--mobile;
 
   @media (min-width: $screen-sm) {
@@ -9,10 +8,21 @@ html {
 
 body {
   font-size: 1rem;
+  font-family: "Open Sans", "Lato", "Helvetica Neue", Helvetica, Arial, sans-serif;
 }
 
 p {
   margin-bottom: 1rem;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: inherit;
+  font-family: inherit;
 }
 
 .sp-h0 {
