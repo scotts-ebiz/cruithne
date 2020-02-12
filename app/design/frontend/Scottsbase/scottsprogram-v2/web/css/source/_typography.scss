@@ -15,6 +15,11 @@ p {
   margin-bottom: 1rem;
 }
 
+h1, h2, h3, h4, h5, h6 {
+    color: inherit;
+    font-family: inherit;
+}
+
 .sp-h0 {
   font-size: $font-size-h0;
   font-weight: 700;
@@ -141,3 +146,4 @@ p {
 .sp-strong {
   font-weight: 700;
 }
+
