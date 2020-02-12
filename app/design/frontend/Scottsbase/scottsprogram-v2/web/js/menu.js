@@ -25,5 +25,26 @@ require(['jquery'], function($){
 			var menu = new Menu($('#sp-header'));
 			menu.init();
 		}
+
+		//account navigation
+		const accountNav = document.querySelector('.account-nav');
+		if(accountNav) {
+			const toggle = document.createElement('span');
+			const current = document.createElement('div');
+			const currentText = accountNav.querySelector('.current').innerText;
+			
+			current.classList.add('current-text');
+			toggle.classList.add('toggle-arrow');
+
+			current.innerText = currentText;
+
+			accountNav.appendChild(current);
+			accountNav.appendChild(toggle);
+
+			toggle.addEventListener('click', (event) => {
+				event.preventDefault();
+				accountNav.classList.contains('active') ? accountNav.classList.remove('active') : accountNav.classList.add('active');
+			})
+		}
 	});
 });
