@@ -1,6 +1,11 @@
 // Mixins
 
-// General //
+
+//  ---------------------------------------------
+//  General Styling
+//  ---------------------------------------------
+
+
 @mixin input-placeholder {
     &.placeholder { @content; }
     &:-moz-placeholder { @content; }
@@ -9,13 +14,54 @@
     &::-webkit-input-placeholder { @content; }
 }
 
+
 @mixin pseudo($display: block, $pos: absolute, $content: '') {
     content: $content;
     display: $display;
     position: $pos;
 }
 
-// Fonts //
+
+@mixin defaultwrap($center: true) {
+  @if $center == false {
+    margin: 0;
+  }
+  @else {
+    margin: 0 auto;
+  }
+
+  max-width: 90em;
+  width: 95%;
+}
+
+
+@mixin translate ($x, $y) {
+  @include transform(translate($x, $y));
+}
+
+
+@mixin transform($transforms) {
+  -moz-transform: $transforms;
+  -o-transform: $transforms;
+  -ms-transform: $transforms;
+  -webkit-transform: $transforms;
+  transform: $transforms;
+}
+
+
+@mixin transition($x...){
+  -webkit-transition: $x;
+  -moz-transition: $x;
+  -ms-transition: $x;
+  -o-transition: $x;
+  transition: $x;
+}
+
+
+//  ---------------------------------------------
+//  Typography
+//  ---------------------------------------------
+
 @mixin font-lato($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
     font-family: $lato;
     @if $size { font-size: $size; }
@@ -24,6 +70,7 @@
     @if $lh { line-height: $lh; }
     @if $ls { letter-spacing: $ls; }
 }
+
 
 @mixin font-open-sans($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
     font-family: $opensans;
@@ -34,8 +81,9 @@
     @if $ls { letter-spacing: $ls; }
 }
 
-@mixin font-rokkitt($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
-  font-family: $rokkitt;
+
+@mixin roboto-regular($size: $font-size__base, $color: $color-black, $weight: false, $lh: false, $ls: false) {
+  font-family: $font-family__quaternary;
   @if $size { font-size: $size; }
   @if $color { color: $color; }
   @if $weight { font-weight: $weight; }
@@ -43,34 +91,131 @@
   @if $ls { letter-spacing: $ls; }
 }
 
-@mixin defaultwrap($center: true) {
-    @if $center == false {
-        margin: 0;
+
+//Cart & Checkout - Body Font (Mobile)
+@mixin cart-checkout-body-font-mobile($size: $font-size__s, $lh: 18px) {
+  @if $size { font-size: $size; }
+  @if $lh { line-height: $lh; }
+}
+
+
+//Cart & Checkout - Body Font
+@mixin cart-checkout-body-font($size: $font-size__base, $color: $color-black, $weight: false, $lh: 20px, $ls: false) {
+  font-family: $font-family__quaternary;
+  @if $size { font-size: $size; }
+  @if $color { color: $color; }
+  @if $weight { font-weight: $weight; }
+  @if $lh { line-height: $lh; }
+  @if $ls { letter-spacing: $ls; }
+}
+
+
+//Cart & Checkout - H2 Font (Mobile)
+@mixin cart-checkout-h2-font-mobile($size: $font-size__l, $ls: $cart-checkout-h2-letter-spacing-mobile) {
+  @if $size { font-size: $size; }
+  @if $ls { letter-spacing: $ls; }
+}
+
+
+//Cart & Checkout - H2 Font
+@mixin cart-checkout-h2-font($size: $font-size__xl, $color: $color-black, $weight: 700, $ls: $cart-checkout-h2-letter-spacing, $text-transform: uppercase, $padding: $cart-checkout-h2-padding, $border: $cart-checkout-h2-border) {
+  font-family: $font-family__quaternary;
+  @if $size { font-size: $size; }
+  @if $color { color: $color; }
+  @if $weight { font-weight: $weight; }
+  @if $ls { letter-spacing: $ls; }
+  @if $text-transform { text-transform: $text-transform; }
+  @if $padding { padding: $padding; }
+  @if $border { border-bottom: $border; }
+  @include max-screen($screen__m) {
+      @include cart-checkout-h2-font-mobile()
+  }
+}
+
+
+
+
+//  ---------------------------------------------
+//  Buttons
+//  ---------------------------------------------
+
+
+// Cart / Checkout - Hover State
+@mixin cart-checkout-button-hover(
+  $_button-background-hover         : $cart-checkout-button__background-hover,
+  $_button-color-hover              : $cart-checkout-button__font-color-hover,
+  $_button-boxshadow                : $cart-checkout-button__boxshadow,
+  $_button-bottom-position          : $cart-checkout-button__bottom-position)
+{
+  @if $_button-background-hover { background-color: $_button-background-hover; };
+  @if $_button-color-hover { color: $_button-color-hover; };
+  @if $_button-boxshadow { box-shadow: $_button-boxshadow; };
+  @if $_button-bottom-position { bottom: $_button-bottom-position; };
+}
+
+
+// Cart / Checkout - Generic Button
+@mixin cart-checkout-button(
+    $_button-font-family              : $cart-checkout-button__font-family,
+    $_button-font-weight              : $cart-checkout-button__font-weight,
+    $_button-line-height              : $cart-checkout-button__line-height,
+    $_button-background               : $cart-checkout-button__background-color,
+    $_button-color                    : $cart-checkout-button__font-color,
+    $_button-font-size                : $cart-checkout-button__font-size,
+    $_button-border                   : $cart-checkout-button__border,
+    $_button-width                    : $cart-checkout-button-l__width,
+    $_button-height                   : $cart-checkout-button__height,
+    $_button-padding                  : $cart-checkout-button__padding,
+    $_button-letter-spacing           : $cart-checkout-button__letter-spacing,
+    $_button-border-radius            : $cart-checkout-button__border-radius,
+    $_button-text-transform           : $cart-checkout-button__txt-transform,
+    $_button-position                 : $cart-checkout-button__position,
+    $_button-bottom-position          : $cart-checkout-button__bottom-position,
+    $_button-background-active        : $cart-checkout-button__background-active
+)
+    {
+    @if $_button-font-family { font-family: $_button-font-family; };
+    @if $_button-font-weight { font-weight: $_button-font-weight; };
+    @if $_button-line-height { line-height: $_button-line-height; };
+    @if $_button-background { background-color: $_button-background; };
+    @if $_button-color { color: $_button-color; };
+    @if $_button-font-size { font-size: $_button-font-size; };
+    @if $_button-border { border: $_button-border; };
+    @if $_button-width { width: $_button-width; };
+    @if $_button-height { height: $_button-height; };
+    @if $_button-padding { padding: $_button-padding; };
+    @if $_button-letter-spacing { letter-spacing: $_button-letter-spacing; };
+    @if $_button-border-radius { border-radius: $_button-border-radius; };
+    @if $_button-text-transform { text-transform: $_button-text-transform; };
+    @if $_button-position { position: $_button-position; };
+    &:hover {
+        @include cart-checkout-button-hover();
     }
-    @else {
-        margin: 0 auto;
+    &:active {
+        @if $_button-background-active { background-color: $_button-background-active; };
+        @include transition(0.2);
     }
-
-    max-width: 90em;
-    width: 95%;
 }
 
-@mixin translate ($x, $y) {
-  @include transform(translate($x, $y));
+
+// Small Button
+@mixin cart-checkout-button-s() {
+    @include cart-checkout-button($_button-width: $cart-checkout-button-s__width, $_button-height: 32px);
 }
 
-@mixin transform($transforms) {
-  -moz-transform: $transforms;
-  -o-transform: $transforms;
-  -ms-transform: $transforms;
-  -webkit-transform: $transforms;
-  transform: $transforms;
+
+@mixin cart-checkout-button-disabled($_button-disabled-opacity: $cart-checkout-button__disabled__opacity){
+    @include cart-checkout-button(
+            $_button-width                    : 313px,
+            $_button-background               : $checkout-light_grey,
+            $_button-color                    : $color-black,
+            $_button-font-weight              : $cart-checkout-button__disabled__font-weight);
+    @if $_button-disabled-opacity { opacity: $_button-disabled-opacity; };
 }
 
-@mixin transition($x...){
-  -webkit-transition: $x;
-  -moz-transition: $x;
-  -ms-transition: $x;
-  -o-transition: $x;
-  transition: $x;
-}
+
+
+
+
+
+

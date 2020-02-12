@@ -87,16 +87,16 @@
      class="modal-popup--subscriptions sp-hide sp-p-8">
     <button
         class="modal-popup--subscriptions__close"
-        data-bind="click: hideSuccess"
+        data-bind="click: hideModal"
     ></button>
-    <h2 class="sp-h2 sp-text-black sp-text-center">Changes Saved</h2>
-    <p class="sp-text-black sp-text-center">The changes to your account have been saved.</p>
+    <h2 class="sp-h2 sp-text-black sp-text-center" data-bind="text: modalValues().header"></h2>
+    <p class="sp-text-black sp-mb-10 sp-text-center" data-bind="text: modalValues().message"></p>
 
     <div class="sp-flex sp-justify-center sp-items-center">
         <button
             class="sp-button sp-button--primary"
             type="button"
-            data-bind="click: hideSuccess"
+            data-bind="click: hideModal"
         >
             Close
         </button>

@@ -12,18 +12,9 @@
                     </h2>
 
                     <p
-                        class="sp-text-left"
+                        class="sp-text-left sp-mb-4"
                         data-bind="text: quiz.currentGroup().subtitle"
                     ></p>
-
-                    <!-- Link to manual lawn square footage are input screen -->
-                    <button
-                        class="sp-quiz__manual-entry sp-mb-4 md:sp-block"
-                        data-bind="
-                            text: quiz.currentGroup().displayMainPageCTA,
-                            click: quiz.toggleGoogleMaps
-                        "
-                    ></button>
                 </div>
 
                 <div
@@ -85,10 +76,22 @@
                     </p>
                     <p
                         class="sp-p2 sp-font-bold sp-mb-0 sp-mt-4"
-                        data-bind="visible: quiz.map() && quiz.map().lawnSize(), text: quiz.map() && ('Total Lawn Size: ' + quiz.map().lawnSize() + ' SQFT')"
+                        data-bind="visible: quiz.map() && quiz.map().lawnSize(), text: quiz.map() && ('Total Lawn Size: ' + quiz.formatNumber(quiz.map().lawnSize()) + ' SQFT')"
                     >
                     </p>
                 </div>
+
+                <!-- Link to manual lawn square footage are input screen -->
+                <button
+                    class="sp-quiz__manual-entry sp-mt-12"
+                    data-bind="
+                        click: quiz.toggleGoogleMaps,
+                        css: {
+                            'sp-hide lg:sp-block': quiz.map() && quiz.map().address()
+                        },
+                        text: quiz.currentGroup().displayMainPageCTA
+                    "
+                ></button>
             </div>
 
             <div
@@ -96,10 +99,10 @@
                 data-bind="css: { 'sp-hide': !quiz.map() || !quiz.map().address() }"
             >
                 <div class="sp-quiz-map sp-relative sp-aspect-ratio md:sp-aspect-ratio--4x3">
-                    <div id="map" class="sp-quiz-map__placeholder sp-aspect-ratio--object">
-                    </div>
+                    <img class="sp-quiz-map__info" src="https://test_magento_image_repo.storage.googleapis.com/mapHelperIcon.svg" alt="Calculate Lawn Size" data-bind="click: quiz.map() && quiz.map().toggleInfo">
+                    <div id="map" class="sp-quiz-map__placeholder sp-aspect-ratio--object"></div>
 
-                    <!-- ko if: quiz.map() && quiz.map().polygons().length -->
+                    <!-- ko if: quiz.map() -->
                     <button
                         class="sp-quiz-map__undo sp-button sp-button--inverted sp-shadow-md"
                         type="button"
@@ -118,23 +121,24 @@
                         </div>
 
                         <h5 class="sp-h4--long sp-mt-0 sp-mb-2 md:sp-mb-4 sp-text-center sp-uppercase">
-                            Tap Tap Taparoo<br/>
+                            "Tap Tap Taparoo"<br/>
                         </h5>
 
                         <ul class="sp-mb-2 md:sp-mb-4">
-                            <li class="sp-p2 sp-mb-0"><strong>TAP a corner</strong> of your lawn</li>
-                            <li class="sp-p2 sp-mb-0">Tap the <strong>next corner</strong> to make a line</li>
-                            <li class="sp-p2 sp-mb-0"><strong>Keep tapping</strong> to make a shape</li>
-                            <li class="sp-p2 sp-mb-0">You can make <strong>multiple shapes</strong></li>
+                            <li class="sp-p2 sp-mb-0">TAP a corner of your lawn</li>
+                            <li class="sp-p2 sp-mb-0">Continue tapping points at the corners of your lawn</li>
+                            <li class="sp-p2 sp-mb-0">You can make multiple shapes for different parts of your lawn</li>
                         </ul>
 
-                        <img src="https://test_magento_image_repo.storage.googleapis.com/mapDraw.png" class="sp-quiz__question-draw-image sp-mb-2 md:sp-mb-4" alt="Draw Lawn Area">
+                        <img src="https://test_magento_image_repo.storage.googleapis.com/LawnSizeCalc_InstructionOverlayAnimation_01242020.gif" class="sp-quiz__question-draw-image sp-mb-2 md:sp-mb-4" alt="Draw Lawn Area">
 
                         <div class="sp-text-center">
                             <button
                                 class="sp-button sp-button--primary"
                                 type="button"
-                                data-bind="click: quiz.map() && quiz.map().hideInstructions"
+                                disabled="disabled"
+                                data-bind="click: quiz.map() && quiz.map().hideInstructions,
+                                attr: { disabled: quiz.map() && quiz.map().mapInstructionsDisabled() }"
                             >
                                 Start
                             </button>
