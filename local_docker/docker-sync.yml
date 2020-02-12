@@ -4,7 +4,7 @@ options:
 syncs:
   magento-data-sync:
     watch_strategy: 'fswatch'
-    src: '/local/Projects/dtc/cruithne_docker/'
+    src: '/local/Projects/dtc/cruithne/'
     sync_userid: '33'
     sync_host_ip: 'auto'
     sync_excludes: ['.idea', '.docker-sync', 'pub/', 'var/', 'generated/', 'Vagrantfile/', 'local_docker', "vendor/"]
