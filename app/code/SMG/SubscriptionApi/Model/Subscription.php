@@ -13,6 +13,7 @@ use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Quote\Model\Quote;
@@ -321,11 +322,10 @@ class Subscription extends AbstractModel
     /**
      * Get subscription order by season slug
      * @param string $seasonSlug
-     * @return SubscriptionOrderCollection|mixed
+     * @return SubscriptionOrder|bool
      */
     public function getSubscriptionOrderBySeasonSlug(string $seasonSlug)
     {
-
         // Make sure we have an actual subscription
         if (empty($this->getEntityId())) {
             return false;
@@ -359,7 +359,6 @@ class Subscription extends AbstractModel
      */
     public function generateShipDates()
     {
-
         // Make sure we have an actual subscription and that we have a subscription type
         if (empty($this->getEntityId()) || empty($this->getSubscriptionType())) {
             return false;
@@ -380,8 +379,8 @@ class Subscription extends AbstractModel
 
     /**
      * @param $addons
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function addSubscriptionToCart($addons)
     {
@@ -564,14 +563,14 @@ class Subscription extends AbstractModel
      * Creates the subscription using subscription service
      * @param $token
      * @param $service
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function createSubscriptionService($token, $service)
     {
 
         /** @var RecurlySubscription $service */
-        $service->createSubscription($token, $this);
+        $service->createRecurlyPurchase($token, $this);
     }
 
     /**
@@ -600,13 +599,17 @@ class Subscription extends AbstractModel
         foreach ($orders as $order) {
             try {
                 /** @var SubscriptionOrder $subscriptionOrder */
-                if ($order->getSubscriptionAddon()) {
+                if ($order->getData('subscription_addon')) {
                     $subscriptionOrder = $this->_subscriptionAddonOrderCollectionFactory->create()->addFieldToFilter('sales_order_id', $order->getEntityId())->getFirstItem();
                 } else {
                     $subscriptionOrder = $this->_subscriptionOrderCollectionFactory->create()->addFieldToFilter('sales_order_id', $order->getEntityId())->getFirstItem();
                 }
+
                 $subscriptionOrder->createCreditMemo();
                 $subscriptionOrders[] = $subscriptionOrder;
+
+                // Set the order status to canceled.
+                $order->setData('status', 'canceled')->save();
             } catch (\Exception $e) {
                 $error = 'There was a problem making a credit memo for subscription cancellation. ' . $e->getMessage();
                 $this->_logger->error($error);
