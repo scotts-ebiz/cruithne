@@ -5,31 +5,7 @@
             .columns {
                 .column.main {
                     .checkout-container {
-                        .opc-progress-bar {
-                            .opc-progress-bar-item {
-                                &._active {
-                                    &:before {
-                                        background: $color_dark30_green_shade;
-                                    }
-                                    span {
-                                        &:before {
-                                            background: $color_dark30_green_shade;
-                                        }
-                                    }
-                                }
-                            }
-                        }
                         .opc-wrapper {
-                            .checkout-shipping-method {
-                                .actions-toolbar {
-                                    .action.primary {
-                                        background: $mygro-green;
-                                        &:hover {
-                                            background: $mygro-dark-green;
-                                        }
-                                    }
-                                }
-                            }
                             .checkout-validate-address {
                                 .step-content {
                                     .instructions.noError {
@@ -40,28 +16,6 @@
                             .checkout-payment-method {
                                 .step-content {
                                     .form.payments {
-                                        .fieldset {
-                                            .opc-payment {
-                                                .items.payment-methods {
-                                                    .payment-group {
-                                                        .payment-method._active {
-                                                            .payment-method-content {
-                                                                .actions-toolbar {
-                                                                    .primary {
-                                                                        .action.primary.checkout:last-child {
-                                                                            background: $mygro-green;
-                                                                            &:hover {
-                                                                                background: $mygro-dark-green;
-                                                                            }
-                                                                        }
-                                                                    }
-                                                                }
-                                                            }
-                                                        }
-                                                    }
-                                                }
-                                            }
-                                        }
                                         .opc-payment-additional {
                                             .payment-option-title {
                                                 .action-toggle {
