@@ -43,7 +43,6 @@ define(
                  */
                 this.checkoutButtonDisabled = ko.computed(function() {
                     if (!self.sameBillingShippingChecked()) {
-
                         /**
                          * Check and ensure that every required field on the billing info
                          * has some input before enabled the checkout button.
@@ -51,11 +50,64 @@ define(
                         const billingInfoValid = Array.prototype.every.call(
                             Object.keys(self.billingInfo()),
                             key => {
+                                const streetValue = key === 'street' ? self.billingInfo()[key][0] : '';
+                                const value = key !== 'street' ? self.billingInfo()[key] : '';
+
+                                if (key === 'street') {
+                                    if (
+                                        /^\s*\S+(?:\s+\S+){2}/.test(streetValue) &&
+                                        streetValue !== ''
+                                    ) {
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                }
+
+                                if (key === 'telephone') {
+                                    if (
+                                        value.length > 9 &&
+                                        /^[(]?(\d{3})[)]?[-|\s]?(\d{3})[-|\s]?(\d{4})$/.test(value)
+                                    ) {
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                }
+
+                                if (key === 'postcode') {
+                                    if (
+                                        /^[0-9]{5}$/.test(value)
+                                    ) {
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                }
+
                                 if (
-                                    key === 'street' &&
-                                    self.billingInfo()[key][0] !== ''
+                                    key === 'firstname' ||
+                                    key === 'lastname'
                                 ) {
-                                    return true;
+                                    if (
+                                        value.length > 0 &&
+                                        /^[a-zA-Z\.\-\'\sàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸåÅæÆœŒœŒçÇðÐøØ¿¡ß]*$/.test(value)
+                                    ) {
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                }
+
+                                if (key === 'city') {
+                                    if (
+                                        value.length > 0 &&
+                                        /^[a-zA-z ]*$/.test(value)
+                                    ) {
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
                                 }
 
                                 if (
@@ -65,7 +117,7 @@ define(
                                     return true;
                                 }
 
-                                return self.billingInfo()[key] !== '';
+                                return value !== '';
                             }
                         );
                         return (

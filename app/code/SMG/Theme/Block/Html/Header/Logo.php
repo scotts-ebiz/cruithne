@@ -2,8 +2,6 @@
 
 namespace SMG\Theme\Block\Html\Header;
 
-use Magento\Customer\Model\Session\Proxy as SessionProxy;
-use SMG\Launch\Model\Session;
 use SMG\SubscriptionApi\Model\RecurlySubscription;
 use Recurly_Client;
 
