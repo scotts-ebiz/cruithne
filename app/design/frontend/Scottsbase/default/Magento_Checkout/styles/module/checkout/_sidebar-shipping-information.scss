@@ -2,7 +2,7 @@
 //  Variables
 //  _____________________________________________
 
-$checkout-sidebar-shipping-information__padding                : $indent__l !default;
+$checkout-sidebar-shipping-information__padding                : 22px $indent__l !default;
 $checkout-sidebar-shipping-information__line-height            : $checkout-billing-address-details__line-height !default;
 
 $checkout-sidebar-shipping-information-edit-icon__color        : $minicart-icons-color !default;
@@ -12,17 +12,24 @@ $checkout-sidebar-shipping-information-edit-icon__line-height  : 28px !default;
 $checkout-sidebar-shipping-information-edit-icon__top          : 2px !default;
 $checkout-sidebar-shipping-information-edit-icon__hover__color : $primary__color !default;
 
+$checkout-sidebar-shipping-information__width                  :75%;
+$checkout-sidebar-shipping-information-mobile__width           :100%;
+
+
+
+
 //
 //  Shipping Information
 //  ---------------------------------------------
 
 .opc-block-shipping-information {
-    @include lib-css(padding, 0 $checkout-sidebar-shipping-information__padding);
+    @extend .abs-add-box-sizing;
+    @include lib-css(width, $checkout-sidebar-shipping-information__width);
+    @include cart-checkout-body-font($size: $font-size__m, $lh: 21px);
+    float: right;
 
     .shipping-information-title {
-        @extend .abs-checkout-title;
-        @include lib-css(border-bottom, $checkout-step-title__border);
-        margin: 0 0 $indent__base;
+        @include cart-checkout-h2-font();
         position: relative;
 
         .action-edit {
@@ -40,18 +47,37 @@ $checkout-sidebar-shipping-information-edit-icon__hover__color : $primary__color
             margin: 0;
             position: absolute;
             right: 0;
+            &:before {
+                content: 'Edit';
+                @include cart-checkout-h2-font($size: $font-size__s, $ls:normal, $border: 0);
+                @include max-screen($screen__m) {
+                    @include cart-checkout-h2-font-mobile($size: $font-size__s); //needed to override mixin's media query
+                }
+            }
         }
     }
-
     .shipping-information-content {
-        @include lib-css(line-height, $checkout-sidebar-shipping-information__line-height);
         .actions-toolbar {
             margin-left: 0;
         }
     }
-
     .ship-to,
     .ship-via {
         margin: 0 0 $indent__base;
+    }
+}
+
+
+
+//
+//  Mobile
+//  _____________________________________________
+
+@include max-screen($screen__m) {
+
+    .opc-block-shipping-information {
+        @include lib-css(padding, $checkout-sidebar-shipping-information__padding);
+        @include lib-css(font-size, $font-size__base);
+        @include lib-css(width, $checkout-sidebar-shipping-information-mobile__width);
     }
 }
