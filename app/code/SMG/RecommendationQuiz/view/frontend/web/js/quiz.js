@@ -45,6 +45,7 @@ define([
         self.initialize = function () {
             const autocompleteElement = document.querySelector('#address-autocomplete');
             const footerBar = document.querySelector('.sp-quiz__footer');
+            self.quiz.invalidZipCode(false);
             let isAndroid = navigator.userAgent.toLowerCase().indexOf('android') !== -1;
 
             autocompleteElement.onfocus = () => {
@@ -823,10 +824,15 @@ define([
             }
         };
 
+        self.formatNumber = function(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        };
+
         /**
          * Toggle Google Maps and manual entry.
          */
         self.toggleGoogleMaps = function () {
+            self.invalidZipCode(false);
             self.usingGoogleMaps(!self.usingGoogleMaps());
             self.setArea(0);
             self.setZipCode('');
