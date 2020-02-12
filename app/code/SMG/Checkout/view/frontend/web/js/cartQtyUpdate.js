@@ -21,8 +21,9 @@ define([
 					$(".messages").replaceWith(messages);
                     $("#form-validate").replaceWith(result);
 					$("#ajax_event").html($(res).find("#ajax_event").html());
+
 					/* Minicart reloading */
-                    customerData.reload(sections, true);
+                    customerData.reload(['cart', 'magepal-gtm-jsdatalayer'], true);
  
                     /* Totals summary reloading */
                     var deferred = $.Deferred();

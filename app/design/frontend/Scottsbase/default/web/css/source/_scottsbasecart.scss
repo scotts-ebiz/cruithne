@@ -16,63 +16,32 @@
         }
     }
     .page-main {
-        .page-title-wrapper {
-            display: block;
-            border-bottom:0;
-            margin-top: 0rem;
-            h1.page-title {
-                font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                font-size: 1.6rem;
-                font-weight: 500;
-                text-transform: inherit;
-                padding: 0 0 10px 0;
-                width: 100%;
-                border-bottom: 1px solid #ccc;
-            }
-        }
         .columns {
             .column {
                 .actions {
-                    a:before{
-                        -webkit-font-smoothing: antialiased;
-                        -moz-osx-font-smoothing: grayscale;
-                        font-size: 20px;
-                        line-height: 20px;
-                        font-family: "Font Awesome\ 5 Free";
-                        content: "\f0d9";
-                        font-weight: 900;
-                        margin: 0;
-                        vertical-align: top;
-                        display: inline-block;
-                        overflow: hidden;
-                        speak: none;
-                        text-align: center;
+                    .action.continue {
+                        font-size: 1.6rem;
+                        &:before {
+                          -webkit-font-smoothing: antialiased;
+                          -moz-osx-font-smoothing: grayscale;
+                          font-size: 20px;
+                          line-height: 20px;
+                          font-family: "Font Awesome\ 5 Free";
+                          content: "\f0d9";
+                          font-weight: 900;
+                          margin: 0;
+                          vertical-align: top;
+                          display: inline-block;
+                          overflow: hidden;
+                          speak: none;
+                          text-align: center;
+                        }
                     }
                 }
                 .cart-container {
                     padding-left: 15px;
                     padding-right: 15px;
                     position: relative;
-                    .custom-checkout-btn-wrap {
-                        position: absolute;
-                        top: 20px;
-                        right: 0;
-                        width: 27.25%;
-                        padding: 0px 30px 0px;
-                        @media screen and (max-width: $screen__l) {
-                            width: 100% !important;
-                            padding: 0 !important;
-                        }
-                        @media screen and (max-width: $screen__m) {
-                            display: none;
-                        }
-                        .action.primary.checkout {
-                          text-transform: uppercase;
-                          font-family: Lato, Arial, sans-serif;
-                          width: 100%;
-                          padding: 23px 0;
-                        }
-                    }
                     .custom-checkout-btn-wrap.stickyCart{
                         @media screen and (max-width: $screen__m) {
                             position: fixed;
@@ -82,17 +51,9 @@
                             padding: 0;
                             z-index: 9999;
                             display:block;
-                            @include transition(all 0.2s ease-in-out);
-                            .action.primary.checkout{
-                              border-radius: 0px;
-                            }
                         }
                     }
                     .form-cart {
-                        margin-top: 100px;
-                        @media screen and (max-width: $screen__m) {
-                            margin-top: 20px;
-                        }
                         .cart.table-wrapper {
                             #shopping-cart-table {
                                 td {
@@ -224,7 +185,7 @@
                                                 text-decoration: underline;
                                                 text-align: left;
                                                 color: $scotts-accent-orange;
-                                                font-size: 0.8rem;
+                                                font-size: 1.2rem;
                                                 margin-left: 0;
                                                 margin-top: 10px;
                                                 margin-bottom: 0;
@@ -239,7 +200,7 @@
                                                 a.action-delete {
                                                     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
                                                     text-decoration: underline;
-                                                    font-size: 0.8rem;
+                                                    font-size: 1.2rem;
                                                     color: $scotts-accent-orange;
                                                 }
                                             }
@@ -272,9 +233,6 @@
                                 }
                             }
                         }
-                        //.product-item-photo {
-                        //    width:138px;
-                        //}
 
                         //Can you vet this?
                         .actions-toolbar > .action.action-edit  {
@@ -346,6 +304,9 @@
                                 .fieldset.coupon {
                                     .field {
                                         float: left;
+                                        @media screen and (max-width: $screen__m) {
+                                            width: 100%;
+                                        }
                                         .label {
                                             width: unset;
                                         }
@@ -355,93 +316,25 @@
                                             }
                                         }
                                     }
-                                    .actions-toolbar {
-                                        .action.apply.primary {
-                                            height:30px;
-                                            font-size: 0.8rem;
-                                            font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                                            padding: 5px 10px 5px 10px !important;
-                                            background: #4d4d4e;
-                                            line-height: 0;
-                                            margin-left: 20px;
-                                            &:hover {
-                                              background: #333333;
-                                            }
-                                        }
-                                        .action.cancel.primary {
-                                            height:30px;
-                                            font-size: 0.8rem;
-                                            font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
-                                            padding: 5px 10px 5px 10px !important;
-                                            background: #4d4d4e;
-                                            line-height: 0;
-                                            margin-left: 20px;
-                                            @include max-screen($screen__s) {
-                                              margin-left:0px;
-                                            }
-                                            &:hover {
-                                              background: #333333;
-                                            }
-
-                                        }
-                                    }
                                 }
                                 .fieldset.coupon > .field:not(.choice) > .control {
                                     width: auto;
+                                    @media screen and (max-width: $screen__m) {
+                                        width: 100%;
+                                    }
                                     @media screen and (max-width: $screen__xs) {
                                         clear: left;
                                     }
                                 }
-
-
                             }
                         }
                         .cart-summary {
                             width: 30%;
-                            background: #dfe6ee;
-
                             @media screen and (max-width: $screen__m) {
                                 order:2;
-                                //width: 100%;
                             }
                             .cart-totals {
                                 border-top: 0;
-                            }
-                            .checkout-methods-items {
-                                .item {
-                                    .action.checkout {
-                                        -webkit-transition: background 0.2s;
-                                        -moz-transition: background 0.2s;
-                                        -ms-transition: background 0.2s;
-                                        -o-transition: background 0.2s;
-                                        transition: background 0.2s;
-                                        border: none;
-                                        &:hover {
-                                            -webkit-transition: background 0.2s;
-                                            -moz-transition: background 0.2s;
-                                            -ms-transition: background 0.2s;
-                                            -o-transition: background 0.2s;
-                                            transition: background 0.2s;
-                                        }
-                                    }
-                                }
-                                .upd-cust-btn {
-                                    .action.checkout {
-                                        padding: 23px 0;
-                                        text-transform: uppercase;
-                                        font-size: 15px;
-                                        line-height: 0px;
-                                        font-family: Lato, Arial, sans-serif;
-                                        width: 100%;
-                                        border-radius: 0.313rem;
-                                        transition: background 0.2s linear;
-                                        -webkit-transition: background 0.2s;
-                                        -moz-transition: background 0.2s;
-                                        -ms-transition: background 0.2s;
-                                        -o-transition: background 0.2s;
-                                        letter-spacing: 0.5px;
-                                    }
-                                }
                             }
                         }
                     }
@@ -500,6 +393,7 @@
             margin-left: 15px;
         }
     }
+
     div[name="shippingAddress.region_id"],
     div[name="shippingAddress.country_id"] {
         display: none !important;

@@ -263,6 +263,10 @@ define([
         setPDPTab: function (tab) {
             this.pdp({ ...this.pdp(), activeTab: tab })
         },
+
+        formatNumber: function(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        }
     });
 });
 
