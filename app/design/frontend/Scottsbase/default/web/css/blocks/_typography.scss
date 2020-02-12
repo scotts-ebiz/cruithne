@@ -26,6 +26,34 @@
     $font-style: normal
 );
 
+@include lib-font-face(
+        $family-name: 'Open-Sans',
+        $font-path: '../fonts/opensans/light/opensans-300',
+        $font-weight: 300,
+        $font-style: normal
+);
+
+@include lib-font-face(
+        $family-name: 'Open-Sans-Cond',
+        $font-path: '../fonts/open-sans-cond/open-sans-condensed-v14-latin-300',
+        $font-weight: 400,
+        $font-style: normal
+);
+
+@include lib-font-face(
+        $family-name: 'Roboto',
+        $font-path: '../fonts/roboto/roboto-v20-latin-regular',
+        $font-weight: 400,
+        $font-style: normal
+);
+
+@include lib-font-face(
+        $family-name: 'Roboto-Bold',
+        $font-path: '../fonts/roboto/roboto-v20-latin-700',
+        $font-weight: 700,
+        $font-style: normal
+);
+
 //
 //  Desktop
 //  _____________________________________________

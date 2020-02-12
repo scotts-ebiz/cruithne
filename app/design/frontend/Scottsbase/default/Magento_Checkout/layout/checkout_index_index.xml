@@ -38,6 +38,7 @@
                                                                     <item name="validation" xsi:type="array">
                                                                         <item name="required-entry" xsi:type="boolean">true</item>
                                                                         <item name="validate-zip-us" xsi:type="boolean">true</item>
+                                                                        <item name="required-entry-exceptpost" xsi:type="boolean">true</item>
                                                                     </item>
                                                                 </item>
                                                                 <item name="telephone" xsi:type="array">
