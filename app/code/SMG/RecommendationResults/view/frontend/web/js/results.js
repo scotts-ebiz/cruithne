@@ -21,7 +21,8 @@ define([
         }),
 
         saveAndSendModal: ko.observable({
-            visible: false
+            visible: false,
+            email: '',
         }),
 
         saveAndSendSuccessModal: ko.observable({
@@ -67,7 +68,7 @@ define([
 
             self.hasValidZone = ko.observable(true);
 
-            self.products = ko.computed(function () {
+            self.products = ko.computed(() => {
                 return self.results().plan
                     ? self.results().plan.coreProducts
                     : []
@@ -75,60 +76,61 @@ define([
 
             self.seasons = ko.computed(() => {
                 const uniqueSeasons = self.products().reduce((items, product) => {
-                  if (items.indexOf(product.season) === -1) {
-                    items.push(product.season);
-                  }
+                    if (items.indexOf(product.season) === -1) {
+                        items.push(product.season);
+                    }
 
-                  return items;
+                    return items;
                 }, []);
 
                 const seasons = uniqueSeasons.map(season => {
-                  const products = self.products().filter(product => {
-                    return product.season === season;
-                  });
+                    const products = self.products().filter(product => {
+                        return product.season === season;
+                    });
 
-                  let prodMap = {};
+                    let prodMap = {};
 
-                  products.forEach(product => {
-                    if (prodMap[product.prodId]) {
-                      prodMap[product.prodId] += 1;
-                      return;
-                    }
+                    products.forEach(product => {
+                        if (prodMap[product.prodId]) {
+                            prodMap[product.prodId] += 1;
+                            return;
+                        }
 
-                    prodMap[product.prodId] = product.quantity;
-                  });
+                        prodMap[product.prodId] = product.quantity;
+                    });
 
-                  const newProducts = [];
+                    const newProducts = [];
 
-                  products.forEach(product => {
-                    if (
-                      !newProducts.some(prod => {
-                        return prod.prodId === product.prodId
-                      })
-                    ) {
-                      let newProd = {
-                        ...product
-                      };
-                      newProd.quantity = prodMap[newProd.prodId];
-                      newProducts.push(newProd);
-                    }
-                  });
+                    products.forEach(product => {
+                        if (
+                            !newProducts.some(prod => {
+                                return prod.prodId === product.prodId
+                            })
+                        ) {
+                            let newProd = {
+                                ...product
+                            };
+                            newProd.quantity = prodMap[newProd.prodId];
+                            newProducts.push(newProd);
+                        }
+                    });
 
 
-                  return {
-                    season,
-                    products: newProducts,
-                    total: products.reduce((price, product) => {
-                      return price + +product.price * +product.quantity;
-                    }, 0)
-                  };
+                    return {
+                        season,
+                        products: newProducts,
+                        total: products.reduce((price, product) => {
+                            return price + +product.price * +product.quantity;
+                        }, 0)
+                    };
                 });
 
                 return seasons;
-              });
+            });
+
 
             // used to indicate which product is up next for delivery
-            self.nextAvailableProduct = ko.computed(function () {
+            self.nextAvailableProduct = ko.computed(() => {
                 const currentDate = new Date();
                 const products = self.products().slice();
 
@@ -145,6 +147,15 @@ define([
                 return self.seasons()[self.activeSeasonIndex()]
             });
 
+        },
+
+        toggleAccordion(index) {
+            const accordionTabs = Array.from(document.querySelectorAll('.accordion > li'));
+            const isActive = accordionTabs[index].classList.contains('active');
+
+            isActive ? accordionTabs[index].classList.remove('active') : accordionTabs[index].classList.add('active');
+
+            accordionTabs[index].scrollIntoView({behavior: "smooth"});
         },
 
         loadQuizResults(id, zip) {
@@ -298,21 +309,30 @@ define([
             );
         },
 
+        saveAndSendResults(e) {
+            if (e && e.preventDefault && typeof e.preventDefault === 'function') {
+                e.preventDefault();
+            }
+
+            this.toggleSaveAndSendModal();
+            this.toggleSaveAndSendSuccessModal();
+        },
+
         formatDate: function (_date) {
             const date = new Date(_date);
 
             return [
-                date.getMonth() + 1, // Months are 0 based
-                date.getDate(),
-                date.getFullYear().toString().slice(2)
+                date.getUTCMonth() + 1, // Months are 0 based
+                date.getUTCDate(),
+                date.getUTCFullYear().toString().slice(2),
             ].join('/')
         },
 
         productFeatures: function (product) {
             return [
-                { image: product.miniClaim1, text: product.miniClaim1Description },
-                { image: product.miniClaim2, text: product.miniClaim2Description },
-                { image: product.miniClaim3, text: product.miniClaim3Description },
+                {image: product.miniClaim1, text: product.miniClaim1Description},
+                {image: product.miniClaim2, text: product.miniClaim2Description},
+                {image: product.miniClaim3, text: product.miniClaim3Description},
             ].filter(x => !!x.image)
         },
 
@@ -388,14 +408,14 @@ define([
         },
 
         setPDPTab: function (tab) {
-            this.pdp({ ...this.pdp(), activeTab: tab })
+            this.pdp({...this.pdp(), activeTab: tab})
         },
 
         preventDefault: function () {
         },
 
-        toggleSaveAndSendModal: function() {
-            if( this.saveAndSendModal().visible) {
+        toggleSaveAndSendModal: function () {
+            if (this.saveAndSendModal().visible) {
                 $('body').removeClass('no-scroll');
             } else {
                 $('body').addClass('no-scroll')
@@ -407,8 +427,8 @@ define([
             })
         },
 
-        toggleSaveAndSendSuccessModal: function() {
-            if( this.saveAndSendSuccessModal().visible) {
+        toggleSaveAndSendSuccessModal: function () {
+            if (this.saveAndSendSuccessModal().visible) {
                 $('body').removeClass('no-scroll');
             } else {
                 $('body').addClass('no-scroll')

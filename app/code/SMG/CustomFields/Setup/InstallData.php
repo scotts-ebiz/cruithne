@@ -166,7 +166,7 @@ class InstallData implements InstallDataInterface
          
         $eavSetup->addAttribute(
 	             \Magento\Catalog\Model\Product::ENTITY,
-	             'states_not_allowed', [
+	             'state_not_allowed', [
 	            'type' => 'int',
 	            'backend' => '',
 	            'frontend' => '',

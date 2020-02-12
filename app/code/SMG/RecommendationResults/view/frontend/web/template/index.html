@@ -8,12 +8,14 @@
         <span data-bind="if: lawnType()"><strong data-bind="html: lawnType()"></strong></span> lawn in every season.
     </p>
 
-    <a class="sp-block sp-link sp-text-center sp-label sp-results__link"
-       href="/quiz">Doesn't look right? Take the quiz again!</a>
+    <a
+        class="sp-block sp-link sp-text-center sp-label sp-results__link"
+        href="/quiz"
+    >Doesn't look right? Take the quiz again!</a>
 </div>
 
 <!-- ko if: results().plan -->
-<div class="sp-container sp-text-center">
+<div class="sp-container sp-mb-16 sp-text-center">
     <div class="sp-results__your-plan sp-inline-block sp-bg-white sp-pt-8 sp-pb-4 sp-px-4 lg:sp-mx-8 md:sp-mx-auto sp-relative sp-rounded sp-my-8 md:sp-my-12">
         <h2 class="sp-text-center sp-h4 sp-m-0 sp-mb-4 sp-uppercase">Your Plan</h2>
 
@@ -52,48 +54,81 @@
         </div>
 
         <!-- Sidebar -->
-        <div class="md:sp-flex">
-            <ul class="sp-p-0 sp-results__tabs"
-                data-bind="foreach: seasons()">
-                <li class="sp-results__list sp-mb-0"
-                    data-bind="css: {'sp-bg-green-4': ($index() === $parent.activeSeasonIndex())}">
-                    <button type="button"
-                            data-bind="click: function() { $parent.activeSeasonIndex($index()) }"
-                            class="sp-results__tabs-button sp-flex sp-align-center sp-py-8 sp-px-4">
-                        <img class="sp-mr-4 sp-results__icon--small"
-                             data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]) }" />
+        <div class="sp-results-tabs-container">
+            <ul
+                class="sp-p-0 sp-results__tabs accordion"
+                data-bind="foreach: seasons()"
+            >
+                <li class="sp-results__list sp-mb-0">
+                    <button
+                        type="button"
+                        data-bind="click: function() { $parent.toggleAccordion($index()) }"
+                        class="sp-results__tabs-button sp-flex sp-align-center sp-py-8 sp-px-4 lg:sp-hide mobile"
+                    >
+                        <img
+                            class="sp-mr-4 sp-results__icon--small"
+                            data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]) }"
+                        />
                         <div>
-                            <strong class="sp-h4 sp-mb-2 lg:sp-mb-0"
-                                    data-bind="html: $data.products[0].season"></strong>
-                            <div class="sp-p2"
-                                 data-bind="if: $parent.nextAvailableProduct() === $index()">(Next Shipment)</div>
-                            <div class="sp-p2"><span data-bind="html: $parent.formatDate($data.products[0].applicationStartDate)"></span> -
-                                <span data-bind="html: $parent.formatDate($data.products[0].applicationEndDate)"></span></div>
+                            <strong
+                                class="sp-h4 sp-mb-2 lg:sp-mb-0"
+                                data-bind="html: $data.products[0].season"
+                            ></strong>
+                            <div
+                                class="sp-p2"
+                                data-bind="if: $parent.nextAvailableProduct() === $index()"
+                            >(Next Shipment)
+                            </div>
                         </div>
                     </button>
-                    <!-- ko if: $index() === $parent.activeSeasonIndex() -->
-                    <!-- ko with: { activeSeason: $parent.activeSeason, formatDate: $parent.formatDate, productFeatures: $parent.productFeatures } -->
-                        <div class="lg:sp-hide">
-                            <!-- ko template: "SMG_RecommendationResults/active-season.html" --><!-- /ko -->
+                    <button
+                        type="button"
+                        class="sp-results__tabs-button sp-flex sp-align-center sp-py-8 sp-px-4 desktop"
+                        data-bind="click: function() { $parent.activeSeasonIndex($index()) }, css: {'sp-bg-green-4': ($index() === $parent.activeSeasonIndex())}"
+                    >
+                        <img
+                            class="sp-mr-4 sp-results__icon--small"
+                            data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]) }"
+                        />
+                        <div>
+                            <strong
+                                class="sp-h4 sp-mb-2 lg:sp-mb-0"
+                                data-bind="html: $data.products[0].season"
+                            ></strong>
+                            <div
+                                class="sp-p2"
+                                data-bind="if: $parent.nextAvailableProduct() === $index()"
+                            >(Next Shipment)
+                            </div>
+                            <div class="sp-p2">
+                                <span data-bind="html: $parent.formatDate($data.products[0].applicationStartDate)"></span>
+                                -
+                                <span data-bind="html: $parent.formatDate($data.products[0].applicationEndDate)"></span>
+                            </div>
                         </div>
-                    <!-- /ko -->
+                    </button>
+                    <!-- ko with: { season: $data, formatDate: $parent.formatDate, productFeatures: $parent.productFeatures, context: $parentContext.$rawData } -->
+                    <div class="lg:sp-hide">
+                        <!-- ko template: "SMG_RecommendationResults/active-season.html" --><!-- /ko -->
+                    </div>
                     <!-- /ko -->
                 </li>
             </ul>
 
             <!-- Product Detail -->
             <!-- ko if: activeSeason() -->
-                <div class="sp-hide lg:sp-block">
-                    <!-- ko template: "SMG_RecommendationResults/active-season.html" --><!-- /ko -->
-                </div>
+            <!-- ko with: { season: $data.activeSeason(), formatDate: $data.formatDate, productFeatures: $data.productFeatures, context: $context.$rawData } -->
+            <div class="sp-hide lg:sp-block">
+                <!-- ko template: "SMG_RecommendationResults/active-season.html" --><!-- /ko -->
+            </div>
+            <!-- /ko -->
             <!-- /ko -->
         </div>
     </div>
 </div>
 
 <!-- ko if: pdp().visible && pdp().product -->
-<!-- ko template: "SMG_RecommendationResults/product-detail-modal.html" -->
-<!-- /ko -->
+<!-- ko template: "SMG_RecommendationResults/product-detail-modal.html" --><!-- /ko -->
 <!-- /ko -->
 
 <!-- ko if: saveAndSendModal().visible -->
@@ -107,7 +142,9 @@
 <div class="sp-bg-green-1 sp-py-4 sp-results__footer">
     <div class="sp-container sp-flex sp-flex-column md:sp-flex-row sp-justify-end">
         <!-- ko if: !hasValidZone() -->
-        <p class="sp-my-0 sp-text-center md:sp-text-left sp-text-white sp-text-sm sp-mb-2 md:sp-mb-0 md:sp-pr-2">We are unable to ship to Alaska and Hawaii at this time. You can save and send your result via email and buy your recommended plan at a local retailer. </p>
+        <p class="sp-my-0 sp-text-center md:sp-text-left sp-text-white sp-text-sm sp-mb-2 md:sp-mb-0 md:sp-pr-2">We are
+            unable to ship to Alaska and Hawaii at this time. You can save and send your result via email and buy your
+            recommended plan at a local retailer. </p>
         <!-- /ko -->
 
         <button
@@ -118,13 +155,15 @@
         </button>
 
         <!-- ko if: hasValidZone() -->
-        <a class="sp-button sp-button--inverted sp-order-0 md:sp-order-1 sp-mb-4 md:sp-mb-0"
-           href="/subscription-options">
+        <a
+            class="sp-button sp-button--inverted sp-order-0 md:sp-order-1 sp-mb-4 md:sp-mb-0"
+            href="/subscription-options"
+        >
             Continue to Subscription Options
         </a>
         <!-- /ko -->
-
     </div>
 </div>
-<!-- /ko results().plan -->
 <!-- /ko -->
+<!-- /ko -->
+

@@ -21,7 +21,12 @@
                 <input type="hidden" data-recurly="postal_code">
                 <input type="hidden" data-recurly="state">
                 <div class="sp-flex sp-flex-wrap sp--mx-2">
-                    <div data-recurly="card" class="sp-form-group sp-px-2 sp-w-full"></div>
+                    <div
+                        data-recurly="card"
+                        class="sp-form-group sp-px-2 sp-w-full"
+                        data-bind="afterRender: initializeRecurly"
+                    >
+                    </div>
                     <p class="sp-form-error recurly-form-error"></p>
                 </div>
 
@@ -33,6 +38,7 @@
                             aria-required="true"
                             type="checkbox"
                             value="true"
+                            data-bind="checked: rscoChecked"
                         >
                         <span
                             class="sp-p2 sp-text-green-1"
@@ -88,7 +94,14 @@
                 class="primary checkout sp-button sp-button--primary sp-button--get-started"
                 data-bind="
                     click: myPlaceOrder,
-                    attr: {title: $t('Place Order')}
+                    attr: {
+                        title: $t('Place Order'),
+                        disabled: checkoutButtonDisabled
+                    },
+                    css: {
+                        'sp-button--inactive': checkoutButtonDisabled,
+                        'sp-button--inactive sp-button--loading': orderProcessing()
+                    }
                     "
                 type="submit"
             >
@@ -98,29 +111,11 @@
     </div>
 </div>
 
-<div id="zip-popup-modal" class="modal-popup--subscriptions sp-hide">
-    <h5 class="sp-h5 sp-text-black sp-text-center">Your Zip Code Has Changed</h5>
-    <div class="content">
-        <p class="sp-text-center">
-            The products in your plan are based on the ZIP code provided previously. To change your ZIP code for shipping, you will need to create a new plan to ensure the products are suitable for your area.
-        </p>
-        <p class="sp-text-center"><strong>
-            Questions or concerns? Contact us Monday through Friday between 8am and 5pm
-            EST at <a href="tel:18882703714">1-888-270-3714</a></strong>
-        </p>
-
-        <div class="modal-popup-cta sp-text-center">
-            <div class="sp-flex sp-items-center sp-justify-center"></div>
-            <button
-                class="sp-link sp-mx-4"
-                data-bind="click: closeZipModal"
-            >
-                Cancel
-            </button>
-            <a class="sp-button sp-button--primary sp-mx-4" href="/quiz">
-                Create New Plan
-            </a>
-        </div>
-
-    </div>
+<div id="zip-popup-modal" class="content sp-hide">
+    <p class="sp-text-center">
+        The products in your plan are based on the ZIP code provided previously. To change your ZIP code for shipping, you will need to create a new plan to ensure the products are suitable for your area.
+    </p>
+    <p class="sp-text-center"><strong>
+        For questions, email us at scotts-orders@scotts.com or call us at <a href="tel:18772203091">1-877-220-3091</a>.</strong>
+    </p>
 </div>

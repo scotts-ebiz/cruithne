@@ -1,147 +1,305 @@
 .sp-results__loading-screen {
-  position: absolute;
-  top: 0;
-  width: 100vw;
+    left: 0;
+    position: absolute;
+    right: 0;
+    top: 0;
+    width: 100%;
 }
 
 .sp-results__your-plan {
-  border: 2px solid #1d5632;
-  margin: 0 auto;
-  min-width: 50%;
-  position: relative;
+    border: 2px solid #1d5632;
+    margin: 0 auto;
+    min-width: 50%;
+    position: relative;
 }
 
 .sp-results__your-plan::after {
-  content: '';
-  background-color: #fff;
-  background-image: url(https://test_magento_image_repo.storage.googleapis.com/grass-icon.svg);
-  border-radius: 100%;
-  display: block;
-  height: 38px;
-  left: 50%;
-  margin-left: -19px;
-  position: absolute;
-  top: -20px;
-  width: 38px;
+    content: '';
+    background-color: #fff;
+    background-image: url(https://test_magento_image_repo.storage.googleapis.com/grass-icon.svg);
+    border-radius: 100%;
+    display: block;
+    height: 38px;
+    left: 50%;
+    margin-left: -19px;
+    position: absolute;
+    top: -20px;
+    width: 38px;
 }
 
 .sp-results__list {
-  list-style: none;
+    list-style: none;
 }
 
 .sp-results__product-image {
-  flex-shrink: 0;
-  height: 100px;
-  width: 68px;
+    flex-shrink: 0;
+    height: 100px;
+    width: 68px;
 }
 
 .sp-results__product-image--lg {
-  height: 224px;
-  width: 174px;
+    height: 224px;
+    width: 174px;
 }
 
 .sp-results__your-plan-label {
-  line-height: 1.25;
-  margin: 0 auto;
-  max-width: 6rem;
+    line-height: 1.25;
+    margin: 0 auto;
+    max-width: 6rem;
+}
+
+.sp-results-tabs-container {
+    display: flex;
 }
 
 .sp-results__tabs {
-  flex-shrink: 0;
+    flex-shrink: 0;
 }
 
 .sp-results__tabs-tab {
-  list-style: none;
+    list-style: none;
 }
 
 .sp-results__icon--small {
-  width: 40px;
-  height: auto;
+    width: 40px;
+    height: auto;
 }
 
 .sp-results__icon--medium {
-  width: 50px;
-  height: auto;
+    width: 50px;
+    height: auto;
 }
 
 .sp-results__product {
-  border: 2px solid #1d5632;
-  align-items: flex-start;
+    border: 2px solid #1d5632;
+    align-items: flex-start;
+}
+
+.sp-results__product button {
+    margin: 0 auto 1rem;
+    text-align: center;
+    width: 100%;
+}
+
+@media (min-width: 768px) {
+    .sp-results__product button {
+        margin-left: 7.2rem;
+        width: auto;
+    }
+}
+
+.sp-results__product ul {
+    padding-inline-start: 18px;
 }
 
 .sp-results__tabs-button {
-  border: none;
-  background: transparent;
-  color: inherit;
-  align-items: center;
-  text-align: left;
-  width: 100%;
+    border: none;
+    color: inherit;
+    align-items: center;
+    text-align: left;
+    width: 100%;
+}
+
+.sp-results__tabs-button:not(.sp-bg-green-4),
+.sp-results__tabs-button:not(.sp-bg-green-4):hover,
+.sp-results__tabs-button:not(.sp-bg-green-4):focus {
+    background: transparent;
+    border: none;
+}
+
+.accordion button.mobile,
+.accordion button.mobile:hover,
+.accordion button.mobile:focus {
+    position: relative;
+    background-color: #edf4e1;
+}
+
+.accordion .active button.mobile {
+    background-color: #FCFFF7;
+}
+
+.accordion .sp-results__list {
+    position: relative;
+}
+
+.accordion button.mobile:after {
+    content: "";
+    color: #1d5632;
+    position: absolute;
+    font-size: 2rem;
+    right: 1rem;
+    top: 50%;
+    width: 20px;
+    height: 20px;
+    transform: translateY(-50%);
+    background: url('https://test_magento_image_repo.storage.googleapis.com/Icon-Open.png') center center / contain no-repeat;
+}
+
+.accordion .active button.mobile:after {
+    background-image: url('https://test_magento_image_repo.storage.googleapis.com/Icon-Close.png');
 }
 
 .sp-results__tabs-button:hover,
 .sp-results__tabs-button:focus,
 .sp-results__tabs-button:active {
-  /* Not ideal, should be styling the li */
-  background-color: #edf4e1;
-  outline: none;
-  border: none;
+    /* Not ideal, should be styling the li */
+    background-color: #edf4e1;
+    outline: none;
+    border: none;
+}
+
+.sp-results__tabs .sp-results__tabs-detail {
+    height: auto;
+    overflow: hidden;
+    padding-top: 0;
+    padding-bottom: 0;
+    transition: all 1s ease-out;
+    max-height: 0;
+    transition: all 1.5s ease-out;
+    background-color: #FCFFF7;
+}
+
+.sp-results__tabs .active .sp-results__tabs-detail {
+    display: block;
+    max-height: 80rem;
+    height: auto;
+    /*animation: animateAccIn 2s ease-out forwards;*/
+    padding-top: 1rem;
+    padding-bottom: 2rem;
+}
+
+.sp-results__tabs .active .sp-results__tabs-detail:after {
+    content: "";
+    position: absolute;
+    border-bottom: 2px solid #1d5632;
+    bottom: -2px;
+    left: 0;
+    right: 0;
+    z-index: 1;
+}
+
+@media (max-width: 1024px) {
+    .sp-results__tabs-button.desktop {
+        display: none;
+    }
+
+    .sp-results-tabs-container {
+        display: block;
+    }
+
+    .accordion {
+        background-color: #edf4e1;
+        padding-bottom: 2rem;
+    }
+
+    .accordion > .sp-results__list:not(:first-of-type):before {
+        content: "";
+        position: absolute;
+        top: 0;
+        left: 1rem;
+        right: 1rem;
+        border-bottom: 2px solid #1d5632;
+        z-index: 1;
+    }
+
+    .accordion > .sp-results__list:last-of-type:after {
+        content: "";
+        position: absolute;
+        bottom: 0;
+        left: 1rem;
+        right: 1rem;
+        border-bottom: 2px solid #1d5632;
+        z-index: 1;
+    }
+
+    .accordion > .active.sp-results__list:before {
+        left: 0;
+        right: 0;
+    }
+
+    .accordion > .active.sp-results__list:last-of-type:after {
+        display: none;
+    }
+}
+
+@media (max-width: 767px) {
+    .accordion {
+        margin: 0 -1rem;
+    }
+}
+
+@media (max-width: 420px) {
+    .accordion .sp-results__list {
+        justify-content: center;
+    }
 }
 
 .sp-results__bag-count {
-  background-image: url(https://test_magento_image_repo.storage.googleapis.com/bag-count.svg);
-  color: white;
-  width: 17px;
-  height: 22px;
+    background-image: url(https://test_magento_image_repo.storage.googleapis.com/bag-count.svg);
+    color: white;
+    width: 17px;
+    height: 22px;
 }
 
 .sp-results__title {
-  max-width: 50rem;
-  margin-left: auto;
-  margin-right: auto;
-  display: flex;
-  justify-content: center;
-  align-items: flex-end;
+    max-width: 50rem;
+    margin-left: auto;
+    margin-right: auto;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
 }
 
 .sp-results__title::before,
 .sp-results__title::after {
-  content: '';
-  background-image: url(https://test_magento_image_repo.storage.googleapis.com/grass-land.svg);
-  display: block;
-  height: 22px;
-  flex: 0 0 45px;
-  position: relative;
-  bottom: 7px;
+    content: '';
+    background-image: url(https://test_magento_image_repo.storage.googleapis.com/grass-land.svg);
+    display: block;
+    height: 22px;
+    flex: 0 0 45px;
+    position: relative;
+    bottom: 7px;
 }
 
 .sp-results__title::before {
-  margin-right: 1rem;
+    margin-right: 1rem;
 }
 
 .sp-results__title::after {
-  margin-left: 1rem;
-  transform: scaleX(-1);
-  filter: FlipH;
+    margin-left: 1rem;
+    transform: scaleX(-1);
+    filter: FlipH;
 }
 
 .sp-results__your-plan-product {
-  text-align: center;
+    text-align: center;
 }
 
 .sp-results__link {
-  text-transform: unset;
+    text-transform: unset;
 }
 
 .sp-results__product-addon-image {
-  flex: 0 1 75px;
+    flex: 0 1 75px;
 }
 
 .sp-results__footer {
-  position: sticky;
-  bottom: 0;
-  z-index: 10;
+    position: sticky;
+    bottom: 0;
+    z-index: 10;
 }
 
 .sp-footer {
-  border-top: 2px solid #fff;
+    border-top: 2px solid #fff;
+}
+
+@keyframes animateAccIn {
+    0% {
+        padding: 2rem;
+        max-height: 0;
+    }
+    100% {
+        padding: 2rem;
+        max-height: 80rem;
+    }
 }

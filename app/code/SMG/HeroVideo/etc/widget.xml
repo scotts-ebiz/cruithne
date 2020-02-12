@@ -44,7 +44,7 @@
             </parameter>
             <parameter name="bannertextsize" visible="true" xsi:type="select"
                        source_model="SMG\HeroVideo\Model\Source\TextSize">
-                <label>Blurb Text Size (in rem)</label>
+                <label>Blurb Text Size</label>
             </parameter>
             <parameter name="textstyle" visible="true" xsi:type="multiselect"
                        source_model="SMG\HeroVideo\Model\Source\TextStyles">
@@ -60,9 +60,8 @@
                 <label>CUSTOMIZE VIDEO SECTION</label>
                 <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\LabelField" />
             </parameter>
-            <parameter name="videotext" visible="true" xsi:type="block">
+            <parameter name="videotext" visible="true" xsi:type="text">
                 <label>Video CTA</label>
-                <block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
             </parameter>
             <parameter name="videotextcolor" visible="true" xsi:type="text">
                 <label>Video CTA Color (#xxxxxx)</label>
@@ -70,7 +69,7 @@
             </parameter>
             <parameter name="videotextsize" visible="true" xsi:type="select"
                        source_model="SMG\HeroVideo\Model\Source\VideoTextSize">
-                <label>Video CTA Size (rem)</label>
+                <label>Video CTA Size</label>
             </parameter>
             <parameter name="iconcolor" visible="true" xsi:type="text">
                 <label>Icon Color (#xxxxxx)</label>

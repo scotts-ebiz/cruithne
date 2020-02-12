@@ -130,7 +130,7 @@ class OrderRepositoryInterface
                 if (!empty($product))
                 {
                     // get the allowed states
-                    $statesNotAllowed = $product->getStatesNotAllowed();
+                    $statesNotAllowed = $product->getData('state_not_allowed');
 
                     //check the state values from product
                    if (!empty($statesNotAllowed))
@@ -141,7 +141,7 @@ class OrderRepositoryInterface
                     $statesNotAllowedArray = array();
                     foreach ($statesNotAllowedList as $stateNotAllowed)
                     {
-                        $attr = $this->_productResource->getAttribute('states_not_allowed');
+                        $attr = $this->_productResource->getAttribute('state_not_allowed');
                         $statesNotAllowedArray = [];
 
                         try

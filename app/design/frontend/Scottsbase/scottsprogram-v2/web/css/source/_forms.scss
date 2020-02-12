@@ -167,6 +167,7 @@ input[type="email"].sp-textarea {
   padding: 1rem;
   position: relative;
   z-index: 1;
+  resize: vertical;
 
   &:focus {
     border-color: $gray-1;

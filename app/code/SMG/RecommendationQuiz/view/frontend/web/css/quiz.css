@@ -7,9 +7,22 @@ body,
   height: 100%;
 }
 
+@media (max-width: 1024px) {
+  .quiz-index-index .page-wrapper {
+    width: 100%;
+    position: fixed;
+    top: 0;
+  }
+}
+
 .sp-quiz__content {
   overflow: auto;
-  order: 1;
+  order: 2;
+  overflow-x: hidden;
+}
+
+.sp-quiz__question.sp-container.sp-mb-8 {
+  padding-bottom: 5.5rem;
 }
 
 .sp-quiz__banner {
@@ -45,6 +58,12 @@ body,
   background: #d3d3d3;
 }
 
+@media (min-width: 768px) {
+  .sp-quiz-map {
+    padding-bottom: 100%;
+  }
+}
+
 .sp-quiz-map__undo {
   left: 1rem;
   position: absolute;
@@ -59,7 +78,24 @@ body,
   position: absolute;
   right: 1rem;
   top: 1rem;
-  z-index: 12;
+  z-index: 50;
+}
+
+.sp-quiz-map__helper ul {
+  padding-left: 1rem;
+}
+
+.sp-quiz__question-draw-image {
+  flex: 0 1 auto;
+  min-height: 5rem;
+  max-height: 12rem;
+  object-fit: contain;
+}
+
+@media (max-height: 625px) {
+  .sp-quiz__question-mark-icon {
+    display: none;
+  }
 }
 
 .sp-quiz__previous:focus {
@@ -306,10 +342,6 @@ li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot::before {
   padding: 20px 0;
 }
 
-.sp-quiz__content {
-  order: 2;
-}
-
 .sp-quiz__progress-buttons {
   order: 3;
 }
@@ -379,6 +411,10 @@ li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot::before {
 
 .sp-quiz__slider-label:last-of-type {
   text-align: right;
+}
+
+.sp-slider {
+  -webkit-tap-highlight-color: transparent;
 }
 
 .sliderContainer {
@@ -586,6 +622,24 @@ li.sp-quiz__progress-item:last-child .sp-quiz__progress-item-dot::before {
 .sp-quiz__safari-bugfix {
   flex: 1 1 100%;
 }
+.sp-quiz-map__info {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  z-index: 50;
+  width: 24px;
+}
+.gm-style-pbt {
+  transform: none;
+  top: 25%;
+}
+
+@media(min-width: 767px) {
+  .gm-style-pbt p.gm-info-text {
+    display: none;
+  }
+}
+
 
 @keyframes transition-slideup {
   0% {

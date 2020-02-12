@@ -31,6 +31,7 @@ define([
         self.quiz = quiz;
         self.polygons = ko.observableArray([]);
         self.activePolygon = null;
+        self.mapInstructionsDisabled = ko.observable(true);
 
         self.addListeners = function () {
             google.maps.event.addListener(self.drawingManager, 'polygoncomplete', self.handlePolygonComplete);
@@ -42,7 +43,22 @@ define([
         };
 
         self.initialize = function () {
-            const autocompleteElement = document.getElementById('address-autocomplete');
+            const autocompleteElement = document.querySelector('#address-autocomplete');
+            const footerBar = document.querySelector('.sp-quiz__footer');
+            let isAndroid = navigator.userAgent.toLowerCase().indexOf('android') !== -1;
+
+            autocompleteElement.onfocus = () => {
+                if (isAndroid) {
+                    footerBar.style.display = 'none';
+                }
+            };
+
+            autocompleteElement.onblur = () => {
+                if (isAndroid) {
+                    footerBar.style.display = 'block';
+                }
+            };
+
             self.autocomplete = new google.maps.places.Autocomplete(
                 autocompleteElement, { types: ['geocode'] }
             );
@@ -72,12 +88,18 @@ define([
                 $('#address-autocomplete').val(self.address());
                 self.showInstructions(true);
 
+                setTimeout(() => {
+                    self.mapInstructionsDisabled(false);
+                }, 5000);
+
+                const zoom = window.outerWidth >= 1024 ? 22 : 20;
+
                 if (place.geometry.viewport) {
                     self.map.fitBounds(place.geometry.viewport);
-                    self.map.setZoom(22);
+                    self.map.setZoom(zoom);
                 } else {
                     self.map.setCenter(place.geometry.location);
-                    self.map.setZoom(22);
+                    self.map.setZoom(zoom);
                 }
 
                 self.getLocation(place.geometry.location);
@@ -139,7 +161,10 @@ define([
             var path = polygon.getPath();
             var point = path.getAt(0);
 
+            // Not a polygon since there are less then 3 points, so remove it.
             if (path.getLength() < 3) {
+                polygon.setMap(null);
+
                 return;
             }
 
@@ -210,23 +235,16 @@ define([
          * Undo the last point placed on the map.
          */
         self.undo = function () {
-            if (!self.activePolygon && !self.polygons().length) {
-                return;
-            }
-
-            var shape = null;
-
-            if (self.activePolygon) {
-                shape = self.activePolygon;
-                self.polygons.remove(shape);
-                shape.setMap(null);
-                self.activePolygon = null;
-            } else {
-                shape = self.polygons.pop();
-                shape.setMap(null);
-            }
+            self.drawingManager.setDrawingMode(null);
+            self.polygons().forEach(polygon => polygon.setMap(null));
+            self.polygons([]);
+            self.activePolygon = null;
 
             self.calculateLawnSize();
+        };
+
+        self.toggleInfo = function () {
+            self.showInstructions(!self.showInstructions());
         };
 
         /**
@@ -304,17 +322,19 @@ define([
         }
 
         self.handleResize = function() {
+            const wrapper = document.querySelector('.sp-quiz__wrapper');
             const content = document.querySelector('.sp-quiz__content');
 
             if (window.innerWidth < 1024) {
                 const height = document.querySelector('.sp-quiz__footer').offsetHeight;
-                content.style.marginBottom = height+'px';
+                wrapper.style.marginBottom = height + 'px';
+                content.style.paddingBottom = height + 'px';
                 return;
             }
 
+            wrapper.style.marginBottom = '0px';
             content.style.marginBottom = '0px';
-
-        }
+        };
 
         window.addEventListener('resize', self.debounce(self.handleResize, 250));
 
@@ -344,7 +364,7 @@ define([
         self.previousGroups = ko.observableArray([]);
         self.sliderImages = ko.observable({});
         self.animation = ko.observable({});
-        self.usingGoogleMaps = ko.observable(true);
+        self.usingGoogleMaps = ko.observable(false);
         self.invalidZipCode = ko.observable(false);
         self.invalidArea = ko.observable(false);
         self.isAnimating = ko.observable(false);
@@ -478,7 +498,7 @@ define([
                                 window.cancelAnimationFrame(animationFrame);
                             }
                         });
-                    }, 1000);
+                    }, 500);
                 }
             }
         };
@@ -556,7 +576,7 @@ define([
                 } else {
                     window.requestAnimationFrame(self.step(start, self.currentAnimationState));
                 }
-            }, 2000);
+            }, 1000);
         };
 
 
@@ -1128,6 +1148,53 @@ define([
 
             this.quiz = new Quiz();
             this.loadTemplate();
+            this.setupRangeListener(this.quiz);
+        },
+
+        setupRangeListener: function(quiz) {
+            let interval = setInterval(() => {
+                if (!navigator.platform.match(/iPhone|iPod|iPad/)) {
+                    clearInterval(interval);
+                }
+
+                if (document.querySelectorAll('.sp-slider-container input.sp-slider').length > 0) {
+                    const sliders = document.querySelectorAll('.sp-slider-container input.sp-slider');
+
+                    Array.prototype.forEach.call(sliders, slider => {
+                        slider.addEventListener(
+                            "touchend",
+                            (e) => this.iosPolyfill(e, quiz), { passive: true }
+                        );
+                    });
+
+                    clearInterval(interval);
+                }
+            }, 100);
+        },
+
+        iosPolyfill: function(e, quiz) {
+            let slider = e.target;
+            let val =
+                (e.pageX - slider.getBoundingClientRect().left) /
+                (slider.getBoundingClientRect().right -
+                slider.getBoundingClientRect().left),
+            max = slider.getAttribute("max"),
+                segment = 1 / (max - 1),
+                segmentArr = [];
+
+            max++;
+
+            for (let i = 0; i < max; i++) {
+                segmentArr.push(segment * i);
+            }
+
+            let segCopy = JSON.parse(JSON.stringify(segmentArr)),
+                index = segmentArr.sort((a, b) => Math.abs(val - a) - Math.abs(val - b))[0];
+
+            let newValue = segCopy.indexOf(index) + 1;
+            slider.value = newValue;
+            setSliderTrack(slider);
+            quiz.setAnswer(newValue + 1, e);
         },
 
         /**

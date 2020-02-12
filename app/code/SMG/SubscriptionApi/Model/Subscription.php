@@ -25,10 +25,8 @@ use Psr\Log\LoggerInterface;
 use SMG\SubscriptionApi\Helper\RecurlyHelper;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\Collection as SubscriptionAddonOrderCollection;
-use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\Collection\Interceptor as SubscriptionAddonOrderCollectionInterceptor;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\CollectionFactory as SubscriptionAddonOrderCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection as SubscriptionOrderCollection;
-use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection\Interceptor as SubscriptionOrderCollectionInterceptor;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
 
 /**
@@ -46,10 +44,10 @@ class Subscription extends AbstractModel
     /**  @var SubscriptionHelper */
     protected $_subscriptionHelper;
 
-    /** @var SubscriptionOrderCollectionInterceptor */
+    /** @var SubscriptionOrderCollection */
     protected $_subscriptionOrders;
 
-    /** @var SubscriptionAddonOrderCollectionInterceptor */
+    /** @var SubscriptionAddonOrderCollection */
     protected $_subscriptionAddonOrders;
 
     /** @var FormKey */
@@ -208,15 +206,12 @@ class Subscription extends AbstractModel
      */
     public function getSubscriptionOrders()
     {
-        // Make sure we have an actual subscription
-        if (empty($this->getEntityId())) {
-            return false;
-        }
-
         // If subscription orders is local, send them, if not, pull them and send them
         if (! isset($this->_subscriptionOrders)) {
             $subscriptionOrders = $this->_subscriptionOrderCollectionFactory->create();
-            $subscriptionOrders->addFieldToFilter('subscription_entity_id', $this->getEntityId());
+            $subscriptionOrders
+                ->setOrder('ship_start_date', 'asc')
+                ->addFieldToFilter('subscription_entity_id', $this->getEntityId());
             $this->_subscriptionOrders = $subscriptionOrders;
         }
 
@@ -349,18 +344,10 @@ class Subscription extends AbstractModel
      */
     public function getSubscriptionAddonOrders()
     {
-
-        // Make sure we have an actual subscription
-        if (empty($this->getEntityId())) {
-            return false;
-        }
-
         // If subscription orders is local, send them, if not, pull them and send them
-        if (! isset($this->_subscriptionAddonOrders)) {
-            $subscriptionAddonOrders = $this->_subscriptionAddonOrderCollectionFactory->create();
-            $subscriptionAddonOrders->addFieldToFilter('subscription_entity_id', $this->getEntityId());
-            $this->_subscriptionAddonOrders = $subscriptionAddonOrders;
-        }
+        $subscriptionAddonOrders = $this->_subscriptionAddonOrderCollectionFactory->create();
+        $subscriptionAddonOrders->addFieldToFilter('subscription_entity_id', $this->getEntityId());
+        $this->_subscriptionAddonOrders = $subscriptionAddonOrders;
 
         return $this->_subscriptionAddonOrders;
     }
@@ -444,6 +431,8 @@ class Subscription extends AbstractModel
             if ($this->getSubscriptionType() == 'annual') {
                 $quote->setCouponCode('annual_discount');
             }
+
+            $quote->save();
         } catch (\Exception $e) {
             $error = 'There was an issue adding the subscription to the cart. - ' . $e->getMessage();
             $this->_logger->error($error);

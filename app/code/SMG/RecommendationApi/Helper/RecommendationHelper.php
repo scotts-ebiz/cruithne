@@ -7,6 +7,7 @@ use Magento\Store\Model\ScopeInterface;
 
 class RecommendationHelper extends AbstractHelper
 {
+    const CONFIG_RECOMMENDATIONS_QUIZ_API_KEY = 'recommendations/api/key';
     const CONFIG_RECOMMENDATIONS_ACTIVE_PATH = 'recommendations/module/active';
     const CONFIG_RECOMMENDATIONS_USE_CSRF = 'recommendations/module/usecsrf';
     const CONFIG_RECOMMENDATIONS_NEW_QUIZ_PATH = 'recommendations/api/new';
@@ -31,6 +32,21 @@ class RecommendationHelper extends AbstractHelper
         );
 
         return $active;
+    }
+
+    /**
+     * Get the LSPaaS API key.
+     *
+     * @param null $storeID
+     * @return mixed
+     */
+    public function getApiKey($storeID = null)
+    {
+        return $this->scopeConfig->getValue(
+            self::CONFIG_RECOMMENDATIONS_QUIZ_API_KEY,
+            ScopeInterface::SCOPE_STORE,
+            $storeID
+        );
     }
 
     /**
@@ -62,7 +78,7 @@ class RecommendationHelper extends AbstractHelper
             self::CONFIG_RECOMMENDATIONS_NEW_QUIZ_PATH,
             ScopeInterface::SCOPE_STORE,
             $store_id
-        );
+        ) . "?key={$this->getApiKey()}";
     }
 
     /**
@@ -77,7 +93,7 @@ class RecommendationHelper extends AbstractHelper
             self::CONFIG_RECOMMENDATIONS_SAVE_QUIZ_PATH,
             ScopeInterface::SCOPE_STORE,
             $store_id
-        );
+        ) . "?key={$this->getApiKey()}";
     }
 
     /**
@@ -92,7 +108,7 @@ class RecommendationHelper extends AbstractHelper
             self::CONFIG_RECOMMENDATIONS_QUIZ_RESULT_PATH,
             ScopeInterface::SCOPE_STORE,
             $store_id
-        );
+        ) . "?key={$this->getApiKey()}";
     }
 
     /**
@@ -107,7 +123,7 @@ class RecommendationHelper extends AbstractHelper
             self::CONFIG_RECOMMENDATIONS_COMPLETED_QUIZ_PATH,
             ScopeInterface::SCOPE_STORE,
             $store_id
-        );
+        ) . "?key={$this->getApiKey()}";
     }
 
     /**
@@ -122,7 +138,7 @@ class RecommendationHelper extends AbstractHelper
             self::CONFIG_RECOMMENDATIONS_MAP_TO_USER_PATH,
             ScopeInterface::SCOPE_STORE,
             $store_id
-        );
+        ) . "?key={$this->getApiKey()}";
     }
 
     /**
@@ -137,7 +153,7 @@ class RecommendationHelper extends AbstractHelper
             self::CONFIG_RECOMMENDATIONS_PRODUCTS_PATH,
             ScopeInterface::SCOPE_STORE,
             $store_id
-        );
+        ) . "?key={$this->getApiKey()}";
     }
 
     /**

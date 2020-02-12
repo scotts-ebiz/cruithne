@@ -1,8 +1,6 @@
 <!--ko if: hasResults()-->
     <div class="sp-text-center sp-px-8 md:sp-px-0 md:sp-container sp-mb-8">
-        <h1
-            class="sp-plan__title sp-h1 sp-text-green-1"
-        >
+        <h1 class="sp-plan__title sp-h1 sp-text-green-1">
             <div>
                 <div data-bind="text: customerFirstName()+'\'s'"></div>
                 Lawn Plan
@@ -59,14 +57,26 @@
                 </div>
 
                 <!-- Sidebar -->
-                <div class="md:sp-flex">
-                    <ul class="sp-p-0 sp-plan__tabs"
+                <div class="sp-plan-tabs-container">
+                    <ul class="sp-p-0 sp-plan__tabs accordion"
                         data-bind="foreach: seasons()">
-                        <li class="sp-plan__list sp-mb-0"
-                            data-bind="css: {'sp-bg-green-4': ($index() === $parent.activeSeasonIndex())}">
+                        <li class="sp-plan__list sp-mb-0">
                             <button type="button"
-                                    data-bind="click: function() { $parent.activeSeasonIndex($index()) }"
-                                    class="sp-plan__tabs-button sp-flex sp-align-center sp-py-8 sp-px-4">
+                                    data-bind="click: function() { $parent.toggleAccordion($index()) }"
+                                    class="sp-plan__tabs-button sp-flex sp-align-center sp-py-8 sp-px-4 lg:sp-hide mobile">
+                                <img class="sp-mr-4 sp-results__icon--small"
+                                     data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]) }" />
+                                <div>
+                                    <strong class="sp-h4 sp-mb-2 lg:sp-mb-0"
+                                            data-bind="html: $data.products[0].season"></strong>
+                                    <div class="sp-p2"
+                                         data-bind="if: $parent.nextAvailableProduct() === $index()">(Next Shipment)</div>
+                                </div>
+                            </button>
+                            <button type="button"
+                                    class="sp-plan__tabs-button sp-flex sp-align-center sp-py-8 sp-px-4 desktop"
+                                    data-bind="click: function() { $parent.activeSeasonIndex($index()) }, css: {'sp-bg-green-4': ($index() === $parent.activeSeasonIndex())}"
+                                    >
                                 <img class="sp-mr-4 sp-plan__icon--small"
                                      data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]) }" />
                                 <div>
@@ -78,21 +88,21 @@
                                         <span data-bind="html: $parent.formatDate($data.products[0].applicationEndDate)"></span></div>
                                 </div>
                             </button>
-                            <!-- ko if: $index() === $parent.activeSeasonIndex() -->
-                                <!-- ko with: { activeSeason: $parent.activeSeason, formatDate: $parent.formatDate, productFeatures: $parent.productFeatures } -->
-                                    <div class="lg:sp-hide">
-                                        <!-- ko template: "SMG_SubscriptionPlan/active-season.html" --><!-- /ko -->
-                                    </div>
-                                <!-- /ko -->
+                            <!-- ko with: { season: $data, formatDate: $parent.formatDate, productFeatures: $parent.productFeatures, context: $parentContext.$rawData } -->
+                                <div class="lg:sp-hide">
+                                    <!-- ko template: "SMG_SubscriptionPlan/active-season.html" --><!-- /ko -->
+                                </div>
                             <!-- /ko -->
                         </li>
                     </ul>
 
                     <!-- Product Detail -->
                     <!-- ko if: activeSeason() -->
+                    <!-- ko with: { season: $data.activeSeason(), formatDate: $data.formatDate, productFeatures: $data.productFeatures, context: $context.$rawData } -->
                     <div class="sp-hide lg:sp-block">
                         <!-- ko template: "SMG_SubscriptionPlan/active-season.html" --><!-- /ko -->
                     </div>
+                    <!-- /ko -->
                     <!-- /ko -->
                 </div>
             </div>
@@ -187,8 +197,6 @@
                 </div>
             </div>
         </div>
-
-
 
         <!-- ko if: pdp().visible && pdp().product -->
             <!-- ko template: "SMG_SubscriptionPlan/product-detail-modal.html" -->

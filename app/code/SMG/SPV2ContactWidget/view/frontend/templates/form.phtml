@@ -6,6 +6,7 @@
                 data-validate="{required:true}"
                 id="name"
                 name="name"
+                maxLength="100"
                 placeholder="<?= $block->escapeHtml(__('Name')) ?>*"
                 title="<?= $block->escapeHtmlAttr(__('Name')) ?>"
                 type="text"
@@ -70,11 +71,11 @@
 
 <?php $ajaxurl = $block->escapeurl( $block->getFormAction() ); ?>
 <script type="text/x-magento-init">
-        {
-            "*": {
-                "SMG_SPV2ContactWidget/js/contactajax": {
-                    "AjaxUrl": "<?php echo $ajaxurl; ?>"
-                }
+    {
+        "*": {
+            "SMG_SPV2ContactWidget/js/contactajax": {
+                "AjaxUrl": "<?php echo $ajaxurl; ?>"
             }
         }
+    }
 </script>

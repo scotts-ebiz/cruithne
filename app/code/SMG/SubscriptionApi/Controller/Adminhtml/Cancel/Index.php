@@ -1,13 +1,15 @@
 <?php
 namespace SMG\SubscriptionApi\Controller\Adminhtml\Cancel;
 
+use Exception;
+use Magento\Framework\App\ResponseInterface;
 use Magento\Framework\Controller\ResultFactory;
+use Magento\Framework\Controller\ResultInterface;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Exception\SecurityViolationException;
 use Psr\Log\LoggerInterface;
-use Recurly_Client;
-use Recurly_Error;
-use Recurly_NotFoundError;
-use Recurly_Subscription;
-use Recurly_SubscriptionList;
+use SMG\SubscriptionApi\Helper\CancelHelper;
+use SMG\SubscriptionApi\Model\RecurlySubscription;
 
 /**
  * Class Index
@@ -49,6 +51,14 @@ class Index extends \Magento\Backend\App\Action
      * @var LoggerInterface
      */
     protected $_logger;
+    /**
+     * @var RecurlySubscription
+     */
+    protected $_recurlySubscription;
+    /**
+     * @var CancelHelper
+     */
+    protected $_cancelHelper;
 
     /**
      * Index constructor.
@@ -68,6 +78,8 @@ class Index extends \Magento\Backend\App\Action
         \Magento\Framework\App\RequestInterface $request,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Magento\Framework\Data\Form\FormKey $formKey,
+        RecurlySubscription $recurlySubscription,
+        CancelHelper $cancelHelper,
         LoggerInterface $logger
     ) {
         $this->_recurlyHelper = $recurlyHelper;
@@ -77,54 +89,48 @@ class Index extends \Magento\Backend\App\Action
         $this->_messageManager = $messageManager;
         $this->_formKey = $formKey;
         $this->_logger = $logger;
+        $this->_recurlySubscription = $recurlySubscription;
+        $this->_cancelHelper = $cancelHelper;
         parent::__construct($context);
     }
 
     /**
-     * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface
-     * @throws Recurly_Error
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @return ResponseInterface|ResultInterface
+     * @throws NoSuchEntityException
+     * @throws SecurityViolationException
      */
     public function execute()
     {
-
         // Check form key
         if (! $this->formValidation($this->_request->getParam('form_key'))) {
             throw new SecurityViolationException(__('Unauthorized'));
         }
 
-        // Check if subscription id, type and Recurly account code are in the request
-        if (! empty($this->_request->getParam('recurly_account_code'))) {
-            Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
-            Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
-
-            $recurlyAccountCode = $this->_request->getParam('recurly_account_code');
-
-            try {
-                $active_subscriptions = Recurly_SubscriptionList::getForAccount($recurlyAccountCode, [ 'state' => 'active' ]);
-                $future_subscriptions = Recurly_SubscriptionList::getForAccount($recurlyAccountCode, [ 'state' => 'future' ]);
-
-                foreach ($active_subscriptions as $subscription) {
-                    $_subscription = Recurly_Subscription::get($subscription->uuid);
-                    $_subscription->cancel();
-                }
-
-                foreach ($future_subscriptions as $subscription) {
-                    $_subscription = Recurly_Subscription::get($subscription->uuid);
-                    $_subscription->cancel();
-                }
-
-                $this->_messageManager->addSuccessMessage('Subscriptions cancelled.');
-            } catch (Recurly_NotFoundError $e) {
-                $error = 'There was an error with the cancellation. (' . $e->getMessage() . ')';
-                $this->_logger->error($error);
-                $this->_messageManager->addErrorMessage($error);
-            }
-        } else {
-            $error = 'There was an error with the cancellation.';
+        if (empty($this->_request->getParam('recurly_account_code'))) {
+            // Redirect back to the customer page with a success or error message
+            $error = 'No customer ID passed in.';
             $this->_logger->error($error);
             $this->_messageManager->addErrorMessage($error);
+            $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+            $resultRedirect->setUrl($this->_redirect->getRefererUrl());
+
+            return $resultRedirect;
         }
+
+        try {
+            $accountCode = $this->_request->getParam('recurly_account_code');
+            $this->_cancelHelper->cancelSubscriptions(true, true, $accountCode);
+        } catch (Exception $e) {
+            $error = 'Could not cancel Recurly subscriptions';
+            $this->_logger->error($error . ' - ' . $e->getMessage());
+            $this->_messageManager->addErrorMessage($error);
+            $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+            $resultRedirect->setUrl($this->_redirect->getRefererUrl());
+
+            return $resultRedirect;
+        }
+
+        $this->_messageManager->addSuccessMessage('Subscriptions cancelled.');
 
         // Redirect back to the customer page with a success or error message
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
@@ -138,7 +144,7 @@ class Index extends \Magento\Backend\App\Action
      *
      * @param $key
      * @return bool
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     private function formValidation($key)
     {
