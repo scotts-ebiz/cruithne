@@ -1,7 +1,9 @@
 # Base image is Google's Optimized Ubuntu Image
 
+ARG BRANCH=staging
 ARG IMAGE=gcr.io/ecommerce-platform-211419/magento-stage-primer:latest
 FROM $IMAGE
+ARG BRANCH
 ENTRYPOINT []
 
 ENV NVM_DIR /home/magento/.nvm
@@ -20,7 +22,7 @@ WORKDIR $MAGENTO_DIR
 # Temporary add to test mass import of images
 RUN mkdir -p $MAGENTO_DIR/var/import/images && gsutil -q -m rsync -r -u gs://magento-image-repo/import/ $MAGENTO_DIR/var/import/images ; exit 0
 
-RUN git fetch --all && git reset --hard origin && git pull
+RUN git fetch --all && git reset --hard origin/${BRANCH} && git pull
 RUN composer install
 RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools
 
