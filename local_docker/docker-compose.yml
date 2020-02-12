@@ -18,8 +18,9 @@ services:
       - 3306:3306
     environment:
       MYSQL_ROOT_PASSWORD: dfDF34#$$
+      DEFAULT_LOCAL_ENVIRONMENT: rc
     volumes:
-      - "/local/Projects/dtc/magento2_primer/local/database/scripts/:/docker-entrypoint-initdb.d/"
+      - "./scripts/:/docker-entrypoint-initdb.d/"
 volumes:
   magento-data-sync:
     external: true

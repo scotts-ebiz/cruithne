@@ -79,3 +79,5 @@ auth.json
 keys/
 package-lock.json
 package.json.sample
+.docker-sync/
+yarn.lock
