@@ -61,7 +61,7 @@ define([
             setTimeout(() => {
                 cancelSubscriptionModal = cancelSubscriptionModal({
                     type: 'popup',
-                    innerScroll: false,
+                    innerScroll: true,
                     buttons: [],
                     focus: 'none',
                     title: 'Before You Cancel',
