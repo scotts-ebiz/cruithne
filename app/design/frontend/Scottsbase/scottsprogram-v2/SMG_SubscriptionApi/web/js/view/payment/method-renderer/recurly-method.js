@@ -249,7 +249,7 @@ define(
                         text: 'Cancel',
                         class: 'sp-link sp-mx-4',
                         click() {
-                            window.location.hash = 'shipping';
+                            window.location.hash = '';
                             window.location.reload();
                         },
                     }, {
@@ -260,7 +260,7 @@ define(
                         }
                     }],
                     closed() {
-                        window.location.hash = 'shipping';
+                        window.location.hash = '';
                         window.location.reload();
                     },
                 };
@@ -279,7 +279,7 @@ define(
                             click() {
                                 if (self.refreshCheckout()) {
                                     self.loadingMask().style.display = 'block';
-                                    window.location.hash = 'shipping';
+                                    window.location.hash = '';
                                     window.location.reload();
                                 }
 
@@ -288,7 +288,7 @@ define(
                         }],
                         closed() {
                             if (self.refreshCheckout()) {
-                                window.location.hash = 'shipping';
+                                window.location.hash = '';
                                 window.location.reload();
                             }
                         },
