@@ -76,3 +76,16 @@
   }
 }
 
+#validate_address {
+  .step-content {
+    .errorMessageContainer {
+       .instructions {
+          margin-bottom: 1rem;
+          font-size: 1.05rem;
+          font-weight: bold;
+          color: $red-1;
+       }
+    }
+  }
+}
+
