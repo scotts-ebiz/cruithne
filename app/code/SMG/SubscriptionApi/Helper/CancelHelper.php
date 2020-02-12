@@ -39,6 +39,9 @@ class CancelHelper extends AbstractHelper
      * CancelHelper constructor.
      * @param Context $context
      * @param RecurlySubscription $recurlySubscription
+     * @param SubscriptionModel $subscriptionModel
+     * @param AddressRepositoryInterface $addressRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         Context $context,
@@ -57,17 +60,20 @@ class CancelHelper extends AbstractHelper
 
     /**
      * @param bool $cancelActive
-     * @param bool $cancelFutuer
-     * @param null $accountCode
+     * @param bool $cancelFuture
+     * @param string $accountCode
      * @return false|string
      * @throws LocalizedException
      */
-    public function cancelSubscriptions($cancelActive = true, $cancelFutuer = true, $accountCode = null)
-    {
+    public function cancelSubscriptions(
+        $cancelActive = true,
+        $cancelFuture = true,
+        $accountCode = ''
+    ) {
         // Cancel the Recurly Subscriptions.
         try {
             // Cancel recurly subscriptions
-            $cancelledSubscriptionIds = $this->_recurlySubscription->cancelRecurlySubscriptions(true, true, $accountCode);
+            $cancelledSubscriptionIds = $this->_recurlySubscription->cancelRecurlySubscriptions($cancelActive, $cancelFuture, $accountCode);
 
             // Find the master subscription id
             $masterSubscriptionId = null;
