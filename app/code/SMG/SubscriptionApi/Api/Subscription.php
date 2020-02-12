@@ -321,45 +321,23 @@ class Subscription implements SubscriptionInterface
 
         // Get customer shipping and billing address
         $mainQuote = $this->_checkoutSession->getQuote();
-        $orderShippingAddress = $mainQuote->getShippingAddress()->getData();
-
-        $this->_logger->debug('Updating customer addresses...');
-
-        // Save the customer addresses.
-
-        // Once the customers addresses have been cleared, any error from here
-        // on out will require the checkout page to be reloaded.
-
-        $this->clearCustomerAddresses($customer);
-
-        /** @var Address $customerShippingAddress */
-        $customerShippingAddress = $this->_addressFactory
-            ->create()
-            ->addData($orderShippingAddress)
-            ->setCustomerId($customerId)
-            ->save();
-        $customer->setDefaultShipping($customerShippingAddress->getId());
-
+        $customerShippingAddress = $this->_subscriptionOrderHelper->formatAddress($mainQuote->getShippingAddress());
         if ($billing_same_as_shipping) {
-            $customer->setDefaultBilling($customerShippingAddress->getId());
+            $customerBillingAddress = $customerShippingAddress;
         } else {
-            /** @var Address $customerBillingAddress */
-            $customerBillingAddress = $this->_addressFactory
-                ->create()
-                ->addData($billing_address)
-                ->setCustomerId($customerId)
-                ->save();
-            $customer->setDefaultBilling($customerBillingAddress->getId());
+            $customerBillingAddress = $billing_address;
         }
 
-        $customer->save();
+        // Add checkout addresses to the session.
+        $this->_coreSession->setCheckoutShipping($customerShippingAddress);
+        $this->_coreSession->setCheckoutBilling($customerBillingAddress);
 
         // Check the zip code to make sure that it is what they entered during the quiz
         $this->_logger->debug('Verifying shipping zip code matches quiz zip code...');
         if (
             is_null($this->_coreSession->getZipCode())
-            || empty($customerShippingAddress->getPostcode())
-            || strpos($customerShippingAddress->getPostcode(), $this->_coreSession->getZipCode()) !== 0 // if the provided quiz zip does not match the first five of the avatax corrected zip then error
+            || empty($customerShippingAddress['postcode'])
+            || strpos($customerShippingAddress['postcode'], $this->_coreSession->getZipCode()) !== 0 // if the provided quiz zip does not match the first five of the avatax corrected zip then error
         ) {
             $error = 'Your shipping zip code and quiz zip code do not match.';
             $this->_logger->error($error);
@@ -420,11 +398,13 @@ class Subscription implements SubscriptionInterface
         $this->_logger->debug('Processing the seasonal orders...');
         foreach ($subscription->getSubscriptionOrders() as $subscriptionOrder) {
             try {
+                $this->clearCustomerAddresses($customer);
                 $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionOrder);
             } catch (Exception $e) {
                 $this->_logger->error($e->getMessage());
 
                 // We failed to create orders, lets remove any created orders.
+                $this->clearCustomerAddresses($customer);
                 $this->cancelOrders($subscription);
 
                 return $this->_responseHelper->error(
@@ -438,6 +418,7 @@ class Subscription implements SubscriptionInterface
         $this->_logger->debug('Processing the add-on orders...');
         foreach ($subscription->getSubscriptionAddonOrders() as $subscriptionAddonOrder) {
             try {
+                $this->clearCustomerAddresses($customer);
                 // Add-on was not selected, so continue.
                 if (! $subscriptionAddonOrder->isSelected()) {
                     continue;
@@ -448,6 +429,7 @@ class Subscription implements SubscriptionInterface
                 $this->_logger->error($e->getMessage());
 
                 // We failed to create orders, lets remove any created orders.
+                $this->clearCustomerAddresses($customer);
                 $this->cancelOrders($subscription);
 
                 return $this->_responseHelper->error(
@@ -469,6 +451,7 @@ class Subscription implements SubscriptionInterface
 
             // We failed to invoice the Recurly subscription, so lets remove any
             // created orders.
+            $this->clearCustomerAddresses($customer);
             $this->cancelOrders($subscription);
 
             return $this->_responseHelper->error(
@@ -498,6 +481,7 @@ class Subscription implements SubscriptionInterface
      * @param $key
      * @return bool
      * @throws NoSuchEntityException
+     * @throws LocalizedException
      */
     public function formValidation($key)
     {
@@ -514,26 +498,21 @@ class Subscription implements SubscriptionInterface
      *
      * @param Customer $customer
      */
-    protected function clearCustomerAddresses($customer)
+    protected function clearCustomerAddresses(&$customer)
     {
-        $customer->setDefaultBilling(null);
-        $customer->setDefaultShipping(null);
-
         try {
-            foreach ($customer->getAddresses() as $address) {
+            foreach ($customer->getAddressesCollection() as $address) {
                 $this->_addressRepository->deleteById($address->getId());
             }
 
             $customer->cleanAllAddresses();
+
+            $customer->setDefaultBilling(null);
+            $customer->setDefaultShipping(null);
+
             $customer->save();
-        } catch (NoSuchEntityException $e) {
-            $this->_logger->error($e->getMessage());
-            return;
-        } catch (LocalizedException $e) {
-            $this->_logger->error($e->getMessage());
-            return;
         } catch (Exception $e) {
-            $this->_logger->error($e->getMessage());
+            $this->_logger->error('Could not clear addresses - ' . $e->getMessage());
             return;
         }
     }
