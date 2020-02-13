@@ -71,6 +71,7 @@ define([
     Array.prototype.forEach.call(inputs, function(input) {
         input.addEventListener('blur', function() {
             $.validator.validateSingleElement($(input));
+
         });
     });
 
