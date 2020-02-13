@@ -4,6 +4,7 @@
 >
     <head>
         <title>Your browser is not supported</title>
+        <css src="SMG_UnsupportedBrowser::css/browser.css" />
     </head>
 
     <body>
