@@ -1031,11 +1031,15 @@ class RecurlySubscription
     protected function updateSubscriptionIDs($subscription)
     {
         try {
-            Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
-            Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
+            $activeSubscriptions = Recurly_SubscriptionList::getForAccount(
+                $subscription->getData('gigya_id'),
+                ['state' => 'active']
+            );
 
-            $activeSubs = Recurly_SubscriptionList::getForAccount($account->account_code, [ 'state' => 'active' ]);
-            $futureSubs = Recurly_SubscriptionList::getForAccount($account->account_code, [ 'state' => 'future' ]);
+            $futureSubscriptions = Recurly_SubscriptionList::getForAccount(
+                $subscription->getData('gigya_id'),
+                ['state' => 'future']
+            );
 
             $subCodes = [];
             foreach ($activeSubscriptions as $activeSubscription) {
