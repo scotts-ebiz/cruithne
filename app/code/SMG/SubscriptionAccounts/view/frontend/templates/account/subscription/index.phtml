@@ -12,7 +12,8 @@
                 "components": {
                     "subscriptionDetails": {
 						"component": "SMG_SubscriptionAccounts/js/subscription-details",
-						"subscriptions": <?php echo json_encode($block->getSubscriptions()); ?>
+						"subscriptions": <?php echo json_encode($block->getSubscriptions()); ?>,
+                        "invoiceHistory": <?php echo json_encode($block->getInvoiceHistory()); ?>
 					}
                 }
             }

@@ -141,8 +141,9 @@
     </div>
     <!-- /ko -->
 </div>
+<!-- /ko -->
 
-<!-- ko if: subscriptions().invoices && subscriptions().invoices.length > 0 -->
+<!-- ko if: invoiceHistory() && invoiceHistory().length -->
 <div class="sp-py-2 sp-subscription-details--border-bottom">
     <h3 class="sp-h4 sp-mt-0">INVOICES</h3>
 </div>
@@ -158,7 +159,7 @@
             <th class="sp-label sp-py-2">Total</th>
         </tr>
         </thead>
-        <tbody data-bind="foreach: { data: subscriptions().invoices, as: 'invoice' }">
+        <tbody data-bind="foreach: { data: invoiceHistory(), as: 'invoice' }">
         <tr>
             <td data-label="Invoice Number"><a
                 class="sp-link"
@@ -176,20 +177,20 @@
             ></td>
             <td
                 data-label="Paid"
-                data-bind="attr: { class: ( invoice.state == 'paid' ) ? '' : 'sp-text-red-1' }"
+                data-bind="attr: { class: ( invoice.state == 'paid' ) ? '' : invoice.type == 'credit' ? '' : 'sp-text-red-1' }"
             >
-                <span data-bind="text: invoice.state == 'paid' ? 'Yes' : 'No'"></span>
+                <span data-bind="text: invoice.state == 'paid' ? 'Yes' : invoice.type == 'credit' ? 'N/A' : 'No'"></span>
             </td>
             <td
                 data-label="Total"
                 class="sp-subscription-details__bold"
-                data-bind="text: '$' + (invoice.total_in_cents / 100).toFixed(2)"
+                data-bind="text: '$' + (invoice.total_in_cents / 100).toFixed(2), 
+                attr: { class: ( invoice.type == 'credit' ) ? 'sp-text-green-1' : '' }"
             ></td>
         </tr>
         </tbody>
     </table>
 </div>
-<!-- /ko -->
 <!-- /ko -->
 
 <div

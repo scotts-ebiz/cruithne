@@ -237,6 +237,25 @@ class Subscription extends Template
         ];
     }
 
+    public function getInvoiceHistory() {
+
+        $invoiceList = Recurly_InvoiceList::getForAccount($this->getGigyaUid());
+
+        $invoices = [];
+
+        // // Loop through the invoices to filter out zero dollar invoices.
+        foreach ($invoiceList as $invoice) {
+            /** @var Recurly_Invoice $invoice */
+            if ($invoice->total_in_cents != 0) {
+                $invoice->due_on = $invoice->due_on ? $invoice->due_on->format('M d, Y') : 'N/A';
+                $invoice->created_at = $invoice->created_at->format('M d, Y');
+                $invoices[] = $invoice->getValues();
+            }
+        }
+
+        return $invoices;
+    }
+
     /**
      * Return all invoices
      *

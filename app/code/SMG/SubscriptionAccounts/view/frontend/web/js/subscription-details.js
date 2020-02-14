@@ -10,6 +10,7 @@ define([
     return Component.extend({
         initialize(config) {
 			this.subscriptions = ko.observable(config.subscriptions);
+            this.invoiceHistory = ko.observable(config.invoiceHistory);
             this.success = ko.observable(null);
             this.loading = ko.observable(false);
             this.type = ko.computed(() => {
