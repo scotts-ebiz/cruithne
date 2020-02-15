@@ -225,12 +225,14 @@ class RecurlySubscription
             throw new LocalizedException(__('There was an issue creating your subscription, please go back and retake the quiz.'));
         }
 
+        // If there is Recurly token, plan code and quiz data
         // Set addressees.
-        $checkoutShipping = $this->_coreSession->getCheckoutShipping();
+        $customerShipping = $this->_addressFactory->create()->load($customer->getDefaultShipping());
+        $shippingAddress = $this->_subscriptionOrderHelper->formatAddress($customerShipping);
 
         $account = $this->loadRecurlyAccount($customer);
 
-        $recurlyShippingAddress = $this->createRecurlyShippingAddress($checkoutShipping, $account->email);
+        $recurlyShippingAddress = $this->createRecurlyShippingAddress($shippingAddress, $account->email);
 
         // Create Recurly Purchase
         try {
@@ -1031,11 +1033,15 @@ class RecurlySubscription
     protected function updateSubscriptionIDs($subscription)
     {
         try {
-            Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
-            Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
+            $activeSubscriptions = Recurly_SubscriptionList::getForAccount(
+                $subscription->getData('gigya_id'),
+                ['state' => 'active']
+            );
 
-            $activeSubs = Recurly_SubscriptionList::getForAccount($account->account_code, [ 'state' => 'active' ]);
-            $futureSubs = Recurly_SubscriptionList::getForAccount($account->account_code, [ 'state' => 'future' ]);
+            $futureSubscriptions = Recurly_SubscriptionList::getForAccount(
+                $subscription->getData('gigya_id'),
+                ['state' => 'future']
+            );
 
             $subCodes = [];
             foreach ($activeSubscriptions as $activeSubscription) {
