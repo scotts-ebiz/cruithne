@@ -3,10 +3,6 @@
 	<head>
 		<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 		<css src="css/scottsprogram-v2.css" />
-		<link src="https://fonts.googleapis.com/css?family=Roboto+Condensed:300,300i,400,400i,700,700i|Roboto:100,100i,300,300i,400,400i,500,500i,700,700i,900,900i" src_type="url" rel="stylesheet" />
-		<link src="https://fonts.googleapis.com/css?family=Roboto:400,400i" src_type="url" rel="stylesheet"/>
-		<link src="https://fonts.googleapis.com/css?family=Roboto+Condensed" src_type="url" rel="stylesheet"/>
-		<link src="https://fonts.googleapis.com/css?family=Raleway:400,700" src_type="url" rel="stylesheet"/>
 		<script src="js/menu.js" />
 	</head>
 </page>

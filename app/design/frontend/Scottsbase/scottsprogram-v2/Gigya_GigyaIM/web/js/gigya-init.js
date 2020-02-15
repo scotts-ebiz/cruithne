@@ -1,5 +1,6 @@
 define([
     'jquery',
+    'gigya_script',
 ], function ($) {
     'use strict';
 
