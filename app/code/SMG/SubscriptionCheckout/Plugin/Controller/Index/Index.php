@@ -143,6 +143,10 @@ class Index
                     // return the login page
                     return $resultRedirect->setPath($customerLoginUrl);
                 } else {
+                    // This hopefully helps prevent some of the issues where the
+                    // continue button on the shipping page does not appear.
+                    $this->_customerSession->getCustomer()->cleanAllAddresses();
+
                     // The customer is logged in, so check if they have any
                     // subscription details in the session.
                     if ($this->_coreSession->getData('subscription_details')) {
