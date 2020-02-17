@@ -10,6 +10,7 @@ use Magento\Framework\Exception\SecurityViolationException;
 use Psr\Log\LoggerInterface;
 use SMG\SubscriptionApi\Helper\CancelHelper;
 use SMG\SubscriptionApi\Model\RecurlySubscription;
+use Zaius\Engage\Helper\Sdk as Sdk;
 
 /**
  * Class Index
@@ -59,7 +60,12 @@ class Index extends \Magento\Backend\App\Action
      * @var CancelHelper
      */
     protected $_cancelHelper;
-
+    
+	/**
+     * @var sdk
+     */
+    protected $_sdk;
+	
     /**
      * Index constructor.
      * @param \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper
@@ -119,6 +125,7 @@ class Index extends \Magento\Backend\App\Action
 
         try {
             $accountCode = $this->_request->getParam('recurly_account_code');
+			$customer_id = $this->_request->getParam('customer_id');
             $this->_cancelHelper->cancelSubscriptions(true, true, $accountCode);
         } catch (Exception $e) {
             $error = 'Could not cancel Recurly subscriptions';
@@ -153,5 +160,35 @@ class Index extends \Magento\Backend\App\Action
         }
 
         return true;
+    }
+	
+	private function zaiusApiCall($customer_id)
+    {
+       $zaiusstatus = false;    
+
+       // check isSubcription and shipmentstatus
+       if ($customer_id)
+        {
+            // call getsdkclient function
+            $zaiusClient = $this->_sdk->getSdkClient();  
+                      // take event as a array and add parameters
+            $event = array();
+            $event['type'] = 'subscription';
+            $event['action'] = 'cancelled';
+            $event['identifiers'] = ['email'=>$customer_email];
+
+            // get postevent function
+            $zaiusstatus = $zaiusClient->postEvent($event);	
+
+				 // check return values from the postevent function
+				if($zaiusstatus)
+				{
+					$this->_logger->info("The customer Email " . $customer_email . " is cancelled successfully to zaius."); //saved in var/log/system.log
+				}
+				else
+				{
+					$this->_logger->info("The customer Email " . $customer_email . " is failed to zaius."); //saved in var/log/system.log
+				}
+        }
     }
 }
