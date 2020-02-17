@@ -76,7 +76,7 @@
                     </p>
                     <p
                         class="sp-p2 sp-font-bold sp-mb-0 sp-mt-4"
-                        data-bind="visible: quiz.map() && quiz.map().lawnSize(), text: quiz.map() && ('Total Lawn Size: ' + quiz.map().lawnSize() + ' SQFT')"
+                        data-bind="visible: quiz.map() && quiz.map().lawnSize(), text: quiz.map() && ('Total Lawn Size: ' + quiz.formatNumber(quiz.map().lawnSize()) + ' SQFT')"
                     >
                     </p>
                 </div>
