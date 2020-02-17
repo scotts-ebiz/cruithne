@@ -12,4 +12,5 @@
     <preference for="SMG\Api\Model\OrderStatusManagementInterface" type="SMG\Api\Model\Api\OrderStatusManagement" />
     <preference for="SMG\Api\Model\ProductImportManagementInterface" type="SMG\Api\Model\Api\ProductImportManagement" />
     <preference for="SMG\Api\Model\ShipmentManagementInterface" type="SMG\Api\Model\Api\ShipmentManagement" />
+    <preference for="SMG\Api\Model\ProductManagementInterface" type="SMG\Api\Model\Api\ProductManagement" />
 </config>
