@@ -177,15 +177,15 @@ class CancelHelper extends AbstractHelper
             // get postevent function
             $zaiusstatus = $zaiusClient->postEvent($event);	
 
-				 // check return values from the postevent function
-				if($zaiusstatus)
-				{
-					$this->_logger->info("The customer Email Subscription " . $customer_email . " is cancelled successfully to zaius."); //saved in var/log/system.log
-				}
-				else
-				{
-					$this->_logger->info("The customer Email Subscription " . $customer_email . " is failed to zaius."); //saved in var/log/system.log
-				}
+			// check return values from the postevent function
+			if($zaiusstatus)
+			{
+				$this->_logger->debug("The customer Email Subscription " . $customer_email . " is cancelled successfully to zaius."); //saved in var/log/debug.log
+			}
+			else
+			{
+				$this->_logger->error("The customer Email Subscription " . $customer_email . " is failed to zaius.");
+			}
         }
     }
 }
