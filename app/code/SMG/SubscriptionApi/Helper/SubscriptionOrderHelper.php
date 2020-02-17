@@ -2,6 +2,8 @@
 
 namespace SMG\SubscriptionApi\Helper;
 
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Directory\Model\ResourceModel\Region\Collection as RegionCollection;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Quote\Model\QuoteFactory;
@@ -126,7 +128,7 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
      * @param RegionCollection $regionCollection
      * @param SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     public function __construct(
         Context $context,
@@ -172,8 +174,8 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @param SubscriptionOrder|SubscriptionAddonOrder|string $subscriptionId
      * @throws LocalizedException
      * @throws SubscriptionException
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws CouldNotSaveException
+     * @throws NoSuchEntityException
      */
     public function processInvoiceWithSubscriptionId($subscriptionId)
     {
@@ -297,8 +299,8 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @return bool
      * @throws LocalizedException
      * @throws SubscriptionException
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws CouldNotSaveException
+     * @throws NoSuchEntityException
      */
     protected function processOrder(Customer $customer, $subscriptionOrder)
     {
