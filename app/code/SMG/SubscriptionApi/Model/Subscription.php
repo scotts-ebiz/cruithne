@@ -6,6 +6,7 @@ use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ProductFactory;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Checkout\Model\Session as CheckoutSession;
+use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Data\Collection\AbstractDb;
@@ -13,11 +14,12 @@ use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
+use Magento\Quote\Api\CartManagementInterface;
+use Magento\Quote\Api\CartRepositoryInterface;
 use Magento\Quote\Model\Quote;
-use Magento\Quote\Model\QuoteManagement;
-use Magento\Quote\Model\QuoteRepository;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use Magento\Store\Model\StoreManager;
@@ -35,6 +37,11 @@ use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory 
  */
 class Subscription extends AbstractModel
 {
+    /**
+     * @var CustomerRepositoryInterface
+     */
+    protected $_customerRepository;
+
     /** @var SubscriptionOrderCollectionFactory */
     protected $_subscriptionOrderCollectionFactory;
 
@@ -85,14 +92,14 @@ class Subscription extends AbstractModel
     protected $_recurlyHelper;
 
     /**
-     * @var QuoteManagement
+     * @var CartManagementInterface
      */
-    protected $_quoteManagement;
+    protected $_cartManagement;
 
     /**
-     * @var QuoteRepository
+     * @var CartRepositoryInterface
      */
-    protected $_quoteRepository;
+    protected $_cartRepository;
     /**
      * @var CustomerSession
      */
@@ -117,6 +124,7 @@ class Subscription extends AbstractModel
      * Subscription constructor.
      * @param Context $context
      * @param Registry $registry
+     * @param CustomerRepositoryInterface $customerRepository
      * @param LoggerInterface $logger
      * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
      * @param SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory
@@ -124,14 +132,15 @@ class Subscription extends AbstractModel
      * @param FormKey $formKey
      * @param CheckoutSession $checkoutSession
      * @param CustomerSession $customerSession
+     * @param CustomerFactory $customerFactory
      * @param StoreManager $storeManager
      * @param Product $product
      * @param ProductFactory $productFactory
      * @param ProductRepository $productRepository
      * @param OrderCollectionFactory $orderCollectionFactory
      * @param RecurlyHelper $recurlyHelper
-     * @param QuoteManagement $quoteManagement
-     * @param QuoteRepository $quoteRepository
+     * @param CartManagementInterface $cartManagement
+     * @param CartRepositoryInterface $cartRepository
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -139,6 +148,7 @@ class Subscription extends AbstractModel
     public function __construct(
         Context $context,
         Registry $registry,
+        CustomerRepositoryInterface $customerRepository,
         LoggerInterface $logger,
         SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
         SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory,
@@ -153,14 +163,15 @@ class Subscription extends AbstractModel
         ProductRepository $productRepository,
         OrderCollectionFactory $orderCollectionFactory,
         RecurlyHelper $recurlyHelper,
-        QuoteManagement $quoteManagement,
-        QuoteRepository $quoteRepository,
+        CartManagementInterface $cartManagement,
+        CartRepositoryInterface $cartRepository,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
     ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
 
+        $this->_customerRepository = $customerRepository;
         $this->_logger = $logger;
         $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
         $this->_subscriptionAddonOrderCollectionFactory = $subscriptionAddonOrderCollectionFactory;
@@ -175,8 +186,8 @@ class Subscription extends AbstractModel
         $this->_productRepository = $productRepository;
         $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->_recurlyHelper = $recurlyHelper;
-        $this->_quoteManagement = $quoteManagement;
-        $this->_quoteRepository = $quoteRepository;
+        $this->_cartManagement = $cartManagement;
+        $this->_cartRepository = $cartRepository;
     }
 
     /**
@@ -321,11 +332,10 @@ class Subscription extends AbstractModel
     /**
      * Get subscription order by season slug
      * @param string $seasonSlug
-     * @return SubscriptionOrderCollection|mixed
+     * @return SubscriptionOrder|bool
      */
     public function getSubscriptionOrderBySeasonSlug(string $seasonSlug)
     {
-
         // Make sure we have an actual subscription
         if (empty($this->getEntityId())) {
             return false;
@@ -359,7 +369,6 @@ class Subscription extends AbstractModel
      */
     public function generateShipDates()
     {
-
         // Make sure we have an actual subscription and that we have a subscription type
         if (empty($this->getEntityId()) || empty($this->getSubscriptionType())) {
             return false;
@@ -380,19 +389,18 @@ class Subscription extends AbstractModel
 
     /**
      * @param $addons
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function addSubscriptionToCart($addons)
     {
         try {
-            $this->_checkoutSession->resetCheckout();
-            $this->_checkoutSession->clearQuote();
-            $quoteID = $this->_quoteManagement->createEmptyCartForCustomer($this->_customerSession->getCustomerId());
-            $quote = $this->_quoteRepository->get($quoteID);
-            $quote->removeAllAddresses();
+            $quoteID = $this->_cartManagement->createEmptyCart();
+            $quote = $this->_cartRepository->get($quoteID);
+            $customer = $this->_customerRepository->getById($this->_customerSession->getId());
+            $quote->assignCustomer($customer);
         } catch (\Exception $e) {
-            $error = 'Could not create empty cart for customer. - ' . $e->getMessage();
+            $error = 'Could not create empty cart for customer when adding subscription to cart. - ' . $e->getMessage();
             $this->_logger->error($error);
 
             throw new \Exception($error);
@@ -564,14 +572,14 @@ class Subscription extends AbstractModel
      * Creates the subscription using subscription service
      * @param $token
      * @param $service
-     * @throws \Magento\Framework\Exception\LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws LocalizedException
+     * @throws NoSuchEntityException
      */
     public function createSubscriptionService($token, $service)
     {
 
         /** @var RecurlySubscription $service */
-        $service->createSubscription($token, $this);
+        $service->createRecurlyPurchase($token, $this);
     }
 
     /**
@@ -600,13 +608,17 @@ class Subscription extends AbstractModel
         foreach ($orders as $order) {
             try {
                 /** @var SubscriptionOrder $subscriptionOrder */
-                if ($order->getSubscriptionAddon()) {
+                if ($order->getData('subscription_addon')) {
                     $subscriptionOrder = $this->_subscriptionAddonOrderCollectionFactory->create()->addFieldToFilter('sales_order_id', $order->getEntityId())->getFirstItem();
                 } else {
                     $subscriptionOrder = $this->_subscriptionOrderCollectionFactory->create()->addFieldToFilter('sales_order_id', $order->getEntityId())->getFirstItem();
                 }
+
                 $subscriptionOrder->createCreditMemo();
                 $subscriptionOrders[] = $subscriptionOrder;
+
+                // Set the order status to canceled.
+                $order->setData('status', 'canceled')->save();
             } catch (\Exception $e) {
                 $error = 'There was a problem making a credit memo for subscription cancellation. ' . $e->getMessage();
                 $this->_logger->error($error);

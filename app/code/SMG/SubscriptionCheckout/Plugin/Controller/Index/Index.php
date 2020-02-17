@@ -116,10 +116,6 @@ class Index
         try {
             // if this store uses subscription then check for login before continuing
             if ($this->_subscriptionHelper->isActive($this->_storeManager->getStore()->getId())) {
-
-                // get the onepage quote to see if the user is a logged in user or a guest user
-                $quote = $subject->getOnepage()->getQuote();
-
                 /**
                  * If the customer is not logged in and guest checkout is not allowed,
                  * redirect the customer to the login page. Set current URL (/checkout) as referer,
@@ -143,21 +139,17 @@ class Index
                     // return the login page
                     return $resultRedirect->setPath($customerLoginUrl);
                 } else {
+                    // This hopefully helps prevent some of the issues where the
+                    // continue button on the shipping page does not appear.
+                    $this->_customerSession->getCustomer()->cleanAllAddresses();
+
                     // The customer is logged in, so check if they have any
                     // subscription details in the session.
                     if ($this->_coreSession->getData('subscription_details')) {
-                        // We are adding the subscription to the cart so clear
-                        // out the onepage quote.
-                        $addresses = $quote->getAllAddresses();
-                        foreach ($addresses as $address) {
-                            $address->delete();
-                        }
-
-                        $quote->removeAllItems();
-                        $quote->removeAllAddresses();
-                        $quote->save();
-                        $quote->collectTotals()->save();
                         $this->_subscriptionHelper->addSessionSubscriptionToCart();
+
+                        // Add the checkout session quote to the checkout page.
+                        $subject->getOnepage()->setQuote($this->_checkoutSession->getQuote());
 
                         $details = $this->_coreSession->getData('subscription_details');
 

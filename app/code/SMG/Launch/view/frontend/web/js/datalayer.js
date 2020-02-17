@@ -22,8 +22,6 @@ define([
         var customer = {isLoggedIn : false},
             cart = {hasItems: false};
 
-
-
         if (_gtmDataLayer !== undefined && (!objectKeyExist(_gtmDataLayer) || _forceUpdate)) {
             if (_.isObject(_dataObject) && _.has(_dataObject, 'customer')) {
                 customer = _dataObject.customer;
@@ -36,7 +34,6 @@ define([
             if (!_.isEqual(lastPushedCart, cart)) {
                 var actions = { remove: [], add: [], update: []};
                 var coupons = [];
-
 
                 if (lastPushedCart && lastPushedCart.items && lastPushedCart.items.length) {
                     if (!cart || !cart.hasItems) {
@@ -66,26 +63,30 @@ define([
                 }
 
                 if (actions.add.length) {
-                    _gtmDataLayer.push({'event': 'addToCart', 'added': actions.add, 'cart': cart});
+                    var add = {'event': 'addToCart', 'added': actions.add, 'cart': cart};
+                    _gtmDataLayer.push(add);
 
                 }
 
                 if (actions.remove.length) {
-                    _gtmDataLayer.push({'event': 'removeFromCart', 'removed': actions.remove, 'cart': cart});
+                    var remove = {'event': 'removeFromCart', 'removed': actions.remove, 'cart': cart};
+                    _gtmDataLayer.push(remove);
 
                 }
 
                 if (actions.update.length) {
-                    _gtmDataLayer.push({'event': 'updateCart', 'updated': actions.update, 'cart': cart});
+                    var update = {'event': 'updateCart', 'updated': actions.update, 'cart': cart};
+                    _gtmDataLayer.push(update);
 
                 }
 
                 if (coupons.length) {
-                    _gtmDataLayer.push({'event': 'couponApplied', 'coupons': coupons, 'cart': cart});
+                    var coupon = {'event': 'couponApplied', 'coupons': coupons, 'cart': cart};
+                    _gtmDataLayer.push(coupon);
                 }
 
                 lastPushedCart = cart;
-                $('body').trigger('dataLayerUpdate', [_gtmDataLayer]);
+                $('body').trigger('dataLayerUpdate', [_gtmDataLayer, actions, add || update || false]);
                 localStorage.setItem('launch-cart', JSON.stringify(cart));
             }
 
@@ -168,7 +169,7 @@ define([
         var gtmDataLayer = window[config.dataLayer];
         // Add any error message to dataLayer
         messagesObject.subscribe(function (data) {
-            if (data && data.messages.length) {
+            if (data && data.messages && data.messages.length) {
                 _.each(data.messages, function (message) {
                     if (message.type === 'error') {
                         gtmDataLayer.push({'event': 'errorMessage', 'errorMessage': message.text});
