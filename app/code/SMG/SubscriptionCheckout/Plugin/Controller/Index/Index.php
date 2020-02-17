@@ -121,7 +121,7 @@ class Index
                  * redirect the customer to the login page. Set current URL (/checkout) as referer,
                  * so the customer is redirected to checkout page on successful login.
                  */
-                if (!$this->_customerSession->isLoggedIn() && !$this->_checkoutHelper->isAllowedGuestCheckout($quote)) {
+                if (! $this->_customerSession->isLoggedIn() && !$this->_checkoutHelper->isAllowedGuestCheckout($subject->getOnepage()->getQuote())) {
                     $resultRedirect = $this->_resultRedirectFactory->create();
 
                     $params = [
