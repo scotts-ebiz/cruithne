@@ -1,0 +1,50 @@
+<?php
+   /**
+    * Copyright © Magento, Inc. All rights reserved.
+    * See COPYING.txt for license details.
+    */
+   
+   ?>
+<?php $_shipment = $block->getShipment() ?>
+<?php $_order    = $block->getOrder() ?>
+<?php if ($_shipment && $_order) : ?>
+<table class="email-items">
+   <thead>
+      <table class="row green-row" style="background-color:#1d5632;border-collapse:collapse;border-spacing:0;display:table;padding:0;position:relative;text-align:left;vertical-align:top;width:578px;margin-top: -3px;margin-left:-46px;margin-right:-93px;">
+         <tbody>
+            <tr style="padding:0;text-align:left;vertical-align:top">
+               <th class="vertical-align small-8 large-8 columns first" style="Margin:0 auto;color:#231f20;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.3;margin:0 auto;padding:0;padding-bottom:0!important;padding-left:44px;padding-right:44px;text-align:left;width:370.67px">
+                  <table style="border-collapse:collapse;border-spacing:0;padding:0;text-align:left;vertical-align:top;width:100%">
+                     <tr style="padding:0;text-align:left;vertical-align:top">
+                        <th style="Margin:0;color:#231f20;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.3;margin:0;padding:0;text-align:left">
+                           <p class="white" style="Margin:0;Margin-bottom:10px;color:#fefefe;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:1.3;margin:6px 0;margin-bottom:10px;padding:0;text-align:left">
+                              <?= $block->escapeHtml(__('Items')) ?>
+                           </p>
+                        </th>
+                     </tr>
+                  </table>
+               </th>
+               <th class="vertical-align small-4 large-4 columns last" style="Margin:0 auto;color:#231f20;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.3;margin:0 auto;padding:0;padding-bottom:0!important;padding-left:44px;padding-right:44px;text-align:left;width:177.33px">
+                  <table style="border-collapse:collapse;border-spacing:0;padding:0;text-align:left;vertical-align:top;width:100%">
+                     <tr style="padding:0;text-align:left;vertical-align:top">
+                        <th style="Margin:0;color:#231f20;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:400;line-height:1.3;margin:0;padding:0;text-align:left">
+                           <p class="white center" style="Margin:0;Margin-bottom:10px;color:#fefefe;font-family:Helvetica,Arial,sans-serif;font-size:16px;font-weight:600;line-height:1.3;margin:6px 0;margin-bottom:10px;padding:0;text-align:center">
+                              <?= $block->escapeHtml(__('Quantity')) ?>
+                           </p>
+                        </th>
+                     </tr>
+                  </table>
+               </th>
+            </tr>
+         </tbody>
+      </table>
+   </thead>
+   <?php foreach ($_shipment->getAllItems() as $_item) : ?>
+   <?php if (!$_item->getOrderItem()->getParentItem()) : ?>
+   <tbody>
+      <?= $block->getItemHtml($_item) ?>
+   </tbody>
+   <?php endif; ?>
+   <?php endforeach; ?>
+</table>
+<?php endif; ?>
