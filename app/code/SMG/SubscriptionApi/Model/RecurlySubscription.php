@@ -228,7 +228,13 @@ class RecurlySubscription
         // Set addressees.
         $checkoutShipping = $this->_coreSession->getCheckoutShipping();
 
-        $account = $this->loadRecurlyAccount($customer);
+        try {
+            $account = $this->loadRecurlyAccount($customer);
+        } catch (LocalizedException $e) {
+            $this->_logger->error('Could not create subscription account. - ' . $e->getMessage());
+
+            throw new LocalizedException(__('Could not create subscription account.'));
+        }
 
         $recurlyShippingAddress = $this->createRecurlyShippingAddress($checkoutShipping, $account->email);
 
@@ -242,7 +248,7 @@ class RecurlySubscription
         } catch (Exception $e) {
             $this->_logger->error($e->getMessage());
 
-            throw new LocalizedException(__($e->getMessage()));
+            throw new LocalizedException(__('There was an error creating the purchase.'));
         }
 
         // Create billing information with the token from Recurly.

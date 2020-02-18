@@ -400,7 +400,7 @@ class Subscription implements SubscriptionInterface
             try {
                 $this->clearCustomerAddresses($customer);
                 $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionOrder);
-            } catch (Exception $e) {
+            } catch (SubscriptionException $e) {
                 $this->_logger->error($e->getMessage());
 
                 // We failed to create orders, lets remove any created orders.
@@ -409,6 +409,18 @@ class Subscription implements SubscriptionInterface
 
                 return $this->_responseHelper->error(
                     $e->getMessage(),
+                    ['refresh' => true]
+                );
+            } catch (Exception $e) {
+                // Catch any other not typical exceptions and return a generic
+                //error response to the customer.
+                $this->_logger->error($e->getMessage());
+
+                // We failed to create orders, lets remove any created orders.
+                $this->cancelOrders($subscription);
+
+                return $this->_responseHelper->error(
+                    'We could not process your order at this time. Please try again.',
                     ['refresh' => true]
                 );
             }
@@ -425,7 +437,7 @@ class Subscription implements SubscriptionInterface
                 }
 
                 $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionAddonOrder);
-            } catch (Exception $e) {
+            } catch (SubscriptionException $e) {
                 $this->_logger->error($e->getMessage());
 
                 // We failed to create orders, lets remove any created orders.
@@ -434,6 +446,18 @@ class Subscription implements SubscriptionInterface
 
                 return $this->_responseHelper->error(
                     $e->getMessage(),
+                    ['refresh' => true]
+                );
+            } catch (Exception $e) {
+                // Catch any other not typical exceptions and return a generic
+                //error response to the customer.
+                $this->_logger->error($e->getMessage());
+
+                // We failed to create orders, lets remove any created orders.
+                $this->cancelOrders($subscription);
+
+                return $this->_responseHelper->error(
+                    'We could not process your order at this time. Please try again.',
                     ['refresh' => true]
                 );
             }
