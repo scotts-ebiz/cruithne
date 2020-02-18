@@ -22,4 +22,4 @@ INSTANCE=$(kubectl get pod -l app=magento-hotfix -o jsonpath="$CLUSTER_NAME")
 #echo $INSTANCE
 
 # connect to the desirec instance
-kubectl exec -it $INSTANCE -c magento /bin/bash
+kubectl exec -it $INSTANCE -c hotfix-magento /bin/bash
