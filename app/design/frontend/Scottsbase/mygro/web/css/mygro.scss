@@ -14,14 +14,10 @@
 @import 'blocks/navigation';
 @import 'blocks/typography';
 
-// Import Scottsbase variables
-@import '../../../default/web/css/source/scottsbasevars';
-
 // Override Module Styles
 @import '../../Magento_Checkout/styles/module';
 
 // Mygro Defaults
-@import 'source/mygrovars';
 @import 'source/mygromixins';
 @import 'source/mygrobase';
 @import 'source/mygropdp';

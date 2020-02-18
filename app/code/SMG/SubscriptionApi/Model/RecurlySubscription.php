@@ -225,10 +225,8 @@ class RecurlySubscription
             throw new LocalizedException(__('There was an issue creating your subscription, please go back and retake the quiz.'));
         }
 
-        // If there is Recurly token, plan code and quiz data
         // Set addressees.
-        $customerShipping = $this->_addressFactory->create()->load($customer->getDefaultShipping());
-        $shippingAddress = $this->_subscriptionOrderHelper->formatAddress($customerShipping);
+        $checkoutShipping = $this->_coreSession->getCheckoutShipping();
 
         try {
             $account = $this->loadRecurlyAccount($customer);
@@ -238,7 +236,7 @@ class RecurlySubscription
             throw new LocalizedException(__('Could not create subscription account.'));
         }
 
-        $recurlyShippingAddress = $this->createRecurlyShippingAddress($shippingAddress, $account->email);
+        $recurlyShippingAddress = $this->createRecurlyShippingAddress($checkoutShipping, $account->email);
 
         // Create Recurly Purchase
         try {

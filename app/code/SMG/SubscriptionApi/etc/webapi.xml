@@ -9,7 +9,7 @@
     <route url="/V1/subscription/createSubscription" method="POST">
         <service class="SMG\SubscriptionApi\Api\Interfaces\SubscriptionInterface" method="createSubscription" />
         <resources>
-            <resource ref="anonymous" />
+            <resource ref="self" />
         </resources>
     </route>
     <route url="/V1/subscription/check" method="POST">
