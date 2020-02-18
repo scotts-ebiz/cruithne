@@ -76,6 +76,8 @@ class ProductExportHelper
             if (!empty($products[$key]['drupalproductid'])) {
                 $products[$key]['drupalId'] = $products[$key]['drupalproductid'];
                 unset($products[$key]['drupalproductid']);
+            } else {
+                $products[$key]['drupalId'] = 'NA';
             }
 
             // Add configurable sku if applicable
