@@ -18,11 +18,11 @@ class EmailNotification
 	public function aroundNewAccount(\Magento\Customer\Model\EmailNotification $subject, \Closure $proceed)
 	{
 		 if(!$this->getWelcomeEmailConfig()){
-			 $this->logger->critical('Email Disabled message');
+			 $this->logger->info('Magento signup email Disabled ');
 			return $subject; 
 		 }else
 		 {
-			 $this->logger->critical('Email sent message');
+			 $this->logger->info('Magento signup email sent');
 		 }
 	}
 	
