@@ -39,29 +39,32 @@ requirejs(['catalogAddToCart'], function(catalogAddToCart) {
                     }, "*");
             });
             // Check for onSuccess of add to cart and set pixel
-            $(document).ajaxSuccess(function(a,b,c) {
+            $(document).on('dataLayerUpdate', function (event, gtmDataLayer, actions, add) {
+                if (actions && add && ((actions.add && actions.add.length) || (actions.update && actions.update.length))) {
+                    window.parent.postMessage({event: 'productAdded', dataLayer: JSON.stringify(add)}, '*');
 
-                if (c.url.indexOf('/checkout/cart/add/') != -1) {
+                    actions.add.forEach(function(item) {
+                        var quantity = item.quantity;
+                        var currentDrupalProductId = item.drupalproductid;
+                        //Do not track Magento products that do not have a drupalId.
+                        if (!currentDrupalProductId) {
+                            return;
+                        }
 
-                    window.parent.postMessage('productAdded', '*');
-                    var quantity = $('#qty').val();
-
-                    //Do not track Magento products that do not have a drupalId.
-                    if (!currentDrupalProductId) {
-                        return;
-                    }
-
-                    // BazaarVoice track add to cart.
-                    window.bvCallback = function (BV) {
-                        BV.pixel.trackConversion({
-                            "type": "AddToCart",
-                            "label": "AddToCart_SKU",
-                            "value": currentDrupalProductId,
-                            "items": [
-                                {"sku": currentDrupalProductId, "quantity": quantity}
-                            ]
-                        });
-                    };
+                        // BazaarVoice track add to cart.
+                        window.bvCallback = function (BV) {
+                            BV.pixel.trackConversion({
+                                "type": "AddToCart",
+                                "label": "AddToCart_SKU",
+                                "value": currentDrupalProductId,
+                                "items": [
+                                    {"sku": currentDrupalProductId, "quantity": quantity}
+                                ]
+                            });
+                        };
+                    });
+                } else {
+                    window.parent.postMessage({event: 'cartUpdated', dataLayer: false}, '*');
                 }
             });
 

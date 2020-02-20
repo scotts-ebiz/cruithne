@@ -7,3 +7,9 @@
 		overflow: unset;
 	}
 }
+
+@supports (-webkit-overflow-scrolling: touch) {
+  .sp-quiz {
+    height: 100%;
+  }
+}
