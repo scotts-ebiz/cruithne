@@ -626,6 +626,11 @@ class Subscription extends AbstractModel
             }
         }
 
+        // Cancel any non-invoiced order that have not shipped.
+        foreach ($this->getOrders(false, false) as $order) {
+            $order->setData('status', 'canceled')->save();
+        }
+
         // Generate Refund
         try {
             $this->generateRefund($orders, $service);
@@ -660,7 +665,7 @@ class Subscription extends AbstractModel
      *  filter negatively
      * @param bool|null $filterByShipped null to ignore filter, true to filter positively (has shipments), false to
      *  filter negatively
-     * @return array
+     * @return Order[]
      * @throws LocalizedException
      */
     public function getOrders(bool $filterByInvoiced = null, bool $filterByShipped = null)
