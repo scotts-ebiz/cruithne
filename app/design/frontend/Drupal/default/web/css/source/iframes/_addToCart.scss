@@ -44,11 +44,15 @@
             border: 0;
             outline: 1px solid #bbb;
             outline-offset: -1px;
-
+            &.mage-error {
+              outline: 2px solid $checkout-red;
+            }
             &:focus {
-
               box-shadow: none;
             }
+          }
+          div.mage-error {
+            display: none !important;
           }
         }
 
