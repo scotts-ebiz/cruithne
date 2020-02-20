@@ -1,9 +1,12 @@
-<form class="form contact" action="<?= $block->escapeUrl($block->getFormAction()) ?>" id="contact-form" method="post" data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>" data-mage-init='{"validation":{}}'>
+<form class="form contact" action="<?= $block->escapeUrl($block->getFormAction()) ?>" id="contact-form" method="post" data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>">
     <fieldset class="fieldset">
         <div class="sp-form-group">
             <input
                 class="input-text sp-input sp-w-full"
-                data-validate="{required:true}"
+                data-validate="{
+                    required: false,
+                    'validate-name': true
+                }"
                 id="name"
                 name="name"
                 maxLength="100"
@@ -17,7 +20,10 @@
         <div class="sp-form-group">
             <input
                 class="input-text sp-input sp-w-full"
-                data-validate="{required:true, 'validate-email':true}"
+                data-validate="{
+                    required: false,
+                    'validate-email-address': true
+                }"
                 id="email"
                 name="email"
                 placeholder="<?= $block->escapeHtml(__('Email')) ?>*"
@@ -29,7 +35,10 @@
         </div>
         <div class="sp-form-group">
             <div class="sp-select sp-w-full">
-                <select name="topic" id="topic" class="sp-w-full">
+                <select name="topic" id="topic" class="sp-w-full" data-validate="{
+                    required: false,
+                    'validate-select': true
+                }">
                     <option value="0" selected disabled style="display: none;">-- Choose --</option>
                     <option value="Information about products or my lawn care plan">Information about products or my lawn care plan</option>
                     <option value="Question or concern with my order">Question or concern with my order</option>
@@ -38,13 +47,16 @@
                     <option value="General question or commen">General question or comment</option>
                 </select>
             </div>
-            <label class="label sp-form-label required" for="topic"><?= $block->escapeHtml(__('Topic')) ?></label>
+            <label class="label sp-form-label required" for="topic"><?= $block->escapeHtml(__('Topic')) ?>*</label>
         </div>
         <div class="sp-form-group sp-mt-12">
             <textarea
                 class="input-text sp-textarea sp-input sp-w-full"
                 cols="5"
-                data-validate="{required:true}"
+                data-validate="{
+                    required: false,
+                    'validate-message': true
+                }"
                 id="comment"
                 name="comment"
                 rows="3"
