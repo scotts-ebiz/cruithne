@@ -1,3 +1,4 @@
+gcloud config set project ecommerce-platform-211419
 gcloud container clusters get-credentials magento-test-ha-cluster --zone us-east1
 
 # get the number of items in cluster
