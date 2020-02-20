@@ -15,10 +15,17 @@
   .gigya-error-msg-title {
     font-weight: 700;
   }
+
   .gigya-sectionHeader {
-    font-weight: bold;
+    font-weight: 700;
+  }
+  
+  .gigya-screen .gigya-composite-control.gigya-composite-control-label.main-text, 
+  .gigya-screen.portrait div.gigya-tfa .gig-tfa-container .gig-tfa-header-text {
+    padding-bottom: 0;
   }
 }
+
 
 .gigya-screen {
   * {
@@ -56,5 +63,11 @@
     &.sp-mr-4 {
       @extend .sp-mr-4;
     }
+  }
+}
+
+#gigya-reset-password-form {
+  .gigya-sectionHeader {
+    font-weight: 700;
   }
 }
