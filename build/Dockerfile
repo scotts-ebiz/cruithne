@@ -22,8 +22,11 @@ WORKDIR $MAGENTO_DIR
 # Temporary add to test mass import of images
 RUN mkdir -p $MAGENTO_DIR/var/import/images && gsutil -q -m rsync -r -u gs://magento-image-repo/import/ $MAGENTO_DIR/var/import/images ; exit 0
 
+RUN git config --global user.name "Git User" && git config --global user.email "user@example.com"
 RUN git fetch --all && git reset --hard origin/${BRANCH} && git pull
+
 RUN composer install
+RUN git checkout origin .htaccess
 RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools
 
 # Temporary patch for VendorVertex
@@ -41,8 +44,7 @@ USER root
 # Expose Ports for Apache
 EXPOSE 80/tcp 443/tcp
 
-RUN find var pub/static pub/media app/etc -type f -exec chmod g+w {} + 
-RUN find var pub/static pub/media app/etc -type d -exec chmod g+ws {} +
+RUN find var pub/static pub/media app/etc -type f -exec chmod g+w {} + && find var pub/static pub/media app/etc -type d -exec chmod g+ws {} +
 
 # Run entrypoint file
 COPY ondemand-entrypoint.sh /usr/local/bin/entrypoint.sh

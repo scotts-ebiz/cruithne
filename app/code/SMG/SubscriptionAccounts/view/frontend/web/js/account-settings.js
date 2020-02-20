@@ -12,10 +12,7 @@ define([
 
             this.account = ko.observable(config.account);
             this.accountEmail = ko.observable(config.account.email);
-            this.modalValues = ko.observable({
-                header: 'Changes Saved',
-                message: 'The changes to your account have been saved.'
-            });
+            this.modalValues = ko.observable({});
 
             setTimeout(function() {
                 responseModal = modal({
@@ -105,6 +102,11 @@ define([
                                 message: 'An account already exists with the email address you entered, please use a different email address.'
                             });
                         }
+                    } else {
+                        self.modalValues({
+                            header: 'Changes Saved',
+                            message: 'The changes to your account have been saved.'
+                        });
                     }
 
                     self.showModal();
