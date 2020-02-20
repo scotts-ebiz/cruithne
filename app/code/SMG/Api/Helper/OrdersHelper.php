@@ -87,6 +87,11 @@ class OrdersHelper
     const SUBSCRIPTION_SHIP_START = 'SubscriptLineShipStart';
     const SUBSCRIPTION_SHIP_END = 'SubscriptLineShipEnd';
 
+    // Return Credit Memo Codes
+    const CUSTOMER_REFUSAL_CODE = '014';
+    const BUYBACK_CODE = '037';
+    const RECOVERY_RECALL_CODE = '038';
+
     /**
      * @var LoggerInterface
      */
@@ -646,6 +651,16 @@ class OrdersHelper
             if (!isset($referenceDocNum))
             {
                 $referenceDocNum = '';
+            }
+
+            // Changes have occurred that the CSRs are entering
+            // Returns as credit memos on magento.  In order to handle
+            // this processing automatically we need to see if this request
+            // is one of three types of credit memos because if it is then
+            // it isn't a credit memo but rather a RMA so we need to flag it as such.
+            if ($orderReason == self::CUSTOMER_REFUSAL_CODE || $orderReason == self::BUYBACK_CODE || $orderReason == self::RECOVERY_RECALL_CODE)
+            {
+                $debitCreditFlag = 'RE';
             }
         }
 
