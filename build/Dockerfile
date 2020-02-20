@@ -44,8 +44,7 @@ USER root
 # Expose Ports for Apache
 EXPOSE 80/tcp 443/tcp
 
-RUN find var pub/static pub/media app/etc -type f -exec chmod g+w {} + 
-RUN find var pub/static pub/media app/etc -type d -exec chmod g+ws {} +
+RUN find var pub/static pub/media app/etc -type f -exec chmod g+w {} + && find var pub/static pub/media app/etc -type d -exec chmod g+ws {} +
 
 # Run entrypoint file
 COPY ondemand-entrypoint.sh /usr/local/bin/entrypoint.sh
