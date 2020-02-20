@@ -2,7 +2,6 @@
 
 namespace SMG\SubscriptionApi\Model;
 
-use Psr\Log\LoggerInterface;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DB\Transaction;
 use Magento\Framework\Exception\LocalizedException;
@@ -20,6 +19,7 @@ use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollection
 use Magento\Sales\Model\ResourceModel\Order\Creditmemo\CollectionFactory as CreditmemoCollectionFactory;
 use Magento\Sales\Model\Service\CreditmemoService;
 use Magento\Sales\Model\Service\InvoiceService;
+use Psr\Log\LoggerInterface;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\Sap\Model\SapOrderBatch;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
@@ -394,7 +394,8 @@ class SubscriptionOrder extends AbstractModel
      * @return bool
      * @throws \Exception
      */
-    public function isCurrenltyShippable() {
+    public function isCurrentlyShippable()
+    {
         if ($this->getSubscriptionType() !== 'annual') {
             $today = new \DateTime();
             $shipStart = \DateTime::createFromFormat('Y-m-d H:i:s', $this->getShipStartDate());
