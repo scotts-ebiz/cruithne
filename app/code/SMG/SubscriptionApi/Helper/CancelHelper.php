@@ -45,6 +45,9 @@ class CancelHelper extends AbstractHelper
      * CancelHelper constructor.
      * @param Context $context
      * @param RecurlySubscription $recurlySubscription
+     * @param SubscriptionModel $subscriptionModel
+     * @param AddressRepositoryInterface $addressRepository
+     * @param LoggerInterface $logger
      */
     public function __construct(
         Context $context,
@@ -65,17 +68,20 @@ class CancelHelper extends AbstractHelper
 
     /**
      * @param bool $cancelActive
-     * @param bool $cancelFutuer
-     * @param null $accountCode
+     * @param bool $cancelFuture
+     * @param string $accountCode
      * @return false|string
      * @throws LocalizedException
      */
-    public function cancelSubscriptions($cancelActive = true, $cancelFutuer = true, $accountCode = null)
-    {
+    public function cancelSubscriptions(
+        $cancelActive = true,
+        $cancelFuture = true,
+        $accountCode = ''
+    ) {
         // Cancel the Recurly Subscriptions.
         try {
             // Cancel recurly subscriptions
-            $cancelledSubscriptionIds = $this->_recurlySubscription->cancelRecurlySubscriptions(true, true, $accountCode);
+            $cancelledSubscriptionIds = $this->_recurlySubscription->cancelRecurlySubscriptions($cancelActive, $cancelFuture, $accountCode);
 
             // Find the master subscription id
             $masterSubscriptionId = null;
@@ -98,7 +104,7 @@ class CancelHelper extends AbstractHelper
             if (! $subscription) {
                 $error = 'Could not find subscription with ID ' . $masterSubscriptionId;
                 $this->_logger->error($error);
-                throw new LocalizedException(_($error));
+                throw new LocalizedException(__($error));
             }
 
             // Cancel subscription orders
@@ -106,7 +112,7 @@ class CancelHelper extends AbstractHelper
         } catch (Exception $e) {
             $this->_logger->error($e->getMessage());
 
-            throw new LocalizedException(_('There was an issue cancelling subscriptions.'));
+            throw new LocalizedException(__('There was an issue cancelling subscriptions.'));
         }
 
         // We canceled the subscription, so clear customer addresses.

@@ -1,8 +1,8 @@
-gcloud config set project ecommerce-platform-211419
-gcloud container clusters get-credentials magento-develop-ha-private-cluster --zone us-east1
+gcloud config set project ecommerce-platform-hotfix
+gcloud container clusters get-credentials magento-hotfix-ha-cluster --zone us-east1
 
 # get the number of items in cluster
-LIST=$(kubectl get pod -l app=magento-develop | wc -l)
+LIST=$(kubectl get pod -l app=magento-hotfix | wc -l)
 
 LIST_COUNT=`expr $LIST - 1`
 #echo $LIST_COUNT
@@ -18,8 +18,8 @@ read -p "Enter number from 0 - $MAX_COUNT for cluster to view: " CLUSTER_ID
 CLUSTER_NAME={.items[$CLUSTER_ID].metadata.name}
 #echo $CLUSTER_NAME
 
-INSTANCE=$(kubectl get pod -l app=magento-develop -o jsonpath="$CLUSTER_NAME")
+INSTANCE=$(kubectl get pod -l app=magento-hotfix -o jsonpath="$CLUSTER_NAME")
 #echo $INSTANCE
 
 # connect to the desirec instance
-kubectl exec -it $INSTANCE -c develop-magento /bin/bash
+kubectl exec -it $INSTANCE -c hotfix-magento /bin/bash
