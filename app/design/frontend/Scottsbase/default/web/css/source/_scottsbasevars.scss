@@ -44,16 +44,40 @@ $font-family-name__quaternary                                 : 'Roboto';
 $font-family__quaternary                                      : $font-family-name__quaternary, $font-family__sans-serif;
 
 
-// Custom Font Size
-$font-size__xxl                                               : 4.0rem;
-$font-size__m                                                 : 1.6rem;
-$font-size__xxs                                               : 1.0rem;
+// Custom Font Sizes
+$font-size__xxl                                               : 4.0rem; // 40px
+// $font-size__xl                                                       // 21px
+// $font-size__l                                                        // 18px
+$font-size__m                                                 : 1.6rem; // 16px
+$font-size__ms                                                : 1.4rem; // 14px
+// $font-size__s                                                        // 12px
+// $font-size__xs                                                       // 10px
+$font-size__xxs                                               : 0.9rem; // 9px
+// (Also showing commented out existing font size variables from _variables.scss)
 
 
 //  Letter Spacing
 $letter-spacing_base                                          : inherit;
 $letter-spacing_l                                             : 1.0px;
 $letter-spacing_m                                             : 0.5px;
+
+
+// Custom Line heights
+// $line-height__xl                // 1.7
+// $line-height__l                 // 1.5
+$line-height__m                    : 1.4 !default;
+// $line-height__s                 // 1.33
+
+
+// Cart Styles
+$cart-half-gutter-width                                       : 13px;                           // 13px
+$cart-gutter-width                                            : $cart-half-gutter-width * 2;    // 26px
+$cart-padding__base                                           : 16px;
+$cart-padding_xs                                              : $cart-padding__base / 4;        // 4px
+$cart-padding_s                                               : $cart-padding__base / 2;        // 8px
+$cart-padding_m                                               : $cart-padding__base;            // 16px
+$cart-padding_l                                               : $cart-padding__base * 1.25;     // 20px
+$cart-padding_xl                                              : $cart-padding__base * 2;        // 32px
 
 
 // Checkout H2 Styles
