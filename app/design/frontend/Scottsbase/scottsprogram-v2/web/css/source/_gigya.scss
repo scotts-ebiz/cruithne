@@ -15,7 +15,12 @@
   .gigya-error-msg-title {
     font-weight: 700;
   }
+  .gigya-screen .gigya-composite-control.gigya-composite-control-label.main-text, 
+  .gigya-screen.portrait div.gigya-tfa .gig-tfa-container .gig-tfa-header-text {
+    padding-bottom: 0;
+  }
 }
+
 
 .gigya-screen {
   * {
