@@ -27,6 +27,7 @@
   background-color: $gray-4;
   margin-left: -1rem;
   margin-right: -1rem;
+  mix-blend-mode: multiply;
 
   @media (min-width: $screen-md) {
     margin-left: 0;
