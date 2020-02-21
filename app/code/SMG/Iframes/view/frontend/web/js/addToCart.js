@@ -39,10 +39,9 @@ requirejs(['catalogAddToCart'], function(catalogAddToCart) {
                     }, "*");
             });
             // Check for onSuccess of add to cart and set pixel
-            $(document).on('dataLayerUpdate', function (gtmDataLayer, actions) {
-
-                if (actions && actions.add && actions.add.length) {
-                    window.parent.postMessage({event: 'productAdded', dataLayer: JSON.stringify(window.dataLayer)}, '*');
+            $(document).on('dataLayerUpdate', function (event, gtmDataLayer, actions, add) {
+                if (actions && add && ((actions.add && actions.add.length) || (actions.update && actions.update.length))) {
+                    window.parent.postMessage({event: 'productAdded', dataLayer: JSON.stringify(add)}, '*');
 
                     actions.add.forEach(function(item) {
                         var quantity = item.quantity;
@@ -63,10 +62,9 @@ requirejs(['catalogAddToCart'], function(catalogAddToCart) {
                                 ]
                             });
                         };
-
                     });
                 } else {
-                    window.parent.postMessage({event: 'cartUpdated', dataLayer: JSON.stringify(window.dataLayer)}, '*');
+                    window.parent.postMessage({event: 'cartUpdated', dataLayer: false}, '*');
                 }
             });
 
