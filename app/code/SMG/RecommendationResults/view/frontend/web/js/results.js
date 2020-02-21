@@ -107,9 +107,9 @@ define([
                                 return prod.prodId === product.prodId
                             })
                         ) {
-                            let newProd = {
-                                ...product
-                            };
+                            let newProd = Object.assign(
+                                product
+                            );
                             newProd.quantity = prodMap[newProd.prodId];
                             newProducts.push(newProd);
                         }
@@ -400,15 +400,15 @@ define([
                 $('body').addClass('no-scroll');
             }
 
-            this.pdp({
-                ...this.pdp(),
-                visible: !this.pdp().visible,
-                product: product
-            });
+            this.pdp(Object.assign(
+                this.pdp(),
+                {visible: !this.pdp().visible},
+                {product: product}
+            ));
         },
 
         setPDPTab: function (tab) {
-            this.pdp({...this.pdp(), activeTab: tab})
+            this.pdp(Object.assign(this.pdp(), {activeTab: tab}))
         },
 
         preventDefault: function () {
@@ -421,10 +421,10 @@ define([
                 $('body').addClass('no-scroll')
             }
 
-            this.saveAndSendModal({
-                ...this.saveAndSendModal(),
-                visible: !this.saveAndSendModal().visible
-            })
+            this.saveAndSendModal(Object.assign(
+                this.saveAndSendModal(),
+                {visible: !this.saveAndSendModal().visible}
+            ))
         },
 
         toggleSaveAndSendSuccessModal: function () {
@@ -434,10 +434,10 @@ define([
                 $('body').addClass('no-scroll')
             }
 
-            this.saveAndSendSuccessModal({
-                ...this.saveAndSendSuccessModal(),
-                visible: !this.saveAndSendSuccessModal().visible
-            })
+            this.saveAndSendSuccessModal(Object.assign(
+                this.saveAndSendSuccessModal(),
+                {visible: !this.saveAndSendSuccessModal().visible}
+            ))
         }
     });
 });

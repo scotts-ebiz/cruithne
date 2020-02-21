@@ -94,10 +94,10 @@ define([
                              * in order to update email input field to correspond to
                              * actual account values.
                              */
-                            const newAccount = {
-                                ...self.account(),
-                                email: self.accountEmail()
-                            }
+                            const newAccount = Object.assign(
+                                self.account(),
+                                {email: self.accountEmail()}
+                            )
                             self.account(newAccount);
 
                             self.modalValues({

@@ -1,0 +1,17 @@
+{
+    "name": "magento2",
+    "author": "Magento Commerce Inc.",
+    "description": "Magento2 js bundling",
+    "license": "(OSL-3.0 OR AFL-3.0)",
+    "bundle_dir": "pub/static/frontend/Scottsbase/scottsprogram-v2",
+    "bundled_dir": "pub/static/frontend/Scottsbase/scottsprogram-v2/en_US",
+    "scripts": {
+        "preinstall": "(npm list requirejs -g || sudo npm install requirejs -g) && (npm list terser -g || sudo npm install terser -g)",
+        "bundlejs": "find ${npm_package_bundle_dir} -mindepth 1 -maxdepth 1 \\( -not -name '*_source' \\) -type d -execdir mv -f \\{} \\{}_source \\; && find ${npm_package_bundle_dir[@]} -mindepth 1 -maxdepth 1 \\( -name '*_source' \\) -type d -exec bash -c 'r.js -o requirejs-bundle-config.js baseUrl=\\{} dir=${@%'_source'}' bash {} \\; && npm run minify",
+        "minify": "find ${npm_package_bundled_dir[@]} -path '*bundles*' \\( -name '*.js' -not -name '*.min.js' \\) -exec terser \\{} -c -m reserved=['$','jQuery','define','require','exports'] -o \\{} \\; && find ${npm_package_bundled_dir[@]} \\( -name 'require.js' -o -name 'requirejs-config.js' \\) -exec terser \\{} -c -m reserved=['$','jQuery','define','require','exports'] -o \\{} \\;"
+    },
+    "homepage": "http://magento.com/",
+    "devDependencies": {
+    
+    }
+}

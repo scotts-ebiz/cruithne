@@ -66,9 +66,9 @@ define([
                                 return prod.prodId === product.prodId
                             })
                         ) {
-                            let newProd = {
-                                ...product
-                            };
+                            let newProd = Object.assign(
+                                product
+                            );
                             newProd.quantity = prodMap[newProd.prodId];
                             newProducts.push(newProd);
                         }
@@ -253,15 +253,15 @@ define([
                 $('body').addClass('no-scroll');
             }
 
-            this.pdp({
-                ...this.pdp(),
-                visible: !this.pdp().visible,
-                product: product
-            });
+            this.pdp(Object.assign(
+                this.pdp(),
+                {visible: !this.pdp().visible},
+                {product: product}
+            ));
         },
 
         setPDPTab: function (tab) {
-            this.pdp({ ...this.pdp(), activeTab: tab })
+            this.pdp(Object.assign(this.pdp(), {activeTab: tab }))
         },
     });
 });

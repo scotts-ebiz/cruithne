@@ -34,7 +34,7 @@ atlassian*
 node_modules/
 /.grunt
 /Gruntfile.js
-/package.json
+# /package.json
 /.php_cs
 /.php_cs.cache
 /grunt-config.json
