@@ -10,7 +10,6 @@ define([
     return Component.extend({
         initialize(config) {
 			this.subscriptions = ko.observable(config.subscriptions);
-            this.success = ko.observable(null);
             this.loading = ko.observable(false);
             this.type = ko.computed(() => {
                 return this.subscriptions().subscription.subscription_type;
@@ -61,11 +60,9 @@ define([
             setTimeout(() => {
                 cancelSubscriptionModal = cancelSubscriptionModal({
                     type: 'popup',
-                    innerScroll: false,
+                    innerScroll: true,
                     buttons: [],
                     focus: 'none',
-                    title: 'Before You Cancel',
-                    subTitle: 'We understand lawn care can be tough. Can we help you get your best results?',
                 }, $('#popup-modal'));
             }, 1000)
         },
@@ -76,10 +73,21 @@ define([
 
         displaySubscriptionModal: function () {
             cancelSubscriptionModal.openModal();
+            this.toggleModalContent('before');
         },
 
         closeSubscriptionModal: function () {
             cancelSubscriptionModal.closeModal();
+        },
+
+        toggleModalContent: function(section) {
+            $('#popup-modal > div').css('display', 'none');
+            $('#popup-modal #' + section).css('display', 'block');
+        },
+
+        closeCancellation: function() {
+            this.closeSubscriptionModal();
+            window.location.reload();
         },
 
         cancelSubscription: function () {
@@ -95,13 +103,7 @@ define([
                 success: function (response) {
                     var response = JSON.parse(response);
                     if (response.success === true) {
-                        self.closeSubscriptionModal();
-                        self.success('Your subscription has been canceled.');
-                        window.location.reload();
-
-                        setTimeout(() => {
-                            self.success(null);
-                        }, 5000);
+                        self.toggleModalContent('success');                        
                     } else {
                         alert(response.message);
                         self.closeSubscriptionModal();

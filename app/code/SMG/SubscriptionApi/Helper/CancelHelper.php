@@ -12,6 +12,7 @@ use Psr\Log\LoggerInterface;
 use SMG\SubscriptionApi\Model\RecurlySubscription;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionModel;
 use SMG\SubscriptionApi\Model\Subscription;
+use Zaius\Engage\Helper\Sdk as Sdk;
 
 class CancelHelper extends AbstractHelper
 {
@@ -34,7 +35,12 @@ class CancelHelper extends AbstractHelper
      * @var AddressRepositoryInterface
      */
     protected $_addressRepository;
-
+    
+	/**
+     * @var sdk
+     */
+    protected $_sdk;
+	
     /**
      * CancelHelper constructor.
      * @param Context $context
@@ -48,7 +54,8 @@ class CancelHelper extends AbstractHelper
         RecurlySubscription $recurlySubscription,
         SubscriptionModel $subscriptionModel,
         AddressRepositoryInterface $addressRepository,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+		Sdk $sdk
     ) {
         parent::__construct($context);
 
@@ -56,6 +63,7 @@ class CancelHelper extends AbstractHelper
         $this->_subscriptionModel = $subscriptionModel;
         $this->_addressRepository = $addressRepository;
         $this->_logger = $logger;
+		$this->_sdk = $sdk;
     }
 
     /**
@@ -111,6 +119,12 @@ class CancelHelper extends AbstractHelper
         $customer = $subscription->getCustomer();
 
         if ($customer) {
+			// get email address
+			$customer_email = $customer->getEmail();
+			
+			// Zaius Cancel call
+            $this->zaiusCancelCall($customer_email);
+			
             $this->clearCustomerAddresses($customer);
         }
 
@@ -144,6 +158,40 @@ class CancelHelper extends AbstractHelper
         } catch (\Exception $ex) {
             $this->_logger->error($ex->getMessage());
             return;
+        }
+    }
+	
+	/**
+     * Cancel subscription from zaius
+     * @param $customer_email
+     */
+	private function zaiusCancelCall($customer_email)
+    {
+       $zaiusstatus = false;    
+
+       // check isSubcription and shipmentstatus
+       if ($customer_email)
+        {
+            // call getsdkclient function
+            $zaiusClient = $this->_sdk->getSdkClient();  
+                      // take event as a array and add parameters
+            $event = array();
+            $event['type'] = 'subscription';
+            $event['action'] = 'cancelled';
+            $event['identifiers'] = ['email'=>$customer_email];
+
+            // get postevent function
+            $zaiusstatus = $zaiusClient->postEvent($event);	
+
+			// check return values from the postevent function
+			if($zaiusstatus)
+			{
+				$this->_logger->debug("The customer Email Subscription " . $customer_email . " is cancelled successfully to zaius."); //saved in var/log/debug.log
+			}
+			else
+			{
+				$this->_logger->error("The customer Email Subscription " . $customer_email . " is failed to zaius.");
+			}
         }
     }
 }

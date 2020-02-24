@@ -199,6 +199,9 @@
 .sp-login {
   margin-left: 1.5rem;
   position: relative;
+  @media (max-width: $screen-md) {
+    margin-left: 0;
+  }
 }
 
 .sp-login::before {

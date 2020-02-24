@@ -103,7 +103,7 @@ return function (validator) {
         return !$.mage.isEmpty(value);
       }
     },
-    $.mage.__('Please enter a valid city')
+    $.mage.__('Please enter a valid city.')
   );
   validator.addRule(
     'required-entry-bcity',
@@ -121,7 +121,7 @@ return function (validator) {
         return !$.mage.isEmpty(value);
       }
     },
-    $.mage.__('Please enter a valid city')
+    $.mage.__('Please enter a valid city.')
   );
 
   /* Start shipping and billing street address validation */

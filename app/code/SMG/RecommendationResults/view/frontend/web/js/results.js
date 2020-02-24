@@ -32,6 +32,7 @@ define([
         initialize(config) {
             const self = this;
 
+            window.scrollTo(0, 0);
             self.customer = customerData.get('customer');
 
             if (config.zip) {
@@ -438,6 +439,10 @@ define([
                 ...this.saveAndSendSuccessModal(),
                 visible: !this.saveAndSendSuccessModal().visible
             })
+        },
+
+        formatNumber: function(number) {
+            return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         }
     });
 });
