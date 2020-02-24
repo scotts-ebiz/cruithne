@@ -22,8 +22,7 @@ WORKDIR $MAGENTO_DIR
 # Temporary add to test mass import of images
 RUN mkdir -p $MAGENTO_DIR/var/import/images && gsutil -q -m rsync -r -u gs://magento-image-repo/import/ $MAGENTO_DIR/var/import/images ; exit 0
 
-RUN git config --global user.name "Git User" && git config --global user.email "user@example.com"
-RUN git fetch --all && git reset --hard origin/${BRANCH} && git pull
+RUN git config --global user.name "Git User" && git config --global user.email "user@example.com" && git fetch --all && git reset --hard origin/${BRANCH} && git pull
 
 RUN composer install
 RUN git checkout origin .htaccess
