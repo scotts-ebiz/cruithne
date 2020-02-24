@@ -33,9 +33,9 @@ foreach($selections as $selc){
                     'cart_page_product_thumbnail')->toHtml() ?>
             </span>
         <div class="product-item-details">
-            <strong class="product-item-name">
+            <span class="product-item-name">
                 <?= $block->escapeHtml($block->getProductName()) ?>
-            </strong>
+            </span>
             <?php if ($_options = $block->getOptionList()):?>
                 <dl class="item-options">
                     <dd><i><?php //echo $_item->getSku() ?></i></dd>
@@ -52,11 +52,11 @@ foreach($selections as $selc){
                             <div class="options-cont-wrp">
                                 <dt><?= $block->escapeHtml($_option['label']) ?></dt>
                                 <dd>
-                                    <i><?php if (isset($_formatedOptionValue['full_view'])): ?>
+                                    <?php if (isset($_formatedOptionValue['full_view'])): ?>
                                             <strong><?= $block->escapeHtml($_formatedOptionValue['full_view']) ?></strong>
                                         <?php else: ?>
                                             <strong><?= $block->escapeHtml($_formatedOptionValue['value']) ?></strong>
-                                        <?php endif; ?></i>
+                                        <?php endif; ?>
                                 </dd>
                             </div>
                         </div>
