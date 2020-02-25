@@ -22,7 +22,7 @@ class Results extends \Magento\Framework\View\Element\Template
     protected $_coreSession;
     
     
-    private $logger;
+    private $_logger;
 
     /**
      * @var SubscriptionCollectionFactory
