@@ -22,7 +22,7 @@ RUN mkdir -p $MAGENTO_DIR/var/import/images && gsutil -q -m rsync -r -u gs://mag
 
 RUN git config --global user.name "Git User" && git config --global user.email "user@example.com"
 RUN git fetch --all
-RUN git reset --hard origin/release-candidate
+RUN git reset --hard origin/master
 RUN composer install
 RUN git checkout origin .htaccess
 RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools
