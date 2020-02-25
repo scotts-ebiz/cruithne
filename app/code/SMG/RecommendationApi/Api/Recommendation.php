@@ -185,12 +185,12 @@ class Recommendation implements RecommendationInterface
         }
 
         // Set Quiz Template ID
-        if (! $this->_coreSession->getQuizTemplateId()) {
+       if (!$this->_coreSession->getQuizTemplateId() && $this->_coreSession->getQuizTemplateId()!=$response[0]['id']) {
             $this->_coreSession->setQuizTemplateId($response[0]['id']);
-        }
-
+         }
         return $response;
     }
+
 
     /**
      * Send answers to complete quiz
