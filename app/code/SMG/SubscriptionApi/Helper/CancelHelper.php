@@ -3,29 +3,18 @@
 namespace SMG\SubscriptionApi\Helper;
 
 use Exception;
-use Magento\Customer\Model\Customer;
 use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Exception\LocalizedException;
 use Psr\Log\LoggerInterface;
-use SMG\SubscriptionApi\Model\RecurlySubscription;
-use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionModel;
-use SMG\SubscriptionApi\Model\Subscription;
-use Zaius\Engage\Helper\Sdk as Sdk;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
+use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
+use Zaius\Engage\Helper\Sdk as ZaiusSdk;
 
 class CancelHelper extends AbstractHelper
 {
-    /**
-     * @var RecurlySubscription
-     */
-    protected $_recurlySubscription;
-
-    /**
-     * @var SubscriptionModel
-     */
-    protected $_subscriptionModel;
-
     /**
      * @var LoggerInterface
      */
@@ -35,163 +24,143 @@ class CancelHelper extends AbstractHelper
      * @var AddressRepositoryInterface
      */
     protected $_addressRepository;
-    
-	/**
-     * @var sdk
+
+    /**
+     * @var ZaiusSdk
      */
     protected $_sdk;
-	
+
+    /**
+     * @var CustomerCollectionFactory
+     */
+    protected $_customerCollectionFactory;
+
+    /**
+     * @var CustomerSession
+     */
+    protected $_customerSession;
+
+    /**
+     * @var SubscriptionCollectionFactory
+     */
+    protected $_subscriptionCollectionFactory;
+
     /**
      * CancelHelper constructor.
      * @param Context $context
-     * @param RecurlySubscription $recurlySubscription
-     * @param SubscriptionModel $subscriptionModel
      * @param AddressRepositoryInterface $addressRepository
+     * @param CustomerCollectionFactory $customerCollectionFactory
+     * @param CustomerSession $customerSession
+     * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
      * @param LoggerInterface $logger
+     * @param ZaiusSdk $sdk
      */
     public function __construct(
         Context $context,
-        RecurlySubscription $recurlySubscription,
-        SubscriptionModel $subscriptionModel,
         AddressRepositoryInterface $addressRepository,
+        CustomerCollectionFactory $customerCollectionFactory,
+        CustomerSession $customerSession,
+        SubscriptionCollectionFactory $subscriptionCollectionFactory,
         LoggerInterface $logger,
-		Sdk $sdk
+        ZaiusSdk $sdk
     ) {
         parent::__construct($context);
 
-        $this->_recurlySubscription = $recurlySubscription;
-        $this->_subscriptionModel = $subscriptionModel;
         $this->_addressRepository = $addressRepository;
+        $this->_customerCollectionFactory = $customerCollectionFactory;
+        $this->_customerSession = $customerSession;
+        $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
         $this->_logger = $logger;
-		$this->_sdk = $sdk;
+        $this->_sdk = $sdk;
     }
 
     /**
-     * @param bool $cancelActive
-     * @param bool $cancelFuture
      * @param string $accountCode
      * @return false|string
      * @throws LocalizedException
      */
-    public function cancelSubscriptions(
-        $cancelActive = true,
-        $cancelFuture = true,
-        $accountCode = ''
-    ) {
-        // Cancel the Recurly Subscriptions.
+    public function cancelSubscriptions($accountCode = '')
+    {
+        // Get the current user.
         try {
-            // Cancel recurly subscriptions
-            $cancelledSubscriptionIds = $this->_recurlySubscription->cancelRecurlySubscriptions($cancelActive, $cancelFuture, $accountCode);
-
-            // Find the master subscription id
-            $masterSubscriptionId = null;
-            foreach ($cancelledSubscriptionIds as $planCode => $cancelledSubscriptionId) {
-                if (in_array($planCode, ['annual', 'seasonal'])) {
-                    $masterSubscriptionId = $cancelledSubscriptionId;
-                }
+            if (! $accountCode) {
+                $accountCode = $this->_customerSession->getCustomer()->getData('gigya_uid');
             }
 
-            if (is_null($masterSubscriptionId)) {
-                $error = "Couldn't find the master subscription id.";
-                $this->_logger->error($error);
-                throw new LocalizedException(__($error));
-            }
+            $subscription = $this->_subscriptionCollectionFactory
+                ->create()
+                ->addFieldToFilter('gigya_id', $accountCode)
+                ->addFieldToFilter('subscription_status', 'active')
+                ->fetchItem();
 
-            // Find the subscription
-            /** @var Subscription $subscription */
-            $subscription = $this->_subscriptionModel->getSubscriptionByMasterSubscriptionId($masterSubscriptionId);
+            $customer = $this->_customerCollectionFactory
+                ->create()
+                ->addFieldToFilter('gigya_uid', $accountCode)
+                ->fetchItem();
 
-            if (! $subscription) {
-                $error = 'Could not find subscription with ID ' . $masterSubscriptionId;
-                $this->_logger->error($error);
-                throw new LocalizedException(__($error));
-            }
+            $subscription->cancel();
 
-            // Cancel subscription orders
-            $subscription->cancelSubscriptions($this->_recurlySubscription);
+            $this->clearCustomerAddresses($customer);
+            $this->zaiusCancelCall($customer->getData('email'));
         } catch (Exception $e) {
             $this->_logger->error($e->getMessage());
 
-            throw new LocalizedException(__('There was an issue cancelling subscriptions.'));
+            throw new LocalizedException(__('There was an error while cancelling the subscription.'));
         }
-
-        // We canceled the subscription, so clear customer addresses.
-        $customer = $subscription->getCustomer();
-
-        if ($customer) {
-			// get email address
-			$customer_email = $customer->getEmail();
-			
-			// Zaius Cancel call
-            $this->zaiusCancelCall($customer_email);
-			
-            $this->clearCustomerAddresses($customer);
-        }
-
-        return true;
     }
 
     /**
      * Delete customer addresses, because we don't want to store them in the address book,
      * so they will always need to enter their shipping/billing details on checkout
      *
-     * @param Customer $customer
+     * @param $customer
      */
     private function clearCustomerAddresses($customer)
     {
-        $customer->setDefaultBilling(null);
-        $customer->setDefaultShipping(null);
-
         try {
+            $customer->setDefaultBilling(null);
+            $customer->setDefaultShipping(null);
+
             foreach ($customer->getAddresses() as $address) {
                 $this->_addressRepository->deleteById($address->getId());
             }
 
             $customer->cleanAllAddresses();
             $customer->save();
-        } catch (NoSuchEntityException $ex) {
-            $this->_logger->error($ex->getMessage());
-            return;
-        } catch (LocalizedException $ex) {
-            $this->_logger->error($ex->getMessage());
-            return;
-        } catch (\Exception $ex) {
+        } catch (Exception $ex) {
             $this->_logger->error($ex->getMessage());
             return;
         }
     }
-	
-	/**
+
+    /**
      * Cancel subscription from zaius
      * @param $customer_email
+     * @throws \ZaiusSDK\ZaiusException
      */
-	private function zaiusCancelCall($customer_email)
+    private function zaiusCancelCall($customer_email)
     {
-       $zaiusstatus = false;    
+        $zaiusstatus = false;
 
-       // check isSubcription and shipmentstatus
-       if ($customer_email)
-        {
+        // check isSubcription and shipmentstatus
+        if ($customer_email) {
             // call getsdkclient function
-            $zaiusClient = $this->_sdk->getSdkClient();  
-                      // take event as a array and add parameters
-            $event = array();
+            $zaiusClient = $this->_sdk->getSdkClient();
+            // take event as a array and add parameters
+            $event = [];
             $event['type'] = 'subscription';
             $event['action'] = 'cancelled';
             $event['identifiers'] = ['email'=>$customer_email];
 
             // get postevent function
-            $zaiusstatus = $zaiusClient->postEvent($event);	
+            $zaiusstatus = $zaiusClient->postEvent($event);
 
-			// check return values from the postevent function
-			if($zaiusstatus)
-			{
-				$this->_logger->debug("The customer Email Subscription " . $customer_email . " is cancelled successfully to zaius."); //saved in var/log/debug.log
-			}
-			else
-			{
-				$this->_logger->error("The customer Email Subscription " . $customer_email . " is failed to zaius.");
-			}
+            // check return values from the postevent function
+            if ($zaiusstatus) {
+                $this->_logger->debug("The customer Email Subscription " . $customer_email . " is cancelled successfully to zaius."); //saved in var/log/debug.log
+            } else {
+                $this->_logger->error("The customer Email Subscription " . $customer_email . " is failed to zaius.");
+            }
         }
     }
 }
