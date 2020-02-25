@@ -136,18 +136,14 @@ class Results extends \Magento\Framework\View\Element\Template
 
     public function getOrderItems($entity_id)
     {
-
         // Make sure we have an actual subscription
         if (empty($entity_id)) {
             return false;
         }
-
-        // If subscription orders is local, send them, if not, pull them and send them
-        
+        // If subscription orders is local, send them, if not, pull them and send them   
         $subscriptionOrderItems = $this->_subscriptionOrderItemCollectionFactory->create();
         $subscriptionOrderItems->addFieldToFilter('subscription_order_entity_id', $entity_id);
         $this->_subscriptionOrderItems = $subscriptionOrderItems;
-
         return $this->_subscriptionOrderItems;
     }
 
