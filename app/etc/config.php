@@ -334,6 +334,7 @@ return [
         'SMG_Directory' => 1,
         'SMG_FeaturesList' => 1,
         'SMG_Framework' => 1,
+        'SMG_Gigya' => 1,
         'SMG_GoogleTagManager' => 1,
         'SMG_GroupedAssociatedProducts' => 1,
         'SMG_HeroCallout' => 1,
