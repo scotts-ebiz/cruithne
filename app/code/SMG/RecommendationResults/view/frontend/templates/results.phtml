@@ -8,11 +8,11 @@
     </div>
 </div>
 <?php if($block->getQuizId()){?>
-<script>
+<script type="text/x-magento-init">
 zaius.event("quiz",{
 	action: "submitted",
 	recommendation_id: "<?php echo $block->getQuizId(); ?>",
-    new_id: "<?php echo $block->getNewId(); ?>",
+        new_id: "<?php echo $block->getNewId(); ?>",
 	product_id: "<?php echo $block->getApplicationdetails()['product_id'];?>",
 	applicationstartdate: "<?php echo $block->getApplicationdetails()['startdate']?>",
 	applicationenddate: "<?php echo $block->getApplicationdetails()['enddate']?>",
