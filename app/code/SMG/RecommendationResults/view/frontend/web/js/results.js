@@ -108,7 +108,6 @@ define([
                             })
                         ) {
                             let newProd = Object.assign({}, product);
-                            console.log(newProd);
                             newProd.quantity = prodMap[newProd.prodId];
                             newProducts.push(newProd);
                         }
