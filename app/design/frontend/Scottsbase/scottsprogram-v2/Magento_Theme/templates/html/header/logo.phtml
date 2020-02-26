@@ -24,13 +24,15 @@ if (strpos($currentUrl, '/account/settings') !== false
 <div class="sp-flex sp-items-center sp-justify-between">
     <?php if ($block->getData('hide_links') == true) { ?>
         <div class="sp-header__logo">
-            <img
-                src="<?= $block->escapeUrl($block->getLogoSrc()) ?>"
-                title="<?= $block->escapeHtml($block->getLogoAlt()) ?>"
-                alt="<?= $block->escapeHtml($block->getLogoAlt()) ?>"
-                <?= $block->getLogoWidth() ? 'width="' . $block->escapeHtml($block->getLogoWidth()) . '"' : '' ?>
-                <?= $block->getLogoHeight() ? 'height="' . $block->escapeHtml($block->getLogoHeight()) . '"' : '' ?>
-            />
+            <a href="<?= $block->escapeUrl($block->getUrl('')) ?>" title="<?= $block->escapeHtml($storeName) ?>">
+                <img
+                        src="<?= $block->escapeUrl($block->getLogoSrc()) ?>"
+                        title="<?= $block->escapeHtml($block->getLogoAlt()) ?>"
+                        alt="<?= $block->escapeHtml($block->getLogoAlt()) ?>"
+                  <?= $block->getLogoWidth() ? 'width="' . $block->escapeHtml($block->getLogoWidth()) . '"' : '' ?>
+                  <?= $block->getLogoHeight() ? 'height="' . $block->escapeHtml($block->getLogoHeight()) . '"' : '' ?>
+                />
+            </a>
         </div>
     <?php } else { ?>
         <a
