@@ -107,9 +107,8 @@ define([
                                 return prod.prodId === product.prodId
                             })
                         ) {
-                            let newProd = Object.assign(
-                                product
-                            );
+                            let newProd = Object.assign({}, product);
+                            console.log(newProd);
                             newProd.quantity = prodMap[newProd.prodId];
                             newProducts.push(newProd);
                         }
@@ -401,6 +400,7 @@ define([
             }
 
             this.pdp(Object.assign(
+                {},
                 this.pdp(),
                 {visible: !this.pdp().visible},
                 {product: product}
@@ -408,7 +408,7 @@ define([
         },
 
         setPDPTab: function (tab) {
-            this.pdp(Object.assign(this.pdp(), {activeTab: tab}))
+            this.pdp(Object.assign({}, this.pdp(), {activeTab: tab}))
         },
 
         preventDefault: function () {
@@ -422,6 +422,7 @@ define([
             }
 
             this.saveAndSendModal(Object.assign(
+                {},
                 this.saveAndSendModal(),
                 {visible: !this.saveAndSendModal().visible}
             ))
@@ -435,6 +436,7 @@ define([
             }
 
             this.saveAndSendSuccessModal(Object.assign(
+                {},
                 this.saveAndSendSuccessModal(),
                 {visible: !this.saveAndSendSuccessModal().visible}
             ))

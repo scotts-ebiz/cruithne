@@ -95,6 +95,7 @@ define([
                              * actual account values.
                              */
                             const newAccount = Object.assign(
+                                {},
                                 self.account(),
                                 {email: self.accountEmail()}
                             )
