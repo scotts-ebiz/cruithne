@@ -24,7 +24,7 @@ class Results extends \Magento\Framework\View\Element\Template
      /**
      * @var logger
      */
-    private $_logger;
+    protected $_logger;
 
     /**
      * @var SubscriptionCollectionFactory
