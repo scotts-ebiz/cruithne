@@ -71,7 +71,7 @@ class RecurlySubscription implements RecurlyInterface
     {
         // Cancel Recurly Subscriptions
         try {
-            $this->_cancelHelper->cancelSubscriptions(true, true);
+            $this->_cancelHelper->cancelSubscriptions();
         } catch (Exception $e) {
             $this->_logger->error($e->getMessage());
 
