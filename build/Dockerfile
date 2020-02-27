@@ -33,7 +33,7 @@ COPY vendor-vertex-compilation-issue.patch /tmp/vendor-vertex-compilation-issue.
 RUN git apply /tmp/vendor-vertex-compilation-issue.patch; exit 0
 
 RUN php /var/www/html/magento2/bin/magento setup:di:compile
-RUN rm /var/www/html/magento2/tools/yarn.lock && cd /var/www/html/magento2/tools && npm install &&  npm rebuild node-sass && gulp clean -f /var/www/html/magento2/tools/gulpfile.esm.js && gulp styles -f /var/www/html/magento2/tools/gulpfile.esm.js
+RUN rm /var/www/html/magento2/tools/yarn.lock && cd /var/www/html/magento2/tools && npm install &&  npm rebuild node-sass && gulp clean -f /var/www/html/magento2/tools/gulpfile.esm.js && gulp styles --prod -f /var/www/html/magento2/tools/gulpfile.esm.js
 
 # Move env file and deploy static content and move it back
 RUN mv /var/www/html/magento2/app/etc/env.php /var/www/html/magento2/app/etc/__env.php && php /var/www/html/magento2/bin/magento setup:static-content:deploy -f && mv /var/www/html/magento2/app/etc/__env.php /var/www/html/magento2/app/etc/env.php

@@ -137,7 +137,7 @@ before_script:
 script:
 #  Move permissions to before script once unit tests are set.
 # Permissions
-- cd vendor/snowdog/frontools/ && npm install && gulp clean && npm rebuild node-sass && gulp styles --ci
+- cd vendor/snowdog/frontools/ && npm install && gulp clean && npm rebuild node-sass && gulp styles --ci --prod
 # - sudo chown -R www-data:www-data /var/www/
 # - sudo chmod -R 666 /var/www/
 # - sudo find /var/www/ -type f -exec chmod ug+rw {} \;
