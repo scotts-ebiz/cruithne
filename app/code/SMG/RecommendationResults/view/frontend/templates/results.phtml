@@ -19,7 +19,7 @@
                         "zip": "<?php echo $this->getRequest()->getParam('zip') ?? ''; ?>"
                     },
 					"zaius": {
-                        "component": "SMG_RecommendationResults/js/zaiusjs",
+                                                "component": "SMG_RecommendationResults/js/zaiusjs",
 						"recommendation_id": "<?php echo $block->getQuizId(); ?>",
 						"new_id": "<?php echo $block->getNewId(); ?>",
 						"product_id": "<?php echo $block->getApplicationdetails()['product_id'];?>",
@@ -32,16 +32,4 @@
             }
         }
     }
-	<?php if($block->getQuizId()){?>
-		zaius.event("quiz",{
-		action: "submitted",
-		recommendation_id: "<?php echo $block->getQuizId(); ?>",
-		new_id: "<?php echo $block->getNewId(); ?>",
-		product_id: "<?php echo $block->getApplicationdetails()['product_id'];?>",
-		applicationstartdate: "<?php echo $block->getApplicationdetails()['startdate']?>",
-		applicationenddate: "<?php echo $block->getApplicationdetails()['enddate']?>",
-		product_order: "<?php echo $block->getApplicationdetails()['product_sort'];?>",
-		quiz_zip_code: "<?php echo $block->getZipCode(); ?>"
-		})
-	<?php } ?>
 </script>
