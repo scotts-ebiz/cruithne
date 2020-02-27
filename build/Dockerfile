@@ -31,8 +31,8 @@ RUN git checkout origin .htaccess
 RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools
 
 # Temporary patch for VendorVertex
-COPY vendor-vertex-compilation-issue.patch /tmp/vendor-vertex-compilation-issue.patch
-RUN git apply /tmp/vendor-vertex-compilation-issue.patch; exit 0
+# COPY vendor-vertex-compilation-issue.patch /tmp/vendor-vertex-compilation-issue.patch
+# RUN git apply /tmp/vendor-vertex-compilation-issue.patch; exit 0
 
 RUN php /var/www/html/magento2/bin/magento setup:di:compile
 RUN rm /var/www/html/magento2/tools/yarn.lock && cd /var/www/html/magento2/tools && npm install &&  npm rebuild node-sass && gulp clean -f /var/www/html/magento2/tools/gulpfile.esm.js && gulp styles --prod -f /var/www/html/magento2/tools/gulpfile.esm.js
