@@ -4,13 +4,10 @@ namespace SMG\SubscriptionApi\Helper;
 
 use DateInterval;
 use Exception;
-use Recurly_Invoice;
-use Recurly_InvoiceList;
 use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Customer\Api\Data\AddressInterfaceFactory;
 use Magento\Customer\Api\Data\RegionInterface;
 use Magento\Customer\Model\AddressFactory;
-use Magento\Customer\Model\ResourceModel\Address\Collection as AddressCollection;
 use Magento\Directory\Model\RegionFactory;
 use Magento\Directory\Model\ResourceModel\Region\Collection as RegionCollection;
 use Magento\Framework\Exception\LocalizedException;
@@ -165,7 +162,7 @@ class SeasonalHelper extends AbstractHelper
         $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
 
         $this->_today = new DateTimeImmutable();
-        $this->_maxShipDate = $this->_today->sub(new DateInterval('PT0M'));
+        $this->_maxShipDate = $this->_today->sub(new DateInterval('PT90M'));
 
         // Give 10 days to have a successful process.
         $this->_failDate = $this->_today->sub(new DateInterval('P10D'));
@@ -225,9 +222,6 @@ class SeasonalHelper extends AbstractHelper
                 $sapOrderBatch
                     ->setData('is_order', 1)
                     ->save();
-
-                // Update the invoice with the Recurly invoice.
-                $this->populateRecurlyInvoice($subscriptionOrder);
 
                 $this->_logger->info("Subscription Order: {$subscriptionOrder->getData('subscription_id')} has successfully processed.");
                 $subscriptionOrder->setData('subscription_order_status', 'complete')->save();
@@ -342,37 +336,5 @@ class SeasonalHelper extends AbstractHelper
 
             return false;
         }
-    }
-
-    /**
-     * Find the related Recurly invoice and add it to the subscription order.
-     *
-     * @param SubscriptionOrder|SubscriptionAddonOrder $subscriptionOrder
-     */
-    protected function populateRecurlyInvoice($subscriptionOrder)
-    {
-        // // Not needed for annual orders.
-        // if ($subscriptionOrder->getSubscriptionType() == 'annual') {
-        //     return false;
-        // }
-        //
-        // try {
-        //     $subscriptionID = $subscriptionOrder->getData('subscription_id');
-        //     $subscription = Recurly_Subscription::get($subscriptionID);
-        //
-        //     $subscription->invoice
-        //     $gigyaID = $subscriptionOrder->getGigyaID();
-        //
-        //     $invoices = Recurly_InvoiceList::getForAccount($gigyaID, [
-        //         'state' => 'paid',
-        //     ]);
-        //
-        //     foreach ($invoices as $invoice) {
-        //         /** @var Recurly_Invoice $invoice */
-        //         $invoice->line_items
-        //     }
-        // } catch (Exception $e) {
-        //
-        // }
     }
 }
