@@ -15,7 +15,6 @@ use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Data\Form\FormKey;
-use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\SecurityViolationException;
@@ -301,7 +300,6 @@ class Subscription implements SubscriptionInterface
      * @param bool $billing_same_as_shipping
      * @return string
      *
-     * @throws CouldNotSaveException
      * @throws LocalizedException
      * @throws NoSuchEntityException
      *
@@ -319,7 +317,6 @@ class Subscription implements SubscriptionInterface
         $customer->setWebsiteId($websiteId);
         $customer->loadByEmail($this->_checkoutSession->getQuote()->getCustomerEmail());
         $customerId = $customer->getId();
-        $customer = $this->_customerFactory->create()->load($customerId);
 
         // Make sure customer was found.
         if (! $customer->getData('entity_id')) {
@@ -437,7 +434,7 @@ class Subscription implements SubscriptionInterface
 
                 // We failed to create orders, lets remove any created orders.
                 $this->clearCustomerAddresses($customer);
-                $this->cancelOrders($subscription);
+                $this->cancelFailedOrders($subscription);
 
                 return $this->_responseHelper->error(
                     $e->getMessage(),
@@ -449,7 +446,7 @@ class Subscription implements SubscriptionInterface
                 $this->_logger->error($e->getMessage());
 
                 // We failed to create orders, lets remove any created orders.
-                $this->cancelOrders($subscription);
+                $this->cancelFailedOrders($subscription);
 
                 return $this->_responseHelper->error(
                     'We could not process your order at this time. Please try again.',
@@ -474,7 +471,7 @@ class Subscription implements SubscriptionInterface
 
                 // We failed to create orders, lets remove any created orders.
                 $this->clearCustomerAddresses($customer);
-                $this->cancelOrders($subscription);
+                $this->cancelFailedOrders($subscription);
 
                 return $this->_responseHelper->error(
                     $e->getMessage(),
@@ -486,7 +483,7 @@ class Subscription implements SubscriptionInterface
                 $this->_logger->error($e->getMessage());
 
                 // We failed to create orders, lets remove any created orders.
-                $this->cancelOrders($subscription);
+                $this->cancelFailedOrders($subscription);
 
                 return $this->_responseHelper->error(
                     'We could not process your order at this time. Please try again.',
@@ -508,7 +505,7 @@ class Subscription implements SubscriptionInterface
             // We failed to invoice the Recurly subscription, so lets remove any
             // created orders.
             $this->clearCustomerAddresses($customer);
-            $this->cancelOrders($subscription);
+            $this->cancelFailedOrders($subscription);
 
             return $this->_responseHelper->error(
                 $e->getMessage(),
@@ -579,7 +576,7 @@ class Subscription implements SubscriptionInterface
      * @param SubscriptionModel $subscription
      * @throws Exception
      */
-    protected function cancelOrders(SubscriptionModel $subscription)
+    protected function cancelFailedOrders(SubscriptionModel $subscription)
     {
         $this->_logger->debug('Failed to create subscription, so let\'s cancel any orders.');
 
@@ -601,7 +598,7 @@ class Subscription implements SubscriptionInterface
                     'subscription_id' => null,
                 ])->save();
 
-                // Delete the SAP batch records.
+                // Mark the SAP batch records as not orders.
                 $sapOrderBatchCollection = $this->_sapOrderBatchCollectionFactory->create();
                 $sapOrderBatchCollection
                     ->addFieldToFilter('order_id', $orderID)
