@@ -34,7 +34,7 @@ echo ''
 
 # Gulp Clean and Styles
 echo 'Begin Gulp Clean and Styles...'
-cd tools && gulp clean && gulp styles && cd ..
+cd tools && gulp clean && gulp styles --prod && cd ..
 echo 'End Gulp Clean and Styles.'
 echo ''
 
