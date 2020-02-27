@@ -18,8 +18,8 @@ RUN chown -R magento:www-data .git
 
 USER magento
 
-# Set developer Mode if NOT in production
-RUN if [ "$BRANCH" != "master" ] ; then bin/magento deploy:mode:set developer && bin/magento setup:config:set --enable-debug-logging=true && sed "s/display_errors.*/display_errors = on/" php.ini; fi
+# Set developer Mode if NOT in production or release-candidate
+RUN if [ "$BRANCH" != "master" ] && [ "$BRANCH" != "release-candidate" ] && [ "$BRANCH" != "hotfixes" ]; then bin/magento deploy:mode:set developer && bin/magento setup:config:set --enable-debug-logging=true && sed -i "s/display_errors.*/display_errors = on/" php.ini; fi
 
 # Temporary add to test mass import of images
 RUN mkdir -p $MAGENTO_DIR/var/import/images && gsutil -q -m rsync -r -u gs://magento-image-repo/import/ $MAGENTO_DIR/var/import/images ; exit 0
