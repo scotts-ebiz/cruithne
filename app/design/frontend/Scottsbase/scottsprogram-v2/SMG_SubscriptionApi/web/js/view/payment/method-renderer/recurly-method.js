@@ -420,7 +420,13 @@ define(
                         window.location.href = '/success';
                     },
                     error(response) {
-                        response = JSON.parse(response.responseJSON);
+                        // Ensure the response is properly converted to a JS object.
+                        try {
+                            response = JSON.parse(response.responseJSON);
+                        }
+                        catch (e) {
+                            response = { data: {}, message: ''}
+                        }
 
                         self.error(response.message);
                         self.refreshCheckout(!!response.data.refresh);
