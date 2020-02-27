@@ -21,8 +21,10 @@ class Results extends \Magento\Framework\View\Element\Template
      */
     protected $_coreSession;
     
-    
-    private $logger;
+     /**
+     * @var logger
+     */
+    protected $_logger;
 
     /**
      * @var SubscriptionCollectionFactory

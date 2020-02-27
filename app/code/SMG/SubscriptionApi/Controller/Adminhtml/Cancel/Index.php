@@ -119,7 +119,7 @@ class Index extends \Magento\Backend\App\Action
 
         try {
             $accountCode = $this->_request->getParam('recurly_account_code');
-            $this->_cancelHelper->cancelSubscriptions(true, true, $accountCode);
+            $this->_cancelHelper->cancelSubscriptions($accountCode);
         } catch (Exception $e) {
             $error = 'Could not cancel Recurly subscriptions';
             $this->_logger->error($error . ' - ' . $e->getMessage());
