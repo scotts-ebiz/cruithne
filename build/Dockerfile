@@ -18,7 +18,7 @@ RUN chown -R magento:www-data .git
 
 USER magento
 
-# Set developer Mode if NOT in production or release-candidate
+# Set developer Mode if NOT in production or release-candidate or hotfixes
 RUN if [ "$BRANCH" != "master" ] && [ "$BRANCH" != "release-candidate" ] && [ "$BRANCH" != "hotfixes" ]; then bin/magento deploy:mode:set developer && bin/magento setup:config:set --enable-debug-logging=true && sed -i "s/display_errors.*/display_errors = on/" php.ini; fi
 
 # Temporary add to test mass import of images
