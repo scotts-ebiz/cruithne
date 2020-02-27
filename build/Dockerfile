@@ -17,7 +17,9 @@ WORKDIR $MAGENTO_DIR
 RUN chown -R magento:www-data .git
 
 USER magento
-WORKDIR $MAGENTO_DIR
+
+# Set developer Mode if NOT in production
+RUN if [ "$BRANCH" != "master" ] ; then bin/magento deploy:mode:set developer && bin/magento setup:config:set --enable-debug-logging=true && sed "s/display_errors.*/display_errors = on/" php.ini; fi
 
 # Temporary add to test mass import of images
 RUN mkdir -p $MAGENTO_DIR/var/import/images && gsutil -q -m rsync -r -u gs://magento-image-repo/import/ $MAGENTO_DIR/var/import/images ; exit 0
