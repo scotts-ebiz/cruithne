@@ -77,7 +77,6 @@
         <column name="sales_order_id" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Sales Order ID"/>
         <column name="subscription_order_status" xsi:type="varchar" nullable="false" length="32" comment="Subscription Order Status"/>
         <column name="price"  xsi:type="decimal" scale="2" precision="10"  nullable="false" comment="Subscription Cost"/>
-        <column name="recurly_invoice" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Recurly Invoice Number"/>
         <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
         <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Updated"/>
         <column name="next_cron_date" xsi:type="timestamp" nullable="true" comment="Next time order can be processed with cron"/>
@@ -144,7 +143,6 @@
         <column name="sales_order_id" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Sales Order ID"/>
         <column name="subscription_order_status" xsi:type="varchar" nullable="false" length="32" comment="Subscription Order Status"/>
         <column name="price"  xsi:type="decimal" scale="2" precision="10"  nullable="false" comment="Subscription Cost"/>
-        <column name="recurly_invoice" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Recurly Invoice Number"/>
         <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
         <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Updated"/>
         <column name="next_cron_date" xsi:type="timestamp" nullable="true" comment="Next time order can be processed with cron"/>
