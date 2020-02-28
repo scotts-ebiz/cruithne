@@ -21,7 +21,7 @@ $color_lightyellow_shade                                      : #ffc;
 
 // Cart / Checkout Colors
 $checkout-green                                               : #1d5632;
-$checkout-light-green                                        : #028c45;
+$checkout-light-green                                         : #028c45;
 $checkout-light_grey                                          : #d3d3d3;
 
 
@@ -44,16 +44,32 @@ $font-family-name__quaternary                                 : 'Roboto';
 $font-family__quaternary                                      : $font-family-name__quaternary, $font-family__sans-serif;
 
 
-// Custom Font Size
+// Custom Font Sizes
 $font-size__xxl                                               : 4.0rem;
 $font-size__m                                                 : 1.6rem;
-$font-size__xxs                                               : 1.0rem;
+$font-size__ms                                                : 1.4rem;
+$font-size__xxs                                               : 0.9rem;
 
 
 //  Letter Spacing
 $letter-spacing_base                                          : inherit;
 $letter-spacing_l                                             : 1.0px;
 $letter-spacing_m                                             : 0.5px;
+
+
+// Custom Line heights
+$line-height__m                                               : 1.4 !default;
+
+
+// Cart Styles
+$cart-half-gutter-width                                       : 13px;
+$cart-gutter-width                                            : $cart-half-gutter-width * 2;
+$cart-padding__base                                           : 16px;
+$cart-padding_xs                                              : $cart-padding__base / 4;
+$cart-padding_s                                               : $cart-padding__base / 2;
+$cart-padding_m                                               : $cart-padding__base;
+$cart-padding_l                                               : $cart-padding__base * 1.25;
+$cart-padding_xl                                              : $cart-padding__base * 2;
 
 
 // Checkout H2 Styles
@@ -63,7 +79,6 @@ $cart-checkout-h2-letter-spacing                              : 2px !default;
 $cart-checkout-h2-letter-spacing-mobile                       : 1.7px !default;
 
 
-// Vet this!
 $lato: 'Lato', sans-serif;
 $opensans: 'Open Sans', sans-serif;
 
