@@ -1,17 +1,9 @@
 .sp-quiz {
-  height: calc(100% - #{$header-height});
+	height: calc(100% - #{$header-height});
 }
 
 .yourplan-options-index {
-  &.sp-overflow-hidden {
-    overflow: unset;
-  }
-}
-
-@supports (-webkit-overflow-scrolling: touch) {
-  .sp-quiz {
-    @media (max-width: $screen-md) {
-      height: calc(100% - #{$footer-height-mobile});
-    }
-  }
+	&.sp-overflow-hidden {
+		overflow: unset;
+	}
 }
