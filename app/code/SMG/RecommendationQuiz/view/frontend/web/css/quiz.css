@@ -48,6 +48,7 @@ body,
 
 .sp-quiz-map {
   background: #d3d3d3;
+  min-height: 20rem; /* PREVENTS MAP FROM GETTING TOO SMALL */
 }
 
 @media (min-width: 768px) {
