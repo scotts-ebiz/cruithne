@@ -220,7 +220,7 @@ class SubscriptionOrder extends AbstractModel
 
         if (is_null($this->_masterSubscription)) {
             $this->_masterSubscription = $this->_subscriptionCollectionFactory->create()
-                ->addFilter('subscription_id', $masterSubscriptionId)
+                ->addFieldToFilter('subscription_id', $masterSubscriptionId)
                 ->getFirstItem();
         }
 
