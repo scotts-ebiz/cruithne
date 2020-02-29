@@ -377,14 +377,24 @@ define(
                 $('#zip-popup-modal').modal('closeModal');
             },
 
-            getShippingAddress: function () {
-                var checkoutData = JSON.parse(localStorage['mage-cache-storage']);
-                checkoutData = checkoutData['checkout-data'];
+            /**
+             * Get the shipping address from the cart (Avatax updated address)
+             * or the checkout data if that does not exist.
+             *
+             *
+             *
+             * @returns {*|{}|Object|string|{regionId: string, postcode: number, region: null, countryId: string}|{base_url: string, admin: string, actual_base_url: string, auto_base_url: string}}
+             */
+            getShippingAddress() {
+                const storageData = JSON.parse(localStorage['mage-cache-storage']);
 
-                return checkoutData.shippingAddressFromData;
+                const cartData = storageData['cart-data'] || {};
+                const checkoutData = storageData['checkout-data'] || {};
+
+                return cartData && cartData.address || checkoutData.shippingAddressFromData;
             },
 
-            getBillingAddress: function () {
+            getBillingAddress() {
                 var checkoutData = JSON.parse(localStorage['mage-cache-storage']);
                 checkoutData = checkoutData['checkout-data'];
 
@@ -453,10 +463,10 @@ define(
                 var address = (isBillingSameAsShipping === false) ? this.getBillingAddress() : this.getShippingAddress();
 
                 // Get full state name by it's id
-                var stateName = $('select[name="region_id"] option[value="' + address.region_id + '"]').attr('data-title');
+                var stateName = $('select[name="region_id"] option[value="' + (address.regionId || address.region_id) + '"]').attr('data-title');
 
                 // Get full country name by it's id
-                var countryName = $('select[name="country_id"] option[value="' + address.country_id + '"]').attr('data-title');
+                var countryName = $('select[name="country_id"] option[value="' + (address.countryId || address.country_id) + '"]').attr('data-title');
 
                 // Update Recurly form
                 $('input[data-recurly="first_name"]').val(address.firstname);
