@@ -50,6 +50,12 @@ Options -Indexes
     php_value max_execution_time 18000
 
 ###########################################
+## Set PHP Display Error Messages
+
+    php_flag display_startup_errors off
+    php_flag display_errors off
+
+###########################################
 ## Set secure PHPSESSID attribute
 
     php_value session.cookie_httponly 1
