@@ -4,7 +4,6 @@ ARG BRANCH=staging
 ARG IMAGE=gcr.io/ecommerce-platform-211419/magento-stage-primer:latest
 FROM $IMAGE
 ARG BRANCH
-ENTRYPOINT []
 
 ENV NVM_DIR /home/magento/.nvm
 ENV MAGENTO_DIR /var/www/html/magento2
@@ -17,6 +16,7 @@ WORKDIR $MAGENTO_DIR
 RUN chown -R magento:www-data .git
 
 USER magento
+WORKDIR $MAGENTO_DIR
 
 # Temporary add to test mass import of images
 RUN mkdir -p $MAGENTO_DIR/var/import/images && gsutil -q -m rsync -r -u gs://magento-image-repo/import/ $MAGENTO_DIR/var/import/images ; exit 0
@@ -27,18 +27,9 @@ RUN composer install
 RUN git checkout origin .htaccess
 RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools
 
-# Set developer Mode if NOT in production or release-candidate or hotfixes
-RUN if [ "$BRANCH" != "master" ] && [ "$BRANCH" != "release-candidate" ] && [ "$BRANCH" != "hotfixes" ]; then bin/magento deploy:mode:set developer && bin/magento setup:config:set --enable-debug-logging=true && sed -i "s/display_errors.*/display_errors = on/" php.ini; fi
-
 # Temporary patch for VendorVertex
-# COPY vendor-vertex-compilation-issue.patch /tmp/vendor-vertex-compilation-issue.patch
-# RUN git apply /tmp/vendor-vertex-compilation-issue.patch; exit 0
-
-RUN php /var/www/html/magento2/bin/magento setup:di:compile
-RUN rm /var/www/html/magento2/tools/yarn.lock && cd /var/www/html/magento2/tools && npm install &&  npm rebuild node-sass && gulp clean -f /var/www/html/magento2/tools/gulpfile.esm.js && gulp styles --prod -f /var/www/html/magento2/tools/gulpfile.esm.js
-
-# Move env file and deploy static content and move it back
-RUN mv /var/www/html/magento2/app/etc/env.php /var/www/html/magento2/app/etc/__env.php && php /var/www/html/magento2/bin/magento setup:static-content:deploy -f && mv /var/www/html/magento2/app/etc/__env.php /var/www/html/magento2/app/etc/env.php
+COPY vendor-vertex-compilation-issue.patch /tmp/vendor-vertex-compilation-issue.patch
+RUN git apply /tmp/vendor-vertex-compilation-issue.patch; exit 0
 
 USER root
 
@@ -55,4 +46,3 @@ RUN ["chmod", "+x", "/usr/local/bin/entrypoint.sh"]
 
 # The apachectl command is in entrypoint :-)
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
-
