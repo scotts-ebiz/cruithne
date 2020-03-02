@@ -4,7 +4,6 @@ ARG BRANCH=staging
 ARG IMAGE=gcr.io/ecommerce-platform-211419/magento-stage-primer:latest
 FROM $IMAGE
 ARG BRANCH
-ENTRYPOINT []
 
 ENV NVM_DIR /home/magento/.nvm
 ENV MAGENTO_DIR /var/www/html/magento2
@@ -28,6 +27,7 @@ RUN composer install
 RUN git checkout origin .htaccess
 RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools
 
+
 # Set developer Mode if NOT in production or release-candidate or hotfixes
 RUN if [ "$BRANCH" != "master" ] && [ "$BRANCH" != "release-candidate" ] && [ "$BRANCH" != "hotfixes" ]; then bin/magento deploy:mode:set developer && bin/magento setup:config:set --enable-debug-logging=true && sed -i "s/display_errors.*/display_errors = on/" php.ini; fi
 
@@ -50,4 +50,3 @@ RUN ["chmod", "+x", "/usr/local/bin/entrypoint.sh"]
 
 # The apachectl command is in entrypoint :-)
 ENTRYPOINT [ "/usr/local/bin/entrypoint.sh" ]
-
