@@ -10,6 +10,8 @@
 
 @supports (-webkit-overflow-scrolling: touch) {
   .sp-quiz {
-    height: 100%;
+		@media (max-width: $screen-md) {
+			height: calc(100% - #{$footer-height-mobile});
+		}
   }
 }

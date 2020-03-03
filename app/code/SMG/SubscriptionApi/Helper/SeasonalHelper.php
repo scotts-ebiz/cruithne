@@ -8,7 +8,6 @@ use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Customer\Api\Data\AddressInterfaceFactory;
 use Magento\Customer\Api\Data\RegionInterface;
 use Magento\Customer\Model\AddressFactory;
-use Magento\Customer\Model\ResourceModel\Address\Collection as AddressCollection;
 use Magento\Directory\Model\RegionFactory;
 use Magento\Directory\Model\ResourceModel\Region\Collection as RegionCollection;
 use Magento\Framework\Exception\LocalizedException;
@@ -219,7 +218,7 @@ class SeasonalHelper extends AbstractHelper
                     throw new LocalizedException(__($error));
                 }
 
-                // Prevent SAP from processing
+                // Update SAP batch
                 $sapOrderBatch
                     ->setData('is_order', 1)
                     ->save();

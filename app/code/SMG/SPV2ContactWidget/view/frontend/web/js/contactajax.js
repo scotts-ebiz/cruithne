@@ -62,6 +62,14 @@ define([
         $.mage.__('Please enter a valid message.')
     );
 
+    $.validator.addMethod(
+        'validate-postal-code',
+        function(value) {
+          return (/(^\d{5}$)|(^\d{5}-\d{4}$)/).test(value);
+        },
+        $.mage.__('Please enter a valid 5 digit US ZIP.')
+    );
+
     const nameInput = document.querySelector('input[name="name"]');
     const emailInput = document.querySelector('input[name="email"]');
     const messageTextarea = document.querySelector('textarea[name="comment"]');
