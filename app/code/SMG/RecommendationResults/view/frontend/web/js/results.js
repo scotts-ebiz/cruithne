@@ -440,8 +440,9 @@ define([
                 visible: !this.saveAndSendSuccessModal().visible
             })
          },
-            formatNumber: function(number) {    
+
+        formatNumber: function(number) {
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-       }
+        }
     });
 });
