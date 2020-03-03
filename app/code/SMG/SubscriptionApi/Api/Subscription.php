@@ -15,7 +15,6 @@ use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Data\Form\FormKey;
-use Magento\Framework\Exception\CouldNotSaveException;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\SecurityViolationException;
@@ -39,6 +38,7 @@ use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as Su
 use SMG\SubscriptionApi\Model\Subscription as SubscriptionModel;
 use SMG\SubscriptionApi\Model\SubscriptionAddonOrder;
 use SMG\SubscriptionApi\Model\SubscriptionOrder;
+use Gigya\GigyaIM\Helper\GigyaMageHelper;
 
 /**
  * Class Subscription
@@ -138,6 +138,11 @@ class Subscription implements SubscriptionInterface
     protected $_invoiceCollectionFactory;
 
     /**
+     * @var GigyaMageHelper
+     */
+    protected $_gigyaHelper;
+
+    /**
      * Subscription constructor.
      * @param LoggerInterface $logger
      * @param RecommendationHelper $recommendationHelper
@@ -164,6 +169,7 @@ class Subscription implements SubscriptionInterface
      * @param RecurlySubscription $recurlySubscription
      * @param Response $response
      * @param ResponseHelper $responseHelper
+     * @param GigyaMageHelper $gigyaMageHelper
      */
     public function __construct(
         LoggerInterface $logger,
@@ -190,7 +196,8 @@ class Subscription implements SubscriptionInterface
         SubscriptionOrderHelper $subscriptionOrderHelper,
         RecurlySubscription $recurlySubscription,
         Response $response,
-        ResponseHelper $responseHelper
+        ResponseHelper $responseHelper,
+        GigyaMageHelper $gigyaMageHelper
     ) {
         $this->_logger = $logger;
         $this->_recommendationHelper = $recommendationHelper;
@@ -218,6 +225,7 @@ class Subscription implements SubscriptionInterface
         $this->_recurlySubscription = $recurlySubscription;
         $this->_response = $response;
         $this->_responseHelper = $responseHelper;
+        $this->_gigyaHelper = $gigyaMageHelper;
 
         Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
@@ -234,6 +242,7 @@ class Subscription implements SubscriptionInterface
      *
      * @throws NoSuchEntityException
      * @throws SecurityViolationException
+     * @throws LocalizedException
      * @api
      */
     public function addSubscriptionToCart($key, $subscription_plan, $data, $addons = [])
@@ -291,7 +300,6 @@ class Subscription implements SubscriptionInterface
      * @param bool $billing_same_as_shipping
      * @return string
      *
-     * @throws CouldNotSaveException
      * @throws LocalizedException
      * @throws NoSuchEntityException
      *
@@ -309,7 +317,6 @@ class Subscription implements SubscriptionInterface
         $customer->setWebsiteId($websiteId);
         $customer->loadByEmail($this->_checkoutSession->getQuote()->getCustomerEmail());
         $customerId = $customer->getId();
-        $customer = $this->_customerFactory->create()->load($customerId);
 
         // Make sure customer was found.
         if (! $customer->getData('entity_id')) {
@@ -331,6 +338,28 @@ class Subscription implements SubscriptionInterface
         // Add checkout addresses to the session.
         $this->_coreSession->setCheckoutShipping($customerShippingAddress);
         $this->_coreSession->setCheckoutBilling($customerBillingAddress);
+
+        // Update the customer's name from the shipping address.
+        try {
+            // Update the customer's M2 account.
+            $customer->addData([
+                'firstname' => $customerShippingAddress['firstname'],
+                'lastname' => $customerShippingAddress['lastname'],
+            ])->save();
+
+            // Update the customer's Gigya account.
+            $gigyaData = [
+                'profile' => [
+                    'firstName' => $customerShippingAddress['firstname'],
+                    'lastName' => $customerShippingAddress['lastname'],
+                ],
+            ];
+
+            $this->_gigyaHelper->updateGigyaAccount($customer->getData('gigya_uid'), $gigyaData);
+        } catch (Exception $e) {
+            $this->_logger->error($e->getMessage());
+        }
+
 
         // Check the zip code to make sure that it is what they entered during the quiz
         $this->_logger->debug('Verifying shipping zip code matches quiz zip code...');
@@ -405,7 +434,7 @@ class Subscription implements SubscriptionInterface
 
                 // We failed to create orders, lets remove any created orders.
                 $this->clearCustomerAddresses($customer);
-                $this->cancelOrders($subscription);
+                $this->cancelFailedOrders($subscription);
 
                 return $this->_responseHelper->error(
                     $e->getMessage(),
@@ -417,7 +446,7 @@ class Subscription implements SubscriptionInterface
                 $this->_logger->error($e->getMessage());
 
                 // We failed to create orders, lets remove any created orders.
-                $this->cancelOrders($subscription);
+                $this->cancelFailedOrders($subscription);
 
                 return $this->_responseHelper->error(
                     'We could not process your order at this time. Please try again.',
@@ -442,7 +471,7 @@ class Subscription implements SubscriptionInterface
 
                 // We failed to create orders, lets remove any created orders.
                 $this->clearCustomerAddresses($customer);
-                $this->cancelOrders($subscription);
+                $this->cancelFailedOrders($subscription);
 
                 return $this->_responseHelper->error(
                     $e->getMessage(),
@@ -454,7 +483,7 @@ class Subscription implements SubscriptionInterface
                 $this->_logger->error($e->getMessage());
 
                 // We failed to create orders, lets remove any created orders.
-                $this->cancelOrders($subscription);
+                $this->cancelFailedOrders($subscription);
 
                 return $this->_responseHelper->error(
                     'We could not process your order at this time. Please try again.',
@@ -476,7 +505,7 @@ class Subscription implements SubscriptionInterface
             // We failed to invoice the Recurly subscription, so lets remove any
             // created orders.
             $this->clearCustomerAddresses($customer);
-            $this->cancelOrders($subscription);
+            $this->cancelFailedOrders($subscription);
 
             return $this->_responseHelper->error(
                 $e->getMessage(),
@@ -547,7 +576,7 @@ class Subscription implements SubscriptionInterface
      * @param SubscriptionModel $subscription
      * @throws Exception
      */
-    protected function cancelOrders(SubscriptionModel $subscription)
+    protected function cancelFailedOrders(SubscriptionModel $subscription)
     {
         $this->_logger->debug('Failed to create subscription, so let\'s cancel any orders.');
 
@@ -569,7 +598,7 @@ class Subscription implements SubscriptionInterface
                     'subscription_id' => null,
                 ])->save();
 
-                // Delete the SAP batch records.
+                // Mark the SAP batch records as not orders.
                 $sapOrderBatchCollection = $this->_sapOrderBatchCollectionFactory->create();
                 $sapOrderBatchCollection
                     ->addFieldToFilter('order_id', $orderID)
