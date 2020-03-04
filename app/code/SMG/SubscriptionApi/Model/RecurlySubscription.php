@@ -16,12 +16,10 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Session\SessionManagerInterface;
 use Psr\Log\LoggerInterface;
 use Recurly_Account;
-use Recurly_Adjustment;
 use Recurly_BillingInfo;
 use Recurly_Client;
 use Recurly_Coupon;
 use Recurly_CustomField;
-use Recurly_Error;
 use Recurly_Invoice;
 use Recurly_InvoiceCollection;
 use Recurly_NotFoundError;
@@ -29,7 +27,6 @@ use Recurly_Purchase;
 use Recurly_ShippingAddress;
 use Recurly_Subscription;
 use Recurly_SubscriptionList;
-use Recurly_ValidationError;
 use SMG\RecommendationApi\Helper\RecommendationHelper;
 use SMG\SubscriptionApi\Helper\RecurlyHelper;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
@@ -257,13 +254,6 @@ class RecurlySubscription
             $recurlyPurchase->account->billing_info = $this->createBillingInfo($account->account_code, $token);
         } catch (Exception $e) {
             $this->_logger->error($e->getMessage());
-
-            if (strpos($e->getMessage(), 'security code') !== false) {
-                $cvvError = 'The security code you entered does not match. Please update the CVV and try again.';
-
-                throw new LocalizedException(__($cvvError));
-            }
-
             $error = 'There is a problem with the billing information.';
 
             throw new LocalizedException(__($error));
@@ -273,7 +263,7 @@ class RecurlySubscription
         try {
             $recurlyPurchase->account->shipping_address = $recurlyShippingAddress;
         } catch (Exception $e) {
-            $error = 'There is a problem with the Recurly shipping information.';
+            $error = 'There is a problem with the shipping information.';
             $this->_logger->error($error . " : " . $e->getMessage());
             throw new LocalizedException(__($error));
         }
@@ -325,7 +315,7 @@ class RecurlySubscription
                 ])->save();
             }
         } catch (Exception $e) {
-            $error = 'There was an error invoicing the subscription in Recurly.';
+            $error = 'There was an error invoicing the subscription.';
             $this->_logger->error($error . " : " . $e->getMessage());
 
             throw new LocalizedException(__($error));
@@ -393,20 +383,18 @@ class RecurlySubscription
      * @param string $account_code
      * @param string $token
      *
+     * @throws Exception
+     *
      * @return object|bool
      */
     protected function createBillingInfo($account_code, $token)
     {
-        try {
-            $billing_info = new Recurly_BillingInfo();
-            $billing_info->account_code = $account_code;
-            $billing_info->token_id = $token;
-            $billing_info->create();
+        $billing_info = new Recurly_BillingInfo();
+        $billing_info->account_code = $account_code;
+        $billing_info->token_id = $token;
+        $billing_info->create();
 
-            return $billing_info;
-        } catch (Exception $e) {
-            return false;
-        }
+        return $billing_info;
     }
 
     /**
