@@ -8,7 +8,8 @@
             <div class="sp-block sp-p1 product-item-name" data-bind="html: $parent.name"></div>
             <div
                 class="sp-block sp-text-xs sp-text-gray-5"
-                data-bind="text: 'You are beautiful!' "
+                data-bind="text: $parents[1].subscriptionData().is_shippable
+                    ? 'You will be charged today' : 'You will be charged before each shipment' "
             >
             </div>
         </div>
