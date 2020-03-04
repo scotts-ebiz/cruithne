@@ -616,7 +616,7 @@ class Subscription implements SubscriptionInterface
                         'subscription_id' => null,
                     ])->setStatus('closed')->save();
 
-                    $this->addOrderHistory($orderID, 'Failed to create subscription: rolling back orders.');
+                    $this->addOrderHistory($orderID, 'Failed to create subscription: rolling back orders.', 'closed');
 
                     // Mark the SAP batch records as not orders.
                     $sapOrderBatchCollection = $this->_sapOrderBatchCollectionFactory->create();
@@ -644,8 +644,9 @@ class Subscription implements SubscriptionInterface
      *
      * @param $orderId
      * @param $message
+     * @param $status
      */
-    private function addOrderHistory($orderId, $message)
+    private function addOrderHistory($orderId, $message, $status)
     {
         try
         {
@@ -661,7 +662,7 @@ class Subscription implements SubscriptionInterface
             // set the desired values
             $orderHistory->setParentId($orderId);
             $orderHistory->setComment($message);
-            $orderHistory->setStatus('processing');
+            $orderHistory->setStatus($status);
             $orderHistory->setCreatedAt($today);
             $orderHistory->setEntityName('order');
 
