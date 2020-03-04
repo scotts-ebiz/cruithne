@@ -39,6 +39,8 @@ use SMG\SubscriptionApi\Model\Subscription as SubscriptionModel;
 use SMG\SubscriptionApi\Model\SubscriptionAddonOrder;
 use SMG\SubscriptionApi\Model\SubscriptionOrder;
 use Gigya\GigyaIM\Helper\GigyaMageHelper;
+use Magento\Sales\Model\ResourceModel\Order\Status\History as HistoryResource;
+use Magento\Sales\Model\Order\Status\HistoryFactory;
 
 /**
  * Class Subscription
@@ -143,6 +145,16 @@ class Subscription implements SubscriptionInterface
     protected $_gigyaHelper;
 
     /**
+     * @var HistoryFactory
+     */
+    protected  $_historyFactory;
+
+    /**
+     * @var HistoryResource
+     */
+    protected $_historyResource;
+
+    /**
      * Subscription constructor.
      * @param LoggerInterface $logger
      * @param RecommendationHelper $recommendationHelper
@@ -170,6 +182,8 @@ class Subscription implements SubscriptionInterface
      * @param Response $response
      * @param ResponseHelper $responseHelper
      * @param GigyaMageHelper $gigyaMageHelper
+     * @param HistoryFactory $historyFactory
+     * @param HistoryResource $historyResource
      */
     public function __construct(
         LoggerInterface $logger,
@@ -197,7 +211,9 @@ class Subscription implements SubscriptionInterface
         RecurlySubscription $recurlySubscription,
         Response $response,
         ResponseHelper $responseHelper,
-        GigyaMageHelper $gigyaMageHelper
+        GigyaMageHelper $gigyaMageHelper,
+        HistoryFactory $historyFactory,
+        HistoryResource $historyResource
     ) {
         $this->_logger = $logger;
         $this->_recommendationHelper = $recommendationHelper;
@@ -226,6 +242,8 @@ class Subscription implements SubscriptionInterface
         $this->_response = $response;
         $this->_responseHelper = $responseHelper;
         $this->_gigyaHelper = $gigyaMageHelper;
+        $this->_historyFactory = $historyFactory;
+        $this->_historyResource = $historyResource;
 
         Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
@@ -581,37 +599,79 @@ class Subscription implements SubscriptionInterface
         $this->_logger->debug('Failed to create subscription, so let\'s cancel any orders.');
 
         // Get the seasonal orders.
-        $seasonalOrders = $subscription->getSubscriptionOrders()->getItems();
-        $addOns = $subscription->getSubscriptionAddonOrders()->getItems();
+        try {
+            $seasonalOrders = $subscription->getSubscriptionOrders()->getItems();
+            $addOns = $subscription->getSubscriptionAddonOrders()->getItems();
 
-        foreach (array_merge($seasonalOrders, $addOns) as $subscriptionOrder) {
-            /* @var SubscriptionOrder | SubscriptionAddonOrder $subscriptionOrder */
-            $order = $subscriptionOrder->getOrder();
+            foreach (array_merge($seasonalOrders, $addOns) as $subscriptionOrder) {
+                /* @var SubscriptionOrder | SubscriptionAddonOrder $subscriptionOrder */
+                $order = $subscriptionOrder->getOrder();
 
-            if ($order) {
-                $orderID = $order->getEntityId();
+                if ($order) {
+                    $orderID = $order->getEntityId();
 
-                // Cancel the order and remove the subscription information.
-                $order->addData([
-                    'master_subscription_id' => null,
-                    'status' => 'canceled',
-                    'subscription_id' => null,
+                    // Cancel the order and remove the subscription information.
+                    $order->addData([
+                        'master_subscription_id' => null,
+                        'subscription_id' => null,
+                    ])->setStatus('closed')->save();
+
+                    $this->addOrderHistory($orderID, 'Failed to create subscription: rolling back orders.');
+
+                    // Mark the SAP batch records as not orders.
+                    $sapOrderBatchCollection = $this->_sapOrderBatchCollectionFactory->create();
+                    $sapOrderBatchCollection
+                        ->addFieldToFilter('order_id', $orderID)
+                        ->walk(function ($sapOrderBatch) {
+                            $sapOrderBatch->setData('is_order', 0)->save();
+                        });
+                }
+
+                // Update status and remove order from subscription order.
+                $subscriptionOrder->addData([
+                    'subscription_order_status' => 'pending',
+                    'sales_order_id' => null,
                 ])->save();
-
-                // Mark the SAP batch records as not orders.
-                $sapOrderBatchCollection = $this->_sapOrderBatchCollectionFactory->create();
-                $sapOrderBatchCollection
-                    ->addFieldToFilter('order_id', $orderID)
-                    ->walk(function ($sapOrderBatch) {
-                        $sapOrderBatch->setData('is_order', 0)->save();
-                    });
             }
+        } catch (\Exception $e) {
+            $this->_logger->error('Failed to close orders on failed order creation with message: ' . $e->getMessage());
+        }
+    }
 
-            // Update status and remove order from subscription order.
-            $subscriptionOrder->addData([
-                'subscription_order_status' => 'pending',
-                'sales_order_id' => null,
-            ])->save();
+    /**
+     * This function will update the sales_order_status_history.
+     * This table displays on the Order under the comments section.
+     *
+     * @param $orderId
+     * @param $message
+     */
+    private function addOrderHistory($orderId, $message)
+    {
+        try
+        {
+            // get the date for today with time
+            $today = date('Y-m-d H:i:s');
+
+            // add the error to the history
+            /**
+             * @var \Magento\Sales\Model\Order\Status\History $orderHistory
+             */
+            $orderHistory = $this->_historyFactory->create();
+
+            // set the desired values
+            $orderHistory->setParentId($orderId);
+            $orderHistory->setComment($message);
+            $orderHistory->setStatus('processing');
+            $orderHistory->setCreatedAt($today);
+            $orderHistory->setEntityName('order');
+
+            // save the history for displaying on the order
+            $this->_historyResource->save($orderHistory);
+        }
+        catch (\Exception $e)
+        {
+            $errorMsg = "Could not add to the order history for order - " . $orderId . " - " . $e->getMessage();
+            $this->_logger->error($errorMsg);
         }
     }
 
