@@ -2,6 +2,7 @@
 
 namespace SMG\SubscriptionApi\Model;
 
+use DateTime;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DB\Transaction;
 use Magento\Framework\Exception\LocalizedException;
@@ -397,8 +398,9 @@ class SubscriptionOrder extends AbstractModel
     public function isCurrentlyShippable()
     {
         if ($this->getSubscriptionType() !== 'annual') {
-            $today = new \DateTime();
-            $shipStart = \DateTime::createFromFormat('Y-m-d H:i:s', $this->getShipStartDate());
+            $today = new DateTime();
+            $today->setTime(0, 0, 0);
+            $shipStart = DateTime::createFromFormat('Y-m-d H:i:s', $this->getShipStartDate());
             return $today >= $shipStart;
         }
         return true;

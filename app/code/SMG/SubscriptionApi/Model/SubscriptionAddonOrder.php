@@ -2,6 +2,7 @@
 
 namespace SMG\SubscriptionApi\Model;
 
+use DateTime;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DB\Transaction;
 use Magento\Framework\Exception\LocalizedException;
@@ -417,8 +418,9 @@ class SubscriptionAddonOrder extends AbstractModel
     {
         // Seasonal subscription, so base ship date on first seasonal order.
         if ($this->getSubscriptionType() !== 'annual') {
-            $shipStart = \DateTime::createFromFormat('Y-m-d H:i:s', $this->getData('ship_start_date'));
-            $today = new \DateTime();
+            $shipStart = DateTime::createFromFormat('Y-m-d H:i:s', $this->getData('ship_start_date'));
+            $today = new DateTime();
+            $today->setTime(0, 0, 0);
 
             return $today >= $shipStart;
         }

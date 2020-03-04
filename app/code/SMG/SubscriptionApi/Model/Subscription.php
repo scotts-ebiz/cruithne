@@ -2,6 +2,7 @@
 
 namespace SMG\SubscriptionApi\Model;
 
+use DateTime;
 use Exception;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ProductFactory;
@@ -528,8 +529,10 @@ class Subscription extends AbstractModel
         if ($this->getSubscriptionType() !== 'annual') {
 
             // Test of seasonal is not shippable
-            $today = new \DateTime();
-            $shipStart = \DateTime::createFromFormat('Y-m-d H:i:s', $this->getFirstSubscriptionOrder()->getShipStartDate());
+            $today = new DateTime();
+            $today->setTime(0, 0, 0);
+            $shipStart = DateTime::createFromFormat('Y-m-d H:i:s', $this->getFirstSubscriptionOrder()->getShipStartDate());
+
             return $today >= $shipStart;
         }
         return true;
