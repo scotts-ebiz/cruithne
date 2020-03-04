@@ -1,31 +1,50 @@
 <!-- ko if: isDisplayed() -->
-	<div class="totals-wrapper">
-		<div
-		    class="sp-p2 sp-font-bold sp-mb-2"
-		    data-bind="text: subscriptionData().subscription_type === 'annual' ? 'Total Today:' : 'First Shipment'"
-		>
-		</div>
-		<table class="data table table-totals sp-table-totals">
-		    <caption class="table-caption" data-bind="i18n: 'Order Summary'"></caption>
-		    <tbody>
-		    <!-- ko foreach: elems() -->
-		        <!-- ko template: getTemplate() --><!-- /ko -->
-		    <!-- /ko -->
-		    </tbody>
-		</table>
-	</div>
-
-	<!-- ko if: !isTaxDisplayedInGrandTotal() && subscriptionData() && subscriptionData().subscription_type === 'annual'-->
-	<div class="sp-annual-total sp-font-bold sp-flex sp-justify-between sp-p2">
-        <span>Total</span>
-        <span class="price" data-bind="text: getGrandTotal()"></span>
-	</div>
-	<!-- /ko -->
-
-	<!-- ko if: subscriptionData() && subscriptionData().subscription_type === 'seasonal' -->
-    <div class="sp-seasonal-total sp-font-bold sp-flex sp-justify-between sp-p2">
-        <span>Total Today:</span>
-        <span data-bind="text: subscriptionData().is_shippable ? getGrandTotal() : '$0'"></span>
+<div class="totals-wrapper">
+    <!-- ko if: subscriptionData() && subscriptionData().is_shippable === true && subscriptionData()
+    .subscription_type === 'seasonal' -->
+    <div class="sp-p2 sp-font-bold sp-mb-2 billing-blurb"
+         data-bind="text: 'First Shipment:'"
+    >
     </div>
-	<!-- /ko -->
+    <!-- /ko -->
+
+    <!-- ko if: subscriptionData() && subscriptionData().is_shippable === false && subscriptionData()
+   .subscription_type === 'seasonal' -->
+    <div class="sp-p2 sp-font-bold sp-mb-2 billing-blurb">
+        Your first bill (charged on
+        <span data-bind="text: subscriptionData().get_ship_start_date"></span>):
+    </div>
+    <!-- /ko -->
+
+    <!-- ko if: subscriptionData() && subscriptionData().subscription_type === 'annual' -->
+    <div
+            class="sp-p2 sp-font-bold sp-mb-2 billing-blurb"
+            data-bind="text: 'Total Today:'"
+    >
+    </div>
+    <!-- /ko -->
+
+    <table class="data table table-totals sp-table-totals">
+        <caption class="table-caption" data-bind="i18n: 'Order Summary'"></caption>
+        <tbody>
+        <!-- ko foreach: elems() -->
+        <!-- ko template: getTemplate() --><!-- /ko -->
+        <!-- /ko -->
+        </tbody>
+    </table>
+</div>
+
+<!-- ko if: !isTaxDisplayedInGrandTotal() && subscriptionData() && subscriptionData().subscription_type === 'annual'-->
+<div class="sp-annual-total sp-font-bold sp-flex sp-justify-between sp-p2">
+    <span>Total</span>
+    <span class="price" data-bind="text: getGrandTotal()"></span>
+</div>
+<!-- /ko -->
+
+<!-- ko if: subscriptionData() && subscriptionData().subscription_type === 'seasonal' -->
+<div class="sp-seasonal-total sp-font-bold sp-flex sp-justify-between sp-p2">
+    <span>Total Today:</span>
+    <span data-bind="text: subscriptionData().is_shippable ? getGrandTotal() : '$0'"></span>
+</div>
+<!-- /ko -->
 <!-- /ko -->
