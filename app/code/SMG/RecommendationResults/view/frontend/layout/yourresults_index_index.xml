@@ -9,10 +9,11 @@
 
     <body>
         <referenceContainer name="content">
-            <block
-                class="Magento\Framework\View\Element\Template"
+          <block
+                class="SMG\RecommendationResults\Block\Results"
                 template="SMG_RecommendationResults::results.phtml"
             />
         </referenceContainer>
     </body>
 </page>
+
