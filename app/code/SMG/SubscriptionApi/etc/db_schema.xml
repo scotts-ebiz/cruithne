@@ -49,6 +49,12 @@
                     referenceTable="subscription_status"
                     referenceColumn="status"
                     onDelete="NO ACTION" />
+        <index referenceId="SUBSCRIPTION_QUIZ_ID" indexType="btree">
+            <column name="quiz_id"/>
+        </index>
+        <index referenceId="SUBSCRIPTION_CUSTOMER_ID" indexType="btree">
+            <column name="customer_id"/>
+        </index>
     </table>
     <table name="subscription_type" engine="innodb" resource="default" comment="Subscription Type">
         <column name="type" xsi:type="varchar" nullable="false" length="32" comment="Type Id of the Subscription Type"/>
@@ -104,6 +110,12 @@
                     referenceTable="sales_order"
                     referenceColumn="entity_id"
                     onDelete="NO ACTION" />
+        <index referenceId="SUBSCRIPTION_ORDER_SUBSCRIPTION_ENTITY_ID" indexType="btree">
+            <column name="subscription_entity_id"/>
+        </index>
+        <index referenceId="SUBSCRIPTION_ORDER_SUBSCRIPTION_ID" indexType="btree">
+            <column name="subscription_id"/>
+        </index>
     </table>
     <table name="subscription_order_item" engine="innodb" resource="default" comment="Subscription Order Item">
         <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
@@ -123,6 +135,9 @@
                     referenceTable="subscription_order"
                     referenceColumn="entity_id"
                     onDelete="NO ACTION" />
+        <index referenceId="SUBSCRIPTION_ORDER_ITEM_SUBSCRIPTION_ORDER_ENTITY_ID" indexType="btree">
+            <column name="subscription_order_entity_id"/>
+        </index>
     </table>
     <table name="subscription_order_status" engine="innodb" resource="default" comment="Subscription Order Status">
         <column name="status" xsi:type="varchar" nullable="false" length="32" comment="Subscription Order Status ID"/>
@@ -170,6 +185,12 @@
                     referenceTable="sales_order"
                     referenceColumn="entity_id"
                     onDelete="NO ACTION" />
+        <index referenceId="SUBSCRIPTION_ADDON_ORDER_SUBSCRIPTION_ENTITY_ID" indexType="btree">
+            <column name="subscription_entity_id"/>
+        </index>
+        <index referenceId="SUBSCRIPTION_ADDON_ORDER_SUBSCRIPTION_ID" indexType="btree">
+            <column name="subscription_id"/>
+        </index>
     </table>
     <table name="subscription_addon_order_item" engine="innodb" resource="default" comment="Subscription Addon Available at time of recommendation">
         <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
@@ -190,5 +211,8 @@
                     referenceTable="subscription_addon_order"
                     referenceColumn="entity_id"
                     onDelete="NO ACTION" />
+        <index referenceId="SUBSCRIPTION_ADDON_ORDER_ITEM_SUBSCRIPTION_ORDER_ENTITY_ID" indexType="btree">
+            <column name="subscription_addon_order_entity_id"/>
+        </index>
     </table>
 </schema>

@@ -17,5 +17,11 @@
         <column xsi:type="boolean" name="subscription_addon" nullable="true" comment="Is Addon Subscription?" />
         <column xsi:type="timestamp" name="ship_start_date" nullable="true" comment="Ship Start Date" />
         <column xsi:type="timestamp" name="ship_end_date" nullable="true" comment="Ship End Date" />
+        <index referenceId="SALES_ORDER_MASTER_SUBSCRIPTION_ID" indexType="btree">
+            <column name="master_subscription_id"/>
+        </index>
+        <index referenceId="SALES_ORDER_SUBSCRIPTION_ID" indexType="btree">
+            <column name="subscription_id"/>
+        </index>
     </table>
 </schema>
