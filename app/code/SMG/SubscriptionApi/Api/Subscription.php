@@ -3,6 +3,7 @@
 namespace SMG\SubscriptionApi\Api;
 
 use Exception;
+use Gigya\GigyaIM\Helper\GigyaMageHelper;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Checkout\Model\Cart;
@@ -20,7 +21,9 @@ use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Framework\Exception\SecurityViolationException;
 use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Framework\Webapi\Rest\Response;
+use Magento\Sales\Model\Order\Status\HistoryFactory;
 use Magento\Sales\Model\ResourceModel\Order\Invoice\CollectionFactory as InvoiceCollectionFactory;
+use Magento\Sales\Model\ResourceModel\Order\Status\History as HistoryResource;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use Recurly_Client;
@@ -38,9 +41,6 @@ use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as Su
 use SMG\SubscriptionApi\Model\Subscription as SubscriptionModel;
 use SMG\SubscriptionApi\Model\SubscriptionAddonOrder;
 use SMG\SubscriptionApi\Model\SubscriptionOrder;
-use Gigya\GigyaIM\Helper\GigyaMageHelper;
-use Magento\Sales\Model\ResourceModel\Order\Status\History as HistoryResource;
-use Magento\Sales\Model\Order\Status\HistoryFactory;
 
 /**
  * Class Subscription
@@ -147,12 +147,17 @@ class Subscription implements SubscriptionInterface
     /**
      * @var HistoryFactory
      */
-    protected  $_historyFactory;
+    protected $_historyFactory;
 
     /**
      * @var HistoryResource
      */
     protected $_historyResource;
+
+    /**
+     * @var string
+     */
+    protected $_loggerPrefix;
 
     /**
      * Subscription constructor.
@@ -245,6 +250,10 @@ class Subscription implements SubscriptionInterface
         $this->_historyFactory = $historyFactory;
         $this->_historyResource = $historyResource;
 
+        $host = gethostname();
+        $ip = gethostbyname($host);
+        $this->_loggerPrefix = 'SERVER: ' . $ip . ' SESSION: ' . session_id() . ' - ';
+
         Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
     }
@@ -277,7 +286,7 @@ class Subscription implements SubscriptionInterface
 
             if ($subscription->getSubscriptionStatus() != 'pending') {
                 // Subscription is already active or has been canceled, so return.
-                $this->_logger->error("Subscription with quiz ID '{$subscription->getQuizId()}' cannot be added to cart since it is active or canceled.");
+                $this->_logger->error($this->_loggerPrefix . "Subscription with quiz ID '{$subscription->getQuizId()}' cannot be added to cart since it is active or canceled.");
 
                 $redirect = '/quiz';
 
@@ -301,7 +310,7 @@ class Subscription implements SubscriptionInterface
 
             return json_encode(['success' => true]);
         } catch (Exception $e) {
-            $this->_logger->error($e->getMessage());
+            $this->_logger->error($this->_loggerPrefix . $e->getMessage());
             $response = ['success' => false, 'message' => $e->getMessage()];
 
             return json_encode($response);
@@ -330,7 +339,7 @@ class Subscription implements SubscriptionInterface
         $websiteId = $store->getWebsiteId();
 
         // Get customer
-        $this->_logger->debug('Loading the customer...');
+        $this->_logger->info($this->_loggerPrefix . 'Loading the customer...');
         $customer = $this->_customerFactory->create();
         $customer->setWebsiteId($websiteId);
         $customer->loadByEmail($this->_checkoutSession->getQuote()->getCustomerEmail());
@@ -339,7 +348,7 @@ class Subscription implements SubscriptionInterface
         // Make sure customer was found.
         if (! $customer->getData('entity_id')) {
             $error = 'Customer ' . $customerId . ' not found during checkout.';
-            $this->_logger->error($error);
+            $this->_logger->error($this->_loggerPrefix . $error);
 
             return $this->_responseHelper->error('Customer account not found.', [], 404);
         }
@@ -375,19 +384,18 @@ class Subscription implements SubscriptionInterface
 
             $this->_gigyaHelper->updateGigyaAccount($customer->getData('gigya_uid'), $gigyaData);
         } catch (Exception $e) {
-            $this->_logger->error($e->getMessage());
+            $this->_logger->error($this->_loggerPrefix . $e->getMessage());
         }
 
-
         // Check the zip code to make sure that it is what they entered during the quiz
-        $this->_logger->debug('Verifying shipping zip code matches quiz zip code...');
+        $this->_logger->info($this->_loggerPrefix . 'Verifying shipping zip code matches quiz zip code...');
         if (
             is_null($this->_coreSession->getZipCode())
             || empty($customerShippingAddress['postcode'])
             || strpos($customerShippingAddress['postcode'], $this->_coreSession->getZipCode()) !== 0 // if the provided quiz zip does not match the first five of the avatax corrected zip then error
         ) {
             $error = 'Your shipping zip code and quiz zip code do not match.';
-            $this->_logger->error($error);
+            $this->_logger->error($this->_loggerPrefix . $error);
 
             return $this->_responseHelper->error(
                 $error,
@@ -396,33 +404,33 @@ class Subscription implements SubscriptionInterface
         }
 
         // Get the subscription
-        $this->_logger->debug('Getting the subscription object...');
+        $this->_logger->info($this->_loggerPrefix . 'Getting the subscription object...');
         /** @var SubscriptionModel $subscription */
         $subscription = $this->_subscriptionCollectionFactory->create()->getItemByColumnValue('quiz_id', $quiz_id);
 
         if (! $subscription) {
             $this->_response->setHttpResponseCode(404);
             $error = 'Subscription not found during checkout.';
-            $this->_logger->error($error);
+            $this->_logger->error($this->_loggerPrefix . $error);
 
             return $this->_responseHelper->error($error, ['refresh' => true]);
         }
 
         // Add customer to subscription.
-        $this->_logger->debug('Adding the customer to the subscription...');
+        $this->_logger->info($this->_loggerPrefix . 'Adding the customer to the subscription...');
         try {
             $subscription->setData('customer_id', $customer->getData('entity_id'));
             $subscription->setData('gigya_id', $customer->getData('gigya_uid'));
             $subscription->save();
         } catch (Exception $e) {
             $error = 'Your account could not be saved. Please try again.';
-            $this->_logger->error($error . " : " . $e->getMessage());
+            $this->_logger->error($this->_loggerPrefix . $error . " : " . $e->getMessage());
 
             return $this->_responseHelper->error($error, ['refresh' => true]);
         }
 
         // Create the subscriptions in Recurly.
-        $this->_logger->debug('Creating the Recurly Purchase...');
+        $this->_logger->info($this->_loggerPrefix . 'Creating the Recurly Purchase...');
         try {
             $recurlyPurchase = $this->_recurlySubscription->createRecurlyPurchase(
                 $token,
@@ -430,25 +438,27 @@ class Subscription implements SubscriptionInterface
                 $customer
             );
         } catch (LocalizedException $e) {
-            $this->_logger->error($e->getMessage());
+            $this->_logger->error($this->_loggerPrefix . $e->getMessage());
 
             return $this->_responseHelper->error($e->getMessage(), ['refresh' => true]);
         }
 
         // Reload the subscription
+        $this->_logger->info($this->_loggerPrefix . 'Reloading the subscription...');
         $subscription = $subscription->load($subscription->getData('entity_id'));
 
         // Clear the cart.
+        $this->_logger->info($this->_loggerPrefix . 'Clearing the cart...');
         $this->clearCart();
 
         // Process the seasonal orders.
-        $this->_logger->debug('Processing the seasonal orders...');
+        $this->_logger->info($this->_loggerPrefix . 'Processing the seasonal orders...');
         foreach ($subscription->getSubscriptionOrders() as $subscriptionOrder) {
             try {
                 $this->clearCustomerAddresses($customer);
                 $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionOrder);
             } catch (SubscriptionException $e) {
-                $this->_logger->error($e->getMessage());
+                $this->_logger->error($this->_loggerPrefix . $e->getMessage());
 
                 // We failed to create orders, lets remove any created orders.
                 $this->clearCustomerAddresses($customer);
@@ -461,7 +471,7 @@ class Subscription implements SubscriptionInterface
             } catch (Exception $e) {
                 // Catch any other not typical exceptions and return a generic
                 //error response to the customer.
-                $this->_logger->error($e->getMessage());
+                $this->_logger->error($this->_loggerPrefix . $e->getMessage());
 
                 // We failed to create orders, lets remove any created orders.
                 $this->cancelFailedOrders($subscription);
@@ -474,7 +484,7 @@ class Subscription implements SubscriptionInterface
         }
 
         // Process the add-on orders.
-        $this->_logger->debug('Processing the add-on orders...');
+        $this->_logger->info($this->_loggerPrefix . 'Processing the add-on orders...');
         foreach ($subscription->getSubscriptionAddonOrders() as $subscriptionAddonOrder) {
             try {
                 $this->clearCustomerAddresses($customer);
@@ -485,7 +495,7 @@ class Subscription implements SubscriptionInterface
 
                 $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionAddonOrder);
             } catch (SubscriptionException $e) {
-                $this->_logger->error($e->getMessage());
+                $this->_logger->error($this->_loggerPrefix . $e->getMessage());
 
                 // We failed to create orders, lets remove any created orders.
                 $this->clearCustomerAddresses($customer);
@@ -498,7 +508,7 @@ class Subscription implements SubscriptionInterface
             } catch (Exception $e) {
                 // Catch any other not typical exceptions and return a generic
                 //error response to the customer.
-                $this->_logger->error($e->getMessage());
+                $this->_logger->error($this->_loggerPrefix . $e->getMessage());
 
                 // We failed to create orders, lets remove any created orders.
                 $this->cancelFailedOrders($subscription);
@@ -511,14 +521,14 @@ class Subscription implements SubscriptionInterface
         }
 
         // We created the orders, lets invoice the subscription.
-        $this->_logger->debug('Invoicing the Recurly purchase...');
+        $this->_logger->info($this->_loggerPrefix . 'Invoicing the Recurly purchase...');
         try {
             $this->_recurlySubscription->invoiceRecurlyPurchase(
                 $recurlyPurchase,
                 $subscription
             );
         } catch (LocalizedException $e) {
-            $this->_logger->error($e->getMessage());
+            $this->_logger->error($this->_loggerPrefix . $e->getMessage());
 
             // We failed to invoice the Recurly subscription, so lets remove any
             // created orders.
@@ -532,12 +542,16 @@ class Subscription implements SubscriptionInterface
         }
 
         // Reload the subscription
+        $this->_logger->info($this->_loggerPrefix . 'Reloading the subscription via getData...');
         $subscription = $subscription->load($subscription->getData('entity_id'));
 
-        $this->_logger->debug('Setting subscription to active status...');
+        $this->_logger->info($this->_loggerPrefix . 'Setting subscription to active status...');
         $subscription->setData('subscription_status', 'active');
+
+        $this->_logger->info($this->_loggerPrefix . 'Saving subscription status...');
         $subscription->save();
 
+        $this->_logger->info($this->_loggerPrefix . 'Done...');
         return $this->_responseHelper->success(
             'Subscription created.',
             [
@@ -583,7 +597,7 @@ class Subscription implements SubscriptionInterface
 
             $customer->save();
         } catch (Exception $e) {
-            $this->_logger->error('Could not clear addresses - ' . $e->getMessage());
+            $this->_logger->error($this->_loggerPrefix . 'Could not clear addresses - ' . $e->getMessage());
             return;
         }
     }
@@ -596,7 +610,7 @@ class Subscription implements SubscriptionInterface
      */
     protected function cancelFailedOrders(SubscriptionModel $subscription)
     {
-        $this->_logger->debug('Failed to create subscription, so let\'s cancel any orders.');
+        $this->_logger->info($this->_loggerPrefix . 'Failed to create subscription, so let\'s cancel any orders.');
 
         // Get the seasonal orders.
         try {
@@ -634,7 +648,7 @@ class Subscription implements SubscriptionInterface
                 ])->save();
             }
         } catch (\Exception $e) {
-            $this->_logger->error('Failed to close orders on failed order creation with message: ' . $e->getMessage());
+            $this->_logger->error($this->_loggerPrefix . 'Failed to close orders on failed order creation with message: ' . $e->getMessage());
         }
     }
 
@@ -648,8 +662,7 @@ class Subscription implements SubscriptionInterface
      */
     private function addOrderHistory($orderId, $message, $status)
     {
-        try
-        {
+        try {
             // get the date for today with time
             $today = date('Y-m-d H:i:s');
 
@@ -668,11 +681,9 @@ class Subscription implements SubscriptionInterface
 
             // save the history for displaying on the order
             $this->_historyResource->save($orderHistory);
-        }
-        catch (\Exception $e)
-        {
+        } catch (\Exception $e) {
             $errorMsg = "Could not add to the order history for order - " . $orderId . " - " . $e->getMessage();
-            $this->_logger->error($errorMsg);
+            $this->_logger->error($this->_loggerPrefix . $errorMsg);
         }
     }
 
