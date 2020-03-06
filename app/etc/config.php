@@ -609,7 +609,6 @@ return [
                     'enable_js_bundling' => '0',
                     'minify_files' => '0'
                 ],
-                // CSS Managed by gulp, if anything should change in regards to compiling it should be done from ulp not here.
                 'css' => [
                     'merge_css_files' => '0',
                     'minify_files' => '0'
@@ -619,7 +618,7 @@ return [
     ],
     'themes' => [
         'frontend/Magento/blank' => [
-            'parent_id' => NULL,
+            'parent_id' => null,
             'theme_path' => 'Magento/blank',
             'theme_title' => 'Magento Blank',
             'is_featured' => '0',
@@ -637,7 +636,7 @@ return [
             'code' => 'Magento/luma'
         ],
         'adminhtml/Magento/backend' => [
-            'parent_id' => NULL,
+            'parent_id' => null,
             'theme_path' => 'Magento/backend',
             'theme_title' => 'Magento 2 backend',
             'is_featured' => '0',
@@ -646,7 +645,7 @@ return [
             'code' => 'Magento/backend'
         ],
         'frontend/Snowdog/blank' => [
-            'parent_id' => NULL,
+            'parent_id' => null,
             'theme_path' => 'Snowdog/blank',
             'theme_title' => 'Snowdog Blank',
             'is_featured' => '0',
@@ -655,7 +654,7 @@ return [
             'code' => 'Snowdog/blank'
         ],
         'frontend/Base/theme-blank-sass' => [
-            'parent_id' => NULL,
+            'parent_id' => null,
             'theme_path' => 'Base/theme-blank-sass',
             'theme_title' => 'Base Default (SASS)',
             'is_featured' => '0',

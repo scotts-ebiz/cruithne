@@ -4,6 +4,13 @@
     data-bind="text: subscriptionData().subscription_type === 'annual' ? 'Total Today:' : 'First Shipment'"
 >
 </div>
+testtest!
+<div
+        class="sp-p2 sp-font-bold sp-mb-2"
+        data-bind="text: subscriptionData().subscription_type === 'seasonal' ? subscriptionData().ship_start_date : 'Not Seasonal'"
+>
+
+</div>
 <table class="data table table-totals sp-table-totals">
     <caption class="table-caption" data-bind="i18n: 'Order Summary'"></caption>
     <tbody>
