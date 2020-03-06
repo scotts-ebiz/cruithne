@@ -51,11 +51,14 @@ class SubscriptionHelper extends AbstractHelper
     {
         $details = $this->_session->getData('subscription_details');
         $quizID = $this->_session->getData('quiz_id');
+
         /** @var Collection $subscriptionCollection */
         $subscriptionCollection = $this->_subscriptionCollectionFactory->create();
 
         /** @var Subscription $subscription */
-        $subscription = $subscriptionCollection->getItemByColumnValue('quiz_id', $quizID);
+        $subscription = $subscriptionCollection
+            ->addFieldToFilter('quiz_id', $quizID)
+            ->getFirstItem();
 
         if (! $subscription->getId() || !isset($details['subscription_plan'], $details['addons'])) {
             $this->_logger->error('Could not add subscription to the cart. Missing subscription or session details.');
