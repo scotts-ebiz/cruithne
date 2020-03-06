@@ -4,5 +4,6 @@
         <css src="css/styles.css" />
         <css src="css/print.css" media="print" />
         <link rel="stylesheet" src_type="url" src="https://use.fontawesome.com/releases/v5.7.1/css/all.css" />
+        <link src="https://fonts.googleapis.com/css?family=Lato:300,300i,400,400i,700,700i,900,900i|Open+Sans:300,300i,400,400i,600,600i,700,700i,800,800i|Roboto:400,700|Rokkitt:700" src_type="url" rel="stylesheet" />
     </head>
 </page>
