@@ -18,6 +18,8 @@ use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
+use Gigya\GigyaIM\Helper\CmsStarterKit\sdk\GSException;
+use Gigya\GigyaIM\Helper\CmsStarterKit\sdk\GSApiException;
 use Magento\Framework\Exception\SecurityViolationException;
 use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Framework\Webapi\Rest\Response;
@@ -328,14 +330,19 @@ class Subscription implements SubscriptionInterface
      * @param bool $billing_same_as_shipping
      * @return string
      *
-     * @throws LocalizedException
-     * @throws NoSuchEntityException
-     *
      * @api
      */
     public function createSubscription($key, $token, $quiz_id, $billing_address, $billing_same_as_shipping)
     {
         try {
+            // We submitted an order in the last minute, so do not submit
+            // another.
+            if (time() - $this->_coreSession->getOrderProcessing() <= 60) {
+                return;
+            }
+
+            $this->_coreSession->setOrderProcessing(time());
+
             // Get store and website information
             $store = $this->_storeManager->getStore();
             $websiteId = $store->getWebsiteId();
@@ -351,6 +358,7 @@ class Subscription implements SubscriptionInterface
             if (! $customer->getData('entity_id')) {
                 $error = 'Customer ' . $customerId . ' not found during checkout.';
                 $this->_logger->error($this->_loggerPrefix . $error);
+                $this->_coreSession->setOrderProcessing(0);
 
                 return $this->_responseHelper->error('Customer account not found.', [], 404);
             }
@@ -369,6 +377,7 @@ class Subscription implements SubscriptionInterface
             $this->_coreSession->setCheckoutBilling($customerBillingAddress);
         } catch (Exception $e) {
             $this->_logger->error($this->_loggerPrefix . $e->getMessage());
+            $this->_coreSession->getOrderProcessing(false);
 
             return $this->_responseHelper->error('There was an error preparing your subscription, please try again.');
         }
@@ -389,9 +398,16 @@ class Subscription implements SubscriptionInterface
                 ],
             ];
 
-            $this->_gigyaHelper->updateGigyaAccount($customer->getData('gigya_uid'), $gigyaData);
+            try {
+                $this->_gigyaHelper->updateGigyaAccount($customer->getData('gigya_uid'), $gigyaData);
+            } catch (GSApiException $e) {
+                $this->_logger->error($this->_loggerPrefix . $e->getMessage());
+            } catch (GSException $e) {
+                $this->_logger->error($this->_loggerPrefix . $e->getMessage());
+            }
         } catch (Exception $e) {
             $this->_logger->error($this->_loggerPrefix . $e->getMessage());
+            $this->_coreSession->setOrderProcessing(0);
 
             return $this->_responseHelper->error('There was an error updating your account, please try again.');
         }
@@ -406,6 +422,7 @@ class Subscription implements SubscriptionInterface
             ) {
                 $error = 'Your shipping zip code and quiz zip code do not match.';
                 $this->_logger->error($this->_loggerPrefix . $error);
+                $this->_coreSession->setOrderProcessing(0);
 
                 return $this->_responseHelper->error(
                     $error,
@@ -425,11 +442,13 @@ class Subscription implements SubscriptionInterface
                 $this->_response->setHttpResponseCode(404);
                 $error = 'Subscription not found during checkout.';
                 $this->_logger->error($this->_loggerPrefix . $error);
+                $this->_coreSession->setOrderProcessing(0);
 
                 return $this->_responseHelper->error($error, ['refresh' => true]);
             }
         } catch (Exception $e) {
             $this->_logger->error($this->_loggerPrefix . $e->getMessage());
+            $this->_coreSession->setOrderProcessing(0);
 
             return $this->_responseHelper->error('There was an error finding your subscription information, please try again.', ['refresh' => true]);
         }
@@ -443,6 +462,7 @@ class Subscription implements SubscriptionInterface
         } catch (Exception $e) {
             $error = 'Your account could not be saved. Please try again.';
             $this->_logger->error($this->_loggerPrefix . $error . " : " . $e->getMessage());
+            $this->_coreSession->setOrderProcessing(0);
 
             return $this->_responseHelper->error($error, ['refresh' => true]);
         }
@@ -458,6 +478,7 @@ class Subscription implements SubscriptionInterface
                 );
             } catch (LocalizedException $e) {
                 $this->_logger->error($this->_loggerPrefix . $e->getMessage());
+                $this->_coreSession->setOrderProcessing(0);
 
                 return $this->_responseHelper->error($e->getMessage(), ['refresh' => true]);
             }
@@ -484,6 +505,7 @@ class Subscription implements SubscriptionInterface
                     // We failed to create orders, lets remove any created orders.
                     $this->clearCustomerAddresses($customer);
                     $this->cancelFailedOrders($subscription);
+                    $this->_coreSession->setOrderProcessing(0);
 
                     return $this->_responseHelper->error(
                         $e->getMessage(),
@@ -496,6 +518,7 @@ class Subscription implements SubscriptionInterface
 
                     // We failed to create orders, lets remove any created orders.
                     $this->cancelFailedOrders($subscription);
+                    $this->_coreSession->setOrderProcessing(0);
 
                     return $this->_responseHelper->error(
                         'We could not process your order at this time. Please try again.',
@@ -523,6 +546,7 @@ class Subscription implements SubscriptionInterface
                     // We failed to create orders, lets remove any created orders.
                     $this->clearCustomerAddresses($customer);
                     $this->cancelFailedOrders($subscription);
+                    $this->_coreSession->setOrderProcessing(0);
 
                     return $this->_responseHelper->error(
                         $e->getMessage(),
@@ -535,6 +559,7 @@ class Subscription implements SubscriptionInterface
 
                     // We failed to create orders, lets remove any created orders.
                     $this->cancelFailedOrders($subscription);
+                    $this->_coreSession->setOrderProcessing(0);
 
                     return $this->_responseHelper->error(
                         'We could not process your order at this time. Please try again.',
@@ -557,6 +582,7 @@ class Subscription implements SubscriptionInterface
                 // created orders.
                 $this->clearCustomerAddresses($customer);
                 $this->cancelFailedOrders($subscription);
+                $this->_coreSession->setOrderProcessing(0);
 
                 return $this->_responseHelper->error(
                     $e->getMessage(),
@@ -575,6 +601,8 @@ class Subscription implements SubscriptionInterface
             $subscription->save();
 
             $this->_logger->info($this->_loggerPrefix . 'Done...');
+            $this->_coreSession->setOrderProcessing(0);
+
             return $this->_responseHelper->success(
                 'Subscription created.',
                 [
@@ -587,6 +615,8 @@ class Subscription implements SubscriptionInterface
             if (isset($subscription)) {
                 $this->cancelFailedOrders($subscription);
             }
+
+            $this->_coreSession->setOrderProcessing(0);
 
             return $this->_responseHelper->error(
                 'There was an error processing your subscription, please try again.',
