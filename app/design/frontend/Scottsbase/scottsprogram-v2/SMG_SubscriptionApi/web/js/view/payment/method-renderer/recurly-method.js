@@ -294,7 +294,7 @@ define(
                 this.zipModalOptions = {
                     type: 'popup',
                     innerScroll: true,
-                    title: 'Your Zip Code Has Changed',
+                    title: 'Your ZIP Code Has Changed',
                     closeText: 'Cancel',
                     focus: 'none',
                     buttons: [{
