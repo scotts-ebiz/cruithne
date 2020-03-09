@@ -307,7 +307,7 @@ define(
                 this.zipModalOptions = {
                     type: 'popup',
                     innerScroll: true,
-                    title: 'Your Zip Code Has Changed',
+                    title: 'Your ZIP Code Has Changed',
                     closeText: 'Cancel',
                     focus: 'none',
                     buttons: [{
@@ -364,7 +364,43 @@ define(
             initializeRecurly() {
                 const self = this;
 
-                recurly.configure(window.recurlyApi);
+                recurly.configure({
+                    publicKey: window.recurlyApi,
+                    fields: {
+                        card: {
+                            // Field style properties
+                            style: {
+                                fontSize: '12px',
+                            }
+                        }
+                    }
+                });
+
+                $(window).on('resize init', function (event) {
+                    if ($(this).width() <= 767) {
+                        recurly.configure({
+                            fields: {
+                                card: {
+                                    // Field style properties
+                                    style: {
+                                        fontSize: '12px',
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        recurly.configure({
+                            fields: {
+                                card: {
+                                    // Field style properties
+                                    style: {
+                                        fontSize: '14px',
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }).triggerHandler('init');
 
                 /**
                  * Change listener on the recurly hosted card field.
