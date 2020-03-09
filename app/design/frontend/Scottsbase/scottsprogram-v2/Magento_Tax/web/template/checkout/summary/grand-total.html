@@ -22,32 +22,12 @@
     </td>
 </tr>
 <!-- /ko -->
-<!-- ko if: !isTaxDisplayedInGrandTotal && isDisplayed() -->
-<tr class="grand totals">
-    <th class="mark" scope="row">
-        <span data-bind="i18n: title"></span>
-    </th>
-    <td data-bind="attr: {'data-th': title}" class="amount">
-        <span class="price" data-bind="text: getValue()"></span>
-    </td>
-</tr>
-<!-- /ko -->
+
 <!-- ko if: isBaseGrandTotalDisplayNeeded() && isDisplayed() -->
 <tr class="totals charge">
     <th class="mark" data-bind="i18n: basicCurrencyMessage" scope="row"></th>
     <td class="amount">
         <span class="price" data-bind="text: getBaseValue(), attr: {'data-th': basicCurrencyMessage}"></span>
-    </td>
-</tr>
-<!-- /ko -->
-
-<!-- ko if: $parent.subscriptionData() && $parent.subscriptionData().subscription_type === 'seasonal' -->
-<tr>
-    <td colspan="2">
-        <div class="sp-seasonal-total sp-font-bold sp-flex sp-justify-between sp-pt-4">
-            <span>Total Today:</span>
-            <span data-bind="text: $parent.subscriptionData().is_shippable ? getValue() : '$0'"></span>
-        </div>
     </td>
 </tr>
 <!-- /ko -->

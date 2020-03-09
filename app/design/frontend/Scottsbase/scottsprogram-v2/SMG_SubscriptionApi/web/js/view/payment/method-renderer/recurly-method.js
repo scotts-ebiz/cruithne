@@ -291,6 +291,19 @@ define(
                     }
                 }, 100);
 
+                // Setup submitting modal
+                this.submittingModalOptions = {
+                    type: 'popup',
+                    innerScroll: true,
+                    title: 'Thanks! Your order is being submitted.',
+                    focus: 'none',
+                    clickableOverlay: 'false',
+                    buttons: [],
+                    opened() {
+                        $('#submitting-modal').parents('.modal-inner-wrap').find('.action-close').remove();
+                    }
+                };
+
                 // Setup zip modal
                 this.zipModalOptions = {
                     type: 'popup',
@@ -473,6 +486,8 @@ define(
                         window.location.href = '/success';
                     },
                     error(response) {
+                        $('#submitting-modal').modal('closeModal');
+
                         // Ensure the response is properly converted to a JS object.
                         try {
                             response = JSON.parse(response.responseJSON);
@@ -541,8 +556,11 @@ define(
 
                 self.submittingOrder = true;
                 self.orderProcessing(true);
+
                 var recurlyForm = $('.recurly-form');
                 var rsco = $('input[name="rsco_accept"]');
+
+                self.orderProcessing(true);
 
                 if (!rsco[0].checked) {
                     rsco[0].setCustomValidity('This field is required.');
@@ -559,10 +577,15 @@ define(
                     return false;
                 }
 
+                Modal(self.submittingModalOptions, $('#submitting-modal'));
+                $('#submitting-modal').modal('openModal');
+
                 recurly.token(recurlyForm, function (err, token) {
                     if (err) {
                         self.orderProcessing(false);
                         self.submittingOrder = false;
+                        $('#submitting-modal').modal('closeModal');
+                      
                         if (err.code === 'validation') {
                             if (err.fields.includes('number')) {
                                 $('.recurly-form-error').text('Please enter a valid card number.');
