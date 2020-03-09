@@ -20,6 +20,7 @@ use Recurly_BillingInfo;
 use Recurly_Client;
 use Recurly_Coupon;
 use Recurly_CustomField;
+use Recurly_Error;
 use Recurly_Invoice;
 use Recurly_InvoiceCollection;
 use Recurly_NotFoundError;
@@ -429,6 +430,41 @@ class RecurlySubscription
                 'has_subscriptions' => false,
                 'refund_amount'     => 0
             ];
+        }
+    }
+
+    /**
+     * Terminate any subscriptions that were created during a failed checkout.
+     *
+     * @param string $gigyaID
+     */
+    public function terminateFailedRecurlySubscriptions($gigyaID)
+    {
+        try {
+            $subscriptions = Recurly_SubscriptionList::getForAccount($gigyaID);
+
+            foreach ($subscriptions as $subscription) {
+                /**
+                 * @var Recurly_Subscription $subscription
+                 */
+
+                // Continue if the subscription is not active or future.
+                if (!in_array($subscription->state, ['active', 'future'])) {
+                    continue;
+                }
+
+                try {
+                    if ($subscription->unit_amount_in_cents > 0 && $subscription->state == 'active') {
+                        $subscription->terminateAndRefund();
+                    } else {
+                        $subscription->terminateWithoutRefund();
+                    }
+                } catch (Recurly_Error $e) {
+                    $this->_logger->error('Failed subscription "' . $subscription->uuid . '" could not be terminated and may need adjusted manually.');
+                }
+            }
+        } catch (Recurly_NotFoundError $e) {
+            $this->_logger->error('Could not find a Recurly account for user: ' . $gigyaID);
         }
     }
 
