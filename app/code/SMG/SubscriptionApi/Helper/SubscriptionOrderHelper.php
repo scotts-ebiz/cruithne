@@ -2,7 +2,6 @@
 
 namespace SMG\SubscriptionApi\Helper;
 
-use Magento\Quote\Model\QuoteRepository;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\AddressFactory;
 use Magento\Customer\Model\Customer;
@@ -328,7 +327,6 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @return bool
      * @throws LocalizedException
      * @throws SubscriptionException
-     * @throws CouldNotSaveException
      * @throws NoSuchEntityException
      */
     protected function processOrder(Customer $customer, $subscriptionOrder)
