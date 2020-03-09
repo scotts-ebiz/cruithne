@@ -3,6 +3,8 @@
 namespace SMG\SubscriptionApi\Api;
 
 use Exception;
+use Gigya\GigyaIM\Helper\CmsStarterKit\sdk\GSApiException;
+use Gigya\GigyaIM\Helper\CmsStarterKit\sdk\GSException;
 use Gigya\GigyaIM\Helper\GigyaMageHelper;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product;
@@ -18,8 +20,6 @@ use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Gigya\GigyaIM\Helper\CmsStarterKit\sdk\GSException;
-use Gigya\GigyaIM\Helper\CmsStarterKit\sdk\GSApiException;
 use Magento\Framework\Exception\SecurityViolationException;
 use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Framework\Webapi\Rest\Response;
@@ -443,6 +443,14 @@ class Subscription implements SubscriptionInterface
                 $error = 'Subscription not found during checkout.';
                 $this->_logger->error($this->_loggerPrefix . $error);
                 $this->_coreSession->setOrderProcessing(0);
+
+                return $this->_responseHelper->error($error, ['refresh' => true]);
+            }
+
+            // Make sure the subscription is pending.
+            if ($subscription->getData('subscription_status') != 'pending') {
+                $error = 'This subscription has already been completed or cancelled.';
+                $this->_logger->error($this->_loggerPrefix . $error);
 
                 return $this->_responseHelper->error($error, ['refresh' => true]);
             }
