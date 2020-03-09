@@ -1,9 +1,9 @@
 // Vendor libs
-@import 'vendor/normalize/lib'; // Normalize.css
-@import 'vendor/magento-ui/lib'; // Magento UI
+@import 'vendor/normalize/lib'; // Normalize.css - Should be the first and only instance needed of normalize
+@import 'vendor/magento-ui/lib'; // Magento UI - Contains variables and mixins needed for import of 'variables' below
 
 // Mixins
-@import "mixins/media-queries";
+@import 'mixins/media-queries';
 
 // Theme variables
 @import 'variables';
@@ -14,7 +14,6 @@
 @import 'source/scottsbase';
 @import 'source/scottsbasecheckout';
 @import 'source/scottsbasegrid';
-
 
 // Reset default styles with magento-reset
 @import 'blocks/reset';
@@ -95,12 +94,3 @@
 @import '../../SMG_HeroVideoBtnWidget/styles/widgets';
 @import '../../SMG_SpecList/styles/widgets';
 @import '../../SMG_IconList/styles/widgets';
-
-
-
-
-
-
-
-
-
