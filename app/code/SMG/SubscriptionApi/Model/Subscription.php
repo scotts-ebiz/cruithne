@@ -231,8 +231,8 @@ class Subscription extends AbstractModel
         if (! isset($this->_subscriptionOrders)) {
             $subscriptionOrders = $this->_subscriptionOrderCollectionFactory->create();
             $subscriptionOrders
-                ->setOrder('ship_start_date', 'asc')
-                ->addFieldToFilter('subscription_entity_id', $this->getEntityId());
+                ->addFieldToFilter('subscription_entity_id', $this->getId())
+                ->setOrder('ship_start_date', 'asc');
             $this->_subscriptionOrders = $subscriptionOrders;
         }
 
@@ -347,12 +347,12 @@ class Subscription extends AbstractModel
     public function getSubscriptionOrderBySeasonSlug(string $seasonSlug)
     {
         // Make sure we have an actual subscription
-        if (empty($this->getEntityId())) {
+        if (empty($this->getId())) {
             return false;
         }
 
         $subscriptionOrders = $this->_subscriptionOrderCollectionFactory->create();
-        $subscriptionOrders->addFieldToFilter('subscription_entity_id', $this->getEntityId());
+        $subscriptionOrders->addFieldToFilter('subscription_entity_id', $this->getId());
         $subscriptionOrders->addFieldToFilter('season_slug', $seasonSlug);
 
         return $subscriptionOrders->fetchItem();
@@ -366,7 +366,7 @@ class Subscription extends AbstractModel
     {
         // If subscription orders is local, send them, if not, pull them and send them
         $subscriptionAddonOrders = $this->_subscriptionAddonOrderCollectionFactory->create();
-        $subscriptionAddonOrders->addFieldToFilter('subscription_entity_id', $this->getEntityId());
+        $subscriptionAddonOrders->addFieldToFilter('subscription_entity_id', $this->getId());
         $this->_subscriptionAddonOrders = $subscriptionAddonOrders;
 
         return $this->_subscriptionAddonOrders;
@@ -413,7 +413,7 @@ class Subscription extends AbstractModel
             $error = 'Could not create empty cart for customer when adding subscription to cart. - ' . $e->getMessage();
             $this->_logger->error($error);
 
-            throw new \Exception($error);
+            throw new Exception($error);
         }
 
         // We will have to calculate the price differently for the subscription than we normally would
@@ -421,7 +421,9 @@ class Subscription extends AbstractModel
 
         // Go through all the core products, add them to cart and calculate
         // the total subscription price which will be applied to the Annual Subscription product
-        foreach ($this->getSubscriptionOrders() as $subscriptionOrder) {
+        $subscriptionOrders = $this->getSubscriptionOrders();
+
+        foreach ($subscriptionOrders as $subscriptionOrder) {
             foreach ($subscriptionOrder->getOrderItems() as $subscriptionOrderItem) {
                 $product = $subscriptionOrderItem->getProduct();
                 $product = $this->_productRepository->get($product->getSku());
@@ -435,7 +437,6 @@ class Subscription extends AbstractModel
 
         try {
             // Get the first seasonal product or annual depending on type
-            $subscriptionOrders = $this->getSubscriptionOrders();
             $planSku = 'annual';
             if ($this->getSubscriptionType() !== 'annual') {
                 $firstSeason = $subscriptionOrders->getFirstItem();
