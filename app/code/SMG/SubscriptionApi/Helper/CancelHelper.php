@@ -3,6 +3,7 @@
 namespace SMG\SubscriptionApi\Helper;
 
 use Exception;
+use ZaiusSDK\ZaiusException;
 use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
@@ -93,6 +94,16 @@ class CancelHelper extends AbstractHelper
                 ->addFieldToFilter('subscription_status', 'active')
                 ->fetchItem();
 
+            if (! $subscription || ! $subscription->getId()) {
+                // Could not find the subscription.
+                $error = 'Could not find an active subscription with Gigya user ID "' . $accountCode . '" to cancel.';
+                $this->_logger->error($error);
+
+                throw new Exception($error);
+
+                return;
+            }
+
             $customer = $this->_customerCollectionFactory
                 ->create()
                 ->addFieldToFilter('gigya_uid', $accountCode)
@@ -101,7 +112,12 @@ class CancelHelper extends AbstractHelper
             $subscription->cancel();
 
             $this->clearCustomerAddresses($customer);
-            $this->zaiusCancelCall($customer->getData('email'));
+
+            try {
+                $this->zaiusCancelCall($customer->getData('email'));
+            } catch (Exception $e) {
+                // Ignore Zaius error so customer is not disrupted.
+            }
         } catch (Exception $e) {
             $this->_logger->error($e->getMessage());
 
@@ -136,7 +152,6 @@ class CancelHelper extends AbstractHelper
     /**
      * Cancel subscription from zaius
      * @param $customer_email
-     * @throws \ZaiusSDK\ZaiusException
      */
     private function zaiusCancelCall($customer_email)
     {
@@ -153,10 +168,14 @@ class CancelHelper extends AbstractHelper
             $event['identifiers'] = ['email'=>$customer_email];
 
             // get postevent function
-            $zaiusstatus = $zaiusClient->postEvent($event);
+            try {
+                $zaiusstatus = $zaiusClient->postEvent($event);
+            } catch (ZaiusException $e) {
+                $this->_logger->error('A post to Zaius failed during cancellation, however, it should not affect the cancelled status.');
+            }
 
             // check return values from the postevent function
-            if ($zaiusstatus) {
+            if (isset($zaiusstatus)) {
                 $this->_logger->debug("The customer Email Subscription " . $customer_email . " is cancelled successfully to zaius."); //saved in var/log/debug.log
             } else {
                 $this->_logger->error("The customer Email Subscription " . $customer_email . " is failed to zaius.");

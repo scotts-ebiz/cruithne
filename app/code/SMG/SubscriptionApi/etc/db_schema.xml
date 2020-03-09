@@ -1,32 +1,47 @@
 <?xml version="1.0"?>
 <schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-  xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="subscription" engine="innodb" resource="default" comment="Subscription Object">
-        <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" padding="10" comment="ID of the record."/>
-        <column name="quiz_id" xsi:type="varchar" nullable="false" length="64" comment="Quiz ID returned from Recommendations Engine"/>
+        <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" padding="10"
+                comment="ID of the record."/>
+        <column name="quiz_id" xsi:type="varchar" nullable="false" length="64"
+                comment="Quiz ID returned from Recommendations Engine"/>
         <column name="gigya_id" xsi:type="varchar" nullable="true" length="64" comment="Gigya Id"/>
-        <column name="quiz_completed_at" xsi:type="timestamp" nullable="true" on_update="false" comment="Quiz Completed At"/>
-        <column name="origin" xsi:type="varchar" nullable="false" length="32" comment="Where the subscription came from"/>
+        <column name="quiz_completed_at" xsi:type="timestamp" nullable="true" on_update="false"
+                comment="Quiz Completed At"/>
+        <column name="origin" xsi:type="varchar" nullable="false" length="32"
+                comment="Where the subscription came from"/>
         <column name="lawn_zip" xsi:type="varchar" nullable="false" length="32" comment="Region Code / Zip Code"/>
-        <column name="zone_name" xsi:type="varchar" nullable="false" length="32" comment="Zone Name returned by Recommendations Engine"/>
-        <column name="lawn_size" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Lawn Size in feet"/>
+        <column name="zone_name" xsi:type="varchar" nullable="false" length="32"
+                comment="Zone Name returned by Recommendations Engine"/>
+        <column name="lawn_size" xsi:type="int" nullable="true" unsigned="true" padding="10"
+                comment="Lawn Size in feet"/>
         <column name="lawn_type" xsi:type="varchar" length="32" comment="Grass Type"/>
-        <column name="customer_id" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Customer Record Id"/>
+        <column name="customer_id" xsi:type="int" nullable="true" unsigned="true" padding="10"
+                comment="Customer Record Id"/>
         <column name="subscription_id" xsi:type="varchar" length="64" nullable="true" comment="Subscription ID"/>
         <column name="subscription_type" xsi:type="varchar" nullable="true" length="32" comment="Annual / Seasonal"/>
-        <column name="subscription_status" xsi:type="varchar" nullable="false" length="32" comment="Subscription Status"/>
-        <column name="subscription_start_date" xsi:type="timestamp" nullable="true" on_update="false" comment="Subscription Start Date"/>
-        <column name="subscription_end_date" xsi:type="timestamp" nullable="true" on_update="false" comment="Subscription End Date"/>
+        <column name="subscription_status" xsi:type="varchar" nullable="false" length="32"
+                comment="Subscription Status"/>
+        <column name="subscription_start_date" xsi:type="timestamp" nullable="true" on_update="false"
+                comment="Subscription Start Date"/>
+        <column name="subscription_end_date" xsi:type="timestamp" nullable="true" on_update="false"
+                comment="Subscription End Date"/>
         <column name="price" xsi:type="decimal" scale="2" precision="10" nullable="false" comment="Subscription Cost"/>
         <column name="tax" xsi:type="decimal" scale="2" precision="10" nullable="false" comment="Recurly Tax"/>
-        <column name="discount" xsi:type="decimal" scale="2" precision="10" nullable="false" comment="Recurly Discount"/>
+        <column name="discount" xsi:type="decimal" scale="2" precision="10" nullable="false"
+                comment="Recurly Discount"/>
         <column name="paid" xsi:type="decimal" scale="2" precision="10" nullable="false" comment="Recurly Paid"/>
-        <column name="recurly_invoice" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Recurly Invoice Number"/>
-        <column name="is_full_refund" xsi:type="int" nullable="false" default="0" unsigned="true" padding="2" comment="Is full refund"/>
-        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
-        <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Updated"/>
+        <column name="recurly_invoice" xsi:type="int" nullable="true" unsigned="true" padding="10"
+                comment="Recurly Invoice Number"/>
+        <column name="is_full_refund" xsi:type="int" nullable="false" default="0" unsigned="true" padding="2"
+                comment="Is full refund"/>
+        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false"
+                comment="Date Created"/>
+        <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true"
+                comment="Date Updated"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
-            <column name="entity_id" />
+            <column name="entity_id"/>
         </constraint>
         <constraint referenceId="SUBSCRIPTION_CUSTOMER_ID_CUSTOMER_ENTITY_ID"
                     xsi:type="foreign"
@@ -34,54 +49,72 @@
                     column="customer_id"
                     referenceTable="customer_entity"
                     referenceColumn="entity_id"
-                    onDelete="NO ACTION" />
+                    onDelete="NO ACTION"/>
         <constraint referenceId="SUBSCRIPTION_SUBSCRIPTION_TYPE_SUBSCRIPTION_TYPE_TYPE"
                     xsi:type="foreign"
                     table="subscription"
                     column="subscription_type"
                     referenceTable="subscription_type"
                     referenceColumn="type"
-                    onDelete="NO ACTION" />
+                    onDelete="NO ACTION"/>
         <constraint referenceId="SUBSCRIPTION_SUBSCRIPTION_STATUS_SUBSCRIPTION_STATUS_STATUS"
                     xsi:type="foreign"
                     table="subscription"
                     column="subscription_status"
                     referenceTable="subscription_status"
                     referenceColumn="status"
-                    onDelete="NO ACTION" />
+                    onDelete="NO ACTION"/>
+        <index referenceId="SUBSCRIPTION_QUIZ_ID" indexType="btree">
+            <column name="quiz_id"/>
+        </index>
+        <index referenceId="SUBSCRIPTION_CUSTOMER_ID" indexType="btree">
+            <column name="customer_id"/>
+        </index>
     </table>
     <table name="subscription_type" engine="innodb" resource="default" comment="Subscription Type">
         <column name="type" xsi:type="varchar" nullable="false" length="32" comment="Type Id of the Subscription Type"/>
-        <column name="label" xsi:type="varchar" nullable="false" length="128" comment="Description of the Subscription Type"/>
+        <column name="label" xsi:type="varchar" nullable="false" length="128"
+                comment="Description of the Subscription Type"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
-            <column name="type" />
+            <column name="type"/>
         </constraint>
     </table>
     <table name="subscription_status" engine="innodb" resource="default" comment="Subscription Status">
         <column name="status" xsi:type="varchar" nullable="false" length="32" comment="Subscription Status ID"/>
-        <column name="label" xsi:type="varchar" nullable="false" length="128" comment="Description of Subscription Status"/>
+        <column name="label" xsi:type="varchar" nullable="false" length="128"
+                comment="Description of Subscription Status"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
-            <column name="status" />
+            <column name="status"/>
         </constraint>
     </table>
     <table name="subscription_order" engine="innodb" resource="default" comment="Subscription Order">
-        <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
-        <column name="subscription_entity_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Subscription Table ID"/>
+        <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true"
+                comment="ID of the record."/>
+        <column name="subscription_entity_id" xsi:type="int" nullable="false" unsigned="true" padding="10"
+                comment="Subscription Table ID"/>
         <column name="season_name" xsi:type="text" nullable="false" comment="Season Name"/>
         <column name="season_slug" xsi:type="text" nullable="false" comment="Season Slug"/>
-        <column name="application_start_date" xsi:type="timestamp" nullable="true" on_update="false" comment="Application Start Date"/>
-        <column name="application_end_date" xsi:type="timestamp" nullable="true" on_update="false" comment="Application End Date"/>
-        <column name="ship_start_date" xsi:type="timestamp" nullable="true" on_update="false" comment="Ship Start Date"/>
+        <column name="application_start_date" xsi:type="timestamp" nullable="true" on_update="false"
+                comment="Application Start Date"/>
+        <column name="application_end_date" xsi:type="timestamp" nullable="true" on_update="false"
+                comment="Application End Date"/>
+        <column name="ship_start_date" xsi:type="timestamp" nullable="true" on_update="false"
+                comment="Ship Start Date"/>
         <column name="ship_end_date" xsi:type="timestamp" nullable="true" on_update="false" comment="Ship End Date"/>
         <column name="subscription_id" xsi:type="varchar" length="64" nullable="true" comment="Subscription ID"/>
-        <column name="sales_order_id" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Sales Order ID"/>
-        <column name="subscription_order_status" xsi:type="varchar" nullable="false" length="32" comment="Subscription Order Status"/>
-        <column name="price"  xsi:type="decimal" scale="2" precision="10"  nullable="false" comment="Subscription Cost"/>
-        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
-        <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Updated"/>
-        <column name="next_cron_date" xsi:type="timestamp" nullable="true" comment="Next time order can be processed with cron"/>
+        <column name="sales_order_id" xsi:type="int" nullable="true" unsigned="true" padding="10"
+                comment="Sales Order ID"/>
+        <column name="subscription_order_status" xsi:type="varchar" nullable="false" length="32"
+                comment="Subscription Order Status"/>
+        <column name="price" xsi:type="decimal" scale="2" precision="10" nullable="false" comment="Subscription Cost"/>
+        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false"
+                comment="Date Created"/>
+        <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true"
+                comment="Date Updated"/>
+        <column name="next_cron_date" xsi:type="timestamp" nullable="true"
+                comment="Next time order can be processed with cron"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
-            <column name="entity_id" />
+            <column name="entity_id"/>
         </constraint>
         <constraint referenceId="SUBSCRIPTION_ORDER_SUBSCRIPTION_ENTITY_ID_SUBSCRIPTION_ENTITY_ID"
                     xsi:type="foreign"
@@ -89,32 +122,43 @@
                     column="subscription_entity_id"
                     referenceTable="subscription"
                     referenceColumn="entity_id"
-                    onDelete="NO ACTION" />
+                    onDelete="NO ACTION"/>
         <constraint referenceId="SUBSCRIPTION_ORDER_SUBSCRIPTION_ORDER_STATUS_SUBSCRIPTION_ORDER_STATUS_STATUS"
                     xsi:type="foreign"
                     table="subscription_order"
                     column="subscription_order_status"
                     referenceTable="subscription_order_status"
                     referenceColumn="status"
-                    onDelete="NO ACTION" />
+                    onDelete="NO ACTION"/>
         <constraint referenceId="SUBSCRIPTION_ORDER_SALES_ORDER_ID_SALES_ORDER_ENTITY_ID"
                     xsi:type="foreign"
                     table="subscription_order"
                     column="sales_order_id"
                     referenceTable="sales_order"
                     referenceColumn="entity_id"
-                    onDelete="NO ACTION" />
+                    onDelete="NO ACTION"/>
+        <index referenceId="SUBSCRIPTION_ORDER_SUBSCRIPTION_ENTITY_ID" indexType="btree">
+            <column name="subscription_entity_id"/>
+        </index>
+        <index referenceId="SUBSCRIPTION_ORDER_SUBSCRIPTION_ID" indexType="btree">
+            <column name="subscription_id"/>
+        </index>
     </table>
     <table name="subscription_order_item" engine="innodb" resource="default" comment="Subscription Order Item">
-        <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
-        <column name="subscription_order_entity_id" xsi:type="int" nullable="false" unsigned="true" comment="Subscription Order Table ID"/>
+        <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true"
+                comment="ID of the record."/>
+        <column name="subscription_order_entity_id" xsi:type="int" nullable="false" unsigned="true"
+                comment="Subscription Order Table ID"/>
         <column name="catalog_product_sku" xsi:type="varchar" nullable="false" length="32" comment="Product Sku"/>
         <column name="qty" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Qty of the Product"/>
-        <column name="price"  xsi:type="decimal" scale="2" precision="10"  nullable="false" comment="Subscription Item Cost"/>
-        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
-        <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Updated"/>
+        <column name="price" xsi:type="decimal" scale="2" precision="10" nullable="false"
+                comment="Subscription Item Cost"/>
+        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false"
+                comment="Date Created"/>
+        <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true"
+                comment="Date Updated"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
-            <column name="entity_id" />
+            <column name="entity_id"/>
         </constraint>
         <constraint referenceId="SUBSCRIPTION_ORDER_ITEM_SUBSCRIPTION_ORDER_ENTITY_ID_SUBSCRIPTION_ENTITY_ID"
                     xsi:type="foreign"
@@ -122,32 +166,46 @@
                     column="subscription_order_entity_id"
                     referenceTable="subscription_order"
                     referenceColumn="entity_id"
-                    onDelete="NO ACTION" />
+                    onDelete="NO ACTION"/>
+        <index referenceId="SUBSCRIPTION_ORDER_ITEM_SUBSCRIPTION_ORDER_ENTITY_ID" indexType="btree">
+            <column name="subscription_order_entity_id"/>
+        </index>
     </table>
     <table name="subscription_order_status" engine="innodb" resource="default" comment="Subscription Order Status">
         <column name="status" xsi:type="varchar" nullable="false" length="32" comment="Subscription Order Status ID"/>
-        <column name="label" xsi:type="varchar" nullable="false" length="128" comment="Description of Subscription Order Status"/>
+        <column name="label" xsi:type="varchar" nullable="false" length="128"
+                comment="Description of Subscription Order Status"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
-            <column name="status" />
+            <column name="status"/>
         </constraint>
     </table>
     <table name="subscription_addon_order" engine="innodb" resource="default" comment="Subscription Addon Order">
-        <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
-        <column name="subscription_entity_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Subscription Table ID"/>
+        <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true"
+                comment="ID of the record."/>
+        <column name="subscription_entity_id" xsi:type="int" nullable="false" unsigned="true" padding="10"
+                comment="Subscription Table ID"/>
         <column name="season_name" xsi:type="text" nullable="false" comment="Season Name"/>
-        <column name="application_start_date" xsi:type="timestamp" nullable="true" on_update="false" comment="Application Start Date"/>
-        <column name="application_end_date" xsi:type="timestamp" nullable="true" on_update="false" comment="Application End Date"/>
-        <column name="ship_start_date" xsi:type="timestamp" nullable="true" on_update="false" comment="Ship Start Date"/>
+        <column name="application_start_date" xsi:type="timestamp" nullable="true" on_update="false"
+                comment="Application Start Date"/>
+        <column name="application_end_date" xsi:type="timestamp" nullable="true" on_update="false"
+                comment="Application End Date"/>
+        <column name="ship_start_date" xsi:type="timestamp" nullable="true" on_update="false"
+                comment="Ship Start Date"/>
         <column name="ship_end_date" xsi:type="timestamp" nullable="true" on_update="false" comment="Ship End Date"/>
         <column name="subscription_id" xsi:type="varchar" length="64" nullable="true" comment="Subscription ID"/>
-        <column name="sales_order_id" xsi:type="int" nullable="true" unsigned="true" padding="10" comment="Sales Order ID"/>
-        <column name="subscription_order_status" xsi:type="varchar" nullable="false" length="32" comment="Subscription Order Status"/>
-        <column name="price"  xsi:type="decimal" scale="2" precision="10"  nullable="false" comment="Subscription Cost"/>
-        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
-        <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Updated"/>
-        <column name="next_cron_date" xsi:type="timestamp" nullable="true" comment="Next time order can be processed with cron"/>
+        <column name="sales_order_id" xsi:type="int" nullable="true" unsigned="true" padding="10"
+                comment="Sales Order ID"/>
+        <column name="subscription_order_status" xsi:type="varchar" nullable="false" length="32"
+                comment="Subscription Order Status"/>
+        <column name="price" xsi:type="decimal" scale="2" precision="10" nullable="false" comment="Subscription Cost"/>
+        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false"
+                comment="Date Created"/>
+        <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true"
+                comment="Date Updated"/>
+        <column name="next_cron_date" xsi:type="timestamp" nullable="true"
+                comment="Next time order can be processed with cron"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
-            <column name="entity_id" />
+            <column name="entity_id"/>
         </constraint>
         <constraint referenceId="SUBSCRIPTION_ADDON_ORDER_SUBSCRIPTION_ENTITY_ID_SUBSCRIPTION_ENTITY_ID"
                     xsi:type="foreign"
@@ -155,33 +213,46 @@
                     column="subscription_entity_id"
                     referenceTable="subscription"
                     referenceColumn="entity_id"
-                    onDelete="NO ACTION" />
+                    onDelete="NO ACTION"/>
         <constraint referenceId="SUBSCRIPTION_ADDON_ORDER_SUBSCRIPTION_ORDER_STATUS_SUBSCRIPTION_ORDER_STATUS_STATUS"
                     xsi:type="foreign"
                     table="subscription_addon_order"
                     column="subscription_order_status"
                     referenceTable="subscription_order_status"
                     referenceColumn="status"
-                    onDelete="NO ACTION" />
+                    onDelete="NO ACTION"/>
         <constraint referenceId="SUBSCRIPTION_ADDON_ORDER_SALES_ORDER_ID_SALES_ORDER_ENTITY_ID"
                     xsi:type="foreign"
                     table="subscription_addon_order"
                     column="sales_order_id"
                     referenceTable="sales_order"
                     referenceColumn="entity_id"
-                    onDelete="NO ACTION" />
+                    onDelete="NO ACTION"/>
+        <index referenceId="SUBSCRIPTION_ADDON_ORDER_SUBSCRIPTION_ENTITY_ID" indexType="btree">
+            <column name="subscription_entity_id"/>
+        </index>
+        <index referenceId="SUBSCRIPTION_ADDON_ORDER_SUBSCRIPTION_ID" indexType="btree">
+            <column name="subscription_id"/>
+        </index>
     </table>
-    <table name="subscription_addon_order_item" engine="innodb" resource="default" comment="Subscription Addon Available at time of recommendation">
-        <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
-        <column name="subscription_addon_order_entity_id" xsi:type="int" nullable="false" unsigned="true" comment="Subscription Table ID"/>
+    <table name="subscription_addon_order_item" engine="innodb" resource="default"
+           comment="Subscription Addon Available at time of recommendation">
+        <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true"
+                comment="ID of the record."/>
+        <column name="subscription_addon_order_entity_id" xsi:type="int" nullable="false" unsigned="true"
+                comment="Subscription Table ID"/>
         <column name="catalog_product_sku" xsi:type="varchar" nullable="false" length="32" comment="Product Sku"/>
         <column name="qty" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Qty of the Product"/>
-        <column name="selected" xsi:type="tinyint" nullable="false" unsigned="true" default="0" comment="Whether the addon was selected"/>
-        <column name="price"  xsi:type="decimal" scale="2" precision="10"  nullable="false" comment="Subscription Item Cost"/>
-        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
-        <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true" comment="Date Updated"/>
+        <column name="selected" xsi:type="tinyint" nullable="false" unsigned="true" default="0"
+                comment="Whether the addon was selected"/>
+        <column name="price" xsi:type="decimal" scale="2" precision="10" nullable="false"
+                comment="Subscription Item Cost"/>
+        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false"
+                comment="Date Created"/>
+        <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true"
+                comment="Date Updated"/>
         <constraint xsi:type="primary" referenceId="PRIMARY">
-            <column name="entity_id" />
+            <column name="entity_id"/>
         </constraint>
         <constraint referenceId="SUBSCRIPTION_ADDON_ORDER_ITEM_SUBSCRIPTION_ORDER_ENTITY_ID_SUBSCRIPTION_ENTITY_ID"
                     xsi:type="foreign"
@@ -189,6 +260,9 @@
                     column="subscription_addon_order_entity_id"
                     referenceTable="subscription_addon_order"
                     referenceColumn="entity_id"
-                    onDelete="NO ACTION" />
+                    onDelete="NO ACTION"/>
+        <index referenceId="SUBSCRIPTION_ADDON_ORDER_ITEM_SUBSCRIPTION_ORDER_ENTITY_ID" indexType="btree">
+            <column name="subscription_addon_order_entity_id"/>
+        </index>
     </table>
 </schema>

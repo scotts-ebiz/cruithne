@@ -1,4 +1,10 @@
-<form class="form contact" action="<?= $block->escapeUrl($block->getFormAction()) ?>" id="contact-form" method="post" data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>">
+<form
+    id="contact-form"
+    action="<?= $block->escapeUrl($block->getFormAction()) ?>"
+    class="form contact"
+    data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>"
+    method="post"
+>
     <fieldset class="fieldset">
         <div class="sp-form-group">
             <input
@@ -173,7 +179,7 @@
                     required: false,
                     'validate-select': true
                 }">
-                    <option value="0" selected disabled style="display: none;">-- Choose --</option>
+                    <option value="0" selected disabled style="display: none;">-- Select a Topic --</option>
                     <option value="Information about products or my lawn care plan">Information about products or my lawn care plan</option>
                     <option value="Question or concern with my order">Question or concern with my order</option>
                     <option value="Canceling my subscription">Canceling my subscription</option>

@@ -105,6 +105,15 @@ define([
                     if (response.success === true) {
                         self.toggleModalContent('success');                        
                     } else {
+                        if (response.message.indexOf('Could not find an active subscription') > -1) {
+                            // Couldn't find the subscription, so maybe it's
+                            // already cancelled, so let's go ahead and refresh
+                            // the page.
+                            window.location.reload();
+
+                            return;
+                        }
+
                         alert(response.message);
                         self.closeSubscriptionModal();
                         self.loading(false);
@@ -112,6 +121,11 @@ define([
                 },
                 error() {
                     self.loading(false);
+
+                    // Lets go ahead and reload the window in case there was a
+                    // failed Zaius call and cancellation actually went through
+                    // correctly.
+                    window.location.reload();
                 }
             })
         }

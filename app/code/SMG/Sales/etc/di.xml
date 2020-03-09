@@ -19,4 +19,11 @@
     <type name="Magento\Sales\Block\Adminhtml\Order\Create\Billing\Method\Form">
         <plugin name="smg_plugin_block_billing_method_form" type="SMG\Sales\Plugin\Block\Adminhtml\Order\Create\Billing\Method\Form" />
     </type>
+    <virtualType name="Magento\Sales\Model\ResourceModel\Order\Grid" type="Magento\Sales\Model\ResourceModel\Grid">
+        <arguments>
+            <argument name="columns" xsi:type="array">
+                <item name="master_subscription_id" xsi:type="string">sales_order.master_subscription_id</item>
+            </argument>
+        </arguments>
+    </virtualType>
 </config>
