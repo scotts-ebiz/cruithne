@@ -6,6 +6,5 @@
 		<script src="js/ie-edge-detection.js" />
 		<script src="js/menu.js" />
 		<remove src="mage/calendar.css" />
-		<remove src="https://use.fontawesome.com/releases/v5.7.1/css/all.css" />
 	</head>
 </page>
