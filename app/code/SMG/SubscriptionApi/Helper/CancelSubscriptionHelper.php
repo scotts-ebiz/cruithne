@@ -278,6 +278,11 @@ class CancelSubscriptionHelper extends AbstractHelper
      */
     protected function cancelMasterRecurlySubscription(Subscription $subscription, $amount = null)
     {
+        // Convert the provided amount to cents if it exists.
+        if ($amount > 0) {
+            $amount = $this->convertAmountToCents($amount);
+        }
+
         $subscriptionID = $subscription->getData('subscription_id');
 
         try {
