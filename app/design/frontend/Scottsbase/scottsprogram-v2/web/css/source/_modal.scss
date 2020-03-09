@@ -7,6 +7,36 @@
     width: 90%;
 }
 
+// Prevent subscription cancellation buttons from getting cut off on small viewports.
+.account-subscription-index {
+    @media(max-width: $screen__s) {
+        .modal-header {
+            padding-top: 1rem;
+            padding-bottom: 1rem;
+        }
+        .modal-content {
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
+        .sp-h5 {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        .sp-h6 {
+            margin-top: 1rem;
+            margin-bottom: 1rem;
+        }
+        .content {
+            ul {
+                margin-bottom: 1rem;
+                li {
+                    margin-bottom: 0.5rem;
+                }
+            }
+        }
+    }
+}
+
 .modal-header {
   position: relative;
 }
