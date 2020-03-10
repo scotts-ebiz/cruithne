@@ -377,7 +377,7 @@ class Subscription implements SubscriptionInterface
             $this->_coreSession->setCheckoutBilling($customerBillingAddress);
         } catch (Exception $e) {
             $this->_logger->error($this->_loggerPrefix . $e->getMessage());
-            $this->_coreSession->getOrderProcessing(false);
+            $this->_coreSession->setOrderProcessing(0);
 
             return $this->_responseHelper->error('There was an error preparing your subscription, please try again.');
         }
