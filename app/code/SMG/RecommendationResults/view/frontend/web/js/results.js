@@ -31,6 +31,7 @@ define([
 
         initialize(config) {
             const self = this;
+
             window.scrollTo(0, 0);
             self.customer = customerData.get('customer');
 
@@ -297,6 +298,7 @@ define([
                                 window.location.href = self.customer().firstname ? '/your-plan' : '/quiz';
                                 return;
                             }
+
                             self.hasResults(true);
                             self.results(data);
                             self.checkZone();
@@ -432,14 +434,12 @@ define([
             } else {
                 $('body').addClass('no-scroll')
             }
-            
-            zaius.subscribe({list_id: 'scotts',email: this.saveAndSendModal().email,acquisition_method: 'scotts-program-quizresults',acquisition_source: 'Scotts'});
 
             this.saveAndSendSuccessModal({
                 ...this.saveAndSendSuccessModal(),
                 visible: !this.saveAndSendSuccessModal().visible
             })
-         },
+        },
 
         formatNumber: function(number) {
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
