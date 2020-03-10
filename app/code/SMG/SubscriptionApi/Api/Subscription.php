@@ -400,9 +400,7 @@ class Subscription implements SubscriptionInterface
 
             try {
                 $this->_gigyaHelper->updateGigyaAccount($customer->getData('gigya_uid'), $gigyaData);
-            } catch (GSApiException $e) {
-                $this->_logger->error($this->_loggerPrefix . $e->getMessage());
-            } catch (GSException $e) {
+            } catch (Exception $e) {
                 $this->_logger->error($this->_loggerPrefix . $e->getMessage());
             }
         } catch (Exception $e) {
