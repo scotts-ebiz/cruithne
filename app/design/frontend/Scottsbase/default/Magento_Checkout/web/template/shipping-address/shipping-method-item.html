@@ -4,7 +4,8 @@
  * See COPYING.txt for license details.
  */
 -->
-<tr class="row"
+<!--The ifnot below hides the flat rate shipping option if free shipping is available-->
+<tr ifnot="!!_.find(element.rates(), function(item){ return item.method_code === 'freeshipping'; }) && method.method_code === 'flat-rate-shipping'" class="row"
     click="element.selectShippingMethod">
     <td class="col col-method">
         <input type="radio"
@@ -14,7 +15,7 @@
                ko-value="method.carrier_code + '_' + method.method_code"
                attr="'aria-labelledby': 'label_method_' + method.method_code + '_' + method.carrier_code + ' ' + 'label_carrier_' + method.method_code + '_' + method.carrier_code,
                     'checked': element.rates().length == 1 || element.isSelected" />
-			<label class='cust-radio'></label>		
+			<label class='cust-radio'></label>
     </td>
     <td class="col col-price">
         <each args="element.getRegion('price')" render="" />
