@@ -9,6 +9,7 @@ define([
             this._super();
 
             this.subscriptionData = ko.observable(window.subscriptionData);
+            this.result = ko.observable(window.sessionStorage.getItem('result') );
         },
 
         /**
