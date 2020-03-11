@@ -63,7 +63,7 @@ define([
 
             if (!self.hasShippingMethod()) {
                 this.isVisible(false);
-                stepNavigator.setHash('shipping');
+                stepNavigator.setHash('Shipping Information');
             } else {
                 getPaymentInformation().done(function () {
                     self.isVisible(true);
