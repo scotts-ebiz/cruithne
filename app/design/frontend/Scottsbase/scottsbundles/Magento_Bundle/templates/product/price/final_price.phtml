@@ -30,7 +30,7 @@ $renderMinimalRegularPrice = $block->renderAmount($minimalRegularPrice, $regular
 <?php if ($block->getSaleableItem()->getPriceView()) : ?>
     <p class="minimal-price">
         <?= /* @noEscape */ $block->renderAmount($minimalPrice, [
-            'display_label'     => __('123As low as'),
+            'display_label'     => __(''),
             'price_id'          => $block->getPriceId('from-'),
             'include_container' => true
         ]); ?>

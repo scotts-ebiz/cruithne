@@ -7,9 +7,6 @@
 
 <?php $_product = $block->getProduct() ?>
 
-<p><?= $block->escapeHtml($_product->getName()) ?></p>
-
-
 <?php if ($_product->isSaleable() && $block->hasOptions()) :?>
     <div class="bundle-actions">
         <button id="bundle-slide"
