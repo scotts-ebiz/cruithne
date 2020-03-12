@@ -2,6 +2,7 @@
 
 namespace SMG\SubscriptionApi\Model;
 
+use Exception;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DB\Transaction;
 use Magento\Framework\Exception\LocalizedException;
@@ -177,7 +178,8 @@ class SubscriptionAddonOrder extends AbstractModel
 
         $subscription = $this->_subscriptionCollectionFactory
             ->create()
-            ->getItemById($this->getData('subscription_entity_id'));
+            ->addFieldToFilter('entity_id', $this->getData('subscription_entity_id'))
+            ->getFirstItem();
 
         if (is_null($subscription) || ! $subscription->getId()) {
             return false;
@@ -198,7 +200,7 @@ class SubscriptionAddonOrder extends AbstractModel
         $subscription = $this->getSubscription();
 
         if ($subscription) {
-            return $subscription->getSubscriptionId();
+            return $subscription->getData('subscription_id');
         }
 
         return '';
@@ -321,7 +323,14 @@ class SubscriptionAddonOrder extends AbstractModel
         }
 
         try {
-            $this->_order = $this->_orderCollectionFactory->create()->getItemById($this->getSalesOrderId());
+            $this->_order = $this->_orderCollectionFactory
+                ->create()
+                ->addFieldToFilter('entity_id', $this->getData('sales_order_id'))
+                ->getFirstItem();
+
+            if (! $this->_order || ! $this->_order->getId()) {
+                return null;
+            }
 
             return $this->_order;
         } catch (\Exception $e) {
@@ -341,7 +350,14 @@ class SubscriptionAddonOrder extends AbstractModel
         }
 
         try {
-            $this->_sapOrderBatch = $this->_sapOrderBatchCollectionFactory->create()->getItemById($this->getSalesOrderId());
+            $this->_sapOrderBatch = $this->_sapOrderBatchCollectionFactory
+                ->create()
+                ->addFieldToFilter('sales_order_id', $this->getData('sales_order_id'))
+                ->getFirstItem();
+
+            if (! $this->_sapOrderBatch->getId()) {
+                return null;
+            }
 
             return $this->_sapOrderBatch;
         } catch (\Exception $e) {
