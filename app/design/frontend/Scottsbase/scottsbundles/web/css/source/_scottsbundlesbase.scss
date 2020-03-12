@@ -278,11 +278,11 @@ h3 {
         button {
             background: $mygro-green;
             border: 0;
-            padding: 23px 35px !important;
+            //padding: 23px 35px !important;
             width: 100%;
             border-radius: 4px;
             color: $color-white;
-            font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
+            font-family: $font-family__secondary;
             font-size: 15px;
             text-align: center;
             display: inline-block;
