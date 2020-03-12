@@ -115,7 +115,9 @@ class Subscription extends AbstractDb
     {
         if (! empty($quizId)) {
             $subscriptions = $this->_subscriptionCollectionFactory->create();
-            $subscription = $subscriptions->getItemByColumnValue('quiz_id', $quizId);
+            $subscription = $subscriptions
+                ->addFieldToFilter('quiz_id', $quizId)
+                ->getFirstItem();
 
             if ($subscription && $subscription->getId()) {
                 return $subscription;
@@ -123,7 +125,6 @@ class Subscription extends AbstractDb
         }
 
         $error = 'Subscription could not be found with quiz id.';
-        $this->_logger->error($error);
 
         throw new LocalizedException(__($error));
     }
@@ -138,7 +139,9 @@ class Subscription extends AbstractDb
     {
         if (! empty($masterSubscription)) {
             $subscriptions = $this->_subscriptionCollectionFactory->create();
-            $subscription = $subscriptions->getItemByColumnValue('subscription_id', $masterSubscription);
+            $subscription = $subscriptions
+                ->addFieldToFilter('subscription_id', $masterSubscription)
+                ->getFirstItem();
 
             if (! $subscription->getId()) {
                 return null;
