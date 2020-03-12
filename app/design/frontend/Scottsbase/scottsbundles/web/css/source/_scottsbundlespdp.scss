@@ -1,0 +1,274 @@
+//Product Page Styles
+.product.info.detailed {
+  display: none;
+}
+
+
+/*Since only one controller product removing select styling*/
+body.product-controller.page-product-grouped .product-info-main .product-add-form form .grouped-product-wrapper {
+  h5 {
+    display: none;
+  }
+  select{
+    outline: 0;
+    padding: 0;
+    appearance: none;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+  }
+}
+
+
+// PDP Page Styles
+.page-product-grouped {
+  .product-info-main {
+    width: 48%;
+    margin-right: auto;
+    margin-left: auto;
+    @media only screen and (max-width: $screen__l){
+      margin-bottom: 100px;
+    }
+    @media only screen and (max-width: $screen_768){
+      width: 90%;
+    }
+    .product-info-price {
+      display: none;
+    }
+
+    .product-add-form {
+      width: 80%;
+
+      margin-left: auto;
+      margin-right: auto;
+      @media only screen and (max-width: $screen_768){
+        width: 95%;
+      }
+      form {
+        .grouped-title-section {
+          h2.grouped-product-header {
+            margin-top: 1.0rem;
+            margin-bottom: 1.0rem;
+            @media only screen and (max-width: $screen_768){
+              text-align: center;
+            }
+          }
+          p {
+            @media only screen and (max-width: $screen_768){
+              font-size: 1.0rem;
+              line-height: 1.2rem;
+            }
+          }
+        }
+        .grouped-product-wrapper {
+          margin-bottom: 20px;
+          h5 {
+            margin: 0 0 10px 0;
+          }
+          select {
+            border-radius: 0px;
+            border: 0px;
+            outline: 1px inset #909090;
+            outline-style: solid;
+            height: 35px;
+          }
+        }
+        .table-wrapper {
+          margin-bottom: 0;
+          table {
+
+            display: table !important;
+            thead {
+
+              tr.grouped-table-titles {
+                display: none;
+              }
+            }
+            tbody {
+              display: table-row-group !important;
+              border-top: 0px;
+
+              @media only screen and (max-width: 639px){
+                display: table-row-group;
+              }
+
+              tr.grouped-row.active {
+                display: table-row;
+                td.product-qty-td {
+                  .qtyminus {
+                    width: 32px;
+                    height: 32px;
+                    padding: 0px;
+                    margin: 0px;
+                    border: 0px;
+                    font-size: 20px;
+                    &:focus {
+                      box-shadow: 0 0;
+                      font-size: 22px;
+                      color: $mygro-green;
+                    }
+                  }
+                  .input-text {
+                    width: 32px;
+                    height: 32px;
+                    padding: 0;
+                    margin: 0;
+                  }
+                  .qtyplus {
+                    width: 32px;
+                    height: 32px;
+                    font-size: 16px;
+                    padding: 0;
+                    margin: 0;
+                    border: 0;
+                    &:focus {
+                      box-shadow: 0 0;
+                      font-size: 18px;
+                      color: $mygro-green;
+                    }
+                  }
+                }
+              }
+              tr.grouped-row {
+                display: none;
+                td.product-detail-td {
+                  width: 70%;
+                  margin: 0;
+                  padding: 0;
+                  &:before {
+                    content: none;
+                  }
+                  @media only screen and (max-width: $screen__l){
+                    width: 55%;
+                  }
+                  @media only screen and (max-width: $screen__xs){
+                    width: 100%;
+                  }
+                }
+                td.product-qty-td {
+                  width: 30%;
+                  text-align: right;
+                  float: right;
+                  padding: 0;
+                  margin: 0;
+                  &:before{
+                    content: none;
+                  }
+                  @media only screen and (max-width: $screen__l){
+                    width: 40%;
+                  }
+                  @media only screen and (max-width: $screen__xs){
+                    width: 100%;
+                    text-align: left;
+                  }
+                }
+              }
+            }
+          }
+        }
+        .box-tocart {
+          display: inline-block;
+          position: relative;
+          width: 100%;
+          .fieldset {
+            .actions {
+              display: inline-block;
+              position: relative;
+              width: 100%;
+              padding-top: 0;
+              button {
+                position: relative;
+                width: 100%;
+                max-width: inherit;
+                padding: 35px 0;
+                height: inherit;
+                line-height: 0;
+                @media only screen and (max-width: $screen_768){
+                  padding: 30px 0;
+                }
+                span{
+                  font-size: $font-size__xl;
+                }
+              }
+            }
+          }
+        }
+        .product-quickInfo {
+          display: none;
+        }
+        .product-quickInfo.active {
+          display: flex;
+          flex-direction: row;
+          flex-wrap: wrap;
+          justify-content: space-around;
+          align-items: flex-start;
+          align-content: stretch;
+          .quickInfo-item {
+            max-width: 33%;
+            &:nth-child(2){
+              text-align: center;
+            }
+            &:nth-child(3){
+              text-align: right;
+              @include max-screen($screen__xs) {
+                text-align: center;
+              }
+            }
+            img {
+              width: 25%;
+              @include max-screen($screen__xs) {
+                width: 35%;
+              }
+            }
+            span {
+              display: inline-block;
+              width: 75px;
+              font-size: $font-size__s;
+              line-height: 13px;
+              vertical-align: top;
+              margin-top: 10px;
+              text-align: left;
+              @include max-screen($screen__xs) {
+                margin-top: 0px;
+              }
+            }
+            @include max-screen($screen__xs) {
+              text-align: center;
+            }
+          }
+        }
+      }
+    }
+    .product-social-links {
+      display: none;
+    }
+
+    .product.attribute.overview {
+      display: none;
+    }
+  }
+  .product.media {
+    width: 50%;
+    margin-right: auto;
+    margin-left: auto;
+
+    @include max-screen($screen__m) {
+      width: 90%;
+    }
+    .action-skip-wrapper {
+      display: none;
+    }
+  }
+}
+
+#product_addtocart_form{
+  .table-wrapper{
+    .table:not(.cart):not(.totals):not(.table-comparison){
+      tbody{
+        @media (max-width: 639px){
+          display:inline-block;
+          width: 100%;
+        }
+      }
+    }
+  }
+}

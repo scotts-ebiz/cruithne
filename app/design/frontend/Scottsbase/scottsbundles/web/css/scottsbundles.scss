@@ -1,0 +1,24 @@
+// Mixins
+@import "mixins/media-queries";
+
+// Vendor libs
+@import '../../../default/web/css/vendor/normalize/lib'; // Normalize.css
+@import '../../../default/web/css/vendor/magento-ui/lib'; // Magento UI
+
+// Theme variables
+@import 'variables';
+
+// Override Block Styles
+@import 'blocks/extends';
+@import 'blocks/layout';
+@import 'blocks/navigation';
+@import 'blocks/typography';
+
+// Override Module Styles
+@import '../../Magento_Checkout/styles/module';
+
+// Mygro Defaults
+@import 'source/scottsbundlesmixins';
+@import 'source/scottsbundlesbase';
+@import 'source/scottsbundlespdp';
+@import 'source/scottsbundlescheckout';
