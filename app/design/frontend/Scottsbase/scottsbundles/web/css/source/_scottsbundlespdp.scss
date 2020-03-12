@@ -23,15 +23,15 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
   font-weight: 700;
   font-size: 26px;
   color: $mygro-dark-green;
-  margin: 0 0 20px 0;
+  margin: 0 0 15px 0;
+  padding: 10px;
 }
 
 .bundle-product-description {
   font-size: 16px;
-  margin: 0 0 20px 0;
+  margin: 0 0 10px 0;
   color: $mygro-dark-gray;
 }
-
 
 .product-reviews-summary .reviews-actions {
   display: none;
@@ -62,6 +62,10 @@ product-add-form .fieldset > .field:not(.choice) > .label {
 
 .product-name {
   color: $mygro-dark-gray;
+}
+
+.product-info-main .price-box {
+  padding: 10px;
 }
 
 .product-info-main .price-box .price-wrapper .price {
@@ -132,9 +136,27 @@ product-add-form .fieldset > .field:not(.choice) > .label {
   }
 }
 
+.fotorama__stage {
+  outline: rgb(144, 144, 144) solid 1px;
+  outline-offset: -1px;
+}
+
+#bundle-summary {
+  width: 80%;
+  @media only screen and (max-width: $screen__m){
+    width: 100%;
+  }
+}
+
 .block-bundle-summary .title {
   margin: 0 0 20px 0;
   border-bottom: 1px solid $mygro-gray;
+  width: 80%;
+  padding: 0 0 10px 0;
+  line-height: 1;
+  @media only screen and (max-width: $screen__m){
+    width: 100%;
+  }
 }
 
 .bundle-options-container .block-bundle-summary .bundle-summary ul.bundle li .label {
