@@ -18,17 +18,30 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
   }
 }
 
+.bundle-product-title {
+  font-family: $font-family__secondary;
+  font-weight: 700;
+  font-size: 26px;
+  color: $mygro-dark-green;
+}
+
 .product-reviews-summary .reviews-actions {
   display: none;
 }
 
-.product-info-stock-sku {
+.product-info-stock-sku .product.attribute.sku{
   display: none;
 }
 
-.roduct-reviews-summary {
+.product-reviews-summary {
   display: none;
 }
+
+
+.bundle-actions {
+  display: none;
+}
+
 
 .action-skip-wrapper {
   display: none;
@@ -54,12 +67,14 @@ product-add-form .fieldset > .field:not(.choice) > .label {
   width: 100%;
 }
 
+
 .fieldset-bundle-options .legend.title {
   font-family: $font-family__secondary;
-  font-weight: 700;
-  font-size: 22px;
-  color: $mygro-dark-green;
-  padding: 0 0 20px 0;
+  font-weight: 400;
+  font-size: 18px;
+  color: $mygro-dark-gray;
+  padding: 0 0 8px 0;
+  line-height: 1;
   border-bottom: 1px solid $mygro-gray;
 }
 

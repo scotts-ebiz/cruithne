@@ -20,7 +20,7 @@
     }
 
     .product-add-form {
-        display: none;
+        //display: none;
     }
 
     .input-text.qty {
@@ -54,9 +54,9 @@
 
         > .title > strong {
             font-family: $font-family__secondary;
-            font-weight: 300;
+            font-weight: 400;
             line-height: 2;
-            font-size: 26px;
+            font-size: 18px;
             color: $mygro-dark-gray;
             padding: 0 0 20px 0;
         }
@@ -103,6 +103,7 @@
     }
     .nested {
         .field.qty {
+            display: none;
             .label {
                 @include lib-css(font-weight, $form-field-label__font-weight);
                 @include lib-css(margin, 0 0 $indent__xs);
