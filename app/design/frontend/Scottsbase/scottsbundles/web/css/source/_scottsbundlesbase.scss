@@ -1,0 +1,667 @@
+// MyGro Base
+
+.nav-sections {
+  @include lib-css(letter-spacing, $navigation-desktop_letter-spacing);
+  @include lib-css(text-transform, $navigation-level0-item__text-transform);
+}
+
+h3 {
+  letter-spacing: 0.5px;
+}
+
+[class^="icon-"],
+[class*=" icon-"] {
+    font-family: 'gro'; 
+    speak: none;
+    font-style: normal;
+    font-weight: normal;
+    font-variant: normal;
+    text-transform: none;
+    line-height: 1;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.skip-content-header{
+    display:none;
+}
+
+.page-wrapper {
+    .page-header {
+        border-bottom: 1px solid #dcdcdc;
+        position: fixed;
+        z-index: 101; // higher than .loading-mask
+        top: 0;
+        left: 0;
+        width: 100%;
+        background: #fff;
+        text-align: center;
+
+        .header.content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            box-sizing: border-box;
+            padding: 3px 22px;
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+            min-height: 53px;
+
+            @include max-screen($screen__m) {
+                padding: 3px 15px;
+            }
+
+            .nav-toggle {
+                @include max-screen($screen__l) {
+                    margin-top: 2px;
+
+                    &:before {
+                        color: #075534!important;
+                    }
+                }
+                img {
+                    display: block;
+                }
+            }
+            .logo {
+                @include max-screen($screen__l) {
+                    max-width: 10rem;
+                    position: absolute!important;
+                    left: 50%;
+                    transform: translateX(-50%);
+                }
+                img {
+                    display: block;
+                }
+            }
+            .minicart-wrapper {
+                max-width: 30%;
+                text-align: right;
+                margin: 0;
+
+                .showcart {
+                    display: flex;
+                    align-items: center;
+                    color: $mygro-green;
+                    position: relative;
+                    text-decoration: none;
+                    text-align: right;
+
+                    &:before {
+                        display: none;
+                        visibility: hidden;
+                    }
+                    .icon-bag {
+                        color: $mygro-green;
+                        display: block;
+                        padding-right: 5px;
+
+                        &:before {
+                            content: '\e902';
+                            font-size: 2.5rem;
+                        }
+                    }
+                    .cart-total-container {
+                        color: $mygro-black;
+                        display: inline-block;
+                        position: relative;
+                        text-transform: uppercase;
+                        text-align: left;
+
+                        .cart-total-title {
+                            font-size: $font-size__s;
+                            text-transform: uppercase;
+                            display: block;
+
+                            @include max-screen($screen__s) {
+                                margin-right: 0;
+                            }
+                        }
+                        .total-amt {
+                            display: block;
+                            font-size: $font-size__l;
+
+                            @include max-screen($screen__s) {
+                                font-size: $font-size__m;
+                                font-weight: 700;
+                            }
+                            .price {
+                                display: block;
+                                letter-spacing: 0;
+                                padding: 0;
+                                margin-left: -1px;
+                                font-weight: bold;
+                                line-height: 1em;
+                            }
+                        }
+                    }
+                }
+                .ui-dialog {
+                    .block-minicart {
+                        font-size: 1rem;
+                        text-align: left;
+                        #minicart-content-wrapper {
+                            .block-content {
+                                .actions {
+                                    .primary {
+                                        font-size: 1.2rem;
+                                        padding: 0;
+                                    }
+                                }
+                                .minicart-items-wrapper {
+                                    .minicart-items {
+                                        .product-item {
+                                            .product {
+                                                .product-item-pricing {
+                                                    .details-qty {
+                                                        .label {
+                                                            width: auto;
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            .sections.nav-sections {
+                display: inline-block;
+
+                @include min-screen($screen__l) {
+                    position: absolute;
+                    top: 2px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    margin: 0;
+                }
+                @include max-screen($screen__l) {
+                    max-width: 250px;
+                    text-align: left;
+                    transform: none;
+                }
+                .icon-close {
+                    display: none;
+                    @include max-screen($screen__l) {
+                        color: $mygro-green;
+                        display: block;
+                        padding: 1rem;
+                        font-size: 2.2rem;
+                        text-align: right;
+                        text-decoration: none;
+                        &:before {
+                            content: "\e95f";
+                        }
+                        &:hover {
+                            color: $mygro-green;
+                        }
+                    }
+                }
+                .nav-sections-item-content {
+                    @include max-screen($screen__l) {
+                        margin-top: 0;
+                        padding: 0;
+                    }
+                    .navigation {
+                        background: transparent;
+                        ul {
+                            li.level-top {
+                                a.level-top {
+                                    span {
+                                        @media only screen and (max-width: 1023px) {
+                                            margin-left: 0;
+                                        }
+                                    }
+                                }
+                            }
+                            li.level0.active.level-top {
+                                a.level-top {
+                                    @include font-hellix-heavy;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    .page-main {
+        margin-top: 95px;
+
+        a:active,
+        .alink:active {
+            text-decoration: none;
+        }
+
+        a:hover,
+        .alink:hover {
+            text-decoration: none;
+        }
+
+        body > section,
+        .column.main > section {
+            max-width: 1440px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        .column.main > section.hero-video {
+            @include max-screen($screen__l) {
+                margin: 0 16px 0 16px;
+                width: auto;
+                height: 350px;
+            }
+        }
+        .col-2 {
+            p {
+                margin: 0 0 1em;
+            }
+        }
+        .products.grid:after {
+            display: none;
+        }
+        .grid:after {
+            content: '';
+            display: table;
+            clear: both;
+        }
+        .col-3 {
+            .item {
+                width: calc(33.33% - 28px);
+            }
+        }
+        button {
+            background: $mygro-green;
+            border: 0;
+            padding: 23px 35px !important;
+            width: 100%;
+            border-radius: 4px;
+            color: $color-white;
+            font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
+            font-size: 15px;
+            text-align: center;
+            display: inline-block;
+            line-height: 0px;
+            box-sizing: border-box;
+            transition: background 0.2s linear;
+            letter-spacing: 0.5px;
+        }
+        button:hover {
+            background: $mygro-dark-green;
+        }
+        button:active {
+            background: $mygro-light-green;
+        }
+        .button {
+            background: $mygro-green;
+            border: 0;
+            padding: 23px 35px;
+            border-radius: 4px;
+            color: $color-white;
+            font-family: "Hellix-Heavy", Lucida Grande, Arial, Helvetica, sans-serif;
+            font-size: 15px;
+            line-height: 0;
+            transition: background 0.2s linear;
+            letter-spacing: 0.5px;
+            text-align: center;
+            display: inline-block;
+        }
+        .button:hover {
+            background: $mygro-dark-green;
+        }
+        .button:active {
+            background: $mygro-light-green;
+        }
+        .hero-video {
+            background: url(../images/bg-hero.jpg) 50% 0% no-repeat;
+            background-size: cover;
+            height: 720px;
+            position: relative;
+            margin: 16px 16px;
+            @include max-screen($screen__l) {
+                background: url(/pub/media/gro/120417_RW_A_0122edit-2.png) 50% 0% no-repeat;
+                background-size: cover;
+            }
+            .mobile-tablet,
+            .mobile-only {
+                display: none;
+            }
+            .content {
+                width: 50%;
+                max-width: 605px;
+                padding-left: 115px;
+                position: absolute;
+                top: 50%;
+                transform: translateY(-50%);
+                color: $color-white;
+                @include max-screen($screen__l) {
+                    width: auto;
+                    padding: 0 25px;
+                }
+            }
+            h2 {
+                font-size: 48px;
+                line-height: 56px;
+                margin-bottom: 25px;
+                @include max-screen($screen__l) {
+                    font-size: 35px;
+                    line-height: 40px;
+                }
+            }
+            p {
+                font-size: 16px;
+                line-height: 28px;
+                margin-bottom: 25px;
+                padding-right: 25px;
+                @include max-screen($screen__l) {
+                    display: none;
+                }
+            }
+        }
+    }
+
+    .page-footer {
+        border-top: 1px solid #dcdcdc;
+        .inner-footer-container {
+            overflow: auto;
+            padding: 0 10rem;
+            text-align: center;
+            @include max-screen($screen__l) {
+                padding: 0 5rem;
+            }
+            @include max-screen($screen__m) {
+                padding: 0 2rem;
+            }
+            .span_4_of_12 {
+                @media only screen and (max-width: $screen__l){
+                    width: 32.26%;
+                }
+                @media only screen and (max-width: $screen__s){
+                    width: 100%;
+                }
+            }
+            .mygro-footer-support {
+              div {
+                  float: left;
+                  display: inline-block;
+                  position: relative;
+                  @media only screen and (max-width: $screen__s){
+                      float: none;
+                  }
+              }
+            }
+            .mygro-footer-tc {
+                div {
+                    margin-right: auto;
+                    margin-left: auto;
+                    text-align: center;
+                    @media only screen and (max-width: $screen__s){
+                        float: none;
+                    }
+                }
+            }
+            .mygro-footer-contact {
+                div {
+                    float: right;
+                    @media only screen and (max-width: $screen__s){
+                        float: none;
+                    }
+                }
+            }
+            h3 {
+                margin-bottom: 0.25rem;
+            }
+            ul {
+                list-style-type: none;
+                margin: 0;
+                padding: 0;
+                display: inline-block;
+                li {
+                    text-align: left;
+                    color: $mygro-gray;
+                    font-size: $font-size__s;
+                    @media only screen and (max-width: $screen__s){
+                        text-align: center;
+                    }
+                    a {
+                        color: $mygro-gray;
+                        font-size: $font-size__s;
+                        &:hover {
+                            color: $mygro-gray;
+                        }
+                    }
+                }
+            }
+            .mygro-footer-copyright {
+                @include font-hellix-regular(0.875rem, $mygro-gray);
+                border-top: 1px solid #f0f2f5;
+                clear: both;
+                padding: 2rem 0;
+            }
+        }
+    }
+}
+
+
+// Base Widget Styles
+.widget-margin {
+    margin: 0 0 150px 0 !important;
+    @media only screen and (max-width: $screen__l) {
+        margin: 0 0 100px 0 !important;
+    }
+}
+
+.widget-margin-mobile {
+    margin: 0 0 100px 0 !important;
+}
+
+
+.abs-product-link, 
+.product-item-name,
+.product.name a{
+	> a{
+		color: $color-black20_shade;
+		text-decoration: none;
+		font-weight: bold;
+	}
+}
+.clnt-hide{
+    display:none;
+}
+
+.customer-account-create,
+.customer-account-forgotpassword,
+.customer-account-login{
+	input[type="text"], 
+	input[type="password"],
+	input[type="email"]{
+		width: 100% !important;
+		height: 29px;
+	}
+}
+.customer-account-create,
+.customer-account-forgotpassword{
+	 .actions-toolbar .primary{
+		float:right;
+	 }
+	 .actions-toolbar .secondary{
+		float:left;
+	 }
+}
+.customer-account-create,
+.customer-account-login,
+.customer-account-forgotpassword{
+	.page-title-wrapper{
+		margin-top: 30px;
+	}
+}
+.customer-account-login {
+	.actions-toolbar .secondary{
+		float: left;
+		margin-left: 30px;
+	}
+	.login-container .fieldset:after{
+		display:none;
+	}
+	.block.block-customer-login{
+		border-right: 1px solid #e8e8e8;
+		padding-right: 15px;
+	}
+}
+
+.product-image-container {
+    width: 100% !important;
+}
+
+.page-main { 
+	padding-top: 0px; 
+}
+
+@media screen and (min-width: $screen_1024) {
+
+	.nav-sections { 
+		width: 65%; display: 
+		inline-block; 
+		margin: 0 7%; 
+		text-align: center; 
+		background: transparent;
+	}
+	.top-navigation { 
+		top: -10px; 
+
+		.ui-menu li a {
+			font-size: $font14 !important; 
+			font-weight:$font_normal !important; 
+			text-transform: uppercase; 
+			padding: 0 25px!important; 
+		}
+		.ui-menu li.active a { 
+			font-weight:bold!important; 
+			color: $mygro-green!important; 
+		}
+	} 
+	
+}
+
+.page-wrapper{
+	.page-header {
+			.shipping-message-pl{
+				background: $mygro-green;
+				padding: 10px;
+				text-align: center;
+				color: white;
+				font-size: 0.9rem;
+
+				p.free-shipping-text{
+					margin-bottom: 0px;
+				}
+			}
+	}
+}
+
+.cms-home .hero-callout{
+  margin: 120px auto 20px !important;
+}
+
+//Causing Title Section to appear on all pages commenting out for now
+// Don't know what the design reason was for this
+/*
+.page-wrapper {
+    .page-main {
+        .page-title-wrapper{
+          display: block;
+          margin-top: 7rem;
+          font-size:2rem !important;
+        }
+    }
+}
+*/
+
+
+.actions-toolbar{
+    .primary{
+        .action-add.primary{
+            text-align:center;
+        }   
+    } 
+}
+button.action{
+    text-align:center;
+}
+
+.payment-group:last-child{
+	padding-bottom:18px;
+}
+
+#block-discount-heading{
+	@media (max-width: 767px){
+        	padding: 0 10px 15px 0px;
+        }
+}
+
+.messages{
+    .message.error{
+        font-size:16px;
+    }
+}
+
+.field{
+    .control{
+        .field-error{
+            margin-top:0px;
+            bottom: 0;
+        }
+    }
+}
+
+.cms-the-groconnect-app{
+    .breadcrumbs{
+        margin-top: 7rem;
+        .item:not(:last-child):after{
+            content:"\002F";
+        }
+        .items{
+            li{
+                font-size:12px;
+                vertical-align: middle;
+            }
+        }
+    }
+    .page-wrapper{
+        .page-main{
+            margin-top:0px;
+        }
+    }
+}
+
+.modal-inner-wrap {
+	.modal-footer{
+		text-align:right;
+		.action-primary{
+			background: #075534;
+			color: #fff;
+		}
+	}
+}
+div.breadcrumbs {
+	/*margin-top: 105px;*/
+	margin-top: 6px;
+
+	.item:not(:last-child):after {
+		line-height: 24px;
+	}
+}
+.sticky-header{
+	position: fixed;
+	transition: all 0.2s ease-in-out;
+
+
+	+ .page-main {
+		margin-top: 120px;
+	}
+}
