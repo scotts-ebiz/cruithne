@@ -24,17 +24,6 @@
             </block>
         </referenceBlock>
         <referenceBlock name="product.info.options.wrapper">
-            <block class="Magento\Catalog\Block\Product\View\Description" name="product.info.overview" template="Magento_Catalog::product/view/attribute.phtml" group="detailed_info" after="product.info.extrahint">
-                <arguments>
-                    <argument name="at_call" xsi:type="string">getShortDescription</argument>
-                    <argument name="at_code" xsi:type="string">short_description</argument>
-                    <argument name="css_class" xsi:type="string">overview</argument>
-                    <argument name="at_label" xsi:type="string">none</argument>
-                    <argument name="title" translate="true" xsi:type="string">Overview</argument>
-                    <argument name="add_attribute" xsi:type="string">itemprop="description"</argument>
-                </arguments>
-            </block>
-
             <block class="Magento\Catalog\Block\Product\View" name="bundle.product.view.options.notice" template="Magento_Bundle::catalog/product/view/options/notice.phtml"/>
             <block class="Magento\Bundle\Block\Catalog\Product\View\Type\Bundle" name="product.info.bundle.options" as="type_bundle_options" template="Magento_Bundle::catalog/product/view/type/bundle/options.phtml" before="-">
                 <container name="product.info.bundle.options.top" as="product_info_bundle_options_top">
