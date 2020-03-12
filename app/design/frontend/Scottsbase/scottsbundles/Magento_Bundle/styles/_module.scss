@@ -17,7 +17,7 @@
     margin-bottom: $indent__xl;
 
     .legend.title {
-        @include lib-heading(h3);
+        //@include lib-heading(h3);
     }
 
     .product-add-form {
@@ -38,8 +38,9 @@
 
     .price-box {
         .price {
-            font-size: $font-size__l;
-            font-weight: $font-weight__bold;
+            font-size: 28px;
+            font-weight: 700;
+            color: $mygro-dark-gray;
         }
     }
 
@@ -52,11 +53,16 @@
         padding: $indent__s $indent__base;
 
         > .title > strong {
-            @include lib-heading(h2);
+            font-family: $font-family__secondary;
+            font-weight: 300;
+            line-height: 2;
+            font-size: 26px;
+            color: $mygro-dark-gray;
+            padding: 0 0 20px 0;
         }
 
         .bundle-summary {
-            margin-top: $indent__l;
+            margin-top: 25px;
 
             &.empty {
                 display: none;
@@ -103,7 +109,7 @@
                 display: inline-block;
             }
 
-            @include lib-css(margin-top, $form-field__vertical-indent);
+            margin-top: 10px;
         }
     }
 
