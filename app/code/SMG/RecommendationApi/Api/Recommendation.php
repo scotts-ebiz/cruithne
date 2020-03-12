@@ -311,13 +311,6 @@ class Recommendation implements RecommendationInterface
             throw new LocalizedException(__($error));
         }
 
-        // See if the subscription already exists.
-        /**
-         * @var SubscriptionCollection $subscriptionCollection
-         */
-        $subscriptionCollection = $this->_subscriptionCollectionFactory->create();
-        $subscription = $subscriptionCollection->getItemByColumnValue('quiz_id', $id);
-
         // Get the response
         $id = filter_var($id, FILTER_SANITIZE_SPECIAL_CHARS);
         $url = filter_var(
@@ -338,7 +331,7 @@ class Recommendation implements RecommendationInterface
 
         // Get the subscription
         try {
-            $this->findOrCreateSubscription(
+            $subscription = $this->findOrCreateSubscription(
                 $response,
                 $zip,
                 $lawnSize,
@@ -584,7 +577,6 @@ class Recommendation implements RecommendationInterface
         try {
             $subscription = $this->_subscription->getSubscriptionByQuizId($response[0]['id']);
             /**
-             * @todo Wes/Sean Check status to make sure this is a valid subscription to checkout
              * If this subscription status is not pending, we need to return an error.
              * @author Sean Kegel
              * @date 12/13/2019

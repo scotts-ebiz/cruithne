@@ -17,7 +17,6 @@
     margin-bottom: $indent__xl;
 
     .legend.title {
-        //@include lib-heading(h3);
     }
 
     .product-add-form {
@@ -41,6 +40,7 @@
             font-size: 28px;
             font-weight: 700;
             color: $mygro-dark-gray;
+
         }
     }
 

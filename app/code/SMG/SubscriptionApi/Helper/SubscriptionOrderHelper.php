@@ -294,13 +294,16 @@ class SubscriptionOrderHelper extends AbstractHelper
         $addOnOrder = false;
 
         $subscriptionOrder = $subscriptionOrderCollection
-            ->getItemByColumnValue('subscription_id', $subscriptionId);
+            ->addFieldToFilter('subscription_id', $subscriptionId)
+            ->getFirstItem();
 
         if (! $subscriptionOrder || ! $subscriptionOrder->getId()) {
             // Lets see if it is an add-on order.
             $subscriptionOrderCollection = $this->_subscriptionAddonOrderCollectionFactory->create();
             $subscriptionOrder = $subscriptionOrderCollection
-                ->getItemByColumnValue('subscription_id', $subscriptionId);
+                ->addFieldToFilter('subscription_id', $subscriptionId)
+                ->getFirstItem();
+
             $addOnOrder = true;
         }
 
