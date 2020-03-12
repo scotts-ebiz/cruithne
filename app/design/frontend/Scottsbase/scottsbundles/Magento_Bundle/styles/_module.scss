@@ -5,12 +5,19 @@
     }
 }
 
+.bundle-info {
+    .product-image-container {
+        display: none;
+    }
+
+}
+
 .bundle-options-container {
     clear: both;
     margin-bottom: $indent__xl;
 
     .legend.title {
-        @include lib-heading(h2);
+        @include lib-heading(h3);
     }
 
     .product-add-form {
@@ -73,6 +80,7 @@
             .actions {
                 display: inline-block;
                 margin-bottom: $indent__s;
+                width: 100%;
             }
 
             .action.primary {
