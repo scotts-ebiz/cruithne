@@ -742,4 +742,14 @@ class Subscription implements SubscriptionInterface
             $this->_cart->removeItem($item->getItemId())->save();
         }
     }
+
+    /**
+     * Get Subscription Data For Data Sync.
+     *
+     * @return array
+     */
+    public function getSubscriptionDataForSync()
+    {
+        return $this->_subscriptionHelper->getSubscriptionDataForSync();
+    }
 }
