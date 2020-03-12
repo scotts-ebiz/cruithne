@@ -13,9 +13,6 @@
 
 <div class="bundle-product-title"><?= $block->escapeHtml($_product->getName()) ?></div>
 
-<div class="bundle-product-description"><?= $block->escapeHtml($_product->getDescription()) ?></div>
-
-
 <?php if ($block->displayProductStockStatus()) : ?>
     <?php if ($_product->isAvailable()) : ?>
         <p class="stock available" title="<?= $block->escapeHtmlAttr(__('Availability:')) ?>">

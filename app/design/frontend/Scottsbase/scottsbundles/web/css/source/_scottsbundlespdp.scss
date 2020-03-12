@@ -73,7 +73,8 @@ product-add-form .fieldset > .field:not(.choice) > .label {
   font-weight: 400;
   font-size: 18px;
   color: $mygro-dark-gray;
-  padding: 0 0 10px 0;
+  padding: 0 0 8px 0;
+  line-height: 1;
   border-bottom: 1px solid $mygro-gray;
 }
 
