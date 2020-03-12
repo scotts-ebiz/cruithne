@@ -23,7 +23,15 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
   font-weight: 700;
   font-size: 26px;
   color: $mygro-dark-green;
+  margin: 0 0 20px 0;
 }
+
+.bundle-product-description {
+  font-size: 16px;
+  margin: 0 0 20px 0;
+  color: $mygro-dark-gray;
+}
+
 
 .product-reviews-summary .reviews-actions {
   display: none;
@@ -36,7 +44,6 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
 .product-reviews-summary {
   display: none;
 }
-
 
 .bundle-actions {
   display: none;
