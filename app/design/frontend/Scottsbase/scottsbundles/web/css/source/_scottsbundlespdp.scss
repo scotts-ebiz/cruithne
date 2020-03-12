@@ -136,11 +136,20 @@ product-add-form .fieldset > .field:not(.choice) > .label {
   }
 }
 
+.fotorama__stage {
+  outline: rgb(144, 144, 144) solid 1px;
+  outline-offset: -1px;
+}
+
 .block-bundle-summary .title {
   margin: 0 0 20px 0;
   border-bottom: 1px solid $mygro-gray;
+  width: 80%;
   padding: 0 0 10px 0;
   line-height: 1;
+  @media only screen and (max-width: $screen__m){
+    width: 100%;
+  }
 }
 
 .bundle-options-container .block-bundle-summary .bundle-summary ul.bundle li .label {
