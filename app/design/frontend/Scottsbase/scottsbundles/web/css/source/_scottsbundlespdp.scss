@@ -18,6 +18,9 @@ body.product-controller.page-product-grouped .product-info-main .product-add-for
   }
 }
 
+.product-reviews-summary .reviews-actions {
+  display: none;
+}
 
 .product-info-stock-sku {
   display: none;
@@ -41,6 +44,11 @@ product-add-form .fieldset > .field:not(.choice) > .label {
   color: $mygro-dark-gray;
 }
 
+.product-info-main .price-box .price-wrapper .price {
+  font-size: 28px;
+  color: $mygro-dark-gray;
+}
+
 .price-notice {
   display: inline-block;
   width: 100%;
@@ -59,10 +67,12 @@ product-add-form .fieldset > .field:not(.choice) > .label {
   display: none;
 }
 
-.fieldset-bundle-options .field.option {
+.fieldset-bundle-options .field.option .nested .qty-holder .control {
   border-bottom: 1px solid $bundle-light-gray;
   padding: 0 0 10px 0;
 }
+
+
 
 .fieldset-bundle-options .field.option .label {
   display: none;
