@@ -434,7 +434,7 @@ define([
             } else {
                 $('body').addClass('no-scroll')
             }
-            
+
             this.saveAndSendSuccessModal({
                 ...this.saveAndSendSuccessModal(),
                 visible: !this.saveAndSendSuccessModal().visible
@@ -451,28 +451,26 @@ define([
             var products = data.plan.coreProducts;
             
             products.forEach(function (product, index) {
-                    product_id.push(product.entity_id);
-                    startdate.push(product.applicationStartDate);
-                    enddate.push(product.applicationEndDate);
-                    product_order.push(i);
+                    product_id = product.entity_id;
+                    startdate  = product.applicationStartDate;
+                    enddate    = product.applicationEndDate;
+                    product_order = i;
+					
+					var applicationStartDateTime =(new Date(startdate)).getTime().toString().slice(0,-3);
+					var applicationEndDateTime =(new Date(enddate)).getTime().toString().slice(0,-3);
+					
+					zaius.event("quiz",{
+						action: "submitted",
+						recommendation_id: data.id,
+						new_id: window.sessionStorage.getItem('new_id'),
+						product_id: product_id,
+						applicationstartdate: applicationStartDateTime,
+						applicationenddate: applicationEndDateTime,
+						product_order: product_order,
+						quiz_zip_code: window.sessionStorage.getItem('lawn-zip')
+					});
                     i++;
-            });
-
-            var applicationStartDate = startdate[0];
-            var applicationEndDate = enddate[i-1];
-            var applicationStartDateTime =(new Date(applicationStartDate)).getTime().toString().slice(0,-3);
-            var applicationEndDateTime =(new Date(applicationEndDate)).getTime().toString().slice(0,-3);
-
-            zaius.event("quiz",{
-                action: "submitted",
-                recommendation_id: '"'+data.id+'"',
-                new_id: '"'+window.sessionStorage.getItem('new_id')+'"',
-                product_id: '"'+product_id.join(separator)+'"',
-                applicationstartdate: '"'+applicationStartDateTime+'"',
-                applicationenddate: '"'+applicationEndDateTime+'"',
-                product_order: '"'+product_order.join(separator)+'"',
-                quiz_zip_code: '"'+window.sessionStorage.getItem('lawn-zip')+'"'
-            });
+            });          
          },
 
         formatNumber: function(number) {
