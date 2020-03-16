@@ -4,11 +4,7 @@
 >
     <!-- ko template: "SMG_SubscriptionCheckout/success.html" --><!-- /ko -->
 </div>
-<?php
-    $objectManager = \Magento\Framework\App\ObjectManager::getInstance();
-    $customerSession = $objectManager->get('Magento\Customer\Model\Session');
-    $storeManager = $objectManager->get('\Magento\Store\Model\StoreManagerInterface');
-?>
+
 <script type="text/x-magento-init">
    {
         "*": {
@@ -16,8 +12,8 @@
                 "components": {
                     "success": {
                         "component": "SMG_SubscriptionCheckout/js/success",
-                        "customerEmail": "<?=$customerSession->getCustomerData()->getEmail()?>",
-                        "storeName": "<?=$storeManager->getStore()->getName()?>"
+                        "customerEmail": "<?=$this->_customerSession->getCustomerData()->getEmail()?>",
+                        "storeName": "<?=$this->_storeManager->getStore()->getName()?>"
                     }
                 }
             }
