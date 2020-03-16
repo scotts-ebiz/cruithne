@@ -153,7 +153,14 @@ class SubscriptionOrderItem extends AbstractModel
         }
 
         try {
-            $this->_subscriptionOrder = $this->_subscriptionOrderCollectionFactory->create()->getItemById($this->getSubscriptionOrderEntityId());
+            $this->_subscriptionOrder = $this->_subscriptionOrderCollectionFactory
+                ->create()
+                ->addFieldToFilter('entity_id', $this->getData('subscription_order_entity_id'))
+                ->getFirstItem();
+
+            if (! $this->_subscriptionOrder->getId()) {
+                return false;
+            }
         } catch (\Exception $e) {
             return false;
         }
