@@ -9,7 +9,8 @@ if [[ "$1" -eq "rc" ]]
     FILENAME='rc_'$(date +%Y%m%d)'0001.sql'
 fi
 # copy the desired sql file to the temp directory for later use
-/root/google-cloud-sdk/bin/gsutil cp gs://magento-data-export/$FILENAME /tmp/database.sql
+#/root/google-cloud-sdk/bin/gsutil cp gs://magento-data-export/$FILENAME /tmp/database.sql
+/root/google-cloud-sdk/bin/gsutil cp gs://magento-data-export/rc_202003030001.sql /tmp/database.sql
 
 # create the magento user
 echo "CREATE USER 'magento'@'%' IDENTIFIED BY 'j7K9u3Lm2wA6';" | mysql -u root -pdfDF34#$
