@@ -23,6 +23,10 @@
   }
 }
 
+.sp-form-group .message.warning {
+  display: none;
+}
+
 .opc-block-summary {
   background-color: $gray-4;
   margin-bottom: 2rem;
