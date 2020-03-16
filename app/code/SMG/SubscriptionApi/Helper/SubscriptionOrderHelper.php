@@ -220,7 +220,7 @@ class SubscriptionOrderHelper extends AbstractHelper
         }
 
         // Check if the subscription order is valid.
-        if ($subscriptionOrder->getData('subscription_order_status') != 'pending') {
+        if ($subscriptionOrder->getData('subscription_order_status') != 'pending' || $subscriptionOrder->getData('sales_order_id') > 0) {
             $this->errorResponse(
                 "Subscription order with subscription ID {$subscriptionOrder->getData('subscription_id')} has already been completed or canceled.",
                 400
