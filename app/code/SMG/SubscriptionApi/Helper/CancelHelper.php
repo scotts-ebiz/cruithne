@@ -200,8 +200,8 @@ class CancelHelper extends AbstractHelper
 	
 	/**
      * Cancel subscription notification to zaius
-     * @param $orderdata
-     * @throws \ZaiusSDK\ZaiusException
+     * @param $subscription, $customeremail, $timestamp
+     * return message on log
      */
     private function zaiusCancelOrder($subscription,$customer_email,$timestamp)
     {
