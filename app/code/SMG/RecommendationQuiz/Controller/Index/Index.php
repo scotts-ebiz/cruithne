@@ -47,16 +47,19 @@ class Index extends Action
         $this->_session = $session;
     }
 
+
     /**
      * @return \Magento\Framework\App\ResponseInterface|\Magento\Framework\Controller\ResultInterface|\Magento\Framework\View\Result\Page
      */
     public function execute()
     {
         // Starting a new quiz, so clear out any existing information.
+
         $this->_session->start();
         $this->_session->unsetData('quiz_id');
         $this->_session->unsetData('subscription_details');
-
+        $timestamp = strtotime(date("Y-m-d H:i:s"));
+        $this->_session->setTimeStamp($timestamp);
         $resultPage = $this->_resultPageFactory->create();
 
         return $resultPage;

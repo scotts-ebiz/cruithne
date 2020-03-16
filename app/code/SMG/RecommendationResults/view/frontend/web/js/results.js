@@ -31,9 +31,9 @@ define([
 
         initialize(config) {
             const self = this;
-
             window.scrollTo(0, 0);
             self.customer = customerData.get('customer');
+            window.sessionStorage.setItem('new_id', config.new_id);
 
             if (config.zip) {
                 window.sessionStorage.setItem('lawn-zip', config.zip);
@@ -298,10 +298,10 @@ define([
                                 window.location.href = self.customer().firstname ? '/your-plan' : '/quiz';
                                 return;
                             }
-
                             self.hasResults(true);
                             self.results(data);
                             self.checkZone();
+                            self.zauisevent(data);
                             window.sessionStorage.setItem('result', JSON.stringify(data));
                             window.sessionStorage.setItem('quiz-id', data.id);
                         }
@@ -439,7 +439,39 @@ define([
                 ...this.saveAndSendSuccessModal(),
                 visible: !this.saveAndSendSuccessModal().visible
             })
-        },
+         },
+
+        zauisevent(data) {
+            var product_id = [];
+            var product_order = [];
+            var startdate = [];
+            var enddate = [];
+            var i = 0;
+            var separator = ','; 
+            var products = data.plan.coreProducts;
+            
+            products.forEach(function (product, index) {
+                    product_id = product.entity_id;
+                    startdate  = product.applicationStartDate;
+                    enddate    = product.applicationEndDate;
+                    product_order = i;
+					
+					var applicationStartDateTime =(new Date(startdate)).getTime().toString().slice(0,-3);
+					var applicationEndDateTime =(new Date(enddate)).getTime().toString().slice(0,-3);
+					
+					zaius.event("quiz",{
+						action: "submitted",
+						recommendation_id: data.id,
+						new_id: window.sessionStorage.getItem('new_id'),
+						product_id: product_id,
+						applicationstartdate: applicationStartDateTime,
+						applicationenddate: applicationEndDateTime,
+						product_order: product_order,
+						quiz_zip_code: window.sessionStorage.getItem('lawn-zip')
+					});
+                    i++;
+            });          
+         },
 
         formatNumber: function(number) {
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
