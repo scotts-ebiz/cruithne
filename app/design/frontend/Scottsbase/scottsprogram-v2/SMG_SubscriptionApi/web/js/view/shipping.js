@@ -311,6 +311,16 @@ define([
                 processData: false,
                 success: function(response) {
                     response = JSON.parse(response);
+
+                    if (response.message.indexOf('Could not find an active subscription') > -1) {
+                        // Couldn't find the subscription, so maybe it's
+                        // already cancelled, so let's go ahead and refresh
+                        // the page.
+                        window.location.reload();
+
+                        return;
+                    }
+
                     if( response.success === true ) {
                         self.hasSubscription(false);
                         $('#popup-modal').modal('closeModal');
@@ -319,14 +329,11 @@ define([
                         $('#popup-modal').modal('closeModal');
                     }
                 },
-                complete() {
-                    self.loading(false);
-                    self.cancellingSubscription(false);
+                error() {
                     window.location.reload();
-
-                    $('button#cancelSubscription')
-                        .removeClass('sp-button--loading')
-                        .removeClass('sp-button--inactive');
+                },
+                complete() {
+                    window.location.reload();
                 },
             })
         },
