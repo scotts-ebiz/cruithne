@@ -1,0 +1,19 @@
+@include lib-font-face(
+    $family-name: 'Hellix-Regular',
+    $font-path: '../fonts/hellix-regular-webfont',
+    $font-weight: 400,
+    $font-style: normal
+);
+
+@include lib-font-face(
+    $family-name: 'Hellix-Heavy',
+    $font-path: '../fonts/hellix-heavy-webfont',
+    $font-weight: 700,
+    $font-style: normal
+);
+
+@include lib-font-face(
+    $family-name: 'Gro',
+    $font-path: '../fonts/gro',
+    $font-style: normal
+);
