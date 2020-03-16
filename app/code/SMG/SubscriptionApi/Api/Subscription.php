@@ -358,6 +358,11 @@ class Subscription implements SubscriptionInterface
             // Get customer shipping and billing address
             $mainQuote = $this->_checkoutSession->getQuote();
             $customerShippingAddress = $this->_subscriptionOrderHelper->formatAddress($mainQuote->getShippingAddress());
+
+            // Update the zip codes in the addresses to just use the first 5.
+            $customerShippingAddress['postcode'] = substr($customerShippingAddress['postcode'], 0, 5);
+            $billing_address['postcode'] = substr($billing_address['postcode'], 0, 5);
+
             if ($billing_same_as_shipping) {
                 $customerBillingAddress = $customerShippingAddress;
             } else {
@@ -741,5 +746,15 @@ class Subscription implements SubscriptionInterface
         foreach ($quoteItems as $item) {
             $this->_cart->removeItem($item->getItemId())->save();
         }
+    }
+
+    /**
+     * Get Subscription Data For Data Sync.
+     *
+     * @return array
+     */
+    public function getSubscriptionDataForSync()
+    {
+        return $this->_subscriptionHelper->getSubscriptionDataForSync();
     }
 }

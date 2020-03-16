@@ -55,10 +55,25 @@ define([
                             })
                         }
                         if (message.indexOf('password') >= 0) {
-                            self.modalValues({
-                                header: 'Problem saving changes',
-                                message: 'There was a problem updating your password.'
-                            });
+                            // Indicate what kind of password error happened.
+                            if (message.indexOf('Missing required parameter') >= 0) {
+                                self.modalValues({
+                                    header: 'Problem saving changes',
+                                    message: 'Current Password is a required field when setting new password. Please enter your current password and try again.'
+                                });
+                            }
+                            else if(message.indexOf('Invalid LoginID') >= 0) {
+                                self.modalValues({
+                                    header: 'Problem saving changes',
+                                    message: 'Invalid current password was entered.'
+                                });
+                            }
+                            else {
+                                self.modalValues({
+                                    header: 'Problem saving changes',
+                                    message: 'There was a problem updating your password.'
+                                });
+                            }
                         }
                         if (message == 'Email is required') {
                             self.modalValues({
