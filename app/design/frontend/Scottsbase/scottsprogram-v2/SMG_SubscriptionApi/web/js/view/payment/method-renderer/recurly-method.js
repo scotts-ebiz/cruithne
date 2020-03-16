@@ -459,6 +459,9 @@ define(
                 const isBillingSameAsShipping = $('input[name="billing-address-same-as-shipping"]:checked').val() === 'on';
                 const address = (isBillingSameAsShipping === false) ? this.getBillingAddress() : this.getShippingAddress();
 
+                // Shorten the zip code to just the first 5.
+                address.postcode = address.postcode.substring(0, 5);
+
                 $.ajax({
                     type: 'POST',
                     url: window.location.origin + '/rest/V1/subscription/createSubscription',
@@ -532,7 +535,7 @@ define(
                 $('input[data-recurly="city"]').val(address.city);
                 $('input[data-recurly="state"]').val(stateName);
                 $('input[data-recurly="country"]').val(countryName);
-                $('input[data-recurly="postal_code"]').val(address.postcode);
+                $('input[data-recurly="postal_code"]').val(address.postcode.substr(0, 5));
 
                 return true;
             },
