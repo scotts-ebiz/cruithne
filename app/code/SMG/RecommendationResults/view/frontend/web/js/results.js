@@ -435,8 +435,6 @@ define([
                 $('body').addClass('no-scroll')
             }
             
-            zaius.subscribe({list_id: 'scotts',email: this.saveAndSendModal().email,acquisition_method: 'scotts-program-quizresults',acquisition_source: 'Scotts'});
-
             this.saveAndSendSuccessModal({
                 ...this.saveAndSendSuccessModal(),
                 visible: !this.saveAndSendSuccessModal().visible
