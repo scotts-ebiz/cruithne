@@ -219,7 +219,7 @@ class SubscriptionOrderHelper extends AbstractHelper
         }
 
         // Check if the subscription order is valid.
-        if ($subscriptionOrder->getData('subscription_order_status') != 'pending') {
+        if ($subscriptionOrder->getData('subscription_order_status') != 'pending' || $subscriptionOrder->getData('sales_order_id') > 0) {
             $this->errorResponse(
                 "Subscription order with subscription ID {$subscriptionOrder->getData('subscription_id')} has already been completed or canceled.",
                 400
@@ -273,7 +273,7 @@ class SubscriptionOrderHelper extends AbstractHelper
             'country_id' => $address->getCountryId(),
             'region' => $address->getRegion(),
             'region_id' => $address->getRegionId(),
-            'postcode' => $address->getPostcode(),
+            'postcode' => substr($address->getPostcode(), 0, 5),
             'telephone' => $address->getTelephone(),
             'save_in_address_book' => 0,
         ];
