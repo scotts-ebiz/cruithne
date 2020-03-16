@@ -274,7 +274,7 @@ class SubscriptionOrderHelper extends AbstractHelper
             'country_id' => $address->getCountryId(),
             'region' => $address->getRegion(),
             'region_id' => $address->getRegionId(),
-            'postcode' => $address->getPostcode(),
+            'postcode' => substr($address->getPostcode(), 0, 5),
             'telephone' => $address->getTelephone(),
             'save_in_address_book' => 0,
         ];
