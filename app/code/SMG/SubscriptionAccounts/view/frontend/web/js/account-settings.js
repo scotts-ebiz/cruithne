@@ -48,17 +48,39 @@ define([
                 success(data) {
                     const { success, message } = data;
                     if (!success) {
-                        if (message.indexOf('updating the account details') >= 0) {
+
+                        if (message.indexOf('Login identifier exists') >= 0) {
+                            self.modalValues({
+                                header: 'Problem saving changes',
+                                message: 'An account already exists with the email address you entered, please use a different email address.'
+                            });
+                        }
+                        else if (message.indexOf('updating the account details') >= 0) {
                             self.modalValues({
                                 header: 'Problem saving changes',
                                 message: 'There was a problem saving your account details, please try again later.'
-                            })
+                            });
                         }
                         if (message.indexOf('password') >= 0) {
-                            self.modalValues({
-                                header: 'Problem saving changes',
-                                message: 'There was a problem updating your password.'
-                            });
+                            // Indicate what kind of password error happened.
+                            if (message.indexOf('Missing required parameter') >= 0) {
+                                self.modalValues({
+                                    header: 'Problem saving changes',
+                                    message: 'Current Password is a required field when setting new password. Please enter your current password and try again.'
+                                });
+                            }
+                            else if(message.indexOf('Invalid LoginID') >= 0) {
+                                self.modalValues({
+                                    header: 'Problem saving changes',
+                                    message: 'Invalid current password was entered.'
+                                });
+                            }
+                            else {
+                                self.modalValues({
+                                    header: 'Problem saving changes',
+                                    message: 'There was a problem updating your password.'
+                                });
+                            }
                         }
                         if (message == 'Email is required') {
                             self.modalValues({
