@@ -6,7 +6,6 @@ use DateTime;
 use Exception;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Checkout\Model\Session as CheckoutSession;
-use Magento\Customer\Model\AddressFactory;
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\ResourceModel\CustomerFactory;
 use Magento\Customer\Model\Session;
@@ -27,7 +26,6 @@ use Recurly_Purchase;
 use Recurly_ShippingAddress;
 use Recurly_Subscription;
 use Recurly_SubscriptionList;
-use SMG\RecommendationApi\Helper\RecommendationHelper;
 use SMG\SubscriptionApi\Helper\RecurlyHelper;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 use SMG\SubscriptionApi\Helper\SubscriptionOrderHelper;
@@ -50,11 +48,6 @@ class RecurlySubscription
      * @var SubscriptionHelper
      */
     protected $_subscriptionHelper;
-
-    /**
-     * @var RecommendationHelper
-     */
-    protected $_recommendationHelper;
 
     /**
      * @var Session
@@ -127,15 +120,9 @@ class RecurlySubscription
     protected $_coreSession;
 
     /**
-     * @var AddressFactory
-     */
-    protected $_addressFactory;
-
-    /**
      * RecurlySubscription constructor.
      * @param RecurlyHelper $recurlyHelper
      * @param SubscriptionHelper $subscriptionHelper
-     * @param RecommendationHelper $recommendationHelper
      * @param Session $customerSession
      * @param Customer $customer
      * @param CustomerFactory $customerFactory
@@ -148,12 +135,10 @@ class RecurlySubscription
      * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
      * @param TestHelper $testHelper
      * @param SessionManagerInterface $coreSession
-     * @param AddressFactory $addressFactory
      */
     public function __construct(
         RecurlyHelper $recurlyHelper,
         SubscriptionHelper $subscriptionHelper,
-        RecommendationHelper $recommendationHelper,
         Session $customerSession,
         Customer $customer,
         CustomerFactory $customerFactory,
@@ -165,13 +150,10 @@ class RecurlySubscription
         SubscriptionOrderHelper $subscriptionOrderHelper,
         SubscriptionCollectionFactory $subscriptionCollectionFactory,
         TestHelper $testHelper,
-        SessionManagerInterface $coreSession,
-        AddressFactory $addressFactory
+        SessionManagerInterface $coreSession
     ) {
         $this->_recurlyHelper = $recurlyHelper;
         $this->_subscriptionHelper = $subscriptionHelper;
-        $this->_recommendationHelper = $recommendationHelper;
-        $this->_recommendationHelper = $recommendationHelper;
         $this->_customerSession = $customerSession;
         $this->_customer = $customer;
         $this->_customerFactory = $customerFactory;
@@ -186,7 +168,6 @@ class RecurlySubscription
         $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
         $this->_testHelper = $testHelper;
         $this->_coreSession = $coreSession;
-        $this->_addressFactory = $addressFactory;
 
         // Configure Recurly Client
         Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
@@ -445,7 +426,7 @@ class RecurlySubscription
             'email' => $email,
             'city' => $shippingAddress['city'],
             'state' => $shippingAddress['region'],
-            'zip' => $shippingAddress['postcode'],
+            'zip' => substr($shippingAddress['postcode'], 0, 5),
             'phone' => $shippingAddress['telephone'],
             'address1' => $shippingAddress['street'][0],
             'address2' => isset($shippingAddress['street'][1]) ? $shippingAddress['street'][1] : '',
