@@ -584,7 +584,6 @@ class Recommendation implements RecommendationInterface
         try {
             $subscription = $this->_subscription->getSubscriptionByQuizId($response[0]['id']);
             /**
-             * @todo Wes/Sean Check status to make sure this is a valid subscription to checkout
              * If this subscription status is not pending, we need to return an error.
              * @author Sean Kegel
              * @date 12/13/2019
