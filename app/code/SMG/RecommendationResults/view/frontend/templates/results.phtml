@@ -23,9 +23,10 @@
                 "components": {
                     "results": {
                         "component": "SMG_RecommendationResults/js/results",
-                        "quiz_id": "<?php echo $this->getRequest()->getParam('id') ?? ''; ?>",
-                        "zip": "<?php echo $this->getRequest()->getParam('zip') ?? ''; ?>"
-                    }
+                        "quiz_id": "<?php /* @escapeNotVerified */ echo $this->getRequest()->getParam('id') ?? ''; ?>",
+                        "zip": "<?php /* @escapeNotVerified */ echo $this->getRequest()->getParam('zip') ?? ''; ?>",
+                        "new_id": "<?php /* @escapeNotVerified */ echo $block->getNewId(); ?>"
+                    }  
                 }
             }
         }
