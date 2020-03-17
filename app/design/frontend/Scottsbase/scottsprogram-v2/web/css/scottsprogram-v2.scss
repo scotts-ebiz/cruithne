@@ -1,14 +1,7 @@
-// Mixins
-//@import "mixins/media-queries";
-
 // Vendor libs
-@import 'vendor/normalize/lib'; // Normalize.css
-@import 'vendor/magento-ui/lib'; // Magento UI
+@import 'vendor/magento-ui/lib'; // Magento UI - Contains variables and mixins needed for import of 'variables' inside of 'source/main' below
 
-@import "source/main";
-
-// Theme variables
-@import 'variables';
+@import 'source/main';
 
 // Widgets
 @import '../../SMG_SPV2FAQPageWidget/styles/widgets';
