@@ -49,15 +49,15 @@ class CancelHelper extends AbstractHelper
      */
     protected $_subscriptionCollectionFactory;
     
-	/** @var SubscriptionOrderCollectionFactory */
+    /** @var SubscriptionOrderCollectionFactory */
     protected $_subscriptionOrderCollectionFactory;
     
     /** @var SubscriptionOrderItemCollectionFactory */
     protected $_subscriptionOrderItemCollectionFactory;
-	
-	/** @var productRepository */
+    
+    /** @var productRepository */
     protected $_productRepository;
-	
+    
     /**
      * CancelHelper constructor.
      * @param Context $context
@@ -76,9 +76,9 @@ class CancelHelper extends AbstractHelper
         SubscriptionCollectionFactory $subscriptionCollectionFactory,
         LoggerInterface $logger,
         ZaiusSdk $sdk,
-		SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
+        SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
         SubscriptionOrderItemCollectionFactory $subscriptionOrderItemCollectionFactory,
-		\Magento\Catalog\Model\ProductRepository $productRepository
+        \Magento\Catalog\Model\ProductRepository $productRepository
     ) {
         parent::__construct($context);
 
@@ -88,9 +88,9 @@ class CancelHelper extends AbstractHelper
         $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
         $this->_logger = $logger;
         $this->_sdk = $sdk;
-		$this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
+        $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
         $this->_subscriptionOrderItemCollectionFactory = $subscriptionOrderItemCollectionFactory;
-		$this->_productRepository = $productRepository;
+        $this->_productRepository = $productRepository;
     }
 
     /**
@@ -131,7 +131,7 @@ class CancelHelper extends AbstractHelper
             $timestamp = strtotime(date("Y-m-d H:i:s"));
             $this->clearCustomerAddresses($customer);
             $this->zaiusCancelCall($customer->getData('email'));
-			      $this->zaiusCancelOrder($subscription,$customer->getData('email'),$timestamp);
+                  $this->zaiusCancelOrder($subscription,$customer->getData('email'),$timestamp);
 
         } catch (Exception $e) {
             $this->_logger->error($e->getMessage());
@@ -197,68 +197,73 @@ class CancelHelper extends AbstractHelper
             }
         }
     }
-	
-	/**
+    
+    /**
      * Cancel subscription notification to zaius
      * @param $subscription, $customeremail, $timestamp
      * return message on log
      */
     private function zaiusCancelOrder($subscription,$customer_email,$timestamp)
     {
-		$zaiusstatus = false;
+        $zaiusstatus = false;
 
         // check isSubcription and shipmentstatus
         if ($subscription) {
-	
-            $subscriptionId = $subscription->getEntityId();	
+    
+            $subscriptionId = $subscription->getEntityId(); 
             
-			// call subscription order
-			$subscriptionOrders = $this->_subscriptionOrderCollectionFactory->create();
+            // call subscription order
+            $subscriptionOrders = $this->_subscriptionOrderCollectionFactory->create();
             $subscriptionOrders
                 ->setOrder('ship_start_date', 'asc')
                 ->addFieldToFilter('subscription_entity_id', $subscriptionId);
             $this->_subscriptionOrders = $subscriptionOrders;
-			
+            
             // call getsdkclient function
             $zaiusClient = $this->_sdk->getSdkClient();
             // take event as a array and add parameters
             $event = [];
-			
+            
             $event['type'] = 'order';
             $event['action'] = 'cancel';
             $event['identifiers'] = ['email'=>$customer_email];
-			$event['magento_store_view'] = 'Default Store View';
-			foreach($this->_subscriptionOrders as $orders){
-			$items = [];	
-			$order_id = $orders->getSalesOrderId();
-			$total = $orders->getPrice();
+            $event['magento_store_view'] = 'Default Store View';
+            foreach($this->_subscriptionOrders as $orders){
+            $items = [];    
+            $order_id = $orders->getSalesOrderId();
+            $total = $orders->getPrice();
             $orderItemId = $this->getOrderItems($orders->getEntityId());
-		    
-			foreach ($orderItemId as $item) {
+            
+            foreach ($orderItemId as $item) {
                  $product = $this->getProductBySku($item->getCatalogProductSku());
                  $items['product_id'] = $product->getEntityId();
-				 $items['price'] = $item->getPrice();
-				 $items['quantity'] = $item->getQty();
-				 $items['subtotal'] = $items['price'] * $items['quantity'];
+                 $items['price'] = $item->getPrice();
+                 $items['quantity'] = $item->getQty();
+                 $items['subtotal'] = $items['price'] * $items['quantity'];
              }
-		    $order = ['order_id'=>$order_id,'total'=>$total,'items'=>[$items]];
+            $order = ['order_id'=>$order_id,'total'=>$total,'items'=>[$items]];
             $event['data'] = ['ts'=>$timestamp,'order'=>$order];
+            
             // get postevent function
-            $zaiusstatus = $zaiusClient->postEvent($event);
-
+            try {
+                $zaiusstatus = $zaiusClient->postEvent($event);
+            } catch (ZaiusException $e) {
+                $this->_logger->error('A post to Zaius failed during cancellation, however, it should not affect the cancelled status.');
+            }
+            
             // check return values from the postevent function
             if ($zaiusstatus) {
-
+                
                 $this->_logger->debug("The cancel order id" . $order_id . " is cancelled successfully to zaius."); //saved in var/log/debug.log
             } else {
 
                 $this->_logger->error("The cancel order id" . $order_id . " is failed to zaius.");
             }
         }
-	}
+    }
 }
-	
-	public function getOrderItems($entity_id)
+    
+    public function getOrderItems($entity_id)
     {
         // Make sure we have an actual subscription
         if (empty($entity_id)) {
@@ -271,8 +276,8 @@ class CancelHelper extends AbstractHelper
 
         return $this->_subscriptionOrderItems;
     }
-	
-	public function getProductBySku($sku) {
+    
+    public function getProductBySku($sku) {
         return $this->_productRepository->get($sku);
     }
 }
