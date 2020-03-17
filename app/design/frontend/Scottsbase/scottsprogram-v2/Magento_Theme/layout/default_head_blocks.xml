@@ -5,5 +5,6 @@
 		<css src="css/scottsprogram-v2.css" />
 		<script src="js/ie-edge-detection.js" />
 		<script src="js/menu.js" />
+		<remove src="mage/calendar.css" />
 	</head>
 </page>

@@ -81,6 +81,7 @@ class Onepage extends \Magento\Checkout\Block\Onepage
 
             return json_encode($data);
         } catch (\Exception $e) {
+            $this->_logger->error('Could not find subscription in checkout with quiz ID: ' . $this->_coreSession->getQuizId() . '.');
             header("Location: /quiz");
         }
     }
