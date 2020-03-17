@@ -2,26 +2,25 @@
 
 namespace SMG\SubscriptionCheckout\Plugin\Controller\Account;
 
+use Gigya\GigyaIM\Helper\GigyaMageHelper;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Framework\Exception\SecurityViolationException;
 use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use SMG\RecommendationApi\Helper\RecommendationHelper;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
-use Gigya\GigyaIM\Helper\GigyaMageHelper;
+use Gigya\GigyaIM\Helper\CmsStarterKit\sdk\GSException;
+use Gigya\GigyaIM\Helper\CmsStarterKit\sdk\GSApiException;
 
 /**
  * Class LoginPost
  * @package SMG\SubscriptionCheckout\Controller\Account
- * @todo Wes this needs jailed
  */
 class LoginPost
 {
-
     /**
      * @var RequestInterface
      */
@@ -99,32 +98,30 @@ class LoginPost
      * @return mixed
      * @throws LocalizedException
      * @throws NoSuchEntityException
-     * @throws SecurityViolationException
+     * @throws GSApiException
+     * @throws GSException
      */
     public function afterExecute(
         \Magento\Customer\Controller\Account\LoginPost $subject,
         $result
-    )
-    {
+    ) {
         // if this is a subscription site we do not want them to go to the checkout cart page
-        if ($this->_subscriptionHelper->isActive( $this->_storeManager->getStore()->getId()))
-        {
+        if ($this->_subscriptionHelper->isActive($this->_storeManager->getStore()->getId())) {
             $quizId = $this->_coreSession->getQuizId();
             $zipCode = $this->_coreSession->getZipCode();
             $customer = $this->_customerSession->getCustomer();
             $gigyaId = $customer->getGigyaUid();
 
-            if ( $quizId && $gigyaId ) {
-                $this->mapToUser( $gigyaId, $quizId );
+            if ($quizId && $gigyaId) {
+                $this->mapToUser($gigyaId, $quizId);
             }
 
-            if ( $gigyaId && $zipCode ) {
+            if ($gigyaId && $zipCode) {
                 $gigyaData['profile']['address'] = $zipCode;
-                $this->_gigyaMageHelper->updateGigyaAccount( $gigyaId, $gigyaData );
+                $this->_gigyaMageHelper->updateGigyaAccount($gigyaId, $gigyaData);
             }
-
         }
-        
+
         return $result;
     }
 
@@ -137,7 +134,7 @@ class LoginPost
      * @throws LocalizedException
      * @api
      */
-    private function mapToUser( $user_id, $quiz_id )
+    private function mapToUser($user_id, $quiz_id)
     {
 
         // Make sure we have a path
@@ -145,7 +142,7 @@ class LoginPost
             return;
         }
 
-        if (empty( $user_id ) || empty( $quiz_id )) {
+        if (empty($user_id) || empty($quiz_id)) {
             return;
         }
 
@@ -165,21 +162,21 @@ class LoginPost
             $response = curl_exec($ch);
 
             $httpStatus = null;
-            if ( ! curl_errno($ch) ) {
+            if (! curl_errno($ch)) {
                 $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
             }
 
-            if ( ! is_null($httpStatus) ) {
-                $this->_logger->info( 'MapToUser called for GigyaUid: ' . $user_id . ' and QuizId: ' . $quiz_id . ' returned with HTTP status: ' . $httpStatus);
+            if (! is_null($httpStatus)) {
+                $this->_logger->info('MapToUser called for GigyaUid: ' . $user_id . ' and QuizId: ' . $quiz_id . ' returned with HTTP status: ' . $httpStatus);
             } else {
-                $this->_logger->error( 'MapToUser called and returned error for GigyaUid: ' . $user_id . ' and QuizId: ' . $quiz_id );
+                $this->_logger->error('MapToUser called and returned error for GigyaUid: ' . $user_id . ' and QuizId: ' . $quiz_id);
             }
 
             curl_close($ch);
 
             return $response;
         } catch (\Exception $e) {
-            throw new LocalizedException( __($e->getMessage() . ' (' . $e->getCode() . ')') );
+            throw new LocalizedException(__($e->getMessage() . ' (' . $e->getCode() . ')'));
         }
     }
 }
