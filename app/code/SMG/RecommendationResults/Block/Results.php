@@ -4,12 +4,18 @@ namespace SMG\RecommendationResults\Block;
 use Magento\Framework\Session\SessionManagerInterface;
 class Results extends \Magento\Framework\View\Element\Template
 {
-    
+	
     /**
      * @var SessionManagerInterface
      */
     protected $_coreSession;
-
+    
+	/**
+	* Escaper
+	*
+	* @var \Magento\Framework\Escaper
+	*/
+	protected $_escaper;
     /**
      * Quiz constructor.
      *
@@ -19,10 +25,12 @@ class Results extends \Magento\Framework\View\Element\Template
     public function __construct(
         \Magento\Framework\View\Element\Template\Context $context,
         array $data = [],
-        SessionManagerInterface $coreSession
+        SessionManagerInterface $coreSession,
+		\Magento\Framework\Escaper $_escaper
     ) {
         parent::__construct($context, $data);
         $this->_coreSession = $coreSession;
+		$this->_escaper=$_escaper
     }
     
     /**
@@ -45,5 +53,10 @@ class Results extends \Magento\Framework\View\Element\Template
          $timestamp = strtotime(date("Y-m-d H:i:s"));
          return $this->_coreSession->getTimeStamp().'-'.$timestamp;
     }  
+	
+	public function escapeHtml($data, $allowedTags = null)
+    {
+        return $this->_escaper->escapeHtml($data, $allowedTags);
+    }
      
 }
