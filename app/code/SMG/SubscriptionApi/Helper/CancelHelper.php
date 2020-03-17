@@ -127,12 +127,21 @@ class CancelHelper extends AbstractHelper
                 ->addFieldToFilter('gigya_uid', $accountCode)
                 ->fetchItem();
 
-            $subscription->cancel();
+                        $subscription->cancel();
             $timestamp = strtotime(date("Y-m-d H:i:s"));
             $this->clearCustomerAddresses($customer);
-            $this->zaiusCancelCall($customer->getData('email'));
-                  $this->zaiusCancelOrder($subscription,$customer->getData('email'),$timestamp);
 
+       try {
+
+
+            $this->zaiusCancelCall($customer->getData('email'));
+            $this->zaiusCancelOrder($subscription,$customer->getData('email'),$timestamp);
+       } catch (Exception $e)
+       {
+
+       $this->_logger->error($e->getMessage());
+
+          }
         } catch (Exception $e) {
             $this->_logger->error($e->getMessage());
 
