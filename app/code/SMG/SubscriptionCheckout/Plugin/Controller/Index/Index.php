@@ -114,6 +114,8 @@ class Index
         callable $proceed
     ) {
         try {
+            $this->_coreSession->setOrderProcessing(0);
+
             // if this store uses subscription then check for login before continuing
             if ($this->_subscriptionHelper->isActive($this->_storeManager->getStore()->getId())) {
                 /**

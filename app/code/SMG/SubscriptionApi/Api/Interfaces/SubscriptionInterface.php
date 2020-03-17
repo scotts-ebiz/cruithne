@@ -33,4 +33,11 @@ interface SubscriptionInterface
      * @api
      */
     public function createSubscription($key, $token, $quiz_id, $billing_address, $billing_same_as_shipping);
+
+    /**
+     * Get Subscription Data For Data Sync.
+     *
+     * @return array
+     */
+    public function getSubscriptionDataForSync();
 }

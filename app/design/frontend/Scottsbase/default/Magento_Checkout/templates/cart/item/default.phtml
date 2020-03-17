@@ -53,9 +53,9 @@ foreach($selections as $selc){
                                 <dt><?= $block->escapeHtml($_option['label']) ?></dt>
                                 <dd>
                                     <?php if (isset($_formatedOptionValue['full_view'])): ?>
-                                            <strong><?= $block->escapeHtml($_formatedOptionValue['full_view']) ?></strong>
+                                            <strong><?= /* @escapeNotVerified */ $_formatedOptionValue['full_view'] ?></strong>
                                         <?php else: ?>
-                                            <strong><?= $block->escapeHtml($_formatedOptionValue['value']) ?></strong>
+                                            <strong><?= /* @escapeNotVerified */ $_formatedOptionValue['value'] ?></strong>
                                         <?php endif; ?>
                                 </dd>
                             </div>
