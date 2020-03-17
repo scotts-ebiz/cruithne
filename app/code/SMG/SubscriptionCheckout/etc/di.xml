@@ -2,6 +2,9 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
 	<preference for="Magento\Checkout\Block\Onepage" type="SMG\SubscriptionCheckout\Block\Onepage" />
 
+	<type name="Magento\Checkout\Block\Checkout\LayoutProcessor">
+		<plugin name="SMG_SbuscriptionCheckout_Block_Checkout_LayoutProcessor" type="SMG\SubscriptionCheckout\Plugin\Block\Checkout\LayoutProcessor" />
+	</type>
 	<type name="Magento\Customer\Controller\Account\LoginPost">
 		<plugin name="smg_subscriptioncheckout_plugin_controller_account_loginpost" type="SMG\SubscriptionCheckout\Plugin\Controller\Account\LoginPost" />
 	</type>
