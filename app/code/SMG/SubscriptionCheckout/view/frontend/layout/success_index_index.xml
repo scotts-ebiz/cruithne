@@ -10,7 +10,7 @@
     <body>
         <referenceContainer name="content">
             <block
-                class="Magento\Framework\View\Element\Template"
+                class="SMG\SubscriptionCheckout\Block\Success"
                 template="SMG_SubscriptionCheckout::success.phtml"
             />
         </referenceContainer>
