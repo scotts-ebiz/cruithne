@@ -23,6 +23,7 @@ define(
                 this.rscoChecked = ko.observable(false);
                 this.cardInputTouched = ko.observable(false);
                 this.orderProcessing = ko.observable(false);
+                this.submittingOrder = false;
                 this.billingFormInputs = ko.observableArray([]);
                 this.error = ko.observable('');
                 this.refreshCheckout = ko.observable(false);
@@ -452,6 +453,12 @@ define(
 
             createNewSubscription(token_id) {
                 const self = this;
+
+                // Order is not processing so this shouldn't be running.
+                if (! self.orderProcessing() || ! self.submittingOrder) {
+                    return false;
+                }
+
                 const form = document.querySelector('.recurly-form');
                 const formKey = document.querySelector('input[name=form_key]').value;
                 const quizID = window.sessionStorage.getItem('quiz-id');
@@ -499,6 +506,7 @@ define(
                             Modal(self.zipModalOptions, $('#zip-popup-modal'));
                             $('#zip-popup-modal').modal('openModal');
                             self.orderProcessing(false);
+                            self.submittingOrder = false;
                         } else {
                             Modal(self.errorModalOptions(), $('#error-modal'));
                             $('#error-modal').modal('openModal');
@@ -507,6 +515,7 @@ define(
                             // button.
                             if (!response.data.refresh) {
                                 self.orderProcessing(false);
+                                self.submittingOrder = false;
                             }
                         }
                     },
@@ -542,6 +551,15 @@ define(
 
             myPlaceOrder: function () {
                 var self = this;
+
+                // We already have an order processing, so do not resubmit.
+                if (self.orderProcessing() || self.submittingOrder) {
+                    return false;
+                }
+
+                self.submittingOrder = true;
+                self.orderProcessing(true);
+
                 var recurlyForm = $('.recurly-form');
                 var rsco = $('input[name="rsco_accept"]');
 
@@ -550,6 +568,7 @@ define(
                 if (!rsco[0].checked) {
                     rsco[0].setCustomValidity('This field is required.');
                     self.orderProcessing(false);
+                    self.submittingOrder = false;
                     return false;
                 } else {
                     rsco[0].setCustomValidity('');
@@ -557,6 +576,7 @@ define(
 
                 if (!self.updateRecurlyFormData()) {
                     self.orderProcessing(false);
+                    self.submittingOrder = false;
                     return false;
                 }
 
@@ -566,7 +586,9 @@ define(
                 recurly.token(recurlyForm, function (err, token) {
                     if (err) {
                         self.orderProcessing(false);
+                        self.submittingOrder = false;
                         $('#submitting-modal').modal('closeModal');
+                      
                         if (err.code === 'validation') {
                             if (err.fields.includes('number')) {
                                 $('.recurly-form-error').text('Please enter a valid card number.');
