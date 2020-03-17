@@ -23,9 +23,9 @@
                 "components": {
                     "results": {
                         "component": "SMG_RecommendationResults/js/results",
-                        "quiz_id": "<?php echo $block->escapeHtml($this->getRequest()->getParam('id')) ?? ''; ?>",
-                        "zip": "<?php echo $block->escapeHtml($this->getRequest()->getParam('zip')) ?? ''; ?>",
-                        "new_id": "<?php echo $block->escapeHtml($block->getNewId()); ?>"
+                        "quiz_id": "<?php /* @escapeNotVerified */ echo $this->getRequest()->getParam('id') ?? ''; ?>",
+                        "zip": "<?php /* @escapeNotVerified */ echo $this->getRequest()->getParam('zip') ?? ''; ?>",
+                        "new_id": "<?php /* @escapeNotVerified */ echo $block->getNewId(); ?>"
                     }  
                 }
             }
