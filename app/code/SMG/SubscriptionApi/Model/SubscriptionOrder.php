@@ -2,6 +2,9 @@
 
 namespace SMG\SubscriptionApi\Model;
 
+use DateTime;
+use Exception;
+use DateInterval;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DB\Transaction;
 use Magento\Framework\Exception\LocalizedException;
@@ -161,7 +164,7 @@ class SubscriptionOrder extends AbstractModel
 
     /**
      * Generate the shipment dates for the subscription order
-     * @throws \Exception
+     * @throws Exception
      */
     public function generateShipDates()
     {
@@ -338,7 +341,7 @@ class SubscriptionOrder extends AbstractModel
             }
 
             return $this->_order;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
     }
@@ -365,7 +368,7 @@ class SubscriptionOrder extends AbstractModel
             }
 
             return $this->_sapOrderBatch;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
     }
@@ -380,9 +383,9 @@ class SubscriptionOrder extends AbstractModel
 
     /**
      * Generate Ship Start Date
-     * @throws \Exception
+     * @throws Exception
      */
-    private function generateShipStartDate()
+    protected function generateShipStartDate()
     {
         // Grab the shipment open window from the admin
         $shippingOpenWindow = 0;
@@ -392,9 +395,9 @@ class SubscriptionOrder extends AbstractModel
         }
 
         // Calculate the Earliest Ship Start Date
-        $earliestShipStartDate = new \DateTime($this->getApplicationStartDate());
-        $earliestShipStartDate->sub(new \DateInterval('P' . $shippingOpenWindow . 'D'));
-        $todayDate = new \DateTime(date('Y-m-d 00:00:00'));
+        $earliestShipStartDate = new DateTime($this->getApplicationStartDate());
+        $earliestShipStartDate->sub(new DateInterval('P' . $shippingOpenWindow . 'D'));
+        $todayDate = new DateTime(date('Y-m-d 00:00:00'));
 
         // Take either Earliest Ship Start date of Today, whichever is greater
         if ($todayDate <= $earliestShipStartDate) {
@@ -407,13 +410,13 @@ class SubscriptionOrder extends AbstractModel
     /**
      * Is Order Currently Shippable
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
     public function isCurrentlyShippable()
     {
         if ($this->getSubscriptionType() !== 'annual') {
-            $today = new \DateTime();
-            $shipStart = \DateTime::createFromFormat('Y-m-d H:i:s', $this->getShipStartDate());
+            $today = new DateTime();
+            $shipStart = DateTime::createFromFormat('Y-m-d H:i:s', $this->getShipStartDate());
             return $today >= $shipStart;
         }
         return true;
@@ -421,7 +424,7 @@ class SubscriptionOrder extends AbstractModel
 
     /**
      * Generate Ship End Date
-     * @throws \Exception
+     * @throws Exception
      */
     private function generateShipEndDate()
     {
@@ -433,9 +436,9 @@ class SubscriptionOrder extends AbstractModel
         }
 
         // Calculate the Earliest Ship Start Date
-        $earliestShipEndDate = new \DateTime($this->getApplicationEndDate());
-        $earliestShipEndDate->sub(new \DateInterval('P' . $shippingCloseWindow . 'D'));
-        $todayDate = new \DateTime(date('Y-m-d 00:00:00'));
+        $earliestShipEndDate = new DateTime($this->getApplicationEndDate());
+        $earliestShipEndDate->sub(new DateInterval('P' . $shippingCloseWindow . 'D'));
+        $todayDate = new DateTime(date('Y-m-d 00:00:00'));
 
         // Take either Earliest Ship Start date of Today, whichever is greater
         if ($todayDate <= $earliestShipEndDate) {
@@ -464,7 +467,7 @@ class SubscriptionOrder extends AbstractModel
                 $creditmemo->setInvoice($invoice);
                 $creditmemo->save();
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $error = 'Could not create credit memo for order.';
             $this->_logger->error($e->getMessage() . ' - ' . $error);
             throw new LocalizedException(__($error));
