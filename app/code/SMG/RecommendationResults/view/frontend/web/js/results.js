@@ -435,7 +435,14 @@ define([
                 $('body').addClass('no-scroll')
             }
 
-            zaius.subscribe({list_id: 'scotts',email: this.saveAndSendModal().email,acquisition_method: 'scotts-program-quizresults',acquisition_source: 'Scotts'});
+            try
+           {
+
+           zaius.subscribe({list_id: 'scotts',email: this.saveAndSendModal().email,acquisition_method: 'scotts-program-quizresults',acquisition_source: 'Scotts'});           
+
+           }catch (e){
+           console.log(e);
+           }
 
             this.saveAndSendSuccessModal({
                 ...this.saveAndSendSuccessModal(),
