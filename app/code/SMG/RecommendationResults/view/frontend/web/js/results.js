@@ -209,7 +209,7 @@ define([
                             self.hasResults(true);
                             self.results(data);
                             self.checkZone();
-                            self.zauisevent(data);
+                            self.zaiusevent(data);
                             window.sessionStorage.setItem('result', JSON.stringify(data));
                             window.sessionStorage.setItem('quiz-id', data.id);
                         }
@@ -443,7 +443,7 @@ define([
             })
         },
 
-        zauisevent(data) {
+        zaiusevent(data) {
             var product_id = [];
             var product_order = [];
             var startdate = [];
