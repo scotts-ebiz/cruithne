@@ -5,11 +5,13 @@
  */
 namespace SMG\Api\Helper;
 
+use Magento\Checkout\Exception;
 use Magento\Sales\Api\CreditmemoRepositoryInterface;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\Order\ItemFactory;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Magento\Sales\Model\ResourceModel\Order\Item as ItemResource;
+use Magento\Store\Api\StoreRepositoryInterface;
 
 use Psr\Log\LoggerInterface;
 
@@ -20,6 +22,7 @@ use SMG\OrderDiscount\Helper\Data as DiscountHelper;
 use SMG\Sap\Model\SapOrderFactory;
 use SMG\Sap\Model\ResourceModel\SapOrder as SapOrderResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
+use SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo as SapOrderBatchCreditmemoResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo\CollectionFactory as SapOrderBatchCreditmemoCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
 
@@ -120,6 +123,40 @@ class OrdersCreditMemoHelper
      */
     protected $_orderResponseFactory;
 
+    /**
+     * @var StoreRepositoryInterface
+     */
+    protected $_storeRepositoryInterface;
+
+    /**
+     * @var SapOrderBatchCreditmemoResource
+     */
+    protected $_sapOrderBatchCreditmemoResource;
+
+    /**
+     * OrdersCreditMemoHelper constructor.
+     *
+     * @param LoggerInterface $logger
+     * @param ResponseHelper $responseHelper
+     * @param ShippingConditionCodeFactory $shippingConditionCodeFactory
+     * @param ShippingConditionCodeResource $shippingConditionCodeResource
+     * @param SapOrderBatchCreditmemoCollectionFactory $sapOrderBatchCreditmemoCollectionFactory
+     * @param OrderFactory $orderFactory
+     * @param OrderResource $orderResource
+     * @param ItemFactory $itemFactory
+     * @param ItemResource $itemResource
+     * @param SapOrderFactory $sapOrderFactory
+     * @param SapOrderResource $sapOrderResource
+     * @param CreditmemoRepositoryInterface $creditmemoRepository
+     * @param RmaRepositoryInterface $rmaRepository
+     * @param SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
+     * @param DiscountHelper $discountHelper
+     * @param SubscriptionResource $subscriptionResource
+     * @param OrdersResponseHelper $ordersResponseHelper
+     * @param OrderResponseFactory $orderResponseFactory
+     * @param StoreRepositoryInterface $storeRepositoryInterface
+     * @param SapOrderBatchCreditmemoResource $sapOrderBatchCreditmemoResource
+     */
     public function __construct(LoggerInterface $logger,
         ResponseHelper $responseHelper,
         ShippingConditionCodeFactory $shippingConditionCodeFactory,
@@ -137,7 +174,9 @@ class OrdersCreditMemoHelper
         DiscountHelper $discountHelper,
         SubscriptionResource $subscriptionResource,
         OrdersResponseHelper $ordersResponseHelper,
-        OrderResponseFactory $orderResponseFactory)
+        OrderResponseFactory $orderResponseFactory,
+        StoreRepositoryInterface $storeRepositoryInterface,
+        SapOrderBatchCreditmemoResource $sapOrderBatchCreditmemoResource)
     {
         $this->_logger = $logger;
         $this->_responseHelper = $responseHelper;
@@ -157,20 +196,40 @@ class OrdersCreditMemoHelper
         $this->_subscriptionResource = $subscriptionResource;
         $this->_orderResponseHelper = $ordersResponseHelper;
         $this->_orderResponseFactory = $orderResponseFactory;
+        $this->_storeRepositoryInterface = $storeRepositoryInterface;
+        $this->_sapOrderBatchCreditmemoResource = $sapOrderBatchCreditmemoResource;
     }
 
     /**
      * Get the sales orders in the desired format
      *
-     * @param int $orderLimitCount
+     * @param $orderLimits
      * @return string
      */
-    public function getOrders($orderLimitCount)
+    public function getOrders($orderLimits)
     {
         try
         {
+            // get the order limit count if there is one
+            $orderLimit = 0;
+            $website = null;
+            if (count($orderLimits) > 0)
+            {
+                // make sure that the key exists
+                if (array_key_exists('orderLimit', $orderLimits[0]))
+                {
+                    $orderLimit = $orderLimits[0]["orderLimit"];
+                }
+
+                // make sure that the key exists
+                if (array_key_exists('website', $orderLimits[0]))
+                {
+                    $website = $orderLimits[0]["website"];
+                }
+            }
+
             // get the credit order data
-            $ordersArray = $this->getCreditOrderData($orderLimitCount);
+            $ordersArray = $this->getCreditOrderData($orderLimit, $website);
 
             // determine if there is anything there to send
             if (empty($ordersArray))
@@ -200,10 +259,12 @@ class OrdersCreditMemoHelper
     /**
      * Get the array of credit orders
      *
-     * @param int $orderLimitCount
+     * @param $orderLimit
+     * @param $website
      * @return array
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
-    private function getCreditOrderData($orderLimitCount)
+    private function getCreditOrderData($orderLimit, $website)
     {
         $ordersArray = array();
 
@@ -214,55 +275,94 @@ class OrdersCreditMemoHelper
 
         // if there is a limit then lets add it
         // if the limit is 0 then we do not add it as we want all of them
-        if ($orderLimitCount > 0)
+        if ($orderLimit > 0)
         {
-            $sapOrderBatchCreditmemos->getSelect()->limit($orderLimitCount);
+            $sapOrderBatchCreditmemos->getSelect()->limit($orderLimit);
         }
 
         // check if there are orders to process
         if ($sapOrderBatchCreditmemos->count() > 0)
         {
+            // if there is a website passed in then limit the results to that website
+            $storeId = 0;
+            if (!empty($website))
+            {
+                // get the store for the store id
+                /**
+                 * @var \Magento\Store\Api\Data\StoreInterface $store
+                 */
+                $store = $this->_storeRepositoryInterface->get($website);
+                $storeId = $store->getId();
+            }
+
             /**
              * @var \SMG\Sap\Model\SapOrderBatchCreditmemo $sapOrderBatchCreditmemo
              */
             foreach ($sapOrderBatchCreditmemos as $sapOrderBatchCreditmemo)
             {
-                // get the required fields needed for processing
-                $orderId = $sapOrderBatchCreditmemo->getData('order_id');
-                $orderItemId = $sapOrderBatchCreditmemo->getData('order_item_id');
-                $creditmemoId = $sapOrderBatchCreditmemo->getData('creditmemo_order_id');
-                $sku = $sapOrderBatchCreditmemo->getData('sku');
-
-                // Get the sales order
-                /**
-                 * @var \Magento\Sales\Model\Order $order
-                 */
-                $order = $this->_orderFactory->create();
-                $this->_orderResource->load($order, $orderId);
-
-                // Get the sales order item
-                /**
-                 * @var \Magento\Sales\Model\Order\Item $orderItem
-                 */
-                $orderItem = $this->_itemFactory->create();
-                $this->_itemResource->load($orderItem, $orderItemId);
-
-                // Get the credit memo
-                $creditMemo = $this->_creditmemoRespository->get($creditmemoId);
-
-                // Get the credit memo items
-                $creditMemoItems = $creditMemo->getItems();
-                foreach ($creditMemoItems as $creditMemoItem)
+                try
                 {
-                    // see if the sku is the same as the sku that we are looking for
-                    if ($sku === $creditMemoItem->getSku())
-                    {
-                        // add the record to the orders array
-                        $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem, $creditMemo, $creditMemoItem);
+                    // get the required fields needed for processing
+                    $orderId = $sapOrderBatchCreditmemo->getData('order_id');
+                    $orderItemId = $sapOrderBatchCreditmemo->getData('order_item_id');
+                    $creditmemoId = $sapOrderBatchCreditmemo->getData('creditmemo_order_id');
+                    $sku = $sapOrderBatchCreditmemo->getData('sku');
 
-                        // get out of the loop as we found it
-                        break;
+                    // Get the sales order
+                    /**
+                     * @var \Magento\Sales\Model\Order $order
+                     */
+                    $order = $this->_orderFactory->create();
+                    $this->_orderResource->load($order, $orderId);
+
+                    // check to see if this is site specific ordering
+                    // if the storeId is 0 then we want all otherwise only
+                    // get the data for the desired site
+                    if ($storeId == 0 || $storeId == $order->getData("store_id"))
+                    {
+                        // Get the sales order item
+                        /**
+                         * @var \Magento\Sales\Model\Order\Item $orderItem
+                         */
+                        $orderItem = $this->_itemFactory->create();
+                        $this->_itemResource->load($orderItem, $orderItemId);
+
+                        // Get the credit memo
+                        $creditMemo = $this->_creditmemoRespository->get($creditmemoId);
+
+                        // Get the credit memo items
+                        $creditMemoItems = $creditMemo->getItems();
+                        foreach ($creditMemoItems as $creditMemoItem)
+                        {
+                            // see if the sku is the same as the sku that we are looking for
+                            if ($sku === $creditMemoItem->getSku())
+                            {
+                                // add the record to the orders array
+                                $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem, $creditMemo, $creditMemoItem);
+
+                                // get out of the loop as we found it
+                                break;
+                            }
+                        }
                     }
+                }
+                catch (\Exception $e)
+                {
+                    if (!empty($orderId))
+                    {
+                        $this->_logger->error("There was an error processing orderId OrdersCreditMemoHelper - " . $orderId);
+                    }
+
+                    $this->_logger->error($e->getMessage());
+
+                    // get the date for today
+                    $today = date('Y-m-d H:i:s');
+
+                    // update the process date so it isn't picked up again
+                    $sapOrderBatchCreditmemo->setData('credit_process_date', $today);
+
+                    // save to the database
+                    $this->_sapOrderBatchCreditmemoResource->save($sapOrderBatchCreditmemo);
                 }
             }
         }
@@ -459,34 +559,41 @@ class OrdersCreditMemoHelper
         $orderResponse->setSubscriptionShipStart($order->getData('ship_start_date'));
         $orderResponse->setSubscriptionShipEnd($order->getData('ship_end_date'));
 
-
-        // if this is an annual subscription set the values for a credit
-        // appropriately
-        if ($order->isSubscription() && $subscriptionType == 'annual')
+        try
         {
-            // get the subscription
-            /**
-             * @var \SMG\SubscriptionApi\Model\Subscription $subscription
-             */
-            $masterSubscriptionId = $order->getData('master_subscription_id');
-            $subscription = $this->_subscriptionResource->getSubscriptionByMasterSubscriptionId($masterSubscriptionId);
+            // if this is an annual subscription set the values for a credit
+            // appropriately
+            if ($order->isSubscription() && $subscriptionType == 'annual')
+            {
+                // get the subscription
+                /**
+                 * @var \SMG\SubscriptionApi\Model\Subscription $subscription
+                 */
+                $masterSubscriptionId = $order->getData('master_subscription_id');
+                $subscription = $this->_subscriptionResource->getSubscriptionByMasterSubscriptionId($masterSubscriptionId);
 
-            // get the gross sales from the subscription order
-            $orderResponse->setGrossSales($subscription->getData('paid'));
+                // get the gross sales from the subscription order
+                $orderResponse->setGrossSales($subscription->getData('paid'));
 
-            // get the shipping amount.  Currently we don't have a shipping amount
-            // for subscriptions.  this will need to be changed if we ever start adding
-            // a shipping amount for subscriptions.
-            $orderResponse->setShippingAmount('0');
+                // get the shipping amount.  Currently we don't have a shipping amount
+                // for subscriptions.  this will need to be changed if we ever start adding
+                // a shipping amount for subscriptions.
+                $orderResponse->setShippingAmount('0');
 
-            // get the subtotal of the subscription
-            $orderResponse->setSubtotal($subscription->getData('price'));
+                // get the subtotal of the subscription
+                $orderResponse->setSubtotal($subscription->getData('price'));
 
-            // get the tax of the subscription
-            $orderResponse->setSalesTax($subscription->getData('tax'));
+                // get the tax of the subscription
+                $orderResponse->setSalesTax($subscription->getData('tax'));
 
-            // get the invoice amount which is the same as the gross sales
-            $orderResponse->setInvoiceAmount($subscription->getData('paid'));
+                // get the invoice amount which is the same as the gross sales
+                $orderResponse->setInvoiceAmount($subscription->getData('paid'));
+            }
+        }
+        catch (\Exception $e)
+        {
+            $this->_logger->error($e->getMessage());
+            throw new Exception("There was an error with subscription");
         }
 
         // check to see if there was a value for invoiceAmount

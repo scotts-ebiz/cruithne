@@ -494,7 +494,7 @@ class OrderResponse
 
     public function getSurchFixedAmount()
     {
-        return $this->surchFixedAmount;
+        return $this->_surchFixedAmount;
     }
 
     public function setSurchFixedAmount($surchFixedAmount)

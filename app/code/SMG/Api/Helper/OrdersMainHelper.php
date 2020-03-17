@@ -7,6 +7,7 @@ use Magento\Sales\Model\Order\ItemFactory;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Magento\Sales\Model\ResourceModel\Order\Item as ItemResource;
 use Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory as OrderItemCollectionFactory;
+use Magento\Store\Api\StoreRepositoryInterface;
 
 use Psr\Log\LoggerInterface;
 
@@ -85,9 +86,14 @@ class OrdersMainHelper
     protected $_orderResponseHelper;
 
     /**
-     * @var @var OrderResponseFactory
+     * @var OrderResponseFactory
      */
     protected $_orderResponseFactory;
+
+    /**
+     * @var StoreRepositoryInterface
+     */
+    protected $_storeRepositoryInterface;
 
     /**
      * OrdersHelper constructor.
@@ -106,6 +112,7 @@ class OrdersMainHelper
      * @param SapOrderBatchResource $sapOrderBatchResource
      * @param OrdersResponseHelper $ordersResponseHelper
      * @param OrderResponseFactory $orderResponseFactory
+     * @param StoreRepositoryInterface $storeRepositoryInterface
      */
     public function __construct(LoggerInterface $logger,
         ResponseHelper $responseHelper,
@@ -120,7 +127,8 @@ class OrdersMainHelper
         DiscountHelper $discountHelper,
         SapOrderBatchResource $sapOrderBatchResource,
         OrdersResponseHelper $ordersResponseHelper,
-        OrderResponseFactory $orderResponseFactory)
+        OrderResponseFactory $orderResponseFactory,
+        StoreRepositoryInterface $storeRepositoryInterface)
     {
         $this->_logger = $logger;
         $this->_responseHelper = $responseHelper;
@@ -136,28 +144,39 @@ class OrdersMainHelper
         $this->_sapOrderBatchResource = $sapOrderBatchResource;
         $this->_orderResponseHelper = $ordersResponseHelper;
         $this->_orderResponseFactory = $orderResponseFactory;
+        $this->_storeRepositoryInterface = $storeRepositoryInterface;
     }
 
     /**
      * Get the sales orders in the desired format
      *
-     * @param int $orderLimitCount
+     * @param $orderLimits
      * @return string
      */
-    public function getOrders($orderLimitCount)
+    public function getOrders($orderLimits)
     {
         try
         {
-            $this->_logger->debug("I am here in OrdersMainHelper->getOrders()");
-
             // get the order limit count if there is one
-            if (count($orderLimitCount) > 0)
+            $orderLimit = 0;
+            $website = null;
+            if (count($orderLimits) > 0)
             {
-                $orderLimit = $orderLimitCount[0]["orderLimit"];
+                // make sure that the key exists
+                if (array_key_exists('orderLimit', $orderLimits[0]))
+                {
+                    $orderLimit = $orderLimits[0]["orderLimit"];
+                }
+
+                // make sure that the key exists
+                if (array_key_exists('website', $orderLimits[0]))
+                {
+                    $website = $orderLimits[0]["website"];
+                }
             }
 
             // get the debit order data
-            $ordersArray = $this->getDebitOrderData($orderLimit);
+            $ordersArray = $this->getDebitOrderData($orderLimit, $website);
 
             // determine if there is anything there to send
             if (empty($ordersArray))
@@ -186,11 +205,13 @@ class OrdersMainHelper
     /**
      * Get the debit orders
      *
-     * @param int $orderLimit
+     * @param $orderLimit
+     * @param $website
      * @return array
      * @throws \Magento\Framework\Exception\AlreadyExistsException
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    private function getDebitOrderData($orderLimit)
+    private function getDebitOrderData($orderLimit, $website)
     {
         $ordersArray = array();
 
@@ -212,6 +233,18 @@ class OrdersMainHelper
         // check if there are orders to process
         if ($sapOrderBatches->count() > 0)
         {
+            // if there is a website passed in then limit the results to that website
+            $storeId = 0;
+            if (!empty($website))
+            {
+                // get the store for the store id
+                /**
+                 * @var \Magento\Store\Api\Data\StoreInterface $store
+                 */
+                $store = $this->_storeRepositoryInterface->get($website);
+                $storeId = $store->getId();
+            }
+
             /**
              * @var \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
              */
@@ -229,46 +262,57 @@ class OrdersMainHelper
                     $order = $this->_orderFactory->create();
                     $this->_orderResource->load($order, $orderId);
 
-                    // make sure that this order was not canceled before continuing
-                    // we do not want to send canceled orders
-                    if ($order->isCanceled())
+                    // check to see if this is site specific ordering
+                    // if the storeId is 0 then we want all otherwise only
+                    // get the data for the desired site
+                    if ($storeId == 0 || $storeId == $order->getData("store_id"))
                     {
-                        // get the date for today
-                        $today = date('Y-m-d H:i:s');
-
-                        // update the process date so it isn't picked up again
-                        $sapOrderBatch->setData('order_process_date', $today);
-
-                        // save to the database
-                        $this->_sapOrderBatchResource->save($sapOrderBatch);
-                    }
-                    else
-                    {
-                        // we do not want to process annual subscriptions here
-                        // annual subscriptions need to be placed together in the file
-                        // otherwise they will not add properly in SAP.  Season subscriptions
-                        // are different because they are processed like regular orders
-                        $subscriptionType = $order->getData('subscription_type');
-                        if (!$order->isSubscription() || ($order->isSubscription() && $subscriptionType != 'annual'))
+                        // make sure that this order was not canceled before continuing
+                        // we do not want to send canceled orders
+                        if ($order->isCanceled())
                         {
-                            // get the list of items for this order
-                            $orderItems = $this->_orderItemCollectionFactory->create();
-                            $orderItems->addFieldToFilter("order_id", ['eq' => $order->getId()]);
-                            $orderItems->addFieldToFilter("product_type", ['neq' => 'bundle']);
-                            $orderItems->addFieldToFilter("product_type", ['neq' => 'configurable']);
+                            // get the date for today
+                            $today = date('Y-m-d H:i:s');
 
-                            /**
-                             * @var \Magento\Sales\Model\Order\Item $orderItem
-                             */
-                            foreach ($orderItems as $orderItem)
+                            // update the process date so it isn't picked up again
+                            $sapOrderBatch->setData('order_process_date', $today);
+
+                            // save to the database
+                            $this->_sapOrderBatchResource->save($sapOrderBatch);
+                        }
+                        else
+                        {
+                            // we do not want to process annual subscriptions here
+                            // annual subscriptions need to be placed together in the file
+                            // otherwise they will not add properly in SAP.  Season subscriptions
+                            // are different because they are processed like regular orders
+                            $subscriptionType = $order->getData('subscription_type');
+                            if (!$order->isSubscription() || ($order->isSubscription() && $subscriptionType != 'annual'))
                             {
-                                $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem);
+                                // get the list of items for this order
+                                $orderItems = $this->_orderItemCollectionFactory->create();
+                                $orderItems->addFieldToFilter("order_id", ['eq' => $order->getId()]);
+                                $orderItems->addFieldToFilter("product_type", ['neq' => 'bundle']);
+                                $orderItems->addFieldToFilter("product_type", ['neq' => 'configurable']);
+
+                                /**
+                                 * @var \Magento\Sales\Model\Order\Item $orderItem
+                                 */
+                                foreach ($orderItems as $orderItem)
+                                {
+                                    $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem);
+                                }
                             }
                         }
                     }
                 }
                 catch (\Exception $e)
                 {
+                    if (!empty($orderId))
+                    {
+                        $this->_logger->error("There was an error processing orderId in OrdersMainHelper - " . $orderId);
+                    }
+
                     // added this so if an error occurs during processing of the order then we can catch
                     // it here and log the message and then keep processing the other orders
                     $this->_logger->error($e->getMessage());

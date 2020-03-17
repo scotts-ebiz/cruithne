@@ -167,15 +167,26 @@ class OrdersLawnSubscriptionHelper
     /**
      * Get the sales orders in the desired format
      *
-     * @param int $orderLimitCount
+     * @param $orderLimits
      * @return string
      */
-    public function getOrders($orderLimitCount)
+    public function getOrders($orderLimits)
     {
         try
         {
+            // get the order limit count if there is one
+            $orderLimit = 0;
+            if (count($orderLimits) > 0)
+            {
+                // make sure that the key exists
+                if (array_key_exists('orderLimit', $orderLimits[0]))
+                {
+                    $orderLimit = $orderLimits[0]["orderLimit"];
+                }
+            }
+
             // get the annual subscription data
-            $ordersArray = $this->getAnnualSubscriptionData($orderLimitCount);
+            $ordersArray = $this->getAnnualSubscriptionData($orderLimit);
 
             // determine if there is anything there to send
             if (empty($ordersArray))
@@ -205,11 +216,11 @@ class OrdersLawnSubscriptionHelper
     /**
      * Process annual subscription data
      *
-     * @param int $orderLimitCount
+     * @param $orderLimit
      * @return array
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    private function getAnnualSubscriptionData($orderLimitCount)
+    private function getAnnualSubscriptionData($orderLimit)
     {
         $ordersArray = array();
 
@@ -223,9 +234,9 @@ class OrdersLawnSubscriptionHelper
 
         // if there is a limit then lets add it
         // if the limit is 0 then we do not add it as we want all of them
-        if ($orderLimitCount > 0)
+        if ($orderLimit > 0)
         {
-            $sapOrderBatches->getSelect()->limit($orderLimitCount);
+            $sapOrderBatches->getSelect()->limit($orderLimit);
         }
 
         // check if there are orders to process
@@ -339,6 +350,11 @@ class OrdersLawnSubscriptionHelper
                 }
                 catch (\Exception $e)
                 {
+                    if (!empty($orderId))
+                    {
+                        $this->_logger->error("There was an error processing orderId OrdersLawnSubscriptionHelper - " . $orderId);
+                    }
+                    
                     // added this so if an error occurs during processing of the order then we can catch
                     // it here and log the message and then keep processing the other orders
                     $this->_logger->error($e->getMessage());
