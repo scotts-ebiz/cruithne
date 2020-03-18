@@ -209,6 +209,7 @@ define([
                             self.hasResults(true);
                             self.results(data);
                             self.checkZone();
+                            self.zaiusevent(data);
                             window.sessionStorage.setItem('result', JSON.stringify(data));
                             window.sessionStorage.setItem('quiz-id', data.id);
                         }
@@ -478,6 +479,7 @@ define([
                         product_order: index,
                         quiz_zip_code: window.sessionStorage.getItem('lawn-zip')
                     });
+
             });          
          },
 
