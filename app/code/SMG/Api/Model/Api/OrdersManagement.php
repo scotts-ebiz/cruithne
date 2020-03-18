@@ -11,15 +11,8 @@ use SMG\Api\Helper\OrdersMainHelper;
 use SMG\Api\Helper\RequestHelper;
 use SMG\Api\Model\OrdersManagementInterface;
 
-use Psr\Log\LoggerInterface;
-
 class OrdersManagement implements OrdersManagementInterface
 {
-    /**
-     * @var LoggerInterface
-     */
-    protected $_logger;
-
     /**
      * @var OrdersHelper
      */
@@ -53,7 +46,6 @@ class OrdersManagement implements OrdersManagementInterface
     /**
      * OrdersManagement constructor.
      *
-     * @param LoggerInterface $logger
      * @param OrdersHelper $ordersHelper
      * @param OrdersCreditMemoHelper $ordersCreditMemoHelper
      * @param OrdersLawnSubscriptionHelper $ordersLawnSubscriptionHelper
@@ -61,14 +53,13 @@ class OrdersManagement implements OrdersManagementInterface
      * @param Request $request
      * @param RequestHelper $requestHelper
      */
-    public function __construct(LoggerInterface $logger, OrdersHelper $ordersHelper,
+    public function __construct(OrdersHelper $ordersHelper,
         OrdersCreditMemoHelper $ordersCreditMemoHelper,
         OrdersLawnSubscriptionHelper $ordersLawnSubscriptionHelper,
         OrdersMainHelper $ordersMainHelper,
         Request $request,
         RequestHelper $requestHelper)
     {
-        $this->_logger = $logger;
         $this->_ordersHelper = $ordersHelper;
         $this->_ordersCreditMemoHelper = $ordersCreditMemoHelper;
         $this->_ordersLawnSubscriptionHelper = $ordersLawnSubscriptionHelper;
@@ -84,7 +75,6 @@ class OrdersManagement implements OrdersManagementInterface
      */
     public function getOrders()
     {
-        $this->_logger->debug("I am in OrdersManagement->getOrders()");
         return $this->_ordersHelper->getOrders();
     }
 
@@ -95,7 +85,6 @@ class OrdersManagement implements OrdersManagementInterface
      */
     public function getCreditMemoOrders()
     {
-        $this->_logger->debug("I am in OrdersManagement->getCreditMemoOrders()");
         return $this->_ordersCreditMemoHelper->getOrders($this->_requestHelper->getRequest($this->_request->getRequestData()));
     }
 
@@ -106,7 +95,6 @@ class OrdersManagement implements OrdersManagementInterface
      */
     public function getLawnSubscriptionOrders()
     {
-        $this->_logger->debug("I am in OrdersManagement->getLawnSubscrptionOrders()");
         return $this->_ordersLawnSubscriptionHelper->getOrders($this->_requestHelper->getRequest($this->_request->getRequestData()));
     }
 
@@ -117,7 +105,6 @@ class OrdersManagement implements OrdersManagementInterface
      */
     public function getMainOrders()
     {
-        $this->_logger->debug("I am in OrdersManagement->getMainOrders()");
         return $this->_ordersMainHelper->getOrders($this->_requestHelper->getRequest($this->_request->getRequestData()));
     }
 }
