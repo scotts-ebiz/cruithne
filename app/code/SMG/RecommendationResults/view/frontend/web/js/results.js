@@ -304,6 +304,7 @@ define([
                             self.hasResults(true);
                             self.results(data);
                             self.checkZone();
+                            self.zaiusevent(data);
                             window.sessionStorage.setItem('result', JSON.stringify(data));
                             window.sessionStorage.setItem('quiz-id', data.id);
                         }
@@ -457,7 +458,6 @@ define([
             var product_order = [];
             var startdate = [];
             var enddate = [];
-            var i = 0;
             var separator = ','; 
             var products = data.plan.coreProducts;
             
@@ -465,7 +465,6 @@ define([
                     product_id = product.entity_id;
                     startdate  = product.applicationStartDate;
                     enddate    = product.applicationEndDate;
-                    product_order = i;
                     
                     var applicationStartDateTime =(new Date(startdate)).getTime().toString().slice(0,-3);
                     var applicationEndDateTime =(new Date(enddate)).getTime().toString().slice(0,-3);
@@ -477,10 +476,10 @@ define([
                         product_id: product_id,
                         applicationstartdate: applicationStartDateTime,
                         applicationenddate: applicationEndDateTime,
-                        product_order: product_order,
+                        product_order: index,
                         quiz_zip_code: window.sessionStorage.getItem('lawn-zip')
                     });
-                    i++;
+
             });          
          },
 
