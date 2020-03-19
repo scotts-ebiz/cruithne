@@ -2,6 +2,7 @@
 
 namespace SMG\SubscriptionApi\Model;
 
+use Psr\Log\LoggerInterface;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Model\AbstractModel;
@@ -26,6 +27,11 @@ class SubscriptionAddonOrderItem extends AbstractModel
     protected $_subscriptionAddonOrderCollectionFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $_logger;
+
+    /**
      * Constructor.
      */
     protected function _construct()
@@ -41,6 +47,7 @@ class SubscriptionAddonOrderItem extends AbstractModel
      * @param Registry $registry
      * @param ProductRepository $productRepository
      * @param SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory
+     * @param LoggerInterface $logger
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -50,6 +57,7 @@ class SubscriptionAddonOrderItem extends AbstractModel
         Registry $registry,
         ProductRepository $productRepository,
         SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory,
+        LoggerInterface $logger,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -58,6 +66,7 @@ class SubscriptionAddonOrderItem extends AbstractModel
 
         $this->_productRepository = $productRepository;
         $this->_subscriptionAddonOrderCollectionFactory = $subscriptionAddonOrderCollectionFactory;
+        $this->_logger = $logger;
     }
 
     /**
@@ -145,7 +154,14 @@ class SubscriptionAddonOrderItem extends AbstractModel
         }
 
         try {
-            $this->_subscriptionAddonOrder = $this->_subscriptionAddonOrderCollectionFactory->create()->getItemById($this->getSubscriptionAddonOrderEntityId());
+            $this->_subscriptionAddonOrder = $this->_subscriptionAddonOrderCollectionFactory
+                ->create()
+                ->addFieldToFilter('entity_id', $this->getData('subscription_addon_order_entity_id'))
+                ->getFirstItem();
+
+            if (! $this->_subscriptionAddonOrder->getId()) {
+                return false;
+            }
         } catch (\Exception $e) {
             return false;
         }

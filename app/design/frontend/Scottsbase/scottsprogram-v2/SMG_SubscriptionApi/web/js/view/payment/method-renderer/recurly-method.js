@@ -23,6 +23,7 @@ define(
                 this.rscoChecked = ko.observable(false);
                 this.cardInputTouched = ko.observable(false);
                 this.orderProcessing = ko.observable(false);
+                this.submittingOrder = false;
                 this.billingFormInputs = ko.observableArray([]);
                 this.error = ko.observable('');
                 this.refreshCheckout = ko.observable(false);
@@ -290,11 +291,24 @@ define(
                     }
                 }, 100);
 
+                // Setup submitting modal
+                this.submittingModalOptions = {
+                    type: 'popup',
+                    innerScroll: true,
+                    title: 'Thanks! Your order is being submitted.',
+                    focus: 'none',
+                    clickableOverlay: 'false',
+                    buttons: [],
+                    opened() {
+                        $('#submitting-modal').parents('.modal-inner-wrap').find('.action-close').remove();
+                    }
+                };
+
                 // Setup zip modal
                 this.zipModalOptions = {
                     type: 'popup',
                     innerScroll: true,
-                    title: 'Your Zip Code Has Changed',
+                    title: 'Your ZIP Code Has Changed',
                     closeText: 'Cancel',
                     focus: 'none',
                     buttons: [{
@@ -351,7 +365,43 @@ define(
             initializeRecurly() {
                 const self = this;
 
-                recurly.configure(window.recurlyApi);
+                recurly.configure({
+                    publicKey: window.recurlyApi,
+                    fields: {
+                        card: {
+                            // Field style properties
+                            style: {
+                                fontSize: '12px',
+                            }
+                        }
+                    }
+                });
+
+                $(window).on('resize init', function (event) {
+                    if ($(this).width() <= 767) {
+                        recurly.configure({
+                            fields: {
+                                card: {
+                                    // Field style properties
+                                    style: {
+                                        fontSize: '12px',
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        recurly.configure({
+                            fields: {
+                                card: {
+                                    // Field style properties
+                                    style: {
+                                        fontSize: '14px',
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }).triggerHandler('init');
 
                 /**
                  * Change listener on the recurly hosted card field.
@@ -377,14 +427,24 @@ define(
                 $('#zip-popup-modal').modal('closeModal');
             },
 
-            getShippingAddress: function () {
-                var checkoutData = JSON.parse(localStorage['mage-cache-storage']);
-                checkoutData = checkoutData['checkout-data'];
+            /**
+             * Get the shipping address from the cart (Avatax updated address)
+             * or the checkout data if that does not exist.
+             *
+             *
+             *
+             * @returns {*|{}|Object|string|{regionId: string, postcode: number, region: null, countryId: string}|{base_url: string, admin: string, actual_base_url: string, auto_base_url: string}}
+             */
+            getShippingAddress() {
+                const storageData = JSON.parse(localStorage['mage-cache-storage']);
 
-                return checkoutData.shippingAddressFromData;
+                const cartData = storageData['cart-data'] || {};
+                const checkoutData = storageData['checkout-data'] || {};
+
+                return cartData && cartData.address || checkoutData.shippingAddressFromData;
             },
 
-            getBillingAddress: function () {
+            getBillingAddress() {
                 var checkoutData = JSON.parse(localStorage['mage-cache-storage']);
                 checkoutData = checkoutData['checkout-data'];
 
@@ -393,12 +453,21 @@ define(
 
             createNewSubscription(token_id) {
                 const self = this;
+
+                // Order is not processing so this shouldn't be running.
+                if (! self.orderProcessing() || ! self.submittingOrder) {
+                    return false;
+                }
+
                 const form = document.querySelector('.recurly-form');
                 const formKey = document.querySelector('input[name=form_key]').value;
                 const quizID = window.sessionStorage.getItem('quiz-id');
                 const subscriptionPlan = window.sessionStorage.getItem('subscription_plan');
                 const isBillingSameAsShipping = $('input[name="billing-address-same-as-shipping"]:checked').val() === 'on';
                 const address = (isBillingSameAsShipping === false) ? this.getBillingAddress() : this.getShippingAddress();
+
+                // Shorten the zip code to just the first 5.
+                address.postcode = address.postcode.substring(0, 5);
 
                 $.ajax({
                     type: 'POST',
@@ -420,7 +489,15 @@ define(
                         window.location.href = '/success';
                     },
                     error(response) {
-                        response = JSON.parse(response.responseJSON);
+                        $('#submitting-modal').modal('closeModal');
+
+                        // Ensure the response is properly converted to a JS object.
+                        try {
+                            response = JSON.parse(response.responseJSON);
+                        }
+                        catch (e) {
+                            response = { data: {}, message: ''}
+                        }
 
                         self.error(response.message);
                         self.refreshCheckout(!!response.data.refresh);
@@ -429,6 +506,7 @@ define(
                             Modal(self.zipModalOptions, $('#zip-popup-modal'));
                             $('#zip-popup-modal').modal('openModal');
                             self.orderProcessing(false);
+                            self.submittingOrder = false;
                         } else {
                             Modal(self.errorModalOptions(), $('#error-modal'));
                             $('#error-modal').modal('openModal');
@@ -437,6 +515,7 @@ define(
                             // button.
                             if (!response.data.refresh) {
                                 self.orderProcessing(false);
+                                self.submittingOrder = false;
                             }
                         }
                     },
@@ -453,10 +532,10 @@ define(
                 var address = (isBillingSameAsShipping === false) ? this.getBillingAddress() : this.getShippingAddress();
 
                 // Get full state name by it's id
-                var stateName = $('select[name="region_id"] option[value="' + address.region_id + '"]').attr('data-title');
+                var stateName = $('select[name="region_id"] option[value="' + (address.regionId || address.region_id) + '"]').attr('data-title');
 
                 // Get full country name by it's id
-                var countryName = $('select[name="country_id"] option[value="' + address.country_id + '"]').attr('data-title');
+                var countryName = $('select[name="country_id"] option[value="' + (address.countryId || address.country_id) + '"]').attr('data-title');
 
                 // Update Recurly form
                 $('input[data-recurly="first_name"]').val(address.firstname);
@@ -465,20 +544,31 @@ define(
                 $('input[data-recurly="city"]').val(address.city);
                 $('input[data-recurly="state"]').val(stateName);
                 $('input[data-recurly="country"]').val(countryName);
-                $('input[data-recurly="postal_code"]').val(address.postcode);
+                $('input[data-recurly="postal_code"]').val(address.postcode.substr(0, 5));
 
                 return true;
             },
 
             myPlaceOrder: function () {
                 var self = this;
+
+                // We already have an order processing, so do not resubmit.
+                if (self.orderProcessing() || self.submittingOrder) {
+                    return false;
+                }
+
+                self.submittingOrder = true;
                 self.orderProcessing(true);
+
                 var recurlyForm = $('.recurly-form');
                 var rsco = $('input[name="rsco_accept"]');
+
+                self.orderProcessing(true);
 
                 if (!rsco[0].checked) {
                     rsco[0].setCustomValidity('This field is required.');
                     self.orderProcessing(false);
+                    self.submittingOrder = false;
                     return false;
                 } else {
                     rsco[0].setCustomValidity('');
@@ -486,12 +576,19 @@ define(
 
                 if (!self.updateRecurlyFormData()) {
                     self.orderProcessing(false);
+                    self.submittingOrder = false;
                     return false;
                 }
+
+                Modal(self.submittingModalOptions, $('#submitting-modal'));
+                $('#submitting-modal').modal('openModal');
 
                 recurly.token(recurlyForm, function (err, token) {
                     if (err) {
                         self.orderProcessing(false);
+                        self.submittingOrder = false;
+                        $('#submitting-modal').modal('closeModal');
+                      
                         if (err.code === 'validation') {
                             if (err.fields.includes('number')) {
                                 $('.recurly-form-error').text('Please enter a valid card number.');

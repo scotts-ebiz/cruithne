@@ -2,6 +2,7 @@
 
 namespace SMG\SubscriptionApi\Model;
 
+use Psr\Log\LoggerInterface;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\Model\AbstractModel;
@@ -26,6 +27,11 @@ class SubscriptionOrderItem extends AbstractModel
     protected $_subscriptionOrderCollectionFactory;
 
     /**
+     * @var LoggerInterface
+     */
+    protected $_logger;
+
+    /**
      * Constructor.
      */
     protected function _construct()
@@ -41,6 +47,7 @@ class SubscriptionOrderItem extends AbstractModel
      * @param Registry $registry
      * @param ProductRepository $productRepository
      * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
+     * @param LoggerInterface $logger
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
@@ -50,6 +57,7 @@ class SubscriptionOrderItem extends AbstractModel
         Registry $registry,
         ProductRepository $productRepository,
         SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
+        LoggerInterface $logger,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -58,6 +66,7 @@ class SubscriptionOrderItem extends AbstractModel
 
         $this->_productRepository = $productRepository;
         $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
+        $this->_logger = $logger;
     }
 
     /**
@@ -144,7 +153,14 @@ class SubscriptionOrderItem extends AbstractModel
         }
 
         try {
-            $this->_subscriptionOrder = $this->_subscriptionOrderCollectionFactory->create()->getItemById($this->getSubscriptionOrderEntityId());
+            $this->_subscriptionOrder = $this->_subscriptionOrderCollectionFactory
+                ->create()
+                ->addFieldToFilter('entity_id', $this->getData('subscription_order_entity_id'))
+                ->getFirstItem();
+
+            if (! $this->_subscriptionOrder->getId()) {
+                return false;
+            }
         } catch (\Exception $e) {
             return false;
         }

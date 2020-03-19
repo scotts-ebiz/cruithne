@@ -2,4 +2,6 @@
     <type name="Magento\Customer\Controller\Account\Index">
         <plugin name="smg_account_index_controller" type="SMG\SubscriptionAccounts\Plugin\Controller\Account\Index" />
     </type>
+
+    <preference for="Gigya\GigyaIM\Model\GigyaAccountService" type="SMG\SubscriptionAccounts\Plugin\Gigya\GigyaIM\Model\GigyaAccountService" />
 </config>
