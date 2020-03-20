@@ -1,6 +1,7 @@
 <?php
 namespace SMG\SubscriptionCheckout\Block;
 
+use DateTime;
 use Magento\Framework\Session\SessionManagerInterface;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription;
 use SMG\SubscriptionApi\Helper\RecurlyHelper;
@@ -24,6 +25,9 @@ class Onepage extends \Magento\Checkout\Block\Onepage
      */
     protected $_recurlyHelper;
 
+    protected $_getShipStart;
+
+    protected $_timezone;
     /**
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magento\Framework\Data\Form\FormKey $formKey
@@ -38,6 +42,7 @@ class Onepage extends \Magento\Checkout\Block\Onepage
      * @SuppressWarnings(PHPMD.UnusedFormalParameter)
      */
     public function __construct(
+        \Magento\Framework\Stdlib\DateTime\TimezoneInterface $timezone,
         \Magento\Framework\View\Element\Template\Context $context,
         \Magento\Framework\Data\Form\FormKey $formKey,
         \Magento\Checkout\Model\CompositeConfigProvider $configProvider,
@@ -54,6 +59,7 @@ class Onepage extends \Magento\Checkout\Block\Onepage
         $this->_coreSession = $coreSession;
         $this->_subscription = $subscription;
         $this->_recurlyHelper = $recurlyHelper;
+        $this->_timezone = $timezone;
     }
 
     /**
@@ -76,6 +82,9 @@ class Onepage extends \Magento\Checkout\Block\Onepage
             $subscription = $this->_subscription->getSubscriptionByQuizId($this->_coreSession->getQuizId());
             $data = $subscription->convertToArray();
             $addOn = $subscription->getAddOn();
+            $this->_getShipStart = $this->_timezone->formatDate($subscription->getFirstSubscriptionOrder()
+              ->getShipStartDate());
+            $data['get_ship_start_date'] = $this->_getShipStart;
             $data['is_shippable'] = $subscription->isCurrentlyShippable();
             $data['add_on'] = $addOn ? $addOn->convertToArray() : false;
 

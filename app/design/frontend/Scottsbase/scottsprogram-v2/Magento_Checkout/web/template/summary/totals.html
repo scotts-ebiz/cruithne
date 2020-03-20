@@ -5,6 +5,8 @@
 		    data-bind="text: subscriptionData().subscription_type === 'annual' ? 'Total Today:' : 'First Shipment'"
 		>
 		</div>
+        Test - Something
+
 		<table class="data table table-totals sp-table-totals">
 		    <caption class="table-caption" data-bind="i18n: 'Order Summary'"></caption>
 		    <tbody>
@@ -26,6 +28,11 @@
     <div class="sp-seasonal-total sp-font-bold sp-flex sp-justify-between sp-p2">
         <span>Total Today:</span>
         <span data-bind="text: subscriptionData().is_shippable ? getGrandTotal() : '$0'"></span>
+
+        <span data-bind="text: subscriptionData().is_shippable ? subscriptionData().is_shippable : '$0'"></span>
+
+        <span data-bind="text: subscriptionData().get_ship_start_date"></span>
+
     </div>
 	<!-- /ko -->
 <!-- /ko -->
