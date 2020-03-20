@@ -28,6 +28,92 @@ define([
             }, 1000);
         },
 
+        passwordStrength: function() {
+
+            // Get Password Value.
+            var val= $('input[name="newPassword"]').val();
+
+            // Create an array and push all requirements for password.
+            var matchedCase = new Array();
+            // Special Character.
+            matchedCase.push("[$@$!%*#?&]");
+            // Uppercase.
+            matchedCase.push("[A-Z]");
+            // Number.
+            matchedCase.push("[0-9]");
+            // Lowercase.
+            matchedCase.push("[a-z]");
+
+            // Check the conditions
+            var ctr = 0;
+            for (var i = 0; i < matchedCase.length; i++) {
+                if (new RegExp(matchedCase[i]).test(val)) {
+                    ctr++;
+                }
+            }
+
+            // Display Vars.
+            var color = "";
+            var strength = "";
+            var meterWidth = "";
+
+            // If the password length is less than 8.
+            if(val.length<8) {
+
+                // Display Settings.
+                color = "#cb0000";
+                strength = "Too Weak";
+
+                // Based on requirements determine meter width.
+                switch (ctr) {
+                    case 0:
+                        meterWidth = "0px";
+                        break;
+                    case 1:
+                        meterWidth = "20%";
+                        break;
+                    case 2:
+                        meterWidth = "40%";
+                        break;
+                    case 3:
+                        meterWidth = "60%";
+                        break;
+                    case 4:
+                        meterWidth = "80%";
+                        break;
+                }
+            }
+            // If the password length is 8 or greater but does not meet requirements.
+            else if(val.length>=8 && ctr <= 2 ) {
+
+                // Display Settings.
+                color = "#cb0000";
+                strength = "Too Weak";
+
+                // Based on requirements determine meter width.
+                switch (ctr) {
+                    case 0:
+                        meterWidth = "0px";
+                        break;
+                    case 1:
+                        meterWidth = "20%";
+                        break;
+                    case 2:
+                        meterWidth = "40%";
+                        break;
+                }
+            }
+            // If the password length is 8 or greater but does not meet requirements.
+            else if(val.length>=8 && ctr >= 3 ) {
+                strength = "Very Strong";
+                color = "#4ABABC";
+                meterWidth = "100%";
+            }
+            document.getElementById("pass_type").innerHTML = strength;
+            $("#pass_type").css("color", color);
+            $("#meter").animate({width:meterWidth},100).css("background-color", color);
+        },
+
         saveAccount: function() {
             const self = this;
             const formKey = document.querySelector('input[name=form_key]').value;
