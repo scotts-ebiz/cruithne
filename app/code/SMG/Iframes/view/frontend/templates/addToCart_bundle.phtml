@@ -16,17 +16,9 @@ $iFrameDrupalIdsById = $this->getData('drupalIdsById');
             <input type="hidden" name="product" value="<?= $this->escapeHtml($_product->getId()) ?>" />
             <input type="hidden" name="selected_configurable_option" value="" />
             <input type="hidden" name="related_product" id="related-products-field" value="" />
+            <input type="hidden" name="qty" id="qty" value="1" />
             <input type="hidden" name="item"  value="<?= $this->escapeHtml($block->getRequest()->getParam('id')) ?>" />
             <?= /* @NoEscape */$block->getBlockHtml('formkey') ?>
-            <div class="block__item">
-
-            </div><!-- .block__item -->
-            <div class="block__item">
-                <?php if ($_product->isSaleable() && $block->getChildHtml('options_configurable')):?>
-                    <?= /* @NoEscape */$block->getChildHtml('options_configurable') ?>
-                <?php endif;?>
-            </div>
-
             <div class="block__item btn-qty-cols">
                 <div class="button-container">
                     <button type="submit" title="Add to Cart" class="button button--cart" id="cart-add"
@@ -36,19 +28,10 @@ $iFrameDrupalIdsById = $this->getData('drupalIdsById');
                         <span>Add to Cart</span>
                     </button>
                 </div>
-
-                <div class="block__subblock">
-                    <label class="block__subblock--label" for="qty">Quantity</label>
-
-                    <label id="qty-wrap">
-                        <input type="text" name="qty" id="qty" maxlength="12" value="1" title="Qty"
-                               class="block__subblock--input" size="3"/>
-                        <!-- Use special HTML character code so they have the same width -->
-                        <button type="button" class="minus">&#8722;</button>
-                        <button type="button" class="plus">&#43;</button>
-                    </label>
-                </div>
             </div><!-- .block__item -->
+            <div class="abs-no-display">
+                <?= /* @NoEscape */$block->getChildHtml('type_bundle_options') ?>
+            </div>
         </form>
     </div><!-- .cta__block -->
 </div>
