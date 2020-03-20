@@ -21,19 +21,6 @@ services:
       DEFAULT_LOCAL_ENVIRONMENT: rc
     volumes:
       - "./scripts/:/docker-entrypoint-initdb.d/"
-  redis:
-    image: redis:latest
-    container_name: redis
-    restart: always
-    volumes:
-      - redis-data:/data
-  elasticsearch:
-    image: markoshust/magento-elasticsearch:6.5.4-0
-    ports:
-      - "9200:9200"
-      - "9300:9300"
 volumes:
   magento-data-sync:
     external: true
-  redis-data:
-    external: false
