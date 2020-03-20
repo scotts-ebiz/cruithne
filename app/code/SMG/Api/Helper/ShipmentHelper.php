@@ -219,8 +219,14 @@ class ShipmentHelper
               // update the sap order batch
             $this->updateSapBatch($sapBatchOrder, $orderId);    
 
+            try {
                // Zaius apiKey
-            $this->zaiusApiCall($orderId);
+               $this->zaiusApiCall($orderId);
+            } catch (Exception $ex) {
+                $this->_logger->error($ex->getMessage());
+                return;
+            }
+            
            }
             
         }
@@ -456,6 +462,7 @@ class ShipmentHelper
             $event['identifiers'] = ['email'=>$email];
             $event['data'] = ['product_id'=>$productid, 'shipment_id'=>$shipmentId, 'magento_store_view'=>'Default Store View','applicationstartdate'=>$startdate,'applicationenddate'=>$enddate,'product_order'=>$product_order];
              
+            $i++;
             
             // get postevent function
             $zaiusstatus = $zaiusClient->postEvent($event); 
@@ -463,11 +470,11 @@ class ShipmentHelper
                  // check return values from the postevent function
                 if($zaiusstatus)
                 {
-                    $this->_logger->info("The order Id " . $orderId . " with product Id " . $productid . " is passed successfully to zaius."); //saved in var/log/system.log
+                    $this->_logger->info("The order Id " . $orderId . " with product Id " . $productId . " is passed successfully to zaius."); //saved in var/log/system.log
                 }
                 else
                 {
-                    $this->_logger->info("The order Id " . $orderId . " with product id " . $productid . " is failed to zaius."); //saved in var/log/system.log
+                    $this->_logger->error("The order Id " . $orderId . " with product id " . $productId . " is failed to zaius."); //saved in var/log/system.log
                 }           
             }
         }
