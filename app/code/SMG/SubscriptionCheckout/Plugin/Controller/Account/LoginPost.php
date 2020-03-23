@@ -14,6 +14,8 @@ use SMG\RecommendationApi\Helper\RecommendationHelper;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 use Gigya\GigyaIM\Helper\CmsStarterKit\sdk\GSException;
 use Gigya\GigyaIM\Helper\CmsStarterKit\sdk\GSApiException;
+use Zaius\Engage\Helper\Sdk as ZaiusSdk;
+use ZaiusSDK\ZaiusException;
 
 /**
  * Class LoginPost
@@ -60,7 +62,12 @@ class LoginPost
      * @var LoggerInterface
      */
     private $_logger;
-
+    
+    /**
+     * @var ZaiusSdk
+     */
+    protected $_sdk;
+    
     /**
      * LoginPost constructor.
      * @param RequestInterface $request
@@ -80,7 +87,8 @@ class LoginPost
         SessionManagerInterface $coreSession,
         CustomerSession $customerSession,
         LoggerInterface $logger,
-        GigyaMageHelper $gigyaMageHelper
+        GigyaMageHelper $gigyaMageHelper,
+        ZaiusSdk $sdk
     ) {
         $this->_request = $request;
         $this->_subscriptionHelper = $subscriptionHelper;
@@ -90,6 +98,7 @@ class LoginPost
         $this->_customerSession = $customerSession;
         $this->_logger = $logger;
         $this->_gigyaMageHelper = $gigyaMageHelper;
+        $this->_sdk = $sdk;
     }
 
     /**
@@ -111,6 +120,7 @@ class LoginPost
             $zipCode = $this->_coreSession->getZipCode();
             $customer = $this->_customerSession->getCustomer();
             $gigyaId = $customer->getGigyaUid();
+            $customer_email = $customer->getData('email');
 
             if ($quizId && $gigyaId) {
                 $this->mapToUser($gigyaId, $quizId);
@@ -119,6 +129,16 @@ class LoginPost
             if ($gigyaId && $zipCode) {
                 $gigyaData['profile']['address'] = $zipCode;
                 $this->_gigyaMageHelper->updateGigyaAccount($gigyaId, $gigyaData);
+            }
+            
+            if ( $gigyaId && $customer_email ) {
+                try {
+                   // Zaius SubscriptionCall
+                   $this->zaiusSubscriptionCall($customer_email);
+                } catch (Exception $ex) {
+                    $this->_logger->error($ex->getMessage());
+                    return;
+                }
             }
         }
 
@@ -177,6 +197,42 @@ class LoginPost
             return $response;
         } catch (\Exception $e) {
             throw new LocalizedException(__($e->getMessage() . ' (' . $e->getCode() . ')'));
+        }
+    }
+    
+    /**
+     * Customer Subscription to zaius
+     * @param $customer_email
+     */
+    private function zaiusSubscriptionCall($customer_email)
+    {
+        $zaiusstatus = false;
+
+        // Check Email
+        if ($customer_email) {
+            // call getsdkclient function
+            $zaiusClient = $this->_sdk->getSdkClient();
+            
+            // take event as a array and add parameters
+            $subscription = array();
+            $subscription['list_id'] = 'scotts';
+            $subscription['email'] = $customer_email;
+            $subscription['subscribed'] = true;
+            $subscription['acquisition_method'] = 'scotts-program-account';
+            $subscription['acquisition_source'] = 'Scotts';
+            // get updateSubscription function
+            try {
+                $zaiusstatus = $zaiusClient->updateSubscription($subscription);
+            } catch (ZaiusException $e) {
+                $this->_logger->error('A post to Zaius failed during subscription, however, it should not affect the account creation.');
+            }
+
+            // check return values from the updateSubscription function
+            if (isset($zaiusstatus)) {
+                $this->_logger->debug("The customer Email Subscription " . $customer_email . " is subscribed successfully to zaius."); //saved in var/log/debug.log
+            } else {
+                $this->_logger->error("The customer Email Subscription " . $customer_email . " is failed to zaius.");
+            }
         }
     }
 }
