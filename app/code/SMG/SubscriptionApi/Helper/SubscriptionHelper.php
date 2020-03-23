@@ -7,7 +7,7 @@ use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Session\SessionManagerInterface as Session;
 use Magento\Store\Model\ScopeInterface;
-use SMG\SubscriptionApi\Model\ResourceModel\Subscription\Collection;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription\Collection as Collection;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
 
 /**
@@ -51,11 +51,14 @@ class SubscriptionHelper extends AbstractHelper
     {
         $details = $this->_session->getData('subscription_details');
         $quizID = $this->_session->getData('quiz_id');
+
         /** @var Collection $subscriptionCollection */
         $subscriptionCollection = $this->_subscriptionCollectionFactory->create();
 
         /** @var Subscription $subscription */
-        $subscription = $subscriptionCollection->getItemByColumnValue('quiz_id', $quizID);
+        $subscription = $subscriptionCollection
+            ->addFieldToFilter('quiz_id', $quizID)
+            ->getFirstItem();
 
         if (! $subscription->getId() || !isset($details['subscription_plan'], $details['addons'])) {
             $this->_logger->error('Could not add subscription to the cart. Missing subscription or session details.');
@@ -136,5 +139,51 @@ class SubscriptionHelper extends AbstractHelper
             ScopeInterface::SCOPE_STORE,
             $store_id
         );
+    }
+
+    /**
+     * Get Subscription Data For Data Sync.
+     *
+     * @return array
+     */
+    public function getSubscriptionDataForSync()
+    {
+        $to = date("Y-m-d h:i:s");
+        $from = strtotime('-30 day', strtotime($to));
+        $from = date('Y-m-d h:i:s', $from);
+
+        /** @var Collection $collection **/
+        $list = $this->_subscriptionCollectionFactory->create()
+            ->addFieldToFilter('created_at', ['from'=>$from, 'to'=>$to])->getData();
+
+        foreach ($list as $key => $sub) {
+            unset($list[$key]['entity_id']);
+            unset($list[$key]['quiz_completed_at']);
+            unset($list[$key]['origin']);
+            unset($list[$key]['lawn_zip']);
+            unset($list[$key]['zone_name']);
+            unset($list[$key]['lawn_size']);
+            unset($list[$key]['lawn_type']);
+            unset($list[$key]['customer_id']);
+            unset($list[$key]['subscription_type']);
+            unset($list[$key]['subscription_start_date']);
+            unset($list[$key]['subscription_end_date']);
+            unset($list[$key]['tax']);
+            unset($list[$key]['discount']);
+            unset($list[$key]['paid']);
+            unset($list[$key]['recurly_invoice']);
+            unset($list[$key]['is_full_refund']);
+            unset($list[$key]['created_at']);
+            unset($list[$key]['updated_at']);
+        }
+
+        if (!empty($list[$key]['subscription_status'])) {
+            $list[$key]['orderStatus'] = $list[$key]['subscription_status'];
+            unset($list[$key]['subscription_status']);
+        } else {
+            $list[$key]['orderStatus'] = 'NA';
+        }
+
+        return $list;
     }
 }

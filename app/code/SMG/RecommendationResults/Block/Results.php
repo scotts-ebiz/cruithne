@@ -4,11 +4,6 @@ namespace SMG\RecommendationResults\Block;
 use Magento\Framework\Session\SessionManagerInterface;
 class Results extends \Magento\Framework\View\Element\Template
 {
-
-    /**
-     * @var \SMG\RecommendationQuiz\Helper\RecommendationQuizHelper
-     */
-    protected $_helper;
     
     /**
      * @var SessionManagerInterface

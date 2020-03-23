@@ -1,0 +1,48 @@
+// MyGro Mixins
+
+// Fonts //
+@mixin font-hellix-regular($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
+    font-family: 'Hellix-Regular', Lucida Grande, Arial, Helvetica, sans-serif;
+    @if $size { font-size: $size; }
+    @if $color { color: $color; }
+    @if $weight { font-weight: $weight; }
+    @if $lh { line-height: $lh; }
+    @if $ls { letter-spacing: $ls; }
+}
+
+@mixin font-hellix-heavy($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
+    font-family: 'Hellix-Heavy', Lucida Grande, Arial, Helvetica, sans-serif;
+    @if $size { font-size: $size; }
+    @if $color { color: $color; }
+    @if $weight { font-weight: $weight; }
+    @if $lh { line-height: $lh; }
+    @if $ls { letter-spacing: $ls; }
+}
+
+@mixin font-gro($size: false, $color: false, $weight: false, $lh: false, $ls: false) {
+    font-family: 'Gro', serif;
+    @if $size { font-size: $size; }
+    @if $color { color: $color; }
+    @if $weight { font-weight: $weight; }
+    @if $lh { line-height: $lh; }
+    @if $ls { letter-spacing: $ls; }
+}
+
+@mixin transform($transforms) {
+    -moz-transform: $transforms;
+    -o-transform: $transforms;
+    -ms-transform: $transforms;
+    -webkit-transform: $transforms;
+    transform: $transforms;
+}
+@mixin translate ($x, $y) {
+    @include transform(translate($x, $y));
+}
+@mixin transition($x...){
+    -webkit-transition: $x;
+    -moz-transition: $x;
+    -ms-transition: $x;
+    -o-transition: $x;
+    transition: $x;
+}
+

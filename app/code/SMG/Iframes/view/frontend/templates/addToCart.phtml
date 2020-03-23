@@ -32,7 +32,7 @@ $iFrameDrupalIdsById = $this->getData('drupalIdsById');
                     <button type="submit" title="Add to Cart" class="button button--cart" id="cart-add"
                             data-size_id="<?php echo $this->escapeHtml(str_replace(' ', '', trim(strtolower($_product->getData('size'))))); ?>"
                             data-sku_id="<?php echo $this->escapeHtml($_product->getData('sku')); ?>"
-                            data-drupal-sku="<? echo $this->escapeHtml($_product->getData('drupalproductid')); ?>">
+                            data-drupal-sku="<?php echo $this->escapeHtml($_product->getData('drupalproductid')); ?>">
                         <span>Add to Cart</span>
                     </button>
                 </div>

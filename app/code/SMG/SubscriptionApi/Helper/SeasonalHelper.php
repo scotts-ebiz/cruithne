@@ -274,7 +274,6 @@ class SeasonalHelper extends AbstractHelper
             $shipDate = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $order->getData('ship_start_date'));
 
             // If a ship date is older than 10 days, it means something is
-            // If a ship date is older than 10 days, it means something is
             // causing the process to fail, so lets mark it as such.
             if ($shipDate < $this->_failDate) {
                 $this->_logger->error("Subscription order {$order->getData('subscription_id')} has failed to process.");
@@ -327,6 +326,15 @@ class SeasonalHelper extends AbstractHelper
                 && $recurlySubscription->activated_at < $this->_today
                 && $recurlySubscription->activated_at > $this->_failDate
             ) {
+                // Subscription is fine, lets get the invoice and check the
+                // status there.
+                $invoice = $recurlySubscription->invoice->get();
+
+                if (! $invoice || $invoice->state != 'paid') {
+                    return false;
+                }
+
+                // Invoice does exist and it has been paid.
                 return true;
             }
 
