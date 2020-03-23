@@ -11,7 +11,9 @@
             "Magento_Ui/js/core/app": {
                 "components": {
                     "success": {
-                        "component": "SMG_SubscriptionCheckout/js/success"
+                        "component": "SMG_SubscriptionCheckout/js/success",
+                        "customerEmail": "<?=$this->_customerSession->getCustomerData()->getEmail()?>",
+                        "storeName": "<?=$this->_storeManager->getStore()->getName()?>"
                     }
                 }
             }

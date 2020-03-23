@@ -1,0 +1,41 @@
+// Checkout Styles
+.checkout-index-index {
+    .page-wrapper {
+        .page-main {
+            .columns {
+                .column.main {
+                    .checkout-container {
+                        .opc-wrapper {
+                            .checkout-validate-address {
+                                .step-content {
+                                    .instructions.noError {
+                                      color: $mygro-green;
+                                    }
+                                }
+                            }
+                            .checkout-payment-method {
+                                .step-content {
+                                    .form.payments {
+                                        .opc-payment-additional {
+                                            .payment-option-title {
+                                                .action-toggle {
+                                                    color: $mygro-green;
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    [type="radio"] + label:before {
+                        border-color: $mygro-dark-green;
+                    }
+                    [type="radio"] + label:after {
+                        background: $mygro-dark-green;
+                    }
+                }
+            }
+        }
+    }
+}
