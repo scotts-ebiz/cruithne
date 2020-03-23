@@ -1,7 +1,6 @@
 <?php
 namespace SMG\SubscriptionCheckout\Block;
 
-use DateTime;
 use Magento\Framework\Session\SessionManagerInterface;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription;
 use SMG\SubscriptionApi\Helper\RecurlyHelper;
