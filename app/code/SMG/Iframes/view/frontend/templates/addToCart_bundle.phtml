@@ -35,26 +35,16 @@ $iFrameDrupalIdsById = $this->getData('drupalIdsById');
         </form>
     </div><!-- .cta__block -->
 </div>
-<script>
-    require([
-        'jquery',
-        'priceBox'
-    ], function($){
-        var dataPriceBoxSelector = '[data-role=priceBox]',
-            dataProductIdSelector = '[data-product-id=<?= $block->escapeHtml($_product->getId()) ?>]',
-            priceBoxes = $(dataPriceBoxSelector + dataProductIdSelector);
-
-        priceBoxes = priceBoxes.filter(function(index, elem){
-            return !$(elem).find('.price-from').length;
-        });
-
-        priceBoxes.priceBox({'priceConfig': <?= /* @escapeNotVerified */ $block->getJsonConfig() ?>});
-    });
-</script>
 <script type="text/x-magento-init">
     {
         "#product_addtocart_form": {
             "Magento_Catalog/js/validate-product": {}
+        },
+        "*" : {
+            "iframePriceBox": {
+                "id" : "<?= $block->escapeHtml($_product->getId()) ?>",
+                "jsonConfig" : <?= /* @escapeNotVerified */ $block->getJsonConfig() ?>
+            }
         }
     }
 </script>
