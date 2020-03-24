@@ -1,6 +1,6 @@
 <!-- ko if: isDisplayed() -->
 	<div class="totals-wrapper">
-        <!-- ko if: subscriptionData() && subscriptionData().is_shippable === false && subscriptionData()
+        <!-- ko if: subscriptionData() && subscriptionData().is_shippable === true && subscriptionData()
         .subscription_type === 'seasonal' -->
         <div class="sp-p2 sp-font-bold sp-mb-2 billing-blurb"
              data-bind="text: 'First Shipment:'"
@@ -8,7 +8,7 @@
         </div>
         <!-- /ko -->
 
-        <!-- ko if: subscriptionData() && subscriptionData().is_shippable === true && subscriptionData()
+        <!-- ko if: subscriptionData() && subscriptionData().is_shippable === false && subscriptionData()
        .subscription_type === 'seasonal' -->
         <div class="sp-p2 sp-font-bold sp-mb-2 billing-blurb">
             Your first bill (charged on

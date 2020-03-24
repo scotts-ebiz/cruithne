@@ -65,7 +65,9 @@
     margin-top: 0;
     text-transform: uppercase;
   }
-
+  .totals-wrapper .billing-blurb {
+    font-size: 12px;
+  }
   @media (max-width: ($screen-md - 1)) {
     height: auto;
     overflow: hidden;
@@ -109,9 +111,6 @@
       .totals-wrapper, .order-summary-products {
         max-height: 20rem;
         opacity: 1;
-      }
-      .totals-wrapper billing-blurb {
-          font-size: 12px;
       }
       .order-summary-products {
         margin-bottom: 1.5rem;
