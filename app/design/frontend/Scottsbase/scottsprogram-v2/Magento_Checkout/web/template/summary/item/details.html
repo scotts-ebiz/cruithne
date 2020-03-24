@@ -9,7 +9,12 @@
             <div
                 class="sp-block sp-text-xs sp-text-gray-5"
                 data-bind="text: $parents[1].subscriptionData().is_shippable
-                    ? 'You will be charged today' : 'You will be charged before each shipment' "
+                    ? 'You will be charged today'
+                    : ($parents[1].isAddOn(item)
+                        ? 'You will be charged at the time of the first shipment'
+                        : 'You will be charged before each shipment'
+                        )
+                "
             >
             </div>
         </div>
