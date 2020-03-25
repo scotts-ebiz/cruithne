@@ -461,8 +461,6 @@ class ShipmentHelper
             $event['action'] = 'shipped';
             $event['identifiers'] = ['email'=>$email];
             $event['data'] = ['product_id'=>$productid, 'shipment_id'=>$shipmentId, 'magento_store_view'=>'Default Store View','applicationstartdate'=>$startdate,'applicationenddate'=>$enddate,'product_order'=>$product_order];
-             
-            $i++;
             
             // get postevent function
             $zaiusstatus = $zaiusClient->postEvent($event); 
