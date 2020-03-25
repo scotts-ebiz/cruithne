@@ -9,3 +9,57 @@
     padding-top: 1rem;
     margin-bottom: 2rem;
 }
+
+/* Password Bubble */
+.form-tooltip {
+    position: absolute;
+    top: -190px;
+    z-index: 2;
+    width: 225px;
+    margin: 0 0 0 15px;
+    display: block;
+    visibility: hidden;
+    height: 0;
+    cursor: help;
+    padding: 15px;
+    background-color: #f4f4f4;
+    border: 1px solid #f4f4f4;
+    font-size: 12px;
+}
+
+/* Password Bubble Visibility */
+:focus ~ .form-tooltip {
+    margin-bottom: 0;
+    height: auto;
+    visibility: visible;
+}
+
+/* Bubble Arrow Down */
+.form-tooltip:after {
+    content:'';
+    position: absolute;
+    left: 0;
+    right: 0;
+    margin: 0 auto;
+    width: 0;
+    height: 0;
+    border-top: 30px solid #f4f4f4;
+    border-left: 30px solid transparent;
+    border-right: 30px solid transparent;
+}
+
+/* Password Strength Verbiage */
+.form-tooltip #pass_type {
+    color: #cb0000;
+}
+
+/* Password Meter Wrapper */
+.form-tooltip #meter_wrapper {
+    background-color: #d8d8d8;
+}
+
+/* Password Meter */
+.form-tooltip #meter {
+    height: 5px;
+    width: 0;
+}
