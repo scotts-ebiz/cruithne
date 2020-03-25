@@ -20,9 +20,14 @@
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach( $subscriptionsList as $subscription ) { ?>
-					<tr>
-						<td><?php echo $subscription->uuid; ?></td>
+				<?php foreach( $subscriptionsList as $subscription ) {?>
+                    <tr onclick='location.href = this.getElementsByTagName("a").item(0).getAttribute("href");' >
+                        <?php if ($subscription->plan->name <> 'Annual' && $subscription->plan->name <> 'Seasonal') :  ?>
+                            <?php $orderId = $block->getOrderBySubscriptionId($subscription->uuid); ?>
+                            <td class="click"><a href="/admin/sales/order/view/order_id/<?php echo $this->escapeHtml($orderId); ?>"><?php echo $this->escapeHtml($subscription->uuid); ?></a></td>
+                        <?php else: ?>
+                            <td><?php echo $this->escapeHtml($subscription->uuid); ?></td>
+                        <?php endif; ?>
 						<td><?php echo ( isset( $subscription->custom_fields['quiz_id'] ) ) ? $subscription->custom_fields['quiz_id']->value : 'Quiz ID does not exist for this subscription.'; ?></td>
 						<td><?php echo $subscription->plan->name; ?></td>
 						<td><?php echo $subscription->state; ?></td>

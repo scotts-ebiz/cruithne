@@ -222,7 +222,7 @@ class RecurlySubscription
         try {
             $recurlyPurchase = new Recurly_Purchase();
             $recurlyPurchase->currency = $this->_currency;
-            $recurlyPurchase->collection = 'automatic';
+            $recurlyPurchase->collection_method = 'automatic';
             $recurlyPurchase->shipping_address = $recurlyShippingAddress;
             $recurlyPurchase->account = $account;
         } catch (Exception $e) {
@@ -785,6 +785,13 @@ class RecurlySubscription
                 $recurlySubscription->custom_fields[] = new Recurly_CustomField('quiz_id', $quizID);
                 $recurlySubscription->starts_at = $subscriptionOrder->getData('ship_start_date');
                 $today = new \DateTimeImmutable();
+
+                // If this subscription order can ship now, we do not need to
+                // send a starts_at date to Recurly, otherwise, it will get
+                // queued and charged at the top of the hour.
+                if ($subscriptionOrder->isCurrentlyShippable()) {
+                    $recurlySubscription->starts_at = null;
+                }
 
                 // We're in test mode, so use custom subscription dates.
                 if ($this->_testHelper->inTestMode()) {

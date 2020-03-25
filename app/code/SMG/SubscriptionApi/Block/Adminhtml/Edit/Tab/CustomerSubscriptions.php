@@ -7,6 +7,7 @@ use Magento\Ui\Component\Layout\Tabs\TabInterface;
 use Recurly_Client;
 use Recurly_NotFoundError;
 use Recurly_SubscriptionList;
+use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 
 class CustomerSubscriptions extends \Magento\Framework\View\Element\Template implements TabInterface
 {
@@ -36,6 +37,11 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     protected $_formKey;
 
     /**
+     * @var OrderCollectionFactory
+     */
+    protected $_orderCollectionFactory;
+
+    /**
      * @var LoggerInterface
      */
     protected $_logger;
@@ -47,6 +53,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         \SMG\SubscriptionApi\Helper\RecurlyHelper $helper,
         \Magento\Framework\UrlInterface $urlInterface,
         \Magento\Framework\Data\Form\FormKey $formKey,
+        OrderCollectionFactory $orderCollectionFactory,
         LoggerInterface $logger,
         array $data = []
     ) {
@@ -55,6 +62,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         $this->_helper = $helper;
         $this->_urlInterface = $urlInterface;
         $this->_formKey = $formKey;
+        $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->_logger = $logger;
         parent::__construct($context, $data);
     }
@@ -133,6 +141,29 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
             $this->_logger->error($e->getMessage());
             return [ 'success' => false, 'error_message' => $e->getMessage() ];
         }
+    }
+
+    /**
+     * Get order by subscription Id
+     *
+     * @return array
+     */
+    public function getOrderBySubscriptionId($subscriptionId)
+    {
+        $this->_logger->error("getOrderBySubscriptionId");
+        try {
+            $orders = $this->_orderCollectionFactory->create();
+            $orders->addFieldToFilter('subscription_id', ['eq' => $subscriptionId]);
+            $cnt = $orders->count();
+            foreach ($orders as $order) {
+                $orderId = $order->getId();
+            }
+        } catch (\Exception $e) {
+            $this->_logger->error($e->getMessage());
+            return [ 'success' => false, 'error_message' => $e->getMessage() ];
+        }
+
+        return $orderId;
     }
 
     /**
