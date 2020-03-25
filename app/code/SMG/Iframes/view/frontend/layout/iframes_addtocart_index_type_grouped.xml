@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<page layout="empty" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <script src="SMG_Iframes::js/addToCart.js"/>
+    </head>
+    <body>
+        <referenceBlock name="page.main.title" display="false" />
+        <referenceContainer name="content">
+            <block class="Magento\Catalog\Pricing\Render" as="iframe_pricing" name="product.price.final">
+                <arguments>
+                    <argument name="price_render" xsi:type="string">product.price.render.default</argument>
+                    <argument name="price_type_code" xsi:type="string">tier_price</argument>
+                    <argument name="zone" xsi:type="string">item_view</argument>
+                </arguments>
+            </block>
+            <block class="SMG\Iframes\Block\AddToCart" name="SMG_block_addtocart" template="SMG_Iframes::addToCart_grouped.phtml" >
+                <block class="Magento\GroupedProduct\Block\Product\View\Type\Grouped" as="grouped_info" name="product.info.grouped" before="product.info.addtocart" template="Magento_GroupedProduct::product/view/type/grouped.phtml"/>
+                <block class="Magento\GroupedProduct\Block\Stockqty\Type\Grouped" as="grouped_info_too" name="product.info.grouped.stock-composite" template="Magento_CatalogInventory::stockqty/composite.phtml"/>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

@@ -1,0 +1,53 @@
+<?php
+$iFrameSkusById = $this->getData('skusById');
+$iFrameDrupalIdsById = $this->getData('drupalIdsById');
+?>
+<?php $_helper = $this->helper('Magento\Catalog\Helper\Output'); ?>
+<?php $_product = $block->getProduct(); ?>
+
+<div class="cta__container">
+    <div class="cta__container--options">
+        <form data-skus-by-id='<?=$this->escapeHtml($this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode($iFrameSkusById))?>'
+              data-drupal-ids-by-id='<?=$this->escapeHtml($this->helper('Magento\Framework\Json\Helper\Data')->jsonEncode($iFrameDrupalIdsById))?>'
+              id="product_addtocart_form"
+              data-product-sku="<?= $block->escapeHtml($_product->getSku()) ?>"
+              action="<?= $block->escapeUrl($block->getSubmitUrl($_product)) ?>" method="post"
+              id="product_addtocart_form"<?php if ($_product->getOptions()): ?> enctype="multipart/form-data"<?php endif; ?>>
+            <input type="hidden" name="product" value="<?= $this->escapeHtml($_product->getId()) ?>" />
+            <input type="hidden" name="selected_configurable_option" value="" />
+            <input type="hidden" name="related_product" id="related-products-field" value="" />
+            <input type="hidden" name="qty" id="qty" value="1" />
+            <input type="hidden" name="item"  value="<?= $this->escapeHtml($block->getRequest()->getParam('id')) ?>" />
+            <?= /* @NoEscape */$block->getBlockHtml('formkey') ?>
+            <div class="block__item">
+                <?= /* @NoEscape */$block->getChildHtml('grouped_info') ?>
+                <!-- here -->
+                <?= /* @NoEscape */$block->getChildHtml('grouped_info_too') ?>
+            </div>
+            <div class="block__item btn-qty-cols">
+                <div class="button-container">
+                    <button type="submit" title="Add to Cart" class="button button--cart" id="cart-add"
+                            data-size_id="<?php echo $this->escapeHtml(str_replace(' ', '', trim(strtolower($_product->getData('size'))))); ?>"
+                            data-sku_id="<?php echo $this->escapeHtml($_product->getData('sku')); ?>"
+                            data-drupal-sku="<?php echo $this->escapeHtml($_product->getData('drupalproductid')); ?>">
+                        <span>Add to Cart</span>
+                    </button>
+                </div>
+            </div><!-- .block__item -->
+        </form>
+    </div><!-- .cta__block -->
+</div>
+<script type="text/x-magento-init">
+    {
+        "#product_addtocart_form": {
+            "Magento_Catalog/js/validate-product": {}
+        },
+        "*" : {
+            "iframePriceBox": {
+                "id" : "<?= $block->escapeHtml($_product->getId()) ?>",
+                "jsonConfig" : <?= /* @escapeNotVerified */ $block->getJsonConfig() ?>
+            }
+        }
+    }
+</script>
+
