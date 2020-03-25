@@ -17,6 +17,7 @@ use Recurly_Subscription;
 use Recurly_SubscriptionList;
 use SMG\SubscriptionApi\Helper\RecurlyHelper;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
 use SMG\SubscriptionApi\Model\SubscriptionAddonOrder;
 use SMG\SubscriptionApi\Model\SubscriptionOrder;
 
@@ -44,7 +45,10 @@ class Subscription extends Template
      * @var SubscriptionCollectionFactory
      */
     protected $_subscriptionCollectionFactory;
-
+    /**
+     * @var SubscriptionOrderCollectionFactory
+     */
+    protected $_subscriptionOrderCollectionFactory;
     /**
      * Subscriptions block constructor.
      * @param Context $context
@@ -52,6 +56,7 @@ class Subscription extends Template
      * @param Customer $customer
      * @param RecurlyHelper $recurlyHelper
      * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
+     * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
      * @param array $data
      */
     public function __construct(
@@ -60,12 +65,14 @@ class Subscription extends Template
         Customer $customer,
         RecurlyHelper $recurlyHelper,
         SubscriptionCollectionFactory $subscriptionCollectionFactory,
+        SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
         array $data = []
     ) {
         $this->_customerSession = $customerSession;
         $this->_customer = $customer;
         $this->_recurlyHelper = $recurlyHelper;
         $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
+        $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
         parent::__construct($context, $data);
 
         Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
@@ -107,6 +114,7 @@ class Subscription extends Template
     public function getSubscriptions()
     {
         $subscriptionCollection = $this->_subscriptionCollectionFactory->create();
+        $subscriptionOrderCollection = $this->_subscriptionCollectionFactory->create();
 
         /** @var \SMG\SubscriptionApi\Model\Subscription $currentSubscription */
         $currentSubscription = $subscriptionCollection
@@ -114,16 +122,24 @@ class Subscription extends Template
             ->addFilter('customer_id', $this->getCustomerId())
             ->getFirstItem();
 
-        // We don't have a subscription so return empty object.
-        if (! $currentSubscription || ! $currentSubscription->getData('entity_id')) {
-            return [
-                'subscription' => [],
-            ];
-        }
+        $customerSubscription = $subscriptionCollection
+            ->addFilter('customer_id', $this->getCustomerId())
+            ->getFirstItem();
 
         $subscriptionOrders = $currentSubscription
             ->getSubscriptionOrders()
             ->getItems();
+
+        $allSubscriptionOrders = $subscriptionOrderCollection
+            ->addFilter('gigya_id', $this->getGigyaUid())
+            ->getItems();
+
+        // If customer has never had a subscription before, then return an empty object.
+        if (count($allSubscriptionOrders) == 0) {
+            return [
+                'subscription' => [],
+            ];
+        }
 
         $subscriptionAddonOrders = $currentSubscription
             ->getSubscriptionAddonOrders()
@@ -132,7 +148,7 @@ class Subscription extends Template
 
         // Get the subscriptions from Recurly.
         $recurlySubscriptions = Recurly_SubscriptionList::getForAccount(
-            $currentSubscription->getData('gigya_id'),
+            $this->getGigyaUid(),
             ['state' => 'active']
         );
 
@@ -180,35 +196,39 @@ class Subscription extends Template
 
         $addonOrder = count($subscriptionAddonOrders) ? $subscriptionAddonOrders[0] : null;
 
-        // Get the next billing date.
-        $startDate = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $subscriptionOrders[0]['ship_start_date'])
-            ->add(new DateInterval('P1Y'));
-        $renewalDate = $startDate->add(new DateInterval('P1Y'));
+        $initialOrder = false;
         $nextBilling = null;
         $nextOrder = null;
+        $renewalDate = null;
+        $startDate = null;
+        if ( $customerSubscription && $customerSubscription->getData('entity_id')) {
+            // Get the next billing date.
+            $startDate = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $subscriptionOrders[0]['ship_start_date'])
+                ->add(new DateInterval('P1Y'));
+            $renewalDate = $startDate->add(new DateInterval('P1Y'));
 
-        // Get the next billing date for seasonal subscription.
-        $initialOrder = true;
-        if ($currentSubscription->getData('subscription_type') == 'seasonal') {
-            foreach ($subscriptionOrders as $subscriptionOrder) {
-                $shipStartDate = DateTime::createFromFormat(
-                    'Y-m-d H:i:s',
-                    $subscriptionOrder['ship_start_date']
-                );
+            // Get the next billing date for seasonal subscription.
+            $initialOrder = true;
+            if ($currentSubscription->getData('subscription_type') == 'seasonal') {
+                foreach ($subscriptionOrders as $subscriptionOrder) {
+                    $shipStartDate = DateTime::createFromFormat(
+                        'Y-m-d H:i:s',
+                        $subscriptionOrder['ship_start_date']
+                    );
 
-                // Find the first order that has not yet been invoiced by Recurly.
-                if (empty($subscriptionOrder['recurly'])) {
-                    $nextOrder = $subscriptionOrder;
-                    $nextBilling = $shipStartDate;
-                    break;
+                    // Find the first order that has not yet been invoiced by Recurly.
+                    if (empty($subscriptionOrder['recurly'])) {
+                        $nextOrder = $subscriptionOrder;
+                        $nextBilling = $shipStartDate;
+                        break;
+                    }
+
+                    $initialOrder = false;
                 }
-
-                $initialOrder = false;
             }
         }
-
         $invoiceList = Recurly_InvoiceList::getForAccount(
-            $currentSubscription->getData('gigya_id')
+            $this->getGigyaUid()
         );
 
         $invoices = [];
@@ -216,10 +236,8 @@ class Subscription extends Template
         // Loop through the invoices to filter out zero dollar invoices.
         foreach ($invoiceList as $invoice) {
             /** @var Recurly_Invoice $invoice */
-            if ($invoice->total_in_cents > 0) {
-                $invoice->due_on = $invoice->due_on->format('M d, Y');
-            }
-            $invoice->created_at = $invoice->created_at->format('M d, Y');
+            $invoice->due_on = $invoice->due_on ? $invoice->due_on->format('M d, Y') : null;
+            $invoice->created_at = $invoice->created_at ? $invoice->created_at->format('M d, Y') : null;
             $invoices[] = $invoice->getValues();
         }
 
@@ -231,8 +249,8 @@ class Subscription extends Template
             'nextBillingDate' => $nextBilling ? $nextBilling->format('M d, Y') : null,
             'nextOrder' => $nextOrder,
             'orders' => $subscriptionOrders,
-            'renewalDate' => $renewalDate->format('M d, Y'),
-            'startDate' => $startDate->format('M d, Y'),
+            'renewalDate' => $renewalDate ? $renewalDate->format('M d, Y') : null,
+            'startDate' => $startDate ? $startDate->format('M d, Y') : null,
             'subscription' => $currentSubscription->toArray(),
         ];
     }
