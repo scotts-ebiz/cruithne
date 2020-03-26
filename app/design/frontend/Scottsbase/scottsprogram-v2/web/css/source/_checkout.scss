@@ -65,9 +65,7 @@
     margin-top: 0;
     text-transform: uppercase;
   }
-  .totals-wrapper .billing-blurb {
-    font-size: 12px;
-  }
+
   @media (max-width: ($screen-md - 1)) {
     height: auto;
     overflow: hidden;
@@ -441,7 +439,7 @@
   td,
   th {
     @extend .sp-p2;
-    font-size: 12px;
+
     padding: 0.5rem 0 !important;
     vertical-align: middle !important;
   }
