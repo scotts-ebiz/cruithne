@@ -13,6 +13,11 @@
             >
             </div>
         </div>
+        <!-- ko if: $parents[1].subscriptionData().subscription_type === 'seasonal' -->
+            <div>Test have add on! With parent array</div>
+        <!-- /ko -->
+
+
         <!-- ko if: $parents[1].subscriptionData().subscription_type === 'annual' -->
             <!-- ko foreach: getRegion('after_details') -->
                 <!-- ko template: getTemplate() --><!-- /ko -->
