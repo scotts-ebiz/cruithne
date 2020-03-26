@@ -1,6 +1,11 @@
-require(['catalogAddToCart'], function(catalogAddToCart) {
+define([
+    'catalogAddToCart',
+    'jquery'
+], function(catalogAddToCart, $) {
+
     (function ($) {
         $(document).ready(function () {
+
             // Sets option id or product base id
             var currentDrupalProductId = '';
             var currentSize = '';
@@ -89,4 +94,5 @@ require(['catalogAddToCart'], function(catalogAddToCart) {
             $.mage.catalogAddToCart();
         });
     })(jQuery);
+
 });
