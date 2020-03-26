@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<page layout="empty" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <head>
+        <script src="SMG_Iframes::js/addToCart.js"/>
+    </head>
+    <body>
+        <referenceBlock name="page.main.title" display="false" />
+        <referenceContainer name="content">
+            <block class="Magento\Catalog\Pricing\Render" as="iframe_pricing" name="product.price.final">
+                <arguments>
+                    <argument name="price_render" xsi:type="string">product.price.render.default</argument>
+                    <argument name="price_type_code" xsi:type="string">configured_price</argument>
+                    <argument name="zone" xsi:type="string">item_view</argument>
+                </arguments>
+            </block>
+            <block class="SMG\Iframes\Block\AddToCart" name="SMG_block_addtocart" template="SMG_Iframes::addToCart_bundle.phtml" >
+                <block class="Magento\Bundle\Block\Catalog\Product\View\Type\Bundle" name="product.info.bundle.options" as="type_bundle_options" template="Magento_Bundle::catalog/product/view/type/bundle/options.phtml" before="-">
+                    <container name="product.info.bundle.options.top" as="product_info_bundle_options_top">
+                        <block class="Magento\Catalog\Block\Product\View" name="bundle.back.button" as="backButton" before="-" template="Magento_Bundle::catalog/product/view/backbutton.phtml"/>
+                    </container>
+                    <block class="Magento\Bundle\Block\Catalog\Product\View\Type\Bundle\Option\Select" name="product.info.bundle.options.select" as="select">
+                        <arguments>
+                            <argument name="tier_price_renderer" xsi:type="object">\Magento\Bundle\Block\DataProviders\OptionPriceRenderer</argument>
+                        </arguments>
+                    </block>
+                    <block class="Magento\Bundle\Block\Catalog\Product\View\Type\Bundle\Option\Multi" name="product.info.bundle.options.multi" as="multi"/>
+                    <block class="Magento\Bundle\Block\Catalog\Product\View\Type\Bundle\Option\Radio" name="product.info.bundle.options.radio" as="radio">
+                        <arguments>
+                            <argument name="tier_price_renderer" xsi:type="object">\Magento\Bundle\Block\DataProviders\OptionPriceRenderer</argument>
+                        </arguments>
+                    </block>
+                    <block class="Magento\Bundle\Block\Catalog\Product\View\Type\Bundle\Option\Checkbox" name="product.info.bundle.options.checkbox" as="checkbox">
+                        <arguments>
+                            <argument name="tier_price_renderer" xsi:type="object">\Magento\Bundle\Block\DataProviders\OptionPriceRenderer</argument>
+                        </arguments>
+                    </block>
+                </block>
+            </block>
+        </referenceContainer>
+    </body>
+</page>

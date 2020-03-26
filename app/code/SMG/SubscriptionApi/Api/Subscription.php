@@ -3,8 +3,6 @@
 namespace SMG\SubscriptionApi\Api;
 
 use Exception;
-use Gigya\GigyaIM\Helper\CmsStarterKit\sdk\GSApiException;
-use Gigya\GigyaIM\Helper\CmsStarterKit\sdk\GSException;
 use Gigya\GigyaIM\Helper\GigyaMageHelper;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product;
@@ -531,6 +529,19 @@ class Subscription implements SubscriptionInterface
                     $this->cancelFailedOrders($subscription);
                     $this->_coreSession->setOrderProcessing(0);
 
+                    // Check if we receive a restricted product error.
+                    if (strpos($e->getMessage(), 'selected products is restricted') !== false) {
+                        // The restricted product error echo's out an error so
+                        // we need to clear the output buffer to prevent that
+                        // from corrupting the JSON return.
+                        ob_clean();
+
+                        return $this->_responseHelper->error(
+                            $e->getMessage(),
+                            ['refresh' => true]
+                        );
+                    }
+
                     return $this->_responseHelper->error(
                         'We could not process your order at this time. Please try again.',
                         ['refresh' => true]
@@ -571,6 +582,19 @@ class Subscription implements SubscriptionInterface
                     // We failed to create orders, lets remove any created orders.
                     $this->cancelFailedOrders($subscription);
                     $this->_coreSession->setOrderProcessing(0);
+
+                    // Check if we receive a restricted product error.
+                    if (strpos($e->getMessage(), 'selected products is restricted') !== false) {
+                        // The restricted product error echo's out an error so
+                        // we need to clear the output buffer to prevent that
+                        // from corrupting the JSON return.
+                        ob_clean();
+
+                        return $this->_responseHelper->error(
+                            $e->getMessage(),
+                            ['refresh' => true]
+                        );
+                    }
 
                     return $this->_responseHelper->error(
                         'We could not process your order at this time. Please try again.',
