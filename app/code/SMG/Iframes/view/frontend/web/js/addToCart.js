@@ -1,4 +1,4 @@
-requirejs(['catalogAddToCart'], function(catalogAddToCart) {
+require(['catalogAddToCart'], function(catalogAddToCart) {
     (function ($) {
         $(document).ready(function () {
             // Sets option id or product base id
