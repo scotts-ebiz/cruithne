@@ -502,6 +502,17 @@
         .block.crosssell {
             margin-top: 0;
             margin-left: 15px;
+            h2 {
+                @include cart-checkout-h2-font();
+            }
+            .product-items {
+              text-align: center;
+              .product-item {
+                border: 2px solid $checkout-light_grey;
+                padding: 50px;
+                width: 60%;
+              }
+            }
         }
     }
 

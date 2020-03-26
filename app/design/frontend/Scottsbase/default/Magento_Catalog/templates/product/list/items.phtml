@@ -163,8 +163,8 @@ switch ($type = $block->getType()) {
         <?php else :?>
         <div class="block <?= $block->escapeHtmlAttr($class) ?>">
             <?php endif; ?>
-            <div class="block-title title">
-                <h1 id="block-<?= $block->escapeHtmlAttr($class) ?>-heading" role="heading" aria-level="2"><?=
+            <div class="block-title title step-title">
+                <h2 id="block-<?= $block->escapeHtmlAttr($class) ?>-heading" role="heading" aria-level="2"><?=
                   $block->escapeHtml($title) ?></>
             </div>
             <div class="block-content content" aria-labelledby="block-<?= $block->escapeHtmlAttr($class) ?>-heading">
@@ -188,11 +188,14 @@ switch ($type = $block->getType()) {
                             <?php else :?>
                                 <li class="item product product-item">
                             <?php endif; ?>
-                            <div class="product-item-info <?= /* @noEscape */ $available ?>">
-                                <?= /* @noEscape */ '<!-- ' . $image . '-->' ?>
+                            <div>
+                              <?= /* @noEscape */ '<!-- ' . $image . '-->' ?>
                                 <a href="<?= $block->escapeUrl($block->getProductUrl($_item)) ?>" class="product photo product-item-photo">
-                                    <?= $block->getImage($_item, $image)->toHtml() ?>
+                                  <?= $block->getImage($_item, $image)->toHtml() ?>
                                 </a>
+                            </div>
+                            <div class="product-item-info <?= /* @noEscape */ $available ?>">
+
                                 <div class="product details product-item-details">
                                     <strong class="product name product-item-name"><a class="product-item-link" title="<?= $block->escapeHtml($_item->getName()) ?>" href="<?= $block->escapeUrl($block->getProductUrl($_item)) ?>">
                                             <?= $block->escapeHtml($_item->getName()) ?></a>
