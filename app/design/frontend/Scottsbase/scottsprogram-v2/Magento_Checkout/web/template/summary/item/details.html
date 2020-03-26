@@ -6,22 +6,42 @@
     <div class="product-item-inner">
         <div class="product-item-name-block">
             <div class="sp-block sp-p1 product-item-name" data-bind="html: $parent.name"></div>
+            <!-- ko if: $parents[1].subscriptionData().subscription_type === 'annual' -->
             <div
                 class="sp-block sp-text-xs sp-text-gray-5"
-                data-bind="text: $parents[1].subscriptionData().is_shippable
-                    ? 'You will be charged today'
-                    : ($parents[1].isAddOn(item)
-                        ? 'You will be charged at the time of the first shipment'
-                        : 'You will be charged before each shipment'
-                        )
-                "
+                data-bind="html: 'You will be charged today'"
             >
             </div>
-        </div>
-        <!-- ko if: $parents[1].subscriptionData().subscription_type === 'seasonal' -->
-            <div>Test have add on! With parent array</div>
-        <!-- /ko -->
+            <!-- /ko -->
 
+            <!-- ko if: $parents[1].subscriptionData().subscription_type === 'seasonal' && $parents[1]
+            .subscriptionData().is_shippable -->
+            <div
+                    class="sp-block sp-text-xs sp-text-gray-5"
+                    data-bind="text: 'You will be charged today'"
+            >
+            </div>
+            <!-- /ko -->
+
+            <!-- ko if: $parents[1].subscriptionData().subscription_type === 'seasonal' && !$parents[1]
+            .subscriptionData().is_shippable &&  !$parents[1].isAddOn(item) -->
+            <div
+                    class="sp-block sp-text-xs sp-text-gray-5"
+                    data-bind="text: 'You will be charged before each shipment'"
+            >
+            </div>
+            <!-- /ko -->
+
+            <!-- ko if: $parents[1].subscriptionData().subscription_type === 'seasonal' && !$parents[1]
+            .subscriptionData().is_shippable &&  $parents[1].isAddOn(item) -->
+            <div
+                    class="sp-block sp-text-xs sp-text-gray-5"
+                    data-bind="text: 'You will be charged at the time of the first shipment'"
+            >
+            </div>
+            <!-- /ko -->
+
+        </div>
 
         <!-- ko if: $parents[1].subscriptionData().subscription_type === 'annual' -->
             <!-- ko foreach: getRegion('after_details') -->
