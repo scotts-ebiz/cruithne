@@ -6,19 +6,10 @@
     <div class="product-item-inner">
         <div class="product-item-name-block">
             <div class="sp-block sp-p1 product-item-name" data-bind="html: $parent.name"></div>
-            <!-- ko if: $parents[1].subscriptionData().subscription_type === 'annual' -->
+            <!-- ko if: $parents[1].subscriptionData().subscription_type === 'annual' || ($parents[1].subscriptionData().subscription_type === 'seasonal' && $parents[1].subscriptionData().is_shippable) -->
             <div
                 class="sp-block sp-text-xs sp-text-gray-5"
                 data-bind="html: 'You will be charged today'"
-            >
-            </div>
-            <!-- /ko -->
-
-            <!-- ko if: $parents[1].subscriptionData().subscription_type === 'seasonal' && $parents[1]
-            .subscriptionData().is_shippable -->
-            <div
-                    class="sp-block sp-text-xs sp-text-gray-5"
-                    data-bind="text: 'You will be charged today'"
             >
             </div>
             <!-- /ko -->
