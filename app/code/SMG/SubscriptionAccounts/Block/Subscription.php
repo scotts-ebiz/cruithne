@@ -122,10 +122,6 @@ class Subscription extends Template
             ->addFilter('customer_id', $this->getCustomerId())
             ->getFirstItem();
 
-        $customerSubscription = $subscriptionCollection
-            ->addFilter('customer_id', $this->getCustomerId())
-            ->getFirstItem();
-
         $subscriptionOrders = $currentSubscription
             ->getSubscriptionOrders()
             ->getItems();
@@ -201,7 +197,7 @@ class Subscription extends Template
         $nextOrder = null;
         $renewalDate = null;
         $startDate = null;
-        if ( $customerSubscription && $customerSubscription->getData('entity_id')) {
+        if ( $currentSubscription && $currentSubscription->getData('entity_id')) {
             // Get the next billing date.
             $startDate = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $subscriptionOrders[0]['ship_start_date'])
                 ->add(new DateInterval('P1Y'));
