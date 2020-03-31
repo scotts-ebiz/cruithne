@@ -606,6 +606,35 @@ class Subscription extends AbstractModel
     public function cancel()
     {
         $this->_cancelSubscriptionHelper->cancel($this);
+
+        return;
+
+        foreach ($orders as $order) {
+            try {
+                /** @var SubscriptionOrder $subscriptionOrder */
+                if ($order->getData('subscription_addon')) {
+                    $subscriptionOrder = $this->_subscriptionAddonOrderCollectionFactory
+                        ->create()
+                        ->addFieldToFilter('sales_order_id', $order->getEntityId())
+                        ->getFirstItem();
+                } else {
+                    $subscriptionOrder = $this->_subscriptionOrderCollectionFactory
+                        ->create()
+                        ->addFieldToFilter('sales_order_id', $order->getEntityId())
+                        ->getFirstItem();
+                }
+
+                $subscriptionOrder->createCreditMemo();
+                $subscriptionOrders[] = $subscriptionOrder;
+
+                // Set the order status to canceled.
+                $order->setData('status', 'canceled')->save();
+            } catch (\Exception $e) {
+                $error = 'There was a problem making a credit memo for subscription cancellation. ' . $e->getMessage();
+                $this->_logger->error($error);
+                throw new LocalizedException(__($error));
+            }
+        }
     }
 
     /**

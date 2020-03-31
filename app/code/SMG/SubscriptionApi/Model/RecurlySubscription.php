@@ -877,15 +877,8 @@ class RecurlySubscription
                 $recurlySubscription->custom_fields[] = new Recurly_CustomField('is_addon', true);
                 $recurlySubscription->custom_fields[] = new Recurly_CustomField('addon_skus', implode(',', $productSkus));
 
-                if ($subscriptionType == 'seasonal') {
+                if ($subscriptionType != 'annual') {
                     $recurlySubscription->starts_at = $subscriptionAddonOrder->getData('ship_start_date');
-
-                    // If this subscription addon order can ship now, we do not
-                    // need to send a starts_at date to Recurly, otherwise, it
-                    // will get queued and charged at the top of the hour.
-                    if ($subscriptionAddonOrder->isCurrentlyShippable()) {
-                        $recurlySubscription->starts_at = null;
-                    }
 
                     // We're in test mode, so set custom start dates.
                     if ($this->_testHelper->inTestMode()) {
