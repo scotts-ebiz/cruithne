@@ -44,7 +44,8 @@ $iFrameDrupalIdsById = $this->getData('drupalIdsById');
             "iframePriceBox": {
                 "id" : "<?= $block->escapeHtml($_product->getId()) ?>",
                 "jsonConfig" : <?= /* @escapeNotVerified */ $block->getJsonConfig() ?>
-            }
+            },
+            "SMG_Iframes/js/addToCart": {}
         }
     }
 </script>

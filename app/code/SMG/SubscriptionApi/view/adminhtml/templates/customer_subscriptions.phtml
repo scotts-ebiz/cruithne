@@ -5,6 +5,7 @@
 
 	if( $subscriptions['success'] == true && ! empty( $subscriptions['subscriptions'] ) ) {
 		$subscriptionsList = $subscriptions['subscriptions'];
+        $adminPath = $this->escapeHtml($block->getAdminURLPath());
 	?>
 	<div class="admin__data-grid-wrap admin__data-grid-wrap-static">
 		<table class="data-grid">
@@ -20,11 +21,11 @@
 				</tr>
 			</thead>
 			<tbody>
-				<?php foreach( $subscriptionsList as $subscription ) {?>
+				<?php foreach( $subscriptionsList as $subscription ) { ?>
                     <tr onclick='location.href = this.getElementsByTagName("a").item(0).getAttribute("href");' >
                         <?php if ($subscription->plan->name <> 'Annual' && $subscription->plan->name <> 'Seasonal') :  ?>
                             <?php $orderId = $block->getOrderBySubscriptionId($subscription->uuid); ?>
-                            <td class="click"><a href="/admin/sales/order/view/order_id/<?php echo $this->escapeHtml($orderId); ?>"><?php echo $this->escapeHtml($subscription->uuid); ?></a></td>
+                            <td class="click"><a href="/<?php echo $this->escapeHtml($adminPath); ?>/sales/order/view/order_id/<?php echo $this->escapeHtml($orderId); ?>"><?php echo $this->escapeHtml($subscription->uuid); ?></a></td>
                         <?php else: ?>
                             <td><?php echo $this->escapeHtml($subscription->uuid); ?></td>
                         <?php endif; ?>
