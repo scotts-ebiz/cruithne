@@ -4,9 +4,9 @@ namespace SMG\SubscriptionCheckout\Block;
 use Magento\Framework\Session\SessionManagerInterface;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription;
 use SMG\SubscriptionApi\Model\SubscriptionOrderItem;
+use SMG\SubscriptionApi\Model\SubscriptionOrder;
 use SMG\SubscriptionApi\Helper\RecurlyHelper;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
-use SMG\SubscriptionApi\Model\SubscriptionOrder;
 
 /**
  * Onepage checkout block
@@ -22,9 +22,7 @@ class Onepage extends \Magento\Checkout\Block\Onepage
     /** @var SessionManagerInterface */
     private $_coreSession;
 
-    /**
-     * @var RecurlyHelper
-     */
+    /** @var RecurlyHelper **/
     protected $_recurlyHelper;
 
     /** @var SubscriptionHelper */
@@ -46,9 +44,9 @@ class Onepage extends \Magento\Checkout\Block\Onepage
      * @param SessionManagerInterface $coreSession
      * @param Subscription $subscription
      * @param SubscriptionOrderItem $subscriptionOrderItem
+     * @param SubscriptionOrder $subscriptionOrder
      * @param RecurlyHelper $recurlyHelper
      * @param SubscriptionHelper $subscriptionHelper
-     * @param SubscriptionOrder $subscriptionOrder
      * @param array $layoutProcessors
      * @param array $data
      * @param \Magento\Framework\Serialize\Serializer\Json $serializer
@@ -63,9 +61,9 @@ class Onepage extends \Magento\Checkout\Block\Onepage
         SessionManagerInterface $coreSession,
         Subscription $subscription,
         SubscriptionOrderItem $subscriptionOrderItem,
+        SubscriptionOrder $subscriptionOrder,
         RecurlyHelper $recurlyHelper,
         SubscriptionHelper $subscriptionHelper,
-        SubscriptionOrder $subscriptionOrder,
         array $layoutProcessors = [],
         array $data = [],
         \Magento\Framework\Serialize\Serializer\Json $serializer = null,
@@ -76,10 +74,10 @@ class Onepage extends \Magento\Checkout\Block\Onepage
         $this->_coreSession = $coreSession;
         $this->_subscription = $subscription;
         $this->_subscriptionOrderItem = $subscriptionOrderItem;
+        $this->_subscriptionOrder = $subscriptionOrder;
         $this->_recurlyHelper = $recurlyHelper;
         $this->_timezone = $timezone;
         $this->_subscriptionHelper = $subscriptionHelper;
-        $this->_subscriptionOrder = $subscriptionOrder;
     }
 
     /**
@@ -92,6 +90,17 @@ class Onepage extends \Magento\Checkout\Block\Onepage
         return $this->_recurlyHelper->getRecurlyPublicApiKey();
     }
 
+    public function getCartShipStartDate()
+    {
+        $onepageGetShipStartDate = $this->_subscriptionOrder->getShipStartDate();
+
+        if (empty($onepageGetShipStartDate) || $onepageGetShipStartDate == '0000-00-00 00:00:00') {
+            return 'Blank';
+        } else {
+            return 'First Something';
+        }
+    }
+
     /**
      * Get Subscription or Redirect
      */
@@ -102,7 +111,7 @@ class Onepage extends \Magento\Checkout\Block\Onepage
             $subscription = $this->_subscription->getSubscriptionByQuizId($this->_coreSession->getQuizId());
             $data = $subscription->convertToArray();
             $addOn = $subscription->getAddOn();
-            $this->_getShipStart = $this->_subscriptionOrder->generateShipStartDate();
+            $this->_getShipStart = $this->getCartShipStartDate();
             $data['get_ship_start_date'] = $this->_getShipStart;
             $data['is_shippable'] = $subscription->isCurrentlyShippable();
             $data['add_on'] = $addOn ? $addOn->convertToArray() : false;
