@@ -43,13 +43,13 @@
 
 		<div class="sp-form-group">
 			<input type="password"
-				   placeholder="Current Password"
+				   placeholder="Current Password*"
 				   class="sp-input"
 				   name="password"
 				   id="password"
 				   value="" />
 			<label class="sp-form-label"
-				   for="current_password">Current Password</label>
+				   for="password">Current Password*</label>
 		</div>
 
 		<div class="sp-form-group">
@@ -58,9 +58,19 @@
 				   placeholder="New Password"
 				   name="newPassword"
 				   id="newPassword"
+				   data-bind="event: { keyup: passwordStrength }"
 				   value="" />
 			<label class="sp-form-label"
 				   for="newPassword">New Password</label>
+			<div class="form-tooltip">
+				<h6 class="sp-mt-0 sp-mb-2">Password Strength:</h6>
+				<div id="pass_type" class="sp-font-bold sp-text-center sp-mb-2">Too Weak</div>
+				<div id="meter_wrapper" class="sp-mb-2">
+					<div id="meter"></div>
+				</div>
+				<p class="sp-mb-0">Password must contain at least 8 characters and the 3 of the following: An uppercase
+				letter, a lowercase latter, a number, a special symbol</p>
+			</div>
 		</div>
 
 		<div class="sp-form-group">

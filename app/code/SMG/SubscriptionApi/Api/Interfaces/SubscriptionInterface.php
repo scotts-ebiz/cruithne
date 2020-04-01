@@ -24,6 +24,7 @@ interface SubscriptionInterface
      * Create orders in Magento
      *
      * @param string $key
+     * @param string $token
      * @param string $quiz_id
      * @param mixed $billing_address
      * @param bool $billing_same_as_shipping
@@ -31,5 +32,12 @@ interface SubscriptionInterface
      *
      * @api
      */
-    public function createOrders($key, $quiz_id, $billing_address, $billing_same_as_shipping);
+    public function createSubscription($key, $token, $quiz_id, $billing_address, $billing_same_as_shipping);
+
+    /**
+     * Get Subscription Data For Data Sync.
+     *
+     * @return array
+     */
+    public function getSubscriptionDataForSync();
 }

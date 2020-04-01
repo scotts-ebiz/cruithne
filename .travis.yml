@@ -63,9 +63,9 @@ notifications:
 
 before_install:
 # Check Docker build:
-- openssl aes-256-cbc -K $encrypted_b17a4b75f504_key -iv $encrypted_b17a4b75f504_iv -in ecommerce-platform-211419-cb2647450c4d.json.enc -out ecommerce-platform-211419-cb2647450c4d.json -d
-- cat ecommerce-platform-211419-cb2647450c4d.json | docker login -u _json_key --password-stdin https://gcr.io
-- docker build build/
+# - openssl aes-256-cbc -K $encrypted_b17a4b75f504_key -iv $encrypted_b17a4b75f504_iv -in ecommerce-platform-211419-cb2647450c4d.json.enc -out ecommerce-platform-211419-cb2647450c4d.json -d
+# - cat ecommerce-platform-211419-cb2647450c4d.json | docker login -u _json_key --password-stdin https://gcr.io
+# - docker build build/
 # Apache
 - sudo apt-get -y install apache2
 - sudo a2enmod ssl
@@ -124,7 +124,7 @@ before_script:
 - phpenv rehash
 
 # Magento 2 installation
-- php bin/magento setup:install --base-url="$LOCAL_URL" --admin-email="$ADMIN_EMAIL"
+- php bin/magento setup:install --no-interaction --base-url="$LOCAL_URL" --admin-email="$ADMIN_EMAIL"
   --admin-firstname="$ADMIN_FIRST" --admin-lastname="$ADMIN_LAST" --admin-user="$ADMIN_USERNAME"
   --admin-password="$ADMIN_PASSWORD" --language="en_US" --backend-frontname="admin"
   --base-url="$LOCAL_URL" --db-host="localhost" --db-name="$DB_NAME" --db-user="$DB_APP_USER"
@@ -137,7 +137,7 @@ before_script:
 script:
 #  Move permissions to before script once unit tests are set.
 # Permissions
-- cd vendor/snowdog/frontools/ && npm install && gulp clean && npm rebuild node-sass && gulp styles --ci
+- cd vendor/snowdog/frontools/ && npm install && gulp clean && npm rebuild node-sass && gulp styles --ci --prod
 # - sudo chown -R www-data:www-data /var/www/
 # - sudo chmod -R 666 /var/www/
 # - sudo find /var/www/ -type f -exec chmod ug+rw {} \;

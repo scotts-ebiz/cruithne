@@ -2,6 +2,9 @@
 
 namespace SMG\SubscriptionApi\Model;
 
+use DateTime;
+use Exception;
+use DateInterval;
 use Magento\Framework\Data\Collection\AbstractDb;
 use Magento\Framework\DB\Transaction;
 use Magento\Framework\Exception\LocalizedException;
@@ -34,9 +37,6 @@ class SubscriptionAddonOrder extends AbstractModel
 
     /** @var SubscriptionAddonOrderItemCollectionFactory */
     protected $_subscriptionAddonOrderItemCollectionFactory;
-
-    /** @var SubscriptionOrderItemInterface */
-    protected $_subscriptionAddonOrderItems;
 
     /** @var OrderRepository */
     protected $_orderRepository;
@@ -157,7 +157,7 @@ class SubscriptionAddonOrder extends AbstractModel
 
     /**
      * Generate the shipment dates for the subscription order
-     * @throws \Exception
+     * @throws Exception
      */
     public function generateShipDates()
     {
@@ -180,7 +180,8 @@ class SubscriptionAddonOrder extends AbstractModel
 
         $subscription = $this->_subscriptionCollectionFactory
             ->create()
-            ->getItemById($this->getData('subscription_entity_id'));
+            ->addFieldToFilter('entity_id', $this->getData('subscription_entity_id'))
+            ->getFirstItem();
 
         if (is_null($subscription) || ! $subscription->getId()) {
             return false;
@@ -201,7 +202,7 @@ class SubscriptionAddonOrder extends AbstractModel
         $subscription = $this->getSubscription();
 
         if ($subscription) {
-            return $subscription->getSubscriptionId();
+            return $subscription->getData('subscription_id');
         }
 
         return '';
@@ -242,27 +243,24 @@ class SubscriptionAddonOrder extends AbstractModel
     /**
      * Get subscription addon orders
      * @param bool $selectedOnly
-     * @return mixed
+     * @return bool|ResourceModel\SubscriptionAddonOrderItem\Collection
      */
     public function getOrderItems(bool $selectedOnly = false)
     {
-
         // Make sure we have an actual subscription
         if (empty($this->getEntityId())) {
             return false;
         }
 
         // If subscription orders is local, send them, if not, pull them and send them
-        if (! isset($this->_subscriptionAddonOrderItems)) {
-            $subscriptionAddonOrderItems = $this->_subscriptionAddonOrderItemCollectionFactory->create();
-            $subscriptionAddonOrderItems->addFieldToFilter('subscription_addon_order_entity_id', $this->getEntityId());
-            if ($selectedOnly) {
-                $subscriptionAddonOrderItems->addFieldToFilter('selected', 1);
-            }
-            $this->_subscriptionAddonOrderItems = $subscriptionAddonOrderItems;
+        $subscriptionAddonOrderItems = $this->_subscriptionAddonOrderItemCollectionFactory->create();
+        $subscriptionAddonOrderItems->addFieldToFilter('subscription_addon_order_entity_id', $this->getEntityId());
+
+        if ($selectedOnly) {
+            $subscriptionAddonOrderItems->addFieldToFilter('selected', 1);
         }
 
-        return $this->_subscriptionAddonOrderItems;
+        return $subscriptionAddonOrderItems;
     }
 
     /**
@@ -327,10 +325,17 @@ class SubscriptionAddonOrder extends AbstractModel
         }
 
         try {
-            $this->_order = $this->_orderCollectionFactory->create()->getItemById($this->getSalesOrderId());
+            $this->_order = $this->_orderCollectionFactory
+                ->create()
+                ->addFieldToFilter('entity_id', $this->getData('sales_order_id'))
+                ->getFirstItem();
+
+            if (! $this->_order || ! $this->_order->getId()) {
+                return null;
+            }
 
             return $this->_order;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
     }
@@ -347,12 +352,31 @@ class SubscriptionAddonOrder extends AbstractModel
         }
 
         try {
-            $this->_sapOrderBatch = $this->_sapOrderBatchCollectionFactory->create()->getItemById($this->getSalesOrderId());
+            $this->_sapOrderBatch = $this->_sapOrderBatchCollectionFactory
+                ->create()
+                ->addFieldToFilter('sales_order_id', $this->getData('sales_order_id'))
+                ->getFirstItem();
+
+            if (! $this->_sapOrderBatch->getId()) {
+                return null;
+            }
 
             return $this->_sapOrderBatch;
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return null;
         }
+    }
+
+    /**
+     * See if any add-on items were selected for the subscription.
+     *
+     * @return bool
+     */
+    public function isSelected()
+    {
+        $addOnItem = $this->getOrderItems(true);
+
+        return $addOnItem->count() > 0;
     }
 
     /**
@@ -365,7 +389,7 @@ class SubscriptionAddonOrder extends AbstractModel
 
     /**
      * Generate Ship Start Date
-     * @throws \Exception
+     * @throws Exception
      */
     private function generateShipStartDate()
     {
@@ -377,35 +401,51 @@ class SubscriptionAddonOrder extends AbstractModel
         }
 
         // Calculate the Earliest Ship Start Date
-        $earliestShipStartDate = new \DateTime($this->getApplicationStartDate());
-        $earliestShipStartDate->sub(new \DateInterval('P' . $shippingOpenWindow . 'D'));
-        $todayDate = new \DateTime(date('Y-m-d 00:00:00'));
+        $earliestShipStartDate = new DateTime($this->getData('application_start_date'));
+        $earliestShipStartDate->sub(new DateInterval('P' . $shippingOpenWindow . 'D'));
 
-        // Take either Earliest Ship Start date of Today, whichever is greater
-        if ($todayDate <= $earliestShipStartDate) {
-            $this->setShipStartDate($earliestShipStartDate);
-        } else {
-            $this->setShipStartDate($todayDate);
+        // Get the subscription and earliest order.
+        $subscription = $this->getSubscription();
+        $subscriptionOrder = $subscription->getSubscriptionOrders()
+            ->setOrder('ship_start_date', 'asc')
+            ->fetchItem();
+
+        // If we have an order, update the earliest ship date to match the first
+        // order.
+        if ($subscriptionOrder && $subscriptionOrder->getId()) {
+            $earliestShipStartDate = DateTime::createFromFormat('Y-m-d H:i:s', $subscriptionOrder->getData('ship_start_date'));
         }
+
+        $todayDate = new DateTime(date('Y-m-d 00:00:00'));
+
+        // Take either Earliest Ship Start date or Today, whichever is greater
+        $this->setData(
+            'ship_start_date',
+            $todayDate <= $earliestShipStartDate ? $earliestShipStartDate : $todayDate
+        )->save();
     }
 
     /**
      * Is Order Currently Shippable
      * @return bool
-     * @throws \Exception
+     * @throws Exception
      */
-    public function isCurrenltyShippable() {
-        if ($this->getSubscriptionType() !== 'annual') {
-            $today = new \DateTime();
-            $shipStart = \DateTime::createFromFormat('Y-m-d H:i:s', $this->getShipStartDate());
+    public function isCurrentlyShippable()
+    {
+        // Seasonal subscription, so base ship date on first seasonal order.
+        if ($this->getSubscriptionType() == 'seasonal') {
+            $shipStart = DateTime::createFromFormat('Y-m-d H:i:s', $this->getData('ship_start_date'));
+            $today = new DateTime();
+
             return $today >= $shipStart;
         }
+
         return true;
     }
 
     /**
      * Generate Ship End Date
-     * @throws \Exception
+     * @throws Exception
      */
     private function generateShipEndDate()
     {
@@ -417,18 +457,13 @@ class SubscriptionAddonOrder extends AbstractModel
         }
 
         // Calculate the Earliest Ship Start Date
-        $earliestShipEndDate = new \DateTime($this->getApplicationEndDate());
-        $earliestShipEndDate->sub(new \DateInterval('P' . $shippingCloseWindow . 'D'));
-        $todayDate = new \DateTime(date('Y-m-d 00:00:00'));
+        $earliestShipEndDate = new DateTime($this->getData('application_end_date'));
+        $earliestShipEndDate->sub(new DateInterval('P' . $shippingCloseWindow . 'D'));
+        $todayDate = new DateTime(date('Y-m-d 00:00:00'));
 
         // Take either Earliest Ship Start date of Today, whichever is greater
-        if ($todayDate <= $earliestShipEndDate) {
-            $this->setShipEndDate($earliestShipEndDate->format('Y-m-d H:i:s'));
-        } else {
-            $this->setShipEndDate($todayDate->format('Y-m-d H:i:s'));
-        }
-
-        $this->save();
+        $shipDate = $todayDate <= $earliestShipEndDate ? $earliestShipEndDate : $todayDate;
+        $this->setData('ship_end_date', $shipDate)->save();
     }
 
     /**
@@ -449,7 +484,7 @@ class SubscriptionAddonOrder extends AbstractModel
                 $creditmemo->setInvoice($invoice);
                 $creditmemo->save();
             }
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             $error = 'Could not create credit memo for order.';
             $this->_logger->error($e->getMessage() . ' - ' . $error);
             throw new LocalizedException(__($error));

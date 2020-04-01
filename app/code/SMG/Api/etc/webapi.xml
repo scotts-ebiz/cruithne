@@ -43,6 +43,24 @@
             <resource ref="self" />
         </resources>
     </route>
+    <route url="/V1/smg/ordersCreditMemo" method="POST">
+        <service class="SMG\Api\Model\OrdersManagementInterface" method="getCreditMemoOrders" />
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
+    <route url="/V1/smg/ordersLawnSubscription" method="POST">
+        <service class="SMG\Api\Model\OrdersManagementInterface" method="getLawnSubscriptionOrders" />
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
+    <route url="/V1/smg/ordersMain" method="POST">
+        <service class="SMG\Api\Model\OrdersManagementInterface" method="getMainOrders" />
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
     <route url="/V1/smg/ordersSent" method="POST">
         <service class="SMG\Api\Model\OrdersSentManagementInterface" method="updateOrders" />
         <resources>
@@ -63,6 +81,12 @@
     </route>
     <route url="/V1/smg/shipment" method="POST">
         <service class="SMG\Api\Model\ShipmentManagementInterface" method="processShipment" />
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
+    <route url="/V1/smg/getProductInfo" method="GET">
+        <service class="SMG\Api\Model\ProductExportManagementInterface" method="processGetProductInfo" />
         <resources>
             <resource ref="self" />
         </resources>

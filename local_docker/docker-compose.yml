@@ -1,0 +1,39 @@
+version: "3.7"
+
+services:
+  m2:
+    container_name: m2
+    image: gcr.io/ecommerce-platform-211419/magento-local-primer
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - magento-data-sync:/var/www/html/magento2
+    depends_on:
+      - mysql
+  mysql:
+    container_name: mysql
+    image: gcr.io/ecommerce-platform-211419/magento-local-db-primer
+    ports:
+      - 3306:3306
+    environment:
+      MYSQL_ROOT_PASSWORD: dfDF34#$$
+      DEFAULT_LOCAL_ENVIRONMENT: rc
+    volumes:
+      - "./scripts/:/docker-entrypoint-initdb.d/"
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: always
+    volumes:
+      - redis-data:/data
+  elasticsearch:
+    image: markoshust/magento-elasticsearch:6.5.4-0
+    ports:
+      - "9200:9200"
+      - "9300:9300"
+volumes:
+  magento-data-sync:
+    external: true
+  redis-data:
+    external: false

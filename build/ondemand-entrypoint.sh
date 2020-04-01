@@ -14,8 +14,8 @@ su - magento -c '/var/www/html/magento2/bin/magento setup:di:compile'
 # Set Styles
 su - magento -c 'rm /var/www/html/magento2/tools/yarn.lock'
 su - magento -c 'cd /var/www/html/magento2/tools/ && ls -la'
-su - magento -c 'cd /var/www/html/magento2/tools && npm install && npm rebuild node-sass && gulp clean -f /var/www/html/magento2/tools/gulpfile.esm.js && gulp styles -f /var/www/html/magento2/tools/gulpfile.esm.js'
-su - magento -c '/var/www/html/magento2/bin/magento setup:static-content:deploy'
+su - magento -c 'cd /var/www/html/magento2/tools && npm install && npm rebuild node-sass && gulp clean -f /var/www/html/magento2/tools/gulpfile.esm.js && gulp styles --prod -f /var/www/html/magento2/tools/gulpfile.esm.js'
+su - magento -c '/var/www/html/magento2/bin/magento setup:static-content:deploy -f'
 
 # Reindex and Cache Flush
 su - magento -c '/var/www/html/magento2/bin/magento -v index:reindex'

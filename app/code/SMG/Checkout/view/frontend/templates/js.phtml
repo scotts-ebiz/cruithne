@@ -1,12 +1,7 @@
-<script>
-    require ([
-            'jquery'
-        ],
-        function ($) {
-            $(window).on("load", function () {
-                require([
-                    'SMG_Checkout/js/cartQtyUpdate'
-                ]);
-            });
-        });
+<script type="text/x-magento-init">
+    {
+        "*": {
+            "ajaxQty": {}
+        }
+    }
 </script>

@@ -8,7 +8,6 @@ use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Customer\Api\Data\AddressInterfaceFactory;
 use Magento\Customer\Api\Data\RegionInterface;
 use Magento\Customer\Model\AddressFactory;
-use Magento\Customer\Model\ResourceModel\Address\Collection as AddressCollection;
 use Magento\Directory\Model\RegionFactory;
 use Magento\Directory\Model\ResourceModel\Region\Collection as RegionCollection;
 use Magento\Framework\Exception\LocalizedException;
@@ -187,7 +186,6 @@ class SeasonalHelper extends AbstractHelper
         }
 
         foreach ($subscriptionOrders as $subscriptionOrder) {
-
             // Check to make sure the order is active (invoiced)
             if (! $this->verifyRecurlySeasonalOrder($subscriptionOrder)) {
                 // Order is not ready to process, set a timestamp to be
@@ -205,7 +203,6 @@ class SeasonalHelper extends AbstractHelper
             }
 
             try {
-
                 // Process Invoice
                 $subscriptionOrder->createInvoice();
 
@@ -221,7 +218,7 @@ class SeasonalHelper extends AbstractHelper
                     throw new LocalizedException(__($error));
                 }
 
-                // Prevent SAP from processing
+                // Update SAP batch
                 $sapOrderBatch
                     ->setData('is_order', 1)
                     ->save();
@@ -277,7 +274,6 @@ class SeasonalHelper extends AbstractHelper
             $shipDate = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $order->getData('ship_start_date'));
 
             // If a ship date is older than 10 days, it means something is
-            // If a ship date is older than 10 days, it means something is
             // causing the process to fail, so lets mark it as such.
             if ($shipDate < $this->_failDate) {
                 $this->_logger->error("Subscription order {$order->getData('subscription_id')} has failed to process.");
@@ -330,6 +326,15 @@ class SeasonalHelper extends AbstractHelper
                 && $recurlySubscription->activated_at < $this->_today
                 && $recurlySubscription->activated_at > $this->_failDate
             ) {
+                // Subscription is fine, lets get the invoice and check the
+                // status there.
+                $invoice = $recurlySubscription->invoice->get();
+
+                if (! $invoice || $invoice->state != 'paid') {
+                    return false;
+                }
+
+                // Invoice does exist and it has been paid.
                 return true;
             }
 

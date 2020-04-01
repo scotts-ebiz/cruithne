@@ -1,21 +1,28 @@
 <?xml version="1.0"?>
-<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
+<schema xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Setup/Declaration/Schema/etc/schema.xsd">
     <table name="sales_order_grid" resource="sales" engine="innodb" comment="Extend sales_order_grid table">
-        <column xsi:type="varchar" name="gigya_id" nullable="true" comment="Gigya ID" />
-        <column xsi:type="varchar" name="master_subscription_id" nullable="true" comment="Master Subscription ID" />
-        <column xsi:type="varchar" name="subscription_id" nullable="true" comment="Subscription ID" />
-        <column xsi:type="varchar" name="subscription_type" nullable="true" comment="Subscription Type" />
-        <column xsi:type="boolean" name="subscription_addon" nullable="true" comment="Is Addon Subscription?" />
-        <column xsi:type="timestamp" name="ship_start_date" nullable="true" comment="Ship Start Date" />
-        <column xsi:type="timestamp" name="ship_end_date" nullable="true" comment="Ship End Date" />
+        <column xsi:type="varchar" name="gigya_id" nullable="true" comment="Gigya ID"/>
+        <column xsi:type="varchar" name="master_subscription_id" nullable="true" comment="Master Subscription ID"/>
+        <column xsi:type="varchar" name="subscription_id" nullable="true" comment="Subscription ID"/>
+        <column xsi:type="varchar" name="subscription_type" nullable="true" comment="Subscription Type"/>
+        <column xsi:type="boolean" name="subscription_addon" nullable="true" comment="Is Addon Subscription?"/>
+        <column xsi:type="timestamp" name="ship_start_date" nullable="true" comment="Ship Start Date"/>
+        <column xsi:type="timestamp" name="ship_end_date" nullable="true" comment="Ship End Date"/>
     </table>
     <table name="sales_order" resource="sales" engine="innodb" comment="Extend sales_order table">
-        <column xsi:type="varchar" name="gigya_id" nullable="true" comment="Gigya ID" />
-        <column xsi:type="varchar" name="master_subscription_id" nullable="true" comment="Master Subscription ID" />
-        <column xsi:type="varchar" name="subscription_id" nullable="true" comment="Subscription ID" />
-        <column xsi:type="varchar" name="subscription_type" nullable="true" comment="Subscription Type" />
-        <column xsi:type="boolean" name="subscription_addon" nullable="true" comment="Is Addon Subscription?" />
-        <column xsi:type="timestamp" name="ship_start_date" nullable="true" comment="Ship Start Date" />
-        <column xsi:type="timestamp" name="ship_end_date" nullable="true" comment="Ship End Date" />
+        <column xsi:type="varchar" name="gigya_id" nullable="true" comment="Gigya ID"/>
+        <column xsi:type="varchar" name="master_subscription_id" nullable="true" comment="Master Subscription ID"/>
+        <column xsi:type="varchar" name="subscription_id" nullable="true" comment="Subscription ID"/>
+        <column xsi:type="varchar" name="subscription_type" nullable="true" comment="Subscription Type"/>
+        <column xsi:type="boolean" name="subscription_addon" nullable="true" comment="Is Addon Subscription?"/>
+        <column xsi:type="timestamp" name="ship_start_date" nullable="true" comment="Ship Start Date"/>
+        <column xsi:type="timestamp" name="ship_end_date" nullable="true" comment="Ship End Date"/>
+        <index referenceId="SALES_ORDER_MASTER_SUBSCRIPTION_ID" indexType="btree">
+            <column name="master_subscription_id"/>
+        </index>
+        <index referenceId="SALES_ORDER_SUBSCRIPTION_ID" indexType="btree">
+            <column name="subscription_id"/>
+        </index>
     </table>
 </schema>

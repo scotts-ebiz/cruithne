@@ -19,6 +19,7 @@ use SMG\Sap\Model\ResourceModel\SapOrderItem\CollectionFactory as SapOrderItemCo
 use SMG\Sap\Model\ResourceModel\SapOrderShipment\CollectionFactory as SapOrderShipmentCollectionFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface as ScopeConfigInterface;
 use Zaius\Engage\Helper\Sdk as Sdk;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
 
 class ShipmentHelper
 {
@@ -116,7 +117,12 @@ class ShipmentHelper
      * @var sdk
      */
     protected $_sdk;
-
+    
+    /** 
+     * @var SubscriptionOrderCollectionFactory 
+     */
+    protected $_subscriptionOrderCollectionFactory;
+    
     /**
      * BatchCaptureHelper constructor.
      *
@@ -156,7 +162,8 @@ class ShipmentHelper
         ItemInterface $itemInterface,
         SapOrderShipmentCollectionFactory $sapOrderShipmentCollectionFactory,
         ScopeConfigInterface $scopeConfigInterface,
-        Sdk $sdk)
+        Sdk $sdk,
+        SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory)
     {
         $this->_logger = $logger;
         $this->_responseHelper = $responseHelper;
@@ -176,6 +183,7 @@ class ShipmentHelper
         $this->_sapOrderShipmentCollectionFactory = $sapOrderShipmentCollectionFactory;
         $this->_scopeConfigInterface = $scopeConfigInterface;
         $this->_sdk = $sdk;
+        $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
     }
 
     /**
@@ -211,8 +219,14 @@ class ShipmentHelper
               // update the sap order batch
             $this->updateSapBatch($sapBatchOrder, $orderId);    
 
+            try {
                // Zaius apiKey
-            $this->zaiusApiCall($orderId);
+               $this->zaiusApiCall($orderId);
+            } catch (Exception $ex) {
+                $this->_logger->error($ex->getMessage());
+                return;
+            }
+            
            }
             
         }
@@ -408,7 +422,14 @@ class ShipmentHelper
      
        // get send shipment status
        $shipmentstatus = $this->getSendShipmentStatus();
-
+       
+       // get subcription order details
+        $subscriptionOrders = $this->_subscriptionOrderCollectionFactory->create();
+        $subscriptionOrders
+                ->setOrder('ship_start_date', 'asc')
+                ->addFieldToFilter('sales_order_id', $orderId);
+        $this->_subscriptionOrders = $subscriptionOrders;
+        
        // check isSubcription and shipmentstatus
        if ($order->isSubscription() && $shipmentstatus)
         {
@@ -421,6 +442,17 @@ class ShipmentHelper
             // get order increment Id
             $shipmentId = $order->getIncrementId();
             
+            $startdate = '';
+            $enddate = '';
+            $product_order = '';
+            if($this->_subscriptionOrders){
+                foreach($this->_subscriptionOrders as $orders){
+                    $startdate = strtotime($orders->getApplicationStartDate());
+                    $enddate   = strtotime($orders->getApplicationEndDate());
+                    $product_order =  $this->getProductOrder($orders->getSubscriptionEntityId(), $orderId);
+                }
+            }
+            
             foreach ($order->getAllVisibleItems() as $_item) {
             $productid = $_item->getProductId();
                       // take event as a array and add parameters
@@ -428,8 +460,8 @@ class ShipmentHelper
             $event['type'] = 'product';
             $event['action'] = 'shipped';
             $event['identifiers'] = ['email'=>$email];
-            $event['data'] = ['product_id'=>$productid, 'shipment_id'=>$shipmentId, 'magento_store_view'=>'Default Store View'];
-
+            $event['data'] = ['product_id'=>$productid, 'shipment_id'=>$shipmentId, 'magento_store_view'=>'Default Store View','applicationstartdate'=>$startdate,'applicationenddate'=>$enddate,'product_order'=>$product_order];
+            
             // get postevent function
             $zaiusstatus = $zaiusClient->postEvent($event); 
 
@@ -453,5 +485,24 @@ class ShipmentHelper
     private function getSendShipmentStatus()
     {
         return $this->_scopeConfigInterface->getValue('zaius_engage/status/send_shipment_status', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    }
+    
+    private function getProductOrder($subscription_entity_id, $sales_order_id)
+    {
+      $subscriptionOrders = $this->_subscriptionOrderCollectionFactory->create();
+      $subscriptionOrders
+                ->setOrder('entity_id', 'asc')
+                ->addFieldToFilter('subscription_entity_id', $subscription_entity_id); 
+      $this->_subscriptionOrders = $subscriptionOrders;
+      $i = 0;
+     foreach($this->_subscriptionOrders as $subcriptionorders){
+             if($subcriptionorders->getSalesOrderId() == $sales_order_id)
+             {
+              return $i;     
+              break; 
+             }
+             $i++;
+        }           
+      return $i;
     }
 }

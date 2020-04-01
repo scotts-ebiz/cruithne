@@ -218,6 +218,12 @@ class Save extends Action
         }
 
         try {
+
+            // Grab existing customer data in case Gigya fails to update and a rollback is needed.
+            $currentEmail = $customer->getData('email');
+            $currentFirstName = $customer->getData('firstname');
+            $currentLastName = $customer->getData('lastname');
+
             // Update Magento customer data
             $customer->setData( 'firstname', $request->firstname );
             $customer->setData( 'lastname', $request->lastname );
@@ -230,6 +236,13 @@ class Save extends Action
             $gigyaData['profile']['email'] = $request->email;
             $this->_gigyaMageHelper->updateGigyaAccount( $this->getGigyaUid(), $gigyaData );
         } catch(\Exception $e) {
+
+            // Rollback M2 db update since Gigya failed to update.
+            $customer->setData( 'firstname', $currentFirstName );
+            $customer->setData( 'lastname', $currentLastName );
+            $customer->setData( 'email', $currentEmail );
+            $customer->save();
+
             $error = 'There was a problem with updating the account details ( '. $e->getMessage() .' )';
             $this->_logger->error($error);
             $data = array(
@@ -267,7 +280,7 @@ class Save extends Action
         $isPasswordChanged = false;
 
         // If current password is not empty, let's update the passwords
-        if( ! empty( $request->password ) ) {
+        if( ! empty( $request->password ) || ! empty( $request->newPassword) || ! empty( $request->passwordRetype ) ) {
             if( ! empty( $request->newPassword ) && ! empty( $request->passwordRetype ) ) {
 
                 // Make sure the new passwords match
@@ -296,6 +309,15 @@ class Save extends Action
                     $result->setData($data);
                     return $result;
                 }
+            } else {
+                $error = 'There was a problem with updating the password.';
+                $this->_logger->error( $error );
+                $data = array(
+                    'success'   => false,
+                    'message'   => $error,
+                );
+                $result->setData($data);
+                return $result;
             }
         }
 

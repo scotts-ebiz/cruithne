@@ -2,17 +2,23 @@
 
 namespace SMG\SubscriptionApi\Helper;
 
-use Magento\Directory\Model\ResourceModel\Region\Collection as RegionCollection;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\Quote\Model\QuoteFactory;
-use Magento\Quote\Model\QuoteRepository;
+use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\AddressFactory;
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerFactory;
+use Magento\Directory\Model\ResourceModel\Region\Collection as RegionCollection;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
-use Magento\Quote\Model\QuoteManagement;
+use Magento\Framework\Exception\CouldNotSaveException;
+use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
+use Magento\Framework\Session\SessionManagerInterface;
+use Magento\Quote\Api\CartManagementInterface;
+use Magento\Quote\Api\CartRepositoryInterface;
+use Magento\Quote\Model\Quote\AddressFactory as QuoteAddressFactory;
+use Magento\Quote\Model\QuoteFactory;
 use Magento\Sales\Model\Order;
+use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\SubscriptionApi\Exception\SubscriptionException;
@@ -52,15 +58,26 @@ class SubscriptionOrderHelper extends AbstractHelper
     protected $_storeManager;
 
     /**
+     * @var SessionManagerInterface
+     */
+    protected $_session;
+
+    /**
      * @var Customer
      */
     protected $_customer;
+
+    /**
+     * @var CustomerRepositoryInterface
+     */
+    protected $_customerRepository;
+
     /**
      * @var int
      */
     private $_websiteId;
     /**
-     * @var \Magento\Store\Api\Data\StoreInterface
+     * @var StoreInterface
      */
     private $_store;
 
@@ -80,9 +97,14 @@ class SubscriptionOrderHelper extends AbstractHelper
     protected $_subscriptionAddonOrderCollectionFactory;
 
     /**
-     * @var QuoteManagement
+     * @var CartManagementInterface
      */
-    protected $_quoteManagement;
+    protected $_cartManagement;
+
+    /**
+     * @var CartRepositoryInterface
+     */
+    protected $_cartRepository;
 
     /**
      * @var CustomerFactory
@@ -93,11 +115,6 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @var QuoteFactory
      */
     protected $_quoteFactory;
-
-    /**
-     * @var QuoteRepository
-     */
-    protected $_quoteRepository;
 
     /**
      * @var RegionCollection
@@ -115,29 +132,35 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @param AddressFactory $addressFactory
      * @param Customer $customer
      * @param CustomerFactory $customerFactory
+     * @param CustomerRepositoryInterface $customerRepository
      * @param Order $order
      * @param QuoteFactory $quoteFactory
-     * @param QuoteManagement $quoteManagement
-     * @param QuoteRepository $quoteRepository
+     * @param QuoteAddressFactory $quoteAddressFactory
+     * @param CartManagementInterface $cartManagement
+     * @param CartRepositoryInterface $cartRepository
      * @param StoreManagerInterface $storeManager
+     * @param SessionManagerInterface $session
      * @param SubscriptionAddonOrder $subscriptionAddonOrder
      * @param SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory
      * @param SubscriptionOrder $subscriptionOrder
      * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
      * @param RegionCollection $regionCollection
      * @param SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     public function __construct(
         Context $context,
         AddressFactory $addressFactory,
         Customer $customer,
         CustomerFactory $customerFactory,
+        CustomerRepositoryInterface $customerRepository,
         Order $order,
         QuoteFactory $quoteFactory,
-        QuoteManagement $quoteManagement,
-        QuoteRepository $quoteRepository,
+        QuoteAddressFactory $quoteAddressFactory,
+        CartManagementInterface $cartManagement,
+        CartRepositoryInterface $cartRepository,
         StoreManagerInterface $storeManager,
+        SessionManagerInterface $session,
         SubscriptionAddonOrder $subscriptionAddonOrder,
         SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory,
         SubscriptionOrder $subscriptionOrder,
@@ -150,11 +173,14 @@ class SubscriptionOrderHelper extends AbstractHelper
         $this->_addressFactory = $addressFactory;
         $this->_customer = $customer;
         $this->_customerFactory = $customerFactory;
+        $this->_customerRepository = $customerRepository;
         $this->_order = $order;
         $this->_quoteFactory = $quoteFactory;
-        $this->_quoteManagement = $quoteManagement;
-        $this->_quoteRepository = $quoteRepository;
+        $this->_quoteAddressFactory = $quoteAddressFactory;
+        $this->_cartManagement = $cartManagement;
+        $this->_cartRepository = $cartRepository;
         $this->_storeManager = $storeManager;
+        $this->_session = $session;
         $this->_subscriptionAddonOrder = $subscriptionAddonOrder;
         $this->_subscriptionAddonOrderCollectionFactory = $subscriptionAddonOrderCollectionFactory;
         $this->_subscriptionOrder = $subscriptionOrder;
@@ -172,8 +198,8 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @param SubscriptionOrder|SubscriptionAddonOrder|string $subscriptionId
      * @throws LocalizedException
      * @throws SubscriptionException
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws CouldNotSaveException
+     * @throws NoSuchEntityException
      */
     public function processInvoiceWithSubscriptionId($subscriptionId)
     {
@@ -187,15 +213,15 @@ class SubscriptionOrderHelper extends AbstractHelper
         // Check if we found a subscription order.
         if (! $subscriptionOrder) {
             $this->errorResponse(
-                "Could not find a subscription order with subscription ID: {$subscriptionOrder->getSubscriptionId()}",
+                "Could not find a subscription order with subscription ID: {$subscriptionOrder->getData('subscription_id')}",
                 404
             );
         }
 
         // Check if the subscription order is valid.
-        if ($subscriptionOrder->getSubscriptionOrderStatus() != 'pending') {
+        if ($subscriptionOrder->getData('subscription_order_status') != 'pending' || $subscriptionOrder->getData('sales_order_id') > 0) {
             $this->errorResponse(
-                "Subscription order with subscription ID {$subscriptionOrder->getSubscriptionId()} has already been completed or canceled.",
+                "Subscription order with subscription ID {$subscriptionOrder->getData('subscription_id')} has already been completed or canceled.",
                 400
             );
         }
@@ -246,9 +272,10 @@ class SubscriptionOrderHelper extends AbstractHelper
             'city' => $address->getCity(),
             'country_id' => $address->getCountryId(),
             'region' => $address->getRegion(),
-            'postcode' => $address->getPostcode(),
+            'region_id' => $address->getRegionId(),
+            'postcode' => substr($address->getPostcode(), 0, 5),
             'telephone' => $address->getTelephone(),
-            'save_in_address_book' => 1,
+            'save_in_address_book' => 0,
         ];
     }
 
@@ -266,13 +293,16 @@ class SubscriptionOrderHelper extends AbstractHelper
         $addOnOrder = false;
 
         $subscriptionOrder = $subscriptionOrderCollection
-            ->getItemByColumnValue('subscription_id', $subscriptionId);
+            ->addFieldToFilter('subscription_id', $subscriptionId)
+            ->getFirstItem();
 
         if (! $subscriptionOrder || ! $subscriptionOrder->getId()) {
             // Lets see if it is an add-on order.
             $subscriptionOrderCollection = $this->_subscriptionAddonOrderCollectionFactory->create();
             $subscriptionOrder = $subscriptionOrderCollection
-                ->getItemByColumnValue('subscription_id', $subscriptionId);
+                ->addFieldToFilter('subscription_id', $subscriptionId)
+                ->getFirstItem();
+
             $addOnOrder = true;
         }
 
@@ -297,19 +327,20 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @return bool
      * @throws LocalizedException
      * @throws SubscriptionException
-     * @throws \Magento\Framework\Exception\CouldNotSaveException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws NoSuchEntityException
      */
     protected function processOrder(Customer $customer, $subscriptionOrder)
     {
-        $quoteID = $this->_quoteManagement->createEmptyCartForCustomer($customer->getId());
-        $quote = $this->_quoteRepository->get($quoteID);
-        $quote->setStore($this->_store);
+        $this->_logger->debug('Processing order...');
+        $quote = $this->_quoteFactory->create();
+        $quote->setStoreId($this->_store->getId());
         $quote->setCurrency();
-        $quote->assignCustomer($customer->getDataModel());
+        $customerData = $this->_customerRepository->getById($customer->getId());
+        $quote->assignCustomer($customerData);
+        $quote->save();
 
+        $this->_logger->debug('Adding items to order...');
         foreach ($subscriptionOrder->getOrderItems() as $item) {
-
             // Check if the item has the selected field and if it is set.
             /**
              * @var SubscriptionOrderItem|SubscriptionAddonOrderItem $item
@@ -340,12 +371,11 @@ class SubscriptionOrderHelper extends AbstractHelper
             $quote->addProduct($product, (int) $item->getQty());
         }
 
-        // Set addressees.
-        $customerBilling = $this->_addressFactory->create()->load($customer->getDefaultBilling());
-        $customerShipping = $this->_addressFactory->create()->load($customer->getDefaultShipping());
-
-        $quote->getBillingAddress()->addData($this->formatAddress($customerBilling));
-        $quote->getShippingAddress()->addData($this->formatAddress($customerShipping));
+        // Set addresses.
+        $this->_logger->debug('Setting billing address...');
+        $quote->getBillingAddress()->addData($this->_session->getCheckoutBilling())->save();
+        $this->_logger->debug('Setting shipping address...');
+        $quote->getShippingAddress()->addData($this->_session->getCheckoutShipping())->save();
 
         // Collect rates and set shipping and payment method.
         $shippingAddress = $quote->getShippingAddress();
@@ -367,17 +397,11 @@ class SubscriptionOrderHelper extends AbstractHelper
         $quote->collectTotals()->save();
 
         // Create an order from the quote.
-        $order = $this->_quoteManagement->submit($quote);
+        $order = $this->_cartManagement->submit($quote);
         $order->setEmailSent(0);
 
         // Set customer Gigya ID
         $order->setGigyaId($customer->getGigyaUid());
-
-        // Set master subscription id based on the Recurly subscription plan code
-        $order->setMasterSubscriptionId($subscriptionOrder->getMasterSubscriptionId());
-
-        // Set subscription ID
-        $order->setSubscriptionId($subscriptionOrder->getSubscriptionId());
 
         // Set ship date for the subscription/order
         $order->setShipStartDate($subscriptionOrder->getShipStartDate());
@@ -392,12 +416,9 @@ class SubscriptionOrderHelper extends AbstractHelper
         $subscriptionOrder->setSalesOrderId($order->getEntityId());
         $subscriptionOrder->save();
 
-        if ($subscriptionOrder->isCurrenltyShippable()) {
-
+        if ($subscriptionOrder->isCurrentlyShippable()) {
             // Complete the order
-            $subscriptionOrder
-                ->setSubscriptionOrderStatus('complete')
-                ->save();
+            $subscriptionOrder->setData('subscription_order_status', 'complete')->save();
 
             // Create the order invoice.
             $subscriptionOrder->createInvoice();

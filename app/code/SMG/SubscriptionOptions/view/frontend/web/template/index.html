@@ -23,7 +23,7 @@
 								<div class="sp-px-1">
 									<img
 										class="sp-align-center sp-block sp-mb-1 sp-options__product-image"
-										data-bind="attr: { src: thumbnailImage }"
+										data-bind="attr: { src: thumbnailImage, alt: meta_title }"
 									/>
 								</div>
 							</div>
@@ -70,7 +70,7 @@
 							</div>
 							<ul class="sp-pl-4">
 								<li class="sp-p1">Full amount charged now</li>
-								<li class="sp-p1">Subscription will be automatically renewed each year until canceled </li>
+								<li class="sp-p1">Subscription automatically renews for each shipment and then starts again the following year until canceled. Cancel anytime.</li>
 								<li class="sp-p1">Free shipping</li>
 							</ul>
 							<div class="sp-options__plan-selector sp-flex-auto sp-flex sp-flex-column sp-justify-end">
@@ -114,7 +114,7 @@
 							</ul>
 							<ul class="sp-pl-4">
 								<li class="sp-p1">Make multiple payments throughout the year</li>
-								<li class="sp-p1">Subscription will be automatically renewed each year until canceled </li>
+								<li class="sp-p1">Subscription automatically renews for each shipment and then starts again the following year until canceled. Cancel anytime.</li>
 								<li class="sp-p1">Free shipping</li>
 							</ul>
 							<div class="sp-options__plan-selector sp-flex-auto sp-flex sp-flex-column sp-justify-end">
@@ -156,9 +156,8 @@
 				<div class="sp-flex sp-flex-column md:sp-flex-row sp-py-4 sp-px-8">
 					<div class="sp-flex-none sp-mb-2 md:sp-mb-0 md:sp-mr-8 sp-text-center">
 						<img
-							alt="Add-On Product"
 							class="sp-options__product-image sp-options__product-image--lg"
-							data-bind="attr: { src: addOn().thumbnailImage }"
+							data-bind="attr: { src: addOn().thumbnailImage, alt: addOn().meta_title }"
 						/>
 					</div>
 					<div class="sp-flex-auto sp-text-center md:sp-text-left">

@@ -9,6 +9,7 @@
             <!-- ko template: getTemplate() --><!-- /ko -->
             <!--/ko-->
         </div>
+
         <!-- Recurly form -->
         <div class="">
             <div class="sp-checkout-title sp-h4 sp-uppercase">Payment Method</div>
@@ -44,36 +45,27 @@
                             class="sp-p2 sp-text-green-1"
                             data-bind="if: subscriptionType() === 'annual'"
                         >
-                            By checking this box you confirm that your
-                            subscription will automatically renew on an annual
-                            basis and you will continue to receive new shipments
-                            as outlined in your Scotts Program Lawn Care Plan
-                            unless you tell us to stop and your credit card on
-                            file will be automatically charged for your entire
-                            plan as outlined in your account on the date of
-                            renewal. You will be notified by email at the
-                            address provided between 30-60 days days prior to
-                            each charge. You may cancel your subscription at any
-                            time through our website
-                            <a class="sp-p2" href="https://program.scotts.com">program.scotts.com</a>.
-                            To avoid the next charge you must cancel your
-                            subscription by the date indicated in the notice.
+                            By checking this box you confirm that your subscription will
+                            automatically renew on an annual basis and you will continue to receive
+                            new shipments as outlined in your Scotts Program Lawn Plan unless you tell us to stop
+                            and your credit card on file will be automatically charged for your entire plan as outlined
+                            in your account on the date of renewal. You will be notified by email at the address
+                            provided between 30-60 days days prior to each charge. You may cancel your subscription at
+                            any time through our website <a class="sp-p2" href="https://program.scotts.com">program.scotts.com</a>.
+                            To avoid the next charge you must cancel your subscription by the date indicated in the
+                            notice.
                         </span>
                         <span
                             class="sp-p2 sp-text-green-1"
                             data-bind="if: subscriptionType() === 'seasonal'"
                         >
-                            By checking this box you confirm that your
-                            subscription will automatically renew and you will
-                            continue to receive new shipments as outlined in
-                            your Scotts Program Lawn Care Plan unless you tell
-                            us to stop and your credit card on file will be
-                            automatically charged the applicable shipment cost
-                            as outlined in your account. You will be notified by
-                            email at the address provided 7 days prior to each
-                            charge. You may cancel your subscription at any time
-                            through our website
-                            <a class="sp-p2" href="https://program.scotts.com">program.scotts.com</a>.
+                            By checking this box you confirm that your subscription will automatically renew and you
+                            will continue to receive new shipments as outlined in your Scotts Program Lawn Plan unless
+                            you tell us to stop and your credit card on file will be automatically charged the
+                            applicable shipment cost as outlined in your account. You will be notified by email at
+                            the address provided 7 days prior to each charge. You may cancel your subscription at any
+                            time through our website
+                            <a target="_blank" class="sp-p2" href="https://program.scotts.com">program.scotts.com</a>.
                             To avoid the next charge you must cancel your
                             subscription by the date indicated in the notice.
                         </span>
@@ -112,10 +104,45 @@
 </div>
 
 <div id="zip-popup-modal" class="content sp-hide">
-    <p class="sp-text-center">
+    <p class="sp-p1 sp-text-center">
         The products in your plan are based on the ZIP code provided previously. To change your ZIP code for shipping, you will need to create a new plan to ensure the products are suitable for your area.
     </p>
-    <p class="sp-text-center"><strong>
+    <p class="sp-p1 sp-text-center"><strong>
         For questions, email us at scotts-orders@scotts.com or call us at <a href="tel:18772203091">1-877-220-3091</a>.</strong>
     </p>
 </div>
+
+<div id="error-modal" class="content sp-hide">
+    <p class="sp-p1">
+        We’re sorry, but your order could not be completed at this time. You
+        have not been charged. Please try to place your order again.
+    </p>
+    <p class="sp-p1">
+        If you are still encountering problems, our consumer services team is
+        available to help. Please contact us at
+        <a href="mailto:scotts-orders@scotts.com">scotts-orders@scotts.com</a>
+        or call us at
+        <a href="tel:+18772203091">1-877-220-3091</a>.
+    </p>
+</div>
+
+
+<div id="submitting-modal" class="content sp-hide">
+    <ul class="sp-p1">
+        <li>
+            Please do not close this window or click the back button on your browser
+        </li>
+        <li>
+            This could take around 30 seconds
+        </li>
+        <li>
+            The page will refresh when your order is complete
+        </li>
+    </ul>
+
+    <p class="sp-h4 sp-mb-6 sp-font-bold sp-text-center">
+      Have a problem or question?<br />
+      Email us at scotts-orders@scotts.com or<br />
+      call us at 1-877-220-3091.
+    </p>
+  </div>

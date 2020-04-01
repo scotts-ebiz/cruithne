@@ -220,7 +220,7 @@
                                                                 display: inline-block;
                                                             }
                                                             [type="radio"]:checked+label:before, [type="radio"]:not(:checked)+label:before {
-                                                                top: 2px;
+                                                                top: 1px;
                                                             }
                                                             [type="radio"]:checked+label:after, [type="radio"]:not(:checked)+label:after {
                                                                 top: 6px;
@@ -746,22 +746,6 @@ td#label_carrier_flat-rate-shipping_flatrate, td#label_carrier_fedex-2ndday_flat
     }
 }
 @media screen and (max-width: $screen__m) {
-    .checkout-cart-index #shopping-cart-table .col.item .product-item-details {
-        width: 100%;
-        text-align: left;
-        display: inline-block;
-        position: relative;
-    }
-    .checkout-cart-index #shopping-cart-table td .product-item-name {
-        font-size: 1.1rem;
-    }
-    .checkout-cart-index #shopping-cart-table td, .checkout-cart-index #shopping-cart-table td.col.price {
-        padding: 0;
-    }
-    .checkout-cart-index #shopping-cart-table thead {
-        display: none;
-    }
-
 
     /** Shipping Page - Start **/
     .checkout-index-index .page-wrapper .page-main .columns .column.main .checkout-container .opc-estimated-wrapper .minicart-wrapper .action.showcart {
@@ -799,9 +783,6 @@ td#label_carrier_flat-rate-shipping_flatrate, td#label_carrier_fedex-2ndday_flat
     }
     .fieldset>.field:not(.choice)>.control {
         float: left;
-    }
-    .cart-summary {
-        width: 100% !important;
     }
     .checkout-payment-method .payment-option-title {
         padding-left: 0;

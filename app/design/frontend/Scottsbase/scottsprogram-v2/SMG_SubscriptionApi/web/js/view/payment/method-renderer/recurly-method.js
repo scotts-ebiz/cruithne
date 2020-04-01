@@ -23,13 +23,17 @@ define(
                 this.rscoChecked = ko.observable(false);
                 this.cardInputTouched = ko.observable(false);
                 this.orderProcessing = ko.observable(false);
+                this.submittingOrder = false;
                 this.billingFormInputs = ko.observableArray([]);
+                this.error = ko.observable('');
+                this.refreshCheckout = ko.observable(false);
 
                 /** Can get current value of the checkbox (checked or not) on this observable */
                 this.sameBillingShippingChecked = ko.observable(true);
                 this.billingInfo = ko.observable(self.getBillingAddress());
                 this.subscriptionType = ko.observable(window.sessionStorage.getItem('subscription_plan'));
                 this.loading = ko.observable(false);
+                this.loadingMask = ko.observable(null);
 
                 /** Can query children of the form element (the inputs) based on this observable, only when it != null */
                 this.billingForm = ko.observable(null);
@@ -41,9 +45,8 @@ define(
                  * - RSCO checkbox checked
                  * - Any character typed into the recurly card iframe
                  */
-                this.checkoutButtonDisabled = ko.computed(function() {
+                this.checkoutButtonDisabled = ko.computed(function () {
                     if (!self.sameBillingShippingChecked()) {
-
                         /**
                          * Check and ensure that every required field on the billing info
                          * has some input before enabled the checkout button.
@@ -51,11 +54,64 @@ define(
                         const billingInfoValid = Array.prototype.every.call(
                             Object.keys(self.billingInfo()),
                             key => {
+                                const streetValue = key === 'street' ? self.billingInfo()[key][0] : '';
+                                const value = key !== 'street' ? self.billingInfo()[key] : '';
+
+                                if (key === 'street') {
+                                    if (
+                                        /^\s*\S+(?:\s+\S+){2}/.test(streetValue) &&
+                                        streetValue !== ''
+                                    ) {
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                }
+
+                                if (key === 'telephone') {
+                                    if (
+                                        value.length > 9 &&
+                                        /^[(]?(\d{3})[)]?[-|\s]?(\d{3})[-|\s]?(\d{4})$/.test(value)
+                                    ) {
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                }
+
+                                if (key === 'postcode') {
+                                    if (
+                                        /^[0-9]{5}$/.test(value)
+                                    ) {
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                }
+
                                 if (
-                                    key === 'street' &&
-                                    self.billingInfo()[key][0] !== ''
+                                    key === 'firstname' ||
+                                    key === 'lastname'
                                 ) {
-                                    return true;
+                                    if (
+                                        value.length > 0 &&
+                                        /^[a-zA-Z\.\-\'\sàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸåÅæÆœŒœŒçÇðÐøØ¿¡ß]*$/.test(value)
+                                    ) {
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
+                                }
+
+                                if (key === 'city') {
+                                    if (
+                                        value.length > 0 &&
+                                        /^[a-zA-z ]*$/.test(value)
+                                    ) {
+                                        return true;
+                                    } else {
+                                        return false;
+                                    }
                                 }
 
                                 if (
@@ -65,7 +121,7 @@ define(
                                     return true;
                                 }
 
-                                return self.billingInfo()[key] !== '';
+                                return value !== '';
                             }
                         );
                         return (
@@ -97,6 +153,13 @@ define(
                         clearInterval(rscoCheckboxInterval);
                     }
                 }, 250);
+
+                let loadingMaskInterval = setInterval(() => {
+                    if (document.querySelector('.loading-mask')) {
+                        self.loadingMask(document.querySelector('.loading-mask'));
+                        clearInterval(loadingMaskInterval);
+                    }
+                }, 200);
 
                 /**
                  * An interval to set the observable for billing form input fields.
@@ -154,7 +217,7 @@ define(
                             });
 
                             // Remove manually generated validation fields when magento validation takes over
-                            $(input).focus(function() {
+                            $(input).focus(function () {
                                 if ($(input).attr("name") === "telephone" && $('[name="billingAddressrecurly.telephone"] .sp-form-error').length) {
                                     $('.sp-form-error-telephone').remove();
                                 }
@@ -210,7 +273,7 @@ define(
                  * the checkbox input for the shipping and billing info being the same.
                  * Update observable value accordingly.
                  */
-              let billingFormInterval = setInterval(() => {
+                let billingFormInterval = setInterval(() => {
                     if (document.querySelector('input[name="billing-address-same-as-shipping"]')) {
                         if (
                             document.querySelector('.billing-address-form')
@@ -228,32 +291,117 @@ define(
                     }
                 }, 100);
 
+                // Setup submitting modal
+                this.submittingModalOptions = {
+                    type: 'popup',
+                    innerScroll: true,
+                    title: 'Thanks! Your order is being submitted.',
+                    focus: 'none',
+                    clickableOverlay: 'false',
+                    buttons: [],
+                    opened() {
+                        $('#submitting-modal').parents('.modal-inner-wrap').find('.action-close').remove();
+                    }
+                };
+
                 // Setup zip modal
                 this.zipModalOptions = {
                     type: 'popup',
                     innerScroll: true,
-                    title: 'Your Zip Code Has Changed',
+                    title: 'Your ZIP Code Has Changed',
                     closeText: 'Cancel',
                     focus: 'none',
                     buttons: [{
                         text: 'Cancel',
                         class: 'sp-link sp-mx-4',
-                        click: self.closeZipModal(),
+                        click() {
+                            window.location.hash = '';
+                            window.location.reload();
+                        },
                     }, {
                         text: 'Create New Plan',
                         class: 'sp-button sp-button--primary sp-mx-4',
-                        click() { window.location.href = '/quiz' }
+                        click() {
+                            window.location.href = '/quiz'
+                        }
                     }],
                     closed() {
-                        window.location.hash = 'shipping';
+                        window.location.hash = '';
+                        window.location.reload();
                     },
                 };
+
+                // Setup zip modal
+                this.errorModalOptions = ko.computed(() => {
+                    return {
+                        type: 'popup',
+                        innerScroll: true,
+                        title: 'Your Order Could Not Be Completed',
+                        subTitle: this.error(),
+                        focus: 'none',
+                        buttons: [{
+                            text: 'Try Again',
+                            class: 'sp-button sp-button--primary sp-mx-4',
+                            click() {
+                                if (self.refreshCheckout()) {
+                                    self.loadingMask().style.display = 'block';
+                                    window.location.hash = '';
+                                    window.location.reload();
+                                }
+
+                                $('#error-modal').modal('closeModal');
+                            },
+                        }],
+                        closed() {
+                            if (self.refreshCheckout()) {
+                                window.location.hash = '';
+                                window.location.reload();
+                            }
+                        },
+                    };
+                });
             },
 
             initializeRecurly() {
                 const self = this;
 
-                recurly.configure(window.recurlyApi);
+                recurly.configure({
+                    publicKey: window.recurlyApi,
+                    fields: {
+                        card: {
+                            // Field style properties
+                            style: {
+                                fontSize: '12px',
+                            }
+                        }
+                    }
+                });
+
+                $(window).on('resize init', function (event) {
+                    if ($(this).width() <= 767) {
+                        recurly.configure({
+                            fields: {
+                                card: {
+                                    // Field style properties
+                                    style: {
+                                        fontSize: '12px',
+                                    }
+                                }
+                            }
+                        });
+                    } else {
+                        recurly.configure({
+                            fields: {
+                                card: {
+                                    // Field style properties
+                                    style: {
+                                        fontSize: '14px',
+                                    }
+                                }
+                            }
+                        });
+                    }
+                }).triggerHandler('init');
 
                 /**
                  * Change listener on the recurly hosted card field.
@@ -279,102 +427,99 @@ define(
                 $('#zip-popup-modal').modal('closeModal');
             },
 
-            getShippingAddress: function () {
-                var checkoutData = JSON.parse(localStorage['mage-cache-storage']);
-                checkoutData = checkoutData['checkout-data'];
+            /**
+             * Get the shipping address from the cart (Avatax updated address)
+             * or the checkout data if that does not exist.
+             *
+             *
+             *
+             * @returns {*|{}|Object|string|{regionId: string, postcode: number, region: null, countryId: string}|{base_url: string, admin: string, actual_base_url: string, auto_base_url: string}}
+             */
+            getShippingAddress() {
+                const storageData = JSON.parse(localStorage['mage-cache-storage']);
 
-                return checkoutData.shippingAddressFromData;
+                const cartData = storageData['cart-data'] || {};
+                const checkoutData = storageData['checkout-data'] || {};
+
+                return cartData && cartData.address || checkoutData.shippingAddressFromData;
             },
 
-            getBillingAddress: function () {
+            getBillingAddress() {
                 var checkoutData = JSON.parse(localStorage['mage-cache-storage']);
                 checkoutData = checkoutData['checkout-data'];
 
                 return checkoutData.billingAddressFromData;
             },
 
-            createNewSubscription: function (token_id) {
-                var self = this;
-                var form = document.querySelector('.recurly-form');
-                var quizID = window.sessionStorage.getItem('quiz-id');
-                var subscriptionPlan = window.sessionStorage.getItem('subscription_plan');
+            createNewSubscription(token_id) {
+                const self = this;
+
+                // Order is not processing so this shouldn't be running.
+                if (! self.orderProcessing() || ! self.submittingOrder) {
+                    return false;
+                }
+
+                const form = document.querySelector('.recurly-form');
+                const formKey = document.querySelector('input[name=form_key]').value;
+                const quizID = window.sessionStorage.getItem('quiz-id');
+                const subscriptionPlan = window.sessionStorage.getItem('subscription_plan');
+                const isBillingSameAsShipping = $('input[name="billing-address-same-as-shipping"]:checked').val() === 'on';
+                const address = (isBillingSameAsShipping === false) ? this.getBillingAddress() : this.getShippingAddress();
+
+                // Shorten the zip code to just the first 5.
+                address.postcode = address.postcode.substring(0, 5);
 
                 $.ajax({
                     type: 'POST',
-                    url: window.location.origin + '/rest/V1/subscription/create',
-                    dataType: 'json',
+                    url: window.location.origin + '/rest/V1/subscription/createSubscription',
                     contentType: 'application/json',
                     processData: false,
                     showLoader: true,
                     data: JSON.stringify({
-                        'token': token_id
-                    }),
-                    success: function (response) {
-                        response = JSON.parse(response);
-                        if (response.success === true) {
-                            self.createNewOrders();
-                        } else {
-                            self.orderProcessing(false);
-                            if (response.message === 'ZIP CODE MISMATCH') {
-                                Modal(self.zipModalOptions, $('#zip-popup-modal'));
-                                $('#zip-popup-modal').modal('openModal');
-
-                                return false;
-                            } else {
-                                $('.recurly-form-error').text(response.message);
-                            }
-                        }
-                    }
-                });
-            },
-
-            createNewOrders: function () {
-                var self = this;
-                var formKey = document.querySelector('input[name=form_key]').value;
-                var quizID = window.sessionStorage.getItem('quiz-id');
-
-                var isBillingSameAsShipping = ($('input[name="billing-address-same-as-shipping"]:checked').val() == 'on') ? true : false;
-                var address = (isBillingSameAsShipping === false) ? this.getBillingAddress() : this.getShippingAddress();
-
-                $.ajax({
-                    type: 'POST',
-                    url: window.location.origin + '/rest/V1/subscription/createorders',
-                    dataType: 'json',
-                    contentType: 'application/json',
-                    processData: false,
-                    showLoader: true,
-                    data: JSON.stringify( {
                         'key': formKey,
+                        'token': token_id,
                         'quiz_id': quizID,
                         'billing_address': address,
                         'billing_same_as_shipping': isBillingSameAsShipping,
-                    } ),
-                    success: function (response) {
-                        if (Array.isArray(response)) {
-                            response = response[0];
+                    }),
+                    success(response) {
+                        response = JSON.parse(response);
+
+                        window.sessionStorage.setItem('subscription_id', response.data.subscription_id);
+                        window.location.href = '/success';
+                    },
+                    error(response) {
+                        $('#submitting-modal').modal('closeModal');
+
+                        // Ensure the response is properly converted to a JS object.
+                        try {
+                            response = JSON.parse(response.responseJSON);
+                        }
+                        catch (e) {
+                            response = { data: {}, message: ''}
                         }
 
-                        if (response.success === true) {
-                            window.sessionStorage.setItem('subscription_id', response.subscription_id);
-                            window.location.href = '/success';
+                        self.error(response.message);
+                        self.refreshCheckout(!!response.data.refresh);
+
+                        if (response.data.error_code === 'Z1') {
+                            Modal(self.zipModalOptions, $('#zip-popup-modal'));
+                            $('#zip-popup-modal').modal('openModal');
+                            self.orderProcessing(false);
+                            self.submittingOrder = false;
+                        } else {
+                            Modal(self.errorModalOptions(), $('#error-modal'));
+                            $('#error-modal').modal('openModal');
+
+                            // No need to refresh the screen so enable the order
+                            // button.
+                            if (!response.data.refresh) {
+                                self.orderProcessing(false);
+                                self.submittingOrder = false;
+                            }
                         }
                     },
-                    error: function (response) {
-                        response = JSON.parse(response.responseText);
-                        self.orderProcessing(false);
-
-                        if (Array.isArray(response)) {
-                            response = response[0];
-                        }
-
-                        // This exists because sending invoices is return 500
-                        // error codes, however, the response was successful.
-                        if (response.success === true) {
-                            window.sessionStorage.setItem('subscription_id', response.subscription_id);
-                            window.location.href = '/success';
-                        }
-                    }
-                })
+                });
             },
 
             updateRecurlyFormData: function () {
@@ -387,10 +532,10 @@ define(
                 var address = (isBillingSameAsShipping === false) ? this.getBillingAddress() : this.getShippingAddress();
 
                 // Get full state name by it's id
-                var stateName = $('select[name="region_id"] option[value="' + address.region_id + '"]').attr('data-title');
+                var stateName = $('select[name="region_id"] option[value="' + (address.regionId || address.region_id) + '"]').attr('data-title');
 
                 // Get full country name by it's id
-                var countryName = $('select[name="country_id"] option[value="' + address.country_id + '"]').attr('data-title');
+                var countryName = $('select[name="country_id"] option[value="' + (address.countryId || address.country_id) + '"]').attr('data-title');
 
                 // Update Recurly form
                 $('input[data-recurly="first_name"]').val(address.firstname);
@@ -399,34 +544,52 @@ define(
                 $('input[data-recurly="city"]').val(address.city);
                 $('input[data-recurly="state"]').val(stateName);
                 $('input[data-recurly="country"]').val(countryName);
-                $('input[data-recurly="postal_code"]').val(address.postcode);
+                $('input[data-recurly="postal_code"]').val(address.postcode.substr(0, 5));
 
                 return true;
             },
 
             myPlaceOrder: function () {
                 var self = this;
+
+                // We already have an order processing, so do not resubmit.
+                if (self.orderProcessing() || self.submittingOrder) {
+                    return false;
+                }
+
+                self.submittingOrder = true;
                 self.orderProcessing(true);
+
                 var recurlyForm = $('.recurly-form');
                 var rsco = $('input[name="rsco_accept"]');
+
+                self.orderProcessing(true);
 
                 if (!rsco[0].checked) {
                     rsco[0].setCustomValidity('This field is required.');
                     self.orderProcessing(false);
+                    self.submittingOrder = false;
                     return false;
                 } else {
                     rsco[0].setCustomValidity('');
                 }
 
-                if (! self.updateRecurlyFormData()) {
+                if (!self.updateRecurlyFormData()) {
                     self.orderProcessing(false);
+                    self.submittingOrder = false;
                     return false;
                 }
+
+                Modal(self.submittingModalOptions, $('#submitting-modal'));
+                $('#submitting-modal').modal('openModal');
 
                 recurly.token(recurlyForm, function (err, token) {
                     if (err) {
                         self.orderProcessing(false);
-                        if( err.code === 'validation' ) {
+                        self.submittingOrder = false;
+                        $('#submitting-modal').modal('closeModal');
+                      
+                        if (err.code === 'validation') {
                             if (err.fields.includes('number')) {
                                 $('.recurly-form-error').text('Please enter a valid card number.');
                             } else if (
@@ -441,7 +604,7 @@ define(
                             $('.recurly-form-error').text(err.message);
                         }
                     } else {
-                        self.createNewSubscription( token.id );
+                        self.createNewSubscription(token.id);
                     }
                 })
             },

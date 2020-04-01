@@ -1,9 +1,18 @@
-<form class="form contact" action="<?= $block->escapeUrl($block->getFormAction()) ?>" id="contact-form" method="post" data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>" data-mage-init='{"validation":{}}'>
+<form
+    id="contact-form"
+    action="<?= $block->escapeUrl($block->getFormAction()) ?>"
+    class="form contact"
+    data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>"
+    method="post"
+>
     <fieldset class="fieldset">
         <div class="sp-form-group">
             <input
                 class="input-text sp-input sp-w-full"
-                data-validate="{required:true}"
+                data-validate="{
+                    required: false,
+                    'validate-name': true
+                }"
                 id="name"
                 name="name"
                 maxLength="100"
@@ -17,7 +26,130 @@
         <div class="sp-form-group">
             <input
                 class="input-text sp-input sp-w-full"
-                data-validate="{required:true, 'validate-email':true}"
+                data-validate="{required:false}"
+                id="address"
+                name="address"
+                maxLength="100"
+                placeholder="<?= $block->escapeHtml(__('Address')) ?>"
+                title="<?= $block->escapeHtmlAttr(__('Address')) ?>"
+                type="text"
+                value="<?= $block->escapeHtmlAttr($this->helper('Magento\Contact\Helper\Data')->getPostValue('address')) ?>"
+            />
+            <label class="label sp-form-label" for="address"><?= $block->escapeHtml(__('Address')) ?></label>
+        </div>
+        <div class="sp-form-group">
+            <input
+                class="input-text sp-input sp-w-full"
+                data-validate="{required:false}"
+                id="address2"
+                name="address2"
+                maxLength="100"
+                placeholder="<?= $block->escapeHtml(__('Address2')) ?>"
+                title="<?= $block->escapeHtmlAttr(__('Address2')) ?>"
+                type="text"
+                value="<?= $block->escapeHtmlAttr($this->helper('Magento\Contact\Helper\Data')->getPostValue('address2')) ?>"
+            />
+            <label class="label sp-form-label" for="address2"><?= $block->escapeHtml(__('Address2')) ?></label>
+        </div>
+        <div class="sp-form-group">
+            <input
+                class="input-text sp-input sp-w-full"
+                data-validate="{required:false}"
+                id="city"
+                name="city"
+                maxLength="100"
+                placeholder="<?= $block->escapeHtml(__('City')) ?>"
+                title="<?= $block->escapeHtmlAttr(__('City')) ?>"
+                type="text"
+                value="<?= $block->escapeHtmlAttr($this->helper('Magento\Contact\Helper\Data')->getPostValue('city')) ?>"
+            />
+            <label class="label sp-form-label" for="city"><?= $block->escapeHtml(__('City')) ?></label>
+        </div>
+        <div class="sp-form-group">
+            <div class="sp-select sp-w-full">
+                <select name="state" id="state" class="sp-w-full" data-validate="{required: false}">
+                    <option value="0" selected disabled style="display: none;">-- Choose State--</option>
+                    <option value="Alabama">Alabama</option>
+                    <option value="Alaska">Alaska</option>
+                    <option value="Arizona">Arizona</option>
+                    <option value="Arkansas">Arkansas</option>
+                    <option value="California">California</option>
+                    <option value="Colorado">Colorado</option>
+                    <option value="Connecticut">Connecticut</option>
+                    <option value="Delaware">Delaware</option>
+                    <option value="District of Columbia">District of Columbia</option>
+                    <option value="Florida">Florida</option>
+                    <option value="Georgia">Georgia</option>
+                    <option value="Guam">Guam</option>
+                    <option value="Hawaii">Hawaii</option>
+                    <option value="Idaho">Idaho</option>
+                    <option value="Illinois">Illinois</option>
+                    <option value="Indiana">Indiana</option>
+                    <option value="Iowa">Iowa</option>
+                    <option value="Kansas">Kansas</option>
+                    <option value="Kentucky">Kentucky</option>
+                    <option value="Louisiana">Louisiana</option>
+                    <option value="Maine">Maine</option>
+                    <option value="Maryland">Maryland</option>
+                    <option value="Massachusetts">Massachusetts</option>
+                    <option value="Michigan">Michigan</option>
+                    <option value="Minnesota">Minnesota</option>
+                    <option value="Mississippi">Mississippi</option>
+                    <option value="Missouri">Missouri</option>
+                    <option value="Montana">Montana</option>
+                    <option value="Nebraska">Nebraska</option>
+                    <option value="Nevada">Nevada</option>
+                    <option value="New Hampshire">New Hampshire</option>
+                    <option value="New Jersey">New Jersey</option>
+                    <option value="New Mexico">New Mexico</option>
+                    <option value="New York">New York</option>
+                    <option value="North Carolina">North Carolina</option>
+                    <option value="North Dakota">North Dakota</option>
+                    <option value="Ohio">Ohio</option>
+                    <option value="Oklahoma">Oklahoma</option>
+                    <option value="Oregon">Oregon</option>
+                    <option value="Pennsylvania">Pennsylvania</option>
+                    <option value="Puerto Rico">Puerto Rico</option>
+                    <option value="Rhode Island">Rhode Island</option>
+                    <option value="South Carolina">South Carolina</option>
+                    <option value="South Dakota">South Dakota</option>
+                    <option value="Tennessee">Tennessee</option>
+                    <option value="Texas">Texas</option>
+                    <option value="Utah">Utah</option>
+                    <option value="Vermont">Vermont</option>
+                    <option value="Virginia">Virginia</option>
+                    <option value="Washington">Washington</option>
+                    <option value="West Virginia">West Virginia</option>
+                    <option value="Wisconsin">Wisconsin</option>
+                    <option value="Wyoming">Wyoming</option>
+                </select>
+            </div>
+            <label class="label sp-form-label" for="state"><?= $block->escapeHtml(__('State')) ?></label>
+        </div>
+        <div class="sp-form-group">
+            <input
+                class="input-number sp-input sp-w-full"
+                data-validate="{
+                    required:true,
+                    'validate-postal-code': true
+                }"
+                id="postalCode"
+                name="postalCode"
+                maxLength="5"
+                placeholder="<?= $block->escapeHtml(__('Postal Code')) ?>*"
+                title="<?= $block->escapeHtmlAttr(__('Postal Code')) ?>"
+                type="number"
+                value="<?= $block->escapeHtmlAttr($this->helper('Magento\Contact\Helper\Data')->getPostValue('postalCode')) ?>"
+            />
+            <label class="label sp-form-label" for="postalCode"><?= $block->escapeHtml(__('Postal Code')) ?></label>
+        </div>
+        <div class="sp-form-group">
+            <input
+                class="input-text sp-input sp-w-full"
+                data-validate="{
+                    required: false,
+                    'validate-email-address': true
+                }"
                 id="email"
                 name="email"
                 placeholder="<?= $block->escapeHtml(__('Email')) ?>*"
@@ -28,9 +160,26 @@
             <label class="label sp-form-label required" for="email"><?= $block->escapeHtml(__('Email')) ?>*</label>
         </div>
         <div class="sp-form-group">
+            <input
+                class="input-number sp-input sp-w-full"
+                data-validate="{required:false}"
+                id="phone"
+                name="phone"
+                maxLength="15"
+                placeholder="<?= $block->escapeHtml(__('Phone')) ?>"
+                title="<?= $block->escapeHtmlAttr(__('Phone')) ?>"
+                type="number"
+                value="<?= $block->escapeHtmlAttr($this->helper('Magento\Contact\Helper\Data')->getPostValue('phone')) ?>"
+            />
+            <label class="label sp-form-label" for="phome"><?= $block->escapeHtml(__('Phone')) ?></label>
+        </div>
+        <div class="sp-form-group">
             <div class="sp-select sp-w-full">
-                <select name="topic" id="topic" class="sp-w-full">
-                    <option value="0" selected disabled style="display: none;">-- Choose --</option>
+                <select name="topic" id="topic" class="sp-w-full" data-validate="{
+                    required: false,
+                    'validate-select': true
+                }">
+                    <option value="0" selected disabled style="display: none;">-- Select a Topic --</option>
                     <option value="Information about products or my lawn care plan">Information about products or my lawn care plan</option>
                     <option value="Question or concern with my order">Question or concern with my order</option>
                     <option value="Canceling my subscription">Canceling my subscription</option>
@@ -38,13 +187,16 @@
                     <option value="General question or commen">General question or comment</option>
                 </select>
             </div>
-            <label class="label sp-form-label required" for="topic"><?= $block->escapeHtml(__('Topic')) ?></label>
+            <label class="label sp-form-label required" for="topic"><?= $block->escapeHtml(__('Topic')) ?>*</label>
         </div>
         <div class="sp-form-group sp-mt-12">
             <textarea
                 class="input-text sp-textarea sp-input sp-w-full"
                 cols="5"
-                data-validate="{required:true}"
+                data-validate="{
+                    required: false,
+                    'validate-message': true
+                }"
                 id="comment"
                 name="comment"
                 rows="3"

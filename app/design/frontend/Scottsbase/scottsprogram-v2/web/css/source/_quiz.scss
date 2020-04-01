@@ -7,3 +7,11 @@
 		overflow: unset;
 	}
 }
+
+@supports (-webkit-overflow-scrolling: touch) {
+  .sp-quiz {
+		@media (max-width: $screen-md) {
+			height: calc(100% - #{$footer-height-mobile});
+		}
+  }
+}
