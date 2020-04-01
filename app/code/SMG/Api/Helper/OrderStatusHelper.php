@@ -2,6 +2,7 @@
 
 namespace SMG\Api\Helper;
 
+use ZaiusSDK\ZaiusException;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Psr\Log\LoggerInterface;
@@ -1064,7 +1065,7 @@ class OrderStatusHelper
      * @param \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    private function invoiceOffline($order, $sapOrderBatch)
+    public function invoiceOffline($order, $sapOrderBatch)
     {
         /* create a invoice */
         // first check to see if there is an invoice that exists already
@@ -1081,10 +1082,16 @@ class OrderStatusHelper
 
                 $invoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
                 $invoice->register();
-                $transaction = $this->_transaction
-                    ->addObject($invoice)
-                    ->addObject($invoice->getOrder());
-                $transaction->save();
+
+                try {
+                    $transaction = $this->_transaction
+                        ->addObject($invoice)
+                        ->addObject($invoice->getOrder());
+                    $transaction->save();
+                } catch (ZaiusException $e) {
+                    // Log and ignore any Zaius errors.
+                    $this->_logger->error($e->getMessage());
+                }
 
                 $this->_invoiceSender->send($invoice);
                 $order->addStatusHistoryComment(__('Notified customer about invoice #%1.', $invoice->getId()))
