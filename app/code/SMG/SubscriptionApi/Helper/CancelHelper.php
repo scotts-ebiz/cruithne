@@ -3,19 +3,19 @@
 namespace SMG\SubscriptionApi\Helper;
 
 use Exception;
-use ZaiusSDK\ZaiusException;
 use Magento\Customer\Api\AddressRepositoryInterface;
+use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
+use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Exception\LocalizedException;
 use Psr\Log\LoggerInterface;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
-use Magento\Customer\Model\Session as CustomerSession;
-use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrderItem\CollectionFactory as SubscriptionOrderItemCollectionFactory;
-
 use Zaius\Engage\Helper\Sdk as ZaiusSdk;
+
+use ZaiusSDK\ZaiusException;
 
 class CancelHelper extends AbstractHelper
 {
@@ -48,16 +48,16 @@ class CancelHelper extends AbstractHelper
      * @var SubscriptionCollectionFactory
      */
     protected $_subscriptionCollectionFactory;
-    
+
     /** @var SubscriptionOrderCollectionFactory */
     protected $_subscriptionOrderCollectionFactory;
-    
+
     /** @var SubscriptionOrderItemCollectionFactory */
     protected $_subscriptionOrderItemCollectionFactory;
-    
+
     /** @var productRepository */
     protected $_productRepository;
-    
+
     /**
      * CancelHelper constructor.
      * @param Context $context
@@ -127,21 +127,16 @@ class CancelHelper extends AbstractHelper
                 ->addFieldToFilter('gigya_uid', $accountCode)
                 ->fetchItem();
 
-                        $subscription->cancel();
+            $subscription->cancel();
             $timestamp = strtotime(date("Y-m-d H:i:s"));
             $this->clearCustomerAddresses($customer);
 
-       try {
-
-
-            $this->zaiusCancelCall($customer->getData('email'));
-            $this->zaiusCancelOrder($subscription,$customer->getData('email'),$timestamp);
-       } catch (Exception $e)
-       {
-
-       $this->_logger->error($e->getMessage());
-
-          }
+            try {
+                $this->zaiusCancelCall($customer->getData('email'));
+                $this->zaiusCancelOrder($subscription, $customer->getData('email'), $timestamp);
+            } catch (Exception $e) {
+                $this->_logger->error($e->getMessage());
+            }
         } catch (Exception $e) {
             $this->_logger->error($e->getMessage());
 
@@ -194,7 +189,8 @@ class CancelHelper extends AbstractHelper
             // get postevent function
             try {
                 $zaiusstatus = $zaiusClient->postEvent($event);
-            } catch (ZaiusException $e) {
+            } catch (Exception $e) {
+                $this->_logger->error($e->getMessage());
                 $this->_logger->error('A post to Zaius failed during cancellation, however, it should not affect the cancelled status.');
             }
 
@@ -206,71 +202,70 @@ class CancelHelper extends AbstractHelper
             }
         }
     }
-    
+
     /**
      * Cancel subscription notification to zaius
      * @param $subscription, $customeremail, $timestamp
      * return message on log
      */
-    private function zaiusCancelOrder($subscription,$customer_email,$timestamp)
+    private function zaiusCancelOrder($subscription, $customer_email, $timestamp)
     {
         $zaiusstatus = false;
 
         // check isSubcription and shipmentstatus
         if ($subscription) {
-    
-            $subscriptionId = $subscription->getEntityId(); 
-            
+            $subscriptionId = $subscription->getEntityId();
+
             // call subscription order
             $subscriptionOrders = $this->_subscriptionOrderCollectionFactory->create();
             $subscriptionOrders
                 ->setOrder('ship_start_date', 'asc')
                 ->addFieldToFilter('subscription_entity_id', $subscriptionId);
             $this->_subscriptionOrders = $subscriptionOrders;
-            
+
             // call getsdkclient function
             $zaiusClient = $this->_sdk->getSdkClient();
             // take event as a array and add parameters
             $event = [];
-            
+
             $event['type'] = 'order';
             $event['action'] = 'cancel';
             $event['identifiers'] = ['email'=>$customer_email];
-            foreach($this->_subscriptionOrders as $orders){
-            $items = [];    
-            $order_id = $orders->getSalesOrderId();
-            $total = $orders->getPrice();
-            $orderItemId = $this->getOrderItems($orders->getEntityId());
-            
-            foreach ($orderItemId as $item) {
-                 $product = $this->getProductBySku($item->getCatalogProductSku());
-                 $items['product_id'] = $product->getEntityId();
-                 $items['price'] = $item->getPrice();
-                 $items['quantity'] = $item->getQty();
-                 $items['subtotal'] = $items['price'] * $items['quantity'];
-             }
-            $order = ['order_id'=>$order_id,'total'=>$total,'items'=>[$items]];
-            $event['data'] = ['ts'=>$timestamp,'magento_store_view'=>'Default Store View','order'=>$order];
-            
-            // get postevent function
-            try {
-                $zaiusstatus = $zaiusClient->postEvent($event);
-            } catch (ZaiusException $e) {
-                $this->_logger->error('A post to Zaius failed during cancellation, however, it should not affect the cancelled status.');
-            }
-            
-            // check return values from the postevent function
-            if ($zaiusstatus) {
-                
-                $this->_logger->debug("The cancel order id" . $order_id . " is cancelled successfully to zaius."); //saved in var/log/debug.log
-            } else {
+            $event['magento_store_view'] = 'Default Store View';
+            foreach ($this->_subscriptionOrders as $orders) {
+                $items = [];
+                $order_id = $orders->getSalesOrderId();
+                $total = $orders->getPrice();
+                $orderItemId = $this->getOrderItems($orders->getEntityId());
 
-                $this->_logger->error("The cancel order id" . $order_id . " is failed to zaius.");
+                foreach ($orderItemId as $item) {
+                    $product = $this->getProductBySku($item->getCatalogProductSku());
+                    $items['product_id'] = $product->getEntityId();
+                    $items['price'] = $item->getPrice();
+                    $items['quantity'] = $item->getQty();
+                    $items['subtotal'] = $items['price'] * $items['quantity'];
+                }
+                $order = ['order_id'=>$order_id,'total'=>$total,'items'=>[$items]];
+                $event['data'] = ['ts'=>$timestamp,'order'=>$order];
+
+                // get postevent function
+                try {
+                    $zaiusstatus = $zaiusClient->postEvent($event);
+                } catch (Exception $e) {
+                    $this->_logger->error($e->getMessage());
+                    $this->_logger->error('A post to Zaius failed during cancellation, however, it should not affect the cancelled status.');
+                }
+
+                // check return values from the postevent function
+                if ($zaiusstatus) {
+                    $this->_logger->debug("The cancel order id" . $order_id . " is cancelled successfully to zaius."); //saved in var/log/debug.log
+                } else {
+                    $this->_logger->error("The cancel order id" . $order_id . " is failed to zaius.");
+                }
             }
         }
     }
-}
-    
+
     public function getOrderItems($entity_id)
     {
         // Make sure we have an actual subscription
@@ -284,8 +279,9 @@ class CancelHelper extends AbstractHelper
 
         return $this->_subscriptionOrderItems;
     }
-    
-    public function getProductBySku($sku) {
+
+    public function getProductBySku($sku)
+    {
         return $this->_productRepository->get($sku);
     }
 }

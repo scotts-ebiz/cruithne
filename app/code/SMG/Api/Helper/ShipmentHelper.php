@@ -468,11 +468,11 @@ class ShipmentHelper
                  // check return values from the postevent function
                 if($zaiusstatus)
                 {
-                    $this->_logger->info("The order Id " . $orderId . " with product Id " . $productId . " is passed successfully to zaius."); //saved in var/log/system.log
+                    $this->_logger->info("The order Id " . $orderId . " with product Id " . $productid . " is passed successfully to zaius."); //saved in var/log/system.log
                 }
                 else
                 {
-                    $this->_logger->error("The order Id " . $orderId . " with product id " . $productId . " is failed to zaius."); //saved in var/log/system.log
+                    $this->_logger->info("The order Id " . $orderId . " with product id " . $productid . " is failed to zaius."); //saved in var/log/system.log
                 }           
             }
         }
