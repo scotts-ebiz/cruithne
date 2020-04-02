@@ -184,7 +184,7 @@ class CancelHelper extends AbstractHelper
             $event = [];
             $event['type'] = 'subscription';
             $event['action'] = 'cancelled';
-            $event['identifiers'] = ['email'=>$customer_email];
+            $event['identifiers'] = ['email'=>$customer_email,'magento_store_view'=>'Default Store View'];
 
             // get postevent function
             try {
