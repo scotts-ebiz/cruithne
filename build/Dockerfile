@@ -31,9 +31,12 @@ RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento
 # Set developer Mode if NOT in production or release-candidate or hotfixes
 RUN if [ "$BRANCH" != "master" ] && [ "$BRANCH" != "release-candidate" ] && [ "$BRANCH" != "hotfixes" ]; then bin/magento deploy:mode:set developer && bin/magento setup:config:set --enable-debug-logging=true && sed -i "s/display_errors.*/display_errors = on/" php.ini; fi
 
-# Temporary patch for VendorVertex
-# COPY vendor-vertex-compilation-issue.patch /tmp/vendor-vertex-compilation-issue.patch
-# RUN git apply /tmp/vendor-vertex-compilation-issue.patch; exit 0
+# Temporary Patch for Inventory Management (Can remove after 2.3.4)
+COPY msi-numeric-skus.diff /tmp/msi-numeric-skus.diff
+WORKDIR $MAGENTO_DIR/vendor
+RUN git apply /tmp/msi-numeric-skus.diff
+
+WORKDIR $MAGENTO_DIR
 
 USER root
 
