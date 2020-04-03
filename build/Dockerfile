@@ -34,7 +34,7 @@ RUN if [ "$BRANCH" != "master" ] && [ "$BRANCH" != "release-candidate" ] && [ "$
 # Temporary Patch for Inventory Management (Can remove after 2.3.4)
 COPY msi-numeric-skus.diff /tmp/msi-numeric-skus.diff
 WORKDIR $MAGENTO_DIR/vendor
-RUN git apply /tmp/msi-numeric-skus.diff
+RUN git apply /tmp/msi-numeric-skus.diff; exit 0
 
 WORKDIR $MAGENTO_DIR
 
