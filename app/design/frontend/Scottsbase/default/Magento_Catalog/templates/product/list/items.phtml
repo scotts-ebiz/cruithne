@@ -104,7 +104,7 @@ switch ($type = $block->getType()) {
             $showAddTo = true;
             $showCart = true;
             $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
-            $description = false;
+            $description = true;
             $canItemsAddToCart = false;
         }
         break;
@@ -122,7 +122,7 @@ switch ($type = $block->getType()) {
             $showAddTo = true;
             $showCart = true;
             $templateType = \Magento\Catalog\Block\Product\ReviewRendererInterface::SHORT_VIEW;
-            $description = false;
+            $description = true;
             $canItemsAddToCart = false;
         }
         break;
@@ -188,7 +188,7 @@ switch ($type = $block->getType()) {
                             <?php else :?>
                                 <li class="item product product-item">
                             <?php endif; ?>
-                            <div>
+                            <div class="product-item-img">
                               <?= /* @noEscape */ '<!-- ' . $image . '-->' ?>
                                 <a href="<?= $block->escapeUrl($block->getProductUrl($_item)) ?>" class="product photo product-item-photo">
                                   <?= $block->getImage($_item, $image)->toHtml() ?>
@@ -197,11 +197,39 @@ switch ($type = $block->getType()) {
                             <div class="product-item-info <?= /* @noEscape */ $available ?>">
 
                                 <div class="product details product-item-details">
-                                    <strong class="product name product-item-name"><a class="product-item-link" title="<?= $block->escapeHtml($_item->getName()) ?>" href="<?= $block->escapeUrl($block->getProductUrl($_item)) ?>">
-                                            <?= $block->escapeHtml($_item->getName()) ?></a>
+                                    <strong class="product name product-item-name">
+                                        <?= $block->escapeHtml($_item->getName()) ?>
                                     </strong>
 
                                     <?= /* @noEscape */ $block->getProductPrice($_item) ?>
+
+
+
+
+
+
+
+                                    <!-- Check Type -->
+                                    <?= /* @noEscape */ $type; ?>
+
+
+                                    <!-- Should show TRUE -->
+                                    <?= /* @noEscape */ $description; ?>
+
+
+                                    <!-- $block->escapeHtml($_item->getDescription() -->
+                                    <!-- The above didnt work and broke it -->
+
+                                    <!-- $block->$_item->getDescription() -->
+                                    <!-- The above didnt work -->
+
+                                    <!-- $_item->getDescription() -->
+                                    <!-- No data but didn't break -->
+
+                                    <!-- /* @noEscape */ $block->getDescription($_item) -->
+                                    <!-- No data but didn't break -->
+
+                                   asdfasdf
 
                                     <?php if ($templateType) :?>
                                         <?= $block->getReviewsSummaryHtml($_item, $templateType) ?>
@@ -241,14 +269,6 @@ switch ($type = $block->getType()) {
                                                         <?php else :?>
                                                             <div class="stock unavailable"><span><?= $block->escapeHtml(__('Out of stock')) ?></span></div>
                                                         <?php endif; ?>
-                                                    <?php endif; ?>
-                                                </div>
-                                            <?php endif; ?>
-
-                                            <?php if ($showAddTo) :?>
-                                                <div class="secondary-addto-links actions-secondary" data-role="add-to-links">
-                                                    <?php if ($addToBlock = $block->getChildBlock('addto')) :?>
-                                                        <?= $addToBlock->setProduct($_item)->getChildHtml() ?>
                                                     <?php endif; ?>
                                                 </div>
                                             <?php endif; ?>

@@ -499,21 +499,6 @@
                 }
             }
         }
-        .block.crosssell {
-            margin-top: 0;
-            margin-left: 15px;
-            h2 {
-                @include cart-checkout-h2-font();
-            }
-            .product-items {
-              text-align: center;
-              .product-item {
-                border: 2px solid $checkout-light_grey;
-                padding: 50px;
-                width: 60%;
-              }
-            }
-        }
     }
 
     #maincontent {
@@ -903,8 +888,54 @@
 //  ---------------------------------------------
 
 .block.crosssell {
-    margin-top: 70px;
+    display: inline-block;
+    width: 100%;
+    margin-left: 0px;
+    padding-left: 15px;
+    padding-right: 15px;
+    box-sizing: border-box;
+    @include cart-checkout-body-font();
+    h2 {
+        @include cart-checkout-h2-font();
+    }
+    .product-items {
+        text-align: center;
+        .product-item {
+            border: 2px solid $checkout-light_grey;
+            padding: 30px;
+            width: 75%;
+          @include cart-checkout-crossSell-productTitle-font();
+            .product-item-img {
+                display: inline-block;
+                position: relative;
+                width: 35%;
+                float: left;
+                box-sizing: border-box;
+            }
+            .product-item-info {
+                float: right;
+                display: inline-block;
+                position: relative;
+                width: 60%;
+                text-align: left;
+                .product-item-name {
+                    @include cart-checkout-crossSell-productTitle-font();
+                }
+                .price-box .price {
+                    @include cart-checkout-crossSell-price-font();
+                }
+                .product-item-actions {
+                    button {
+                        @include cart-checkout-button-crossSell();
+                    }
+                }
+            }
+        }
+    }
 }
+
+
+
 
 .cart-tax-info,
 .cart .cart-tax-info {
