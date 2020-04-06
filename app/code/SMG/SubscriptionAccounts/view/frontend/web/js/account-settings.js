@@ -2,17 +2,31 @@ define([
     'uiComponent',
     'ko',
     'Magento_Ui/js/modal/modal',
-    'jquery'
+    'jquery',
+    'knockoutjs/knockout-toggle-click'
 ], function (Component, ko, modal, $) {
     let successModal;
 
     return Component.extend({
         initialize(config) {
-            let self = this;
+            var self = this;
 
-            this.account = ko.observable(config.account);
-            this.accountEmail = ko.observable(config.account.email);
-            this.modalValues = ko.observable({});
+            // Save default config for use later.
+            self.config = config;
+
+            // Setup Account Observables for usage in our form.
+            self.account = {
+                email: ko.observable(config.account.email || ''),
+                firstName: ko.observable(config.account.firstname || ''),
+                lastName: ko.observable(config.account.lastname),
+                currentPassword: ko.observable(''),
+                newPassword: ko.observable(''),
+                newPasswordConfirm: ko.observable(''),
+            };
+
+            self.modalValues = ko.observable({});
+            self.accountInfoEditable = ko.observable(false);
+            self.saving = ko.observable(false);
 
             setTimeout(function() {
                 responseModal = modal({
@@ -117,6 +131,7 @@ define([
         saveAccount: function() {
             const self = this;
             const formKey = document.querySelector('input[name=form_key]').value;
+            self.saving(true);
 
             $.ajax({
                 type: 'POST',
@@ -124,15 +139,23 @@ define([
 
                 data: JSON.stringify( {
                     form_key: formKey,
-                    firstname: $('input[name="firstname"]').val(),
-                    lastname: $('input[name="lastname"]').val(),
-                    email: $('input[name="email"]').val(),
-                    password: $('input[name="password"]').val(),
-                    newPassword: $('input[name="newPassword"]').val(),
-                    passwordRetype: $('input[name="passwordRetype"]').val(),
+                    firstname: self.account.firstName(),
+                    lastname: self.account.lastName(),
+                    email: self.account.email(),
+                    password: self.account.currentPassword(),
+                    newPassword: self.account.newPassword(),
+                    passwordRetype: self.account.newPasswordConfirm(),
                 }),
                 success(data) {
                     const { success, message } = data;
+
+                    // Reset form state after saving.
+                    self.saving(false);
+                    self.accountInfoEditable(false);
+                    self.account.currentPassword('');
+                    self.account.newPassword('')
+                    self.account.newPasswordConfirm('');
+
                     if (!success) {
 
                         if (message.indexOf('Login identifier exists') >= 0) {
@@ -199,12 +222,7 @@ define([
                              * in order to update email input field to correspond to
                              * actual account values.
                              */
-                            const newAccount = {
-                                ...self.account(),
-                                email: self.accountEmail()
-                            }
-                            self.account(newAccount);
-
+                            self.account.email(this.config.account.email);
                             self.modalValues({
                                 header: 'Problem saving changes',
                                 message: 'An account already exists with the email address you entered, please use a different email address.'
@@ -228,6 +246,15 @@ define([
 
         showModal() {
             responseModal.openModal();
+        },
+        resetFields() {
+            // Reset fields back to their original values.
+            this.account.firstName(this.config.account.firstname);
+            this.account.lastName(this.config.account.lastname);
+            this.account.email(this.config.account.email);
+            this.account.currentPassword('');
+            this.account.newPassword('');
+            this.account.newPasswordConfirm('');
         }
     });
 });
