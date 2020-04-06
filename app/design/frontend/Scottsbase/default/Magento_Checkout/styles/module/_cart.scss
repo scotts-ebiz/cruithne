@@ -250,6 +250,9 @@
                                                         margin: 0;
                                                     }
                                                     .simple-img-wrapper {
+                                                        .cust-simple-image {
+                                                            display: none;
+                                                        }
                                                         .options-cont-wrp {
                                                             font-size: $font-size__ms;
                                                             line-height: $line-height__m;
@@ -258,7 +261,9 @@
                                                                 font-size: $font-size__s;
                                                                 line-height: $line-height__l;
                                                             }
-
+                                                            dd {
+                                                                margin-bottom: 1.2rem;
+                                                            }
                                                             dd,
                                                             strong {
                                                                 font-weight: normal;
