@@ -103,7 +103,7 @@ $cart-checkout-button__font-size                              : $font-size__s !d
 $cart-checkout-button__font-weight                            : normal !default;
 $cart-checkout-button__font-color                             : $color-white !default;
 $cart-checkout-button__font-color-hover                       : $color-white !default;
-$cart-checkout-button__line-height                            : 44px; // this needs to match button height when it's a styled link
+$cart-checkout-button__line-height                            : 0 !default;
 $cart-checkout-button__border-radius                          : 3px !default;
 $cart-checkout-button__disabled__opacity                      : 1.0;
 $cart-checkout-button__disabled__font-weight                  : 700;
