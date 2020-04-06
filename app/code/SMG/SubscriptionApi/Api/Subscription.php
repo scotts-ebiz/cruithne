@@ -12,6 +12,7 @@ use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\Address;
 use Magento\Customer\Model\AddressFactory;
+use Magento\Customer\Model\ResourceModel\Customer as CustomerResource;
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\Session as CustomerSession;
@@ -42,6 +43,10 @@ use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as Su
 use SMG\SubscriptionApi\Model\Subscription as SubscriptionModel;
 use SMG\SubscriptionApi\Model\SubscriptionAddonOrder;
 use SMG\SubscriptionApi\Model\SubscriptionOrder;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder as SubscriptionOrderResource;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder as SubscriptionAddonOrderResource;
+use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 
 /**
  * Class Subscription
@@ -84,6 +89,9 @@ class Subscription implements SubscriptionInterface
 
     /** @var CustomerFactory */
     protected $_customerFactory;
+
+    /** @var CustomerResource */
+    protected $_customerResource;
 
     /** @var CustomerRepositoryInterface */
     protected $_customerRepository;
@@ -161,6 +169,21 @@ class Subscription implements SubscriptionInterface
     protected $_loggerPrefix;
 
     /**
+     * @var SubscriptionResource
+     */
+    protected $_subscriptionResource;
+
+    /**
+     * @var SubscriptionOrderResource
+     */
+    protected $_subscriptionOrderResource;
+
+    /**
+     * @var SubscriptionAddonOrderResource
+     */
+    protected $_subscriptionAddonOrderResource;
+
+    /**
      * Subscription constructor.
      * @param LoggerInterface $logger
      * @param RecommendationHelper $recommendationHelper
@@ -179,6 +202,9 @@ class Subscription implements SubscriptionInterface
      * @param Address $customerAddress
      * @param SubscriptionResourceModel $subscription
      * @param SubscriptionResourceCollectionFactory $subscriptionCollectionFactory
+     * @param SubscriptionResource $subscriptionResource
+     * @param SubscriptionOrderResource $subscriptionOrderResource
+     * @param SubscriptionAddonOrderResource $subscriptionAddonOrderResource
      * @param InvoiceCollectionFactory $invoiceCollectionFactory
      * @param SapOrderBatchCollectionFactory $sapInvoiceCollectionFactory
      * @param SessionManagerInterface $coreSession
@@ -205,10 +231,14 @@ class Subscription implements SubscriptionInterface
         StoreManagerInterface $storeManager,
         CustomerFactory $customerFactory,
         CustomerRepositoryInterface $customerRepository,
+        CustomerResource $customerResource,
         AddressRepositoryInterface $addressRepository,
         Address $customerAddress,
         SubscriptionResourceModel $subscription,
         SubscriptionResourceCollectionFactory $subscriptionCollectionFactory,
+        SubscriptionResource $subscriptionResource,
+        SubscriptionOrderResource $subscriptionOrderResource,
+        SubscriptionAddonOrderResource $subscriptionAddonOrderResource,
         InvoiceCollectionFactory $invoiceCollectionFactory,
         SapOrderBatchCollectionFactory $sapInvoiceCollectionFactory,
         SessionManagerInterface $coreSession,
@@ -234,11 +264,15 @@ class Subscription implements SubscriptionInterface
         $this->_storeManager = $storeManager;
         $this->_customerFactory = $customerFactory;
         $this->_customerRepository = $customerRepository;
+        $this->_customerResource = $customerResource;
         $this->_recurlyHelper = $recurlyHelper;
         $this->_addressRepository = $addressRepository;
         $this->_customerAddress = $customerAddress;
         $this->_subscription = $subscription;
         $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
+        $this->_subscriptionResource = $subscriptionResource;
+        $this->_subscriptionOrderResource = $subscriptionOrderResource;
+        $this->_subscriptionAddonOrderResource = $subscriptionAddonOrderResource;
         $this->_invoiceCollectionFactory = $invoiceCollectionFactory;
         $this->_sapOrderBatchCollectionFactory = $sapInvoiceCollectionFactory;
         $this->_coreSession = $coreSession;
@@ -467,7 +501,7 @@ class Subscription implements SubscriptionInterface
         try {
             $subscription->setData('customer_id', $customer->getData('entity_id'));
             $subscription->setData('gigya_id', $customer->getData('gigya_uid'));
-            $subscription->save();
+            $this->_subscriptionResource->save($subscription);
         } catch (Exception $e) {
             $error = 'Your account could not be saved. Please try again.';
             $this->_logger->error($this->_loggerPrefix . $error . " : " . $e->getMessage());
@@ -494,7 +528,7 @@ class Subscription implements SubscriptionInterface
 
             // Reload the subscription
             $this->_logger->info($this->_loggerPrefix . 'Reloading the subscription...');
-            $subscription = $subscription->load($subscription->getData('entity_id'));
+            $this->_subscriptionResource->load($subscription, $subscription->getId());
 
             // Clear the cart.
             $this->_logger->info($this->_loggerPrefix . 'Clearing the cart...');
@@ -507,6 +541,7 @@ class Subscription implements SubscriptionInterface
             foreach ($subscriptionOrders as $subscriptionOrder) {
                 try {
                     $this->clearCustomerAddresses($customer);
+                    $this->_logger->info($this->_loggerPrefix . "Processing {$subscriptionOrder->getData('season_name')} order...");
                     $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionOrder);
                 } catch (SubscriptionException $e) {
                     $this->_logger->error($this->_loggerPrefix . $e->getMessage());
@@ -561,6 +596,7 @@ class Subscription implements SubscriptionInterface
                         continue;
                     }
 
+                    $this->_logger->info($this->_loggerPrefix . "Processing add-on order...");
                     $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionAddonOrder);
                 } catch (SubscriptionException $e) {
                     $this->_logger->error($this->_loggerPrefix . $e->getMessage());
@@ -702,7 +738,7 @@ class Subscription implements SubscriptionInterface
             $customer->setDefaultBilling(null);
             $customer->setDefaultShipping(null);
 
-            $customer->save();
+            $this->_customerResource->save($customer);
         } catch (Exception $e) {
             $this->_logger->error($this->_loggerPrefix . 'Could not clear addresses - ' . $e->getMessage());
         }
