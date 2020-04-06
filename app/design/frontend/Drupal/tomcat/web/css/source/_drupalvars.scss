@@ -1,16 +1,29 @@
 // Magento UI Variables //
-$primary__color:   #ED1B2B; // red
-$secondary__color: #262626; // off-black
+$primary__color:                                    #ED1B2B; // red
+$secondary__color:                                  #262626; // off-black
 
 //  Tomcat Var Overrides
 //  ---------------------------------------------
 
 // Iframes //
-$iframe-addtocart-btn-border: none;
-$iframe-addtocart-btn-border-radius: 0;
-$iframe-addtocart-btn-color: $color_white;
-$iframe-addtocart-btn-color-hover: $color_white;
-$iframe-addtocart-btn-background: $primary__color;
-$iframe-addtocart-btn-background-hover: $secondary__color;
+$iframe-addtocart-btn-border:                       none;
+$iframe-addtocart-btn-border-radius:                0;
+$iframe-addtocart-btn-color:                        $color_white;
+$iframe-addtocart-btn-color-hover:                  $color_white;
+$iframe-addtocart-btn-background:                   $primary__color;
+$iframe-addtocart-btn-background-hover:             $secondary__color;
 
-$iframe-cart-checkout-now-txt: $primary__color;
+$iframe-cart-checkout-now-txt:                      $primary__color;
+
+// Cart / Checkout Colors
+$checkout-red:                                      #ca0b0b;
+$checkout-accent-color:                             $color-black;
+$checkout-button-color:                             $checkout-red;
+$checkout-button-color-active:                      $checkout-red;
+$checkout-promo-color:                              $color-black;
+
+// Cart / Checkout Button Customization
+$cart-checkout-button__background-color:            $checkout-button-color;
+$cart-checkout-button__background-hover:            $checkout-button-color;
+$cart-checkout-button__active__color:               $checkout-button-color;
+$cart-checkout-button__background-active:           $checkout-button-color-active;
