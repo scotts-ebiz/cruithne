@@ -23,6 +23,10 @@ $color_lightyellow_shade                                      : #ffc;
 $checkout-green                                               : #1d5632;
 $checkout-light-green                                         : #028c45;
 $checkout-light_grey                                          : #d3d3d3;
+$checkout-accent-color                                        : $checkout-green;
+$checkout-button-color                                        : $checkout-green;
+$checkout-button-color-active                                 : $checkout-light-green;
+$checkout-promo-color                                         : $checkout-green;
 
 
 
@@ -71,6 +75,9 @@ $cart-padding_m                                               : $cart-padding__b
 $cart-padding_l                                               : $cart-padding__base * 1.25;
 $cart-padding_xl                                              : $cart-padding__base * 2;
 
+
+// Borders
+$border-width__thick                                           : 2px !default;
 
 // Checkout H2 Styles
 $cart-checkout-h2-border                                      : 2px solid $checkout-green !default;
