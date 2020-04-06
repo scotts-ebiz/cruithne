@@ -218,9 +218,9 @@ class Subscription extends Template
             /** @var Recurly_Invoice $invoice */
             if ($invoice->total_in_cents > 0) {
                 $invoice->due_on = $invoice->due_on->format('M d, Y');
-                $invoice->created_at = $invoice->created_at->format('M d, Y');
-                $invoices[] = $invoice->getValues();
             }
+            $invoice->created_at = $invoice->created_at->format('M d, Y');
+            $invoices[] = $invoice->getValues();
         }
 
         return [

@@ -88,7 +88,15 @@
 
         <div class="md:sp-hide sp-mt-8">
             <a href="/quiz" class="sp-link sp-block sp-mb-2">Lawn conditions changed?</a>
-            <button data-bind="click: displaySubscriptionModal" class="sp-link sp-block">Cancel Subscription</button>
+            <button
+                data-bind="
+                    afterRender: initializeCancelModal,
+                    click: displaySubscriptionModal
+                "
+                class="sp-link sp-block"
+            >
+                Cancel Subscription
+            </button>
         </div>
     </div>
 
@@ -164,18 +172,18 @@
             ></td>
             <td
                 data-label="Due On"
-                data-bind="text: invoice.due_on"
+                data-bind="text: invoice.due_on || '-'"
             ></td>
             <td
                 data-label="Paid"
-                data-bind="attr: { class: ( invoice.state == 'paid' ) ? '' : 'sp-text-red-1' }"
+                data-bind="attr: { class: invoice.origin == 'refund' ? 'sp-text-green-2' : invoice.state == 'paid' ? '' : 'sp-text-red-1' }"
             >
-                <span data-bind="text: invoice.state == 'paid' ? 'Yes' : 'No'"></span>
+                <span data-bind="text: invoice.state == 'paid' ? 'Yes' : invoice.origin == 'refund' ? 'Refund' : 'No'"></span>
             </td>
             <td
                 data-label="Total"
                 class="sp-subscription-details__bold"
-                data-bind="text: '$' + (invoice.total_in_cents / 100).toFixed(2)"
+                data-bind="text: '$' + (invoice.total_in_cents / 100).toFixed(2), css: { 'sp-text-green-2': invoice.origin == 'refund' }"
             ></td>
         </tr>
         </tbody>

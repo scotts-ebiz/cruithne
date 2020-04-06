@@ -7,6 +7,8 @@ use Magento\Ui\Component\Layout\Tabs\TabInterface;
 use Recurly_Client;
 use Recurly_NotFoundError;
 use Recurly_SubscriptionList;
+use Magento\Sales\Model\OrderFactory;
+use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 
 class CustomerSubscriptions extends \Magento\Framework\View\Element\Template implements TabInterface
 {
@@ -36,6 +38,16 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     protected $_formKey;
 
     /**
+     * @var OrderFactory
+     */
+    protected $_orderFactory;
+
+    /**
+     * @var OrderResource
+     */
+    protected $_orderResource;
+
+    /**
      * @var LoggerInterface
      */
     protected $_logger;
@@ -47,6 +59,8 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         \SMG\SubscriptionApi\Helper\RecurlyHelper $helper,
         \Magento\Framework\UrlInterface $urlInterface,
         \Magento\Framework\Data\Form\FormKey $formKey,
+        OrderFactory $orderFactory,
+        OrderResource $orderResource,
         LoggerInterface $logger,
         array $data = []
     ) {
@@ -55,6 +69,8 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         $this->_helper = $helper;
         $this->_urlInterface = $urlInterface;
         $this->_formKey = $formKey;
+        $this->_orderFactory = $orderFactory;
+        $this->_orderResource = $orderResource;
         $this->_logger = $logger;
         parent::__construct($context, $data);
     }
@@ -133,6 +149,38 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
             $this->_logger->error($e->getMessage());
             return [ 'success' => false, 'error_message' => $e->getMessage() ];
         }
+    }
+
+    /**
+     * Get order by subscription Id
+     *
+     * @return array
+     */
+    public function getOrderBySubscriptionId($subscriptionId)
+    {
+        $this->_logger->error("getOrderBySubscriptionId");
+        try {
+            $order = $this->_orderFactory->create();
+            $this->_orderResource->load($order, $subscriptionId, 'subscription_id');
+            $orderId = $order->getId();
+        } catch (\Exception $e) {
+            $this->_logger->error($e->getMessage());
+            return [ 'success' => false, 'error_message' => $e->getMessage() ];
+        }
+
+        return $orderId;
+    }
+
+    /**
+     * Get Admin URL path
+     *
+     * @return array
+     */
+    public function getAdminURLPath()
+    {
+        $urlParts = parse_url($this->getRequest()->getUriString());
+        $path = explode('/', $urlParts['path']);
+        return $path[1];
     }
 
     /**

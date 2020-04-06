@@ -12,7 +12,7 @@
 				   placeholder="First Name"
 				   name="firstname"
 				   id="firstname"
-				   data-bind="value: account().firstname" />
+				   data-bind="textInput: account.firstName, enable: accountInfoEditable" />
 			<label class="sp-form-label"
 				   for="firstname">First Name</label>
 		</div>
@@ -22,7 +22,7 @@
 				   placeholder="Last Name"
 				   name="lastname"
 				   id="lastname"
-				   data-bind="value: account().lastname" />
+				   data-bind="textInput: account.lastName, enable: accountInfoEditable" />
 			<label class="sp-form-label"
 				   for="lastname">Last Name</label>
 		</div>
@@ -36,18 +36,17 @@
 				   placeholder="Email"
 				   name="email"
 				   id="email"
-				   data-bind="value: account().email" />
+				   data-bind="textInput: account.email, enable: accountInfoEditable" />
 			<label class="sp-form-label"
 				   for="email">Email</label>
 		</div>
 
 		<div class="sp-form-group">
-			<input type="password"
+			<input type="password" data-bind="textInput: account.currentPassword, enable: accountInfoEditable"
 				   placeholder="Current Password*"
 				   class="sp-input"
 				   name="password"
-				   id="password"
-				   value="" />
+				   id="password"/>
 			<label class="sp-form-label"
 				   for="password">Current Password*</label>
 		</div>
@@ -58,26 +57,43 @@
 				   placeholder="New Password"
 				   name="newPassword"
 				   id="newPassword"
-				   value="" />
+				   data-bind="event: { keyup: passwordStrength }, textInput: account.newPassword, enable: accountInfoEditable" />
 			<label class="sp-form-label"
 				   for="newPassword">New Password</label>
+			<div class="form-tooltip">
+				<h6 class="sp-mt-0 sp-mb-2">Password Strength:</h6>
+				<div id="pass_type" class="sp-font-bold sp-text-center sp-mb-2">Too Weak</div>
+				<div id="meter_wrapper" class="sp-mb-2">
+					<div id="meter"></div>
+				</div>
+				<p class="sp-mb-0">Password must contain at least 8 characters and the 3 of the following: An uppercase
+				letter, a lowercase latter, a number, a special symbol</p>
+			</div>
 		</div>
 
 		<div class="sp-form-group">
 			<input type="password"
-				   placeholder="Confirm New Password"
 				   class="sp-input"
+				   placeholder="Confirm New Password"
 				   name="passwordRetype"
 				   id="passwordRetype"
-				   value="" />
+				   data-bind="textInput: account.newPasswordConfirm, enable: accountInfoEditable" />
 			<label class="sp-form-label"
 				   for="passwordRetype">Confirm New Password</label>
 		</div>
 
 		<div class="sp-flex sp-justify-end">
+			<button type="button" class="sp-button sp-button--primary"
+					data-bind="toggleClick: accountInfoEditable, visible: !accountInfoEditable()">Change</button>
+			<button type="button" class="sp-link sp-flex-none md:sp-mr-6 sp-order-0 md:sp-order-0"
+					data-bind="toggleClick: accountInfoEditable, click: resetFields, visible: accountInfoEditable(), enable: accountInfoEditable">Cancel</button>
 			<button type="submit"
 					class="sp-button sp-button--primary"
-					data-bind="click: saveAccount">Save</button>
+					data-bind="click: saveAccount, visible: accountInfoEditable() && !saving()">Save</button>
+			<button type="button"
+					class="sp-button sp-button--inactive sp-button--loading"
+					data-bind="visible: accountInfoEditable() && saving()">&emsp;&emsp;&emsp;</button>
+
 		</div>
 	</div>
 	<div class="sp-flex-auto sp-p-4">

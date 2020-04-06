@@ -1,7 +1,7 @@
-require([
+define([
     'jquery',
     'priceBox'
-], function($){
+], function($) {
 
     $.widget('mage.iframePriceBox', {
         options: {
