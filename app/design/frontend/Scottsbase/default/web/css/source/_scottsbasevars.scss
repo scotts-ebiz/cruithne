@@ -103,13 +103,13 @@ $cart-checkout-button__font-size                              : $font-size__s !d
 $cart-checkout-button__font-weight                            : normal !default;
 $cart-checkout-button__font-color                             : $color-white !default;
 $cart-checkout-button__font-color-hover                       : $color-white !default;
-$cart-checkout-button__line-height                            : 0 !default;
+$cart-checkout-button__line-height                            : 44px; // this needs to match button height when it's a styled link
 $cart-checkout-button__border-radius                          : 3px !default;
 $cart-checkout-button__disabled__opacity                      : 1.0;
 $cart-checkout-button__disabled__font-weight                  : 700;
-$cart-checkout-button__background-color                       : $checkout-green !default;
-$cart-checkout-button__background-hover                       : $checkout-green !default;
-$cart-checkout-button__active__color                          : $checkout-green !default;
+$cart-checkout-button__background-color                       : $checkout-button-color !default;
+$cart-checkout-button__background-hover                       : $checkout-button-color !default;
+$cart-checkout-button__active__color                          : $checkout-button-color !default;
 $cart-checkout-button__border                                 : 0;
 $cart-checkout-button__letter-spacing                         : 1px;
 $cart-checkout-button__width                                  : 250px;
@@ -118,14 +118,12 @@ $cart-checkout-button__padding                                : 0;
 $cart-checkout-button__txt-transform                          : uppercase;
 $cart-checkout-button__position                               : relative;
 $cart-checkout-button__bottom-position                        : 1px;
-$cart-checkout-button__boxshadow                              : 0px 10px 15px -10px rgba(0,0,0,0.4);
-$cart-checkout-button__background-active                      : $checkout-light-green !default;
-
+$cart-checkout-button__boxshadow                              : 0 10px 15px -10px rgba(0,0,0,0.4);
+$cart-checkout-button__background-active                      : $checkout-button-color-active !default;
 
 // Large Button
 $cart-checkout-button-l__width                                : 250px;
 
 // Small Button
 $cart-checkout-button-s__width                                : 74px;
-
 
