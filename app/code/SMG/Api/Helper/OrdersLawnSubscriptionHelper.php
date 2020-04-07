@@ -5,6 +5,7 @@
  */
 namespace SMG\Api\Helper;
 
+use Exception;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\Order\ItemFactory;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
@@ -267,7 +268,7 @@ class OrdersLawnSubscriptionHelper
 
                         // make sure that this order was not canceled before continuing
                         // we do not want to send canceled orders
-                        if ($order->isCanceled())
+                        if ($order->getStatus() != 'processing')
                         {
                             // get the date for today
                             $today = date('Y-m-d H:i:s');
@@ -308,7 +309,7 @@ class OrdersLawnSubscriptionHelper
                                         // get the required fields needed for processing
                                         $annualOrderId = $annualOrder->getId();
 
-                                        if ($annualOrder->isCanceled())
+                                        if ($annualOrder->getStatus() != 'processing')
                                         {
                                             // get the date for today
                                             $today = date('Y-m-d H:i:s');
@@ -454,6 +455,10 @@ class OrdersLawnSubscriptionHelper
          * @var \SMG\SubscriptionApi\Model\Subscription $subscription
          */
         $subscription = $this->_subscriptionResource->getSubscriptionByMasterSubscriptionId($order->getData('master_subscription_id'));
+
+        if (! $subscription) {
+            throw new Exception("MISSING SUBSCRIPTION: Could not find subscription with ID '{$order->getData('master_subscription_id')}' for order ID '{$order->getData('increment_id')}'");
+        }
 
         $orderResponse->setGrossSales($subscription->getData('paid'));
 

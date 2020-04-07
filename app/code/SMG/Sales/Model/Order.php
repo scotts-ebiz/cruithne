@@ -77,10 +77,12 @@ class Order extends MagentoOrder
         // variables
         $returnValue = false;
 
-        // if there is a type and there is a master id or a subscription id
-        // then it is a subscription
-        if (!empty($this->getData('subscription_type')) && (!empty($this->getData('master_subscription_id')) || !empty($this->getData('subscription_id'))))
-        {
+        // if there is a type and a master id and a subscription id
+        // then it is a subscription order
+        if (!empty($this->getData('subscription_type'))
+            && !empty($this->getData('master_subscription_id'))
+                && !empty($this->getData('subscription_id'))
+        ) {
             $returnValue = true;
         }
 

@@ -2,6 +2,7 @@
 
 namespace SMG\Api\Helper;
 
+use Exception;
 use ZaiusSDK\ZaiusException;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
@@ -136,7 +137,7 @@ class OrderStatusHelper
      * @var DiscountHelper
      */
     protected $_discountHelper;
-    
+
     /**
      * @var InvoiceService
      */
@@ -1063,7 +1064,7 @@ class OrderStatusHelper
      *
      * @param \Magento\Sales\Model\Order $order
      * @param \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
-     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws Exception
      */
     public function invoiceOffline($order, $sapOrderBatch)
     {
@@ -1083,15 +1084,31 @@ class OrderStatusHelper
                 $invoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
                 $invoice->register();
 
-                try {
-                    $transaction = $this->_transaction
-                        ->addObject($invoice)
-                        ->addObject($invoice->getOrder());
-                    $transaction->save();
-                } catch (ZaiusException $e) {
-                    // Log and ignore any Zaius errors.
-                    $this->_logger->error($e->getMessage());
-                }
+                $attempts = 0;
+
+                // We are going to attempt to save the invoice 5 times because
+                // we are seeing deadlock issues with this transaction. If it
+                // fails after the 5th attempt, we will throw the exception and
+                // log the error.
+                do {
+                    try {
+                        $this->saveInvoice($invoice);
+
+                        // We succeeded saving the invoice so break out of the
+                        // loop.
+                        break;
+                    } catch (Exception $e) {
+                        // The transaction failed, lets try it again if less than 5 attempts.
+                        $attempts++;
+
+                        // We've attempted 5 times, just pass the exception forward.
+                        if ($attempts >= 5) {
+                            throw $e;
+                        }
+
+                        sleep(1);
+                    }
+                } while ($attempts < 5);
 
                 $this->_invoiceSender->send($invoice);
                 $order->addStatusHistoryComment(__('Notified customer about invoice #%1.', $invoice->getId()))
@@ -1104,5 +1121,17 @@ class OrderStatusHelper
         $today = date('Y-m-d H:i:s');
         $sapOrderBatch->setData('is_capture', true);
         $sapOrderBatch->setData('capture_process_date', $today);
+    }
+
+    /**
+     * @param $invoice
+     * @throws Exception
+     */
+    protected function saveInvoice($invoice): void
+    {
+        $transaction = $this->_transaction
+            ->addObject($invoice)
+            ->addObject($invoice->getOrder());
+        $transaction->save();
     }
 }
