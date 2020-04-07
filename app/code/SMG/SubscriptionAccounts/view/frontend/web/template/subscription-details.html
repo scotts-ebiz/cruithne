@@ -88,7 +88,14 @@
 
         <div class="md:sp-hide sp-mt-8">
             <a href="/quiz" class="sp-link sp-block sp-mb-2">Lawn conditions changed?</a>
-            <button data-bind="click: displaySubscriptionModal" class="sp-link sp-block">Cancel Subscription</button>
+            <button
+                data-bind="
+                    click: displaySubscriptionModal
+                "
+                class="sp-link sp-block"
+            >
+                Cancel Subscription
+            </button>
         </div>
     </div>
 
@@ -187,6 +194,7 @@
 <div
     id="popup-modal"
     class="modal-popup--subscriptions sp-hide sp-pb-8"
+    data-bind="afterRender: initializeCancelModal"
 >
     <div id="before">
         <h5 class="sp-h5 sp-text-black sp-text-center">Before You Cancel</h5>

@@ -231,7 +231,6 @@ class CancelHelper extends AbstractHelper
             $event['type'] = 'order';
             $event['action'] = 'cancel';
             $event['identifiers'] = ['email'=>$customer_email];
-            $event['magento_store_view'] = 'Default Store View';
             foreach ($this->_subscriptionOrders as $orders) {
                 $items = [];
                 $order_id = $orders->getSalesOrderId();
@@ -246,7 +245,7 @@ class CancelHelper extends AbstractHelper
                     $items['subtotal'] = $items['price'] * $items['quantity'];
                 }
                 $order = ['order_id'=>$order_id,'total'=>$total,'items'=>[$items]];
-                $event['data'] = ['ts'=>$timestamp,'order'=>$order];
+                $event['data'] = ['ts'=>$timestamp,'magento_store_view'=>'Default Store View','order'=>$order];
 
                 // get postevent function
                 try {
