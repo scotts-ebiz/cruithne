@@ -3,23 +3,28 @@
 namespace SMG\SubscriptionApi\Helper;
 
 use Exception;
-use Recurly_Error;
-use Recurly_Client;
-use Recurly_Invoice;
-use Recurly_Subscription;
-use Magento\Sales\Model\Order;
-use SMG\SubscriptionApi\Model\Subscription;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
-use SMG\SubscriptionApi\Model\SubscriptionOrder;
 use Magento\Framework\Exception\LocalizedException;
-use SMG\SubscriptionApi\Model\SubscriptionAddonOrder;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Magento\Sales\Model\ResourceModel\Order\Collection as OrderCollection;
-use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use Psr\Log\LoggerInterface;
-use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\CollectionFactory as SubscriptionAddonOrderCollectionFactory;
+use Recurly_Client;
+use Recurly_Error;
+use Recurly_Invoice;
+use Recurly_Subscription;
+use SMG\Sap\Model\ResourceModel\SapOrderBatch as SapOrderBatchResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder as SubscriptionAddonOrderResource;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\CollectionFactory as SubscriptionAddonOrderCollectionFactory;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder as SubscriptionOrderResource;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
+use SMG\SubscriptionApi\Model\Subscription;
+use SMG\SubscriptionApi\Model\SubscriptionAddonOrder;
+use SMG\SubscriptionApi\Model\SubscriptionOrder;
 
 class CancelSubscriptionHelper extends AbstractHelper
 {
@@ -44,6 +49,11 @@ class CancelSubscriptionHelper extends AbstractHelper
     protected $_sapOrderBatchCollectionFactory;
 
     /**
+     * @var SapOrderBatchResource
+     */
+    protected $_sapOrderBatchResource;
+
+    /**
      * @var SubscriptionOrderCollectionFactory
      */
     protected $_subscriptionOrderCollectionFactory;
@@ -54,33 +64,68 @@ class CancelSubscriptionHelper extends AbstractHelper
     protected $_subscriptionAddonOrderCollectionFactory;
 
     /**
+     * @var OrderResource
+     */
+    protected $_orderResource;
+
+    /**
+     * @var SubscriptionResource
+     */
+    protected $_subscriptionResource;
+
+    /**
+     * @var SubscriptionOrderResource
+     */
+    protected $_subscriptionOrderResource;
+
+    /**
+     * @var SubscriptionAddonOrderResource
+     */
+    protected $_subscriptionAddonOrderResource;
+
+    /**
      * CancelHelper constructor.
      *
      * @param Context $context
      * @param LoggerInterface $logger
      * @param OrderCollectionFactory $orderCollectionFactory
+     * @param OrderResource $orderResource
      * @param RecurlyHelper $recurlyHelper
      * @param SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
+     * @param SapOrderBatchResource $sapOrderBatchResource
      * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
      * @param SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory
+     * @param SubscriptionResource $subscriptionResource
+     * @param SubscriptionOrderResource $subscriptionOrderResource
+     * @param SubscriptionAddonOrderResource $subscriptionAddonOrderResource
      */
     public function __construct(
         Context $context,
         LoggerInterface $logger,
         OrderCollectionFactory $orderCollectionFactory,
+        OrderResource $orderResource,
         RecurlyHelper $recurlyHelper,
         SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory,
+        SapOrderBatchResource $sapOrderBatchResource,
         SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
-        SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory
+        SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory,
+        SubscriptionResource $subscriptionResource,
+        SubscriptionOrderResource $subscriptionOrderResource,
+        SubscriptionAddonOrderResource $subscriptionAddonOrderResource
     ) {
         parent::__construct($context);
 
         $this->_logger = $logger;
         $this->_orderCollectionFactory = $orderCollectionFactory;
+        $this->_orderResource = $orderResource;
         $this->_recurlyHelper = $recurlyHelper;
         $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
+        $this->_sapOrderBatchResource = $sapOrderBatchResource;
         $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
         $this->_subscriptionAddonOrderCollectionFactory = $subscriptionAddonOrderCollectionFactory;
+        $this->_subscriptionResource = $subscriptionResource;
+        $this->_subscriptionOrderResource = $subscriptionOrderResource;
+        $this->_subscriptionAddonOrderResource = $subscriptionAddonOrderResource;
 
         // Configure Recurly Client
         Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
@@ -159,10 +204,11 @@ class CancelSubscriptionHelper extends AbstractHelper
                 }
 
                 // Mark subscription order as canceled.
-                $subscriptionOrder->setData('subscription_status', 'canceled')->save();
+                $this->setSubscriptionOrderCanceledStatus($subscriptionOrder);
 
                 // Mark the order as canceled.
-                $order->setData('status', 'canceled')->save();
+                $order->setData('status', 'canceled');
+                $this->_orderResource->save($order);
             }
 
             // If this is an annual subscription
@@ -177,7 +223,8 @@ class CancelSubscriptionHelper extends AbstractHelper
             }
 
             // Mark the subscription as canceled.
-            $subscription->setData('subscription_status', 'canceled')->save();
+            $subscription->setData('subscription_status', 'canceled');
+            $this->_subscriptionResource->save($subscription);
         } catch (Exception $e) {
             // Failed to cancel subscription.
             $error = 'Could not cancel subscription: "' . $subscription->getData('subscription_id') . '"';
@@ -224,18 +271,52 @@ class CancelSubscriptionHelper extends AbstractHelper
         try {
             $subscription = $this->loadRecurlySubscription($subscriptionOrder->getData('subscription_id'));
 
-            if (!in_array($subscription->state, ['active', 'future'])) {
+            // The subscription has already been terminated or completed.
+            if (! in_array($subscription->state, ['active', 'future'])) {
                 return;
             }
 
-            if ($refund) {
-                $subscription->terminateAndRefund();
-            } else {
+            // No refund needed, so just terminate the subscription.
+            if (! $refund) {
                 $subscription->terminateWithoutRefund();
+
+                // Update the subscription order status.
+                $this->setSubscriptionOrderCanceledStatus($subscriptionOrder);
+
+                return;
             }
 
+            // Load the invoice.
+            $invoice = null;
+
+            try {
+                $invoice = $subscription->invoice->get();
+            } catch (Exception $e) {
+                $this->_logger->error("Could not find refundable invoice for subscription {$subscription->uuid}.");
+            }
+
+            // Find the invoice line item for the subscription.
+            $lineItem = array_values(array_filter($invoice->line_items, function ($item) use ($subscription) {
+                return $item->product_code == $subscription->plan->plan_code;
+            }));
+
+            if (count($lineItem)) {
+                // Refund the line item.
+                try {
+                    $refundItem = $lineItem[0]->toRefundAttributes();
+                    $invoice->refund([$refundItem], 'transaction_first');
+                } catch (Exception $e) {
+                    $this->_logger->error("Could not refund line item for subscription {$subscription->uuid}.");
+                }
+            } else {
+                $this->_logger->error("Could not find invoice line item when refunding subscription {$subscription->uuid}.");
+            }
+
+            // Terminate the subscription.
+            $subscription->terminateWithoutRefund();
+
             // Update the subscription order status.
-            $subscriptionOrder->setData('subscription_order_status', 'canceled')->save();
+            $this->setSubscriptionOrderCanceledStatus($subscriptionOrder);
         } catch (Exception $e) {
             // Could not terminate subscription.
             $error = 'Could not cancel subscription "' . $subscriptionOrder->getData('subscription_id') . '"';
@@ -303,9 +384,9 @@ class CancelSubscriptionHelper extends AbstractHelper
                 $invoice = Recurly_Invoice::get($subscription->getData('recurly_invoice'));
 
                 if (is_null($amount)) {
-                    $invoice->refundAmount($this->convertAmountToCents($subscription->getData('paid')));
+                    $invoice->refundAmount($this->convertAmountToCents($subscription->getData('paid')), 'transaction_first');
                 } else {
-                    $invoice->refundAmount($amount);
+                    $invoice->refundAmount($amount, 'transaction_first');
                 }
             }
         } catch (Exception $e) {
@@ -327,7 +408,8 @@ class CancelSubscriptionHelper extends AbstractHelper
         $sapOrderBatchCollection
             ->addFieldToFilter('order_id', $order->getEntityId())
             ->walk(function ($sapOrderBatch) {
-                $sapOrderBatch->setData('is_order', 0)->save();
+                $sapOrderBatch->setData('is_order', 0);
+                $this->_sapOrderBatchResource->save($sapOrderBatch);
             });
     }
 
@@ -346,5 +428,22 @@ class CancelSubscriptionHelper extends AbstractHelper
         }
 
         return (int) $cents;
+    }
+
+    /**
+     * Set the given order to canceled.
+     *
+     * @param SubscriptionOrder | SubscriptionAddonOrder $subscriptionOrder
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     */
+    protected function setSubscriptionOrderCanceledStatus($subscriptionOrder): void
+    {
+        $subscriptionOrder->setData('subscription_order_status', 'canceled');
+
+        if ($subscriptionOrder instanceof SubscriptionAddonOrder) {
+            $this->_subscriptionOrderResource->save($subscriptionOrder);
+        } else {
+            $this->_subscriptionAddonOrderResource->save($subscriptionOrder);
+        }
     }
 }
