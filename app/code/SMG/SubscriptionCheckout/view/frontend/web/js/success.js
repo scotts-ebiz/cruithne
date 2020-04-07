@@ -26,13 +26,15 @@ define(
                     if (orderInfo['plan']) {
                         ko.utils.arrayForEach(
                             orderInfo['plan']['coreProducts'], function (product, index) {
+                                let applicationStartDateTime =(new Date(product['applicationStartDate'])).getTime().toString().slice(0,-3);
+                                let applicationEndDateTime =(new Date(product['applicationEndDate'])).getTime().toString().slice(0,-3);
                                 products.push(
                                     {
                                         sku: product['sku'],
-                                        product_id: product['prodId'],
+                                        product_id: product['entity_id'],
                                         order_id: self.subscriptionID(),
-                                        applicationstatedate: product['applicationStartDate'],
-                                        applicationenddate: product['applicationEndDate'],
+                                        applicationstatedate: applicationStartDateTime,
+                                        applicationenddate: applicationEndDateTime,
                                         magento_store_view: config.storeName,
                                         product_order: index
                                     }
