@@ -1,0 +1,21 @@
+--- vendor/magento/module-inventory-source-selection-api/Model/Algorithms/Result/GetDefaultSortedSourcesResult.php
++++ vendor/magento/module-inventory-source-selection-api/Model/Algorithms/Result/GetDefaultSortedSourcesResult.php
+@@ -94,7 +94,9 @@
+         $sourceItemSelections = [];
+ 
+         $itemsTdDeliver = [];
++        $itemsTdDeliverSkus = [];
+         foreach ($inventoryRequest->getItems() as $item) {
++            $itemsTdDeliverSkus[] = $item->getSku();
+             $itemsTdDeliver[$item->getSku()] = $item->getQty();
+         }
+ 
+@@ -105,7 +107,7 @@
+ 
+         $sourceItems =
+             $this->getInStockSourceItemsBySkusAndSortedSource->execute(
+-                array_keys($itemsTdDeliver),
++                $itemsTdDeliverSkus,
+                 $sortedSourceCodes
+             );
+ 
