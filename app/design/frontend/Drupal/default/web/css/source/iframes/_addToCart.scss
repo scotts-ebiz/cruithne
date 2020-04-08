@@ -33,7 +33,7 @@
 						border-radius: 0; // Chrome does not support border-radius with Select.
 						border: 0;
 						outline: 1px solid #bbb;
-						outline-offset: -2px;
+						outline-offset: -1px;
 						&.mage-error {
 							outline: 2px solid $checkout-red;
 						}
