@@ -202,33 +202,7 @@ switch ($type = $block->getType()) {
                                     </strong>
                                     <?= /* @noEscape */ $block->getProductPrice($_item) ?>
 
-
-                                    <!-- Check Type -->
-                                    <?= /* @noEscape */ $type; ?>
-
-
-                                    <!-- Should show TRUE -->
-                                    <?= /* @noEscape */ $description; ?>
-
-
-                                    <!-- $block->escapeHtml($_item->getDescription() -->
-                                    <!-- The above didnt work and broke it -->
-
-
-                                    <span>Get Description: Start Again</span>
-                                    <?= $block->getDescription($_item) ?>
-
-                                    <?= $block->getData($description)?>
-
-                                    <span>Get Description: End Again</span>
-                                    <!-- The above didnt work -->
-
-                                    <!-- $_item->getDescription() -->
-                                    <!-- No data but didn't break -->
-
-                                    <!-- /* @noEscape */ $block->getDescription($_item) -->
-                                    <!-- No data but didn't break -->
-
+                                        <?= /* @escapeNotVerified */ $_item->getData('short_description');?>
 
                                     <?php if ($templateType) :?>
                                         <?= $block->getReviewsSummaryHtml($_item, $templateType) ?>
