@@ -146,6 +146,16 @@ define([
                 }
             }, 100);
 
+            window.addEventListener('hashchange', (event) => {
+
+                // If we press the back button on the #payment page, clear billing info
+                // and the recurly iframe cc info via page reload.
+                if (event.oldURL.indexOf('#payment') >= 0 && event.newURL.indexOf('#shipping') >= 0) {
+                    checkoutData.setBillingAddressFromData({});
+                    window.location.reload();
+                }
+            });
+
             return this;
         },
 
