@@ -24,7 +24,7 @@ define([
                             // Field style properties
                             style: {
                                 fontSize: '12px',
-                            },
+                            }
                         }
 
                     }
