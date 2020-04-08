@@ -200,9 +200,13 @@ switch ($type = $block->getType()) {
                                     <strong class="product name product-item-name">
                                         <?= $block->escapeHtml($_item->getName()) ?>
                                     </strong>
+                                    <!-- Display Product Price -->
                                     <?= /* @noEscape */ $block->getProductPrice($_item) ?>
 
+                                    <!-- Display Short Description -->
+                                    <div class="description-item-wrapper">
                                         <?= /* @escapeNotVerified */ $_item->getData('short_description');?>
+                                    </div>
 
                                     <?php if ($templateType) :?>
                                         <?= $block->getReviewsSummaryHtml($_item, $templateType) ?>

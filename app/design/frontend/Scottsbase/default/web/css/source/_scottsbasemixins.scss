@@ -100,7 +100,7 @@
 
 
 //Cart & Checkout - Body Font
-@mixin cart-checkout-body-font($size: $font-size__base, $color: $color-black, $weight: false, $lh: 20px, $ls: false) {
+@mixin cart-checkout-body-font($size: $font-size__base, $color: $color-black, $weight: 400, $lh: 20px, $ls: false) {
     font-family: $font-family__quaternary;
     @if $size { font-size: $size; }
     @if $color { color: $color; }
@@ -118,7 +118,7 @@
 
 //Cart & Checkout - Cross Sell Price Font
 @mixin cart-checkout-crossSell-price-font() {
-  @include cart-checkout-body-font($size: $font-size__s, $weight: 700);
+  @include cart-checkout-body-font($size: $font-size__s, $weight: 700, $ls: 1px);
 }
 
 
