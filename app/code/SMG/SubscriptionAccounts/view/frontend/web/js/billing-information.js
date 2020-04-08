@@ -109,17 +109,17 @@ define([
             successModal.openModal();
         },
 		
-		hideChange() {
+	hideChange() {
             $('.changehide').hide();
-			$('.cardview').hide();
+	    $('.cardview').hide();
             $('#recurlyForm').trigger('reset');
             $('.hideme').show();
-			$('.cardedit').show();
+	    $('.cardedit').show();
         },
 		
-		cancelBilling() {
+	cancelBilling() {
             $('body').trigger('processStart');
-			location.reload(); 
+		location.reload(); 
 		}
     });
 });
