@@ -2,8 +2,9 @@ define([
     'uiComponent',
     'ko',
     'jquery',
-    'Magento_Customer/js/customer-data'
-], function (Component, ko, $, customerData) {
+    'Magento_Customer/js/customer-data',
+    'Magento_Checkout/js/checkout-data',
+], function (Component, ko, $, customerData, checkoutData) {
     return Component.extend({
         hasResults: ko.observable(false),
         results: ko.observable({}),
@@ -115,6 +116,9 @@ define([
                     self.subscriptionType(event.target.value);
                 }
             }
+
+            // Clear shipping info if we came here from pressing the back button.
+            checkoutData.setShippingAddressFromData({});
         },
 
         /**

@@ -84,7 +84,13 @@ define([
                     };
                 });
 
-                return seasons;
+                return seasons.sort((a, b) => {
+                    try {
+                        return a.products[0].applicationStartDate > b.products[0].applicationStartDate;
+                    } catch (error) {
+                        return 0;
+                    }
+                });
             });
 
             // Used to indicate which product is up next for delivery
