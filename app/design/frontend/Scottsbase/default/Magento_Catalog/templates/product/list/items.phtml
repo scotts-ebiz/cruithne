@@ -200,13 +200,7 @@ switch ($type = $block->getType()) {
                                     <strong class="product name product-item-name">
                                         <?= $block->escapeHtml($_item->getName()) ?>
                                     </strong>
-
                                     <?= /* @noEscape */ $block->getProductPrice($_item) ?>
-
-
-
-
-
 
 
                                     <!-- Check Type -->
@@ -220,7 +214,13 @@ switch ($type = $block->getType()) {
                                     <!-- $block->escapeHtml($_item->getDescription() -->
                                     <!-- The above didnt work and broke it -->
 
-                                    <!-- $block->$_item->getDescription() -->
+
+                                    <span>Get Description: Start Again</span>
+                                    <?= $block->getDescription($_item) ?>
+
+                                    <?= $block->getData($description)?>
+
+                                    <span>Get Description: End Again</span>
                                     <!-- The above didnt work -->
 
                                     <!-- $_item->getDescription() -->
@@ -229,7 +229,6 @@ switch ($type = $block->getType()) {
                                     <!-- /* @noEscape */ $block->getDescription($_item) -->
                                     <!-- No data but didn't break -->
 
-                                   asdfasdf
 
                                     <?php if ($templateType) :?>
                                         <?= $block->getReviewsSummaryHtml($_item, $templateType) ?>
