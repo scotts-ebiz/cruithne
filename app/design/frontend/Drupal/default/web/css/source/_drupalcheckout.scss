@@ -44,10 +44,19 @@
               }
               .checkout-payment-method .payment-method-content > .actions-toolbar > .primary .action.primary {
                 background-color: $cart-checkout-button__background-color; // change color of PLACE ORDER button
+
+                &:active {
+                  background-color: $cart-checkout-button__background-active; // change color of PLACE ORDER button, active state
+                }
               }
             }
-            .methods-shipping .actions-toolbar .action:not([disabled]) {
-              background-color: $cart-checkout-button__background-color; // change color of CONTINUE button
+            .methods-shipping .actions-toolbar {
+              .action:not([disabled]) {
+                background-color: $cart-checkout-button__background-color; // change color of CONTINUE button
+              }
+              .action:active {
+                background-color: $cart-checkout-button__background-active; // change color of CONTINUE button, active state
+              }
             }
             .step-content {
               a.edit-address {
