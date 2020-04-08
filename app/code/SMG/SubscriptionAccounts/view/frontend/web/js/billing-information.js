@@ -75,7 +75,7 @@ define([
             $('body').trigger('processStart');
             recurly.token( recurlyForm, function( err, token ) {
                 if( err ) {
-					$('body').trigger('processStop');
+	    $('body').trigger('processStop');
                     alert( err.message );
                 } else {
                     if( token ) {
@@ -88,12 +88,12 @@ define([
                                 form: recurlyForm.serializeArray()
                             } ),
                             success: function( response ) {
-								$('body').trigger('processStop');
-								location.reload(); 
+			    $('body').trigger('processStop');
+				location.reload(); 
                             },
-							error: function( response ) {
-								$('body').trigger('processStop');
-								location.reload(); 
+			    error: function( response ) {
+			    $('body').trigger('processStop');
+			        location.reload(); 
                             }
                         })
                     }
