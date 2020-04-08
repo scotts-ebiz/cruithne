@@ -140,7 +140,7 @@
     </div>
     <!-- /ko -->
 </div>
-
+<!-- /ko -->
 <!-- ko if: subscriptions().invoices && subscriptions().invoices.length > 0 -->
 <div class="sp-py-2 sp-subscription-details--border-bottom">
     <h3 class="sp-h4 sp-mt-0">INVOICES</h3>
@@ -175,20 +175,20 @@
             ></td>
             <td
                 data-label="Paid"
-                data-bind="attr: { class: invoice.origin == 'refund' ? 'sp-text-green-2' : invoice.state == 'paid' ? '' : 'sp-text-red-1' }"
+                data-bind="attr: { class: invoice.origin == 'refund' || invoice.origin == 'credit' ? 'sp-text-green-2' : invoice.state == 'paid' ? '' : 'sp-text-red-1' }"
             >
-                <span data-bind="text: invoice.state == 'paid' ? 'Yes' : invoice.origin == 'refund' ? 'Refund' : 'No'"></span>
+                <span data-bind="text: invoice.state == 'paid' ? 'Yes' : invoice.origin == 'refund' ? 'Refund' : invoice.origin == 'credit' ? 'Credit' : 'No'"></span>
             </td>
             <td
                 data-label="Total"
                 class="sp-subscription-details__bold"
-                data-bind="text: '$' + (invoice.total_in_cents / 100).toFixed(2), css: { 'sp-text-green-2': invoice.origin == 'refund' }"
+                data-bind="text: '$' + (invoice.total_in_cents / 100).toFixed(2), css: { 'sp-text-green-2': invoice.origin == 'refund' || invoice.origin == 'credit' }"
             ></td>
         </tr>
         </tbody>
     </table>
 </div>
-<!-- /ko -->
+
 <!-- /ko -->
 
 <div
