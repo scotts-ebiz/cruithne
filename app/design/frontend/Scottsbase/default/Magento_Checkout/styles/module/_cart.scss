@@ -910,13 +910,25 @@
             border: 2px solid $checkout-light_grey;
             padding: 25px;
             flex: 2 1 auto;
-            max-width: 800px;
+            max-width: 850px;
             min-width: 350px;
+            align-self: stretch;
             &:nth-child(odd){
-                margin: 0 ;
+                margin: 0;
+                @media only screen and (max-width: $screen__l){
+                    margin: 20px 0 0 0;
+                    width: 100%;
+                    &:first-child(){
+                        margin: 0;
+                    }
+                }
             }
             &:nth-child(even){
                 margin: 0 0 0 20px;
+                @media only screen and (max-width: $screen__l){
+                    margin: 20px 0 0 0;
+                    width: 100%;
+                }
             }
             @include cart-checkout-crossSell-productTitle-font();
             .product-item-img {
@@ -925,6 +937,9 @@
                 width: 35%;
                 float: left;
                 box-sizing: border-box;
+                @media only screen and (max-width: $screen__s){
+                    width: 100%;
+                }
             }
             .product-item-info {
                 float: right;
@@ -932,6 +947,10 @@
                 position: relative;
                 width: 60%;
                 text-align: left;
+                @media only screen and (max-width: $screen__s){
+                    width: 100%;
+                    text-align: center;
+                }
                 .product-item-name {
                     margin: 0 0 16px 0;
                     @include cart-checkout-crossSell-productTitle-font();
@@ -940,11 +959,12 @@
                     @include cart-checkout-crossSell-price-font();
                 }
                 .description-item-wrapper {
-                    margin: 0 0 32px 0;
+                    margin: 0 0 20px 0;
                     @include cart-checkout-body-font();
                 }
                 .product-item-actions {
                     margin: 0;
+                    display: block;
                     button {
                         @include cart-checkout-button-crossSell();
                     }
