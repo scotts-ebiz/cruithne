@@ -205,7 +205,7 @@ switch ($type = $block->getType()) {
 
                                     <!-- Display Short Description -->
                                     <div class="description-item-wrapper">
-                                        <?= /* @escapeNotVerified */ $_item->getData('short_description');?>
+                                        <?= /* @noEscape */ $_item->getData('short_description');?>
                                     </div>
 
                                     <?php if ($templateType) :?>
