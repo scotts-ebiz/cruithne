@@ -1,6 +1,7 @@
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * SMG Override of vendor/magento/module-customer/view/frontend/web/js/customer-data.js
+ * Changelog:
+ * 1) Changed Error() ln 96 to use jqXHR.responseText instead of just jqXHR
  */
 
 /**

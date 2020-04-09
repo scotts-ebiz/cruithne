@@ -1,6 +1,7 @@
 /**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
+ * SMG Override of vendor/magento/module-banner/view/frontend/web/js/model/banner.js
+ * Changelog:
+ * 1) Changed Error() ln 75 to use jqXHR.responseText instead of just jqXHR
  */
 
 /**
