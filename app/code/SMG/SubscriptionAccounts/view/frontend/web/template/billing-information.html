@@ -32,13 +32,26 @@
             >
             <label class="sp-form-label">Last Name</label>
         </div>
-
-        <div class="sp-form-group">
-            <label class="sp-form-label">Card Number</label>
-            <div data-recurly="card"
-                class="sp-form-group sp-px-2 sp-w-full"></div>
+         
+		<div class="sp-form-group cardview">
+            <input type="text"
+                placeholder="Card Number"
+                class="sp-input"
+                data-recurly="card_no_file"
+                data-bind="value: billing().card_no_file"
+                name="card_no_file"
+            >
+            <label class="sp-form-label">Card on file</label>
+        </div> 
+		
+		<div class="cardedit" style="display: none;">
+			<div class="sp-form-group">
+				<label class="sp-form-label">Card Number</label>
+				<div data-recurly="card"
+					class="sp-form-group sp-px-2 sp-w-full"></div>
+			</div>
         </div>
-
+		 
         <div class="sp-form-group sp-hidden">
             <div class="sp-select sp-block sp-w-full">
                 <select name="country"
@@ -102,9 +115,17 @@
             <input type="hidden"
                 name="recurly-token"
                 data-recurly="token">
-            <button type="submit"
+				
+			<button type="reset"
+                    class="sp-button sp-button--primary changehide" data-bind="click: hideChange;">Change</button>
+					
+            <button style="display: none;" type="submit"
                     data-bind="click: saveBilling"
-                    class="sp-button sp-button--primary">Save</button>
+                    class="sp-button sp-button--primary hideme">Save</button>
+			
+			<button  style="display: none;" type="button"
+							data-bind="click: cancelBilling"
+							class="sp-button sp-ml-4 sp-button--primary hideme">Cancel</button>			
         </div>
     </div>
 </form>
