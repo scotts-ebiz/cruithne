@@ -76,7 +76,7 @@ define([
             recurly.token( recurlyForm, function( err, token ) {
                 if( err ) {
         $('body').trigger('processStop');
-                    alert( "Please fill all the fields");
+                    alert( "Required fields are missing");
                 } else {
                     if( token ) {
                         $.ajax({
