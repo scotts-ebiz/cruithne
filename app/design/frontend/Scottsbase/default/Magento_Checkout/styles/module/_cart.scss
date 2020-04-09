@@ -905,10 +905,19 @@
         flex-wrap: wrap;
         justify-content: space-around;
         align-items: flex-start;
+        margin: 0;
         .product-item {
             border: 2px solid $checkout-light_grey;
-            padding: 48px;
-            width: 80%;
+            padding: 25px;
+            flex: 2 1 auto;
+            max-width: 800px;
+            min-width: 350px;
+            &:nth-child(odd){
+                margin: 0 ;
+            }
+            &:nth-child(even){
+                margin: 0 0 0 20px;
+            }
             @include cart-checkout-crossSell-productTitle-font();
             .product-item-img {
                 display: inline-block;
