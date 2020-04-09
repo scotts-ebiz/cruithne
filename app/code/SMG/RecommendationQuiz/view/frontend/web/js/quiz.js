@@ -680,11 +680,12 @@ define([
                 self.answers.push(new QuestionResult(event.target.name, event.target.value));
 
                 // This is the grass type question, so store the grass type.
-                if (
-                    self.currentGroup().label === 'LAWN DETAILS' && event.target.dataset.label &&
-                    !event.target.dataset.label.includes('not sure')
-                ) {
-                    window.sessionStorage.setItem('lawn-type', event.target.dataset.label);
+                if (self.currentGroup().label === 'LAWN DETAILS' && event.target.dataset.label) {
+                    if (!event.target.dataset.label.includes('not sure')) {
+                        window.sessionStorage.setItem('lawn-type', event.target.dataset.label);
+                    } else {
+                        window.sessionStorage.removeItem('lawn-type');
+                    }
                 }
             }
         };
