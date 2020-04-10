@@ -79,7 +79,7 @@ define([
             recurly.token( recurlyForm, function( err, token ) {
                 if( err ) {
                     $('body').trigger('processStop');
-                    alert( "Please fill all the fields");
+                    return false;
                 } else {
                     if( token ) {
                         $.ajax({
