@@ -19,9 +19,9 @@ $checkout-progress-bar-item-element__width                     : 10px !default;
 $checkout-progress-bar-item-element__height                    : $checkout-progress-bar-item-element__width !default;
 
 //new vars for active span
-$checkout-progress-bar-item-element__active__width             : 30px !default;
+$checkout-progress-bar-item-element__active__width             : 26px !default;
 $checkout-progress-bar-item-element__active__height            : $checkout-progress-bar-item-element__active__width !default;
-$checkout-progress-bar-item-element__active__after__width      : $checkout-progress-bar-item-element__active__width - 4 !default;
+$checkout-progress-bar-item-element__active__after__width      : $checkout-progress-bar-item-element__active__width !default;
 $checkout-progress-bar-item-element__active__after__height     : $checkout-progress-bar-item-element__active__after__width !default;
 $checkout-progress-bar-item-element__active__after__margin     : (- $checkout-progress-bar-item-element__active__after__width) / 2 !default;
 
@@ -34,6 +34,7 @@ $checkout-progress-bar-item-element-inner__height              : $checkout-progr
 $checkout-progress-bar-item-element-inner__active__content     : url(../images/check.svg) !default;
 $checkout-progress-bar-item-element-inner__active__content_size : 30px !default;
 $checkout-progress-bar-item-element-inner__active__line-height : 1 !default;
+$checkout-progress-bar-item-element-inner__active__font_size : 13px !default;
 
 $checkout-progress-bar-item-element-outer-radius__width: 6px;
 
@@ -63,7 +64,7 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
 
     &:before { // Horizontal line
         @include lib-css(background, $checkout-progress-bar-item__background-color);
-        @include lib-css(top, $checkout-progress-bar-item-element__active__width/2);
+        @include lib-css(top, ($checkout-progress-bar-item-element__active__width + 4)/2);
         content: '';
         height: 2px;
         left: 0;
@@ -111,35 +112,41 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
 
         > span {
             &:before { // Outer Circle
-                @include lib-css(background, $checkout-progress-bar__active__background-color);
+                @include lib-css(background, $color-white);
                 @include lib-css(height, $checkout-progress-bar-item-element__active__height);
                 @include lib-css(width, $checkout-progress-bar-item-element__active__width);
                 top: 0;
-                left:50%;
-                margin-left:-15px;
+                left: 50%;
+                margin-left: -15px;
+                border: 2px solid $checkout-progress-bar__active__background-color;
             }
 
             &:after { // Inner Circle
-                @include lib-css(background, $checkout-progress-bar-item__active__background-color);
-                @include lib-css(background-image, $checkout-progress-bar-item-element-inner__active__content);
                 @include lib-css(line-height, $checkout-progress-bar-item-element-inner__active__line-height);
                 @include lib-css(height, $checkout-progress-bar-item-element__active__after__height);
                 @include lib-css(width, $checkout-progress-bar-item-element__active__after__width);
                 @include lib-css(margin-left, $checkout-progress-bar-item-element__active__after__margin);
-                @include lib-typography(
-                        $_color       : $checkout-progress-bar-item-element-inner__color,
-                        $_font-family : $icons__font-name,
-                        $_font-style  : false,
-                        $_font-weight : $font-weight__semibold,
-                        $_line-height : false
-                );
-                border-radius: 50%;
-                content: '';
-                left:50%;
-                top:2px;
+                left: 50%;
+                top: 10px;
                 position: absolute;
-                background-position: center;
-                background-size: $checkout-progress-bar-item-element-inner__active__content_size $checkout-progress-bar-item-element-inner__active__content_size;
+
+                @include lib-typography(
+                    $_font-size   : $checkout-progress-bar-item-element-inner__active__font_size,
+                    $_color       : $checkout-progress-bar-item-element-inner__color,
+                    $_font-family : "Font Awesome\ 5 Free",
+                    $_font-style  : false,
+                    $_font-weight : $font-weight__semibold,
+                    $_line-height : $checkout-progress-bar-item-element-inner__active__line-height
+                );
+                content: '\f00c';
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                vertical-align: top;
+                display: inline-block;
+                overflow: hidden;
+                speak: none;
+                text-align: center;
+                transform: rotate(-12deg) skew(-10deg, 0deg) translateX(1px);
             }
         }
     }
