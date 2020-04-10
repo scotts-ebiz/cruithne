@@ -29,7 +29,7 @@ RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento
 
 
 # Set developer Mode if NOT in production or release-candidate or hotfixes
-RUN if [ "$BRANCH" != "master" ] && [ "$BRANCH" != "release-candidate" ] && [ "$BRANCH" != "hotfixes" ]; then bin/magento deploy:mode:set developer && bin/magento setup:config:set --enable-debug-logging=true && sed -i "s/display_errors.*/display_errors = on/" php.ini; fi
+RUN if [ "$BRANCH" != "master" ]; then bin/magento deploy:mode:set developer && bin/magento setup:config:set --enable-debug-logging=true && sed -i "s/display_errors.*/display_errors = on/" php.ini; fi
 
 # Temporary Patch for Inventory Management (Can remove after 2.3.4)
 COPY msi-numeric-skus.diff /tmp/msi-numeric-skus.diff
@@ -43,7 +43,7 @@ USER root
 # Expose Ports for Apache
 EXPOSE 80/tcp 443/tcp
 
-RUN find var pub/static pub/media app/etc -type f -exec chmod g+w {} + && find var pub/static pub/media app/etc -type d -exec chmod g+ws {} +
+RUN find var pub/static pub/media generated/ app/etc -type f -exec chmod g+w {} + && find var pub/static generated/ pub/media app/etc -type d -exec chmod g+ws {} +
 
 # Run entrypoint file
 COPY ondemand-entrypoint.sh /usr/local/bin/entrypoint.sh
