@@ -15,7 +15,6 @@ define([
             this.billing = ko.observable(config.billing);
             this.states = ko.observable(config.states);
             this.countries = ko.observable(config.countries);
-
             setTimeout( function() {
                 recurly.configure({
                     publicKey: config.recurlyApi,

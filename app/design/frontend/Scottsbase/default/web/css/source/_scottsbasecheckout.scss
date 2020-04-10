@@ -556,6 +556,60 @@
                 .payment-method [type="radio"]+label:after {
                     top: 4px;
                 }
+                [type="checkbox"] {
+                    opacity: 0;
+                    height: 0;
+                    width: 0;
+                    position: absolute;
+
+                    & + label {
+                        &:before {
+                            @include lib-typography(
+                                $_font-size   : 1.2rem,
+                                $_color       : $color-white,
+                                $_font-family : "Font Awesome\ 5 Free",
+                                $_font-style  : false,
+                                $_font-weight : $font-weight__semibold,
+                                $_line-height : 1.2rem
+                            );
+                            content: '';
+                            -webkit-font-smoothing: antialiased;
+                            -moz-osx-font-smoothing: grayscale;
+                            overflow: hidden;
+                            speak: none;
+                            text-align: center;
+                            position: absolute;
+                            top: 0.4rem;
+                            left: 0.2rem;
+                            z-index: 1;
+                            transform: rotate(-12deg) skew(-10deg, 0deg) scale(0.9,1);
+                            display: none;
+                        }
+                        &:after {
+                            content: '';
+                            display: inline-block;
+                            width: 1.2rem;
+                            height: 1.2rem;
+                            background: none;
+                            border: 2px solid $checkout-accent-color;
+                            position: absolute;
+                            top: 0.2rem;
+                            left: 0;
+                        }
+                        span {
+                            margin-left: 2.5rem;
+                        }
+                    }
+                    &:checked + label {
+                        &:before {
+                            content: '\f00c';
+                            display: inline-block;
+                        }
+                        &:after {
+                            background: $checkout-accent-color;
+                        }
+                    }
+                }
                 //Fieldset based styles
                 .fieldset>.field:not(.choice)>.control {
                     width: auto;
@@ -668,13 +722,7 @@
                         float: right;
                         width: 100%;
                         .action.primary.continue {
-                            color: #fff;
-                            padding: 10px 25px 10px 25px;
-                            display: inline-block;
-                            background: #075534;
-                            margin: 0;
-                            float: right;
-                            width: auto;
+                            @include cart-checkout-button();
                         }
                     }
                 }
