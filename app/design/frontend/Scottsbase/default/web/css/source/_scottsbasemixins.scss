@@ -188,6 +188,9 @@
     @if $_button-border-radius { border-radius: $_button-border-radius; };
     @if $_button-text-transform { text-transform: $_button-text-transform; };
     @if $_button-position { position: $_button-position; };
+    display: flex;
+    align-items: center;
+    justify-content: center;
     &:hover {
         @include cart-checkout-button-hover();
     }
