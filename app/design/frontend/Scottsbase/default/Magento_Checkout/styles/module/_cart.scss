@@ -311,7 +311,7 @@
                                                 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
                                                 text-decoration: underline;
                                                 text-align: left;
-                                                color: $checkout-green;
+                                                color: $checkout-accent-color;
                                                 font-size: 1.2rem;
                                                 margin-left: 0;
                                                 margin-top: 10px;
@@ -328,7 +328,7 @@
                                                     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
                                                     text-decoration: underline;
                                                     font-size: 1.2rem;
-                                                    color: $checkout-green;
+                                                    color: $checkout-accent-color;
                                                 }
                                             }
                                         }
@@ -652,7 +652,7 @@
 
     .items {
         thead + .item {
-            border-top: $border-width__base solid $border-color__base;
+            border-top: $border-width__thick solid $checkout-accent-color;
         }
 
         > .item {
