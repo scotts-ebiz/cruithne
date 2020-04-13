@@ -100,13 +100,25 @@
 
 
 //Cart & Checkout - Body Font
-@mixin cart-checkout-body-font($size: $font-size__base, $color: $color-black, $weight: false, $lh: 20px, $ls: false) {
-  font-family: $font-family__quaternary;
-  @if $size { font-size: $size; }
-  @if $color { color: $color; }
-  @if $weight { font-weight: $weight; }
-  @if $lh { line-height: $lh; }
-  @if $ls { letter-spacing: $ls; }
+@mixin cart-checkout-body-font($size: $font-size__base, $color: $color-black, $weight: 400, $lh: 20px, $ls: false) {
+    font-family: $font-family__quaternary;
+    @if $size { font-size: $size; }
+    @if $color { color: $color; }
+    @if $weight { font-weight: $weight; }
+    @if $lh { line-height: $lh; }
+    @if $ls { letter-spacing: $ls; }
+}
+
+
+//Cart & Checkout - Cross Sell Product Title Font
+@mixin cart-checkout-crossSell-productTitle-font() {
+    @include cart-checkout-body-font($size: $font-size__m, $weight: 700);
+}
+
+
+//Cart & Checkout - Cross Sell Price Font
+@mixin cart-checkout-crossSell-price-font() {
+  @include cart-checkout-body-font($size: $font-size__s, $weight: 700, $ls: 1px);
 }
 
 
@@ -163,6 +175,7 @@
     $_button-color                    : $cart-checkout-button__font-color,
     $_button-font-size                : $cart-checkout-button__font-size,
     $_button-border                   : $cart-checkout-button__border,
+    $_button-border-color             : $cart-checkout-button__border-color,
     $_button-width                    : $cart-checkout-button-l__width,
     $_button-height                   : $cart-checkout-button__height,
     $_button-padding                  : $cart-checkout-button__padding,
@@ -181,6 +194,7 @@
     @if $_button-color { color: $_button-color; };
     @if $_button-font-size { font-size: $_button-font-size; };
     @if $_button-border { border: $_button-border; };
+    @if $_button-border-color { border-color: $_button-border-color; };
     @if $_button-width { width: $_button-width; };
     @if $_button-height { height: $_button-height; };
     @if $_button-padding { padding: $_button-padding; };
@@ -188,6 +202,9 @@
     @if $_button-border-radius { border-radius: $_button-border-radius; };
     @if $_button-text-transform { text-transform: $_button-text-transform; };
     @if $_button-position { position: $_button-position; };
+    display: flex;
+    align-items: center;
+    justify-content: center;
     &:hover {
         @include cart-checkout-button-hover();
     }
@@ -198,12 +215,26 @@
 }
 
 
-// Small Button
-@mixin cart-checkout-button-s() {
-    @include cart-checkout-button($_button-width: $cart-checkout-button-s__width, $_button-height: 32px);
+// Cart / Checkout - Cross Sell Button
+@mixin cart-checkout-button-crossSell () {
+    @include cart-checkout-button(
+            $_button-width: $cart-checkout-button-crossSell__width,
+            $_button-border: $cart-checkout-button__crossSell-border,
+            $_button-border-color: $cart-checkout-button__crossSell-border-color,
+            $_button-background: $cart-checkout-button__crossSell-background-color,
+            $_button-color: $cart-checkout-button__crossSell-font-color,
+            $_button-font-weight: $cart-checkout-button__crossSell-font-weight
+    );
 }
 
 
+// Cart / Checkout - Small Button
+@mixin cart-checkout-button-s() {
+    @include cart-checkout-button($_button-width: $cart-checkout-button-s__width, $_button-height: $cart-checkout-button-s__height);
+}
+
+
+// Cart / Checkout - Disable Button
 @mixin cart-checkout-button-disabled($_button-disabled-opacity: $cart-checkout-button__disabled__opacity){
     @include cart-checkout-button(
             $_button-width                    : 313px,
