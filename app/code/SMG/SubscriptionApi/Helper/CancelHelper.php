@@ -3,6 +3,7 @@
 namespace SMG\SubscriptionApi\Helper;
 
 use Exception;
+use Magento\Catalog\Model\ProductRepository;
 use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
 use Magento\Customer\Model\Session as CustomerSession;
@@ -14,7 +15,7 @@ use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as Su
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrderItem\CollectionFactory as SubscriptionOrderItemCollectionFactory;
 use Zaius\Engage\Helper\Sdk as ZaiusSdk;
-
+use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use ZaiusSDK\ZaiusException;
 
 class CancelHelper extends AbstractHelper
@@ -59,6 +60,11 @@ class CancelHelper extends AbstractHelper
     protected $_productRepository;
 
     /**
+     * @var OrderCollectionFactory
+     */
+    protected $_orderCollectionFactory;
+
+    /**
      * CancelHelper constructor.
      * @param Context $context
      * @param AddressRepositoryInterface $addressRepository
@@ -67,6 +73,10 @@ class CancelHelper extends AbstractHelper
      * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
      * @param LoggerInterface $logger
      * @param ZaiusSdk $sdk
+     * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
+     * @param SubscriptionOrderItemCollectionFactory $subscriptionOrderItemCollectionFactory
+     * @param ProductRepository $productRepository
+     * @param OrderCollectionFactory $orderCollectionFactory
      */
     public function __construct(
         Context $context,
@@ -78,7 +88,8 @@ class CancelHelper extends AbstractHelper
         ZaiusSdk $sdk,
         SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
         SubscriptionOrderItemCollectionFactory $subscriptionOrderItemCollectionFactory,
-        \Magento\Catalog\Model\ProductRepository $productRepository
+        \Magento\Catalog\Model\ProductRepository $productRepository,
+        OrderCollectionFactory $orderCollectionFactory
     ) {
         parent::__construct($context);
 
@@ -91,6 +102,7 @@ class CancelHelper extends AbstractHelper
         $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
         $this->_subscriptionOrderItemCollectionFactory = $subscriptionOrderItemCollectionFactory;
         $this->_productRepository = $productRepository;
+        $this->_orderCollectionFactory = $orderCollectionFactory;
     }
 
     /**
@@ -128,6 +140,22 @@ class CancelHelper extends AbstractHelper
                 ->fetchItem();
 
             $subscription->cancel();
+
+            // Add cancellation comments to orders.
+            $subscriptionOrders = $this->_subscriptionOrderCollectionFactory->create();
+            $subscriptionOrders
+                ->addFieldToFilter('subscription_entity_id', $subscription->getId());
+            foreach ($subscriptionOrders as $subscriptionOrder) {
+                $orderId = $subscriptionOrder->getSalesOrderId();
+                $order = $this->_orderCollectionFactory
+                    ->create()
+                    ->addFieldToFilter('entity_id', $orderId)
+                    ->fetchItem();
+
+                $order->addCommentToStatusHistory('Subscription Canceled by Customer', false, false)
+                    ->save();
+            }
+
             $timestamp = strtotime(date("Y-m-d H:i:s"));
             $this->clearCustomerAddresses($customer);
 
