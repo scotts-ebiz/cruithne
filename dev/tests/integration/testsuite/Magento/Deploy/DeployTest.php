@@ -71,7 +71,6 @@ class DeployTest extends \PHPUnit\Framework\TestCase
     private $options = [
         Options::DRY_RUN => false,
         Options::NO_JAVASCRIPT => false,
-        Options::NO_JS_BUNDLE => false,
         Options::NO_CSS => false,
         Options::NO_LESS => false,
         Options::NO_IMAGES => false,
@@ -101,10 +100,9 @@ class DeployTest extends \PHPUnit\Framework\TestCase
         $this->rootDir = $this->filesystem->getDirectoryRead(DirectoryList::ROOT);
 
         $logger = $objectManager->get(\Psr\Log\LoggerInterface::class);
-        $this->deployService = $objectManager->create(
-            DeployStaticContent::class,
-            ['logger' => $logger]
-        );
+        $this->deployService = $objectManager->create(DeployStaticContent::class, [
+            'logger' => $logger
+        ]);
 
         $this->bundleConfig = $objectManager->create(BundleConfig::class);
         $this->config = $objectManager->create(View::class);

@@ -155,7 +155,7 @@ class AssertImportedProducts extends AbstractConstraint
      *      'type' => 'simple',
      *      'qty' => '100',
      *      'weight' => '30',
-     *      'url_key' => 'simple_url',
+     *      'url_key' => 'simple_url'б,
      *      'website_ids' => [
      *          '1'
      *      ]

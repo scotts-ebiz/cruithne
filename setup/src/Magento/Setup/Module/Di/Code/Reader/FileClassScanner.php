@@ -6,24 +6,8 @@
 
 namespace Magento\Setup\Module\Di\Code\Reader;
 
-/**
- * Class FileClassScanner
- *
- * @package Magento\Setup\Module\Di\Code\Reader
- */
 class FileClassScanner
 {
-    private const NAMESPACE_TOKENS = [
-        T_WHITESPACE => true,
-        T_STRING => true,
-        T_NS_SEPARATOR => true
-    ];
-
-    private const ALLOWED_OPEN_BRACES_TOKENS = [
-        T_CURLY_OPEN               => true,
-        T_DOLLAR_OPEN_CURLY_BRACES => true,
-        T_STRING_VARNAME           => true];
-
     /**
      * The filename of the file to introspect
      *
@@ -50,9 +34,7 @@ class FileClassScanner
      */
     public function __construct($filename)
     {
-        // phpcs:ignore
         $filename = realpath($filename);
-        // phpcs:ignore
         if (!file_exists($filename) || !\is_file($filename)) {
             throw new InvalidFileException(
                 sprintf(
@@ -71,14 +53,12 @@ class FileClassScanner
      */
     public function getFileContents()
     {
-        // phpcs:ignore
         return file_get_contents($this->filename);
     }
 
     /**
-     * Extracts the fully qualified class name from a file.
-     *
-     * It only searches for the first match and stops looking as soon as it enters the class definition itself.
+     * Extracts the fully qualified class name from a file.  It only searches for the first match and stops looking
+     * as soon as it enters the class definition itself.
      *
      * Warnings are suppressed for this method due to a micro-optimization that only really shows up when this logic
      * is called several millions of times, which can happen quite easily with even moderately sized codebases.
@@ -89,36 +69,35 @@ class FileClassScanner
      */
     private function extract()
     {
+        $allowedOpenBraces = [T_CURLY_OPEN, T_DOLLAR_OPEN_CURLY_BRACES, T_STRING_VARNAME];
         $classes = [];
-        $namespaceParts = [];
+        $namespace = '';
         $class = '';
         $triggerClass = false;
         $triggerNamespace = false;
         $braceLevel = 0;
         $bracedNamespace = false;
 
-        // phpcs:ignore
         $this->tokens = token_get_all($this->getFileContents());
         foreach ($this->tokens as $index => $token) {
-            $tokenIsArray = is_array($token);
             // Is either a literal brace or an interpolated brace with a variable
-            if ($token === '{' || ($tokenIsArray && isset(self::ALLOWED_OPEN_BRACES_TOKENS[$token[0]]))) {
+            if ($token == '{' || (is_array($token) && in_array($token[0], $allowedOpenBraces))) {
                 $braceLevel++;
-            } elseif ($token === '}') {
+            } else if ($token == '}') {
                 $braceLevel--;
             }
             // The namespace keyword was found in the last loop
             if ($triggerNamespace) {
                 // A string ; or a discovered namespace that looks like "namespace name { }"
-                if (!$tokenIsArray || ($namespaceParts && $token[0] === T_WHITESPACE)) {
+                if (!is_array($token) || ($namespace && $token[0] == T_WHITESPACE)) {
                     $triggerNamespace = false;
-                    $namespaceParts[] = '\\';
+                    $namespace .= '\\';
                     continue;
                 }
-                $namespaceParts[] = $token[1];
+                $namespace .= $token[1];
 
-            // The class keyword was found in the last loop
-            } elseif ($triggerClass && $token[0] === T_STRING) {
+                // The class keyword was found in the last loop
+            } else if ($triggerClass && $token[0] == T_STRING) {
                 $triggerClass = false;
                 $class = $token[1];
             }
@@ -127,7 +106,7 @@ class FileClassScanner
                 case T_NAMESPACE:
                     // Current loop contains the namespace keyword.  Between this and the semicolon is the namespace
                     $triggerNamespace = true;
-                    $namespaceParts = [];
+                    $namespace = '';
                     $bracedNamespace = $this->isBracedNamespace($index);
                     break;
                 case T_CLASS:
@@ -139,8 +118,9 @@ class FileClassScanner
             }
 
             // We have a class name, let's concatenate and store it!
-            if ($class !== '') {
-                $fqClassName = trim(join('', $namespaceParts)) . trim($class);
+            if ($class != '') {
+                $namespace = trim($namespace);
+                $fqClassName = $namespace . trim($class);
                 $classes[] = $fqClassName;
                 $class = '';
             }
@@ -159,15 +139,15 @@ class FileClassScanner
         $len = count($this->tokens);
         while ($index++ < $len) {
             if (!is_array($this->tokens[$index])) {
-                if ($this->tokens[$index] === ';') {
+                if ($this->tokens[$index] == ';') {
                     return false;
-                } elseif ($this->tokens[$index] === '{') {
+                } else if ($this->tokens[$index] == '{') {
                     return true;
                 }
                 continue;
             }
 
-            if (!isset(self::NAMESPACE_TOKENS[$this->tokens[$index][0]])) {
+            if (!in_array($this->tokens[$index][0], [T_WHITESPACE, T_STRING, T_NS_SEPARATOR])) {
                 throw new InvalidFileException('Namespace not defined properly');
             }
         }
@@ -175,9 +155,8 @@ class FileClassScanner
     }
 
     /**
-     * Retrieves the first class found in a class file.
-     *
-     * The return value is in an array format so it retains the same usage as the FileScanner.
+     * Retrieves the first class found in a class file.  The return value is in an array format so it retains the
+     * same usage as the FileScanner.
      *
      * @return array
      */

@@ -17,10 +17,9 @@ $attributeCollection->setFrontendInputTypeFilter('media_image');
 $attributeCollection->setCodeFilter('funny_image');
 $attributeCollection->setEntityTypeFilter($entityType->getId());
 $attributeCollection->setPageSize(1);
-$attribute = $attributeCollection->getFirstItem();
-if ($attribute->getId()) {
-    $attribute->delete();
-}
+$attributeCollection->load();
+$attribute = $attributeCollection->fetchItem();
+$attribute->delete();
 
 // remove attribute set
 
@@ -32,9 +31,8 @@ $attributeSetCollection->addFilter('attribute_set_name', 'attribute_set_with_med
 $attributeSetCollection->addFilter('entity_type_id', $entityType->getId());
 $attributeSetCollection->setOrder('attribute_set_id'); // descending is default value
 $attributeSetCollection->setPageSize(1);
+$attributeSetCollection->load();
 
 /** @var \Magento\Eav\Model\Entity\Attribute\Set $attributeSet */
-$attributeSet = $attributeSetCollection->getFirstItem();
-if ($attributeSet->getId()) {
-    $attributeSet->delete();
-}
+$attributeSet = $attributeSetCollection->fetchItem();
+$attributeSet->delete();

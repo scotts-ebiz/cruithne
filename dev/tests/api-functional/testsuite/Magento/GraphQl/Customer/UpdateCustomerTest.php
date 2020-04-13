@@ -69,7 +69,7 @@ mutation {
             middlename: "{$newMiddlename}"
             lastname: "{$newLastname}"
             suffix: "{$newSuffix}"
-            date_of_birth: "{$newDob}"
+            dob: "{$newDob}"
             taxvat: "{$newTaxVat}"
             email: "{$newEmail}"
             password: "{$currentPassword}"
@@ -82,7 +82,7 @@ mutation {
             middlename
             lastname
             suffix
-            date_of_birth
+            dob
             taxvat
             email
             gender
@@ -102,7 +102,7 @@ QUERY;
         $this->assertEquals($newMiddlename, $response['updateCustomer']['customer']['middlename']);
         $this->assertEquals($newLastname, $response['updateCustomer']['customer']['lastname']);
         $this->assertEquals($newSuffix, $response['updateCustomer']['customer']['suffix']);
-        $this->assertEquals($newDob, $response['updateCustomer']['customer']['date_of_birth']);
+        $this->assertEquals($newDob, $response['updateCustomer']['customer']['dob']);
         $this->assertEquals($newTaxVat, $response['updateCustomer']['customer']['taxvat']);
         $this->assertEquals($newEmail, $response['updateCustomer']['customer']['email']);
         $this->assertEquals($newGender, $response['updateCustomer']['customer']['gender']);
@@ -253,8 +253,6 @@ QUERY;
         $currentEmail = 'customer@example.com';
         $currentPassword = 'password';
         $existedEmail = 'customer_two@example.com';
-        $firstname = 'Richard';
-        $lastname = 'Rowe';
 
         $query = <<<QUERY
 mutation {
@@ -262,40 +260,10 @@ mutation {
         input: {
             email: "{$existedEmail}"
             password: "{$currentPassword}"
-            firstname: "{$firstname}"
-            lastname: "{$lastname}"
         }
     ) {
         customer {
             firstname
-        }
-    }
-}
-QUERY;
-        $this->graphQlMutation($query, [], '', $this->getCustomerAuthHeaders($currentEmail, $currentPassword));
-    }
-
-    /**
-     * @magentoApiDataFixture Magento/Customer/_files/customer.php
-     * @expectedException \Exception
-     * @expectedExceptionMessage Required parameters are missing: First Name
-     */
-    public function testEmptyCustomerName()
-    {
-        $currentEmail = 'customer@example.com';
-        $currentPassword = 'password';
-
-        $query = <<<QUERY
-mutation {
-    updateCustomer(
-        input: {
-            email: "{$currentEmail}"
-            password: "{$currentPassword}"
-            firstname: ""
-        }
-    ) {
-        customer {
-            email
         }
     }
 }

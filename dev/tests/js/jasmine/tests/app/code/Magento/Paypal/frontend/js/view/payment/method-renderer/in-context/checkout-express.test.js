@@ -35,8 +35,7 @@ define([
         beforeAll(function (done) {
             window.checkoutConfig = {
                 quoteData: {
-                    /* jscs:disable requireCamelCaseOrUpperCaseIdentifiers */
-                    entity_Id: 1
+                    entityId: 1
                 },
                 formKey: 'formKey'
             };

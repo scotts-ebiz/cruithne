@@ -151,14 +151,7 @@ class SetPaymentMethodTest extends GraphQlAbstract
         $maskedQuoteId = $this->getMaskedQuoteIdByReservedOrderId->execute($reservedOrderId);
 
         $setPaymentQuery = $this->getSetPaymentBraintreeQueryInvalidMethodInput($maskedQuoteId);
-
-        $this->expectExceptionMessage(
-            'Field BraintreeInput.is_active_payment_token_enabler of required type Boolean! was not provided'
-        );
-        $this->expectExceptionMessage(
-            'Field BraintreeInput.payment_method_nonce of required type String! was not provided.'
-        );
-
+        $this->expectExceptionMessage("for \"braintree\" is missing.");
         $this->graphQlMutation($setPaymentQuery);
     }
 
@@ -166,8 +159,8 @@ class SetPaymentMethodTest extends GraphQlAbstract
     {
         self::assertArrayHasKey('placeOrder', $response);
         self::assertArrayHasKey('order', $response['placeOrder']);
-        self::assertArrayHasKey('order_number', $response['placeOrder']['order']);
-        self::assertEquals($reservedOrderId, $response['placeOrder']['order']['order_number']);
+        self::assertArrayHasKey('order_id', $response['placeOrder']['order']);
+        self::assertEquals($reservedOrderId, $response['placeOrder']['order']['order_id']);
     }
 
     private function assertSetPaymentMethodResponse(array $response, string $methodCode): void
@@ -266,7 +259,7 @@ QUERY;
 mutation {
   placeOrder(input: {cart_id: "{$maskedQuoteId}"}) {
     order {
-      order_number
+      order_id
     }
   }
 }

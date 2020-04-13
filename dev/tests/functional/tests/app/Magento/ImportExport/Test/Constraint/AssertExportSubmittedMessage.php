@@ -16,8 +16,7 @@ class AssertExportSubmittedMessage extends AbstractConstraint
     /**
      * Text value to be checked.
      */
-    const MESSAGE = 'Message is added to queue, wait to get your file soon.'
-        . ' Make sure your cron job is running to export the file';
+    const MESSAGE = 'Message is added to queue, wait to get your file soon';
 
     /**
      * Assert that export submitted message is visible after exporting.

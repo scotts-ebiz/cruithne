@@ -49,12 +49,12 @@ mutation {
             company: "test company"
             street: ["test street 1", "test street 2"]
             city: "test city"
-            region: "AL"
+            region: "test region"
             postcode: "887766"
             country_code: "US"
             telephone: "88776655"
+            save_in_address_book: false
           }
-          customer_notes: "Test note"
         }
       ]
     }
@@ -73,7 +73,6 @@ mutation {
           label
         }
         __typename
-        customer_notes
       }
     }
   }
@@ -113,10 +112,11 @@ mutation {
             company: "test company"
             street: ["test street 1", "test street 2"]
             city: "test city"
-            region: "AL"
+            region: "test region"
             postcode: "887766"
             country_code: "US"
             telephone: "88776655"
+            save_in_address_book: false
           }
         }
       ]
@@ -264,10 +264,11 @@ mutation {
             company: "test company"
             street: ["test street 1", "test street 2", "test street 3"]
             city: "test city"
-            region: "AL"
+            region: "test region"
             postcode: "887766"
             country_code: "US"
             telephone: "88776655"
+            save_in_address_book: false
           }
         }
       ]
@@ -302,7 +303,7 @@ QUERY;
             ],
             'missed_cart_id' => [
                 'shipping_addresses: {}',
-                'Field SetShippingAddressesOnCartInput.cart_id of required type String! was not provided.'
+                'Required parameter "cart_id" is missing'
             ]
         ];
     }
@@ -332,10 +333,11 @@ mutation {
             company: "test company"
             street: ["test street 1", "test street 2"]
             city: "test city"
-            region: "AL"
+            region: "test region"
             postcode: "887766"
             country_code: "US"
             telephone: "88776655"
+            save_in_address_book: false
           }
         },
         {
@@ -345,10 +347,11 @@ mutation {
             company: "test company 2"
             street: ["test street 1", "test street 2"]
             city: "test city"
-            region: "AL"
+            region: "test region"
             postcode: "887766"
             country_code: "US"
             telephone: "88776655"
+            save_in_address_book: false
           }
         }
       ]
@@ -384,10 +387,11 @@ mutation {
           company: "test company"
           street: ["test street 1", "test street 2"]
           city: "test city"
-          region: "AL"
+          region: "test region"
           postcode: "887766"
           country_code: "US"
           telephone: "88776655"
+          save_in_address_book: false
         }
       }
     }
@@ -523,8 +527,7 @@ QUERY;
             ['response_field' => 'postcode', 'expected_value' => '887766'],
             ['response_field' => 'telephone', 'expected_value' => '88776655'],
             ['response_field' => 'country', 'expected_value' => ['code' => 'US', 'label' => 'US']],
-            ['response_field' => '__typename', 'expected_value' => 'ShippingCartAddress'],
-            ['response_field' => 'customer_notes', 'expected_value' => 'Test note']
+            ['response_field' => '__typename', 'expected_value' => 'ShippingCartAddress']
         ];
 
         $this->assertResponseFields($shippingAddressResponse, $assertionMap);

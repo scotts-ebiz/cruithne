@@ -112,7 +112,7 @@ mutation {
       }
       placeOrder(input: {cart_id: "{$cartId}"}) {
         order {
-          order_number
+          order_id
         }
       }
 }
@@ -191,11 +191,11 @@ QUERY;
         );
 
         $this->assertTrue(
-            isset($responseData['data']['placeOrder']['order']['order_number'])
+            isset($responseData['data']['placeOrder']['order']['order_id'])
         );
         $this->assertEquals(
             'test_quote',
-            $responseData['data']['placeOrder']['order']['order_number']
+            $responseData['data']['placeOrder']['order']['order_id']
         );
     }
 

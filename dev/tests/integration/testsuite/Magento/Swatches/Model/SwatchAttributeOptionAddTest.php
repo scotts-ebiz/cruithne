@@ -36,7 +36,7 @@ class SwatchAttributeOptionAddTest extends \PHPUnit\Framework\TestCase
         $attribute = $this->objectManager
             ->create(\Magento\Catalog\Model\ResourceModel\Eav\Attribute::class)
             ->load('color_swatch', 'attribute_code');
-        $optionsPerAttribute = 4;
+        $optionsPerAttribute = 3;
 
         $data['options']['option'] = array_reduce(
             range(10, $optionsPerAttribute),

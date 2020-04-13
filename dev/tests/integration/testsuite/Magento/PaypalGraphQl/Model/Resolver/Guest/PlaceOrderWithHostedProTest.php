@@ -115,7 +115,7 @@ class PlaceOrderWithHostedProTest extends TestCase
   }
     placeOrder(input: {cart_id: "$cartId"}) {
       order {
-        order_number
+        order_id
       }
     }
 }
@@ -140,11 +140,11 @@ QUERY;
             $responseData['data']['setPaymentMethodOnCart']['cart']['selected_payment_method']['code']
         );
         $this->assertTrue(
-            isset($responseData['data']['placeOrder']['order']['order_number'])
+            isset($responseData['data']['placeOrder']['order']['order_id'])
         );
         $this->assertEquals(
             'test_quote',
-            $responseData['data']['placeOrder']['order']['order_number']
+            $responseData['data']['placeOrder']['order']['order_id']
         );
     }
 
@@ -189,7 +189,7 @@ QUERY;
   }
     placeOrder(input: {cart_id: "$cartId"}) {
       order {
-        order_number
+        order_id
       }
     }
 }
@@ -206,7 +206,7 @@ QUERY;
         $this->assertArrayHasKey('errors', $responseData);
         $actualError = $responseData['errors'][0];
         $this->assertEquals($expectedExceptionMessage, $actualError['message']);
-        $this->assertEquals(GraphQlInputException::EXCEPTION_CATEGORY, $actualError['extensions']['category']);
+        $this->assertEquals(GraphQlInputException::EXCEPTION_CATEGORY, $actualError['category']);
     }
 
     /**
@@ -258,6 +258,6 @@ QUERY;
         $this->assertArrayHasKey('errors', $responseData);
         $actualError = $responseData['errors'][0];
         $this->assertEquals($expectedExceptionMessage, $actualError['message']);
-        $this->assertEquals(GraphQlInputException::EXCEPTION_CATEGORY, $actualError['extensions']['category']);
+        $this->assertEquals(GraphQlInputException::EXCEPTION_CATEGORY, $actualError['category']);
     }
 }

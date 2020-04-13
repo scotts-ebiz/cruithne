@@ -8,7 +8,7 @@ declare(strict_types=1);
 
 namespace Magento\WebapiAsync\Model;
 
-use Magento\Catalog\Api\Data\ProductInterface as Product;
+use Magento\Catalog\Api\Data\ProductInterface;
 use Magento\TestFramework\MessageQueue\PreconditionFailedException;
 use Magento\TestFramework\MessageQueue\PublisherConsumerController;
 use Magento\TestFramework\MessageQueue\EnvironmentPreconditionException;
@@ -19,6 +19,7 @@ use Magento\Framework\Phrase;
 use Magento\Framework\Registry;
 use Magento\Framework\Webapi\Exception;
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Catalog\Api\Data\ProductInterface as Product;
 use Magento\Framework\ObjectManagerInterface;
 use Magento\Store\Model\Store;
 use Magento\Framework\Webapi\Rest\Request;
@@ -127,13 +128,6 @@ class AsyncScheduleMultiStoreTest extends WebapiAbstract
      */
     public function testAsyncScheduleBulkMultistore($storeCode)
     {
-        if ($storeCode === self::STORE_CODE_FROM_FIXTURE) {
-            /** @var \Magento\Config\Model\Config $config */
-            $config = Bootstrap::getObjectManager()->get(\Magento\Config\Model\Config::class);
-            if (strpos($config->getConfigDataValue('catalog/search/engine'), 'elasticsearch') !== false) {
-                $this->markTestSkipped('MC-20452');
-            }
-        }
         $product = $this->getProductData();
         $this->_markTestAsRestOnly();
 
@@ -249,6 +243,7 @@ class AsyncScheduleMultiStoreTest extends WebapiAbstract
             foreach ($this->skus as $sku) {
                 $this->productRepository->deleteById($sku);
             }
+        // phpcs:ignore Magento2.Exceptions.ThrowCatch
         } catch (\Exception $e) {
             throw $e;
             //nothing to delete
@@ -283,9 +278,9 @@ class AsyncScheduleMultiStoreTest extends WebapiAbstract
             'product' =>
                 $productBuilder(
                     [
-                        Product::TYPE_ID => 'simple',
-                        Product::SKU => 'multistore-sku-test-1',
-                        Product::NAME => 'Test Name ',
+                        ProductInterface::TYPE_ID => 'simple',
+                        ProductInterface::SKU => 'multistore-sku-test-1',
+                        ProductInterface::NAME => 'Test Name ',
                     ]
                 ),
         ];
@@ -309,16 +304,16 @@ class AsyncScheduleMultiStoreTest extends WebapiAbstract
     private function getSimpleProductData($productData = [])
     {
         return [
-            Product::SKU => isset($productData[Product::SKU])
-                ? $productData[Product::SKU] : uniqid('sku-', true),
-            Product::NAME => isset($productData[Product::NAME])
-                ? $productData[Product::NAME] : uniqid('sku-', true),
-            Product::VISIBILITY => 4,
-            Product::TYPE_ID => 'simple',
-            Product::PRICE => 3.62,
-            Product::STATUS => 1,
-            Product::TYPE_ID => 'simple',
-            Product::ATTRIBUTE_SET_ID => 4,
+            ProductInterface::SKU => isset($productData[ProductInterface::SKU])
+                ? $productData[ProductInterface::SKU] : uniqid('sku-', true),
+            ProductInterface::NAME => isset($productData[ProductInterface::NAME])
+                ? $productData[ProductInterface::NAME] : uniqid('sku-', true),
+            ProductInterface::VISIBILITY => 4,
+            ProductInterface::TYPE_ID => 'simple',
+            ProductInterface::PRICE => 3.62,
+            ProductInterface::STATUS => 1,
+            ProductInterface::TYPE_ID => 'simple',
+            ProductInterface::ATTRIBUTE_SET_ID => 4,
         ];
     }
 

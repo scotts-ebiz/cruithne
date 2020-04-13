@@ -56,7 +56,7 @@ $quote->setIsMultiShipping('1');
 $quote->collectTotals();
 
 $quoteRepository = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
-    ->get(\Magento\Quote\Api\CartRepositoryInterface::class);
+    ->create(\Magento\Quote\Api\CartRepositoryInterface::class);
 $quoteRepository->save($quote);
 
 /** @var \Magento\Quote\Model\QuoteIdMask $quoteIdMask */
