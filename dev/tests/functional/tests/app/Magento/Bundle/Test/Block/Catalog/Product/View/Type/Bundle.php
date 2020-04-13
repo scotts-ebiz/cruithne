@@ -311,7 +311,7 @@ class Bundle extends Block
     {
         foreach ($bundleOptions as $option) {
             $selector = sprintf($this->bundleOptionBlock, $option['title']);
-            $useDefault = isset($option['use_default']) && strtolower($option['use_default']) == 'true';
+            $useDefault = isset($option['use_default']) && strtolower($option['use_default']) == 'true' ? true : false;
             if (!$useDefault) {
                 /** @var Option $optionBlock */
                 $optionBlock = $this->blockFactory->create(

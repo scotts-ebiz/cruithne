@@ -52,6 +52,7 @@
 }
 
 .translate-dialog .ui-dialog-buttonset {
+    padding-right: 0;
     margin-right: 0;
     float: right;
     background: rgba(223, 243, 250, 1.0);

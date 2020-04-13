@@ -15,7 +15,6 @@ class ProductsViewedTest extends \Magento\TestFramework\TestCase\AbstractBackend
     /**
      * @magentoAppArea adminhtml
      * @magentoDataFixture Magento/Reports/_files/viewed_products.php
-     * @magentoConfigFixture default/reports/options/enabled 1
      */
     public function testExecute()
     {

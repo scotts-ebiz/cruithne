@@ -278,6 +278,7 @@ class CheckoutTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue((bool)$shippingAddress->getSameAsBilling());
         $this->assertNull($shippingAddress->getPrefix());
         $this->assertNull($shippingAddress->getMiddlename());
+        $this->assertNull($shippingAddress->getLastname());
         $this->assertNull($shippingAddress->getSuffix());
         $this->assertTrue($shippingAddress->getShouldIgnoreValidation());
         $this->assertContains('exported', $shippingAddress->getFirstname());

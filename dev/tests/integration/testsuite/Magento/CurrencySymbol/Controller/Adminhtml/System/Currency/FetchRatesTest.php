@@ -6,30 +6,11 @@
 
 namespace Magento\CurrencySymbol\Controller\Adminhtml\System\Currency;
 
-use Magento\Framework\Escaper;
-
 /**
  * Fetch Rates Test
  */
 class FetchRatesTest extends \Magento\TestFramework\TestCase\AbstractBackendController
 {
-    /**
-     * @var Escaper
-     */
-    private $escaper;
-
-    /**
-     * Initial setup
-     */
-    protected function setUp()
-    {
-        $this->escaper = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
-            Escaper::class
-        );
-
-        parent::setUp();
-    }
-
     /**
      * Test fetch action without service
      *
@@ -65,11 +46,7 @@ class FetchRatesTest extends \Magento\TestFramework\TestCase\AbstractBackendCont
         $this->dispatch('backend/admin/system_currency/fetchRates');
 
         $this->assertSessionMessages(
-            $this->contains(
-                $this->escaper->escapeHtml(
-                    "The import model can't be initialized. Verify the model and try again."
-                )
-            ),
+            $this->contains("The import model can't be initialized. Verify the model and try again."),
             \Magento\Framework\Message\MessageInterface::TYPE_ERROR
         );
     }

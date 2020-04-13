@@ -3,22 +3,15 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
 namespace Magento\CurrencySymbol\Controller\Adminhtml\System\Currency;
 
 use Magento\Framework\App\Request\Http as HttpRequest;
-use Magento\Framework\Escaper;
 
 class SaveRatesTest extends \Magento\TestFramework\TestCase\AbstractBackendController
 {
 
     /** @var \Magento\Directory\Model\Currency $currencyRate */
     protected $currencyRate;
-
-    /**
-     * @var Escaper
-     */
-    private $escaper;
 
     /**
      * Initial setup
@@ -28,10 +21,6 @@ class SaveRatesTest extends \Magento\TestFramework\TestCase\AbstractBackendContr
         $this->currencyRate = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
             \Magento\Directory\Model\Currency::class
         );
-        $this->escaper = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
-            Escaper::class
-        );
-
         parent::setUp();
     }
 
@@ -100,9 +89,7 @@ class SaveRatesTest extends \Magento\TestFramework\TestCase\AbstractBackendContr
 
         $this->assertSessionMessages(
             $this->contains(
-                $this->escaper->escapeHtml(
-                    (string)__('Please correct the input data for "%1 => %2" rate.', $currencyCode, $currencyTo)
-                )
+                (string)__('Please correct the input data for "%1 => %2" rate.', $currencyCode, $currencyTo)
             ),
             \Magento\Framework\Message\MessageInterface::TYPE_WARNING
         );

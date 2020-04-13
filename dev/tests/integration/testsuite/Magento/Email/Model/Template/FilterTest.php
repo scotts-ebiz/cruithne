@@ -9,7 +9,6 @@ use Magento\Framework\App\Area;
 use Magento\Framework\App\State;
 use Magento\Framework\App\TemplateTypesInterface;
 use Magento\Framework\Phrase;
-use Magento\Framework\View\Asset\ContentProcessorInterface;
 use Magento\Setup\Module\I18n\Locale;
 use Magento\Theme\Block\Html\Footer;
 
@@ -330,7 +329,7 @@ class FilterTest extends \PHPUnit\Framework\TestCase
             'Empty or missing file' => [
                 TemplateTypesInterface::TYPE_HTML,
                 'file="css/non-existent-file.css"',
-                '/*' . PHP_EOL . ContentProcessorInterface::ERROR_MESSAGE_PREFIX . 'LESS file is empty: ',
+                '/* Contents of the specified CSS file could not be loaded or is empty */'
             ],
             'File with compilation error results in error message' => [
                 TemplateTypesInterface::TYPE_HTML,

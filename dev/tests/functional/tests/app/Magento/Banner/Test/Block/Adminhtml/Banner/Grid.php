@@ -37,6 +37,10 @@ class Grid extends AbstractGrid
         'banner' => [
             'selector' => 'input[name="banner_name"]',
         ],
+        'visibility' => [
+            'selector' => 'select[name="visible_in"]',
+            'input' => 'selectstore',
+        ],
         'active' => [
             'selector' => 'select[name="banner_is_enabled"]',
             'input' => 'select',

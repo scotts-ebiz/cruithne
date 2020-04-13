@@ -11,11 +11,6 @@ use Magento\Framework\ObjectManager\Code\Generator\Factory as FactoryGenerator;
 use Magento\Setup\Module\Di\Compiler\Log\Log;
 use \Magento\Framework\Reflection\TypeProcessor;
 
-/**
- * Class PhpScanner
- *
- * @package Magento\Setup\Module\Di\Code\Scanner
- */
 class PhpScanner implements ScannerInterface
 {
     /**
@@ -172,51 +167,48 @@ class PhpScanner implements ScannerInterface
      *
      * @param array $files
      * @return array
-     * @throws \ReflectionException
      */
     public function collectEntities(array $files)
     {
-        $output = [[]];
+        $output = [];
         foreach ($files as $file) {
             $classes = $this->_getDeclaredClasses($file);
             foreach ($classes as $className) {
                 $reflectionClass = new \ReflectionClass($className);
-                $output [] = $this->_fetchFactories($reflectionClass, $file);
-                $output [] = $this->_fetchMissingExtensionAttributesClasses($reflectionClass, $file);
+                $output = array_merge(
+                    $output,
+                    $this->_fetchFactories($reflectionClass, $file),
+                    $this->_fetchMissingExtensionAttributesClasses($reflectionClass, $file)
+                );
             }
         }
-        return array_unique(array_merge(...$output));
+        return array_unique($output);
     }
 
     /**
-     * Fetch namespaces from tokenized PHP file
-     *
-     * @param int $tokenIterator
-     * @param int $count
-     * @param array $tokens
+     * @param $tokenIterator int
+     * @param $count int
+     * @param $tokens array
      * @return string
      */
     protected function _fetchNamespace($tokenIterator, $count, $tokens)
     {
-        $namespaceParts = [];
+        $namespace = '';
         for ($tokenOffset = $tokenIterator + 1; $tokenOffset < $count; ++$tokenOffset) {
             if ($tokens[$tokenOffset][0] === T_STRING) {
-                $namespaceParts[] = "\\";
-                $namespaceParts[] = $tokens[$tokenOffset][1];
+                $namespace .= "\\" . $tokens[$tokenOffset][1];
             } elseif ($tokens[$tokenOffset] === '{' || $tokens[$tokenOffset] === ';') {
                 break;
             }
         }
-        return join('', $namespaceParts);
+        return $namespace;
     }
 
     /**
-     * Fetch class names from tokenized PHP file
-     *
-     * @param string $namespace
-     * @param int $tokenIterator
-     * @param int $count
-     * @param array $tokens
+     * @param $namespace string
+     * @param $tokenIterator int
+     * @param $count int
+     * @param $tokens array
      * @return array
      */
     protected function _fetchClasses($namespace, $tokenIterator, $count, $tokens)
@@ -238,24 +230,23 @@ class PhpScanner implements ScannerInterface
      */
     protected function _getDeclaredClasses($file)
     {
-        $classes = [[]];
-        $namespaceParts = [];
-        // phpcs:ignore
+        $classes = [];
+        $namespace = '';
         $tokens = token_get_all(file_get_contents($file));
         $count = count($tokens);
 
         for ($tokenIterator = 0; $tokenIterator < $count; $tokenIterator++) {
             if ($tokens[$tokenIterator][0] == T_NAMESPACE) {
-                $namespaceParts[] = $this->_fetchNamespace($tokenIterator, $count, $tokens);
+                $namespace .= $this->_fetchNamespace($tokenIterator, $count, $tokens);
             }
 
             if (($tokens[$tokenIterator][0] == T_CLASS || $tokens[$tokenIterator][0] == T_INTERFACE)
                 && $tokens[$tokenIterator - 1][0] != T_DOUBLE_COLON
             ) {
-                $classes[] = $this->_fetchClasses(join('', $namespaceParts), $tokenIterator, $count, $tokens);
+                $classes = array_merge($classes, $this->_fetchClasses($namespace, $tokenIterator, $count, $tokens));
             }
         }
-        return array_unique(array_merge(...$classes));
+        return array_unique($classes);
     }
 
     /**
@@ -272,7 +263,7 @@ class PhpScanner implements ScannerInterface
             if (class_exists($missingClassName)) {
                 return false;
             }
-        } catch (\RuntimeException $e) { //phpcs:ignore
+        } catch (\RuntimeException $e) {
         }
         $sourceClassName = $this->getSourceClassName($missingClassName, $entityType);
         if (!class_exists($sourceClassName) && !interface_exists($sourceClassName)) {

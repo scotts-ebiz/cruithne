@@ -8,9 +8,6 @@ namespace Magento\Setup\Console;
 
 use Symfony\Component\Console\Exception\RuntimeException;
 
-/**
- * Input validation exception.
- */
 class InputValidationException extends RuntimeException
 {
 

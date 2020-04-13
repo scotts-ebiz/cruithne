@@ -8,21 +8,8 @@ namespace Magento\Setup\Module\Di\Compiler\Config\Chain;
 
 use Magento\Setup\Module\Di\Compiler\Config\ModificationInterface;
 
-/**
- * Class PreferencesResolving
- *
- * @package Magento\Setup\Module\Di\Compiler\Config\Chain
- */
 class PreferencesResolving implements ModificationInterface
 {
-    /**
-     * Argument keys which require recursive resolving
-     */
-    private const RECURSIVE_ARGUMENT_KEYS = [
-        '_i_' => true, // shared instance of a class or interface
-        '_ins_' => true // non-shared instance of a class or interface
-    ];
-
     /**
      * Modifies input config
      *
@@ -45,6 +32,7 @@ class PreferencesResolving implements ModificationInterface
      *
      * @param array $argument
      * @param array $preferences
+     * @return array
      */
     private function resolvePreferences(&$argument, &$preferences)
     {
@@ -53,12 +41,14 @@ class PreferencesResolving implements ModificationInterface
         }
 
         foreach ($argument as $key => &$value) {
-            if (isset(self::RECURSIVE_ARGUMENT_KEYS[$key])) {
+            if (in_array($key, ['_i_', '_ins_'], true)) {
                 $value = $this->resolvePreferenceRecursive($value, $preferences);
                 continue;
             }
 
-            $this->resolvePreferences($value, $preferences);
+            if (is_array($value)) {
+                $this->resolvePreferences($value, $preferences);
+            }
         }
     }
 

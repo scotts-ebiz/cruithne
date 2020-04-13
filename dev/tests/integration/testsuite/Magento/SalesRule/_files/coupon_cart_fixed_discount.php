@@ -37,11 +37,6 @@ $salesRule->setData(
         'website_ids' => [
             $objectManager->get(StoreManagerInterface::class)->getWebsite()->getId(),
         ],
-        'store_labels' => [
-
-            'store_id' => 0,
-            'store_label' => 'TestRule_Coupon',
-        ]
     ]
 );
 $objectManager->get(\Magento\SalesRule\Model\ResourceModel\Rule::class)->save($salesRule);

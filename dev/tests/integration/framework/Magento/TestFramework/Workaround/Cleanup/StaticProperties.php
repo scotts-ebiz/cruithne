@@ -9,15 +9,9 @@
  */
 namespace Magento\TestFramework\Workaround\Cleanup;
 
-use Magento\Framework\App\CacheInterface;
 use Magento\Framework\App\Utility\Files;
 use Magento\Framework\Component\ComponentRegistrar;
-use Magento\Framework\Serialize\SerializerInterface;
-use Magento\TestFramework\Helper\Bootstrap;
 
-/**
- * Resets static properties of classes before each test run
- */
 class StaticProperties
 {
     /**
@@ -48,8 +42,6 @@ class StaticProperties
         \Magento\Framework\Phrase::class,
     ];
 
-    private const CACHE_NAME = 'integration_test_static_properties';
-
     /**
      * Constructor
      */
@@ -75,7 +67,6 @@ class StaticProperties
      *
      * @param \ReflectionClass $reflectionClass
      * @return bool
-     * phpcs:disable Magento2.Functions.StaticFunction
      */
     protected static function _isClassCleanable(\ReflectionClass $reflectionClass)
     {
@@ -97,7 +88,6 @@ class StaticProperties
      *
      * @param string $classFile
      * @return bool
-     * phpcs:disable Magento2.Functions.StaticFunction
      */
     protected static function _isClassInCleanableFolders($classFile)
     {
@@ -122,11 +112,8 @@ class StaticProperties
     protected static $classes = [];
 
     /**
-     * Create a reflection class from the provided class
-     *
      * @param string $class
      * @return \ReflectionClass
-     * phpcs:disable Magento2.Functions.StaticFunction
      */
     private static function getReflectionClass($class)
     {
@@ -138,9 +125,7 @@ class StaticProperties
 
     /**
      * Restore static variables (after running controller test case)
-     *
      * @TODO: refactor all code where objects are stored to static variables to use object manager instead
-     * phpcs:ignore Magento2.Functions.StaticFunction
      */
     public static function restoreStaticVariables()
     {
@@ -157,27 +142,12 @@ class StaticProperties
     /**
      * Backup static variables
      *
-     * @SuppressWarnings(PHPMD.CyclomaticComplexity)
-     * phpcs:disable Magento2.Functions.StaticFunction
      */
     public static function backupStaticVariables()
     {
         if (count(self::$backupStaticVariables) > 0) {
             return;
         }
-
-        $objectManager = Bootstrap::getInstance()->getObjectManager();
-        $cache = $objectManager->get(CacheInterface::class);
-        $serializer = $objectManager->get(SerializerInterface::class);
-        $cachedProperties = $cache->load(self::CACHE_NAME);
-
-        if ($cachedProperties) {
-            self::$backupStaticVariables = $serializer->unserialize($cachedProperties);
-            return;
-        }
-
-        unset($cachedProperties, $objectManager);
-
         $classFiles = array_filter(
             Files::init()->getPhpFiles(
                 Files::INCLUDE_APP_CODE
@@ -186,14 +156,12 @@ class StaticProperties
             ),
             function ($classFile) {
                 return StaticProperties::_isClassInCleanableFolders($classFile)
-                // phpcs:ignore Magento2.Functions.DiscouragedFunction
                 && strpos(file_get_contents($classFile), ' static ')  > 0;
             }
         );
         $namespacePattern = '/namespace [a-zA-Z0-9\\\\]+;/';
         $classPattern = '/\nclass [a-zA-Z0-9_]+/';
         foreach ($classFiles as $classFile) {
-            // phpcs:ignore Magento2.Functions.DiscouragedFunction
             $code = file_get_contents($classFile);
             preg_match($namespacePattern, $code, $namespace);
             preg_match($classPattern, $code, $class);
@@ -219,16 +187,17 @@ class StaticProperties
                 }
             }
         }
-
-        $cache->save($serializer->serialize(self::$backupStaticVariables), self::CACHE_NAME);
     }
 
     /**
      * Handler for 'startTestSuite' event
+     *
      */
     public function startTestSuite()
     {
-        self::backupStaticVariables();
+        if (empty(self::$backupStaticVariables)) {
+            self::backupStaticVariables();
+        }
     }
 
     /**

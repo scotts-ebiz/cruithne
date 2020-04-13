@@ -11,8 +11,6 @@ use Magento\Backend\Model\Auth;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
 use Magento\Framework\Api\SearchCriteriaBuilder;
-use Magento\Framework\Exception\LocalizedException;
-use Magento\TestFramework\Catalog\Model\ProductLayoutUpdateManager;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\Bootstrap as TestBootstrap;
 use Magento\Framework\Acl\Builder;
@@ -48,10 +46,15 @@ class ProductRepositoryTest extends \PHPUnit\Framework\TestCase
      */
     private $productResource;
 
-    /**
-     * @var ProductLayoutUpdateManager
+    /*
+     * @var Auth
      */
-    private $layoutManager;
+    private $auth;
+
+    /**
+     * @var Builder
+     */
+    private $aclBuilder;
 
     /**
      * Sets up common objects
@@ -60,19 +63,21 @@ class ProductRepositoryTest extends \PHPUnit\Framework\TestCase
     {
         $this->productRepository = Bootstrap::getObjectManager()->create(ProductRepositoryInterface::class);
         $this->searchCriteriaBuilder = Bootstrap::getObjectManager()->get(SearchCriteriaBuilder::class);
+        $this->auth = Bootstrap::getObjectManager()->get(Auth::class);
+        $this->aclBuilder = Bootstrap::getObjectManager()->get(Builder::class);
         $this->productFactory = Bootstrap::getObjectManager()->get(ProductFactory::class);
         $this->productResource = Bootstrap::getObjectManager()->get(ProductResource::class);
-        $this->layoutManager = Bootstrap::getObjectManager()->get(ProductLayoutUpdateManager::class);
     }
 
     /**
-     * Create new subject instance.
-     *
-     * @return ProductRepositoryInterface
+     * @inheritDoc
      */
-    private function createRepo(): ProductRepositoryInterface
+    protected function tearDown()
     {
-        return Bootstrap::getObjectManager()->create(ProductRepositoryInterface::class);
+        parent::tearDown();
+
+        $this->auth->logout();
+        $this->aclBuilder->resetRuntimeAcl();
     }
 
     /**
@@ -201,36 +206,30 @@ class ProductRepositoryTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Test that custom layout file attribute is saved.
+     * Test authorization when saving product's design settings.
      *
-     * @return void
-     * @throws \Throwable
      * @magentoDataFixture Magento/Catalog/_files/product_simple.php
-     * @magentoDbIsolation enabled
-     * @magentoAppIsolation enabled
+     * @magentoAppArea adminhtml
      */
-    public function testCustomLayout(): void
+    public function testSaveDesign()
     {
-        //New valid value
-        $repo = $this->createRepo();
-        $product = $repo->get('simple');
-        $newFile = 'test';
-        $this->layoutManager->setFakeFiles((int)$product->getId(), [$newFile]);
-        $product->setCustomAttribute('custom_layout_update_file', $newFile);
-        $repo->save($product);
-        $repo = $this->createRepo();
-        $product = $repo->get('simple');
-        $this->assertEquals($newFile, $product->getCustomAttribute('custom_layout_update_file')->getValue());
+        $product = $this->productRepository->get('simple');
+        $this->auth->login(TestBootstrap::ADMIN_NAME, TestBootstrap::ADMIN_PASSWORD);
 
-        //Setting non-existent value
-        $newFile = 'does not exist';
-        $product->setCustomAttribute('custom_layout_update_file', $newFile);
-        $caughtException = false;
-        try {
-            $repo->save($product);
-        } catch (LocalizedException $exception) {
-            $caughtException = true;
-        }
-        $this->assertTrue($caughtException);
+        //Admin doesn't have access to product's design.
+        $this->aclBuilder->getAcl()->deny(null, 'Magento_Catalog::edit_product_design');
+
+        $product->setCustomAttribute('custom_design', 2);
+        $product = $this->productRepository->save($product);
+        $this->assertEmpty($product->getCustomAttribute('custom_design'));
+
+        //Admin has access to products' design.
+        $this->aclBuilder->getAcl()
+            ->allow(null, ['Magento_Catalog::products','Magento_Catalog::edit_product_design']);
+
+        $product->setCustomAttribute('custom_design', 2);
+        $product = $this->productRepository->save($product);
+        $this->assertNotEmpty($product->getCustomAttribute('custom_design'));
+        $this->assertEquals(2, $product->getCustomAttribute('custom_design')->getValue());
     }
 }

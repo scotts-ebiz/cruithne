@@ -217,11 +217,11 @@ QUERY;
         return [
             'missed_cart_id' => [
                 'coupon_code: "test"',
-                'Field ApplyCouponToCartInput.cart_id of required type String! was not provided.'
+                'Required parameter "cart_id" is missing'
             ],
             'missed_coupon_code' => [
                 'cart_id: "test_quote"',
-                'Field ApplyCouponToCartInput.coupon_code of required type String! was not provided.'
+                'Required parameter "coupon_code" is missing'
             ],
         ];
     }

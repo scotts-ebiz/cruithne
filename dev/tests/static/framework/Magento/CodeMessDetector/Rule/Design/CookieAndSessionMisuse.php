@@ -16,8 +16,6 @@ use PHPMD\Rule\ClassAware;
 
 /**
  * Session and Cookies must be used only in HTML Presentation layer.
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class CookieAndSessionMisuse extends AbstractRule implements ClassAware
 {
@@ -66,19 +64,6 @@ class CookieAndSessionMisuse extends AbstractRule implements ClassAware
     {
         return $class->isSubclassOf(
             \Magento\Checkout\Block\Checkout\LayoutProcessorInterface::class
-        );
-    }
-
-    /**
-     * Is given class a View Model?
-     *
-     * @param \ReflectionClass $class
-     * @return bool
-     */
-    private function isViewModel(\ReflectionClass $class): bool
-    {
-        return $class->isSubclassOf(
-            \Magento\Framework\View\Element\Block\ArgumentInterface::class
         );
     }
 
@@ -206,7 +191,6 @@ class CookieAndSessionMisuse extends AbstractRule implements ClassAware
                 && !$this->isControllerPlugin($class)
                 && !$this->isBlockPlugin($class)
                 && !$this->isLayoutProcessor($class)
-                && !$this->isViewModel($class)
             ) {
                 $this->addViolation($node, [$node->getFullQualifiedName()]);
             }

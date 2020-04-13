@@ -47,14 +47,6 @@ class ObjectManagerProviderTest extends \PHPUnit\Framework\TestCase
     public function testGet()
     {
         $initParams = ['param' => 'value'];
-        $commands = [
-            new Command('setup:install'),
-            new Command('setup:upgrade'),
-        ];
-
-        $application = $this->getMockBuilder(Application::class)
-            ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
 
         $this->serviceLocatorMock
             ->expects($this->atLeastOnce())
@@ -64,21 +56,16 @@ class ObjectManagerProviderTest extends \PHPUnit\Framework\TestCase
                     [InitParamListener::BOOTSTRAP_PARAM, $initParams],
                     [
                         Application::class,
-                        $application,
+                        $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock(),
                     ],
                 ]
             );
-
-        $commandListMock = $this->createMock(CommandListInterface::class);
-        $commandListMock->expects($this->once())
-            ->method('getCommands')
-            ->willReturn($commands);
 
         $objectManagerMock = $this->createMock(ObjectManagerInterface::class);
         $objectManagerMock->expects($this->once())
             ->method('create')
             ->with(CommandListInterface::class)
-            ->willReturn($commandListMock);
+            ->willReturn($this->getCommandListMock());
 
         $objectManagerFactoryMock = $this->getMockBuilder(ObjectManagerFactory::class)
             ->disableOriginalConstructor()
@@ -94,9 +81,21 @@ class ObjectManagerProviderTest extends \PHPUnit\Framework\TestCase
             ->willReturn($objectManagerFactoryMock);
 
         $this->assertInstanceOf(ObjectManagerInterface::class, $this->model->get());
+    }
 
-        foreach ($commands as $command) {
-            $this->assertSame($application, $command->getApplication());
-        }
+    /**
+     * @return \PHPUnit_Framework_MockObject_MockObject
+     */
+    private function getCommandListMock()
+    {
+        $commandMock = $this->getMockBuilder(Command::class)->disableOriginalConstructor()->getMock();
+        $commandMock->expects($this->once())->method('setApplication');
+
+        $commandListMock = $this->createMock(CommandListInterface::class);
+        $commandListMock->expects($this->once())
+            ->method('getCommands')
+            ->willReturn([$commandMock]);
+
+        return $commandListMock;
     }
 }
