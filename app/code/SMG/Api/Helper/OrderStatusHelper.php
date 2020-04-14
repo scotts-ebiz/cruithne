@@ -42,6 +42,8 @@ class OrderStatusHelper
     const INPUT_SAP_SAP_BILLING_DOC_DATE = 'InvoiceDate';
     const INPUT_SAP_PAYER_ID = 'PayerId';
     const INPUT_SAP_DELIVERY_NUMBER = 'DeliveryNumber';
+    const ERROR_CODE_LOCK_WAIT = 1205;
+    const ERROR_CODE_DEAD_LOCK = 1213;
 
     /**
      * @var LoggerInterface
@@ -1099,7 +1101,7 @@ class OrderStatusHelper
                         $retryAttempts = $maxAttempts + 1;
                     } catch (\Throwable $e) {
                         // If this is a deadlock or lock wait timeout, let's retry the transaction after waiting a few seconds.
-                        if (($e->getCode() == 1205 || $e->getCode() == 1213) && $retryAttempts <= $maxAttempts) {
+                        if (($e->getCode() == self::ERROR_CODE_LOCK_WAIT || $e->getCode() == self::ERROR_CODE_DEAD_LOCK) && $retryAttempts <= $maxAttempts) {
                             $retryAttempts++;
                             sleep($retryWaitTime);
                         } else {
