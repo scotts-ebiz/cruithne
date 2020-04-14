@@ -311,7 +311,7 @@
                                                 font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
                                                 text-decoration: underline;
                                                 text-align: left;
-                                                color: $checkout-green;
+                                                color: $checkout-accent-color;
                                                 font-size: 1.2rem;
                                                 margin-left: 0;
                                                 margin-top: 10px;
@@ -328,7 +328,7 @@
                                                     font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
                                                     text-decoration: underline;
                                                     font-size: 1.2rem;
-                                                    color: $checkout-green;
+                                                    color: $checkout-accent-color;
                                                 }
                                             }
                                         }
@@ -504,10 +504,6 @@
                 }
             }
         }
-        .block.crosssell {
-            margin-top: 0;
-            margin-left: 15px;
-        }
     }
 
     #maincontent {
@@ -656,7 +652,7 @@
 
     .items {
         thead + .item {
-            border-top: $border-width__base solid $border-color__base;
+            border-top: $border-width__thick solid $checkout-accent-color;
         }
 
         > .item {
@@ -897,8 +893,95 @@
 //  ---------------------------------------------
 
 .block.crosssell {
-    margin-top: 70px;
+    display: inline-block;
+    width: 100%;
+    margin-left: 0px;
+    padding-left: 15px;
+    padding-right: 15px;
+    box-sizing: border-box;
+    @include cart-checkout-body-font();
+    h2 {
+        @include cart-checkout-h2-font();
+    }
+    .product-items {
+        text-align: center;
+        display: flex;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+        align-items: flex-start;
+        margin: 0;
+        .product-item {
+            border: 2px solid $checkout-light_grey;
+            border-radius: 3px;
+            padding: 25px;
+            flex: 2 1 auto;
+            max-width: 850px;
+            min-width: 350px;
+            align-self: stretch;
+            &:nth-child(odd){
+                margin: 0;
+                @media only screen and (max-width: $screen__l){
+                    margin: 20px 0 0 0;
+                    width: 100%;
+                    &:first-child(){
+                        margin: 0;
+                    }
+                }
+            }
+            &:nth-child(even){
+                margin: 0 0 0 20px;
+                @media only screen and (max-width: $screen__l){
+                    margin: 20px 0 0 0;
+                    width: 100%;
+                }
+            }
+            @include cart-checkout-crossSell-productTitle-font();
+            .product-item-img {
+                display: inline-block;
+                position: relative;
+                width: 35%;
+                float: left;
+                box-sizing: border-box;
+                @media only screen and (max-width: $screen__s){
+                    width: 100%;
+                }
+            }
+            .product-item-info {
+                float: right;
+                display: inline-block;
+                position: relative;
+                width: 60%;
+                text-align: left;
+                @media only screen and (max-width: $screen__s){
+                    width: 100%;
+                    text-align: center;
+                }
+                .product-item-name {
+                    margin: 0 0 16px 0;
+                    @include cart-checkout-crossSell-productTitle-font();
+                }
+                .price-box .price {
+                    @include cart-checkout-crossSell-price-font();
+                }
+                .description-item-wrapper {
+                    margin: 0 0 20px 0;
+                    @include cart-checkout-body-font();
+                }
+                .product-item-actions {
+                    margin: 0;
+                    display: block;
+                    button {
+                        @include cart-checkout-button-crossSell();
+                    }
+                }
+            }
+        }
+    }
 }
+
+
+
 
 .cart-tax-info,
 .cart .cart-tax-info {

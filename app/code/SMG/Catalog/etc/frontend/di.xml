@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @copyright Copyright (c) 2019 SMG, LLC
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Catalog\Block\Product\ProductList\Crosssell">
+        <plugin name="catalog_crosssell_plugin"
+                type="SMG\Catalog\Plugin\Crosssell" />
+    </type>
+</config>
