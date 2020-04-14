@@ -491,7 +491,7 @@ class Subscription implements SubscriptionInterface
 
             if (! $subscription || ! $subscription->getId()) {
                 $this->_response->setHttpResponseCode(404);
-                $error = "Subscription with quiz ID not found during checkout.";
+                $error = "Subscription with quiz ID {$quiz_id} not found during checkout.";
                 $this->_logger->error($this->_loggerPrefix . $error);
                 $this->_coreSession->setOrderProcessing(0);
 
