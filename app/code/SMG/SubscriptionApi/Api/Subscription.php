@@ -12,9 +12,9 @@ use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\Address;
 use Magento\Customer\Model\AddressFactory;
-use Magento\Customer\Model\ResourceModel\Customer as CustomerResource;
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\CustomerFactory;
+use Magento\Customer\Model\ResourceModel\Customer as CustomerResource;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\Exception\LocalizedException;
@@ -24,13 +24,14 @@ use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Framework\Webapi\Rest\Response;
 use Magento\Sales\Model\Order\Status\History;
 use Magento\Sales\Model\Order\Status\HistoryFactory;
-use Magento\Sales\Model\ResourceModel\Order\Invoice\CollectionFactory as InvoiceCollectionFactory;
+use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Magento\Sales\Model\ResourceModel\Order\Status\History as HistoryResource;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use Recurly_Client;
 use SMG\RecommendationApi\Helper\RecommendationHelper;
-use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
+use SMG\Sap\Model\ResourceModel\SapOrderBatch as SapOrderBatchResource;
+use SMG\Sap\Model\SapOrderBatchFactory;
 use SMG\SubscriptionApi\Api\Interfaces\SubscriptionInterface;
 use SMG\SubscriptionApi\Exception\SubscriptionException;
 use SMG\SubscriptionApi\Helper\RecurlyHelper;
@@ -38,15 +39,14 @@ use SMG\SubscriptionApi\Helper\ResponseHelper;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 use SMG\SubscriptionApi\Helper\SubscriptionOrderHelper;
 use SMG\SubscriptionApi\Model\RecurlySubscription;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResourceModel;
-use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionResourceCollectionFactory;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder as SubscriptionAddonOrderResource;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder as SubscriptionOrderResource;
 use SMG\SubscriptionApi\Model\Subscription as SubscriptionModel;
 use SMG\SubscriptionApi\Model\SubscriptionAddonOrder;
+use SMG\SubscriptionApi\Model\SubscriptionFactory;
 use SMG\SubscriptionApi\Model\SubscriptionOrder;
-use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
-use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder as SubscriptionOrderResource;
-use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder as SubscriptionAddonOrderResource;
-use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 
 /**
  * Class Subscription
@@ -107,9 +107,6 @@ class Subscription implements SubscriptionInterface
     /**  @var SubscriptionResourceModel */
     protected $_subscription;
 
-    /** @var SubscriptionResourceCollectionFactory */
-    protected $_subscriptionCollectionFactory;
-
     /** @var SessionManagerInterface */
     protected $_coreSession;
 
@@ -137,16 +134,6 @@ class Subscription implements SubscriptionInterface
      * @var RecurlySubscription
      */
     protected $_recurlySubscription;
-
-    /**
-     * @var SapOrderBatchCollectionFactory
-     */
-    protected $_sapOrderBatchCollectionFactory;
-
-    /**
-     * @var InvoiceCollectionFactory
-     */
-    protected $_invoiceCollectionFactory;
 
     /**
      * @var GigyaMageHelper
@@ -184,6 +171,26 @@ class Subscription implements SubscriptionInterface
     protected $_subscriptionAddonOrderResource;
 
     /**
+     * @var OrderResource
+     */
+    protected $_orderResource;
+
+    /**
+     * @var SapOrderBatchFactory
+     */
+    protected $_sapOrderBatchFactory;
+
+    /**
+     * @var SapOrderBatchResource
+     */
+    protected $_sapOrderBatchResource;
+
+    /**
+     * @var SubscriptionFactory
+     */
+    protected $_subscriptionFactory;
+
+    /**
      * Subscription constructor.
      * @param LoggerInterface $logger
      * @param RecommendationHelper $recommendationHelper
@@ -198,15 +205,17 @@ class Subscription implements SubscriptionInterface
      * @param StoreManagerInterface $storeManager
      * @param CustomerFactory $customerFactory
      * @param CustomerRepositoryInterface $customerRepository
+     * @param CustomerResource $customerResource
      * @param AddressRepositoryInterface $addressRepository
      * @param Address $customerAddress
+     * @param OrderResource $orderResource
      * @param SubscriptionResourceModel $subscription
-     * @param SubscriptionResourceCollectionFactory $subscriptionCollectionFactory
+     * @param SubscriptionFactory $subscriptionFactory
      * @param SubscriptionResource $subscriptionResource
      * @param SubscriptionOrderResource $subscriptionOrderResource
      * @param SubscriptionAddonOrderResource $subscriptionAddonOrderResource
-     * @param InvoiceCollectionFactory $invoiceCollectionFactory
-     * @param SapOrderBatchCollectionFactory $sapInvoiceCollectionFactory
+     * @param SapOrderBatchFactory $sapOrderBatchFactory
+     * @param SapOrderBatchResource $sapOrderBatchResource
      * @param SessionManagerInterface $coreSession
      * @param AddressFactory $addressFactory
      * @param SubscriptionOrderHelper $subscriptionOrderHelper
@@ -234,13 +243,14 @@ class Subscription implements SubscriptionInterface
         CustomerResource $customerResource,
         AddressRepositoryInterface $addressRepository,
         Address $customerAddress,
+        OrderResource $orderResource,
         SubscriptionResourceModel $subscription,
-        SubscriptionResourceCollectionFactory $subscriptionCollectionFactory,
+        SubscriptionFactory $subscriptionFactory,
         SubscriptionResource $subscriptionResource,
         SubscriptionOrderResource $subscriptionOrderResource,
         SubscriptionAddonOrderResource $subscriptionAddonOrderResource,
-        InvoiceCollectionFactory $invoiceCollectionFactory,
-        SapOrderBatchCollectionFactory $sapInvoiceCollectionFactory,
+        SapOrderBatchFactory $sapOrderBatchFactory,
+        SapOrderBatchResource $sapOrderBatchResource,
         SessionManagerInterface $coreSession,
         AddressFactory $addressFactory,
         SubscriptionOrderHelper $subscriptionOrderHelper,
@@ -268,13 +278,14 @@ class Subscription implements SubscriptionInterface
         $this->_recurlyHelper = $recurlyHelper;
         $this->_addressRepository = $addressRepository;
         $this->_customerAddress = $customerAddress;
+        $this->_orderResource = $orderResource;
         $this->_subscription = $subscription;
-        $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
+        $this->_subscriptionFactory = $subscriptionFactory;
         $this->_subscriptionResource = $subscriptionResource;
         $this->_subscriptionOrderResource = $subscriptionOrderResource;
         $this->_subscriptionAddonOrderResource = $subscriptionAddonOrderResource;
-        $this->_invoiceCollectionFactory = $invoiceCollectionFactory;
-        $this->_sapOrderBatchCollectionFactory = $sapInvoiceCollectionFactory;
+        $this->_sapOrderBatchFactory = $sapOrderBatchFactory;
+        $this->_sapOrderBatchResource = $sapOrderBatchResource;
         $this->_coreSession = $coreSession;
         $this->_addressFactory = $addressFactory;
         $this->_subscriptionOrderHelper = $subscriptionOrderHelper;
@@ -380,15 +391,15 @@ class Subscription implements SubscriptionInterface
             $websiteId = $store->getWebsiteId();
 
             // Get customer
-            $this->_logger->info($this->_loggerPrefix . 'Loading the customer...');
+            $email = $this->_checkoutSession->getQuote()->getCustomerEmail();
+            $this->_logger->info($this->_loggerPrefix . "Loading the customer by email: {$email}...");
             $customer = $this->_customerFactory->create();
             $customer->setWebsiteId($websiteId);
-            $customer->loadByEmail($this->_checkoutSession->getQuote()->getCustomerEmail());
-            $customerId = $customer->getId();
+            $customer->loadByEmail($email);
 
             // Make sure customer was found.
-            if (! $customer->getData('entity_id')) {
-                $error = 'Customer ' . $customerId . ' not found during checkout.';
+            if (! $customer->getId()) {
+                $error = 'Customer with email' . $email . ' not found during checkout.';
                 $this->_logger->error($this->_loggerPrefix . $error);
                 $this->_coreSession->setOrderProcessing(0);
 
@@ -421,11 +432,13 @@ class Subscription implements SubscriptionInterface
 
         // Update the customer's name from the shipping address.
         try {
+            $this->_logger->info($this->_loggerPrefix . "Updating name in M2 and Gigya for account with Gigya ID: {$customer->getData('gigya_uid')}");
             // Update the customer's M2 account.
             $customer->addData([
                 'firstname' => $customerShippingAddress['firstname'],
                 'lastname' => $customerShippingAddress['lastname'],
-            ])->save();
+            ]);
+            $this->_customerResource->save($customer);
 
             // Update the customer's Gigya account.
             $gigyaData = [
@@ -457,6 +470,11 @@ class Subscription implements SubscriptionInterface
             ) {
                 $error = 'Your shipping zip code and quiz zip code do not match.';
                 $this->_logger->error($this->_loggerPrefix . $error);
+                try {
+                    $this->_logger->info($this->_loggerPrefix . "Quiz Zip: {$this->_coreSession->getZipCode()} Address Zip Code: {$customerShippingAddress['postcode']}");
+                } catch (Exception $e) {
+                    $this->_logger->info($this->_loggerPrefix . 'The quiz or shipping zip code is missing.');
+                }
                 $this->_coreSession->setOrderProcessing(0);
 
                 return $this->_responseHelper->error(
@@ -466,16 +484,14 @@ class Subscription implements SubscriptionInterface
             }
 
             // Get the subscription
-            $this->_logger->info($this->_loggerPrefix . 'Getting the subscription object...');
+            $this->_logger->info($this->_loggerPrefix . "Getting the subscription object with quiz ID '{$quiz_id}':...");
             /** @var SubscriptionModel $subscription */
-            $subscription = $this->_subscriptionCollectionFactory
-                ->create()
-                ->addFieldToFilter('quiz_id', $quiz_id)
-                ->getFirstItem();
+            $subscription = $this->_subscriptionFactory->create();
+            $this->_subscriptionResource->load($subscription, $quiz_id, 'quiz_id');
 
             if (! $subscription || ! $subscription->getId()) {
                 $this->_response->setHttpResponseCode(404);
-                $error = 'Subscription not found during checkout.';
+                $error = "Subscription with quiz ID not found during checkout.";
                 $this->_logger->error($this->_loggerPrefix . $error);
                 $this->_coreSession->setOrderProcessing(0);
 
@@ -484,7 +500,7 @@ class Subscription implements SubscriptionInterface
 
             // Make sure the subscription is pending.
             if ($subscription->getData('subscription_status') != 'pending') {
-                $error = 'This subscription has already been completed or cancelled.';
+                $error = "This subscription with quiz ID '{$quiz_id}' has already been completed or cancelled.";
                 $this->_logger->error($this->_loggerPrefix . $error);
 
                 return $this->_responseHelper->error($error, ['refresh' => true]);
@@ -497,7 +513,7 @@ class Subscription implements SubscriptionInterface
         }
 
         // Add customer to subscription.
-        $this->_logger->info($this->_loggerPrefix . 'Adding the customer to the subscription...');
+        $this->_logger->info($this->_loggerPrefix . "Adding the customer with Gigya ID: '{$customer->getData('gigya_uid')}' to the subscription...");
         try {
             $subscription->setData('customer_id', $customer->getData('entity_id'));
             $subscription->setData('gigya_id', $customer->getData('gigya_uid'));
@@ -542,7 +558,8 @@ class Subscription implements SubscriptionInterface
                 try {
                     $this->clearCustomerAddresses($customer);
                     $this->_logger->info($this->_loggerPrefix . "Processing {$subscriptionOrder->getData('season_name')} order...");
-                    $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionOrder);
+                    $order = $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionOrder);
+                    $this->_logger->info("Created {$subscriptionOrder->getData('season_name')} order with ID: {$order->getId()} ({$order->getIncrementId()})");
                 } catch (SubscriptionException $e) {
                     $this->_logger->error($this->_loggerPrefix . $e->getMessage());
 
@@ -597,7 +614,8 @@ class Subscription implements SubscriptionInterface
                     }
 
                     $this->_logger->info($this->_loggerPrefix . "Processing add-on order...");
-                    $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionAddonOrder);
+                    $order = $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionAddonOrder);
+                    $this->_logger->info("Created add-on order with ID: {$order->getId()} ({$order->getIncrementId()})");
                 } catch (SubscriptionException $e) {
                     $this->_logger->error($this->_loggerPrefix . $e->getMessage());
 
@@ -671,7 +689,7 @@ class Subscription implements SubscriptionInterface
             $subscription->setData('subscription_status', 'active');
 
             $this->_logger->info($this->_loggerPrefix . 'Saving subscription status...');
-            $subscription->save();
+            $this->_subscriptionResource->save($subscription);
 
             $this->_logger->info($this->_loggerPrefix . 'Done...');
             $this->_coreSession->setOrderProcessing(0);
@@ -762,33 +780,40 @@ class Subscription implements SubscriptionInterface
 
             foreach ($subscriptionOrders as $subscriptionOrder) {
                 /* @var SubscriptionOrder | SubscriptionAddonOrder $subscriptionOrder */
+                $this->_logger->info($this->_loggerPrefix . "Loading order '{$subscriptionOrder->getData('sales_order_id')}' so it can be closed due to a checkout error...");
                 $order = $subscriptionOrder->getOrder();
 
                 if ($order) {
-                    $orderID = $order->getEntityId();
+                    $orderID = $order->getId();
 
                     // Cancel the order and remove the subscription information.
                     $order->addData([
                         'master_subscription_id' => null,
                         'subscription_id' => null,
-                    ])->setStatus('closed')->save();
+                    ])->setStatus('closed');
+                    $this->_orderResource->save($order);
+                    $this->_logger->info($this->_loggerPrefix . "Closed order: {$order->getId()} ({$order->getIncrementId()})");
 
                     $this->addOrderHistory($orderID, 'Failed to create subscription: rolling back orders.', 'closed');
 
                     // Mark the SAP batch records as not orders.
-                    $sapOrderBatchCollection = $this->_sapOrderBatchCollectionFactory->create();
-                    $sapOrderBatchCollection
-                        ->addFieldToFilter('order_id', $orderID)
-                        ->walk(function ($sapOrderBatch) {
-                            $sapOrderBatch->setData('is_order', 0)->save();
-                        });
+                    $sapOrderBatch = $this->_sapOrderBatchFactory->create();
+                    $this->_sapOrderBatchResource->load($sapOrderBatch, $orderID, 'order_id');
+
+                    if ($sapOrderBatch->getId()) {
+                        $sapOrderBatch->setData('is_order', 0);
+                        $this->_sapOrderBatchResource->save($sapOrderBatch);
+                        $this->_logger->info($this->_loggerPrefix . "Set SAP is_order to 0 for order: {$orderID} ({$order->getIncrementId()})");
+                    }
                 }
 
                 // Update status and remove order from subscription order.
                 $subscriptionOrder->addData([
                     'subscription_order_status' => 'pending',
                     'sales_order_id' => null,
-                ])->save();
+                ]);
+
+                $this->_subscriptionOrderHelper->saveSubscriptionOrder($subscriptionOrder);
             }
         } catch (Exception $e) {
             $this->_logger->error($this->_loggerPrefix . 'Failed to close orders on failed order creation with message: ' . $e->getMessage());
