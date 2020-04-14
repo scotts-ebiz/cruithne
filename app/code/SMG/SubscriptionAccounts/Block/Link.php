@@ -69,7 +69,7 @@ class Link extends \Magento\Framework\View\Element\Html\Link\Current {
     {
         $customer = $this->_customer->load( $this->getCustomerId() );
 
-        if( $customer->getRecurlyAccountCode() ) {
+        if( $customer->getGigyaUid() ) {
             return true;
         }
 

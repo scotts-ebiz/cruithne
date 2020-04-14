@@ -139,7 +139,7 @@ class Billing extends Template
             $billing['country'] = '';
             $billing['state'] = '';
             $billing['zip'] = '';
-            $billing['number'] = '';
+            $billing['card_no_file'] = '';
         }
 
         return $billing;
