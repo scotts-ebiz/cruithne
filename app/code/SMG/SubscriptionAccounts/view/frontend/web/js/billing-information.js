@@ -2,11 +2,10 @@ define([
     'uiComponent',
     'ko',
     'Magento_Ui/js/modal/modal',
-    'jquery',
-    'mage/mage'
+    'jquery'
 ], function (Component, ko, modal, $) {
     let successModal;
-   
+
     return Component.extend({
         isVisible: ko.observable(true),
         
@@ -15,6 +14,8 @@ define([
             this.billing = ko.observable(config.billing);
             this.states = ko.observable(config.states);
             this.countries = ko.observable(config.countries);
+  
+
             setTimeout( function() {
                 recurly.configure({
                     publicKey: config.recurlyApi,
@@ -71,14 +72,11 @@ define([
             const self = this;
             const recurlyForm = $('form#recurlyForm');
             const formKey = document.querySelector('input[name=form_key]').value;
-            if(recurlyForm.validation('isValid') === false){
-              return false;
-            }
             $('body').trigger('processStart');
             recurly.token( recurlyForm, function( err, token ) {
                 if( err ) {
-                    $('body').trigger('processStop');
-                    return false;
+        $('body').trigger('processStop');
+                    alert( "Required fields are missing");
                 } else {
                     if( token ) {
                         $.ajax({
@@ -116,11 +114,9 @@ define([
         $('.cardview').hide();
         $('#recurlyForm input').attr('readonly', false);
         $('#recurlyForm select').attr('disabled', false);
-        $('#recurlyForm input').attr('required', false);
         $('#recurlyForm').trigger('reset');
         $('.hideme').show();
         $('.cardedit').show();
-        $('form#recurlyForm').mage('validation', {});
         },
         
     cancelBilling() {
