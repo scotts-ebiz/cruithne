@@ -973,6 +973,7 @@
                     display: block;
                     button {
                         @include cart-checkout-button-crossSell();
+                        display: inline-block;
                     }
                 }
             }
