@@ -76,7 +76,7 @@ class Onepage extends \Magento\Checkout\Block\Onepage
             $subscription = $this->_subscription->getSubscriptionByQuizId($this->_coreSession->getQuizId());
             $data = $subscription->convertToArray();
             $addOn = $subscription->getAddOn();
-            $data['is_shippable'] = $subscription->isCurrentlyShippable();
+            $data['is_shippable'] = $subscription->getData('subscription_type') == 'annual' || $subscription->isCurrentlyShippable();
             $data['add_on'] = $addOn ? $addOn->convertToArray() : false;
 
             return json_encode($data);
