@@ -129,7 +129,7 @@ define([
 
                 return seasons.sort((a, b) => {
                     try {
-                        return a.products[0].applicationStartDate > b.products[0].applicationStartDate;
+                        return new Date(a.products[0].applicationStartDate) > new Date(b.products[0].applicationStartDate) ? 1 : -1;
                     } catch (error) {
                         return 0;
                     }

@@ -368,18 +368,18 @@ class SubscriptionOrderHelper extends AbstractHelper
      */
     protected function processOrder(Customer $customer, $subscriptionOrder)
     {
-        $this->_logger->debug('Processing order...');
+        $this->_logger->info('Processing order...');
         $quote = $this->_quoteFactory->create();
         $quote->setStoreId($this->_store->getId());
         $quote->setCurrency();
         $customerData = $this->_customerRepository->getById($customer->getId());
-        $this->_logger->debug('Assign customer to quote quote...');
+        $this->_logger->info('Assign customer to quote...');
         $quote->assignCustomer($customerData);
 
-        $this->_logger->debug('Saving quote...');
+        $this->_logger->info('Saving quote...');
         $this->_quoteResource->save($quote);
 
-        $this->_logger->debug('Adding items to order...');
+        $this->_logger->info('Adding items to order...');
         foreach ($subscriptionOrder->getOrderItems() as $item) {
             // Check if the item has the selected field and if it is set.
             /**
@@ -395,7 +395,7 @@ class SubscriptionOrderHelper extends AbstractHelper
             // Add the annual discount for annual subscription items that are
             // not add-ons.
             if (! $isAddon && $subscriptionOrder->getData('subscription_type') == 'annual') {
-                $this->_logger->debug('Setting annual discount coupon...');
+                $this->_logger->info('Setting annual discount coupon...');
                 $quote->setCouponCode('annual_discount_order');
             }
 
@@ -403,7 +403,7 @@ class SubscriptionOrderHelper extends AbstractHelper
             try {
                 $product = $item->getProduct();
 
-                $this->_logger->debug('Adding product to quote...');
+                $this->_logger->info('Adding product to quote...');
                 $quote->addProduct($product, (int) $item->getQty());
             } catch (\Exception $e) {
                 $this->errorResponse(
@@ -414,9 +414,9 @@ class SubscriptionOrderHelper extends AbstractHelper
         }
 
         // Set addresses.
-        $this->_logger->debug('Setting billing address...');
+        $this->_logger->info('Setting billing address...');
         $quote->getBillingAddress()->addData($this->_session->getCheckoutBilling())->save();
-        $this->_logger->debug('Setting shipping address...');
+        $this->_logger->info('Setting shipping address...');
         $quote->getShippingAddress()->addData($this->_session->getCheckoutShipping())->save();
 
         // Collect rates and set shipping and payment method.
@@ -430,7 +430,7 @@ class SubscriptionOrderHelper extends AbstractHelper
             ->setShippingMethod('freeshipping_freeshipping');
         $quote->setPaymentMethod('recurly');
         $quote->setInventoryProcessed(false);
-        $this->_logger->debug('Saving quote after adding address information...');
+        $this->_logger->info('Saving quote after adding address information...');
         $this->_quoteResource->save($quote);
 
         // Set sales order payment.
@@ -438,11 +438,11 @@ class SubscriptionOrderHelper extends AbstractHelper
 
         // Collect the totals and save the quote.
         $quote->collectTotals();
-        $this->_logger->debug('Saving quote after collecting totals...');
+        $this->_logger->info('Saving quote after collecting totals...');
         $this->_quoteResource->save($quote);
 
         // Create an order from the quote.
-        $this->_logger->debug('Submitting quote...');
+        $this->_logger->info('Submitting quote...');
         /** @var Order $order */
         $order = $this->_cartManagement->submit($quote);
         $order->setEmailSent(0);
@@ -459,20 +459,20 @@ class SubscriptionOrderHelper extends AbstractHelper
         ]);
 
         // Save order
-        $this->_logger->debug('Saving order...');
+        $this->_logger->info('Saving order...');
         $this->_orderResource->save($order);
 
         // Add the order ID to teh subscription order.
         $subscriptionOrder->setData('sales_order_id', $order->getId());
         $this->saveSubscriptionOrder($subscriptionOrder);
 
-        if ($subscriptionOrder->isCurrentlyShippable()) {
+        if ($subscriptionOrder->getSubscriptionType() == 'annual' || $subscriptionOrder->isCurrentlyShippable()) {
             // Complete the order
             $subscriptionOrder->setData('subscription_order_status', 'complete');
             $this->saveSubscriptionOrder($subscriptionOrder);
 
             // Create the order invoice.
-            $this->_logger->debug('Creating the invoice...');
+            $this->_logger->info('Creating the invoice...');
             $subscriptionOrder->createInvoice();
         }
 
@@ -498,7 +498,7 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @param SubscriptionOrder | SubscriptionAddonOrder $subscriptionOrder
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    protected function saveSubscriptionOrder($subscriptionOrder): void
+    public function saveSubscriptionOrder($subscriptionOrder): void
     {
         if ($subscriptionOrder instanceof SubscriptionOrder) {
             $this->_subscriptionOrderResource->save($subscriptionOrder);
