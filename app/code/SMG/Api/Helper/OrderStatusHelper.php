@@ -1094,11 +1094,11 @@ class OrderStatusHelper
                             ->addObject($invoice)
                             ->addObject($invoice->getOrder());
                         $transaction->save();
-                        $retryAttempts = $maxAttempts + 1;
+                        break;
                     } catch (ZaiusException $e) {
                         // Log and ignore any Zaius errors.
                         $this->_logger->error($e->getMessage());
-                        $retryAttempts = $maxAttempts + 1;
+                        break;
                     } catch (\Throwable $e) {
                         // If this is a deadlock or lock wait timeout, let's retry the transaction after waiting a few seconds.
                         if (($e->getCode() == self::ERROR_CODE_LOCK_WAIT || $e->getCode() == self::ERROR_CODE_DEAD_LOCK) && $retryAttempts <= $maxAttempts) {
