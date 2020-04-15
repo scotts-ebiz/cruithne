@@ -393,14 +393,10 @@ class SubscriptionAddonOrder extends AbstractModel
     public function isCurrentlyShippable()
     {
         // Seasonal subscription, so base ship date on first seasonal order.
-        if ($this->getSubscriptionType() == 'seasonal') {
-            $shipStart = DateTime::createFromFormat('Y-m-d H:i:s', $this->getData('ship_start_date'));
-            $today = new DateTime();
+        $shipStart = DateTime::createFromFormat('Y-m-d H:i:s', $this->getData('ship_start_date'));
+        $today = new DateTime();
 
-            return $today >= $shipStart;
-        }
-
-        return true;
+        return $today >= $shipStart;
     }
 
     /**
