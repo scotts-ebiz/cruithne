@@ -17,6 +17,8 @@ use Magento\Sales\Model\Order as MagentoOrder;
 use Magento\Sales\Model\Order\ProductOption;
 
 use SMG\OrderDiscount\Helper\Data as DiscountHelper;
+use SMG\SubscriptionApi\Model\SubscriptionFactory;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
 
 class Order extends MagentoOrder
 {
@@ -24,6 +26,16 @@ class Order extends MagentoOrder
      * @var DiscountHelper
      */
     protected $_discountHelper;
+
+    /**
+     * @var SubscriptionFactory
+     */
+    protected $_subscriptionFactory;
+
+    /**
+     * @var SubscriptionResource
+     */
+    protected $_subscriptionResource;
 
     public function __construct(\Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
@@ -50,6 +62,8 @@ class Order extends MagentoOrder
         PriceCurrencyInterface $priceCurrency,
         \Magento\Catalog\Model\ResourceModel\Product\CollectionFactory $productListFactory,
         DiscountHelper $discountHelper,
+        SubscriptionFactory $subscriptionFactory,
+        SubscriptionResource $subscriptionResource,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = [],
@@ -64,6 +78,8 @@ class Order extends MagentoOrder
         );
 
         $this->_discountHelper = $discountHelper;
+        $this->_subscriptionFactory = $subscriptionFactory;
+        $this->_subscriptionResource = $subscriptionResource;
     }
 
     /**
@@ -77,14 +93,45 @@ class Order extends MagentoOrder
         // variables
         $returnValue = false;
 
-        // if there is a type and there is a master id or a subscription id
-        // then it is a subscription
-        if (!empty($this->getData('subscription_type')) && (!empty($this->getData('master_subscription_id')) || !empty($this->getData('subscription_id'))))
+        // if there is a subscription type then it is a subscription and a master subscription id then
+        // it is a subscription
+        if (!empty($this->getSubscriptionType()) && !empty($this->getData('master_subscription_id')))
         {
             $returnValue = true;
         }
 
         // return whether this was a subscription or not
+        return $returnValue;
+    }
+
+    /**
+     * This function was needed because the data in sales_order for subscription
+     * wasn't always valid we needed to do a check and get it from the subscription
+     * table instead
+     *
+     * @return mixed
+     */
+    public function getSubscriptionType()
+    {
+        // variables
+        $returnValue = $this->getData('subscription_type');
+        if (empty($returnValue))
+        {
+            // load the subscription
+            /**
+             * @var \SMG\SubscriptionApi\Model\Subscription $subscription
+             */
+            $subscription = $this->_subscriptionFactory->create();
+            $this->_subscriptionResource->load($subscription, $this->getData('master_subscription_id'), 'subscription_id');
+
+            // check to see if there was a subscription
+            if (!empty($subscription))
+            {
+                $returnValue = $subscription->getData('subscription_type');
+            }
+        }
+
+        // return
         return $returnValue;
     }
 
