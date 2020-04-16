@@ -119,7 +119,7 @@ class Billing extends Template
         $billing = [];
 
         try {
-            $billing_info = Recurly_BillingInfo::get($this->getGigyaUid());
+            $billing_info = Recurly_BillingInfo::get($this->getCustomerRecurlyAccountCode());
 
             $billing['first_name'] = $billing_info->first_name;
             $billing['last_name'] = $billing_info->last_name;
@@ -129,7 +129,6 @@ class Billing extends Template
             $billing['country'] = $billing_info->country;
             $billing['state'] = $billing_info->state;
             $billing['zip'] = $billing_info->zip;
-            $billing['card_on_file'] = '****_****_****_'.$billing_info->last_four;
         } catch (\Exception $e) {
             // Not truly an error state. We expect this for users without recurly accounts
             $billing['first_name'] = '';
@@ -140,7 +139,6 @@ class Billing extends Template
             $billing['country'] = '';
             $billing['state'] = '';
             $billing['zip'] = '';
-            $billing['card_on_file'] = '';
         }
 
         return $billing;

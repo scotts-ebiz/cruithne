@@ -5,15 +5,15 @@ define([
     'jquery'
 ], function (Component, ko, modal, $) {
     let successModal;
-   
+
     return Component.extend({
-        isVisible: ko.observable(true),
-        
         initialize(config) {
             const self = this;
             this.billing = ko.observable(config.billing);
             this.states = ko.observable(config.states);
             this.countries = ko.observable(config.countries);
+
+
             setTimeout( function() {
                 recurly.configure({
                     publicKey: config.recurlyApi,
@@ -25,7 +25,6 @@ define([
                                 fontSize: '12px',
                             }
                         }
-
                     }
                 });
 
@@ -66,6 +65,7 @@ define([
                         $('.modal-header').remove();
                     }
                 }, $('#popup-modal'));
+
             }, 2000);
         },
 
@@ -73,14 +73,10 @@ define([
             const self = this;
             const recurlyForm = $('form#recurlyForm');
             const formKey = document.querySelector('input[name=form_key]').value;
-            if(recurlyForm.validation('isValid') === false){
-              return false;
-            }
-            $('body').trigger('processStart');
+
             recurly.token( recurlyForm, function( err, token ) {
                 if( err ) {
-                    $('body').trigger('processStop');
-                    return false;
+                    alert( err.message );
                 } else {
                     if( token ) {
                         $.ajax({
@@ -92,12 +88,7 @@ define([
                                 form: recurlyForm.serializeArray()
                             } ),
                             success: function( response ) {
-                                    $('body').trigger('processStop');
-                                    location.reload(); 
-                            },
-                error: function( response ) {
-                $('body').trigger('processStop');
-                    location.reload(); 
+                                self.hideSuccess();
                             }
                         })
                     }
