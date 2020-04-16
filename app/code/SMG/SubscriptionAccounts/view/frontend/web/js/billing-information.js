@@ -17,6 +17,7 @@ define([
             setTimeout( function() {
                 recurly.configure({
                     publicKey: config.recurlyApi,
+                    required : ['cvv'],
                     fields: {
                         card: {
                             // Field style properties
@@ -31,6 +32,7 @@ define([
                 $(window).on('resize init', function (event) {
                     if ($(this).width() <= 767) {
                         recurly.configure({
+                            required : ['cvv'],
                             fields: {
                                 card: {
                                     // Field style properties
@@ -42,6 +44,7 @@ define([
                         });
                     } else {
                         recurly.configure({
+                            required : ['cvv'],
                             fields: {
                                 card: {
                                     // Field style properties
@@ -66,15 +69,18 @@ define([
             }, 2000);
         },
 
-        saveBilling() {
+       saveBilling() {
             const self = this;
             const recurlyForm = $('form#recurlyForm');
             const formKey = document.querySelector('input[name=form_key]').value;
+            if(recurlyForm.validation('isValid') === false){
+              return false;
+            }
             $('body').trigger('processStart');
             recurly.token( recurlyForm, function( err, token ) {
                 if( err ) {
                     $('body').trigger('processStop');
-                    alert(err.message);
+                    return false;
                 } else {
                     if( token ) {
                         $.ajax({

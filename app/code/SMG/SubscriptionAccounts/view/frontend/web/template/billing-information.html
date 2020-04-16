@@ -18,6 +18,7 @@
                 data-recurly="first_name"
                 data-bind="value: billing().first_name"
                 name="first_name"
+                data-validate="{required:true}" aria-required="true"
                 readonly
                 >
             <label class="sp-form-label">First Name</label>
@@ -29,6 +30,7 @@
                 data-recurly="last_name"
                 data-bind="value: billing().last_name"
                 name="last_name"
+                data-validate="{required:true}" aria-required="true"
                 readonly
             >
             <label class="sp-form-label">Last Name</label>
@@ -74,6 +76,7 @@
                 data-recurly="address1"
                 data-bind="value: billing().address1"
                 name="address_1"
+                data-validate="{required:true}" aria-required="true"
                 readonly
             >
             <label class="sp-form-label">Address line 1</label>
@@ -93,7 +96,7 @@
                 class="sp-input"
                 data-recurly="city"
                 data-bind="value: billing().city"
-                name="city" readonly>
+                name="city" readonly data-validate="{required:true}" aria-required="true">
             <label class="sp-form-label">City</label>
         </div>
         <div class="sp-form-group">
@@ -101,7 +104,7 @@
                 <select disabled="true" name="state"
                         placeholder="State"
                         data-recurly="state"
-                        data-bind="options: Object.values(states()), optionsText: function(item) { return item.text }, optionsValue: function(item) { return item.value }, value: billing().state"></select>
+                        data-bind="options: Object.values(states()), optionsText: function(item) { return item.text }, optionsValue: function(item) { return item.value }, value: billing().state" data-validate="{required:true}" aria-required="true"></select>
             </div>
             <label class="sp-form-label">State</label>
         </div>
@@ -111,7 +114,8 @@
                 class="sp-input"
                 data-recurly="postal_code"
                 data-bind="value: billing().zip"
-                name="zip_code" 
+                name="zip_code"
+                data-validate="{required:true}" aria-required="true" 
                 readonly
                 >
             <label class="sp-form-label">Zip/Postal Code</label>
