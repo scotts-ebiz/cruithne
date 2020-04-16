@@ -9,9 +9,7 @@
     <a href="/quiz" class="sp-button sp-button--primary sp-button--get-started sp-relative sp-text-center sp-mt-4">Get Started</a>
 </div>
 <!-- /ko -->
-<form id="recurlyForm" class="sp-flex sp-flex-column lg:sp-flex-row" 
-data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>"
-      data-mage-init='{"validation":{}}'>
+<form id="recurlyForm" class="sp-flex sp-flex-column lg:sp-flex-row">
     <div class="sp-flex-auto sp-p-4 lg:sp-p-0">
         <div class="sp-form-group">
             <input type="text"
@@ -20,7 +18,6 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 data-recurly="first_name"
                 data-bind="value: billing().first_name"
                 name="first_name"
-                data-validate="{required:true}" aria-required="true"
                 readonly
                 >
             <label class="sp-form-label">First Name</label>
@@ -32,7 +29,6 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 data-recurly="last_name"
                 data-bind="value: billing().last_name"
                 name="last_name"
-                data-validate="{required:true}" aria-required="true"
                 readonly
             >
             <label class="sp-form-label">Last Name</label>
@@ -42,9 +38,9 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
             <input type="text"
                 placeholder="Card Number"
                 class="sp-input"
-                data-recurly="card_no_file"
-                data-bind="value: billing().card_no_file"
-                name="card_no_file"
+                data-recurly="card_on_file"
+                data-bind="value: billing().card_on_file"
+                name="card_on_file"
                 readonly
             >
             <label class="sp-form-label">Card on file</label>
@@ -78,7 +74,6 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 data-recurly="address1"
                 data-bind="value: billing().address1"
                 name="address_1"
-                data-validate="{required:true}" aria-required="true"
                 readonly
             >
             <label class="sp-form-label">Address line 1</label>
@@ -98,7 +93,7 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 class="sp-input"
                 data-recurly="city"
                 data-bind="value: billing().city"
-                name="city" readonly data-validate="{required:true}" aria-required="true">
+                name="city" readonly>
             <label class="sp-form-label">City</label>
         </div>
         <div class="sp-form-group">
@@ -106,7 +101,7 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 <select disabled="true" name="state"
                         placeholder="State"
                         data-recurly="state"
-                        data-bind="options: Object.values(states()), optionsText: function(item) { return item.text }, optionsValue: function(item) { return item.value }, value: billing().state" data-validate="{required:true}" aria-required="true"></select>
+                        data-bind="options: Object.values(states()), optionsText: function(item) { return item.text }, optionsValue: function(item) { return item.value }, value: billing().state"></select>
             </div>
             <label class="sp-form-label">State</label>
         </div>
@@ -117,7 +112,6 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 data-recurly="postal_code"
                 data-bind="value: billing().zip"
                 name="zip_code" 
-                data-validate="{required:true}" aria-required="true"
                 readonly
                 >
             <label class="sp-form-label">Zip/Postal Code</label>

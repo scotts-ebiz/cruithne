@@ -69,7 +69,7 @@ class Link extends \Magento\Framework\View\Element\Html\Link\Current {
     {
         $customer = $this->_customerRepositoryInterface->getById( $this->getCustomerId() );
 
-        if( $customer->getCustomAttribute('gigya_uid') ) {
+        if( $customer->getCustomAttribute('gigya_uid')->getValue() ) {
             return true;
         }
 

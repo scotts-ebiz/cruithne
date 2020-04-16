@@ -2,7 +2,6 @@
 
 namespace SMG\SubscriptionAccounts\Block;
 
-use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Directory\Block\Data;
 use Magento\Directory\Model\RegionFactory;
@@ -12,6 +11,7 @@ use Magento\Framework\View\Element\Template\Context;
 use Recurly_BillingInfo;
 use Recurly_Client;
 use SMG\SubscriptionApi\Helper\RecurlyHelper;
+use Magento\Customer\Api\CustomerRepositoryInterface;
 
 /**
  * Class Billing
@@ -23,11 +23,6 @@ class Billing extends Template
      * @var CustomerSession
      */
     protected $_customerSession;
-
-    /**
-     * @var Customer
-     */
-    protected $_customer;
 
     /**
      * @var RecurlyHelper
@@ -50,6 +45,11 @@ class Billing extends Template
     protected $_collectionFactory;
 
     /**
+     * @var CustomerRepositoryInterface
+     */
+    protected $_customerRepositoryInterface;
+
+    /**
      * Subscriptions block constructor.
      * @param Context $context
      * @param CustomerSession $customerSession
@@ -58,24 +58,25 @@ class Billing extends Template
      * @param Data $directoryData
      * @param RegionFactory $regionFactory
      * @param CollectionFactory $collectionFactory
+     * @param CustomerRepositoryInterface $customerRepositoryInterface
      * @param array $data
      */
     public function __construct(
         Context $context,
         CustomerSession $customerSession,
-        Customer $customer,
         RecurlyHelper $recurlyHelper,
         Data $directoryData,
         RegionFactory $regionFactory,
         CollectionFactory $collectionFactory,
+        CustomerRepositoryInterface $customerRepositoryInterface,
         array $data = []
     ) {
         $this->_customerSession = $customerSession;
-        $this->_customer = $customer;
         $this->_recurlyHelper = $recurlyHelper;
         $this->_directoryData = $directoryData;
         $this->_regionFactory = $regionFactory;
         $this->_collectionFactory = $collectionFactory;
+        $this->_customerRepositoryInterface = $customerRepositoryInterface;
         parent::__construct($context, $data);
     }
 
@@ -96,10 +97,10 @@ class Billing extends Template
      */
     private function getCustomerRecurlyAccountCode()
     {
-        $customer = $this->_customer->load($this->getCustomerId());
+        $customer = $this->_customerRepositoryInterface->getById( $this->getCustomerId() );
 
-        if ($customer->getRecurlyAccountCode()) {
-            return $customer->getRecurlyAccountCode();
+        if ($customer->getCustomAttribute('recurly_account_code')->getValue()) {
+            return $customer->getCustomAttribute('recurly_account_code')->getValue();
         }
 
         return false;
@@ -215,10 +216,9 @@ class Billing extends Template
      */
     private function getGigyaUid()
     {
-        $customer = $this->_customer->load($this->getCustomerId());
-
-        if( $customer->getGigyaUid() ) {
-            return $customer->getGigyaUid();
+        $customer = $this->_customerRepositoryInterface->getById( $this->getCustomerId() );
+        if( $customer->getCustomAttribute('gigya_uid')->getValue()) {
+            return $customer->getCustomAttribute('gigya_uid')->getValue();
         }
 
         return false;

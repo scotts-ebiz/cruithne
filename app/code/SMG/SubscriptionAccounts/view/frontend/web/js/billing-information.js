@@ -2,8 +2,7 @@ define([
     'uiComponent',
     'ko',
     'Magento_Ui/js/modal/modal',
-    'jquery',
-    'mage/mage'
+    'jquery'
 ], function (Component, ko, modal, $) {
     let successModal;
    
@@ -71,14 +70,11 @@ define([
             const self = this;
             const recurlyForm = $('form#recurlyForm');
             const formKey = document.querySelector('input[name=form_key]').value;
-            if(recurlyForm.validation('isValid') === false){
-              return false;
-            }
             $('body').trigger('processStart');
             recurly.token( recurlyForm, function( err, token ) {
                 if( err ) {
                     $('body').trigger('processStop');
-                    return false;
+                    alert(err.message);
                 } else {
                     if( token ) {
                         $.ajax({
@@ -116,7 +112,6 @@ define([
         $('.cardview').hide();
         $('#recurlyForm input').attr('readonly', false);
         $('#recurlyForm select').attr('disabled', false);
-        $('#recurlyForm input').attr('required', false);
         $('#recurlyForm').trigger('reset');
         $('.hideme').show();
         $('.cardedit').show();
