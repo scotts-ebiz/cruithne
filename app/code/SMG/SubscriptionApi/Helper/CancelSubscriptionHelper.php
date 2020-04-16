@@ -19,9 +19,9 @@ use SMG\Sap\Model\ResourceModel\SapOrderBatch as SapOrderBatchResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder as SubscriptionAddonOrderResource;
-use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\CollectionFactory as SubscriptionAddonOrderCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder as SubscriptionOrderResource;
-use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
+use SMG\SubscriptionApi\Model\SubscriptionAddonOrderFactory;
+use SMG\SubscriptionApi\Model\SubscriptionOrderFactory;
 use SMG\SubscriptionApi\Model\Subscription;
 use SMG\SubscriptionApi\Model\SubscriptionAddonOrder;
 use SMG\SubscriptionApi\Model\SubscriptionOrder;
@@ -54,16 +54,6 @@ class CancelSubscriptionHelper extends AbstractHelper
     protected $_sapOrderBatchResource;
 
     /**
-     * @var SubscriptionOrderCollectionFactory
-     */
-    protected $_subscriptionOrderCollectionFactory;
-
-    /**
-     * @var SubscriptionAddonOrderCollectionFactory
-     */
-    protected $_subscriptionAddonOrderCollectionFactory;
-
-    /**
      * @var OrderResource
      */
     protected $_orderResource;
@@ -84,6 +74,19 @@ class CancelSubscriptionHelper extends AbstractHelper
     protected $_subscriptionAddonOrderResource;
 
     /**
+     * @var string
+     */
+    protected $_loggerPrefix;
+    /**
+     * @var SubscriptionOrderFactory
+     */
+    protected $_subscriptionOrderFactory;
+    /**
+     * @var SubscriptionAddonOrderFactory
+     */
+    protected $_subscriptionAddonOrderFactory;
+
+    /**
      * CancelHelper constructor.
      *
      * @param Context $context
@@ -93,10 +96,10 @@ class CancelSubscriptionHelper extends AbstractHelper
      * @param RecurlyHelper $recurlyHelper
      * @param SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
      * @param SapOrderBatchResource $sapOrderBatchResource
-     * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
-     * @param SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory
      * @param SubscriptionResource $subscriptionResource
+     * @param SubscriptionOrderFactory $subscriptionOrderFactory
      * @param SubscriptionOrderResource $subscriptionOrderResource
+     * @param SubscriptionAddonOrderFactory $subscriptionAddonOrderFactory
      * @param SubscriptionAddonOrderResource $subscriptionAddonOrderResource
      */
     public function __construct(
@@ -107,10 +110,10 @@ class CancelSubscriptionHelper extends AbstractHelper
         RecurlyHelper $recurlyHelper,
         SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory,
         SapOrderBatchResource $sapOrderBatchResource,
-        SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
-        SubscriptionAddonOrderCollectionFactory $subscriptionAddonOrderCollectionFactory,
         SubscriptionResource $subscriptionResource,
+        SubscriptionOrderFactory $subscriptionOrderFactory,
         SubscriptionOrderResource $subscriptionOrderResource,
+        SubscriptionAddonOrderFactory $subscriptionAddonOrderFactory,
         SubscriptionAddonOrderResource $subscriptionAddonOrderResource
     ) {
         parent::__construct($context);
@@ -121,15 +124,19 @@ class CancelSubscriptionHelper extends AbstractHelper
         $this->_recurlyHelper = $recurlyHelper;
         $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
         $this->_sapOrderBatchResource = $sapOrderBatchResource;
-        $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
-        $this->_subscriptionAddonOrderCollectionFactory = $subscriptionAddonOrderCollectionFactory;
         $this->_subscriptionResource = $subscriptionResource;
+        $this->_subscriptionOrderFactory = $subscriptionOrderFactory;
         $this->_subscriptionOrderResource = $subscriptionOrderResource;
+        $this->_subscriptionAddonOrderFactory = $subscriptionAddonOrderFactory;
         $this->_subscriptionAddonOrderResource = $subscriptionAddonOrderResource;
 
         // Configure Recurly Client
         Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
+        
+        $host = gethostname();
+        $ip = gethostbyname($host);
+        $this->_loggerPrefix = 'SERVER: ' . $ip . ' SESSION: ' . session_id() . ' - ';
     }
 
     /**
@@ -140,12 +147,16 @@ class CancelSubscriptionHelper extends AbstractHelper
      */
     public function cancel($subscription)
     {
+        $this->_logger->info($this->_loggerPrefix . "Starting cancel process for {$subscription->getData('subscription_type')} subscription {$subscription->getData('subscription_id')}.");
+
         // Subscription is not active so nothing to cancel.
         if ($subscription->getData('subscription_status' != 'active')) {
+            $this->_logger->info($this->_loggerPrefix . "Subscription {$subscription->getData('subscription_id')} is not active so cannot be canceled.");
             return;
         }
 
         try {
+            $this->_logger->info($this->_loggerPrefix . "Getting orders to cancel for subscription {$subscription->getData('subscription_id')}...");
             $orders = $this->getOrders($subscription);
             $isAnnual = $subscription->getData('subscription_type') == 'annual';
             $refundAmount = 0;
@@ -158,22 +169,29 @@ class CancelSubscriptionHelper extends AbstractHelper
                     /** @var Order $order */
                     if ($order->getData('subscription_addon')) {
                         /** @var SubscriptionAddonOrder $subscriptionOrder */
-                        $subscriptionOrder = $this->_subscriptionAddonOrderCollectionFactory
-                            ->create()
-                            ->addFieldToFilter('sales_order_id', $order->getEntityId())
-                            ->getFirstItem();
+                        $subscriptionOrder = $this->_subscriptionAddonOrderFactory->create();
+                        $this->_subscriptionAddonOrderResource->load($subscriptionOrder, $order->getId(), 'sales_order_id');
+
+                        if (! $subscriptionOrder->getId()) {
+                            $error = "Could not find subscription add-on order for order: {$order->getId()} ({$order->getIncrementId()})";
+                            throw new Exception($error);
+                        }
                     } else {
                         /** @var SubscriptionOrder $subscriptionOrder */
-                        $subscriptionOrder = $this->_subscriptionOrderCollectionFactory
-                            ->create()
-                            ->addFieldToFilter('sales_order_id', $order->getEntityId())
-                            ->getFirstItem();
+                        $subscriptionOrder = $this->_subscriptionOrderFactory->create();
+                        $this->_subscriptionOrderResource->load($subscriptionOrder, $order->getId(), 'sales_order_id');
+
+                        if (! $subscriptionOrder->getId()) {
+                            $error = "Could not find subscription order for order: {$order->getId()} ({$order->getIncrementId()})";
+                            throw new Exception($error);
+                        }
                     }
                 } catch (Exception $e) {
+                    $this->_logger->error($this->_loggerPrefix . $e->getMessage());
+
                     // Could not find the subscription order, so continue.
                     $error = 'Could not find subscription order to cancel. Sales Order: ' . $order->getEntityId();
-                    $this->_logger->error($error);
-                    $this->_logger->error($e->getMessage());
+                    $this->_logger->error($this->_loggerPrefix . $error);
 
                     continue;
                 }
@@ -181,6 +199,7 @@ class CancelSubscriptionHelper extends AbstractHelper
                 if ($order->hasShipments()) {
                     // Order has shipped and cannot be refunded, however, we
                     // should still cancel the Recurly subscription.
+                    $this->_logger->info($this->_loggerPrefix . "Order {$order->getId()} ({$order->getIncrementId()}) has shipments so we will cancel the Recurly subscription without a refund...");
                     $this->cancelRecurlySubscription($subscriptionOrder, false);
 
                     continue;
@@ -188,6 +207,7 @@ class CancelSubscriptionHelper extends AbstractHelper
 
                 if ($order->hasInvoices()) {
                     // Cancel the subscription.
+                    $this->_logger->info($this->_loggerPrefix . "Order {$order->getId()} ({$order->getIncrementId()}) has been invoiced so we will cancel the Recurly subscription...");
                     $this->cancelRecurlySubscription($subscriptionOrder, !$isAnnual);
 
                     // Order has been invoiced, but not shipped, so let's make
@@ -196,10 +216,12 @@ class CancelSubscriptionHelper extends AbstractHelper
                     $ordersRefunded++;
 
                     // Create the credit memo for the subscription order.
+                    $this->_logger->info($this->_loggerPrefix . "Creating a credit memo for order {$order->getId()} ({$order->getIncrementId()})");
                     $subscriptionOrder->createCreditMemo();
                 } else {
                     // Order has not shipped or been invoiced, so cancel the
                     // subscription. No refunds are necessary.
+                    $this->_logger->info($this->_loggerPrefix . "Order {$order->getId()} ({$order->getIncrementId()}) has not been invoiced so we will cancel the Recurly subscription without a refund...");
                     $this->cancelRecurlySubscription($subscriptionOrder, false);
                 }
 
@@ -207,6 +229,7 @@ class CancelSubscriptionHelper extends AbstractHelper
                 $this->setSubscriptionOrderCanceledStatus($subscriptionOrder);
 
                 // Mark the order as canceled.
+                $this->_logger->info($this->_loggerPrefix . "Setting Order {$order->getId()} ({$order->getIncrementId()}) status to canceled...");
                 $order->setData('status', 'canceled');
                 $this->_orderResource->save($order);
             }
@@ -216,9 +239,11 @@ class CancelSubscriptionHelper extends AbstractHelper
             // refunded.
             if ($ordersRefunded == $orders->count()) {
                 // Refund full amount.
+                $this->_logger->info($this->_loggerPrefix . "All annual orders have been cancelled, so cancel the master subscription {$subscription->getData('subscription_id')} in Recurly with a full refund...");
                 $this->cancelMasterRecurlySubscription($subscription);
             } else {
                 // Refund a partial amount.
+                $this->_logger->info($this->_loggerPrefix . "Some orders have shipped so cancel the master subscription {$subscription->getData('subscription_id')} in Recurly with a partial refund...");
                 $this->cancelMasterRecurlySubscription($subscription, $refundAmount);
             }
 
@@ -273,11 +298,13 @@ class CancelSubscriptionHelper extends AbstractHelper
 
             // The subscription has already been terminated or completed.
             if (! in_array($subscription->state, ['active', 'future'])) {
+                $this->_logger->info($this->_loggerPrefix . "Recurly subscription with ID {$subscription->uuid} is not active or a future subscription so it cannot be canceled.");
                 return;
             }
 
             // No refund needed, so just terminate the subscription.
             if (! $refund) {
+                $this->_logger->info($this->_loggerPrefix . "Cancelling Recurly subscription with ID {$subscription->uuid} without a refund since it was not required.");
                 $subscription->terminateWithoutRefund();
 
                 // Update the subscription order status.
@@ -304,6 +331,7 @@ class CancelSubscriptionHelper extends AbstractHelper
                 // Refund the line item.
                 try {
                     $refundItem = $lineItem[0]->toRefundAttributes();
+                    $this->_logger->info($this->_loggerPrefix . "We are refunding a specific line ({$refundItem['uuid']}) item for Recurly subscription with ID {$subscription->uuid}.");
                     $invoice->refund([$refundItem], 'transaction_first');
                 } catch (Exception $e) {
                     $this->_logger->error("Could not refund line item for subscription {$subscription->uuid}.");
@@ -313,6 +341,7 @@ class CancelSubscriptionHelper extends AbstractHelper
             }
 
             // Terminate the subscription.
+            $this->_logger->info($this->_loggerPrefix . "Cancelling Recurly subscription {$subscription->uuid}...");
             $subscription->terminateWithoutRefund();
 
             // Update the subscription order status.
@@ -370,6 +399,7 @@ class CancelSubscriptionHelper extends AbstractHelper
             $recurlySubscription = $this->loadRecurlySubscription($subscriptionID);
 
             if (! in_array($recurlySubscription->state, ['active', 'future'])) {
+                $this->_logger->info($this->_loggerPrefix . "Recurly subscription with ID {$recurlySubscription->uuid} is not active or a future subscription so it cannot be canceled.");
                 return;
             }
 
@@ -377,6 +407,7 @@ class CancelSubscriptionHelper extends AbstractHelper
             // We cannot terminate and refund because the subscription may have
             // an add-on order which appears on the same invoice but on another
             // subscription plan in Recurly.
+            $this->_logger->info($this->_loggerPrefix . "Cancelling Recurly subscription with ID {$recurlySubscription->uuid}...");
             $recurlySubscription->terminateWithoutRefund();
 
             if ($subscription->getData('subscription_type') == 'annual') {
@@ -384,8 +415,10 @@ class CancelSubscriptionHelper extends AbstractHelper
                 $invoice = Recurly_Invoice::get($subscription->getData('recurly_invoice'));
 
                 if (is_null($amount)) {
+                    $this->_logger->info($this->_loggerPrefix . "Refunding Recurly subscription with ID {$recurlySubscription->uuid} with full amount: {$subscription->getData('paid')}...");
                     $invoice->refundAmount($this->convertAmountToCents($subscription->getData('paid')), 'transaction_first');
                 } else {
+                    $this->_logger->info($this->_loggerPrefix . "Refunding Recurly subscription with ID {$recurlySubscription->uuid} with partial amount: {$amount}...");
                     $invoice->refundAmount($amount, 'transaction_first');
                 }
             }

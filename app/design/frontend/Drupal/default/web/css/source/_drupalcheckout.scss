@@ -14,4 +14,65 @@
   .nav-toggle {
     display: none;
   }
+  .page-wrapper {
+    .page-main {
+      .columns {
+        .column.main {
+          .checkout-container {
+            .opc-progress-bar-item._active {
+              &:before {
+                background: $checkout-accent-color; // change color of line in active step of step progress bar
+              }
+              & > span:before {
+                border-color: $checkout-accent-color; // change color of active step circle outline in step progress bar
+              }
+              & > span:after {
+                color: $checkout-accent-color; // change color of checkmark in step progress bar
+              }
+            }
+            .opc-progress-bar-item._complete {
+              &:before {
+                background-color: $checkout-accent-color; // color of line when progress bar is complete
+              }
+              & > span:before {
+                background-color: $checkout-accent-color; // color of dot on line when progress bar is complete
+              }
+            }
+            .opc-wrapper {
+              .step-title {
+                border-color: $checkout-accent-color; // change color of divider lines
+              }
+              .checkout-payment-method .payment-method-content > .actions-toolbar > .primary .action.primary {
+                background-color: $cart-checkout-button__background-color; // change color of PLACE ORDER button
+
+                &:active {
+                  background-color: $cart-checkout-button__background-active; // change color of PLACE ORDER button, active state
+                }
+              }
+            }
+            .methods-shipping .actions-toolbar {
+              .action:not([disabled]) {
+                background-color: $cart-checkout-button__background-color; // change color of CONTINUE button
+              }
+              .action:active {
+                background-color: $cart-checkout-button__background-active; // change color of CONTINUE button, active state
+              }
+            }
+            .step-content {
+              a.edit-address {
+                &,
+                &:visited {
+                  color: $checkout-accent-color; // change color of links
+                }
+              }
+            }
+          }
+          [type="radio"] + label:before {
+            border-color: $checkout-accent-color; // change color of shipping radio buttons
+          }
+        }
+      }
+    }
+  }
 }
+
