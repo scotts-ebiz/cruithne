@@ -13,7 +13,9 @@
         <?php  else :?>
             <p><?= $block->escapeHtml(__('Your order # is: <span>%1</span>.', $block->getOrderId()), ['span']) ?></p>
         <?php endif;?>
-            <p><?= $block->escapeHtml(__('Thank you for your order. We\'ll email you an order confirmation with details and tracking info. Due to higher than expected order volume, your shipping confirmation may take up to 7 Days. We really appreciate your understanding. If you have any questions please email us at <a href="mailto:tomcat-orders@scotts.com">tomcat-orders@scotts.com</a>')) ?></p>
+        <p>Thank you for your order. We'll email you an order confirmation with details and tracking info.
+            <br>Due to higher than expected order volume, your shipping confirmation may take up to 7 days. We really appreciate your understanding. If you have any questions please email us at <a href="mailto:tomcat-orders@scotts.com">tomcat-orders@scotts.com</a>
+        </p>
     <?php endif;?>
 
     <?= $block->getAdditionalInfoHtml() ?>
