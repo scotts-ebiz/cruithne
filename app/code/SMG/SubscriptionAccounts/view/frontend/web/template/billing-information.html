@@ -53,10 +53,10 @@
                     class="sp-form-group sp-px-2 sp-w-full"></div>
             </div>
         </div>
-         
+
         <div class="sp-form-group sp-hidden">
             <div class="sp-select sp-block sp-w-full">
-                <select readonly name="country"
+                <select name="country"
                         placeholder="Country"
                         class="sp-block sp-w-full"
                         data-recurly="country"
@@ -84,7 +84,7 @@
                 class="sp-input"
                 data-recurly="address2"
                 data-bind="value: billing().address2"
-                name="address_2" readonly>
+                name="address_2">
             <label class="sp-form-label">Address line 2</label>
         </div>
         <div class="sp-form-group">
@@ -98,7 +98,7 @@
         </div>
         <div class="sp-form-group">
             <div class="sp-select">
-                <select disabled="true" name="state"
+                <select name="state"
                         placeholder="State"
                         data-recurly="state"
                         data-bind="options: Object.values(states()), optionsText: function(item) { return item.text }, optionsValue: function(item) { return item.value }, value: billing().state"></select>
@@ -120,17 +120,9 @@
             <input type="hidden"
                 name="recurly-token"
                 data-recurly="token">
-                
-            <button type="reset"
-                    class="sp-button sp-button--primary changehide" data-bind="click: hideChange;">Change</button>
-                    
-            <button style="display: none;" type="submit"
+            <button type="submit"
                     data-bind="click: saveBilling"
-                    class="sp-button sp-button--primary hideme">Save</button>
-            
-            <button  style="display: none;" type="button"
-                            data-bind="click: cancelBilling"
-                            class="sp-button sp-ml-4 sp-button--primary hideme">Cancel</button>         
+                    class="sp-button sp-button--primary">Save</button>
         </div>
     </div>
 </form>

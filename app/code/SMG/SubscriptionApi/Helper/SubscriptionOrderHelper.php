@@ -394,8 +394,8 @@ class SubscriptionOrderHelper extends AbstractHelper
 
             // Add the annual discount for annual subscription items that are
             // not add-ons.
-            if (! $isAddon && $subscriptionOrder->getData('subscription_type') == 'annual') {
-                $this->_logger->info('Setting annual discount coupon...');
+            if (! $isAddon && $subscriptionOrder->getSubscriptionType() == 'annual') {
+                $this->_logger->debug('Setting annual discount coupon...');
                 $quote->setCouponCode('annual_discount_order');
             }
 
@@ -455,7 +455,7 @@ class SubscriptionOrderHelper extends AbstractHelper
             'ship_start_date' => $subscriptionOrder->getData('ship_start_date'),
             'ship_end_date' => $subscriptionOrder->getData('ship_end_date'),
             'subscription_addon' => $subscriptionOrder->type() == 'addon' ? 1 : 0,
-            'subscription_type' => $subscriptionOrder->getData('subscription_type'),
+            'subscription_type' => $subscriptionOrder->getSubscriptionType(),
         ]);
 
         // Save order

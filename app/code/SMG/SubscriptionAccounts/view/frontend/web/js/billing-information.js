@@ -5,15 +5,15 @@ define([
     'jquery'
 ], function (Component, ko, modal, $) {
     let successModal;
-   
+
     return Component.extend({
-        isVisible: ko.observable(true),
-        
         initialize(config) {
             const self = this;
             this.billing = ko.observable(config.billing);
             this.states = ko.observable(config.states);
             this.countries = ko.observable(config.countries);
+
+
             setTimeout( function() {
                 recurly.configure({
                     publicKey: config.recurlyApi,
@@ -24,7 +24,6 @@ define([
                                 fontSize: '12px',
                             }
                         }
-
                     }
                 });
 
@@ -63,6 +62,7 @@ define([
                         $('.modal-header').remove();
                     }
                 }, $('#popup-modal'));
+
             }, 2000);
         },
 
@@ -86,12 +86,7 @@ define([
                                 form: recurlyForm.serializeArray()
                             } ),
                             success: function( response ) {
-                                    $('body').trigger('processStop');
-                                    location.reload(); 
-                            },
-                error: function( response ) {
-                $('body').trigger('processStop');
-                    location.reload(); 
+                                self.hideSuccess();
                             }
                         })
                     }
