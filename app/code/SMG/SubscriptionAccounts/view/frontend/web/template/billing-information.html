@@ -9,9 +9,8 @@
     <a href="/quiz" class="sp-button sp-button--primary sp-button--get-started sp-relative sp-text-center sp-mt-4">Get Started</a>
 </div>
 <!-- /ko -->
-<form id="recurlyForm" class="sp-flex sp-flex-column lg:sp-flex-row" 
-data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>"
-      data-mage-init='{"validation":{}}'>
+
+<form id="recurlyForm" class="sp-flex sp-flex-column lg:sp-flex-row">
     <div class="sp-flex-auto sp-p-4 lg:sp-p-0">
         <div class="sp-form-group">
             <input type="text"
@@ -20,9 +19,7 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 data-recurly="first_name"
                 data-bind="value: billing().first_name"
                 name="first_name"
-                data-validate="{required:true}" aria-required="true"
-                readonly
-                >
+            >
             <label class="sp-form-label">First Name</label>
         </div>
         <div class="sp-form-group">
@@ -32,35 +29,19 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 data-recurly="last_name"
                 data-bind="value: billing().last_name"
                 name="last_name"
-                data-validate="{required:true}" aria-required="true"
-                readonly
             >
             <label class="sp-form-label">Last Name</label>
         </div>
-         
-        <div class="sp-form-group cardview">
-            <input type="text"
-                placeholder="Card Number"
-                class="sp-input"
-                data-recurly="card_no_file"
-                data-bind="value: billing().card_no_file"
-                name="card_no_file"
-                readonly
-            >
-            <label class="sp-form-label">Card on file</label>
-        </div> 
-        
-        <div class="cardedit" style="display: none;">
-            <div class="sp-form-group">
-                <label class="sp-form-label">Card Number</label>
-                <div data-recurly="card"
-                    class="sp-form-group sp-px-2 sp-w-full"></div>
-            </div>
+
+        <div class="sp-form-group">
+            <label class="sp-form-label">Card Number</label>
+            <div data-recurly="card"
+                class="sp-form-group sp-px-2 sp-w-full"></div>
         </div>
-         
+
         <div class="sp-form-group sp-hidden">
             <div class="sp-select sp-block sp-w-full">
-                <select readonly name="country"
+                <select name="country"
                         placeholder="Country"
                         class="sp-block sp-w-full"
                         data-recurly="country"
@@ -78,8 +59,6 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 data-recurly="address1"
                 data-bind="value: billing().address1"
                 name="address_1"
-                data-validate="{required:true}" aria-required="true"
-                readonly
             >
             <label class="sp-form-label">Address line 1</label>
         </div>
@@ -89,7 +68,7 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 class="sp-input"
                 data-recurly="address2"
                 data-bind="value: billing().address2"
-                name="address_2" readonly>
+                name="address_2">
             <label class="sp-form-label">Address line 2</label>
         </div>
         <div class="sp-form-group">
@@ -98,15 +77,15 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 class="sp-input"
                 data-recurly="city"
                 data-bind="value: billing().city"
-                name="city" readonly data-validate="{required:true}" aria-required="true">
+                name="city">
             <label class="sp-form-label">City</label>
         </div>
         <div class="sp-form-group">
             <div class="sp-select">
-                <select disabled="true" name="state"
+                <select name="state"
                         placeholder="State"
                         data-recurly="state"
-                        data-bind="options: Object.values(states()), optionsText: function(item) { return item.text }, optionsValue: function(item) { return item.value }, value: billing().state" data-validate="{required:true}" aria-required="true"></select>
+                        data-bind="options: Object.values(states()), optionsText: function(item) { return item.text }, optionsValue: function(item) { return item.value }, value: billing().state"></select>
             </div>
             <label class="sp-form-label">State</label>
         </div>
@@ -116,27 +95,16 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 class="sp-input"
                 data-recurly="postal_code"
                 data-bind="value: billing().zip"
-                name="zip_code" 
-                data-validate="{required:true}" aria-required="true"
-                readonly
-                >
+                name="zip_code">
             <label class="sp-form-label">Zip/Postal Code</label>
         </div>
         <div class="sp-flex sp-justify-end">
             <input type="hidden"
                 name="recurly-token"
                 data-recurly="token">
-                
-            <button type="reset"
-                    class="sp-button sp-button--primary changehide" data-bind="click: hideChange;">Change</button>
-                    
-            <button style="display: none;" type="submit"
+            <button type="submit"
                     data-bind="click: saveBilling"
-                    class="sp-button sp-button--primary hideme">Save</button>
-            
-            <button  style="display: none;" type="button"
-                            data-bind="click: cancelBilling"
-                            class="sp-button sp-ml-4 sp-button--primary hideme">Cancel</button>         
+                    class="sp-button sp-button--primary">Save</button>
         </div>
     </div>
 </form>
