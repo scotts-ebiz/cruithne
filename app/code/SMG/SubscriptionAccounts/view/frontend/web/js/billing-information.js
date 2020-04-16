@@ -18,6 +18,7 @@ define([
             setTimeout( function() {
                 recurly.configure({
                     publicKey: config.recurlyApi,
+                    required : ['cvv'],
                     fields: {
                         card: {
                             // Field style properties
@@ -25,13 +26,13 @@ define([
                                 fontSize: '12px',
                             }
                         }
-
                     }
                 });
 
                 $(window).on('resize init', function (event) {
                     if ($(this).width() <= 767) {
                         recurly.configure({
+                            required : ['cvv'],
                             fields: {
                                 card: {
                                     // Field style properties
@@ -43,6 +44,7 @@ define([
                         });
                     } else {
                         recurly.configure({
+                            required : ['cvv'],
                             fields: {
                                 card: {
                                     // Field style properties
