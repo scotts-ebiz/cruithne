@@ -36,9 +36,9 @@ class Link extends \Magento\Framework\View\Element\Html\Link\Current {
         parent::__construct( $context, $defaultPath );
     }
 
-	/**
-	 * Display "Billing Information" menu in My Account only if the customer has a Recurly account
-	 * 
+    /**
+     * Display "Billing Information" menu in My Account only if the customer has a Recurly account
+     * 
      * @return string
      */
     public function toHtml()
@@ -47,7 +47,7 @@ class Link extends \Magento\Framework\View\Element\Html\Link\Current {
             return parent::toHtml();
         }
 
-    	return '';
+        return '';
     }
 
     /**

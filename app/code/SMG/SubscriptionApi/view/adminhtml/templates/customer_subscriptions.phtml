@@ -25,7 +25,11 @@
                     <tr onclick='location.href = this.getElementsByTagName("a").item(0).getAttribute("href");' >
                         <?php if ($subscription->plan->name <> 'Annual' && $subscription->plan->name <> 'Seasonal') :  ?>
                             <?php $orderId = $block->getOrderBySubscriptionId($subscription->uuid); ?>
-                            <td class="click"><a href="/<?php echo $this->escapeHtml($adminPath); ?>/sales/order/view/order_id/<?php echo $this->escapeHtml($orderId); ?>"><?php echo $this->escapeHtml($subscription->uuid); ?></a></td>
+                            <td class="click">
+                                <?php if ($orderId) { ?>
+                                    <a href="/<?php echo $this->escapeHtml($adminPath); ?>/sales/order/view/order_id/<?php echo $this->escapeHtml($orderId); ?>"><?php echo $this->escapeHtml($subscription->uuid); ?></a>
+                                <?php } ?>
+                            </td>
                         <?php else: ?>
                             <td><?php echo $this->escapeHtml($subscription->uuid); ?></td>
                         <?php endif; ?>
