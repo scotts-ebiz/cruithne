@@ -380,7 +380,7 @@ class OrdersHelper
                 // annual subscriptions need to be placed together in the file
                 // otherwise they will not add properly in SAP.  Season subscriptions
                 // are different because they are processed like regular orders
-                $subscriptionType = $order->getData('subscription_type');
+                $subscriptionType = $order->getSubscriptionType();
                 if ($order->isSubscription() && $subscriptionType == 'annual')
                 {
                     // get the master subscription id
@@ -590,7 +590,7 @@ class OrdersHelper
         $surchPerAmt='';
 
         // determine if this is a subscription
-        $subscriptionType = $order->getData('subscription_type');
+        $subscriptionType = $order->getSubscriptionType();
         if ($order->isSubscription() && $subscriptionType == 'annual')
         {
             // get the subscription

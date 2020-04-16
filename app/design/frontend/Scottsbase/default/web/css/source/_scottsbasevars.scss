@@ -110,6 +110,7 @@ $cart-checkout-button__background-color                       : $checkout-button
 $cart-checkout-button__background-hover                       : $checkout-button-color !default;
 $cart-checkout-button__active__color                          : $checkout-button-color !default;
 $cart-checkout-button__border                                 : 0;
+$cart-checkout-button__border-color                           : inherit;
 $cart-checkout-button__letter-spacing                         : 1px;
 $cart-checkout-button__width                                  : 250px;
 $cart-checkout-button__height                                 : 44px;
@@ -123,6 +124,17 @@ $cart-checkout-button__background-active                      : $checkout-button
 // Large Button
 $cart-checkout-button-l__width                                : 250px;
 
+
+// Cross Sell Button
+$cart-checkout-button-crossSell__width                        : 156px;
+$cart-checkout-button__crossSell-border-color                 : $checkout-green;
+$cart-checkout-button__crossSell-font-weight                  : 700;
+$cart-checkout-button__crossSell-background-color             : $color-white;
+$cart-checkout-button__crossSell-font-color                   : $color-black;
+$cart-checkout-button__crossSell-border                       : 2px solid;
+
+
 // Small Button
 $cart-checkout-button-s__width                                : 74px;
+$cart-checkout-button-s__height                               : 32px;
 

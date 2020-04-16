@@ -154,18 +154,17 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     /**
      * Get order by subscription Id
      *
-     * @return array
+     * @param $subscriptionId
+     * @return mixed
      */
     public function getOrderBySubscriptionId($subscriptionId)
     {
-        $this->_logger->error("getOrderBySubscriptionId");
-        try {
-            $order = $this->_orderFactory->create();
-            $this->_orderResource->load($order, $subscriptionId, 'subscription_id');
-            $orderId = $order->getId();
-        } catch (\Exception $e) {
-            $this->_logger->error($e->getMessage());
-            return [ 'success' => false, 'error_message' => $e->getMessage() ];
+        $order = $this->_orderFactory->create();
+        $this->_orderResource->load($order, $subscriptionId, 'subscription_id');
+        $orderId = $order->getId();
+
+        if (! $orderId) {
+            $this->_logger->error("Could not find an order for subscription with ID: {$subscriptionId}");
         }
 
         return $orderId;

@@ -603,6 +603,11 @@ class Subscription extends AbstractModel
         return $this->_recurlyHelper->getSeasonSlugByName($name);
     }
 
+    /**
+     * Cancel the subscription.
+     *
+     * @throws LocalizedException
+     */
     public function cancel()
     {
         $this->_cancelSubscriptionHelper->cancel($this);

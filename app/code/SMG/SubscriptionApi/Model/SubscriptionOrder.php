@@ -346,12 +346,10 @@ class SubscriptionOrder extends AbstractModel
      */
     public function isCurrentlyShippable()
     {
-        if ($this->getSubscriptionType() !== 'annual') {
-            $today = new DateTime();
-            $shipStart = DateTime::createFromFormat('Y-m-d H:i:s', $this->getShipStartDate());
-            return $today >= $shipStart;
-        }
-        return true;
+        $today = new DateTime();
+        $shipStart = DateTime::createFromFormat('Y-m-d H:i:s', $this->getShipStartDate());
+        
+        return $today >= $shipStart;
     }
 
     /**
