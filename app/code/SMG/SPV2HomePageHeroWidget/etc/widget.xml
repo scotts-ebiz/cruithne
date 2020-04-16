@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<widgets xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Widget:etc/widget.xsd">
+	<widget class="SMG\SPV2HomePageHeroWidget\Block\Widget\HomePageHeroWidget" id="smg_scottsprogram_homepageherowidget">
+		<label>Scotts Program Home Page Hero Widget</label>
+		<description>Custom fields for the hero widget on the home page.</description>
+		<parameters>
+
+			<parameter name="heroHeadlineHTML" visible="true" xsi:type="block">
+				<label>DESKTOP Hero Headline</label>
+				<block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
+			</parameter>
+
+			<parameter name="heroHorizontalAlignment" visible="true" xsi:type="select" source_model="SMG\SPV2HomePageHeroWidget\Model\Source\HorizontalAlignmentSelect">
+				<label>DESKTOP Horizontal Alignment</label>
+			</parameter>
+
+			<parameter name="heroVerticalAlignment" visible="true" xsi:type="select" source_model="SMG\SPV2HomePageHeroWidget\Model\Source\VerticalAlignmentSelect">
+				<label>DESKTOP Vertical Alignment</label>
+			</parameter>
+
+			<parameter name="heroHeadlineHTMLMobile" visible="true" xsi:type="block">
+				<label>MOBILE Hero Headline</label>
+				<block class="SMG\ParameterTypes\Block\Adminhtml\Widget\Wysiwyg" />
+			</parameter>
+
+			<parameter name="heroHorizontalAlignmentMobile" visible="true" xsi:type="select" source_model="SMG\SPV2HomePageHeroWidget\Model\Source\HorizontalAlignmentSelect">
+				<label>MOBILE Horizontal Alignment</label>
+			</parameter>
+
+			<parameter name="heroVerticalAlignmentMobile" visible="true" xsi:type="select" source_model="SMG\SPV2HomePageHeroWidget\Model\Source\VerticalAlignmentSelect">
+				<label>MOBILE Vertical Alignment</label>
+			</parameter>
+
+			<parameter name="heroImage" visible="true" xsi:type="block">
+				<label>DESKTOP Hero Image</label>
+				<block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+			</parameter>
+
+			<parameter name="heroBackgroundImageClass" visible="true" xsi:type="select" source_model="SMG\SPV2HomePageHeroWidget\Model\Source\BackgroundPositionSelect">
+				<label>DESKTOP Background Image Position</label>
+			</parameter>
+
+			<parameter name="heroMobileImage" visible="true" xsi:type="block">
+				<label>MOBILE Hero Image</label>
+				<block class="SMG\ParameterTypes\Block\Adminhtml\Widget\ImageChooser" />
+			</parameter>
+
+			<parameter name="heroBackgroundImageClassMobile" visible="true" xsi:type="select" source_model="SMG\SPV2HomePageHeroWidget\Model\Source\BackgroundPositionSelect">
+				<label>MOBILE Background Image Position</label>
+			</parameter>
+
+            <parameter name="heroCallToActionText" visible="true" xsi:type="text">
+                <label>Call to Action Text</label>
+            </parameter>
+
+			<parameter name="heroCallToActionLink" visible="true" xsi:type="text">
+				<label>Call to Action Link URL (Page Identifier)</label>
+			</parameter>
+
+			<parameter name="heroCallToActionTextColor" visible="true" xsi:type="text">
+				<label>Call to Action Text Color</label>
+				<value>#000000</value>
+			</parameter>
+
+			<parameter name="heroCallToActionButtonColor" visible="true" xsi:type="text">
+				<label>Call to Action Button Color</label>
+				<value>#FFFFFF</value>
+			</parameter>
+
+			<parameter name="heroFullScreen" visible="true" xsi:type="select" source_model="SMG\ParameterTypes\Model\Source\YesNoSelect">
+				<label>Full Screen Hero</label>
+			</parameter>
+
+		</parameters>
+	</widget>
+</widgets>

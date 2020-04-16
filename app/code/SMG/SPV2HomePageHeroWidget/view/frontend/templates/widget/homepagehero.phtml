@@ -1,0 +1,145 @@
+<?php
+// PHP vars
+$heroHorizontalAlignment = ($block->getData('heroHorizontalAlignment') != '') ? $block->escapeHtml($block->getData('heroHorizontalAlignment')) : 'left';
+$heroHorizontalAlignmentMobile = ($block->getData('heroHorizontalAlignmentMobile') != '') ? $block->escapeHtml($block->getData('heroHorizontalAlignmentMobile')) : 'center';
+$heroVerticalAlignment = ($block->getData('heroVerticalAlignment') != '') ? $block->escapeHtml($block->getData('heroVerticalAlignment')) : 'middle';
+$heroVerticalAlignmentMobile = ($block->getData('heroVerticalAlignmentMobile') != '') ? $block->escapeHtml($block->getData('heroVerticalAlignmentMobile')) : 'middle';
+
+$heroBackgroundImageClass = ($block->getData('heroBackgroundImageClass') != '') ? 'md:' . $block->escapeHtml($block->getData('heroBackgroundImageClass')) : 'md:sp-bg-center';
+$heroBackgroundImageClassMobile = ($block->getData('heroBackgroundImageClassMobile') != '') ? 'xs:' . $block->escapeHtml($block->getData('heroBackgroundImageClassMobile')) : 'xs:sp-bg-center';
+
+$heroHorizontalAlignmentClassArray = [];
+$heroHorizontalFlexAlignmentClassArray = [];
+$heroVerticalAlignmentClassArray = [];
+
+$heroCallToActionTextColor = ($block->getData('heroCallToActionTextColor') != '') ? $block->escapeHtml($block->getData('heroCallToActionTextColor')) : '';
+$heroCallToActionButtonColor = ($block->getData('heroCallToActionButtonColor') != '') ? $block->escapeHtml($block->getData('heroCallToActionButtonColor')) : '';
+$heroCallToActionButtonStyles = '';
+
+// functions to adjust classes/styles per settings
+
+function setHorizontalAlignment($size, $alignment) {
+    $prefix = ($size == "mobile") ? "xs" : "md";
+    switch ($alignment) {
+        case "center":
+            return $prefix . ':sp-text-center';
+            break;
+        case "right":
+            return $prefix . ':sp-text-right';
+            break;
+        default: // left
+            return $prefix . ':sp-text-left';
+    }
+}
+
+function setHorizontalFlexAlignment($size, $alignment) {
+    $prefix = ($size == "mobile") ? "xs" : "md";
+    switch ($alignment) {
+        case "center":
+            return $prefix . ':sp-justify-center';
+            break;
+        case "right":
+            return $prefix . ':sp-justify-end';
+            break;
+        default: // left
+            return $prefix . ':sp-justify-start';
+    }
+}
+
+function setVerticalAlignment($size, $alignment) {
+    $prefix = ($size == "mobile") ? "xs" : "md";
+    switch ($alignment) {
+        case 'top':
+            return $prefix . ':sp-items-start';
+            break;
+        case 'bottom':
+            return $prefix . ':sp-items-end';
+            break;
+        default: // middle
+            return $prefix . ':sp-items-center';
+    }
+}
+
+// set classes/styles per settings
+
+$heroHorizontalAlignmentClassArray["desktop"] = setHorizontalAlignment("desktop", $heroHorizontalAlignment);
+$heroHorizontalAlignmentClassArray["mobile"] = setHorizontalAlignment("mobile", $heroHorizontalAlignmentMobile);
+$heroHorizontalFlexAlignmentClassArray["desktop"] = setHorizontalFlexAlignment("desktop", $heroHorizontalAlignment);
+$heroHorizontalFlexAlignmentClassArray["mobile"] = setHorizontalFlexAlignment("mobile", $heroHorizontalAlignmentMobile);
+$heroVerticalAlignmentClassArray["desktop"] = setVerticalAlignment("desktop", $heroVerticalAlignment);
+$heroVerticalAlignmentClassArray["mobile"] = setVerticalAlignment("mobile", $heroVerticalAlignmentMobile);
+
+if ($heroCallToActionTextColor !=''):
+    $heroCallToActionButtonStyles = $heroCallToActionButtonStyles . ' color: ' . $heroCallToActionTextColor . '; ';
+endif;
+
+if ($heroCallToActionButtonColor !=''):
+    $heroCallToActionButtonStyles = $heroCallToActionButtonStyles . ' background-color: ' . $heroCallToActionButtonColor . '; ';
+endif;
+
+?>
+<style>
+    .sp-hero__background {
+        <?php if ($block->getData('heroMobileImage') || $block->getData('heroImage')) { ?>
+            <?php if ($block->getData('heroMobileImage')) { ?>
+                background-image: url('<?php echo $block->escapeUrl($block->getData('heroMobileImage')); ?>') !important;
+            <?php } else { ?>
+                background-image: url('<?php echo $block->escapeUrl($block->getData('heroImage')); ?>') !important;
+            <?php } ?>
+        <?php } else { ?>
+            background-image: url('https://test_magento_image_repo.storage.googleapis.com/homePageHero.jpg') !important;
+        <?php } ?>
+    }
+
+    <?php if ($block->getData('heroImage')) { ?>
+        @media (min-width: 768px) {
+            .sp-hero__background {
+                background-image: url('<?php echo $block->escapeUrl($block->getData('heroImage')); ?>') !important;
+            }
+        }
+    <?php } ?>
+</style>
+
+<div class="sp-hero <?php echo $block->getData('heroFullScreen') ? 'sp-hero--full' : '' ?> <?php echo $heroVerticalAlignmentClassArray['mobile'] . ' ' . $heroVerticalAlignmentClassArray['desktop'] ?> sp-mb-12 sp-pb-4 ajctestversion4">
+    <div class="sp-hero__background <?php echo $heroBackgroundImageClassMobile . ' ' . $heroBackgroundImageClass ?>"></div>
+    <?php if ($block->getData('heroHeadlineHTML')) { ?>
+        <?php if( ! $block->getData('heroFullScreen' ) ) { ?>
+        <div class="sp-hero__headline sp-container sp-my-8">
+            <h1 class="sp-h1 sp-relative sp-text-white sp-my-0 <?php echo $heroHorizontalAlignmentClassArray['mobile'] . ' ' . $heroHorizontalAlignmentClassArray['desktop'] ?>">
+                <?php echo $block->escapeHtml($block->getData('heroHeadlineHTML'), ['p', 'strong', 'b', 'em', 'span', 'ul', 'ol', 'li']) ?>
+            </h1>
+        </div>
+        <?php } else { ?>
+        <div class="sp-container sp-flex sp-flex-wrap <?php echo $heroBackgroundImageClassMobile . ' ' . $heroBackgroundImageClass . ' ' . $heroHorizontalFlexAlignmentClassArray['mobile'] . ' ' . $heroHorizontalFlexAlignmentClassArray['desktop'] ?>">
+            <div class="sp-hero__headline sp-my-8">
+                <h1 class="sp-h1 sp-relative sp-text-white sp-my-0 <?php echo $heroHorizontalAlignmentClassArray['mobile'] . ' ' . $heroHorizontalAlignmentClassArray['desktop'] ?>">
+                    <?php echo $block->escapeHtml($block->getData('heroHeadlineHTML'), ['p', 'strong', 'b', 'em', 'span', 'ul', 'ol', 'li']) ?>
+                </h1>
+            </div>
+            <?php if ($block->getData('heroCallToActionText') && $block->getData('heroCallToActionLink')) { ?>
+            <a
+                href="<?php echo $block->escapeUrl($block->getData('heroCallToActionLink')) ?>"
+                class="sp-button sp-button--inverted sp-button--get-started sp-mb-8 sp-relative sp-text-center"
+                <?php if( $heroCallToActionButtonStyles != '' ) { ?>
+                    style="<?php echo $heroCallToActionButtonStyles ?>"
+                <?php } ?>
+            >
+                <?php echo $block->escapeHtml($block->getData('heroCallToActionText')) ?>
+            </a>
+            <?php } ?>
+        </div>
+        <?php } ?>
+    <?php } ?>
+
+    <?php if ($block->getData('heroCallToActionText') && $block->getData('heroCallToActionLink') && ! $block->getData('heroFullScreen') ) { ?>
+        <a
+            href="<?php echo $block->escapeUrl($block->getData('heroCallToActionLink')) ?>"
+            class="sp-button sp-button--inverted sp-button--get-started sp-mb-8 sp-relative sp-text-center"
+            <?php if( $heroCallToActionButtonStyles != '' ) { ?>
+                style="<?php echo $heroCallToActionButtonStyles ?>"
+            <?php } ?>
+        >
+            <?php echo $block->escapeHtml($block->getData('heroCallToActionText')) ?>
+        </a>
+    <?php } ?>
+</div>
