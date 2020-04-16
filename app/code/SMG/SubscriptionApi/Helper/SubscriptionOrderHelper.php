@@ -33,6 +33,8 @@ use SMG\SubscriptionApi\Model\SubscriptionAddonOrderItem;
 use SMG\SubscriptionApi\Model\SubscriptionOrder;
 use SMG\SubscriptionApi\Model\SubscriptionOrderItem;
 use Magento\Quote\Model\ResourceModel\Quote as QuoteResource;
+use SMG\Sap\Model\SapOrderBatchFactory;
+use SMG\Sap\Model\ResourceModel\SapOrderBatch as SapOrderBatchResource;
 
 /**
  * Class SubscriptionOrderHelper
@@ -156,6 +158,16 @@ class SubscriptionOrderHelper extends AbstractHelper
     protected $_quoteResource;
 
     /**
+     * @var SapOrderBatchFactory
+     */
+    protected $_sapOrderBatchFactory;
+
+    /**
+     * @var SapOrderBatchResource
+     */
+    protected $_sapOrderBatchResource;
+
+    /**
      * SubscriptionOrderHelper constructor.
      * @param Context $context
      * @param AddressFactory $addressFactory
@@ -179,6 +191,8 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @param SubscriptionOrderResource $subscriptionOrderResource
      * @param RegionCollection $regionCollection
      * @param SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
+     * @param SapOrderBatchFactory $sapOrderBatchFactory
+     * @param SapOrderBatchResource $sapOrderBatchResource
      * @throws NoSuchEntityException
      */
     public function __construct(
@@ -203,7 +217,9 @@ class SubscriptionOrderHelper extends AbstractHelper
         SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
         SubscriptionOrderResource $subscriptionOrderResource,
         RegionCollection $regionCollection,
-        SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
+        SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory,
+        SapOrderBatchFactory $sapOrderBatchFactory,
+        SapOrderBatchResource $sapOrderBatchResource
     ) {
         parent::__construct($context);
 
@@ -228,6 +244,8 @@ class SubscriptionOrderHelper extends AbstractHelper
         $this->_subscriptionOrderResource = $subscriptionOrderResource;
         $this->_regionCollection = $regionCollection;
         $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
+        $this->_sapOrderBatchFactory = $sapOrderBatchFactory;
+        $this->_sapOrderBatchResource = $sapOrderBatchResource;
 
         $this->_store = $storeManager->getStore();
         $this->_websiteId = $this->_store->getWebsiteId();
@@ -474,6 +492,20 @@ class SubscriptionOrderHelper extends AbstractHelper
             // Create the order invoice.
             $this->_logger->info('Creating the invoice...');
             $subscriptionOrder->createInvoice();
+        } else {
+            // This is a future seasonal order so find the batch and clear
+            // is_order and order_process_date.
+            $sapOrderBatch = $this->_sapOrderBatchFactory->create();
+            $this->_sapOrderBatchResource->load($sapOrderBatch, $order->getId(), 'order_id');
+
+            if ($sapOrderBatch->getId()) {
+                $sapOrderBatch->addData([
+                    'is_order' => 0,
+                    'order_process_date' => null,
+                ]);
+
+                $this->_sapOrderBatchResource->save($sapOrderBatch);
+            }
         }
 
         return $order;
