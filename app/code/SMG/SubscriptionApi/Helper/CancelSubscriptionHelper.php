@@ -2,6 +2,7 @@
 
 namespace SMG\SubscriptionApi\Helper;
 
+use DateTime;
 use Exception;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
@@ -17,6 +18,7 @@ use Recurly_Invoice;
 use Recurly_Subscription;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch as SapOrderBatchResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
+use SMG\Sap\Model\SapOrderBatchFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder as SubscriptionAddonOrderResource;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder as SubscriptionOrderResource;
@@ -47,6 +49,11 @@ class CancelSubscriptionHelper extends AbstractHelper
      * @var SapOrderBatchCollectionFactory
      */
     protected $_sapOrderBatchCollectionFactory;
+
+    /**
+     * @var \SMG\SubscriptionApi\Helper\SapOrderBatchFactory
+     */
+    protected $_sapOrderBatchFactory;
 
     /**
      * @var SapOrderBatchResource
@@ -109,6 +116,7 @@ class CancelSubscriptionHelper extends AbstractHelper
         OrderResource $orderResource,
         RecurlyHelper $recurlyHelper,
         SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory,
+        SapOrderBatchFactory $sapOrderBatchFactory,
         SapOrderBatchResource $sapOrderBatchResource,
         SubscriptionResource $subscriptionResource,
         SubscriptionOrderFactory $subscriptionOrderFactory,
@@ -123,6 +131,7 @@ class CancelSubscriptionHelper extends AbstractHelper
         $this->_orderResource = $orderResource;
         $this->_recurlyHelper = $recurlyHelper;
         $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
+        $this->_sapOrderBatchFactory = $sapOrderBatchFactory;
         $this->_sapOrderBatchResource = $sapOrderBatchResource;
         $this->_subscriptionResource = $subscriptionResource;
         $this->_subscriptionOrderFactory = $subscriptionOrderFactory;
@@ -223,6 +232,26 @@ class CancelSubscriptionHelper extends AbstractHelper
                     // subscription. No refunds are necessary.
                     $this->_logger->info($this->_loggerPrefix . "Order {$order->getId()} ({$order->getIncrementId()}) has not been invoiced so we will cancel the Recurly subscription without a refund...");
                     $this->cancelRecurlySubscription($subscriptionOrder, false);
+
+                    // The most likely case for an order in this state is that
+                    // it was a future seasonal order out of the shipping
+                    // window. Just to be save, we clear any SAP batch
+                    // information that may have been added.
+                    $sapOrderBatch = $this->_sapOrderBatchFactory->create();
+                    $this->_sapOrderBatchResource->load($sapOrderBatch, $order->getId(), 'order_id');
+
+                    // Update the SAP order batch.
+                    if ($sapOrderBatch->getId()) {
+                        $today = new DateTime();
+
+                        $sapOrderBatch->addData([
+                            'is_order' => 0,
+                            'order_process_date' => $today->format('Y-m-d H:i:s'),
+                        ]);
+
+                        $this->_sapOrderBatchResource->save($sapOrderBatch);
+                        $this->_logger->info($this->_loggerPrefix . "Set SAP is_order to 0 and order_process_date to null for canceled order: {$order->getId()} ({$order->getIncrementId()})");
+                    }
                 }
 
                 // Mark subscription order as canceled.
