@@ -68,8 +68,7 @@ class Link extends \Magento\Framework\View\Element\Html\Link\Current {
     private function hasRecurlyAccount()
     {
         $customer = $this->_customer->load( $this->getCustomerId() );
-
-        if( $customer->getRecurlyAccountCode() ) {
+        if( $customer->getCustomAttribute('gigya_uid')->getValue() ) {
             return true;
         }
 
