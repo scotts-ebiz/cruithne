@@ -5,18 +5,19 @@ define([
     'jquery'
 ], function (Component, ko, modal, $) {
     let successModal;
-
+   
     return Component.extend({
+        isVisible: ko.observable(true),
+        
         initialize(config) {
             const self = this;
             this.billing = ko.observable(config.billing);
             this.states = ko.observable(config.states);
             this.countries = ko.observable(config.countries);
-
-
             setTimeout( function() {
                 recurly.configure({
                     publicKey: config.recurlyApi,
+                    required : ['cvv'],
                     fields: {
                         card: {
                             // Field style properties
@@ -24,12 +25,14 @@ define([
                                 fontSize: '12px',
                             }
                         }
+
                     }
                 });
 
                 $(window).on('resize init', function (event) {
                     if ($(this).width() <= 767) {
                         recurly.configure({
+                            required : ['cvv'],
                             fields: {
                                 card: {
                                     // Field style properties
@@ -41,6 +44,7 @@ define([
                         });
                     } else {
                         recurly.configure({
+                            required : ['cvv'],
                             fields: {
                                 card: {
                                     // Field style properties
@@ -62,18 +66,21 @@ define([
                         $('.modal-header').remove();
                     }
                 }, $('#popup-modal'));
-
             }, 2000);
         },
 
-        saveBilling() {
+       saveBilling() {
             const self = this;
             const recurlyForm = $('form#recurlyForm');
             const formKey = document.querySelector('input[name=form_key]').value;
-
+            if(recurlyForm.validation('isValid') === false){
+              return false;
+            }
+            $('body').trigger('processStart');
             recurly.token( recurlyForm, function( err, token ) {
                 if( err ) {
-                    alert( err.message );
+                    $('body').trigger('processStop');
+                    return false;
                 } else {
                     if( token ) {
                         $.ajax({
@@ -85,7 +92,12 @@ define([
                                 form: recurlyForm.serializeArray()
                             } ),
                             success: function( response ) {
-                                self.hideSuccess();
+                                    $('body').trigger('processStop');
+                                    location.reload(); 
+                            },
+                error: function( response ) {
+                $('body').trigger('processStop');
+                    location.reload(); 
                             }
                         })
                     }
@@ -99,6 +111,22 @@ define([
 
         showSuccess() {
             successModal.openModal();
+        },
+        
+    hideChange() {
+        $('.changehide').hide();
+        $('.cardview').hide();
+        $('#recurlyForm input').attr('readonly', false);
+        $('#recurlyForm select').attr('disabled', false);
+        $('#recurlyForm').trigger('reset');
+        $('.hideme').show();
+        $('.cardedit').show();
+        $('form#recurlyForm').mage('validation', {});
+        },
+        
+    cancelBilling() {
+        $('body').trigger('processStart');
+        location.reload(); 
         }
     });
 });
