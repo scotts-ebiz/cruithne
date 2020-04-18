@@ -57,7 +57,7 @@ class Billing extends Template
      * @param Data $directoryData
      * @param RegionFactory $regionFactory
      * @param CollectionFactory $collectionFactory
-	 * @param CustomerRepositoryInterface $customerRepositoryInterface,
+     * @param CustomerRepositoryInterface $customerRepositoryInterface
      * @param array $data
      */
     public function __construct(
@@ -67,7 +67,7 @@ class Billing extends Template
         Data $directoryData,
         RegionFactory $regionFactory,
         CollectionFactory $collectionFactory,
-		CustomerRepositoryInterface $customerRepositoryInterface,
+	CustomerRepositoryInterface $customerRepositoryInterface,
         array $data = []
     ) {
         $this->_customerSession = $customerSession;
@@ -75,7 +75,7 @@ class Billing extends Template
         $this->_directoryData = $directoryData;
         $this->_regionFactory = $regionFactory;
         $this->_collectionFactory = $collectionFactory;
-		$this->_customerRepositoryInterface = $customerRepositoryInterface;
+	$this->_customerRepositoryInterface = $customerRepositoryInterface;
         parent::__construct($context, $data);
     }
 
