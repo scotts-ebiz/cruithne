@@ -42,9 +42,9 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
             <input type="text"
                 placeholder="Card Number"
                 class="sp-input"
-                data-recurly="card_no_file"
-                data-bind="value: billing().card_no_file"
-                name="card_no_file"
+                data-recurly="card_on_file"
+                data-bind="value: billing().card_on_file"
+                name="card_on_file"
                 readonly
             >
             <label class="sp-form-label">Card on file</label>
@@ -113,7 +113,7 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
         <div class="sp-form-group">
             <input type="text"
                 placeholder="Zip/Postal Code"
-                class="sp-input"
+                class="sp-input validate-zip-us"
                 data-recurly="postal_code"
                 data-bind="value: billing().zip"
                 name="zip_code" 
