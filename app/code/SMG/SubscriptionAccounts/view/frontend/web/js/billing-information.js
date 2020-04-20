@@ -2,7 +2,8 @@ define([
     'uiComponent',
     'ko',
     'Magento_Ui/js/modal/modal',
-    'jquery'
+    'jquery',
+    'mage/mage'
 ], function (Component, ko, modal, $) {
     let successModal;
    
@@ -25,7 +26,6 @@ define([
                                 fontSize: '12px',
                             }
                         }
-
                     }
                 });
 
@@ -69,7 +69,7 @@ define([
             }, 2000);
         },
 
-       saveBilling() {
+        saveBilling() {
             const self = this;
             const recurlyForm = $('form#recurlyForm');
             const formKey = document.querySelector('input[name=form_key]').value;
@@ -95,10 +95,10 @@ define([
                                     $('body').trigger('processStop');
                                     location.reload(); 
                             },
-                error: function( response ) {
-                $('body').trigger('processStop');
-                    location.reload(); 
-                            }
+							error: function( response ) {
+							    $('body').trigger('processStop');
+								location.reload(); 
+							}
                         })
                     }
                 }
