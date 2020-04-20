@@ -43,17 +43,16 @@ class Billing extends Template
      * @var CollectionFactory
      */
     protected $_collectionFactory;
-
-    /**
+    
+	/**
      * @var CustomerRepositoryInterface
      */
     protected $_customerRepositoryInterface;
-
+	
     /**
      * Subscriptions block constructor.
      * @param Context $context
      * @param CustomerSession $customerSession
-     * @param Customer $customer
      * @param RecurlyHelper $recurlyHelper
      * @param Data $directoryData
      * @param RegionFactory $regionFactory
@@ -68,7 +67,7 @@ class Billing extends Template
         Data $directoryData,
         RegionFactory $regionFactory,
         CollectionFactory $collectionFactory,
-        CustomerRepositoryInterface $customerRepositoryInterface,
+	CustomerRepositoryInterface $customerRepositoryInterface,
         array $data = []
     ) {
         $this->_customerSession = $customerSession;
@@ -76,7 +75,7 @@ class Billing extends Template
         $this->_directoryData = $directoryData;
         $this->_regionFactory = $regionFactory;
         $this->_collectionFactory = $collectionFactory;
-        $this->_customerRepositoryInterface = $customerRepositoryInterface;
+	$this->_customerRepositoryInterface = $customerRepositoryInterface;
         parent::__construct($context, $data);
     }
 
@@ -99,7 +98,7 @@ class Billing extends Template
     {
         $customer = $this->_customerRepositoryInterface->getById( $this->getCustomerId() );
 
-        if ($customer->getCustomAttribute('recurly_account_code')->getValue()) {
+        if (!empty($customer->getCustomAttribute('recurly_account_code')->getValue())) {
             return $customer->getCustomAttribute('recurly_account_code')->getValue();
         }
 
@@ -119,7 +118,7 @@ class Billing extends Template
         $billing = [];
 
         try {
-            $billing_info = Recurly_BillingInfo::get($this->getCustomerRecurlyAccountCode());
+            $billing_info = Recurly_BillingInfo::get($this->getGigyaUid());
 
             $billing['first_name'] = $billing_info->first_name;
             $billing['last_name'] = $billing_info->last_name;
@@ -129,6 +128,7 @@ class Billing extends Template
             $billing['country'] = $billing_info->country;
             $billing['state'] = $billing_info->state;
             $billing['zip'] = $billing_info->zip;
+            $billing['card_on_file'] = '****_****_****_'.$billing_info->last_four;
         } catch (\Exception $e) {
             // Not truly an error state. We expect this for users without recurly accounts
             $billing['first_name'] = '';
@@ -139,6 +139,7 @@ class Billing extends Template
             $billing['country'] = '';
             $billing['state'] = '';
             $billing['zip'] = '';
+            $billing['card_on_file'] = '';
         }
 
         return $billing;
@@ -208,14 +209,15 @@ class Billing extends Template
     }
     
     /**
-     * Return customer's Recurly account code
+     * Return customer's Gigya Uid
      * 
      * @return string|bool
      */
     private function getGigyaUid()
     {
         $customer = $this->_customerRepositoryInterface->getById( $this->getCustomerId() );
-        if( $customer->getCustomAttribute('gigya_uid')->getValue()) {
+
+        if( !empty($customer->getCustomAttribute('gigya_uid')->getValue()) ) {
             return $customer->getCustomAttribute('gigya_uid')->getValue();
         }
 
