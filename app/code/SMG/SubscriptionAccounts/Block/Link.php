@@ -3,6 +3,7 @@ namespace SMG\SubscriptionAccounts\Block;
 
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\App\DefaultPathInterface;
+use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Customer\Api\CustomerRepositoryInterface;
 
@@ -14,25 +15,25 @@ class Link extends \Magento\Framework\View\Element\Html\Link\Current {
     protected $_defaultPath;
 
     /**
-     * @var Customer
-     */
-    protected $_customerRepositoryInterface;
-
-    /**
      * @var CustomerSession
      */
     protected $_customerSession;
-  
+    
+	/**
+     * @var CustomerRepositoryInterface
+     */
+    protected $_customerRepositoryInterface;
+	
     public function __construct(
         Context $context,
         CustomerSession $customerSession,
         DefaultPathInterface $defaultPath,
-        CustomerRepositoryInterface $customerRepositoryInterface,
+	CustomerRepositoryInterface $customerRepositoryInterface,
         array $data = []
     )
     {
         $this->_customerSession = $customerSession;
-        $this->_customerRepositoryInterface = $customerRepositoryInterface;
+	$this->_customerRepositoryInterface = $customerRepositoryInterface;
         parent::__construct( $context, $defaultPath );
     }
 
@@ -68,8 +69,7 @@ class Link extends \Magento\Framework\View\Element\Html\Link\Current {
     private function hasRecurlyAccount()
     {
         $customer = $this->_customerRepositoryInterface->getById( $this->getCustomerId() );
-
-        if( $customer->getCustomAttribute('gigya_uid') ) {
+        if(!empty($customer->getCustomAttribute('gigya_uid')->getValue())) {
             return true;
         }
 

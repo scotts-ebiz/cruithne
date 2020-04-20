@@ -2,8 +2,7 @@ define([
     'uiComponent',
     'ko',
     'Magento_Ui/js/modal/modal',
-    'jquery',
-    'mage/mage'
+    'jquery'
 ], function (Component, ko, modal, $) {
     let successModal;
    
@@ -18,6 +17,7 @@ define([
             setTimeout( function() {
                 recurly.configure({
                     publicKey: config.recurlyApi,
+                    required : ['cvv'],
                     fields: {
                         card: {
                             // Field style properties
@@ -32,6 +32,7 @@ define([
                 $(window).on('resize init', function (event) {
                     if ($(this).width() <= 767) {
                         recurly.configure({
+                            required : ['cvv'],
                             fields: {
                                 card: {
                                     // Field style properties
@@ -43,6 +44,7 @@ define([
                         });
                     } else {
                         recurly.configure({
+                            required : ['cvv'],
                             fields: {
                                 card: {
                                     // Field style properties
@@ -67,7 +69,7 @@ define([
             }, 2000);
         },
 
-        saveBilling() {
+       saveBilling() {
             const self = this;
             const recurlyForm = $('form#recurlyForm');
             const formKey = document.querySelector('input[name=form_key]').value;
@@ -116,7 +118,6 @@ define([
         $('.cardview').hide();
         $('#recurlyForm input').attr('readonly', false);
         $('#recurlyForm select').attr('disabled', false);
-        $('#recurlyForm input').attr('required', false);
         $('#recurlyForm').trigger('reset');
         $('.hideme').show();
         $('.cardedit').show();

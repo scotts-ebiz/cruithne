@@ -9,9 +9,7 @@
     <a href="/quiz" class="sp-button sp-button--primary sp-button--get-started sp-relative sp-text-center sp-mt-4">Get Started</a>
 </div>
 <!-- /ko -->
-<form id="recurlyForm" class="sp-flex sp-flex-column lg:sp-flex-row" 
-data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>"
-      data-mage-init='{"validation":{}}'>
+<form id="recurlyForm" class="sp-flex sp-flex-column lg:sp-flex-row">
     <div class="sp-flex-auto sp-p-4 lg:sp-p-0">
         <div class="sp-form-group">
             <input type="text"
@@ -42,9 +40,9 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
             <input type="text"
                 placeholder="Card Number"
                 class="sp-input"
-                data-recurly="card_no_file"
-                data-bind="value: billing().card_no_file"
-                name="card_no_file"
+                data-recurly="card_on_file"
+                data-bind="value: billing().card_on_file"
+                name="card_on_file"
                 readonly
             >
             <label class="sp-form-label">Card on file</label>
@@ -99,6 +97,7 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 data-recurly="city"
                 data-bind="value: billing().city"
                 name="city" readonly data-validate="{required:true}" aria-required="true">
+
             <label class="sp-form-label">City</label>
         </div>
         <div class="sp-form-group">
@@ -113,11 +112,11 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
         <div class="sp-form-group">
             <input type="text"
                 placeholder="Zip/Postal Code"
-                class="sp-input"
+                class="sp-input validate-zip-us"
                 data-recurly="postal_code"
                 data-bind="value: billing().zip"
-                name="zip_code" 
-                data-validate="{required:true}" aria-required="true"
+                name="zip_code"
+                data-validate="{required:true}" aria-required="true" 
                 readonly
                 >
             <label class="sp-form-label">Zip/Postal Code</label>
