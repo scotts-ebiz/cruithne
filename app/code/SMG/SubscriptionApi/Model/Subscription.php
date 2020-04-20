@@ -17,8 +17,8 @@ use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
 use Magento\Framework\Exception\NoSuchEntityException;
+use SMG\RecommendationApi\Helper\RecommendationHelper;
 use SMG\SubscriptionApi\Helper\CancelSubscriptionHelper;
-use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Quote\Api\CartManagementInterface;
 use Magento\Quote\Api\CartRepositoryInterface;
@@ -29,6 +29,7 @@ use Magento\Store\Model\StoreManager;
 use Psr\Log\LoggerInterface;
 use SMG\SubscriptionApi\Helper\RecurlyHelper;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\Collection as SubscriptionAddonOrderCollection;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\CollectionFactory as SubscriptionAddonOrderCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\Collection as SubscriptionOrderCollection;
@@ -119,6 +120,16 @@ class Subscription extends AbstractModel
     protected $_cancelSubscriptionHelper;
 
     /**
+     * @var RecommendationHelper
+     */
+    protected $_recommendationHelper;
+
+    /**
+     * @var SubscriptionResource
+     */
+    protected $_resource;
+
+    /**
      * Constructor.
      */
     protected function _construct()
@@ -149,7 +160,9 @@ class Subscription extends AbstractModel
      * @param RecurlyHelper $recurlyHelper
      * @param CartManagementInterface $cartManagement
      * @param CartRepositoryInterface $cartRepository
-     * @param AbstractResource|null $resource
+     * @param CancelSubscriptionHelper $cancelSubscriptionHelper
+     * @param RecommendationHelper $recommendationHelper
+     * @param SubscriptionResource $resource
      * @param AbstractDb|null $resourceCollection
      * @param array $data
      */
@@ -174,7 +187,8 @@ class Subscription extends AbstractModel
         CartManagementInterface $cartManagement,
         CartRepositoryInterface $cartRepository,
         CancelSubscriptionHelper $cancelSubscriptionHelper,
-        AbstractResource $resource = null,
+        RecommendationHelper $recommendationHelper,
+        SubscriptionResource $resource,
         AbstractDb $resourceCollection = null,
         array $data = []
     ) {
@@ -198,6 +212,7 @@ class Subscription extends AbstractModel
         $this->_cartManagement = $cartManagement;
         $this->_cartRepository = $cartRepository;
         $this->_cancelSubscriptionHelper = $cancelSubscriptionHelper;
+        $this->_recommendationHelper = $recommendationHelper;
     }
 
     /**
@@ -658,6 +673,95 @@ class Subscription extends AbstractModel
         }
 
         return $ordersArray;
+    }
+
+    /**
+     * Map the customer to the recommendation for this subscription.
+     *
+     * @return bool
+     */
+    public function mapUserToRecommendation()
+    {
+        if ($this->getData('mapped_recommendation') === 1) {
+            // Recommendation already mapped, so return.
+            return true;
+        }
+
+        // If a Gigya ID was passed in and one does not exist yet on this
+        // subscription, add it.
+        $userID = $this->getData('gigya_id');
+        $quizID = $this->getData('quiz_id');
+
+        // If there isn't a Gigya ID, try to grab it from logged in user.
+        if (! $userID && $this->_customerSession->isLoggedIn()) {
+            $customer = $this->_customerSession->getCustomer();
+            $userID = $customer->getData('gigya_uid');
+        }
+
+        // Let's go ahead and add the Gigya ID to the subscription if it's not
+        // there.
+        if ($userID && ! $this->getData('gigya_id')) {
+            $this->setData('gigya_id', $userID);
+
+            try {
+                $this->_resource->save($this);
+            } catch (Exception $e) {
+                $this->_logger->error("Could not save Gigya ID to subscription when attempt to map user to recommendation - {$e->getMessage()}");
+
+                return false;
+            }
+        }
+
+        if (! $userID || ! $quizID) {
+            // Need a user and quiz ID to map, so can't do it at this time.
+            return false;
+        }
+
+        $url = $this->_recommendationHelper->getMapToUserPath();
+
+        if (! $url) {
+            $this->_logger->error('ERROR: The mapToUser path is not setup in the Magento store configuration (CONFIG_RECOMMENDATIONS_MAP_TO_USER_PATH).');
+
+            return false;
+        }
+
+        try {
+            $url = filter_var($url, FILTER_SANITIZE_URL);
+            $ch = curl_init();
+            curl_setopt($ch, CURLOPT_URL, $url);
+            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
+            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+            curl_setopt($ch, CURLOPT_HTTPHEADER, [
+                'Content-Type: application/json',
+                'x-userid: ' . $this->getData('gigya_id'),
+            ]);
+            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([$this->getData('quiz_id')]));
+
+            curl_exec($ch);
+
+            $httpStatus = null;
+            if (! curl_errno($ch)) {
+                $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+            }
+
+            if ($httpStatus >= 200 && $httpStatus < 300) {
+                $this->_logger->info('MapToUser called for GigyaUid: ' . $userID . ' and QuizId: ' . $quizID . ' returned with HTTP status: ' . $httpStatus);
+            } else {
+                throw new Exception("MapToUser call failed with status {$httpStatus} for gigya ID: {$userID} and quiz ID: {$quizID}.");
+            }
+
+            curl_close($ch);
+
+            // Update the subscription to show that it has been mapped.
+            $this->setData('recommendation_mapped', 1);
+            $this->_resource->save($this);
+
+            return true;
+        } catch (Exception $e) {
+            $this->_logger->error('ERROR: Failed to map recommendation to user. - ' . $e->getMessage());
+
+            return false;
+        }
     }
 
     /**
