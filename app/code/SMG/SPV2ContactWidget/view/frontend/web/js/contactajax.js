@@ -14,6 +14,8 @@ define(
 
                     let self = this;
 
+                    self.defaultConfig = config;
+
                     // Initialize contact form observables.
                     self.form = {};
                     self.form.name = ko.observable(config.customerName || '');
@@ -165,6 +167,7 @@ define(
 
                 self.grassTypes = ko.observableArray(
                     [
+                    'Don\'t know',
                     'Bahia',
                     'Bahia & St. Augustine',
                     'Bermuda',
@@ -266,6 +269,7 @@ define(
                                     data: dataForm.serialize(),
                                     success: function (response) {
                                         self.saving(false);
+
                                         if (response.success == true) {
                                             var options = {
                                                 type: "popup",
@@ -282,12 +286,19 @@ define(
                                                 ]
                                             };
 
-                                            // Clear out the form.
-                                            $(':input', dataForm)
-                                            .not(':button, :submit, :reset, :hidden')
-                                            .val('')
-                                            .removeAttr('selected');
-                                            $('#topic').val(0);
+                                            // Reset form to what was loaded initially.
+                                            self.form.name(self.defaultConfig.customerName || '');
+                                            self.form.address(self.defaultConfig.address || '');
+                                            self.form.address2(self.defaultConfig.address2 || '');
+                                            self.form.city(self.defaultConfig.city || '');
+                                            self.form.state(self.defaultConfig.state || null);
+                                            self.form.postalCode(self.defaultConfig.postalCode || '');
+                                            self.form.email(self.defaultConfig.email || '');
+                                            self.form.phone(self.defaultConfig.phone || '');
+                                            self.form.topic(self.defaultConfig.topic || null);
+                                            self.form.comment(self.defaultConfig.comment || '');
+                                            self.form.grassType(self.defaultConfig.grassType || null);
+
 
                                             var popup = modal(options, $("#popup-modal"));
                                             $("#popup-modal").modal("openModal");
