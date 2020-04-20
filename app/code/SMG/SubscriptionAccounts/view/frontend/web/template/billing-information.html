@@ -18,10 +18,9 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 placeholder="First Name"
                 class="sp-input"
                 data-recurly="first_name"
-                data-bind="value: billing().first_name"
+                data-bind="value: billing.first_name, enable: billingInfoEditable"
                 name="first_name"
                 data-validate="{required:true}" aria-required="true"
-                readonly
                 >
             <label class="sp-form-label">First Name</label>
         </div>
@@ -30,27 +29,25 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 placeholder="Last Name"
                 class="sp-input"
                 data-recurly="last_name"
-                data-bind="value: billing().last_name"
+                data-bind="value: billing.last_name, enable: billingInfoEditable"
                 name="last_name"
                 data-validate="{required:true}" aria-required="true"
-                readonly
             >
             <label class="sp-form-label">Last Name</label>
         </div>
          
-        <div class="sp-form-group cardview">
+        <div class="sp-form-group">
             <input type="text"
                 placeholder="Card Number"
                 class="sp-input"
-                data-recurly="card_on_file"
-                data-bind="value: billing().card_on_file"
-                name="card_on_file"
-                readonly
+                data-recurly="card_no_file"
+                data-bind="value: billing.card_on_file, visible: !billingInfoEditable(), enable: billingInfoEditable"
+                name="card_no_file"
             >
             <label class="sp-form-label">Card on file</label>
         </div> 
         
-        <div class="cardedit" style="display: none;">
+        <div class="cardedit" data-bind="visible: billingInfoEditable">
             <div class="sp-form-group">
                 <label class="sp-form-label">Card Number</label>
                 <div data-recurly="card"
@@ -60,11 +57,11 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
          
         <div class="sp-form-group sp-hidden">
             <div class="sp-select sp-block sp-w-full">
-                <select readonly name="country"
+                <select name="country"
                         placeholder="Country"
                         class="sp-block sp-w-full"
                         data-recurly="country"
-                        data-bind="options: countries(), optionsText: function(item) { return item.label }, optionsValue: function(item) { return item.value }, value: billing().country"></select>
+                        data-bind="options: countries, optionsText: function(item) { return item.label }, optionsValue: function(item) { return item.value }, value: billing.country, enable: billingInfoEditable"></select>
                 </div>
             <label class="sp-form-label">Country</label>
         </div>
@@ -76,10 +73,9 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 placeholder="Address line 1"
                 class="sp-input"
                 data-recurly="address1"
-                data-bind="value: billing().address1"
+                data-bind="value: billing.address1, enable: billingInfoEditable"
                 name="address_1"
                 data-validate="{required:true}" aria-required="true"
-                readonly
             >
             <label class="sp-form-label">Address line 1</label>
         </div>
@@ -88,8 +84,8 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 placeholder="Address line 2"
                 class="sp-input"
                 data-recurly="address2"
-                data-bind="value: billing().address2"
-                name="address_2" readonly>
+                data-bind="value: billing.address2, enable: billingInfoEditable"
+                name="address_2">
             <label class="sp-form-label">Address line 2</label>
         </div>
         <div class="sp-form-group">
@@ -97,16 +93,16 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 placeholder="City"
                 class="sp-input"
                 data-recurly="city"
-                data-bind="value: billing().city"
-                name="city" readonly data-validate="{required:true}" aria-required="true">
+                data-bind="value: billing.city, enable: billingInfoEditable"
+                name="city" data-validate="{required:true}" aria-required="true">
             <label class="sp-form-label">City</label>
         </div>
         <div class="sp-form-group">
             <div class="sp-select">
-                <select disabled="true" name="state"
+                <select name="state"
                         placeholder="State"
                         data-recurly="state"
-                        data-bind="options: Object.values(states()), optionsText: function(item) { return item.text }, optionsValue: function(item) { return item.value }, value: billing().state" data-validate="{required:true}" aria-required="true"></select>
+                        data-bind="options: states, optionsText: 'text', optionsValue: 'value', value: billing.state, enable: billingInfoEditable" data-validate="{required:true}" aria-required="true"></select>
             </div>
             <label class="sp-form-label">State</label>
         </div>
@@ -115,10 +111,9 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 placeholder="Zip/Postal Code"
                 class="sp-input validate-zip-us"
                 data-recurly="postal_code"
-                data-bind="value: billing().zip"
+                data-bind="value: billing.zip, enable: billingInfoEditable"
                 name="zip_code" 
                 data-validate="{required:true}" aria-required="true"
-                readonly
                 >
             <label class="sp-form-label">Zip/Postal Code</label>
         </div>
@@ -126,17 +121,16 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
             <input type="hidden"
                 name="recurly-token"
                 data-recurly="token">
-                
-            <button type="reset"
-                    class="sp-button sp-button--primary changehide" data-bind="click: hideChange;">Change</button>
-                    
-            <button style="display: none;" type="submit"
-                    data-bind="click: saveBilling"
-                    class="sp-button sp-button--primary hideme">Save</button>
-            
-            <button  style="display: none;" type="button"
-                            data-bind="click: cancelBilling"
-                            class="sp-button sp-ml-4 sp-button--primary hideme">Cancel</button>         
+            <button type="button" class="sp-button sp-button--primary"
+                    data-bind="click: hideChange, visible: !billingInfoEditable()">Change</button>
+            <button type="button" class="sp-link sp-flex-none md:sp-mr-6 sp-order-0 md:sp-order-0"
+                    data-bind="toggleClick: billingInfoEditable, click: cancelBilling, visible: billingInfoEditable(), enable: billingInfoEditable">Cancel</button>
+            <button type="submit"
+                    class="sp-button sp-button--primary"
+                    data-bind="click: saveBilling, visible: billingInfoEditable() && !saving()">Save</button>
+            <button type="button"
+                    class="sp-button sp-button--inactive sp-button--loading"
+                    data-bind="visible: billingInfoEditable() && saving()">&emsp;&emsp;&emsp;</button>
         </div>
     </div>
 </form>
@@ -147,9 +141,10 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
         class="modal-popup--subscriptions__close"
         data-bind="click: hideSuccess"
     ></button>
-    <h2 class="sp-h2 sp-text-black sp-text-center">Changes Saved</h2>
-    <p class="sp-text-black sp-text-center">The changes to your account have been saved.</p>
-
+    <h2 class="sp-h2 sp-text-black sp-text-center" data-bind="visible: !modalErrorMessage().length">Changes Saved</h2>
+    <h2 class="sp-h2 sp-text-black sp-text-center" data-bind="visible: modalErrorMessage().length">A problem has occurred.</h2>
+    <p class="sp-text-black sp-text-center" data-bind="visible: !modalErrorMessage().length">The changes to your account have been saved.</p>
+    <p class="sp-text-black sp-text-center" data-bind="visible modalErrorMessage().length, text: modalErrorMessage"></p>
     <div class="sp-flex sp-justify-center sp-items-center">
         <button
             class="sp-button sp-button--primary"
