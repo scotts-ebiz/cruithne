@@ -33,6 +33,7 @@ use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatch
 use SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo\CollectionFactory as SapOrderBatchCreditmemoCollectionFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderBatchRma\CollectionFactory as SapOrderBatchRmaCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription\Collection as Collection;
 
 class OrdersHelper
 {
@@ -349,7 +350,7 @@ class OrdersHelper
      *
      * @return array
      */
-    private function getDebitOrderData()
+    private function   getDebitOrderData()
     {
         $ordersArray = array();
 
@@ -911,4 +912,53 @@ class OrdersHelper
         // return
         return $ordersArray;
     }
+
+    /**
+     * Get Order Data For Data Sync.
+     *
+     * @return array
+     */
+    public function getOrdersForAudit() {
+
+        /** @var Collection $orders **/
+        $orders = $this->_orderCollectionFactory->create();
+
+        $returnArray = array();
+        /** @var Order $order **/
+        foreach ($orders as $index=>$order) {
+            $newDataItem = array();
+            $newDataItem['DatabaseOrderNumber'] = $order->getId();
+            $newDataItem['OrderNumber'] = $order->getData('increment_id');
+            $newDataItem['DatePlaced'] = $order->getData('created_at');
+            $newDataItem['master_subscription_id'] = $order->getData('master_subscription_id');
+            $newDataItem['subscription_id'] = $order->getData('subscription_id');
+            $newDataItem['subscription_type'] = $order->getData('subscription_type');
+            $newDataItem['status'] = $order->getData('status');
+            $newDataItem['customer_firstname'] = $order->getData('customer_firstname');
+            $newDataItem['customer_lastname'] = $order->getData('customer_lastname');
+            $newDataItem['email'] = $order->getData('customer_email');
+            $newDataItem['ship_start_date'] = $order->getData('ship_start_date');
+            $newDataItem['ship_end_date'] = $order->getData('ship_end_date');
+            $newDataItem['SubTotal'] = $order->getData('subtotal');
+            $newDataItem['SalesTax'] = $order->getData('tax_amount');
+            $newDataItem['InvoicedAmount'] = $order->getData('total_invoiced');
+            $newDataItem['subscription_addon'] = $order->getData('subscription_addon');
+            $newDataItem['gigya_id'] = $order->getData('gigya_id');
+            $returnArray[] = $newDataItem;
+        }
+
+        return $returnArray;
+    }
+
+    /**
+     * Get SAP Data For Data Sync.
+     *
+     * @return array
+     */
+    public function getSapBatchForAudit() {
+
+        $sapOrderCollection = $this->_sapOrderBatchCollectionFactory->create();
+        return $sapOrderCollection->getData();
+    }
+
 }

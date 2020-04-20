@@ -107,4 +107,24 @@ class OrdersManagement implements OrdersManagementInterface
     {
         return $this->_ordersMainHelper->getOrders($this->_requestHelper->getRequest($this->_request->getRequestData()));
     }
+
+    /**
+     * Get the list of orders for order audit process.
+     *
+     * @return array
+     */
+    public function getOrdersForAudit()
+    {
+        return $this->_ordersHelper->getOrdersForAudit();
+    }
+
+    /**
+     * Get the list of sap batch for order audit process.
+     *
+     * @return array
+     */
+    public function getSapBatchForAudit()
+    {
+        return $this->_ordersHelper->getSapBatchForAudit();
+    }
 }
