@@ -91,4 +91,16 @@
             <resource ref="self" />
         </resources>
     </route>
+    <route url="/V1/smg/orderaudit/orders" method="GET">
+        <service class="SMG\Api\Model\OrdersManagementInterface" method="getOrdersForAudit" />
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
+    <route url="/V1/smg/orderaudit/sapbatch" method="GET">
+        <service class="SMG\Api\Model\OrdersManagementInterface" method="getSapBatchForAudit" />
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
 </routes>
