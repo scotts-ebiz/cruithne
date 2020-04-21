@@ -42,6 +42,8 @@ class OrderStatusHelper
     const INPUT_SAP_SAP_BILLING_DOC_DATE = 'InvoiceDate';
     const INPUT_SAP_PAYER_ID = 'PayerId';
     const INPUT_SAP_DELIVERY_NUMBER = 'DeliveryNumber';
+    const ERROR_CODE_LOCK_WAIT = 1205;
+    const ERROR_CODE_DEAD_LOCK = 1213;
 
     /**
      * @var LoggerInterface
@@ -1083,16 +1085,30 @@ class OrderStatusHelper
                 $invoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
                 $invoice->register();
 
-                try {
-                    $transaction = $this->_transaction
-                        ->addObject($invoice)
-                        ->addObject($invoice->getOrder());
-                    $transaction->save();
-                } catch (ZaiusException $e) {
-                    // Log and ignore any Zaius errors.
-                    $this->_logger->error($e->getMessage());
+                $retryAttempts = 0;
+                $maxAttempts = 3;
+                $retryWaitTime = 10;
+                while ($retryAttempts <= $maxAttempts) {
+                    try {
+                        $transaction = $this->_transaction
+                            ->addObject($invoice)
+                            ->addObject($invoice->getOrder());
+                        $transaction->save();
+                        break;
+                    } catch (ZaiusException $e) {
+                        // Log and ignore any Zaius errors.
+                        $this->_logger->error($e->getMessage());
+                        break;
+                    } catch (\Throwable $e) {
+                        // If this is a deadlock or lock wait timeout, let's retry the transaction after waiting a few seconds.
+                        if (($e->getCode() == self::ERROR_CODE_LOCK_WAIT || $e->getCode() == self::ERROR_CODE_DEAD_LOCK) && $retryAttempts <= $maxAttempts) {
+                            $retryAttempts++;
+                            sleep($retryWaitTime);
+                        } else {
+                            throw $e;
+                        }
+                    }
                 }
-
                 $this->_invoiceSender->send($invoice);
                 $order->addStatusHistoryComment(__('Notified customer about invoice #%1.', $invoice->getId()))
                     ->setIsCustomerNotified(false)
