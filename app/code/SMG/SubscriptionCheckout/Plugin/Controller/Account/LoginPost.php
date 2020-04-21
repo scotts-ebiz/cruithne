@@ -122,10 +122,6 @@ class LoginPost
             $gigyaId = $customer->getGigyaUid();
             $customer_email = $customer->getData('email');
 
-            if ($quizId && $gigyaId) {
-                $this->mapToUser($gigyaId, $quizId);
-            }
-
             if ($gigyaId && $zipCode) {
                 $gigyaData['profile']['address'] = $zipCode;
                 $this->_gigyaMageHelper->updateGigyaAccount($gigyaId, $gigyaData);
@@ -145,61 +141,6 @@ class LoginPost
         return $result;
     }
 
-    /**
-     * Map the quiz to the user
-     *
-     * @param string $user_id
-     * @param string $quiz_id
-     * @return bool|string|void
-     * @throws LocalizedException
-     * @api
-     */
-    private function mapToUser($user_id, $quiz_id)
-    {
-
-        // Make sure we have a path
-        if (!$this->_recommendationHelper->getMapToUserPath()) {
-            return;
-        }
-
-        if (empty($user_id) || empty($quiz_id)) {
-            return;
-        }
-
-        try {
-            $url = filter_var($this->_recommendationHelper->getMapToUserPath(), FILTER_SANITIZE_URL);
-
-            $ch = curl_init();
-            curl_setopt($ch, CURLOPT_URL, $url);
-            curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'PUT');
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, [
-                'Content-Type: application/json',
-                'x-userid: ' . $user_id,
-            ]);
-            curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode([$quiz_id]));
-
-            $response = curl_exec($ch);
-
-            $httpStatus = null;
-            if (! curl_errno($ch)) {
-                $httpStatus = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            }
-
-            if (! is_null($httpStatus)) {
-                $this->_logger->info('MapToUser called for GigyaUid: ' . $user_id . ' and QuizId: ' . $quiz_id . ' returned with HTTP status: ' . $httpStatus);
-            } else {
-                $this->_logger->error('MapToUser called and returned error for GigyaUid: ' . $user_id . ' and QuizId: ' . $quiz_id);
-            }
-
-            curl_close($ch);
-
-            return $response;
-        } catch (\Exception $e) {
-            throw new LocalizedException(__($e->getMessage() . ' (' . $e->getCode() . ')'));
-        }
-    }
-    
     /**
      * Customer Subscription to zaius
      * @param $customer_email
