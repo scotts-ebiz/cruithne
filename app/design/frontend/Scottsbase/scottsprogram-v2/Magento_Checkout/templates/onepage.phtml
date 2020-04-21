@@ -22,7 +22,8 @@
     <script>
         require([
             'mage/url',
-            'Magento_Ui/js/block-loader'
+            'Magento_Ui/js/block-loader',
+            'SMG_RecommendationResults/js/results'
         ], function(url, blockLoader) {
             blockLoader("<?= /* @escapeNotVerified */ $block->getViewFileUrl('images/loader-1.gif') ?>");
             return url.setBaseUrl('<?= /* @escapeNotVerified */ $block->getBaseUrl() ?>');
