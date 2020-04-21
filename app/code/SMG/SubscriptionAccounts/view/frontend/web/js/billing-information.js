@@ -18,6 +18,7 @@ define([
             setTimeout( function() {
                 recurly.configure({
                     publicKey: config.recurlyApi,
+                    required : ['cvv'],
                     fields: {
                         card: {
                             // Field style properties
@@ -25,13 +26,13 @@ define([
                                 fontSize: '12px',
                             }
                         }
-
                     }
                 });
 
                 $(window).on('resize init', function (event) {
                     if ($(this).width() <= 767) {
                         recurly.configure({
+                            required : ['cvv'],
                             fields: {
                                 card: {
                                     // Field style properties
@@ -43,6 +44,7 @@ define([
                         });
                     } else {
                         recurly.configure({
+                            required : ['cvv'],
                             fields: {
                                 card: {
                                     // Field style properties
@@ -93,10 +95,10 @@ define([
                                     $('body').trigger('processStop');
                                     location.reload(); 
                             },
-                error: function( response ) {
-                $('body').trigger('processStop');
-                    location.reload(); 
-                            }
+							error: function( response ) {
+							    $('body').trigger('processStop');
+								location.reload(); 
+							}
                         })
                     }
                 }
@@ -116,7 +118,6 @@ define([
         $('.cardview').hide();
         $('#recurlyForm input').attr('readonly', false);
         $('#recurlyForm select').attr('disabled', false);
-        $('#recurlyForm input').attr('required', false);
         $('#recurlyForm').trigger('reset');
         $('.hideme').show();
         $('.cardedit').show();

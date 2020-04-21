@@ -122,6 +122,13 @@ class Subscription extends Template
             ->addFilter('customer_id', $this->getCustomerId())
             ->getFirstItem();
 
+        // Check if there is an active subscription and return otherwise.
+        if (! $currentSubscription->getId()) {
+            return [
+                'subscription' => [],
+            ];
+        }
+
         $subscriptionOrders = $currentSubscription
             ->getSubscriptionOrders()
             ->getItems();
