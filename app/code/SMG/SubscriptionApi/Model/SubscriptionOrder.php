@@ -13,13 +13,9 @@ use Magento\Framework\Model\Context;
 use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Creditmemo;
-use Magento\Sales\Model\Order\CreditmemoFactory;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
-use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
-use Magento\Sales\Model\ResourceModel\Order\Creditmemo as CreditmemoResource;
 use Magento\Sales\Model\Service\InvoiceService;
 use Psr\Log\LoggerInterface;
 use SMG\Api\Helper\OrderStatusHelper;
@@ -30,6 +26,8 @@ use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder as SubscriptionOrderResource;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrderItem\CollectionFactory as SubscriptionOrderItemCollectionFactory;
+use Magento\Sales\Api\RefundOrderInterface;
+use Magento\Sales\Model\Order\Creditmemo\ItemCreationFactory;
 
 /**
  * Class SubscriptionOrder
@@ -89,14 +87,16 @@ class SubscriptionOrder extends AbstractModel
      * @var SubscriptionFactory
      */
     protected $_subscriptionFactory;
+
     /**
-     * @var CreditmemoFactory
+     * @var ItemCreationFactory
      */
-    protected $_creditmemoFactory;
+    protected $_itemCreationFactory;
+
     /**
-     * @var CreditmemoResource
+     * @var RefundOrderInterface
      */
-    protected $_creditmemoResource;
+    protected $_refundOrder;
 
     /**
      * Constructor.
@@ -124,8 +124,6 @@ class SubscriptionOrder extends AbstractModel
      * @param InvoiceSender $invoiceSender
      * @param SapOrderBatchFactory $sapOrderBatchFactory
      * @param SapOrderBatchResource $sapOrderBatchResource
-     * @param CreditmemoFactory $creditmemoFactory
-     * @param CreditmemoResource $creditmemoResource
      * @param OrderStatusHelper $orderStatusHelper
      * @param AbstractResource|null $resource
      * @param AbstractDb|null $resourceCollection
@@ -135,8 +133,6 @@ class SubscriptionOrder extends AbstractModel
         Context $context,
         Registry $registry,
         LoggerInterface $logger,
-        CreditmemoFactory $creditmemoFactory,
-        CreditmemoResource $creditmemoResource,
         SubscriptionHelper $subscriptionHelper,
         SubscriptionFactory $subscriptionFactory,
         SubscriptionResource $subscriptionResource,
@@ -149,6 +145,8 @@ class SubscriptionOrder extends AbstractModel
         SapOrderBatchFactory $sapOrderBatchFactory,
         SapOrderBatchResource $sapOrderBatchResource,
         OrderStatusHelper $orderStatusHelper,
+        RefundOrderInterface $refundOrder,
+        ItemCreationFactory $itemCreationFactory,
         SubscriptionOrderResource $resource,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -162,8 +160,6 @@ class SubscriptionOrder extends AbstractModel
         );
 
         $this->_logger = $logger;
-        $this->_creditmemoFactory = $creditmemoFactory;
-        $this->_creditmemoResource = $creditmemoResource;
         $this->_subscriptionHelper = $subscriptionHelper;
         $this->_subscriptionFactory = $subscriptionFactory;
         $this->_subscriptionResource = $subscriptionResource;
@@ -176,6 +172,8 @@ class SubscriptionOrder extends AbstractModel
         $this->_sapOrderBatchFactory = $sapOrderBatchFactory;
         $this->_sapOrderBatchResource = $sapOrderBatchResource;
         $this->_orderStatusHelper = $orderStatusHelper;
+        $this->_refundOrder = $refundOrder;
+        $this->_itemCreationFactory = $itemCreationFactory;
     }
 
     /**
@@ -387,17 +385,28 @@ class SubscriptionOrder extends AbstractModel
     public function createCreditMemo()
     {
         try {
-            /** @var Order $order */
             $order = $this->getOrder();
-            $invoices = $order->getInvoiceCollection();
 
-            /** @var Invoice $invoice */
-            foreach ($invoices as $invoice) {
-                /** @var Creditmemo $creditmemo */
-                $creditmemo = $this->_creditmemoFactory->createByOrder($order);
-                $creditmemo->setInvoice($invoice);
-                $this->_creditmemoResource->save($creditmemo);
+            if (! $order) {
+                // No order, so nothing to credit memo.
+                return;
             }
+
+            $creditMemoItems = [];
+            $orderItems = $order->getAllItems();
+
+            // Loop through the order items to create credit memo items to
+            // refund.
+            foreach ($orderItems as $orderItem) {
+                $creditMemoItem = $this->_itemCreationFactory->create();
+                $creditMemoItem->setQty($orderItem->getQtyInvoiced());
+                $creditMemoItem->setOrderItemId($orderItem->getId());
+
+                $creditMemoItems[] = $creditMemoItem;
+            }
+
+            // Refund the order.
+            $this->_refundOrder->execute($order->getId(), $creditMemoItems);
         } catch (Exception $e) {
             $error = 'Could not create credit memo for order.';
             $this->_logger->error($e->getMessage() . ' - ' . $error);
