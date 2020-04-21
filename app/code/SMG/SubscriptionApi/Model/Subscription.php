@@ -551,6 +551,19 @@ class Subscription extends AbstractModel
         return true;
     }
 
+    public function currentShipStartDate()
+    {
+        // $shipStartDate = $this->getFirstSubscriptionOrder()->getShipStartDate();  
+
+        $shipStartDate = date("m/d/Y", strtotime($shipStartDate = $this->getFirstSubscriptionOrder()->getShipStartDate())); 
+
+        return $shipStartDate;
+
+
+        // $value = $shipStartDate;
+        // return $value;
+    }
+
     /**
      * Return the first subscription order
      * @return SubscriptionOrder|mixed

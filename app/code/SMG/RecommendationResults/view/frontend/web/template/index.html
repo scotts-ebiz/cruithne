@@ -2,11 +2,19 @@
 <div class="sp-text-center sp-mt-4 sp-px-8 md:sp-px-0 md:sp-container sp-mb-8">
     <h1 class="sp-results__title sp-h1 sp-text-green-1">Here’s Your Plan</h1>
 
-    <p class="sp-text-center sp-max-w-md sp-mx-auto">
-        Get ready to grow a thick, strong, green lawn! Your plan contains everything you need to take care of all
-        <strong data-bind="if: lawnArea() > 0"><span data-bind="html: formatNumber(lawnArea())"></span> square feet</strong> of your
-        <span data-bind="if: lawnType()"><strong data-bind="html: lawnType()"></strong></span> lawn in every season.
-    </p>
+	<p class="sp-text-center sp-max-w-md sp-mx-auto">
+		Get ready to grow a thick, strong, green lawn! Your plan contains
+		everything you need to take care of all
+		<strong data-bind="if: lawnArea() > 0"
+			><span data-bind="html: formatNumber(lawnArea())"></span> square
+			feet</strong
+		>
+		of your
+		<span data-bind="if: lawnType()"
+			><strong data-bind="html: lawnType()"></strong
+		></span>
+		lawn in every season.
+	</p>
 
     <a
         class="sp-inline-block sp-link sp-text-center sp-label sp-results__link"
@@ -147,12 +155,18 @@
 <!-- /ko -->
 
 <div class="sp-bg-green-1 sp-py-4 sp-results__footer">
-    <div class="sp-container sp-flex sp-flex-column md:sp-flex-row sp-justify-end">
-        <!-- ko if: !hasValidZone() -->
-        <p class="sp-my-0 sp-text-center md:sp-text-left sp-text-white sp-text-sm sp-mb-2 md:sp-mb-0 md:sp-pr-2">We are
-            unable to ship to Alaska and Hawaii at this time. You can save and send your result via email and buy your
-            recommended plan at a local retailer. </p>
-        <!-- /ko -->
+	<div
+		class="sp-container sp-flex sp-flex-column md:sp-flex-row sp-justify-end"
+	>
+		<!-- ko if: !hasValidZone() -->
+		<p
+			class="sp-my-0 sp-text-center md:sp-text-left sp-text-white sp-text-sm sp-mb-2 md:sp-mb-0 md:sp-pr-2"
+		>
+			We are unable to ship to Alaska and Hawaii at this time. You can
+			save and send your result via email and buy your recommended plan at
+			a local retailer.
+		</p>
+		<!-- /ko -->
 
         <button
             class="sp-link sp-link--inverted sp-flex-none md:sp-mr-12 sp-order-1 md:sp-order-0"
@@ -175,4 +189,3 @@
 </div>
 <!-- /ko -->
 <!-- /ko -->
-
