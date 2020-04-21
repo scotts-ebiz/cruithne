@@ -167,7 +167,6 @@ define(
 
                 self.grassTypes = ko.observableArray(
                     [
-                    'Don\'t know',
                     'Bahia',
                     'Bahia & St. Augustine',
                     'Bermuda',
@@ -183,6 +182,7 @@ define(
                     'St. Augustine/Floratam',
                     'Tall Fescue',
                     'Zoysia',
+                    'I don\'t know'
                     ]
                 );
 
