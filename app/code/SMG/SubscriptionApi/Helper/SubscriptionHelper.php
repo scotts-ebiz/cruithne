@@ -60,6 +60,9 @@ class SubscriptionHelper extends AbstractHelper
             ->addFieldToFilter('quiz_id', $quizID)
             ->getFirstItem();
 
+        // Attempt to map the user to the recommendation.
+        $subscription->mapUserToRecommendation();
+
         if (! $subscription->getId() || !isset($details['subscription_plan'], $details['addons'])) {
             $this->_logger->error('Could not add subscription to the cart. Missing subscription or session details.');
 
