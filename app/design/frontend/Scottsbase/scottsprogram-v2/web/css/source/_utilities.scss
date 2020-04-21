@@ -43,41 +43,42 @@ $colors: (
 }
 
 // Background Position
-.sp-bg-bottom {
-  background-position: bottom;
+@each $size in $breakpoints {
+  @include breakpoint($size) {
+    @if $size {
+      $size: #{$size}\:
+    }
+
+    .#{$size}sp-bg-bottom {
+      background-position: bottom;
+    }
+    .#{$size}sp-bg-center {
+      background-position: center;
+    }
+    .#{$size}sp-bg-left {
+      background-position: left;
+    }
+    .#{$size}sp-bg-left-bottom {
+      background-position: left bottom;
+    }
+    .#{$size}sp-bg-left-top {
+      background-position: left top;
+    }
+    .#{$size}sp-bg-right {
+      background-position: right;
+    }
+    .#{$size}sp-bg-right-bottom {
+      background-position: right bottom;
+    }
+    .#{$size}sp-bg-right-top {
+      background-position: right top;
+    }
+    .#{$size}sp-bg-top {
+      background-position: top;
+    }
+  }
 }
 
-.sp-bg-center {
-  background-position: center;
-}
-
-.sp-bg-left {
-  background-position: left;
-}
-
-.sp-bg-left-bottom {
-  background-position: left bottom;
-}
-
-.sp-bg-left-top {
-  background-position: left top;
-}
-
-.sp-bg-right {
-  background-position: right;
-}
-
-.sp-bg-right-bottom {
-  background-position: right bottom;
-}
-
-.sp-bg-right-top {
-  background-position: right top;
-}
-
-.sp-bg-top {
-  background-position: top;
-}
 
 // Border Radius
 .sp-rounded {
