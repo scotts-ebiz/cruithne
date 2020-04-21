@@ -142,7 +142,7 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
         data-bind="click: hideSuccess"
     ></button>
     <h2 class="sp-h2 sp-text-black sp-text-center" data-bind="visible: !modalErrorMessage().length">Changes Saved</h2>
-    <h2 class="sp-h2 sp-text-black sp-text-center" data-bind="visible: modalErrorMessage().length">A problem has occurred.</h2>
+    <h3 class="sp-h3 sp-text-black sp-text-center" data-bind="visible: modalErrorMessage().length">A problem has occurred.</h3>
     <p class="sp-text-black sp-text-center" data-bind="visible: !modalErrorMessage().length">The changes to your account have been saved.</p>
     <p class="sp-text-black sp-text-center" data-bind="visible modalErrorMessage().length, text: modalErrorMessage"></p>
     <div class="sp-flex sp-justify-center sp-items-center">

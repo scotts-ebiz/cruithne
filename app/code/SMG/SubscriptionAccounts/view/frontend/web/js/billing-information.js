@@ -118,12 +118,21 @@ define([
                             form: recurlyForm.serializeArray()
                         }),
                     success: function ( response ) {
+
                         self.saving(false);
-                    },
-                        error: function ( response ) {
-                            self.saving(false);
-                            self.modalErrorMessage(JSON.stringify(response));
+
+                        if (!response.success) {
+                            self.modalErrorMessage(response.message);
                         }
+                        else {
+                            self.billingInfoEditable(false);
+                        }
+
+                        modalBilling.openModal();
+                    },
+                    error: function ( response ) {
+                        self.saving(false);
+                    }
                     })
                 }
             });
@@ -141,7 +150,6 @@ define([
             let self = this;
             self.billingInfoEditable(true);
             $('#recurlyForm input').attr('required', false);
-            //$('#recurlyForm').trigger('reset');
             $('form#recurlyForm').mage('validation', {});
         },
         
