@@ -25,14 +25,14 @@
       <td style="box-sizing: border-box; font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; font-size: 14px; vertical-align: top;"
          valign="top">
          <p class="white"
-            style="font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; margin: 0; margin-bottom: 0; font-size: 16; font-weight: 600; color: #fff;">
+            style="font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; margin: 0; margin-bottom: 0; font-size: 16; font-weight: 600; color: #fff; text-align: right; margin-right: 12px;">
             <?= $block->escapeHtml(__('Quantity')) ?>
          </p>
       </td>
    </tr>
 </table>
 <table class="light-green"
-   style="box-sizing: border-box; border-collapse: separate !important; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background-color: #edf4e1; padding: 20px 40px;"
+   style="box-sizing: border-box; border-collapse: separate !important; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background-color: #edf4e1; padding: 0 40px;"
    width="100%" bgcolor="#edf4e1">
    <tr>
       <?php foreach ($_shipment->getAllItems() as $_item) : ?>

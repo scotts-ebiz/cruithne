@@ -5,10 +5,13 @@
 .sp-hero {
   align-items: center;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   min-height: 300px;
   position: relative;
+
+  .sp-container {
+    padding: 0 1.5rem;
+  }
 }
 
 .sp-hero--full {
@@ -44,4 +47,22 @@
   position: relative;
   max-width: 768px;
   text-shadow: 0 2px 4px rgba(0, 0, 0, .5);
+}
+
+/**
+ * Page-specific styling
+ */
+
+.cms-scotts-program-v2-home {
+  .sp-hero__headline {
+    max-width: none;
+    width: 100%;
+
+    p, span {
+      margin-bottom: 0;
+    }
+    strong, b {
+      font-weight: 900; // needs to be extra bold since header here is already bold
+    }
+  }
 }
