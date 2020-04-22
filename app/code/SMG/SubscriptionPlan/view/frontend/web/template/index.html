@@ -100,7 +100,7 @@
                                     </div>
                                 </div>
                             </button>
-                            <!-- ko with: { season: $data, formatDate: $parent.formatDate, productFeatures: $parent.productFeatures, context: $parentContext.$rawData, formfactor: 'Mobile' } -->
+                            <!-- ko with: { season: $data, formatDate: $parent.formatDate, formatId: $parent.formatId, productFeatures: $parent.productFeatures, context: $parentContext.$rawData, formfactor: 'Mobile' } -->
                                 <div class="lg:sp-hide">
                                     <!-- ko template: "SMG_SubscriptionPlan/active-season.html" --><!-- /ko -->
                                 </div>
@@ -110,7 +110,7 @@
 
                     <!-- Product Detail -->
                     <!-- ko if: activeSeason() -->
-                    <!-- ko with: { season: $data.activeSeason(), formatDate: $data.formatDate, productFeatures: $data.productFeatures, context: $context.$rawData, formfactor: 'Desktop' } -->
+                    <!-- ko with: { season: $data.activeSeason(), formatDate: $data.formatDate, formatId: $data.formatId, productFeatures: $data.productFeatures, context: $context.$rawData, formfactor: 'Desktop' } -->
                     <div class="sp-hide lg:sp-block">
                         <!-- ko template: "SMG_SubscriptionPlan/active-season.html" --><!-- /ko -->
                     </div>
