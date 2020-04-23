@@ -28,16 +28,20 @@ define([
          * @return {String}
          */
         getShippingMethodTitle: function () {
-            var shippingMethod = quote.shippingMethod();
-            var shippingMethodCarrierTitle = '';
-            if (shippingMethod['carrier_title'] == 'Flat Rate' || shippingMethod['carrier_title'] == '') {
-                shippingMethodCarrierTitle = '';
+            var shippingMethod = quote.shippingMethod(),
+                shippingMethodTitle = '';
+
+            if (!shippingMethod) {
+                return '';
             }
-            else
-            {
-				shippingMethodCarrierTitle = shippingMethod['carrier_title'] + ' - ';
-			}
-            return shippingMethod ? shippingMethodCarrierTitle + shippingMethod['method_title'] : '';
+
+            shippingMethodTitle = shippingMethod['carrier_title'];
+
+            if (typeof shippingMethod['method_title'] !== 'undefined') {
+                shippingMethodTitle += ' - ' + shippingMethod['method_title'];
+            }
+
+            return shippingMethodTitle;
         },
 
         /**
