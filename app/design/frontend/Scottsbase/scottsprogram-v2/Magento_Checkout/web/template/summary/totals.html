@@ -27,7 +27,7 @@
 <!-- ko if: subscriptionData() && subscriptionData().subscription_type === 'seasonal' -->
 <div class="sp-seasonal-total sp-font-bold sp-flex sp-justify-between sp-p2">
 	<span>Total Today:</span>
-	<span data-bind="text: $data.products[0].type_id"></span>
+	<span data-bind="text: recurlyApi()"></span>
 	<span
 		data-bind="text: subscriptionData().is_shippable ? getGrandTotal() : '$0'"
 	></span>
