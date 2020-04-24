@@ -4,6 +4,7 @@ namespace SMG\SubscriptionCheckout\Block;
 use Magento\Framework\Session\SessionManagerInterface;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription;
 use SMG\SubscriptionApi\Helper\RecurlyHelper;
+use SMG\RecommendationApi\Api\Recommendation;
 
 /**
  * Onepage checkout block
@@ -25,12 +26,18 @@ class Onepage extends \Magento\Checkout\Block\Onepage
     protected $_recurlyHelper;
 
     /**
+     * @var Recommendation
+     */
+    protected $_recommendation;
+
+    /**
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magento\Framework\Data\Form\FormKey $formKey
      * @param \Magento\Checkout\Model\CompositeConfigProvider $configProvider
      * @param SessionManagerInterface $coreSession
      * @param Subscription $subscription
      * @param RecurlyHelper $recurlyHelper
+     * @param Recommendation $recommendation
      * @param array $layoutProcessors
      * @param array $data
      * @param \Magento\Framework\Serialize\Serializer\Json $serializer
@@ -44,6 +51,7 @@ class Onepage extends \Magento\Checkout\Block\Onepage
         SessionManagerInterface $coreSession,
         Subscription $subscription,
         RecurlyHelper $recurlyHelper,
+        Recommendation $recommendation,
         array $layoutProcessors = [],
         array $data = [],
         \Magento\Framework\Serialize\Serializer\Json $serializer = null,
@@ -53,7 +61,8 @@ class Onepage extends \Magento\Checkout\Block\Onepage
 
         $this->_coreSession = $coreSession;
         $this->_subscription = $subscription;
-        $this->_recurlyHelper = $recurlyHelper;
+        $this->_recurlyHelper = $recurlyHelper; 
+        $this->_recommendation = $recommendation; 
     }
 
     /**
@@ -65,6 +74,16 @@ class Onepage extends \Magento\Checkout\Block\Onepage
     {
         return $this->_recurlyHelper->getRecurlyPublicApiKey();
     }
+
+
+    /**
+     * Get Recommendation Results
+     */
+    public function getResult()
+    {
+        return $this->_recommendation->getResult();
+    }
+
 
     /**
      * Get Subscription or Redirect
