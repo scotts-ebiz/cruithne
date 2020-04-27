@@ -3,11 +3,11 @@
         <div class="md:sp-w-1/2">
             <h3
                 class="sp-my-0 sp-h2 sp-text-green-1 sp-mb-2 lg:sp-mb-0"
-                data-bind="html: season.products[0].season, attr: { id: formatId(season.products[0].season) + 'Title' + formfactor }"
+                data-bind="html: season.products[0].season"
             >
             </h3>
-            <div class="sp-p1" data-bind="html: formfactor">Apply between</div>
-            <div class="sp-p1 sp-mb-4 lg:sp-mb-0" data-bind="attr: { id: formatId(season.products[0].season) + 'SelectedShipmentApplyBetween' + formfactor }">
+            <div class="sp-p1">Apply between</div>
+            <div class="sp-p1 sp-mb-4 lg:sp-mb-0">
                 <span data-bind="html: formatDate(season.products[0].applicationStartDate)"></span>
                 -
                 <span data-bind="html: formatDate(season.products[0].applicationEndDate)"></span>
@@ -34,12 +34,12 @@
         <div class="sp-results__product sp-m--4 sp-bg-white sp-rounded">
             <div class="sp-flex">
                 <img class="sp-mx-auto sp-m-4 sp-results__product-image sp-block"
-                     data-bind="attr: { src: $data.thumbnailImage, alt: $data.meta_title, id: $parent.formatId(season) + 'SelectedShipmentImage' + $parent.formfactor }"
-                />
+                     data-bind="attr: { src: $data.thumbnailImage, alt: $data.meta_title }" />
+
                 <div class="sp-m-4">
                     <div class="sp-flex sp-mb-2">
                         <div class="sp-results__bag-count sp-label sp-mr-2 sp-flex sp-justify-center sp-items-center sp-label sp-uppercase"
-                             data-bind="html: $data.quantity, attr: { id: $parent.formatId(season) + 'SelectedShipmentBagCount' + $parent.formfactor }"></div>
+                             data-bind="html: $data.quantity"></div>
                         <span>Bag Count</span>
                     </div>
 
@@ -52,7 +52,7 @@
                 </div>
             </div>
             <button class="sp-link sp-uppercase"
-                    data-bind="click: function() { $parent.context.togglePDP($data) }, attr: { id: $parent.formatId(season) + 'MoreAboutThisProductLink' + $parent.formfactor }">More about this product</button>
+                    data-bind="click: function() { $parent.context.togglePDP($data) }">more about this product</button>
         </div>
     </div>
 </div>
