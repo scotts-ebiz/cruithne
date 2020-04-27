@@ -2,14 +2,12 @@
     <h2 class="sp-h2 sp-mt-0 sp-text-center md:sp-text-left">Billing Information</h2>
 </div>
 
-<!-- ko if: false -->
-<div class="sp-px-4 md:sp-px-0 sp-my-8 sp-text-center md:sp-text-left">
+<div class="sp-px-4 md:sp-px-0 sp-my-8 sp-text-center md:sp-text-left" data-bind="visible: !billing.card_on_file()">
     <p class="sp-p1 sp-strong">You do not have a current subscription with Scotts Program.</p>
     <p class="sp-p1 sp-max-w-md">Ready to get a subscription lawn care plan made just for your yard?</p>
     <a href="/quiz" class="sp-button sp-button--primary sp-button--get-started sp-relative sp-text-center sp-mt-4">Get Started</a>
 </div>
-<!-- /ko -->
-<form id="recurlyForm" class="sp-flex sp-flex-column lg:sp-flex-row" 
+<form data-bind="visible: billing.card_on_file" id="recurlyForm" class="sp-flex sp-flex-column lg:sp-flex-row"
 data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>"
       data-mage-init='{"validation":{}}'>
     <div class="sp-flex-auto sp-p-4 lg:sp-p-0">
