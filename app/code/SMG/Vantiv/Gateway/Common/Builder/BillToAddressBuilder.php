@@ -62,7 +62,7 @@ class BillToAddressBuilder extends \Vantiv\Payment\Gateway\Common\Builder\BillTo
         $city = $address->getCity();
         $regionCode = $address->getRegionCode();
         $postcode = $address->getPostcode();
-		$postcode = substr($postcode, 0, 5);
+	$postcode = substr($postcode, 0, 5);
         $countryId = $address->getCountryId();
         $email = $address->getEmail();
         $telephone = $address->getTelephone();
