@@ -18,11 +18,12 @@ interface RecurlyInterface
     /**
      * Cancel Recurly subscriptions
      *
+     * @param string $cancelReason
      * @return array
      *
      * @api
      */
-    public function cancelRecurlySubscription();
+    public function cancelRecurlySubscription($cancelReason);
 
     /**
      * Process seasonal invoices sent from Recurly
