@@ -793,7 +793,17 @@ td#label_carrier_flat-rate-shipping_flatrate, td#label_carrier_fedex-2ndday_flat
         }
     }
 }
-@media screen and (max-width: $screen__m) {
+
+@include max-screen($screen__s) {
+    #popup {
+        width: 90%;
+    }
+    .options-cont-wrp {
+        width: 70%;
+    }
+}
+
+@include max-screen($screen__m) {
 
     /** Shipping Page - Start **/
     .checkout-index-index .page-wrapper .page-main .columns .column.main .checkout-container .opc-estimated-wrapper .minicart-wrapper .action.showcart {
@@ -821,9 +831,27 @@ td#label_carrier_flat-rate-shipping_flatrate, td#label_carrier_fedex-2ndday_flat
         color: #333;
     }
     /** Shipping Page - End **/
+
+    /** Cart & Checkout user input font sizes, fix for iOS - Start **/
+    .checkout-index-index .checkout-container {
+        input, select {
+            font-size: 16px;
+        }
+    }
+    .checkout-cart-index .cart-container {
+        .coupon {
+            input {
+                font-size: 16px;
+            }
+        }
+        .input-text {
+            font-size: 16px;
+        }
+    }
+    /** Cart & Checkout user input font sizes, fix for iOS - End **/
 }
 
-@media screen and (max-width: $screen__l) {
+@include max-screen($screen__l) {
     .fieldset>.field:not(.choice)>.label {
         text-align: right;
         box-sizing: border-box;
@@ -840,15 +868,6 @@ td#label_carrier_flat-rate-shipping_flatrate, td#label_carrier_fedex-2ndday_flat
     }
     .checkout-index-index #discount-form label {
         padding: 6px 10px 0 0;
-    }
-}
-
-@media screen and (max-width: $screen__s) {
-    #popup {
-        width: 90%;
-    }
-    .options-cont-wrp {
-        width: 70%;
     }
 }
 
