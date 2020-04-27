@@ -486,11 +486,15 @@ define([
                         quiz_zip_code: window.sessionStorage.getItem('lawn-zip')
                     });
 
-            });          
+            });
          },
 
         formatNumber: function(number) {
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+        },
+
+        formatId: function(string) {
+            return string.replace(/[&\/\\#, +()$~%.'":*?<>{}]/g, '');
         }
     });
 });

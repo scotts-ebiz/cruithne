@@ -53,7 +53,7 @@
         <div class="sp-container sp-mb-16">
             <div class="sp-mx-auto sp-w-full lg:sp-w-5/6">
                 <div class="sp-flex sp-justify-end sp-mr-8 md:sp-mr-0 sp-my-4">
-                    <a class="sp-link" href="/account/subscription">Manage Plan</a>
+                    <a class="sp-link" id="ManagePlanLink" href="/account/subscription">Manage Plan</a>
                 </div>
 
                 <!-- Sidebar -->
@@ -62,8 +62,10 @@
                         data-bind="foreach: seasons()">
                         <li class="sp-plan__list sp-mb-0">
                             <button type="button"
-                                    data-bind="click: function() { $parent.toggleAccordion($index()) }"
-                                    class="sp-plan__tabs-button sp-flex sp-align-center sp-py-8 sp-px-4 lg:sp-hide mobile">
+                                    data-bind="click: function() { $parent.toggleAccordion($index()) },
+                                        attr: { id: $parent.formatId($data.products[0].season) + 'ButtonMobile' }"
+                                    class="sp-plan__tabs-button sp-flex sp-align-center sp-py-8 sp-px-4 lg:sp-hide mobile"
+                            >
                                 <img class="sp-mr-4 sp-results__icon--small"
                                      data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]), alt: $data.products[0].season }"  />
                                 <div>
@@ -75,20 +77,30 @@
                             </button>
                             <button type="button"
                                     class="sp-plan__tabs-button sp-flex sp-align-center sp-py-8 sp-px-4 desktop"
-                                    data-bind="click: function() { $parent.activeSeasonIndex($index()) }, css: {'sp-bg-green-4': ($index() === $parent.activeSeasonIndex())}"
+                                    data-bind="click: function() { $parent.activeSeasonIndex($index()) },
+                                        css: {'sp-bg-green-4': ($index() === $parent.activeSeasonIndex())},
+                                        attr: { id: $parent.formatId($data.products[0].season) + 'ButtonDesktop' }"
                                     >
                                 <img class="sp-mr-4 sp-plan__icon--small"
                                      data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]), alt: $data.products[0].season }" />
                                 <div>
                                     <strong class="sp-h4 sp-mb-2 lg:sp-mb-0"
                                             data-bind="html: $data.products[0].season"></strong>
-                                    <div class="sp-p2"
-                                         data-bind="if: $parent.nextAvailableProduct() === $index()">(Next Shipment)</div>
-                                    <div class="sp-p2"><span data-bind="html: $parent.formatDate($data.products[0].applicationStartDate)"></span> -
-                                        <span data-bind="html: $parent.formatDate($data.products[0].applicationEndDate)"></span></div>
+                                    <div
+                                        class="sp-p2"
+                                        data-bind="if: $parent.nextAvailableProduct() === $index()"
+                                    >(Next Shipment)
+                                    </div>
+                                    <div
+                                        class="sp-p2"
+                                        data-bind="attr: { id: $parent.formatId($data.products[0].season) + 'ApplyBetween' }"
+                                    >
+                                        <span data-bind="html: $parent.formatDate($data.products[0].applicationStartDate)"></span> -
+                                        <span data-bind="html: $parent.formatDate($data.products[0].applicationEndDate)"></span>
+                                    </div>
                                 </div>
                             </button>
-                            <!-- ko with: { season: $data, formatDate: $parent.formatDate, productFeatures: $parent.productFeatures, context: $parentContext.$rawData } -->
+                            <!-- ko with: { season: $data, formatDate: $parent.formatDate, formatId: $parent.formatId, productFeatures: $parent.productFeatures, context: $parentContext.$rawData, formfactor: 'Mobile' } -->
                                 <div class="lg:sp-hide">
                                     <!-- ko template: "SMG_SubscriptionPlan/active-season.html" --><!-- /ko -->
                                 </div>
@@ -98,7 +110,7 @@
 
                     <!-- Product Detail -->
                     <!-- ko if: activeSeason() -->
-                    <!-- ko with: { season: $data.activeSeason(), formatDate: $data.formatDate, productFeatures: $data.productFeatures, context: $context.$rawData } -->
+                    <!-- ko with: { season: $data.activeSeason(), formatDate: $data.formatDate, formatId: $data.formatId, productFeatures: $data.productFeatures, context: $context.$rawData, formfactor: 'Desktop' } -->
                     <div class="sp-hide lg:sp-block">
                         <!-- ko template: "SMG_SubscriptionPlan/active-season.html" --><!-- /ko -->
                     </div>
@@ -122,6 +134,7 @@
                             >
                             <a
                                 class="sp-success__article-link sp-bg-green-1 sp-text-center sp-text-white sp-uppercase"
+                                id="WhatDoGrassClippingsReadMoreLink"
                                 href="https://www.scotts.com/en-us/library/lawn-food/what-do-grass-clippings"
                                 target="_blank"
                             >
@@ -149,6 +162,7 @@
                             >
                             <a
                                 class="sp-success__article-link sp-bg-green-1 sp-text-center sp-text-white sp-uppercase"
+                                id="BenefitsMulchingReadMoreLink"
                                 href="https://www.scotts.com/en-us/library/mulch-garden/benefits-mulching"
                                 target="_blank"
                             >
@@ -176,6 +190,7 @@
                             >
                             <a
                                 class="sp-success__article-link sp-bg-green-1 sp-text-center sp-text-white sp-uppercase"
+                                id="HowReadyYourLawnMowerSpringReadMoreLink"
                                 href="https://www.scotts.com/en-us/library/spreaders-mowing-tools/how-ready-your-lawn-mower-spring"
                                 target="_blank"
                             >
