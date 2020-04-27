@@ -78,10 +78,11 @@ class Onepage extends \Magento\Checkout\Block\Onepage
 
     /**
      * Get Recommendation Results
+     * 
      */
-    public function getResult()
+    public function getResult($key=4447, $id='ade83fa8-f4ba-4a6a-bc3e-ad5b400d2e09', $zip='80016' )
     {
-        return $this->_recommendation->getResult();
+        return $this->_recommendation->getResult($key, $id, $zip);
     }
 
 
