@@ -10,7 +10,7 @@
 
     <a
         class="sp-inline-block sp-link sp-text-center sp-label sp-results__link"
-        id="TakeQuizAgainLink"
+        data-qa="TakeQuizAgainLink"
         href="/quiz"
     >Doesn't look right? Take the quiz again!</a>
 </div>
@@ -51,7 +51,7 @@
 <div class="sp-container sp-mb-16">
     <div class="sp-mx-auto sp-w-full lg:sp-w-5/6">
         <div class="sp-flex sp-justify-end sp-mr-8 md:sp-mr-0 sp-my-4">
-            <button class="sp-link" data-bind="click: toggleSaveAndSendModal" id="SaveAndSendResultsLinkTop">Save and Send Results</button>
+            <button class="sp-link" data-bind="click: toggleSaveAndSendModal" data-qa="SaveAndSendResultsLinkTop">Save and Send Results</button>
         </div>
 
         <!-- Sidebar -->
@@ -64,7 +64,7 @@
                     <button
                         type="button"
                         data-bind="click: function() { $parent.toggleAccordion($index()) },
-                            attr: { id: $parent.formatId($data.products[0].season) + 'ButtonMobile' }"
+                            attr: { 'data-qa': $parent.formatId($data.products[0].season) + 'Button' }"
                         class="sp-results__tabs-button sp-flex sp-align-center sp-py-8 sp-px-4 lg:sp-hide mobile"
                     >
                         <img
@@ -88,7 +88,7 @@
                         class="sp-results__tabs-button sp-flex sp-align-center sp-py-8 sp-px-4 desktop"
                         data-bind="click: function() { $parent.activeSeasonIndex($index()) },
                             css: {'sp-bg-green-4': ($index() === $parent.activeSeasonIndex())},
-                            attr: { id: $parent.formatId($data.products[0].season) + 'ButtonDesktop' }"
+                            attr: { 'data-qa': $parent.formatId($data.products[0].season) + 'Button' }"
                     >
                         <img
                             class="sp-mr-4 sp-results__icon--small"
@@ -106,7 +106,7 @@
                             </div>
                             <div
                                 class="sp-p2"
-                                data-bind="attr: { id: $parent.formatId($data.products[0].season) + 'ApplyBetween' }"
+                                data-bind="attr: { 'data-qa': $parent.formatId($data.products[0].season) + 'ApplyBetween' }"
                             >
                                 <span data-bind="html: $parent.formatDate($data.products[0].applicationStartDate)"></span>
                                 -
@@ -114,7 +114,7 @@
                             </div>
                         </div>
                     </button>
-                    <!-- ko with: { season: $data, formatDate: $parent.formatDate, formatId: $parent.formatId, productFeatures: $parent.productFeatures, context: $parentContext.$rawData, formfactor: 'Mobile' } -->
+                    <!-- ko with: { season: $data, formatDate: $parent.formatDate, formatId: $parent.formatId, productFeatures: $parent.productFeatures, context: $parentContext.$rawData } -->
                     <div class="lg:sp-hide">
                         <!-- ko template: "SMG_RecommendationResults/active-season.html" --><!-- /ko -->
                     </div>
@@ -124,7 +124,7 @@
 
             <!-- Product Detail -->
             <!-- ko if: activeSeason() -->
-            <!-- ko with: { season: $data.activeSeason(), formatDate: $data.formatDate, formatId: $data.formatId, productFeatures: $data.productFeatures, context: $context.$rawData, formfactor: 'Desktop' } -->
+            <!-- ko with: { season: $data.activeSeason(), formatDate: $data.formatDate, formatId: $data.formatId, productFeatures: $data.productFeatures, context: $context.$rawData } -->
             <div class="sp-hide lg:sp-block">
                 <!-- ko template: "SMG_RecommendationResults/active-season.html" --><!-- /ko -->
             </div>
@@ -157,7 +157,7 @@
         <button
             class="sp-link sp-link--inverted sp-flex-none md:sp-mr-12 sp-order-1 md:sp-order-0"
             data-bind="click: toggleSaveAndSendModal"
-            id="SaveAndSendResultsLinkBottom"
+            data-qa="SaveAndSendResultsLinkBottom"
         >
             Save and Send Results
         </button>
@@ -165,7 +165,7 @@
         <!-- ko if: hasValidZone() -->
         <a
             class="sp-button sp-button--inverted sp-order-0 md:sp-order-1 sp-mb-4 md:sp-mb-0"
-            id="ContinueButton"
+            data-qa="ContinueButton"
             href="/subscription-options"
         >
             Continue to Subscription Options
