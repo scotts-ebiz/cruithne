@@ -136,7 +136,7 @@ class CancelHelper extends AbstractHelper
      * @return false|string
      * @throws LocalizedException
      */
-    public function cancelSubscriptions($accountCode = '')
+    public function cancelSubscriptions($accountCode = '', $cancelReason = '')
     {
         // Get the current user.
         try {
@@ -186,8 +186,15 @@ class CancelHelper extends AbstractHelper
                 $order = $this->_orderFactory->create();
                 $this->_orderResource->load($order, $orderId);
 
-                $order->addCommentToStatusHistory('Subscription Canceled by Customer', false, false)
-                    ->save();
+                if ($cancelReason) {
+                    $order->addCommentToStatusHistory('Subscription canceled by customer. Reason: ' . $cancelReason, false, false)
+                        ->save();
+                }
+                else {
+                    $order->addCommentToStatusHistory('Subscription canceled by an administrator', false, false)
+                        ->save();
+                }
+
             }
 
             $timestamp = strtotime(date("Y-m-d H:i:s"));
