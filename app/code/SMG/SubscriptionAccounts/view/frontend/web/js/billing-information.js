@@ -126,6 +126,10 @@ define([
                         }
                         else {
                             self.billingInfoEditable(false);
+
+                            // Refresh the page to ensure the CC field mask is updated
+                            // since we cannot update it to the new one.
+                            window.location.reload();
                         }
 
                         modalBilling.openModal();
