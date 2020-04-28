@@ -3,6 +3,8 @@
     <preference for="Vantiv\Payment\Model\Ui\CcConfigProvider" type="SMG\Vantiv\Model\Ui\CcConfigProvider" />
     <preference for="Vantiv\Payment\Helper\Vault" type="SMG\Vantiv\Helper\Vault" />
     <preference for="Vantiv\Payment\Gateway\Cc\Builder\TokenBuilder" type="SMG\Vantiv\Gateway\Cc\Builder\TokenBuilder" />
+	<preference for="Vantiv\Payment\Gateway\Common\Builder\BillToAddressBuilder" type="SMG\Vantiv\Gateway\Common\Builder\BillToAddressBuilder" />
+	<preference for="Vantiv\Payment\Gateway\Common\Builder\EnhancedDataBuilder" type="SMG\Vantiv\Gateway\Common\Builder\EnhancedDataBuilder" />
 
     <!-- Vantiv KeyPad Facade -->
     <virtualType name="SMG\Vantiv\Model\VantivKeyPadFacade" type="Vantiv\Payment\Model\Method\Adapter">
