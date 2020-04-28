@@ -52,6 +52,7 @@ class Index extends \Magento\Framework\App\Action\Action
             $discount_amount = $order->getBaseDiscountAmount(); 
             $shipping_amount = $order->getShippingAmount();      
             $postcode = $order->getShippingAddress()->getData("postcode");
+            $postcode = substr($postcode, 0, 5);
             $coundtry_id = $order->getShippingAddress()->getData("country_id");
             $orderItems = $order->getAllItems();
             $i=1;
