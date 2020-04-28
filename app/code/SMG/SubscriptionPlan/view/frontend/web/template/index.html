@@ -63,7 +63,7 @@
                         <li class="sp-plan__list sp-mb-0">
                             <button type="button"
                                     data-bind="click: function() { $parent.toggleAccordion($index()) },
-                                        attr: { 'data-qa': $parent.formatId($data.products[0].season) + 'Button' }"
+                                        attr: { 'data-qa': $parent.formatId($data.products[0].season) + 'ButtonMobile' }"
                                     class="sp-plan__tabs-button sp-flex sp-align-center sp-py-8 sp-px-4 lg:sp-hide mobile"
                             >
                                 <img class="sp-mr-4 sp-results__icon--small"
@@ -79,7 +79,7 @@
                                     class="sp-plan__tabs-button sp-flex sp-align-center sp-py-8 sp-px-4 desktop"
                                     data-bind="click: function() { $parent.activeSeasonIndex($index()) },
                                         css: {'sp-bg-green-4': ($index() === $parent.activeSeasonIndex())},
-                                        attr: { 'data-qa': $parent.formatId($data.products[0].season) + 'Button' }"
+                                        attr: { 'data-qa': $parent.formatId($data.products[0].season) + 'ButtonDesktop' }"
                                     >
                                 <img class="sp-mr-4 sp-plan__icon--small"
                                      data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]), alt: $data.products[0].season }" />
@@ -100,7 +100,7 @@
                                     </div>
                                 </div>
                             </button>
-                            <!-- ko with: { season: $data, formatDate: $parent.formatDate, formatId: $parent.formatId, productFeatures: $parent.productFeatures, context: $parentContext.$rawData } -->
+                            <!-- ko with: { season: $data, formatDate: $parent.formatDate, formatId: $parent.formatId, productFeatures: $parent.productFeatures, context: $parentContext.$rawData, formfactor: 'Mobile' } -->
                                 <div class="lg:sp-hide">
                                     <!-- ko template: "SMG_SubscriptionPlan/active-season.html" --><!-- /ko -->
                                 </div>
@@ -110,7 +110,7 @@
 
                     <!-- Product Detail -->
                     <!-- ko if: activeSeason() -->
-                    <!-- ko with: { season: $data.activeSeason(), formatDate: $data.formatDate, formatId: $data.formatId, productFeatures: $data.productFeatures, context: $context.$rawData } -->
+                    <!-- ko with: { season: $data.activeSeason(), formatDate: $data.formatDate, formatId: $data.formatId, productFeatures: $data.productFeatures, context: $context.$rawData, formfactor: 'Desktop' } -->
                     <div class="sp-hide lg:sp-block">
                         <!-- ko template: "SMG_SubscriptionPlan/active-season.html" --><!-- /ko -->
                     </div>
