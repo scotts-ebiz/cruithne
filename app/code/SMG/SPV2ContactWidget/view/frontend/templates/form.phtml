@@ -101,7 +101,7 @@
         <div class="sp-form-group" data-bind="visible: addressVisible">
             <input
                     class="input-text sp-input sp-w-full"
-                    data-validate="{required:true}"
+                    data-validate="{'required-entry-street-0':true}"
                     id="address"
                     name="address"
                     maxLength="100"
@@ -127,7 +127,7 @@
         <div class="sp-form-group" data-bind="visible: addressVisible">
             <input
                     class="input-text sp-input sp-w-full"
-                    data-validate="{required:true}"
+                    data-validate="{'required-entry-bcity':true}"
                     data-bind="textInput: form.city"
                     id="city"
                     name="city"
@@ -163,7 +163,7 @@
             <input
                     class="input-number sp-input sp-w-full"
                     data-bind="textInput: form.phone"
-                    data-validate="{required:true}"
+                    data-validate="{'required-entry-telephone': true}"
                     id="phone"
                     name="phone"
                     maxLength="15"
