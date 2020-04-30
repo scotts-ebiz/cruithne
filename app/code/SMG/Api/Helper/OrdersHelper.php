@@ -548,7 +548,7 @@ class OrdersHelper
          */
         $shippingAddress = $order->getShippingAddress();
         $street = $shippingAddress->getStreet();
-        $address = ““;
+        $address = '';
         
         foreach ($street as $streetLine){
             if (!empty($streetLine)){
