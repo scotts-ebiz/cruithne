@@ -547,6 +547,15 @@ class OrdersHelper
          * @var \Magento\Sales\Model\Order\Address $shippingAddress
          */
         $shippingAddress = $order->getShippingAddress();
+        $street = $shippingAddress->getStreet();
+        $address = ““;
+        
+        foreach ($street as $streetLine){
+            if (!empty($streetLine)){
+                $address = $address + ' ' + $streetLine;
+            }
+        }
+
         $customerFirstName = $shippingAddress->getFirstname();
         $customerLastName = $shippingAddress->getLastname();
         if (empty($customerFirstName) && empty($customerLastName))
