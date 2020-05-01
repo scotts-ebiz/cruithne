@@ -547,14 +547,11 @@ class OrdersHelper
          * @var \Magento\Sales\Model\Order\Address $shippingAddress
          */
         $shippingAddress = $order->getShippingAddress();
-        $street = $shippingAddress->getStreet();
-        $address = '';
-        
-        foreach ($street as $streetLine){
-            if (!empty($streetLine)){
-                $address = $address + ' ' + $streetLine;
-            }
-        }
+        $streetArray = $shippingAddress->getStreet();
+        $addressArray = ["foo", "bar", "hello", "world"];
+
+        $implodedStreetAddress = $this->setStreetArray($streetArray);
+    
 
         $customerFirstName = $shippingAddress->getFirstname();
         $customerLastName = $shippingAddress->getLastname();
@@ -748,7 +745,7 @@ class OrdersHelper
             self::DATE_PLACED => $order->getData('created_at'),
             self::SAP_DELIVERY_DATE => $tomorrow,
             self::CUSTOMER_NAME => $customerName,
-            self::ADDRESS_STREET => $shippingAddress->getStreetLine(1),
+            self::ADDRESS_STREET => $implodedStreetAddress,
             self::ADDRESS_CITY => $shippingAddress->getCity(),
             self::ADDRESS_STATE => $shippingAddress->getRegion(),
             self::ADDRESS_ZIP => $shippingAddress->getPostcode(),
@@ -792,6 +789,16 @@ class OrdersHelper
             self::SUBSCRIPTION_SHIP_START => $order->getData('ship_start_date'),
             self::SUBSCRIPTION_SHIP_END => $order->getData('ship_end_date')
         ));
+    }
+
+    private function setStreetArray($value){
+        $streetArrayValue = $value;
+
+        $comma_separated = implode(" ", array_reverse($streetArrayValue));
+
+        $value = $comma_separated; 
+
+        return $value;
     }
 
     /**
