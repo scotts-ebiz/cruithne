@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+         <section id="checkout" translate="label" type="text" sortOrder="305" showInDefault="1" showInWebsite="1" showInStore="1">
+              <group id="options" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">			  
+                <field id="opt_in_status" translate="label" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Opt-In Status</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="opt_in_headline" translate="label" type="text" sortOrder="50" showInDefault="0" showInWebsite="1" showInStore="1">
+                    <label>Opt-In Headline</label>
+                    <comment>This text will display on the frontend Opt-In Headline.</comment>
+                </field>
+				<field id="opt_in_disclaimer" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Opt-In Disclaimer</label>
+                    <comment>This text will display on the frontend Opt-In Disclaimer.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
