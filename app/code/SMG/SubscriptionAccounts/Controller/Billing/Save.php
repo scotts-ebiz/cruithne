@@ -150,8 +150,10 @@ class Save extends Action
 
             $data = array(
                 'success'   => true,
-                'message'   => 'Billing details updated.'
+                'message'   => 'Billing details updated.',
+                'last_four' => '****-****-****-'.$billing_info->last_four
             );
+
 
             $result->setData( $data );
             return $result;
