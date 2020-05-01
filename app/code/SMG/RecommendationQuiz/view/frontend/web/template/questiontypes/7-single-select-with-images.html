@@ -52,7 +52,7 @@
 
                             <label
                                 class="sp-quiz__option-label sp-block sp-h-full"
-                                data-bind="attr: { for: option.id }"
+                                data-bind="attr: { for: option.id, 'data-qa': 'QuizButton' + $parents[1].quiz.currentGroup().label + '-' + ($index()+1) }"
                             >
                                 <span class="sp-quiz__option-content sp-bg-white sp-flex sp-flex-column sp-items-center sp-justify-center sp-px-4 sp-py-10 sp-rounded sp-shadow-md">
                                     <span
