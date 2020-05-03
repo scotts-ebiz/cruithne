@@ -548,9 +548,7 @@ class OrdersHelper
          */
         $shippingAddress = $order->getShippingAddress();
         $streetArray = $shippingAddress->getStreet();
-        $addressArray = ["foo", "bar", "hello", "world"];
-
-        $implodedStreetAddress = $this->setStreetArray($streetArray);
+        $implodedStreetAddress = $this->implodeStreetArray($streetArray);
     
 
         $customerFirstName = $shippingAddress->getFirstname();
@@ -791,13 +789,10 @@ class OrdersHelper
         ));
     }
 
-    private function setStreetArray($value){
+    private function implodeStreetArray($value){
         $streetArrayValue = $value;
-
-        $comma_separated = implode(",", array_reverse($streetArrayValue));
-
+        $comma_separated = implode(", ", array_reverse($streetArrayValue));
         $value = $comma_separated; 
-
         return $value;
     }
 
