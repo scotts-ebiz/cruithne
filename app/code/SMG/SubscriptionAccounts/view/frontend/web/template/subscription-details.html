@@ -196,8 +196,8 @@
     class="modal-popup--subscriptions sp-hide sp-pb-8"
     data-bind="afterRender: initializeCancelModal"
 >
-    <div id="before">
-        <h5 class="sp-h5 sp-text-black sp-text-center">Before You Cancel</h5>
+    <div id="before" data-bind="visible: currentModal() == 'before'">
+        <h5 class="sp-h5 sp-text-black sp-text-center">Before You Cancel...</h5>
         <h6 class="sp-h6 sp-text-black sp-text-center">We understand lawn care can be tough. Can we help you get your best results?</h6>
         <div class="content">
             <div>
@@ -226,7 +226,7 @@
             <button
                 class="sp-button sp-button--primary"
                 type="button"
-                data-bind="click: toggleModalContent('confirm')"
+                data-bind="click: function() { toggleModalContent('cancelReason') }"
             >
                 I want to cancel
             </button>
@@ -239,7 +239,47 @@
         </div>
     </div>
 
-    <div id="confirm" class="sp-hide">
+    <div id="cancelReason" data-bind="visible: currentModal() == 'cancelReason'">
+        <h5 class="sp-h5 sp-text-black sp-text-center">Why Are you Canceling?</h5>
+        <p class="sp-text-center sp-text-black">We're sorry to see you go. Please let us know how we can improve.</p><br />
+        <div class="content">
+            <form id="cancelReasonForm">
+            <div class="sp-form-group">
+                <div class="sp-select sp-w-full">
+                    <select data-bind="options: cancelReasons, value:cancelReason, optionsCaption: 'Please Select...'"
+                            name="cancelReason"
+                            id="cancelReasonSelect"
+                            class="sp-w-full"
+                            data-validate="{required:true}" aria-required="true">
+                    </select>
+                </div>
+                <label class="label sp-form-label sp-text-black" for="cancelReasonSelect">Reason for Canceling</label>
+            </div>
+            </form>
+            <div class="divider"></div>
+            <p class="sp-text-center"><strong>For questions, email us at scotts-orders@scotts.com or <span class="sp-nobr">call us at <a href="tel:18772203091">1-877-220-3091</a>.</span></strong></p>
+        </div>
+
+        <hr class="sp-my-8"/>
+
+        <div class="sp-flex sp-flex-column sp-justify-center sp-items-center">
+            <button
+                    class="sp-button sp-button--primary"
+                    type="button"
+                    data-bind="click: function() { validateCancelReason('confirm') },  css: { 'sp-button--inactive': !cancelReason() }, enable: cancelReason"
+            >
+                Next
+            </button>
+            <button
+                    data-bind="click: closeSubscriptionModal"
+                    class="sp-link close-subscription-modal sp-block sp-mt-4"
+            >
+                Never mind, take me back
+            </button>
+        </div>
+    </div>
+
+    <div id="confirm" data-bind="visible: currentModal() == 'confirm'">
         <h5 class="sp-h5 sp-text-black sp-text-center">Confirm Your Cancellation</h5>
         <h6 class="sp-h6 sp-text-black sp-text-center">By cancelling your subscription, the following will happen:</h6>
         <div class="content">
@@ -272,7 +312,7 @@
         </div>
     </div>
 
-    <div id="success" class="sp-hide">
+    <div id="success" data-bind="visible: currentModal() == 'success'">
         <h5 class="sp-h5 sp-text-black sp-text-center">Your Subscription is Canceled</h5>
         <h6 class="sp-h6 sp-text-black sp-text-center">We're sorry to see you go.</h6>
         <div class="content">
