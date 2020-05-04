@@ -5,9 +5,38 @@ namespace SMG\Zip\Controller\Zip;
 use Magento\Framework\App\Action\Action;
 use \Magento\Widget\Model\Widget\Instance;
 use \Magento\Cms\Model\Page;
+use Magento\Framework\App\Action\Context;
+use Magento\Cms\Api\PageRepositoryInterface;
+use Magento\Framework\Api\SearchCriteriaBuilder;
 
 class Index extends Action
 {
+    /**
+     * @var PageRepositoryInterface
+     */
+    protected $_pageRepository;
+
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    protected $_searchCriteriaBuilder;
+
+    /**
+     * @param Context $context
+     * @param PageRepositoryInterface $pageRepository
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     */
+    public function __construct(
+        Context $context,
+        PageRepositoryInterface $pageRepository,
+        SearchCriteriaBuilder $searchCriteriaBuilder
+    ) {
+        parent::__construct($context);
+
+        $this->_pageRepository = $pageRepository;
+        $this->_searchCriteriaBuilder = $searchCriteriaBuilder;
+    }
+
     public function execute() {
         // set the redirect to no zip page
         $current_page_url = parse_url($this->_url->getUrl(), PHP_URL_SCHEME) . '://' . parse_url($this->_url->getUrl(), PHP_URL_HOST);
@@ -95,12 +124,13 @@ class Index extends Action
 
         if($page_title):
             // Get the page id from the table
-            $query = 'SELECT * FROM cms_page WHERE title LIKE "' . $page_title . '" LIMIT 1';
-            $results = $this->getData($query);
+            $searchCriteria = $this->_searchCriteriaBuilder->addFilter('title', "%FAQ%", 'like')->create();
+            $pages = $this->_pageRepository->getList($searchCriteria)->getItems();
+            $pages = array_values($pages);
 
-            if($results):
+            if(isset($pages[0])):
                 // Get the page Id from the query results
-                $page_id = $results[0]['page_id'];
+                $page_id = $pages[0]->getId();
 
                 // Injection wouldn't work in a controller for some reason kept getting "Type Error occurred when creating object:"
                 // Used the Object Manager to get the Page Helper
