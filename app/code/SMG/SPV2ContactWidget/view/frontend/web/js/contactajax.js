@@ -250,6 +250,65 @@ define(
                     $.mage.__('Please enter a valid 5 digit US ZIP.')
                 );
 
+                    $.validator.addMethod(
+                        'required-entry-telephone',
+                        function (value) {
+                            if ($("input[name='telephone']").val() != '') {
+                                var filter = /^[(]?(\d{3})[)]?[-|\s]?(\d{3})[-|\s]?(\d{4})$/;
+                                if (value.length > 9 && filter.test(value)) {
+                                    return true;
+                                }else {
+                                    return false;
+                                }
+
+
+                            } else {
+                                return !$.mage.isEmpty(value);
+                            }
+                        },
+                        $.mage.__('Please enter a valid phone number.')
+                    );
+
+                    $.validator.addMethod(
+                        'required-entry-bcity',
+                        function (value) {
+                            if ($(".billing-address-form input[name='city']").val() != '') {
+                                if (!isNaN(value)) {
+                                    return false;
+                                }
+                                if( value.match( /^[a-zA-Z ]*$/) ) {
+                                    return true
+                                }else{
+                                    return false;
+                                }
+                            } else {
+                                return !$.mage.isEmpty(value);
+                            }
+                        },
+                        $.mage.__('Please enter a valid city')
+                    );
+
+                    /* Start shipping and billing street address validation */
+                    $.validator.addMethod(
+                        'required-entry-street-0',
+                        function (value) {
+                            if ($("input[name='street[0]']").val() != '') {
+                                if (!isNaN(value)) {
+                                    return false;
+                                }
+                                if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
+                                    return true
+                                } else {
+                                    return false;
+                                }
+
+                            } else {
+                                return !$.mage.isEmpty(value);
+                            }
+                        },
+                        $.mage.__('Please enter a valid street address.')
+                    );
+
                 // If user leaves a given required field, validate that field.
                 $('body').on('blur', "#name, #email, #comment, #topic, #address, #city, #state, #postalCode, #grassType, #phone", function () {
                     if ($.validator.validateSingleElement($(this))) {
