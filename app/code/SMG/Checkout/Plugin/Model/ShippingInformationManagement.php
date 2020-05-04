@@ -94,7 +94,6 @@ class ShippingInformationManagement
         $items = $this->_cart->getQuote()->getAllItems();
         $validate = false;
         $State= $this->_checkoutSession->getQuote()->getShippingAddress()->getRegion();
-
         foreach($items as $item) {
             $itemId = $item-> getItemId();
             $productId=$item->getProductId();

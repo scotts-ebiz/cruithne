@@ -11,6 +11,18 @@ define([
         initialize(config) {
 			this.subscriptions = ko.observable(config.subscriptions);
             this.loading = ko.observable(false);
+
+            this.currentModal = ko.observable('before')
+            this.cancelReasons = ko.observableArray([
+                'Price of Subscription',
+                'Can\'t Modify Plan/Products',
+                'Delivery Options/Schedule',
+                'Customer Service',
+                'Product Quality or Results',
+                'Some Other Reason'
+            ]);
+            this.cancelReason = ko.observable();
+
             this.type = ko.computed(() => {
                 return this.subscriptions().subscription.subscription_type;
             });
@@ -78,16 +90,20 @@ define([
                     this.displaySubscriptionModal();
                 }, 250);
             }
-            this.toggleModalContent('before');
         },
 
         closeSubscriptionModal: function () {
+            this.currentModal('before');
             cancelSubscriptionModal.closeModal();
         },
-
+        validateCancelReason: function (section) {
+            if ($.validator.validateSingleElement($('#cancelReasonSelect'))) {
+                this.toggleModalContent(section);
+            }
+        },
         toggleModalContent: function(section) {
-            $('#popup-modal > div').css('display', 'none');
-            $('#popup-modal #' + section).css('display', 'block');
+            $('form#cancelReasonForm').mage('validation');
+            this.currentModal(section);
         },
 
         closeCancellation: function() {
@@ -104,6 +120,7 @@ define([
                 url: window.location.origin + '/rest/V1/subscription/cancel',
                 dataType: 'json',
                 contentType: 'application/json',
+                data: JSON.stringify({cancelReason: this.cancelReason()}),
                 processData: false,
                 success: function (response) {
                     var response = JSON.parse(response);

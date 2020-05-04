@@ -125,6 +125,7 @@ define([
                             self.modalErrorMessage(response.message);
                         }
                         else {
+                            self.billing.card_on_file(response.last_four);
                             self.billingInfoEditable(false);
                         }
 
