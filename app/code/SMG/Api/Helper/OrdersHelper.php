@@ -792,8 +792,8 @@ class OrdersHelper
     */
     private function implodeStreetArray($value){
         $streetArrayValue = $value;
-        $comma_separated = implode(", ", array_reverse($streetArrayValue));
-        $value = $comma_separated; 
+        $impodeStreetValues = implode(" ", array_reverse($streetArrayValue));
+        $value = $impodeStreetValues; 
         return $value;
     }
 
