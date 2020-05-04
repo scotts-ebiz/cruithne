@@ -1,0 +1,102 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * Copyright © Magento, Inc. All rights reserved.
+ * See COPYING.txt for license details.
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <checkout>
+            <options>
+                <opt_in_status>0</opt_in_status>
+                <opt_in_headline>Yes, sign me up to receive emails with lawn care tips from the Scotts experts.</opt_in_headline>
+                <opt_in_disclaimer>By subscribing, you are signing up to receive emails marketed by Scotts Miracle-Gro, its affiliates, and select partners with related tips, information, and promotions.</opt_in_disclaimer>
+            </options>
+        </checkout>
+    </default>
+	<stores>
+		<miraclegro>
+		  <checkout>
+            <options>
+                <opt_in_status>1</opt_in_status>
+                <opt_in_headline>Yes, sign me up to receive emails with expert gardening tips and inspiration.</opt_in_headline>
+            </options>
+          </checkout>
+		</miraclegro>
+		<scotts>
+		  <checkout>
+            <options>
+                <opt_in_status>1</opt_in_status>
+                <opt_in_headline>Yes, sign me up to receive emails with lawn care tips from the Scotts experts.</opt_in_headline>
+            </options>
+          </checkout>
+		</scotts>
+		<ortho>
+		  <checkout>
+            <options>
+                <opt_in_status>1</opt_in_status>
+                <opt_in_headline>Yes, sign me up to receive emails with expert advice on weed and pest control in my area.</opt_in_headline>
+            </options>
+          </checkout>
+		</ortho>
+        <roundup>
+          <checkout>
+            <options>
+                <opt_in_status>1</opt_in_status>
+                <opt_in_headline>Yes, sign me up to receive emails with expert advice for weed control in my area.</opt_in_headline>
+            </options>
+          </checkout>
+        </roundup>
+        <tomcat>
+          <checkout>
+            <options>
+                <opt_in_status>1</opt_in_status>
+                <opt_in_headline>Yes, sign me up to receive emails with expert advice for weed control in my area.</opt_in_headline>
+            </options>
+          </checkout>
+        </tomcat>
+	</stores>
+    <websites>
+        <miraclegro>
+          <checkout>
+            <options>
+                <opt_in_status>1</opt_in_status>
+                <opt_in_headline>Yes, sign me up to receive emails with expert gardening tips and inspiration.</opt_in_headline>
+            </options>
+          </checkout>
+        </miraclegro>
+        <scotts>
+          <checkout>
+            <options>
+                <opt_in_status>1</opt_in_status>
+                <opt_in_headline>Yes, sign me up to receive emails with lawn care tips from the Scotts experts.</opt_in_headline>
+            </options>
+          </checkout>
+        </scotts>
+        <ortho>
+          <checkout>
+            <options>
+                <opt_in_status>1</opt_in_status>
+                <opt_in_headline>Yes, sign me up to receive emails with expert advice on weed and pest control in my area.</opt_in_headline>
+            </options>
+          </checkout>
+        </ortho>
+        <roundup>
+          <checkout>
+            <options>
+                <opt_in_status>1</opt_in_status>
+                <opt_in_headline>Yes, sign me up to receive emails with expert advice for weed control in my area.</opt_in_headline>
+            </options>
+          </checkout>
+        </roundup>
+        <tomcat>
+          <checkout>
+            <options>
+                <opt_in_status>1</opt_in_status>
+                <opt_in_headline>Yes, sign me up to receive emails with expert advice for weed control in my area.</opt_in_headline>
+            </options>
+          </checkout>
+        </tomcat>
+    </websites>
+</config>
