@@ -113,7 +113,7 @@
             <options>
                 <opt_in_status>1</opt_in_status>
                 <opt_in_headline>Yes, sign me up to receive emails with expert advice for weed control in my area.</opt_in_headline>
-                <opt_in_list_id>tomcatbrand</opt_in_list_id>
+                <opt_in_list_id>tomcat</opt_in_list_id>
                 <opt_in_acquisition_source>Tomcat</opt_in_acquisition_source>
             </options>
           </checkout>
