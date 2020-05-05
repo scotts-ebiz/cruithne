@@ -6,10 +6,13 @@ FILENAME='staging_'$(date +%Y%m%d)'0500.sql'
 # Change the file name if there is a argument passed in
 if [[ "$1" -eq "rc" ]]
    then
-    FILENAME='rc_'$(date +%Y%m%d)'0001.sql'
+    FILENAME='rc_'$(date +%Y%m%d)'0031.sql'
 fi
 # copy the desired sql file to the temp directory for later use
 /root/google-cloud-sdk/bin/gsutil cp gs://magento-data-export/$FILENAME /tmp/database.sql
+
+sed -i "s/is_tracking_orders_on_frontend'/is_tracking_orders_on_frontend1'/" /tmp/database.sql
+sed -i "s/is_tracking_orders_on_frontend'/is_tracking_orders_on_frontend2'/" /tmp/database.sql
 
 # create the magento user
 echo "CREATE USER 'magento'@'%' IDENTIFIED BY 'j7K9u3Lm2wA6';" | mysql -u root -pdfDF34#$
