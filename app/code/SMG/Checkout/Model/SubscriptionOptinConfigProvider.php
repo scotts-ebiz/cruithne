@@ -57,7 +57,13 @@ class SubscriptionOptinConfigProvider implements ConfigProviderInterface
     public function getStoreCode()
     {
         $storecode = $this->storeManager->getStore()->getCode();
-        
+        if(strpos($storecode, 'view') !== false){
+           $storecode = str_replace("_view","", $storecode);
+        } 
+        else if(strpos($storecode, 'store') !== false){
+           $storecode = str_replace("_store","", $storecode);
+        } 
+
         switch ($storecode) {
             case "scotts":
                 return "scotts";
@@ -87,6 +93,12 @@ class SubscriptionOptinConfigProvider implements ConfigProviderInterface
     public function getStoreName()
     {
         $storecode = $this->storeManager->getStore()->getCode();
+        if(strpos($storecode, 'view') !== false){
+           $storecode = str_replace("_view","", $storecode);
+        }
+        else if(strpos($storecode, 'store') !== false){
+           $storecode = str_replace("_store","", $storecode);
+        }  
         
         switch ($storecode) {
             case "scotts":
