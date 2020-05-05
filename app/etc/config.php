@@ -363,7 +363,6 @@ return [
         'SMG_SPV2ContactWidget' => 1,
         'SMG_SPV2FAQPageWidget' => 1,
         'SMG_SPV2HeroWidget' => 1,
-        'SMG_SPV2HomePageHeroWidget' => 1,
         'SMG_SPV2HomePageWidget' => 1,
         'SMG_SPV2HowItWorksPageWidget' => 1,
         'SMG_SPV2Theming' => 1,
