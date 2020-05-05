@@ -143,12 +143,11 @@ class OrderRepositoryInterface
                             $statesNotAllowedList = explode(',', $statesNotAllowed);
 
                             // initialize the list of
-                            $statesNotAllowedArray = array();
+                            $statesNotAllowedArray = [];
                             foreach ($statesNotAllowedList as $stateNotAllowed)
                             {
                                 $attr = $this->_productResource->getAttribute('state_not_allowed');
-                                $statesNotAllowedArray = [];
-
+                                
                                 try
                                 {
                                     $statesNotAllowedArray[] = $attr->getSource()->getOptionText($stateNotAllowed);

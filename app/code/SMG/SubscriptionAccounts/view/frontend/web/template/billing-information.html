@@ -50,7 +50,9 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 <label class="sp-form-label">Card Number</label>
                 <div data-recurly="card"
                     class="sp-form-group sp-px-2 sp-w-full"></div>
+                <p data-bind="text: creditCardErrorMessage" class="sp-form-error recurly-form-error"></p>
             </div>
+
         </div>
          
         <div class="sp-form-group sp-hidden">

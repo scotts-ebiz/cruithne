@@ -35,6 +35,7 @@ define([
             self.billingInfoEditable = ko.observable(false);
             self.saving = ko.observable(false);
             self.modalErrorMessage = ko.observable('');
+            self.creditCardErrorMessage = ko.observable('');
 
             setTimeout(function () {
                 recurly.configure({
@@ -175,15 +176,33 @@ define([
                 return false;
             }
 
+            // Reset error messages.
             self.modalErrorMessage('');
+            self.creditCardErrorMessage('');
+
             self.saving(true);
 
             recurly.token(recurlyForm, function ( err, token ) {
+                // Handle credit card validation.
                 if ( err ) {
+                    if (err.code === 'validation') {
+                        if (err.fields.includes('number')) {
+                            self.creditCardErrorMessage('Please enter a valid card number.')
+                        } else if (
+                            !err.fields.includes('number') &&
+                            (err.fields.includes('month') || err.fields.includes('year'))
+                        ) {
+                            self.creditCardErrorMessage('Please enter a valid expiration date.')
+                        } else {
+                            self.creditCardErrorMessage(err.message);
+                        }
+                    } else {
+                        self.creditCardErrorMessage(err.message);
+                    }
                     self.saving(false);
-                    self.modalErrorMessage(err);
                     return;
                 }
+
                 if ( token ) {
                     $.ajax({
                         type: 'POST',
@@ -201,11 +220,8 @@ define([
                             self.modalErrorMessage(response.message);
                         }
                         else {
+                            self.billing.card_on_file(response.last_four);
                             self.billingInfoEditable(false);
-
-                            // Refresh the page to ensure the CC field mask is updated
-                            // since we cannot update it to the new one.
-                            window.location.reload();
                         }
 
                         modalBilling.openModal();
