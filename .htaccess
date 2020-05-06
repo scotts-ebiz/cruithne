@@ -257,6 +257,15 @@ RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,QSA,L]
 RewriteCond %{HTTP_HOST} ^mygro\.com$ [NC]
 RewriteRule ^(.*)$   https://www.mygro.com/$1 [R=301,L,QSA]
 
+#######################################################################
+# XSS Attack Prevention - Strip query string if it seems malicious    
+#######################################################################
+<IfModule mod_rewrite.c>
+RewriteCond %{QUERY_STRING} (\<|%3C).*script.*(\>|%3E) [NC,OR]
+RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
+RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2})
+RewriteRule .* index.php [QSD,L]
+</IfModule>
 ############################################
 ## rewrite everything else to index.php
 
