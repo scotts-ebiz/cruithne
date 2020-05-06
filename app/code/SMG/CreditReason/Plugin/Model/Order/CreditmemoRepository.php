@@ -160,6 +160,9 @@ class CreditmemoRepository
                     // get the order item id
                     $orderItemId = $item->getData("order_item_id");
 
+                     // get the order qty
+                     $orderQty = $item->getData("qty");
+
                     // determine if this was the item that was modified
                     // on the creditmemo form
                     if ($orderItemId == $key)
@@ -171,7 +174,7 @@ class CreditmemoRepository
                         // if it is then we will wait to update the reason code values
                         // otherwise update the reason code values now
                         $productType = $orderItem->getProductType();
-                        if (isset($productType) && $productType != 'bundle')
+                        if (isset($productType) && $productType != 'bundle' && $orderQty > 0)
                         {
                             // get the refunded reason code
                             $refundedReadonCode = $itemsParams[$orderItemId]['refunded_reason_code'];
@@ -222,6 +225,10 @@ class CreditmemoRepository
                 // get the order item id
                 $orderItemId = $item->getData("order_item_id");
 
+                // get the order qty
+                $orderQty = $item->getData("qty");
+
+
                 // load the order item from the order item id
                 $this->_itemResource->load($orderItem, $orderItemId);
 
@@ -229,7 +236,7 @@ class CreditmemoRepository
                 // if it is then we will wait to update the reason code values
                 // otherwise update the reason code values now
                 $productType = $orderItem->getProductType();
-                if (isset($productType) && $productType != 'bundle')
+                if (isset($productType) && $productType != 'bundle' && $orderQty > 0)
                 {
                     // create a record in the sales order sap batch items table
                     $sapOrderBatchCreditmemo = $this->_sapOrderBatchCreditmemoFactory->create();
