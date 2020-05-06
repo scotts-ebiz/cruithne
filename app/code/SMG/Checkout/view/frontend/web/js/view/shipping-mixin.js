@@ -59,8 +59,8 @@ define(
                 var email = this.getEmail();
 				var zipCode = $("input[name='postcode']").val();
 				var enable = window.checkoutConfig.opt_in_status;
-				var storename = window.checkoutConfig.storename;
-				var storecode = window.checkoutConfig.storecode;
+		        var acquisitionSource = window.checkoutConfig.acquisition_source;
+                var listId = window.checkoutConfig.list_id;
 
                 quote.billingAddress(null);
                 checkoutDataResolver.resolveBillingAddress();
@@ -68,7 +68,7 @@ define(
                     function () {
                        if($('#subscriptionOptIn').is(":checked") && email != null && enable == 1)
                         {
-                             zaius.subscribe({list_id: storecode,email: email ,zip: zipCode ,acquisition_method: 'Magento' ,acquisition_source: storename});
+                             zaius.subscribe({list_id: listId,email: email ,zip: zipCode ,acquisition_method: 'Magento' ,acquisition_source: acquisitionSource});
                         }
 
                         stepNavigator.next();
