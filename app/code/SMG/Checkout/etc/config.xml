@@ -16,35 +16,43 @@
         </checkout>
     </default>
 	<stores>
-		<miraclegro>
-		  <checkout>
+    <miraclegro>
+      <checkout>
             <options>
                 <opt_in_status>1</opt_in_status>
                 <opt_in_headline>Yes, sign me up to receive emails with expert gardening tips and inspiration.</opt_in_headline>
+                <opt_in_list_id>miracle_gro</opt_in_list_id>
+                <opt_in_acquisition_source>Miracle Gro</opt_in_acquisition_source>
             </options>
           </checkout>
-		</miraclegro>
-		<scotts>
-		  <checkout>
+    </miraclegro>
+    <scotts>
+      <checkout>
             <options>
                 <opt_in_status>1</opt_in_status>
                 <opt_in_headline>Yes, sign me up to receive emails with lawn care tips from the Scotts experts.</opt_in_headline>
+                <opt_in_list_id>scotts</opt_in_list_id>
+                <opt_in_acquisition_source>Scotts</opt_in_acquisition_source>
             </options>
           </checkout>
-		</scotts>
-		<ortho>
-		  <checkout>
+    </scotts>
+    <ortho>
+      <checkout>
             <options>
                 <opt_in_status>1</opt_in_status>
                 <opt_in_headline>Yes, sign me up to receive emails with expert advice on weed and pest control in my area.</opt_in_headline>
+                <opt_in_list_id>ortho</opt_in_list_id>
+                <opt_in_acquisition_source>Ortho</opt_in_acquisition_source>
             </options>
           </checkout>
-		</ortho>
+    </ortho>
         <roundup>
           <checkout>
             <options>
                 <opt_in_status>1</opt_in_status>
                 <opt_in_headline>Yes, sign me up to receive emails with expert advice for weed control in my area.</opt_in_headline>
+                <opt_in_list_id>roundup</opt_in_list_id>
+                <opt_in_acquisition_source>Roundup</opt_in_acquisition_source>
             </options>
           </checkout>
         </roundup>
@@ -53,40 +61,50 @@
             <options>
                 <opt_in_status>1</opt_in_status>
                 <opt_in_headline>Yes, sign me up to receive emails with expert advice for weed control in my area.</opt_in_headline>
+                <opt_in_list_id>tomcatbrand</opt_in_list_id>
+                <opt_in_acquisition_source>Tomcat</opt_in_acquisition_source>
             </options>
           </checkout>
         </tomcat>
-	</stores>
+  </stores>
     <websites>
         <miraclegro>
-          <checkout>
+      <checkout>
             <options>
                 <opt_in_status>1</opt_in_status>
                 <opt_in_headline>Yes, sign me up to receive emails with expert gardening tips and inspiration.</opt_in_headline>
+                <opt_in_list_id>miracle_gro</opt_in_list_id>
+                <opt_in_acquisition_source>Miracle Gro</opt_in_acquisition_source>
             </options>
           </checkout>
-        </miraclegro>
-        <scotts>
-          <checkout>
+    </miraclegro>
+    <scotts>
+      <checkout>
             <options>
                 <opt_in_status>1</opt_in_status>
                 <opt_in_headline>Yes, sign me up to receive emails with lawn care tips from the Scotts experts.</opt_in_headline>
+                <opt_in_list_id>scotts</opt_in_list_id>
+                <opt_in_acquisition_source>Scotts</opt_in_acquisition_source>
             </options>
           </checkout>
-        </scotts>
-        <ortho>
-          <checkout>
+    </scotts>
+    <ortho>
+      <checkout>
             <options>
                 <opt_in_status>1</opt_in_status>
                 <opt_in_headline>Yes, sign me up to receive emails with expert advice on weed and pest control in my area.</opt_in_headline>
+                <opt_in_list_id>ortho</opt_in_list_id>
+                <opt_in_acquisition_source>Ortho</opt_in_acquisition_source>
             </options>
           </checkout>
-        </ortho>
+    </ortho>
         <roundup>
           <checkout>
             <options>
                 <opt_in_status>1</opt_in_status>
                 <opt_in_headline>Yes, sign me up to receive emails with expert advice for weed control in my area.</opt_in_headline>
+                <opt_in_list_id>roundup</opt_in_list_id>
+                <opt_in_acquisition_source>Roundup</opt_in_acquisition_source>
             </options>
           </checkout>
         </roundup>
@@ -95,6 +113,8 @@
             <options>
                 <opt_in_status>1</opt_in_status>
                 <opt_in_headline>Yes, sign me up to receive emails with expert advice for weed control in my area.</opt_in_headline>
+                <opt_in_list_id>tomcatbrand</opt_in_list_id>
+                <opt_in_acquisition_source>Tomcat</opt_in_acquisition_source>
             </options>
           </checkout>
         </tomcat>
