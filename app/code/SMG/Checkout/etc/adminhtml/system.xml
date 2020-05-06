@@ -15,6 +15,14 @@
                     <label>Opt-In Disclaimer</label>
                     <comment>This text will display on the frontend Opt-In Disclaimer.</comment>
                 </field>
+                <field id="opt_in_list_id" translate="label" type="text" sortOrder="70" showInDefault="0" showInWebsite="1" showInStore="1">
+                    <label>Opt-In List Id</label>
+                    <comment>This text will display on the frontend Opt-In List Id.</comment>
+                </field>
+                <field id="opt_in_acquisition_source" translate="label" type="text" sortOrder="80" showInDefault="0" showInWebsite="1" showInStore="1">
+                    <label>Opt-In Acquisition Source</label>
+                    <comment>This text will display on the frontend Opt-In Acquisition Source.</comment>
+                </field>
             </group>
         </section>
     </system>
