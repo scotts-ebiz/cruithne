@@ -40,7 +40,7 @@ use Magento\Framework\Setup\SchemaListener;
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @since 100.0.2
  */
-class Mysql extends \Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
+class Mysql extends \SMG\Framework\DB\Adapter\Pdo\Mysql
 {
     // @codingStandardsIgnoreEnd
 
@@ -228,48 +228,6 @@ class Mysql extends \Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
      * @var SchemaListener
      */
     private $schemaListener;
-
-    /**
-     * Constructor
-     *
-     * @param StringUtils $string
-     * @param DateTime $dateTime
-     * @param LoggerInterface $logger
-     * @param SelectFactory $selectFactory
-     * @param array $config
-     * @param SerializerInterface|null $serializer
-     */
-    public function __construct(
-        StringUtils $string,
-        DateTime $dateTime,
-        LoggerInterface $logger,
-        SelectFactory $selectFactory,
-        array $config = [],
-        SerializerInterface $serializer = null
-    ) {
-        $this->string = $string;
-        $this->dateTime = $dateTime;
-        $this->logger = $logger;
-        $this->selectFactory = $selectFactory;
-        $this->serializer = $serializer ?: ObjectManager::getInstance()->get(SerializerInterface::class);
-        $this->exceptionMap = [
-            // SQLSTATE[HY000]: General error: 2006 MySQL server has gone away
-            2006 => ConnectionException::class,
-            // SQLSTATE[HY000]: General error: 2013 Lost connection to MySQL server during query
-            2013 => ConnectionException::class,
-            // SQLSTATE[HY000]: General error: 1205 Lock wait timeout exceeded
-            1205 => LockWaitException::class,
-            // SQLSTATE[40001]: Serialization failure: 1213 Deadlock found when trying to get lock
-            1213 => DeadlockException::class,
-            // SQLSTATE[23000]: Integrity constraint violation: 1062 Duplicate entry
-            1062 => DuplicateException::class,
-        ];
-        try {
-            parent::__construct($config);
-        } catch (\Zend_Db_Adapter_Exception $e) {
-            throw new \InvalidArgumentException($e->getMessage(), $e->getCode(), $e);
-        }
-    }
 
     /**
      * Begin new DB transaction for connection
@@ -542,10 +500,9 @@ class Mysql extends \Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
             2013,  // SQLSTATE[HY000]: General error: 2013 Lost connection to MySQL server during query
         ];
         
-        // Array of deadlock error codes
         $deadlockErrors = [
-        	1205, // SQLSTATE[HY000]: General error: 1205 Lock wait timeout exceeded; try restarting transaction
-        	1213 // SQLSTATE[40001]: Serialization failure: 1213 Deadlock found when trying to get lock; try restarting transaction
+        		1205, // SQLSTATE[HY000]: General error: 1205 Lock wait timeout exceeded; try restarting transaction
+        		1213 // SQLSTATE[40001]: Serialization failure: 1213 Deadlock found when trying to get lock; try restarting transaction
         ];
         
         $triesCount = 0;
@@ -578,8 +535,8 @@ class Mysql extends \Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
 
                 // Check to reconnect
                 if ($pdoException && $triesCount < self::MAX_CONNECTION_RETRIES
-                    && in_array($pdoException->errorInfo[1], $connectionErrors))
-                {
+                    && in_array($pdoException->errorInfo[1], $connectionErrors)
+                ) {
                     $retry = true;
                     $triesCount++;
                     $this->closeConnection();
@@ -594,15 +551,13 @@ class Mysql extends \Zend_Db_Adapter_Pdo_Mysql implements AdapterInterface
 
                     $this->_connect();
                 }
-                // Check to retry when there is a deadlock
-                else if ($pdoException && $triesCount < self::MAX_DEADLOCK_RETRIES 
+                else if ($pdoException && $triesCount < self::MAX_DEADLOCK_RETRIES
                 	&& in_array($pdoException->errorInfo[1], $deadlockErrors))
                 {
                 	$retry = true;
                 	$triesCount++;
-                	$sleepSeconds = pow($triesCount, 2);
-                	$this->logger->critical("Encountered Deadlock Exception. Retrying in {$sleepSeconds} seconds. Full exception details below. " . $e->getMessage() . "\n" . $e->getTraceAsString());
-                	sleep($sleepSeconds);
+                	$stringLogger->critical("Encountered Deadlock Exception. Retrying in {$sleepSeconds} seconds. Full exception details below. " . $e->getMessage() . "\n" . $e->getTraceAsString());
+                	sleep(30);
                 }
 
                 if (!$retry) {

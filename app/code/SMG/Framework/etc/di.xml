@@ -7,9 +7,6 @@
     <!-- 
     	Unfortunately I had to do an override to add a check for deadlocks and then do a retry.  This should affect all
     	queries in the database.  This is based on the errors found in the NewRelic logs.
-    	
-    	Unfortuantely we had to do a full override because we need access to protected functions which can't
-    	be done when extending the class.
      -->
-    <preference for="Magento\Framework\DB\Adapter\Pdo\Mysql" type="SMG\Framework\DB\Adapter\Pdo\Mysql" />
+    <!-- <preference for="Magento\Framework\DB\Adapter\Pdo\Mysql" type="SMG\Framework\DB\Adapter\Pdo\Mysql" /> -->
 </config>
