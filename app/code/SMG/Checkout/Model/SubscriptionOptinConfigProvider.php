@@ -34,12 +34,15 @@ class SubscriptionOptinConfigProvider implements ConfigProviderInterface
         $opt_in_status = $this->scopeConfig->getValue('checkout/options/opt_in_status', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
 		$opt_in_headline = $this->scopeConfig->getValue('checkout/options/opt_in_headline', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
         $opt_in_disclaimer = $this->scopeConfig->getValue('checkout/options/opt_in_disclaimer', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $opt_in_list_id = $this->scopeConfig->getValue('checkout/options/opt_in_list_id', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+        $opt_in_acquisition_source = $this->scopeConfig->getValue('checkout/options/opt_in_acquisition_source', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+
         $config = [
             'opt_in_status' => $opt_in_status,
 			'opt_in_headline' => $opt_in_headline,
             'opt_in_disclaimer' => $opt_in_disclaimer,
-			'storecode' => $this->getStoreCode(),
-			'storename' => $this->getStoreName()	
+			'list_id' => $opt_in_list_id,
+            'acquisition_source' => $opt_in_acquisition_source
         ];
         return $config;
     }
@@ -47,65 +50,5 @@ class SubscriptionOptinConfigProvider implements ConfigProviderInterface
     public function getStoreId()
     {
         return $this->storeManager->getStore()->getStoreId();
-    }
-	
-	/**
-     * Get Store code
-     *
-     * @return string
-     */
-    public function getStoreCode()
-    {
-        $storecode = $this->storeManager->getStore()->getCode();
-        
-        switch ($storecode) {
-            case "scotts":
-                return "scotts";
-                break;
-            case "miraclegro":
-                return "miracle_gro";
-                break;
-            case "roundup":
-                return "roundup";
-                break;
-            case "ortho":
-                return "ortho";
-                break;
-            case "tomcat":
-                return "tomcatbrand";
-                break;  
-            default:
-                return $storecode;
-        }
-    }
-    
-    /**
-     * Get Store name
-     *
-     * @return string
-     */
-    public function getStoreName()
-    {
-        $storecode = $this->storeManager->getStore()->getCode();
-        
-        switch ($storecode) {
-            case "scotts":
-                return "Scotts";
-                break;
-            case "miraclegro":
-                return "Miracle Gro";
-                break;
-            case "roundup":
-                return "Roundup";
-                break;
-            case "ortho":
-                return "Ortho";
-                break;
-            case "tomcat":
-                return "Tomcat";
-                break;  
-            default:
-                return $storecode;
-        }
     }
 }
