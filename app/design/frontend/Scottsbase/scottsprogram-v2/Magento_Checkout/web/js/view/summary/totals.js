@@ -12,6 +12,10 @@ define(["ko", "Magento_Checkout/js/view/summary/abstract-total"], function (
 
 			this.recurlyApiObserve = ko.observable(window.recurlyApi);
 
+			this.showGetResults = ko.observable(window.testFunctionOne);
+
+			// this.quizResults = window.sessionStorage.getItem("result");
+
 			const summaryInterval = setInterval(() => {
 				let summaryContainer = document.querySelector(
 					".opc-block-summary"

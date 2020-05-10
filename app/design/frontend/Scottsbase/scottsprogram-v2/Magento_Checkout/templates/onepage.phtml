@@ -1,8 +1,8 @@
 <?php
 // @codingStandardsIgnoreFile
 ?>
-<div id="checkout" data-bind="scope:'checkout'" class="checkout-container sp-container sp-mx-auto lg:sp-w-5/6">
-    
+<div id="checkout" data-bind="scope: 'checkout', 'results'" class="checkout-container sp-container sp-mx-auto lg:sp-w-5/6">
+
     <!-- ko template: getTemplate() --><!-- /ko -->
     <script type="text/x-magento-init">
         {
@@ -11,10 +11,28 @@
             }
         }
     </script>
+    <script type="text/x-magento-init">
+   {
+        "*": {
+            "Magento_Ui/js/core/app": { 
+                "components": {
+                    "results": {
+                        "component": "SMG_RecommendationResults/js/results",
+                        "quiz_id": "<?php /* @escapeNotVerified */ echo $this->getRequest()->getParam('id') ?? ''; ?>",
+                        "zip": "<?php /* @escapeNotVerified */ echo $this->getRequest()->getParam('zip') ?? ''; ?>",
+                        "new_id": "<?php /* @escapeNotVerified */ echo $block->getNewId(); ?>"
+                    }  
+                }
+            }
+        }
+    }
+</script>
     <script>
         window.checkoutConfig = <?= /* @escapeNotVerified */ $block->getSerializedCheckoutConfig() ?>;
         window.subscriptionData = <?= /* @escapeNotVerified */ $block->getSubscription() ?>;
         window.recurlyApi = '<?= $block->escapeHtml($block->getRecurlyPublicApiKey()); ?>';
+    
+
 
         // Create aliases for customer.js model from customer module
         window.isCustomerLoggedIn = window.checkoutConfig.isCustomerLoggedIn;
