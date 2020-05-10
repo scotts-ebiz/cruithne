@@ -30,6 +30,8 @@ class Onepage extends \Magento\Checkout\Block\Onepage
      */
     protected $_recommendation;
 
+
+
     /**
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magento\Framework\Data\Form\FormKey $formKey
@@ -75,16 +77,50 @@ class Onepage extends \Magento\Checkout\Block\Onepage
         return $this->_recurlyHelper->getRecurlyPublicApiKey();
     }
 
+    
+    // public function testFunctionOne()
+    // {
+    //     $testVar = 'asdfasdf';
+	//     return $testVar;
+    // }
+    
 
-    /**
-     * Get Recommendation Results
-     * 
-     */
-    public function getResult($key=4447, $id='ade83fa8-f4ba-4a6a-bc3e-ad5b400d2e09', $zip='80016' )
+
+    public function quizResultString()
     {
-        return $this->_recommendation->getResult($key, $id, $zip);
+        $retieveQuizResults = $this->_recommendation->getResult('1342', 'a2854c92-3dd1-445d-af94-e1e1c3d8ad78', '80016');
+
+        // $retieveQuizResults = $this->_recommendation->getResult();
+
+        // $exampleResult = array(
+        //     'id' => 'asdfasdf',
+        //     'plan' => array('0' => 'One', '1' => 'Two')
+        // );
+
+        $getResultId = $retieveQuizResults['0']['plan']['coreProducts']['0']['applicationStartDate'];
+
+
+        $results = $getResultId;
+
+
+        // $getResultId = $retieveQuizResults['id'];
+
+
+        // $testVar = ['One','Two','Five'];
+        
+        // $getImplodedQuizResultValue = $this->implodeQuizResult($retieveQuizResults);
+        
+        return $results;
     }
 
+
+    public function implodeQuizResult($value)
+    {
+	    $quizResultArrayValue = $value;
+	    $implodedQuizResultArrayValue = implode(' ', $quizResultArrayValue);
+	    $value = $implodedQuizResultArrayValue;
+        return $value;
+    }
 
     /**
      * Get Subscription or Redirect
