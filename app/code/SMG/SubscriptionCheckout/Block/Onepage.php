@@ -4,7 +4,6 @@ namespace SMG\SubscriptionCheckout\Block;
 use Magento\Framework\Session\SessionManagerInterface;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription;
 use SMG\SubscriptionApi\Helper\RecurlyHelper;
-use SMG\RecommendationApi\Api\Recommendation;
 
 /**
  * Onepage checkout block
@@ -25,11 +24,6 @@ class Onepage extends \Magento\Checkout\Block\Onepage
      */
     protected $_recurlyHelper;
 
-    /**
-     * @var Recommendation
-     */
-    protected $_recommendation;
-
 
 
     /**
@@ -39,7 +33,6 @@ class Onepage extends \Magento\Checkout\Block\Onepage
      * @param SessionManagerInterface $coreSession
      * @param Subscription $subscription
      * @param RecurlyHelper $recurlyHelper
-     * @param Recommendation $recommendation
      * @param array $layoutProcessors
      * @param array $data
      * @param \Magento\Framework\Serialize\Serializer\Json $serializer
@@ -53,7 +46,6 @@ class Onepage extends \Magento\Checkout\Block\Onepage
         SessionManagerInterface $coreSession,
         Subscription $subscription,
         RecurlyHelper $recurlyHelper,
-        Recommendation $recommendation,
         array $layoutProcessors = [],
         array $data = [],
         \Magento\Framework\Serialize\Serializer\Json $serializer = null,
@@ -64,7 +56,6 @@ class Onepage extends \Magento\Checkout\Block\Onepage
         $this->_coreSession = $coreSession;
         $this->_subscription = $subscription;
         $this->_recurlyHelper = $recurlyHelper; 
-        $this->_recommendation = $recommendation; 
     }
 
     /**
@@ -75,51 +66,6 @@ class Onepage extends \Magento\Checkout\Block\Onepage
     public function getRecurlyPublicApiKey()
     {
         return $this->_recurlyHelper->getRecurlyPublicApiKey();
-    }
-
-    
-    // public function testFunctionOne()
-    // {
-    //     $testVar = 'asdfasdf';
-	//     return $testVar;
-    // }
-    
-
-
-    public function quizResultString()
-    {
-        $retieveQuizResults = $this->_recommendation->getResult('1342', 'a2854c92-3dd1-445d-af94-e1e1c3d8ad78', '80016');
-
-        // $retieveQuizResults = $this->_recommendation->getResult();
-
-        // $exampleResult = array(
-        //     'id' => 'asdfasdf',
-        //     'plan' => array('0' => 'One', '1' => 'Two')
-        // );
-
-        $getResultId = $retieveQuizResults['0']['plan']['coreProducts']['0']['applicationStartDate'];
-
-
-        $results = $getResultId;
-
-
-        // $getResultId = $retieveQuizResults['id'];
-
-
-        // $testVar = ['One','Two','Five'];
-        
-        // $getImplodedQuizResultValue = $this->implodeQuizResult($retieveQuizResults);
-        
-        return $results;
-    }
-
-
-    public function implodeQuizResult($value)
-    {
-	    $quizResultArrayValue = $value;
-	    $implodedQuizResultArrayValue = implode(' ', $quizResultArrayValue);
-	    $value = $implodedQuizResultArrayValue;
-        return $value;
     }
 
     /**
@@ -133,6 +79,7 @@ class Onepage extends \Magento\Checkout\Block\Onepage
             $data = $subscription->convertToArray();
             $addOn = $subscription->getAddOn();
             $data['is_shippable'] = $subscription->getData('subscription_type') == 'annual' || $subscription->isCurrentlyShippable();
+            $data['ship_start_date'] = $subscription->currentShipStartDate();
             $data['add_on'] = $addOn ? $addOn->convertToArray() : false;
 
             return json_encode($data);
