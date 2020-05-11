@@ -1,9 +1,28 @@
 <!-- ko if: isDisplayed() -->
 <div class="totals-wrapper">
+	<!-- ko if: subscriptionData() && subscriptionData().is_shippable === true && subscriptionData()
+	.subscription_type === 'seasonal' -->
 	<div
-		class="sp-p2 sp-font-bold sp-mb-2"
-		data-bind="text: subscriptionData().subscription_type === 'annual' ? 'Total Today:' : 'First Shipment'"
+		class="sp-p2 sp-font-bold sp-mb-2 billing-blurb"
+		data-bind="text: 'First Shipment:'"
 	></div>
+	<!-- /ko -->
+
+	<!-- ko if: subscriptionData() && subscriptionData().is_shippable === false && subscriptionData()
+   .subscription_type === 'seasonal' -->
+	<div class="sp-p2 sp-font-bold sp-mb-2 billing-blurb">
+		Your first bill (charged on
+		<span data-bind="text: subscriptionData().ship_start_date"></span>):
+	</div>
+	<!-- /ko -->
+
+	<!-- ko if: subscriptionData() && subscriptionData().subscription_type === 'annual' -->
+	<div
+		class="sp-p2 sp-font-bold sp-mb-2 billing-blurb"
+		data-bind="text: 'Total Today:'"
+	></div>
+	<!-- /ko -->
+
 	<table class="data table table-totals sp-table-totals">
 		<caption
 			class="table-caption"
@@ -30,22 +49,6 @@
 	<span
 		data-bind="text: subscriptionData().is_shippable ? getGrandTotal() : '$0'"
 	></span>
-
-	<p>
-		<!-- Recurly Window Object: NOT set to php function -->
-		<!-- Pass -->
-		<!-- <span data-bind="text: recurlyApi"></span> -->
-
-		<!-- Recurly Observable  -->
-		<!-- Pass -->
-		<!-- <span data-bind="text: recurlyApiObserve()"></span> -->
-
-		<!-- Show Test Results -->
-		<!-- <span data-bind="text: showGetResults()"></span> -->
-
-		<!-- Application Start Date -->
-		<!-- <span data-bind="html: results.products[0].applicationStartDate"></span> -->
-	</p>
 </div>
 <!-- /ko -->
 <!-- /ko -->
