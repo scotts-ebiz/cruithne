@@ -1,164 +1,137 @@
 <!--ko if: hasResults()-->
 <div class="sp-text-center sp-mt-4 sp-px-8 md:sp-px-0 md:sp-container sp-mb-8">
-	<h1 class="sp-results__title sp-h1 sp-text-green-1">Here’s Your Plan</h1>
+    <h1 class="sp-results__title sp-h1 sp-text-green-1">Here’s Your Plan</h1>
 
-	<p class="sp-text-center sp-max-w-md sp-mx-auto">
-		Get ready to grow a thick, strong, green lawn! Your plan contains
-		everything you need to take care of all
-		<strong data-bind="if: lawnArea() > 0"
-			><span data-bind="html: formatNumber(lawnArea())"></span> square
-			feet</strong
-		>
-		of your
-		<span data-bind="if: lawnType()"
-			><strong data-bind="html: lawnType()"></strong
-		></span>
-		lawn in every season.
-	</p>
-	<a
-		class="sp-inline-block sp-link sp-text-center sp-label sp-results__link"
-		href="/quiz"
-		>Doesn't look right? Take the quiz again!</a
-	>
+    <p class="sp-text-center sp-max-w-md sp-mx-auto">
+        Get ready to grow a thick, strong, green lawn! Your plan contains everything you need to take care of all
+        <strong data-bind="if: lawnArea() > 0"><span data-bind="html: formatNumber(lawnArea())"></span> square feet</strong> of your
+        <span data-bind="if: lawnType()"><strong data-bind="html: lawnType()"></strong></span> lawn in every season.
+    </p>
+
+    <a
+        class="sp-inline-block sp-link sp-text-center sp-label sp-results__link"
+        data-qa="TakeQuizAgainLink"
+        href="/quiz"
+    >Doesn't look right? Take the quiz again!</a>
 </div>
 
 <!-- ko if: results().plan -->
 <div class="sp-container sp-mb-16 sp-text-center">
-	<div
-		class="sp-results__your-plan sp-inline-block sp-bg-white sp-pt-8 sp-pb-4 sp-px-4 lg:sp-mx-8 md:sp-mx-auto sp-relative sp-rounded sp-my-8 md:sp-my-12"
-	>
-		<h2 class="sp-text-center sp-h4 sp-m-0 sp-mb-4 sp-uppercase">
-			Your Plan
-		</h2>
+    <div class="sp-results__your-plan sp-inline-block sp-bg-white sp-pt-8 sp-pb-4 sp-px-4 lg:sp-mx-8 md:sp-mx-auto sp-relative sp-rounded sp-my-8 md:sp-my-12">
+        <h2 class="sp-text-center sp-h4 sp-m-0 sp-mb-4 sp-uppercase">Your Plan</h2>
 
-		<ul
-			class="sp-results__list sp-flex sp-flex-row sp-flex-wrap lg:sp-flex-no-wrap sp-m-0 sp--mx-2 sp-p-0 sp-justify-around sp-relative"
-			data-bind="foreach: seasons()"
-		>
-			<li
-				class="sp-results__your-plan-product sp-text-center sp-mx-4 md:sp-mx-0 sp-px-2"
-			>
-				<div
-					class="sp-flex sp-items-center sp-justify-center sp--mx-1"
-					data-bind="foreach: products"
-				>
-					<div class="sp-px-1">
-						<img
-							class="sp-align-center sp-block sp-mb-1 sp-results__product-image"
-							data-bind="attr: { src: thumbnailImage, alt: meta_title }"
-						/>
-					</div>
-				</div>
-				<div
-					class="sp-results__your-plan-label sp-text-center sp-p2"
-					data-bind="html: season"
-				></div>
-				<strong
-					class="sp-text-center sp-label"
-					data-bind="html: $parent.formatCurrency(total)"
-				>
-				</strong>
-			</li>
-		</ul>
-	</div>
+        <ul
+            class="sp-results__list sp-flex sp-flex-row sp-flex-wrap lg:sp-flex-no-wrap sp-m-0 sp--mx-2 sp-p-0 sp-justify-around sp-relative"
+            data-bind="foreach: seasons()"
+        >
+            <li class="sp-results__your-plan-product sp-text-center sp-mx-4 md:sp-mx-0 sp-px-2">
+                <div class="sp-flex sp-items-center sp-justify-center sp--mx-1" data-bind="foreach: products">
+                    <div class="sp-px-1">
+                        <img
+                            class="sp-align-center sp-block sp-mb-1 sp-results__product-image"
+                            data-bind="attr: { src: thumbnailImage, alt: meta_title }"
+                        />
+                    </div>
+                </div>
+                <div
+                    class="sp-results__your-plan-label sp-text-center sp-p2"
+                    data-bind="html: season"
+                >
+                </div>
+                <strong
+                    class="sp-text-center sp-label"
+                    data-bind="html: $parent.formatCurrency(total)"
+                >
+                </strong>
+            </li>
+        </ul>
+    </div>
 </div>
 
 <div class="sp-container sp-mb-16">
-	<div class="sp-mx-auto sp-w-full lg:sp-w-5/6">
-		<div class="sp-flex sp-justify-end sp-mr-8 md:sp-mr-0 sp-my-4">
-			<button
-				class="sp-link"
-				data-bind="click: toggleSaveAndSendModal"
-				data-qa="SaveAndSendResultsLinkTop"
-			>
-				Save and Send Results
-			</button>
-		</div>
+    <div class="sp-mx-auto sp-w-full lg:sp-w-5/6">
+        <div class="sp-flex sp-justify-end sp-mr-8 md:sp-mr-0 sp-my-4">
+            <button class="sp-link" data-bind="click: toggleSaveAndSendModal" data-qa="SaveAndSendResultsLinkTop">Save and Send Results</button>
+        </div>
 
-		<!-- Sidebar -->
-		<div class="sp-results-tabs-container">
-			<ul
-				class="sp-p-0 sp-results__tabs accordion"
-				data-bind="foreach: seasons()"
-			>
-				<li class="sp-results__list sp-mb-0">
-					<button
-						type="button"
-						data-bind="click: function() { $parent.toggleAccordion($index()) },
+        <!-- Sidebar -->
+        <div class="sp-results-tabs-container">
+            <ul
+                class="sp-p-0 sp-results__tabs accordion"
+                data-bind="foreach: seasons()"
+            >
+                <li class="sp-results__list sp-mb-0">
+                    <button
+                        type="button"
+                        data-bind="click: function() { $parent.toggleAccordion($index()) },
                             attr: { 'data-qa': $parent.formatId($data.products[0].season) + 'ButtonMobile' }"
-						class="sp-results__tabs-button sp-flex sp-align-center sp-py-8 sp-px-4 lg:sp-hide mobile"
-					>
-						<img
-							class="sp-mr-4 sp-results__icon--small"
-							data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]), alt: $data.products[0].season }"
-						/>
-						<div>
-							<strong
-								class="sp-h4 sp-mb-2 lg:sp-mb-0"
-								data-bind="html: $data.products[0].season"
-							></strong>
-							<div
-								class="sp-p2"
-								data-bind="if: $parent.nextAvailableProduct() === $index()"
-							>
-								(Next Shipment)
-							</div>
-						</div>
-					</button>
-					<button
-						type="button"
-						class="sp-results__tabs-button sp-flex sp-align-center sp-py-8 sp-px-4 desktop"
-						data-bind="click: function() { $parent.activeSeasonIndex($index()) },
+                        class="sp-results__tabs-button sp-flex sp-align-center sp-py-8 sp-px-4 lg:sp-hide mobile"
+                    >
+                        <img
+                            class="sp-mr-4 sp-results__icon--small"
+                            data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]), alt: $data.products[0].season }"
+                        />
+                        <div>
+                            <strong
+                                class="sp-h4 sp-mb-2 lg:sp-mb-0"
+                                data-bind="html: $data.products[0].season"
+                            ></strong>
+                            <div
+                                class="sp-p2"
+                                data-bind="if: $parent.nextAvailableProduct() === $index()"
+                            >(Next Shipment)
+                            </div>
+                        </div>
+                    </button>
+                    <button
+                        type="button"
+                        class="sp-results__tabs-button sp-flex sp-align-center sp-py-8 sp-px-4 desktop"
+                        data-bind="click: function() { $parent.activeSeasonIndex($index()) },
                             css: {'sp-bg-green-4': ($index() === $parent.activeSeasonIndex())},
                             attr: { 'data-qa': $parent.formatId($data.products[0].season) + 'ButtonDesktop' }"
-					>
-						<img
-							class="sp-mr-4 sp-results__icon--small"
-							data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]), alt: $data.products[0].season }"
-						/>
-						<div>
-							<strong
-								class="sp-h4 sp-mb-2 lg:sp-mb-0"
-								data-bind="html: $data.products[0].season"
-							></strong>
-							<div
-								class="sp-p2"
-								data-bind="if: $parent.nextAvailableProduct() === $index()"
-							>
-								(Next Shipment)
-							</div>
-							<div
-								class="sp-p2"
-								data-bind="attr: { 'data-qa': $parent.formatId($data.products[0].season) + 'ApplyBetween' }"
-							>
-								<span
-									data-bind="html: $parent.formatDate($data.products[0].applicationStartDate)"
-								></span>
-								-
-								<span
-									data-bind="html: $parent.formatDate($data.products[0].applicationEndDate)"
-								></span>
-							</div>
-						</div>
-					</button>
-					<!-- ko with: { season: $data, formatDate: $parent.formatDate, formatId: $parent.formatId, productFeatures: $parent.productFeatures, context: $parentContext.$rawData, formfactor: 'Mobile' } -->
-					<div class="lg:sp-hide">
-						<!-- ko template: "SMG_RecommendationResults/active-season.html" --><!-- /ko -->
-					</div>
-					<!-- /ko -->
-				</li>
-			</ul>
+                    >
+                        <img
+                            class="sp-mr-4 sp-results__icon--small"
+                            data-bind="attr: { src: $parent.getSeasonIcon($data.products[0]), alt: $data.products[0].season }"
+                        />
+                        <div>
+                            <strong
+                                class="sp-h4 sp-mb-2 lg:sp-mb-0"
+                                data-bind="html: $data.products[0].season"
+                            ></strong>
+                            <div
+                                class="sp-p2"
+                                data-bind="if: $parent.nextAvailableProduct() === $index()"
+                            >(Next Shipment)
+                            </div>
+                            <div
+                                class="sp-p2"
+                                data-bind="attr: { 'data-qa': $parent.formatId($data.products[0].season) + 'ApplyBetween' }"
+                            >
+                                <span data-bind="html: $parent.formatDate($data.products[0].applicationStartDate)"></span>
+                                -
+                                <span data-bind="html: $parent.formatDate($data.products[0].applicationEndDate)"></span>
+                            </div>
+                        </div>
+                    </button>
+                    <!-- ko with: { season: $data, formatDate: $parent.formatDate, formatId: $parent.formatId, productFeatures: $parent.productFeatures, context: $parentContext.$rawData, formfactor: 'Mobile' } -->
+                    <div class="lg:sp-hide">
+                        <!-- ko template: "SMG_RecommendationResults/active-season.html" --><!-- /ko -->
+                    </div>
+                    <!-- /ko -->
+                </li>
+            </ul>
 
-			<!-- Product Detail -->
-			<!-- ko if: activeSeason() -->
-			<!-- ko with: { season: $data.activeSeason(), formatDate: $data.formatDate, formatId: $data.formatId, productFeatures: $data.productFeatures, context: $context.$rawData, formfactor: 'Desktop' } -->
-			<div class="sp-hide lg:sp-block">
-				<!-- ko template: "SMG_RecommendationResults/active-season.html" --><!-- /ko -->
-			</div>
-			<!-- /ko -->
-			<!-- /ko -->
-		</div>
-	</div>
+            <!-- Product Detail -->
+            <!-- ko if: activeSeason() -->
+            <!-- ko with: { season: $data.activeSeason(), formatDate: $data.formatDate, formatId: $data.formatId, productFeatures: $data.productFeatures, context: $context.$rawData, formfactor: 'Desktop' } -->
+            <div class="sp-hide lg:sp-block">
+                <!-- ko template: "SMG_RecommendationResults/active-season.html" --><!-- /ko -->
+            </div>
+            <!-- /ko -->
+            <!-- /ko -->
+        </div>
+    </div>
 </div>
 
 <!-- ko if: pdp().visible && pdp().product -->
@@ -174,36 +147,31 @@
 <!-- /ko -->
 
 <div class="sp-bg-green-1 sp-py-4 sp-results__footer">
-	<div
-		class="sp-container sp-flex sp-flex-column md:sp-flex-row sp-justify-end"
-	>
-		<!-- ko if: !hasValidZone() -->
-		<p
-			class="sp-my-0 sp-text-center md:sp-text-left sp-text-white sp-text-sm sp-mb-2 md:sp-mb-0 md:sp-pr-2"
-		>
-			We are unable to ship to Alaska and Hawaii at this time. You can
-			save and send your result via email and buy your recommended plan at
-			a local retailer.
-		</p>
-		<!-- /ko -->
-		<button
-			class="sp-link sp-link--inverted sp-flex-none md:sp-mr-12 sp-order-1 md:sp-order-0"
-			data-bind="click: toggleSaveAndSendModal"
-			data-qa="SaveAndSendResultsLinkBottom"
-		>
-			Save and Send Results
-		</button>
+    <div class="sp-container sp-flex sp-flex-column md:sp-flex-row sp-justify-end">
+        <!-- ko if: !hasValidZone() -->
+        <p class="sp-my-0 sp-text-center md:sp-text-left sp-text-white sp-text-sm sp-mb-2 md:sp-mb-0 md:sp-pr-2">We are
+            unable to ship to Alaska and Hawaii at this time. You can save and send your result via email and buy your
+            recommended plan at a local retailer. </p>
+        <!-- /ko -->
 
-		<!-- ko if: hasValidZone() -->
-		<a
-			class="sp-button sp-button--inverted sp-order-0 md:sp-order-1 sp-mb-4 md:sp-mb-0"
-			data-qa="ContinueButton"
-			href="/subscription-options"
-		>
-			Continue to Subscription Options
-		</a>
-		<!-- /ko -->
-	</div>
+        <button
+            class="sp-link sp-link--inverted sp-flex-none md:sp-mr-12 sp-order-1 md:sp-order-0"
+            data-bind="click: toggleSaveAndSendModal"
+            data-qa="SaveAndSendResultsLinkBottom"
+        >
+            Save and Send Results
+        </button>
+
+        <!-- ko if: hasValidZone() -->
+        <a
+            class="sp-button sp-button--inverted sp-order-0 md:sp-order-1 sp-mb-4 md:sp-mb-0"
+            data-qa="ContinueButton"
+            href="/subscription-options"
+        >
+            Continue to Subscription Options
+        </a>
+        <!-- /ko -->
+    </div>
 </div>
 <!-- /ko -->
 <!-- /ko -->
