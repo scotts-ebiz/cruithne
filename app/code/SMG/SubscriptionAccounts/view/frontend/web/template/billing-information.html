@@ -16,9 +16,9 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 placeholder="First Name"
                 class="sp-input"
                 data-recurly="first_name"
-                data-bind="value: billing.first_name, enable: billingInfoEditable"
+                data-bind="value: billing.first_name, enable: billingInfoEditable, event: { 'blur': validateField }"
                 name="first_name"
-                data-validate="{required:true}" aria-required="true"
+                data-validate="{'validate-name': true}" aria-required="true"
                 >
             <label class="sp-form-label">First Name</label>
         </div>
@@ -27,9 +27,9 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 placeholder="Last Name"
                 class="sp-input"
                 data-recurly="last_name"
-                data-bind="value: billing.last_name, enable: billingInfoEditable"
+                data-bind="value: billing.last_name, enable: billingInfoEditable, event: { 'blur': validateField }"
                 name="last_name"
-                data-validate="{required:true}" aria-required="true"
+                data-validate="{'validate-name': true}" aria-required="true"
             >
             <label class="sp-form-label">Last Name</label>
         </div>
@@ -50,7 +50,9 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 <label class="sp-form-label">Card Number</label>
                 <div data-recurly="card"
                     class="sp-form-group sp-px-2 sp-w-full"></div>
+                <p data-bind="text: creditCardErrorMessage" class="sp-form-error recurly-form-error"></p>
             </div>
+
         </div>
          
         <div class="sp-form-group sp-hidden">
@@ -59,7 +61,7 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                         placeholder="Country"
                         class="sp-block sp-w-full"
                         data-recurly="country"
-                        data-bind="options: countries, optionsText: function(item) { return item.label }, optionsValue: function(item) { return item.value }, value: billing.country, enable: billingInfoEditable"></select>
+                        data-bind="options: countries, optionsText: function(item) { return item.label }, optionsValue: function(item) { return item.value }, value: billing.country, enable: billingInfoEditable, event: { 'change': validateField }"></select>
                 </div>
             <label class="sp-form-label">Country</label>
         </div>
@@ -71,9 +73,9 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 placeholder="Address line 1"
                 class="sp-input"
                 data-recurly="address1"
-                data-bind="value: billing.address1, enable: billingInfoEditable"
+                data-bind="value: billing.address1, enable: billingInfoEditable, event: { 'blur': validateField }"
                 name="address_1"
-                data-validate="{required:true}" aria-required="true"
+                data-validate="{'required-entry-street-0':true}" aria-required="true"
             >
             <label class="sp-form-label">Address line 1</label>
         </div>
@@ -91,8 +93,8 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 placeholder="City"
                 class="sp-input"
                 data-recurly="city"
-                data-bind="value: billing.city, enable: billingInfoEditable"
-                name="city" data-validate="{required:true}" aria-required="true">
+                data-bind="value: billing.city, enable: billingInfoEditable, event: { 'blur': validateField }"
+                name="city" data-validate="{'required-entry-bcity':true}" aria-required="true">
             <label class="sp-form-label">City</label>
         </div>
         <div class="sp-form-group">
@@ -100,7 +102,7 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 <select name="state"
                         placeholder="State"
                         data-recurly="state"
-                        data-bind="options: states, optionsText: 'text', optionsValue: 'value', value: billing.state, enable: billingInfoEditable" data-validate="{required:true}" aria-required="true"></select>
+                        data-bind="options: states, optionsText: 'text', optionsValue: 'value', value: billing.state, enable: billingInfoEditable, event: { 'change': validateField }" data-validate="{required:true}" aria-required="true"></select>
             </div>
             <label class="sp-form-label">State</label>
         </div>
@@ -109,9 +111,9 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 placeholder="Zip/Postal Code"
                 class="sp-input validate-zip-us"
                 data-recurly="postal_code"
-                data-bind="value: billing.zip, enable: billingInfoEditable"
+                data-bind="value: billing.zip, enable: billingInfoEditable, event: { 'blur': validateField }"
                 name="zip_code" 
-                data-validate="{required:true}" aria-required="true"
+                data-validate="{'validate-postal-code':true}" aria-required="true"
                 >
             <label class="sp-form-label">Zip/Postal Code</label>
         </div>

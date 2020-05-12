@@ -142,7 +142,7 @@ class CancelSubscriptionHelper extends AbstractHelper
         // Configure Recurly Client
         Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
-        
+
         $host = gethostname();
         $ip = gethostbyname($host);
         $this->_loggerPrefix = 'SERVER: ' . $ip . ' SESSION: ' . session_id() . ' - ';
@@ -502,7 +502,7 @@ class CancelSubscriptionHelper extends AbstractHelper
     {
         $subscriptionOrder->setData('subscription_order_status', 'canceled');
 
-        if ($subscriptionOrder instanceof SubscriptionAddonOrder) {
+        if ($subscriptionOrder instanceof SubscriptionOrder) {
             $this->_subscriptionOrderResource->save($subscriptionOrder);
         } else {
             $this->_subscriptionAddonOrderResource->save($subscriptionOrder);
