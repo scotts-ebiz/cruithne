@@ -314,14 +314,12 @@ class OrderStatusHelper
         {
             // create the order sap record
             $orderSapId = $this->insertOrderSap($inputOrder);
-            
+
             // create the order sap item record
-            if(!empty($orderSapId)){
             $orderSapItemId = $this->insertOrderSapItem($inputOrder, $orderSapId);
-              
+
             // create the order sap shipment record
             $this->insertOrderSapShipment($inputOrder, $orderSapItemId);
-            }
         }
     }
 
@@ -451,7 +449,6 @@ class OrderStatusHelper
      */
     private function insertOrderSap($inputOrder)
     {
-        $orderSapId = '';
         // get the order for the desired increment id
         $order = $this->_orderFactory->create();
         $this->_orderResource->load($order, $inputOrder[self::INPUT_SAP_MAGENTO_PO], 'increment_id');
@@ -463,7 +460,6 @@ class OrderStatusHelper
         // ship tracking number
         $orderStatus = $this->getOrderStatus($sapOrderStatus, $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]);
 
-       if(!empty($order->getId())){
         // Add to the sales_order_sap table
         $sapOrder = $this->_sapOrderFactory->create();
         $sapOrder->setData('order_id', $order->getId());
@@ -477,19 +473,14 @@ class OrderStatusHelper
         $this->_sapOrderResource->save($sapOrder);
 
         // get the entity id from the newly added sap order
-        // return the order sap id that was generated from
-        // inserting into the table
         $orderSapId = $sapOrder->getId();
 
         // Add to the sale_order_sap_history table
         $this->insertOrderSapHistory($orderSapId, $orderStatus, null);
 
-       }else{
-            // log the error
-            $this->_logger->error("SMG\Api\Helper\OrderStatusHelper - Missing magento po number - ".$inputOrder[self::INPUT_SAP_MAGENTO_PO]);
-       }
-       
-       return $orderSapId;
+        // return the order sap id that was generated from
+        // inserting into the table
+        return $orderSapId;
     }
 
     /**
@@ -1041,7 +1032,6 @@ class OrderStatusHelper
 
             // check the shipment
             if (!empty($inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]) &&
-                !empty($sapOrderBatch->getData('capture_process_date')) &&
                 empty($sapOrderBatch->getData('shipment_process_date')) &&
                 !$sapOrderBatch->getData('is_shipment'))
             {
