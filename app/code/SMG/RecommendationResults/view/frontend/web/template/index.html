@@ -1,6 +1,6 @@
 <!--ko if: hasResults()-->
 <div class="sp-text-center sp-mt-4 sp-px-8 md:sp-px-0 md:sp-container sp-mb-8">
-	<h1 class="sp-results__title sp-h1 sp-text-green-1">Here’s Your Plan</h1>
+    <h1 class="sp-results__title sp-h1 sp-text-green-1">Here’s Your Plan</h1>
 
 	<p class="sp-text-center sp-max-w-md sp-mx-auto">
 		Get ready to grow a thick, strong, green lawn! Your plan contains
@@ -25,43 +25,35 @@
 
 <!-- ko if: results().plan -->
 <div class="sp-container sp-mb-16 sp-text-center">
-	<div
-		class="sp-results__your-plan sp-inline-block sp-bg-white sp-pt-8 sp-pb-4 sp-px-4 lg:sp-mx-8 md:sp-mx-auto sp-relative sp-rounded sp-my-8 md:sp-my-12"
-	>
-		<h2 class="sp-text-center sp-h4 sp-m-0 sp-mb-4 sp-uppercase">
-			Your Plan
-		</h2>
+    <div class="sp-results__your-plan sp-inline-block sp-bg-white sp-pt-8 sp-pb-4 sp-px-4 lg:sp-mx-8 md:sp-mx-auto sp-relative sp-rounded sp-my-8 md:sp-my-12">
+        <h2 class="sp-text-center sp-h4 sp-m-0 sp-mb-4 sp-uppercase">Your Plan</h2>
 
-		<ul
-			class="sp-results__list sp-flex sp-flex-row sp-flex-wrap lg:sp-flex-no-wrap sp-m-0 sp--mx-2 sp-p-0 sp-justify-around sp-relative"
-			data-bind="foreach: seasons()"
-		>
-			<li
-				class="sp-results__your-plan-product sp-text-center sp-mx-4 md:sp-mx-0 sp-px-2"
-			>
-				<div
-					class="sp-flex sp-items-center sp-justify-center sp--mx-1"
-					data-bind="foreach: products"
-				>
-					<div class="sp-px-1">
-						<img
-							class="sp-align-center sp-block sp-mb-1 sp-results__product-image"
-							data-bind="attr: { src: thumbnailImage, alt: meta_title }"
-						/>
-					</div>
-				</div>
-				<div
-					class="sp-results__your-plan-label sp-text-center sp-p2"
-					data-bind="html: season"
-				></div>
-				<strong
-					class="sp-text-center sp-label"
-					data-bind="html: $parent.formatCurrency(total)"
-				>
-				</strong>
-			</li>
-		</ul>
-	</div>
+        <ul
+            class="sp-results__list sp-flex sp-flex-row sp-flex-wrap lg:sp-flex-no-wrap sp-m-0 sp--mx-2 sp-p-0 sp-justify-around sp-relative"
+            data-bind="foreach: seasons()"
+        >
+            <li class="sp-results__your-plan-product sp-text-center sp-mx-4 md:sp-mx-0 sp-px-2">
+                <div class="sp-flex sp-items-center sp-justify-center sp--mx-1" data-bind="foreach: products">
+                    <div class="sp-px-1">
+                        <img
+                            class="sp-align-center sp-block sp-mb-1 sp-results__product-image"
+                            data-bind="attr: { src: thumbnailImage, alt: meta_title }"
+                        />
+                    </div>
+                </div>
+                <div
+                    class="sp-results__your-plan-label sp-text-center sp-p2"
+                    data-bind="html: season"
+                >
+                </div>
+                <strong
+                    class="sp-text-center sp-label"
+                    data-bind="html: $parent.formatCurrency(total)"
+                >
+                </strong>
+            </li>
+        </ul>
+    </div>
 </div>
 
 <div class="sp-container sp-mb-16">
