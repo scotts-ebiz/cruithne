@@ -1040,7 +1040,6 @@ class OrderStatusHelper
 
             // check the shipment
             if (!empty($inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]) &&
-                !empty($sapOrderBatch->getData('capture_process_date')) &&
                  empty($sapOrderBatch->getData('shipment_process_date')) &&
                 !$sapOrderBatch->getData('is_shipment'))
             {
