@@ -1,108 +1,110 @@
 .iframes-addtocart-index {
-  .page-wrapper .page-main {
-    @include font-iframe(0.875rem, $color-black);
-    margin: .5rem 0;
-    padding: 0;
+	.page-wrapper .page-main {
+		@include font-iframe(0.875rem, $color-black);
+		margin: 0.5rem 0;
+		padding: 0;
 
-    // Turn off messages for iframe.
-    .messages {
-      display: none;
-    }
-  }
+		// Turn off messages for iframe.
+		.messages {
+			display: none;
+		}
+	}
 
-  // Price
-  .price-box {
-    // Force Magento to hide this since they are attaching it on the element.
-    .price-label {
-      display: none !important;
-    }
-    .price {
-      @include font-iframe(22px);
-    }
-  }
+	// Price
+	.price-box {
+		// Force Magento to hide this since they are attaching it on the element.
+		.price-label {
+			display: none !important;
+		}
+		.price {
+			@include font-iframe(22px);
+		}
+	}
 
-  // Iframe Container.
-  .cta__container {
+	// Iframe Container.
+	.cta__container {
+		// Contains Size, Quantity, and Button.
+		.cta__container--options {
+			.block__item {
+				margin-top: 10px;
 
-    // Contains Size, Quantity, and Button.
-    .cta__container--options {
-      .block__item {
-        margin-top: 10px;
+				// Format Labels.
+				label {
+					display: none;
+				}
 
-        // Format Labels.
-        label {
-          display: none;
-        }
+				// Size.
+				.configurable {
+					select {
+						border-radius: 0;
 
-        // Size.
-        .configurable{
+						// Chrome does not support border-radius with Select.
+						border: 0;
+						outline: 1px solid #bbb;
+						outline-offset: -1px;
+						&.mage-error {
+							outline: 2px solid $checkout-red;
+						}
+						&:focus {
+							box-shadow: none;
+						}
+					}
+					div.mage-error {
+						display: none !important;
+					}
+				}
 
-          select {
-            border-radius: 0;
+				// Quantity.
+				.block__subblock {
+					display: -ms-flexbox;
+					display: flex;
+					width: 30%;
+					margin-left: 5px;
 
-            // Chrome does not support border-radius with Select.
-            border: 0;
-            outline: 1px solid #bbb;
-            outline-offset: -1px;
+					#qty-wrap {
+						display: flex;
+						border: 1px solid $color-gray-light2;
+						width: 100%;
 
-            &:focus {
+						.block__subblock--input {
+							border: none;
+							padding: 0;
+							font-size: 14px;
+							text-align: center;
+							border-radius: 0;
+							box-shadow: none;
+						}
 
-              box-shadow: none;
-            }
-          }
-        }
+						// Plus and Minus Sign buttons.
+						.minus,
+						.plus {
+							color: $color-gray19;
+							font-family: $lato;
+							font-size: 20px;
+							padding: 12px;
+							background-color: $color-gray-light0;
+							border: none;
+							border-radius: 0;
+							border-left: 1px solid $color-gray-light2;
+							line-height: 0;
+						}
+					}
+				}
 
-        // Quantity.
-        .block__subblock {
-          display: -ms-flexbox;
-          display: flex;
-          width: 30%;
-          margin-left: 5px;
+				// "Add to Cart" Button.
+				.button-container {
+					margin-right: 5px;
+					width: 70%;
 
-          #qty-wrap {
-            display: flex;
-            border: 1px solid $color-gray-light2;
-            width: 100%;
+					.button--cart {
+						@include lib-button-iframe-addtocart();
+					}
+				}
+			}
 
-            .block__subblock--input{
-              border: none;
-              padding: 0;
-              font-size: 14px;
-              text-align: center;
-              border-radius: 0;
-              box-shadow: none;
-            }
-
-            // Plus and Minus Sign buttons.
-            .minus, .plus {
-              color: $color-gray19;
-              font-family: $lato;
-              font-size: 20px;
-              padding: 12px;
-              background-color: $color-gray-light0;
-              border: none;
-              border-radius: 0;
-              border-left: 1px solid $color-gray-light2;
-              line-height: 0;
-            }
-          }
-
-        }
-
-        // "Add to Cart" Button.
-        .button-container {
-          margin-right: 5px;
-          width: 70%;
-
-          .button--cart {
-            @include lib-button-iframe-addtocart();
-          }
-        }
-      }
-
-      .btn-qty-cols {
-        display: flex;
-      }
-    }
-  }
+			.btn-qty-cols {
+				display: flex;
+			}
+		}
+	}
 }
