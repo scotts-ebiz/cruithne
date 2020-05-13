@@ -198,11 +198,10 @@ class ShipmentHelper
         $orderStatusResponse = $this->_responseHelper->createResponse(true, "The shipment process completed successfully.");
 
         // get all of the records in the batch capture table
-        // where the shipment has not been completed and the order was not unauthorized
+        // where the shipment has not been completed
         $sapBatchOrders = $this->_sapOrderBatchCollectionFactory->create();
         $sapBatchOrders->addFieldToFilter('is_shipment', ['eq' => true]);
         $sapBatchOrders->addFieldToFilter('shipment_process_date', ['null' => true]);
-        $sapBatchOrders->addFieldToFilter('is_unauthorized', ['neq' => true]);
 
         // loop through all of the batch capture records that have not been processed
         foreach ($sapBatchOrders as $sapBatchOrder)

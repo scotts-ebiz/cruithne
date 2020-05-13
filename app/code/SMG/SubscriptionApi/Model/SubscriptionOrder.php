@@ -258,7 +258,6 @@ class SubscriptionOrder extends AbstractModel
             return false;
         }
 
-        $this->_orderStatusHelper->invoiceOffline($order, $sapOrderBatch);
         $this->_sapOrderBatchResource->save($sapOrderBatch);
 
         return true;
