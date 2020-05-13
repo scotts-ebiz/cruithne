@@ -13,9 +13,10 @@
         "amasty/securityauth": "^1.1",
         "avalara/avatax-magento": "^1.5",
         "composer/composer": "@alpha",
+        "cweagans/composer-patches": "^1.6",
+        "gigya/magento2-im": "^5.4",
         "magento/composer-root-update-plugin": "~0.1",
         "magento/product-enterprise-edition": "2.3.3-p1",
-        "gigya/magento2-im": "^5.4",
         "magepal/magento2-googletagmanager": "^2.3",
         "mageplaza/module-smtp": "^1.2",
         "recurly/recurly-client": "^2.12",
@@ -92,7 +93,13 @@
         }
     },
     "extra": {
-        "magento-force": "override"
+        "magento-force": "override",
+        "composer-exit-on-patch-failure": true,
+        "patches": {
+        	"zaius/zaius-magento-2": {
+        		"Zaius Duplicate Entries": "patches/composer/zaius_duplicate_patch.diff"
+        	}
+        }
     },
     "conflict": {
         "gene/bluefoot": "*"
