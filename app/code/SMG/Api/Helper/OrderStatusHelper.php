@@ -860,7 +860,7 @@ class OrderStatusHelper
     {
         // get the order id
         $orderId = $sapOrder->getData('order_id');
-        if (empty($orderId))
+        if (!empty($orderId))
         {
             // get the order for the desired increment id
             $order = $this->_orderFactory->create();
@@ -1008,5 +1008,68 @@ class OrderStatusHelper
             // update the table
             $this->_sapOrderBatchResource->save($sapOrderBatch);
         }
+    }
+
+    /**
+     * This function allows orders to be invoiced but offline so
+     * the system doesn't try to capture funds.
+     *
+     * @param \Magento\Sales\Model\Order $order
+     * @param \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function invoiceOffline($order, $sapOrderBatch)
+    {
+        /* create a invoice */
+        // first check to see if there is an invoice that exists already
+        // if there is one then don't try to create one
+        if (!$order->hasInvoices())
+        {
+            if ($order->canInvoice())
+            {
+                $invoice = $this->_invoiceService->prepareInvoice($order);
+                if (!$invoice->getTotalQty())
+                {
+                    throw new \Magento\Framework\Exception\LocalizedException(__('You can\'t create an invoice without products.'));
+                }
+
+                $invoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_OFFLINE);
+                $invoice->register();
+
+                $retryAttempts = 0;
+                $maxAttempts = 3;
+                $retryWaitTime = 10;
+                while ($retryAttempts <= $maxAttempts) {
+                    try {
+                        $transaction = $this->_transaction
+                            ->addObject($invoice)
+                            ->addObject($invoice->getOrder());
+                        $transaction->save();
+                        break;
+                    } catch (ZaiusException $e) {
+                        // Log and ignore any Zaius errors.
+                        $this->_logger->error($e->getMessage());
+                        break;
+                    } catch (\Throwable $e) {
+                        // If this is a deadlock or lock wait timeout, let's retry the transaction after waiting a few seconds.
+                        if (($e->getCode() == self::ERROR_CODE_LOCK_WAIT || $e->getCode() == self::ERROR_CODE_DEAD_LOCK) && $retryAttempts <= $maxAttempts) {
+                            $retryAttempts++;
+                            sleep($retryWaitTime);
+                        } else {
+                            throw $e;
+                        }
+                    }
+                }
+                $this->_invoiceSender->send($invoice);
+                $order->addStatusHistoryComment(__('Notified customer about invoice #%1.', $invoice->getId()))
+                    ->setIsCustomerNotified(false)
+                    ->save();
+            }
+        }
+        /* end of create a invoice */
+
+        $today = date('Y-m-d H:i:s');
+        $sapOrderBatch->setData('is_capture', true);
+        $sapOrderBatch->setData('capture_process_date', $today);
     }
 }
