@@ -3,6 +3,7 @@
 namespace SMG\SubscriptionApi\Api;
 
 use Exception;
+use Magento\Framework\Exception\SecurityViolationException;
 use Psr\Log\LoggerInterface;
 use SMG\SubscriptionApi\Api\Interfaces\RecurlyInterface;
 use SMG\SubscriptionApi\Helper\CancelHelper;
@@ -67,11 +68,11 @@ class RecurlySubscription implements RecurlyInterface
      *
      * @api
      */
-    public function cancelRecurlySubscription()
+    public function cancelRecurlySubscription($cancelReason = '')
     {
         // Cancel Recurly Subscriptions
         try {
-            $this->_cancelHelper->cancelSubscriptions();
+            $this->_cancelHelper->cancelSubscriptions('', $cancelReason);
         } catch (Exception $e) {
             $this->_logger->error($e->getMessage());
 

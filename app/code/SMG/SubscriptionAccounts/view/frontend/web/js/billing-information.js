@@ -4,7 +4,8 @@ define([
     'Magento_Ui/js/modal/modal',
     'jquery',
     'mage/mage',
-    'knockoutjs/knockout-toggle-click'
+    'knockoutjs/knockout-toggle-click',
+    "mage/validation"
 ], function (Component, ko, modal, $) {
     let modalBilling;
    
@@ -34,6 +35,7 @@ define([
             self.billingInfoEditable = ko.observable(false);
             self.saving = ko.observable(false);
             self.modalErrorMessage = ko.observable('');
+            self.creditCardErrorMessage = ko.observable('');
 
             setTimeout(function () {
                 recurly.configure({
@@ -87,7 +89,82 @@ define([
                         $('.modal-header').remove();
                     }
                 }, $('#popup-modal'));
+
+                $.validator.addMethod(
+                    'validate-name',
+                    function (value) {
+                        if (value != '') {
+                            if (!isNaN(value)) {
+                                return false;
+                            }
+
+                            if (value.match(/^[a-zA-Z\.\-\'\sàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸåÅæÆœŒœŒçÇðÐøØ¿¡ß]*$/)) {
+                                return true
+                            } else {
+                                return false;
+                            }
+
+                        } else {
+                            return !$.mage.isEmpty(value);
+                        }
+                    },
+                    $.mage.__('Please enter a valid name.')
+                );
+
+                $.validator.addMethod(
+                    'validate-postal-code',
+                    function (value) {
+                        return (/(^\d{5}$)|(^\d{5}-\d{4}$)/).test(value);
+                    },
+                    $.mage.__('Please enter a valid 5 digit US ZIP.')
+                );
+
+                $.validator.addMethod(
+                    'required-entry-street-0',
+                    function (value) {
+                        if ($("input[name='street[0]']").val() != '') {
+                            if (!isNaN(value)) {
+                                return false;
+                            }
+                            if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
+                                return true
+                            } else {
+                                return false;
+                            }
+
+                        } else {
+                            return !$.mage.isEmpty(value);
+                        }
+                    },
+                    $.mage.__('Please enter a valid street address.')
+                );
+
+                $.validator.addMethod(
+                    'required-entry-bcity',
+                    function (value) {
+                        if ($(".billing-address-form input[name='city']").val() != '') {
+                            if (!isNaN(value)) {
+                                return false;
+                            }
+                            if( value.match( /^[a-zA-Z ]*$/) ) {
+                                return true
+                            }else{
+                                return false;
+                            }
+                        } else {
+                            return !$.mage.isEmpty(value);
+                        }
+                    },
+                    $.mage.__('Please enter a valid city')
+                );
+
             }, 2000);
+        },
+
+        validateField (item, event) {
+            if ($.validator.validateSingleElement($(event.target))) {
+                $(event.target).removeAttr('aria-invalid');
+            }
         },
 
         saveBilling() {
@@ -99,15 +176,33 @@ define([
                 return false;
             }
 
+            // Reset error messages.
             self.modalErrorMessage('');
+            self.creditCardErrorMessage('');
+
             self.saving(true);
 
             recurly.token(recurlyForm, function ( err, token ) {
+                // Handle credit card validation.
                 if ( err ) {
+                    if (err.code === 'validation') {
+                        if (err.fields.includes('number')) {
+                            self.creditCardErrorMessage('Please enter a valid card number.')
+                        } else if (
+                            !err.fields.includes('number') &&
+                            (err.fields.includes('month') || err.fields.includes('year'))
+                        ) {
+                            self.creditCardErrorMessage('Please enter a valid expiration date.')
+                        } else {
+                            self.creditCardErrorMessage(err.message);
+                        }
+                    } else {
+                        self.creditCardErrorMessage(err.message);
+                    }
                     self.saving(false);
-                    self.modalErrorMessage(err);
                     return;
                 }
+
                 if ( token ) {
                     $.ajax({
                         type: 'POST',
@@ -125,11 +220,8 @@ define([
                             self.modalErrorMessage(response.message);
                         }
                         else {
+                            self.billing.card_on_file(response.last_four);
                             self.billingInfoEditable(false);
-
-                            // Refresh the page to ensure the CC field mask is updated
-                            // since we cannot update it to the new one.
-                            window.location.reload();
                         }
 
                         modalBilling.openModal();
@@ -153,7 +245,6 @@ define([
         hideChange() {
             let self = this;
             self.billingInfoEditable(true);
-            $('#recurlyForm input').attr('required', false);
             $('form#recurlyForm').mage('validation', {});
         },
         
