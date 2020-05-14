@@ -29,23 +29,5 @@
             <constraint name="Magento\Customer\Test\Constraint\AssertCustomerDefaultAddressFrontendAddressBook" />
             <constraint name="Magento\Sales\Test\Constraint\AssertOrderGrandTotal" />
         </variation>
-        <variation name="OnePageCheckoutAuthorizenetTestGiftcardVariation" summary="CheckOut with Authorize.Net Direct Post and giftcard" ticketId="MAGETWO-63966">
-            <data name="products/0" xsi:type="string">giftCardProduct::giftcard_50</data>
-            <data name="customer/dataset" xsi:type="string">johndoe_with_addresses</data>
-            <data name="checkoutMethod" xsi:type="string">login</data>
-            <data name="prices" xsi:type="array">
-                <item name="grandTotal" xsi:type="string">50.00</item>
-            </data>
-            <data name="payment/method" xsi:type="string">authorizenet_directpost</data>
-            <data name="creditCard/dataset" xsi:type="string">visa_default</data>
-            <data name="configData" xsi:type="string">authorizenet, authorizenet_authorize_capture</data>
-            <data name="status" xsi:type="string">Complete</data>
-            <data name="tag" xsi:type="string">test_type:3rd_party_test, severity:S1</data>
-            <constraint name="Magento\Checkout\Test\Constraint\AssertOrderSuccessPlacedMessage" />
-            <constraint name="Magento\Checkout\Test\Constraint\AssertMinicartEmpty" />
-            <constraint name="Magento\Sales\Test\Constraint\AssertOrderGrandTotal" />
-            <constraint name="Magento\Sales\Test\Constraint\AssertOrderStatusIsCorrect" />
-            <constraint name="Magento\GiftCard\Test\Constraint\AssertOrderGiftCardGenerated" />
-        </variation>
     </testCase>
 </config>

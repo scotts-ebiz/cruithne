@@ -100,7 +100,11 @@
 		</referenceContainer>
 		<referenceContainer name="content">
 			<block class="Magento\Framework\View\Element\FormKey" name="formkey"/>
-			<block name="customer.section.config" class="Magento\Customer\Block\SectionConfig" template="Magento_Customer::js/section-config.phtml"/>
+			<block name="customer.section.config" class="Magento\Customer\Block\SectionConfig" template="Magento_Customer::js/section-config.phtml">
+                <arguments>
+                    <argument name="sectionNamesProvider" xsi:type="object">Magento\Customer\Block\SectionNamesProvider</argument>
+                </arguments>
+            </block>
 			<block name="customer.customer.data" class="Magento\Customer\Block\CustomerData" template="Magento_Customer::js/customer-data.phtml"/>
 		</referenceContainer>
 		<referenceBlock name="catalog.compare.link" remove="true"/>
