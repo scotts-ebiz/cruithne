@@ -342,6 +342,7 @@ class OrderStatusHelper
             }
         }
     }
+}
 
     /**
      * Takes the request data and inserts/updates the appropriate SAP
@@ -524,7 +525,6 @@ class OrderStatusHelper
         // get the order status for this order based on the
         // ship tracking number
         $orderStatus = $this->getOrderStatus($sapOrderStatus, $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]);
-
        if(!empty($order_id)){
         // Add to the sales_order_sap table
         $sapOrder = $this->_sapOrderFactory->create();
@@ -545,7 +545,6 @@ class OrderStatusHelper
 
         // Add to the sale_order_sap_history table
         $this->insertOrderSapHistory($orderSapId, $orderStatus, null);
-
        }else{
             // log the error
             $this->_logger->error("SMG\Api\Helper\OrderStatusHelper - Missing magento po number - ".$inputOrder[self::INPUT_SAP_MAGENTO_PO]);
@@ -1103,7 +1102,7 @@ class OrderStatusHelper
 
             // check the shipment
             if (!empty($inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]) &&
-                empty($sapOrderBatch->getData('shipment_process_date')) &&
+                 empty($sapOrderBatch->getData('shipment_process_date')) &&
                 !$sapOrderBatch->getData('is_shipment'))
             {
                 $isUpdateNeeded = true;
