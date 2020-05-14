@@ -556,6 +556,60 @@
                 .payment-method [type="radio"]+label:after {
                     top: 4px;
                 }
+                [type="checkbox"] {
+                    opacity: 0;
+                    height: 0;
+                    width: 0;
+                    position: absolute;
+
+                    & + label {
+                        &:before {
+                            @include lib-typography(
+                                $_font-size   : 1.2rem,
+                                $_color       : $color-white,
+                                $_font-family : "Font Awesome\ 5 Free",
+                                $_font-style  : false,
+                                $_font-weight : $font-weight__semibold,
+                                $_line-height : 1.2rem
+                            );
+                            content: '';
+                            -webkit-font-smoothing: antialiased;
+                            -moz-osx-font-smoothing: grayscale;
+                            overflow: hidden;
+                            speak: none;
+                            text-align: center;
+                            position: absolute;
+                            top: 0.4rem;
+                            left: 0.2rem;
+                            z-index: 1;
+                            transform: rotate(-12deg) skew(-10deg, 0deg) scale(0.9,1);
+                            display: none;
+                        }
+                        &:after {
+                            content: '';
+                            display: inline-block;
+                            width: 1.2rem;
+                            height: 1.2rem;
+                            background: none;
+                            border: 2px solid $checkout-accent-color;
+                            position: absolute;
+                            top: 0.2rem;
+                            left: 0;
+                        }
+                        span {
+                            margin-left: 2.5rem;
+                        }
+                    }
+                    &:checked + label {
+                        &:before {
+                            content: '\f00c';
+                            display: inline-block;
+                        }
+                        &:after {
+                            background: $checkout-accent-color;
+                        }
+                    }
+                }
                 //Fieldset based styles
                 .fieldset>.field:not(.choice)>.control {
                     width: auto;
@@ -668,13 +722,7 @@
                         float: right;
                         width: 100%;
                         .action.primary.continue {
-                            color: #fff;
-                            padding: 10px 25px 10px 25px;
-                            display: inline-block;
-                            background: #075534;
-                            margin: 0;
-                            float: right;
-                            width: auto;
+                            @include cart-checkout-button();
                         }
                     }
                 }
@@ -745,7 +793,17 @@ td#label_carrier_flat-rate-shipping_flatrate, td#label_carrier_fedex-2ndday_flat
         }
     }
 }
-@media screen and (max-width: $screen__m) {
+
+@include max-screen($screen__s) {
+    #popup {
+        width: 90%;
+    }
+    .options-cont-wrp {
+        width: 70%;
+    }
+}
+
+@include max-screen($screen__m) {
 
     /** Shipping Page - Start **/
     .checkout-index-index .page-wrapper .page-main .columns .column.main .checkout-container .opc-estimated-wrapper .minicart-wrapper .action.showcart {
@@ -773,9 +831,27 @@ td#label_carrier_flat-rate-shipping_flatrate, td#label_carrier_fedex-2ndday_flat
         color: #333;
     }
     /** Shipping Page - End **/
+
+    /** Cart & Checkout user input font sizes, fix for iOS - Start **/
+    .checkout-index-index .checkout-container {
+        input, select {
+            font-size: 16px;
+        }
+    }
+    .checkout-cart-index .cart-container {
+        .coupon {
+            input {
+                font-size: 16px;
+            }
+        }
+        .input-text {
+            font-size: 16px;
+        }
+    }
+    /** Cart & Checkout user input font sizes, fix for iOS - End **/
 }
 
-@media screen and (max-width: $screen__l) {
+@include max-screen($screen__l) {
     .fieldset>.field:not(.choice)>.label {
         text-align: right;
         box-sizing: border-box;
@@ -792,15 +868,6 @@ td#label_carrier_flat-rate-shipping_flatrate, td#label_carrier_fedex-2ndday_flat
     }
     .checkout-index-index #discount-form label {
         padding: 6px 10px 0 0;
-    }
-}
-
-@media screen and (max-width: $screen__s) {
-    #popup {
-        width: 90%;
-    }
-    .options-cont-wrp {
-        width: 70%;
     }
 }
 

@@ -3,19 +3,24 @@
 namespace SMG\SubscriptionApi\Helper;
 
 use Exception;
+use Magento\Catalog\Model\ProductRepository;
 use Magento\Customer\Api\AddressRepositoryInterface;
 use Magento\Customer\Model\ResourceModel\Customer\CollectionFactory as CustomerCollectionFactory;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\App\Helper\AbstractHelper;
 use Magento\Framework\App\Helper\Context;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Sales\Model\OrderFactory;
+use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Psr\Log\LoggerInterface;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrderItem\CollectionFactory as SubscriptionOrderItemCollectionFactory;
+use SMG\SubscriptionApi\Model\Subscription;
 use Zaius\Engage\Helper\Sdk as ZaiusSdk;
-
+use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use ZaiusSDK\ZaiusException;
+
 
 class CancelHelper extends AbstractHelper
 {
@@ -33,6 +38,16 @@ class CancelHelper extends AbstractHelper
      * @var ZaiusSdk
      */
     protected $_sdk;
+
+    /**
+     * @var OrderFactory
+     */
+    protected $_orderFactory;
+
+    /**
+     * @var OrderResource
+     */
+    protected $_orderResource;
 
     /**
      * @var CustomerCollectionFactory
@@ -59,6 +74,16 @@ class CancelHelper extends AbstractHelper
     protected $_productRepository;
 
     /**
+     * @var OrderCollectionFactory
+     */
+    protected $_orderCollectionFactory;
+
+    /**
+     * @var string
+     */
+    protected $_loggerPrefix;
+
+    /**
      * CancelHelper constructor.
      * @param Context $context
      * @param AddressRepositoryInterface $addressRepository
@@ -67,6 +92,11 @@ class CancelHelper extends AbstractHelper
      * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
      * @param LoggerInterface $logger
      * @param ZaiusSdk $sdk
+     * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
+     * @param SubscriptionOrderItemCollectionFactory $subscriptionOrderItemCollectionFactory
+     * @param ProductRepository $productRepository
+     * @param OrderFactory $orderFactory
+     * @param OrderResource $orderResource
      */
     public function __construct(
         Context $context,
@@ -78,7 +108,9 @@ class CancelHelper extends AbstractHelper
         ZaiusSdk $sdk,
         SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
         SubscriptionOrderItemCollectionFactory $subscriptionOrderItemCollectionFactory,
-        \Magento\Catalog\Model\ProductRepository $productRepository
+        ProductRepository $productRepository,
+        OrderFactory $orderFactory,
+        OrderResource $orderResource
     ) {
         parent::__construct($context);
 
@@ -91,6 +123,12 @@ class CancelHelper extends AbstractHelper
         $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
         $this->_subscriptionOrderItemCollectionFactory = $subscriptionOrderItemCollectionFactory;
         $this->_productRepository = $productRepository;
+        $this->_orderFactory = $orderFactory;
+        $this->_orderResource = $orderResource;
+
+        $host = gethostname();
+        $ip = gethostbyname($host);
+        $this->_loggerPrefix = 'SERVER: ' . $ip . ' SESSION: ' . session_id() . ' - ';
     }
 
     /**
@@ -98,7 +136,7 @@ class CancelHelper extends AbstractHelper
      * @return false|string
      * @throws LocalizedException
      */
-    public function cancelSubscriptions($accountCode = '')
+    public function cancelSubscriptions($accountCode = '', $cancelReason = '')
     {
         // Get the current user.
         try {
@@ -106,6 +144,11 @@ class CancelHelper extends AbstractHelper
                 $accountCode = $this->_customerSession->getCustomer()->getData('gigya_uid');
             }
 
+            $this->_logger->info($this->_loggerPrefix . "Cancelling subscription for account with Gigya ID: {$accountCode}");
+
+            /**
+             * @var $subscription Subscription
+             */
             $subscription = $this->_subscriptionCollectionFactory
                 ->create()
                 ->addFieldToFilter('gigya_id', $accountCode)
@@ -115,19 +158,45 @@ class CancelHelper extends AbstractHelper
             if (! $subscription || ! $subscription->getId()) {
                 // Could not find the subscription.
                 $error = 'Could not find an active subscription with Gigya user ID "' . $accountCode . '" to cancel.';
-                $this->_logger->error($error);
+                $this->_logger->error($this->_loggerPrefix . $error);
 
                 throw new Exception($error);
-
-                return;
             }
 
+            // Need to use collection here, the customer resource overrides the
+            // normal load method and requires an ID instead of being able to
+            // provide a field.
             $customer = $this->_customerCollectionFactory
                 ->create()
                 ->addFieldToFilter('gigya_uid', $accountCode)
                 ->fetchItem();
 
+            if (! $customer->getId()) {
+                throw new Exception("Could not find customer with Gigya ID: {$accountCode}.");
+            }
+
             $subscription->cancel();
+
+            // Add cancellation comments to orders.
+            $subscriptionOrders = $this->_subscriptionOrderCollectionFactory->create();
+            $subscriptionOrders
+                ->addFieldToFilter('subscription_entity_id', $subscription->getId());
+            foreach ($subscriptionOrders as $subscriptionOrder) {
+                $orderId = $subscriptionOrder->getSalesOrderId();
+                $order = $this->_orderFactory->create();
+                $this->_orderResource->load($order, $orderId);
+
+                if ($cancelReason) {
+                    $order->addCommentToStatusHistory('Subscription canceled by customer. Reason: ' . $cancelReason, false, false)
+                        ->save();
+                }
+                else {
+                    $order->addCommentToStatusHistory('Subscription canceled by an administrator', false, false)
+                        ->save();
+                }
+
+            }
+
             $timestamp = strtotime(date("Y-m-d H:i:s"));
             $this->clearCustomerAddresses($customer);
 
@@ -135,10 +204,10 @@ class CancelHelper extends AbstractHelper
                 $this->zaiusCancelCall($customer->getData('email'));
                 $this->zaiusCancelOrder($subscription, $customer->getData('email'), $timestamp);
             } catch (Exception $e) {
-                $this->_logger->error($e->getMessage());
+                $this->_logger->error($this->_loggerPrefix . $e->getMessage());
             }
         } catch (Exception $e) {
-            $this->_logger->error($e->getMessage());
+            $this->_logger->error($this->_loggerPrefix . $e->getMessage());
 
             throw new LocalizedException(__('There was an error while cancelling the subscription.'));
         }

@@ -5,6 +5,7 @@ namespace SMG\SubscriptionAccounts\Block;
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
+use Exception;
 use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\Session as CustomerSession;
 use Magento\Framework\View\Element\Template;
@@ -16,6 +17,7 @@ use Recurly_InvoiceList;
 use Recurly_Subscription;
 use Recurly_SubscriptionList;
 use SMG\SubscriptionApi\Helper\RecurlyHelper;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
 use SMG\SubscriptionApi\Model\SubscriptionAddonOrder;
@@ -49,6 +51,12 @@ class Subscription extends Template
      * @var SubscriptionOrderCollectionFactory
      */
     protected $_subscriptionOrderCollectionFactory;
+
+    /**
+     * @var SubscriptionResource
+     */
+    protected $_subscriptionResource;
+
     /**
      * Subscriptions block constructor.
      * @param Context $context
@@ -57,6 +65,7 @@ class Subscription extends Template
      * @param RecurlyHelper $recurlyHelper
      * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
      * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
+     * @param SubscriptionResource $subscriptionResource
      * @param array $data
      */
     public function __construct(
@@ -66,6 +75,7 @@ class Subscription extends Template
         RecurlyHelper $recurlyHelper,
         SubscriptionCollectionFactory $subscriptionCollectionFactory,
         SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
+        SubscriptionResource $subscriptionResource,
         array $data = []
     ) {
         $this->_customerSession = $customerSession;
@@ -73,6 +83,7 @@ class Subscription extends Template
         $this->_recurlyHelper = $recurlyHelper;
         $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
         $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
+        $this->_subscriptionResource = $subscriptionResource;
         parent::__construct($context, $data);
 
         Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
@@ -148,12 +159,34 @@ class Subscription extends Template
             ['state' => 'active']
         );
 
-        foreach ($recurlySubscriptions as $recurlySubscription) {
-            /** @var Recurly_Subscription $recurlySubscription */
-            if ($recurlySubscription->uuid == $currentSubscription->getData('subscription_id')) {
-                $currentSubscription->setData('recurly', $recurlySubscription->getValues());
-                break;
+        try {
+            foreach ($recurlySubscriptions as $recurlySubscription) {
+                /** @var Recurly_Subscription $recurlySubscription */
+                if ($recurlySubscription->uuid == $currentSubscription->getData('subscription_id')) {
+                    $currentSubscription->setData('recurly', $recurlySubscription->getValues());
+                    break;
+                }
             }
+        } catch (Exception $e) {
+            // Recurly threw an exception, typically due to a missing account
+            // when a user has made it to the checkout page, but has not yet
+            // completed checkout.
+            // Recurly does not throw an exception for a missing account until
+            // we attempt to loop through the subscription list, which is why
+            // the try...catch is around the foreach.
+            // No Recurly subscriptions for account or account does not exist.
+            $currentSubscription->setData('recurly', []);
+        }
+
+        if ($currentSubscription->getId() && empty($currentSubscription->getData('recurly'))) {
+            // No active Recurly subscription found for M2 subscription, so
+            // update the status.
+            $currentSubscription->setData('subscription_status', 'canceled');
+            $this->_subscriptionResource->save($currentSubscription);
+
+            // Clear out subscription ID for template. This change will not be
+            // saved.
+            $currentSubscription->setId(null);
         }
 
         $subscriptionOrders = array_values(array_map(function ($subscriptionOrder) use ($recurlySubscriptions) {
@@ -197,7 +230,7 @@ class Subscription extends Template
         $nextOrder = null;
         $renewalDate = null;
         $startDate = null;
-        if ( $currentSubscription && $currentSubscription->getData('entity_id')) {
+        if ($currentSubscription && $currentSubscription->getData('entity_id')) {
             // Get the next billing date.
             $startDate = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $subscriptionOrders[0]['ship_start_date'])
                 ->add(new DateInterval('P1Y'));
@@ -223,6 +256,7 @@ class Subscription extends Template
                 }
             }
         }
+
         $invoiceList = Recurly_InvoiceList::getForAccount(
             $this->getGigyaUid()
         );
@@ -230,11 +264,21 @@ class Subscription extends Template
         $invoices = [];
 
         // Loop through the invoices to filter out zero dollar invoices.
-        foreach ($invoiceList as $invoice) {
-            /** @var Recurly_Invoice $invoice */
-            $invoice->due_on = $invoice->due_on ? $invoice->due_on->format('M d, Y') : null;
-            $invoice->created_at = $invoice->created_at ? $invoice->created_at->format('M d, Y') : null;
-            $invoices[] = $invoice->getValues();
+        try {
+            foreach ($invoiceList as $invoice) {
+                /** @var Recurly_Invoice $invoice */
+                $invoice->due_on = $invoice->due_on ? $invoice->due_on->format('M d, Y') : null;
+                $invoice->created_at = $invoice->created_at ? $invoice->created_at->format('M d, Y') : null;
+                $invoices[] = $invoice->getValues();
+            }
+        } catch (Exception $e) {
+            // Recurly threw an exception, typically due to a missing account
+            // when a user has made it to the checkout page, but has not yet
+            // completed checkout.
+            // Recurly does not throw an exception for a missing account until
+            // we attempt to loop through the invoice list, which is why
+            // the try...catch is around the foreach.
+            $invoices = [];
         }
 
         return [
@@ -313,7 +357,10 @@ class Subscription extends Template
             return Recurly_BillingInfo::get($this->getGigyaUid());
         } catch (\Exception $e) {
             $this->_logger->error($e->getMessage());
-            return [];
+
+            // We expect an object with a last_four property, so return an
+            // empty one.
+            return (object) ['last_four' => ''];
         }
     }
 }

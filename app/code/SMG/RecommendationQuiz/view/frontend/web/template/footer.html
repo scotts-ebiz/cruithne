@@ -16,6 +16,7 @@
                 class="sp-quiz__previous sp-label sp-text-green-1"
                 type="button"
                 data-bind="visible: quiz.previousGroups().length, click: previousQuestionGroup"
+                data-qa="PreviousLink"
             >
                 Previous
             </button>
@@ -38,6 +39,7 @@
                     attr: { disabled: !quiz.isCurrentGroupValid() || quiz.isAnimating() },
                     css: { 'sp-button--disabled': !quiz.isCurrentGroupValid() || quiz.isAnimating() }
                 "
+                data-qa="NextButton"
             >
                 Next
             </button>

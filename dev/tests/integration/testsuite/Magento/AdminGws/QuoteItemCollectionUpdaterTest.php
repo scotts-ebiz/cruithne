@@ -13,7 +13,6 @@ use Magento\TestFramework\Helper\Bootstrap;
 /**
  * @magentoDataFixture Magento/AdminGws/_files/two_quote_items_on_different_websites.php
  * @magentoAppIsolation enabled
- * @magentoDbIsolation disabled
  * @magentoAppArea adminhtml
  */
 class QuoteItemCollectionUpdaterTest extends \PHPUnit\Framework\TestCase
@@ -54,10 +53,6 @@ class QuoteItemCollectionUpdaterTest extends \PHPUnit\Framework\TestCase
         $items = $this->collection->getItems();
 
         $this->assertCount($expected, $items);
-
-        // restore admin role for proper rollback access
-        $adminRole->load('role_has_general_access', 'role_name');
-        $adminGwsRole->setAdminRole($adminRole);
     }
 
     /**

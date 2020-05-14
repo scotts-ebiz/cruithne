@@ -69,104 +69,109 @@ class OrderRepositoryInterface
     public function beforeSave(\Magento\Sales\Api\OrderRepositoryInterface $subject,
         \Magento\Sales\Api\Data\OrderInterface $order)
     {
-        // initialize the state
-        $state = '';
-
-        // get the quote id to get the needed information for the order
-        $quoteId = $order->getQuoteId();
-
-        /**
-         * @var \Magento\Quote\Model\Quote $quote
-         */
-        $quote = $this->_quoteFactory->create();
-        $this->_quoteResource->load($quote, $quoteId);
-
-        /**
-         * @var \Magento\Quote\Model\Quote\Address $shippingAddress
-         */
-        $shippingAddress = $quote->getShippingAddress();
-        if (!empty($shippingAddress))
+        // we only want to check the restricted states if this is a new order
+        // if there is no entity id then it is a new order and it hasn't been
+        // saved to the database.
+        if (empty($order->getEntityId()))
         {
-            $state = $shippingAddress->getRegion();
-        }
+            // initialize the state
+            $state = '';
 
-        // if the state is empty then use the billing state
-        if (empty($state))
-        {
+            // get the quote id to get the needed information for the order
+            $quoteId = $order->getQuoteId();
+
             /**
-             * @var \Magento\Sales\Api\Data\OrderAddressInterface $billingAddress
+             * @var \Magento\Quote\Model\Quote $quote
              */
-            $billingAddress = $order->getBillingAddress();
-            if (!empty($billingAddress))
+            $quote = $this->_quoteFactory->create();
+            $this->_quoteResource->load($quote, $quoteId);
+
+            /**
+             * @var \Magento\Quote\Model\Quote\Address $shippingAddress
+             */
+            $shippingAddress = $quote->getShippingAddress();
+            if (!empty($shippingAddress))
             {
-                $state = $billingAddress->getRegion();
+                $state = $shippingAddress->getRegion();
             }
-        }
 
-        // make sure that the state is not empty
-        if (!empty($state))
-        {
-            // initialize
-            $validate = false;
-
-            // loop through the items
-            /**
-             * @var \Magento\Sales\Api\Data\OrderItemInterface[] $items
-             */
-            $items = $order->getItems();
-            foreach($items as $item)
+            // if the state is empty then use the billing state
+            if (empty($state))
             {
-                // get the product id to load the product info
-                $productId = $item->getProductId();
-
-                // get the product
                 /**
-                 * @var \Magento\Catalog\Model\Product $product
+                 * @var \Magento\Sales\Api\Data\OrderAddressInterface $billingAddress
                  */
-                $product = $this->_productFactory->create();
-                $this->_productResource->load($product, $productId);
-
-                // make sure that there is a product for continuing
-                if (!empty($product))
+                $billingAddress = $order->getBillingAddress();
+                if (!empty($billingAddress))
                 {
-                    // get the allowed states
-                    $statesNotAllowed = $product->getData('state_not_allowed');
-
-                    //check the state values from product
-                   if (!empty($statesNotAllowed))
-                   {
-                    $statesNotAllowedList = explode(',', $statesNotAllowed);
-
-                    // initialize the list of
-                    $statesNotAllowedArray = array();
-                    foreach ($statesNotAllowedList as $stateNotAllowed)
-                    {
-                        $attr = $this->_productResource->getAttribute('state_not_allowed');
-                        $statesNotAllowedArray = [];
-
-                        try
-                        {
-                            $statesNotAllowedArray[] = $attr->getSource()->getOptionText($stateNotAllowed);
-                        }
-                        catch (\Magento\Framework\Exception\LocalizedException $e)
-                        {
-                            $this->_logger->error($e);
-                        }
-                    }
-
-                    // is the state in the list
-                    if (in_array($state, $statesNotAllowedArray)) {
-                        $validate = true;
-                    }
-                   }
+                    $state = $billingAddress->getRegion();
                 }
             }
 
-            if($validate)
+            // make sure that the state is not empty
+            if (!empty($state))
             {
-                echo $message = "Unfortunately one or more of the selected products is restricted from shipping to " . $state . ".";
-                throw new InputException(__($message));
-                die();
+                // initialize
+                $validate = false;
+
+                // loop through the items
+                /**
+                 * @var \Magento\Sales\Api\Data\OrderItemInterface[] $items
+                 */
+                $items = $order->getItems();
+                foreach ($items as $item)
+                {
+                    // get the product id to load the product info
+                    $productId = $item->getProductId();
+
+                    // get the product
+                    /**
+                     * @var \Magento\Catalog\Model\Product $product
+                     */
+                    $product = $this->_productFactory->create();
+                    $this->_productResource->load($product, $productId);
+
+                    // make sure that there is a product for continuing
+                    if (!empty($product))
+                    {
+                        // get the allowed states
+                        $statesNotAllowed = $product->getData('state_not_allowed');
+
+                        //check the state values from product
+                        if (!empty($statesNotAllowed))
+                        {
+                            $statesNotAllowedList = explode(',', $statesNotAllowed);
+
+                            // initialize the list of
+                            $statesNotAllowedArray = [];
+                            foreach ($statesNotAllowedList as $stateNotAllowed)
+                            {
+                                $attr = $this->_productResource->getAttribute('state_not_allowed');
+                                
+                                try
+                                {
+                                    $statesNotAllowedArray[] = $attr->getSource()->getOptionText($stateNotAllowed);
+                                } catch (\Magento\Framework\Exception\LocalizedException $e)
+                                {
+                                    $this->_logger->error($e);
+                                }
+                            }
+
+                            // is the state in the list
+                            if (in_array($state, $statesNotAllowedArray))
+                            {
+                                $validate = true;
+                            }
+                        }
+                    }
+                }
+
+                if ($validate)
+                {
+                    echo $message = "Unfortunately one or more of the selected products is restricted from shipping to " . $state . ".";
+                    throw new InputException(__($message));
+                    die();
+                }
             }
         }
 

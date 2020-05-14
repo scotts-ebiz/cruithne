@@ -91,7 +91,29 @@ class GetSpecifiedBillingAddressTest extends GraphQlAbstract
         $response = $this->graphQlQuery($query, [], '', $this->getHeaderMap());
         self::assertArrayHasKey('cart', $response);
         self::assertArrayHasKey('billing_address', $response['cart']);
-        self::assertNull($response['cart']['billing_address']);
+
+        $expectedBillingAddressData = [
+            'firstname' => null,
+            'lastname' => null,
+            'company' => null,
+            'street' => [
+                ''
+            ],
+            'city' => null,
+            'region' => [
+                'code' => null,
+                'label' => null,
+            ],
+            'postcode' => null,
+            'country' => [
+                'code' => null,
+                'label' => null,
+            ],
+            'telephone' => null,
+            '__typename' => 'BillingCartAddress',
+            'customer_notes' => null,
+        ];
+        self::assertEquals($expectedBillingAddressData, $response['cart']['billing_address']);
     }
 
     /**

@@ -33,4 +33,18 @@ interface OrdersManagementInterface
      * @return string
      */
     public function getMainOrders();
+
+    /**
+     * This function will get the orders in a JSON format for order audit.
+     *
+     * @return array
+     */
+    public function getOrdersForAudit();
+
+    /**
+     * This function will get the sap batch in a JSON format for order audit.
+     *
+     * @return array
+     */
+    public function getSapBatchForAudit();
 }

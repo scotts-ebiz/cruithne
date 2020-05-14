@@ -10,13 +10,9 @@ use Magento\Framework\DB\Transaction;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Model\AbstractModel;
 use Magento\Framework\Model\Context;
-use Magento\Framework\Model\ResourceModel\AbstractResource;
 use Magento\Framework\Registry;
 use Magento\Sales\Model\Order;
-use Magento\Sales\Model\Order\Creditmemo;
-use Magento\Sales\Model\Order\CreditmemoFactory;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender;
-use Magento\Sales\Model\Order\Invoice;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Magento\Sales\Model\ResourceModel\Order\Creditmemo as CreditmemoResource;
@@ -30,6 +26,8 @@ use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder as SubscriptionAddonOrderResource;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrderItem\CollectionFactory as SubscriptionAddonOrderItemCollectionFactory;
+use Magento\Sales\Api\RefundOrderInterface;
+use Magento\Sales\Model\Order\Creditmemo\ItemCreationFactory;
 
 /**
  * Class SubscriptionAddonOrder
@@ -51,11 +49,6 @@ class SubscriptionAddonOrder extends AbstractModel
 
     /** @var InvoiceSender */
     protected $_invoiceSender;
-
-    /**
-     * @var CreditmemoFactory
-     */
-    protected $_creditmemoFactory;
 
     /**
      * @var LoggerInterface
@@ -102,6 +95,16 @@ class SubscriptionAddonOrder extends AbstractModel
     protected $_creditmemoResource;
 
     /**
+     * @var ItemCreationFactory
+     */
+    protected $_itemCreationFactory;
+
+    /**
+     * @var RefundOrderInterface
+     */
+    protected $_refundOrder;
+
+    /**
      * Constructor.
      */
     protected function _construct()
@@ -116,8 +119,6 @@ class SubscriptionAddonOrder extends AbstractModel
      * @param Context $context
      * @param Registry $registry
      * @param LoggerInterface $logger
-     * @param CreditmemoFactory $creditmemoFactory
-     * @param CreditmemoResource $creditmemoResource
      * @param SubscriptionFactory $subscriptionFactory
      * @param SubscriptionResource $subscriptionResource
      * @param SubscriptionHelper $subscriptionHelper
@@ -138,8 +139,6 @@ class SubscriptionAddonOrder extends AbstractModel
         Context $context,
         Registry $registry,
         LoggerInterface $logger,
-        CreditmemoFactory $creditmemoFactory,
-        CreditmemoResource $creditmemoResource,
         SubscriptionFactory $subscriptionFactory,
         SubscriptionResource $subscriptionResource,
         SubscriptionHelper $subscriptionHelper,
@@ -152,6 +151,8 @@ class SubscriptionAddonOrder extends AbstractModel
         SapOrderBatchFactory $sapOrderBatchFactory,
         SapOrderBatchResource $sapOrderBatchResource,
         OrderStatusHelper $orderStatusHelper,
+        RefundOrderInterface $refundOrder,
+        ItemCreationFactory $itemCreationFactory,
         SubscriptionAddonOrderResource $resource,
         AbstractDb $resourceCollection = null,
         array $data = []
@@ -165,8 +166,6 @@ class SubscriptionAddonOrder extends AbstractModel
         );
 
         $this->_logger = $logger;
-        $this->_creditmemoFactory = $creditmemoFactory;
-        $this->_creditmemoResource = $creditmemoResource;
         $this->_subscriptionHelper = $subscriptionHelper;
         $this->_subscriptionFactory = $subscriptionFactory;
         $this->_subscriptionResource = $subscriptionResource;
@@ -179,6 +178,8 @@ class SubscriptionAddonOrder extends AbstractModel
         $this->_sapOrderBatchFactory = $sapOrderBatchFactory;
         $this->_sapOrderBatchResource = $sapOrderBatchResource;
         $this->_orderStatusHelper = $orderStatusHelper;
+        $this->_refundOrder = $refundOrder;
+        $this->_itemCreationFactory = $itemCreationFactory;
     }
 
     /**
@@ -393,14 +394,10 @@ class SubscriptionAddonOrder extends AbstractModel
     public function isCurrentlyShippable()
     {
         // Seasonal subscription, so base ship date on first seasonal order.
-        if ($this->getSubscriptionType() == 'seasonal') {
-            $shipStart = DateTime::createFromFormat('Y-m-d H:i:s', $this->getData('ship_start_date'));
-            $today = new DateTime();
+        $shipStart = DateTime::createFromFormat('Y-m-d H:i:s', $this->getData('ship_start_date'));
+        $today = new DateTime();
 
-            return $today >= $shipStart;
-        }
-
-        return true;
+        return $today >= $shipStart;
     }
 
     /**
@@ -433,17 +430,28 @@ class SubscriptionAddonOrder extends AbstractModel
     public function createCreditMemo()
     {
         try {
-            /** @var Order $order */
             $order = $this->getOrder();
-            $invoices = $order->getInvoiceCollection();
 
-            /** @var Invoice $invoice */
-            foreach ($invoices as $invoice) {
-                /** @var Creditmemo $creditmemo */
-                $creditmemo = $this->_creditmemoFactory->createByOrder($order);
-                $creditmemo->setInvoice($invoice);
-                $this->_creditmemoResource->save($creditmemo);
+            if (! $order) {
+                // No order, so nothing to credit memo.
+                return;
             }
+
+            $creditMemoItems = [];
+            $orderItems = $order->getAllItems();
+
+            // Loop through the order items to create credit memo items to
+            // refund.
+            foreach ($orderItems as $orderItem) {
+                $creditMemoItem = $this->_itemCreationFactory->create();
+                $creditMemoItem->setQty($orderItem->getQtyInvoiced());
+                $creditMemoItem->setOrderItemId($orderItem->getId());
+
+                $creditMemoItems[] = $creditMemoItem;
+            }
+
+            // Refund the order.
+            $this->_refundOrder->execute($order->getId(), $creditMemoItems);
         } catch (Exception $e) {
             $error = 'Could not create credit memo for order.';
             $this->_logger->error($e->getMessage() . ' - ' . $error);

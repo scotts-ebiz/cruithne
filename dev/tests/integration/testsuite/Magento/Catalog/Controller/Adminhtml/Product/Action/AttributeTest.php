@@ -124,7 +124,7 @@ class AttributeTest extends \Magento\TestFramework\TestCase\AbstractBackendContr
 
         $this->publisherConsumerController->waitForAsynchronousResult(
             function () use ($repository) {
-                sleep(10); // Should be refactored in the scope of MC-22947
+                sleep(3);
                 return $repository->get(
                     'simple',
                     false,

@@ -44,7 +44,6 @@ class ApplyGiftCardToCartTest extends GraphQlAbstract
         $response = $this->graphQlMutation($query);
 
         self::assertArrayHasKey('applyGiftCardToCart', $response);
-        $prices = $response['applyGiftCardToCart']['cart']['prices'];
         $appliedGiftCards = $response['applyGiftCardToCart']['cart']['applied_gift_cards'];
         $expirationDate = date('Y-m-d', strtotime('+1 week'));
         self::assertEquals($giftCardCode, $appliedGiftCards[0]['code']);
@@ -58,13 +57,6 @@ class ApplyGiftCardToCartTest extends GraphQlAbstract
 
         self::assertEquals('USD', $appliedGiftCards[0]['current_balance']['currency']);
         self::assertEquals(9.99, $appliedGiftCards[0]['current_balance']['value']);
-
-        self::assertEquals('USD', $prices['grand_total']['currency']);
-        self::assertEquals('USD', $prices['subtotal_excluding_tax']['currency']);
-        self::assertEquals('USD', $prices['subtotal_with_discount_excluding_tax']['currency']);
-        self::assertEquals(10.01, $prices['grand_total']['value']);
-        self::assertEquals(20, $prices['subtotal_excluding_tax']['value']);
-        self::assertEquals(20, $prices['subtotal_with_discount_excluding_tax']['value']);
     }
 
     /**
@@ -213,20 +205,6 @@ class ApplyGiftCardToCartTest extends GraphQlAbstract
 mutation {
   applyGiftCardToCart(input: {cart_id: "$maskedQuoteId", gift_card_code: "$giftCardCode"}) {
     cart {
-      prices {
-        grand_total {
-          currency
-          value
-        }
-        subtotal_excluding_tax {
-          currency
-          value
-        }
-        subtotal_with_discount_excluding_tax {
-          currency
-          value
-        }
-      }
       applied_gift_cards {
         code
         applied_balance {
