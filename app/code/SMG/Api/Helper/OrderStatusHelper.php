@@ -24,6 +24,8 @@ use SMG\OrderDiscount\Helper\Data as DiscountHelper;
 use Magento\Sales\Model\Service\InvoiceService as InvoiceService;
 use Magento\Framework\DB\Transaction as Transaction;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender as InvoiceSender;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
+use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 
 class OrderStatusHelper
 {
@@ -151,7 +153,17 @@ class OrderStatusHelper
      * @var InvoiceSender
      */
     protected $_invoiceSender;
-
+    
+    /** 
+     * @var SubscriptionCollectionFactory  
+     */
+    protected $_subscriptionCollectionFactory;
+    
+    /**
+     * @var SapOrderBatchCollectionFactory
+     */
+    protected $_sapOrderBatchCollectionFactory;
+    
     /**
      * OrderStatusHelper constructor.
      *
@@ -173,6 +185,8 @@ class OrderStatusHelper
      * @param ResponseHelper $responseHelper
      * @param OrderFactory $orderFactory
      * @param OrderResource $orderResource
+     * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
+     * @param SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
      */
     public function __construct(
         LoggerInterface $logger,
@@ -196,7 +210,9 @@ class OrderStatusHelper
         DiscountHelper $discountHelper,
         InvoiceService $invoiceService,
         Transaction $transaction,
-        InvoiceSender $invoiceSender)
+        InvoiceSender $invoiceSender,
+        SubscriptionCollectionFactory $subscriptionCollectionFactory,
+        SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory)
     {
         $this->_logger = $logger;
         $this->_sapOrderFactory = $sapOrderFactory;
@@ -220,6 +236,8 @@ class OrderStatusHelper
         $this->_invoiceService = $invoiceService;
         $this->_transaction = $transaction;
         $this->_invoiceSender = $invoiceSender;
+        $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
+        $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
     }
 
     /**
@@ -314,12 +332,14 @@ class OrderStatusHelper
         {
             // create the order sap record
             $orderSapId = $this->insertOrderSap($inputOrder);
-
+            
             // create the order sap item record
+            if(!empty($orderSapId)){
             $orderSapItemId = $this->insertOrderSapItem($inputOrder, $orderSapId);
-
+              
             // create the order sap shipment record
             $this->insertOrderSapShipment($inputOrder, $orderSapItemId);
+            }
         }
     }
 
@@ -449,9 +469,54 @@ class OrderStatusHelper
      */
     private function insertOrderSap($inputOrder)
     {
+        $orderSapId = '';
         // get the order for the desired increment id
         $order = $this->_orderFactory->create();
         $this->_orderResource->load($order, $inputOrder[self::INPUT_SAP_MAGENTO_PO], 'increment_id');
+        
+        $master_subscription_id = $order->getMasterSubscriptionId();
+        $order_id = $order->getId();
+        if ($order->isSubscription() && !empty($master_subscription_id) && !empty($order_id))
+        {
+            $subscriptions = $this->_subscriptionCollectionFactory->create();
+            $subscription = $subscriptions
+                ->addFieldToFilter('subscription_id', $master_subscription_id)
+                ->getFirstItem();
+            
+            $sapOrderBatches = $this->_sapOrderBatchCollectionFactory->create();
+            $sapOrderBatches->addFieldToFilter('order_id', ['eq' => $order_id]);
+            $sapOrderBatches->addFieldToFilter('order_process_date', ['null' => true]);
+            
+            if (!$subscription->getId()) {
+          
+                if ($sapOrderBatches->count() > 0)
+                {
+                 /**
+                 * @var \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
+                 */
+                 foreach ($sapOrderBatches as $sapOrderBatch)
+                 {
+                    // get the order if for this order
+                    $orderId = $sapBatchOrder->getData('order_id');
+                    
+                    // get the date for today
+                    $today = date('Y-m-d H:i:s');
+
+                    // update the process date so it isn't picked up again
+                    $sapOrderBatch->setData('order_process_date', $today);
+
+                    // save to the database
+                    $this->_sapOrderBatchResource->save($sapOrderBatch);
+                  }                 
+                }   
+            
+                //Error log in system log file for SAP_ORDER_CRON_SKIP_BROKEN_SUB
+                $error = 'SAP_ORDER_CRON_SKIP_BROKEN_SUB for po number - '.$inputOrder[self::INPUT_SAP_MAGENTO_PO];
+                $this->_logger->error($error);
+            
+                return $orderSapId;
+            }   
+        }
 
         // variables
         $sapOrderStatus = $inputOrder[self::INPUT_SAP_SAP_ORDER_STATUS];
@@ -460,6 +525,7 @@ class OrderStatusHelper
         // ship tracking number
         $orderStatus = $this->getOrderStatus($sapOrderStatus, $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]);
 
+       if(!empty($order_id)){
         // Add to the sales_order_sap table
         $sapOrder = $this->_sapOrderFactory->create();
         $sapOrder->setData('order_id', $order->getId());
@@ -473,14 +539,19 @@ class OrderStatusHelper
         $this->_sapOrderResource->save($sapOrder);
 
         // get the entity id from the newly added sap order
+        // return the order sap id that was generated from
+        // inserting into the table
         $orderSapId = $sapOrder->getId();
 
         // Add to the sale_order_sap_history table
         $this->insertOrderSapHistory($orderSapId, $orderStatus, null);
 
-        // return the order sap id that was generated from
-        // inserting into the table
-        return $orderSapId;
+       }else{
+            // log the error
+            $this->_logger->error("SMG\Api\Helper\OrderStatusHelper - Missing magento po number - ".$inputOrder[self::INPUT_SAP_MAGENTO_PO]);
+       }
+       
+       return $orderSapId;
     }
 
     /**
