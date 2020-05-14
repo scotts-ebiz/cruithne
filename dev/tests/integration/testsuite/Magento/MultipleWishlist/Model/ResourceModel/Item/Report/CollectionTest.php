@@ -51,6 +51,7 @@ class CollectionTest extends TestCase
     }
 
     /**
+     * @magentoDbIsolation disabled
      * @magentoDataFixture Magento/AdminGws/_files/two_roles_for_different_websites.php
      * @magentoDataFixture Magento/MultipleWishlist/_files/wishlists.php
      */
@@ -62,9 +63,14 @@ class CollectionTest extends TestCase
         $adminGwsRole->setAdminRole($adminRole);
 
         $this->assertEquals(0, $this->collection->getSize());
+
+        // restore admin role for proper rollback access
+        $adminRole->load('role_has_general_access', 'role_name');
+        $adminGwsRole->setAdminRole($adminRole);
     }
 
     /**
+     * @magentoDbIsolation disabled
      * @magentoDataFixture Magento/AdminGws/_files/two_roles_for_different_websites.php
      * @magentoDataFixture Magento/MultipleWishlist/_files/wishlists.php
      */
@@ -77,5 +83,9 @@ class CollectionTest extends TestCase
 
         $this->collection->load();
         $this->assertCount(0, $this->collection->getItems());
+
+        // restore admin role for proper rollback access
+        $adminRole->load('role_has_general_access', 'role_name');
+        $adminGwsRole->setAdminRole($adminRole);
     }
 }
