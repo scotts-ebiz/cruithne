@@ -350,10 +350,6 @@ class OrderStatusHelper
                     $this->updateOrderSapItem($inputOrder, $sapOrderItem, $totalConfirmedQuantity, $totalOrderedQuantity);
                 }
             }
-
-                // create the order sap item record
-                $this->insertOrderSapItem($inputOrder, $orderSapId, $totalConfirmedQuantity, $totalOrderedQuantity);
-
         }
         else
         {
