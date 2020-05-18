@@ -95,7 +95,7 @@ class CheckoutEndToEndTest extends GraphQlAbstract
   products (
     filter: {
       sku: {
-        eq:"simple1"
+        like:"simple%"
       }
     }
     pageSize: 1
@@ -219,6 +219,7 @@ mutation {
           telephone: "88776655"
           region: "TX"
           country_code: "US"
+          save_in_address_book: false
          }
       }
     }
@@ -257,6 +258,7 @@ mutation {
             postcode: "887766"
             country_code: "US"
             telephone: "88776655"
+            save_in_address_book: false
           }
         }
       ]
@@ -384,7 +386,7 @@ mutation {
     }
   ) {
     order {
-      order_number
+      order_id
     }
   }
 }
@@ -392,8 +394,8 @@ QUERY;
         $response = $this->graphQlMutation($query);
         self::assertArrayHasKey('placeOrder', $response);
         self::assertArrayHasKey('order', $response['placeOrder']);
-        self::assertArrayHasKey('order_number', $response['placeOrder']['order']);
-        self::assertNotEmpty($response['placeOrder']['order']['order_number']);
+        self::assertArrayHasKey('order_id', $response['placeOrder']['order']);
+        self::assertNotEmpty($response['placeOrder']['order']['order_id']);
     }
 
     public function tearDown()

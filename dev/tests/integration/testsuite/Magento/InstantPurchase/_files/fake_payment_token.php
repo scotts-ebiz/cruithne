@@ -19,6 +19,4 @@ $token->setIsActive(true);
 $token->setIsVisible(true);
 $token->setCreatedAt(strtotime('-1 day'));
 $token->setExpiresAt(strtotime('+1 day'));
-$tokenDetails = ['cc_last4' => '1111', 'cc_exp_year' => '2020', 'cc_exp_month' => '01', 'cc_type' => 'VI'];
-$token->setTokenDetails(json_encode($tokenDetails));
 $repository->save($token);

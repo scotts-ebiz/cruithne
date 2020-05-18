@@ -3,15 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-/**
- * @deprecated use next @magentoConfigFixture instead:
- * @magentoConfigFixture default_store payment/fake_vault/active 0
- * @magentoConfigFixture default_store payment/paypal_billing_agreement/active 0
- * @magentoConfigFixture default_store payment/fake/active 0
- * @magentoConfigFixture default_store payment/checkmo/active 0
- * @magentoConfigFixture default_store payment/free/active 0
- *
- */
+// TODO: Should be removed in scope of https://github.com/magento/graphql-ce/issues/167
 declare(strict_types=1);
 
 use Magento\Config\Model\Config;

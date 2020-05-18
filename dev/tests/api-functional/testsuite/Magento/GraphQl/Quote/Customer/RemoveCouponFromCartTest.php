@@ -73,7 +73,7 @@ class RemoveCouponFromCartTest extends GraphQlAbstract
     /**
      * @magentoApiDataFixture Magento/Customer/_files/customer.php
      * @expectedException Exception
-     * @expectedExceptionMessage Field RemoveCouponFromCartInput.cart_id of required type String! was not provided.
+     * @expectedExceptionMessage Required parameter "cart_id" is missing
      */
     public function testRemoveCouponFromCartIfCartIdIsMissed()
     {

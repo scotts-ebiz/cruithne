@@ -167,7 +167,7 @@ QUERY;
         /** @var ProductInterface $product */
         $product = $productRepository->get('simple1');
         $query = <<<QUERY
-query GetProducts(\$filterInput:ProductAttributeFilterInput){
+query GetProducts(\$filterInput:ProductFilterInput){
     products(
         filter:\$filterInput
     ){
@@ -251,7 +251,7 @@ QUERY;
                 foreach ($outputResponse['errors'] as $error) {
                     $this->assertEquals(
                         \Magento\Framework\GraphQl\Exception\GraphQlInputException::EXCEPTION_CATEGORY,
-                        $error['extensions']['category']
+                        $error['category']
                     );
                     if (isset($error['message'])) {
                         $this->assertEquals($error['message'], 'Invalid entity_type specified: invalid');

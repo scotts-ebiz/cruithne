@@ -28,7 +28,7 @@ class SaveTest extends AbstractInvoiceControllerTest
      */
     public function testSendEmailOnInvoiceSave(): void
     {
-        $order = $this->prepareRequest();
+        $order = $this->prepareRequest(['invoice' => ['send_email' => true]]);
         $this->dispatch('backend/sales/order_invoice/save');
 
         $this->assertSessionMessages(

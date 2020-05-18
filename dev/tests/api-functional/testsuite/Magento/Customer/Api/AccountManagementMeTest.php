@@ -16,8 +16,6 @@ use Magento\TestFramework\Helper\Customer as CustomerHelper;
 /**
  * Class AccountManagementMeTest
  *
- * Tests involving the customer modifying their user information via web API.
- *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  * @magentoApiDataFixture Magento/Customer/_files/customer.php
  * @magentoApiDataFixture Magento/Customer/_files/customer_two_addresses.php
@@ -146,14 +144,13 @@ class AccountManagementMeTest extends \Magento\TestFramework\TestCase\WebapiAbst
     {
         $customerData = $this->_getCustomerData($this->customerData[CustomerInterface::ID]);
         $lastName = $customerData->getLastname();
-        $groupID = $customerData->getGroupId();
+
         $updatedCustomerData = $this->dataObjectProcessor->buildOutputDataArray(
             $customerData,
             \Magento\Customer\Api\Data\CustomerInterface::class
         );
         $updatedCustomerData[CustomerInterface::LASTNAME] = $lastName . 'Updated';
         $updatedCustomerData[CustomerInterface::ID] = 25;
-        $updatedCustomerData[CustomerInterface::GROUP_ID] = $groupID . 1;
 
         $serviceInfo = [
             'rest' => [
@@ -175,7 +172,6 @@ class AccountManagementMeTest extends \Magento\TestFramework\TestCase\WebapiAbst
 
         $customerData = $this->_getCustomerData($this->customerData[CustomerInterface::ID]);
         $this->assertEquals($lastName . "Updated", $customerData->getLastname());
-        $this->assertEquals($groupID, $customerData->getGroupId());
     }
 
     public function testGetCustomerData()

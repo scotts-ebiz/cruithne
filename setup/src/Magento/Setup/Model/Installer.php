@@ -16,7 +16,6 @@ use Magento\Framework\Component\ComponentRegistrar;
 use Magento\Framework\Config\ConfigOptionsListConstants;
 use Magento\Framework\Config\Data\ConfigData;
 use Magento\Framework\Config\File\ConfigFilePool;
-use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\DB\Adapter\Pdo\Mysql;
 use Magento\Framework\Exception\FileSystemException;
 use Magento\Framework\Filesystem;
@@ -429,7 +428,7 @@ class Installer
         $disable = $this->readListOfModules($all, $request, InstallCommand::INPUT_KEY_DISABLE_MODULES);
         $result = [];
         foreach ($all as $module) {
-            if (isset($currentModules[$module]) && !$currentModules[$module]) {
+            if ((isset($currentModules[$module]) && !$currentModules[$module])) {
                 $result[$module] = 0;
             } else {
                 $result[$module] = 1;
@@ -604,7 +603,7 @@ class Installer
      */
     private function setupCoreTables(SchemaSetupInterface $setup)
     {
-        /* @var $connection AdapterInterface */
+        /* @var $connection \Magento\Framework\DB\Adapter\AdapterInterface */
         $connection = $setup->getConnection();
         $setup->startSetup();
 
@@ -620,12 +619,12 @@ class Installer
      * Create table 'session'
      *
      * @param SchemaSetupInterface $setup
-     * @param AdapterInterface $connection
+     * @param \Magento\Framework\DB\Adapter\AdapterInterface $connection
      * @return void
      */
     private function setupSessionTable(
         SchemaSetupInterface $setup,
-        AdapterInterface $connection
+        \Magento\Framework\DB\Adapter\AdapterInterface $connection
     ) {
         if (!$connection->isTableExists($setup->getTable('session'))) {
             $table = $connection->newTable(
@@ -659,12 +658,12 @@ class Installer
      * Create table 'cache'
      *
      * @param SchemaSetupInterface $setup
-     * @param AdapterInterface $connection
+     * @param \Magento\Framework\DB\Adapter\AdapterInterface $connection
      * @return void
      */
     private function setupCacheTable(
         SchemaSetupInterface $setup,
-        AdapterInterface $connection
+        \Magento\Framework\DB\Adapter\AdapterInterface $connection
     ) {
         if (!$connection->isTableExists($setup->getTable('cache'))) {
             $table = $connection->newTable(
@@ -713,12 +712,12 @@ class Installer
      * Create table 'cache_tag'
      *
      * @param SchemaSetupInterface $setup
-     * @param AdapterInterface $connection
+     * @param \Magento\Framework\DB\Adapter\AdapterInterface $connection
      * @return void
      */
     private function setupCacheTagTable(
         SchemaSetupInterface $setup,
-        AdapterInterface $connection
+        \Magento\Framework\DB\Adapter\AdapterInterface $connection
     ) {
         if (!$connection->isTableExists($setup->getTable('cache_tag'))) {
             $table = $connection->newTable(
@@ -749,17 +748,16 @@ class Installer
      * Create table 'flag'
      *
      * @param SchemaSetupInterface $setup
-     * @param AdapterInterface $connection
+     * @param \Magento\Framework\DB\Adapter\AdapterInterface $connection
      * @return void
      */
     private function setupFlagTable(
         SchemaSetupInterface $setup,
-        AdapterInterface $connection
+        \Magento\Framework\DB\Adapter\AdapterInterface $connection
     ) {
-        $tableName = $setup->getTable('flag');
-        if (!$connection->isTableExists($tableName)) {
+        if (!$connection->isTableExists($setup->getTable('flag'))) {
             $table = $connection->newTable(
-                $tableName
+                $setup->getTable('flag')
             )->addColumn(
                 'flag_id',
                 \Magento\Framework\DB\Ddl\Table::TYPE_INTEGER,
@@ -781,7 +779,7 @@ class Installer
             )->addColumn(
                 'flag_data',
                 \Magento\Framework\DB\Ddl\Table::TYPE_TEXT,
-                '16m',
+                '64k',
                 [],
                 'Flag Data'
             )->addColumn(
@@ -797,8 +795,6 @@ class Installer
                 'Flag'
             );
             $connection->createTable($table);
-        } else {
-            $this->updateColumnType($connection, $tableName, 'flag_data', 'mediumtext');
         }
     }
 
@@ -925,7 +921,7 @@ class Installer
      */
     private function handleDBSchemaData($setup, $type, array $request)
     {
-        if (!($type === 'schema' || $type === 'data')) {
+        if (!(($type === 'schema') || ($type === 'data'))) {
             throw  new \Magento\Setup\Exception("Unsupported operation type $type is requested");
         }
         $resource = new \Magento\Framework\Module\ModuleResource($this->context);
@@ -1375,32 +1371,7 @@ class Installer
      */
     private function assertDbAccessible()
     {
-        $driverOptionKeys = [
-            ConfigOptionsListConstants::KEY_MYSQL_SSL_KEY =>
-                ConfigOptionsListConstants::CONFIG_PATH_DB_CONNECTION_DEFAULT_DRIVER_OPTIONS . '/' .
-                ConfigOptionsListConstants::KEY_MYSQL_SSL_KEY,
-
-            ConfigOptionsListConstants::KEY_MYSQL_SSL_CERT =>
-                ConfigOptionsListConstants::CONFIG_PATH_DB_CONNECTION_DEFAULT_DRIVER_OPTIONS . '/' .
-                ConfigOptionsListConstants::KEY_MYSQL_SSL_CERT,
-
-            ConfigOptionsListConstants::KEY_MYSQL_SSL_CA =>
-                ConfigOptionsListConstants::CONFIG_PATH_DB_CONNECTION_DEFAULT_DRIVER_OPTIONS . '/' .
-                ConfigOptionsListConstants::KEY_MYSQL_SSL_CA,
-
-            ConfigOptionsListConstants::KEY_MYSQL_SSL_VERIFY =>
-                ConfigOptionsListConstants::CONFIG_PATH_DB_CONNECTION_DEFAULT_DRIVER_OPTIONS . '/' .
-                ConfigOptionsListConstants::KEY_MYSQL_SSL_VERIFY
-        ];
-        $driverOptions = [];
-        foreach ($driverOptionKeys as $driverOptionKey => $driverOptionConfig) {
-            $config = $this->deploymentConfig->get($driverOptionConfig);
-            if ($config !== null) {
-                $driverOptions[$driverOptionKey] = $config;
-            }
-        }
-
-        $this->dbValidator->checkDatabaseConnectionWithDriverOptions(
+        $this->dbValidator->checkDatabaseConnection(
             $this->deploymentConfig->get(
                 ConfigOptionsListConstants::CONFIG_PATH_DB_CONNECTION_DEFAULT .
                 '/' . ConfigOptionsListConstants::KEY_NAME
@@ -1416,8 +1387,7 @@ class Installer
             $this->deploymentConfig->get(
                 ConfigOptionsListConstants::CONFIG_PATH_DB_CONNECTION_DEFAULT .
                 '/' . ConfigOptionsListConstants::KEY_PASSWORD
-            ),
-            $driverOptions
+            )
         );
         $prefix = $this->deploymentConfig->get(
             ConfigOptionsListConstants::CONFIG_PATH_DB_CONNECTION_DEFAULT .
@@ -1551,29 +1521,5 @@ class Installer
         );
 
         return !empty($adminData);
-    }
-
-    /**
-     * Update flag_data column data type to maintain consistency.
-     *
-     * @param AdapterInterface $connection
-     * @param string $tableName
-     * @param string $columnName
-     * @param string $typeName
-     */
-    private function updateColumnType(
-        AdapterInterface $connection,
-        string $tableName,
-        string $columnName,
-        string $typeName
-    ): void {
-        $tableDescription = $connection->describeTable($tableName);
-        if ($tableDescription[$columnName]['DATA_TYPE'] !== $typeName) {
-            $connection->modifyColumn(
-                $tableName,
-                $columnName,
-                $typeName
-            );
-        }
     }
 }

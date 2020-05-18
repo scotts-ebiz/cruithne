@@ -5,22 +5,17 @@
  */
 
 //delete existing updates
-use Magento\CatalogRule\Model\ResourceModel\Rule;
-use Magento\Framework\App\ResourceConnection;
-use Magento\Staging\Model\ResourceModel\Update;
-use Magento\TestFramework\Helper\Bootstrap;
+$objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
 
-$objectManager = Bootstrap::getObjectManager();
-
-/** @var ResourceConnection $resource */
-$resource = $objectManager->get(ResourceConnection::class);
+/** @var \Magento\Framework\App\ResourceConnection $resource */
+$resource = $objectManager->get(\Magento\Framework\App\ResourceConnection::class);
 $connection = $resource->getConnection();
 
-/** @var Update $resourceModel */
-$resourceModel = $objectManager->create(Update::class);
+/** @var \Magento\Staging\Model\ResourceModel\Update $resourceModel */
+$resourceModel = $objectManager->create(\Magento\Staging\Model\ResourceModel\Update::class);
 $connection->delete($resourceModel->getMainTable());
 
 //delete existing catalog rules
-/** @var Rule $ruleResource */
-$ruleResource = $objectManager->create(Rule::class);
+/** @var \Magento\CatalogRule\Model\ResourceModel\Rule $ruleResource */
+$ruleResource = $objectManager->create(\Magento\CatalogRule\Model\ResourceModel\Rule::class);
 $connection->delete($ruleResource->getMainTable());

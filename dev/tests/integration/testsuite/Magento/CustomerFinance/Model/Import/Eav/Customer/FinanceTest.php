@@ -4,15 +4,15 @@
  * See COPYING.txt for license details.
  */
 
+/**
+ * Test class for \Magento\CustomerFinance\Model\Import\Eav\Customer\Finance
+ */
 namespace Magento\CustomerFinance\Model\Import\Eav\Customer;
 
 use Magento\CustomerFinance\Model\ResourceModel\Customer\Attribute\Finance\Collection;
 use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\TestFramework\Helper\Bootstrap;
 
 /**
- * Test class for \Magento\CustomerFinance\Model\Import\Eav\Customer\Finance
- *
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class FinanceTest extends \PHPUnit\Framework\TestCase
@@ -23,14 +23,14 @@ class FinanceTest extends \PHPUnit\Framework\TestCase
     protected function tearDown()
     {
         /** @var $testWebsite \Magento\Store\Model\Website */
-        $testWebsite = Bootstrap::getObjectManager()->create(
+        $testWebsite = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
             \Magento\Store\Model\Website::class
         )->load(
             'test'
         );
         if ($testWebsite->getId()) {
             // Clear test website info from application cache.
-            Bootstrap::getObjectManager()->get(
+            \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(
                 \Magento\Store\Model\StoreManagerInterface::class
             )->reinitStores();
         }
@@ -57,10 +57,10 @@ class FinanceTest extends \PHPUnit\Framework\TestCase
          * in this case test website will be added into protected property of Application instance class.
          */
         /** @var $objectManager \Magento\TestFramework\ObjectManager */
-        $objectManager = Bootstrap::getObjectManager();
+        $objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
 
         /** @var $testWebsite \Magento\Store\Model\Website */
-        $testWebsite = Bootstrap::getObjectManager()->create(
+        $testWebsite = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
             \Magento\Store\Model\Website::class
         )->load(
             'test'
@@ -150,14 +150,14 @@ class FinanceTest extends \PHPUnit\Framework\TestCase
     public function testImportDataDelete()
     {
         /* clean up the database from prior tests before importing */
-        $rewards = Bootstrap::getObjectManager()->create(
+        $rewards = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
             \Magento\Reward\Model\ResourceModel\Reward\Collection::class
         );
         foreach ($rewards as $reward) {
             $reward->delete();
         }
 
-        $directory = Bootstrap::getObjectManager()->create(
+        $directory = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
             \Magento\Framework\Filesystem::class
         )->getDirectoryWrite(
             DirectoryList::ROOT
@@ -166,7 +166,7 @@ class FinanceTest extends \PHPUnit\Framework\TestCase
             __DIR__ . '/../_files/customer_finance_delete.csv',
             $directory
         );
-        $model = Bootstrap::getObjectManager()->create(
+        $model = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
             \Magento\CustomerFinance\Model\Import\Eav\Customer\Finance::class
         );
         $model->setParameters(['behavior' => \Magento\ImportExport\Model\Import::BEHAVIOR_DELETE]);
@@ -174,14 +174,14 @@ class FinanceTest extends \PHPUnit\Framework\TestCase
         $model->validateData();
         $model->importData();
 
-        $rewards = Bootstrap::getObjectManager()->create(
+        $rewards = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
             \Magento\Reward\Model\ResourceModel\Reward\Collection::class
         );
-        $balances = Bootstrap::getObjectManager()->create(
+        $balances = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
             \Magento\CustomerBalance\Model\ResourceModel\Balance\Collection::class
         );
         /** @var $objectManager \Magento\TestFramework\ObjectManager */
-        $objectManager = Bootstrap::getObjectManager();
+        $objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
 
         $expectedRewards = $objectManager->get(
             \Magento\Framework\Registry::class

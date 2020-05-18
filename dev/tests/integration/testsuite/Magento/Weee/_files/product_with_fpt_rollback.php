@@ -13,13 +13,12 @@ $registry->register('isSecureArea', true);
 
 /** @var $product \Magento\Catalog\Model\Product */
 $product = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(\Magento\Catalog\Model\Product::class);
-
-$product = $product->loadByAttribute('sku', 'simple-with-ftp');
-if ($product && $product->getId()) {
+$product->load(101);
+if ($product->getId()) {
     $product->delete();
 }
 
-/** @var \Magento\Catalog\Model\ResourceModel\Eav\Attribute $attribute */
+/** @var $attribute \Magento\Catalog\Model\ResourceModel\Eav\Attribute */
 $attribute = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
     ->create(\Magento\Catalog\Model\ResourceModel\Eav\Attribute::class);
 $attribute->load('fpt_for_all', 'attribute_code');

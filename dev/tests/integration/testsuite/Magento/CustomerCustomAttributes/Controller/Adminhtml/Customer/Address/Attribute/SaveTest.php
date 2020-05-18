@@ -70,14 +70,11 @@ class SaveTest extends AbstractBackendController
     /**
      * Tests that controller validate file extensions.
      *
-     * @var string $fileExtension
-     *
      * @return void
-     * @dataProvider fileExtensionsDataProvider
      */
-    public function testFileExtensions(string $fileExtension): void
+    public function testFileExtensions(): void
     {
-        $params = $this->getRequestNewAttributeData($fileExtension);
+        $params = $this->getRequestNewAttributeData();
         $request = $this->getRequest();
         $request->setMethod('POST');
         $request->setPostValue($params);
@@ -87,34 +84,6 @@ class SaveTest extends AbstractBackendController
         $this->assertSessionMessages(
             $this->equalTo(['Please correct the value for file extensions.'])
         );
-    }
-
-    /**
-     * @return array
-     */
-    public function fileExtensionsDataProvider(): array
-    {
-        return [
-            ['php'],
-            ['svg'],
-            ['php3'],
-            ['php4'],
-            ['php5'],
-            ['php7'],
-            ['htaccess'],
-            ['jsp'],
-            ['pl'],
-            ['py'],
-            ['asp'],
-            ['sh'],
-            ['cgi'],
-            ['htm'],
-            ['html'],
-            ['phtml'],
-            ['shtml'],
-            ['phpt'],
-            ['pht'],
-        ];
     }
 
     /**
@@ -139,17 +108,15 @@ class SaveTest extends AbstractBackendController
     /**
      * Gets request params.
      *
-     * @var string $fileExtension
-     *
      * @return array
      */
-    private function getRequestNewAttributeData(string $fileExtension): array
+    private function getRequestNewAttributeData(): array
     {
         return [
             'attribute_code' => 'new_file',
             'frontend_label' => ['new_file'],
             'frontend_input' => 'file',
-            'file_extensions' => $fileExtension,
+            'file_extensions' => 'php',
             'sort_order' => 1,
             'form_key' => $this->_objectManager->get(FormKey::class)->getFormKey(),
         ];

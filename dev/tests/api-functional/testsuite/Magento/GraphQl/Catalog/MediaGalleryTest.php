@@ -198,6 +198,6 @@ QUERY;
         curl_exec($connection);
         $responseStatus = curl_getinfo($connection, CURLINFO_HTTP_CODE);
         // phpcs:enable Magento2.Functions.DiscouragedFunction
-        return $responseStatus === 200;
+        return $responseStatus === 200 ? true : false;
     }
 }

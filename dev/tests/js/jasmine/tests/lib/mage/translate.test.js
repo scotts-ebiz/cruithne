@@ -9,15 +9,10 @@ define([
 ], function ($) {
     'use strict';
 
-    // be careful with test variation order as one variation can affect another one
     describe('Test for mage/translate jQuery plugin', function () {
         it('works with one string as parameter', function () {
             $.mage.translate.add('Hello World!');
             expect('Hello World!').toEqual($.mage.translate.translate('Hello World!'));
-        });
-        it('works with translation alias __', function () {
-            $.mage.translate.add('Hello World!');
-            expect('Hello World!').toEqual($.mage.__('Hello World!'));
         });
         it('works with one array as parameter', function () {
             $.mage.translate.add(['Hello World!', 'Bonjour tout le monde!']);
@@ -44,6 +39,10 @@ define([
         it('works with two string as parameter', function () {
             $.mage.translate.add('Hello World!', 'Bonjour tout le monde!');
             expect('Bonjour tout le monde!').toEqual($.mage.translate.translate('Hello World!'));
+        });
+        it('works with translation alias __', function () {
+            $.mage.translate.add('Hello World!');
+            expect('Hello World!').toEqual($.mage.__('Hello World!'));
         });
     });
 

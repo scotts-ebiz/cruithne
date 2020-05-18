@@ -10,7 +10,6 @@ namespace Magento\Checkout\Controller\Cart;
 use Magento\Catalog\Model\Product;
 use Magento\Checkout\Model\Session;
 use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Framework\App\Request\Http as HttpRequest;
 use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\Serialize\Serializer\Json;
 
@@ -82,7 +81,6 @@ class UpdateItemQtyTest extends \Magento\TestFramework\TestCase\AbstractControll
             ];
         }
 
-        $this->getRequest()->setMethod(HttpRequest::METHOD_POST);
         $this->getRequest()->setPostValue($request);
         $this->dispatch('checkout/cart/updateItemQty');
         $response = $this->getResponse()->getBody();

@@ -9,6 +9,7 @@ namespace Magento\CatalogSearch\Model\Indexer;
 
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\Visibility;
+use Magento\CatalogSearch\Model\ResourceModel\Fulltext\Collection;
 use Magento\TestFramework\Helper\Bootstrap;
 
 /**
@@ -74,6 +75,10 @@ class FulltextTest extends \PHPUnit\Framework\TestCase
             \Magento\Indexer\Model\Indexer::class
         );
         $this->indexer->load('catalogsearch_fulltext');
+
+        $this->engine = Bootstrap::getObjectManager()->get(
+            \Magento\CatalogSearch\Model\ResourceModel\Engine::class
+        );
 
         $this->queryFactory = Bootstrap::getObjectManager()->get(
             \Magento\Search\Model\QueryFactory::class
@@ -218,8 +223,12 @@ class FulltextTest extends \PHPUnit\Framework\TestCase
         $query->setQueryText($text);
         $query->saveIncrementalPopularity();
         $products = [];
-        $searchLayer = Bootstrap::getObjectManager()->create(\Magento\Catalog\Model\Layer\Search::class);
-        $collection = $searchLayer->getProductCollection();
+        $collection = Bootstrap::getObjectManager()->create(
+            Collection::class,
+            [
+                'searchRequestName' => 'quick_search_container'
+            ]
+        );
         $collection->addSearchFilter($text);
 
         if (null !== $visibilityFilter) {

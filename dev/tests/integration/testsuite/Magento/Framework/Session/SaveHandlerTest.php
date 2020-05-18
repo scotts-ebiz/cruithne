@@ -9,18 +9,12 @@ use Magento\Framework\App\DeploymentConfig;
 use Magento\Framework\Exception\SessionException;
 use Magento\Framework\Phrase;
 use Magento\Framework\Session\Config\ConfigInterface;
-use Magento\TestFramework\Helper\Bootstrap;
-use Magento\TestFramework\ObjectManager;
+use Magento\Framework\App\ObjectManager;
 
-/**
- * Tests \Magento\Framework\Session\SaveHandler functionality.
- *
- * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
- */
 class SaveHandlerTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var ObjectManager
+     * @var \Magento\TestFramework\ObjectManager
      */
     private $objectManager;
 
@@ -34,21 +28,15 @@ class SaveHandlerTest extends \PHPUnit\Framework\TestCase
      */
     private $saveHandlerFactoryMock;
 
-    /**
-     * @inheritdoc
-     */
     protected function setUp()
     {
-        $this->objectManager = Bootstrap::getObjectManager();
+        $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $this->deploymentConfigMock = $this->createMock(DeploymentConfig::class);
         $this->objectManager->addSharedInstance($this->deploymentConfigMock, DeploymentConfig::class);
         $this->saveHandlerFactoryMock = $this->createMock(SaveHandlerFactory::class);
         $this->objectManager->addSharedInstance($this->saveHandlerFactoryMock, SaveHandlerFactory::class);
     }
 
-    /**
-     * @inheritdoc
-     */
     protected function tearDown()
     {
         $this->objectManager->removeSharedInstance(DeploymentConfig::class);
@@ -56,74 +44,99 @@ class SaveHandlerTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @return void
+     * Tests that the session handler is correctly set when object is created.
+     *
+     * @dataProvider saveHandlerProvider
+     * @param string $deploymentConfigHandler
      */
-    public function testRedisSaveHandler(): void
+    public function testConstructor($deploymentConfigHandler)
     {
+        $expected = $this->getExpectedSaveHandler($deploymentConfigHandler, ini_get('session.save_handler'));
+
         $this->deploymentConfigMock->method('get')
-            ->willReturnMap(
-                [
-                    [Config::PARAM_SESSION_SAVE_METHOD, null, 'redis'],
-                    [Config::PARAM_SESSION_SAVE_PATH, null, 'explicit_save_path'],
-                ]
-            );
+            ->willReturnCallback(function ($configPath) use ($deploymentConfigHandler) {
+                switch ($configPath) {
+                    case Config::PARAM_SESSION_SAVE_METHOD:
+                        return $deploymentConfigHandler;
+                    case Config::PARAM_SESSION_CACHE_LIMITER:
+                        return 'private_no_expire';
+                    case Config::PARAM_SESSION_SAVE_PATH:
+                        return 'explicit_save_path';
+                    default:
+                        return null;
+                }
+            });
 
-        $redisHandlerMock = $this->getMockBuilder(SaveHandler\Redis::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $redisHandlerMock->method('open')
-            ->with('explicit_save_path', 'test_session_id')
-            ->willReturn(true);
-
-        $this->saveHandlerFactoryMock->expects($this->exactly(1))
+        $this->saveHandlerFactoryMock->expects($this->once())
             ->method('create')
-            ->with('redis')
-            ->willReturn($redisHandlerMock);
-
+            ->with($expected);
         $sessionConfig = $this->objectManager->create(ConfigInterface::class);
-        /** @var SaveHandler $saveHandler */
-        $saveHandler = $this->objectManager->create(SaveHandler::class, ['sessionConfig' => $sessionConfig]);
-        $result = $saveHandler->open('explicit_save_path', 'test_session_id');
-        $this->assertTrue($result);
+        $this->objectManager->create(SaveHandler::class, ['sessionConfig' => $sessionConfig]);
+
+        // Test expectation
+        $this->assertEquals(
+            $expected,
+            $sessionConfig->getOption('session.save_handler')
+        );
+    }
+
+    public function saveHandlerProvider()
+    {
+        return [
+            ['db'],
+            ['redis'],
+            ['files'],
+            [false],
+        ];
     }
 
     /**
-     * @return void
+     * Retrieve expected session.save_handler
+     *
+     * @param string $deploymentConfigHandler
+     * @param string $iniHandler
+     * @return string
      */
-    public function testRedisSaveHandlerFallbackToDefaultOnSessionException(): void
+    private function getExpectedSaveHandler($deploymentConfigHandler, $iniHandler)
+    {
+        if ($deploymentConfigHandler) {
+            return $deploymentConfigHandler;
+        } elseif ($iniHandler) {
+            return $iniHandler;
+        } else {
+            return SaveHandlerInterface::DEFAULT_HANDLER;
+        }
+    }
+
+    public function testConstructorWithException()
     {
         $this->deploymentConfigMock->method('get')
-            ->willReturnMap(
-                [
-                    [Config::PARAM_SESSION_SAVE_METHOD, null, 'redis'],
-                    [Config::PARAM_SESSION_SAVE_PATH, null, 'explicit_save_path'],
-                ]
-            );
-
-        $redisHandlerMock = $this->getMockBuilder(SaveHandler\Redis::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $redisHandlerMock->method('open')
-            ->with('explicit_save_path', 'test_session_id')
-            ->willThrowException(new SessionException(new Phrase('Session Exception')));
-
-        $defaultHandlerMock = $this->getMockBuilder(SaveHandler\Native::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-        $defaultHandlerMock->expects($this->once())->method('open')->with('explicit_save_path', 'test_session_id');
+            ->willReturnCallback(function ($configPath) {
+                switch ($configPath) {
+                    case Config::PARAM_SESSION_SAVE_METHOD:
+                        return 'db';
+                    case Config::PARAM_SESSION_CACHE_LIMITER:
+                        return 'private_no_expire';
+                    case Config::PARAM_SESSION_SAVE_PATH:
+                        return 'explicit_save_path';
+                    default:
+                        return null;
+                }
+            });
 
         $this->saveHandlerFactoryMock->expects($this->at(0))
             ->method('create')
-            ->with('redis')
-            ->willReturn($redisHandlerMock);
+            ->willThrowException(new SessionException(new Phrase('Session Exception')));
         $this->saveHandlerFactoryMock->expects($this->at(1))
             ->method('create')
-            ->with(SaveHandlerInterface::DEFAULT_HANDLER)
-            ->willReturn($defaultHandlerMock);
-
+            ->with(SaveHandlerInterface::DEFAULT_HANDLER);
         $sessionConfig = $this->objectManager->create(ConfigInterface::class);
-        /** @var SaveHandler $saveHandler */
-        $saveHandler = $this->objectManager->create(SaveHandler::class, ['sessionConfig' => $sessionConfig]);
-        $saveHandler->open('explicit_save_path', 'test_session_id');
+        $this->objectManager->create(SaveHandler::class, ['sessionConfig' => $sessionConfig]);
+
+        // Test expectation
+        $this->assertEquals(
+            'db',
+            $sessionConfig->getOption('session.save_handler')
+        );
     }
 }
