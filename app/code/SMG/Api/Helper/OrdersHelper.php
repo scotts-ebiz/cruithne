@@ -34,7 +34,7 @@ use SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo\CollectionFactory as Sap
 use SMG\Sap\Model\ResourceModel\SapOrderBatchRma\CollectionFactory as SapOrderBatchRmaCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription\Collection as Collection;
-use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
+use SMG\SubscriptionApi\Model\SubscriptionFactory;
 
 class OrdersHelper
 {
@@ -224,10 +224,10 @@ class OrdersHelper
      */
     protected $_sapOrderBatchFactory;
 
-    /** 
-     * @var SubscriptionCollectionFactory  
+    /**
+     * @var SubscriptionFactory
      */
-    protected $_subscriptionCollectionFactory;
+    protected $_subscriptionFactory;
 
     /**
      * OrdersHelper constructor.
@@ -257,7 +257,7 @@ class OrdersHelper
      * @param SapOrderBatchResource $sapOrderBatchResource
      * @param SubscriptionResource $subscriptionResource
      * @param SapOrderBatchFactory $sapOrderBatchFactory
-     * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
+     * @param SubscriptionFactory $subscriptionFactory
      */
     public function __construct(LoggerInterface $logger,
         ResourceConnection $resourceConnection,
@@ -284,7 +284,7 @@ class OrdersHelper
         SapOrderBatchResource $sapOrderBatchResource,
         SubscriptionResource $subscriptionResource,
         SapOrderBatchFactory $sapOrderBatchFactory,
-        SubscriptionCollectionFactory $subscriptionCollectionFactory
+        SubscriptionFactory $subscriptionFactory
         )
     {
         $this->_logger = $logger;
@@ -312,7 +312,7 @@ class OrdersHelper
         $this->_sapOrderBatchResource = $sapOrderBatchResource;
         $this->_subscriptionResource = $subscriptionResource;
         $this->_sapOrderBatchFactory = $sapOrderBatchFactory;
-        $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
+        $this->_subscriptionFactory = $subscriptionFactory;
     }
 
     /**
@@ -456,10 +456,8 @@ class OrdersHelper
             foreach ($this->_masterSubscriptionIds as $masterSubscriptionId)
             {
                 // get the subscription data with filter master_subscription_id of sales_order
-                $subscriptions = $this->_subscriptionCollectionFactory->create();
-                $subscription = $subscriptions
-                                ->addFieldToFilter('subscription_id', $masterSubscriptionId)
-                                ->getFirstItem();
+                $subscription = $this->_subscriptionFactory->create();
+                $this->_subscriptionResource->load($subscription, $masterSubscriptionId, 'subscription_id');
                 
                 // get the list of orders for this master subscription id
                 $annualOrders = $this->_orderCollectionFactory->create();
@@ -481,8 +479,8 @@ class OrdersHelper
                      $orderId = $annualOrder->getId();
                      $incrementId = $annualOrder->getData('increment_id'); 
                       
-                     // check subscription id exist or not                    
-                     if($subscription->getId()){
+                     // check subscription exist or not                    
+                     if(!empty($subscription)){
                          
                         if ($annualOrder->isCanceled())
                         {
