@@ -8,16 +8,12 @@ use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Psr\Log\LoggerInterface;
 use SMG\Sap\Model\SapOrderFactory;
 use SMG\Sap\Model\SapOrderBatchFactory;
-use SMG\Sap\Model\SapOrderHistoryFactory;
 use SMG\Sap\Model\SapOrderItemFactory;
 use SMG\Sap\Model\SapOrderShipmentFactory;
-use SMG\Sap\Model\SapOrderItemHistoryFactory;
 use SMG\Sap\Model\ResourceModel\SapOrder as SapOrderResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch as SapOrderBatchResource;
-use SMG\Sap\Model\ResourceModel\SapOrderHistory as SapOrderHistoryResource;
 use SMG\Sap\Model\ResourceModel\SapOrderShipment as SapOrderShipmentResource;
 use SMG\Sap\Model\ResourceModel\SapOrderItem as SapOrderItemResource;
-use SMG\Sap\Model\ResourceModel\SapOrderItemHistory as SapOrderItemHistoryResource;
 use SMG\Sap\Model\ResourceModel\SapOrderItem\CollectionFactory as SapOrderItemCollectionFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderShipment\CollectionFactory as SapOrderShipmentCollectionFactory;
 use SMG\OrderDiscount\Helper\Data as DiscountHelper;
@@ -61,19 +57,9 @@ class OrderStatusHelper
     protected $_sapOrderBatchFactory;
 
     /**
-     * @var SapOrderHistoryFactory
-     */
-    protected $_sapOrderHistoryFactory;
-
-    /**
      * @var SapOrderItemFactory
      */
     protected $_sapOrderItemFactory;
-
-    /**
-     * @var SapOrderItemHistoryFactory
-     */
-    protected $_sapOrderItemHistoryFactory;
 
     /**
      * @var SapOrderResource
@@ -86,19 +72,9 @@ class OrderStatusHelper
     protected $_sapOrderBatchResource;
 
     /**
-     * @var SapOrderHistoryResource
-     */
-    protected $_sapOrderHistoryResource;
-
-    /**
      * @var SapOrderItemResource
      */
     protected $_sapOrderItemResource;
-
-    /**
-     * @var SapOrderItemHistoryResource
-     */
-    protected $_sapOrderItemHistoryResource;
 
     /**
      * @var SapOrderItemCollectionFactory
@@ -158,14 +134,10 @@ class OrderStatusHelper
      * @param LoggerInterface $logger
      * @param SapOrderFactory $sapOrderFactory
      * @param SapOrderBatchFactory $sapOrderBatchFactory
-     * @param SapOrderHistoryFactory $sapOrderHistoryFactory
      * @param SapOrderItemFactory $sapOrderItemFactory
-     * @param SapOrderItemHistoryFactory $sapOrderItemHistoryFactory
      * @param SapOrderResource $sapOrderResource
      * @param SapOrderBatchResource $sapOrderBatchResource
-     * @param SapOrderHistoryResource $sapOrderHistoryResource
      * @param SapOrderItemResource $sapOrderItemResource
-     * @param SapOrderItemHistoryResource $sapOrderItemHistoryResource
      * @param SapOrderItemCollectionFactory $sapOrderItemCollectionFactory
      * @param SapOrderShipmentFactory $sapOrderShipmentFactory
      * @param SapOrderShipmentResource $sapOrderShipmentResource
@@ -178,14 +150,10 @@ class OrderStatusHelper
         LoggerInterface $logger,
         SapOrderFactory $sapOrderFactory,
         SapOrderBatchFactory $sapOrderBatchFactory,
-        SapOrderHistoryFactory $sapOrderHistoryFactory,
         SapOrderItemFactory $sapOrderItemFactory,
-        SapOrderItemHistoryFactory $sapOrderItemHistoryFactory,
         SapOrderResource $sapOrderResource,
         SapOrderBatchResource $sapOrderBatchResource,
-        SapOrderHistoryResource $sapOrderHistoryResource,
         SapOrderItemResource $sapOrderItemResource,
-        SapOrderItemHistoryResource $sapOrderItemHistoryResource,
         SapOrderItemCollectionFactory $sapOrderItemCollectionFactory,
         SapOrderShipmentFactory $sapOrderShipmentFactory,
         SapOrderShipmentResource $sapOrderShipmentResource,
@@ -201,14 +169,10 @@ class OrderStatusHelper
         $this->_logger = $logger;
         $this->_sapOrderFactory = $sapOrderFactory;
         $this->_sapOrderBatchFactory = $sapOrderBatchFactory;
-        $this->_sapOrderHistoryFactory = $sapOrderHistoryFactory;
         $this->_sapOrderItemFactory = $sapOrderItemFactory;
-        $this->_sapOrderItemHistoryFactory = $sapOrderItemHistoryFactory;
         $this->_sapOrderResource = $sapOrderResource;
         $this->_sapOrderBatchResource = $sapOrderBatchResource;
-        $this->_sapOrderHistoryResource = $sapOrderHistoryResource;
         $this->_sapOrderItemResource = $sapOrderItemResource;
-        $this->_sapOrderItemHistoryResource = $sapOrderItemHistoryResource;
         $this->_sapOrderItemCollectionFactory = $sapOrderItemCollectionFactory;
         $this->_responseHelper = $responseHelper;
         $this->_sapOrderShipmentFactory = $sapOrderShipmentFactory;
@@ -320,12 +284,12 @@ class OrderStatusHelper
     private function processOrderSapInfo($inputOrder, $sapOrder, $totalConfirmedQuantity, $totalOrderedQuantity)
     {
         // get the orderId to see if it is present in the object
-        $orderId = $sapOrder->getData('order_id');
+        $orderSapId = $sapOrder->getId();
 
         // determine if the sapOrder needs to be created
         // if it was loaded from the database there should be an
         // order id value
-        if (!empty($orderId))
+        if (!empty($orderSapId))
         {
             // check to see if the order needs to be updated
             // if so then update the order
@@ -340,7 +304,7 @@ class OrderStatusHelper
         else
         {
             // create the order sap record
-            $orderSapId = $this->insertOrderSap($inputOrder, $totalConfirmedQuantity, $totalOrderedQuantity);
+            $orderSapId = $this->insertOrderSap($inputOrder, $sapOrder, $totalConfirmedQuantity, $totalOrderedQuantity);
 
             // create the order sap item record
             $orderSapItemId = $this->insertOrderSapItem($inputOrder, $orderSapId, $totalConfirmedQuantity, $totalOrderedQuantity);
@@ -367,15 +331,13 @@ class OrderStatusHelper
         // the items with the desired order
         $sapOrderItems = $this->_sapOrderItemCollectionFactory->create();
         $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $orderSapId]);
+        $sapOrderItems->addFieldToFilter('sku', ['eq' => $inputOrder[self::INPUT_SAP_SKU]]);
 
         // check to see if there is a record already
         // if there is then update the appropriate tables
         // otherwise create new values in the tables
         if ($sapOrderItems->count() > 0)
         {
-            // initialize if the item has already been added to this order
-            $isAdd = true;
-
             // loop through the orders
             foreach($sapOrderItems as $sapOrderItem)
             {
@@ -383,22 +345,15 @@ class OrderStatusHelper
                 // otherwise we will insert
                 if ($inputOrder[self::INPUT_SAP_SKU] === $sapOrderItem->getData('sku'))
                 {
-                    // set the is add flag to false since
-                    // it already exists for this order
-                    $isAdd = false;
-
                     // check to see if the order needs to be updated
                     // if so then update the order item
                     $this->updateOrderSapItem($inputOrder, $sapOrderItem, $totalConfirmedQuantity, $totalOrderedQuantity);
                 }
             }
 
-            // if the flag is true then add the order item
-            if ($isAdd)
-            {
                 // create the order sap item record
-                $this->insertOrderSapItem($inputOrder, $orderSapId);
-            }
+                $this->insertOrderSapItem($inputOrder, $orderSapId, $totalConfirmedQuantity, $totalOrderedQuantity);
+
         }
         else
         {
@@ -473,7 +428,7 @@ class OrderStatusHelper
      * @return mixed
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    private function insertOrderSap($inputOrder, $totalConfirmedQuantity, $totalOrderedQuantity)
+    private function insertOrderSap($inputOrder, $sapOrder, $totalConfirmedQuantity, $totalOrderedQuantity)
     {
         // get the order for the desired increment id
         $order = $this->_orderFactory->create();
@@ -487,7 +442,6 @@ class OrderStatusHelper
         $orderStatus = $this->getOrderStatus($inputOrder, $totalConfirmedQuantity, $totalOrderedQuantity);
 
         // Add to the sales_order_sap table
-        $sapOrder = $this->_sapOrderFactory->create();
         $sapOrder->setData('order_id', $order->getId());
         $sapOrder->setData('sap_order_id', $inputOrder[self::INPUT_SAP_ORDER_NUMBER]);
         $sapOrder->setData('order_created_at', $inputOrder[self::INPUT_SAP_ORDER_CREATE_DATE]);
@@ -628,36 +582,9 @@ class OrderStatusHelper
         // get the entity id from the newly added sap order item
         $orderSapItemId = $sapOrderItem->getId();
 
-        // add to the sales_order_sap_item_history table
-        $this->insertOrderSapItemHistory($orderSapItemId, $orderStatus, null);
-
         // return the order sap item id that was generated from
         // inserting into the table
         return $orderSapItemId;
-    }
-
-    /**
-     * Insert the order sap item history table with the appropriate values
-     *
-     * @param $orderSapItemId
-     * @param $orderStatus
-     * @param $orderStatusNotes
-     * @throws \Magento\Framework\Exception\AlreadyExistsException
-     */
-    private function insertOrderSapItemHistory($orderSapItemId, $orderStatus, $orderStatusNotes)
-    {
-        // add to the sales_order_sap_item_history table
-        $sapOrderItemHistory = $this->_sapOrderItemHistoryFactory->create();
-        $sapOrderItemHistory->setData('order_sap_item_id', $orderSapItemId);
-        $sapOrderItemHistory->setData('order_status', $orderStatus);
-
-        if (!empty($orderStatusNotes))
-        {
-            $sapOrderItemHistory->setData('order_status_notes', $orderStatusNotes);
-        }
-
-        // save the data to the table
-        $this->_sapOrderItemHistoryResource->save($sapOrderItemHistory);
     }
 
     /**

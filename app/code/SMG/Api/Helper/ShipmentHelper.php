@@ -274,14 +274,6 @@ class ShipmentHelper
              */
             foreach ($order->getAllItems() as $orderItem)
             {
-                /**
-                 * @var \Magento\Sales\Api\Data\ShipmentItemCreationInterface $shipmentItemCreation
-                 */
-                $shipmentItemCreation = $this->_shipmentItemCreationInterfaceFactory->create();
-                $shipmentItemCreation->setOrderItemId($orderItem->getItemId());
-                $shipmentItemCreation->setQty($orderItem->getQtyOrdered());
-                $items[] = $shipmentItemCreation;
-
                 // get the sap order item
                 $sapOrderItems = $this->_sapOrderItemCollectionFactory->create();
                 $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $sapOrder->getId()]);
@@ -294,10 +286,13 @@ class ShipmentHelper
                     }
                 });
 
-                // If this order item has only been partially shipped, then don't set it as having been shipped yet.
-                if ($orderItem->getQtyOrdered() < $totalConfirmedQuantity) {
-                    continue;
-                }
+                /**
+                 * @var \Magento\Sales\Api\Data\ShipmentItemCreationInterface $shipmentItemCreation
+                 */
+                $shipmentItemCreation = $this->_shipmentItemCreationInterfaceFactory->create();
+                $shipmentItemCreation->setOrderItemId($orderItem->getItemId());
+                $shipmentItemCreation->setQty($totalConfirmedQuantity);
+                $items[] = $shipmentItemCreation;
 
                 // get the first item from the collection.  there should only be one
                 // item
