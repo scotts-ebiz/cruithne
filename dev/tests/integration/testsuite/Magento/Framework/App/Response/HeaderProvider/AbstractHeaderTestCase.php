@@ -5,20 +5,11 @@
  */
 namespace Magento\Framework\App\Response\HeaderProvider;
 
-use Magento\Framework\App\Response\Http as HttpResponse;
-use Zend\Http\Header\HeaderInterface;
-
-/**
- * Class AbstractHeaderTestCase
- */
 abstract class AbstractHeaderTestCase extends \Magento\TestFramework\TestCase\AbstractController
 {
-    /** @var  HttpResponse */
+    /** @var  \Magento\Framework\App\Response\Http */
     private $interceptedResponse;
 
-    /**
-     * @inheritDoc
-     */
     public function setUp()
     {
         parent::setUp();
@@ -26,12 +17,12 @@ abstract class AbstractHeaderTestCase extends \Magento\TestFramework\TestCase\Ab
             [
                 'preferences' =>
                     [
-                        // phpcs:ignore Magento2.PHP.LiteralNamespaces.LiteralClassUsage
-                        HttpResponse::class => 'Magento\Framework\App\Response\Http\Interceptor'
+                        \Magento\Framework\App\Response\Http::class =>
+                            \Magento\Framework\App\Response\Http\Interceptor::class
                     ]
             ]
         );
-        $this->interceptedResponse = $this->_objectManager->create(HttpResponse::class);
+        $this->interceptedResponse = $this->_objectManager->create(\Magento\Framework\App\Response\Http::class);
     }
 
     /**
@@ -43,28 +34,15 @@ abstract class AbstractHeaderTestCase extends \Magento\TestFramework\TestCase\Ab
     protected function assertHeaderPresent($name, $value)
     {
         $this->interceptedResponse->sendResponse();
+
         $header = $this->interceptedResponse->getHeader($name);
-
-        $headerContent = [];
-        if ($header instanceof \ArrayIterator) {
-            foreach ($header as $item) {
-                $headerContent[] = $item->getFieldValue();
-            }
-        } elseif ($header instanceof HeaderInterface) {
-            $headerContent[] = $header->getFieldValue();
-        }
-
+        $this->assertTrue(is_subclass_of($header, \Zend\Http\Header\HeaderInterface::class, false));
         $this->assertSame(
-            [$value],
-            $headerContent
+            $value,
+            $header->getFieldValue()
         );
     }
 
-    /**
-     * Assert is no header.
-     *
-     * @param string $name
-     */
     protected function assertHeaderNotPresent($name)
     {
         $this->interceptedResponse->sendResponse();

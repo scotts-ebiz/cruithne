@@ -63,7 +63,7 @@ class RemoveCouponFromCartTest extends GraphQlAbstract
 
     /**
      * @expectedException Exception
-     * @expectedExceptionMessage Field RemoveCouponFromCartInput.cart_id of required type String! was not provided.
+     * @expectedExceptionMessage Required parameter "cart_id" is missing
      */
     public function testRemoveCouponFromCartIfCartIdIsMissed()
     {

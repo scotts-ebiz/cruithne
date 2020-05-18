@@ -183,7 +183,7 @@ class UpdateCartItemsTest extends GraphQlAbstract
 
     /**
      * @expectedException \Exception
-     * @expectedExceptionMessage Field UpdateCartItemsInput.cart_id of required type String! was not provided.
+     * @expectedExceptionMessage Required parameter "cart_id" is missing.
      */
     public function testUpdateWithMissedCartItemId()
     {
@@ -248,11 +248,11 @@ QUERY;
         return [
             'missed_cart_items' => [
                 '',
-                'Field UpdateCartItemsInput.cart_items of required type [CartItemUpdateInput]! was not provided.'
+                'Required parameter "cart_items" is missing.'
             ],
             'missed_cart_item_id' => [
                 'cart_items: [{ quantity: 2 }]',
-                'Field CartItemUpdateInput.cart_item_id of required type Int! was not provided.'
+                'Required parameter "cart_item_id" for "cart_items" is missing.'
             ],
             'missed_cart_item_qty' => [
                 'cart_items: [{ cart_item_id: 1 }]',

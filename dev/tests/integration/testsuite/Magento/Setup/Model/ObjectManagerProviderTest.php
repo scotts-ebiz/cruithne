@@ -6,17 +6,9 @@
 
 namespace Magento\Setup\Model;
 
-use Magento\Framework\ObjectManagerInterface;
 use Magento\Setup\Mvc\Bootstrap\InitParamListener;
-use PHPUnit\Framework\TestCase;
-use PHPUnit_Framework_MockObject_MockObject;
-use Symfony\Component\Console\Application;
-use Zend\ServiceManager\ServiceLocatorInterface;
 
-/**
- * Tests ObjectManagerProvider
- */
-class ObjectManagerProviderTest extends TestCase
+class ObjectManagerProviderTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var ObjectManagerProvider
@@ -24,34 +16,21 @@ class ObjectManagerProviderTest extends TestCase
     private $object;
 
     /**
-     * @var ServiceLocatorInterface|PHPUnit_Framework_MockObject_MockObject
+     * @var \Zend\ServiceManager\ServiceLocatorInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $locator;
 
-    /**
-     * @inheritDoc
-     */
     protected function setUp()
     {
-        $this->locator = $this->getMockForAbstractClass(ServiceLocatorInterface::class);
+        $this->locator = $this->getMockForAbstractClass(\Zend\ServiceManager\ServiceLocatorInterface::class);
         $this->object = new ObjectManagerProvider($this->locator, new Bootstrap());
-        $this->locator->expects($this->any())
-            ->method('get')
-            ->willReturnMap(
-                [
-                    [InitParamListener::BOOTSTRAP_PARAM, []],
-                    [Application::class, $this->getMockForAbstractClass(Application::class)],
-                ]
-            );
     }
 
-    /**
-     * Tests the same instance of ObjectManagerInterface should be provided by the ObjectManagerProvider
-     */
     public function testGet()
     {
+        $this->locator->expects($this->once())->method('get')->with(InitParamListener::BOOTSTRAP_PARAM)->willReturn([]);
         $objectManager = $this->object->get();
-        $this->assertInstanceOf(ObjectManagerInterface::class, $objectManager);
+        $this->assertInstanceOf(\Magento\Framework\ObjectManagerInterface::class, $objectManager);
         $this->assertSame($objectManager, $this->object->get());
     }
 }
