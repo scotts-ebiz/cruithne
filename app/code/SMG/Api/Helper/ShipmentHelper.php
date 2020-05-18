@@ -23,6 +23,10 @@ use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory 
 
 class ShipmentHelper
 {
+
+    const INPUT_SAP_CONFIRMED_QTY = 'ConfirmedQTY';
+    const INPUT_SAP_ORDER_QTY = 'OrderQTY';
+
     /**
      * @var array
      */
@@ -283,6 +287,18 @@ class ShipmentHelper
                 $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $sapOrder->getId()]);
                 $sapOrderItems->addFieldToFilter('sku', ['eq' => $orderItem->getSku()]);
 
+                // Sum up all the confirmed (shipped) items for this sku.
+                $totalConfirmedQuantity = array_reduce($sapOrderItems, function ($total, $item) {
+                    if (!empty($item[self::INPUT_SAP_CONFIRMED_QTY])) {
+                        return $total + floatval($item[self::INPUT_SAP_CONFIRMED_QTY]);
+                    }
+                });
+
+                // If this order item has only been partially shipped, then don't set it as having been shipped yet.
+                if ($orderItem->getQtyOrdered() < $totalConfirmedQuantity) {
+                    continue;
+                }
+
                 // get the first item from the collection.  there should only be one
                 // item
                 /**
@@ -350,6 +366,42 @@ class ShipmentHelper
      */
     private function updateSapBatch($sapBatchOrder, $orderId)
     {
+            /**
+             * @var \SMG\Sap\Model\SapOrder $sapOrder
+             */
+            $sapOrder = $this->_sapOrderResource->getSapOrderByOrderId($orderId);
+
+            // get the items for this sap order.
+            $sapOrderItems = $this->_sapOrderItemCollectionFactory->create();
+            $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $sapOrder->getId()]);
+
+            // Grab all the unique skus for this order.
+            $sapDistinctSkus = [];
+            foreach($sapOrderItems as $sapOrderItem) {
+                if (array_search($sapOrderItem[self::INPUT_SAP_SKU], array_column($sapDistinctSkus,self::INPUT_SAP_SKU)) === FALSE) {
+                    $sapDistinctSkus[] = $sapOrderItem;
+                }
+            }
+
+            // Sum up all the confirmed (shipped) items for this order.
+            $totalConfirmedQuantity = array_reduce($sapOrderItems, function ($total, $item) {
+                if (!empty($item[self::INPUT_SAP_CONFIRMED_QTY])) {
+                    return $total + floatval($item[self::INPUT_SAP_CONFIRMED_QTY]);
+                }
+            });
+
+            // Sum up every unique sku to get the total number of items ordered.
+            $totalOrderedQuantity = array_reduce($sapDistinctSkus, function ($total, $item) {
+                if (!empty($item[self::INPUT_SAP_ORDER_QTY])) {
+                    return $total + floatval($item[self::INPUT_SAP_ORDER_QTY]);
+                }
+            });
+
+            // We do not want to set a shipment process date since this order is only partially shipped.
+            if ($totalOrderedQuantity < $totalConfirmedQuantity) {
+                return;
+            }
+
             // get the current date
             $today = date('Y-m-d H:i:s');
 
