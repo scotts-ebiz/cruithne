@@ -341,20 +341,17 @@ class OrderStatusHelper
             // loop through the orders
             foreach($sapOrderItems as $sapOrderItem)
             {
-                // if it is the same sku then we update
-                // otherwise we will insert
-                if ($inputOrder[self::INPUT_SAP_SKU] === $sapOrderItem->getData('sku'))
-                {
-                    // check to see if the order needs to be updated
-                    // if so then update the order item
-                    $this->updateOrderSapItem($inputOrder, $sapOrderItem, $totalConfirmedQuantity, $totalOrderedQuantity);
-                }
+
+                // check to see if the order needs to be updated
+                // if so then update the order item
+                $this->updateOrderSapItem($inputOrder, $sapOrderItem, $totalConfirmedQuantity, $totalOrderedQuantity);
+
             }
         }
         else
         {
             // create the order sap item record
-            $this->insertOrderSapItem($inputOrder, $orderSapId);
+            $this->insertOrderSapItem($inputOrder, $orderSapId, $totalConfirmedQuantity, $totalOrderedQuantity);
         }
     }
 
