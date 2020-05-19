@@ -383,33 +383,33 @@ class OrderStatusHelper
             foreach ($sapOrderItems as $sapOrderItem)
             {
                 // get the order sap item id
-                $orderSapItemId = $sapOrderItem->getData('order_id');
-                // create the sap orders shipment factory to retrieve all
-                // the shipment items with the desired order
-                $sapOrderShipments = $this->_sapOrderShipmentCollectionFactory->create();
-                $sapOrderShipments->addFieldToFilter('order_sap_item_id', ['eq' => $orderSapItemId]);
-                $sapOrderShipments->addFieldToFilter('ship_tracking_number', ['eq' => $shipTrackingNumber]);
-                $sapOrderShipments->addFieldToFilter('qty', ['eq' => $inputOrder[self::INPUT_SAP_ORDER_QTY]]);
+                $orderSapItemId = $sapOrderItem->getId();
+            }
+            // create the sap orders shipment factory to retrieve all
+            // the shipment items with the desired order
+            $sapOrderShipments = $this->_sapOrderShipmentCollectionFactory->create();
+            $sapOrderShipments->addFieldToFilter('order_sap_item_id', ['eq' => $orderSapItemId]);
+            $sapOrderShipments->addFieldToFilter('ship_tracking_number', ['eq' => $shipTrackingNumber]);
+            $sapOrderShipments->addFieldToFilter('qty', ['eq' => $inputOrder[self::INPUT_SAP_ORDER_QTY]]);
 
-                // check to see if there is a record already
-                // if there is then update the appropriate tables
-                // otherwise create new values in the tables
-                // there should only be one record
-                if ($sapOrderShipments->count() > 0)
+            // check to see if there is a record already
+            // if there is then update the appropriate tables
+            // otherwise create new values in the tables
+            // there should only be one record
+            if ($sapOrderShipments->count() > 0)
+            {
+                // loop through the orders
+                foreach($sapOrderShipments as $sapOrderShipment)
                 {
-                    // loop through the orders
-                    foreach($sapOrderShipments as $sapOrderShipment)
-                    {
-                        // check to see if the order needs to be updated
-                        // if so then update the order item
-                        $this->updateOrderSapShipment($inputOrder, $sapOrderShipment);
-                    }
+                    // check to see if the order needs to be updated
+                    // if so then update the order item
+                    $this->updateOrderSapShipment($inputOrder, $sapOrderShipment);
                 }
-                else
-                {
-                    // create the order sap shipment record
-                    $this->insertOrderSapShipment($inputOrder, $orderSapItemId);
-                }
+            }
+            else
+            {
+                // create the order sap shipment record
+                $this->insertOrderSapShipment($inputOrder, $orderSapItemId);
             }
         }
     }
