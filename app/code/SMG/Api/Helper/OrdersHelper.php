@@ -459,12 +459,13 @@ class OrdersHelper
                 $subscription = $this->_subscriptionFactory->create();
                 $this->_subscriptionResource->load($subscription, $masterSubscriptionId, 'subscription_id');
                 
-             // check subscription exist or not                    
-             if(!empty($subscription->getId())){
-                 
                 // get the list of orders for this master subscription id
-                $annualOrders = $this->getAnnualOrders($masterSubscriptionId);
-                
+                $annualOrders = $this->_orderCollectionFactory->create();
+                $annualOrders->addFieldToFilter('master_subscription_id', ['eq' => $masterSubscriptionId]);
+                $annualOrders->setOrder('master_subscription_id', 'asc');
+                $annualOrders->setOrder('ship_start_date', 'asc');
+                $annualOrders->setOrder('entity_id', 'asc');
+
                 // make sure that there are orders
                 // check if there are orders to process
                 if ($annualOrders->count() > 0)
@@ -476,6 +477,9 @@ class OrdersHelper
                     {
                      // get the required fields needed for processing
                      $orderId = $annualOrder->getId();
+                      
+                     // check subscription exist or not                    
+                     if(!empty($subscription)){
                          
                         if ($annualOrder->isCanceled())
                         {
@@ -511,50 +515,32 @@ class OrdersHelper
                                 $ordersArray[] = $this->addRecordToOrdersArray($annualOrder, $orderItem);
                             }
                         }
-                     
+                      }
+                      else
+                      {
+                        // Get the sap sales order
+                        /**
+                         * @var \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
+                         */
+                        $sapOrderBatch = $this->_sapOrderBatchFactory->create();
+                        $this->_sapOrderBatchResource->load($sapOrderBatch, $orderId);
+
+                        // get the date for today
+                        $today = date('Y-m-d H:i:s');
+
+                        // update the process date so it isn't picked up again
+                        $sapOrderBatch->setData('order_process_date', $today);
+
+                        // save to the database
+                        $this->_sapOrderBatchResource->save($sapOrderBatch);
+                        
+                        //Error log in system log file for SAP_ORDER_CRON_SKIP_BROKEN_SUB
+                        $error = 'SMG\Api\Helper\OrdersHelper - SAP_ORDER_CRON_SKIP_BROKEN_SUB - Subscription id is null for order number -'.$annualOrder->getData('increment_id');
+                        $this->_logger->error($error);
+                      }
                     }
                 }
-              }
-               else
-              {
-                // get the list of orders for this master subscription id
-                $annualOrders = $this->getAnnualOrders($masterSubscriptionId);               
-                
-                // Get the sap sales order
-                if ($annualOrders->count() > 0)
-                {
-                    /**
-                     * @var \SMG\Sales\Model\Order $annualOrder
-                     */
-                    foreach ($annualOrders as $annualOrder)
-                    {
-                     // get the required fields needed for processing
-                     $orderId = $annualOrder->getId();
-                    
-                    /**
-                     * @var \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
-                     */
-                    $sapOrderBatch = $this->_sapOrderBatchFactory->create();
-                    $this->_sapOrderBatchResource->load($sapOrderBatch, $orderId);
-
-                    // get the date for today
-                    $today = date('Y-m-d H:i:s');
-
-                    // update the process date so it isn't picked up again
-                    $sapOrderBatch->setData('order_process_date', $today);
-
-                    // save to the database
-                    $this->_sapOrderBatchResource->save($sapOrderBatch);
-
-                    //Error log in system log file for SAP_ORDER_CRON_SKIP_BROKEN_SUB
-                    $error = 'SMG\Api\Helper\OrdersHelper - SAP_ORDER_CRON_SKIP_BROKEN_SUB - Subscription id is null for order number -'.$annualOrder->getData('increment_id');
-                    $this->_logger->error($error);
-                
-                  }
-             
-                }
-              }     
-           }
+            }
         }
 
         // return
@@ -1025,23 +1011,6 @@ class OrdersHelper
 
         $sapOrderCollection = $this->_sapOrderBatchCollectionFactory->create();
         return $sapOrderCollection->getData();
-    }
-    
-    /**
-     * Get order data
-     *
-     * @return array
-     */
-    public function getAnnualOrders($masterSubscriptionId)
-    {
-        // get the list of orders for this master subscription id
-        $annualOrders = $this->_orderCollectionFactory->create();
-        $annualOrders->addFieldToFilter('master_subscription_id', ['eq' => $masterSubscriptionId]);
-        $annualOrders->setOrder('master_subscription_id', 'asc');
-        $annualOrders->setOrder('ship_start_date', 'asc');
-        $annualOrders->setOrder('entity_id', 'asc');
-        
-        return $annualOrders;
     }
 
 }
