@@ -479,7 +479,7 @@ class OrdersHelper
                      $orderId = $annualOrder->getId();
                       
                      // check subscription exist or not                    
-                     if(!empty($subscription)){
+                     if(!empty($subscription->getId())){
                          
                         if ($annualOrder->isCanceled())
                         {
