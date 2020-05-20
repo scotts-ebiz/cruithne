@@ -24,6 +24,8 @@ class Onepage extends \Magento\Checkout\Block\Onepage
      */
     protected $_recurlyHelper;
 
+
+
     /**
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magento\Framework\Data\Form\FormKey $formKey
@@ -53,7 +55,7 @@ class Onepage extends \Magento\Checkout\Block\Onepage
 
         $this->_coreSession = $coreSession;
         $this->_subscription = $subscription;
-        $this->_recurlyHelper = $recurlyHelper;
+        $this->_recurlyHelper = $recurlyHelper; 
     }
 
     /**
@@ -77,6 +79,7 @@ class Onepage extends \Magento\Checkout\Block\Onepage
             $data = $subscription->convertToArray();
             $addOn = $subscription->getAddOn();
             $data['is_shippable'] = $subscription->getData('subscription_type') == 'annual' || $subscription->isCurrentlyShippable();
+            $data['ship_start_date'] = $subscription->currentShipStartDate();
             $data['add_on'] = $addOn ? $addOn->convertToArray() : false;
 
             return json_encode($data);

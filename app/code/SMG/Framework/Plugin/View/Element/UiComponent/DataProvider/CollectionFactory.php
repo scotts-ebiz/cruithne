@@ -62,7 +62,7 @@ class CollectionFactory
                     ['subscription_order_status' => $subscriptionOrderStatusTable],
                     'subscription_order.subscription_order_status = subscription_order_status.status OR subscription_addon_order.subscription_order_status = subscription_order_status.status',
                     ['subscription_order_status.label AS subscription_status']
-                );
+                )->group(['main_table.entity_id']);
 
                 return $this->_collection;
             }
