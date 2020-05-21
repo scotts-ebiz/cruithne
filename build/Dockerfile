@@ -15,6 +15,11 @@ USER root
 WORKDIR $MAGENTO_DIR
 RUN chown -R magento:www-data .git
 
+RUN chown -R magento /usr/local/lib/node_modules
+
+RUN npm install -g npm
+
+
 USER magento
 WORKDIR $MAGENTO_DIR
 
@@ -41,6 +46,8 @@ WORKDIR $MAGENTO_DIR
 USER root
 
 RUN chown -R magento:www-data $MAGENTO_DIR/tools
+
+RUN cd tools && npm install
 
 # Expose Ports for Apache
 EXPOSE 80/tcp 443/tcp
