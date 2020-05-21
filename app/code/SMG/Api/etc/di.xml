@@ -7,6 +7,7 @@
     <preference for="SMG\Api\Model\ConsumerDataSentManagementInterface" type="SMG\Api\Model\Api\ConsumerDataSentManagement" />
     <preference for="SMG\Api\Model\InvoiceReconciliationManagementInterface" type="SMG\Api\Model\Api\InvoiceReconciliationManagement" />
     <preference for="SMG\Api\Model\InvoiceReconciliationSentManagementInterface" type="SMG\Api\Model\Api\InvoiceReconciliationSentManagement" />
+    <preference for="SMG\Api\Model\ManualShipmentManagementInterface" type="SMG\Api\Model\Api\ManualShipmentManagement" />
     <preference for="SMG\Api\Model\OrdersManagementInterface" type="SMG\Api\Model\Api\OrdersManagement" />
     <preference for="SMG\Api\Model\OrdersSentManagementInterface" type="SMG\Api\Model\Api\OrdersSentManagement" />
     <preference for="SMG\Api\Model\OrderStatusManagementInterface" type="SMG\Api\Model\Api\OrderStatusManagement" />
