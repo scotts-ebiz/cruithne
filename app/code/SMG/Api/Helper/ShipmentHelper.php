@@ -316,7 +316,7 @@ class ShipmentHelper
                          * @var \Magento\Sales\Model\Order\Item $orderItem
                          */
                         $orderItem = array_filter($order->getAllItems(), function ($item) use(&$sapOrderItem) {
-                            return $item->getData('sku') == $sapOrderItem->getData('SKU');
+                            return $item->getData('sku') == $sapOrderItem->getData('sku');
                         });
 
                         if (empty($orderItem)) {
@@ -359,42 +359,39 @@ class ShipmentHelper
      */
     private function updateSapBatch($sapBatchOrder, $orderId)
     {
-            /**
-             * @var \SMG\Sap\Model\SapOrder $sapOrder
-             */
-            $sapOrder = $this->_sapOrderResource->getSapOrderByOrderId($orderId);
+        /**
+         * @var \SMG\Sap\Model\SapOrder $sapOrder
+         */
+        $sapOrder = $this->_sapOrderResource->getSapOrderByOrderId($orderId);
 
-            // get the items for this sap order.
-            $sapOrderItems = $this->_sapOrderItemCollectionFactory->create();
-            $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $sapOrder->getId()]);
+        // get the items for this sap order.
+        $sapOrderItems = $this->_sapOrderItemCollectionFactory->create();
+        $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $sapOrder->getId()]);
 
-            // Grab all the unique skus for this order.
-            $sapDistinctSkus = [];
-            foreach($sapOrderItems as $sapOrderItem) {
-                if (array_search($sapOrderItem[self::INPUT_SAP_SKU], array_column($sapDistinctSkus,self::INPUT_SAP_SKU)) === FALSE) {
-                    $sapDistinctSkus[] = $sapOrderItem;
-                }
+        // Grab all the unique skus for this order.
+        $sapDistinctSkus = [];
+        foreach($sapOrderItems as $sapOrderItem) {
+            if (array_search($sapOrderItem[self::INPUT_SAP_SKU], array_column($sapDistinctSkus,self::INPUT_SAP_SKU)) === FALSE) {
+                $sapDistinctSkus[] = $sapOrderItem;
             }
+        }
 
-            // Sum up all the confirmed (shipped) items for this order.
-            $totalConfirmedQuantity = array_reduce($sapOrderItems->getData(), function ($total, $item) {
-                if (!empty($item[self::INPUT_SAP_CONFIRMED_QTY])) {
-                    return $total + floatval($item[self::INPUT_SAP_CONFIRMED_QTY]);
-                }
-            });
-
-            // Sum up every unique sku to get the total number of items ordered.
-            $totalOrderedQuantity = array_reduce($sapDistinctSkus, function ($total, $item) {
-                if (!empty($item[self::INPUT_SAP_ORDER_QTY])) {
-                    return $total + floatval($item[self::INPUT_SAP_ORDER_QTY]);
-                }
-            });
-
-            // We do not want to set a shipment process date since this order is only partially shipped.
-            if (isset($totalOrderedQuantity) && $totalOrderedQuantity < $totalConfirmedQuantity) {
-                return;
+        // Sum up all the confirmed (shipped) items for this order.
+        $totalConfirmedQuantity = array_reduce($sapOrderItems->getData(), function ($total, $item) {
+            if (!empty($item[self::INPUT_SAP_CONFIRMED_QTY])) {
+                return $total + floatval($item[self::INPUT_SAP_CONFIRMED_QTY]);
             }
+        });
 
+        // Sum up every unique sku to get the total number of items ordered.
+        $totalOrderedQuantity = array_reduce($sapDistinctSkus, function ($total, $item) {
+            if (!empty($item[self::INPUT_SAP_ORDER_QTY])) {
+                return $total + floatval($item[self::INPUT_SAP_ORDER_QTY]);
+            }
+        });
+
+        // Only set ship processing date if all items in the order have been shipped.
+        if ($totalConfirmedQuantity >= $totalOrderedQuantity) {
             // get the current date
             $today = date('Y-m-d H:i:s');
 
@@ -407,6 +404,7 @@ class ShipmentHelper
             // add the order id to the array to send email
             // to customer service
             $this->_customerServiceEmailIds[] = $orderId;
+        }
     }
 
     /**
