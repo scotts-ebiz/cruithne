@@ -40,6 +40,8 @@ WORKDIR $MAGENTO_DIR
 
 USER root
 
+RUN chown -R magento:www-data $MAGENTO_DIR/tools
+
 # Expose Ports for Apache
 EXPOSE 80/tcp 443/tcp
 
