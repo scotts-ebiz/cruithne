@@ -55,6 +55,7 @@ RUN find var pub/static pub/media app/etc -type f -exec chmod g+w {} + && find v
 
 
 RUN chown -R magento:www-data $MAGENTO_DIR/tools
+RUN chmod -R 777 $MAGENTO_DIR/tools
 
 # Run entrypoint file
 COPY ondemand-entrypoint.sh /usr/local/bin/entrypoint.sh
