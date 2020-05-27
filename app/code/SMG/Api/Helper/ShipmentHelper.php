@@ -28,6 +28,7 @@ class ShipmentHelper
     const INPUT_SAP_CONFIRMED_QTY = 'confirmed_qty';
     const INPUT_SAP_ORDER_QTY = 'qty';
     const INPUT_SAP_SKU = 'sku';
+    const ACTION_FLAG_SHIP = 'ship';
     /**
      * @var array
      */
@@ -258,7 +259,7 @@ class ShipmentHelper
         $this->_orderResource->load($order, $orderId);
 
         // determine if this can be shipped
-        if ($order->canShip())
+        if ($this->canShip($order))
         {
             // create the list of items
             // initialize the items array
@@ -518,4 +519,33 @@ class ShipmentHelper
         }
       return $i;
     }
+
+    /*
+     * Retrieve order shipment availability
+     * @param \Magento\Sales\Model\Order $order
+     * @return bool
+     */
+    public function canShip($order)
+    {
+        if ($order->canUnhold() || $order->isPaymentReview()) {
+            return false;
+        }
+
+        if ($order->getIsVirtual() || $order->isCanceled()) {
+            return false;
+        }
+
+        if ($order->getActionFlag(self::ACTION_FLAG_SHIP) === false) {
+            return false;
+        }
+
+        foreach ($order->getAllItems() as $item) {
+            if (!$item->getIsVirtual() &&
+                !$item->getLockedDoShip() && $item->getQtyRefunded() != $item->getQtyOrdered()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
