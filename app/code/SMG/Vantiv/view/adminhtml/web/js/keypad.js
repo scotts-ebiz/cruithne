@@ -3,9 +3,10 @@
  * See LICENSE.txt for license details.
  */
 define([
-    'jquery'
+    'jquery',
+    'Magento_Ui/js/modal/alert'
 ],
-    function ($) {
+    function ($, alert) {
         'use strict';
 
         const MANUAL_DEFAULT_FORMAT_SIZE = 198;
@@ -13,7 +14,7 @@ define([
         $(document).on('click', '#p_method_vantiv_keypadpayment', function () {
             // KeyPad alert
             alert({
-                title: $.mage.__('Warning'),
+                title: $.mage.__('Warning!'),
                 content: $.mage.__('Please do not leave this page until you have completed your keypad entry and submitted your order.'),
                 actions: {
                     always: function () { }
