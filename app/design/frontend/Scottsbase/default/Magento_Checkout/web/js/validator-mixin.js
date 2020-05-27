@@ -112,7 +112,7 @@ define([
 					if (!isNaN(value)) {
 						return false;
 					}
-					if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value)){
+					if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
 						return true
 					} else {
 						return false;
@@ -128,19 +128,21 @@ define([
 		validator.addRule(
 			'required-entry-street-1',
 			function (value) {
-                    if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value) || value == ''){
+
+					if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
 						return true
 					} else {
 						return false;
 					}
 			},
-			$.mage.__('Please only include apartment or suite number, if applicable.')
+			$.mage.__('Please enter a valid street address.')
 		);
 
 		validator.addRule(
 			'required-entry-street-2',
 			function (value) {
-                if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value) || value == ''){
+
+					if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
 						return true
 					} else {
 						return false;
@@ -157,7 +159,7 @@ define([
 					if (!isNaN(value)) {
 						return false;
 					}
-					if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value)){
+					if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
 						return true
 					} else {
 						return false;
@@ -174,20 +176,20 @@ define([
 			'required-entry-bstreet-1',
 			function (value) {
 
-					if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value)){
+					if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
 						return true
 					} else {
 						return false;
 					}
 			},
-			$.mage.__('Please only include apartment or suite number, if applicable.')
+			$.mage.__('Please enter a valid street address.')
 		);
 
 		validator.addRule(
 			'required-entry-bstreet-2',
 			function (value) {
 
-					if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value)){
+					if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
 						return true
 					} else {
 						return false;
@@ -240,7 +242,7 @@ define([
 			'required-entry-exceptpost',
 			function (value) {
 				var zipcodesTemp = ['967', '968', '995', '996', '997', '998', '999'];
-				var temp = value.substring(0, 3);
+				var temp = value.substring(0, 3);			
 				if ($("input[name='postcode']").val() != '') {
 					if($.inArray(temp, zipcodesTemp) >= 0){
 						return false;
