@@ -34,7 +34,6 @@ use SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo\CollectionFactory as Sap
 use SMG\Sap\Model\ResourceModel\SapOrderBatchRma\CollectionFactory as SapOrderBatchRmaCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription\Collection as Collection;
-use SMG\SubscriptionApi\Model\SubscriptionFactory;
 
 class OrdersHelper
 {
@@ -225,11 +224,6 @@ class OrdersHelper
     protected $_sapOrderBatchFactory;
 
     /**
-     * @var SubscriptionFactory
-     */
-    protected $_subscriptionFactory;
-
-    /**
      * OrdersHelper constructor.
      *
      * @param LoggerInterface $logger
@@ -257,7 +251,6 @@ class OrdersHelper
      * @param SapOrderBatchResource $sapOrderBatchResource
      * @param SubscriptionResource $subscriptionResource
      * @param SapOrderBatchFactory $sapOrderBatchFactory
-     * @param SubscriptionFactory $subscriptionFactory
      */
     public function __construct(LoggerInterface $logger,
         ResourceConnection $resourceConnection,
@@ -283,9 +276,7 @@ class OrdersHelper
         DiscountHelper $discountHelper,
         SapOrderBatchResource $sapOrderBatchResource,
         SubscriptionResource $subscriptionResource,
-        SapOrderBatchFactory $sapOrderBatchFactory,
-        SubscriptionFactory $subscriptionFactory
-        )
+        SapOrderBatchFactory $sapOrderBatchFactory)
     {
         $this->_logger = $logger;
         $this->_resourceConnection = $resourceConnection;
@@ -312,7 +303,6 @@ class OrdersHelper
         $this->_sapOrderBatchResource = $sapOrderBatchResource;
         $this->_subscriptionResource = $subscriptionResource;
         $this->_sapOrderBatchFactory = $sapOrderBatchFactory;
-        $this->_subscriptionFactory = $subscriptionFactory;
     }
 
     /**
@@ -360,7 +350,7 @@ class OrdersHelper
      *
      * @return array
      */
-    private function getDebitOrderData()
+    private function   getDebitOrderData()
     {
         $ordersArray = array();
 
@@ -455,10 +445,6 @@ class OrdersHelper
             // loop through the list of master subscription ids
             foreach ($this->_masterSubscriptionIds as $masterSubscriptionId)
             {
-                // get the subscription data with filter master_subscription_id of sales_order
-                $subscription = $this->_subscriptionFactory->create();
-                $this->_subscriptionResource->load($subscription, $masterSubscriptionId, 'subscription_id');
-                
                 // get the list of orders for this master subscription id
                 $annualOrders = $this->_orderCollectionFactory->create();
                 $annualOrders->addFieldToFilter('master_subscription_id', ['eq' => $masterSubscriptionId]);
@@ -475,12 +461,9 @@ class OrdersHelper
                      */
                     foreach ($annualOrders as $annualOrder)
                     {
-                     // get the required fields needed for processing
-                     $orderId = $annualOrder->getId();
-                      
-                     // check subscription exist or not                    
-                     if(!empty($subscription->getId())){
-                         
+                        // get the required fields needed for processing
+                        $orderId = $annualOrder->getId();
+
                         if ($annualOrder->isCanceled())
                         {
                             // Get the sap sales order
@@ -515,29 +498,6 @@ class OrdersHelper
                                 $ordersArray[] = $this->addRecordToOrdersArray($annualOrder, $orderItem);
                             }
                         }
-                      }
-                      else
-                      {
-                        // Get the sap sales order
-                        /**
-                         * @var \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
-                         */
-                        $sapOrderBatch = $this->_sapOrderBatchFactory->create();
-                        $this->_sapOrderBatchResource->load($sapOrderBatch, $orderId);
-
-                        // get the date for today
-                        $today = date('Y-m-d H:i:s');
-
-                        // update the process date so it isn't picked up again
-                        $sapOrderBatch->setData('order_process_date', $today);
-
-                        // save to the database
-                        $this->_sapOrderBatchResource->save($sapOrderBatch);
-                        
-                        //Error log in system log file for SAP_ORDER_CRON_SKIP_BROKEN_SUB
-                        $error = 'SMG\Api\Helper\OrdersHelper - SAP_ORDER_CRON_SKIP_BROKEN_SUB - Subscription id is null for order number -'.$annualOrder->getData('increment_id');
-                        $this->_logger->error($error);
-                      }
                     }
                 }
             }
