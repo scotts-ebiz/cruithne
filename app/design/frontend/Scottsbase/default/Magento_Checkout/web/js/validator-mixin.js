@@ -104,19 +104,19 @@ define([
 			$.mage.__('Please enter a valid city')
 		);
 
-		/* Start shipping and billing street address validation */
-		validator.addRule(
-			'required-entry-street-0',
-			function (value) {
-				if ($("input[name='street[0]']").val() != '') {
-					if (!isNaN(value)) {
-						return false;
-					}
-					if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value)){
-						return true
-					} else {
-						return false;
-					}
+        /* Start shipping and billing street address validation */
+        validator.addRule(
+            'required-entry-street-0',
+            function (value) {
+                if ($("input[name='street[0]']").val() != '') {
+                    if (!isNaN(value)) {
+                        return false;
+                    }
+                    if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
+                        return true
+                    } else {
+                        return false;
+                    }
 
 				} else {
 					return !$.mage.isEmpty(value);
@@ -125,43 +125,45 @@ define([
 			$.mage.__('Please enter a valid street address.')
 		);
 
-		validator.addRule(
-			'required-entry-street-1',
-			function (value) {
-                    if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value) || value == ''){
-						return true
-					} else {
-						return false;
-					}
-			},
-			$.mage.__('Please only include apartment or suite number, if applicable.')
-		);
+        validator.addRule(
+            'required-entry-street-1',
+            function (value) {
 
-		validator.addRule(
-			'required-entry-street-2',
-			function (value) {
-                if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value) || value == ''){
-						return true
-					} else {
-						return false;
-					}
-			},
-			$.mage.__('Please enter a valid street address.')
-		);
+                if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
+                    return true
+                } else {
+                    return false;
+                }
+            },
+            $.mage.__('Please enter a valid street address.')
+        );
 
-		validator.addRule(
-			'required-entry-bstreet-0',
-			function (value) {
-				var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.street.0';
-				if ($("div[name='"+inpt+"'] input[name='street[0]']").val() != '') {
-					if (!isNaN(value)) {
-						return false;
-					}
-					if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value)){
-						return true
-					} else {
-						return false;
-					}
+        validator.addRule(
+            'required-entry-street-2',
+            function (value) {
+
+                if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
+                    return true
+                } else {
+                    return false;
+                }
+            },
+            $.mage.__('Please enter a valid street address.')
+        );
+
+        validator.addRule(
+            'required-entry-bstreet-0',
+            function (value) {
+                var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.street.0';
+                if ($("div[name='"+inpt+"'] input[name='street[0]']").val() != '') {
+                    if (!isNaN(value)) {
+                        return false;
+                    }
+                    if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
+                        return true
+                    } else {
+                        return false;
+                    }
 
 				} else {
 					return !$.mage.isEmpty(value);
@@ -174,27 +176,27 @@ define([
 			'required-entry-bstreet-1',
 			function (value) {
 
-					if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value)){
-						return true
-					} else {
-						return false;
-					}
-			},
-			$.mage.__('Please only include apartment or suite number, if applicable.')
-		);
+                if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
+                    return true
+                } else {
+                    return false;
+                }
+            },
+            $.mage.__('Please enter a valid street address.')
+        );
 
 		validator.addRule(
 			'required-entry-bstreet-2',
 			function (value) {
 
-					if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value)){
-						return true
-					} else {
-						return false;
-					}
-			},
-			$.mage.__('Please enter a valid street address.')
-		);
+                if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
+                    return true
+                } else {
+                    return false;
+                }
+            },
+            $.mage.__('Please enter a valid street address.')
+        );
 
 		/* End street address validation */
 		validator.addRule(
@@ -225,56 +227,56 @@ define([
 			'required-entry-pcode',
 			function (value) {
 
-				if ($("input[name='postcode']").val() != '') {
-					if(value.length < 5){
-						return false;
-					}
-					return true;
-				} else {
-					return !$.mage.isEmpty(value);
-				}
-			},
-			$.mage.__('Please enter a valid ZIP code.')
-		);
-		validator.addRule(
-			'required-entry-exceptpost',
-			function (value) {
-				var zipcodesTemp = ['967', '968', '995', '996', '997', '998', '999'];
-				var temp = value.substring(0, 3);
-				if ($("input[name='postcode']").val() != '') {
-					if($.inArray(temp, zipcodesTemp) >= 0){
-						return false;
-					}
-					return true;
-				} else {
-					return !$.mage.isEmpty(value);
-				}
-			},
-			$.mage.__('We are unable to ship to Alaska and Hawaii at this time.')
-		);
-		validator.addRule(
-			'required-entry-bpcode',
-			function (value) {
-				var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.postcode';
-				if ($("div[name='"+inpt+"'] input[name='postcode']").val() != '') {
-					if(value.length < 5){
-						return false;
-					}
-					return true;
-				}
-			},
-			$.mage.__('Please enter a valid ZIP code.')
-		);
-		validator.addRule(
-			'required-entry-telephone',
-			function (value) {
-				if ($("input[name='telephone']").val() != '') {
-					var filter = /^[(]?(\d{3})[)]?[-|\s]?(\d{3})[-|\s]?(\d{4})$/;
-					if (value.length > 9 && filter.test(value)) {
-						return true;
-					}else {
-						return false;
-					}
+                if ($("input[name='postcode']").val() != '') {
+                    if(value.length < 5){
+                        return false;
+                    }
+                    return true;
+                } else {
+                    return !$.mage.isEmpty(value);
+                }
+            },
+            $.mage.__('Please enter a valid ZIP code.')
+        );
+        validator.addRule(
+            'required-entry-exceptpost',
+            function (value) {
+                var zipcodesTemp = ['967', '968', '995', '996', '997', '998', '999'];
+                var temp = value.substring(0, 3);
+                if ($("input[name='postcode']").val() != '') {
+                    if($.inArray(temp, zipcodesTemp) >= 0){
+                        return false;
+                    }
+                    return true;
+                } else {
+                    return !$.mage.isEmpty(value);
+                }
+            },
+            $.mage.__('We are unable to ship to Alaska and Hawaii at this time.')
+        );
+        validator.addRule(
+            'required-entry-bpcode',
+            function (value) {
+                var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.postcode';
+                if ($("div[name='"+inpt+"'] input[name='postcode']").val() != '') {
+                    if(value.length < 5){
+                        return false;
+                    }
+                    return true;
+                }
+            },
+            $.mage.__('Please enter a valid ZIP code.')
+        );
+        validator.addRule(
+            'required-entry-telephone',
+            function (value) {
+                if ($("input[name='telephone']").val() != '') {
+                    var filter = /^[(]?(\d{3})[)]?[-|\s]?(\d{3})[-|\s]?(\d{4})$/;
+                    if (value.length > 9 && filter.test(value)) {
+                        return true;
+                    }else {
+                        return false;
+                    }
 
 
 				} else {
