@@ -642,6 +642,15 @@ class OrderStatusHelper
             $sapOrderItem->setData('order_status', $inputValue);
         }
 
+        // check the confirmed quantity
+        $inputValue = $inputOrder[self::INPUT_SAP_CONFIRMED_QTY];
+        $sapOrderItemValue = $sapOrderItem->getData('confirmed_qty');
+        if (bccomp($inputValue, $sapOrderItemValue, 3) <> 0)
+        {
+            $isUpdateNeeded = true;
+            $sapOrderItem->setData('confirmed_qty', $inputValue);
+        }
+
         // if there was something updated then update the table
         if ($isUpdateNeeded)
         {
