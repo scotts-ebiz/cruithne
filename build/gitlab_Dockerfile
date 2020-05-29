@@ -14,6 +14,8 @@ ARG CI_COMMIT_BRANCH
 ENV MAGENTO_DIR /var/www/html/magento2
 WORKDIR $MAGENTO_DIR
 
+USER magento
+
 RUN git config --global user.name "Git User" ;\
 git config --global user.email "user@example.com" ;\
 git fetch --all ;\
