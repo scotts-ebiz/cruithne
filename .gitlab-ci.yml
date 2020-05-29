@@ -1,0 +1,137 @@
+stages:
+  - build_test_base
+  # - test
+
+variables:
+  GIT_DEPTH: "1"
+  DOCKER_REGISTRY_PREFIX: gcr.io/ecommerce-platform-211419
+
+test_image:
+  stage: build_test_base
+  variables:
+    # DB_NAME > MYSQL_DATABASE
+    MYSQL_DATABASE: "cruithne"
+    # DB_APP_USER > MYSQL_USER
+    MYSQL_USER: "varien"
+    # DB_APP_PASSWORD > MYSQL_PASSWORD
+    MYSQL_PASSWORD: "j7K9u3Lm2wA6"
+    MYSQL_ROOT_PASSWORD: "Huwqdkb1iu2d12dh"
+    LOCAL_URL: "https://store.cruthine.test"
+    ADMIN_EMAIL: "smgwebsupport@scotts.com"
+    ADMIN_FIRST: "SMG"
+    ADMIN_LAST: "Developer"
+    ADMIN_USERNAME: "admin"
+    ADMIN_PASSWORD: "passw0rd"
+  tags:
+    - docker
+  image: docker:stable
+  services:
+    - docker:dind
+  script:
+    - echo "${GCLOUD_GCR_JSON}" > ./gcloud-service-key.json
+    - docker login -u _json_key --password-stdin https://${DOCKER_REGISTRY_PREFIX} < ./gcloud-service-key.json
+    - docker build --build-arg TEST_MAGENTO_USER 
+      --build-arg TEST_MAGENTO_PASSWORD 
+      --build-arg TEST_AMASTY_USER 
+      --build-arg TEST_AMASTY_PASSWORD 
+      --build-arg LOCAL_URL 
+      --build-arg ADMIN_EMAIL 
+      --build-arg ADMIN_LAST 
+      --build-arg ADMIN_USERNAME 
+      --build-arg MYSQL_USER -t ${DOCKER_REGISTRY_PREFIX}:test -f build/gitlab_Dockerfile
+  rules:
+    - if: 'CI_COMMIT_BRANCH' == "ally_poc"'
+
+# testing:
+#   stage: test
+#   variables:
+#     # DB_NAME > MYSQL_DATABASE
+#     MYSQL_DATABASE: "cruithne"
+#     # DB_APP_USER > MYSQL_USER
+#     MYSQL_USER: "varien"
+#     # DB_APP_PASSWORD > MYSQL_PASSWORD
+#     MYSQL_PASSWORD: "j7K9u3Lm2wA6"
+#     MYSQL_ROOT_PASSWORD: "Huwqdkb1iu2d12dh"
+#     LOCAL_URL: "https://store.cruthine.test"
+#     ADMIN_EMAIL: "smgwebsupport@scotts.com"
+#     ADMIN_FIRST: "SMG"
+#     ADMIN_LAST: "Developer"
+#     ADMIN_USERNAME: "admin"
+#     ADMIN_PASSWORD: "passw0rd"
+#     # SSL_DIR: "/etc/ssl"
+#     # COMMON: "store.cruithne.test"
+#     # MYGRO_COMMON: "www.mygro.test"
+#     # PASSPHRASE: ""
+#     # COUNTRY: "US"
+#     # STATE: "Ohio"
+#     # ORGANIZATION: "The Scotts Miracle-Gro Company"
+#     # CITY: "Marysville"
+#     # ORGNAME: "eCommerce"
+#     # EMAIL: "smgwebsupport@scotts.com"
+#     # SUBJ: "/C=$COUNTRY/ST=$STATE/O=$ORGANIZATION/localityName=$CITY/commonName=$COMMON/organizationalUnitName=$ORGNAME/emailAddress=$EMAIL"
+#     # MYGRO_SUBJ: "/C=$COUNTRY/ST=$STATE/O=$ORGANIZATION/localityName=$CITY/commonName=$MYGRO_COMMON/organizationalUnitName=$ORGNAME/emailAddress=$EMAIL"  
+#   tags:
+#     - docker
+#   services:
+#     - name: mysql:5.7
+#       alias: mysql
+#   image: ${CI_REGISTRY_IMAGE}/cruithne:latest
+#   script:
+#     ### Lines ↓↓↓ are moved inside .devops/Dockerfile-test-base file
+#     # - touch ${PHP_INI_DIR}/php.ini
+#     # - echo "memory_limit = 512M" > ${PHP_INI_DIR}/php.ini
+#     # - apt-get update 
+#     # - apt-get install -y --no-install-recommends gnupg 
+#     #   git 
+#     #   libxml2-dev 
+#     #   libxslt-dev 
+#     #   libmcrypt-dev 
+#     #   libcurl3-dev 
+#     #   mariadb-client 
+#     #   libfreetype6-dev 
+#     #   libjpeg-dev 
+#     #   libxpm-dev 
+#     #   libpng-dev
+#     # - docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ --with-png-dir=/usr/include/ --with-xpm-dir=/usr/include/ --enable-gd-jis-conv
+#     # - docker-php-ext-install bcmath gd intl pdo_mysql soap xsl zip
+#     # - curl -sL https://deb.nodesource.com/setup_12.x | bash - &&
+#     # - apt update
+#     # - apt install -y nodejs
+#     # - cp .devops/apache-config/000-default.local.conf /etc/apache2/sites-available/000-default.conf
+#     # - cp .devops/apache-config/default-ssl.local.conf /etc/apache2/sites-available/default-ssl.conf
+#     # - chmod 644 /etc/apache2/sites-available/000-default.conf
+#     # - chmod 644 /etc/apache2/sites-available/default-ssl.conf
+#     # - a2enmod ssl
+#     # - a2ensite default-ssl
+#     # - mkdir -p "$SSL_DIR"
+#     # - openssl genrsa -out "$SSL_DIR/cruithne.key" 2048
+#     # - openssl req -new -subj "$(echo -n "$SUBJ" | tr "\n" "/")" -key "$SSL_DIR/cruithne.key" -out "$SSL_DIR/cruithne.csr" -passin pass:$PASSPHRASE
+#     # - openssl x509 -req -days 365 -in "$SSL_DIR/cruithne.csr" -signkey "$SSL_DIR/cruithne.key" -out "$SSL_DIR/cruithne.crt"
+#     # - openssl genrsa -out "$SSL_DIR/mygro.key" 2048
+#     # - openssl req -new -subj "$(echo -n "$MYGRO_SUBJ" | tr "\n" "/")" -key "$SSL_DIR/mygro.key" -out "$SSL_DIR/mygro.csr" -passin pass:$PASSPHRASE
+#     # - openssl x509 -req -days 365 -in "$SSL_DIR/mygro.csr" -signkey "$SSL_DIR/mygro.key" -out "$SSL_DIR/mygro.crt"
+#     # - openssl genrsa -out "$SSL_DIR/mygro.key" 2048
+#     # - openssl req -new -subj "$(echo -n "$MYGRO_SUBJ" | tr "\n" "/")" -key "$SSL_DIR/mygro.key" -out "$SSL_DIR/mygro.csr" -passin pass:$PASSPHRASE
+#     # - openssl x509 -req -days 365 -in "$SSL_DIR/mygro.csr" -signkey "$SSL_DIR/mygro.key" -out "$SSL_DIR/mygro.crt"
+#     # - apachectl configtest
+#     # - service apache2 restart
+#     # - npm install -g gulp-cli
+#     # - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+#     # - composer selfupdate
+#     ### Lines ↑↑↑ are moved inside .devops/Dockerfile-test-base file 
+#     - composer config repositories.amasty composer https://composer.amasty.com/enterprise/
+#     - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${TEST_MAGENTO_USER}\",\"password\":\"${TEST_MAGENTO_PASSWORD}\"},\"composer.amasty.com\":{\"username\":\"${TEST_AMASTY_USER}\",\"password\":\"${TEST_AMASTY_PASSWORD}\"}}}" > auth.json
+#     - composer install --prefer-dist
+#     - php bin/magento setup:install --no-interaction --base-url="$LOCAL_URL" --admin-email="$ADMIN_EMAIL" 
+#       --admin-firstname="$ADMIN_FIRST" --admin-lastname="$ADMIN_LAST" --admin-user="$ADMIN_USERNAME" 
+#       --admin-password="$ADMIN_PASSWORD" --language="en_US" --backend-frontname="admin" 
+#       --base-url="$LOCAL_URL" --db-host="mysql" --db-name="$MYSQL_DATABASE" --db-user="$MYSQL_USER" 
+#       --db-password="$MYSQL_PASSWORD" --currency="USD" --timezone="America/New_York" --use-rewrites="1" 
+#       --use-secure="1"
+#     - cd vendor/snowdog/frontools/ && npm install && gulp clean && npm rebuild node-sass && gulp styles --ci --prod
+#   cache:
+#     key: ${CI_COMMIT_REF_SLUG}
+#     paths:
+#     - vendor/
+#   only:
+#     - ci-fix-test
