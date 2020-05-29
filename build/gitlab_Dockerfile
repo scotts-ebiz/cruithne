@@ -13,7 +13,7 @@ ARG MYSQL_USER
 ARG CI_COMMIT_BRANCH
 
 RUN apt-get update ;\
-apt-get install iputils-ping ;\
+apt-get install -y iputils-ping ;\
 ping -c 3 mysql
 
 # ENV MAGENTO_DIR /var/www/html/magento2
