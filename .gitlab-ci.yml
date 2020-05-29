@@ -39,7 +39,7 @@ test_image:
       --build-arg ADMIN_EMAIL 
       --build-arg ADMIN_LAST 
       --build-arg ADMIN_USERNAME 
-      --build-arg MYSQL_USER -t ${DOCKER_REGISTRY_PREFIX}:test -f build/gitlab_Dockerfile
+      --build-arg MYSQL_USER -t ${DOCKER_REGISTRY_PREFIX}:test -f build/gitlab_Dockerfile .
   only:
     - ally_poc
 
