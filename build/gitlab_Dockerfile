@@ -1,5 +1,4 @@
-# FROM gcr.io/ecommerce-platform-211419/magento-primer:latest
-FROM ubuntu:18.04
+FROM gcr.io/ecommerce-platform-211419/magento-primer:latest
 
 ARG TEST_MAGENTO_USER
 ARG TEST_MAGENTO_PASSWORD
@@ -12,44 +11,40 @@ ARG ADMIN_USERNAME
 ARG MYSQL_USER
 ARG CI_COMMIT_BRANCH
 
-RUN apt-get update ;\
-apt-get install -y iputils-ping ;\
-ping -c 3 mysql
+ENV MAGENTO_DIR /var/www/html/magento2
+WORKDIR $MAGENTO_DIR
 
-# ENV MAGENTO_DIR /var/www/html/magento2
-# WORKDIR $MAGENTO_DIR
+USER magento
 
-# USER magento
-
-# RUN git config --global user.name "Git User" ;\
-# git config --global user.email "user@example.com" ;\
-# git fetch --all ;\
-# git reset --hard origin/${CI_COMMIT_BRANCH} ;\
-# git pull ;\
-# git checkout origin .htaccess ;\
-# # added from my previous work ↓↓↓
-# composer config repositories.amasty composer https://composer.amasty.com/enterprise/ ;\
-# echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${TEST_MAGENTO_USER}\",\"password\":\"${TEST_MAGENTO_PASSWORD}\"},\"composer.amasty.com\":{\"username\":\"${TEST_AMASTY_USER}\",\"password\":\"${TEST_AMASTY_PASSWORD}\"}}}" > auth.json ;\
-# composer install --prefer-dist ;\
-# php bin/magento setup:install --no-interaction --base-url="$LOCAL_URL" --admin-email="$ADMIN_EMAIL" \
-#   --admin-firstname="$ADMIN_FIRST" --admin-lastname="$ADMIN_LAST" --admin-user="$ADMIN_USERNAME" \
-#   --admin-password="$ADMIN_PASSWORD" --language="en_US" --backend-frontname="admin" \
-#   --base-url="$LOCAL_URL" --db-host="mysql" --db-name="$MYSQL_DATABASE" --db-user="$MYSQL_USER" \
-#   --db-password="$MYSQL_PASSWORD" --currency="USD" --timezone="America/New_York" --use-rewrites="1" \
-#   --use-secure="1" ;\
-# # added from my previous work ↑↑↑
-# # composer install
-# # Link already presents
-# # ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools
-# bin/magento setup:upgrade ;\
-# bin/magento setup:di:compile ;\
-# rm /var/www/html/magento2/tools/yarn.lock ;\
-# cd /var/www/html/magento2/tools ;\
-# npm install ;\
-# npm rebuild node-sass ;\
-# gulp clean -f /var/www/html/magento2/tools/gulpfile.esm.js ;\
-# gulp styles --prod -f /var/www/html/magento2/tools/gulpfile.esm.js ;\
-# cd /var/www/html/magento2 ;\
-# bin/magento setup:static-content:deploy -f ;\
-# bin/magento -v index:reindex ;\
-# bin/magento -v cache:flush
+RUN git config --global user.name "Git User" ;\
+git config --global user.email "user@example.com" ;\
+git fetch --all ;\
+git reset --hard origin/${CI_COMMIT_BRANCH} ;\
+git pull ;\
+git checkout origin .htaccess ;\
+# added from my previous work ↓↓↓
+composer config repositories.amasty composer https://composer.amasty.com/enterprise/ ;\
+echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${TEST_MAGENTO_USER}\",\"password\":\"${TEST_MAGENTO_PASSWORD}\"},\"composer.amasty.com\":{\"username\":\"${TEST_AMASTY_USER}\",\"password\":\"${TEST_AMASTY_PASSWORD}\"}}}" > auth.json ;\
+composer install --prefer-dist ;\
+php bin/magento setup:install --no-interaction --base-url="$LOCAL_URL" --admin-email="$ADMIN_EMAIL" \
+  --admin-firstname="$ADMIN_FIRST" --admin-lastname="$ADMIN_LAST" --admin-user="$ADMIN_USERNAME" \
+  --admin-password="$ADMIN_PASSWORD" --language="en_US" --backend-frontname="admin" \
+  --base-url="$LOCAL_URL" --db-host="mysql" --db-name="$MYSQL_DATABASE" --db-user="$MYSQL_USER" \
+  --db-password="$MYSQL_PASSWORD" --currency="USD" --timezone="America/New_York" --use-rewrites="1" \
+  --use-secure="1" ;\
+# added from my previous work ↑↑↑
+# composer install
+# Link already presents
+# ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools
+bin/magento setup:upgrade ;\
+bin/magento setup:di:compile ;\
+rm /var/www/html/magento2/tools/yarn.lock ;\
+cd /var/www/html/magento2/tools ;\
+npm install ;\
+npm rebuild node-sass ;\
+gulp clean -f /var/www/html/magento2/tools/gulpfile.esm.js ;\
+gulp styles --prod -f /var/www/html/magento2/tools/gulpfile.esm.js ;\
+cd /var/www/html/magento2 ;\
+bin/magento setup:static-content:deploy -f ;\
+bin/magento -v index:reindex ;\
+bin/magento -v cache:flush
