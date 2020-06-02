@@ -229,11 +229,33 @@ class OrderStatusHelper
                         }
 
                         // Sum up all the confirmed (shipped) items for this order.
-                        $totalConfirmedQuantity = array_reduce($sapOrderItems, function ($total, $item) {
-                            if (!empty($item[self::INPUT_SAP_CONFIRMED_QTY])) {
-                                return $total + floatval($item[self::INPUT_SAP_CONFIRMED_QTY]);
+                        $totalConfirmedQuantity = 0;
+                        foreach ($sapOrderItems as $sapOrderItem) {
+                            if (!empty($sapOrderItem[self::INPUT_SAP_CONFIRMED_QTY])) {
+                                $totalConfirmedQuantity += floatval($sapOrderItem[self::INPUT_SAP_CONFIRMED_QTY]);
                             }
-                        });
+                        }
+
+                        // Sum up all the confirmed (shipped) items for the given sku
+                        $skuConfirmedQuantity = 0;
+                        foreach ($sapOrderItems as $sapOrderItem) {
+                            if (!empty($sapOrderItem[self::INPUT_SAP_CONFIRMED_QTY]) &&
+                                $sapOrderItem[self::INPUT_SAP_SKU] === $inputOrder[self::INPUT_SAP_SKU]
+                            ) {
+                                $skuConfirmedQuantity += floatval($sapOrderItem[self::INPUT_SAP_CONFIRMED_QTY]);
+                            }
+                        }
+
+                        // Sum up all the confirmed (shipped) items for the given sku and tracking number.
+                        $skuTrackedConfirmedQuantity = 0;
+                        foreach ($sapOrderItems as $sapOrderItem) {
+                            if (!empty($sapOrderItem[self::INPUT_SAP_CONFIRMED_QTY]) &&
+                                $sapOrderItem[self::INPUT_SAP_SKU] === $inputOrder[self::INPUT_SAP_SKU] &&
+                                $sapOrderItem[self::INPUT_SAP_SHIP_TRACKING_NUMBER] === $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]
+                            ) {
+                                $skuTrackedConfirmedQuantity += floatval($sapOrderItem[self::INPUT_SAP_CONFIRMED_QTY]);
+                            }
+                        }
 
                         // Sum up all the confirmed (shipped) items for the given sku
                         $skuConfirmedQuantity = 0;
@@ -259,11 +281,12 @@ class OrderStatusHelper
 
 
                         // Sum up every unique sku to get the total number of items ordered.
-                        $totalOrderedQuantity = array_reduce($sapDistinctSkus, function ($total, $item) {
-                            if (!empty($item[self::INPUT_SAP_ORDER_QTY])) {
-                                return $total + floatval($item[self::INPUT_SAP_ORDER_QTY]);
+                        $totalOrderedQuantity = 0;
+                        foreach($sapDistinctSkus as $distinctSku) {
+                            if (!empty($distinctSku[self::INPUT_SAP_ORDER_QTY])) {
+                                $totalOrderedQuantity += floatval($distinctSku[self::INPUT_SAP_ORDER_QTY]);
                             }
-                        });
+                        }
 
                         // process the sap order info
                         $this->processOrderSapInfo($inputOrder, $sapOrder, $totalConfirmedQuantity, $totalOrderedQuantity, $skuConfirmedQuantity, $skuTrackedConfirmedQuantity);

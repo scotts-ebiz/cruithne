@@ -378,18 +378,19 @@ class ShipmentHelper
         }
 
         // Sum up all the confirmed (shipped) items for this order.
-        $totalConfirmedQuantity = array_reduce($sapOrderItems->getData(), function ($total, $item) {
-            if (!empty($item[self::INPUT_SAP_CONFIRMED_QTY])) {
-                return $total + floatval($item[self::INPUT_SAP_CONFIRMED_QTY]);
+        $totalConfirmedQuantity = 0;
+        foreach ($sapOrderItems as $sapOrderItem) {
+            if (!empty($sapOrderItem->getConfirmedQty())) {
+                $totalConfirmedQuantity += floatval($sapOrderItem->getConfirmedQty());
             }
-        });
+        }
 
-        // Sum up every unique sku to get the total number of items ordered.
-        $totalOrderedQuantity = array_reduce($sapDistinctSkus, function ($total, $item) {
-            if (!empty($item[self::INPUT_SAP_ORDER_QTY])) {
-                return $total + floatval($item[self::INPUT_SAP_ORDER_QTY]);
+        $totalOrderedQuantity = 0;
+        foreach ($sapDistinctSkus as $distinctSku) {
+            if (!empty($distinctSku[self::INPUT_SAP_ORDER_QTY])) {
+                $totalOrderedQuantity += floatval($distinctSku[self::INPUT_SAP_ORDER_QTY]);
             }
-        });
+        }
 
         // Only set ship processing date if all items in the order have been shipped.
         if ($totalConfirmedQuantity >= $totalOrderedQuantity) {
