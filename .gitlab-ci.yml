@@ -10,8 +10,6 @@ update_base_image_in_gitlab_registry:
   stage: update_base
   services:
     - docker:dind
-  dependencies:
-    - Build application
   script:
     - cat ${GCLOUD_GCR_JSON} | docker login -u _json_key --password-stdin https://${DOCKER_REGISTRY_PREFIX}
     - docker pull ${DOCKER_REGISTRY_PREFIX}/magento-primer:latest
