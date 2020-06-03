@@ -33,7 +33,7 @@ test_image:
     - cat ${GCLOUD_GCR_JSON} | docker login -u _json_key --password-stdin https://${DOCKER_REGISTRY_PREFIX}
     - docker ps
     # DEBUG
-    - sleep 10000
+    - host mysql
     # DEBUG
     - mysql_ip=`docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mysql`
     - docker build --add-host=mysql:${mysql_ip} --build-arg TEST_MAGENTO_USER 
