@@ -174,7 +174,7 @@ define([
 			'required-entry-bstreet-1',
 			function (value) {
 
-					if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value)){
+					if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value) || value == ''){
 						return true
 					} else {
 						return false;
@@ -187,7 +187,7 @@ define([
 			'required-entry-bstreet-2',
 			function (value) {
 
-					if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value)){
+					if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value) || value == ''){
 						return true
 					} else {
 						return false;
