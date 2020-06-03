@@ -1,10 +1,29 @@
 stages:
+  - update_base
   - build_test_base
-  # - test
 
 variables:
   GIT_DEPTH: "1"
   DOCKER_REGISTRY_PREFIX: gcr.io/ecommerce-platform-211419
+
+update_base_image_in_gitlab_registry:  
+  stage: update_base
+  services:
+    - docker:dind
+  dependencies:
+    - Build application
+  script:
+    - cat ${GCLOUD_GCR_JSON} | docker login -u _json_key --password-stdin https://${DOCKER_REGISTRY_PREFIX}
+    - docker pull ${DOCKER_REGISTRY_PREFIX}/magento-primer:latest
+    - docker tag ${DOCKER_REGISTRY_PREFIX}/magento-primer:latest ${CI_REGISTRY_IMAGE}/magento-primer:latest
+    - docker login -u gitlab-ci-token -p $CI_JOB_TOKEN $CI_REGISTRY
+    - docker push ${CI_REGISTRY_IMAGE}/magento-primer:latest
+    # Docker login, build and push image
+    # - echo "${GCLOUD_SA_GCR_JSON}" > ./gcloud-service-key.json
+    # - docker login -u _json_key --password-stdin https://${DOCKER_REGISTRY_PREFIX} < ./gcloud-service-key.json
+    # - docker build -t ${DOCKER_IMAGE} .
+    # - docker push ${DOCKER_IMAGE}
+  when: manual
 
 test_image:
   stage: build_test_base
@@ -24,28 +43,14 @@ test_image:
     ADMIN_PASSWORD: "passw0rd"
   tags:
     - docker
-  image: docker:stable
+  # image: docker:stable
+  image: ${CI_REGISTRY_IMAGE}/magento-primer:latest
   services:
-    - docker:dind
+    # - docker:dind
     - name: mysql:5.7
       alias: mysql
   script:
-    - cat ${GCLOUD_GCR_JSON} | docker login -u _json_key --password-stdin https://${DOCKER_REGISTRY_PREFIX}
-    - apk add bind-tools
-    # DEBUG
-    - ping mysql -c 1
-    # DEBUG
-    - mysql_ip=`docker inspect --format='{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' mysql`
-    - docker build --add-host=mysql:${mysql_ip} --build-arg TEST_MAGENTO_USER 
-      --build-arg CI_COMMIT_BRANCH
-      --build-arg TEST_MAGENTO_PASSWORD
-      --build-arg TEST_AMASTY_USER 
-      --build-arg TEST_AMASTY_PASSWORD 
-      --build-arg LOCAL_URL 
-      --build-arg ADMIN_EMAIL 
-      --build-arg ADMIN_LAST 
-      --build-arg ADMIN_USERNAME 
-      --build-arg MYSQL_USER -t ${DOCKER_REGISTRY_PREFIX}:test -f build/gitlab_Dockerfile .
+    - ls -tlra /var/www/html/magento2
   only:
     - ally_poc
 
