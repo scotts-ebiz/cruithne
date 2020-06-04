@@ -49,6 +49,7 @@ test_image:
     - name: mysql:5.7
       alias: mysql
   script:
+    - mysql -h mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "SHOW DATABASES;"
     - composer config repositories.amasty composer https://composer.amasty.com/enterprise/
     - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${TEST_MAGENTO_USER}\",\"password\":\"${TEST_MAGENTO_PASSWORD}\"},\"composer.amasty.com\":{\"username\":\"${TEST_AMASTY_USER}\",\"password\":\"${TEST_AMASTY_PASSWORD}\"}}}" > auth.json 
     - composer install --prefer-dist
@@ -60,13 +61,14 @@ test_image:
       --use-secure="1"
     - bin/magento setup:upgrade
     - bin/magento setup:di:compile
-    - rm /var/www/html/magento2/tools/yarn.lock
-    - cd /var/www/html/magento2/tools
+    - rm yarn.lock
+    - cd ./tools
     - npm install
     - npm rebuild node-sass
     - gulp clean -f /var/www/html/magento2/tools/gulpfile.esm.js
     - gulp styles --prod -f /var/www/html/magento2/tools/gulpfile.esm.js 
-    - cd /var/www/html/magento2
+    - cd ../
+    - mysql -h mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "SHOW DATABASES;"
     - bin/magento setup:static-content:deploy -f
     - bin/magento -v index:reindex
     - bin/magento -v cache:flush
