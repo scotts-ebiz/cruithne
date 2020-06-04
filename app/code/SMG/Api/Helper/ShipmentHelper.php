@@ -228,13 +228,6 @@ class ShipmentHelper
             // update the sap order batch
             $this->updateSapBatch($sapBatchOrder, $orderId);
 
-            try {
-               // Zaius apiKey
-               $this->zaiusApiCall($orderId);
-            } catch (Exception $ex) {
-                $this->_logger->error($ex->getMessage());
-                return;
-            }
         }
         // send consumer service email
         $this->sendCustomerServiceEmails();
@@ -361,6 +354,14 @@ class ShipmentHelper
             {
                 // create shipment status
                 $this->_shipOrderInterface->execute($orderId, $items, true, false, null, $tracks);
+
+                try {
+                    // Zaius apiKey
+                    $this->zaiusApiCall($orderId);
+                } catch (Exception $ex) {
+                    $this->_logger->error($ex->getMessage());
+                    return;
+                }
             }
         }
         else
