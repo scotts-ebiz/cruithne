@@ -8,6 +8,7 @@ variables:
 
 update_base_image_in_gitlab_registry:  
   stage: update_base
+  image: docker:stable
   services:
     - docker:dind
   script:
