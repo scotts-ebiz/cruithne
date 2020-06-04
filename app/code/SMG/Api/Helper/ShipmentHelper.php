@@ -275,7 +275,19 @@ class ShipmentHelper
 
             foreach ($sapOrder->getSapOrderTrackingNumbers() as $trackingNumber)
             {
-                    try {
+                try {
+                    // Do not create the tracking number record if it already exists on the Magento 2 order.
+                    $trackingNumberExists = false;
+                    foreach($order->getTracksCollection() as $track) {
+                        if ($track->getTrackNumber() === $trackingNumber) {
+                            $trackingNumberExists = true;
+                        }
+                    }
+
+                    if ($trackingNumberExists) {
+                        continue;
+                    }
+
                     // add the ship tracking number to the array
                     $shipTrackingNumbers[] = $trackingNumber;
 
@@ -322,6 +334,10 @@ class ShipmentHelper
 
                         if (empty($orderItem)) {
                             $this->_logger->error('Could not find sku for item' . $sapOrderItem->getId());
+                            continue;
+                        }
+                        // Do not add the item to the track if its quantity is 0.
+                        if (floatval($sapOrderItem->getData('confirmed_qty')) < 1) {
                             continue;
                         }
 
