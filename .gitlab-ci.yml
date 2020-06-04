@@ -50,6 +50,7 @@ test_image:
       alias: mysql
   script:
     - mysql -h mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "SHOW DATABASES;"
+    - cd /var/www/html/magento2/
     - composer config repositories.amasty composer https://composer.amasty.com/enterprise/
     - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${TEST_MAGENTO_USER}\",\"password\":\"${TEST_MAGENTO_PASSWORD}\"},\"composer.amasty.com\":{\"username\":\"${TEST_AMASTY_USER}\",\"password\":\"${TEST_AMASTY_PASSWORD}\"}}}" > auth.json 
     - composer install --prefer-dist
@@ -62,12 +63,13 @@ test_image:
     - bin/magento setup:upgrade
     - bin/magento setup:di:compile
     - rm ./vendor/snowdog/frontools/yarn.lock
-    - cd ./vendor/snowdog/frontools/
+    # - cd ./vendor/snowdog/frontools/
+    - cd ./tools
     - npm install
     - npm rebuild node-sass
     - gulp clean -f /var/www/html/magento2/tools/gulpfile.esm.js
     - gulp styles --prod -f /var/www/html/magento2/tools/gulpfile.esm.js 
-    - cd ${CI_PROJECT_DIR}
+    - cd ..
     - mysql -h mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "SHOW DATABASES;"
     - mysql -h mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "SELECT * FROM ${MYSQL_DATABASE};"
     - bin/magento setup:static-content:deploy -f
