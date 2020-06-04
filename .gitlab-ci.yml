@@ -61,14 +61,15 @@ test_image:
       --use-secure="1"
     - bin/magento setup:upgrade
     - bin/magento setup:di:compile
-    - rm yarn.lock
-    - cd ./tools
+    - rm ./vendor/snowdog/frontools/yarn.lock
+    - cd ./vendor/snowdog/frontools/
     - npm install
     - npm rebuild node-sass
     - gulp clean -f /var/www/html/magento2/tools/gulpfile.esm.js
     - gulp styles --prod -f /var/www/html/magento2/tools/gulpfile.esm.js 
-    - cd ../
+    - cd ${CI_PROJECT_DIR}
     - mysql -h mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "SHOW DATABASES;"
+    - mysql -h mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "SELECT * FROM ${MYSQL_DATABASE};"
     - bin/magento setup:static-content:deploy -f
     - bin/magento -v index:reindex
     - bin/magento -v cache:flush
