@@ -28,6 +28,7 @@ class ShipmentHelper
     const INPUT_SAP_CONFIRMED_QTY = 'confirmed_qty';
     const INPUT_SAP_ORDER_QTY = 'qty';
     const INPUT_SAP_SKU = 'sku';
+    const ACTION_FLAG_SHIP = 'ship';
     /**
      * @var array
      */
@@ -258,7 +259,7 @@ class ShipmentHelper
         $this->_orderResource->load($order, $orderId);
 
         // determine if this can be shipped
-        if ($order->canShip())
+        if ($this->canShip($order))
         {
             // create the list of items
             // initialize the items array
@@ -274,7 +275,19 @@ class ShipmentHelper
 
             foreach ($sapOrder->getSapOrderTrackingNumbers() as $trackingNumber)
             {
-                    try {
+                try {
+                    // Do not create the tracking number record if it already exists on the Magento 2 order.
+                    $trackingNumberExists = false;
+                    foreach($order->getTracksCollection() as $track) {
+                        if ($track->getTrackNumber() === $trackingNumber) {
+                            $trackingNumberExists = true;
+                        }
+                    }
+
+                    if ($trackingNumberExists) {
+                        continue;
+                    }
+
                     // add the ship tracking number to the array
                     $shipTrackingNumbers[] = $trackingNumber;
 
@@ -315,12 +328,16 @@ class ShipmentHelper
                         /**
                          * @var \Magento\Sales\Model\Order\Item $orderItem
                          */
-                        $orderItem = array_filter($order->getAllItems(), function ($item) use(&$sapOrderItem) {
+                        $orderItem = array_values(array_filter($order->getAllItems(), function ($item) use(&$sapOrderItem) {
                             return $item->getData('sku') == $sapOrderItem->getData('sku');
-                        });
+                        }));
 
                         if (empty($orderItem)) {
                             $this->_logger->error('Could not find sku for item' . $sapOrderItem->getId());
+                            continue;
+                        }
+                        // Do not add the item to the track if its quantity is 0.
+                        if (floatval($sapOrderItem->getData('confirmed_qty')) < 1) {
                             continue;
                         }
 
@@ -377,18 +394,19 @@ class ShipmentHelper
         }
 
         // Sum up all the confirmed (shipped) items for this order.
-        $totalConfirmedQuantity = array_reduce($sapOrderItems->getData(), function ($total, $item) {
-            if (!empty($item[self::INPUT_SAP_CONFIRMED_QTY])) {
-                return $total + floatval($item[self::INPUT_SAP_CONFIRMED_QTY]);
+        $totalConfirmedQuantity = 0;
+        foreach ($sapOrderItems as $sapOrderItem) {
+            if (!empty($sapOrderItem->getConfirmedQty())) {
+                $totalConfirmedQuantity += floatval($sapOrderItem->getConfirmedQty());
             }
-        });
+        }
 
-        // Sum up every unique sku to get the total number of items ordered.
-        $totalOrderedQuantity = array_reduce($sapDistinctSkus, function ($total, $item) {
-            if (!empty($item[self::INPUT_SAP_ORDER_QTY])) {
-                return $total + floatval($item[self::INPUT_SAP_ORDER_QTY]);
+        $totalOrderedQuantity = 0;
+        foreach ($sapDistinctSkus as $distinctSku) {
+            if (!empty($distinctSku[self::INPUT_SAP_ORDER_QTY])) {
+                $totalOrderedQuantity += floatval($distinctSku[self::INPUT_SAP_ORDER_QTY]);
             }
-        });
+        }
 
         // Only set ship processing date if all items in the order have been shipped.
         if ($totalConfirmedQuantity >= $totalOrderedQuantity) {
@@ -518,4 +536,33 @@ class ShipmentHelper
         }
       return $i;
     }
+
+    /*
+     * Retrieve order shipment availability
+     * @param \Magento\Sales\Model\Order $order
+     * @return bool
+     */
+    public function canShip($order)
+    {
+        if ($order->canUnhold() || $order->isPaymentReview()) {
+            return false;
+        }
+
+        if ($order->getIsVirtual() || $order->isCanceled()) {
+            return false;
+        }
+
+        if ($order->getActionFlag(self::ACTION_FLAG_SHIP) === false) {
+            return false;
+        }
+
+        foreach ($order->getAllItems() as $item) {
+            if (!$item->getIsVirtual() &&
+                !$item->getLockedDoShip() && $item->getQtyRefunded() != $item->getQtyOrdered()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
