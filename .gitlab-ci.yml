@@ -1,11 +1,14 @@
 stages:
-  - update_base
+- update_base
   - build_test_base
 
 variables:
+  # GIT_STRATEGY=none disables any fetch and checkout commands by GitLab.
+  # Because of NOTE#1
   GIT_STRATEGY: none
   DOCKER_REGISTRY_PREFIX: gcr.io/ecommerce-platform-211419
 
+# Download lates 'based image' from GCR to GitLab registry:
 update_base_image_in_gitlab_registry:  
   stage: update_base
   image: docker:stable
@@ -21,6 +24,7 @@ update_base_image_in_gitlab_registry:
 
 test_image:
   stage: build_test_base
+# Below variables are safe to place here in plain text because they are used only on the ephemeral test stage.
   variables:
     MYSQL_DATABASE: "cruithne"
     MYSQL_USER: "varien"
@@ -40,6 +44,11 @@ test_image:
     - name: mysql:5.7
       alias: mysql
   script:
+    # NOTE#1 ↓↓↓ 
+    #   We don't need to do next 6 commands if we will have the right base image.
+    # With GitLab logic and the code from repo Magento2 is automatically fetched and included into `build_test_base` stage,
+    # but because we have outdated base image with the application code inside it underthe path /var/www/html/magento2/, I
+    # decided to use old aproach of application building. So it is a kind of optimization and should be discussed.
     - cd ${PATH_TO_MAGENTO2}
     - su - magento -c "git config --global user.name 'Git User'"
     - su - magento -c "git config --global user.email 'user@example.com'"
@@ -47,6 +56,7 @@ test_image:
     - su - magento -c "cd ${PATH_TO_MAGENTO2}; git reset --hard origin/${CI_COMMIT_BRANCH}"
     - su - magento -c "cd ${PATH_TO_MAGENTO2}; git pull"
     - su - magento -c "cd ${PATH_TO_MAGENTO2}; git checkout origin .htaccess"
+    # NOTE#1 ↑↑↑
     - composer config repositories.amasty composer https://composer.amasty.com/enterprise/
     - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${TEST_MAGENTO_USER}\",\"password\":\"${TEST_MAGENTO_PASSWORD}\"},\"composer.amasty.com\":{\"username\":\"${TEST_AMASTY_USER}\",\"password\":\"${TEST_AMASTY_PASSWORD}\"}}}" > auth.json 
     - composer install --prefer-dist
@@ -71,6 +81,5 @@ test_image:
     - bin/magento setup:static-content:deploy -f
     - bin/magento -v index:reindex
     - bin/magento -v cache:flush
-
   only:
     - ally_poc
