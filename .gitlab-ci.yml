@@ -3,7 +3,7 @@ stages:
   - build_test_base
 
 variables:
-  GIT_DEPTH: "1"
+  GIT_STRATEGY: none
   DOCKER_REGISTRY_PREFIX: gcr.io/ecommerce-platform-211419
 
 update_base_image_in_gitlab_registry:  
@@ -49,8 +49,13 @@ test_image:
     - name: mysql:5.7
       alias: mysql
   script:
-    - mysql -h mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "SHOW DATABASES;"
     - cd /var/www/html/magento2/
+    - su - magento -c 'git config --global user.name "Git User"'
+    - su - magento -c 'git config --global user.email "user@example.com"'
+    - su - magento -c 'git fetch --all' 
+    - su - magento -c 'git reset --hard origin/${CI_COMMIT_BRANCH}'
+    - su - magento -c 'git pull'
+    - su - magento -c 'git checkout origin .htaccess'
     - composer config repositories.amasty composer https://composer.amasty.com/enterprise/
     - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${TEST_MAGENTO_USER}\",\"password\":\"${TEST_MAGENTO_PASSWORD}\"},\"composer.amasty.com\":{\"username\":\"${TEST_AMASTY_USER}\",\"password\":\"${TEST_AMASTY_PASSWORD}\"}}}" > auth.json 
     - composer install --prefer-dist
@@ -68,7 +73,7 @@ test_image:
     - npm install
     - npm rebuild node-sass
     - gulp clean -f /var/www/html/magento2/tools/gulpfile.esm.js
-    - gulp styles --prod -f /var/www/html/magento2/tools/gulpfile.esm.js 
+    - gulp styles --prod -f /var/www/html/magento2/tools/gulpfile.esm.js
     - cd ..
     - mysql -h mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "SHOW DATABASES;"
     - mysql -h mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} -e "SHOW TABLES;"
