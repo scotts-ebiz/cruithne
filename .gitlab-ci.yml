@@ -51,12 +51,12 @@ test_image:
       alias: mysql
   script:
     - cd ${PATH_TO_MAGENTO2}
-    - su - magento -c 'git config --global user.name "Git User"'
-    - su - magento -c 'git config --global user.email "user@example.com"'
-    - su - magento -c 'cd ${PATH_TO_MAGENTO2}; git fetch --all'
-    - su - magento -c 'cd ${PATH_TO_MAGENTO2}; git reset --hard origin/${CI_COMMIT_BRANCH}'
-    - su - magento -c 'cd ${PATH_TO_MAGENTO2}; git pull'
-    - su - magento -c 'cd ${PATH_TO_MAGENTO2}; git checkout origin .htaccess'
+    - su - magento -c "git config --global user.name 'Git User'"
+    - su - magento -c "git config --global user.email 'user@example.com'"
+    - su - magento -c "cd ${PATH_TO_MAGENTO2}; git fetch --all"
+    - su - magento -c "cd ${PATH_TO_MAGENTO2}; git reset --hard origin/${CI_COMMIT_BRANCH}"
+    - su - magento -c "cd ${PATH_TO_MAGENTO2}; git pull"
+    - su - magento -c "cd ${PATH_TO_MAGENTO2}; git checkout origin .htaccess"
     - composer config repositories.amasty composer https://composer.amasty.com/enterprise/
     - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${TEST_MAGENTO_USER}\",\"password\":\"${TEST_MAGENTO_PASSWORD}\"},\"composer.amasty.com\":{\"username\":\"${TEST_AMASTY_USER}\",\"password\":\"${TEST_AMASTY_PASSWORD}\"}}}" > auth.json 
     - composer install --prefer-dist
