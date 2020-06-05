@@ -71,7 +71,7 @@ test_image:
     - gulp styles --prod -f /var/www/html/magento2/tools/gulpfile.esm.js 
     - cd ..
     - mysql -h mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "SHOW DATABASES;"
-    - mysql -h mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "SELECT * FROM ${MYSQL_DATABASE};"
+    - mysql -h mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "SELECT * FROM cruithne;"
     - bin/magento setup:static-content:deploy -f
     - bin/magento -v index:reindex
     - bin/magento -v cache:flush
