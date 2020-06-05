@@ -1,5 +1,5 @@
 stages:
-- update_base
+  - update_base
   - build_test_base
 
 variables:
