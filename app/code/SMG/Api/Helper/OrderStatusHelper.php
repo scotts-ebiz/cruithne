@@ -8,16 +8,12 @@ use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Psr\Log\LoggerInterface;
 use SMG\Sap\Model\SapOrderFactory;
 use SMG\Sap\Model\SapOrderBatchFactory;
-use SMG\Sap\Model\SapOrderHistoryFactory;
 use SMG\Sap\Model\SapOrderItemFactory;
 use SMG\Sap\Model\SapOrderShipmentFactory;
-use SMG\Sap\Model\SapOrderItemHistoryFactory;
 use SMG\Sap\Model\ResourceModel\SapOrder as SapOrderResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch as SapOrderBatchResource;
-use SMG\Sap\Model\ResourceModel\SapOrderHistory as SapOrderHistoryResource;
 use SMG\Sap\Model\ResourceModel\SapOrderShipment as SapOrderShipmentResource;
 use SMG\Sap\Model\ResourceModel\SapOrderItem as SapOrderItemResource;
-use SMG\Sap\Model\ResourceModel\SapOrderItemHistory as SapOrderItemHistoryResource;
 use SMG\Sap\Model\ResourceModel\SapOrderItem\CollectionFactory as SapOrderItemCollectionFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderShipment\CollectionFactory as SapOrderShipmentCollectionFactory;
 use SMG\OrderDiscount\Helper\Data as DiscountHelper;
@@ -61,19 +57,9 @@ class OrderStatusHelper
     protected $_sapOrderBatchFactory;
 
     /**
-     * @var SapOrderHistoryFactory
-     */
-    protected $_sapOrderHistoryFactory;
-
-    /**
      * @var SapOrderItemFactory
      */
     protected $_sapOrderItemFactory;
-
-    /**
-     * @var SapOrderItemHistoryFactory
-     */
-    protected $_sapOrderItemHistoryFactory;
 
     /**
      * @var SapOrderResource
@@ -86,19 +72,9 @@ class OrderStatusHelper
     protected $_sapOrderBatchResource;
 
     /**
-     * @var SapOrderHistoryResource
-     */
-    protected $_sapOrderHistoryResource;
-
-    /**
      * @var SapOrderItemResource
      */
     protected $_sapOrderItemResource;
-
-    /**
-     * @var SapOrderItemHistoryResource
-     */
-    protected $_sapOrderItemHistoryResource;
 
     /**
      * @var SapOrderItemCollectionFactory
@@ -138,7 +114,7 @@ class OrderStatusHelper
      * @var DiscountHelper
      */
     protected $_discountHelper;
-    
+
     /**
      * @var InvoiceService
      */
@@ -158,14 +134,10 @@ class OrderStatusHelper
      * @param LoggerInterface $logger
      * @param SapOrderFactory $sapOrderFactory
      * @param SapOrderBatchFactory $sapOrderBatchFactory
-     * @param SapOrderHistoryFactory $sapOrderHistoryFactory
      * @param SapOrderItemFactory $sapOrderItemFactory
-     * @param SapOrderItemHistoryFactory $sapOrderItemHistoryFactory
      * @param SapOrderResource $sapOrderResource
      * @param SapOrderBatchResource $sapOrderBatchResource
-     * @param SapOrderHistoryResource $sapOrderHistoryResource
      * @param SapOrderItemResource $sapOrderItemResource
-     * @param SapOrderItemHistoryResource $sapOrderItemHistoryResource
      * @param SapOrderItemCollectionFactory $sapOrderItemCollectionFactory
      * @param SapOrderShipmentFactory $sapOrderShipmentFactory
      * @param SapOrderShipmentResource $sapOrderShipmentResource
@@ -178,14 +150,10 @@ class OrderStatusHelper
         LoggerInterface $logger,
         SapOrderFactory $sapOrderFactory,
         SapOrderBatchFactory $sapOrderBatchFactory,
-        SapOrderHistoryFactory $sapOrderHistoryFactory,
         SapOrderItemFactory $sapOrderItemFactory,
-        SapOrderItemHistoryFactory $sapOrderItemHistoryFactory,
         SapOrderResource $sapOrderResource,
         SapOrderBatchResource $sapOrderBatchResource,
-        SapOrderHistoryResource $sapOrderHistoryResource,
         SapOrderItemResource $sapOrderItemResource,
-        SapOrderItemHistoryResource $sapOrderItemHistoryResource,
         SapOrderItemCollectionFactory $sapOrderItemCollectionFactory,
         SapOrderShipmentFactory $sapOrderShipmentFactory,
         SapOrderShipmentResource $sapOrderShipmentResource,
@@ -201,14 +169,10 @@ class OrderStatusHelper
         $this->_logger = $logger;
         $this->_sapOrderFactory = $sapOrderFactory;
         $this->_sapOrderBatchFactory = $sapOrderBatchFactory;
-        $this->_sapOrderHistoryFactory = $sapOrderHistoryFactory;
         $this->_sapOrderItemFactory = $sapOrderItemFactory;
-        $this->_sapOrderItemHistoryFactory = $sapOrderItemHistoryFactory;
         $this->_sapOrderResource = $sapOrderResource;
         $this->_sapOrderBatchResource = $sapOrderBatchResource;
-        $this->_sapOrderHistoryResource = $sapOrderHistoryResource;
         $this->_sapOrderItemResource = $sapOrderItemResource;
-        $this->_sapOrderItemHistoryResource = $sapOrderItemHistoryResource;
         $this->_sapOrderItemCollectionFactory = $sapOrderItemCollectionFactory;
         $this->_responseHelper = $responseHelper;
         $this->_sapOrderShipmentFactory = $sapOrderShipmentFactory;
@@ -251,8 +215,58 @@ class OrderStatusHelper
                          */
                         $sapOrder = $this->_sapOrderResource->getSapOrderByIncrementId($orderIncrementId);
 
+                        // Grab all siblings of this order item inclusively.
+                        $sapOrderItems = array_filter($requestData, function ($orderItem) use ($inputOrder) {
+                            return $inputOrder[self::INPUT_SAP_MAGENTO_PO] === $orderItem[self::INPUT_SAP_MAGENTO_PO];
+                        });
+
+                        // Grab all the unique skus for this order.
+                        $sapDistinctSkus = [];
+                        foreach($sapOrderItems as $sapOrderItem) {
+                            if (array_search($sapOrderItem[self::INPUT_SAP_SKU], array_column($sapDistinctSkus,self::INPUT_SAP_SKU)) === FALSE) {
+                                $sapDistinctSkus[] = $sapOrderItem;
+                            }
+                        }
+
+                        // Sum up all the confirmed (shipped) items for this order.
+                        $totalConfirmedQuantity = 0;
+                        foreach ($sapOrderItems as $sapOrderItem) {
+                            if (!empty($sapOrderItem[self::INPUT_SAP_CONFIRMED_QTY])) {
+                                $totalConfirmedQuantity += floatval($sapOrderItem[self::INPUT_SAP_CONFIRMED_QTY]);
+                            }
+                        }
+
+                        // Sum up all the confirmed (shipped) items for the given sku
+                        $skuConfirmedQuantity = 0;
+                        foreach ($sapOrderItems as $sapOrderItem) {
+                            if (!empty($sapOrderItem[self::INPUT_SAP_CONFIRMED_QTY]) &&
+                                $sapOrderItem[self::INPUT_SAP_SKU] === $inputOrder[self::INPUT_SAP_SKU]
+                            ) {
+                                $skuConfirmedQuantity += floatval($sapOrderItem[self::INPUT_SAP_CONFIRMED_QTY]);
+                            }
+                        }
+
+                        // Sum up all the confirmed (shipped) items for the given sku and tracking number.
+                        $skuTrackedConfirmedQuantity = 0;
+                        foreach ($sapOrderItems as $sapOrderItem) {
+                            if (!empty($sapOrderItem[self::INPUT_SAP_CONFIRMED_QTY]) &&
+                                $sapOrderItem[self::INPUT_SAP_SKU] === $inputOrder[self::INPUT_SAP_SKU] &&
+                                $sapOrderItem[self::INPUT_SAP_SHIP_TRACKING_NUMBER] === $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]
+                            ) {
+                                $skuTrackedConfirmedQuantity += floatval($sapOrderItem[self::INPUT_SAP_CONFIRMED_QTY]);
+                            }
+                        }
+
+                        // Sum up every unique sku to get the total number of items ordered.
+                        $totalOrderedQuantity = 0;
+                        foreach($sapDistinctSkus as $distinctSku) {
+                            if (!empty($distinctSku[self::INPUT_SAP_ORDER_QTY])) {
+                                $totalOrderedQuantity += floatval($distinctSku[self::INPUT_SAP_ORDER_QTY]);
+                            }
+                        }
+
                         // process the sap order info
-                        $this->processOrderSapInfo($inputOrder, $sapOrder);
+                        $this->processOrderSapInfo($inputOrder, $sapOrder, $totalConfirmedQuantity, $totalOrderedQuantity, $skuConfirmedQuantity, $skuTrackedConfirmedQuantity);
 
                         // update the batch processing for those
                         // that need to be processed through batch capture
@@ -290,40 +304,38 @@ class OrderStatusHelper
      * @param \SMG\Sap\Model\SapOrder $sapOrder
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    private function processOrderSapInfo($inputOrder, $sapOrder)
+    private function processOrderSapInfo($inputOrder, $sapOrder, $totalConfirmedQuantity, $totalOrderedQuantity, $skuConfirmedQuantity, $skuTrackedConfirmedQuantity)
     {
         // get the orderId to see if it is present in the object
-        $orderId = $sapOrder->getData('order_id');
+        $orderSapId = $sapOrder->getId();
 
         // determine if the sapOrder needs to be created
         // if it was loaded from the database there should be an
         // order id value
-        if (isset($orderId))
+        if (!empty($orderSapId))
         {
             // check to see if the order needs to be updated
             // if so then update the order
-            $this->updateOrderSap($inputOrder, $sapOrder);
+            $this->updateOrderSap($inputOrder, $sapOrder, $totalConfirmedQuantity, $totalOrderedQuantity);
 
             // process the sap order item information
-            $this->processOrderSapItemInfo($inputOrder, $sapOrder);
+            $this->processOrderSapItemInfo($inputOrder, $sapOrder, $totalConfirmedQuantity, $totalOrderedQuantity, $skuConfirmedQuantity);
 
             // process the sap order shipment information
-            $this->processOrderSapShipmentInfo($inputOrder, $sapOrder);
+            $this->processOrderSapShipmentInfo($inputOrder, $sapOrder, $skuTrackedConfirmedQuantity);
         }
         else
         {
             // create the order sap record
-            $orderSapId = $this->insertOrderSap($inputOrder);
+            $orderSapId = $this->insertOrderSap($inputOrder, $sapOrder, $totalConfirmedQuantity, $totalOrderedQuantity);
 
             // create the order sap item record
-            if(!empty($orderSapId)){
-            $orderSapItemId = $this->insertOrderSapItem($inputOrder, $orderSapId);
+            $orderSapItemId = $this->insertOrderSapItem($inputOrder, $orderSapId, $totalConfirmedQuantity, $totalOrderedQuantity, $skuConfirmedQuantity);
 
             // create the order sap shipment record
-            $this->insertOrderSapShipment($inputOrder, $orderSapItemId);
+            $this->insertOrderSapShipment($inputOrder, $orderSapItemId, $skuTrackedConfirmedQuantity);
         }
     }
-}
 
     /**
      * Takes the request data and inserts/updates the appropriate SAP
@@ -333,7 +345,7 @@ class OrderStatusHelper
      * @param $sapOrder
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    private function processOrderSapItemInfo($inputOrder, $sapOrder)
+    private function processOrderSapItemInfo($inputOrder, $sapOrder, $totalConfirmedQuantity, $totalOrderedQuantity, $skuConfirmedQuantity)
     {
         // get the order sap id
         $orderSapId = $sapOrder->getId();
@@ -342,43 +354,27 @@ class OrderStatusHelper
         // the items with the desired order
         $sapOrderItems = $this->_sapOrderItemCollectionFactory->create();
         $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $orderSapId]);
+        $sapOrderItems->addFieldToFilter('sku', ['eq' => $inputOrder[self::INPUT_SAP_SKU]]);
 
         // check to see if there is a record already
         // if there is then update the appropriate tables
         // otherwise create new values in the tables
         if ($sapOrderItems->count() > 0)
         {
-            // initialize if the item has already been added to this order
-            $isAdd = true;
-
             // loop through the orders
             foreach($sapOrderItems as $sapOrderItem)
             {
-                // if it is the same sku then we update
-                // otherwise we will insert
-                if ($inputOrder[self::INPUT_SAP_SKU] === $sapOrderItem->getData('sku'))
-                {
-                    // set the is add flag to false since
-                    // it already exists for this order
-                    $isAdd = false;
 
-                    // check to see if the order needs to be updated
-                    // if so then update the order item
-                    $this->updateOrderSapItem($inputOrder, $sapOrderItem);
-                }
-            }
+                // check to see if the order needs to be updated
+                // if so then update the order item
+                $this->updateOrderSapItem($inputOrder, $sapOrderItem, $totalConfirmedQuantity, $totalOrderedQuantity, $skuConfirmedQuantity);
 
-            // if the flag is true then add the order item
-            if ($isAdd)
-            {
-                // create the order sap item record
-                $this->insertOrderSapItem($inputOrder, $orderSapId);
             }
         }
         else
         {
             // create the order sap item record
-            $this->insertOrderSapItem($inputOrder, $orderSapId);
+            $this->insertOrderSapItem($inputOrder, $orderSapId, $totalConfirmedQuantity, $totalOrderedQuantity, $skuConfirmedQuantity);
         }
     }
 
@@ -390,7 +386,7 @@ class OrderStatusHelper
      * @param $sapOrder
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    private function processOrderSapShipmentInfo($inputOrder, $sapOrder)
+    private function processOrderSapShipmentInfo($inputOrder, $sapOrder, $skuTrackedConfirmedQuantity)
     {
         // get the ship tracking number for later use
         $shipTrackingNumber = $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER];
@@ -412,13 +408,11 @@ class OrderStatusHelper
                 // get the order sap item id
                 $orderSapItemId = $sapOrderItem->getId();
             }
-
             // create the sap orders shipment factory to retrieve all
             // the shipment items with the desired order
             $sapOrderShipments = $this->_sapOrderShipmentCollectionFactory->create();
             $sapOrderShipments->addFieldToFilter('order_sap_item_id', ['eq' => $orderSapItemId]);
             $sapOrderShipments->addFieldToFilter('ship_tracking_number', ['eq' => $shipTrackingNumber]);
-            $sapOrderShipments->addFieldToFilter('qty', ['eq' => $inputOrder[self::INPUT_SAP_ORDER_QTY]]);
 
             // check to see if there is a record already
             // if there is then update the appropriate tables
@@ -431,13 +425,13 @@ class OrderStatusHelper
                 {
                     // check to see if the order needs to be updated
                     // if so then update the order item
-                    $this->updateOrderSapShipment($inputOrder, $sapOrderShipment);
+                    $this->updateOrderSapShipment($inputOrder, $sapOrderShipment, $skuTrackedConfirmedQuantity);
                 }
             }
             else
             {
                 // create the order sap shipment record
-                $this->insertOrderSapShipment($inputOrder, $orderSapItemId);
+                $this->insertOrderSapShipment($inputOrder, $orderSapItemId, $skuTrackedConfirmedQuantity);
             }
         }
     }
@@ -449,9 +443,8 @@ class OrderStatusHelper
      * @return mixed
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    private function insertOrderSap($inputOrder)
+    private function insertOrderSap($inputOrder, $sapOrder, $totalConfirmedQuantity, $totalOrderedQuantity)
     {
-        $orderSapId = '';
         // get the order for the desired increment id
         $order = $this->_orderFactory->create();
         $this->_orderResource->load($order, $inputOrder[self::INPUT_SAP_MAGENTO_PO], 'increment_id');
@@ -461,11 +454,9 @@ class OrderStatusHelper
 
         // get the order status for this order based on the
         // ship tracking number
-        $orderStatus = $this->getOrderStatus($sapOrderStatus, $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]);
+        $orderStatus = $this->getOrderStatus($inputOrder, $totalConfirmedQuantity, $totalOrderedQuantity);
 
-        if(!empty($order->getId())){
         // Add to the sales_order_sap table
-        $sapOrder = $this->_sapOrderFactory->create();
         $sapOrder->setData('order_id', $order->getId());
         $sapOrder->setData('sap_order_id', $inputOrder[self::INPUT_SAP_ORDER_NUMBER]);
         $sapOrder->setData('order_created_at', $inputOrder[self::INPUT_SAP_ORDER_CREATE_DATE]);
@@ -477,43 +468,7 @@ class OrderStatusHelper
         $this->_sapOrderResource->save($sapOrder);
 
         // get the entity id from the newly added sap order
-        // return the order sap id that was generated from
-        // inserting into the table
         $orderSapId = $sapOrder->getId();
-
-        // Add to the sale_order_sap_history table
-        $this->insertOrderSapHistory($orderSapId, $orderStatus, null);
-
-        }else{
-            // log the error
-            $this->_logger->error("SMG\Api\Helper\OrderStatusHelper - Missing magento po number - ".$inputOrder[self::INPUT_SAP_MAGENTO_PO]);
-       }
-        return $orderSapId;
-    }
-
-    /**
-     * Insert the order sap history table with the appropriate values
-     *
-     * @param $orderSapId
-     * @param $orderStatus
-     * @param $orderStatusNotes
-     * @return mixed
-     * @throws \Magento\Framework\Exception\AlreadyExistsException
-     */
-    private function insertOrderSapHistory($orderSapId, $orderStatus, $orderStatusNotes)
-    {
-        // Add to the sale_order_sap_history table
-        $sapOrderHistory = $this->_sapOrderHistoryFactory->create();
-        $sapOrderHistory->setData('order_sap_id', $orderSapId);
-        $sapOrderHistory->setData('order_status', $orderStatus);
-
-        if (!empty($orderStatusNotes))
-        {
-            $sapOrderHistory->setData('order_status_notes', $orderStatusNotes);
-        }
-
-        // save the data to the table
-        $this->_sapOrderHistoryResource->save($sapOrderHistory);
 
         // return the order sap id that was generated from
         // inserting into the table
@@ -527,7 +482,7 @@ class OrderStatusHelper
      * @param $sapOrder
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    private function updateOrderSap($inputOrder, $sapOrder)
+    private function updateOrderSap($inputOrder, $sapOrder, $totalConfirmedQuantity, $totalOrderedQuantity)
     {
         // initialize update flag
         $isUpdateNeeded = false;
@@ -543,7 +498,6 @@ class OrderStatusHelper
         {
             $isUpdateNeeded = true;
             $sapOrder->setData('sap_order_id', $inputValue);
-            $orderStatusNotes .= 'SAP Order Id was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
         }
 
         // check order created at
@@ -572,7 +526,6 @@ class OrderStatusHelper
             {
                 $isUpdateNeeded = true;
                 $sapOrder->setData('order_created_at', $inputValue);
-                $orderStatusNotes .= 'Order created was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
             }
         }
 
@@ -583,18 +536,15 @@ class OrderStatusHelper
         {
             $isUpdateNeeded = true;
             $sapOrder->setData('sap_order_status', $inputValue);
-            $orderStatusNotes .= 'SAP Order Status was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
         }
 
         // check order status
-        $inputValue = $this->getOrderStatus($inputOrder[self::INPUT_SAP_SAP_ORDER_STATUS], $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]);
+        $inputValue = $this->getOrderStatus($inputOrder, $totalConfirmedQuantity, $totalOrderedQuantity);
         $sapOrderValue = $sapOrder->getData('order_status');
         if ((!empty($inputValue) || !empty($sapOrderValue)) && $inputValue !== $sapOrderValue)
         {
             $isUpdateNeeded = true;
             $sapOrder->setData('order_status', $inputValue);
-            $orderStatus = $inputValue;
-            $orderStatusNotes .= 'Order Status was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
         }
 
         // check if the payer id changed
@@ -604,7 +554,6 @@ class OrderStatusHelper
         {
             $isUpdateNeeded = true;
             $sapOrder->setData('sap_payer_id', $inputValue);
-            $orderStatusNotes .= 'Payer Id was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
         }
 
         // if there was something updated then update the table
@@ -612,9 +561,6 @@ class OrderStatusHelper
         {
             // update the table
             $this->_sapOrderResource->save($sapOrder);
-
-            // insert new record in the history
-            $this->insertOrderSapHistory($sapOrder->getId(), $orderStatus, $orderStatusNotes);
         }
     }
 
@@ -625,7 +571,7 @@ class OrderStatusHelper
      * @param $orderSapId
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    private function insertOrderSapItem($inputOrder, $orderSapId)
+    private function insertOrderSapItem($inputOrder, $orderSapId, $totalConfirmedQuantity, $totalOrderedQuantity, $skuConfirmedQuantity)
     {
         // variables
         $sapOrderStatus = $inputOrder[self::INPUT_SAP_SAP_ORDER_STATUS];
@@ -633,7 +579,7 @@ class OrderStatusHelper
 
         // get the order status for this order based on the
         // ship tracking number
-        $orderStatus = $this->getOrderStatus($sapOrderStatus, $shipTrackingNumber);
+        $orderStatus = $this->getOrderStatus($inputOrder, $totalConfirmedQuantity, $totalOrderedQuantity);
 
         // add to the sales_order_sap_item table
         $sapOrderItem = $this->_sapOrderItemFactory->create();
@@ -643,7 +589,7 @@ class OrderStatusHelper
         $sapOrderItem->setData('sku', $inputOrder[self::INPUT_SAP_SKU]);
         $sapOrderItem->setData('sku_description', $inputOrder[self::INPUT_SAP_SKU_DESCRIPTION]);
         $sapOrderItem->setData('qty', $inputOrder[self::INPUT_SAP_ORDER_QTY]);
-        $sapOrderItem->setData('confirmed_qty', $inputOrder[self::INPUT_SAP_CONFIRMED_QTY]);
+        $sapOrderItem->setData('confirmed_qty', $skuConfirmedQuantity);
 
         // save the data to the table
         $this->_sapOrderItemResource->save($sapOrderItem);
@@ -651,36 +597,9 @@ class OrderStatusHelper
         // get the entity id from the newly added sap order item
         $orderSapItemId = $sapOrderItem->getId();
 
-        // add to the sales_order_sap_item_history table
-        $this->insertOrderSapItemHistory($orderSapItemId, $orderStatus, null);
-
         // return the order sap item id that was generated from
         // inserting into the table
         return $orderSapItemId;
-    }
-
-    /**
-     * Insert the order sap item history table with the appropriate values
-     *
-     * @param $orderSapItemId
-     * @param $orderStatus
-     * @param $orderStatusNotes
-     * @throws \Magento\Framework\Exception\AlreadyExistsException
-     */
-    private function insertOrderSapItemHistory($orderSapItemId, $orderStatus, $orderStatusNotes)
-    {
-        // add to the sales_order_sap_item_history table
-        $sapOrderItemHistory = $this->_sapOrderItemHistoryFactory->create();
-        $sapOrderItemHistory->setData('order_sap_item_id', $orderSapItemId);
-        $sapOrderItemHistory->setData('order_status', $orderStatus);
-
-        if (!empty($orderStatusNotes))
-        {
-            $sapOrderItemHistory->setData('order_status_notes', $orderStatusNotes);
-        }
-
-        // save the data to the table
-        $this->_sapOrderItemHistoryResource->save($sapOrderItemHistory);
     }
 
     /**
@@ -690,7 +609,7 @@ class OrderStatusHelper
      * @param $orderSapItemId
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    private function insertOrderSapShipment($inputOrder, $orderSapItemId)
+    private function insertOrderSapShipment($inputOrder, $orderSapItemId, $skuTrackedConfirmedQuantity)
     {
         // get the ship tracking number for later use
         $shipTrackingNumber = $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER];
@@ -704,7 +623,7 @@ class OrderStatusHelper
             $sapOrderShipment->setData('order_sap_item_id', $orderSapItemId);
             $sapOrderShipment->setData('ship_tracking_number', $shipTrackingNumber);
             $sapOrderShipment->setData('qty', $inputOrder[self::INPUT_SAP_ORDER_QTY]);
-            $sapOrderShipment->setData('confirmed_qty', $inputOrder[self::INPUT_SAP_CONFIRMED_QTY]);
+            $sapOrderShipment->setData('confirmed_qty', $skuTrackedConfirmedQuantity);
             $sapOrderShipment->setData('delivery_number', $inputOrder[self::INPUT_SAP_DELIVERY_NUMBER]);
             $sapOrderShipment->setData('fulfillment_location', $inputOrder[self::INPUT_SAP_FULFILLMENT_LOCATION]);
             $sapOrderShipment->setData('sap_billing_doc_number', $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER]);
@@ -722,14 +641,10 @@ class OrderStatusHelper
      * @param $sapOrderItem
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    private function updateOrderSapItem($inputOrder, $sapOrderItem)
+    private function updateOrderSapItem($inputOrder, $sapOrderItem, $totalConfirmedQuantity, $totalOrderedQuantity, $skuConfirmedQuantity)
     {
         // initialize update flag
         $isUpdateNeeded = false;
-
-        // initialize the order status and notes
-        $orderStatus = 'updated';
-        $orderStatusNotes = '';
 
         // check sap order status
         $inputValue = $inputOrder[self::INPUT_SAP_SAP_ORDER_STATUS];
@@ -738,18 +653,24 @@ class OrderStatusHelper
         {
             $isUpdateNeeded = true;
             $sapOrderItem->setData('sap_order_status', $inputValue);
-            $orderStatusNotes .= 'SAP Order Status was ' . $sapOrderValue . ' now ' . $inputValue . '. ';
         }
 
         // check order status
-        $inputValue = $this->getOrderStatus($inputOrder[self::INPUT_SAP_SAP_ORDER_STATUS], $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]);
+        $inputValue = $this->getOrderStatus($inputOrder, $totalConfirmedQuantity, $totalOrderedQuantity);
         $sapOrderItemValue = $sapOrderItem->getData('order_status');
         if ((!empty($inputValue) || !empty($sapOrderValue)) && $inputValue !== $sapOrderItemValue)
         {
             $isUpdateNeeded = true;
             $sapOrderItem->setData('order_status', $inputValue);
-            $orderStatus = $inputValue;
-            $orderStatusNotes .= 'Order Status was ' . $sapOrderItemValue . ' now ' . $inputValue . '. ';
+        }
+
+        // check the confirmed quantity
+        $inputValue = $skuConfirmedQuantity;
+        $sapOrderItemValue = $sapOrderItem->getData('confirmed_qty');
+        if (bccomp($inputValue, $sapOrderItemValue, 3) <> 0)
+        {
+            $isUpdateNeeded = true;
+            $sapOrderItem->setData('confirmed_qty', $inputValue);
         }
 
         // if there was something updated then update the table
@@ -758,8 +679,6 @@ class OrderStatusHelper
             // update the table
             $this->_sapOrderItemResource->save($sapOrderItem);
 
-            // insert new record in the history
-            $this->insertOrderSapItemHistory($sapOrderItem->getId(), $orderStatus, $orderStatusNotes);
         }
     }
 
@@ -770,7 +689,7 @@ class OrderStatusHelper
      * @param $sapOrderShipment
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    private function updateOrderSapShipment($inputOrder, $sapOrderShipment)
+    private function updateOrderSapShipment($inputOrder, $sapOrderShipment, $skuTrackedConfirmedQuantity)
     {
         // initialize update flag
         $isUpdateNeeded = false;
@@ -794,7 +713,7 @@ class OrderStatusHelper
         }
 
         // check the confirmed quantity
-        $inputValue = $inputOrder[self::INPUT_SAP_CONFIRMED_QTY];
+        $inputValue = $skuTrackedConfirmedQuantity;
         $sapOrderValue = $sapOrderShipment->getData('confirmed_qty');
         if (bccomp($inputValue, $sapOrderValue, 3) <> 0)
         {
@@ -873,14 +792,25 @@ class OrderStatusHelper
      * @param $shipTrackingNumber
      * @return string
      */
-    private function getOrderStatus($sapOrderStatus, $shipTrackingNumber)
+    private function getOrderStatus($inputOrder, $totalConfirmedQuantity, $totalOrderedQuantity)
     {
+        $sapOrderStatus = $inputOrder[self::INPUT_SAP_SAP_ORDER_STATUS];
+        $shipTrackingNumber = $inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER];
+
         $status = 'created';
 
         // determine the status of the order
         if (!empty($shipTrackingNumber))
         {
-            $status = 'order_shipped';
+            if ($totalConfirmedQuantity >= $totalOrderedQuantity) {
+                $status = 'order_shipped';
+            }
+            else {
+                $status = 'order_partially_shipped';
+            }
+        }
+        else if ($totalConfirmedQuantity > 0) {
+            $status = 'order_partially_shipped';
         }
         else if ($sapOrderStatus === 'A')
         {
@@ -910,7 +840,7 @@ class OrderStatusHelper
     {
         // get the order id
         $orderId = $sapOrder->getData('order_id');
-        if (!isset($orderId))
+        if (!empty($orderId))
         {
             // get the order for the desired increment id
             $order = $this->_orderFactory->create();
@@ -931,7 +861,7 @@ class OrderStatusHelper
             // it should as the batch record should have been created before
             // the status file to contain the order but it is best to check
             $orderIdFromBatch = $sapOrderBatch->getData('order_id');
-            if (isset($orderIdFromBatch))
+            if (!empty($orderIdFromBatch))
             {
                 // check to see if the order sap batch needs to be updated
                 // if so then update the order sap batch
@@ -1020,9 +950,6 @@ class OrderStatusHelper
                 {
                     // set the flag to have updates
                     $isUpdateNeeded = true;
-
-                    // invoice the order offline
-                    $this->invoiceOffline($order, $sapOrderBatch);
                 }
             }
 
@@ -1033,14 +960,11 @@ class OrderStatusHelper
             {
                 // set the flag to have updates
                 $isUpdateNeeded = true;
-
-                // invoice the order offline
-                $this->invoiceOffline($order, $sapOrderBatch);
             }
 
             // check the shipment
             if (!empty($inputOrder[self::INPUT_SAP_SHIP_TRACKING_NUMBER]) &&
-                 empty($sapOrderBatch->getData('shipment_process_date')) &&
+                empty($sapOrderBatch->getData('shipment_process_date')) &&
                 !$sapOrderBatch->getData('is_shipment'))
             {
                 $isUpdateNeeded = true;
