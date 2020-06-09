@@ -33,14 +33,15 @@ class SapOrder extends AbstractModel
      */
     protected $_sapOrderItemCollectionFactory;
 
-    public function __construct(Context $context,
+    public function __construct(
+        Context $context,
         \Magento\Framework\Registry $registry,
         SapOrderResource $resourceModel,
         SapOrderItemCollectionFactory $sapOrderItemCollectionFactory,
         AbstractResource $resource = null,
         AbstractDb $resourceCollection = null,
-        array $data = [])
-    {
+        array $data = []
+    ) {
         parent::__construct($context, $registry, $resource, $resourceCollection, $data);
 
         $this->_resourceModel = $resourceModel;
@@ -54,8 +55,7 @@ class SapOrder extends AbstractModel
 
     public function getOrder()
     {
-        if (!$this->_order)
-        {
+        if (!$this->_order) {
             $this->_order = $this->_resourceModel->getOrder($this->getOrderId());
         }
 
@@ -92,5 +92,38 @@ class SapOrder extends AbstractModel
 
         // return
         return $sapOrderBatches;
+    }
+
+    /**
+     * Get a list of unique tracking numbers for this Sap Order
+     *
+     * @return \SMG\Sap\Model\ResourceModel\SapOrderItem\Collection
+     */
+    public function getSapOrderTrackingNumbers()
+    {
+        $sapOrderItems = $this->getSapOrderItems();
+
+        // Grab all the unique tracking numbers.
+        $trackingNumbers = [];
+
+        /**
+         * @var \SMG\Sap\Model\SapOrderItem $sapOrderItem
+         */
+        foreach ($sapOrderItems as $sapOrderItem) {
+            $shipments =  $sapOrderItem->getSapOrderShipments($sapOrderItem->getId());
+
+            /**
+            * @var \SMG\Sap\Model\SapOrderShipment $shipment
+            */
+            foreach ($shipments as $shipment) {
+                $trackingNumber = $shipment->getData('ship_tracking_number');
+
+                if (!in_array($trackingNumber, $trackingNumbers)) {
+                    $trackingNumbers[] = $trackingNumber;
+                }
+            }
+        }
+
+        return $trackingNumbers;
     }
 }
