@@ -1,0 +1,56 @@
+<?php
+   /**
+    * Copyright © Magento, Inc. All rights reserved.
+    * See COPYING.txt for license details.
+    */
+   
+   ?>
+<?php $_shipment = $block->getShipment() ?>
+<?php $_order    = $block->getOrder() ?>
+<?php
+$itemsNotShipped = [];
+if ($_order) {
+    $itemsNotShipped = $block->getItemsNotShipped($_order->getData('entity_id'));
+}
+?>
+<?php if (!empty($itemsNotShipped)) : ?>
+<table class="green"
+   style="box-sizing: border-box; border-collapse: separate !important; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background-color: #1d5632; padding: 0 40px;"
+   width="100%" bgcolor="#1d5632">
+   <tr>
+      <td style="box-sizing: border-box; font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; font-size: 14px; vertical-align: top;"
+         valign="top">
+         <p class="white"
+            style="font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; margin: 0; margin-bottom: 0; font-size: 16; font-weight: 600; color: #fff;">
+            <?= $block->escapeHtml(__('Items')) ?>
+         </p>
+      </td>
+      <td class="wrapper"
+         style="box-sizing: border-box; font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; font-size: 14px; vertical-align: top; padding: 20px 40px 0;"
+         valign="top"></td>
+      <td style="box-sizing: border-box; font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; font-size: 14px; vertical-align: top;"
+         valign="top">
+         <p class="white"
+            style="font-family: 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif; margin: 0; margin-bottom: 0; font-size: 16; font-weight: 600; color: #fff; text-align: right; margin-right: 12px;">
+            <?= $block->escapeHtml(__('Quantity Not Shipped')) ?>
+         </p>
+      </td>
+   </tr>
+</table>
+<table class="light-green"
+   style="box-sizing: border-box; border-collapse: separate !important; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background-color: #edf4e1; padding: 0 40px;"
+   width="100%" bgcolor="#edf4e1">
+   <tr>
+      <?php foreach ($itemsNotShipped as $_item) : ?>
+
+   <tbody>
+   <tr>
+       <td><?=$_item->getSkuDescription()?></td>
+       <td><?=$_item->getQty() - $_item->getConfirmedQty()?></td>
+   </tr>
+   </tbody>
+
+   <?php endforeach; ?>
+   </tr>
+</table>
+<?php endif; ?>

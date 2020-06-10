@@ -41,6 +41,11 @@ class UpgradeData implements UpgradeDataInterface
         {
             $this->addDataVersion300($setup);
         }
+
+        if (version_compare($context->getVersion(), '3.3.0', '<'))
+        {
+            $this->addDataVersion330($setup);
+        }
     }
 
     /**
@@ -80,6 +85,27 @@ class UpgradeData implements UpgradeDataInterface
             ['status' => 'capture_failed', 'label' => 'Capture Failed - Reverse Authorization Processing'],
             ['status' => 'order_canceled', 'label' => 'Order Canceled - Authorization Voided'],
             ['status' => 'order_captured', 'label' => 'Order Captured']
+        ];
+
+        // insert the rows
+        $setup->getConnection()->insertMultiple($tableName, $data);
+    }
+
+    /**
+     * Add Data for Version 3.3.0
+     *
+     * - Added 1 new value for the sales_order_status_sap
+     *
+     * @param ModuleDataSetupInterface $setup
+     */
+    private function addDataVersion330(ModuleDataSetupInterface $setup)
+    {
+        // get the table
+        $tableName = $setup->getTable('sales_order_status_sap');
+
+        // create the data
+        $data = [
+            ['status' => 'order_partially_shipped', 'label' => 'Order Partially Shipped'],
         ];
 
         // insert the rows
