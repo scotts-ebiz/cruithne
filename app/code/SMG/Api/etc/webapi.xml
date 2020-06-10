@@ -79,6 +79,12 @@
             <resource ref="self" />
         </resources>
     </route>
+    <route url="/V1/smg/manualShipment" method="POST">
+        <service class="SMG\Api\Model\ManualShipmentManagementInterface" method="processShipment" />
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
     <route url="/V1/smg/shipment" method="POST">
         <service class="SMG\Api\Model\ShipmentManagementInterface" method="processShipment" />
         <resources>
