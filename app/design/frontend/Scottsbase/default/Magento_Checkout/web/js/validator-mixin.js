@@ -170,6 +170,15 @@ define([
 			$.mage.__('Please enter a valid street address.')
 		);
 
+        validator.addRule(
+            'no-pobox-allowed',
+            function (value) {
+                var pattern = new RegExp('\\b[p]*(ost)*\\.*\\s*[o|0]*(ffice)*\\.*\\s*b[o|0]x\\b', 'i');
+                return !pattern.test(value);
+            },
+            $.mage.__('We are unable to ship to to PO Boxes. Please enter a valid street address.')
+        );
+
 		validator.addRule(
 			'required-entry-bstreet-1',
 			function (value) {
