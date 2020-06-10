@@ -9,6 +9,7 @@ use Magento\Sales\Api\Data\ShipmentTrackCreationInterfaceFactory;
 use Magento\Sales\Api\ShipOrderInterface;
 use Magento\Sales\Model\Spi\OrderResourceInterface;
 use Magento\Sales\Model\Spi\ShipmentTrackResourceInterface;
+use Magento\Setup\Exception;
 use Psr\Log\LoggerInterface;
 use SMG\CustomerServiceEmail\Api\OrderManagementInterface;
 use SMG\CustomerServiceEmail\Api\Data\ItemInterface;
@@ -23,6 +24,11 @@ use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory 
 
 class ShipmentHelper
 {
+
+    const INPUT_SAP_CONFIRMED_QTY = 'confirmed_qty';
+    const INPUT_SAP_ORDER_QTY = 'qty';
+    const INPUT_SAP_SKU = 'sku';
+    const ACTION_FLAG_SHIP = 'ship';
     /**
      * @var array
      */
@@ -118,11 +124,11 @@ class ShipmentHelper
      */
     protected $_sdk;
     
-    /** 
-     * @var SubscriptionOrderCollectionFactory 
+    /**
+     * @var SubscriptionOrderCollectionFactory
      */
     protected $_subscriptionOrderCollectionFactory;
-    
+
     /**
      * BatchCaptureHelper constructor.
      *
@@ -198,11 +204,10 @@ class ShipmentHelper
         $orderStatusResponse = $this->_responseHelper->createResponse(true, "The shipment process completed successfully.");
 
         // get all of the records in the batch capture table
-        // where the shipment has not been completed and the order was not unauthorized
+        // where the shipment has not been completed
         $sapBatchOrders = $this->_sapOrderBatchCollectionFactory->create();
         $sapBatchOrders->addFieldToFilter('is_shipment', ['eq' => true]);
         $sapBatchOrders->addFieldToFilter('shipment_process_date', ['null' => true]);
-        $sapBatchOrders->addFieldToFilter('is_unauthorized', ['neq' => true]);
 
         // loop through all of the batch capture records that have not been processed
         foreach ($sapBatchOrders as $sapBatchOrder)
@@ -210,26 +215,20 @@ class ShipmentHelper
             // get the order id
             $orderId = $sapBatchOrder->getData('order_id');
 
-            // create the shipment request
-            $this->createShipmentRequest($orderId);
-            
-            // check the status
-          if ($this->wasShipmentSuccessful($orderId))
-           {
-              // update the sap order batch
-            $this->updateSapBatch($sapBatchOrder, $orderId);    
-
             try {
-               // Zaius apiKey
-               $this->zaiusApiCall($orderId);
-            } catch (Exception $ex) {
-                $this->_logger->error($ex->getMessage());
-                return;
+                // create the shipment request
+                $this->createShipmentRequest($orderId);
             }
-            
-           }
-            
+            catch (Exception $ex) {
+                // if an error occurs, log it and continue with the batch processing.
+                $this->_logger->error($ex->getMessage());
+                continue;
+            }
+
+            // update the sap order batch
+            $this->updateSapBatch($sapBatchOrder, $orderId);
         }
+
         // send consumer service email
         $this->sendCustomerServiceEmails();
 
@@ -253,7 +252,7 @@ class ShipmentHelper
         $this->_orderResource->load($order, $orderId);
 
         // determine if this can be shipped
-        if ($order->canShip())
+        if ($this->canShip($order))
         {
             // create the list of items
             // initialize the items array
@@ -261,81 +260,111 @@ class ShipmentHelper
             $tracks = [];
             $shipTrackingNumbers = [];
 
+
             /**
              * @var \SMG\Sap\Model\SapOrder $sapOrder
              */
             $sapOrder = $this->_sapOrderResource->getSapOrderByOrderId($orderId);
 
-            /**
-             * @var \Magento\Sales\Model\Order\Item $orderItem
-             */
-            foreach ($order->getAllItems() as $orderItem)
+            foreach ($sapOrder->getSapOrderTrackingNumbers() as $trackingNumber)
             {
-                /**
-                 * @var \Magento\Sales\Api\Data\ShipmentItemCreationInterface $shipmentItemCreation
-                 */
-                $shipmentItemCreation = $this->_shipmentItemCreationInterfaceFactory->create();
-                $shipmentItemCreation->setOrderItemId($orderItem->getItemId());
-                $shipmentItemCreation->setQty($orderItem->getQtyOrdered());
-                $items[] = $shipmentItemCreation;
-
-                // get the sap order item
-                $sapOrderItems = $this->_sapOrderItemCollectionFactory->create();
-                $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $sapOrder->getId()]);
-                $sapOrderItems->addFieldToFilter('sku', ['eq' => $orderItem->getSku()]);
-
-                // get the first item from the collection.  there should only be one
-                // item
-                /**
-                 * @var \SMG\Sap\Model\SapOrderItem $sapOrderItem
-                 */
-                foreach ($sapOrderItems as $sapOrderItem)
-                {
-                    if (!empty($sapOrderItem))
-                    {
-                        // get the sap order shipment
-                        $sapOrderShipments = $this->_sapOrderShipmentCollectionFactory->create();
-                        $sapOrderShipments->addFieldToFilter('order_sap_item_id', ['eq' => $sapOrderItem->getId()]);
-                        $sapOrderShipments->addFieldToFilter('ship_tracking_number', ['notnull' => true]);
-
-                        // loop through the order shipment
-                        /**
-                         * @var \SMG\Sap\Model\SapOrderShipment $sapOrderShipment
-                         */
-                        foreach ($sapOrderShipments as $sapOrderShipment)
-                        {
-                            // get the shipping tracking number
-                            $shipTrackingNumber = $sapOrderShipment->getData('ship_tracking_number');
-
-                            // check if the ship tracking number exists in the array as we don't want to add
-                            // the same ship tracking number twice
-                            if (!in_array($shipTrackingNumber, $shipTrackingNumbers))
-                            {
-                                // add the ship tracking number to the array
-                                $shipTrackingNumbers[] = $shipTrackingNumber;
-
-                                // create the title
-                                $shippingTitle = "Federal Express - " . $order->getShippingDescription();
-
-                                /**
-                                 * @var \Magento\Sales\Api\Data\ShipmentTrackCreationInterface @$shipmentTrackItemCreation
-                                 */
-                                $shipmentTrackItemCreation = $this->_shipmentTrackCreationInterfaceFactory->create();
-                                $shipmentTrackItemCreation->setTrackNumber($shipTrackingNumber);
-                                $shipmentTrackItemCreation->setTitle($shippingTitle);
-                                $shipmentTrackItemCreation->setCarrierCode("fedex");
-                                $tracks[] = $shipmentTrackItemCreation;
-                            }
+                try {
+                    // Do not create the tracking number record if it already exists on the Magento 2 order.
+                    $trackingNumberExists = false;
+                    foreach($order->getTracksCollection() as $track) {
+                        if ($track->getTrackNumber() === $trackingNumber) {
+                            $trackingNumberExists = true;
                         }
                     }
+
+                    if ($trackingNumberExists) {
+                        continue;
+                    }
+
+                    // add the ship tracking number to the array
+                    $shipTrackingNumbers[] = $trackingNumber;
+
+                    // create the title
+                    $shippingTitle = "Federal Express - " . $order->getShippingDescription();
+
+                    /**
+                     * @var \Magento\Sales\Api\Data\ShipmentTrackCreationInterface @$shipmentTrackItemCreation
+                     */
+                    $shipmentTrackItemCreation = $this->_shipmentTrackCreationInterfaceFactory->create();
+                    $shipmentTrackItemCreation->setTrackNumber($trackingNumber);
+                    $shipmentTrackItemCreation->setTitle($shippingTitle);
+                    $shipmentTrackItemCreation->setCarrierCode("fedex");
+                    $tracks[] = $shipmentTrackItemCreation;
+
+                    // get the sap order items
+                    $sapOrderItems = $this->_sapOrderItemCollectionFactory->create();
+                    $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $sapOrder->getId()]);
+
+                    // go through each sap order item and create a shipment item if it is related to the given tracking number.
+                    /**
+                     * @var \SMG\Sap\Model\SapOrderItem $sapOrderItem
+                     */
+                    foreach ($sapOrderItems as $sapOrderItem) {
+
+                        /**
+                         * @var \SMG\Sap\Model\ResourceModel\SapOrderShipment\Collection
+                         */
+                        $shipments =  $sapOrderItem->getSapOrderShipments($sapOrderItem->getId());
+                        $shipments->addFieldToFilter('ship_tracking_number', ['eq' => $trackingNumber]);
+
+                        // Ensure the current sap item is associated with the current tracking number.
+                        if (empty($shipments)) {
+                            continue;
+                        }
+
+                        // get the magento order item for the current sap order item.
+                        /**
+                         * @var \Magento\Sales\Model\Order\Item $orderItem
+                         */
+                        $orderItem = array_values(array_filter($order->getAllItems(), function ($item) use(&$sapOrderItem) {
+                            return $item->getData('sku') == $sapOrderItem->getData('sku');
+                        }));
+
+                        if (empty($orderItem)) {
+                            $this->_logger->error('Could not find sku for item' . $sapOrderItem->getId());
+                            continue;
+                        }
+                        // Do not add the item to the track if its quantity is 0.
+                        if (floatval($sapOrderItem->getData('confirmed_qty')) < 1) {
+                            continue;
+                        }
+
+                        /**
+                         * @var \Magento\Sales\Api\Data\ShipmentItemCreationInterface $shipmentItemCreation
+                         */
+                        $shipmentItemCreation = $this->_shipmentItemCreationInterfaceFactory->create();
+                        $shipmentItemCreation->setOrderItemId($orderItem[0]->getItemId());
+                        $shipmentItemCreation->setQty($sapOrderItem->getData('confirmed_qty'));
+                        $items[] = $shipmentItemCreation;
+                    }
+                    } catch (Exception $ex) {
+
+                        $this->_logger->error($ex->getMessage());
+                        continue;
+                    }
                 }
-            }
 
             // check to see if the items were added
             if (!empty($items) && !empty($tracks))
             {
                 // create shipment status
                 $this->_shipOrderInterface->execute($orderId, $items, true, false, null, $tracks);
+                
+                try 
+                {
+                	// Zaius apiKey
+                	$this->zaiusApiCall($orderId);
+                }
+                catch (Exception $ex)
+                {
+                	$this->_logger->error($ex->getMessage());
+                	return;
+                }
             }
         }
         else
@@ -351,6 +380,40 @@ class ShipmentHelper
      */
     private function updateSapBatch($sapBatchOrder, $orderId)
     {
+        /**
+         * @var \SMG\Sap\Model\SapOrder $sapOrder
+         */
+        $sapOrder = $this->_sapOrderResource->getSapOrderByOrderId($orderId);
+
+        // get the items for this sap order.
+        $sapOrderItems = $this->_sapOrderItemCollectionFactory->create();
+        $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $sapOrder->getId()]);
+
+        // Grab all the unique skus for this order.
+        $sapDistinctSkus = [];
+        foreach($sapOrderItems as $sapOrderItem) {
+            if (array_search($sapOrderItem[self::INPUT_SAP_SKU], array_column($sapDistinctSkus,self::INPUT_SAP_SKU)) === FALSE) {
+                $sapDistinctSkus[] = $sapOrderItem;
+            }
+        }
+
+        // Sum up all the confirmed (shipped) items for this order.
+        $totalConfirmedQuantity = 0;
+        foreach ($sapOrderItems as $sapOrderItem) {
+            if (!empty($sapOrderItem->getConfirmedQty())) {
+                $totalConfirmedQuantity += floatval($sapOrderItem->getConfirmedQty());
+            }
+        }
+
+        $totalOrderedQuantity = 0;
+        foreach ($sapDistinctSkus as $distinctSku) {
+            if (!empty($distinctSku[self::INPUT_SAP_ORDER_QTY])) {
+                $totalOrderedQuantity += floatval($distinctSku[self::INPUT_SAP_ORDER_QTY]);
+            }
+        }
+
+        // Only set ship processing date if all items in the order have been shipped.
+        if ($totalConfirmedQuantity >= $totalOrderedQuantity) {
             // get the current date
             $today = date('Y-m-d H:i:s');
 
@@ -363,35 +426,7 @@ class ShipmentHelper
             // add the order id to the array to send email
             // to customer service
             $this->_customerServiceEmailIds[] = $orderId;
-    }
-
-    /**
-     * Determine if the update was successful
-     *
-     * @param $orderId
-     * @return bool
-     */
-    private function wasShipmentSuccessful($orderId)
-    {
-        // set the success flag
-        $isBatchCaptureSuccess = false;
-
-        // load the shipment track data
-        /**
-         * @var \Magento\Sales\Model\Order\Shipment\Track $shipmentTrack
-         */
-        $shipmentTrack = $this->_shipmentTrackFactory->create();
-        $this->_shipmentTracKResource->load($shipmentTrack, $orderId, 'order_id');
-
-        // check to see if the user is loaded
-        $trackingNumber = $shipmentTrack->getTrackNumber();
-        if (isset($trackingNumber))
-        {
-            $isBatchCaptureSuccess = true;
         }
-
-        // return
-        return $isBatchCaptureSuccess;
     }
 
     /**
@@ -409,27 +444,27 @@ class ShipmentHelper
             $this->_orderManagementInterface->notifyShipmentOrdersServiceTeam($this->_itemInterface);
         }
     }
-    
+
     private function zaiusApiCall($orderId)
     {
-       $zaiusstatus = false;    
-       
-       // get order  
+       $zaiusstatus = false;
+
+       // get order
        $order = $this->_orderFactory->create();
 
        // load order from orderId
        $this->_orderResource->load($order, $orderId);
-     
+
        // get send shipment status
        $shipmentstatus = $this->getSendShipmentStatus();
-       
+
        // get subcription order details
         $subscriptionOrders = $this->_subscriptionOrderCollectionFactory->create();
         $subscriptionOrders
                 ->setOrder('ship_start_date', 'asc')
                 ->addFieldToFilter('sales_order_id', $orderId);
         $this->_subscriptionOrders = $subscriptionOrders;
-        
+
        // check isSubcription and shipmentstatus
        if ($order->isSubscription() && $shipmentstatus)
         {
@@ -438,10 +473,10 @@ class ShipmentHelper
 
             // get customer email
             $email = $order->getCustomerEmail();
-            
+
             // get order increment Id
             $shipmentId = $order->getIncrementId();
-            
+
             $startdate = '';
             $enddate = '';
             $product_order = '';
@@ -452,7 +487,7 @@ class ShipmentHelper
                     $product_order =  $this->getProductOrder($orders->getSubscriptionEntityId(), $orderId);
                 }
             }
-            
+
             foreach ($order->getAllVisibleItems() as $_item) {
             $productid = $_item->getProductId();
                       // take event as a array and add parameters
@@ -461,9 +496,9 @@ class ShipmentHelper
             $event['action'] = 'shipped';
             $event['identifiers'] = ['email'=>$email];
             $event['data'] = ['product_id'=>$productid, 'shipment_id'=>$shipmentId, 'magento_store_view'=>'Default Store View','applicationstartdate'=>$startdate,'applicationenddate'=>$enddate,'product_order'=>$product_order];
-            
+
             // get postevent function
-            $zaiusstatus = $zaiusClient->postEvent($event); 
+            $zaiusstatus = $zaiusClient->postEvent($event);
 
                  // check return values from the postevent function
                 if($zaiusstatus)
@@ -473,11 +508,11 @@ class ShipmentHelper
                 else
                 {
                     $this->_logger->info("The order Id " . $orderId . " with product id " . $productid . " is failed to zaius."); //saved in var/log/system.log
-                }           
+                }
             }
         }
     }
-    
+
     /**
      * @param \Magento\Store\Model\Store|int|null $store
      * @return bool
@@ -486,23 +521,52 @@ class ShipmentHelper
     {
         return $this->_scopeConfigInterface->getValue('zaius_engage/status/send_shipment_status', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
-    
+
     private function getProductOrder($subscription_entity_id, $sales_order_id)
     {
       $subscriptionOrders = $this->_subscriptionOrderCollectionFactory->create();
       $subscriptionOrders
                 ->setOrder('entity_id', 'asc')
-                ->addFieldToFilter('subscription_entity_id', $subscription_entity_id); 
+                ->addFieldToFilter('subscription_entity_id', $subscription_entity_id);
       $this->_subscriptionOrders = $subscriptionOrders;
       $i = 0;
      foreach($this->_subscriptionOrders as $subcriptionorders){
              if($subcriptionorders->getSalesOrderId() == $sales_order_id)
              {
-              return $i;     
-              break; 
+              return $i;
+              break;
              }
              $i++;
-        }           
+        }
       return $i;
     }
+
+    /*
+     * Retrieve order shipment availability
+     * @param \Magento\Sales\Model\Order $order
+     * @return bool
+     */
+    public function canShip($order)
+    {
+        if ($order->canUnhold() || $order->isPaymentReview()) {
+            return false;
+        }
+
+        if ($order->getIsVirtual() || $order->isCanceled()) {
+            return false;
+        }
+
+        if ($order->getActionFlag(self::ACTION_FLAG_SHIP) === false) {
+            return false;
+        }
+
+        foreach ($order->getAllItems() as $item) {
+            if (!$item->getIsVirtual() &&
+                !$item->getLockedDoShip() && $item->getQtyRefunded() != $item->getQtyOrdered()) {
+                return true;
+            }
+        }
+        return false;
+    }
+
 }
