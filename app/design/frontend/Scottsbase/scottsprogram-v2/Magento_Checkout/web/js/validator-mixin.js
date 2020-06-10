@@ -132,7 +132,7 @@ return function (validator) {
         if (!isNaN(value)) {
           return false;
         }
-        if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
+        if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value)){
           return true
         } else {
           return false;
@@ -149,20 +149,20 @@ return function (validator) {
     'required-entry-street-1',
     function (value) {
 
-        if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
+        if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value) || value == ''){
           return true
         } else {
           return false;
         }
     },
-    $.mage.__('Please enter a valid street address.')
+    $.mage.__('Please only include apartment or suite number, if applicable.')
   );
 
   validator.addRule(
     'required-entry-street-2',
     function (value) {
 
-        if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
+        if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value) || value == ''){
           return true
         } else {
           return false;
@@ -179,7 +179,7 @@ return function (validator) {
         if (!isNaN(value)) {
           return false;
         }
-        if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
+        if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value)){
           return true
         } else {
           return false;
@@ -196,20 +196,20 @@ return function (validator) {
     'required-entry-bstreet-1',
     function (value) {
 
-        if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
+        if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value) || value == ''){
           return true
         } else {
           return false;
         }
     },
-    $.mage.__('Please enter a valid street address.')
+    $.mage.__('Please only include apartment or suite number, if applicable.')
   );
 
   validator.addRule(
     'required-entry-bstreet-2',
     function (value) {
 
-        if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
+        if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value) || value == ''){
           return true
         } else {
           return false;
