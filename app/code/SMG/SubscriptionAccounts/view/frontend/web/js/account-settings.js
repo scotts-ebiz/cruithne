@@ -222,7 +222,7 @@ define([
                              * in order to update email input field to correspond to
                              * actual account values.
                              */
-                            self.account.email(this.config.account.email);
+                            self.account.email(self.config.account.email);
                             self.modalValues({
                                 header: 'Problem saving changes',
                                 message: 'An account already exists with the email address you entered, please use a different email address.'
