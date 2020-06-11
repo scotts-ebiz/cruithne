@@ -7,3 +7,7 @@
     margin: 10px;
     display: none;
 }
+
+.modal-popup._show {
+    z-index: 2200 !important;
+}
