@@ -6,10 +6,10 @@
  */
 -->
 <page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
-    <update handle="sales_order_create_item_price"/>
     <head>
-     <css src="css/sales-order-create-styles-override.css"/>
+        <css src="SMG_Sales::css/sales-order-create-styles-override.css" />
    </head>
+    <update handle="sales_order_create_item_price"/>
     <body>
         <referenceContainer name="content">
             <block class="Magento\Sales\Block\Adminhtml\Order\Create\Data" template="SMG_Sales::order/create/data.phtml" name="data">
