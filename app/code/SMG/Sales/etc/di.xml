@@ -26,7 +26,4 @@
             </argument>
         </arguments>
     </virtualType>
-    <type name="Magento\Sales\Api\OrderManagementInterface">
-        <plugin name="smg_sales_plugin_ordermanagement" type="SMG\Sales\Plugin\Api\OrderManagement"/>
-    </type>
 </config>
