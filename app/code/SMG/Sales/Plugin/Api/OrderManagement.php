@@ -1,5 +1,5 @@
 <?php
-namespace SMG\Sales\Plugin;
+namespace SMG\Sales\Plugin\Api;
 
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderManagementInterface;
