@@ -7,7 +7,7 @@ class LayoutProcessor {
 
 		        $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
             ['shippingAddress']['children']['shipping-address-fieldset']['children']['street']['children']['0']
-            ['validation'] = ['required-entry' => false,'required-entry-street-0' => true];
+            ['validation'] = ['required-entry' => false,'required-entry-street-0' => true, 'no-pobox-allowed' => true];
 
 		        /* Street Address 0 - Label Change */
             $result['components']['checkout']['children']['steps']['children']['shipping-step']['children']
