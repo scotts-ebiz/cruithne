@@ -16,7 +16,7 @@ class OrderManagement
     private $orderRepository;
 
     /**
-     * MyCustomClass constructor.
+     * 
      *
      * @param \Magento\Sales\Api\OrderRepositoryInterface $orderRepository
      */
