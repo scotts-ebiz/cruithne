@@ -22,64 +22,84 @@ update_base_image_in_gitlab_registry:
     - docker push ${CI_REGISTRY_IMAGE}/magento-primer:latest
   when: manual
 
-test_image:
+# test_image:
+#   stage: build_test_base
+# # Below variables are safe to place here in plain text because they are used only on the ephemeral test stage.
+#   variables:
+#     MYSQL_DATABASE: "cruithne"
+#     MYSQL_USER: "varien"
+#     MYSQL_PASSWORD: "j7K9u3Lm2wA6"
+#     MYSQL_ROOT_PASSWORD: "Huwqdkb1iu2d12dh"
+#     LOCAL_URL: "https://store.cruthine.test"
+#     ADMIN_EMAIL: "smgwebsupport@scotts.com"
+#     ADMIN_FIRST: "SMG"
+#     ADMIN_LAST: "Developer"
+#     ADMIN_USERNAME: "admin"
+#     ADMIN_PASSWORD: "passw0rd"
+#     PATH_TO_MAGENTO2: /var/www/html/magento2/
+#   tags:
+#     - docker
+#   image: ${CI_REGISTRY_IMAGE}/magento-primer:latest
+#   services:
+#     - name: mysql:5.7
+#       alias: mysql
+#   script:
+#     # NOTE#1 ↓↓↓ 
+#     #   We don't need to do next 6 commands if we will have the right base image.
+#     # With GitLab logic and the code from repo Magento2 is automatically fetched and included into `build_test_base` stage,
+#     # but because we have outdated base image with the application code inside it underthe path /var/www/html/magento2/, I
+#     # decided to use old aproach of application building. So it is a kind of optimization and should be discussed.
+#     - cd ${PATH_TO_MAGENTO2}
+#     - su - magento -c "git config --global user.name 'Git User'"
+#     - su - magento -c "git config --global user.email 'user@example.com'"
+#     - su - magento -c "cd ${PATH_TO_MAGENTO2}; git fetch --all"
+#     - su - magento -c "cd ${PATH_TO_MAGENTO2}; git reset --hard origin/${CI_COMMIT_BRANCH}"
+#     - su - magento -c "cd ${PATH_TO_MAGENTO2}; git pull"
+#     - su - magento -c "cd ${PATH_TO_MAGENTO2}; git checkout origin .htaccess"
+#     # NOTE#1 ↑↑↑
+#     - composer config repositories.amasty composer https://composer.amasty.com/enterprise/
+#     - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${TEST_MAGENTO_USER}\",\"password\":\"${TEST_MAGENTO_PASSWORD}\"},\"composer.amasty.com\":{\"username\":\"${TEST_AMASTY_USER}\",\"password\":\"${TEST_AMASTY_PASSWORD}\"}}}" > auth.json 
+#     - composer install --prefer-dist
+#     - php bin/magento setup:install --no-interaction --base-url="$LOCAL_URL" --admin-email="$ADMIN_EMAIL" 
+#       --admin-firstname="$ADMIN_FIRST" --admin-lastname="$ADMIN_LAST" --admin-user="$ADMIN_USERNAME" 
+#       --admin-password="$ADMIN_PASSWORD" --language="en_US" --backend-frontname="admin" 
+#       --base-url="$LOCAL_URL" --db-host="mysql" --db-name="$MYSQL_DATABASE" --db-user="$MYSQL_USER" 
+#       --db-password="$MYSQL_PASSWORD" --currency="USD" --timezone="America/New_York" --use-rewrites="1" 
+#       --use-secure="1"
+#     - bin/magento setup:upgrade
+#     - bin/magento setup:di:compile
+#     - rm ./vendor/snowdog/frontools/yarn.lock
+#     - cd ./tools
+#     - npm install
+#     - npm rebuild node-sass
+#     - gulp clean -f /var/www/html/magento2/tools/gulpfile.esm.js
+#     - gulp styles --prod -f /var/www/html/magento2/tools/gulpfile.esm.js
+#     - cd ..
+#     - mysql -h mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "SHOW DATABASES;"
+#     - mysql -h mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} -e "SHOW TABLES;"
+#     - mysql -h mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} -e "SELECT * FROM store;"
+#     - bin/magento setup:static-content:deploy -f
+#     - bin/magento -v index:reindex
+#     - bin/magento -v cache:flush
+#   only:
+#     - ally_poc
+
+test_image1:
   stage: build_test_base
-# Below variables are safe to place here in plain text because they are used only on the ephemeral test stage.
-  variables:
-    MYSQL_DATABASE: "cruithne"
-    MYSQL_USER: "varien"
-    MYSQL_PASSWORD: "j7K9u3Lm2wA6"
-    MYSQL_ROOT_PASSWORD: "Huwqdkb1iu2d12dh"
-    LOCAL_URL: "https://store.cruthine.test"
-    ADMIN_EMAIL: "smgwebsupport@scotts.com"
-    ADMIN_FIRST: "SMG"
-    ADMIN_LAST: "Developer"
-    ADMIN_USERNAME: "admin"
-    ADMIN_PASSWORD: "passw0rd"
-    PATH_TO_MAGENTO2: /var/www/html/magento2/
   tags:
     - docker
-  image: ${CI_REGISTRY_IMAGE}/magento-primer:latest
-  services:
-    - name: mysql:5.7
-      alias: mysql
+  image: ubuntu:18.04
   script:
-    # NOTE#1 ↓↓↓ 
-    #   We don't need to do next 6 commands if we will have the right base image.
-    # With GitLab logic and the code from repo Magento2 is automatically fetched and included into `build_test_base` stage,
-    # but because we have outdated base image with the application code inside it underthe path /var/www/html/magento2/, I
-    # decided to use old aproach of application building. So it is a kind of optimization and should be discussed.
-    - cd ${PATH_TO_MAGENTO2}
-    - su - magento -c "git config --global user.name 'Git User'"
-    - su - magento -c "git config --global user.email 'user@example.com'"
-    - su - magento -c "cd ${PATH_TO_MAGENTO2}; git fetch --all"
-    - su - magento -c "cd ${PATH_TO_MAGENTO2}; git reset --hard origin/${CI_COMMIT_BRANCH}"
-    - su - magento -c "cd ${PATH_TO_MAGENTO2}; git pull"
-    - su - magento -c "cd ${PATH_TO_MAGENTO2}; git checkout origin .htaccess"
-    # NOTE#1 ↑↑↑
-    - composer config repositories.amasty composer https://composer.amasty.com/enterprise/
-    - echo "{\"http-basic\":{\"repo.magento.com\":{\"username\":\"${TEST_MAGENTO_USER}\",\"password\":\"${TEST_MAGENTO_PASSWORD}\"},\"composer.amasty.com\":{\"username\":\"${TEST_AMASTY_USER}\",\"password\":\"${TEST_AMASTY_PASSWORD}\"}}}" > auth.json 
-    - composer install --prefer-dist
-    - php bin/magento setup:install --no-interaction --base-url="$LOCAL_URL" --admin-email="$ADMIN_EMAIL" 
-      --admin-firstname="$ADMIN_FIRST" --admin-lastname="$ADMIN_LAST" --admin-user="$ADMIN_USERNAME" 
-      --admin-password="$ADMIN_PASSWORD" --language="en_US" --backend-frontname="admin" 
-      --base-url="$LOCAL_URL" --db-host="mysql" --db-name="$MYSQL_DATABASE" --db-user="$MYSQL_USER" 
-      --db-password="$MYSQL_PASSWORD" --currency="USD" --timezone="America/New_York" --use-rewrites="1" 
-      --use-secure="1"
-    - bin/magento setup:upgrade
-    - bin/magento setup:di:compile
-    - rm ./vendor/snowdog/frontools/yarn.lock
-    - cd ./tools
-    - npm install
-    - npm rebuild node-sass
-    - gulp clean -f /var/www/html/magento2/tools/gulpfile.esm.js
-    - gulp styles --prod -f /var/www/html/magento2/tools/gulpfile.esm.js
-    - cd ..
-    - mysql -h mysql -u root -p${MYSQL_ROOT_PASSWORD} -e "SHOW DATABASES;"
-    - mysql -h mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} -e "SHOW TABLES;"
-    - mysql -h mysql -u root -p${MYSQL_ROOT_PASSWORD} ${MYSQL_DATABASE} -e "SELECT * FROM store;"
-    - bin/magento setup:static-content:deploy -f
-    - bin/magento -v index:reindex
-    - bin/magento -v cache:flush
+    - ls -ltra /root
+  only:
+    - ally_poc
+
+test_image2:
+  stage: build_test_base
+  tags:
+    - docker
+  image: ubuntu:18.04
+  script:
+    - ls -ltra /
   only:
     - ally_poc
