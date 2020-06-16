@@ -91,8 +91,15 @@ test_image1:
   image: ubuntu:18.04
   script:
     - ls -ltra /root
+    - touch /root/1.txt
+    - ls -ltr /root/
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
+    paths:
+    - /root
   only:
     - ally_poc
+
 
 test_image2:
   stage: build_test_base
@@ -101,5 +108,8 @@ test_image2:
   image: ubuntu:18.04
   script:
     - ls -ltra /
+    - ls -ltra 
+  cache:
+    key: ${CI_COMMIT_REF_SLUG}
   only:
     - ally_poc
