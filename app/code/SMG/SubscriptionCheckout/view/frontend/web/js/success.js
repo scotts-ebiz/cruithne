@@ -8,7 +8,7 @@ define(
                 initialize(config) {
                     var self = this;
 
-                    self.subscriptionID = ko.observable(window.sessionStorage.getItem('subscription_id'));
+                    self.subscriptionID = ko.observable(config.order_id);
 
                     // Clear out the subscription ID, we only needed it for this page.
                     window.sessionStorage.removeItem('subscription_id');
