@@ -13,7 +13,8 @@
                     "success": {
                         "component": "SMG_SubscriptionCheckout/js/success",
                         "customerEmail": "<?=$this->_customerSession->getCustomerData()->getEmail()?>",
-                        "storeName": "<?=$this->_storeManager->getStore()->getName()?>"
+                        "storeName": "<?=$this->_storeManager->getStore()->getName()?>",
+                        "order_id": "<?php /* @escapeNotVerified */ echo $block->getOrderId(); ?>"
                     }
                 }
             }
