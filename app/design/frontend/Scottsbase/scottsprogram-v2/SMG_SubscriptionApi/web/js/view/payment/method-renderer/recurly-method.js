@@ -541,6 +541,9 @@ define(
                 $('input[data-recurly="first_name"]').val(address.firstname);
                 $('input[data-recurly="last_name"]').val(address.lastname);
                 $('input[data-recurly="address1"]').val(address.street[0]);
+                if(typeof address.street[1] !== 'undefined') {
+                   $('input[data-recurly="address2"]').val(address.street[1]);
+                }
                 $('input[data-recurly="city"]').val(address.city);
                 $('input[data-recurly="state"]').val(stateName);
                 $('input[data-recurly="country"]').val(countryName);

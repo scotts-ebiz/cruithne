@@ -3,14 +3,24 @@
  * See LICENSE.txt for license details.
  */
 define([
-        'jquery'
-    ],
-    function ($) {
+    'jquery',
+    'Magento_Ui/js/modal/alert'
+],
+    function ($, alert) {
         'use strict';
 
         const MANUAL_DEFAULT_FORMAT_SIZE = 198;
 
-        $(document).on('click', '#p_method_vantiv_keypadpayment', function() {
+        $(document).on('click', '#p_method_vantiv_keypadpayment', function () {
+            // KeyPad alert
+            alert({
+                title: $.mage.__('Warning!'),
+                content: $.mage.__('Please do not leave this page until you have completed your keypad entry and submitted your order.'),
+                actions: {
+                    always: function () { }
+                }
+            });
+
             // initialize the error to not display
             $('#keypad-error').css('display', 'none');
 
@@ -49,23 +59,19 @@ define([
                 // if this is the start of original or enhanced format then
                 // we should see 02 as the first two values
                 // if (keyPressCount == 2)
-                if (keyPadInput.length === 2)
-                {
+                if (keyPadInput.length === 2) {
                     // get the first two from the string
                     var firsttwo = keyPadInput.toString().replace(/,/g, '');
-                    if (firsttwo === '02')
-                    {
+                    if (firsttwo === '02') {
                         keyPadOutputType = 1;
                         $('#payment-vantiv-keypadpayment-ecdata-type').val('default');
 
                     }
-                    else if (firsttwo === '<D')
-                    {
+                    else if (firsttwo === '<D') {
                         keyPadOutputType = 2;
                         $('#payment-vantiv-keypadpayment-ecdata-type').val('xml');
                     }
-                    else
-                    {
+                    else {
                         // stop spinner
                         jQuery('#edit_form').trigger('processStop');
 
@@ -76,13 +82,11 @@ define([
                 }
 
                 // determine if we have made it to the end
-                switch (keyPadOutputType)
-                {
+                switch (keyPadOutputType) {
                     // Default Output
                     case 1:
                         // determine if we are at the end
-                        if (keyPadInput.length === MANUAL_DEFAULT_FORMAT_SIZE)
-                        {
+                        if (keyPadInput.length === MANUAL_DEFAULT_FORMAT_SIZE) {
                             // get the keypad output as a string with no commas
                             keypadInputValue = keyPadInput.toString().replace(/,/g, '');
 
@@ -108,8 +112,7 @@ define([
                         keypadInputValue = keyPadInput.toString().replace(/,/g, '');
 
                         // determine if we are at the end
-                        if (keypadInputValue.indexOf('</DvcMsg>') > -1)
-                        {
+                        if (keypadInputValue.indexOf('</DvcMsg>') > -1) {
                             // parse the data format for displaying purposes
                             parseXmlFormat(keypadInputValue);
 
@@ -180,13 +183,11 @@ define([
             var entry = $(dvc).attr('Entry');
 
             // make sure that the user didn't swipe the card
-            if (entry === 'SWIPE')
-            {
+            if (entry === 'SWIPE') {
                 // set the error to display as we shouldn't be doing a swipe of the card
                 $('#keypad-error').css('display', 'block');
             }
-            else
-            {
+            else {
                 // find the XML tag Card
                 var card = $(data).find('Card');
 
