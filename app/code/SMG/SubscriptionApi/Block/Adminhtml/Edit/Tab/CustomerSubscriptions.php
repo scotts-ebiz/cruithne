@@ -1,4 +1,5 @@
 <?php
+
 namespace SMG\SubscriptionApi\Block\Adminhtml\Edit\Tab;
 
 use Psr\Log\LoggerInterface;
@@ -9,6 +10,9 @@ use Recurly_NotFoundError;
 use Recurly_SubscriptionList;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
+use Magento\Catalog\Model\ProductFactory;
+use Magento\Catalog\Model\ResourceModel\Product;
+
 
 class CustomerSubscriptions extends \Magento\Framework\View\Element\Template implements TabInterface
 {
@@ -52,6 +56,17 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
      */
     protected $_logger;
 
+    /**
+     * @var ProductFactory
+     */
+    protected $_productFactory;
+
+    /**
+     * @var ProductsResource
+     */
+    protected $_productResource;
+
+
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
         \Magento\Framework\Registry $registry,
@@ -60,6 +75,8 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         \Magento\Framework\UrlInterface $urlInterface,
         \Magento\Framework\Data\Form\FormKey $formKey,
         OrderFactory $orderFactory,
+        ProductFactory $productFactory,
+        Product $productResource,
         OrderResource $orderResource,
         LoggerInterface $logger,
         array $data = []
@@ -70,6 +87,8 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         $this->_urlInterface = $urlInterface;
         $this->_formKey = $formKey;
         $this->_orderFactory = $orderFactory;
+        $this->_productFactory = $productFactory;
+        $this->_productResource = $productResource;
         $this->_orderResource = $orderResource;
         $this->_logger = $logger;
         parent::__construct($context, $data);
@@ -131,8 +150,8 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         $totalAmount = false;
 
         try {
-            $activeSubscriptions = Recurly_SubscriptionList::getForAccount($this->getCustomerRecurlyAccountCode(), [ 'state' => 'active' ]);
-            $futureSubscriptions = Recurly_SubscriptionList::getForAccount($this->getCustomerRecurlyAccountCode(), [ 'state' => 'future' ]);
+            $activeSubscriptions = Recurly_SubscriptionList::getForAccount($this->getCustomerRecurlyAccountCode(), ['state' => 'active']);
+            $futureSubscriptions = Recurly_SubscriptionList::getForAccount($this->getCustomerRecurlyAccountCode(), ['state' => 'future']);
 
             foreach ($activeSubscriptions as $subscription) {
                 array_push($subscriptions, $subscription);
@@ -144,10 +163,10 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
                 $totalAmount += $subscription->unit_amount_in_cents;
             }
 
-            return [ 'success' => true, 'subscriptions' => $subscriptions, 'total_amount' => $this->convertAmountToDollars($totalAmount) ];
+            return ['success' => true, 'subscriptions' => $subscriptions, 'total_amount' => $this->convertAmountToDollars($totalAmount)];
         } catch (Recurly_NotFoundError $e) {
             $this->_logger->error($e->getMessage());
-            return [ 'success' => false, 'error_message' => $e->getMessage() ];
+            return ['success' => false, 'error_message' => $e->getMessage()];
         }
     }
 
@@ -163,7 +182,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         $this->_orderResource->load($order, $subscriptionId, 'subscription_id');
         $orderId = $order->getId();
 
-        if (! $orderId) {
+        if (!$orderId) {
             $this->_logger->error("Could not find an order for subscription with ID: {$subscriptionId}");
         }
 
@@ -188,7 +207,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
      */
     public function convertAmountToDollars($amount)
     {
-        return number_format(($amount/100), 2, '.', ' ');
+        return number_format(($amount / 100), 2, '.', ' ');
     }
 
     public function getCancelUrl()
@@ -229,7 +248,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
     public function getTabUrl()
     {
-        return $this->getUrl('customersubscriptions/*/customersubscriptions', [ '_current' => true ]);
+        return $this->getUrl('customersubscriptions/*/customersubscriptions', ['_current' => true]);
     }
 
     public function isAjaxLoaded()
