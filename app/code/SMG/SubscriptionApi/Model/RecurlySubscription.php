@@ -1036,6 +1036,7 @@ class RecurlySubscription
 
                         if ($order && $order->getId()) {
                             $this->_logger->info($this->_loggerPrefix . "Adding {$subCode['plan_code']} Recurly subscription ID {$subCode['subscription_id']} and master subscription ID {$masterSubscriptionID} to add-on order {$order->getId()} ({$order->getIncrementId()}.");
+                            $this->_coreSession->setOrderId($order->getIncrementId());
                             $order->addData([
                                 'master_subscription_id' => $masterSubscriptionID,
                                 'subscription_id' => $subCode['subscription_id'],
@@ -1060,6 +1061,7 @@ class RecurlySubscription
 
                     if ($order && $order->getId()) {
                         $this->_logger->info($this->_loggerPrefix . "Adding {$subCode['plan_code']} Recurly subscription ID {$subCode['subscription_id']} and master subscription ID {$masterSubscriptionID} to order {$order->getId()} ({$order->getIncrementId()}.");
+                        $this->_coreSession->setOrderId($order->getIncrementId());
                         $order->addData([
                             'master_subscription_id' => $masterSubscriptionID,
                             'subscription_id' => $subCode['subscription_id'],
