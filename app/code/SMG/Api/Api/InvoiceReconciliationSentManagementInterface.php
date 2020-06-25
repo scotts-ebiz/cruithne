@@ -1,13 +1,13 @@
 <?php
 
-namespace SMG\Api\Model;
+namespace SMG\Api\Api;
 
-interface InvoiceReconciliationManagementInterface
+interface InvoiceReconciliationSentManagementInterface
 {
     /**
      * This function will get the orders in a JSON format.
      *
      * @return string
      */
-    public function getOrders();
+    public function updateOrders();
 }

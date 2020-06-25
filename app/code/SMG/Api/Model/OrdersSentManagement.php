@@ -1,12 +1,12 @@
 <?php
 
-namespace SMG\Api\Model\Api;
+namespace SMG\Api\Model;
 
 use Magento\Framework\Webapi\Rest\Request;
 
 use SMG\Api\Helper\OrdersSentHelper;
 use SMG\Api\Helper\RequestHelper;
-use SMG\Api\Model\OrdersSentManagementInterface;
+use SMG\Api\Api\OrdersSentManagementInterface;
 
 class OrdersSentManagement implements OrdersSentManagementInterface
 {

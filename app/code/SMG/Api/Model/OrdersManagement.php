@@ -1,6 +1,6 @@
 <?php
 
-namespace SMG\Api\Model\Api;
+namespace SMG\Api\Model;
 
 use Magento\Framework\Webapi\Rest\Request;
 
@@ -9,7 +9,7 @@ use SMG\Api\Helper\OrdersHelper;
 use SMG\Api\Helper\OrdersLawnSubscriptionHelper;
 use SMG\Api\Helper\OrdersMainHelper;
 use SMG\Api\Helper\RequestHelper;
-use SMG\Api\Model\OrdersManagementInterface;
+use SMG\Api\Api\OrdersManagementInterface;
 
 class OrdersManagement implements OrdersManagementInterface
 {

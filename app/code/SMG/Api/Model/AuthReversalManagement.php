@@ -1,11 +1,11 @@
 <?php
 
-namespace SMG\Api\Model\Api;
+namespace SMG\Api\Model;
 
 use Magento\Framework\Webapi\Rest\Request;
 
 use SMG\Api\Helper\AuthReversalHelper;
-use SMG\Api\Model\AuthReversalManagementInterface;
+use SMG\Api\Api\AuthReversalManagementInterface;
 
 class AuthReversalManagement implements AuthReversalManagementInterface
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace SMG\Api\Model\Api;
+namespace SMG\Api\Model;
 
 use SMG\Api\Helper\ProductExportHelper;
-use SMG\Api\Model\ProductExportManagementInterface;
+use SMG\Api\Api\ProductExportManagementInterface;
 
 class ProductExportManagement implements ProductExportManagementInterface
 {

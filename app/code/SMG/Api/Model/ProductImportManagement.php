@@ -1,12 +1,12 @@
 <?php
 
-namespace SMG\Api\Model\Api;
+namespace SMG\Api\Model;
 
 use Magento\Framework\Webapi\Rest\Request;
 
 use SMG\Api\Helper\ProductImportHelper;
 use SMG\Api\Helper\RequestHelper;
-use SMG\Api\Model\ProductImportManagementInterface;
+use SMG\Api\Api\ProductImportManagementInterface;
 
 class ProductImportManagement implements ProductImportManagementInterface
 {

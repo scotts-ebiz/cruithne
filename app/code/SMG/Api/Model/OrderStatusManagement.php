@@ -1,12 +1,12 @@
 <?php
 
-namespace SMG\Api\Model\Api;
+namespace SMG\Api\Model;
 
 use Magento\Framework\Webapi\Rest\Request;
 
 use SMG\Api\Helper\OrderStatusHelper;
 use SMG\Api\Helper\RequestHelper;
-use SMG\Api\Model\OrderStatusManagementInterface;
+use SMG\Api\Api\OrderStatusManagementInterface;
 
 class OrderStatusManagement implements OrderStatusManagementInterface
 {
