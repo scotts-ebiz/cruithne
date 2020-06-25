@@ -10,6 +10,7 @@ use Recurly_NotFoundError;
 use Recurly_SubscriptionList;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 
 
 class CustomerSubscriptions extends \Magento\Framework\View\Element\Template implements TabInterface
@@ -50,9 +51,37 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     protected $_orderResource;
 
     /**
+     * @var orderRepository
+     */
+    protected $orderRepository;
+
+    /**
+     * @var searchCriteriaBuilder
+     */
+    protected $searchCriteriaBuilder;
+
+    /**
      * @var LoggerInterface
      */
     protected $_logger;
+
+    /**
+     * @var ProductRepositoryInterface
+     */
+    protected $_productRepository;
+
+    /**
+     * @var InvoiceRepositoryInterface
+     */
+    protected $_invoiceRepository;
+
+
+
+    /**
+     * @param ProductRepositoryInterface $_productRepository
+     * @param InvoiceRepositoryInterface $_invoiceRepository
+     */
+
 
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -63,6 +92,10 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         \Magento\Framework\Data\Form\FormKey $formKey,
         OrderFactory $orderFactory,
         OrderResource $orderResource,
+        \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
+        \Magento\Sales\Api\InvoiceRepositoryInterface $invoiceRepository,
+        \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
+        ProductRepositoryInterface $_productRepository,
         LoggerInterface $logger,
         array $data = []
     ) {
@@ -73,6 +106,10 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         $this->_formKey = $formKey;
         $this->_orderFactory = $orderFactory;
         $this->_orderResource = $orderResource;
+        $this->_orderRepository = $orderRepository;
+        $this->_invoiceRepository = $invoiceRepository;
+        $this->_searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->productRepository = $_productRepository;
         $this->_logger = $logger;
         parent::__construct($context, $data);
     }
@@ -166,6 +203,48 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     }
 
 
+    /**
+     * Get product name by Order_Item_Id on Invoice Item Table
+     * @param $subscriptionId
+     * @return mixed
+     */
+    public function getProductName($subscriptionId)
+    {
+        $orderId = $this->_invoiceRepository->get($subscriptionId);
+
+        $orderEntityId = $orderId->getData('entity_id');
+
+        return $orderEntityId;
+
+
+
+        // This worked to get from OrderRepositoryInterface!
+
+        // $orderId = $this->_orderRepository->get($subscriptionId);
+
+        // $orderEntityId = $orderId->getData('entity_id');
+
+        // return $orderEntityId;
+
+
+
+
+        // $searchCriteria = $this->_searchCriteriaBuilder->addFilter('subscription_id', $subscriptionId)->create();
+
+
+        // $gproduct = $this->productRepository->getById($gid, false, $storeId);
+        //         $gproduct = $gproduct->getName();
+
+        // $orders = $this->_orderRepository->getList(
+        //     $this->_searchCriteriaBuilder->addFilter('subscription_id', $subscriptionId)->create()
+        // )->getData('entity_id');
+
+        // $productName = 'asdf';
+
+        // $productName = $invoiceOrderModel->getData('name');
+
+        // return $productName;
+    }
 
     /**
      * Get order by Entity Id on Order Table
