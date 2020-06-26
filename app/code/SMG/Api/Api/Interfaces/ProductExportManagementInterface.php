@@ -1,13 +1,13 @@
 <?php
 
-namespace SMG\Api\Api;
+namespace SMG\Api\Api\Interfaces;
 
 interface ProductExportManagementInterface
 {
     /**
      * This function will return formatted product information.
      *
-     * @return SMG\Api\Model\ProductExportManagement[]
+     * @return mixed
      */
     public function processGetProductInfo();
 }

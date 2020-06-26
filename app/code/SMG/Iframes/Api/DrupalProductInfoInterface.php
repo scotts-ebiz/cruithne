@@ -7,7 +7,7 @@ interface DrupalProductInfoInterface {
      *
      * @api
      * @param string $skus comma separated sku values.
-     * @return SMG\Iframes\Model\DrupalProductInfo[]
+     * @return mixed
      */
     public function getInfo($skus);
 }

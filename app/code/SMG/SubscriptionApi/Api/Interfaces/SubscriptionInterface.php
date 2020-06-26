@@ -14,7 +14,7 @@ interface SubscriptionInterface
      * @param string $subscription_plan
      * @param mixed $data
      * @param mixed $addons
-     * @return SMG\SubscriptionApi\Api\Subscription[]
+     * @return mixed
      *
      * @api
      */
@@ -28,7 +28,7 @@ interface SubscriptionInterface
      * @param string $quiz_id
      * @param mixed $billing_address
      * @param bool $billing_same_as_shipping
-     * @return SMG\SubscriptionApi\Api\Subscription[]
+     * @return mixed
      *
      * @api
      */
@@ -37,7 +37,7 @@ interface SubscriptionInterface
     /**
      * Get Subscription Data For Data Sync.
      *
-     * @return SMG\SubscriptionApi\Api\Subscription[]
+     * @return mixed
      */
     public function getSubscriptionDataForSync();
 }

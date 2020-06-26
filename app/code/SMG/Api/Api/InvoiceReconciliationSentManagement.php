@@ -1,12 +1,12 @@
 <?php
 
-namespace SMG\Api\Model;
+namespace SMG\Api\Api;
 
 use Magento\Framework\Webapi\Rest\Request;
 
 use SMG\Api\Helper\InvoiceReconciliationSentHelper;
 use SMG\Api\Helper\RequestHelper;
-use SMG\Api\Api\InvoiceReconciliationSentManagementInterface;
+use SMG\Api\Api\Interfaces\InvoiceReconciliationSentManagementInterface;
 
 class InvoiceReconciliationSentManagement implements InvoiceReconciliationSentManagementInterface
 {

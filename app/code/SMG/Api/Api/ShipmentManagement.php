@@ -1,11 +1,11 @@
 <?php
 
-namespace SMG\Api\Model;
+namespace SMG\Api\Api;
 
 use Magento\Framework\Webapi\Rest\Request;
 
 use SMG\Api\Helper\ShipmentHelper;
-use SMG\Api\Api\ShipmentManagementInterface;
+use SMG\Api\Api\Interfaces\ShipmentManagementInterface;
 
 class ShipmentManagement implements ShipmentManagementInterface
 {

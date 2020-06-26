@@ -1,6 +1,6 @@
 <?php
 
-namespace SMG\Api\Api;
+namespace SMG\Api\Api\Interfaces;
 
 interface OrdersManagementInterface
 {
@@ -37,14 +37,14 @@ interface OrdersManagementInterface
     /**
      * This function will get the orders in a JSON format for order audit.
      *
-     * @return SMG\Api\Model\OrdersManagement[]
+     * @return mixed
      */
     public function getOrdersForAudit();
 
     /**
      * This function will get the sap batch in a JSON format for order audit.
      *
-     * @return SMG\Api\Model\OrdersManagement[]
+     * @return mixed
      */
     public function getSapBatchForAudit();
 }

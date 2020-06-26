@@ -1,8 +1,8 @@
 <?php
 
-namespace SMG\Api\Api;
+namespace SMG\Api\Api\Interfaces;
 
-interface InvoiceReconciliationSentManagementInterface
+interface ConsumerDataSentManagementInterface
 {
     /**
      * This function will get the orders in a JSON format.

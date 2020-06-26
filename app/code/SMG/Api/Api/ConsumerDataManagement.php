@@ -1,11 +1,11 @@
 <?php
 
-namespace SMG\Api\Model;
+namespace SMG\Api\Api;
 
 use Magento\Framework\Webapi\Rest\Request;
 
 use SMG\Api\Helper\ConsumerDataHelper;
-use SMG\Api\Api\ConsumerDataManagementInterface;
+use SMG\Api\Api\Interfaces\ConsumerDataManagementInterface;
 
 class ConsumerDataManagement implements ConsumerDataManagementInterface
 {

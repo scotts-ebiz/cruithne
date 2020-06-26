@@ -1,18 +1,18 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <preference for="SMG\Api\Api\AuthReversalManagementInterface" type="SMG\Api\Model\AuthReversalManagement" />
-    <preference for="SMG\Api\Api\BatchCaptureManagementInterface" type="SMG\Api\Model\BatchCaptureManagement" />
-    <preference for="SMG\Api\Api\ConsumerDataManagementInterface" type="SMG\Api\Model\ConsumerDataManagement" />
-    <preference for="SMG\Api\Api\ConsumerDataSentManagementInterface" type="SMG\Api\Model\ConsumerDataSentManagement" />
-    <preference for="SMG\Api\Api\InvoiceReconciliationManagementInterface" type="SMG\Api\Model\InvoiceReconciliationManagement" />
-    <preference for="SMG\Api\Api\InvoiceReconciliationSentManagementInterface" type="SMG\Api\Model\InvoiceReconciliationSentManagement" />
-    <preference for="SMG\Api\Api\ManualShipmentManagementInterface" type="SMG\Api\Model\ManualShipmentManagement" />
-    <preference for="SMG\Api\Api\OrdersManagementInterface" type="SMG\Api\Model\OrdersManagement" />
-    <preference for="SMG\Api\Api\OrdersSentManagementInterface" type="SMG\Api\Model\OrdersSentManagement" />
-    <preference for="SMG\Api\Api\OrderStatusManagementInterface" type="SMG\Api\Model\OrderStatusManagement" />
-    <preference for="SMG\Api\Api\ProductImportManagementInterface" type="SMG\Api\Model\ProductImportManagement" />
-    <preference for="SMG\Api\Api\ShipmentManagementInterface" type="SMG\Api\Model\ShipmentManagement" />
-    <preference for="SMG\Api\Api\ProductExportManagementInterface" type="SMG\Api\Model\ProductExportManagement" />
-    <preference for="SMG\Api\Api\OrderInfoManagementInterface" type="SMG\Api\Model\OrderInfoManagement" />
+    <preference for="SMG\Api\Api\Interfaces\AuthReversalManagementInterface" type="SMG\Api\Api\AuthReversalManagement" />
+    <preference for="SMG\Api\Api\Interfaces\BatchCaptureManagementInterface" type="SMG\Api\Api\BatchCaptureManagement" />
+    <preference for="SMG\Api\Api\Interfaces\ConsumerDataManagementInterface" type="SMG\Api\Api\ConsumerDataManagement" />
+    <preference for="SMG\Api\Api\Interfaces\ConsumerDataSentManagementInterface" type="SMG\Api\Api\ConsumerDataSentManagement" />
+    <preference for="SMG\Api\Api\Interfaces\InvoiceReconciliationManagementInterface" type="SMG\Api\Api\InvoiceReconciliationManagement" />
+    <preference for="SMG\Api\Api\Interfaces\InvoiceReconciliationSentManagementInterface" type="SMG\Api\Api\InvoiceReconciliationSentManagement" />
+    <preference for="SMG\Api\Api\Interfaces\ManualShipmentManagementInterface" type="SMG\Api\Api\ManualShipmentManagement" />
+    <preference for="SMG\Api\Api\Interfaces\OrdersManagementInterface" type="SMG\Api\Api\OrdersManagement" />
+    <preference for="SMG\Api\Api\Interfaces\OrdersSentManagementInterface" type="SMG\Api\Api\OrdersSentManagement" />
+    <preference for="SMG\Api\Api\Interfaces\OrderStatusManagementInterface" type="SMG\Api\Api\OrderStatusManagement" />
+    <preference for="SMG\Api\Api\Interfaces\ProductImportManagementInterface" type="SMG\Api\Api\ProductImportManagement" />
+    <preference for="SMG\Api\Api\Interfaces\ShipmentManagementInterface" type="SMG\Api\Api\ShipmentManagement" />
+    <preference for="SMG\Api\Api\Interfaces\ProductExportManagementInterface" type="SMG\Api\Api\ProductExportManagement" />
+    <preference for="SMG\Api\Api\Interfaces\OrderInfoManagementInterface" type="SMG\Api\Api\OrderInfoManagement" />
 </config>

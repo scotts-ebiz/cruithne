@@ -2,115 +2,115 @@
 <routes xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
   xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Webapi:etc/webapi.xsd">
     <route url="/V1/smg/authReversal" method="POST">
-        <service class="SMG\Api\Api\AuthReversalManagementInterface" method="processAuthReversal" />
+        <service class="SMG\Api\Api\Interfaces\AuthReversalManagementInterface" method="processAuthReversal" />
         <resources>
             <resource ref="self" />
         </resources>
     </route>
     <route url="/V1/smg/batchCapture" method="POST">
-        <service class="SMG\Api\Api\BatchCaptureManagementInterface" method="processBatchCapture" />
+        <service class="SMG\Api\Api\Interfaces\BatchCaptureManagementInterface" method="processBatchCapture" />
         <resources>
             <resource ref="self" />
         </resources>
     </route>
     <route url="/V1/smg/consumerData" method="POST">
-        <service class="SMG\Api\Api\ConsumerDataManagementInterface" method="getConsumerData" />
+        <service class="SMG\Api\Api\Interfaces\ConsumerDataManagementInterface" method="getConsumerData" />
         <resources>
             <resource ref="self" />
         </resources>
     </route>
     <route url="/V1/smg/consumerDataSent" method="POST">
-        <service class="SMG\Api\Api\ConsumerDataSentManagementInterface" method="updateOrders" />
+        <service class="SMG\Api\Api\Interfaces\ConsumerDataSentManagementInterface" method="updateOrders" />
         <resources>
             <resource ref="self" />
         </resources>
     </route>
     <route url="/V1/smg/invoiceReconciliation" method="POST">
-        <service class="SMG\Api\Api\InvoiceReconciliationManagementInterface" method="getOrders" />
+        <service class="SMG\Api\Api\Interfaces\InvoiceReconciliationManagementInterface" method="getOrders" />
         <resources>
             <resource ref="self" />
         </resources>
     </route>
     <route url="/V1/smg/invoiceReconciliationSent" method="POST">
-        <service class="SMG\Api\Api\InvoiceReconciliationSentManagementInterface" method="updateOrders" />
+        <service class="SMG\Api\Api\Interfaces\InvoiceReconciliationSentManagementInterface" method="updateOrders" />
         <resources>
             <resource ref="self" />
         </resources>
     </route>
     <route url="/V1/smg/orders" method="POST">
-        <service class="SMG\Api\Api\OrdersManagementInterface" method="getOrders" />
+        <service class="SMG\Api\Api\Interfaces\OrdersManagementInterface" method="getOrders" />
         <resources>
             <resource ref="self" />
         </resources>
     </route>
     <route url="/V1/smg/ordersCreditMemo" method="POST">
-        <service class="SMG\Api\Api\OrdersManagementInterface" method="getCreditMemoOrders" />
+        <service class="SMG\Api\Api\Interfaces\OrdersManagementInterface" method="getCreditMemoOrders" />
         <resources>
             <resource ref="self" />
         </resources>
     </route>
     <route url="/V1/smg/ordersLawnSubscription" method="POST">
-        <service class="SMG\Api\Api\OrdersManagementInterface" method="getLawnSubscriptionOrders" />
+        <service class="SMG\Api\Api\Interfaces\OrdersManagementInterface" method="getLawnSubscriptionOrders" />
         <resources>
             <resource ref="self" />
         </resources>
     </route>
     <route url="/V1/smg/ordersMain" method="POST">
-        <service class="SMG\Api\Api\OrdersManagementInterface" method="getMainOrders" />
+        <service class="SMG\Api\Api\Interfaces\OrdersManagementInterface" method="getMainOrders" />
         <resources>
             <resource ref="self" />
         </resources>
     </route>
     <route url="/V1/smg/ordersSent" method="POST">
-        <service class="SMG\Api\Api\OrdersSentManagementInterface" method="updateOrders" />
+        <service class="SMG\Api\Api\Interfaces\OrdersSentManagementInterface" method="updateOrders" />
         <resources>
             <resource ref="self" />
         </resources>
     </route>
     <route url="/V1/smg/orderStatus" method="POST">
-        <service class="SMG\Api\Api\OrderStatusManagementInterface" method="setOrderStatus" />
+        <service class="SMG\Api\Api\Interfaces\OrderStatusManagementInterface" method="setOrderStatus" />
         <resources>
             <resource ref="self" />
         </resources>
     </route>
     <route url="/V1/smg/productImport" method="POST">
-        <service class="SMG\Api\Api\ProductImportManagementInterface" method="processProductImport" />
+        <service class="SMG\Api\Api\Interfaces\ProductImportManagementInterface" method="processProductImport" />
         <resources>
             <resource ref="self" />
         </resources>
     </route>
     <route url="/V1/smg/manualShipment" method="POST">
-        <service class="SMG\Api\Api\ManualShipmentManagementInterface" method="processShipment" />
+        <service class="SMG\Api\Api\Interfaces\ManualShipmentManagementInterface" method="processShipment" />
         <resources>
             <resource ref="self" />
         </resources>
     </route>
     <route url="/V1/smg/shipment" method="POST">
-        <service class="SMG\Api\Api\ShipmentManagementInterface" method="processShipment" />
+        <service class="SMG\Api\Api\Interfaces\ShipmentManagementInterface" method="processShipment" />
         <resources>
             <resource ref="self" />
         </resources>
     </route>
     <route url="/V1/smg/getProductInfo" method="GET">
-        <service class="SMG\Api\Api\ProductExportManagementInterface" method="processGetProductInfo" />
+        <service class="SMG\Api\Api\Interfaces\ProductExportManagementInterface" method="processGetProductInfo" />
         <resources>
             <resource ref="self" />
         </resources>
     </route>
     <route url="/V1/smg/orderaudit/orders" method="GET">
-        <service class="SMG\Api\Api\OrdersManagementInterface" method="getOrdersForAudit" />
+        <service class="SMG\Api\Api\Interfaces\OrdersManagementInterface" method="getOrdersForAudit" />
         <resources>
             <resource ref="self" />
         </resources>
     </route>
     <route url="/V1/smg/orderaudit/sapbatch" method="GET">
-        <service class="SMG\Api\Api\OrdersManagementInterface" method="getSapBatchForAudit" />
+        <service class="SMG\Api\Api\Interfaces\OrdersManagementInterface" method="getSapBatchForAudit" />
         <resources>
             <resource ref="self" />
         </resources>
     </route>
     <route url="/V1/smg/orderInfo" method="POST">
-        <service class="SMG\Api\Api\OrderInfoManagementInterface" method="getOrderInfo" />
+        <service class="SMG\Api\Api\Interfaces\OrderInfoManagementInterface" method="getOrderInfo" />
         <resources>
             <resource ref="self" />
         </resources>

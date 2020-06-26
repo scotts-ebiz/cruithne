@@ -9,7 +9,7 @@ interface RecurlyInterface
     /**
      * Check existing Recurly subscriptions
      *
-     * @return SMG\SubscriptionApi\Api\RecurlySubscription[]
+     * @return mixed
      *
      * @api
      */
@@ -19,7 +19,7 @@ interface RecurlyInterface
      * Cancel Recurly subscriptions
      *
      * @param string $cancelReason
-     * @return SMG\SubscriptionApi\Api\RecurlySubscription[]
+     * @return mixed
      *
      * @api
      */
@@ -28,7 +28,7 @@ interface RecurlyInterface
     /**
      * Process seasonal invoices sent from Recurly
      *
-     * @return SMG\SubscriptionApi\Api\RecurlySubscription[]
+     * @return mixed
      *
      * @api
      */

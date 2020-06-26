@@ -1,6 +1,6 @@
 <?php
 
-namespace SMG\Api\Api;
+namespace SMG\Api\Api\Interfaces;
 
 interface BatchCaptureManagementInterface
 {
