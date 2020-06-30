@@ -1,9 +1,9 @@
 <?php
 
-namespace SMG\Api\Model\Api;
+namespace SMG\Api\Api;
 
 use SMG\Api\Helper\InvoiceReconciliationHelper;
-use SMG\Api\Model\InvoiceReconciliationManagementInterface;
+use SMG\Api\Api\Interfaces\InvoiceReconciliationManagementInterface;
 
 class InvoiceReconciliationManagement implements InvoiceReconciliationManagementInterface
 {

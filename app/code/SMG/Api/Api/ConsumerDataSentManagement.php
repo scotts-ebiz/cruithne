@@ -1,12 +1,12 @@
 <?php
 
-namespace SMG\Api\Model\Api;
+namespace SMG\Api\Api;
 
 use Magento\Framework\Webapi\Rest\Request;
 
 use SMG\Api\Helper\ConsumerDataSentHelper;
 use SMG\Api\Helper\RequestHelper;
-use SMG\Api\Model\ConsumerDataSentManagementInterface;
+use SMG\Api\Api\Interfaces\ConsumerDataSentManagementInterface;
 
 class ConsumerDataSentManagement implements ConsumerDataSentManagementInterface
 {

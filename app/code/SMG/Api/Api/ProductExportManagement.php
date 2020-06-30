@@ -1,9 +1,9 @@
 <?php
 
-namespace SMG\Api\Model\Api;
+namespace SMG\Api\Api;
 
 use SMG\Api\Helper\ProductExportHelper;
-use SMG\Api\Model\ProductExportManagementInterface;
+use SMG\Api\Api\Interfaces\ProductExportManagementInterface;
 
 class ProductExportManagement implements ProductExportManagementInterface
 {
@@ -26,7 +26,7 @@ class ProductExportManagement implements ProductExportManagementInterface
     /**
      * This function will return formatted product information.
      *
-     * @return array
+     * @return mixed
      */
     public function processGetProductInfo()
     {
