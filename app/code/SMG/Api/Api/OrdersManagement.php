@@ -101,11 +101,18 @@ class OrdersManagement implements OrdersManagementInterface
     /**
      * Get the List of Desired Orders
      *
-     * @return string
+     * @param int $limit
+     * @param int $website
+     * @return mixed
+     * @throws Exception
+     * @api
      */
-    public function getMainOrders()
+    public function getMainOrders($limit,$website)
     {
-        return $this->_ordersMainHelper->getOrders($this->_requestHelper->getRequest($this->_request->getRequestData()));
+        $orderLimit[0]['orderLimit'] = $limit;
+        $orderLimit[0]['website'] = $website;
+
+        return $this->_ordersMainHelper->getOrders($orderLimit);
     }
 
     /**
