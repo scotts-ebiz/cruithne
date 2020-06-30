@@ -10,9 +10,11 @@ use Recurly_NotFoundError;
 use Recurly_SubscriptionList;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
+use Magento\Sales\Model\InvoiceOrderFactory;
+use Magento\Sales\Model\ResourceModel\Order\Invoice as InvoiceItemResource;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Framework\Api\FilterBuilder;
-use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
+// use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
 
 
 class CustomerSubscriptions extends \Magento\Framework\View\Element\Template implements TabInterface
@@ -96,9 +98,21 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
 
     /**
-     * @var CollectionFactory
+     * @var orderCollectionFactory
      */
     protected $_orderCollectionFactory;
+
+
+    /**
+     * @var InvoiceOrderFactory
+     */
+    protected $_invoiceOrderFactory;
+
+
+    /**
+     * @var InvoiceItemResource
+     */
+    protected $_invoiceItemResource;
 
 
 
@@ -106,7 +120,10 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     /**
      * @param ProductRepositoryInterface $_productRepository
      * @param InvoiceRepositoryInterface $_invoiceRepository
-     * @param CollectionFactory $orderCollectionFactory
+     * @param $invoiceItemRepository
+     * @param $orderCollectionFactory
+     * @param InvoiceOrderFactory $invoiceOrderFactory
+     * @param InvoiceItemResource $invoiceItemResource
      * @param FilterBuilder $filterBuilder
      */
 
@@ -125,7 +142,9 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         FilterBuilder $filterBuilder,
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         ProductRepositoryInterface $_productRepository,
-        CollectionFactory $orderCollectionFactory,
+        \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
+        InvoiceOrderFactory $invoiceOrderFactory,
+        InvoiceItemResource $invoiceItemResource,
         LoggerInterface $logger,
         array $data = []
     ) {
@@ -136,12 +155,14 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         $this->_formKey = $formKey;
         $this->_orderFactory = $orderFactory;
         $this->_orderResource = $orderResource;
+        $this->_invoiceItemResource = $invoiceItemResource;
         $this->_orderRepository = $orderRepository;
         $this->_invoiceItemRepository = $invoiceItemRepository;
         $this->_filterBuilder = $filterBuilder;
         $this->_searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->productRepository = $_productRepository;
         $this->_orderCollectionFactory = $orderCollectionFactory;
+        $this->_invoiceOrderFactory = $invoiceOrderFactory;
         $this->_logger = $logger;
         parent::__construct($context, $data);
     }
@@ -233,6 +254,66 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
             return ['success' => false, 'error_message' => $e->getMessage()];
         }
     }
+
+
+
+    /**
+     * TEST - Get Entity Id from Invoice Table
+     *
+     * @return mixed
+     */
+    public function getInvoiceEntityId()
+    {
+
+        $entityId = 7012;
+
+        $invoiceOrders = $this->_invoiceItemRepository->getList(
+            $this->_searchCriteriaBuilder
+                ->addFilter('entity_id', $entityId, 'eq')
+                ->create()
+        );
+
+
+        foreach ($invoiceOrders as $invoiceOrder) {
+            return $invoiceOrder->getData('name');
+        }
+
+        return false;
+
+
+
+        // THIS WORKS!!!
+        // $subscriptionId = 7012;
+        // $orderId = $this->_invoiceItemRepository->get($subscriptionId);
+        // $orderEntityId = $orderId->getData('entity_id');
+        // return $orderEntityId;
+
+
+        // FAILED!!!
+        // $invoiceOrderModelFactory = $this->_invoiceOrderFactory->create();
+        // $this->_invoiceItemResource->load($invoiceOrderModelFactory, $orderItemId, 'order_item_id');
+        // $invoiceEntityId = $invoiceOrderModelFactory->getData('entity_id');
+
+        // return $invoiceEntityId;
+    }
+
+
+
+    /**
+     * Get order by Entity Id on Order Table
+     *
+     * @param $subscriptionId
+     * @return mixed
+     */
+    public function getOrderEntityId($subscriptionId)
+    {
+        $orderModel = $this->_orderFactory->create();
+        $this->_orderResource->load($orderModel, $subscriptionId, 'subscription_id');
+        $orderEntityId = $orderModel->getData('entity_id');
+
+        return $orderEntityId;
+    }
+
 
 
     /**
@@ -398,22 +479,6 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
 
 
-    }
-
-
-    /**
-     * Get order by Entity Id on Order Table
-     *
-     * @param $subscriptionId
-     * @return mixed
-     */
-    public function getOrderEntityId($subscriptionId)
-    {
-        $orderModel = $this->_orderFactory->create();
-        $this->_orderResource->load($orderModel, $subscriptionId, 'subscription_id');
-        $orderEntityId = $orderModel->getData('entity_id');
-
-        return $orderEntityId;
     }
 
 

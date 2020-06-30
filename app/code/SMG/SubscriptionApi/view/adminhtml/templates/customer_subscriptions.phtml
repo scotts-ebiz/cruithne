@@ -24,6 +24,7 @@
 						<th class="data-grid-th no-link">Amount</th>
 						<th class="data-grid-th no-link">Order Entity Id</th>
 						<th class="data-grid-th no-link">Product Name</th>
+						<th class="data-grid-th no-link">Invoice Entity Id</th>
 					</tr>
 				</thead>
 				<tbody>
@@ -47,6 +48,7 @@
 							<td>$<?php echo $block->convertAmountToDollars($subscription->unit_amount_in_cents); ?></td>
 							<td><?php echo $block->getOrderEntityId($subscription->uuid); ?> </td>
 							<td><?php echo $block->getProductName($subscription->uuid); ?></td>
+							<td><?php echo $block->getInvoiceEntityId(); ?>asdf</td>
 						</tr>
 					<?php } ?>
 				</tbody>
