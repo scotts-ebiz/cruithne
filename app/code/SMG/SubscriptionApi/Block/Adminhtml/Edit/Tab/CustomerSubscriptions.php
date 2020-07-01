@@ -10,11 +10,6 @@ use Recurly_NotFoundError;
 use Recurly_SubscriptionList;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
-use Magento\Sales\Model\InvoiceOrderFactory;
-use Magento\Sales\Model\ResourceModel\Order\Invoice as InvoiceItemResource;
-use Magento\Catalog\Api\ProductRepositoryInterface;
-use Magento\Framework\Api\FilterBuilder;
-// use Magento\Sales\Model\ResourceModel\Order\CollectionFactory;
 
 
 class CustomerSubscriptions extends \Magento\Framework\View\Element\Template implements TabInterface
@@ -62,12 +57,6 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
 
     /**
-     * @var orderRepository
-     */
-    protected $orderRepository;
-
-
-    /**
      * @var searchCriteriaBuilder
      */
     protected $_searchCriteriaBuilder;
@@ -80,21 +69,9 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
 
     /**
-     * @var ProductRepositoryInterface
-     */
-    protected $_productRepository;
-
-
-    /**
      * @var InvoiceRepositoryInterface
      */
     protected $_invoiceItemRepository;
-
-
-    /**
-     * @var FilterBuilder
-     */
-    protected $_filterBuilder;
 
 
     /**
@@ -103,28 +80,12 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     protected $_orderCollectionFactory;
 
 
-    /**
-     * @var InvoiceOrderFactory
-     */
-    protected $_invoiceOrderFactory;
 
 
     /**
-     * @var InvoiceItemResource
-     */
-    protected $_invoiceItemResource;
-
-
-
-
-    /**
-     * @param ProductRepositoryInterface $_productRepository
      * @param InvoiceRepositoryInterface $_invoiceRepository
      * @param $invoiceItemRepository
      * @param $orderCollectionFactory
-     * @param InvoiceOrderFactory $invoiceOrderFactory
-     * @param InvoiceItemResource $invoiceItemResource
-     * @param FilterBuilder $filterBuilder
      */
 
 
@@ -137,14 +98,9 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         \Magento\Framework\Data\Form\FormKey $formKey,
         OrderFactory $orderFactory,
         OrderResource $orderResource,
-        \Magento\Sales\Api\OrderRepositoryInterface $orderRepository,
         \Magento\Sales\Api\InvoiceItemRepositoryInterface $invoiceItemRepository,
-        FilterBuilder $filterBuilder,
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
-        ProductRepositoryInterface $_productRepository,
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
-        InvoiceOrderFactory $invoiceOrderFactory,
-        InvoiceItemResource $invoiceItemResource,
         LoggerInterface $logger,
         array $data = []
     ) {
@@ -155,29 +111,13 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         $this->_formKey = $formKey;
         $this->_orderFactory = $orderFactory;
         $this->_orderResource = $orderResource;
-        $this->_invoiceItemResource = $invoiceItemResource;
-        $this->_orderRepository = $orderRepository;
         $this->_invoiceItemRepository = $invoiceItemRepository;
-        $this->_filterBuilder = $filterBuilder;
         $this->_searchCriteriaBuilder = $searchCriteriaBuilder;
-        $this->productRepository = $_productRepository;
         $this->_orderCollectionFactory = $orderCollectionFactory;
-        $this->_invoiceOrderFactory = $invoiceOrderFactory;
         $this->_logger = $logger;
         parent::__construct($context, $data);
     }
 
-    /**
-     * Return form key
-     *
-     * @return bool
-     */
-    public function getSubscriptionOrderEntityIdTest()
-    {
-        $testing = 'This is asdf';
-
-        return $testing;
-    }
 
     /**
      * Return form key
@@ -295,7 +235,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
 
     /**
-     * Get Invoice Order Product Qty
+     * Get Product Qty from Subscription ID
      *
      * @param $subscription_uuid
      * @return mixed
@@ -332,7 +272,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
 
     /**
-     * Get Product SKU
+     * Get Product SKU from Subscription ID
      *
      * @param $subscription_uuid
      * @return mixed
@@ -369,218 +309,6 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
 
     /**
-     * TEST - Get Entity Id from Invoice Table
-     *
-     * @return mixed
-     */
-    public function getInvoiceEntityId()
-    {
-
-        $entityId = 7012;
-
-        $subscription_order_id = 10603;
-
-        // Select invoice order data set from Order_Item_Id
-        $invoiceOrders = $this->_invoiceItemRepository->getList(
-            $this->_searchCriteriaBuilder
-                ->addFilter('order_item_id', $subscription_order_id, 'eq')
-                ->create()
-        );
-
-
-        foreach ($invoiceOrders as $invoiceOrder) {
-            return $invoiceOrder->getData('name');
-        }
-
-        return false;
-    }
-
-
-
-    /**
-     * Get order by Entity Id on Order Table - WORKS
-     *
-     * @param $subscriptionId
-     * @return mixed
-     */
-    public function getOrderEntityId($subscriptionId)
-    {
-        $orderModel = $this->_orderFactory->create();
-        $this->_orderResource->load($orderModel, $subscriptionId, 'subscription_id');
-        $orderEntityId = $orderModel->getData('entity_id');
-
-        return $orderEntityId;
-    }
-
-
-    //WORKS - To get the Entity Id from the Order Collection Factory!
-    /**
-     * Get product name by Order_Item_Id on Invoice Item Table
-     * @param $subscription_uuid
-     * @return string
-     */
-    public function getEntityIdTest($subscription_uuid)
-    {
-        $subscriptionId = $subscription_uuid;
-
-        $collection = $this->_orderCollectionFactory->create()
-            ->addAttributeToSelect('*')
-            ->addFieldToFilter('subscription_id', $subscriptionId);
-
-        foreach ($collection as $order) {
-            return $order->getData('entity_id');
-        }
-
-        return false;
-
-
-
-        // return $subscriptionId;
-
-        // foreach ($collection as $order) {
-        //     return $order->getData('entity_id');
-        // }
-
-        // return false;
-
-        // if (!empty($collection)) {
-        //     return true;
-        // } else {
-        //     echo 'This is empty!';
-        // }
-
-
-
-        // echo $collection->getSelect()->__toString();
-        // return $collection;
-
-
-
-
-        // Test - Does the collection run then with exporting a different var? = PASSED
-
-
-
-        //Test - If is_array() works on a simple array  = PASSED
-        // $testArray = array(
-        //     "foo" => "bar",
-        //     "bar" => "foo",
-        // );
-        // echo is_array($testArray);
-
-
-
-        // Test - Does the collection run then with exporting a different var? = PASSED
-        // $customer_id = 3505;
-
-        // $store_id = 1;
-
-        // $collection = $this->_orderCollectionFactory->create()->addFieldToFilter(
-        //     'customer_id',
-        //     $customer_id
-        // )->addFieldToFilter(
-        //     'store_id',
-        //     $store_id
-        // )->setOrder(
-        //     'created_at',
-        //     'desc'
-        // )->setPageSize(
-        //     1
-        // )->load();
-
-        // return $customer_id;
-
-
-
-        // Test - Simple test to display an int = PASSED
-        // $testVar = $entityId;
-        // return $testVar;
-
-
-
-        // Test - Simple CollectionFactory from EntityId passed in = FAILED
-        // $orderCollection = $this->_orderCollectionFactory()->create()
-        //     ->addAttributeToSelect('entity_id')
-        //     ->addFieldToFilter('entity_id', $entityId)
-        //     ->load();
-        // foreach ($orderCollection as $order) {
-        //     return $order;
-        // }
-        // return false;
-
-
-        //Test - Export Array - Worked
-        // $testArray = array(
-        //     "foo" => "bar",
-        //     "bar" => "foo",
-        // );
-
-        // foreach ($testArray as $testArrayValues) {
-        //     return $testArrayValues;
-        // }
-
-
-
-        //Testing using Order Collection and Attribute Filter - FAILED
-        // $orderCollection = $this->_orderCollectionFactory->create();
-
-        // $orderCollectionResults = $orderCollection->addAttributeToSelect('entity_id')->addFieldToFilter('entity_id', '7012');
-
-        // return $orderCollectionResults;
-
-        // foreach ($orderCollectionResults as $orderCollectionResultsValues) {
-        //     return $orderCollectionResultsValues;
-        // }
-
-
-
-        // This worked to get "entity_id" using get() from OrderRepositoryInterface!
-        // $orderId = $this->_invoiceItemRepository->get($subscriptionId);
-
-        // $orderEntityId = $orderId->getData('entity_id');
-
-        // return $orderEntityId;
-
-
-
-
-
-
-
-
-
-
-        // return $productSearch;
-
-        // if (!empty($productSearch)) {
-        //     return true;
-        // } else {
-        //     return false;
-        // }
-
-
-
-        // Get value of qty column
-        // $productQty = $productSearch->getData('qty');
-
-        // return $productQty;
-
-
-
-        // $orderId = $this->_invoiceItemRepository->get($subscriptionId);
-
-        // $orderEntityId = $orderId->getData('name');
-
-
-
-
-
-
-
-    }
-
-
-    /**
      * Get order by subscription Id
      *
      * @param $subscriptionId
@@ -598,6 +326,8 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
         return $orderId;
     }
+
+
 
     /**
      * Get Admin URL path
