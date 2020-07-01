@@ -48,7 +48,14 @@
 							<td>$<?php echo $block->convertAmountToDollars($subscription->unit_amount_in_cents); ?></td>
 							<td><?php echo $block->getProductName($subscription->uuid); ?></td>
 							<td><?php echo $block->getProductSku($subscription->uuid); ?></td>
-							<td><?php echo round($block->getProductQty($subscription->uuid)); ?></td>
+							<td>
+								<?php if ($block->getProductQty($subscription->uuid) > 0) { ?>
+									<?php echo round($block->getProductQty($subscription->uuid)); ?>
+								<?php } else { ?>
+									<?php echo '' ?>
+								<?php } ?>
+							</td>
+
 						</tr>
 					<?php } ?>
 				</tbody>
