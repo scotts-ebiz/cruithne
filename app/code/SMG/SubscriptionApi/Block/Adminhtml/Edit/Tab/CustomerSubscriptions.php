@@ -297,7 +297,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
                     ->create()
             );
 
-            // From InvoiceOrders results - Return attribute 'qty' 
+            // From InvoiceOrders results - Return attribute 'sku' 
             foreach ($invoiceOrders as $invoiceOrder) {
                 return $invoiceOrder->getData('sku');
             }
