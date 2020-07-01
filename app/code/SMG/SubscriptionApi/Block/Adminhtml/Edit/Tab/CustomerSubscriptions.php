@@ -258,6 +258,117 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
 
     /**
+     * Get Invoice Order Product Name
+     *
+     * @param $subscription_uuid
+     * @return mixed
+     */
+    public function getProductName($subscription_uuid)
+    {
+        $subscriptionId = $subscription_uuid;
+
+        // From Order Collection - Select all attributs based on Subscription_Id
+        $collection = $this->_orderCollectionFactory->create()
+            ->addAttributeToSelect('*')
+            ->addFieldToFilter('subscription_id', $subscriptionId);
+
+        // Select Order Entity_Id from Order Collection results   
+        foreach ($collection as $order) {
+            $orderEntityId = $order->getData('entity_id');
+
+            // From Invoice Item Repository - Select data set based on Order_Item_Id (Order Entity Id) 
+            $invoiceOrders = $this->_invoiceItemRepository->getList(
+                $this->_searchCriteriaBuilder
+                    ->addFilter('order_item_id', $orderEntityId, 'eq')
+                    ->create()
+            );
+
+            // From InvoiceOrders results - Return attribute 'name' 
+            foreach ($invoiceOrders as $invoiceOrder) {
+                return $invoiceOrder->getData('name');
+            }
+            return false;
+        }
+        return false;
+    }
+
+
+
+    /**
+     * Get Invoice Order Product Qty
+     *
+     * @param $subscription_uuid
+     * @return mixed
+     */
+    public function getProductQty($subscription_uuid)
+    {
+        $subscriptionId = $subscription_uuid;
+
+        // From Order Collection - Select all attributs based on Subscription_Id
+        $collection = $this->_orderCollectionFactory->create()
+            ->addAttributeToSelect('*')
+            ->addFieldToFilter('subscription_id', $subscriptionId);
+
+        // Select Order Entity_Id from Order Collection results   
+        foreach ($collection as $order) {
+            $orderEntityId = $order->getData('entity_id');
+
+            // From Invoice Item Repository - Select data set based on Order_Item_Id (Order Entity Id) 
+            $invoiceOrders = $this->_invoiceItemRepository->getList(
+                $this->_searchCriteriaBuilder
+                    ->addFilter('order_item_id', $orderEntityId, 'eq')
+                    ->create()
+            );
+
+            // From InvoiceOrders results - Return attribute 'qty' 
+            foreach ($invoiceOrders as $invoiceOrder) {
+                return $invoiceOrder->getData('qty');
+            }
+            return false;
+        }
+        return false;
+    }
+
+
+
+    /**
+     * Get Product SKU
+     *
+     * @param $subscription_uuid
+     * @return mixed
+     */
+    public function getProductSku($subscription_uuid)
+    {
+        $subscriptionId = $subscription_uuid;
+
+        // From Order Collection - Select all attributs based on Subscription_Id
+        $collection = $this->_orderCollectionFactory->create()
+            ->addAttributeToSelect('*')
+            ->addFieldToFilter('subscription_id', $subscriptionId);
+
+        // Select Order Entity_Id from Order Collection results   
+        foreach ($collection as $order) {
+            $orderEntityId = $order->getData('entity_id');
+
+            // From Invoice Item Repository - Select data set based on Order_Item_Id (Order Entity Id) 
+            $invoiceOrders = $this->_invoiceItemRepository->getList(
+                $this->_searchCriteriaBuilder
+                    ->addFilter('order_item_id', $orderEntityId, 'eq')
+                    ->create()
+            );
+
+            // From InvoiceOrders results - Return attribute 'qty' 
+            foreach ($invoiceOrders as $invoiceOrder) {
+                return $invoiceOrder->getData('sku');
+            }
+            return false;
+        }
+        return false;
+    }
+
+
+
+    /**
      * TEST - Get Entity Id from Invoice Table
      *
      * @return mixed
@@ -267,9 +378,12 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
         $entityId = 7012;
 
+        $subscription_order_id = 10603;
+
+        // Select invoice order data set from Order_Item_Id
         $invoiceOrders = $this->_invoiceItemRepository->getList(
             $this->_searchCriteriaBuilder
-                ->addFilter('entity_id', $entityId, 'eq')
+                ->addFilter('order_item_id', $subscription_order_id, 'eq')
                 ->create()
         );
 
@@ -279,28 +393,12 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         }
 
         return false;
-
-
-
-        // THIS WORKS!!!
-        // $subscriptionId = 7012;
-        // $orderId = $this->_invoiceItemRepository->get($subscriptionId);
-        // $orderEntityId = $orderId->getData('entity_id');
-        // return $orderEntityId;
-
-
-        // FAILED!!!
-        // $invoiceOrderModelFactory = $this->_invoiceOrderFactory->create();
-        // $this->_invoiceItemResource->load($invoiceOrderModelFactory, $orderItemId, 'order_item_id');
-        // $invoiceEntityId = $invoiceOrderModelFactory->getData('entity_id');
-
-        // return $invoiceEntityId;
     }
 
 
 
     /**
-     * Get order by Entity Id on Order Table
+     * Get order by Entity Id on Order Table - WORKS
      *
      * @param $subscriptionId
      * @return mixed
@@ -315,13 +413,13 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     }
 
 
-
+    //WORKS - To get the Entity Id from the Order Collection Factory!
     /**
      * Get product name by Order_Item_Id on Invoice Item Table
      * @param $subscription_uuid
      * @return string
      */
-    public function getProductName($subscription_uuid)
+    public function getEntityIdTest($subscription_uuid)
     {
         $subscriptionId = $subscription_uuid;
 
