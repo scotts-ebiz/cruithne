@@ -119,6 +119,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     }
 
 
+
     /**
      * Return form key
      *
@@ -129,6 +130,8 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         return $this->_formKey->getFormKey();
     }
 
+
+
     /**
      * Return customer id
      *
@@ -138,6 +141,8 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     {
         return $this->_coreRegistry->registry(RegistryConstants::CURRENT_CUSTOMER_ID);
     }
+
+
 
     /**
      * Return customer's Recurly account code
@@ -156,6 +161,8 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
         return false;
     }
+
+
 
     /**
      * Return active and future subscriptions of the customer
@@ -205,12 +212,10 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
      */
     public function getProductName($subscription_uuid)
     {
-        $subscriptionId = $subscription_uuid;
-
         // From Order Collection - Select all attributs based on Subscription_Id
         $collection = $this->_orderCollectionFactory->create()
             ->addAttributeToSelect('*')
-            ->addFieldToFilter('subscription_id', $subscriptionId);
+            ->addFieldToFilter('subscription_id', $subscription_uuid);
 
         // Select Order Entity_Id from Order Collection results   
         foreach ($collection as $order) {
@@ -242,12 +247,10 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
      */
     public function getProductQty($subscription_uuid)
     {
-        $subscriptionId = $subscription_uuid;
-
         // From Order Collection - Select all attributs based on Subscription_Id
         $collection = $this->_orderCollectionFactory->create()
             ->addAttributeToSelect('*')
-            ->addFieldToFilter('subscription_id', $subscriptionId);
+            ->addFieldToFilter('subscription_id', $subscription_uuid);
 
         // Select Order Entity_Id from Order Collection results   
         foreach ($collection as $order) {
@@ -279,12 +282,10 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
      */
     public function getProductSku($subscription_uuid)
     {
-        $subscriptionId = $subscription_uuid;
-
         // From Order Collection - Select all attributs based on Subscription_Id
         $collection = $this->_orderCollectionFactory->create()
             ->addAttributeToSelect('*')
-            ->addFieldToFilter('subscription_id', $subscriptionId);
+            ->addFieldToFilter('subscription_id', $subscription_uuid);
 
         // Select Order Entity_Id from Order Collection results   
         foreach ($collection as $order) {
