@@ -18,8 +18,8 @@
         &:before {
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
-          font-size: 32px;
-          line-height: 18px;
+          font-size: 38px;
+          line-height: 25px;
           color: $color-gray56;
           content: "";
           font-family: "icons-blank-theme";
@@ -40,6 +40,7 @@
         .count {
           display: inline-block;
           vertical-align: top;
+          margin: 2px 0 0 0;
 
           &:before, &:after {
             display: inline-block;
@@ -55,14 +56,6 @@
             content: ')';
           }
         }
-      }
-      .checkout-now {
-        font-family: $lato;
-        text-transform: uppercase;
-        font-size: $font-size__xxs;
-        color: $iframe-cart-checkout-now-txt;
-        text-align: center;
-        line-height: 1.8rem;
       }
     }
   }
