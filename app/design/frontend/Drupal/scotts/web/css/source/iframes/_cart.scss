@@ -20,8 +20,7 @@
           -moz-osx-font-smoothing: grayscale;
           font-size: 38px;
           line-height: 25px;
-          color: $color-gray56;
-          color: #000;
+          color: $iframe-scotts-gray;
           content: "";
           font-family: "icons-blank-theme";
           display: inline-block;
@@ -32,8 +31,7 @@
       }
       .nav__cart--label {
         font-family: $lato;
-        color: $color-gray56;
-        color: #000;
+        color: $iframe-scotts-gray;
         display: inline-block;
         font-size: $font-size__base;
         text-transform: uppercase;
