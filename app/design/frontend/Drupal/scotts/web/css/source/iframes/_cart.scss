@@ -1,3 +1,64 @@
-body {
-  color: #fff;
+.iframes-cart-index {
+  .page-wrapper .page-main {
+    margin: 0;
+    padding: 0;
+
+    // Turn off messages for iframe.
+    .messages {
+      display: none;
+    }
+  }
+
+  .nav__cart {
+    width: fit-content;
+    cursor: pointer;
+
+    .nav__cart--wrapper {
+      .nav__cart--icon {
+        &:before {
+          -webkit-font-smoothing: antialiased;
+          -moz-osx-font-smoothing: grayscale;
+          font-size: 38px;
+          line-height: 25px;
+          color: $color-gray56;
+          color: #000;
+          content: "";
+          font-family: "icons-blank-theme";
+          display: inline-block;
+          width: 1.875rem;
+          height: 1.875rem;
+          vertical-align: middle;
+        }
+      }
+      .nav__cart--label {
+        font-family: $lato;
+        color: $color-gray56;
+        color: #000;
+        display: inline-block;
+        font-size: $font-size__base;
+        text-transform: uppercase;
+        margin: 2px 0 0 10px;
+
+        .count {
+          display: inline-block;
+          vertical-align: top;
+          margin: 2px 0 0 0;
+
+          &:before, &:after {
+            display: inline-block;
+            line-height: 1;
+            vertical-align: middle;
+          }
+
+          &:before {
+            content: '(';
+          }
+
+          &:after {
+            content: ')';
+          }
+        }
+      }
+    }
+  }
 }
