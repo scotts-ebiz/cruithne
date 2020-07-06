@@ -1,3 +1,7 @@
+// body {
+//   // color:$iframe-gray;
+// }
+
 .iframes-cart-index {
   .page-wrapper .page-main {
     margin: 0;
@@ -20,7 +24,7 @@
           -moz-osx-font-smoothing: grayscale;
           font-size: 38px;
           line-height: 25px;
-          color: $iframe-scotts-gray;
+          // color: $iframe-scotts-gray;
           content: "";
           font-family: "icons-blank-theme";
           display: inline-block;
@@ -31,7 +35,7 @@
       }
       .nav__cart--label {
         font-family: $lato;
-        color: $iframe-scotts-gray;
+        // color: $iframe-scotts-gray;
         display: inline-block;
         font-size: $font-size__base;
         text-transform: uppercase;
