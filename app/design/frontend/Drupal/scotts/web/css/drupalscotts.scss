@@ -1,11 +1,49 @@
 //Default Drupal Styles 
-@import '../../../default/web/css/drupal';
+// @import '../../../default/web/css/drupal';
 
 
-//Drupal Scotts Variables
-@import 'source/drupalscottsvars';
+
+// Mixins
+@import '../../../../Scottsbase/default/web/css/mixins/media-queries';
+
+
+// Vendor libs
+@import '../../../../Scottsbase/default/web/css/vendor/normalize/lib'; // Normalize.css - Should be the first and only instance needed of normalize
+@import '../../../../Scottsbase/default/web/css/vendor/magento-ui/lib'; // Magento UI - Contains variables and mixins needed for import of 'variables' below
+
+
+// Theme variables
+@import 'variables';
+
+
+// Override Block Styles
+@import '../../../../Scottsbase/mygro/web/css/blocks/extends';
+@import '../../../../Scottsbase/mygro/web/css/blocks/layout';
+@import '../../../../Scottsbase/mygro/web/css/blocks/navigation';
+@import '../../../../Scottsbase/mygro/web/css/blocks/typography';
+
+
+// Mygro Defaults
+// @import 'source/mygromixins';
+// @import 'source/mygrobase';
+// @import 'source/mygropdp';
+// @import 'source/mygrocheckout';
+
+
+//Drupal Mixins
+@import '../../../default/web/css/source/drupalmixins';
+@import '../../../default/web/css/source/drupalvars';
+
+
+// Drupal-specific Iframes
+@import '../../../default/web/css/source/iframes/addToCart';
+
+
+// Theme variables
+// @import 'variables';
 
 
 //iframe cart styles
 @import 'source/iframes/cart';
+
 

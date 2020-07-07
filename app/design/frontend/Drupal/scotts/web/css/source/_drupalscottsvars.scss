@@ -1,5 +1,7 @@
-$iframe-scotts-gray:                                           #646569;
+// Scotts Base Defaults (copied from app/design/frontend/Scottsbase/default/web/css/styles.scss)
+@import '../../../../../Scottsbase/default/web/css/source/scottsbasevars';
+@import '../../../../../Scottsbase/mygro/web/css/source/mygrovars';
 
-body {
-    color:#332233;
-}
+// $iframe-scotts-gray:                                           #646569;
+
+$iframe-scotts-gray:                                           #333333;
