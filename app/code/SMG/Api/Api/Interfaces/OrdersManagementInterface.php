@@ -25,14 +25,19 @@ interface OrdersManagementInterface
      */
     public function getLawnSubscriptionOrders();
 
-    /**
+     /**
      * This function will get the main orders in a JSON format.  This replaces the getOrders
      * as it is all M2 orders including seasonal subscriptions except the credit memos and
      * lawn subscription orders.
      *
-     * @return string
+     * @param int $limit
+     * @param int $website
+     *
+     * @return SMG\Api\Api\OrdersManagement[]
+     *
+     * @api
      */
-    public function getMainOrders();
+    public function getMainOrders($limit,$website);
 
     /**
      * This function will get the orders in a JSON format for order audit.
