@@ -333,6 +333,11 @@ class ShipmentHelper
                         if (floatval($sapOrderItem->getData('confirmed_qty')) < 1) {
                             continue;
                         }
+                        // Do not add the item to the track if all items have shipped.
+                        if (floatval($orderItem[0]->getData('qty_ordered')) == floatval($orderItem[0]->getData('qty_shipped'))) {
+                            $this->_logger->info("Item already shipped: orderItem.item_id=" . $orderItem[0]->getItemId());
+                            continue;
+                        }
 
                         /**
                          * @var \Magento\Sales\Api\Data\ShipmentItemCreationInterface $shipmentItemCreation
