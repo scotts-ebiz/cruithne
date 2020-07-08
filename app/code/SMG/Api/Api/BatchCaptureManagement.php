@@ -1,11 +1,11 @@
 <?php
 
-namespace SMG\Api\Model\Api;
+namespace SMG\Api\Api;
 
 use Magento\Framework\Webapi\Rest\Request;
 
 use SMG\Api\Helper\BatchCaptureHelper;
-use SMG\Api\Model\BatchCaptureManagementInterface;
+use SMG\Api\Api\Interfaces\BatchCaptureManagementInterface;
 
 class BatchCaptureManagement implements BatchCaptureManagementInterface
 {

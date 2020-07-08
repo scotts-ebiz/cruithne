@@ -1,12 +1,12 @@
 <?php
 
-namespace SMG\Api\Model;
+namespace SMG\Api\Api\Interfaces;
 
-interface ManualShipmentManagementInterface
+interface ShipmentManagementInterface
 {
     /**
      * This function will process the orders
-     * sent in the json file
+     * that have been set as ready to ship
      *
      * @return string
      */

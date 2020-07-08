@@ -1,6 +1,6 @@
 <?php
 
-namespace SMG\Api\Model;
+namespace SMG\Api\Api\Interfaces;
 
 interface AuthReversalManagementInterface
 {
