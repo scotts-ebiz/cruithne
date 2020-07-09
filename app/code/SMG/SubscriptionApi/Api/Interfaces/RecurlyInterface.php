@@ -9,7 +9,7 @@ interface RecurlyInterface
     /**
      * Check existing Recurly subscriptions
      *
-     * @return array
+     * @return mixed
      *
      * @api
      */
@@ -19,7 +19,7 @@ interface RecurlyInterface
      * Cancel Recurly subscriptions
      *
      * @param string $cancelReason
-     * @return array
+     * @return mixed
      *
      * @api
      */
@@ -28,7 +28,7 @@ interface RecurlyInterface
     /**
      * Process seasonal invoices sent from Recurly
      *
-     * @return array
+     * @return mixed
      *
      * @api
      */

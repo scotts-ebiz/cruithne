@@ -1,6 +1,6 @@
 <?php
 
-namespace SMG\Api\Model\Api;
+namespace SMG\Api\Api;
 
 use Magento\Framework\Webapi\Rest\Request;
 
@@ -9,7 +9,7 @@ use SMG\Api\Helper\OrdersHelper;
 use SMG\Api\Helper\OrdersLawnSubscriptionHelper;
 use SMG\Api\Helper\OrdersMainHelper;
 use SMG\Api\Helper\RequestHelper;
-use SMG\Api\Model\OrdersManagementInterface;
+use SMG\Api\Api\Interfaces\OrdersManagementInterface;
 
 class OrdersManagement implements OrdersManagementInterface
 {
@@ -101,17 +101,24 @@ class OrdersManagement implements OrdersManagementInterface
     /**
      * Get the List of Desired Orders
      *
-     * @return string
+     * @param int $limit
+     * @param int $website
+     * @return mixed
+     * @throws Exception
+     * @api
      */
-    public function getMainOrders()
+    public function getMainOrders($limit,$website)
     {
-        return $this->_ordersMainHelper->getOrders($this->_requestHelper->getRequest($this->_request->getRequestData()));
+        $orderLimit[0]['orderLimit'] = $limit;
+        $orderLimit[0]['website'] = $website;
+
+        return $this->_ordersMainHelper->getOrders($orderLimit);
     }
 
     /**
      * Get the list of orders for order audit process.
      *
-     * @return array
+     * @return mixed
      */
     public function getOrdersForAudit()
     {
@@ -121,7 +128,7 @@ class OrdersManagement implements OrdersManagementInterface
     /**
      * Get the list of sap batch for order audit process.
      *
-     * @return array
+     * @return mixed
      */
     public function getSapBatchForAudit()
     {
