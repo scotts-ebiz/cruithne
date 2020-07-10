@@ -1,15 +1,13 @@
-body {
-    color:#696969;
-}
+// Overrides Cart.scss for Drupal Scotts
 
 .iframes-cart-index .nav__cart .nav__cart--wrapper {
     .nav__cart--icon {
         &:before {
-            color: #646569;
+            color: $drupalScotts-gray;
         }
     }
     .nav__cart--label {
-        color: #646569;
+        color: $drupalScotts-gray;
     }
 }
 

@@ -18,7 +18,7 @@
         &:before {
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
-          font-size: 38px;
+          font-size: 37px;
           line-height: 25px;
           color: $color-gray56;
           content: "";
@@ -27,6 +27,10 @@
           width: 1.875rem;
           height: 1.875rem;
           vertical-align: middle;
+          @media only screen and (max-width: 768px){
+              font-size: 38px;
+              line-height: 26px;
+          }
         }
       }
       .nav__cart--label {
@@ -41,6 +45,9 @@
           display: inline-block;
           vertical-align: top;
           margin: 2px 0 0 0;
+          @media only screen and (max-width: 768px){
+            margin: 3px 0 0 0;
+        }
 
           &:before, &:after {
             display: inline-block;
