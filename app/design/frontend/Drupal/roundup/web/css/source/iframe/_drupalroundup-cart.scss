@@ -3,10 +3,14 @@
 .iframes-cart-index .nav__cart .nav__cart--wrapper {
     .nav__cart--icon {
         &:before {
-            color: $drupalScotts-gray;
+            line-height: 18px;
+            color: $drupalRoundup-gray;
         }
     }
     .nav__cart--label {
-        color: $drupalScotts-gray;
+        color: $drupalRoundup-gray;
+        .count {
+            margin: 0;
+        }
     }
 }
