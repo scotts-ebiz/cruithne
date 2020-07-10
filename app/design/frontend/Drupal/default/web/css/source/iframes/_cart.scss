@@ -27,7 +27,7 @@
           width: 1.875rem;
           height: 1.875rem;
           vertical-align: middle;
-          @media only screen and (max-width: 768px){
+          @media only screen and (max-width: $screen__m){
               font-size: 38px;
               line-height: 26px;
           }
@@ -45,7 +45,7 @@
           display: inline-block;
           vertical-align: top;
           margin: 2px 0 0 0;
-          @media only screen and (max-width: 768px){
+          @media only screen and (max-width: $screen__m){
             margin: 3px 0 0 0;
         }
 
