@@ -18,20 +18,24 @@
         &:before {
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
-          font-size: 32px;
-          line-height: 18px;
-          color: $color-gray56;
+          font-size: $iframe-cart-icon-size;
+          line-height: $iframe-cart-icon-line-height;
+          color: $iframe-cart-icon;
           content: "";
           font-family: "icons-blank-theme";
           display: inline-block;
           width: 1.875rem;
           height: 1.875rem;
           vertical-align: middle;
+          @media only screen and (max-width: $screen__m){
+            font-size: $iframe-cart-mobile-icon-size;
+            line-height: $iframe-cart-icon-mobile-line-height;
+        }
         }
       }
       .nav__cart--label {
         font-family: $lato;
-        color: $color-gray56;
+        color: $iframe-cart-icon;
         display: inline-block;
         font-size: $font-size__base;
         text-transform: uppercase;
@@ -40,6 +44,10 @@
         .count {
           display: inline-block;
           vertical-align: top;
+          margin: $iframe-cart-count-margin;
+          @media only screen and (max-width: $screen__m){
+            margin: $iframe-cart-count-mobile-margin;
+        }
 
           &:before, &:after {
             display: inline-block;
