@@ -15,6 +15,11 @@ $iframe-addtocart-btn-background-hover:                        $secondary__color
 
 $iframe-cart-checkout-now-txt:                                 $primary__color;
 
+
+// iFrame Colors 
+$drupal-scotts-gray:                                            #646569;
+
+
 // Cart / Checkout Colors
 $checkout-green:                                               #1d5632;
 $checkout-light-green:                                         #028c45;
@@ -29,3 +34,7 @@ $cart-checkout-button__background-color:                       $checkout-button-
 $cart-checkout-button__background-hover:                       $checkout-button-color;
 $cart-checkout-button__active__color:                          $checkout-button-color;
 $cart-checkout-button__background-active:                      $checkout-button-color-active;
+
+
+//  Iframe Vars
+$iframe-cart-icon:                                              $drupal-scotts-gray;
