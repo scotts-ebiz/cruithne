@@ -44,6 +44,10 @@
         .count {
           display: inline-block;
           vertical-align: top;
+          margin: $iframe-cart-count-margin;
+          @media only screen and (max-width: $screen__m){
+            margin: $iframe-cart-count-mobile-margin;
+        }
 
           &:before, &:after {
             display: inline-block;
