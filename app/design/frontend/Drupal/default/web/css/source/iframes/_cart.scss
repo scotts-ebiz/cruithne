@@ -19,7 +19,7 @@
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
           font-size: $iframe-cart-icon-size;
-          line-height: $iframe-cart-icon-lineheight;
+          line-height: $iframe-cart-icon-line-height;
           color: $iframe-cart-icon;
           content: "";
           font-family: "icons-blank-theme";
@@ -27,6 +27,10 @@
           width: 1.875rem;
           height: 1.875rem;
           vertical-align: middle;
+          @media only screen and (max-width: $screen__m){
+            font-size: $iframe-cart-mobile-icon-size;
+            line-height: $iframe-cart-icon-mobile-line-height;
+        }
         }
       }
       .nav__cart--label {
