@@ -18,8 +18,8 @@
         &:before {
           -webkit-font-smoothing: antialiased;
           -moz-osx-font-smoothing: grayscale;
-          font-size: 32px;
-          line-height: 18px;
+          font-size: $iframe-cart-icon-size;
+          line-height: $iframe-cart-icon-lineheight;
           color: $iframe-cart-icon;
           content: "";
           font-family: "icons-blank-theme";
