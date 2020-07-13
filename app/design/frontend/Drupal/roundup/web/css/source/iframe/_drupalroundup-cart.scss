@@ -4,11 +4,11 @@
     .nav__cart--icon {
         &:before {
             line-height: 18px;
-            color: $drupalRoundup-gray;
+            color: $iframe-cart-icon;
         }
     }
     .nav__cart--label {
-        color: $drupalRoundup-gray;
+        color: $iframe-cart-icon;
         .count {
             margin: 0;
         }
