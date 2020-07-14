@@ -10,6 +10,8 @@ use Recurly_NotFoundError;
 use Recurly_SubscriptionList;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
+use SMG\SubscriptionApi\Model\SubscriptionOrderFactory;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder as SubscriptionOrderResource;
 
 
 class CustomerSubscriptions extends \Magento\Framework\View\Element\Template implements TabInterface
@@ -57,6 +59,12 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
 
     /**
+     * @var SubscriptionOrderResource
+     */
+    protected $_subscriptionOrderResource;
+
+
+    /**
      * @var searchCriteriaBuilder
      */
     protected $_searchCriteriaBuilder;
@@ -80,12 +88,15 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     protected $_orderCollectionFactory;
 
 
+    /** @var SubscriptionOrderFactory  */
+    protected $_subscriptionOrderFactory;
 
 
     /**
      * @param InvoiceRepositoryInterface $_invoiceRepository
      * @param $invoiceItemRepository
      * @param $orderCollectionFactory
+     * @param SubscriptionOrderFactory $subscriptionOrderFactory
      */
 
 
@@ -98,9 +109,11 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         \Magento\Framework\Data\Form\FormKey $formKey,
         OrderFactory $orderFactory,
         OrderResource $orderResource,
+        SubscriptionOrderResource $subscriptionOrderResource,
         \Magento\Sales\Api\InvoiceItemRepositoryInterface $invoiceItemRepository,
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
+        SubscriptionOrderFactory $subscriptionOrderFactory,
         LoggerInterface $logger,
         array $data = []
     ) {
@@ -111,9 +124,11 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         $this->_formKey = $formKey;
         $this->_orderFactory = $orderFactory;
         $this->_orderResource = $orderResource;
+        $this->_subscriptionOrderResource = $subscriptionOrderResource;
         $this->_invoiceItemRepository = $invoiceItemRepository;
         $this->_searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->_orderCollectionFactory = $orderCollectionFactory;
+        $this->_subscriptionOrderFactory = $subscriptionOrderFactory;
         $this->_logger = $logger;
         parent::__construct($context, $data);
     }
@@ -291,6 +306,25 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
             return $order->getData('status');
         }
         return false;
+    }
+
+
+    /**
+     * Get Subscription Order Status from Subscription ID
+     *
+     * @param $subscription_uuid
+     * @return mixed
+     */
+    public function getSapSubscriptionStatus($subscription_uuid)
+    {
+        // From Subscription Order Collection - Select all attributs based on Subscription_Id
+        $subscriptionOrderObject = $this->_subscriptionOrderFactory->create();
+
+        $this->_subscriptionOrderResource->load($subscriptionOrderObject, $subscription_uuid, 'subscription_id');
+
+        $subOrderStatus = $subscriptionOrderObject->getData('subscription_order_status');
+
+        return $subOrderStatus;
     }
 
 
