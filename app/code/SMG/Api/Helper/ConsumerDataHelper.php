@@ -180,6 +180,7 @@ class ConsumerDataHelper
                 $orderItems = $this->_orderItemCollectionFactory->create();
                 $orderItems->addFieldToFilter("order_id", ['eq' => $order->getId()]);
                 $orderItems->addFieldToFilter("product_type", ['neq' => 'bundle']);
+                $orderItems->addFieldToFilter("product_type", ['neq' => 'configurable']);
 
                 /**
                  * @var \Magento\Sales\Model\Order\Item $orderItem
