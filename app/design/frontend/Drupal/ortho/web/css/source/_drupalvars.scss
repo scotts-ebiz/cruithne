@@ -15,6 +15,19 @@ $iframe-addtocart-btn-background-hover:                         $color-white;
 
 $iframe-cart-checkout-now-txt:                                  $primary__color;
 
+$iframe-cart-icon-size:                                         37px;
+$iframe-cart-mobile-icon-size:                                  38px;
+
+$iframe-cart-icon-line-height:                                  25px;
+$iframe-cart-icon-mobile-line-height:                           26px;
+
+$iframe-cart-count-margin:                                      2px 0 0 0;
+$iframe-cart-count-mobile-margin:                               3px 0 0 0;
+
+// iFrame Colors 
+$drupal-scotts-gray:                                            #646569;
+
+
 // Cart / Checkout Colors
 $checkout-red:                                                  #ca0b0b;
 $checkout-dark-red:                                             #7E0101;
@@ -28,3 +41,7 @@ $cart-checkout-button__background-color:                        $checkout-button
 $cart-checkout-button__background-hover:                        $checkout-button-color;
 $cart-checkout-button__active__color:                           $checkout-button-color;
 $cart-checkout-button__background-active:                       $checkout-button-color-active;
+
+
+//  Iframe Vars
+$iframe-cart-icon:                                              $drupal-scotts-gray;
