@@ -1,4 +1,5 @@
 <?php
+
 namespace SMG\SubscriptionApi\Block\Adminhtml\Edit\Tab;
 
 use Psr\Log\LoggerInterface;
@@ -10,6 +11,7 @@ use Recurly_SubscriptionList;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 
+
 class CustomerSubscriptions extends \Magento\Framework\View\Element\Template implements TabInterface
 {
     /**
@@ -17,40 +19,75 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
      */
     protected $_coreRegistry;
 
+
     /**
      * @var \Magento\Customer\Model\Customer
      */
     protected $_customer;
+
 
     /**
      * @var \SMG\SubscriptionApi\Helper\RecurlyHelper
      */
     protected $_helper;
 
+
     /**
      * @var \Magento\Framework\UrlInterface
      */
     protected $_urlInterface;
+
 
     /**
      * @var \Magento\Framework\Data\Form\FormKey
      */
     protected $_formKey;
 
+
     /**
      * @var OrderFactory
      */
     protected $_orderFactory;
+
 
     /**
      * @var OrderResource
      */
     protected $_orderResource;
 
+
+    /**
+     * @var searchCriteriaBuilder
+     */
+    protected $_searchCriteriaBuilder;
+
+
     /**
      * @var LoggerInterface
      */
     protected $_logger;
+
+
+    /**
+     * @var InvoiceRepositoryInterface
+     */
+    protected $_invoiceItemRepository;
+
+
+    /**
+     * @var orderCollectionFactory
+     */
+    protected $_orderCollectionFactory;
+
+
+
+
+    /**
+     * @param InvoiceRepositoryInterface $_invoiceRepository
+     * @param $invoiceItemRepository
+     * @param $orderCollectionFactory
+     */
+
 
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -61,6 +98,9 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         \Magento\Framework\Data\Form\FormKey $formKey,
         OrderFactory $orderFactory,
         OrderResource $orderResource,
+        \Magento\Sales\Api\InvoiceItemRepositoryInterface $invoiceItemRepository,
+        \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
+        \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
         LoggerInterface $logger,
         array $data = []
     ) {
@@ -71,9 +111,14 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         $this->_formKey = $formKey;
         $this->_orderFactory = $orderFactory;
         $this->_orderResource = $orderResource;
+        $this->_invoiceItemRepository = $invoiceItemRepository;
+        $this->_searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->_logger = $logger;
         parent::__construct($context, $data);
     }
+
+
 
     /**
      * Return form key
@@ -85,6 +130,8 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         return $this->_formKey->getFormKey();
     }
 
+
+
     /**
      * Return customer id
      *
@@ -94,6 +141,8 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     {
         return $this->_coreRegistry->registry(RegistryConstants::CURRENT_CUSTOMER_ID);
     }
+
+
 
     /**
      * Return customer's Recurly account code
@@ -113,6 +162,8 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         return false;
     }
 
+
+
     /**
      * Return active and future subscriptions of the customer
      *
@@ -131,8 +182,8 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         $totalAmount = false;
 
         try {
-            $activeSubscriptions = Recurly_SubscriptionList::getForAccount($this->getCustomerRecurlyAccountCode(), [ 'state' => 'active' ]);
-            $futureSubscriptions = Recurly_SubscriptionList::getForAccount($this->getCustomerRecurlyAccountCode(), [ 'state' => 'future' ]);
+            $activeSubscriptions = Recurly_SubscriptionList::getForAccount($this->getCustomerRecurlyAccountCode(), ['state' => 'active']);
+            $futureSubscriptions = Recurly_SubscriptionList::getForAccount($this->getCustomerRecurlyAccountCode(), ['state' => 'future']);
 
             foreach ($activeSubscriptions as $subscription) {
                 array_push($subscriptions, $subscription);
@@ -144,12 +195,119 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
                 $totalAmount += $subscription->unit_amount_in_cents;
             }
 
-            return [ 'success' => true, 'subscriptions' => $subscriptions, 'total_amount' => $this->convertAmountToDollars($totalAmount) ];
+            return ['success' => true, 'subscriptions' => $subscriptions, 'total_amount' => $this->convertAmountToDollars($totalAmount)];
         } catch (Recurly_NotFoundError $e) {
             $this->_logger->error($e->getMessage());
-            return [ 'success' => false, 'error_message' => $e->getMessage() ];
+            return ['success' => false, 'error_message' => $e->getMessage()];
         }
     }
+
+
+
+    /**
+     * Get Invoice Order Product Name
+     *
+     * @param $subscription_uuid
+     * @return mixed
+     */
+    public function getProductName($subscription_uuid)
+    {
+        // From Order Collection - Select all attributs based on Subscription_Id
+        $collection = $this->_orderCollectionFactory->create()
+            ->addAttributeToSelect('*')
+            ->addFieldToFilter('subscription_id', $subscription_uuid);
+
+        // Select Order Entity_Id from Order Collection results   
+        foreach ($collection as $order) {
+            $orderEntityId = $order->getData('entity_id');
+
+            // From Invoice Item Repository - Select data set based on Order_Item_Id (Order Entity Id) 
+            $invoiceOrders = $this->_invoiceItemRepository->getList(
+                $this->_searchCriteriaBuilder
+                    ->addFilter('order_item_id', $orderEntityId, 'eq')
+                    ->create()
+            );
+
+            // From InvoiceOrders results - Return attribute 'name' 
+            foreach ($invoiceOrders as $invoiceOrder) {
+                return $invoiceOrder->getData('name');
+            }
+            return false;
+        }
+        return false;
+    }
+
+
+
+    /**
+     * Get Product Qty from Subscription ID
+     *
+     * @param $subscription_uuid
+     * @return mixed
+     */
+    public function getProductQty($subscription_uuid)
+    {
+        // From Order Collection - Select all attributs based on Subscription_Id
+        $collection = $this->_orderCollectionFactory->create()
+            ->addAttributeToSelect('*')
+            ->addFieldToFilter('subscription_id', $subscription_uuid);
+
+        // Select Order Entity_Id from Order Collection results   
+        foreach ($collection as $order) {
+            $orderEntityId = $order->getData('entity_id');
+
+            // From Invoice Item Repository - Select data set based on Order_Item_Id (Order Entity Id) 
+            $invoiceOrders = $this->_invoiceItemRepository->getList(
+                $this->_searchCriteriaBuilder
+                    ->addFilter('order_item_id', $orderEntityId, 'eq')
+                    ->create()
+            );
+
+            // From InvoiceOrders results - Return attribute 'qty' 
+            foreach ($invoiceOrders as $invoiceOrder) {
+                return $invoiceOrder->getData('qty');
+            }
+            return false;
+        }
+        return false;
+    }
+
+
+
+    /**
+     * Get Product SKU from Subscription ID
+     *
+     * @param $subscription_uuid
+     * @return mixed
+     */
+    public function getProductSku($subscription_uuid)
+    {
+        // From Order Collection - Select all attributs based on Subscription_Id
+        $collection = $this->_orderCollectionFactory->create()
+            ->addAttributeToSelect('*')
+            ->addFieldToFilter('subscription_id', $subscription_uuid);
+
+        // Select Order Entity_Id from Order Collection results   
+        foreach ($collection as $order) {
+            $orderEntityId = $order->getData('entity_id');
+
+            // From Invoice Item Repository - Select data set based on Order_Item_Id (Order Entity Id) 
+            $invoiceOrders = $this->_invoiceItemRepository->getList(
+                $this->_searchCriteriaBuilder
+                    ->addFilter('order_item_id', $orderEntityId, 'eq')
+                    ->create()
+            );
+
+            // From InvoiceOrders results - Return attribute 'sku' 
+            foreach ($invoiceOrders as $invoiceOrder) {
+                return $invoiceOrder->getData('sku');
+            }
+            return false;
+        }
+        return false;
+    }
+
+
 
     /**
      * Get order by subscription Id
@@ -163,12 +321,14 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         $this->_orderResource->load($order, $subscriptionId, 'subscription_id');
         $orderId = $order->getId();
 
-        if (! $orderId) {
+        if (!$orderId) {
             $this->_logger->error("Could not find an order for subscription with ID: {$subscriptionId}");
         }
 
         return $orderId;
     }
+
+
 
     /**
      * Get Admin URL path
@@ -188,7 +348,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
      */
     public function convertAmountToDollars($amount)
     {
-        return number_format(($amount/100), 2, '.', ' ');
+        return number_format(($amount / 100), 2, '.', ' ');
     }
 
     public function getCancelUrl()
@@ -229,7 +389,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
     public function getTabUrl()
     {
-        return $this->getUrl('customersubscriptions/*/customersubscriptions', [ '_current' => true ]);
+        return $this->getUrl('customersubscriptions/*/customersubscriptions', ['_current' => true]);
     }
 
     public function isAjaxLoaded()
