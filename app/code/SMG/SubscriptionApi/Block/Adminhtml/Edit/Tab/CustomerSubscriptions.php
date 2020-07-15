@@ -10,7 +10,6 @@ use Recurly_NotFoundError;
 use Recurly_SubscriptionList;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
-use SMG\SubscriptionApi\Model\SubscriptionOrderFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder as SubscriptionOrderResource;
 use SMG\Sap\Model\SapOrderFactory;
 use SMG\Sap\Model\ResourceModel\SapOrder as SapOrderResource;
@@ -92,12 +91,6 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     protected $_orderCollectionFactory;
 
 
-    /** 
-     * @var SubscriptionOrderFactory  
-     */
-    protected $_subscriptionOrderFactory;
-
-
     /**
      * @var SapOrderFactory
      */
@@ -128,7 +121,6 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
      * @param $orderCollectionFactory
      * @param $sapOrderFactory
      * @param SapOrderStatusFactory $sapOrderStatusFactory
-     * @param SubscriptionOrderFactory $subscriptionOrderFactory
      */
 
 
@@ -149,7 +141,6 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         \Magento\Sales\Api\InvoiceItemRepositoryInterface $invoiceItemRepository,
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
-        SubscriptionOrderFactory $subscriptionOrderFactory,
         LoggerInterface $logger,
         array $data = []
     ) {
@@ -341,27 +332,6 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
             ->addFieldToFilter('subscription_id', $subscription_uuid);
 
         // Select Order Entity_Id from Order Collection results   
-        foreach ($collection as $order) {
-            return $order->getData('status');
-        }
-        return false;
-    }
-
-
-    /**
-     * Get Product Magento Status from Subscription ID
-     *
-     * @param $subscription_uuid
-     * @return mixed
-     */
-    public function getMagentoStatus($subscription_uuid)
-    {
-        // From Order Collection - Select all attributs based on Subscription_Id
-        $collection = $this->_orderCollectionFactory->create()
-            ->addAttributeToSelect('*')
-            ->addFieldToFilter('subscription_id', $subscription_uuid);
-
-        // Select Order Status from Order Collection results   
         foreach ($collection as $order) {
             return $order->getData('status');
         }
