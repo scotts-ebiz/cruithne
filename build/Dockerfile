@@ -15,6 +15,11 @@ USER root
 WORKDIR $MAGENTO_DIR
 RUN chown -R magento:www-data .git
 
+RUN chown -R magento /usr/local/lib/node_modules
+
+RUN npm install -g npm
+
+
 USER magento
 WORKDIR $MAGENTO_DIR
 
@@ -40,10 +45,14 @@ WORKDIR $MAGENTO_DIR
 
 USER root
 
+
+RUN cd tools && npm install
+
 # Expose Ports for Apache
 EXPOSE 80/tcp 443/tcp
 
 RUN find var pub/static pub/media app/etc -type f -exec chmod g+w {} + && find var pub/static pub/media app/etc -type d -exec chmod g+ws {} +
+
 
 # Run entrypoint file
 COPY ondemand-entrypoint.sh /usr/local/bin/entrypoint.sh

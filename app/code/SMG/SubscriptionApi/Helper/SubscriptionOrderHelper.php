@@ -33,6 +33,8 @@ use SMG\SubscriptionApi\Model\SubscriptionAddonOrderItem;
 use SMG\SubscriptionApi\Model\SubscriptionOrder;
 use SMG\SubscriptionApi\Model\SubscriptionOrderItem;
 use Magento\Quote\Model\ResourceModel\Quote as QuoteResource;
+use SMG\Sap\Model\SapOrderBatchFactory;
+use SMG\Sap\Model\ResourceModel\SapOrderBatch as SapOrderBatchResource;
 
 /**
  * Class SubscriptionOrderHelper
@@ -156,6 +158,16 @@ class SubscriptionOrderHelper extends AbstractHelper
     protected $_quoteResource;
 
     /**
+     * @var SapOrderBatchFactory
+     */
+    protected $_sapOrderBatchFactory;
+
+    /**
+     * @var SapOrderBatchResource
+     */
+    protected $_sapOrderBatchResource;
+
+    /**
      * SubscriptionOrderHelper constructor.
      * @param Context $context
      * @param AddressFactory $addressFactory
@@ -179,6 +191,8 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @param SubscriptionOrderResource $subscriptionOrderResource
      * @param RegionCollection $regionCollection
      * @param SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
+     * @param SapOrderBatchFactory $sapOrderBatchFactory
+     * @param SapOrderBatchResource $sapOrderBatchResource
      * @throws NoSuchEntityException
      */
     public function __construct(
@@ -203,7 +217,9 @@ class SubscriptionOrderHelper extends AbstractHelper
         SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
         SubscriptionOrderResource $subscriptionOrderResource,
         RegionCollection $regionCollection,
-        SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
+        SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory,
+        SapOrderBatchFactory $sapOrderBatchFactory,
+        SapOrderBatchResource $sapOrderBatchResource
     ) {
         parent::__construct($context);
 
@@ -228,6 +244,8 @@ class SubscriptionOrderHelper extends AbstractHelper
         $this->_subscriptionOrderResource = $subscriptionOrderResource;
         $this->_regionCollection = $regionCollection;
         $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
+        $this->_sapOrderBatchFactory = $sapOrderBatchFactory;
+        $this->_sapOrderBatchResource = $sapOrderBatchResource;
 
         $this->_store = $storeManager->getStore();
         $this->_websiteId = $this->_store->getWebsiteId();
@@ -368,18 +386,18 @@ class SubscriptionOrderHelper extends AbstractHelper
      */
     protected function processOrder(Customer $customer, $subscriptionOrder)
     {
-        $this->_logger->debug('Processing order...');
+        $this->_logger->info('Processing order...');
         $quote = $this->_quoteFactory->create();
         $quote->setStoreId($this->_store->getId());
         $quote->setCurrency();
         $customerData = $this->_customerRepository->getById($customer->getId());
-        $this->_logger->debug('Assign customer to quote quote...');
+        $this->_logger->info('Assign customer to quote...');
         $quote->assignCustomer($customerData);
 
-        $this->_logger->debug('Saving quote...');
+        $this->_logger->info('Saving quote...');
         $this->_quoteResource->save($quote);
 
-        $this->_logger->debug('Adding items to order...');
+        $this->_logger->info('Adding items to order...');
         foreach ($subscriptionOrder->getOrderItems() as $item) {
             // Check if the item has the selected field and if it is set.
             /**
@@ -403,7 +421,7 @@ class SubscriptionOrderHelper extends AbstractHelper
             try {
                 $product = $item->getProduct();
 
-                $this->_logger->debug('Adding product to quote...');
+                $this->_logger->info('Adding product to quote...');
                 $quote->addProduct($product, (int) $item->getQty());
             } catch (\Exception $e) {
                 $this->errorResponse(
@@ -414,9 +432,9 @@ class SubscriptionOrderHelper extends AbstractHelper
         }
 
         // Set addresses.
-        $this->_logger->debug('Setting billing address...');
+        $this->_logger->info('Setting billing address...');
         $quote->getBillingAddress()->addData($this->_session->getCheckoutBilling())->save();
-        $this->_logger->debug('Setting shipping address...');
+        $this->_logger->info('Setting shipping address...');
         $quote->getShippingAddress()->addData($this->_session->getCheckoutShipping())->save();
 
         // Collect rates and set shipping and payment method.
@@ -430,7 +448,7 @@ class SubscriptionOrderHelper extends AbstractHelper
             ->setShippingMethod('freeshipping_freeshipping');
         $quote->setPaymentMethod('recurly');
         $quote->setInventoryProcessed(false);
-        $this->_logger->debug('Saving quote after adding address information...');
+        $this->_logger->info('Saving quote after adding address information...');
         $this->_quoteResource->save($quote);
 
         // Set sales order payment.
@@ -438,11 +456,11 @@ class SubscriptionOrderHelper extends AbstractHelper
 
         // Collect the totals and save the quote.
         $quote->collectTotals();
-        $this->_logger->debug('Saving quote after collecting totals...');
+        $this->_logger->info('Saving quote after collecting totals...');
         $this->_quoteResource->save($quote);
 
         // Create an order from the quote.
-        $this->_logger->debug('Submitting quote...');
+        $this->_logger->info('Submitting quote...');
         /** @var Order $order */
         $order = $this->_cartManagement->submit($quote);
         $order->setEmailSent(0);
@@ -459,21 +477,35 @@ class SubscriptionOrderHelper extends AbstractHelper
         ]);
 
         // Save order
-        $this->_logger->debug('Saving order...');
+        $this->_logger->info('Saving order...');
         $this->_orderResource->save($order);
 
         // Add the order ID to teh subscription order.
         $subscriptionOrder->setData('sales_order_id', $order->getId());
         $this->saveSubscriptionOrder($subscriptionOrder);
 
-        if ($subscriptionOrder->isCurrentlyShippable()) {
+        if ($subscriptionOrder->getSubscriptionType() == 'annual' || $subscriptionOrder->isCurrentlyShippable()) {
             // Complete the order
             $subscriptionOrder->setData('subscription_order_status', 'complete');
             $this->saveSubscriptionOrder($subscriptionOrder);
 
             // Create the order invoice.
-            $this->_logger->debug('Creating the invoice...');
+            $this->_logger->info('Creating the invoice...');
             $subscriptionOrder->createInvoice();
+        } else {
+            // This is a future seasonal order so find the batch and clear
+            // is_order and order_process_date.
+            $sapOrderBatch = $this->_sapOrderBatchFactory->create();
+            $this->_sapOrderBatchResource->load($sapOrderBatch, $order->getId(), 'order_id');
+
+            if ($sapOrderBatch->getId()) {
+                $sapOrderBatch->addData([
+                    'is_order' => 0,
+                    'order_process_date' => null,
+                ]);
+
+                $this->_sapOrderBatchResource->save($sapOrderBatch);
+            }
         }
 
         return $order;
@@ -498,7 +530,7 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @param SubscriptionOrder | SubscriptionAddonOrder $subscriptionOrder
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    protected function saveSubscriptionOrder($subscriptionOrder): void
+    public function saveSubscriptionOrder($subscriptionOrder): void
     {
         if ($subscriptionOrder instanceof SubscriptionOrder) {
             $this->_subscriptionOrderResource->save($subscriptionOrder);

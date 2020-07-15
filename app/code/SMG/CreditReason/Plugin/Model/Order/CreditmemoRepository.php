@@ -12,6 +12,7 @@ use Magento\Framework\App\RequestInterface;
 use Magento\Sales\Model\Order\ItemFactory;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order\Item as ItemResource;
+use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 
 use Psr\Log\LoggerInterface;
 use SMG\Sap\Model\SapOrderBatchCreditmemoFactory;
@@ -19,6 +20,8 @@ use SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo as SapOrderBatchCreditme
 
 class CreditmemoRepository
 {
+    public const ORDER_ERROR_REASON_CODE = '040';
+
     /**
      * @var LoggerInterface
      */
@@ -50,6 +53,16 @@ class CreditmemoRepository
     protected $_itemResource;
 
     /**
+     * @var \SMG\CreditReason\Plugin\Model\Order\OrderFactory
+     */
+    protected $_orderFactory;
+
+    /**
+     * @var OrderResource
+     */
+    protected $_orderResource;
+
+    /**
      * CreditmemoRepository constructor.
      * @param LoggerInterface $logger
      * @param RequestInterface $request
@@ -63,7 +76,9 @@ class CreditmemoRepository
         SapOrderBatchCreditmemoFactory $sapOrderBatchCreditmemoFactory,
         SapOrderBatchCreditmemoResource $sapOrderBatchCreditmemoResource,
         ItemFactory $itemFactory,
-        ItemResource $itemResource)
+        ItemResource $itemResource,
+        OrderFactory $orderFactory,
+        OrderResource $orderResource)
     {
         $this->_logger = $logger;
         $this->_request = $request;
@@ -71,12 +86,45 @@ class CreditmemoRepository
         $this->_sapOrderBatchCreditmemoResource = $sapOrderBatchCreditmemoResource;
         $this->_itemFactory = $itemFactory;
         $this->_itemResource = $itemResource;
+        $this->_orderFactory = $orderFactory;
+        $this->_orderResource = $orderResource;
     }
 
     public function beforeSave(\Magento\Sales\Model\Order\CreditmemoRepository $subject, \Magento\Sales\Api\Data\CreditmemoInterface $entity)
     {
         try
         {
+            // Get the order for this credit memo.
+            $order = $this->_orderFactory->create();
+            $this->_orderResource->load($order, $entity->getOrderId());
+
+            // Check if this is a lawn subscription order.
+            if ($order->getData('subscription_id')) {
+                // This is a subscription order that has been cancelled.
+                $items = $entity->getItems();
+                $orderItem = $this->_itemFactory->create();
+
+                foreach ($items as $item) {
+                    // get the order item id
+                    $orderItemId = $item->getData("order_item_id");
+
+                    // load the order item from the order item id
+                    $this->_itemResource->load($orderItem, $orderItemId);
+
+                    // determine if this is a bundle product
+                    // if it is then we will wait to update the reason code values
+                    // otherwise update the reason code values now
+                    $productType = $orderItem->getProductType();
+                    if (isset($productType) && $productType != 'bundle')
+                    {
+                        // set the refunded reason code on the credit memo item
+                        $item->setData('refunded_reason_code', self::ORDER_ERROR_REASON_CODE);
+                    }
+                }
+
+                return [$entity];
+            }
+
             // get the parameters from the page
             $params = $this->_request->getParams();
 
@@ -112,6 +160,9 @@ class CreditmemoRepository
                     // get the order item id
                     $orderItemId = $item->getData("order_item_id");
 
+                     // get the order qty
+                     $orderQty = $item->getData("qty");
+
                     // determine if this was the item that was modified
                     // on the creditmemo form
                     if ($orderItemId == $key)
@@ -123,7 +174,7 @@ class CreditmemoRepository
                         // if it is then we will wait to update the reason code values
                         // otherwise update the reason code values now
                         $productType = $orderItem->getProductType();
-                        if (isset($productType) && $productType != 'bundle')
+                        if (isset($productType) && $productType != 'bundle' && $orderQty > 0)
                         {
                             // get the refunded reason code
                             $refundedReadonCode = $itemsParams[$orderItemId]['refunded_reason_code'];
@@ -174,6 +225,10 @@ class CreditmemoRepository
                 // get the order item id
                 $orderItemId = $item->getData("order_item_id");
 
+                // get the order qty
+                $orderQty = $item->getData("qty");
+
+
                 // load the order item from the order item id
                 $this->_itemResource->load($orderItem, $orderItemId);
 
@@ -181,7 +236,7 @@ class CreditmemoRepository
                 // if it is then we will wait to update the reason code values
                 // otherwise update the reason code values now
                 $productType = $orderItem->getProductType();
-                if (isset($productType) && $productType != 'bundle')
+                if (isset($productType) && $productType != 'bundle' && $orderQty > 0)
                 {
                     // create a record in the sales order sap batch items table
                     $sapOrderBatchCreditmemo = $this->_sapOrderBatchCreditmemoFactory->create();

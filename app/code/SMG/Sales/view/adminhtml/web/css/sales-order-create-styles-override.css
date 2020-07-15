@@ -1,0 +1,11 @@
+@media only screen and (min-width: 768px) {
+    .sales-order_create-index .order-shipping-method, .sales-order_create-index .order-billing-method {
+        float: none;
+        width: auto;
+    }
+    
+    .sales-order_create-index .order-shipping-method {
+        margin: 0 0 50px 0;
+    }
+}
+

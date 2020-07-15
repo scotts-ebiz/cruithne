@@ -13,6 +13,7 @@ use Magento\Customer\Model\Url;
 use Magento\Directory\Model\ResourceModel\Region\CollectionFactory;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Session\SessionManagerInterface;
+use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Psr\Log\LoggerInterface;
 use Recurly_Account;
 use Recurly_BillingInfo;
@@ -31,8 +32,11 @@ use SMG\SubscriptionApi\Helper\RecurlyHelper;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
 use SMG\SubscriptionApi\Helper\SubscriptionOrderHelper;
 use SMG\SubscriptionApi\Helper\TestHelper;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder as SubscriptionAddonOrderResource;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrderItem\Collection;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder as SubscriptionOrderResource;
 
 /**
  * Class RecurlySubscription
@@ -121,12 +125,38 @@ class RecurlySubscription
     protected $_coreSession;
 
     /**
+     * @var OrderResource
+     */
+    protected $_orderResource;
+
+    /**
+     * @var SubscriptionResource
+     */
+    protected $_subscriptionResource;
+
+    /**
+     * @var SubscriptionOrderResource
+     */
+    protected $_subscriptionOrderResource;
+
+    /**
+     * @var SubscriptionAddonOrderResource
+     */
+    protected $_subscriptionAddonOrderResource;
+
+    /**
+     * @var string
+     */
+    protected $_loggerPrefix;
+
+    /**
      * RecurlySubscription constructor.
      * @param RecurlyHelper $recurlyHelper
      * @param SubscriptionHelper $subscriptionHelper
      * @param Session $customerSession
      * @param Customer $customer
      * @param CustomerFactory $customerFactory
+     * @param OrderResource $orderResource
      * @param ProductRepositoryInterface $productRepository
      * @param CheckoutSession $checkoutSession
      * @param CollectionFactory $collectionFactory
@@ -136,6 +166,9 @@ class RecurlySubscription
      * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
      * @param TestHelper $testHelper
      * @param SessionManagerInterface $coreSession
+     * @param SubscriptionResource $subscriptionResource
+     * @param SubscriptionOrderResource $subscriptionOrderResource
+     * @param SubscriptionAddonOrderResource $subscriptionAddonOrderResource
      */
     public function __construct(
         RecurlyHelper $recurlyHelper,
@@ -143,6 +176,7 @@ class RecurlySubscription
         Session $customerSession,
         Customer $customer,
         CustomerFactory $customerFactory,
+        OrderResource $orderResource,
         ProductRepositoryInterface $productRepository,
         CheckoutSession $checkoutSession,
         CollectionFactory $collectionFactory,
@@ -151,13 +185,17 @@ class RecurlySubscription
         SubscriptionOrderHelper $subscriptionOrderHelper,
         SubscriptionCollectionFactory $subscriptionCollectionFactory,
         TestHelper $testHelper,
-        SessionManagerInterface $coreSession
+        SessionManagerInterface $coreSession,
+        SubscriptionResource $subscriptionResource,
+        SubscriptionOrderResource $subscriptionOrderResource,
+        SubscriptionAddonOrderResource $subscriptionAddonOrderResource
     ) {
         $this->_recurlyHelper = $recurlyHelper;
         $this->_subscriptionHelper = $subscriptionHelper;
         $this->_customerSession = $customerSession;
         $this->_customer = $customer;
         $this->_customerFactory = $customerFactory;
+        $this->_orderResource = $orderResource;
         $this->_productRepository = $productRepository;
         $this->_checkoutSession = $checkoutSession;
         $this->_collectionFactory = $collectionFactory;
@@ -169,10 +207,17 @@ class RecurlySubscription
         $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
         $this->_testHelper = $testHelper;
         $this->_coreSession = $coreSession;
+        $this->_subscriptionResource = $subscriptionResource;
+        $this->_subscriptionOrderResource = $subscriptionOrderResource;
+        $this->_subscriptionAddonOrderResource = $subscriptionAddonOrderResource;
 
         // Configure Recurly Client
         Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
+
+        $host = gethostname();
+        $ip = gethostbyname($host);
+        $this->_loggerPrefix = 'SERVER: ' . $ip . ' SESSION: ' . session_id() . ' - ';
     }
 
     /**
@@ -294,7 +339,8 @@ class RecurlySubscription
                     'price' => $this->convertAmountToDollars($invoice->subtotal_before_discount_in_cents),
                     'discount' => $this->convertAmountToDollars(-$invoice->discount_in_cents),
                     'tax' => $this->convertAmountToDollars($invoice->tax_in_cents),
-                ])->save();
+                ]);
+                $this->_subscriptionResource->save($subscription);
             }
         } catch (Exception $e) {
             $error = 'There was an error invoicing the subscription.';
@@ -436,8 +482,10 @@ class RecurlySubscription
 
                 try {
                     if ($subscription->unit_amount_in_cents > 0 && $subscription->state == 'active') {
+                        $this->_logger->info($this->_loggerPrefix . "Terminating and refunding subscription {$subscription->uuid} due to a checkout error...");
                         $subscription->terminateAndRefund();
                     } else {
+                        $this->_logger->info($this->_loggerPrefix . "Terminating subscription {$subscription->uuid} due to a checkout error...");
                         $subscription->terminateWithoutRefund();
                     }
                 } catch (Recurly_Error $e) {
@@ -483,7 +531,7 @@ class RecurlySubscription
     protected function loadRecurlyAccount(Customer $customer): Recurly_Account
     {
         // Get Customer's Recurly account
-        $this->_logger->debug('Gigya ID: ' . $customer->getData('gigya_uid'));
+        $this->_logger->info("Attempting to load or create Recurly account with Gigya ID: {$customer->getData('gigya_uid')}...");
 
         try {
             /** @var Recurly_Account $account */
@@ -609,7 +657,7 @@ class RecurlySubscription
      */
     protected function createRecurlyAccount(Customer $customer)
     {
-        $this->_logger->debug('Creating Recurly account...');
+        $this->_logger->info("Creating Recurly account with Gigya ID {$customer->getData('gigya_uid')}...");
 
         // Generate account code from customer's email
         $customerID = $customer->getData('entity_id');
@@ -876,17 +924,16 @@ class RecurlySubscription
                 $recurlySubscription->custom_fields[] = new Recurly_CustomField('quiz_id', $quizID);
                 $recurlySubscription->custom_fields[] = new Recurly_CustomField('is_addon', true);
                 $recurlySubscription->custom_fields[] = new Recurly_CustomField('addon_skus', implode(',', $productSkus));
+                $recurlySubscription->starts_at = $subscriptionAddonOrder->getData('ship_start_date');
+
+                // If this subscription addon order can ship now, we do not
+                // need to send a starts_at date to Recurly, otherwise, it
+                // will get queued and charged at the top of the hour.
+                if ($subscriptionAddonOrder->isCurrentlyShippable()) {
+                    $recurlySubscription->starts_at = null;
+                }
 
                 if ($subscriptionType == 'seasonal') {
-                    $recurlySubscription->starts_at = $subscriptionAddonOrder->getData('ship_start_date');
-
-                    // If this subscription addon order can ship now, we do not
-                    // need to send a starts_at date to Recurly, otherwise, it
-                    // will get queued and charged at the top of the hour.
-                    if ($subscriptionAddonOrder->isCurrentlyShippable()) {
-                        $recurlySubscription->starts_at = null;
-                    }
-
                     // We're in test mode, so set custom start dates.
                     if ($this->_testHelper->inTestMode()) {
                         $this->_logger->info('Test mode subscription_addon_order');
@@ -967,6 +1014,7 @@ class RecurlySubscription
 
             foreach ($subCodes as $subCode) {
                 if (in_array($subCode['plan_code'], ['annual', 'seasonal'])) {
+                    $this->_logger->info($this->_loggerPrefix . "Adding {$subCode['plan_code']} Recurly subscription ID {$subCode['subscription_id']} to the subscription");
                     $subscription
                         ->setData('subscription_id', $subCode['subscription_id'])
                         ->save();
@@ -975,21 +1023,27 @@ class RecurlySubscription
                     $addOns = $subscription->getSubscriptionAddonOrders();
 
                     if ($addOns && $addOns->getFirstItem()) {
+                        $this->_logger->info($this->_loggerPrefix . "Adding {$subCode['plan_code']} Recurly subscription ID {$subCode['subscription_id']} to add-on.");
+
                         $addOn = $addOns->getFirstItem();
                         /** @var SubscriptionAddonOrder $addOn */
-                        $addOn
-                            ->setData('subscription_id', $subCode['subscription_id'])
-                            ->save();
+                        $addOn->setData('subscription_id', $subCode['subscription_id']);
+                        $this->_subscriptionAddonOrderResource->save($addOn);
 
                         // Check if there is an associated order and update the
                         // subscription IDs.
                         $order = $addOn->getOrder();
 
-                        if ($order) {
+                        if ($order && $order->getId()) {
+                            $this->_logger->info($this->_loggerPrefix . "Adding {$subCode['plan_code']} Recurly subscription ID {$subCode['subscription_id']} and master subscription ID {$masterSubscriptionID} to add-on order {$order->getId()} ({$order->getIncrementId()}.");
+                            $this->_coreSession->setOrderId($order->getIncrementId());
                             $order->addData([
                                 'master_subscription_id' => $masterSubscriptionID,
                                 'subscription_id' => $subCode['subscription_id'],
-                            ])->save();
+                            ]);
+                            $this->_orderResource->save($order);
+                        } else {
+                            throw new LocalizedException(__("Order not found for subscription add on order with subscription ID: {$subCode['subscription_id']}"));
                         }
                     }
                 } else {
@@ -997,19 +1051,24 @@ class RecurlySubscription
                     // ID.
                     $subscriptionOrder = $subscription->getSubscriptionOrderBySeasonSlug($subCode['plan_code']);
 
-                    $subscriptionOrder
-                        ->setData('subscription_id', $subCode['subscription_id'])
-                        ->save();
+                    $this->_logger->info($this->_loggerPrefix . "Adding {$subCode['plan_code']} Recurly subscription ID {$subCode['subscription_id']} to subscription order");
+                    $subscriptionOrder->setData('subscription_id', $subCode['subscription_id']);
+                    $this->_subscriptionOrderResource->save($subscriptionOrder);
 
                     // Check if there is an associated order and update the
                     // subscription IDs.
                     $order = $subscriptionOrder->getOrder();
 
-                    if ($order) {
+                    if ($order && $order->getId()) {
+                        $this->_logger->info($this->_loggerPrefix . "Adding {$subCode['plan_code']} Recurly subscription ID {$subCode['subscription_id']} and master subscription ID {$masterSubscriptionID} to order {$order->getId()} ({$order->getIncrementId()}.");
+                        $this->_coreSession->setOrderId($order->getIncrementId());
                         $order->addData([
                             'master_subscription_id' => $masterSubscriptionID,
                             'subscription_id' => $subCode['subscription_id'],
-                        ])->save();
+                        ]);
+                        $this->_orderResource->save($order);
+                    } else {
+                        throw new LocalizedException(__("Order not found for subscription order with subscription ID: {$subCode['subscription_id']}"));
                     }
                 }
             }

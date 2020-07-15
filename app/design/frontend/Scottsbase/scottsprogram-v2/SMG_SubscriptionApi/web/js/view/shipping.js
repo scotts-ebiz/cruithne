@@ -318,6 +318,7 @@ define([
                 url: window.location.origin + '/rest/V1/subscription/cancel',
                 dataType: 'json',
                 contentType: 'application/json',
+                data: JSON.stringify({cancelReason: 'Changing Plan'}),
                 processData: false,
                 success: function(response) {
                     response = JSON.parse(response);

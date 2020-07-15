@@ -3,8 +3,8 @@ namespace SMG\SubscriptionAccounts\Block;
 
 use Magento\Framework\View\Element\Template\Context;
 use Magento\Framework\App\DefaultPathInterface;
-use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Customer\Api\CustomerRepositoryInterface;
 
 class Link extends \Magento\Framework\View\Element\Html\Link\Current {
 
@@ -14,31 +14,31 @@ class Link extends \Magento\Framework\View\Element\Html\Link\Current {
     protected $_defaultPath;
 
     /**
-     * @var Customer
-     */
-    protected $_customer;
-
-    /**
      * @var CustomerSession
      */
     protected $_customerSession;
-
+    
+	/**
+     * @var CustomerRepositoryInterface
+     */
+    protected $_customerRepositoryInterface;
+	
     public function __construct(
         Context $context,
-        Customer $customer,
         CustomerSession $customerSession,
         DefaultPathInterface $defaultPath,
+		CustomerRepositoryInterface $customerRepositoryInterface,
         array $data = []
     )
     {
-        $this->_customer = $customer;
         $this->_customerSession = $customerSession;
+		$this->_customerRepositoryInterface = $customerRepositoryInterface;
         parent::__construct( $context, $defaultPath );
     }
 
-	/**
-	 * Display "Billing Information" menu in My Account only if the customer has a Recurly account
-	 * 
+    /**
+     * Display "Billing Information" menu in My Account only if the customer has a Recurly account
+     * 
      * @return string
      */
     public function toHtml()
@@ -47,7 +47,7 @@ class Link extends \Magento\Framework\View\Element\Html\Link\Current {
             return parent::toHtml();
         }
 
-    	return '';
+        return '';
     }
 
     /**
@@ -67,9 +67,8 @@ class Link extends \Magento\Framework\View\Element\Html\Link\Current {
      */
     private function hasRecurlyAccount()
     {
-        $customer = $this->_customer->load( $this->getCustomerId() );
-
-        if( $customer->getRecurlyAccountCode() ) {
+        $customer = $this->_customerRepositoryInterface->getById( $this->getCustomerId() );
+        if(!empty($customer->getCustomAttribute('gigya_uid')->getValue())) {
             return true;
         }
 

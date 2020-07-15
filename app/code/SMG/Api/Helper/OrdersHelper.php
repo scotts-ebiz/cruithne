@@ -33,6 +33,8 @@ use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatch
 use SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo\CollectionFactory as SapOrderBatchCreditmemoCollectionFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderBatchRma\CollectionFactory as SapOrderBatchRmaCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription\Collection as Collection;
+use SMG\SubscriptionApi\Model\SubscriptionFactory;
 
 class OrdersHelper
 {
@@ -223,6 +225,11 @@ class OrdersHelper
     protected $_sapOrderBatchFactory;
 
     /**
+     * @var SubscriptionFactory
+     */
+    protected $_subscriptionFactory;
+
+    /**
      * OrdersHelper constructor.
      *
      * @param LoggerInterface $logger
@@ -250,6 +257,7 @@ class OrdersHelper
      * @param SapOrderBatchResource $sapOrderBatchResource
      * @param SubscriptionResource $subscriptionResource
      * @param SapOrderBatchFactory $sapOrderBatchFactory
+     * @param SubscriptionFactory $subscriptionFactory
      */
     public function __construct(LoggerInterface $logger,
         ResourceConnection $resourceConnection,
@@ -275,7 +283,9 @@ class OrdersHelper
         DiscountHelper $discountHelper,
         SapOrderBatchResource $sapOrderBatchResource,
         SubscriptionResource $subscriptionResource,
-        SapOrderBatchFactory $sapOrderBatchFactory)
+        SapOrderBatchFactory $sapOrderBatchFactory,
+        SubscriptionFactory $subscriptionFactory
+        )
     {
         $this->_logger = $logger;
         $this->_resourceConnection = $resourceConnection;
@@ -302,6 +312,7 @@ class OrdersHelper
         $this->_sapOrderBatchResource = $sapOrderBatchResource;
         $this->_subscriptionResource = $subscriptionResource;
         $this->_sapOrderBatchFactory = $sapOrderBatchFactory;
+        $this->_subscriptionFactory = $subscriptionFactory;
     }
 
     /**
@@ -444,6 +455,10 @@ class OrdersHelper
             // loop through the list of master subscription ids
             foreach ($this->_masterSubscriptionIds as $masterSubscriptionId)
             {
+                // get the subscription data with filter master_subscription_id of sales_order
+                $subscription = $this->_subscriptionFactory->create();
+                $this->_subscriptionResource->load($subscription, $masterSubscriptionId, 'subscription_id');
+                
                 // get the list of orders for this master subscription id
                 $annualOrders = $this->_orderCollectionFactory->create();
                 $annualOrders->addFieldToFilter('master_subscription_id', ['eq' => $masterSubscriptionId]);
@@ -460,9 +475,12 @@ class OrdersHelper
                      */
                     foreach ($annualOrders as $annualOrder)
                     {
-                        // get the required fields needed for processing
-                        $orderId = $annualOrder->getId();
-
+                     // get the required fields needed for processing
+                     $orderId = $annualOrder->getId();
+                      
+                     // check subscription exist or not                    
+                     if(!empty($subscription->getId())){
+                         
                         if ($annualOrder->isCanceled())
                         {
                             // Get the sap sales order
@@ -497,6 +515,29 @@ class OrdersHelper
                                 $ordersArray[] = $this->addRecordToOrdersArray($annualOrder, $orderItem);
                             }
                         }
+                      }
+                      else
+                      {
+                        // Get the sap sales order
+                        /**
+                         * @var \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
+                         */
+                        $sapOrderBatch = $this->_sapOrderBatchFactory->create();
+                        $this->_sapOrderBatchResource->load($sapOrderBatch, $orderId);
+
+                        // get the date for today
+                        $today = date('Y-m-d H:i:s');
+
+                        // update the process date so it isn't picked up again
+                        $sapOrderBatch->setData('order_process_date', $today);
+
+                        // save to the database
+                        $this->_sapOrderBatchResource->save($sapOrderBatch);
+                        
+                        //Error log in system log file for SAP_ORDER_CRON_SKIP_BROKEN_SUB
+                        $error = 'SMG\Api\Helper\OrdersHelper - SAP_ORDER_CRON_SKIP_BROKEN_SUB - Subscription id is null for order number -'.$annualOrder->getData('increment_id');
+                        $this->_logger->error($error);
+                      }
                     }
                 }
             }
@@ -546,6 +587,8 @@ class OrdersHelper
          * @var \Magento\Sales\Model\Order\Address $shippingAddress
          */
         $shippingAddress = $order->getShippingAddress();
+        $streetArray = $shippingAddress->getStreet();
+        $implodedStreetAddress = $this->implodeStreetArray($streetArray);
         $customerFirstName = $shippingAddress->getFirstname();
         $customerLastName = $shippingAddress->getLastname();
         if (empty($customerFirstName) && empty($customerLastName))
@@ -738,7 +781,7 @@ class OrdersHelper
             self::DATE_PLACED => $order->getData('created_at'),
             self::SAP_DELIVERY_DATE => $tomorrow,
             self::CUSTOMER_NAME => $customerName,
-            self::ADDRESS_STREET => $shippingAddress->getStreetLine(1),
+            self::ADDRESS_STREET => $implodedStreetAddress,
             self::ADDRESS_CITY => $shippingAddress->getCity(),
             self::ADDRESS_STATE => $shippingAddress->getRegion(),
             self::ADDRESS_ZIP => $shippingAddress->getPostcode(),
@@ -782,6 +825,16 @@ class OrdersHelper
             self::SUBSCRIPTION_SHIP_START => $order->getData('ship_start_date'),
             self::SUBSCRIPTION_SHIP_END => $order->getData('ship_end_date')
         ));
+    }
+
+    /** 
+    * Implode all Street Line Values 
+    */
+    private function implodeStreetArray($value){
+        $streetArrayValue = $value;
+        $impodeStreetValues = implode(" ", array_reverse($streetArrayValue));
+        $value = $impodeStreetValues; 
+        return $value;
     }
 
     /**
@@ -911,4 +964,53 @@ class OrdersHelper
         // return
         return $ordersArray;
     }
+
+    /**
+     * Get Order Data For Data Sync.
+     *
+     * @return array
+     */
+    public function getOrdersForAudit() {
+
+        /** @var Collection $orders **/
+        $orders = $this->_orderCollectionFactory->create();
+
+        $returnArray = array();
+        /** @var Order $order **/
+        foreach ($orders as $index=>$order) {
+            $newDataItem = array();
+            $newDataItem['DatabaseOrderNumber'] = $order->getId();
+            $newDataItem['OrderNumber'] = $order->getData('increment_id');
+            $newDataItem['DatePlaced'] = $order->getData('created_at');
+            $newDataItem['master_subscription_id'] = $order->getData('master_subscription_id');
+            $newDataItem['subscription_id'] = $order->getData('subscription_id');
+            $newDataItem['subscription_type'] = $order->getData('subscription_type');
+            $newDataItem['status'] = $order->getData('status');
+            $newDataItem['customer_firstname'] = $order->getData('customer_firstname');
+            $newDataItem['customer_lastname'] = $order->getData('customer_lastname');
+            $newDataItem['email'] = $order->getData('customer_email');
+            $newDataItem['ship_start_date'] = $order->getData('ship_start_date');
+            $newDataItem['ship_end_date'] = $order->getData('ship_end_date');
+            $newDataItem['SubTotal'] = $order->getData('subtotal');
+            $newDataItem['SalesTax'] = $order->getData('tax_amount');
+            $newDataItem['InvoicedAmount'] = $order->getData('total_invoiced');
+            $newDataItem['subscription_addon'] = $order->getData('subscription_addon');
+            $newDataItem['gigya_id'] = $order->getData('gigya_id');
+            $returnArray[] = $newDataItem;
+        }
+
+        return $returnArray;
+    }
+
+    /**
+     * Get SAP Data For Data Sync.
+     *
+     * @return array
+     */
+    public function getSapBatchForAudit() {
+
+        $sapOrderCollection = $this->_sapOrderBatchCollectionFactory->create();
+        return $sapOrderCollection->getData();
+    }
+
 }
