@@ -44,7 +44,7 @@
 							<td><?php echo $subscription->plan->name; ?></td>
 							<td><?php echo $subscription->state; ?></td>
 							<td><?php echo $block->getMagentoStatus($subscription->uuid); ?></td>
-							<td><?php echo $block->getSapOrderStatus($subscription->uuid); ?>test</td>
+							<td><?php echo $block->getSapOrderStatus($subscription->uuid); ?></td>
 							<td><?php echo $subscription->activated_at->format('d F, Y'); ?></td>
 							<td><?php echo $subscription->current_term_started_at->format('d F, Y'); ?></td>
 							<td>$<?php echo $block->convertAmountToDollars($subscription->unit_amount_in_cents); ?></td>

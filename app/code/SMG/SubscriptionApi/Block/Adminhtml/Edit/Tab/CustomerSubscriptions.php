@@ -15,6 +15,7 @@ use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder as SubscriptionOrd
 use SMG\Sap\Model\SapOrderFactory;
 use SMG\Sap\Model\ResourceModel\SapOrder as SapOrderResource;
 use SMG\Sap\Model\SapOrderStatusFactory;
+use SMG\Sap\Model\ResourceModel\SapOrderStatus as SapOrderStatusResource;
 
 
 class CustomerSubscriptions extends \Magento\Framework\View\Element\Template implements TabInterface
@@ -116,6 +117,12 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
 
     /**
+     * @var SapOrderStatusResource
+     */
+    protected $_sapOrderStatusResource;
+
+
+    /**
      * @param InvoiceRepositoryInterface $_invoiceRepository
      * @param $invoiceItemRepository
      * @param $orderCollectionFactory
@@ -137,6 +144,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         SapOrderFactory $sapOrderFactory,
         SapOrderResource $SapOrderResource,
         SapOrderStatusFactory $sapOrderStatusFactory,
+        SapOrderStatusResource $sapOrderStatusResource,
         SubscriptionOrderResource $subscriptionOrderResource,
         \Magento\Sales\Api\InvoiceItemRepositoryInterface $invoiceItemRepository,
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
@@ -159,6 +167,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         $this->_sapOrderFactory = $sapOrderFactory;
         $this->_sapOrderResource = $SapOrderResource;
         $this->_sapOrderStatusFactory = $sapOrderStatusFactory;
+        $this->_sapOrderStatusResource = $sapOrderStatusResource;
         $this->_logger = $logger;
         parent::__construct($context, $data);
     }
@@ -362,11 +371,18 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         foreach ($collection as $order) {
             $orderEntityId = $order->getData('entity_id');
 
+            // Load SAP Order object based on order_id
             $this->_sapOrderResource->load($sapOrderObject, $orderEntityId, 'order_id');
 
+            // Retrieve order_status from SAP Order Object
             $sapOrderStatus = $sapOrderObject->getData('order_status');
 
-            return $sapOrderStatus;
+            // Load SAP Order Status object based on status
+            $this->_sapOrderStatusResource->load($sapOrderStatusObject, $sapOrderStatus, 'status');
+
+            $sapOrderStatusLabel = $sapOrderStatusObject->getData('label');
+
+            return $sapOrderStatusLabel;
         }
         return false;
     }
