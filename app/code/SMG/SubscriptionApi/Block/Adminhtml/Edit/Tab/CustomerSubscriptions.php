@@ -327,6 +327,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     }
 
 
+
     /**
      * Get Product Magento Status from Subscription ID
      *
@@ -346,6 +347,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         }
         return false;
     }
+
 
 
     /**
@@ -380,12 +382,14 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
             // Load SAP Order Status object based on status
             $this->_sapOrderStatusResource->load($sapOrderStatusObject, $sapOrderStatus, 'status');
 
+            // Retrieve clean version of the SAP Status label from SAP Order Status object
             $sapOrderStatusLabel = $sapOrderStatusObject->getData('label');
 
             return $sapOrderStatusLabel;
         }
         return false;
     }
+
 
 
     /**
