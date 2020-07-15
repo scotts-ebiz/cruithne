@@ -88,7 +88,9 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     protected $_orderCollectionFactory;
 
 
-    /** @var SubscriptionOrderFactory  */
+    /** 
+     * @var SubscriptionOrderFactory  
+     */
     protected $_subscriptionOrderFactory;
 
 
@@ -310,7 +312,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
 
     /**
-     * Get Subscription Order Status from Subscription ID
+     * Get SAP Subscription Order Status from Subscription ID
      *
      * @param $subscription_uuid
      * @return mixed
@@ -322,6 +324,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
         $this->_subscriptionOrderResource->load($subscriptionOrderObject, $subscription_uuid, 'subscription_id');
 
+        // Select SAP Subscription Order Status from subscriptionOrderObject
         $subOrderStatus = $subscriptionOrderObject->getData('subscription_order_status');
 
         return $subOrderStatus;
