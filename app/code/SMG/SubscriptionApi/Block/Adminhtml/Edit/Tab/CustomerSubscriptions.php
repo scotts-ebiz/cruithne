@@ -12,6 +12,9 @@ use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use SMG\SubscriptionApi\Model\SubscriptionOrderFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder as SubscriptionOrderResource;
+use SMG\Sap\Model\SapOrderFactory;
+use SMG\Sap\Model\ResourceModel\SapOrder as SapOrderResource;
+use SMG\Sap\Model\SapOrderStatusFactory;
 
 
 class CustomerSubscriptions extends \Magento\Framework\View\Element\Template implements TabInterface
@@ -95,9 +98,29 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
 
     /**
+     * @var SapOrderFactory
+     */
+    protected $_sapOrderFactory;
+
+
+    /**
+     * @var SapOrderResource
+     */
+    protected $_sapOrderResource;
+
+
+    /**
+     * @var SapOrderStatusFactory
+     */
+    protected $_sapOrderStatusFactory;
+
+
+    /**
      * @param InvoiceRepositoryInterface $_invoiceRepository
      * @param $invoiceItemRepository
      * @param $orderCollectionFactory
+     * @param $sapOrderFactory
+     * @param SapOrderStatusFactory $sapOrderStatusFactory
      * @param SubscriptionOrderFactory $subscriptionOrderFactory
      */
 
@@ -111,6 +134,9 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         \Magento\Framework\Data\Form\FormKey $formKey,
         OrderFactory $orderFactory,
         OrderResource $orderResource,
+        SapOrderFactory $sapOrderFactory,
+        SapOrderResource $SapOrderResource,
+        SapOrderStatusFactory $sapOrderStatusFactory,
         SubscriptionOrderResource $subscriptionOrderResource,
         \Magento\Sales\Api\InvoiceItemRepositoryInterface $invoiceItemRepository,
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
@@ -130,7 +156,9 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         $this->_invoiceItemRepository = $invoiceItemRepository;
         $this->_searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->_orderCollectionFactory = $orderCollectionFactory;
-        $this->_subscriptionOrderFactory = $subscriptionOrderFactory;
+        $this->_sapOrderFactory = $sapOrderFactory;
+        $this->_sapOrderResource = $SapOrderResource;
+        $this->_sapOrderStatusFactory = $sapOrderStatusFactory;
         $this->_logger = $logger;
         parent::__construct($context, $data);
     }
@@ -317,17 +345,30 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
      * @param $subscription_uuid
      * @return mixed
      */
-    public function getSapSubscriptionStatus($subscription_uuid)
+    public function getSapOrderStatus($subscription_uuid)
     {
-        // From Subscription Order Collection - Select all attributs based on Subscription_Id
-        $subscriptionOrderObject = $this->_subscriptionOrderFactory->create();
+        // From Order Collection - Select all attributs based on Subscription_Id
+        $collection = $this->_orderCollectionFactory->create()
+            ->addAttributeToSelect('*')
+            ->addFieldToFilter('subscription_id', $subscription_uuid);
 
-        $this->_subscriptionOrderResource->load($subscriptionOrderObject, $subscription_uuid, 'subscription_id');
+        // Create instance of SAP Order Factory    
+        $sapOrderObject = $this->_sapOrderFactory->create();
 
-        // Select SAP Subscription Order Status from subscriptionOrderObject
-        $subOrderStatus = $subscriptionOrderObject->getData('subscription_order_status');
+        // Create instance of SAP Order Status Factory    
+        $sapOrderStatusObject = $this->_sapOrderStatusFactory->create();
 
-        return $subOrderStatus;
+        // Select Order Entity_Id from Order Collection results   
+        foreach ($collection as $order) {
+            $orderEntityId = $order->getData('entity_id');
+
+            $this->_sapOrderResource->load($sapOrderObject, $orderEntityId, 'order_id');
+
+            $sapOrderStatus = $sapOrderObject->getData('order_status');
+
+            return $sapOrderStatus;
+        }
+        return false;
     }
 
 
