@@ -327,6 +327,26 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     }
 
 
+    /**
+     * Get Product Magento Status from Subscription ID
+     *
+     * @param $subscription_uuid
+     * @return mixed
+     */
+    public function getMagentoStatus($subscription_uuid)
+    {
+        // From Order Collection - Select all attributs based on Subscription_Id
+        $collection = $this->_orderCollectionFactory->create()
+            ->addAttributeToSelect('*')
+            ->addFieldToFilter('subscription_id', $subscription_uuid);
+
+        // Select Order Entity_Id from Order Collection results   
+        foreach ($collection as $order) {
+            return $order->getData('status');
+        }
+        return false;
+    }
+
 
     /**
      * Get Product Magento Status from Subscription ID
