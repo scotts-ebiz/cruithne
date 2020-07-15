@@ -91,9 +91,6 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     protected $_orderCollectionFactory;
 
 
-
-
-
     /**
      * @var SapOrderFactory
      */
