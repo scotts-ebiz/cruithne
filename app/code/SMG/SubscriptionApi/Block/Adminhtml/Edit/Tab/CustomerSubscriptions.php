@@ -10,6 +10,11 @@ use Recurly_NotFoundError;
 use Recurly_SubscriptionList;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder as SubscriptionOrderResource;
+use SMG\Sap\Model\SapOrderFactory;
+use SMG\Sap\Model\ResourceModel\SapOrder as SapOrderResource;
+use SMG\Sap\Model\SapOrderStatusFactory;
+use SMG\Sap\Model\ResourceModel\SapOrderStatus as SapOrderStatusResource;
 
 
 class CustomerSubscriptions extends \Magento\Framework\View\Element\Template implements TabInterface
@@ -57,6 +62,12 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
 
     /**
+     * @var SubscriptionOrderResource
+     */
+    protected $_subscriptionOrderResource;
+
+
+    /**
      * @var searchCriteriaBuilder
      */
     protected $_searchCriteriaBuilder;
@@ -80,12 +91,36 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     protected $_orderCollectionFactory;
 
 
+    /**
+     * @var SapOrderFactory
+     */
+    protected $_sapOrderFactory;
+
+
+    /**
+     * @var SapOrderResource
+     */
+    protected $_sapOrderResource;
+
+
+    /**
+     * @var SapOrderStatusFactory
+     */
+    protected $_sapOrderStatusFactory;
+
+
+    /**
+     * @var SapOrderStatusResource
+     */
+    protected $_sapOrderStatusResource;
 
 
     /**
      * @param InvoiceRepositoryInterface $_invoiceRepository
      * @param $invoiceItemRepository
      * @param $orderCollectionFactory
+     * @param $sapOrderFactory
+     * @param SapOrderStatusFactory $sapOrderStatusFactory
      */
 
 
@@ -98,6 +133,11 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         \Magento\Framework\Data\Form\FormKey $formKey,
         OrderFactory $orderFactory,
         OrderResource $orderResource,
+        SapOrderFactory $sapOrderFactory,
+        SapOrderResource $SapOrderResource,
+        SapOrderStatusFactory $sapOrderStatusFactory,
+        SapOrderStatusResource $sapOrderStatusResource,
+        SubscriptionOrderResource $subscriptionOrderResource,
         \Magento\Sales\Api\InvoiceItemRepositoryInterface $invoiceItemRepository,
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
@@ -111,9 +151,14 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         $this->_formKey = $formKey;
         $this->_orderFactory = $orderFactory;
         $this->_orderResource = $orderResource;
+        $this->_subscriptionOrderResource = $subscriptionOrderResource;
         $this->_invoiceItemRepository = $invoiceItemRepository;
         $this->_searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->_orderCollectionFactory = $orderCollectionFactory;
+        $this->_sapOrderFactory = $sapOrderFactory;
+        $this->_sapOrderResource = $SapOrderResource;
+        $this->_sapOrderStatusFactory = $sapOrderStatusFactory;
+        $this->_sapOrderStatusResource = $sapOrderStatusResource;
         $this->_logger = $logger;
         parent::__construct($context, $data);
     }
@@ -273,6 +318,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     }
 
 
+
     /**
      * Get Product Magento Status from Subscription ID
      *
@@ -286,12 +332,55 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
             ->addAttributeToSelect('*')
             ->addFieldToFilter('subscription_id', $subscription_uuid);
 
-        // Select Order Entity_Id from Order Collection results   
+        // Select Order Status from Order Collection results   
         foreach ($collection as $order) {
             return $order->getData('status');
         }
         return false;
     }
+
+
+
+    /**
+     * Get SAP Subscription Order Status from Subscription ID
+     *
+     * @param $subscription_uuid
+     * @return mixed
+     */
+    public function getSapOrderStatus($subscription_uuid)
+    {
+        // From Order Collection - Select all attributs based on Subscription_Id
+        $collection = $this->_orderCollectionFactory->create()
+            ->addAttributeToSelect('*')
+            ->addFieldToFilter('subscription_id', $subscription_uuid);
+
+        // Create instance of SAP Order Factory    
+        $sapOrderObject = $this->_sapOrderFactory->create();
+
+        // Create instance of SAP Order Status Factory    
+        $sapOrderStatusObject = $this->_sapOrderStatusFactory->create();
+
+        // Select Order Entity_Id from Order Collection results   
+        foreach ($collection as $order) {
+            $orderEntityId = $order->getData('entity_id');
+
+            // Load SAP Order object based on order_id
+            $this->_sapOrderResource->load($sapOrderObject, $orderEntityId, 'order_id');
+
+            // Retrieve order_status from SAP Order Object
+            $sapOrderStatus = $sapOrderObject->getData('order_status');
+
+            // Load SAP Order Status object based on status
+            $this->_sapOrderStatusResource->load($sapOrderStatusObject, $sapOrderStatus, 'status');
+
+            // Retrieve clean version of the SAP Status label from SAP Order Status object
+            $sapOrderStatusLabel = $sapOrderStatusObject->getData('label');
+
+            return $sapOrderStatusLabel;
+        }
+        return false;
+    }
+
 
 
     /**
