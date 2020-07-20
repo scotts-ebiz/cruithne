@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8c76f3a6a8ef50fcdb4e30e7f4e4e142",
+    "content-hash": "49818f44960f943aecc87c22033a59d7",
     "packages": [
         {
             "name": "amasty/base",
@@ -15088,6 +15088,40 @@
                 "mageplaza",
                 "smtp"
             ]
+        },
+        {
+            "name": "markshust/magento2-module-simpledata",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/markshust/magento2-module-simpledata.git",
+                "reference": "936869cb92286c1e5e8563d3a9621e3e527f960b"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/markshust/magento2-module-simpledata/zipball/936869cb92286c1e5e8563d3a9621e3e527f960b",
+                "reference": "936869cb92286c1e5e8563d3a9621e3e527f960b",
+                "shasum": ""
+            },
+            "require": {
+                "magento/framework": ">=101",
+                "php": ">=7.1"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "MarkShust\\SimpleData\\": ""
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "The SimpleData module simplifies calling Magento data structures.",
+            "time": "2020-05-20T16:45:29+00:00"
         },
         {
             "name": "monolog/monolog",
