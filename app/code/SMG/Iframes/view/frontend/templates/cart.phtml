@@ -1,15 +1,14 @@
 <div class="nav__cart">
     <a id="cart-checkout" data-target-element="#header-cart" class="nav__cart--wrapper" target="_parent">
         <span class="nav__cart--icon"></span>
-      <? if ($this->cartCount() != 0 ) : ?>
-          <span class="nav__cart--label">Cart <span class="count"><?php echo $this->escapeHtml($this->cartCount()); ?></span></span>
-          <div class="checkout-now">Checkout Now</div>
-      <? endif; ?>
+        <? if ($this->cartCount() != 0 ) : ?>
+        <span class="nav__cart--label"><span class="count"><?php echo $this->escapeHtml($this->cartCount()); ?></span></span>
+        <? endif; ?>
     </a>
 </div>
 
 <script type="text/x-magento-init">
-{
+    {
     "*": {
         "SMG_Iframes/js/cart": {}
     }
