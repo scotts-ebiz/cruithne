@@ -334,12 +334,16 @@ class OrdersLawnSubscriptionHelper
                                             $orderItems->addFieldToFilter("product_type", ['neq' => 'bundle']);
                                             $orderItems->addFieldToFilter("product_type", ['neq' => 'configurable']);
 
-                                            /**
-                                             * @var \Magento\Sales\Model\Order\Item $orderItem
-                                             */
-                                            foreach ($orderItems as $orderItem)
+                                            // Skip if virtual
+                                            if (!$order->getIsVirtual())
                                             {
-                                                $ordersArray[] = $this->addRecordToOrdersArray($annualOrder, $orderItem);
+                                                /**
+                                                 * @var \Magento\Sales\Model\Order\Item $orderItem
+                                                 */
+                                                foreach ($orderItems as $orderItem)
+                                                {
+                                                    $ordersArray[] = $this->addRecordToOrdersArray($annualOrder, $orderItem);
+                                                }
                                             }
                                         }
                                     }
@@ -354,7 +358,7 @@ class OrdersLawnSubscriptionHelper
                     {
                         $this->_logger->error("There was an error processing orderId OrdersLawnSubscriptionHelper - " . $orderId);
                     }
-                    
+
                     // added this so if an error occurs during processing of the order then we can catch
                     // it here and log the message and then keep processing the other orders
                     $this->_logger->error($e->getMessage());
