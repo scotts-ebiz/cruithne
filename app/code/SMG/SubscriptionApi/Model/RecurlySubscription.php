@@ -924,10 +924,12 @@ class RecurlySubscription
                 $recurlySubscription->custom_fields[] = new Recurly_CustomField('quiz_id', $quizID);
                 $recurlySubscription->custom_fields[] = new Recurly_CustomField('is_addon', true);
                 $recurlySubscription->custom_fields[] = new Recurly_CustomField('addon_skus', implode(',', $productSkus));
+                $recurlySubscription->starts_at = $subscriptionAddonOrder->getData('ship_start_date');
 
-                // If annual subx, ship add-on immediately, null accomplishes that.
-                $recurlySubscription->starts_at = null;
-
+                // If annual subx or , ship add-on immediately, null accomplishes that.
+                if ($subscriptionAddonOrder->isCurrentlyShippable() || $subscriptionType == 'annual') {
+                    $recurlySubscription->starts_at = null;
+                }
 
                 if ($subscriptionType == 'seasonal') {
                     // We're in test mode, so set custom start dates.
