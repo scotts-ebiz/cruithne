@@ -75,7 +75,7 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 data-recurly="address1"
                 data-bind="value: billing.address1, enable: billingInfoEditable, event: { 'blur': validateField }"
                 name="address_1"
-                data-validate="{'required-entry-street-0':true}" aria-required="true"
+                data-validate="{'required-entry-street-0':true,'validate-street0-extra-words':true}" aria-required="true"
             >
             <label class="sp-form-label">Address line 1</label>
         </div>
@@ -84,7 +84,8 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 placeholder="Address line 2"
                 class="sp-input"
                 data-recurly="address2"
-                data-bind="value: billing.address2, enable: billingInfoEditable"
+                data-bind="value: billing.address2, enable: billingInfoEditable, event: { 'blur': validateField }"
+                data-validate="{'validate-street1-extra-words':true}"
                 name="address_2">
             <label class="sp-form-label">Address line 2</label>
         </div>
