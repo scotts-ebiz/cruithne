@@ -425,12 +425,16 @@ class OrdersHelper
                     $orderItems->addFieldToFilter("product_type", ['neq' => 'bundle']);
                     $orderItems->addFieldToFilter("product_type", ['neq' => 'configurable']);
 
-                    /**
-                     * @var \Magento\Sales\Model\Order\Item $orderItem
-                     */
-                    foreach ($orderItems as $orderItem)
+                    // Skip if virtual
+                    if (!$order->getIsVirtual())
                     {
-                        $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem);
+                        /**
+                         * @var \Magento\Sales\Model\Order\Item $orderItem
+                         */
+                        foreach ($orderItems as $orderItem)
+                        {
+                            $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem);
+                        }
                     }
                 }
             }
@@ -458,7 +462,7 @@ class OrdersHelper
                 // get the subscription data with filter master_subscription_id of sales_order
                 $subscription = $this->_subscriptionFactory->create();
                 $this->_subscriptionResource->load($subscription, $masterSubscriptionId, 'subscription_id');
-                
+
                 // get the list of orders for this master subscription id
                 $annualOrders = $this->_orderCollectionFactory->create();
                 $annualOrders->addFieldToFilter('master_subscription_id', ['eq' => $masterSubscriptionId]);
@@ -477,10 +481,10 @@ class OrdersHelper
                     {
                      // get the required fields needed for processing
                      $orderId = $annualOrder->getId();
-                      
-                     // check subscription exist or not                    
+
+                     // check subscription exist or not
                      if(!empty($subscription->getId())){
-                         
+
                         if ($annualOrder->isCanceled())
                         {
                             // Get the sap sales order
@@ -507,12 +511,16 @@ class OrdersHelper
                             $orderItems->addFieldToFilter("product_type", ['neq' => 'bundle']);
                             $orderItems->addFieldToFilter("product_type", ['neq' => 'configurable']);
 
-                            /**
-                             * @var \Magento\Sales\Model\Order\Item $orderItem
-                             */
-                            foreach ($orderItems as $orderItem)
+                            // Skip if virtual
+                            if (!$annualOrder->getIsVirtual())
                             {
-                                $ordersArray[] = $this->addRecordToOrdersArray($annualOrder, $orderItem);
+                                /**
+                                 * @var \Magento\Sales\Model\Order\Item $orderItem
+                                 */
+                                foreach ($orderItems as $orderItem)
+                                {
+                                    $ordersArray[] = $this->addRecordToOrdersArray($annualOrder, $orderItem);
+                                }
                             }
                         }
                       }
@@ -533,7 +541,7 @@ class OrdersHelper
 
                         // save to the database
                         $this->_sapOrderBatchResource->save($sapOrderBatch);
-                        
+
                         //Error log in system log file for SAP_ORDER_CRON_SKIP_BROKEN_SUB
                         $error = 'SMG\Api\Helper\OrdersHelper - SAP_ORDER_CRON_SKIP_BROKEN_SUB - Subscription id is null for order number -'.$annualOrder->getData('increment_id');
                         $this->_logger->error($error);
@@ -827,13 +835,13 @@ class OrdersHelper
         ));
     }
 
-    /** 
-    * Implode all Street Line Values 
+    /**
+    * Implode all Street Line Values
     */
     private function implodeStreetArray($value){
         $streetArrayValue = $value;
         $impodeStreetValues = implode(" ", array_reverse($streetArrayValue));
-        $value = $impodeStreetValues; 
+        $value = $impodeStreetValues;
         return $value;
     }
 
@@ -884,16 +892,19 @@ class OrdersHelper
 
                 // Get the credit memo items
                 $creditMemoItems = $creditMemo->getItems();
-                foreach ($creditMemoItems as $creditMemoItem)
+                if (!$order->getIsVirtual())
                 {
-                    // see if the sku is the same as the sku that we are looking for
-                    if ($sku === $creditMemoItem->getSku())
+                    foreach ($creditMemoItems as $creditMemoItem)
                     {
-                        // add the record to the orders array
-                        $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem, $creditMemo, $creditMemoItem);
+                        // see if the sku is the same as the sku that we are looking for
+                        if ($sku === $creditMemoItem->getSku())
+                        {
+                            // add the record to the orders array
+                            $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem, $creditMemo, $creditMemoItem);
 
-                        // get out of the loop as we found it
-                        break;
+                            // get out of the loop as we found it
+                            break;
+                        }
                     }
                 }
             }
@@ -946,16 +957,20 @@ class OrdersHelper
                 // Get the credit memo items
                 $rmaItems = $rma->getItems();
 
-                foreach ($rmaItems as $rmaItem)
+                // Skip if virtual
+                if (!$order->getIsVirtual())
                 {
-                    // see if the sku is the same as the sku that we are looking for
-                    if ($sku === $rmaItem->getProductSku())
+                    foreach ($rmaItems as $rmaItem)
                     {
-                        // add the record to the orders array
-                        $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem, null, null, $rmaItem, $sapOrderBatchRma);
+                        // see if the sku is the same as the sku that we are looking for
+                        if ($sku === $rmaItem->getProductSku())
+                        {
+                            // add the record to the orders array
+                            $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem, null, null, $rmaItem, $sapOrderBatchRma);
 
-                        // get out of the loop as we found it
-                        break;
+                            // get out of the loop as we found it
+                            break;
+                        }
                     }
                 }
             }
