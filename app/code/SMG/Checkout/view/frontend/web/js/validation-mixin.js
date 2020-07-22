@@ -10,7 +10,7 @@ define([
             $.validator.addMethod(
                 "validate-street0-extra-words",
                 function(value, element) {
-                    if(value.toLowerCase().includes("none"))
+                    if(value.toLowerCase().includes("none") && value.trim().length == 4)
                     {
                         return false;
                     }
@@ -25,7 +25,7 @@ define([
             $.validator.addMethod(
                 "validate-street1-extra-words",
                 function(value, element) {
-                    if(value.toLowerCase().includes("none"))
+                    if(value.toLowerCase().includes("none") && value.trim().length == 4)
                     {
                         return false;
                     }
