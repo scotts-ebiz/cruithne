@@ -115,12 +115,19 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     protected $_sapOrderStatusResource;
 
 
+
+    /**
+     * @var \Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory
+     */
+    protected $_orderItemCollectionFactory;
+
     /**
      * @param InvoiceRepositoryInterface $_invoiceRepository
      * @param $invoiceItemRepository
      * @param $orderCollectionFactory
      * @param $sapOrderFactory
      * @param SapOrderStatusFactory $sapOrderStatusFactory
+     * @param \Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory $orderItemCollectionFactory
      */
 
 
@@ -141,6 +148,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         \Magento\Sales\Api\InvoiceItemRepositoryInterface $invoiceItemRepository,
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
+        \Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory $orderItemCollectionFactory,
         LoggerInterface $logger,
         array $data = []
     ) {
@@ -159,6 +167,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         $this->_sapOrderResource = $SapOrderResource;
         $this->_sapOrderStatusFactory = $sapOrderStatusFactory;
         $this->_sapOrderStatusResource = $sapOrderStatusResource;
+        $this->_orderItemCollectionFactory = $orderItemCollectionFactory;
         $this->_logger = $logger;
         parent::__construct($context, $data);
     }
@@ -264,20 +273,21 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
         // Select Order Entity_Id from Order Collection results   
         foreach ($collection as $order) {
-            $orderEntityId = $order->getData('entity_id');
+            $orderEntityId = $order->getData('increment_id');
 
             // From Invoice Item Repository - Select data set based on Order_Item_Id (Order Entity Id) 
-            $invoiceOrders = $this->_invoiceItemRepository->getList(
-                $this->_searchCriteriaBuilder
-                    ->addFilter('order_item_id', $orderEntityId, 'eq')
-                    ->create()
-            );
+            // $invoiceOrders = $this->_invoiceItemRepository->getList(
+            //     $this->_searchCriteriaBuilder
+            //         ->addFilter('order_item_id', $orderEntityId, 'eq')
+            //         ->create()
+            // );
 
             // From InvoiceOrders results - Return attribute 'name' 
-            foreach ($invoiceOrders as $invoiceOrder) {
-                return $invoiceOrder->getData('name');
-            }
-            return false;
+            // foreach ($invoiceOrders as $invoiceOrder) {
+            //     return $invoiceOrder->getData('name');
+            // }
+            // return false;
+            return $orderEntityId;
         }
         return false;
     }
