@@ -259,7 +259,7 @@ class CancelSubscriptionHelper extends AbstractHelper
 
                 // Mark the order as canceled.
                 $this->_logger->info($this->_loggerPrefix . "Setting Order {$order->getId()} ({$order->getIncrementId()}) status to canceled...");
-                $order->setData('status', 'canceled');
+                $order->setState("canceled")->setStatus("complete");
                 $this->_orderResource->save($order);
             }
 
