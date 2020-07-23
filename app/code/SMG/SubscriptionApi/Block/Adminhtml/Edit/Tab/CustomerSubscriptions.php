@@ -397,16 +397,10 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         foreach ($collection as $order) {
             $orderEntityId = $order->getData('entity_id');
 
-            // From Invoice Item Repository - Select data set based on Order_Item_Id (Order Entity Id) 
-            $invoiceOrders = $this->_invoiceItemRepository->getList(
-                $this->_searchCriteriaBuilder
-                    ->addFilter('order_item_id', $orderEntityId, 'eq')
-                    ->create()
-            );
+            $orderItemCollection = $this->_orderItemCollectionFactory->create()->setOrderFilter($orderEntityId);
 
-            // From InvoiceOrders results - Return attribute 'sku' 
-            foreach ($invoiceOrders as $invoiceOrder) {
-                return $invoiceOrder->getData('sku');
+            foreach ($orderItemCollection as $orderItem) {
+                return $orderItem->getData('sku');
             }
             return false;
         }
