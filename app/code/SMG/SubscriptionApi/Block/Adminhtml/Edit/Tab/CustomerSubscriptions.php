@@ -273,21 +273,14 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
         // Select Order Entity_Id from Order Collection results   
         foreach ($collection as $order) {
-            $orderEntityId = $order->getData('increment_id');
+            $orderEntityId = $order->getData('entity_id');
 
-            // From Invoice Item Repository - Select data set based on Order_Item_Id (Order Entity Id) 
-            // $invoiceOrders = $this->_invoiceItemRepository->getList(
-            //     $this->_searchCriteriaBuilder
-            //         ->addFilter('order_item_id', $orderEntityId, 'eq')
-            //         ->create()
-            // );
+            $orderItemCollection = $this->_orderItemCollectionFactory->create()->setOrderFilter($orderEntityId);
 
-            // From InvoiceOrders results - Return attribute 'name' 
-            // foreach ($invoiceOrders as $invoiceOrder) {
-            //     return $invoiceOrder->getData('name');
-            // }
-            // return false;
-            return $orderEntityId;
+            foreach ($orderItemCollection as $orderItem) {
+                return $orderItem->getData('name');
+            }
+            return false;
         }
         return false;
     }
@@ -311,16 +304,10 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         foreach ($collection as $order) {
             $orderEntityId = $order->getData('entity_id');
 
-            // From Invoice Item Repository - Select data set based on Order_Item_Id (Order Entity Id) 
-            $invoiceOrders = $this->_invoiceItemRepository->getList(
-                $this->_searchCriteriaBuilder
-                    ->addFilter('order_item_id', $orderEntityId, 'eq')
-                    ->create()
-            );
+            $orderItemCollection = $this->_orderItemCollectionFactory->create()->setOrderFilter($orderEntityId);
 
-            // From InvoiceOrders results - Return attribute 'qty' 
-            foreach ($invoiceOrders as $invoiceOrder) {
-                return $invoiceOrder->getData('qty');
+            foreach ($orderItemCollection as $orderItem) {
+                return $orderItem->getData('qty_ordered');
             }
             return false;
         }
