@@ -9,6 +9,9 @@ var config = {
             mixins: {
                 'Magento_Checkout/js/view/shipping': {
                     'SMG_Checkout/js/view/shipping-mixin': true
+                },
+                'mage/validation': {
+                    'SMG_Checkout/js/validation-mixin': true
                 }
             }
         }
