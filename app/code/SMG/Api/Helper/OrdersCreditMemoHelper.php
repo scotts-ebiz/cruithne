@@ -332,16 +332,21 @@ class OrdersCreditMemoHelper
 
                         // Get the credit memo items
                         $creditMemoItems = $creditMemo->getItems();
-                        foreach ($creditMemoItems as $creditMemoItem)
-                        {
-                            // see if the sku is the same as the sku that we are looking for
-                            if ($sku === $creditMemoItem->getSku())
-                            {
-                                // add the record to the orders array
-                                $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem, $creditMemo, $creditMemoItem);
 
-                                // get out of the loop as we found it
-                                break;
+                        // Skip if virtual
+                        if (!$order->getIsVirtual())
+                        {
+                            foreach ($creditMemoItems as $creditMemoItem)
+                            {
+                                // see if the sku is the same as the sku that we are looking for
+                                if ($sku === $creditMemoItem->getSku())
+                                {
+                                    // add the record to the orders array
+                                    $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem, $creditMemo, $creditMemoItem);
+
+                                    // get out of the loop as we found it
+                                    break;
+                                }
                             }
                         }
                     }

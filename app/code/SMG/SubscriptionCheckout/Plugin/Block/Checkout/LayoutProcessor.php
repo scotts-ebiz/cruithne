@@ -65,13 +65,13 @@ class LayoutProcessor
                 if (isset($payment['children']['form-fields']['children']['street'])) {
                     $result['components']['checkout']['children']['steps']['children']['billing-step']['children']
                     ['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
-                    ['street']['children']['0']['validation'] = ['required-entry' => false,'required-entry-bstreet-0' => true];
+                    ['street']['children']['0']['validation'] = ['required-entry' => false,'required-entry-bstreet-0' => true,'validate-street0-extra-words' => true];
                 }
 
                 if (isset($payment['children']['form-fields']['children']['street'])) {
                     $result['components']['checkout']['children']['steps']['children']['billing-step']['children']
                     ['payment']['children']['payments-list']['children'][$key]['children']['form-fields']['children']
-                    ['street']['children']['1']['validation'] = ['required-entry-bstreet-1' => true];
+                    ['street']['children']['1']['validation'] = ['required-entry-bstreet-1' => true,'validate-street1-extra-words' => true];
                 }
 
                 if (isset($payment['children']['form-fields']['children']['street'])) {
