@@ -713,6 +713,13 @@ class OrdersHelper
             {
                 $debitCreditFlag = 'RE';
             }
+            
+            // check to order item for CL
+            $flag = $this->checkCancellation($order); 
+            if($flag)
+            {
+                    $debitCreditFlag = 'CL';
+            }
         }
 
         // Returns (Rma)
@@ -1027,5 +1034,71 @@ class OrdersHelper
         $sapOrderCollection = $this->_sapOrderBatchCollectionFactory->create();
         return $sapOrderCollection->getData();
     }
+    
+     /**
+     * Check order cancel or not
+     *
+     * @return boolen
+     */
+     public function checkCancellation($order) {
+         
+        // Get the sap sales order
+        /**
+         * @var \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
+         */
+        $trackNumbers = []; 
+        $sapOrderBatch = $this->_sapOrderBatchFactory->create();
+        $this->_sapOrderBatchResource->load($sapOrderBatch, $order->getId(), 'order_id');
+        $orderProcessDate = $sapOrderBatch->getData('order_process_date');
+        if (!empty($orderProcessDate))
+        {
+         $order_sent = 'Yes';
+        }
+        else
+        {
+         $order_sent =  'No';
+        }
+        
+        $tracksCollection = $order->getTracksCollection();
+        if($tracksCollection){
+            
+            foreach ($tracksCollection->getItems() as $track) {
+
+              $trackNumbers[] = $track->getTrackNumber();
+
+            }
+        }
+         
+        if(!empty($trackNumbers)){ 
+        
+        $shipping_track = 'Yes';
+        
+        }else{
+            
+         $shipping_track = 'No';
+         
+        }
+        
+        if($order_sent == 'Yes' && $shipping_track == 'No'){
+            return true;
+            exit;
+        }
+        else if($order_sent == 'No' && $shipping_track == 'Yes')
+        {
+            return true;
+            exit;
+        }
+        else if($order_sent == 'No')
+        {
+            return true;
+            exit;
+        }
+        else{
+            return false;
+            exit;
+        }
+        
+         
+     }
 
 }
