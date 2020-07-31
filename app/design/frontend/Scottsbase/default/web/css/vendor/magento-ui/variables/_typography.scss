@@ -7,6 +7,7 @@
 //  ---------------------------------------------
 
 @import '../../../source/scottsbase-colors';
+@import '../../../source/scottsbase-typography';
 
 //  Path
 $icons__font-path               : "../fonts/Blank-Theme-Icons/Blank-Theme-Icons" !default;
@@ -30,7 +31,7 @@ $font-size-unit                 : rem !default; // The unit to which most typogr
 $font-size-unit-ratio           : $root__font-size * 16 / 100 / 1% !default; // Ratio of the root font-size to the font-size unit
 $font-size-unit-convert         : true !default; // Controls whether font-size values are converted to the specified font-size unit
 
-$font-size__base                : $font-size-unit-ratio * $font-size-ratio__base * 1px !default; // Base font size value in px
+$font-size__base                : $font-size-unit-ratio * $font-size-ratio__base * 1px !default; // 14px
 $font-size__xl                  : ceil(1.5 * $font-size__base) !default; // 21px
 $font-size__l                   : ceil(1.25 * $font-size__base) !default; // 18px
 $font-size__s                   : ceil(0.85 * $font-size__base) !default; // 12px
@@ -141,28 +142,28 @@ $heading__font-style__base      : false !default;
 $heading__margin-top__base      : $indent__base !default;
 $heading__margin-bottom__base   : $indent__base !default;
 
-$h1__font-size                  : ceil(($font-size__base * 1.85)) !default; // 26px
-$h1__font-color                 : $heading__color__base !default;
-$h1__font-family                : $heading__font-family__base !default;
-$h1__font-weight                : $heading__font-weight__base !default;
+$h1__font-size                  : $font-size__xl !default; // 21px
+$h1__font-color                 : $primary__color !default;
+$h1__font-family                : $font-family__secondary !default;
+$h1__font-weight                : $font-weight__bold !default;
 $h1__font-style                 : $heading__font-style__base !default;
 $h1__line-height                : $heading__line-height__base !default;
 $h1__margin-top                 : 0 !default;
 $h1__margin-bottom              : $heading__margin-bottom__base !default;
 $h1__font-size-desktop          : ceil(($font-size__base * 2.85)) !default; // 40px
 
-$h2__font-size                  : ceil(($font-size__base * 1.85)) !default; // 26px
-$h2__font-color                 : $heading__color__base !default;
-$h2__font-family                : $heading__font-family__base !default;
+$h2__font-size                  : $font-size__xxl !default; // 26px
+$h2__font-color                 : $text__color !default;
+$h2__font-family                : $font-family__secondary !default;
 $h2__font-weight                : $heading__font-weight__base !default;
 $h2__font-style                 : $heading__font-style__base !default;
 $h2__line-height                : $heading__line-height__base !default;
 $h2__margin-top                 : $indent__m !default;
 $h2__margin-bottom              : $heading__margin-bottom__base !default;
 
-$h3__font-size                  : ceil(($font-size__base * 1.28)) !default; // 18px
-$h3__font-color                 : $heading__color__base !default;
-$h3__font-family                : $heading__font-family__base !default;
+$h3__font-size                  : $font-size__base !default; // 18px
+$h3__font-color                 : $text__color !default;
+$h3__font-family                : $font-family__secondary !default;
 $h3__font-weight                : $heading__font-weight__base !default;
 $h3__font-style                 : $heading__font-style__base !default;
 $h3__line-height                : $heading__line-height__base !default;
@@ -178,9 +179,9 @@ $h4__line-height                : $heading__line-height__base !default;
 $h4__margin-top                 : $heading__margin-top__base !default;
 $h4__margin-bottom              : $heading__margin-bottom__base !default;
 
-$h5__font-size                  : ceil(($font-size__base * 0.85)) !default; // 12px
-$h5__font-color                 : $heading__color__base !default;
-$h5__font-family                : $heading__font-family__base !default;
+$h5__font-size                  : $font-size__l !default; // 18px
+$h5__font-color                 : $primary__color !default;
+$h5__font-family                : $font-family__secondary !default;
 $h5__font-weight                : $font-weight__bold !default;
 $h5__font-style                 : $heading__font-style__base !default;
 $h5__line-height                : $heading__line-height__base !default;

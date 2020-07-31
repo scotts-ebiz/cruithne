@@ -6,43 +6,43 @@
 @import 'source/scottsbasevars';
 
 //  Colors
-//Moved to use vender variable colors.scss
+//Moved to define in vender variable colors.scss
 //$primary__color                                               : $scotts-green;
 
-//Moved to use vender variable colors.scss
+//Moved to define in vender variable colors.scss
 //$secondary__color                                             : $scotts-secondary-green;
 
-//Moved to use vender variable colors.scss
+//Moved to define in vender variable colors.scss
 //$active__color                                                : $scotts-green;
 
-//Moved to use vender variable typography.scss
+//Moved to define in vender variable typography.scss
 //$text__color                                                  : $scotts-black; //sets body color
 
 
 //  Links
 
-//Moved to use vender variable typography.scss
+//Moved to define in vender variable typography.scss
 //$link__color                                                  : $primary__color;
 
-//Moved to use vender variable typography.scss
+//Moved to define in vender variable typography.scss
 //$link__text-decoration                                        : none;
 
-//Moved to use vender variable typography.scss
+//Moved to define in vender variable typography.scss
 //$link__visited__color                                         : $primary__color;
 
-//Moved to use vender variable typography.scss
+//Moved to define in vender variable typography.scss
 //$link__visited__text-decoration                               : none;
 
-//Moved to use vender variable typography.scss
+//Moved to define in vender variable typography.scss
 //$link__hover__color                                           : $secondary__color;
 
-//Moved to use vender variable typography.scss
+//Moved to define in vender variable typography.scss
 //$link__hover__text-decoration                                 : underline;
 
-//Moved to use vender variable typography.scss
+//Moved to define in vender variable typography.scss
 //$link__active__color                                          : $primary__color;
 
-//Moved to use vender variable typography.scss
+//Moved to define in vender variable typography.scss
 //$link__active__text-decoration                                : underline;
 
 
@@ -61,23 +61,52 @@ $font-family__base                                            : $font-family-nam
 
 
 //  Headings
-$h1__margin-bottom__desktop                                   : $indent__xl !default;
-$h1__font-size                                                : $font-size__xl;
-$h1__font-color                                               : $primary__color;
-$h1__font-family                                              : $font-family__secondary;
-$h1__font-weight                                              : $font-weight__bold;
 
-$h2__font-size                                                : $font-size__xxl;
-$h2__font-color                                               : $text__color;
-$h2__font-family                                              : $font-family__secondary;
+//Moved to define in scottsbase-typography.scss
+//$h1__margin-bottom__desktop                                   : $indent__xl !default;
 
-$h3__font-size                                                : $font-size__base;
-$h3__font-color                                               : $text__color;
-$h3__font-family                                              : $font-family__secondary;
+//Moved to define in vender variable typography.scss
+//$h1__font-size                                                : $font-size__xl;
 
-$h5__font-size                                                : $font-size__l;
-$h5__font-color                                               : $primary__color;
-$h5__font-family                                              : $font-family__secondary;
+//Moved to define in vender variable typography.scss
+//$h1__font-color                                               : $primary__color;
+
+
+//Moved to define in vender variable typography.scss
+//$h1__font-family                                              : $font-family__secondary;
+
+//Moved to define in vender variable typography.scss
+//$h1__font-weight                                              : $font-weight__bold;
+
+
+//Moved to define in vender variable typography.scss
+//$h2__font-size                                                : $font-size__xxl;
+
+//Moved to define in vender variable typography.scss
+//$h2__font-color                                               : $text__color;
+
+//Moved to define in vender variable typography.scss
+//$h2__font-family                                              : $font-family__secondary;
+
+//Moved to define in vender variable typography.scss
+//$h3__font-size                                                : $font-size__base;
+
+
+//Moved to define in vender variable typography.scss
+//$h3__font-color                                               : $text__color;
+
+
+//Moved to define in vender variable typography.scss
+//$h3__font-family                                              : $font-family__secondary;
+
+//Moved to define in vender variable typography.scss
+//$h5__font-size                                                : $font-size__l;
+
+//Moved to define in vender variable typography.scss
+//$h5__font-color                                               : $primary__color;
+
+//Moved to define in vender variable typography.scss
+//$h5__font-family                                              : $font-family__secondary;
 
 
 

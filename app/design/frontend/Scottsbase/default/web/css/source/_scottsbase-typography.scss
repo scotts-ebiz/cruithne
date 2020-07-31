@@ -5,13 +5,14 @@
 
 // Fonts
 $font-family-name__secondary                                  : 'Open-Sans' !default;
-$font-family__secondary                                       : $font-family-name__secondary, $font-family__sans-serif !default;
+$font-family__sans-serif-custom                                : 'Helvetica Neue', Helvetica, Arial, sans-serif !default;
+$font-family__secondary                                       : $font-family-name__secondary, font-family__sans-serif-custom !default;
 
 $font-family-name__tertiary                                   : 'Rokkitt';
-$font-family__tertiary                                        : $font-family-name__tertiary, $font-family__sans-serif;
+$font-family__tertiary                                        : $font-family-name__tertiary, $font-family__sans-serif-custom;
 
 $font-family-name__quaternary                                 : 'Roboto';
-$font-family__quaternary                                      : $font-family-name__quaternary, $font-family__sans-serif;
+$font-family__quaternary                                      : $font-family-name__quaternary, $font-family__sans-serif-custom;
 
 
 // Custom Font Sizes
@@ -29,6 +30,11 @@ $letter-spacing_m                                             : 0.5px;
 
 // Custom Line heights
 $line-height__m                                               : 1.4 !default;
+
+
+//  Custom Headings
+$h1__margin-bottom__desktop                                   : $indent__xl !default;
+
 
 
 // Checkout H2 Styles
