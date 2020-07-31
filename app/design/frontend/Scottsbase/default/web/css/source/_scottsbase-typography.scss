@@ -1,0 +1,43 @@
+//  ---------------------------------------------
+//  Scotts Base - Typography
+//  ---------------------------------------------
+
+
+// Fonts
+$font-family-name__secondary                                  : 'Open-Sans' !default;
+$font-family__secondary                                       : $font-family-name__secondary, $font-family__sans-serif !default;
+
+$font-family-name__tertiary                                   : 'Rokkitt';
+$font-family__tertiary                                        : $font-family-name__tertiary, $font-family__sans-serif;
+
+$font-family-name__quaternary                                 : 'Roboto';
+$font-family__quaternary                                      : $font-family-name__quaternary, $font-family__sans-serif;
+
+
+// Custom Font Sizes
+$font-size__xxl                                               : 4.0rem;
+$font-size__m                                                 : 1.6rem;
+$font-size__ms                                                : 1.4rem;
+$font-size__xxs                                               : 0.9rem;
+
+
+//  Letter Spacing
+$letter-spacing_base                                          : inherit;
+$letter-spacing_l                                             : 1.0px;
+$letter-spacing_m                                             : 0.5px;
+
+
+// Custom Line heights
+$line-height__m                                               : 1.4 !default;
+
+
+// Checkout H2 Styles
+$cart-checkout-h2-border                                      : 2px solid $checkout-green !default;
+$cart-checkout-h2-padding                                     : 0 0 20px 0 !default;
+$cart-checkout-h2-letter-spacing                              : 2px !default;
+$cart-checkout-h2-letter-spacing-mobile                       : 1.7px !default;
+
+
+// Font Family
+$lato: 'Lato', sans-serif;
+$opensans: 'Open Sans', sans-serif;
