@@ -6,24 +6,44 @@
 @import 'source/scottsbasevars';
 
 //  Colors
-$primary__color                                               : $scotts-green;
-$secondary__color                                             : $scotts-secondary-green;
-$active__color                                                : $scotts-green;
-$text__color                                                  : $scotts-black; //sets body color
+//Moved to use vender variable colors.scss
+//$primary__color                                               : $scotts-green;
+
+//Moved to use vender variable colors.scss
+//$secondary__color                                             : $scotts-secondary-green;
+
+//Moved to use vender variable colors.scss
+//$active__color                                                : $scotts-green;
+
+//Moved to use vender variable typography.scss
+//$text__color                                                  : $scotts-black; //sets body color
 
 
 //  Links
-$link__color                                                  : $primary__color;
-$link__text-decoration                                        : none;
 
-$link__visited__color                                         : $primary__color;
-$link__visited__text-decoration                               : none;
+//Moved to use vender variable typography.scss
+//$link__color                                                  : $primary__color;
 
-$link__hover__color                                           : $secondary__color;
-$link__hover__text-decoration                                 : underline;
+//Moved to use vender variable typography.scss
+//$link__text-decoration                                        : none;
 
-$link__active__color                                          : $primary__color;
-$link__active__text-decoration                                : underline;
+//Moved to use vender variable typography.scss
+//$link__visited__color                                         : $primary__color;
+
+//Moved to use vender variable typography.scss
+//$link__visited__text-decoration                               : none;
+
+//Moved to use vender variable typography.scss
+//$link__hover__color                                           : $secondary__color;
+
+//Moved to use vender variable typography.scss
+//$link__hover__text-decoration                                 : underline;
+
+//Moved to use vender variable typography.scss
+//$link__active__color                                          : $primary__color;
+
+//Moved to use vender variable typography.scss
+//$link__active__text-decoration                                : underline;
 
 
 //  Sizes

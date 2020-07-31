@@ -6,6 +6,8 @@
 //  Fonts
 //  ---------------------------------------------
 
+@import '../../../source/scottsbase-colors';
+
 //  Path
 $icons__font-path               : "../fonts/Blank-Theme-Icons/Blank-Theme-Icons" !default;
 
@@ -53,7 +55,7 @@ $line-height__l                 : 1.5 !default;
 $line-height__s                 : 1.33 !default;
 
 //  Colors
-$text__color                    : $primary__color !default;
+$text__color                    : $scotts-black !default; // Sets body color
 $text__color__intense           : $primary__color__darker !default;
 $text__color__muted             : $primary__color__lighter !default;
 
@@ -79,16 +81,16 @@ $border-width__base             : 1px !default;
 //  Links
 //  ---------------------------------------------
 
-$link__color                    : $color-blue1 !default;
+$link__color                    : $primary__color !default;
 $link__text-decoration          : none !default;
 
 $link__visited__color           : $link__color !default;
 $link__visited__text-decoration : none !default;
 
-$link__hover__color             : $color-blue2 !default;
+$link__hover__color             : $secondary__color !default;
 $link__hover__text-decoration   : underline !default;
 
-$link__active__color            : $active__color !default;
+$link__active__color            : $primary__color !default;
 $link__active__text-decoration  : underline !default;
 
 //
