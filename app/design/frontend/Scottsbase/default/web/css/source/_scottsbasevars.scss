@@ -58,52 +58,6 @@ $border-width__thick                                           : 2px !default;
 
 
 
-//  ---------------------------------------------
-//  Scotts Base - Cart / Checkout Button
-//  ---------------------------------------------
-
-
-// Generic Button
-$cart-checkout-button__font-family                            : $font-family__quaternary !default;
-$cart-checkout-button__font-size                              : $font-size__s !default;
-$cart-checkout-button__font-weight                            : normal !default;
-$cart-checkout-button__font-color                             : $color-white !default;
-$cart-checkout-button__font-color-hover                       : $color-white !default;
-$cart-checkout-button__line-height                            : 0 !default;
-$cart-checkout-button__border-radius                          : 3px !default;
-$cart-checkout-button__disabled__opacity                      : 1.0;
-$cart-checkout-button__disabled__font-weight                  : 700;
-$cart-checkout-button__background-color                       : $checkout-button-color !default;
-$cart-checkout-button__background-hover                       : $checkout-button-color !default;
-$cart-checkout-button__active__color                          : $checkout-button-color !default;
-$cart-checkout-button__border                                 : 0;
-$cart-checkout-button__border-color                           : inherit;
-$cart-checkout-button__letter-spacing                         : 1px;
-$cart-checkout-button__width                                  : 250px;
-$cart-checkout-button__height                                 : 44px;
-$cart-checkout-button__padding                                : 0;
-$cart-checkout-button__txt-transform                          : uppercase;
-$cart-checkout-button__position                               : relative;
-$cart-checkout-button__bottom-position                        : 1px;
-$cart-checkout-button__boxshadow                              : 0 10px 15px -10px rgba(0,0,0,0.4);
-$cart-checkout-button__background-active                      : $checkout-button-color-active !default;
-
-// Large Button
-$cart-checkout-button-l__width                                : 250px;
-
-
-// Cross Sell Button
-$cart-checkout-button-crossSell__width                        : 156px;
-$cart-checkout-button__crossSell-border-color                 : $checkout-green;
-$cart-checkout-button__crossSell-font-weight                  : 700;
-$cart-checkout-button__crossSell-background-color             : $color-white;
-$cart-checkout-button__crossSell-font-color                   : $color-black;
-$cart-checkout-button__crossSell-border                       : 2px solid;
-
-
-// Small Button
-$cart-checkout-button-s__width                                : 74px;
-$cart-checkout-button-s__height                               : 32px;
 
 
 
