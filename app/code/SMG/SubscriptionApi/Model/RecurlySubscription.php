@@ -316,18 +316,20 @@ class RecurlySubscription
     /**
      * @param Recurly_Purchase $recurlyPurchase
      * @param Subscription $subscription
+     * @param $increment_id
      * @throws LocalizedException
      */
     public function invoiceRecurlyPurchase(
         Recurly_Purchase $recurlyPurchase,
-        Subscription $subscription
+        Subscription $subscription,
+        $increment_id
     ) {
         // Get the Recurly invoices and set the values on the subscription.
         try {
             /* @var Recurly_InvoiceCollection $invoiceCollection */
+            $recurlyPurchase->po_number = $increment_id;
             $invoiceCollection = Recurly_Purchase::invoice($recurlyPurchase);
             $invoices = $invoiceCollection->getValues();
-
             // We have an annual subscription so add the invoice amounts to the
             // subscription.
             if ($subscription->getData('subscription_type') == 'annual' && ! empty($invoices)) {
