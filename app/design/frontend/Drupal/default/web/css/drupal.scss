@@ -23,7 +23,8 @@
 // Scotts Base Defaults (copied from app/design/frontend/Scottsbase/default/web/css/styles.scss)
 // @import '../../../../Scottsbase/default/web/css/source/scottsbasevars';
 
-
+// Override Module Styles
+@import '../../../../Scottsbase/default/Magento_Checkout/styles/module';
 
 // Drupal-specific Vars
 @import 'source/drupalvars';

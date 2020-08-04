@@ -5,6 +5,17 @@
 @import '../../../default/web/css/vendor/normalize/lib'; // Normalize.css
 @import '../../../default/web/css/vendor/magento-ui/lib'; // Magento UI
 
+
+//Scottsbase Typography
+// @import '../../../default/web/css/source/scottsbase-typography';
+
+//Scottsbase Buttons
+// @import '../../../default/web/css/source/scottsbase-buttons';
+
+//Scottsbase Mixins
+// @import '../../../default/web/css/source/scottsbasemixins';
+
+
 // Theme variables
 @import 'mygro-variables';
 
@@ -15,7 +26,7 @@
 @import 'blocks/typography';
 
 // Override Module Styles
-@import '../../Magento_Checkout/styles/module';
+@import '../../../default/Magento_Checkout/styles/module';
 
 // Mygro Defaults
 @import 'source/mygromixins';
