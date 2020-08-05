@@ -10,6 +10,7 @@
         "sort-packages": true
     },
     "require": {
+        "akeneo/magento2-connector-enterprise": "100.*",
         "amasty/securityauth": "^1.1",
         "avalara/avatax-magento": "^1.5",
         "composer/composer": "@alpha",
@@ -90,6 +91,10 @@
         "gigya-im": {
             "type": "git",
             "url": "https://github.com/gigya/Magento-2"
+        },
+        "magento2-connector-enterprise": {
+            "type": "vcs",
+            "url": "ssh://git@distribution.akeneo.com:443/magento2-connector-enterprise"
         }
     },
     "extra": {
