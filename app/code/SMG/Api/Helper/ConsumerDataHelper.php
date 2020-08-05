@@ -180,13 +180,18 @@ class ConsumerDataHelper
                 $orderItems = $this->_orderItemCollectionFactory->create();
                 $orderItems->addFieldToFilter("order_id", ['eq' => $order->getId()]);
                 $orderItems->addFieldToFilter("product_type", ['neq' => 'bundle']);
+                $orderItems->addFieldToFilter("product_type", ['neq' => 'configurable']);
 
-                /**
-                 * @var \Magento\Sales\Model\Order\Item $orderItem
-                 */
-                foreach ($orderItems as $orderItem)
+                // If virtual skip
+                if (!$order->getIsVirtual())
                 {
-                    $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem);
+                    /**
+                     * @var \Magento\Sales\Model\Order\Item $orderItem
+                     */
+                    foreach ($orderItems as $orderItem)
+                    {
+                        $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem);
+                    }
                 }
             }
         }
