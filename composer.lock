@@ -4,8 +4,149 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8c76f3a6a8ef50fcdb4e30e7f4e4e142",
+    "content-hash": "9b61bb9d709f5a6a0652270b827e1be8",
     "packages": [
+        {
+            "name": "akeneo/api-php-client",
+            "version": "v5.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/akeneo/api-php-client.git",
+                "reference": "4d676bb1372243dc943a335f5df381665bdc0a4a"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/akeneo/api-php-client/zipball/4d676bb1372243dc943a335f5df381665bdc0a4a",
+                "reference": "4d676bb1372243dc943a335f5df381665bdc0a4a",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1",
+                "php-http/discovery": "^1.6",
+                "php-http/httplug": "^2.0",
+                "php-http/multipart-stream-builder": "^1.0",
+                "psr/http-client": "^1.0",
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^1.0",
+                "psr/http-message-implementation": "^1.0"
+            },
+            "require-dev": {
+                "donatj/mock-webserver": "^2.0",
+                "friendsofphp/php-cs-fixer": "^2.14",
+                "http-interop/http-factory-guzzle": "^1.0",
+                "php-http/guzzle6-adapter": "^2.0",
+                "phpspec/phpspec": "^5.0",
+                "phpunit/phpunit": "^7.0",
+                "symfony/yaml": "^4.2"
+            },
+            "suggest": {
+                "php-http/guzzle6-adapter": "In order to use Guzzle v6 as the HTTP client"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Akeneo\\Pim\\ApiClient\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "OSL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Akeneo",
+                    "homepage": "http://www.akeneo.com"
+                }
+            ],
+            "description": "Akeneo PIM client for the API",
+            "time": "2019-09-09T15:46:29+00:00"
+        },
+        {
+            "name": "akeneo/api-php-client-ee",
+            "version": "v5.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/akeneo/api-php-client-ee.git",
+                "reference": "39bc35795fde4ee492f3b10c926e83244d97fbb7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/akeneo/api-php-client-ee/zipball/39bc35795fde4ee492f3b10c926e83244d97fbb7",
+                "reference": "39bc35795fde4ee492f3b10c926e83244d97fbb7",
+                "shasum": ""
+            },
+            "require": {
+                "akeneo/api-php-client": "^5.0"
+            },
+            "require-dev": {
+                "donatj/mock-webserver": "^2.0",
+                "friendsofphp/php-cs-fixer": "^2.14",
+                "http-interop/http-factory-guzzle": "^1.0",
+                "php-http/guzzle6-adapter": "^2.0",
+                "phpspec/phpspec": "^5.0",
+                "phpunit/phpunit": "^7.0",
+                "symfony/yaml": "^4.2"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Akeneo\\PimEnterprise\\ApiClient\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "OSL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Akeneo",
+                    "homepage": "http://www.akeneo.com"
+                }
+            ],
+            "description": "Akeneo PIM ENTERPRISE client for the API",
+            "time": "2019-10-11T15:06:55+00:00"
+        },
+        {
+            "name": "akeneo/magento2-connector-enterprise",
+            "version": "100.5.10",
+            "source": {
+                "type": "git",
+                "url": "ssh://git@distribution.akeneo.com:443/magento2-connector-enterprise",
+                "reference": "e613c278c601cc5094ed6e8bb1c6cb4e7918c390"
+            },
+            "require": {
+                "akeneo/api-php-client-ee": "^5.0",
+                "http-interop/http-factory-guzzle": "^1.0",
+                "magento/framework": ">=100.0.1",
+                "magento/module-backend": ">=100.0.1",
+                "magento/module-catalog": ">=100.0.1",
+                "magento/module-eav": ">=100.0.1",
+                "magento/module-store": ">=100.0.1",
+                "php-http/guzzle6-adapter": "^2.0"
+            },
+            "type": "magento2-module",
+            "autoload": {
+                "files": [
+                    "registration.php"
+                ],
+                "psr-4": {
+                    "Akeneo\\Connector\\": ""
+                }
+            },
+            "license": [
+                "OSL-3.0",
+                "AFL-3.0"
+            ],
+            "authors": [
+                {
+                    "name": "Agence DnD",
+                    "homepage": "https://www.dnd.fr/",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Akeneo connector for Magento 2",
+            "time": "2020-07-27T08:37:40+00:00"
+        },
         {
             "name": "amasty/base",
             "version": "1.10.0",
@@ -1887,6 +2028,56 @@
             ],
             "abandoned": true,
             "time": "2014-10-12T19:18:40+00:00"
+        },
+        {
+            "name": "http-interop/http-factory-guzzle",
+            "version": "1.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/http-interop/http-factory-guzzle.git",
+                "reference": "34861658efb9899a6618cef03de46e2a52c80fc0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/http-interop/http-factory-guzzle/zipball/34861658efb9899a6618cef03de46e2a52c80fc0",
+                "reference": "34861658efb9899a6618cef03de46e2a52c80fc0",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/psr7": "^1.4.2",
+                "psr/http-factory": "^1.0"
+            },
+            "provide": {
+                "psr/http-factory-implementation": "^1.0"
+            },
+            "require-dev": {
+                "http-interop/http-factory-tests": "^0.5",
+                "phpunit/phpunit": "^6.5"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Http\\Factory\\Guzzle\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "An HTTP Factory using Guzzle PSR7",
+            "keywords": [
+                "factory",
+                "http",
+                "psr-17",
+                "psr-7"
+            ],
+            "time": "2018-07-31T19:32:56+00:00"
         },
         {
             "name": "justinrainbow/json-schema",
@@ -15668,6 +15859,353 @@
             "time": "2019-10-10T13:23:40+00:00"
         },
         {
+            "name": "php-http/discovery",
+            "version": "1.9.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-http/discovery.git",
+                "reference": "64a18cc891957e05d91910b3c717d6bd11fbede9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-http/discovery/zipball/64a18cc891957e05d91910b3c717d6bd11fbede9",
+                "reference": "64a18cc891957e05d91910b3c717d6bd11fbede9",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1 || ^8.0"
+            },
+            "conflict": {
+                "nyholm/psr7": "<1.0"
+            },
+            "require-dev": {
+                "graham-campbell/phpspec-skip-example-extension": "^5.0",
+                "php-http/httplug": "^1.0 || ^2.0",
+                "php-http/message-factory": "^1.0",
+                "phpspec/phpspec": "^5.1 || ^6.1",
+                "puli/composer-plugin": "1.0.0-beta10"
+            },
+            "suggest": {
+                "php-http/message": "Allow to use Guzzle, Diactoros or Slim Framework factories",
+                "puli/composer-plugin": "Sets up Puli which is recommended for Discovery to work. Check http://docs.php-http.org/en/latest/discovery.html for more details."
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.9-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Http\\Discovery\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Márk Sági-Kazár",
+                    "email": "mark.sagikazar@gmail.com"
+                }
+            ],
+            "description": "Finds installed HTTPlug implementations and PSR-7 message factories",
+            "homepage": "http://php-http.org",
+            "keywords": [
+                "adapter",
+                "client",
+                "discovery",
+                "factory",
+                "http",
+                "message",
+                "psr7"
+            ],
+            "time": "2020-07-13T15:44:45+00:00"
+        },
+        {
+            "name": "php-http/guzzle6-adapter",
+            "version": "v2.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-http/guzzle6-adapter.git",
+                "reference": "6074a4b1f4d5c21061b70bab3b8ad484282fe31f"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-http/guzzle6-adapter/zipball/6074a4b1f4d5c21061b70bab3b8ad484282fe31f",
+                "reference": "6074a4b1f4d5c21061b70bab3b8ad484282fe31f",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "^6.0",
+                "php": "^7.1",
+                "php-http/httplug": "^2.0",
+                "psr/http-client": "^1.0"
+            },
+            "provide": {
+                "php-http/async-client-implementation": "1.0",
+                "php-http/client-implementation": "1.0",
+                "psr/http-client-implementation": "1.0"
+            },
+            "require-dev": {
+                "ext-curl": "*",
+                "php-http/client-integration-tests": "^2.0",
+                "phpunit/phpunit": "^7.4"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Http\\Adapter\\Guzzle6\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Márk Sági-Kazár",
+                    "email": "mark.sagikazar@gmail.com"
+                },
+                {
+                    "name": "David de Boer",
+                    "email": "david@ddeboer.nl"
+                }
+            ],
+            "description": "Guzzle 6 HTTP Adapter",
+            "homepage": "http://httplug.io",
+            "keywords": [
+                "Guzzle",
+                "http"
+            ],
+            "time": "2018-12-16T14:44:03+00:00"
+        },
+        {
+            "name": "php-http/httplug",
+            "version": "2.2.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-http/httplug.git",
+                "reference": "191a0a1b41ed026b717421931f8d3bd2514ffbf9"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-http/httplug/zipball/191a0a1b41ed026b717421931f8d3bd2514ffbf9",
+                "reference": "191a0a1b41ed026b717421931f8d3bd2514ffbf9",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1 || ^8.0",
+                "php-http/promise": "^1.1",
+                "psr/http-client": "^1.0",
+                "psr/http-message": "^1.0"
+            },
+            "require-dev": {
+                "friends-of-phpspec/phpspec-code-coverage": "^4.1",
+                "phpspec/phpspec": "^5.1 || ^6.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "2.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Http\\Client\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Eric GELOEN",
+                    "email": "geloen.eric@gmail.com"
+                },
+                {
+                    "name": "Márk Sági-Kazár",
+                    "email": "mark.sagikazar@gmail.com",
+                    "homepage": "https://sagikazarmark.hu"
+                }
+            ],
+            "description": "HTTPlug, the HTTP client abstraction for PHP",
+            "homepage": "http://httplug.io",
+            "keywords": [
+                "client",
+                "http"
+            ],
+            "time": "2020-07-13T15:43:23+00:00"
+        },
+        {
+            "name": "php-http/message-factory",
+            "version": "v1.0.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-http/message-factory.git",
+                "reference": "a478cb11f66a6ac48d8954216cfed9aa06a501a1"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-http/message-factory/zipball/a478cb11f66a6ac48d8954216cfed9aa06a501a1",
+                "reference": "a478cb11f66a6ac48d8954216cfed9aa06a501a1",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.4",
+                "psr/http-message": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Http\\Message\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Márk Sági-Kazár",
+                    "email": "mark.sagikazar@gmail.com"
+                }
+            ],
+            "description": "Factory interfaces for PSR-7 HTTP Message",
+            "homepage": "http://php-http.org",
+            "keywords": [
+                "factory",
+                "http",
+                "message",
+                "stream",
+                "uri"
+            ],
+            "time": "2015-12-19T14:08:53+00:00"
+        },
+        {
+            "name": "php-http/multipart-stream-builder",
+            "version": "1.1.2",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-http/multipart-stream-builder.git",
+                "reference": "121299c2aad475a19087bc6298a1c9aa4d5c1ecc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-http/multipart-stream-builder/zipball/121299c2aad475a19087bc6298a1c9aa4d5c1ecc",
+                "reference": "121299c2aad475a19087bc6298a1c9aa4d5c1ecc",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1 || ^8.0",
+                "php-http/discovery": "^1.7",
+                "php-http/message-factory": "^1.0.2",
+                "psr/http-factory": "^1.0",
+                "psr/http-message": "^1.0"
+            },
+            "require-dev": {
+                "nyholm/psr7": "^1.0",
+                "php-http/message": "^1.5",
+                "phpunit/phpunit": "^7.5.15 || ^8.5 || ^9.3"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Http\\Message\\MultipartStream\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Tobias Nyholm",
+                    "email": "tobias.nyholm@gmail.com"
+                }
+            ],
+            "description": "A builder class that help you create a multipart stream",
+            "homepage": "http://php-http.org",
+            "keywords": [
+                "factory",
+                "http",
+                "message",
+                "multipart stream",
+                "stream"
+            ],
+            "time": "2020-07-13T15:48:43+00:00"
+        },
+        {
+            "name": "php-http/promise",
+            "version": "1.1.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-http/promise.git",
+                "reference": "4c4c1f9b7289a2ec57cde7f1e9762a5789506f88"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-http/promise/zipball/4c4c1f9b7289a2ec57cde7f1e9762a5789506f88",
+                "reference": "4c4c1f9b7289a2ec57cde7f1e9762a5789506f88",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.1 || ^8.0"
+            },
+            "require-dev": {
+                "friends-of-phpspec/phpspec-code-coverage": "^4.3.2",
+                "phpspec/phpspec": "^5.1.2 || ^6.2"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Http\\Promise\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Joel Wurtz",
+                    "email": "joel.wurtz@gmail.com"
+                },
+                {
+                    "name": "Márk Sági-Kazár",
+                    "email": "mark.sagikazar@gmail.com"
+                }
+            ],
+            "description": "Promise used for asynchronous HTTP requests",
+            "homepage": "http://httplug.io",
+            "keywords": [
+                "promise"
+            ],
+            "time": "2020-07-07T09:29:14+00:00"
+        },
+        {
             "name": "phpseclib/mcrypt_compat",
             "version": "1.0.8",
             "source": {
@@ -15856,6 +16394,107 @@
                 "psr"
             ],
             "time": "2017-02-14T16:28:37+00:00"
+        },
+        {
+            "name": "psr/http-client",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-client.git",
+                "reference": "2dfb5f6c5eff0e91e20e913f8c5452ed95b86621"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-client/zipball/2dfb5f6c5eff0e91e20e913f8c5452ed95b86621",
+                "reference": "2dfb5f6c5eff0e91e20e913f8c5452ed95b86621",
+                "shasum": ""
+            },
+            "require": {
+                "php": "^7.0 || ^8.0",
+                "psr/http-message": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Client\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for HTTP clients",
+            "homepage": "https://github.com/php-fig/http-client",
+            "keywords": [
+                "http",
+                "http-client",
+                "psr",
+                "psr-18"
+            ],
+            "time": "2020-06-29T06:28:15+00:00"
+        },
+        {
+            "name": "psr/http-factory",
+            "version": "1.0.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/http-factory.git",
+                "reference": "12ac7fcd07e5b077433f5f2bee95b3a771bf61be"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/http-factory/zipball/12ac7fcd07e5b077433f5f2bee95b3a771bf61be",
+                "reference": "12ac7fcd07e5b077433f5f2bee95b3a771bf61be",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.0.0",
+                "psr/http-message": "^1.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.0.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Http\\Message\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interfaces for PSR-7 HTTP message factories",
+            "keywords": [
+                "factory",
+                "http",
+                "message",
+                "psr",
+                "psr-17",
+                "psr-7",
+                "request",
+                "response"
+            ],
+            "time": "2019-04-30T12:38:16+00:00"
         },
         {
             "name": "psr/http-message",
