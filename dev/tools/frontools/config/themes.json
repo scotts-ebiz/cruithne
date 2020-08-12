@@ -18,8 +18,8 @@
     "disableSuffix": true,
     "parent": "default"
   },
-  "scottsprogram-v2asdfdsfad": {
-    "src": "app/design/frontend/Scottsbase/scottsprogram-v2",
+  "scottsprogram-v2": {
+    "src": "app/design/frontend/Scottsbase/scottsprogram-v2sadfasdfds",
     "dest": "pub/static/frontend/Scottsbase/scottsprogram-v2/asdf",
     "stylesDir": "web/css",
     "locale": [
