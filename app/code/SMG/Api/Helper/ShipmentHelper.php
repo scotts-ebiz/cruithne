@@ -265,7 +265,7 @@ class ShipmentHelper
              * @var \SMG\Sap\Model\SapOrder $sapOrder
              */
             $sapOrder = $this->_sapOrderResource->getSapOrderByOrderId($orderId);
-
+            
             foreach ($sapOrder->getSapOrderTrackingNumbers() as $trackingNumber)
             {
                 try {
@@ -280,7 +280,7 @@ class ShipmentHelper
                     if ($trackingNumberExists) {
                         continue;
                     }
-
+                      
                     // add the ship tracking number to the array
                     $shipTrackingNumbers[] = $trackingNumber;
 
@@ -362,13 +362,13 @@ class ShipmentHelper
                 
                 try 
                 {
-                	// Zaius apiKey
-                	$this->zaiusApiCall($orderId);
+                    // Zaius apiKey
+                    $this->zaiusApiCall($orderId);
                 }
                 catch (Exception $ex)
                 {
-                	$this->_logger->error($ex->getMessage());
-                	return;
+                    $this->_logger->error($ex->getMessage());
+                    return;
                 }
             }
         }
@@ -389,7 +389,15 @@ class ShipmentHelper
          * @var \SMG\Sap\Model\SapOrder $sapOrder
          */
         $sapOrder = $this->_sapOrderResource->getSapOrderByOrderId($orderId);
-
+        $trackingNumberCustomExists = false;
+        foreach ($sapOrder->getSapOrderTrackingNumbers() as $trackingNumber)
+        {
+            
+            if ($trackingNumber == '123456789') {
+                $trackingNumberCustomExists = true;
+            }
+        }
+           
         // get the items for this sap order.
         $sapOrderItems = $this->_sapOrderItemCollectionFactory->create();
         $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $sapOrder->getId()]);
@@ -430,7 +438,9 @@ class ShipmentHelper
 
             // add the order id to the array to send email
             // to customer service
-            $this->_customerServiceEmailIds[] = $orderId;
+           if (!$trackingNumberCustomExists) {
+             $this->_customerServiceEmailIds[] = $orderId;
+           }
         }
     }
 
