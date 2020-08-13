@@ -368,17 +368,18 @@ class ShipmentHelper
                   $this->_shipOrderInterface->execute($orderId, $items, false, false, null, $tracks);
                 }else{
                    $this->_shipOrderInterface->execute($orderId, $items, true, false, null, $tracks);
-                }
-                try 
-                {
+                    try 
+                    {
                     // Zaius apiKey
                     $this->zaiusApiCall($orderId);
-                }
-                catch (Exception $ex)
-                {
+                    }
+                     catch (Exception $ex)
+                    {
                     $this->_logger->error($ex->getMessage());
                     return;
+                    }
                 }
+
             }
         }
         else
