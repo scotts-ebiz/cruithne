@@ -271,6 +271,11 @@ class ShipmentHelper
                 try {
                     // Do not create the tracking number record if it already exists on the Magento 2 order.
                     $trackingNumberExists = false;
+                    $trackingNumberCustomExists = false;
+                    if ($trackingNumber == '123456789') {
+                       $trackingNumberCustomExists = true;
+                    }
+
                     foreach($order->getTracksCollection() as $track) {
                         if ($track->getTrackNumber() === $trackingNumber) {
                             $trackingNumberExists = true;
@@ -357,9 +362,13 @@ class ShipmentHelper
             // check to see if the items were added
             if (!empty($items) && !empty($tracks))
             {
-                // create shipment status
-                $this->_shipOrderInterface->execute($orderId, $items, true, false, null, $tracks);
                 
+                // create shipment status
+                if($trackingNumberCustomExists){
+                  $this->_shipOrderInterface->execute($orderId, $items, false, false, null, $tracks);
+                }else{
+                   $this->_shipOrderInterface->execute($orderId, $items, true, false, null, $tracks);
+                }
                 try 
                 {
                     // Zaius apiKey
