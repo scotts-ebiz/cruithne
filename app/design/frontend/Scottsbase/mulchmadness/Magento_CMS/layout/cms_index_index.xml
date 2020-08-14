@@ -1,0 +1,18 @@
+<?xml version="1.0"?>
+<!--
+/**
+<<<<<<< HEAD
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details.  
+=======
+ * Copyright © 2016 Magento. All rights reserved.
+ * See COPYING.txt for license details. 
+>>>>>>> 239ce617749b0bfbbecbd9dc2c229bc5d8c8e068
+ */
+-->
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" layout="1column" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceBlock name="page.main.title" remove="false" />
+        <referenceBlock name="breadcrumbs" remove="true" />
+    </body>
+</page>

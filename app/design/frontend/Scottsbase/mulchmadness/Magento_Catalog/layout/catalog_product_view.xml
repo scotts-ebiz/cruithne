@@ -34,7 +34,6 @@
                 <container name="product.info.price" label="Product info auxiliary container" htmlTag="div" htmlClass="product-info-price">
                     <container name="product.info.stock.sku" label="Product auxiliary info" htmlTag="div" htmlClass="product-info-stock-sku">
                         <container name="product.info.type" before="-"/>
-                        <block class="Magento\Catalog\Block\Product\View\Description" name="product.info.name" template="Magento_Catalog::product/view/product-title.phtml" after="product.info.type">
                         <block class="Magento\Catalog\Block\Product\View\Description" name="product.info.sku" template="Magento_Catalog::product/view/attribute.phtml" after="product.info.type">
                             <arguments>
                                 <argument name="at_call" xsi:type="string">getSku</argument>
