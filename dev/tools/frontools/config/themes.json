@@ -20,7 +20,7 @@
   },
   "scottsprogram-v2": {
     "src": "app/design/frontend/Scottsbase/scottsprogram-v2",
-    "dest": "pub/static/frontend/Scottsbase/scottsprogram-v2  ",
+    "dest": "pub/static/frontend/Scottsbase/scottsprogram-v2",
     "stylesDir": "web/css",
     "locale": [
       "en_US"
