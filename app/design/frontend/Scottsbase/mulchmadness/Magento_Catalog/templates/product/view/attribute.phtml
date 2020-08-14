@@ -46,15 +46,13 @@ if ($_attributeType && $_attributeType == 'text') {
 }
 ?>
 
-<?php if ($_product->getName()) : ?>
-    <h2 class='product-name'>
-        <?php $_product->getName(); ?>
-        <?= /* @noEscape */ $_helper->productAttribute($_product, $_product->getName(), 'name') ?>
-    </h2>
+
+<?php if ($_className == 'product-title') : ?>
+    <h2><?= /* @noEscape */ $_attributeValue ?></h2>
 <?php endif; ?>
 
 
-<?php if ($_attributeValue) : ?>
+<?php if ($_attributeValue && $_className != 'product-title') : ?>
     <div class="product attribute <?= $block->escapeHtmlAttr($_className) ?>">
         <?php if ($renderLabel) : ?>
             <strong class="type"><?= $block->escapeHtml($_attributeLabel) ?></strong>
