@@ -48,7 +48,7 @@
             <container name="header-wrapper" label="Page Header" as="header-wrapper" htmlTag="div" htmlClass="header content">
                 <block class="Magento\Theme\Block\Html\Header\Logo" name="logo">
                     <arguments>
-                        <argument name="logo_file" xsi:type="string">images/gro_scotts_lockup_resize.png</argument>
+                        <argument name="logo_file" xsi:type="string">images/scotts_logo.png</argument>
                         <argument name="logo_img_width" xsi:type="number">105</argument>
                         <argument name="logo_img_height" xsi:type="number">35</argument>
                     </arguments>
