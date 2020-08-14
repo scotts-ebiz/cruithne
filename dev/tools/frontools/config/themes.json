@@ -3,14 +3,18 @@
     "src": "app/design/frontend/Scottsbase/default",
     "dest": "pub/static/frontend/Scottsbase/default",
     "stylesDir": "web/css",
-    "locale": ["en_US"],
+    "locale": [
+      "en_US"
+    ],
     "disableSuffix": true
   },
   "scottsprogram": {
     "src": "app/design/frontend/Scottsbase/scottsprogram",
     "dest": "pub/static/frontend/Scottsbase/scottsprogram",
     "stylesDir": "web/css",
-    "locale": ["en_US"],
+    "locale": [
+      "en_US"
+    ],
     "disableSuffix": true,
     "parent": "default"
   },
@@ -18,7 +22,9 @@
     "src": "app/design/frontend/Scottsbase/scottsprogram-v2",
     "dest": "pub/static/frontend/Scottsbase/scottsprogram-v2",
     "stylesDir": "web/css",
-    "locale": ["en_US"],
+    "locale": [
+      "en_US"
+    ],
     "disableSuffix": true,
     "parent": "default"
   },
@@ -26,15 +32,29 @@
     "src": "app/design/frontend/Scottsbase/mygro",
     "dest": "pub/static/frontend/Scottsbase/mygro",
     "stylesDir": "web/css",
-    "locale": ["en_US"],
+    "locale": [
+      "en_US"
+    ],
     "disableSuffix": true,
     "parent": "default"
+  },
+  "mulchmadness": {
+    "src": "app/design/frontend/Scottsbase/mulchmadness",
+    "dest": "pub/static/frontend/Scottsbase/mulchmadness",
+    "stylesDir": "web/css",
+    "locale": [
+      "en_US"
+    ],
+    "disableSuffix": true,
+    "parent": "mygro"
   },
   "scottsbundles": {
     "src": "app/design/frontend/Scottsbase/scottsbundles",
     "dest": "pub/static/frontend/Scottsbase/scottsbundles",
     "stylesDir": "web/css",
-    "locale": ["en_US"],
+    "locale": [
+      "en_US"
+    ],
     "disableSuffix": true,
     "parent": "mygro"
   },
@@ -42,7 +62,9 @@
     "src": "app/design/frontend/Drupal/default",
     "dest": "pub/static/frontend/Drupal/default",
     "stylesDir": "web/css",
-    "locale": ["en_US"],
+    "locale": [
+      "en_US"
+    ],
     "disableSuffix": true,
     "parent": "mygro"
   },
@@ -50,7 +72,9 @@
     "src": "app/design/frontend/Drupal/roundup",
     "dest": "pub/static/frontend/Drupal/roundup",
     "stylesDir": "web/css",
-    "locale": ["en_US"],
+    "locale": [
+      "en_US"
+    ],
     "disableSuffix": true,
     "parent": "drupal"
   },
@@ -58,7 +82,9 @@
     "src": "app/design/frontend/Drupal/scotts",
     "dest": "pub/static/frontend/Drupal/scotts",
     "stylesDir": "web/css",
-    "locale": ["en_US"],
+    "locale": [
+      "en_US"
+    ],
     "disableSuffix": true,
     "parent": "drupal"
   },
@@ -66,7 +92,9 @@
     "src": "app/design/frontend/Drupal/tomcat",
     "dest": "pub/static/frontend/Drupal/tomcat",
     "stylesDir": "web/css",
-    "locale": ["en_US"],
+    "locale": [
+      "en_US"
+    ],
     "disableSuffix": true,
     "parent": "drupal"
   },
@@ -74,7 +102,9 @@
     "src": "app/design/frontend/Drupal/miraclegro",
     "dest": "pub/static/frontend/Drupal/miraclegro",
     "stylesDir": "web/css",
-    "locale": ["en_US"],
+    "locale": [
+      "en_US"
+    ],
     "disableSuffix": true,
     "parent": "drupal"
   },
@@ -82,7 +112,9 @@
     "src": "app/design/frontend/Drupal/ortho",
     "dest": "pub/static/frontend/Drupal/ortho",
     "stylesDir": "web/css",
-    "locale": ["en_US"],
+    "locale": [
+      "en_US"
+    ],
     "disableSuffix": true,
     "parent": "drupal"
   }
