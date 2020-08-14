@@ -46,11 +46,6 @@ if ($_attributeType && $_attributeType == 'text') {
 }
 ?>
 
-<h2 class='product-name'>
-    <?php $_product->getName(); ?>
-    <?= /* @noEscape */ $_helper->productAttribute($_product, $_product->getName(), 'name') ?>
-</h2>
-
 
 <?php if ($_attributeValue) : ?>
     <div class="product attribute <?= $block->escapeHtmlAttr($_className) ?>">

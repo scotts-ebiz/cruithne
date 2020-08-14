@@ -1,0 +1,4 @@
+<h2 class='product-name'>
+    <?php $_product->getName(); ?>
+    <?= /* @noEscape */ $_helper->productAttribute($_product, $_product->getName(), 'name') ?>
+</h2>
