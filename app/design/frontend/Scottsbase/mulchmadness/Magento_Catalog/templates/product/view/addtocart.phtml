@@ -9,9 +9,16 @@
 
 /** @var $block \Magento\Catalog\Block\Product\View */
 ?>
+<?php $_helper = $this->helper(Magento\Catalog\Helper\Output::class); ?>
 <?php $_product = $block->getProduct(); ?>
 <?php $buttonTitle = __('Add to Cart'); ?>
 <?php if ($_product->isSaleable()) : ?>
+
+  <div class='test'>
+    <?php $_product->getName(); ?>
+    <?= /* @noEscape */ $_helper->productAttribute($_product, $_product->getName(), 'name') ?>
+  </div>
+
   <div class="box-tocart">
     <div class="fieldset">
       <?php if ($block->shouldRenderQuantity()) : ?>
