@@ -20,3 +20,10 @@
     @if $color { color: $color; }
     @if $weight { font-weight: $weight; }
 }
+
+@mixin php-product-button($family: $font-family__pdp-body, $size: $pdp-product-btn-size, $color: false, $weight: $font-weight__normal) {
+    @if $family { font-family: $family; }
+    @if $size { font-size: $size; }
+    @if $color { color: $color; }
+    @if $weight { font-weight: $weight; }
+}
