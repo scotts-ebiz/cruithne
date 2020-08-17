@@ -1,0 +1,11 @@
+h2 {
+    @include php-product-title;
+}
+
+body {
+    @include php-product-body;
+}
+
+.product-info-main .price-box .price-wrapper .price {
+    @include php-product-price;
+}
