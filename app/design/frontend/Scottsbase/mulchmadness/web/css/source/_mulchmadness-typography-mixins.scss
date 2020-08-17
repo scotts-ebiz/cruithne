@@ -1,0 +1,7 @@
+
+@mixin php-product-title($family: $font-family__secondary, $size: $pdp-product-title-size, $color: false, $weight: $font-weight__bold) {
+    @if $family { font-family: $family; }
+    @if $size { font-size: $size; }
+    @if $color { color: $color; }
+    @if $weight { font-weight: $weight; }
+}
