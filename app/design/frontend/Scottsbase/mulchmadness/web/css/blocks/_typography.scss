@@ -1,0 +1,12 @@
+@include lib-font-face(
+        $family-name: 'Open-Sans-Cond',
+        $font-path: '../../../../default/web/fonts/open-sans-cond/open-sans-condensed-v14-latin-300',
+        $font-weight: 400,
+        $font-style: normal
+);
+
+@include lib-font-face(
+    $family-name: 'Gro',
+    $font-path: '../fonts/gro',
+    $font-style: normal
+);
