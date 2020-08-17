@@ -1,8 +1,13 @@
 
 // Font Family
-$font-family-name__secondary                                    : 'Lato';
+
 $font-family__sans-serif                                        : 'Helvetica Neue', Helvetica, Arial, sans-serif !default;
-$font-family__secondary                                         : $font-family-name__secondary, $font-family__sans-serif;
+
+$font-family-name__pdp-title                                   : 'Open Sans Condensed';
+$font-family__pdp-title                                        : $font-family-name__pdp-header, $font-family__sans-serif;
+
+$font-family-name__pdp-body                                         : 'Lato';
+$font-family__pdp-body                                              : $font-family-name__body, $font-family__sans-serif;
 
 
 // Font Sizes
@@ -10,5 +15,6 @@ $pdp-product-title-size                                         : 32px;
 $pdp-product-body-size                                          : 14px;
 
 // Font Weight
+$font-weight__normal                                            : 400;
 $font-weight__bold                                              : 700;
 
