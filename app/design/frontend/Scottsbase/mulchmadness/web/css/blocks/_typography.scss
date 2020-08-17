@@ -5,3 +5,8 @@
         $font-style: normal
 );
 
+@include lib-font-face(
+    $family-name: 'Gro',
+    $font-path: '../fonts/gro',
+    $font-style: normal
+);
