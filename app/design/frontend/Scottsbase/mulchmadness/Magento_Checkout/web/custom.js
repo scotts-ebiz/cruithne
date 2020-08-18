@@ -97,12 +97,11 @@ define([
             $(window).on('hashchange', function() {
                 if (window.location.hash) {
                     var newHash = window.location.hash.substring(1);
-                    if (newHash === "payment") {
+                    if (newHash === 'payment') {
                         var billingFormLoaded = setInterval(function() {
-                            var billingForm = $('.billing-address-details');
+                            var billingForm = $('.checkout-validate-address .instructions.noError a.edit-address');
                             if (billingForm.length) {
-                                var edit = $('.instructions.noError a.edit-address');
-                                $('.instructions.noError').html('').append(edit.text('Edit your info.'));
+                                $('.checkout-validate-address .instructions.noError').html('').append(billingForm.attr('href', '#shipping').text('Edit your info.'));
                                 clearInterval(billingFormLoaded);
                             }
                         }, 100);
