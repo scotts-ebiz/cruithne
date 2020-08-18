@@ -326,9 +326,13 @@ class ShipmentHelper
                         /**
                          * @var \Magento\Sales\Model\Order\Item $orderItem
                          */
-                        $orderItem = array_values(array_filter($order->getAllItems(), function ($item) use(&$sapOrderItem) {
-                            return $item->getData('sku') == $sapOrderItem->getData('sku');
-                        }));
+                        if($trackingNumberCustomExists){
+                            $orderItem = $order->getAllItems();
+                        }else{
+                            $orderItem = array_values(array_filter($order->getAllItems(), function ($item) use(&$sapOrderItem) {
+                                return $item->getData('sku') == $sapOrderItem->getData('sku');
+                            }));
+                        }
 
                         if (empty($orderItem)) {
                             $this->_logger->error('Could not find sku for item' . $sapOrderItem->getId());
