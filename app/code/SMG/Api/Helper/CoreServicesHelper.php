@@ -1,0 +1,654 @@
+<?php
+
+namespace SMG\Api\Helper;
+
+use Magento\Customer\Api\CustomerRepositoryInterface;
+use Magento\Quote\Model\QuoteFactory;
+use Magento\Catalog\Model\ProductFactory;
+use Magento\Catalog\Model\ProductRepository;
+use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
+use Magento\CatalogSearch\Model\ResourceModel\Advanced as AdvancedResource;
+use Magento\Customer\Api\AddressRepositoryInterface;
+use Magento\Customer\Model\CustomerFactory;
+use Magento\Customer\Model\ResourceModel\Customer as CustomerResource;
+use Magento\Framework\DB\Transaction as Transaction;
+use Magento\Quote\Model\QuoteManagement;
+use Magento\Quote\Model\ResourceModel\Quote as QuoteResource;
+use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Model\Order;
+use Magento\Sales\Model\Order\Email\Sender\InvoiceSender as InvoiceSender;
+use Magento\Sales\Model\OrderFactory;
+use Magento\Sales\Model\ResourceModel\Order as OrderResource;
+use Magento\Sales\Model\Service\InvoiceService as InvoiceService;
+use Magento\Store\Model\StoreManagerInterface;
+use Psr\Log\LoggerInterface;
+use SMG\OrderDiscount\Helper\Data as DiscountHelper;
+use Magento\CatalogSearch\Model\AdvancedFactory;
+use Magento\Quote\Model\Quote\AddressFactory;
+use SMG\SubscriptionApi\Helper\RecurlyHelper;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder as SubscriptionOrderResource;
+use SMG\SubscriptionApi\Model\Subscription;
+use SMG\SubscriptionApi\Model\SubscriptionAddonOrderFactory;
+use SMG\SubscriptionApi\Model\SubscriptionAddonOrderItemFactory;
+use SMG\SubscriptionApi\Model\SubscriptionFactory;
+use SMG\SubscriptionApi\Model\SubscriptionOrderFactory;
+use SMG\SubscriptionApi\Model\SubscriptionOrderItemFactory;
+
+class CoreServicesHelper
+{
+    /** @var LoggerInterface */
+    protected $_logger;
+
+    /** @var ResponseHelper */
+    protected $_responseHelper;
+
+    /** @var OrderFactory */
+    protected $_orderFactory;
+
+    /** @var OrderResource */
+    protected $_orderResource;
+
+    /** @var DiscountHelper */
+    protected $_discountHelper;
+
+    /** @var InvoiceService */
+    protected $_invoiceService;
+
+    /** @var Transaction */
+    protected $_transaction;
+
+    /** @var InvoiceSender */
+    protected $_invoiceSender;
+
+    /** @var CustomerResource */
+    protected $_customerResource;
+
+    /** @var CustomerFactory */
+    protected $_customerFactory;
+
+    /** @var StoreManagerInterface */
+    protected $_storeManager;
+
+    /** @var QuoteManagement */
+    protected $_quoteManagement;
+
+    /** @var QuoteFactory */
+    protected $_quoteFactory;
+
+    /** @var QuoteResource */
+    protected $_quoteResource;
+
+    /** @var AddressRepositoryInterface */
+    protected $_addressRepository;
+
+    /** @var ProductFactory */
+    protected $_productFactory;
+
+    /** @var ProductResource */
+    protected $_productResource;
+
+    /**@var AdvancedFactory */
+    protected $_advancedFactory;
+
+    /** @var AdvancedResource */
+    protected $_advancedResource;
+
+    /** @var \Magento\Quote\Model\Quote\AddressFactory */
+    private $_addressFactory;
+
+    /** @var ProductRepository */
+    protected $_productRepository;
+
+    /** @var CustomerRepositoryInterface */
+    protected $_customerRepository;
+
+    /** @var OrderRepositoryInterface */
+    private $_orderRepository;
+
+    /** @var SubscriptionFactory */
+    protected $_subscriptionFactory;
+
+    /** @var SubscriptionResource */
+    protected $_subscriptionResource;
+
+    /** @var SubscriptionOrderFactory  */
+    protected $_subscriptionOrderFactory;
+
+    /** @var SubscriptionOrderItemFactory  */
+    protected $_subscriptionOrderItemFactory;
+
+    /** @var SubscriptionAddonOrderFactory  */
+    protected $_subscriptionAddonOrderFactory;
+
+    /** @var SubscriptionAddonOrderItemFactory  */
+    protected $_subscriptionAddonOrderItemFactory;
+
+    /** @var RecurlyHelper */
+    protected $_recurlyHelper;
+
+    /** @var SubscriptionOrderResource */
+    protected $_subscriptionOrderResource;
+
+    /**
+     * OrderStatusHelper constructor.
+     *
+     * @param LoggerInterface $logger
+     * @param ResponseHelper $responseHelper
+     * @param OrderFactory $orderFactory
+     * @param OrderResource $orderResource
+     * @param CustomerResource $customerResource
+     * @param CustomerFactory $customerFactory
+     * @param StoreManagerInterface $storeManager
+     * @param QuoteManagement $quoteManagement
+     * @param QuoteFactory $quoteFactory
+     * @param ProductFactory $productFactory
+     * @param ProductResource $productResource
+     * @param AdvancedFactory $advancedFactory
+     * @param AdvancedResource $advancedResource
+     * @param AddressFactory $addressFactory
+     * @param ProductRepository $productRepository
+     * @param CustomerRepositoryInterface $customerRepository
+     * @param OrderRepositoryInterface $orderRepository
+     * @param SubscriptionFactory $subscriptionFactory
+     * @param SubscriptionResource $subscriptionResource
+     * @param SubscriptionOrderFactory $subscriptionOrderFactory
+     * @param SubscriptionOrderItemFactory $subscriptionOrderItemFactory
+     * @param SubscriptionAddonOrderFactory $subscriptionAddonOrderFactory
+     * @param SubscriptionAddonOrderItemFactory $subscriptionAddonOrderItemFactory
+     * @param RecurlyHelper $recurlyHelper
+     * @param SubscriptionOrderResource $subscriptionOrderResource
+     */
+    public function __construct(
+        LoggerInterface $logger,
+        ResponseHelper $responseHelper,
+        OrderFactory $orderFactory,
+        OrderResource $orderResource,
+        DiscountHelper $discountHelper,
+        InvoiceService $invoiceService,
+        Transaction $transaction,
+        InvoiceSender $invoiceSender,
+        CustomerResource $customerResource,
+        CustomerFactory $customerFactory,
+        StoreManagerInterface $storeManager,
+        QuoteManagement $quoteManagement,
+        QuoteFactory $quoteFactory,
+        AddressRepositoryInterface $addressRepository,
+        ProductFactory $productFactory,
+        ProductResource $productResource,
+        AdvancedFactory $advancedFactory,
+        AdvancedResource $advancedResource,
+        AddressFactory $addressFactory,
+        ProductRepository $productRepository,
+        CustomerRepositoryInterface $customerRepository,
+        QuoteResource $quoteResource,
+        OrderRepositoryInterface $orderRepository,
+        SubscriptionFactory $subscriptionFactory,
+        SubscriptionResource $subscriptionResource,
+        SubscriptionOrderFactory $subscriptionOrderFactory,
+        SubscriptionOrderItemFactory $subscriptionOrderItemFactory,
+        SubscriptionAddonOrderFactory $subscriptionAddonOrderFactory,
+        SubscriptionAddonOrderItemFactory $subscriptionAddonOrderItemFactory,
+        RecurlyHelper $recurlyHelper,
+        SubscriptionOrderResource $subscriptionOrderResource
+
+    )
+    {
+        $this->_logger = $logger;
+        $this->_responseHelper = $responseHelper;
+        $this->_orderFactory = $orderFactory;
+        $this->_orderResource = $orderResource;
+        $this->_discountHelper = $discountHelper;
+        $this->_invoiceService = $invoiceService;
+        $this->_transaction = $transaction;
+        $this->_invoiceSender = $invoiceSender;
+        $this->_customerResource = $customerResource;
+        $this->_customerFactory = $customerFactory;
+        $this->_storeManager = $storeManager;
+        $this->_quoteManagement = $quoteManagement;
+        $this->_quoteFactory = $quoteFactory;
+        $this->_addressRepository = $addressRepository;
+        $this->_productFactory = $productFactory;
+        $this->_productResource = $productResource;
+        $this->_advancedFactory = $advancedFactory;
+        $this->_advancedResource = $advancedResource;
+        $this->_addressFactory = $addressFactory;
+        $this->_productRepository = $productRepository;
+        $this->_customerRepository = $customerRepository;
+        $this->_quoteResource = $quoteResource;
+        $this->_orderRepository = $orderRepository;
+        $this->_subscriptionFactory = $subscriptionFactory;
+        $this->_subscriptionResource = $subscriptionResource;
+        $this->_subscriptionOrderFactory = $subscriptionOrderFactory;
+        $this->_subscriptionOrderItemFactory = $subscriptionOrderItemFactory;
+        $this->_subscriptionAddonOrderFactory = $subscriptionAddonOrderFactory;
+        $this->_subscriptionAddonOrderItemFactory = $subscriptionAddonOrderItemFactory;
+        $this->_recurlyHelper = $recurlyHelper;
+        $this->_subscriptionOrderResource = $subscriptionOrderResource;
+    }
+
+    /**
+     * Creates a new order.
+     *
+     * @param $requestData
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     */
+    public function createOrder($orderData)
+    {
+        // Ensure we are not given an empty request
+        if (empty($orderData)) {
+            return $this->_responseHelper->createResponse(false, "Request cannot be empty.");
+        }
+
+        // Log order request DTO
+        $this->_logger->info('Processing order: ' . json_encode($orderData));
+
+        // Ensure the data provided to us for order creation is accurate and complete.
+       $isNotValidated = $this->validateOrderData($orderData);
+       if ($isNotValidated) {
+           return $isNotValidated;
+       }
+
+        // Get the customer object.
+        /** @var \Magento\Customer\Model\Customer $customer */
+        $customer = $this->_customerRepository->getById($orderData["customerId"]);
+
+        if (!$customer->getId()) {
+            return $this->_responseHelper->createResponse(false, "Customer not found.");
+        }
+
+        // Get store and website information
+        $store = $this->_storeManager->getStore($orderData["storeId"]);
+        if (!$store->getId()) {
+            return $this->_responseHelper->createResponse(false, "Store not found.");
+        }
+
+        // Create Quote object.
+        /** @var \Magento\Quote\Model\Quote $quote */
+        $quote = $this->_quoteFactory->create();
+        $quote->setStore($store);
+        $quote->assignCustomer($customer);
+
+        // Load and add each product to the quote.
+        foreach ($orderData['products'] as $item) {
+
+            // Get the Product.
+            /** @var \Magento\Catalog\Model\Product $product */
+            $product = $this->_productRepository->get($item['sku']);
+
+            // make sure that this product exists
+            if (!$product) {
+                return $this->_responseHelper->createResponse(false, 'Product with sku of ' . $item['sku'] . ' not found.');
+            }
+            // Add the product to our quote.
+            $quote->addProduct($product, $item['qty']);
+        }
+
+        // Apply coupon code if available.
+        if (!empty($orderData["couponCode"])) {
+            $quote->setCouponCode($orderData["couponCode"]);
+        }
+
+        // Create Billing Address and associate it to the quote.
+        /* @var $orderBillingAddress \Magento\Quote\Model\Quote\Address */
+        $orderBillingAddress = $this->_addressFactory->create();
+        $orderBillingAddress->setAddressType(\Magento\Sales\Model\Order\Address::TYPE_BILLING);
+        $orderBillingAddress->setCustomerId($customer->getId());
+        $orderBillingAddress->setFirstname($orderData['billingAddress']['firstName']);
+        $orderBillingAddress->setLastname($orderData['billingAddress']['lastName']);
+        $orderBillingAddress->setStreet($orderData['billingAddress']['street1']);
+        $orderBillingAddress->setCity($orderData['billingAddress']['city']);
+        $orderBillingAddress->setRegion($orderData['billingAddress']['region']);
+        $orderBillingAddress->setPostcode($orderData['billingAddress']['postalCode']);
+        $orderBillingAddress->setCountryId($orderData['billingAddress']['country']);
+        $orderBillingAddress->setTelephone($orderData['billingAddress']['phone']);
+        $quote->setShippingAddress($orderBillingAddress);
+
+        // Create Shipping Address and associate it to the quote.
+        /* @var $orderShippingAddress \Magento\Quote\Model\Quote\Address */
+        $orderShippingAddress = $this->_addressFactory->create();
+        $orderShippingAddress->setAddressType(\Magento\Sales\Model\Order\Address::TYPE_SHIPPING);
+        $orderShippingAddress->setCustomerId($customer->getId());
+        $orderShippingAddress->setFirstname($orderData['shippingAddress']['firstName']);
+        $orderShippingAddress->setLastname($orderData['shippingAddress']['lastName']);
+        $orderShippingAddress->setStreet($orderData['shippingAddress']['street1']);
+        $orderShippingAddress->setCity($orderData['shippingAddress']['city']);
+        $orderShippingAddress->setRegion($orderData['shippingAddress']['region']);
+        $orderShippingAddress->setPostcode($orderData['shippingAddress']['postalCode']);
+        $orderShippingAddress->setCountryId($orderData['shippingAddress']['country']);
+        $orderShippingAddress->setTelephone($orderData['shippingAddress']['phone']);
+        $orderShippingAddress->setCollectShippingRates(true);
+        $orderShippingAddress->setShippingMethod('freeshipping_freeshipping');
+        $quote->setShippingAddress($orderShippingAddress);
+        $quote->getShippingAddress()->collectShippingRates();
+        $quote->setPaymentMethod('recurly');
+        $quote->setInventoryProcessed(false);
+
+        $this->_quoteResource->save($quote);
+
+        // Set sales order payment.
+        $quote->getPayment()->importData(['method' => 'recurly']);
+
+        $quote->collectTotals();
+
+        $this->_quoteResource->save($quote);
+
+        // Generate the order from the quote.
+        /** @var Order $order */
+        $order = $this->_quoteManagement->submit($quote);
+        $order->setEmailSent(0);
+
+        // Set custom order fields
+        if (!empty($orderData["lsOrderId"])) {
+            $order->setData('ls_order_id', $orderData["lsOrderId"]);
+        }
+
+        if (!empty($orderData["parentOrderId"])) {
+            $order->setData('parent_order_id', $orderData["parentOrderId"]);
+        }
+
+
+        // Save order
+        $this->_orderResource->save($order);
+
+        // Perform lawn subscription order specific processing.
+        if ($orderData["orderType"] === "LS") {
+
+            //create the master lawn subscription object
+            /** @var Subscription $subscription */
+            $subscription = $this->createSubscription($order, $orderData);
+
+            // Set ship date for the subscription/order
+            $order->addData([
+                'ship_start_date' => $orderData["shipStartDate"] ?? NULL,
+                'ship_end_date' => $orderData["shipEndDate"] ?? NULL,
+                'subscription_addon' => $orderData["isAddOn"] ?? FALSE,
+                'subscription_type' => $subscription->getSubscriptionType(),
+            ]);
+
+            // Save subscription data to order.
+            $this->_orderResource->save($order);
+
+        }
+
+        $response = array(
+            'statusCode' => 200,
+            'statusMessage' => 'success',
+            'response' => $order->getId()
+        );
+
+        // Log order response DTO
+        $this->_logger->info('Finished processing order: ' . json_encode($order->getData()));
+
+        // return the order object.
+        return $response;
+    }
+
+    /**
+     * Creates a master subscription
+     *
+     * @param Order $order
+     * @param mixed $orderData
+     *
+     */
+    protected function createSubscription($order, $orderData) {
+
+        // Create the master subscription
+        /** @var Subscription $subscription */
+        $subscription = $this->_subscriptionFactory->create();
+        $subscription->setData('customer_id', $order->getCustomerId());
+        $subscription->setData('gigya_id', $order->getData("customer_gigya_id"));
+        $subscription->setData('sales_order_id', $order->getId());
+        $subscription->setData('quiz_id', $orderData['completedQuizId']);
+        $subscription->setData('lawn_zip', $orderData['lawnZip']);
+        $subscription->setData('zone_name', $orderData['lawnZone']);
+        $subscription->setData('subscription_type', $orderData['subType']);
+        $subscription->setData('origin', $orderData['cartType']);
+        $subscription->setData('subscription_status', $orderData['subStatus'] ??  "active");
+        $subscription->setData('tax', $order->getTaxAmount());
+        $subscription->setData('paid', $order->getTotalPaid());
+        $subscription->setData('discount', $order->getDiscountAmount());
+        $this->_subscriptionResource->save($subscription);
+
+        foreach ($orderData['products'] as $item) {
+
+            $this->createSubscriptionOrder($subscription, $orderData, $item);
+
+        }
+
+
+        return $subscription;
+    }
+
+    /**
+     * Creates a master subscription
+     *
+     * @param Subscription $masterSubscription
+     * @param mixed $orderData
+     * @param mixed $product
+     *
+     */
+    protected function createSubscriptionOrder($masterSubscription, $orderData, $product) {
+        /** @var SubscriptionOrderResource $subscriptionOrder */
+        $subscriptionOrder = $this->_subscriptionOrderFactory->create();
+        $subscriptionOrder->setData('subscription_entity_id', $masterSubscription->getId());
+        $subscriptionOrder->setData('application_start_date', $product['applicationWindow']['startDate']);
+        $subscriptionOrder->setData('application_end_date', $product['applicationWindow']['endDate']);
+        $subscriptionOrder->setData('ship_start_date', $orderData["shipStartDate"]);
+        $subscriptionOrder->setData('ship_end_date', $orderData["shipEndDate"]);
+        $subscriptionOrder->setData('subscription_order_status', $orderData['subStatus'] ??  "pending");
+        $subscriptionOrder->setData('season_name', $product['applicationWindow']['season']);
+        $subscriptionOrder->setData('season_slug', $this->_recurlyHelper->getSeasonSlugByName($product['applicationWindow']['season']));
+
+        $this->_subscriptionOrderResource->save($subscriptionOrder);
+    }
+
+
+
+    protected function validateOrderData($orderData)
+    {
+        if (empty($orderData["customerId"])) {
+            return $this->_responseHelper->createResponse(false, "There must be a customer id.");
+        }
+
+        if (empty($orderData["storeId"])) {
+            return $this->_responseHelper->createResponse(false, "There must be a store id.");
+        }
+
+        if (empty($orderData["products"])) {
+            return $this->_responseHelper->createResponse(false, "There must be products.");
+        }
+        if (empty($orderData["shippingAddress"])) {
+            return $this->_responseHelper->createResponse(false, "There must be a shipping address.");
+        }
+
+        if (empty($orderData["shippingAddress"]['firstName'])) {
+            return $this->_responseHelper->createResponse(false, "There must be a first name on the shipping address.");
+        }
+
+        if (empty($orderData["shippingAddress"]['lastName'])) {
+            return $this->_responseHelper->createResponse(false, "There must be a last name on the shipping address.");
+        }
+
+        if (empty($orderData["shippingAddress"]['street1'])) {
+            return $this->_responseHelper->createResponse(false, "There must be a street1 on the shipping address.");
+        }
+
+        if (empty($orderData["shippingAddress"]['city'])) {
+            return $this->_responseHelper->createResponse(false, "There must be a city on the shipping address.");
+        }
+
+        if (empty($orderData["shippingAddress"]['region'])) {
+            return $this->_responseHelper->createResponse(false, "There must be a region (state) on the shipping address.");
+        }
+
+        if (empty($orderData["shippingAddress"]['postalCode'])) {
+            return $this->_responseHelper->createResponse(false, "There must be a postal code (zip) on the shipping address.");
+        }
+
+        if (empty($orderData["shippingAddress"]['country'])) {
+            return $this->_responseHelper->createResponse(false, "There must be a country on the shipping address.");
+        }
+
+        if (empty($orderData["shippingAddress"]['phone'])) {
+            return $this->_responseHelper->createResponse(false, "There must be a phone on the shipping address.");
+        }
+
+        if (empty($orderData["billingAddress"])) {
+            return $this->_responseHelper->createResponse(false, "There must be a billing address.");
+        }
+
+        if (empty($orderData["billingAddress"]['firstName'])) {
+            return $this->_responseHelper->createResponse(false, "There must be a first name on the billing address");
+        }
+
+        if (empty($orderData["billingAddress"]['lastName'])) {
+            return $this->_responseHelper->createResponse(false, "There must be a last name on the billing address");
+        }
+
+        if (empty($orderData["billingAddress"]['street1'])) {
+            return $this->_responseHelper->createResponse(false, "There must be a street1 on the billing address.");
+        }
+
+        if (empty($orderData["billingAddress"]['city'])) {
+            return $this->_responseHelper->createResponse(false, "There must be a city on the billing address.");
+        }
+
+        if (empty($orderData["billingAddress"]['region'])) {
+            return $this->_responseHelper->createResponse(false, "There must be a region (state) on the billing address.");
+        }
+
+        if (empty($orderData["billingAddress"]['postalCode'])) {
+            return $this->_responseHelper->createResponse(false, "There must be a postal code (zip) on the billing address.");
+        }
+
+        if (empty($orderData["billingAddress"]['country'])) {
+            return $this->_responseHelper->createResponse(false, "There must be a country on the billing address.");
+        }
+
+        if (empty($orderData["billingAddress"]['phone'])) {
+            return $this->_responseHelper->createResponse(false, "There must be a phone on the billing address.");
+        }
+
+        if (empty($orderData['orderType'])) {
+            return $this->_responseHelper->createResponse(false, "There must be an order type.");
+        }
+
+        return false;
+    }
+
+    /**
+     * Gets an existing order.
+     *
+     * @param $requestData
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     */
+    public function getOrder($orderData)
+    {
+        // Log order request DTO
+        $this->_logger->info('Processing method getOrder with orderId: ' . json_encode($orderData));
+
+        /** @var Order $order */
+        $order = $this->_orderRepository->get($orderData['orderId']);
+
+        $response = array(
+            'statusCode' => 200,
+            'statusMessage' => 'success',
+            'response' => $order->getData()
+        );
+
+        // Log getOrder response DTO
+        $this->_logger->info('Finished retrieving order: ' . json_encode($response));
+
+        // return the order object.
+        return $response;
+    }
+
+    /**
+     * Updates the subscription status of an order.
+     *
+     * @param $requestData
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     */
+    public function updateOrderSubscriptionStatus($requestData)
+    {
+
+        $this->_logger->info('Processing method updateOrderSubscriptionStatus request: ' . json_encode($requestData));
+
+        // Ensure there is a subscription id.
+        if (empty($requestData['subscriptionId'])) {
+            return $this->_responseHelper->createResponse(false, "There must be a subscription id.");
+        }
+
+        // Ensure there is a subscription status.
+        if (empty($requestData['status'])) {
+            return $this->_responseHelper->createResponse(false, "There must be a subscription status.");
+        }
+
+        // Load the subscription.
+        /** @var Subscription $subscription */
+        $subscription = $this->_subscriptionFactory->create();
+        $this->_subscriptionResource->load($subscription, $requestData['subscriptionId'], 'subscription_id');
+
+        // Update the subscription status.
+        $subscription->setData('subscription_status', $requestData['status']);
+        $this->_subscriptionResource->save($subscription);
+
+        // Return a successful response.
+        $response = array(
+            'statusCode' => 200,
+            'statusMessage' => 'success',
+            'response' => $subscription->getData()
+        );
+
+        // Log updateOrderSubscriptionStatus response DTO
+        $this->_logger->info('Finished retrieving products: ' . json_encode($response));
+
+        return $response;
+    }
+
+    /**
+     * Gets an array of products by their sku(s).
+     *
+     * @param $requestData
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     */
+    public function getProducts($requestData) {
+
+        $this->_logger->info('Processing method getProducts request: ' . json_encode($requestData));
+
+        $skus = explode(',', $requestData['skus']);
+
+        // Load and add each product to the quote.
+        foreach ($skus as $sku) {
+
+            $products = [];
+            // Get the Product by sku
+            /** @var \Magento\Catalog\Model\Product $product */
+            $product = $this->_productRepository->get($sku);
+
+            // make sure that this product exists
+            if (!$product) {
+                $this->_logger->info("Could not find product with sku: ${$sku}");
+                continue;
+            }
+
+            // Add the product to our return object.
+            // TODO: possibly remove unneeded fields.
+            $products[] = $product->getData();
+        }
+
+
+        // Return a successful response.
+        $response = array(
+            'statusCode' => 200,
+            'statusMessage' => 'success',
+            'response' => $products
+        );
+
+        // Log getProducts response DTO
+        $this->_logger->info('Finished retrieving products: ' . json_encode($response));
+
+        return $response;
+    }
+}
