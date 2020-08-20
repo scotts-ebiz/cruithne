@@ -4,9 +4,10 @@ define([
         'jquery/validate',
         'mage/translate',
         'Magento_Customer/js/customer-data',
-        'uiRegistry'
+        'uiRegistry',
+        'Magento_Checkout/js/model/quote'
     ],
-    function($, ui, validate, translate, customerData, uiRegistry){
+    function($, ui, validate, translate, customerData, uiRegistry, quote){
         "use strict";
         // Warehouses
         var oxfordPA = {
@@ -88,16 +89,25 @@ define([
         $(function() {
 
             var shippingFormLoaded = setInterval(function() {
-                if ($('select[name="region_id"] option').length) {
+                if ($('select[name="region_id"] option').length
+                    && $('#shipping-new-address-form input[name="street[0]"]').length
+                    && $('#shipping-new-address-form input[name="city"]').length
+                    && $('#shipping-new-address-form input[name="postcode"]').length
+                ) {
                     clearInterval(shippingFormLoaded);
                     getWarehouseAddress();
                 }
             }, 100);
 
+            if (window.location.hash === '#payment') {
+                quote.billingAddress(null);
+            }
+
             $(window).on('hashchange', function() {
                 if (window.location.hash) {
-                    var newHash = window.location.hash.substring(1);
-                    if (newHash === 'payment') {
+                    var newHash = window.location.hash;
+                    if (newHash === '#payment') {
+                        quote.billingAddress(null);
                         var billingFormLoaded = setInterval(function() {
                             var billingForm = $('.checkout-validate-address .instructions.noError a.edit-address');
                             if (billingForm.length) {
