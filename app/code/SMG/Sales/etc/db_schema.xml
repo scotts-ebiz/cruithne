@@ -20,6 +20,7 @@
         <column xsi:type="timestamp" name="ship_end_date" nullable="true" comment="Ship End Date"/>
         <column xsi:type="varchar" name="parent_order_id" nullable="true" comment="Parent Order ID"/>
         <column xsi:type="varchar" name="ls_order_id" nullable="true" comment="LS Order ID"/>
+        <column xsi:type="varchar" name="scotts_customer_id" nullable="true" comment="Scotts Customer ID"/>
         <index referenceId="SALES_ORDER_MASTER_SUBSCRIPTION_ID" indexType="btree">
             <column name="master_subscription_id"/>
         </index>
