@@ -249,14 +249,6 @@ class CoreServicesHelper
            return $isNotValidated;
        }
 
-        // Get the customer object.
-        /** @var \Magento\Customer\Model\Customer $customer */
-        $customer = $this->_customerRepository->getById($orderData["customerId"]);
-
-        if (!$customer->getId()) {
-            return $this->_responseHelper->createResponse(false, "Customer not found.");
-        }
-
         // Get store and website information
         $store = $this->_storeManager->getStore($orderData["storeId"]);
         if (!$store->getId()) {
@@ -267,7 +259,6 @@ class CoreServicesHelper
         /** @var \Magento\Quote\Model\Quote $quote */
         $quote = $this->_quoteFactory->create();
         $quote->setStore($store);
-        $quote->assignCustomer($customer);
 
         // Load and add each product to the quote.
         foreach ($orderData['products'] as $item) {
@@ -293,7 +284,6 @@ class CoreServicesHelper
         /* @var $orderBillingAddress \Magento\Quote\Model\Quote\Address */
         $orderBillingAddress = $this->_addressFactory->create();
         $orderBillingAddress->setAddressType(\Magento\Sales\Model\Order\Address::TYPE_BILLING);
-        $orderBillingAddress->setCustomerId($customer->getId());
         $orderBillingAddress->setFirstname($orderData['billingAddress']['firstName']);
         $orderBillingAddress->setLastname($orderData['billingAddress']['lastName']);
         $orderBillingAddress->setStreet($orderData['billingAddress']['street1']);
@@ -308,7 +298,6 @@ class CoreServicesHelper
         /* @var $orderShippingAddress \Magento\Quote\Model\Quote\Address */
         $orderShippingAddress = $this->_addressFactory->create();
         $orderShippingAddress->setAddressType(\Magento\Sales\Model\Order\Address::TYPE_SHIPPING);
-        $orderShippingAddress->setCustomerId($customer->getId());
         $orderShippingAddress->setFirstname($orderData['shippingAddress']['firstName']);
         $orderShippingAddress->setLastname($orderData['shippingAddress']['lastName']);
         $orderShippingAddress->setStreet($orderData['shippingAddress']['street1']);
@@ -323,6 +312,8 @@ class CoreServicesHelper
         $quote->getShippingAddress()->collectShippingRates();
         $quote->setPaymentMethod('recurly');
         $quote->setInventoryProcessed(false);
+        $quote->setCustomerEmail($orderData['customerEmail']);
+        $quote->setCustomerIsGuest(true);
 
         $this->_quoteResource->save($quote);
 
@@ -347,6 +338,8 @@ class CoreServicesHelper
             $order->setData('parent_order_id', $orderData["parentOrderId"]);
         }
 
+        // Set the Scotts Customer Id.
+        $order->setData('scotts_customer_id', $orderData["customerId"]);
 
         // Save order
         $this->_orderResource->save($order);
@@ -396,7 +389,7 @@ class CoreServicesHelper
         // Create the master subscription
         /** @var Subscription $subscription */
         $subscription = $this->_subscriptionFactory->create();
-        $subscription->setData('customer_id', $order->getCustomerId());
+        $subscription->setData('customer_id', $order->getData('scotts_customer_id'));
         $subscription->setData('gigya_id', $order->getData("customer_gigya_id"));
         $subscription->setData('sales_order_id', $order->getId());
         $subscription->setData('quiz_id', $orderData['completedQuizId']);
