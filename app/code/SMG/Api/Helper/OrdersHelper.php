@@ -683,8 +683,15 @@ class OrdersHelper
             // this processing automatically we need to see if this request
             // is one of three types of credit memos because if it is then
             // it isn't a credit memo but rather a RMA so we need to flag it as such.
-            if ($orderReason == self::CUSTOMER_REFUSAL_CODE || $orderReason == self::BUYBACK_CODE || $orderReason == self::RECOVERY_RECALL_CODE) {
+            if ($orderReason == self::CUSTOMER_REFUSAL_CODE || $orderReason == self::BUYBACK_CODE || $orderReason == self::RECOVERY_RECALL_CODE) 
+            {
                 $debitCreditFlag = 'RE';
+            }
+            // check to order item for CL
+            $flag = $this->checkCancellation($order); 
+            if($flag)
+            {
+                    $debitCreditFlag = 'CL';
             }
         }
 
@@ -989,5 +996,69 @@ class OrdersHelper
 
         $sapOrderCollection = $this->_sapOrderBatchCollectionFactory->create();
         return $sapOrderCollection->getData();
+    }
+        /**
+     * Check order cancel or not
+     *
+     * @return boolen
+     */
+     public function checkCancellation($order) {
+         
+        // Get the sap sales order
+        /**
+         * @var \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
+         */
+        $trackNumbers = []; 
+        $sapOrderBatch = $this->_sapOrderBatchFactory->create();
+        $this->_sapOrderBatchResource->load($sapOrderBatch, $order->getId(), 'order_id');
+        $orderProcessDate = $sapOrderBatch->getData('order_process_date');
+        if (!empty($orderProcessDate))
+        {
+         $order_sent = 'Yes';
+        }
+        else
+        {
+         $order_sent =  'No';
+        }
+        
+        $tracksCollection = $order->getTracksCollection();
+        if($tracksCollection){
+            
+            foreach ($tracksCollection->getItems() as $track) {
+
+              $trackNumbers[] = $track->getTrackNumber();
+
+            }
+        }
+         
+        if(!empty($trackNumbers)){ 
+        
+        $shipping_track = 'Yes';
+        
+        }else{
+            
+         $shipping_track = 'No';
+         
+        }
+        
+        if($order_sent == 'Yes' && $shipping_track == 'No'){
+            return true;
+            exit;
+        }
+        else if($order_sent == 'No' && $shipping_track == 'Yes')
+        {
+            return true;
+            exit;
+        }
+        else if($order_sent == 'No')
+        {
+            return true;
+            exit;
+        }
+        else{
+            return false;
+            exit;
+        }  
+         
     }
 }
