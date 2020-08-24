@@ -2,16 +2,18 @@
 
 namespace SMG\Api\Helper;
 
-use Magento\Customer\Api\CustomerRepositoryInterface;
-use Magento\Quote\Model\QuoteFactory;
 use Magento\Catalog\Model\ProductFactory;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
+use Magento\CatalogSearch\Model\AdvancedFactory;
 use Magento\CatalogSearch\Model\ResourceModel\Advanced as AdvancedResource;
 use Magento\Customer\Api\AddressRepositoryInterface;
+use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\ResourceModel\Customer as CustomerResource;
 use Magento\Framework\DB\Transaction as Transaction;
+use Magento\Quote\Model\Quote\AddressFactory;
+use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\QuoteManagement;
 use Magento\Quote\Model\ResourceModel\Quote as QuoteResource;
 use Magento\Sales\Api\OrderRepositoryInterface;
@@ -20,11 +22,10 @@ use Magento\Sales\Model\Order\Email\Sender\InvoiceSender as InvoiceSender;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Magento\Sales\Model\Service\InvoiceService as InvoiceService;
+use Magento\Setup\Exception;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use SMG\OrderDiscount\Helper\Data as DiscountHelper;
-use Magento\CatalogSearch\Model\AdvancedFactory;
-use Magento\Quote\Model\Quote\AddressFactory;
 use SMG\SubscriptionApi\Helper\RecurlyHelper;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder as SubscriptionOrderResource;
@@ -94,17 +95,11 @@ class CoreServicesHelper
     /** @var AdvancedResource */
     protected $_advancedResource;
 
-    /** @var \Magento\Quote\Model\Quote\AddressFactory */
-    private $_addressFactory;
-
     /** @var ProductRepository */
     protected $_productRepository;
 
     /** @var CustomerRepositoryInterface */
     protected $_customerRepository;
-
-    /** @var OrderRepositoryInterface */
-    private $_orderRepository;
 
     /** @var SubscriptionFactory */
     protected $_subscriptionFactory;
@@ -112,16 +107,16 @@ class CoreServicesHelper
     /** @var SubscriptionResource */
     protected $_subscriptionResource;
 
-    /** @var SubscriptionOrderFactory  */
+    /** @var SubscriptionOrderFactory */
     protected $_subscriptionOrderFactory;
 
-    /** @var SubscriptionOrderItemFactory  */
+    /** @var SubscriptionOrderItemFactory */
     protected $_subscriptionOrderItemFactory;
 
-    /** @var SubscriptionAddonOrderFactory  */
+    /** @var SubscriptionAddonOrderFactory */
     protected $_subscriptionAddonOrderFactory;
 
-    /** @var SubscriptionAddonOrderItemFactory  */
+    /** @var SubscriptionAddonOrderItemFactory */
     protected $_subscriptionAddonOrderItemFactory;
 
     /** @var RecurlyHelper */
@@ -129,6 +124,15 @@ class CoreServicesHelper
 
     /** @var SubscriptionOrderResource */
     protected $_subscriptionOrderResource;
+
+    /** @var \Magento\Quote\Model\Quote\AddressFactory */
+    private $_addressFactory;
+
+    /** @var OrderRepositoryInterface */
+    private $_orderRepository;
+
+    /** @var string */
+    protected $_loggerPrefix;
 
     /**
      * OrderStatusHelper constructor.
@@ -195,6 +199,9 @@ class CoreServicesHelper
     )
     {
         $this->_logger = $logger;
+        $host = gethostname();
+        $ip = gethostbyname($host);
+        $this->_loggerPrefix = 'SERVER: ' . $ip . ' SESSION: ' . session_id() . ' - ';
         $this->_responseHelper = $responseHelper;
         $this->_orderFactory = $orderFactory;
         $this->_orderResource = $orderResource;
@@ -244,10 +251,10 @@ class CoreServicesHelper
         $this->_logger->info('Processing order: ' . json_encode($orderData));
 
         // Ensure the data provided to us for order creation is accurate and complete.
-       $isNotValidated = $this->validateOrderData($orderData);
-       if ($isNotValidated) {
-           return $isNotValidated;
-       }
+        $isNotValidated = $this->validateOrderData($orderData);
+        if ($isNotValidated) {
+            return $isNotValidated;
+        }
 
         // Get store and website information
         $store = $this->_storeManager->getStore($orderData["storeId"]);
@@ -315,128 +322,73 @@ class CoreServicesHelper
         $quote->setCustomerEmail($orderData['customerEmail']);
         $quote->setCustomerIsGuest(true);
 
-        $this->_quoteResource->save($quote);
+        try {
 
-        // Set sales order payment.
-        $quote->getPayment()->importData(['method' => 'recurly']);
+            $this->_quoteResource->save($quote);
 
-        $quote->collectTotals();
+            // Set sales order payment.
+            $quote->getPayment()->importData(['method' => 'recurly']);
 
-        $this->_quoteResource->save($quote);
+            $quote->collectTotals();
 
-        // Generate the order from the quote.
-        /** @var Order $order */
-        $order = $this->_quoteManagement->submit($quote);
-        $order->setEmailSent(0);
+            $this->_quoteResource->save($quote);
 
-        // Set custom order fields
-        if (!empty($orderData["lsOrderId"])) {
-            $order->setData('ls_order_id', $orderData["lsOrderId"]);
-        }
+            // Generate the order from the quote.
+            /** @var Order $order */
+            $order = $this->_quoteManagement->submit($quote);
+            $order->setEmailSent(0);
 
-        if (!empty($orderData["parentOrderId"])) {
-            $order->setData('parent_order_id', $orderData["parentOrderId"]);
-        }
+            // Set custom order fields
+            if (!empty($orderData["lsOrderId"])) {
+                $order->setData('ls_order_id', $orderData["lsOrderId"]);
+            }
 
-        // Set the Scotts Customer Id.
-        $order->setData('scotts_customer_id', $orderData["customerId"]);
+            if (!empty($orderData["parentOrderId"])) {
+                $order->setData('parent_order_id', $orderData["parentOrderId"]);
+            }
 
-        // Save order
-        $this->_orderResource->save($order);
+            // Set the Scotts Customer Id.
+            $order->setData('scotts_customer_id', $orderData["customerId"]);
 
-        // Perform lawn subscription order specific processing.
-        if ($orderData["orderType"] === "LS") {
-
-            //create the master lawn subscription object
-            /** @var Subscription $subscription */
-            $subscription = $this->createSubscription($order, $orderData);
-
-            // Set ship date for the subscription/order
-            $order->addData([
-                'ship_start_date' => $orderData["shipStartDate"] ?? NULL,
-                'ship_end_date' => $orderData["shipEndDate"] ?? NULL,
-                'subscription_addon' => $orderData["isAddOn"] ?? FALSE,
-                'subscription_type' => $subscription->getSubscriptionType(),
-            ]);
-
-            // Save subscription data to order.
+            // Save order
             $this->_orderResource->save($order);
 
+            // Perform lawn subscription order specific processing.
+            if ($orderData["orderType"] === "LS") {
+
+                //create the master lawn subscription object
+                /** @var Subscription $subscription */
+                $subscription = $this->createSubscription($order, $orderData);
+
+                // Set ship date for the subscription/order
+                $order->addData([
+                    'ship_start_date' => $orderData["shipStartDate"] ?? NULL,
+                    'ship_end_date' => $orderData["shipEndDate"] ?? NULL,
+                    'subscription_addon' => $orderData["isAddOn"] ?? FALSE,
+                    'subscription_type' => $subscription->getSubscriptionType(),
+                ]);
+
+                // Save subscription data to order.
+                $this->_orderResource->save($order);
+
+            }
+
+            $response = array(
+                'statusCode' => 200,
+                'statusMessage' => 'success',
+                'response' => $order->getId()
+            );
+
+            // Log order response DTO
+            $this->_logger->info('Finished processing order: ' . json_encode($order->getData()));
+
+            // return the order object.
+            return $response;
+
+        } catch (Exception $e) {
+            $this->_logger->error($this->_loggerPrefix . $e->getMessage());
         }
-
-        $response = array(
-            'statusCode' => 200,
-            'statusMessage' => 'success',
-            'response' => $order->getId()
-        );
-
-        // Log order response DTO
-        $this->_logger->info('Finished processing order: ' . json_encode($order->getData()));
-
-        // return the order object.
-        return $response;
     }
-
-    /**
-     * Creates a master subscription
-     *
-     * @param Order $order
-     * @param mixed $orderData
-     *
-     */
-    protected function createSubscription($order, $orderData) {
-
-        // Create the master subscription
-        /** @var Subscription $subscription */
-        $subscription = $this->_subscriptionFactory->create();
-        $subscription->setData('customer_id', $order->getData('scotts_customer_id'));
-        $subscription->setData('gigya_id', $order->getData("customer_gigya_id"));
-        $subscription->setData('sales_order_id', $order->getId());
-        $subscription->setData('quiz_id', $orderData['completedQuizId']);
-        $subscription->setData('lawn_zip', $orderData['lawnZip']);
-        $subscription->setData('zone_name', $orderData['lawnZone']);
-        $subscription->setData('subscription_type', $orderData['subType']);
-        $subscription->setData('origin', $orderData['cartType']);
-        $subscription->setData('subscription_status', $orderData['subStatus'] ??  "active");
-        $subscription->setData('tax', $order->getTaxAmount());
-        $subscription->setData('paid', $order->getTotalPaid());
-        $subscription->setData('discount', $order->getDiscountAmount());
-        $this->_subscriptionResource->save($subscription);
-
-        foreach ($orderData['products'] as $item) {
-
-            $this->createSubscriptionOrder($subscription, $orderData, $item);
-
-        }
-
-
-        return $subscription;
-    }
-
-    /**
-     * Creates a master subscription
-     *
-     * @param Subscription $masterSubscription
-     * @param mixed $orderData
-     * @param mixed $product
-     *
-     */
-    protected function createSubscriptionOrder($masterSubscription, $orderData, $product) {
-        /** @var SubscriptionOrderResource $subscriptionOrder */
-        $subscriptionOrder = $this->_subscriptionOrderFactory->create();
-        $subscriptionOrder->setData('subscription_entity_id', $masterSubscription->getId());
-        $subscriptionOrder->setData('application_start_date', $product['applicationWindow']['startDate']);
-        $subscriptionOrder->setData('application_end_date', $product['applicationWindow']['endDate']);
-        $subscriptionOrder->setData('ship_start_date', $orderData["shipStartDate"]);
-        $subscriptionOrder->setData('ship_end_date', $orderData["shipEndDate"]);
-        $subscriptionOrder->setData('subscription_order_status', $orderData['subStatus'] ??  "pending");
-        $subscriptionOrder->setData('season_name', $product['applicationWindow']['season']);
-        $subscriptionOrder->setData('season_slug', $this->_recurlyHelper->getSeasonSlugByName($product['applicationWindow']['season']));
-
-        $this->_subscriptionOrderResource->save($subscriptionOrder);
-    }
-
-
 
     protected function validateOrderData($orderData)
     {
@@ -531,6 +483,66 @@ class CoreServicesHelper
     }
 
     /**
+     * Creates a master subscription
+     *
+     * @param Order $order
+     * @param mixed $orderData
+     *
+     */
+    protected function createSubscription($order, $orderData)
+    {
+
+        // Create the master subscription
+        /** @var Subscription $subscription */
+        $subscription = $this->_subscriptionFactory->create();
+        $subscription->setData('gigya_id', $order->getData("customer_gigya_id"));
+        $subscription->setData('sales_order_id', $order->getId());
+        $subscription->setData('quiz_id', $orderData['completedQuizId']);
+        $subscription->setData('lawn_zip', $orderData['lawnZip']);
+        $subscription->setData('zone_name', $orderData['lawnZone']);
+        $subscription->setData('subscription_type', $orderData['subType']);
+        $subscription->setData('origin', $orderData['cartType']);
+        $subscription->setData('subscription_status', $orderData['subStatus'] ?? "active");
+        $subscription->setData('tax', $order->getTaxAmount());
+        $subscription->setData('paid', $order->getTotalPaid());
+        $subscription->setData('discount', $order->getDiscountAmount());
+        $this->_subscriptionResource->save($subscription);
+
+        foreach ($orderData['products'] as $item) {
+
+            $this->createSubscriptionOrder($subscription, $orderData, $item);
+
+        }
+
+
+        return $subscription;
+    }
+
+    /**
+     * Creates a master subscription
+     *
+     * @param Subscription $masterSubscription
+     * @param mixed $orderData
+     * @param mixed $product
+     *
+     */
+    protected function createSubscriptionOrder($masterSubscription, $orderData, $product)
+    {
+        /** @var SubscriptionOrderResource $subscriptionOrder */
+        $subscriptionOrder = $this->_subscriptionOrderFactory->create();
+        $subscriptionOrder->setData('subscription_entity_id', $masterSubscription->getId());
+        $subscriptionOrder->setData('application_start_date', $product['applicationWindow']['startDate']);
+        $subscriptionOrder->setData('application_end_date', $product['applicationWindow']['endDate']);
+        $subscriptionOrder->setData('ship_start_date', $orderData["shipStartDate"]);
+        $subscriptionOrder->setData('ship_end_date', $orderData["shipEndDate"]);
+        $subscriptionOrder->setData('subscription_order_status', $orderData['subStatus'] ?? "pending");
+        $subscriptionOrder->setData('season_name', $product['applicationWindow']['season']);
+        $subscriptionOrder->setData('season_slug', $this->_recurlyHelper->getSeasonSlugByName($product['applicationWindow']['season']));
+
+        $this->_subscriptionOrderResource->save($subscriptionOrder);
+    }
+
+    /**
      * Gets an existing order.
      *
      * @param $requestData
@@ -606,7 +618,8 @@ class CoreServicesHelper
      * @param $requestData
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    public function getProducts($requestData) {
+    public function getProducts($requestData)
+    {
 
         $this->_logger->info('Processing method getProducts request: ' . json_encode($requestData));
 
