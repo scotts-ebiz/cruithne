@@ -5,6 +5,11 @@
 @import '../../../default/web/css/vendor/normalize/lib'; // Normalize.css
 @import '../../../default/web/css/vendor/magento-ui/lib'; // Magento UI
 
+@import '../../../default/web/css/source/scottsbase-colors'; // Import Scottsbase Colors
+
+// Mygro Colors
+@import 'source/mygro-colors';
+
 // Theme variables
 @import 'variables';
 
@@ -14,8 +19,6 @@
 @import 'blocks/navigation';
 @import 'blocks/typography';
 
-// Override Module Styles
-@import '../../Magento_Checkout/styles/module';
 
 // Mygro Defaults
 @import 'source/mygromixins';
