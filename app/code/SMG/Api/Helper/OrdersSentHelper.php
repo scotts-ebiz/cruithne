@@ -182,11 +182,6 @@ class OrdersSentHelper
                             $this->_logger->error("SMG\Api\Helper\OrdersSentHelper - The order number " . $orderIncrementId . " is missing the sku for the order type of " . $orderType);
                         }
                     }
-                    else
-                    {
-                        // log the error
-                        $this->_logger->error("SMG\Api\Helper\OrdersSentHelper - The order number " . $orderIncrementId . " has an invalid order type " . $orderType);
-                    }
                     else if ($orderType === 'CL')
                     {
                         // get the sku value from the input JSON
