@@ -2,6 +2,7 @@
 
 namespace SMG\Api\Helper;
 
+use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ProductFactory;
 use Magento\Catalog\Model\ProductRepository;
 use Magento\Catalog\Model\ResourceModel\Product as ProductResource;
@@ -267,6 +268,9 @@ class CoreServicesHelper
         $quote = $this->_quoteFactory->create();
         $quote->setStore($store);
 
+        $quote->setCustomerFirstname($orderData['customerFirstName']);
+        $quote->setCustomerLastname($orderData['customerLastName']);
+
         // Load and add each product to the quote.
         foreach ($orderData['products'] as $item) {
 
@@ -394,6 +398,14 @@ class CoreServicesHelper
     {
         if (empty($orderData["customerId"])) {
             return $this->_responseHelper->createResponse(false, "There must be a customer id.");
+        }
+
+        if (empty($orderData["customerFirstName"])) {
+            return $this->_responseHelper->createResponse(false, "There must be a customer first name.");
+        }
+
+        if (empty($orderData["customerLastName"])) {
+            return $this->_responseHelper->createResponse(false, "There must be a customer last name.");
         }
 
         if (empty($orderData["storeId"])) {
@@ -556,10 +568,23 @@ class CoreServicesHelper
         /** @var Order $order */
         $order = $this->_orderRepository->get($orderData['orderId']);
 
+        $orderObject = $order->getData();
+        $orderObject['billingAddress'] = $order->getBillingAddress()->getData();
+        $orderObject['shippingAddress'] = $order->getShippingAddress()->getData();
+
+        $orderObject['products'] = [];
+
+        // Populate the products array
+        /** @var Product $item */
+        foreach ($order->getAllItems() as $item) {
+            $product = $item->getData();
+            $orderObject['products'][] = $product;
+        }
+        
         $response = array(
             'statusCode' => 200,
             'statusMessage' => 'success',
-            'response' => $order->getData()
+            'response' => $orderObject
         );
 
         // Log getOrder response DTO
