@@ -5,11 +5,13 @@
 // Mixins
 @import 'mixins/media-queries';
 
+@import 'source/scottsbase-colors';
+
 // Theme variables
 @import 'variables';
 
 // Scotts Base Defaults
-@import 'source/scottsbase-colors';
+
 @import 'source/scottsbasevars';
 @import 'source/scottsbasemixins';
 @import 'source/scottsbase';
