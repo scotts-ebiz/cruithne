@@ -1,9 +1,4 @@
 ############################################
-## hide directory listings
-
-Options -Indexes
-
-############################################
 ## overrides deployment configuration mode value
 ## use command bin/magento deploy:mode:set to switch modes
 
@@ -46,14 +41,8 @@ Options -Indexes
 ############################################
 ## adjust memory limit
 
-    php_value memory_limit 4000M
+    php_value memory_limit 756M
     php_value max_execution_time 18000
-
-###########################################
-## Set secure PHPSESSID attribute
-
-    php_value session.cookie_httponly 1
-    php_value session.cookie_secure 1
 
 ############################################
 ## disable automatic session start
@@ -75,7 +64,7 @@ Options -Indexes
 ############################################
 ## adjust memory limit
 
-    php_value memory_limit 4000M
+    php_value memory_limit 756M
     php_value max_execution_time 18000
 
 ############################################
@@ -83,8 +72,6 @@ Options -Indexes
 ## before autoload was initialized
 
     php_flag session.auto_start off
-    php_value session.gc_maxlifetime 31536000
-    php_value session.cookie_lifetime 31536000
 
 ############################################
 ## enable resulting html compression
@@ -175,61 +162,6 @@ Options -Indexes
     RewriteRule .* - [L,R=405]
 
 ############################################
-## GOM1-118 Redirect STORE roots (used by keep-shopping links) to brand sites.
-## Updated per DTECH-558 for new evironment mappings.
-## BUT!! This .htaccess isn't used! SEE .htaccess in M2_PRIMER Repo.
-## PROD
-    RewriteCond %{HTTP_HOST} ^(store\.|shop\.)?roundup\.com$ [NC]
-    RewriteRule ^$   https://www.roundup.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^(store\.|shop\.)?scotts\.com$ [NC]
-    RewriteRule ^$   https://www.scotts.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^(store\.|shop\.)?miraclegro\.com$ [NC]
-    RewriteRule ^$   https://www.miraclegro.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^(store\.|shop\.)?ortho\.com$ [NC]
-    RewriteRule ^$   https://www.ortho.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^(store\.|shop\.)?tomcatbrand\.com$ [NC]
-    RewriteRule ^$   https://www.tomcatbrand.com/ [R=301,L,QSA]
-## RC (release-candidate)
-    RewriteCond %{HTTP_HOST} ^rc\.roundup\.com$ [NC]
-    RewriteRule ^$   https://acsftest.roundup.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^rc\.scotts\.com$ [NC]
-    RewriteRule ^$   https://acsftest.scotts.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^rc\.miraclegro\.com$ [NC]
-    RewriteRule ^$   https://acsftest.miraclegro.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^rc\.ortho\.com$ [NC]
-    RewriteRule ^$   https://acsftest.ortho.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^rc\.tomcatbrand\.com$ [NC]
-    RewriteRule ^$   https://acsftest.tomcatbrand.com/ [R=301,L,QSA]
-## DEV, TEST, STAGING
-    RewriteCond %{HTTP_HOST} ^(dev|test|staging)\.roundup\.com$ [NC]
-    RewriteRule ^$   https://acsfdev.roundup.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^(dev|test|staging)\.scotts\.com$ [NC]
-    RewriteRule ^$   https://acsfdev.scotts.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^(dev|test|staging)\.miraclegro\.com$ [NC]
-    RewriteRule ^$   https://acsfdev.miraclegro.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^(dev|test|staging)\.ortho\.com$ [NC]
-    RewriteRule ^$   https://acsfdev.ortho.com/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^(dev|test|staging)\.tomcatbrand\.com$ [NC]
-    RewriteRule ^$   https://acsfdev.tomcatbrand.com/ [R=301,L,QSA]
-## LOCAL
-    RewriteCond %{HTTP_HOST} ^cruithne\.roundup\.local$ [NC]
-    RewriteRule ^$   https://roundup.test/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^cruithne\.scotts\.local$ [NC]
-    RewriteRule ^$   https://scotts.test/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^cruithne\.miraclegro\.local$ [NC]
-    RewriteRule ^$   https://miraclegro.test/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^cruithne\.ortho\.local$ [NC]
-    RewriteRule ^$   https://ortho.test/ [R=301,L,QSA]
-    RewriteCond %{HTTP_HOST} ^cruithne\.tomcatbrand\.local$ [NC]
-    RewriteRule ^$   https://tomcatbrand.test/ [R=301,L,QSA]
-
-############################################
-## GOM1-50 Redirect M1 iframe uris to M2's for easier cutovers.
-    RewriteRule ^/?atgcart/add$    https://%{HTTP_HOST}/iframes/addtocart [R=302,NC,L,QSA]
-    RewriteRule ^/?atgcart/index$  https://%{HTTP_HOST}/iframes/cart [R=302,NC,L,QSA]
-    RewriteRule ^/?atgcart$        https://%{HTTP_HOST}/iframes/cart [R=302,NC,L,QSA]
-
-############################################
 ## redirect for mobile user agents
 
     #RewriteCond %{REQUEST_URI} !^/mobiledirectoryhere/.*$
@@ -243,29 +175,6 @@ Options -Indexes
     RewriteCond %{REQUEST_FILENAME} !-d
     RewriteCond %{REQUEST_FILENAME} !-l
 
-############################################
-## rewrite everything to https
-
-RewriteCond %{HTTPS} off
-RewriteCond %{HTTP:X-Forwarded-Proto} !https
-RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,QSA,L]
-
-
-############################################
-## rewrite everything to https
-
-RewriteCond %{HTTP_HOST} ^mygro\.com$ [NC]
-RewriteRule ^(.*)$   https://www.mygro.com/$1 [R=301,L,QSA]
-
-#######################################################################
-# XSS Attack Prevention - Strip query string if it seems malicious    
-#######################################################################
-<IfModule mod_rewrite.c>
-RewriteCond %{QUERY_STRING} (\<|%3C).*script.*(\>|%3E) [NC,OR]
-RewriteCond %{QUERY_STRING} GLOBALS(=|\[|\%[0-9A-Z]{0,2}) [OR]
-RewriteCond %{QUERY_STRING} _REQUEST(=|\[|\%[0-9A-Z]{0,2})
-RewriteRule .* index.php [QSD,L]
-</IfModule>
 ############################################
 ## rewrite everything else to index.php
 
