@@ -22,10 +22,13 @@ use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender as InvoiceSender;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
+use Magento\Sales\Model\ResourceModel\Order\Item as ItemResource;
 use Magento\Sales\Model\Service\InvoiceService as InvoiceService;
 use Magento\Setup\Exception;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
+use SMG\OfflineShipping\Model\ResourceModel\ShippingConditionCode as ShippingConditionCodeResource;
+use SMG\OfflineShipping\Model\ShippingConditionCodeFactory;
 use SMG\OrderDiscount\Helper\Data as DiscountHelper;
 use SMG\SubscriptionApi\Helper\RecurlyHelper;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
@@ -126,14 +129,24 @@ class CoreServicesHelper
     /** @var SubscriptionOrderResource */
     protected $_subscriptionOrderResource;
 
+    /** @var string */
+    protected $_loggerPrefix;
+
+    /** @var ItemResource */
+    protected $_itemResource;
+
     /** @var \Magento\Quote\Model\Quote\AddressFactory */
     private $_addressFactory;
 
     /** @var OrderRepositoryInterface */
     private $_orderRepository;
 
-    /** @var string */
-    protected $_loggerPrefix;
+    /** @var ShippingConditionCodeFactory */
+    protected $_shippingConditionCodeFactory;
+
+    /** @var ShippingConditionCodeResource */
+    protected $_shippingConditionCodeResource;
+
 
     /**
      * OrderStatusHelper constructor.
@@ -163,6 +176,9 @@ class CoreServicesHelper
      * @param SubscriptionAddonOrderItemFactory $subscriptionAddonOrderItemFactory
      * @param RecurlyHelper $recurlyHelper
      * @param SubscriptionOrderResource $subscriptionOrderResource
+     * @param ItemResource $itemResource
+     * @param ShippingConditionCodeFactory $shippingConditionCodeFactory
+     * @param ShippingConditionCodeResource $shippingConditionCodeResource
      */
     public function __construct(
         LoggerInterface $logger,
@@ -195,8 +211,10 @@ class CoreServicesHelper
         SubscriptionAddonOrderFactory $subscriptionAddonOrderFactory,
         SubscriptionAddonOrderItemFactory $subscriptionAddonOrderItemFactory,
         RecurlyHelper $recurlyHelper,
-        SubscriptionOrderResource $subscriptionOrderResource
-
+        SubscriptionOrderResource $subscriptionOrderResource,
+        ItemResource $itemResource,
+        ShippingConditionCodeFactory $shippingConditionCodeFactory,
+        ShippingConditionCodeResource $shippingConditionCodeResource
     )
     {
         $this->_logger = $logger;
@@ -233,6 +251,9 @@ class CoreServicesHelper
         $this->_subscriptionAddonOrderItemFactory = $subscriptionAddonOrderItemFactory;
         $this->_recurlyHelper = $recurlyHelper;
         $this->_subscriptionOrderResource = $subscriptionOrderResource;
+        $this->_itemResource = $itemResource;
+        $this->_shippingConditionCodeFactory = $shippingConditionCodeFactory;
+        $this->_shippingConditionCodeResource = $shippingConditionCodeResource;
     }
 
     /**
@@ -268,8 +289,8 @@ class CoreServicesHelper
         $quote = $this->_quoteFactory->create();
         $quote->setStore($store);
 
-        $quote->setCustomerFirstname($orderData['customerFirstName']);
-        $quote->setCustomerLastname($orderData['customerLastName']);
+        $quote->setCustomerFirstname($orderData['customerFirstName']  ?? null);
+        $quote->setCustomerLastname($orderData['customerLastName'] ?? null);
 
         // Load and add each product to the quote.
         foreach ($orderData['products'] as $item) {
@@ -277,6 +298,9 @@ class CoreServicesHelper
             // Get the Product.
             /** @var \Magento\Catalog\Model\Product $product */
             $product = $this->_productRepository->get($item['sku']);
+
+            // Override price if it exists on the json object
+            $product->setPrice($item['price'] ?? $product->getPrice());
 
             // make sure that this product exists
             if (!$product) {
@@ -287,9 +311,8 @@ class CoreServicesHelper
         }
 
         // Apply coupon code if available.
-        if (!empty($orderData["couponCode"])) {
-            $quote->setCouponCode($orderData["couponCode"]);
-        }
+        $quote->setCouponCode($orderData["couponCode"] ?? $quote->getCouponCode());
+
 
         // Create Billing Address and associate it to the quote.
         /* @var $orderBillingAddress \Magento\Quote\Model\Quote\Address */
@@ -343,16 +366,20 @@ class CoreServicesHelper
             $order->setEmailSent(0);
 
             // Set custom order fields
-            if (!empty($orderData["lsOrderId"])) {
-                $order->setData('ls_order_id', $orderData["lsOrderId"]);
-            }
 
-            if (!empty($orderData["parentOrderId"])) {
-                $order->setData('parent_order_id', $orderData["parentOrderId"]);
-            }
+            $order->setData('ls_order_id', $orderData["lsOrderId"] ?? null);
+            $order->setData('parent_order_id', $orderData["parentOrderId"] ?? null);
 
             // Set the Scotts Customer Id.
-            $order->setData('scotts_customer_id', $orderData["customerId"]);
+            $order->setData('scotts_customer_id', $orderData["customerId"] ?? null);
+
+            // Overwrite M2 order pricing with pricing from core services if set.
+            $order->setShippingAmount($orderData["shippingCost"] ?? $order->getShippingAmount());
+            $order->setSubtotal($orderData["subTotal"] ?? $order->getSubtotal());
+            $order->setDiscountAmount($orderData["discounts"] ?? $order->getDiscountAmount());
+            $order->setTaxAmount($orderData["tax"] ?? $order->getTaxAmount());
+            $order->setGrandTotal($orderData["total"] ?? $order->getGrandTotal());
+            $order->setCouponCode($orderData["couponCode"] ?? $order->getCouponCode());
 
             // Save order
             $this->_orderResource->save($order);
@@ -491,6 +518,7 @@ class CoreServicesHelper
             return $this->_responseHelper->createResponse(false, "There must be an order type.");
         }
 
+
         return false;
     }
 
@@ -507,8 +535,7 @@ class CoreServicesHelper
         // Create the master subscription
         /** @var Subscription $subscription */
         $subscription = $this->_subscriptionFactory->create();
-        $subscription->setData('gigya_id', $order->getData("customer_gigya_id"));
-        $subscription->setData('sales_order_id', $order->getId());
+        $subscription->setData('gigya_id', $order->getData("customer_gigya_id") ?? null);
         $subscription->setData('quiz_id', $orderData['completedQuizId']);
         $subscription->setData('lawn_zip', $orderData['lawnZip']);
         $subscription->setData('zone_name', $orderData['lawnZone']);
@@ -516,13 +543,14 @@ class CoreServicesHelper
         $subscription->setData('origin', $orderData['cartType']);
         $subscription->setData('subscription_status', $orderData['subStatus'] ?? "active");
         $subscription->setData('tax', $order->getTaxAmount());
-        $subscription->setData('paid', $order->getTotalPaid());
+        $subscription->setData('paid', $orderData['paid']);
+        $subscription->setData('price', $orderData['price']);
         $subscription->setData('discount', $order->getDiscountAmount());
         $this->_subscriptionResource->save($subscription);
 
         foreach ($orderData['products'] as $item) {
 
-            $this->createSubscriptionOrder($subscription, $orderData, $item);
+            $this->createSubscriptionOrder($subscription, $orderData, $item, $order->getId());
 
         }
 
@@ -538,11 +566,13 @@ class CoreServicesHelper
      * @param mixed $product
      *
      */
-    protected function createSubscriptionOrder($masterSubscription, $orderData, $product)
+    protected function createSubscriptionOrder($masterSubscription, $orderData, $product, $orderId)
     {
         /** @var SubscriptionOrderResource $subscriptionOrder */
         $subscriptionOrder = $this->_subscriptionOrderFactory->create();
         $subscriptionOrder->setData('subscription_entity_id', $masterSubscription->getId());
+        $subscriptionOrder->setData('sales_order_id', $orderId);
+        $subscriptionOrder->setData('price', $product['price'] ?? 0.00);
         $subscriptionOrder->setData('application_start_date', $product['applicationWindow']['startDate']);
         $subscriptionOrder->setData('application_end_date', $product['applicationWindow']['endDate']);
         $subscriptionOrder->setData('ship_start_date', $orderData["shipStartDate"]);
@@ -580,7 +610,25 @@ class CoreServicesHelper
             $product = $item->getData();
             $orderObject['products'][] = $product;
         }
-        
+
+        // Populate the subscription.
+        /** @var Subscription $subscription */
+        $subscriptionOrder = $this->_subscriptionOrderFactory->create();
+        $this->_subscriptionOrderResource->load($subscriptionOrder, $order->getId(), 'sales_order_id');
+
+        $subscription = $this->_subscriptionFactory->create();
+        $this->_subscriptionResource->load($subscription, $subscriptionOrder->getData('subscription_entity_id'), 'entity_id');
+
+        $orderObject['masterSubscription'] = $subscription->getData();
+        $orderObject['subscriptions'] = $subscriptionOrder->getData();
+
+        // get the shipping condition data
+        /** @var /SMG/OfflineShipping/Model/ShippingConditionCode $shippingCondition */
+        $shippingCondition = $this->_shippingConditionCodeFactory->create();
+        $this->_shippingConditionCodeResource->load($shippingCondition, $order->getShippingMethod(), 'shipping_method');
+
+        $orderObject['shippingCondition'] = $shippingCondition->getData();
+
         $response = array(
             'statusCode' => 200,
             'statusMessage' => 'success',
