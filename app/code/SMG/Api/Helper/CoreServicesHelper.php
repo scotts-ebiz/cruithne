@@ -147,7 +147,6 @@ class CoreServicesHelper
     /** @var ShippingConditionCodeResource */
     protected $_shippingConditionCodeResource;
 
-
     /**
      * OrderStatusHelper constructor.
      *
@@ -622,13 +621,14 @@ class CoreServicesHelper
         $orderObject['masterSubscription'] = $subscription->getData();
         $orderObject['subscriptions'] = $subscriptionOrder->getData();
 
+        $orderObject['shipments'] = $order->getShipmentsCollection()->getData();
+
         // get the shipping condition data
         /** @var /SMG/OfflineShipping/Model/ShippingConditionCode $shippingCondition */
         $shippingCondition = $this->_shippingConditionCodeFactory->create();
         $this->_shippingConditionCodeResource->load($shippingCondition, $order->getShippingMethod(), 'shipping_method');
 
         $orderObject['shippingCondition'] = $shippingCondition->getData();
-
         $response = array(
             'statusCode' => 200,
             'statusMessage' => 'success',
