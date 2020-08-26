@@ -222,7 +222,7 @@ return [
         'Magento_PromotionPermissions' => 1,
         'Magento_BannerPageBuilderAnalytics' => 1,
         'Magento_QuoteAnalytics' => 1,
-        'Magento_GiftCardAccountGraphQl' => 1,
+        'Magento_GiftCardAccountGraphQl' => 0,
         'Magento_RelatedProductGraphQl' => 1,
         'Magento_ReleaseNotification' => 1,
         'Magento_Reminder' => 1,
