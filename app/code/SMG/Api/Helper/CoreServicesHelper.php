@@ -37,6 +37,7 @@ use SMG\SubscriptionApi\Model\Subscription;
 use SMG\SubscriptionApi\Model\SubscriptionAddonOrderFactory;
 use SMG\SubscriptionApi\Model\SubscriptionAddonOrderItemFactory;
 use SMG\SubscriptionApi\Model\SubscriptionFactory;
+use SMG\SubscriptionApi\Model\SubscriptionOrder;
 use SMG\SubscriptionApi\Model\SubscriptionOrderFactory;
 use SMG\SubscriptionApi\Model\SubscriptionOrderItemFactory;
 
@@ -664,23 +665,23 @@ class CoreServicesHelper
         }
 
         // Load the subscription.
-        /** @var Subscription $subscription */
-        $subscription = $this->_subscriptionFactory->create();
-        $this->_subscriptionResource->load($subscription, $requestData['subscriptionId'], 'subscription_id');
+        /** @var SubscriptionOrder $subscriptionOrder */
+        $subscriptionOrder = $this->_subscriptionOrderFactory->create();
+        $this->_subscriptionOrderResource->load($subscriptionOrder, $requestData['subscriptionId'], 'entity_id');
 
         // Update the subscription status.
-        $subscription->setData('subscription_status', $requestData['status']);
-        $this->_subscriptionResource->save($subscription);
+        $subscriptionOrder->setData('subscription_order_status', $requestData['status']);
+        $this->_subscriptionOrderResource->save($subscriptionOrder);
 
         // Return a successful response.
         $response = array(
             'statusCode' => 200,
             'statusMessage' => 'success',
-            'response' => $subscription->getData()
+            'response' => $subscriptionOrder->getData()
         );
 
         // Log updateOrderSubscriptionStatus response DTO
-        $this->_logger->info('Finished retrieving products: ' . json_encode($response));
+        $this->_logger->info('Finished updating order subscriptionstatus: ' . json_encode($response));
 
         return $response;
     }
