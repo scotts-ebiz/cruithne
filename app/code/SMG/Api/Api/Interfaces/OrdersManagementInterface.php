@@ -10,6 +10,14 @@ interface OrdersManagementInterface
      * @return string
      */
     public function getOrders();
+    
+    /**
+     * This function will get the order information in a JSON format.
+     * 
+     * @param string orderId
+     * @return string
+     */
+    public function getOrderById($orderId);
 
     /**
      * This function will get the credit memo orders in a JSON format.

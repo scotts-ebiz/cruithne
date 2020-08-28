@@ -43,6 +43,12 @@
             <resource ref="self" />
         </resources>
     </route>
+    <route url="/V1/smg/orders/:orderId" method="POST">
+        <service class="SMG\Api\Api\Interfaces\OrdersManagementInterface" method="getOrderById" />
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
     <route url="/V1/smg/ordersCreditMemo" method="POST">
         <service class="SMG\Api\Api\Interfaces\OrdersManagementInterface" method="getCreditMemoOrders" />
         <resources>
