@@ -5,6 +5,9 @@
 @import '../../../default/web/css/vendor/normalize/lib'; // Normalize.css
 @import '../../../default/web/css/vendor/magento-ui/lib'; // Magento UI
 
+// Import Scottsbase Colors
+@import '../../../default/web/css/source/scottsbase-colors'; 
+
 // Theme variables
 @import 'variables';
 
