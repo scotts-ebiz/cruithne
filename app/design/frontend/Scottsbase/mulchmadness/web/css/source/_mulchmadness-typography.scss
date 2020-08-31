@@ -1,0 +1,27 @@
+
+// Font Family
+
+$font-family__sans-serif                                        : 'Helvetica Neue', Helvetica, Arial, sans-serif !default;
+
+$font-family-name__pdp-title                                    : 'Open Sans Condensed';
+$font-family__pdp-title                                         : $font-family-name__pdp-title, $font-family__sans-serif;
+
+$font-family-name__pdp-body                                     : 'Lato';
+$font-family__pdp-body                                          : $font-family-name__pdp-body, $font-family__sans-serif;
+
+
+// Font Sizes
+$pdp-product-title-size                                         : 32px; 
+$pdp-product-body-size                                          : 14px;
+$pdp-product-btn-size                                           : 16px;
+$pdp-product-price-size                                         : 22px;
+
+// Font Weight
+$font-weight__normal                                            : 400;
+$font-weight__bold                                              : 700;
+
+
+// Font Color
+$php-product-title-color                                        : $scotts-gray;
+$pdp-product-body-color                                         : $scotts-gray;
+
