@@ -208,7 +208,7 @@ class UpgradeData implements UpgradeDataInterface
     }
 
     /**
-     * Add Data for Version 1.1.7
+     * Add Data for Version 1.1.8
      *
      * @param ModuleDataSetupInterface $setup
      */
