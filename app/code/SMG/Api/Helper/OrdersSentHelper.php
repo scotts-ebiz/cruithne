@@ -234,7 +234,7 @@ class OrdersSentHelper
 
         // since the order response will be sending a record for each item that is in
         // the orders file but only need one then check to see if the date was already set
-        if (empty($sapOrderBatch->getData('order_process_date')))
+        if (empty($sapOrderBatch->getData('order_process_date')) && $order->getId() == $sapOrderBatch->getData('order_id'))
         {
             // set the process date for this order
             $sapOrderBatch->setData('order_process_date', $today);
