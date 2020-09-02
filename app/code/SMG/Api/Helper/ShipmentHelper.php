@@ -450,7 +450,7 @@ class ShipmentHelper
         }
     }
 
-    public function zaiusApiCall($orderId)
+    private function zaiusApiCall($orderId)
     {
        $zaiusstatus = false;
 
