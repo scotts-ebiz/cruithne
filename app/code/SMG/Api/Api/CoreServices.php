@@ -118,5 +118,13 @@ class CoreServices implements CoreServicesInterface
         return $this->_coreServicesHelper->getProducts($this->_request->getRequestData());
     }
 
-
+    /**
+     * Creates a shipment given order/shipment details.
+     *
+     * @return string
+     */
+    public function createShipment()
+    {
+        return $this->_coreServicesHelper->createShipment($this->_request->getRequestData());
+    }
 }

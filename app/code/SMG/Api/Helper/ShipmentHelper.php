@@ -113,17 +113,17 @@ class ShipmentHelper
      * @var SapOrderShipmentCollectionFactory
      */
     protected $_sapOrderShipmentCollectionFactory;
-    
+
     /**
      * @var scopeConfigInterface
      */
     protected $_scopeConfigInterface;
-    
+
     /**
      * @var sdk
      */
     protected $_sdk;
-    
+
     /**
      * @var SubscriptionOrderCollectionFactory
      */
@@ -359,8 +359,8 @@ class ShipmentHelper
             {
                 // create shipment status
                 $this->_shipOrderInterface->execute($orderId, $items, true, false, null, $tracks);
-                
-                try 
+
+                try
                 {
                 	// Zaius apiKey
                 	$this->zaiusApiCall($orderId);
@@ -450,7 +450,7 @@ class ShipmentHelper
         }
     }
 
-    private function zaiusApiCall($orderId)
+    public function zaiusApiCall($orderId)
     {
        $zaiusstatus = false;
 

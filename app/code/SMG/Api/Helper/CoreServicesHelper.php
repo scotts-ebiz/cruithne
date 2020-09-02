@@ -13,17 +13,21 @@ use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Model\CustomerFactory;
 use Magento\Customer\Model\ResourceModel\Customer as CustomerResource;
 use Magento\Framework\DB\Transaction as Transaction;
+use Magento\Framework\Exception\InputException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use Magento\Quote\Model\Quote\AddressFactory;
 use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\QuoteManagement;
 use Magento\Quote\Model\ResourceModel\Quote as QuoteResource;
 use Magento\Sales\Api\OrderRepositoryInterface;
+use Magento\Sales\Api\ShipOrderInterface;
 use Magento\Sales\Model\Order;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender as InvoiceSender;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
 use Magento\Sales\Model\ResourceModel\Order\Item as ItemResource;
 use Magento\Sales\Model\Service\InvoiceService as InvoiceService;
+use Magento\Sales\Model\Spi\OrderResourceInterface;
 use Magento\Setup\Exception;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -40,6 +44,10 @@ use SMG\SubscriptionApi\Model\SubscriptionFactory;
 use SMG\SubscriptionApi\Model\SubscriptionOrder;
 use SMG\SubscriptionApi\Model\SubscriptionOrderFactory;
 use SMG\SubscriptionApi\Model\SubscriptionOrderItemFactory;
+use Magento\Sales\Api\Data\ShipmentTrackInterfaceFactory;
+use Magento\Sales\Api\Data\ShipmentItemCreationInterfaceFactory;
+use Magento\Sales\Api\Data\ShipmentTrackCreationInterfaceFactory;
+use SMG\Api\Helper\ShipmentHelper;
 
 class CoreServicesHelper
 {
@@ -149,17 +157,47 @@ class CoreServicesHelper
     protected $_shippingConditionCodeResource;
 
     /**
+     * @var SapOrderBatchCollectionFactory
+     */
+    protected $_sapOrderBatchCollectionFactory;
+
+    /**
+     * @var ShipOrderInterface
+     */
+    protected $_shipOrderInterface;
+
+    /**
+     * @var ShipmentItemCreationInterfaceFactory
+     */
+    protected $_shipmentItemCreationInterfaceFactory;
+
+    /**
+     * @var ShipmentTrackCreationInterfaceFactory
+     */
+    protected $_shipmentTrackCreationInterfaceFactory;
+
+    /**
+     * @var ShipmentHelper
+     */
+    protected $_shipmentHelper;
+
+    /**
      * OrderStatusHelper constructor.
      *
      * @param LoggerInterface $logger
      * @param ResponseHelper $responseHelper
      * @param OrderFactory $orderFactory
      * @param OrderResource $orderResource
+     * @param DiscountHelper $discountHelper
+     * @param InvoiceService $invoiceService
+     * @param Transaction $transaction
+     * @param InvoiceSender $invoiceSender
      * @param CustomerResource $customerResource
      * @param CustomerFactory $customerFactory
      * @param StoreManagerInterface $storeManager
      * @param QuoteManagement $quoteManagement
      * @param QuoteFactory $quoteFactory
+     * @param AddressRepositoryInterface $addressRepository
      * @param ProductFactory $productFactory
      * @param ProductResource $productResource
      * @param AdvancedFactory $advancedFactory
@@ -167,6 +205,7 @@ class CoreServicesHelper
      * @param AddressFactory $addressFactory
      * @param ProductRepository $productRepository
      * @param CustomerRepositoryInterface $customerRepository
+     * @param QuoteResource $quoteResource
      * @param OrderRepositoryInterface $orderRepository
      * @param SubscriptionFactory $subscriptionFactory
      * @param SubscriptionResource $subscriptionResource
@@ -179,6 +218,10 @@ class CoreServicesHelper
      * @param ItemResource $itemResource
      * @param ShippingConditionCodeFactory $shippingConditionCodeFactory
      * @param ShippingConditionCodeResource $shippingConditionCodeResource
+     * @param ShipOrderInterface $shipOrderInterface
+     * @param ShipmentItemCreationInterfaceFactory $shipmentItemCreationInterfaceFactory
+     * @param ShipmentTrackCreationInterfaceFactory $shipmentTrackCreationInterfaceFactory
+     * @param ShipmentHelper $shipmentHelper
      */
     public function __construct(
         LoggerInterface $logger,
@@ -214,7 +257,11 @@ class CoreServicesHelper
         SubscriptionOrderResource $subscriptionOrderResource,
         ItemResource $itemResource,
         ShippingConditionCodeFactory $shippingConditionCodeFactory,
-        ShippingConditionCodeResource $shippingConditionCodeResource
+        ShippingConditionCodeResource $shippingConditionCodeResource,
+        ShipOrderInterface $shipOrderInterface,
+        ShipmentItemCreationInterfaceFactory $shipmentItemCreationInterfaceFactory,
+        ShipmentTrackCreationInterfaceFactory $shipmentTrackCreationInterfaceFactory,
+        ShipmentHelper $shipmentHelper
     )
     {
         $this->_logger = $logger;
@@ -254,6 +301,10 @@ class CoreServicesHelper
         $this->_itemResource = $itemResource;
         $this->_shippingConditionCodeFactory = $shippingConditionCodeFactory;
         $this->_shippingConditionCodeResource = $shippingConditionCodeResource;
+        $this->_shipOrderInterface = $shipOrderInterface;
+        $this->_shipmentItemCreationInterfaceFactory = $shipmentItemCreationInterfaceFactory;
+        $this->_shipmentTrackCreationInterfaceFactory = $shipmentTrackCreationInterfaceFactory;
+        $this->_shipmentHelper = $shipmentHelper;
     }
 
     /**
@@ -731,4 +782,179 @@ class CoreServicesHelper
 
         return $response;
     }
+
+    /**
+     * Create the Shipment Request to set the order as
+     * shipped.
+     *
+     * @param $orderData
+     * @return array
+     */
+    public function createShipment($orderData) {
+        $orderId = $orderData['order_id'];
+        //Check if order exists
+        try {
+            /** @var Order $order */
+            $order = $this->_orderRepository->get($orderId);
+        } catch (NoSuchEntityException $e) {
+            return array(
+                'statusCode' => 404,
+                'statusMessage' => 'failure',
+                'response' => 'Order not found with id: ' . $orderId
+            );
+        } catch (InputException $e) {
+            return array(
+                'statusCode' => 400,
+                'statusMessage' => 'failure',
+                'response' => 'No order id provided.'
+            );
+        }
+
+        // determine if this can be shipped
+        if (!$this->_shipmentHelper->canShip($order)) {
+            $this->_logger->error("The order Id " . $orderId . " can not be shipped.  The order status currently is " . $order->getStatus());
+            return array(
+                'statusCode' => 403,
+                'statusMessage' => 'failure',
+                'response' => 'The Magento order cannot ship.'
+            );
+        }
+
+        $items = [];
+        $tracks = [];
+        $hasError = false;
+        $response = array(
+            'statusCode' => 500,
+            'statusMessage' => 'failure',
+            'response' => 'Unknown Error.'
+        );
+
+        /**
+         * @var array $shippedItems
+         */
+        $shippedItems = $orderData['shipped'];
+        $shippingTitle = "Federal Express - " . $order->getShippingDescription();
+
+        // Create Shipments and Tracking Numbers
+        try {
+            foreach ($shippedItems as $shipped) {
+                // Do not create the tracking number record if it already exists on the Magento 2 order.
+                $trackingNumberExists = false;
+                $trackingNumber = $shipped['tracking_number'];
+                $sku = $shipped['sku'];
+                $quantity = $shipped['qty_shipped'];
+
+                foreach ($order->getTracksCollection() as $track) {
+                    if ($track->getTrackNumber() === $trackingNumber) {
+                        $trackingNumberExists = true;
+                    }
+                }
+
+                if (!$trackingNumberExists) {
+                    /**
+                     * @var \Magento\Sales\Api\Data\ShipmentTrackCreationInterface @$shipmentTrackItemCreation
+                     */
+                    $shipmentTrackItemCreation = $this->_shipmentTrackCreationInterfaceFactory->create();
+                    $shipmentTrackItemCreation->setTrackNumber($trackingNumber);
+                    $shipmentTrackItemCreation->setTitle($shippingTitle);
+                    $shipmentTrackItemCreation->setCarrierCode("fedex");
+                    $tracks[] = $shipmentTrackItemCreation;
+                }
+
+                // get the magento order item for the current sap order item.
+                /**
+                 * @var \Magento\Sales\Model\Order\Item $orderItem
+                 */
+                $orderItem = array_values(array_filter($order->getAllItems(), function ($item) use (&$sku) {
+                    return $item->getData('sku') == $sku;
+                }));
+
+                if (empty($orderItem)) {
+                    $this->_logger->error('Could not find sku: ' . $sku . ' in order: ' . $orderId);
+                    return array(
+                        'statusCode' => 404,
+                        'statusMessage' => 'failure',
+                        'response' => 'Could not find sku: ' . $sku . ' in order: ' . $orderId
+                    );
+                }
+                // Do not add the item to the track if its quantity is 0.
+                if (floatval($quantity) < 1) {
+                    continue;
+                }
+                // Do not add the item to the track if all items have shipped.
+                if (floatval($orderItem[0]->getData('qty_ordered')) == floatval($quantity)) {
+                    $this->_logger->error("Item already shipped: orderItem.item_id=" . $orderItem[0]->getItemId());
+                    return array(
+                        'statusCode' => 400,
+                        'statusMessage' => 'failure',
+                        'response' => 'Sku already fully shipped: ' . $sku . ' in order: ' . $orderId
+                    );
+                }
+                /**
+                 * @var \Magento\Sales\Api\Data\ShipmentItemCreationInterface $shipmentItemCreation
+                 */
+                $shipmentItemCreation = $this->_shipmentItemCreationInterfaceFactory->create();
+                $shipmentItemCreation->setOrderItemId($orderItem[0]->getItemId());
+                $shipmentItemCreation->setQty($quantity);
+                $items[] = $shipmentItemCreation;
+            }
+        } catch (Exception $e) {
+            $this->_logger->error('Error creating shipments for order: ' . $orderId);
+            return array(
+                'statusCode' => 500,
+                'statusMessage' => 'failure',
+                'response' => 'Internal error creating shipments for order.',
+                'stack' => $e->getTraceAsString()
+            );
+        }
+
+        // check to see if the items were added
+        if (!empty($items) && !empty($tracks)) {
+
+            try {
+                    // Load the subscription.
+                    /** @var SubscriptionOrder $subscriptionOrder */
+                $subscriptionOrder = $this->_subscriptionOrderFactory->create();
+                $this->_subscriptionOrderResource->load($subscriptionOrder, $order->getData('entity_id'), 'sales_order_id');
+
+                // Update the subscription status.
+                $subscriptionOrder->setData('subscription_order_status', $orderData['new_status']);
+                $this->_subscriptionOrderResource->save($subscriptionOrder);
+            } catch (Exception $e) {
+                return array(
+                    'statusCode' => 500,
+                    'statusMessage' => 'failure',
+                    'response' => 'Internal error saving subscription order details for order.',
+                    'stack' => $e->getTraceAsString()
+                );
+            }
+
+            try {
+                // create shipment status
+                $shipmentId = $this->_shipOrderInterface->execute($orderId, $items, false, false, null, $tracks);
+            } catch (Exception $e) {
+                return array(
+                    'statusCode' => 500,
+                    'statusMessage' => 'failure',
+                    'response' => 'Internal error saving shipment on order.',
+                    'stack' => $e->getTraceAsString()
+                );
+            }
+
+            // Return a successful response.
+            return array(
+                'statusCode' => 200,
+                'statusMessage' => 'success',
+                'response' => $shipmentId
+            );
+        } else {
+            $this->_logger->error("The order Id " . $orderId . " found nothing applicable to process from request.");
+            return array(
+                'statusCode' => 404,
+                'statusMessage' => 'failure',
+                'response' => 'Nothing was found to process.'
+            );
+        }
+    }
+
 }
