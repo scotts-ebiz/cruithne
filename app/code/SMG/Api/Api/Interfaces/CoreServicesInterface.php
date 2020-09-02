@@ -32,6 +32,13 @@ interface CoreServicesInterface
      */
     public function getProducts();
 
+    /**
+     * Creates a shipment given order/shipment details.
+     *
+     * @return string
+     */
+    public function createShipment();
+
 
 
 }
