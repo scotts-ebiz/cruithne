@@ -1,6 +1,10 @@
 //
 //  Variables
 //  _____________________________________________
+form input.input-text {
+    @include lib-form-element-input($_border: 10px, $_border-bottom: 0px);
+}
+
 
 $checkout-field-validation__border-color: $form-element-validation__border-error !default;
 
