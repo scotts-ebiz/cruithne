@@ -93,7 +93,6 @@
     }
 
     ._keyfocus *,
-    input:not([disabled]),
     textarea:not([disabled]),
     select:not([disabled]) {
         &:focus {

@@ -3,6 +3,9 @@
 //  _____________________________________________
 form input.input-text {
     @include lib-form-element-input($_type: input-text, $_border-bottom: 1px solid $checkout-gray, $_border: 0px);
+    &:focus{
+        @include lib-form-element-input($_border-bottom: 1px solid $color-black, $_border: 0px);
+    }
 }
 
 
