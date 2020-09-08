@@ -95,7 +95,6 @@
     @if $_type == "textarea" {
         $_background             : $textarea__background !default;
         $_background-clip        : $textarea__background-clip !default;
-        $_border-bottom          : $input-text__border-bottom !default;
         $_border                 : $textarea__border !default;
         $_border-radius          : $textarea__border-radius !default;
         $_color                  : $textarea__color !default;
@@ -137,6 +136,7 @@
     @include lib-css(background, $_background);
     @include lib-css(background-clip, $_background-clip);
     @include lib-css(border, $_border);
+    @include lib-css(border-bottom, $_border-bottom);
     @include lib-css(border-radius, $_border-radius);
     @include lib-css(color, $_color);
     @include lib-css(font-family, $_font-family);

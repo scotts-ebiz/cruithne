@@ -9,7 +9,7 @@
 $form-element-input-type                        : '' !default; // [input-text|select|textarea|input-radio|input-checkbox]
 $form-element-input__background                 : $color-white !default;
 $form-element-input__border-color               : $color-gray76 !default;
-$form-element-input__border-bottom              : 0px !default;
+$form-element-input__border-bottom              : 1px solid $form-element-input__border-color !default;
 $form-element-input__border                     : 1px solid $form-element-input__border-color !default;
 $form-element-input__border-radius              : 1px !default;
 $form-element-input__height                     : 32px !default;

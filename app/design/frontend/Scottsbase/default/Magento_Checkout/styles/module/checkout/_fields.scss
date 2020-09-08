@@ -2,7 +2,7 @@
 //  Variables
 //  _____________________________________________
 form input.input-text {
-    @include lib-form-element-input($_border: 10px, $_border-bottom: 0px);
+    @include lib-form-element-input($_border-bottom: 1px solid $checkout-gray, $_border: 0px);
 }
 
 
