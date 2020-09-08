@@ -65,7 +65,6 @@
     @if $_type == "select" {
         $_background             : $select__background !default;
         $_background-clip        : $select__background-clip !default;
-        $_border-bottom          : $input-text__border-bottom !default;
         $_border                 : $select__border !default;
         $_border-radius          : $select__border-radius !default;
         $_color                  : $select__color !default;
