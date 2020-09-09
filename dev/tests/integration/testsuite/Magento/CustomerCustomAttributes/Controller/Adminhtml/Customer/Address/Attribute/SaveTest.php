@@ -9,9 +9,9 @@ namespace Magento\CustomerCustomAttributes\Controller\Adminhtml\Customer\Address
 
 use Magento\Customer\Api\Data\AddressInterface;
 use Magento\Eav\Api\AttributeRepositoryInterface;
+use Magento\Framework\Data\Form\FormKey;
 use Magento\Framework\Message\MessageInterface;
 use Magento\TestFramework\TestCase\AbstractBackendController;
-use Magento\Framework\Data\Form\FormKey;
 
 /**
  * @magentoAppArea adminhtml
@@ -44,6 +44,7 @@ class SaveTest extends AbstractBackendController
      * available for updating.
      *
      * @return void
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     public function testRegionFrontendLabelUpdate(): void
     {
@@ -121,6 +122,7 @@ class SaveTest extends AbstractBackendController
      * Gets request params.
      *
      * @return array
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
     private function getRequestData(): array
     {
@@ -222,6 +224,63 @@ class SaveTest extends AbstractBackendController
             'serialized_options' => '["option%5Border%5D%5Boption_0%5D=1&option%5Bvalue%5D%5Boption_0%5D%5B0%5D=&option%5Bvalue%5D%5Boption_0%5D%5B1%5D=&option%5Bdelete%5D%5Boption_0%5D="]',
             //@codingStandardsIgnoreEnd
             'sort_order' => 1,
+        ];
+    }
+
+    /**
+     * Tests postcode input validation
+     *
+     * When postcode input validation set to null the associated attribute max_length
+     * and min_length also become null
+     *
+     * @return void
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    public function testPostcodeInputValidation(): void
+    {
+        $params = $this->getRequestPostcodeAttributeData();
+        $request = $this->getRequest();
+        $request->setMethod('POST');
+        $request->setPostValue($params);
+
+        $this->dispatch('backend/admin/customer_address_attribute/save');
+
+        /**
+         * Check that errors was generated and set to session
+         */
+        self::assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
+
+        $postcodeAttribute = $this->attributeRepository->get(
+            'customer_address',
+            AddressInterface::POSTCODE
+        );
+
+        self::assertEmpty($postcodeAttribute->getValidationRules());
+    }
+
+    /**
+     * Gets request postcode attribute data
+     *
+     * @return array
+     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     */
+    private function getRequestPostcodeAttributeData(): array
+    {
+        $postcodeAttribute = $this->attributeRepository->get(
+            'customer_address',
+            AddressInterface::POSTCODE
+        );
+
+        return [
+            'attribute_id' => $postcodeAttribute->getAttributeId(),
+            'attribute_code' => $postcodeAttribute->getAttributeCode(),
+            'frontend_label' => ['Zip/Postal Code'],
+            'frontend_input' => $postcodeAttribute->getFrontendInput(),
+            'sort_order' => 110,
+            'input_validation' => '',
+            'min_text_length' => 4,
+            'max_text_length' => 7,
+            'form_key' => $this->_objectManager->get(FormKey::class)->getFormKey(),
         ];
     }
 }
