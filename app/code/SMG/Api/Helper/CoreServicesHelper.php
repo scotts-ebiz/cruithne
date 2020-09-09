@@ -749,11 +749,10 @@ class CoreServicesHelper
         $this->_logger->info('Processing method getProducts request: ' . json_encode($requestData));
 
         $skus = explode(',', $requestData['skus']);
-
+        $products = [];
         // Load and add each product to the quote.
         foreach ($skus as $sku) {
 
-            $products = [];
             // Get the Product by sku
             /** @var \Magento\Catalog\Model\Product $product */
             $product = $this->_productRepository->get($sku);
