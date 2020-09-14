@@ -1,0 +1,5 @@
+interface ProductInterface {
+    drupalproductid: String
+        @doc(description: "Drupal Product Id")
+        @resolver(class: "\\SMG\\CatalogGraphQl\\Model\\Resolver\\Product\\DrupalProductId")
+}

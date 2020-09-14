@@ -15,6 +15,7 @@ use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\ResourceModel\Quote as QuoteResource;
 use Magento\Setup\Exception;
 use Psr\Log\LoggerInterface;
+use Magento\Sales\Api\Data\OrderExtensionFactory;
 
 
 class OrderRepositoryInterface
@@ -45,6 +46,11 @@ class OrderRepositoryInterface
     protected $_productResource;
 
     /**
+     * @var OrderExtensionFactory
+     */
+    protected $_extensionFactory;
+
+    /**
      * OrderRepositoryInterface constructor.
      *
      * @param LoggerInterface $logger
@@ -52,18 +58,21 @@ class OrderRepositoryInterface
      * @param QuoteResource $quoteResource
      * @param ProductFactory $productFactory
      * @param ProductResource $productResource
+     * @param OrderExtensionFactory $extensionFactory
      */
     public function __construct(LoggerInterface $logger,
         QuoteFactory $quoteFactory,
         QuoteResource $quoteResource,
         ProductFactory $productFactory,
-        ProductResource $productResource)
+        ProductResource $productResource,
+        OrderExtensionFactory $extensionFactory)
     {
         $this->_logger = $logger;
         $this->_quoteFactory = $quoteFactory;
         $this->_quoteResource = $quoteResource;
         $this->_productFactory = $productFactory;
         $this->_productResource = $productResource;
+        $this->_extensionFactory = $extensionFactory;
     }
 
     public function beforeSave(\Magento\Sales\Api\OrderRepositoryInterface $subject,
@@ -147,7 +156,7 @@ class OrderRepositoryInterface
                             foreach ($statesNotAllowedList as $stateNotAllowed)
                             {
                                 $attr = $this->_productResource->getAttribute('state_not_allowed');
-                                
+
                                 try
                                 {
                                     $statesNotAllowedArray[] = $attr->getSource()->getOptionText($stateNotAllowed);
@@ -177,5 +186,28 @@ class OrderRepositoryInterface
 
         // we must return the same number of parameters as the original method
         return [$order];
+    }
+
+    public function afterGet(\Magento\Sales\Api\OrderRepositoryInterface $subject, \Magento\Sales\Api\Data\OrderInterface $order)
+    {
+        $customerFeedback = $order->getData('subscription_id');
+        $extensionAttributes = $order->getExtensionAttributes();
+        $extensionAttributes = $extensionAttributes ? $extensionAttributes : $this->_extensionFactory->create();
+        $extensionAttributes->setSubscriptionId($customerFeedback);
+        $order->setExtensionAttributes($extensionAttributes);
+        return $order;
+    }
+
+    public function afterGetList(SMG\Sales\Plugin\Api\OrderRepositoryInterface $subject, OrderSearchResultInterface $searchResult)
+    {
+        $orders = $searchResult->getItems();
+        foreach ($orders as &$order) {
+            $customerFeedback = $order->getData('subscription_id');
+            $extensionAttributes = $order->getExtensionAttributes();
+            $extensionAttributes = $extensionAttributes ? $extensionAttributes : $this->_extensionFactory->create();
+            $extensionAttributes->setSubcriptionId($customerFeedback);
+            $order->setExtensionAttributes($extensionAttributes);
+        }
+        return $searchResult;
     }
 }
