@@ -5,6 +5,7 @@
 @mixin lib-form-element-input(
     $_type                   : $form-element-input-type,
     $_background             : null,
+    $_border-bottom          : null,
     $_border                 : null,
     $_border-radius          : null,
     $_height                 : null,
@@ -34,6 +35,7 @@
     @if $_type == "input-text" {
         $_background             : $input-text__background !default;
         $_background-clip        : $input-text__background-clip !default;
+        $_border-bottom          : $input-text__border-bottom !default;
         $_border                 : $input-text__border !default;
         $_border-radius          : $input-text__border-radius !default;
         $_color                  : $input-text__color !default;
@@ -133,6 +135,7 @@
     @include lib-css(background, $_background);
     @include lib-css(background-clip, $_background-clip);
     @include lib-css(border, $_border);
+    @include lib-css(border-bottom, $_border-bottom);
     @include lib-css(border-radius, $_border-radius);
     @include lib-css(color, $_color);
     @include lib-css(font-family, $_font-family);
@@ -1179,4 +1182,3 @@
         $_font-style  : $_font-style
     );
 }
-
