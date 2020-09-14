@@ -1,9 +1,10 @@
 // Mixins
 @import "mixins/media-queries";
 
-// Vendor libs
-@import 'vendor/normalize/lib'; // Normalize.css
-@import 'vendor/magento-ui/lib'; // Magento UI
+// Default Theme Vendor libs
+@import '../../../default/web/css/vendor/normalize/lib';
+@import '../../../default/web/css/vendor/magento-ui/lib';
+
 @import 'normalize/lib'; // Normalize file for Scottsprogram
 
 // Theme variables
@@ -14,9 +15,6 @@
 
 // Import Scottsbase variables
 @import '../../../default/web/css/source/scottsbasevars';
-
-// Override Module Styles
-@import '../../Magento_Checkout/styles/module';
 
 // Scotts Program Defaults
 @import 'source/scottsprogramvars';
