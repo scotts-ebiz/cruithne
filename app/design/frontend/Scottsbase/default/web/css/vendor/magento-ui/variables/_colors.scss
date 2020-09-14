@@ -84,11 +84,19 @@ $color-yellow-light3     : #d6ca8e !default;
 $color-yellow1           : #ff0 !default;
 
 //
-//  Checkout Color variables
+//  Cart / Checkout Color variables
 //  _____________________________________________
-$checkout-light-gray      : #d3d3d3;
-$checkout-gray            : #919191;
-$checkout-black           : #454545;
+$checkout-light-gray            : #d3d3d3;
+$checkout-gray                  : #919191;
+$checkout-black                 : #454545;
+$checkout-green                 : #1d5632;
+$checkout-light-green           : #028c45;
+$checkout-light_grey            : #d3d3d3;
+$checkout-accent-color          : $checkout-green;
+$checkout-button-color          : $checkout-green;
+$checkout-button-color-active   : $checkout-light-green;
+$checkout-promo-color           : $checkout-green;
+$checkout-red                   : #cb0000;
 
 //
 //  Color nesting
