@@ -113,17 +113,17 @@ class ShipmentHelper
      * @var SapOrderShipmentCollectionFactory
      */
     protected $_sapOrderShipmentCollectionFactory;
-
+    
     /**
      * @var scopeConfigInterface
      */
     protected $_scopeConfigInterface;
-
+    
     /**
      * @var sdk
      */
     protected $_sdk;
-
+    
     /**
      * @var SubscriptionOrderCollectionFactory
      */
@@ -265,12 +265,17 @@ class ShipmentHelper
              * @var \SMG\Sap\Model\SapOrder $sapOrder
              */
             $sapOrder = $this->_sapOrderResource->getSapOrderByOrderId($orderId);
-
+            
             foreach ($sapOrder->getSapOrderTrackingNumbers() as $trackingNumber)
             {
                 try {
                     // Do not create the tracking number record if it already exists on the Magento 2 order.
                     $trackingNumberExists = false;
+                    $trackingNumberCustomExists = false;
+                    if ($trackingNumber == '123456789') {
+                       $trackingNumberCustomExists = true;
+                    }
+
                     foreach($order->getTracksCollection() as $track) {
                         if ($track->getTrackNumber() === $trackingNumber) {
                             $trackingNumberExists = true;
@@ -280,7 +285,7 @@ class ShipmentHelper
                     if ($trackingNumberExists) {
                         continue;
                     }
-
+                      
                     // add the ship tracking number to the array
                     $shipTrackingNumbers[] = $trackingNumber;
 
@@ -321,9 +326,13 @@ class ShipmentHelper
                         /**
                          * @var \Magento\Sales\Model\Order\Item $orderItem
                          */
-                        $orderItem = array_values(array_filter($order->getAllItems(), function ($item) use(&$sapOrderItem) {
-                            return $item->getData('sku') == $sapOrderItem->getData('sku');
-                        }));
+                        if($trackingNumberCustomExists){
+                            $orderItem = $order->getAllItems();
+                        }else{
+                            $orderItem = array_values(array_filter($order->getAllItems(), function ($item) use(&$sapOrderItem) {
+                                return $item->getData('sku') == $sapOrderItem->getData('sku');
+                            }));
+                        }
 
                         if (empty($orderItem)) {
                             $this->_logger->error('Could not find sku for item' . $sapOrderItem->getId());
@@ -357,18 +366,22 @@ class ShipmentHelper
             // check to see if the items were added
             if (!empty($items) && !empty($tracks))
             {
+                
                 // create shipment status
-                $this->_shipOrderInterface->execute($orderId, $items, true, false, null, $tracks);
-
-                try
+                if($trackingNumberCustomExists){
+                  $this->_shipOrderInterface->execute($orderId, $items, false, false, null, $tracks);
+                }else{
+                   $this->_shipOrderInterface->execute($orderId, $items, true, false, null, $tracks);
+                }
+                try 
                 {
-                	// Zaius apiKey
-                	$this->zaiusApiCall($orderId);
+                    // Zaius apiKey
+                    $this->zaiusApiCall($orderId);
                 }
                 catch (Exception $ex)
                 {
-                	$this->_logger->error($ex->getMessage());
-                	return;
+                    $this->_logger->error($ex->getMessage());
+                    return;
                 }
             }
         }
@@ -389,7 +402,15 @@ class ShipmentHelper
          * @var \SMG\Sap\Model\SapOrder $sapOrder
          */
         $sapOrder = $this->_sapOrderResource->getSapOrderByOrderId($orderId);
-
+        $trackingNumberCustomExists = false;
+        foreach ($sapOrder->getSapOrderTrackingNumbers() as $trackingNumber)
+        {
+            
+            if ($trackingNumber == '123456789') {
+                $trackingNumberCustomExists = true;
+            }
+        }
+           
         // get the items for this sap order.
         $sapOrderItems = $this->_sapOrderItemCollectionFactory->create();
         $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $sapOrder->getId()]);
@@ -430,7 +451,9 @@ class ShipmentHelper
 
             // add the order id to the array to send email
             // to customer service
-            $this->_customerServiceEmailIds[] = $orderId;
+           if (!$trackingNumberCustomExists) {
+             $this->_customerServiceEmailIds[] = $orderId;
+           }
         }
     }
 
