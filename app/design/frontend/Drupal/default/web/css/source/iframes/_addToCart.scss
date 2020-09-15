@@ -43,7 +43,7 @@
 						outline: 1px solid #bbb;
 						outline-offset: -2px;
 						&.mage-error {
-							outline: 2px solid $checkout-red;
+							outline: 2px solid $checkout-alert-red;
 						}
 						&:focus {
 							box-shadow: none;

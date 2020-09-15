@@ -92,11 +92,14 @@ $checkout-black                 : #454545;
 $checkout-green                 : #1d5632;
 $checkout-light-green           : #028c45;
 $checkout-light_grey            : #d3d3d3;
+$checkout-alert-red             : #cb0000;
+$checkout-red                   : #CA0B0B;
+$checkout-progress-bar          : $checkout-green;
 $checkout-accent-color          : $checkout-green;
 $checkout-button-color          : $checkout-green;
-$checkout-button-color-active   : $checkout-light-green;
+$checkout-button-color-active   : $checkout-green;
 $checkout-promo-color           : $checkout-green;
-$checkout-red                   : #cb0000;
+
 
 //
 //  Color nesting

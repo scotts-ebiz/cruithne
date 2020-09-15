@@ -31,6 +31,7 @@
         .columns {
             .column {
                 .actions {
+                    padding-left: 15px;
                     .action.continue {
                         font-size: 1.6rem;
                         &:before {
@@ -52,6 +53,7 @@
                 }
                 .page-title-wrapper {
                     display: block;
+                    padding-left: 15px;
                     h1 {
                         @include cart-checkout-h2-font($border: 0);
                     }
@@ -93,14 +95,13 @@
                                     }
                                 }
                                 .col {
-                                    width: calc(20% - #{$cart-gutter-width});
+                                    width: 15.5%;
                                     margin: 0;
                                     padding: $cart-padding_xl $cart-gutter-width $cart-padding_xl 0;
                                     text-align: left;
                                     display: table-cell;
-
-                                    @include max-screen($screen__l) {
-                                        width: calc(16% - #{$cart-gutter-width});
+                                    @include max-screen($screen__m) {
+                                        width: 15%;
                                     }
                                     @include max-screen($screen__s) {
                                         padding: $cart-padding_l $cart-gutter-width $cart-padding_l 0;
@@ -126,10 +127,9 @@
                                     }
                                 }
                                 .col.item {
-                                    width: calc(40% - #{$cart-gutter-width});
-
+                                    width: 36%;
                                     @include max-screen($screen__l) {
-                                        width: calc(52% - #{$cart-gutter-width});
+                                        width: 34%;
                                     }
 
                                     @include max-screen($screen__s) {
@@ -137,6 +137,24 @@
                                         padding-right: 0;
                                         padding-bottom: 0;
                                     }
+                                    .remove-product-mobile {
+                                        display: none;
+                                        @include max-screen($screen__s) {
+                                            display: block;
+                                            float: right;
+                                            width: 2%;
+                                        }
+                                        .actions-toolbar {
+                                            margin: 0;
+                                            .cart-remove-icon {
+                                                display: block;
+                                                content: '';
+                                                float: right;
+                                                @include cart-remove-icon();
+                                            }
+                                        }
+                                    }
+                                    
                                 }
                                 .col.price {
                                     @include max-screen($screen__s) {
@@ -161,7 +179,25 @@
                                             display: none;
                                         }
                                     }
+                                }
 
+                                .col.remove {
+                                    padding: 32px 0 0 0;
+                                    float: right;
+                                    width: 2%;
+                                    @include max-screen($screen__s) {
+                                        display: none;
+                                    }
+                                    .actions-toolbar {
+                                        margin: 0;
+                                        .cart-remove-icon {
+                                            display: block;
+                                            content: '';
+                                            float: right;
+                                            @include cart-remove-icon();
+                                        }
+                                    }
+                                    
                                 }
                                 .col.msrp {
                                     @include max-screen($screen__s) {
@@ -234,7 +270,7 @@
                                                 display: inline-block;
 
                                                 @include max-screen($screen__s) {
-                                                    width: calc(73% - #{$cart-padding_m};
+                                                    width: 50%;     
                                                     display: inline-block;
                                                 }
 
@@ -382,33 +418,27 @@
                     .cart-parent-summary {
 
                         .cart-summary-divlink {
-                            width: 60%;
+                            width: 40%;
                             float: left;
-                            padding: 1px 20px 25px;
                             position: relative;
                             color: $scotts-light-gray;
                             @include max-screen($screen__l) {
-                                width: 100%;
                                 padding: 1px 0;
+                            }
+                            @include max-screen($screen__s) {
+                                width: 100%;
                             }
 
                             .block.discount {
-                                .title {
+                                h1.title {
+                                    @include cart-checkout-h2-font();
+                                    cursor: pointer;
                                     &:after {
-                                        -webkit-font-smoothing: antialiased;
-                                        -moz-osx-font-smoothing: grayscale;
-                                        font-size: 32px;
-                                        line-height: 16px;
-                                        color: $scotts-light-gray;
-                                        content: "";
-                                        font-family: "icons-blank-theme";
-                                        margin: 0;
-                                        vertical-align: middle;
-                                        display: inline-block;
-                                        font-weight: 400;
+                                        @include discount-icon-open();
+                                        content: '';
                                         overflow: hidden;
-                                        speak: none;
-                                        text-align: center;
+                                        float: right;
+                                        position: relative;
                                     }
                                 }
                                 .content {
@@ -419,19 +449,34 @@
                                 }
                                 &.active {
                                     .title:after {
-                                        content: "";
+                                        @include discount-icon-close();
                                     }
                                 }
                             }
                             #discount-coupon-form {
+                                margin: 45px 0 0 0;
                                 .fieldset.coupon {
                                     .field {
                                         float: left;
+                                        width: 80%;
+                                        margin: 12px 0 0 0;
+                                        @include max-screen($screen__l) {
+                                            width: 70%;
+                                        }
                                         @include max-screen($screen__m) {
-                                            width: 100%;
+                                            width: 65%;
+                                        }
+                                        @include max-screen($screen__s) {
+                                            width: 80%;
+                                        }
+                                        @include max-screen($screen__xs) {
+                                            width: 70%;
+                                        }
+                                        @include max-screen($screen__xxs) {
+                                            width: 65%;
                                         }
                                         .label {
-                                            width: unset;
+                                            display: none;
                                         }
                                         .control {
                                             div.mage-error {
@@ -441,7 +486,7 @@
                                     }
                                 }
                                 .fieldset.coupon > .field:not(.choice) > .control {
-                                    width: auto;
+                                    width: 100%;
                                     @include max-screen($screen__m) {
                                         width: 100%;
                                     }
@@ -564,6 +609,14 @@
     padding: 0;
     float: right;
     position: relative;
+
+    @include max-screen($screen__l) {
+        min-width: 350px;
+    }
+
+    @include max-screen($screen__m) {
+        min-width: 300px;
+    }
 
     @include max-screen($screen__s) {
         min-width: auto;
@@ -836,13 +889,22 @@
 
 
 //  Discount Code
-.actions-toolbar .primary .action {
-    @include cart-checkout-button-s();
-    margin-left: 10px;
-    &:last-child {
-        @media screen and (max-width: $screen__m) {
-            margin-left: 0;
-            margin-bottom: 25px;
+.cart-summary-divlink {
+    .actions-toolbar {
+        float: right;
+        margin-left: 0 !important;
+        .primary .action {
+            margin-right: 0;
+            @include cart-checkout-button-sm();
+            &[disabled]{
+                @include cart-checkout-button-disabled-sm();
+            }
+            &:last-child {
+                @media screen and (max-width: $screen__m) {
+                    margin-left: 0;
+                    margin-bottom: 25px;
+                }
+            }
         }
     }
 }
