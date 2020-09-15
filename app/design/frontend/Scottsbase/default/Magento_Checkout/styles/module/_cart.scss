@@ -31,6 +31,7 @@
         .columns {
             .column {
                 .actions {
+                    padding-left: 15px;
                     .action.continue {
                         font-size: 1.6rem;
                         &:before {
@@ -52,6 +53,7 @@
                 }
                 .page-title-wrapper {
                     display: block;
+                    padding-left: 15px;
                     h1 {
                         @include cart-checkout-h2-font($border: 0);
                     }
@@ -384,7 +386,7 @@
                         .cart-summary-divlink {
                             width: 60%;
                             float: left;
-                            padding: 1px 20px 25px;
+                            
                             position: relative;
                             color: $scotts-light-gray;
                             @include max-screen($screen__l) {
@@ -393,6 +395,25 @@
                             }
 
                             .block.discount {
+                                h1 {
+                                    @include cart-checkout-h2-font($border: 0);
+                                    &:after {
+                                        -webkit-font-smoothing: antialiased;
+                                        -moz-osx-font-smoothing: grayscale;
+                                        font-size: 32px;
+                                        line-height: 16px;
+                                        color: $scotts-light-gray;
+                                        content: "";
+                                        font-family: "icons-blank-theme";
+                                        margin: 0;
+                                        vertical-align: middle;
+                                        display: inline-block;
+                                        font-weight: 400;
+                                        overflow: hidden;
+                                        speak: none;
+                                        text-align: center;
+                                    }
+                                }
                                 .title {
                                     &:after {
                                         -webkit-font-smoothing: antialiased;
