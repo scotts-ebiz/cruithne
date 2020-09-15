@@ -233,7 +233,7 @@ class Subscription extends Template
         if ($currentSubscription && $currentSubscription->getData('entity_id')) {
             // Get the next billing date.
             $startDate = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $subscriptionOrders[0]['ship_start_date'])
-                ->sub(new DateInterval('P1D'));
+                ->add(new DateInterval('P1Y'));
             $renewalDate = $startDate->add(new DateInterval('P1Y'));
 
             // Get the next billing date for seasonal subscription.
