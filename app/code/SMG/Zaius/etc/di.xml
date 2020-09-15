@@ -7,4 +7,6 @@
     <type name="Zaius\Engage\Observer\OrderPlaceAfterObserver">
         <plugin name="SMG_Zaius_Plugin_Observer_OrderPlaceAfterObserver" type="SMG\Zaius\Plugin\Observer\ZaiusObserver"/>
     </type>
+
+    <preference for="Zaius\Engage\Model\ProductRepository" type="SMG\Zaius\Model\ProductRepository" />
 </config>
