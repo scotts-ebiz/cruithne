@@ -384,19 +384,22 @@
                     .cart-parent-summary {
 
                         .cart-summary-divlink {
-                            width: 60%;
+                            width: 40%;
                             float: left;
                             
                             position: relative;
                             color: $scotts-light-gray;
                             @include max-screen($screen__l) {
-                                width: 100%;
                                 padding: 1px 0;
+                            }
+                            @include max-screen($screen__s) {
+                                width: 100%;
                             }
 
                             .block.discount {
                                 h1 {
                                     @include cart-checkout-h2-font($border: 0);
+                                    border-bottom: $border-width__thick solid $checkout-accent-color;
                                     &:after {
                                         -webkit-font-smoothing: antialiased;
                                         -moz-osx-font-smoothing: grayscale;
@@ -431,6 +434,7 @@
                                         overflow: hidden;
                                         speak: none;
                                         text-align: center;
+                                        float: right;
                                     }
                                 }
                                 .content {
@@ -588,6 +592,14 @@
     padding: 0;
     float: right;
     position: relative;
+
+    @include max-screen($screen__l) {
+        min-width: 350px;
+    }
+
+    @include max-screen($screen__m) {
+        min-width: 300px;
+    }
 
     @include max-screen($screen__s) {
         min-width: auto;
