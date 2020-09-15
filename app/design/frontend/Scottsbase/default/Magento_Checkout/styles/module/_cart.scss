@@ -421,7 +421,8 @@
                                         font-size: 32px;
                                         line-height: 16px;
                                         color: $scotts-light-gray;
-                                        content: "";
+                                        //content: "";
+                                        content: url(../images/icon-open-green.svg);
                                         font-family: "icons-blank-theme";
                                         margin: 0;
                                         vertical-align: middle;
@@ -440,7 +441,9 @@
                                 }
                                 &.active {
                                     .title:after {
-                                        content: "";
+                                        //content: "";
+                                        content: url(../images/icon-close.svg);
+
                                     }
                                 }
                             }
