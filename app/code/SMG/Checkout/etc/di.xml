@@ -17,4 +17,7 @@
 	<type name="Magento\Checkout\Controller\Cart\Index">
 		<plugin name="smg_checkout_plugin_controller_cart_index" type="SMG\Checkout\Plugin\Controller\Cart\Index" />
 	</type>
+	<type name="Magento\Checkout\Model\Cart">
+		<plugin name="smg_checkout_plugin_model_checkout_cart_index" type="SMG\Checkout\Plugin\Model\Checkout\Cart\Index" />
+	</type>
 </config>
