@@ -452,14 +452,29 @@
                                 }
                             }
                             #discount-coupon-form {
+                                margin: 45px 0 0 0;
                                 .fieldset.coupon {
                                     .field {
                                         float: left;
+                                        width: 80%;
+                                        margin: 12px 0 0 0;
+                                        @include max-screen($screen__l) {
+                                            width: 70%;
+                                        }
                                         @include max-screen($screen__m) {
-                                            width: 100%;
+                                            width: 65%;
+                                        }
+                                        @include max-screen($screen__s) {
+                                            width: 80%;
+                                        }
+                                        @include max-screen($screen__xs) {
+                                            width: 70%;
+                                        }
+                                        @include max-screen($screen__xxs) {
+                                            width: 65%;
                                         }
                                         .label {
-                                            width: unset;
+                                            display: none;
                                         }
                                         .control {
                                             div.mage-error {
@@ -469,7 +484,7 @@
                                     }
                                 }
                                 .fieldset.coupon > .field:not(.choice) > .control {
-                                    width: auto;
+                                    width: 100%;
                                     @include max-screen($screen__m) {
                                         width: 100%;
                                     }
@@ -872,13 +887,19 @@
 
 
 //  Discount Code
-.actions-toolbar .primary .action {
-    @include cart-checkout-button-s();
-    margin-left: 10px;
-    &:last-child {
-        @media screen and (max-width: $screen__m) {
-            margin-left: 0;
-            margin-bottom: 25px;
+.cart-summary-divlink {
+    .actions-toolbar {
+        float: right;
+        margin-left: 0 !important;
+        .primary .action {
+            margin-right: 0;
+            @include cart-checkout-button-s();
+            &:last-child {
+                @media screen and (max-width: $screen__m) {
+                    margin-left: 0;
+                    margin-bottom: 25px;
+                }
+            }
         }
     }
 }
