@@ -34,7 +34,7 @@ if ($isCouponValid) {
                 <div class="field">
                     <label for="coupon_code" class="label"><span><?= /* @escapeNotVerified */ __('Enter discount code') ?></span></label>
                     <div class="control">
-                        <input type="text" class="input-text<?= ($isCouponValid) ? '' : ' mage-error' ?>" id="coupon_code" name="coupon_code" value="<?= $block->escapeHtml($block->getCouponCode()) ?>" placeholder="<?= $block->escapeHtml(__('Enter discount code asdf')) ?>" <?php if (strlen($block->getCouponCode())) : ?> disabled="disabled" <?php endif; ?> />
+                        <input type="text" class="input-text<?= ($isCouponValid) ? '' : ' mage-error' ?>" id="coupon_code" name="coupon_code" value="<?= $block->escapeHtml($block->getCouponCode()) ?>" placeholder="<?= $block->escapeHtml(__('Enter discount code')) ?>" <?php if (strlen($block->getCouponCode())) : ?> disabled="disabled" <?php endif; ?> />
                         <?php
                         if (!$isCouponValid) {
                         ?>

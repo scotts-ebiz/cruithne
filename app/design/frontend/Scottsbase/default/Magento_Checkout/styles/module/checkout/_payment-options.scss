@@ -17,24 +17,27 @@ $checkout-payment-option-content__padding__xl     : $checkout-payment-method-con
 
 .checkout-payment-method {
     .payment-option {
-        &._active {
-            .payment-option-title {
-                .action-toggle {
-                    &:after {
-                        content: $icon-up;
-                    }
-                }
-            }
-        }
-
         &._collapsible {
             .payment-option-title {
                 cursor: pointer;
                 height: 0 !important; //overriding base form height that's needed
+                .action-toggle {
+                    &:after {
+                        content: url(../images/icon-close.svg);
+                    }
+                }
             }
-
             .payment-option-content {
                 display: none;
+            }
+        }
+        &._active {
+            .payment-option-title {
+                .action-toggle {
+                    &:after {
+                        content: url(../images/icon-open-green.svg);
+                    }
+                }
             }
         }
     }
