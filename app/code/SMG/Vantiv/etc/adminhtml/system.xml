@@ -29,6 +29,11 @@
                         <source_model>Vantiv\Payment\Model\Config\Source\VantivEnvironment</source_model>
                         <config_path>payment/vantiv_keypadpayment/environment</config_path>
                     </field>
+                    <field id="payment_action" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="0">
+                        <label>Payment Action</label>
+                        <source_model>Vantiv\Payment\Model\Config\Source\PaymentAction</source_model>
+                        <config_path>payment/vantiv_keypadpayment/payment_action</config_path>
+                    </field>
                     <field id="account_id" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
                         <label>Account ID</label>
                         <config_path>payment/vantiv_keypadpayment/account_id</config_path>
