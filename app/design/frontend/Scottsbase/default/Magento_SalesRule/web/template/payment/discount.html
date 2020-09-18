@@ -24,7 +24,7 @@
                         <span data-bind="i18n: 'Enter discount code asdf'"></span>
                     </label>
                     <div class="control">
-                        <input class="input-text" type="text" id="discount-code" name="discount_code"
+                        <input class="input-text" type="text" id="discount-code" name="discount_code_input"
                             data-validate="{'required-entry':true}"
                             data-bind="value: couponCode, attr:{disabled:isApplied() , placeholder: $t('Enter discount code')} " />
                     </div>
@@ -34,7 +34,7 @@
                 <div class="primary">
                     <!-- ko ifnot: isApplied() -->
                     <button class="action action-apply" type="submit"
-                        data-bind="'value': $t('Apply Discount'), click: apply">
+                        data-bind="'value': $t('Apply Discount'), click: apply" id="payment-discount-apply">
                         <span>
                             <!-- ko i18n: 'Apply Discount'-->
                             <!-- /ko --></span>

@@ -1,12 +1,53 @@
 define([
-    'jquery',
-    'jquery/ui',
-    'jquery/validate',
-    'mage/translate'
-], function($){
-'use strict';
+	'jquery',
+	'jquery/ui',
+	'jquery/validate',
+	'mage/translate'
+], function ($) {
+	'use strict';
 
 	return function (validator) {
+
+
+		alert('js is working');
+
+
+
+
+		$('#coupon_code').keyup(function () {
+			alert('Keyup Alert');
+		});
+
+
+
+
+		// $("#discount-code").on('keyup change', function () {
+		// 	alert('Keyup Alert');
+
+		// 	// $('.actions-toolbar button').prop('disabled', true);
+
+		// 	// if ($("input[name='discount_code_input']").val() != '') {
+		// 	// 	$('.actions-toolbar button').prop('disabled', false);
+		// 	// }
+		// });
+
+
+
+		validator.addRule(
+			'discount-btn-status',
+			function (value) {
+				if ($("#discount-code").val() != '') {
+					if (value.match(/^[a-zA-Z\.\-\' ]*$/)) {
+						$("#payment-discount-apply").addClass('has-value');
+					} else {
+						$("#payment-discount-apply").addClass('do-something');
+					}
+
+				} else {
+					$("#payment-discount-apply").addClass('has-no-value');
+				}
+			}
+		);
 
 		validator.addRule(
 			'required-entry-firstname',
@@ -15,9 +56,9 @@ define([
 					if (!isNaN(value)) {
 						return false;
 					}
-					if( value.match( /^[a-zA-Z\.\-\' ]*$/) ) {
-						 return true
-					}else{
+					if (value.match(/^[a-zA-Z\.\-\' ]*$/)) {
+						return true
+					} else {
 						return false;
 					}
 
@@ -30,15 +71,15 @@ define([
 		validator.addRule(
 			'required-entry-bfirstname',
 			function (value) {
-				var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.firstname';
-				if ($("div[name='"+inpt+"'] input[name='firstname']").val() != '') {
+				var inpt = 'billingAddress' + $(".payment-method._active input[type='radio']").val() + '.firstname';
+				if ($("div[name='" + inpt + "'] input[name='firstname']").val() != '') {
 
 					if (!isNaN(value)) {
 						return false;
 					}
-					if( value.match( /^[a-zA-Z\.\-\' ]*$/) ) {
-						 return true
-					}else{
+					if (value.match(/^[a-zA-Z\.\-\' ]*$/)) {
+						return true
+					} else {
 						return false;
 					}
 
@@ -55,9 +96,9 @@ define([
 					if (!isNaN(value)) {
 						return false;
 					}
-					if( value.match( /^[a-zA-Z\.\-\' ]*$/) ) {
-						 return true
-					}else{
+					if (value.match(/^[a-zA-Z\.\-\' ]*$/)) {
+						return true
+					} else {
 						return false;
 					}
 				} else {
@@ -69,14 +110,14 @@ define([
 		validator.addRule(
 			'required-entry-blastname',
 			function (value) {
-				var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.lastname';
-				if ($("div[name='"+inpt+"'] input[name='lastname']").val() != '') {
+				var inpt = 'billingAddress' + $(".payment-method._active input[type='radio']").val() + '.lastname';
+				if ($("div[name='" + inpt + "'] input[name='lastname']").val() != '') {
 					if (!isNaN(value)) {
 						return false;
 					}
-					if( value.match( /^[a-zA-Z\.\-\' ]*$/) ) {
-						 return true
-					}else{
+					if (value.match(/^[a-zA-Z\.\-\' ]*$/)) {
+						return true
+					} else {
 						return false;
 					}
 				} else {
@@ -92,9 +133,9 @@ define([
 					if (!isNaN(value)) {
 						return false;
 					}
-					if( value.match( /^[a-zA-Z ]*$/) ) {
-						 return true
-					}else{
+					if (value.match(/^[a-zA-Z ]*$/)) {
+						return true
+					} else {
 						return false;
 					}
 				} else {
@@ -112,7 +153,7 @@ define([
 					if (!isNaN(value)) {
 						return false;
 					}
-					if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value)){
+					if (/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value)) {
 						return true
 					} else {
 						return false;
@@ -128,11 +169,11 @@ define([
 		validator.addRule(
 			'required-entry-street-1',
 			function (value) {
-                    if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value) || value == ''){
-						return true
-					} else {
-						return false;
-					}
+				if (/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value) || value == '') {
+					return true
+				} else {
+					return false;
+				}
 			},
 			$.mage.__('Please only include apartment or suite number, if applicable.')
 		);
@@ -140,11 +181,11 @@ define([
 		validator.addRule(
 			'required-entry-street-2',
 			function (value) {
-                if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value) || value == ''){
-						return true
-					} else {
-						return false;
-					}
+				if (/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value) || value == '') {
+					return true
+				} else {
+					return false;
+				}
 			},
 			$.mage.__('Please enter a valid street address.')
 		);
@@ -152,12 +193,12 @@ define([
 		validator.addRule(
 			'required-entry-bstreet-0',
 			function (value) {
-				var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.street.0';
-				if ($("div[name='"+inpt+"'] input[name='street[0]']").val() != '') {
+				var inpt = 'billingAddress' + $(".payment-method._active input[type='radio']").val() + '.street.0';
+				if ($("div[name='" + inpt + "'] input[name='street[0]']").val() != '') {
 					if (!isNaN(value)) {
 						return false;
 					}
-					if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value)){
+					if (/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value)) {
 						return true
 					} else {
 						return false;
@@ -170,24 +211,24 @@ define([
 			$.mage.__('Please enter a valid street address.')
 		);
 
-        validator.addRule(
-            'no-pobox-allowed',
-            function (value) {
-                var pattern = new RegExp('\\b[p]*(ost)*\\.*\\s*[o|0]*(ffice)*\\.*\\s*b[o|0]x\\b', 'i');
-                return !pattern.test(value);
-            },
-            $.mage.__('We are unable to ship to to PO Boxes. Please enter a valid street address.')
-        );
+		validator.addRule(
+			'no-pobox-allowed',
+			function (value) {
+				var pattern = new RegExp('\\b[p]*(ost)*\\.*\\s*[o|0]*(ffice)*\\.*\\s*b[o|0]x\\b', 'i');
+				return !pattern.test(value);
+			},
+			$.mage.__('We are unable to ship to to PO Boxes. Please enter a valid street address.')
+		);
 
 		validator.addRule(
 			'required-entry-bstreet-1',
 			function (value) {
 
-					if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value) || value == ''){
-						return true
-					} else {
-						return false;
-					}
+				if (/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value) || value == '') {
+					return true
+				} else {
+					return false;
+				}
 			},
 			$.mage.__('Please only include apartment or suite number, if applicable.')
 		);
@@ -196,11 +237,11 @@ define([
 			'required-entry-bstreet-2',
 			function (value) {
 
-					if(/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value) || value == ''){
-						return true
-					} else {
-						return false;
-					}
+				if (/^\b(?!none\b)([a-zA-Z0-9()":;'-.]+ ?)+$/i.test(value) || value == '') {
+					return true
+				} else {
+					return false;
+				}
 			},
 			$.mage.__('Please enter a valid street address.')
 		);
@@ -221,8 +262,8 @@ define([
 		validator.addRule(
 			'required-entry-bregionid',
 			function (value) {
-				var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.region_id';
-				if ($("div[name='"+inpt+"'] select[name='region_id']").val() != '') {
+				var inpt = 'billingAddress' + $(".payment-method._active input[type='radio']").val() + '.region_id';
+				if ($("div[name='" + inpt + "'] select[name='region_id']").val() != '') {
 					return true;
 				} else {
 					return !$.mage.isEmpty(value);
@@ -235,7 +276,7 @@ define([
 			function (value) {
 
 				if ($("input[name='postcode']").val() != '') {
-					if(value.length < 5){
+					if (value.length < 5) {
 						return false;
 					}
 					return true;
@@ -251,7 +292,7 @@ define([
 				var zipcodesTemp = ['967', '968', '995', '996', '997', '998', '999'];
 				var temp = value.substring(0, 3);
 				if ($("input[name='postcode']").val() != '') {
-					if($.inArray(temp, zipcodesTemp) >= 0){
+					if ($.inArray(temp, zipcodesTemp) >= 0) {
 						return false;
 					}
 					return true;
@@ -264,9 +305,9 @@ define([
 		validator.addRule(
 			'required-entry-bpcode',
 			function (value) {
-				var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.postcode';
-				if ($("div[name='"+inpt+"'] input[name='postcode']").val() != '') {
-					if(value.length < 5){
+				var inpt = 'billingAddress' + $(".payment-method._active input[type='radio']").val() + '.postcode';
+				if ($("div[name='" + inpt + "'] input[name='postcode']").val() != '') {
+					if (value.length < 5) {
 						return false;
 					}
 					return true;
@@ -281,7 +322,7 @@ define([
 					var filter = /^[(]?(\d{3})[)]?[-|\s]?(\d{3})[-|\s]?(\d{4})$/;
 					if (value.length > 9 && filter.test(value)) {
 						return true;
-					}else {
+					} else {
 						return false;
 					}
 
@@ -295,12 +336,12 @@ define([
 		validator.addRule(
 			'required-entry-btelephone',
 			function (value) {
-				var inpt = 'billingAddress'+$(".payment-method._active input[type='radio']").val()+'.telephone';
-				if ($("div[name='"+inpt+"'] input[name='telephone']").val() != '') {
+				var inpt = 'billingAddress' + $(".payment-method._active input[type='radio']").val() + '.telephone';
+				if ($("div[name='" + inpt + "'] input[name='telephone']").val() != '') {
 					var filter = /^[(]?(\d{3})[)]?[-|\s]?(\d{3})[-|\s]?(\d{4})$/;
 					if (value.length > 9 && filter.test(value)) {
 						return true;
-					}else {
+					} else {
 						return false;
 					}
 
@@ -314,4 +355,6 @@ define([
 
 		return validator;
 	};
+
+
 });
