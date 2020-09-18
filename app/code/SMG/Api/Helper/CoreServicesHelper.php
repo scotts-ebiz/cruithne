@@ -48,6 +48,7 @@ use Magento\Sales\Api\Data\ShipmentTrackInterfaceFactory;
 use Magento\Sales\Api\Data\ShipmentItemCreationInterfaceFactory;
 use Magento\Sales\Api\Data\ShipmentTrackCreationInterfaceFactory;
 use SMG\Api\Helper\ShipmentHelper;
+use Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory as OrderItemCollectionFactory;
 
 class CoreServicesHelper
 {
@@ -180,6 +181,11 @@ class CoreServicesHelper
      * @var ShipmentHelper
      */
     protected $_shipmentHelper;
+    
+     /**
+     * @var OrderItemCollectionFactory
+     */
+    protected $_orderItemCollectionFactory;
 
     /**
      * OrderStatusHelper constructor.
@@ -222,6 +228,7 @@ class CoreServicesHelper
      * @param ShipmentItemCreationInterfaceFactory $shipmentItemCreationInterfaceFactory
      * @param ShipmentTrackCreationInterfaceFactory $shipmentTrackCreationInterfaceFactory
      * @param ShipmentHelper $shipmentHelper
+     * @param OrderItemCollectionFactory $orderItemCollectionFactory
      */
     public function __construct(
         LoggerInterface $logger,
@@ -261,7 +268,8 @@ class CoreServicesHelper
         ShipOrderInterface $shipOrderInterface,
         ShipmentItemCreationInterfaceFactory $shipmentItemCreationInterfaceFactory,
         ShipmentTrackCreationInterfaceFactory $shipmentTrackCreationInterfaceFactory,
-        ShipmentHelper $shipmentHelper
+        ShipmentHelper $shipmentHelper,
+        OrderItemCollectionFactory $orderItemCollectionFactory
     )
     {
         $this->_logger = $logger;
@@ -305,6 +313,7 @@ class CoreServicesHelper
         $this->_shipmentItemCreationInterfaceFactory = $shipmentItemCreationInterfaceFactory;
         $this->_shipmentTrackCreationInterfaceFactory = $shipmentTrackCreationInterfaceFactory;
         $this->_shipmentHelper = $shipmentHelper;
+        $this->_orderItemCollectionFactory = $orderItemCollectionFactory;
     }
 
     /**
@@ -643,13 +652,25 @@ class CoreServicesHelper
      */
     public function getOrder($orderData)
     {
+
         // Log order request DTO
         $this->_logger->info('Processing method getOrder with orderId: ' . json_encode($orderData));
 
         /** @var Order $order */
         $order = $this->_orderRepository->get($orderData['orderId']);
-
+        
         $orderObject = $order->getData();
+        $orderObject['hdr_disc_fixed_amount'] = '';
+        $orderObject['hdr_disc_perc'] = '';
+        $orderObject['hdr_disc_cond_code'] = '';
+        
+        if(!empty($order->getData('coupon_code'))){
+            $orderDiscount = $this->_discountHelper->DiscountCode($order->getData('coupon_code'));
+            $orderObject['hdr_disc_fixed_amount'] = $orderDiscount['hdr_disc_fixed_amount'];
+            $orderObject['hdr_disc_perc'] = $orderDiscount['hdr_disc_perc'];
+            $orderObject['hdr_disc_cond_code'] = $orderDiscount['hdr_disc_cond_code'];
+        }
+        
         $orderObject['billingAddress'] = $order->getBillingAddress()->getData();
         $orderObject['shippingAddress'] = $order->getShippingAddress()->getData();
 
@@ -659,7 +680,30 @@ class CoreServicesHelper
         /** @var Product $item */
         foreach ($order->getAllItems() as $item) {
             $product = $item->getData();
+            
+            // If configurable, get parent price
+            $price = $item->getOriginalPrice();
+
+            if (!empty($item->getParentItemId()))
+            {
+                $parent = $this->_orderItemCollectionFactory->create()->addFieldToFilter('item_id', ['eq' => $item->getParentItemId()]);
+
+                /**
+                * There will be only one result since we filter on the unique id
+                *
+                * @var \Magento\Sales\Model\Order\Item $parentItem
+                */
+                    $parentItem = $parent->getFirstItem();
+                if ($parentItem->getProductType() === "configurable")
+                {
+                    $price = $parentItem->getOriginalPrice();
+                }
+            }
+            
+            $parent_p['parent_price']= $price;
+            $product = array_merge($product,$parent_p);
             $orderObject['products'][] = $product;
+
         }
 
         // Populate the subscription.
