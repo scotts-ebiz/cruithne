@@ -1,6 +1,13 @@
 //
-//  Variables
+//  Form Mixin
 //  _____________________________________________
+form input.input-text, form select {
+    @include lib-form-element-input($_type: input-text);
+    &:focus{
+        @include lib-form-element-input($_border-bottom: 1px solid $checkout-black);
+    }
+}
+
 
 $checkout-field-validation__border-color: $form-element-validation__border-error !default;
 
@@ -37,9 +44,9 @@ $checkout-field-validation__border-color: $form-element-validation__border-error
 
 .opc-wrapper {
     .fieldset {
-        > .field {
-            > .label {
-                font-weight: $font-weight__regular;
+        .field {
+            .label {
+                color: $checkout-gray;
             }
         }
     }
