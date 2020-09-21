@@ -7,11 +7,17 @@ define([
 	'use strict';
 
 	return function (validator) {
+		// $('#coupon_code').keyup(function () {
+		// 	$('button.apply').prop('disabled', false);
+		// });
+
 		$('#coupon_code').keyup(function () {
-			$('button.apply').prop('disabled', false);
+			if ($('#coupon_code').val() != '') {
+				$('button.apply').prop('disabled', false);
+			} else {
+				$('button.apply').prop('disabled', true);
+			}
 		});
-
-
 
 
 		// $("#discount-code").on('keyup change', function () {
