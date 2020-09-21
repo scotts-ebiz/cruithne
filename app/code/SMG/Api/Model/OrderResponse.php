@@ -6,12 +6,12 @@
  * Time: 1:59 PM
  */
 
-namespace SMG\Api\Api\Model;
+namespace SMG\Api\Model;
 
 
 /**
  * Class OrderResponse
- * @package SMG\Api\Api\Model
+ * @package SMG\Api\Model
  */
 class OrderResponse
 {
