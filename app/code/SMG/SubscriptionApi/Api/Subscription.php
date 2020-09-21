@@ -553,14 +553,13 @@ class Subscription implements SubscriptionInterface
             // Process the seasonal orders.
             $this->_logger->info($this->_loggerPrefix . 'Processing the seasonal orders...');
             $subscriptionOrders = $subscription->getSubscriptionOrders();
-            $increment_id = [];
+
             foreach ($subscriptionOrders as $subscriptionOrder) {
                 try {
                     $this->clearCustomerAddresses($customer);
                     $this->_logger->info($this->_loggerPrefix . "Processing {$subscriptionOrder->getData('season_name')} order...");
                     $order = $this->_subscriptionOrderHelper->processInvoiceWithSubscriptionId($subscriptionOrder);
                     $this->_logger->info("Created {$subscriptionOrder->getData('season_name')} order with ID: {$order->getId()} ({$order->getIncrementId()})");
-                    $increment_id[] = $order->getIncrementId();
                 } catch (SubscriptionException $e) {
                     $this->_logger->error($this->_loggerPrefix . $e->getMessage());
 
@@ -663,8 +662,7 @@ class Subscription implements SubscriptionInterface
             try {
                 $this->_recurlySubscription->invoiceRecurlyPurchase(
                     $recurlyPurchase,
-                    $subscription,
-                    $increment_id[0]
+                    $subscription
                 );
             } catch (LocalizedException $e) {
                 $this->_logger->error($this->_loggerPrefix . $e->getMessage());
