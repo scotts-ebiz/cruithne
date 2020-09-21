@@ -209,6 +209,7 @@ $checkout-shipping-method__padding              : 8px !default;
 @include max-screen($screen__s) {
     .opc-wrapper {
         .form-login {
+            @include lib-css(border-bottom, 1px solid $checkout-shipping-item-before__border-color);
             @include lib-css(margin, $checkout-shipping-item-mobile__padding);
             @include lib-css(padding, $checkout-shipping-item-mobile__padding);
         }

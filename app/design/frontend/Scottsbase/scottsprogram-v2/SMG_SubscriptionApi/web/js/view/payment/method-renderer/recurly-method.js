@@ -55,21 +55,17 @@ define(
                             Object.keys(self.billingInfo()),
                             key => {
                                 const streetValue = key === 'street' ? self.billingInfo()[key][0] : '';
-                                const streetValue1 = key === 'street' ? self.billingInfo()[key][1] : '';
                                 const value = key !== 'street' ? self.billingInfo()[key] : '';
-                                
+
                                 if (key === 'street') {
                                     if (
                                         /^\s*\S+(?:\s+\S+){2}/.test(streetValue) &&
                                         streetValue !== ''
                                     ) {
-                                        if(streetValue1.toLowerCase().trim() == "none"){
-                                           return false;
-                                        }
-                                          return true;
+                                        return true;
                                     } else {
                                         return false;
-                                    }  
+                                    }
                                 }
 
                                 if (key === 'telephone') {
@@ -120,7 +116,7 @@ define(
 
                                 if (
                                     key === 'company' ||
-                                    key === 'region' || key === 'street[1]'
+                                    key === 'region'
                                 ) {
                                     return true;
                                 }
