@@ -47,7 +47,7 @@ if ($isCouponValid) {
                 <div class="actions-toolbar">
                     <?php if (!strlen($block->getCouponCode())) : ?>
                         <div class="primary">
-                            <button class="action apply primary" type="button" value="<?= /* @escapeNotVerified */ __('Apply Discount') ?>">
+                            <button class="action apply primary" disabled type="button" value="<?= /* @escapeNotVerified */ __('Apply Discount') ?>">
                                 <span><?= /* @escapeNotVerified */ __('Apply Discount') ?></span>
                             </button>
                         </div>

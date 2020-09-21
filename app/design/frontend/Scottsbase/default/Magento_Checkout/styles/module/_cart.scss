@@ -891,7 +891,10 @@
         margin-left: 0 !important;
         .primary .action {
             margin-right: 0;
-            @include cart-checkout-button-s();
+            @include cart-checkout-button-sm();
+            &[disabled]{
+                @include cart-checkout-button-disabled-sm();
+            }
             &:last-child {
                 @media screen and (max-width: $screen__m) {
                     margin-left: 0;

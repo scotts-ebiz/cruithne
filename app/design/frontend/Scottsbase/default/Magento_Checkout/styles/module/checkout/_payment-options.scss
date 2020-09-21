@@ -37,7 +37,7 @@ $checkout-payment-option-content__padding__xl     : $checkout-payment-method-con
                     .actions-toolbar {
                         float: right;
                         button {
-                            @include cart-checkout-button-s();
+                            @include cart-checkout-button-sm();
                             margin: 0;
                         }
                     }

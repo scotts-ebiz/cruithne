@@ -7,15 +7,8 @@ define([
 	'use strict';
 
 	return function (validator) {
-
-
-		alert('js is working');
-
-
-
-
 		$('#coupon_code').keyup(function () {
-			alert('Keyup Alert');
+			$('button.apply').prop('disabled', false);
 		});
 
 
