@@ -21,7 +21,7 @@
             <div class="payment-option-inner">
                 <div class="field">
                     <label class="label" for="discount-code">
-                        <span data-bind="i18n: 'Enter discount code asdf'"></span>
+                        <span data-bind="i18n: 'Enter discount code'"></span>
                     </label>
                     <div class="control">
                         <input class="input-text" type="text" id="discount-code" name="discount_code_input"
@@ -33,7 +33,7 @@
             <div class="actions-toolbar">
                 <div class="primary">
                     <!-- ko ifnot: isApplied() -->
-                    <button class="action action-apply" type="submit"
+                    <button class="action action-apply" type="submit" disabled
                         data-bind="'value': $t('Apply Discount'), click: apply" id="payment-discount-apply">
                         <span>
                             <!-- ko i18n: 'Apply Discount'-->

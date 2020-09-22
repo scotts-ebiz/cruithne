@@ -24,6 +24,16 @@ define([
     'use strict';
 
     return function (couponCode, isApplied) {
+
+
+        // $('#discount-code').keyup(function () {
+        //     if ($('#discount-code').val() != '') {
+        //         $('button.action-apply').prop('disabled', false);
+        //     } else {
+        //         $('button.action-apply').prop('disabled', true);
+        //     }
+        // });
+
         var quoteId = quote.getQuoteId(),
             url = urlManager.getApplyCouponUrl(couponCode, quoteId),
             message = $t('Your coupon was successfully applied.');
