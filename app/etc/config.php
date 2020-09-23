@@ -360,6 +360,7 @@ return [
         'SMG_Gigya' => 1,
         'SMG_GoogleTagManager' => 1,
         'SMG_GroupedAssociatedProducts' => 1,
+        'SMG_GuestCart' => 1,
         'SMG_HeroCallout' => 1,
         'SMG_HeroVideo' => 1,
         'SMG_HeroVideoBtnWidget' => 1,

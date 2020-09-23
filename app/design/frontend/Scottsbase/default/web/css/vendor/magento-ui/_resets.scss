@@ -93,9 +93,7 @@
     }
 
     ._keyfocus *,
-    input:not([disabled]),
-    textarea:not([disabled]),
-    select:not([disabled]) {
+    textarea:not([disabled]) {
         &:focus {
             @include lib-css(box-shadow, $focus__box-shadow);
         }
