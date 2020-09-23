@@ -306,6 +306,7 @@ return [
         'Magento_WishlistAnalytics' => 1,
         'Magento_WishlistGraphQl' => 1,
         'Magento_Worldpay' => 1,
+        'Akeneo_Connector' => 1,
         'Amasty_Base' => 1,
         'Amasty_SecurityAuth' => 1,
         'Amazon_Core' => 1,
