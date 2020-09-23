@@ -1,5 +1,12 @@
-define(['jquery'], function ($) {
-    $('#discount-code').keyup(function () {
-        alert('Keyup Alert');
-    });
+require(['jquery', 'jquery/ui'], function ($) {
+    // $(document).ready(function () {
+    //     alert('asdf Alert');
+    // });
+    // alert('Alert 2');
+
+    // $('#payment-discount-apply').click(function () {
+    //     alert('This is working!');
+    // }); 
+
+    // alert('Alert 3');
 });

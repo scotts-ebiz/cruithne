@@ -11,6 +11,12 @@ define([
 		// 	$('button.apply').prop('disabled', false);
 		// });
 
+		alert('Validator Mixin is working!');
+
+		$('#payment-discount-apply').click(function () {
+			alert('This is working!');
+		});
+
 		$('#coupon_code').keyup(function () {
 			if ($('#coupon_code').val() != '') {
 				$('button.apply').prop('disabled', false);

@@ -33,7 +33,7 @@
             <div class="actions-toolbar">
                 <div class="primary">
                     <!-- ko ifnot: isApplied() -->
-                    <button class="action action-apply" type="submit" disabled
+                    <button class="action action-apply" type="submit"
                         data-bind="'value': $t('Apply Discount'), click: apply" id="payment-discount-apply">
                         <span>
                             <!-- ko i18n: 'Apply Discount'-->
@@ -56,11 +56,3 @@
         </form>
     </div>
 </div>
-
-<script type="text/x-magento-init">
-    {
-        "*": {
-            "Magento_SalesRule/js/view/payment/coupon-field-validation": {}
-        }
-    }
-</script>
