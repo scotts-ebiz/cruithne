@@ -188,10 +188,7 @@ class CoreServicesHelper
      */
     protected $_orderItemCollectionFactory;
 
-    /**
-     * @var VariableFactory 
-     */
-    protected $_varFactory;
+    CONST IMAGE_URL = 'https://images.scottsprogram.com/prod/pub/media/catalog/product';
 
     /**
      * OrderStatusHelper constructor.
@@ -237,7 +234,6 @@ class CoreServicesHelper
      * @param OrderItemCollectionFactory $orderItemCollectionFactory
      */
     public function __construct(
-        VariableFactory $varFactory,
         LoggerInterface $logger,
         ResponseHelper $responseHelper,
         OrderFactory $orderFactory,
@@ -277,9 +273,7 @@ class CoreServicesHelper
         ShipmentTrackCreationInterfaceFactory $shipmentTrackCreationInterfaceFactory,
         ShipmentHelper $shipmentHelper,
         OrderItemCollectionFactory $orderItemCollectionFactory
-    )
-    {
-        $this->_varFactory = $varFactory;
+    ) {
         $this->_logger = $logger;
         $host = gethostname();
         $ip = gethostbyname($host);
@@ -822,11 +816,8 @@ class CoreServicesHelper
             /**
              * COM-962 - Build full thumbnail image url
              */
-            $imageUrl = $this->_varFactory->create()->loadByCode('product_image_url');
-            if ($imageUrl) {
-                $thumbnailUrl = $imageUrl->getValue('text') . $productData->getThumbnail();
-                $productData->setThumbnail($thumbnailUrl);
-            }
+            $thumbnailUrl = self::IMAGE_URL . $productData->getThumbnail();
+            $productData->setThumbnail($thumbnailUrl);
 
             $products[] = $productData;
         }
