@@ -2,6 +2,7 @@
 
 namespace SMG\Api\Helper;
 
+use Magento\Variable\Model\VariableFactory;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ProductFactory;
 use Magento\Catalog\Model\ProductRepository;
@@ -188,6 +189,11 @@ class CoreServicesHelper
     protected $_orderItemCollectionFactory;
 
     /**
+     * @var VariableFactory 
+     */
+    protected $_varFactory;
+
+    /**
      * OrderStatusHelper constructor.
      *
      * @param LoggerInterface $logger
@@ -231,6 +237,7 @@ class CoreServicesHelper
      * @param OrderItemCollectionFactory $orderItemCollectionFactory
      */
     public function __construct(
+        VariableFactory $varFactory,
         LoggerInterface $logger,
         ResponseHelper $responseHelper,
         OrderFactory $orderFactory,
@@ -272,6 +279,7 @@ class CoreServicesHelper
         OrderItemCollectionFactory $orderItemCollectionFactory
     )
     {
+        $this->_varFactory = $varFactory;
         $this->_logger = $logger;
         $host = gethostname();
         $ip = gethostbyname($host);
@@ -809,11 +817,18 @@ class CoreServicesHelper
 
             // Add the product to our return object.
             // TODO: possibly remove unneeded fields.
-            $productsData = $product->getData();
-            $imageUrl = $productsData->getMediaConfig()->getMediaUrl($productsData->getThumbnail());
-            $productsData->setThumbnail($imageUrl);
-            $products[] = $productsData;
+            $productData = $product->getData();
 
+            /**
+             * COM-962 - Build full thumbnail image url
+             */
+            $imageUrl = $this->_varFactory->create()->loadByCode('product_image_url');
+            if ($imageUrl) {
+                $thumbnailUrl = $imageUrl->getValue('text') . $productData->getThumbnail();
+                $productData->setThumbnail($thumbnailUrl);
+            }
+
+            $products[] = $productData;
         }
 
 
