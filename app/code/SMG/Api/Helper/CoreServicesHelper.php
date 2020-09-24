@@ -809,7 +809,11 @@ class CoreServicesHelper
 
             // Add the product to our return object.
             // TODO: possibly remove unneeded fields.
-            $products[] = $product->getData();
+            $productsData = $product->getData();
+            $imageUrl = $productsData->getMediaConfig()->getMediaUrl($productsData->getThumbnail());
+            $productsData->setThumbnail($imageUrl);
+            $products[] = $productsData;
+
         }
 
 
