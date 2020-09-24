@@ -181,7 +181,7 @@ class CoreServicesHelper
      * @var ShipmentHelper
      */
     protected $_shipmentHelper;
-    
+
      /**
      * @var OrderItemCollectionFactory
      */
@@ -659,19 +659,19 @@ class CoreServicesHelper
 
         /** @var Order $order */
         $order = $this->_orderRepository->get($orderData['orderId']);
-        
+
         $orderObject = $order->getData();
         $orderObject['hdr_disc_fixed_amount'] = '';
         $orderObject['hdr_disc_perc'] = '';
         $orderObject['hdr_disc_cond_code'] = '';
-        
+
         if(!empty($order->getData('coupon_code'))){
             $orderDiscount = $this->_discountHelper->DiscountCode($order->getData('coupon_code'));
             $orderObject['hdr_disc_fixed_amount'] = $orderDiscount['hdr_disc_fixed_amount'];
             $orderObject['hdr_disc_perc'] = $orderDiscount['hdr_disc_perc'];
             $orderObject['hdr_disc_cond_code'] = $orderDiscount['hdr_disc_cond_code'];
         }
-        
+
         $orderObject['billingAddress'] = $order->getBillingAddress()->getData();
         $orderObject['shippingAddress'] = $order->getShippingAddress()->getData();
 
@@ -681,7 +681,7 @@ class CoreServicesHelper
         /** @var Product $item */
         foreach ($order->getAllItems() as $item) {
             $product = $item->getData();
-            
+
             // If configurable, get parent price
             $price = $item->getOriginalPrice();
 
@@ -700,7 +700,7 @@ class CoreServicesHelper
                     $price = $parentItem->getOriginalPrice();
                 }
             }
-            
+
             $parent_p['parent_price']= $price;
             $product = array_merge($product,$parent_p);
             $orderObject['products'][] = $product;
@@ -934,7 +934,7 @@ class CoreServicesHelper
                     continue;
                 }
                 // Do not add the item to the track if all items have shipped.
-                if (floatval($orderItem[0]->getData('qty_ordered')) == floatval($quantity)) {
+                if (floatval($orderItem[0]->getData('qty_shipped')) == floatval($orderItem[0]->getData('qty_ordered'))) {
                     $this->_logger->error("Item already shipped: orderItem.item_id=" . $orderItem[0]->getItemId());
                     return array(
                         'statusCode' => 400,
