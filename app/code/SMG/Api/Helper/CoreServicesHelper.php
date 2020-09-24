@@ -2,7 +2,6 @@
 
 namespace SMG\Api\Helper;
 
-use Magento\Variable\Model\VariableFactory;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\ProductFactory;
 use Magento\Catalog\Model\ProductRepository;
