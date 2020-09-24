@@ -187,6 +187,8 @@ class CoreServicesHelper
      */
     protected $_orderItemCollectionFactory;
 
+    CONST IMAGE_URL = 'https://images.scottsprogram.com/prod/pub/media/catalog/product';
+
     /**
      * OrderStatusHelper constructor.
      *
@@ -270,8 +272,7 @@ class CoreServicesHelper
         ShipmentTrackCreationInterfaceFactory $shipmentTrackCreationInterfaceFactory,
         ShipmentHelper $shipmentHelper,
         OrderItemCollectionFactory $orderItemCollectionFactory
-    )
-    {
+    ) {
         $this->_logger = $logger;
         $host = gethostname();
         $ip = gethostbyname($host);
@@ -809,7 +810,15 @@ class CoreServicesHelper
 
             // Add the product to our return object.
             // TODO: possibly remove unneeded fields.
-            $products[] = $product->getData();
+            $productData = $product->getData();
+
+            /**
+             * COM-962 - Build full thumbnail image url
+             */
+            $thumbnailUrl = self::IMAGE_URL . $productData->getThumbnail();
+            $productData->setThumbnail($thumbnailUrl);
+
+            $products[] = $productData;
         }
 
 
