@@ -34,11 +34,19 @@ $checkout-payment-option-content__padding__xl     : $checkout-payment-method-con
                 display: none;
                 .form-discount {
                     margin: 45px 0 0 0;
+                    .payment-option-inner{
+                        input.input-text.mage-error{
+                            border-bottom: 1px solid $checkout-red; 
+                        }
+                    }
                     .actions-toolbar {
                         float: right;
                         button {
                             @include cart-checkout-button-sm();
                             margin: 0;
+                            &[disabled]{
+                                @include cart-checkout-button-disabled-sm();
+                            }
                         }
                     }
                 }

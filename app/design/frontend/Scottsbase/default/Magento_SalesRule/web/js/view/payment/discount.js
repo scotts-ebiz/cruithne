@@ -14,8 +14,6 @@ define([
 ], function ($, ko, Component, quote, setCouponCodeAction, cancelCouponAction, coupon) {
     'use strict';
 
-    alert('Validator Mixin is working!');
-
     var totals = quote.getTotals(),
         couponCode = coupon.getCouponCode(),
         isApplied = coupon.getIsApplied();
@@ -29,6 +27,7 @@ define([
         defaults: {
             template: 'Magento_SalesRule/payment/discount'
         },
+
         couponCode: couponCode,
 
         /**
@@ -42,6 +41,17 @@ define([
         apply: function () {
             if (this.validate()) {
                 setCouponCodeAction(couponCode(), isApplied);
+            }
+        },
+
+        /**
+         * couponFieldTest Function - Changes button disable setting depending on if input has any characters in field 
+         * **/
+        couponFieldTest: function () {
+            if ($('#discount-code').val() != '') {
+                $('#payment-discount-apply').prop('disabled', false);
+            } else {
+                $('#payment-discount-apply').prop('disabled', true);
             }
         },
 

@@ -7,15 +7,6 @@ define([
 	'use strict';
 
 	return function (validator) {
-		// $('#coupon_code').keyup(function () {
-		// 	$('button.apply').prop('disabled', false);
-		// });
-
-		alert('Validator Mixin is working!');
-
-		$('#payment-discount-apply').click(function () {
-			alert('This is working!');
-		});
 
 		$('#coupon_code').keyup(function () {
 			if ($('#coupon_code').val() != '') {
@@ -24,19 +15,6 @@ define([
 				$('button.apply').prop('disabled', true);
 			}
 		});
-
-
-		// $("#discount-code").on('keyup change', function () {
-		// 	alert('Keyup Alert');
-
-		// 	// $('.actions-toolbar button').prop('disabled', true);
-
-		// 	// if ($("input[name='discount_code_input']").val() != '') {
-		// 	// 	$('.actions-toolbar button').prop('disabled', false);
-		// 	// }
-		// });
-
-
 
 		validator.addRule(
 			'discount-btn-status',
