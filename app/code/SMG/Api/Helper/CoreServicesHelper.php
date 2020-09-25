@@ -815,8 +815,14 @@ class CoreServicesHelper
             /**
              * COM-962 - Build full thumbnail image url
              */
-            $thumbnailUrl = self::IMAGE_URL . $productData->getThumbnail();
-            $productData->setThumbnail($thumbnailUrl);
+            $thumbnailUrl = self::IMAGE_URL . $productData['thumbnail'];
+            $productData['thumbnail'] = $thumbnailUrl;
+
+            $smallImageUrl = self::IMAGE_URL . $productData['small_image'];
+            $productData['small_image'] = $smallImageUrl;
+
+            $imageUrl = self::IMAGE_URL . $productData['image'];
+            $productData['image'] = $imageUrl;
 
             $products[] = $productData;
         }
