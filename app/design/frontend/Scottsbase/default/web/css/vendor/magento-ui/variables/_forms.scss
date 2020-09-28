@@ -8,8 +8,9 @@
 
 $form-element-input-type                        : '' !default; // [input-text|select|textarea|input-radio|input-checkbox]
 $form-element-input__background                 : $color-white !default;
-$form-element-input__border-color               : $color-gray76 !default;
-$form-element-input__border                     : 1px solid $form-element-input__border-color !default;
+$form-element-input__border-color               : $checkout-light-gray !default;
+$form-element-input__border-bottom              : 1px solid $form-element-input__border-color !default;
+$form-element-input__border                     : 0px solid $form-element-input__border-color !default;
 $form-element-input__border-radius              : 1px !default;
 $form-element-input__height                     : 32px !default;
 $form-element-input__width                      : 100% !default;
@@ -52,6 +53,7 @@ $form-element-choice__disabled__opacity         : $form-element-input__disabled_
 //  ---------------------------------------------
 
 $input-text__background                         : $form-element-input__background !default;
+$input-text__border-bottom                      : $form-element-input__border-bottom !default;
 $input-text__border                             : $form-element-input__border !default;
 $input-text__border-radius                      : $form-element-input__border-radius !default;
 $input-text__height                             : $form-element-input__height !default;
@@ -245,10 +247,10 @@ $form-field-column__number                      : 2 !default;
 
 //  Form field label
 $form-field-label__align                        : false !default;
-$form-field-label__color                        : false !default;
+$form-field-label__color                        : $checkout-gray !default;
 $form-field-label__font-size                    : false !default;
 $form-field-label__font-family                  : false !default;
-$form-field-label__font-weight                  : $font-weight__bold !default;
+$form-field-label__font-weight                  : $font-weight__regular !default;
 $form-field-label__font-style                   : false !default;
 $form-field-label__line-height                  : false !default;
 
