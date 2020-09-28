@@ -129,7 +129,7 @@ return [
         'Magento_Fedex' => 1,
         'Magento_Tax' => 1,
         'Magento_GiftCardAccount' => 0,
-        'Magento_GiftCardAccountGraphQl' => 1,
+        'Magento_GiftCardAccountGraphQl' => 0,
         'Magento_GiftCardGraphQl' => 0,
         'Magento_GiftCardImportExport' => 0,
         'Magento_VisualMerchandiser' => 1,
