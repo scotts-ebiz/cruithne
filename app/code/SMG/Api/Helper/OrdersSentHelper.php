@@ -12,6 +12,7 @@ use SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo as SapOrderBatchCreditme
 use SMG\Sap\Model\ResourceModel\SapOrderBatchRma as SapOrderBatchRmaResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo\CollectionFactory as SapOrderBatchCreditmemoCollectionFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderBatchRma\CollectionFactory as SapOrderBatchRmaCollectionFactory;
+use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 
 class OrdersSentHelper
 {
@@ -72,6 +73,11 @@ class OrdersSentHelper
     protected $_sapOrderBatchRmaResource;
 
     /**
+     * @var SapOrderBatchCollectionFactory
+     */
+    protected $_sapOrderBatchCollectionFactory;
+
+    /**
      * OrdersHelper constructor.
      *
      * @param LoggerInterface $logger
@@ -94,7 +100,8 @@ class OrdersSentHelper
         SapOrderBatchRmaCollectionFactory $sapOrderBatchRmaCollectionFactory,
         SapOrderBatchRmaResource $sapOrderBatchRmaResource,
         SapOrderBatchCreditmemoCollectionFactory $sapOrderBatchCreditmemoCollectionFactory,
-        SapOrderBatchCreditmemoResource $sapOrderBatchCreditmemoResource)
+        SapOrderBatchCreditmemoResource $sapOrderBatchCreditmemoResource,
+        SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory)
     {
         $this->_logger = $logger;
         $this->_resourceConnection = $resourceConnection;
@@ -107,6 +114,7 @@ class OrdersSentHelper
         $this->_sapOrderBatchCreditmemoResource = $sapOrderBatchCreditmemoResource;
         $this->_sapOrderBatchRmaCollectionFactory = $sapOrderBatchRmaCollectionFactory;
         $this->_sapOrderBatchRmaResource = $sapOrderBatchRmaResource;
+        $this->_sapOrderBatchCollectionFactory = $sapOrderBatchCollectionFactory;
     }
 
     /**
@@ -226,21 +234,33 @@ class OrdersSentHelper
      * @param $today
      * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
-    private function debitOrders($order, $today)
+     private function debitOrders($order, $today)
     {
         // load the sap order batch
-        $sapOrderBatch = $this->_sapOrderBatchFactory->create();
-        $this->_sapOrderBatchResource->load($sapOrderBatch, $order->getId(), 'order_id');
-
-        // since the order response will be sending a record for each item that is in
-        // the orders file but only need one then check to see if the date was already set
-        if (empty($sapOrderBatch->getData('order_process_date')))
+        $sapOrderBatchs = $this->_sapOrderBatchCollectionFactory->create();;
+        $sapOrderBatchs->addFieldToFilter('order_id', ['eq' => $order->getId()]);
+        $sapOrderBatchs->addFieldToFilter('order_process_date', array('null' => true));
+        
+        // make sure that there is something provided
+        // there should only be one
+        if ($sapOrderBatchs->count() > 0)
         {
-            // set the process date for this order
-            $sapOrderBatch->setData('order_process_date', $today);
+            /**
+             * @var \SMG\Sap\Model\sapOrderBatch $sapOrderBatch
+             */
+            foreach ($sapOrderBatchs as $sapOrderBatch)
+            {
+                // since the order response will be sending a record for each item that is in
+                // the orders file but only need one then check to see if the date was already set
+                 if (empty($sapOrderBatch->getData('order_process_date')) && $order->getId() == $sapOrderBatch->getData('order_id'))
+                {
+                    // set the process date for this order
+                    $sapOrderBatch->setData('order_process_date', $today);
 
-            // save
-            $this->_sapOrderBatchResource->save($sapOrderBatch);
+                    // save
+                    $this->_sapOrderBatchResource->save($sapOrderBatch);
+                }
+            }
         }
     }
 
