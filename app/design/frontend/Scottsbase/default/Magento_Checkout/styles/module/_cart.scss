@@ -424,7 +424,7 @@
                                         font-size: 32px;
                                         line-height: 16px;
                                         color: $scotts-light-gray;
-                                        content: url(../images/icon-open-green.svg);
+                                        content: url(../images/grn-checkout-open-icon.svg);
                                         font-family: "icons-blank-theme";
                                         margin: 0;
                                         vertical-align: middle;
@@ -444,7 +444,7 @@
                                 }
                                 &.active {
                                     .title:after {
-                                        content: url(../images/icon-close.svg);
+                                        content: url(../images/grn-checkout-close-icon.svg);
 
                                     }
                                 }
