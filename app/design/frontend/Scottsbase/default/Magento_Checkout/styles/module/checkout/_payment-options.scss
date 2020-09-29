@@ -67,6 +67,7 @@ $checkout-payment-option-content__padding__xl     : $checkout-payment-method-con
     .payment-option-title {
         @include lib-css(border-top, $checkout-payment-option-title__border);
         .action-toggle {
+            cursor: pointer;
             @include lib-icon-font(
                 $icon-down,
                 $_icon-font-size         : $checkout-payment-option-title-icon__font-size,

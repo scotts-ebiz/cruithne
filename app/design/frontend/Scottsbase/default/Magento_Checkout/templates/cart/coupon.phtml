@@ -7,6 +7,8 @@
 
 // @codingStandardsIgnoreFile
 
+$hasCouponCode = (bool) strlen($block->getCouponCode());
+
 ?>
 <?php
 $isDiscActive = '';
@@ -21,9 +23,8 @@ if ($isCouponValid) {
 }
 ?>
 <div class="block discount" id="block-discount" data-mage-init='{"collapsible":{"openedState": "active", "saveState": false}}'>
-    <!-- <h1 class="title"><?= /* @escapeNotVerified */ __('Discount Code') ?></h1> -->
+    <h1 class="title" id="discount-code-title" data-role="title"><?= /* @escapeNotVerified */ __('Discount Code') ?></h1>
 
-    <h1 class="title">Discount Code</h1>
     <div class="content<?= $isDiscActive ?>" data-role="content" aria-labelledby="block-discount-heading">
         <form id="discount-coupon-form" action="<?= /* @escapeNotVerified */ $block->getUrl('checkout/cart/couponPost') ?>" method="post" data-mage-init='{"discountCode":{"couponCodeSelector": "#coupon_code",
                                                "removeCouponSelector": "#remove-coupon",

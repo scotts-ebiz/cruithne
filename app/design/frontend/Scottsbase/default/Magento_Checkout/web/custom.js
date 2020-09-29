@@ -63,7 +63,7 @@ require([
 		});
 
 		/*------- Discount code - toggle --------*/
-		$('#block-discount .title').click(function () {
+		$('#discount-code-title').click(function () {
 			$('#block-discount .content').toggleClass('disc_active');
 		});
 	});

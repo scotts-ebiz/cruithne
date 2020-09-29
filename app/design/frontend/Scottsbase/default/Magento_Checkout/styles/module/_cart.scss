@@ -386,7 +386,6 @@
                         .cart-summary-divlink {
                             width: 40%;
                             float: left;
-                            
                             position: relative;
                             color: $scotts-light-gray;
                             @include max-screen($screen__l) {
@@ -400,6 +399,7 @@
                                 h1 {
                                     @include cart-checkout-h2-font($border: 0);
                                     border-bottom: $border-width__thick solid $checkout-accent-color;
+                                    cursor: pointer;
                                     &:after {
                                         -webkit-font-smoothing: antialiased;
                                         -moz-osx-font-smoothing: grayscale;
