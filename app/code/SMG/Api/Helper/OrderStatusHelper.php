@@ -20,6 +20,7 @@ use SMG\OrderDiscount\Helper\Data as DiscountHelper;
 use Magento\Sales\Model\Service\InvoiceService as InvoiceService;
 use Magento\Framework\DB\Transaction as Transaction;
 use Magento\Sales\Model\Order\Email\Sender\InvoiceSender as InvoiceSender;
+use Magento\Sales\Model\InvoiceOrder;
 
 class OrderStatusHelper
 {
@@ -127,7 +128,11 @@ class OrderStatusHelper
      * @var InvoiceSender
      */
     protected $_invoiceSender;
-
+    
+     /**
+     * @var InvoiceOrder
+     */
+    protected $_invoiceOrder;
     /**
      * OrderStatusHelper constructor.
      *
@@ -145,6 +150,7 @@ class OrderStatusHelper
      * @param ResponseHelper $responseHelper
      * @param OrderFactory $orderFactory
      * @param OrderResource $orderResource
+     * @param InvoiceOrder $invoiceorder
      */
     public function __construct(
         LoggerInterface $logger,
@@ -164,7 +170,8 @@ class OrderStatusHelper
         DiscountHelper $discountHelper,
         InvoiceService $invoiceService,
         Transaction $transaction,
-        InvoiceSender $invoiceSender)
+        InvoiceSender $invoiceSender,
+        InvoiceOrder $invoiceOrder)
     {
         $this->_logger = $logger;
         $this->_sapOrderFactory = $sapOrderFactory;
@@ -184,6 +191,7 @@ class OrderStatusHelper
         $this->_invoiceService = $invoiceService;
         $this->_transaction = $transaction;
         $this->_invoiceSender = $invoiceSender;
+        $this->_invoiceOrder = $invoiceOrder;
     }
 
     /**
@@ -873,6 +881,9 @@ class OrderStatusHelper
                 $sapOrderBatch->setData('order_id', $orderId);
                 $this->insertOrderSapBatch($inputOrder, $sapOrderBatch);
             }
+            
+             // create invoice to capture payment for payment method keypad authorization
+            $this->invoiceOnline($order);
         }
         else
         {
@@ -1051,5 +1062,38 @@ class OrderStatusHelper
         $today = date('Y-m-d H:i:s');
         $sapOrderBatch->setData('is_capture', true);
         $sapOrderBatch->setData('capture_process_date', $today);
+    }
+    
+    /**
+     * This function allows orders to be invoiced but offline so
+     * the system doesn't try to capture funds.
+     *
+     * @param \Magento\Sales\Model\Order $order
+     * @throws \Magento\Framework\Exception\LocalizedException
+     */
+    public function invoiceOnline($order)
+    {
+        $orderId = $order->getId();
+         /* create a invoice */
+        // first check to see if there is an invoice that exists already
+        // if there is one then don't try to create one
+        if (!$order->hasInvoices())
+        {
+            $payment = $order->getPayment();
+            $methodname = $payment->getMethod();
+            $items = array();
+            try
+            {
+                if($methodname == "vantiv_keypadpayment" && $orderId !=''){
+                  $this->_invoiceOrder->execute($orderId,true,$items,true,false,null,null);
+                }
+            }
+            catch (\Exception $e)
+            {
+                $errorMsg = "Could not Create Invoice please create manually due to some issue - " . $e->getMessage();
+                // log the error
+                $this->_logger->error($errorMsg);
+            }
+        }
     }
 }
