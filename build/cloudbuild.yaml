@@ -31,7 +31,7 @@ steps:
   args: 
     - 'rollout'
     - 'status'
-    - 'w'
+    - '-w'
     - 'deployment/${_WORKLOAD}'
   env:
     - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
