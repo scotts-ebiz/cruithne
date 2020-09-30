@@ -27,6 +27,12 @@ steps:
     - 'image'
     - 'cronjob/${_CRON_WORKLOAD}'
     - '${_CRON_WORKLOAD}=gcr.io/$PROJECT_ID/${_CONTAINER_REPO_NAME}:$SHORT_SHA'
+- name: 'gcr.io/cloud-builders/kubectl'
+  args: 
+    - 'rollout'
+    - 'status'
+    - '-w'
+    - 'deployment/${_WORKLOAD}'
   env:
     - 'CLOUDSDK_COMPUTE_ZONE=${_CLOUDSDK_COMPUTE_ZONE}'
     - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
