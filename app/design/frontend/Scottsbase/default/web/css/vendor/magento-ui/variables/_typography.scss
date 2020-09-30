@@ -44,12 +44,23 @@ $font-size__l                   : ceil(1.25 * $font-size__base) !default; // 18p
 $font-size__s                   : ceil(0.85 * $font-size__base) !default; // 12px
 $font-size__xs                  : floor(0.75 * $font-size__base) !default; // 11px
 
+// Custom Font Sizes
+$font-size__xxl                 : 4.0rem;
+$font-size__m                   : 1.6rem;
+$font-size__ms                  : 1.4rem;
+$font-size__xxs                 : 0.9rem;
+
 //  Weights
 $font-weight__light             : 300 !default;
 $font-weight__regular           : 400 !default;
 $font-weight__heavier           : 500 !default;
 $font-weight__semibold          : 600 !default;
 $font-weight__bold              : 700 !default;
+
+//  Letter Spacing
+$letter-spacing_base            : inherit;
+$letter-spacing_l               : 1.0px;
+$letter-spacing_m               : 0.5px;
 
 //  Styles
 $font-style__base               : normal !default;

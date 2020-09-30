@@ -25,7 +25,7 @@ $checkout-payment-option-content__padding__xl     : $checkout-payment-method-con
                 .action-toggle {
                     width: 100%;
                     &:after {
-                        content: url(../images/grn-checkout-open-icon.svg);
+                        content: url(../images/rup-checkout-open-icon.svg);
                         float: right;
                     }
                 }
@@ -57,7 +57,7 @@ $checkout-payment-option-content__padding__xl     : $checkout-payment-method-con
             .payment-option-title {
                 .action-toggle {
                     &:after {
-                        content: url(../images/grn-checkout-close-icon.svg);
+                        content: url(../images/rup-checkout-close-icon.svg);
                     }
                 }
             }

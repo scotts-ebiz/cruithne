@@ -1,28 +1,27 @@
 
 // Vendor libs (copied from app/design/frontend/Scottsbase/default/web/css/styles.scss)
-@import '../../../../Scottsbase/default/web/css/vendor/normalize/lib'; // Normalize.css - Should be the first and only instance needed of normalize
-@import '../../../../Scottsbase/default/web/css/vendor/magento-ui/lib'; // Magento UI - Contains variables and mixins needed for import of 'variables' below
+@import 'vendor/normalize/lib'; // Normalize.css - Should be the first and only instance needed of normalize
+@import 'vendor/magento-ui/lib';
+// @import '../../../../Scottsbase/default/web/css/vendor/magento-ui/lib'; // Magento UI - Contains variables and mixins needed for import of 'variables' below
+
+//Import Color Variables
+// @import 'vendor/magento-ui/variables/colors';
+
+//Import Vendor Typography
+// @import 'vendor/magento-ui/variables/typography';
+
+//Import Button Mixins and Variables
+// @import 'vendor/magento-ui/variables/icons';
+
+//Import Button Mixins and Variables
+// @import 'vendor/magento-ui/variables/buttons';
+// @import 'vendor/magento-ui/buttons';
 
 // Mixins (copied from app/design/frontend/Scottsbase/default/web/css/styles.scss)
 @import '../../../../Scottsbase/default/web/css/mixins/media-queries';
 
-// Scotts Base Colors
-@import '../../../../Scottsbase/default/web/css/source/scottsbase-colors';
-
-// Theme variables (copied from app/design/frontend/Scottsbase/default/web/css/styles.scss)
-@import '../../../../Scottsbase/default/web/css/variables';
-
-// Scotts Base Defaults (copied from app/design/frontend/Scottsbase/default/web/css/styles.scss)
-@import '../../../../Scottsbase/default/web/css/source/scottsbasevars';
-
 // Drupal-specific Vars
 @import 'source/drupalvars';
-
-// Scottsbase Mixins et al
-@import '../../../../Scottsbase/default/web/css/source/scottsbasemixins';
-@import '../../../../Scottsbase/default/web/css/source/scottsbase';
-@import '../../../../Scottsbase/default/web/css/source/scottsbasecheckout';
-@import '../../../../Scottsbase/default/web/css/source/scottsbasegrid';
 
 // Drupal-specific Mixins et al
 @import 'source/drupalmixins';
@@ -33,86 +32,4 @@
 @import 'source/iframes/cart';
 
 
-/* Remaining items copied from app/design/frontend/Scottsbase/default/web/css/styles.scss
- **     (at some point, determine which of these is actually needed)
-*/
 
-// Reset default styles with magento-reset
-@import '../../../../Scottsbase/default/web/css/blocks/reset';
-
-// Theme blocks
-@import '../../../../Scottsbase/default/web/css/blocks/actions-toolbar';
-@import '../../../../Scottsbase/default/web/css/blocks/breadcrumbs';
-@import '../../../../Scottsbase/default/web/css/blocks/extends';
-@import '../../../../Scottsbase/default/web/css/blocks/forms';
-@import '../../../../Scottsbase/default/web/css/blocks/icons';
-@import '../../../../Scottsbase/default/web/css/blocks/layout';
-@import '../../../../Scottsbase/default/web/css/blocks/loaders';
-@import '../../../../Scottsbase/default/web/css/blocks/messages';
-@import '../../../../Scottsbase/default/web/css/blocks/navigation';
-@import '../../../../Scottsbase/default/web/css/blocks/pages'; // Theme pager
-@import '../../../../Scottsbase/default/web/css/blocks/popups';
-@import '../../../../Scottsbase/default/web/css/blocks/price';
-@import '../../../../Scottsbase/default/web/css/blocks/sections';
-@import '../../../../Scottsbase/default/web/css/blocks/tables';
-@import '../../../../Scottsbase/default/web/css/blocks/tooltips';
-@import '../../../../Scottsbase/default/web/css/blocks/typography';
-
-// Components styles (modal/sliding panel)
-@import '../../../../Scottsbase/default/web/css/blocks/components/modals'; // from lib
-@import '../../../../Scottsbase/default/web/css/blocks/components/modals_extend'; // local
-
-// Modules
-@import '../../../../Scottsbase/default/Magento_AdvancedCheckout/styles/module';
-@import '../../../../Scottsbase/default/Magento_Braintree/styles/module';
-@import '../../../../Scottsbase/default/Magento_Bundle/styles/module';
-@import '../../../../Scottsbase/default/Magento_Catalog/styles/module';
-@import '../../../../Scottsbase/default/Magento_CatalogEvent/styles/module';
-@import '../../../../Scottsbase/default/Magento_CatalogSearch/styles/module';
-@import '../../../../Scottsbase/default/Magento_Checkout/styles/module';
-@import '../../../../Scottsbase/default/Magento_Customer/styles/module';
-@import '../../../../Scottsbase/default/Magento_Downloadable/styles/module';
-@import '../../../../Scottsbase/default/Magento_GiftCard/styles/module';
-@import '../../../../Scottsbase/default/Magento_GiftCardAccount/styles/module';
-@import '../../../../Scottsbase/default/Magento_GiftMessage/styles/module';
-@import '../../../../Scottsbase/default/Magento_GiftRegistry/styles/module';
-@import '../../../../Scottsbase/default/Magento_GiftWrapping/styles/module';
-@import '../../../../Scottsbase/default/Magento_GroupedProduct/styles/module';
-@import '../../../../Scottsbase/default/Magento_Invitation/styles/module';
-@import '../../../../Scottsbase/default/Magento_LayeredNavigation/styles/module';
-@import '../../../../Scottsbase/default/Magento_Msrp/styles/module';
-@import '../../../../Scottsbase/default/Magento_MultipleWishlist/styles/module';
-@import '../../../../Scottsbase/default/Magento_Multishipping/styles/module';
-@import '../../../../Scottsbase/default/Magento_Newsletter/styles/module';
-@import '../../../../Scottsbase/default/Magento_Paypal/styles/module';
-@import '../../../../Scottsbase/default/Magento_ProductVideo/styles/module';
-@import '../../../../Scottsbase/default/Magento_Review/styles/module';
-@import '../../../../Scottsbase/default/Magento_Reward/styles/module';
-@import '../../../../Scottsbase/default/Magento_Rma/styles/module';
-@import '../../../../Scottsbase/default/Magento_Sales/styles/module';
-@import '../../../../Scottsbase/default/Magento_SalesRule/styles/module';
-@import '../../../../Scottsbase/default/Magento_SendFriend/styles/module';
-@import '../../../../Scottsbase/default/Magento_Swatches/styles/swatches';
-@import '../../../../Scottsbase/default/Magento_Theme/styles/module';
-@import '../../../../Scottsbase/default/Magento_Vault/styles/module';
-@import '../../../../Scottsbase/default/Magento_Weee/styles/module';
-@import '../../../../Scottsbase/default/Magento_Wishlist/styles/module';
-
-// Widgets
-@import '../../../../Scottsbase/default/Magento_AdvancedCheckout/styles/widgets';
-@import '../../../../Scottsbase/default/Magento_Banner/styles/widgets';
-@import '../../../../Scottsbase/default/Magento_Catalog/styles/widgets';
-@import '../../../../Scottsbase/default/Magento_CatalogEvent/styles/widgets';
-@import '../../../../Scottsbase/default/Magento_Cms/styles/widgets';
-@import '../../../../Scottsbase/default/Magento_MultipleWishlist/styles/widgets';
-@import '../../../../Scottsbase/default/Magento_VersionsCms/styles/widgets';
-@import '../../../../Scottsbase/default/SMG_FeaturesList/styles/widgets';
-@import '../../../../Scottsbase/default/SMG_LandingPageOptions/styles/widgets';
-@import '../../../../Scottsbase/default/SMG_ProductCallout/styles/widgets';
-@import '../../../../Scottsbase/default/SMG_ProductGrid/styles/widgets';
-@import '../../../../Scottsbase/default/SMG_ProductCalloutVideo/styles/widgets';
-@import '../../../../Scottsbase/default/SMG_HeroCallout/styles/widgets';
-@import '../../../../Scottsbase/default/SMG_HeroVideo/styles/widgets';
-@import '../../../../Scottsbase/default/SMG_HeroVideoBtnWidget/styles/widgets';
-@import '../../../../Scottsbase/default/SMG_SpecList/styles/widgets';
-@import '../../../../Scottsbase/default/SMG_IconList/styles/widgets';
