@@ -375,6 +375,7 @@ return [
         'SMG_OfflineShipping' => 1,
         'SMG_OrderCreateGrid' => 1,
         'SMG_Sap' => 1,
+        'SMG_OrderEdit' => 1,
         'SMG_OrderReason' => 1,
         'SMG_ParameterTypes' => 1,
         'SMG_ProductCallout' => 1,
