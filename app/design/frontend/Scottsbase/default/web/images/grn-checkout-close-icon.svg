@@ -1,20 +1,37 @@
-<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="20" height="21" viewBox="0 0 20 21">
-    <defs>
-        <path id="a" d="M0 2.428l20 .144.014-2-20-.144z"/>
-        <path id="c" d="M0 0h20v21H0z"/>
-    </defs>
-    <g fill="none" fill-rule="evenodd" transform="matrix(1 0 0 -1 -.007 12)">
-        <mask id="b" fill="#fff">
-            <use xlink:href="#a"/>
-        </mask>
-        <g mask="url(#b)">
-            <path fill="#FFF" d="M.007-9h20v21h-20z"/>
-            <g transform="translate(.007 -9)">
-                <mask id="d" fill="#fff">
-                    <use xlink:href="#c"/>
-                </mask>
-                <path fill="#1D5632" d="M0 0h20v21H0z" mask="url(#d)"/>
-            </g>
-        </g>
-    </g>
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Generator: Adobe Illustrator 23.1.1, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
+	 viewBox="0 0 20 20" style="enable-background:new 0 0 20 20;" xml:space="preserve">
+<style type="text/css">
+	.st0{display:none;}
+	.st1{display:inline;}
+	.st2{fill-rule:evenodd;clip-rule:evenodd;fill:#1D5632;}
+	.st3{fill:#1D5632;}
+</style>
+<g id="Layer_2" class="st0">
+	<g class="st1">
+		<g class="st0">
+			<g transform="translate(-.007)" class="st1">
+				<g>
+					<path class="st2" d="M0-0.5h20v21H0V-0.5z"/>
+					<g transform="translate(.007)">
+						<path class="st2" d="M0-0.5h20v21H0V-0.5z"/>
+					</g>
+				</g>
+			</g>
+		</g>
+		<g>
+			<g>
+				<path class="st3" d="M11.2-0.3v9.1H20v2.3h-8.8v9.2H8.8v-9.2H0V8.8h8.8v-9.1C8.8-0.3,11.2-0.3,11.2-0.3z"/>
+			</g>
+		</g>
+	</g>
+</g>
+<g id="Layer_3">
+	<g>
+		<g>
+			<path class="st3" d="M20,8.8v2.3H0V8.8H20z"/>
+		</g>
+	</g>
+</g>
 </svg>
