@@ -421,17 +421,18 @@
                                     &:after {
                                         -webkit-font-smoothing: antialiased;
                                         -moz-osx-font-smoothing: grayscale;
-                                        font-size: 32px;
-                                        line-height: 16px;
-                                        color: $scotts-light-gray;
-                                        content: url(../images/grn-checkout-open-icon.svg);
-                                        font-family: "icons-blank-theme";
+                                        background-image: url('../images/grn-checkout-open-icon.png');
+                                        content: -moz-alt-content;
+                                        background-position: center;
+                                        background-size: cover;
+                                        font-family: none;
+                                        height: 20px;
+                                        width: 20px;
                                         margin: 0;
                                         vertical-align: middle;
                                         display: inline-block;
                                         font-weight: 400;
                                         overflow: hidden;
-                                        speak: none;
                                         text-align: center;
                                         float: right;
                                     }
@@ -444,7 +445,7 @@
                                 }
                                 &.active {
                                     .title:after {
-                                        content: url(../images/grn-checkout-close-icon.svg);
+                                        background-image: url('../images/grn-checkout-close-icon.png');
 
                                     }
                                 }
