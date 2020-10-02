@@ -323,15 +323,17 @@
 }
 
 
-@mixin disocount-icon(
-    $_discount-icon-bg-img      : $discount-icon-bg-img,
+@mixin discount-icon-open(
+    $_discount-icon-bg-img      : $discount-icon-bg-open-img,
     $_discount-icon-height      : $discount-icon-height,
     $_discount-icon-width        : $discount-icon-width
     ){
         @if $_discount-icon-bg-img { background-image: $_discount-icon-bg-img; };
         @if $_discount-icon-height { height: $_discount-icon-height; };
         @if $_discount-icon-width { width: $_discount-icon-width; };
-        background-position: center;
-        background-size: cover;
-        background-repeat: no-repeat;
+}
+
+@mixin discount-icon-close(){
+    @include discount-icon-open( $_discount-icon-bg-img      : $discount-icon-bg-close-img)
+
 }

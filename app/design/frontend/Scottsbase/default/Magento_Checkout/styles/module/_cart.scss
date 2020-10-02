@@ -396,42 +396,22 @@
                             }
 
                             .block.discount {
-                                h1 {
+                                h1.title {
                                     @include cart-checkout-h2-font($border: 0);
                                     border-bottom: $border-width__thick solid $checkout-accent-color;
                                     cursor: pointer;
-                                    &:after {
-                                        -webkit-font-smoothing: antialiased;
-                                        -moz-osx-font-smoothing: grayscale;
-                                        font-size: 32px;
-                                        line-height: 16px;
-                                        color: $scotts-light-gray;
-                                        content: "";
-                                        font-family: "icons-blank-theme";
-                                        margin: 0;
-                                        vertical-align: middle;
-                                        display: inline-block;
-                                        font-weight: 400;
-                                        overflow: hidden;
-                                        speak: none;
-                                        text-align: center;
+                                    &:before {
+                                        content: $discount-icon-bg-close-img;
+                                        opacity: 0;
                                     }
-                                }
-                                .title {
                                     &:after {
-                                        -webkit-font-smoothing: antialiased;
-                                        -moz-osx-font-smoothing: grayscale;
-                                        //background-image: url('../images/grn-checkout-open-icon.png');
-                                        content: -moz-alt-content;
-                                        @include disocount-icon();
-                                        font-family: none;
-                                        margin: 0;
-                                        vertical-align: middle;
-                                        display: inline-block;
-                                        font-weight: 400;
+                                        content: $discount-icon-bg-open-img;
+                                        
                                         overflow: hidden;
-                                        text-align: center;
                                         float: right;
+                                       
+                                        position: relative;
+                                        pointer-events:none;
                                     }
                                 }
                                 .content {
@@ -442,8 +422,7 @@
                                 }
                                 &.active {
                                     .title:after {
-                                        background-image: url('../images/grn-checkout-close-icon.png');
-
+                                        content: $discount-icon-bg-close-img;
                                     }
                                 }
                             }
