@@ -403,7 +403,7 @@
                                     &:after {
                                         width: 20px; 
                                         height: 20px;
-                                        background: url('../images/discount-icon-sprite.png') -50px -50px;
+                                        background: url('../images/discount-icon-sprite.png') -10px -90px;
                                         content: '';
                                         
                                         overflow: hidden;
@@ -421,7 +421,7 @@
                                 }
                                 &.active {
                                     .title:after {
-                                        background: url('../images/discount-icon-sprite.png') -50px -90px;
+                                        background: url('../images/discount-icon-sprite.png') -10px -10px;
                                     }
                                 }
                             }
