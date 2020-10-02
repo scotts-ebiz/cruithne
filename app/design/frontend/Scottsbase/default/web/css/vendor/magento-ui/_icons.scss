@@ -323,7 +323,7 @@
 }
 
 
-@mixin discount-icon-open(
+@mixin discount-icon-open-old(
     $_discount-icon-bg-img      : $discount-icon-bg-open-img,
     $_discount-icon-height      : $discount-icon-height,
     $_discount-icon-width       : $discount-icon-width
@@ -333,7 +333,19 @@
         @if $_discount-icon-width { width: $_discount-icon-width; };
 }
 
-@mixin discount-icon-close(){
+@mixin discount-icon-close-old(){
     @include discount-icon-open( $_discount-icon-bg-img      : $discount-icon-bg-close-img)
 
+}
+
+@mixin discount-icon-open(
+    $_discount-icon-bg-img      : $discount-icon-bg-img,
+    $_discount-icon-height      : $discount-icon-height,
+    $_discount-icon-width       : $discount-icon-width,
+    $_discount-icon-position-width : $discount-icon-open-position-width,
+    $_discount-icon-position-width : $discount-icon-open-position-height,
+    ){
+        @if $_discount-icon-bg-img { background: $_discount-icon-bg-img $discount-icon-open-position-width $discount-icon-open-position-height; };
+        @if $_discount-icon-height { height: $_discount-icon-height; };
+        @if $_discount-icon-width { width: $_discount-icon-width; };
 }
