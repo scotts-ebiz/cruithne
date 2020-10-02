@@ -401,8 +401,10 @@
                                     border-bottom: $border-width__thick solid $checkout-accent-color;
                                     cursor: pointer;
                                     &:after {
-                                        width: 60px; height: 60px;
-                                        background: url('../images/discount-icon-sprite.png') -170px -90px;
+                                        width: 20px; 
+                                        height: 20px;
+                                        background: url('../images/discount-icon-sprite.png') -50px -50px;
+                                        content: '';
                                         
                                         overflow: hidden;
                                         float: right;
@@ -419,7 +421,7 @@
                                 }
                                 &.active {
                                     .title:after {
-                                        background: url('../images/discount-icon-sprite.png') -10px -10px;
+                                        background: url('../images/discount-icon-sprite.png') -50px -90px;
                                     }
                                 }
                             }
