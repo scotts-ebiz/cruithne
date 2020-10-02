@@ -410,7 +410,6 @@
                                         float: right;
                                        
                                         position: relative;
-                                        pointer-events:none;
                                     }
                                 }
                                 .content {
@@ -421,7 +420,7 @@
                                 }
                                 &.active {
                                     .title:after {
-                                        background: url('../images/discount-icon-sprite.png') -10px -10px;
+                                        @include discount-icon-close();
                                     }
                                 }
                             }
