@@ -25,7 +25,8 @@ $checkout-payment-option-content__padding__xl     : $checkout-payment-method-con
                 .action-toggle {
                     width: 100%;
                     &:after {
-                        content: url(../images/grn-checkout-open-icon.svg);
+                        @include discount-icon-open();
+                        content: '';
                         float: right;
                     }
                 }
@@ -57,7 +58,7 @@ $checkout-payment-option-content__padding__xl     : $checkout-payment-method-con
             .payment-option-title {
                 .action-toggle {
                     &:after {
-                        content: url(../images/grn-checkout-close-icon.svg);
+                        @include discount-icon-close();
                     }
                 }
             }
@@ -210,7 +211,7 @@ $checkout-payment-option-content__padding__xl     : $checkout-payment-method-con
             @include lib-css(margin, 0 -($checkout-payment-option-title-mobile__padding));
 
             .payment-option-title {
-                @include lib-css(padding, $checkout-payment-option-title-mobile__padding)
+                margin: 15px !important;
             }
 
             .payment-option-content {

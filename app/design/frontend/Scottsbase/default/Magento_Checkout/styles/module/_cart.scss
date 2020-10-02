@@ -401,14 +401,10 @@
                                     border-bottom: $border-width__thick solid $checkout-accent-color;
                                     cursor: pointer;
                                     &:after {
-
                                         @include discount-icon-open();
-
                                         content: '';
-                                        
                                         overflow: hidden;
                                         float: right;
-                                       
                                         position: relative;
                                     }
                                 }
