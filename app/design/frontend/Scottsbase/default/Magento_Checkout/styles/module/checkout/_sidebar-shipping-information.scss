@@ -53,7 +53,7 @@ $checkout-sidebar-shipping-information-mobile__width           :100%;
                 @include max-screen($screen__m) {
                     @include cart-checkout-h2-font-mobile($size: $font-size__s); //needed to override mixin's media query
                 }
-            }
+            }   
         }
     }
     .shipping-information-content {

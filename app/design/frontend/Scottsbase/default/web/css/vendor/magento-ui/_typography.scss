@@ -383,6 +383,32 @@
 
 
 //
+//  Checkout Header
+//  ---------------------------------------------
+
+@mixin cart-checkout-h2-font($size: $font-size__xl, $color: $color-black, $weight: 700, $ls: $cart-checkout-h2-letter-spacing, $text-transform: uppercase, $padding: $cart-checkout-h2-padding, $border: $cart-checkout-h2-border) {
+    font-family: $font-family__quaternary;
+    @if $size { font-size: $size; }
+    @if $color { color: $color; }
+    @if $weight { font-weight: $weight; }
+    @if $ls { letter-spacing: $ls; }
+    @if $text-transform { text-transform: $text-transform; }
+    @if $padding { padding: $padding; }
+    @if $border { border-bottom: $border; }
+    @include max-screen($screen__m) {
+        @include cart-checkout-h2-font-mobile()
+    }
+  }
+
+
+  //Cart & Checkout - H2 Font (Mobile)
+@mixin cart-checkout-h2-font-mobile($size: $font-size__l, $ls: $cart-checkout-h2-letter-spacing-mobile) {
+    @if $size { font-size: $size; }
+    @if $ls { letter-spacing: $ls; }
+}
+
+
+//
 //  Links
 //  ---------------------------------------------
 

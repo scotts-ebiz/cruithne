@@ -397,8 +397,7 @@
 
                             .block.discount {
                                 h1.title {
-                                    @include cart-checkout-h2-font($border: 0);
-                                    border-bottom: $border-width__thick solid $checkout-accent-color;
+                                    @include cart-checkout-h2-font();
                                     cursor: pointer;
                                     &:after {
                                         @include discount-icon-open();
