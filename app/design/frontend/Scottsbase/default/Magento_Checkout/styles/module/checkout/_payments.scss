@@ -35,7 +35,7 @@ $checkout-billing-address-form__max-width      : $checkout-shipping-address__max
         & + .payment-method {
             .payment-method-title {
                 @include lib-css(border-top, $checkout-payment-method-title__border);
-            }
+            }   
         }
     }
 
