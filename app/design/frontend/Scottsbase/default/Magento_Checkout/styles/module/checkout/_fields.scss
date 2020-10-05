@@ -4,7 +4,7 @@
 form input.input-text, form select {
     @include lib-form-element-input($_type: input-text);
     // &.mage-error {
-    //     @include lib-form-element-input($_border-bottom: 1px solid $checkout-red);
+    //     @include lib-form-element-input($_border-bottom: 1px solid $checkout-alert-red);
     // }
     &:focus{
         @include lib-form-element-input($_border-bottom: 1px solid $checkout-black);

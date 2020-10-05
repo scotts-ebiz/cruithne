@@ -35,12 +35,13 @@ $drupal-tomcat-gray:                                #959393;
 $lato:                                              'Lato', sans-serif;
 
 // Cart / Checkout Colors
-$checkout-red:                                      #ca0b0b;
 $checkout-dark-red:                                 #7E0101;
 $checkout-accent-color:                             $color-black;
 $checkout-button-color:                             $checkout-red;
 $checkout-button-color-active:                      $checkout-dark-red;
 $checkout-promo-color:                              $color-black;
+$checkout-alert-red:                                #cb0000;
+$checkout-red:                                      #CA0B0B;
 
 
 // Cart / Checkout Button Customization

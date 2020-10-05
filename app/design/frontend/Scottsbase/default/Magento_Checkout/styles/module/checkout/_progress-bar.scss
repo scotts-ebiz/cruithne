@@ -83,7 +83,7 @@ $checkout-progress-bar-item-element-outer-radius__width: 6px;
         }
 
         @include lib-typography(
-            $_color       : $color-black,
+            $_color       : $checkout-progress-bar ,
             $_font-family : $font-family__quaternary,
             $_font-size   : $checkout-progress-bar__font-size,
             $_font-style  : false,

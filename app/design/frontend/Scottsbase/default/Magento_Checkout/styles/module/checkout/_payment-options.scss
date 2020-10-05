@@ -37,7 +37,7 @@ $checkout-payment-option-content__padding__xl     : $checkout-payment-method-con
                     margin: 45px 0 0 0;
                     .payment-option-inner{
                         input.input-text.mage-error{
-                            border-bottom: 1px solid $checkout-red; 
+                            border-bottom: 1px solid $checkout-alert-red; 
                         }
                     }
                     .actions-toolbar {
