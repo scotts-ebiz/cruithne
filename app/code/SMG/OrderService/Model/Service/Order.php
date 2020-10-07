@@ -8,7 +8,7 @@ use \Magento\Framework\Webapi\Rest\Request;
 use \Magento\Sales\Api\OrderRepositoryInterface;
 use \Magento\Customer\Model\AddressFactory;
 use \Magento\Sales\Api\Data\TransactionSearchResultInterfaceFactory as TrasactionResultInterface;
-
+use \Psr\Log\LoggerInterface;
 
 class Order
 {
@@ -49,19 +49,22 @@ class Order
      * @param OrderRepositoryInterface $orderRepository
      * @param AddressFactory $addressFactory
      * @param TrasactionResultInterface $trasactionResultInterface
+     * @param LoggerInterface $logger
      */
     public function __construct(
         Api $client,
         Config $config,
         OrderRepositoryInterface $orderRepository,
         AddressFactory $addressFactory,
-        TrasactionResultInterface $trasactionResultInterface
+        TrasactionResultInterface $trasactionResultInterface,
+        LoggerInterface $logger
     ) {
         $this->client = $client;
         $this->config = $config;
         $this->orderRepository = $orderRepository;
         $this->addressFactory = $addressFactory;
         $this->trasactionResultInterface = $trasactionResultInterface;
+        $this->logger = $logger;
     }
 
     /**
@@ -87,7 +90,7 @@ class Order
         );
 
         if ($response == false) {
-
+           $this->logger->info("Order Service with no response for orderId : ".$orderId);
         }
 
         return;
@@ -204,7 +207,7 @@ class Order
         $params['websiteUrl'] = $urlParts['host'];
         $params['createGuestCustomer'] = 'true';
         $params['doNotSaveExternally'] = 'true';
-
+        $this->logger->info("OrderService Request :",$params);
         return $params;
     }
 }
