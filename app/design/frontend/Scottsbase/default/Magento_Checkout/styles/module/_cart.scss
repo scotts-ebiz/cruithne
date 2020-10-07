@@ -127,7 +127,6 @@
                                     }
                                 }
                                 .col.item {
-                                    //width: calc(40% - #{$cart-gutter-width});
                                     width: 36%;
                                     @include max-screen($screen__l) {
                                         width: 34%;
@@ -138,6 +137,22 @@
                                         padding-right: 0;
                                         padding-bottom: 0;
                                     }
+                                    .remove-product-mobile {
+                                        display: none;
+                                        @include max-screen($screen__s) {
+                                            display: block;
+                                        }
+                                        .actions-toolbar {
+                                            margin: 0;
+                                            .cart-remove-icon {
+                                                display: block;
+                                                content: '';
+                                                float: right;
+                                                @include cart-remove-icon();
+                                            }
+                                        }
+                                    }
+                                    
                                 }
                                 .col.price {
                                     @include max-screen($screen__s) {
@@ -171,7 +186,7 @@
                                     width: 2%;
                                     .actions-toolbar {
                                         margin: 0;
-                                        #cart-remove-icon {
+                                        .cart-remove-icon {
                                             display: block;
                                             content: '';
                                             float: right;
