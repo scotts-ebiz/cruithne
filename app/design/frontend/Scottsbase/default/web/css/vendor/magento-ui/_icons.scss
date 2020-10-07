@@ -331,7 +331,7 @@
     $_discount-icon-position-height : $discount-icon-open-position-height
     ){
         @if $_discount-icon-bg-img { background: $_discount-icon-bg-img $_discount-icon-position-width $_discount-icon-position-height; };
-        @if $_discount-icon-bg-img-size { height: $_discount-icon-bg-img-size; };
+        @if $_discount-icon-bg-img-size { background-size: $_discount-icon-bg-img-size; };
         @if $_discount-icon-height { height: $_discount-icon-height; };
         @if $_discount-icon-width { width: $_discount-icon-width; };
 }
