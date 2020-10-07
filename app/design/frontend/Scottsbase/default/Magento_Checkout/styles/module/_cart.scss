@@ -184,6 +184,9 @@
                                     padding: 32px 0 0 0;
                                     float: right;
                                     width: 2%;
+                                    @include max-screen($screen__s) {
+                                        display: none;
+                                    }
                                     .actions-toolbar {
                                         margin: 0;
                                         .cart-remove-icon {
@@ -266,7 +269,7 @@
                                                 display: inline-block;
 
                                                 @include max-screen($screen__s) {
-                                                    width: calc(73% - #{$cart-padding_m};
+                                                    width: 50%; 
                                                     display: inline-block;
                                                 }
 
