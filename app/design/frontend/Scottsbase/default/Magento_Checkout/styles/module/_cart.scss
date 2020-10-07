@@ -95,13 +95,14 @@
                                     }
                                 }
                                 .col {
-                                    //width: calc(15% - #{$cart-gutter-width});
                                     width: 15.5%;
                                     margin: 0;
                                     padding: $cart-padding_xl $cart-gutter-width $cart-padding_xl 0;
                                     text-align: left;
                                     display: table-cell;
-
+                                    @include max-screen($screen__m) {
+                                        width: 15%;
+                                    }
                                     @include max-screen($screen__s) {
                                         padding: $cart-padding_l $cart-gutter-width $cart-padding_l 0;
 
