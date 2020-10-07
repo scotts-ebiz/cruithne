@@ -1,0 +1,12 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <smg_orderservice>
+            <api>
+                <order>//cts-orders-k6x4iqtnzq-uc.a.run.app/v1/</order>
+                <customer>//cts-customers-k6x4iqtnzq-uc.a.run.app/v1/</customer>
+            </api>
+        </smg_orderservice>
+    </default>
+</config>
