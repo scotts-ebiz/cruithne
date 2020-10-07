@@ -141,6 +141,8 @@
                                         display: none;
                                         @include max-screen($screen__s) {
                                             display: block;
+                                            float: right;
+                                            width: 2%;
                                         }
                                         .actions-toolbar {
                                             margin: 0;
@@ -177,7 +179,6 @@
                                             display: none;
                                         }
                                     }
-
                                 }
 
                                 .col.remove {
@@ -269,7 +270,7 @@
                                                 display: inline-block;
 
                                                 @include max-screen($screen__s) {
-                                                    width: 50%; 
+                                                    width: 50%;     
                                                     display: inline-block;
                                                 }
 
