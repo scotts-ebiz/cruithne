@@ -1,6 +1,6 @@
 <?php
 
-namespace SMG\OrderService\Helper;
+namespace SMG\BackendService\Helper;
 
 use Magento\Framework\App\Helper\AbstractHelper;
 use \Magento\Framework\App\Helper\Context;
@@ -9,8 +9,8 @@ use \Magento\Framework\App\Config\ScopeConfigInterface;
 class Data extends AbstractHelper
 {
 
-    const XML_API_ORDER_REQUEST_URI = 'smg_orderservice/api/order';
-    const XML_API_CUSTOMER_REQUEST_URI = 'smg_orderservice/api/customer';
+    const XML_API_ORDER_REQUEST_URI = 'smg_backendservice/api/order';
+    const XML_API_CUSTOMER_REQUEST_URI = 'smg_backendservice/api/customer';
 
     /**
      * Config constructor
@@ -42,7 +42,7 @@ class Data extends AbstractHelper
     public function getCustomerApiUrl()
     {
         return $this->scopeConfig->getValue(
-            self::XML_API_ORDER_REQUEST_URI,
+            self::XML_API_CUSTOMER_REQUEST_URI,
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
     }

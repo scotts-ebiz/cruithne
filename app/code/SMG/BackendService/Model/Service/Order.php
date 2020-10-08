@@ -1,9 +1,9 @@
 <?php
 
-namespace SMG\OrderService\Model\Service;
+namespace SMG\BackendService\Model\Service;
 
-use SMG\OrderService\Model\Client\Api;
-use SMG\OrderService\Helper\Data as Config;
+use SMG\BackendService\Model\Client\Api;
+use SMG\BackendService\Helper\Data as Config;
 use \Magento\Framework\Webapi\Rest\Request;
 use \Magento\Sales\Api\OrderRepositoryInterface;
 use \Magento\Customer\Model\AddressFactory;

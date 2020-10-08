@@ -1,6 +1,6 @@
 <?php
 
-namespace SMG\OrderService\Model\Client;
+namespace SMG\BackendService\Model\Client;
 
 use \GuzzleHttp\Client;
 use \GuzzleHttp\ClientFactory;
@@ -57,16 +57,28 @@ class Api
         $params,
         $requestMethod = Request::HTTP_METHOD_POST
     ) {
+        $apiUrl = $apiEndPoint . $apiFunction;
         $client = $this->clientFactory->create(['config' => [
-            'base_uri' => $apiEndPoint . $apiFunction
+            'base_uri' => $apiUrl
         ]]);
 
         try {
+            $this->logger->info(
+                sprintf('API %s : %s', $apiUrl, $params)
+            );
             $response = $client->request($requestMethod, $params);
+
+            $this->logger->info(
+                sprintf('Response from API %s : %s', $apiUrl, $response)
+            );
+
             if ($response->getStatusCode() == "200") {
                 return $response->getBody();
             }
         } catch (\Exception $ex) {
+            $this->logger->info(
+                sprintf('API Exception %s : %s', $apiUrl, $ex->getMessage())
+            );
             return false;
         }
 
