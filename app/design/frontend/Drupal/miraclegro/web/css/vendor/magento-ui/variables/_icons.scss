@@ -88,16 +88,17 @@ $discount-icon-bg-img-size              : 75px 75px;
 $discount-icon-bg-img-size              : 75px 75px;
 $discount-icon-height                   : 21px !default;
 $discount-icon-width                    : 21px !default;
-$discount-icon-open-position-width      : -90px !default;
-$discount-icon-open-position-height     : -10px !default;
-$discount-icon-close-position-width     : -50px !default;
-$discount-icon-close-position-height    : -50px !default;
+$discount-icon-open-position-width      : -27px !default;
+$discount-icon-open-position-height     : -2px !default;
+$discount-icon-close-position-width     : -2px !default;
+$discount-icon-close-position-height    : -52px !default;
 
 //
 //  Variables for Cart Remove Icons
 //  ---------------------------------------------
 $cart-remove-icon-bg-img                : url('../images/cart-remove-icon-sprite.png') !default;
-$cart-remove-icon-height                : 18px !default;
-$cart-remove-icon-width                 : 18px !default;
-$cart-remove-icon-position-width        : -10px !default;
-$cart-remove-icon-position-height       : -10px !default;
+$cart-remove-icon-bg-img-size           : 50px 50px;
+$cart-remove-icon-height                : 21px !default;
+$cart-remove-icon-width                 : 21px !default;
+$cart-remove-icon-position-width        : -2px !default;
+$cart-remove-icon-position-height       : -2px !default;

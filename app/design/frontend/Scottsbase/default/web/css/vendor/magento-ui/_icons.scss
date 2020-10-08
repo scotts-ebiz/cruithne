@@ -344,13 +344,15 @@
 }
 
 @mixin cart-remove-icon(
-    $_cart-remove-icon-bg-img      : $cart-remove-icon-bg-img,
-    $_cart-remove-icon-height      : $cart-remove-icon-height,
-    $_cart-remove-icon-width       : $cart-remove-icon-width,
-    $_cart-remove-icon-position-width : $cart-remove-icon-position-width,
-    $_cart-remove-icon-position-height : $cart-remove-icon-position-height
+    $_cart-remove-icon-bg-img           : $cart-remove-icon-bg-img,
+    $_cart-remove-icon-bg-img-size       : $cart-remove-icon-bg-img-size,
+    $_cart-remove-icon-height           : $cart-remove-icon-height,
+    $_cart-remove-icon-width            : $cart-remove-icon-width,
+    $_cart-remove-icon-position-width   : $cart-remove-icon-position-width,
+    $_cart-remove-icon-position-height  : $cart-remove-icon-position-height
     ){
         @if $_cart-remove-icon-bg-img { background: $_cart-remove-icon-bg-img $_cart-remove-icon-position-width $_cart-remove-icon-position-height; };
+        @if $_cart-remove-icon-bg-img-size { background-size: $_cart-remove-icon-bg-img-size; };
         @if $_cart-remove-icon-height { height: $_cart-remove-icon-height; };
         @if $_cart-remove-icon-width { width: $_cart-remove-icon-width; };
 }
