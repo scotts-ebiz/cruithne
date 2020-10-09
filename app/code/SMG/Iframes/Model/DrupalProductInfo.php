@@ -70,7 +70,7 @@ class DrupalProductInfo implements DrupalProductInfoInterface {
                     'price' => number_format((float)$child->getPrice(), 2, '.', ''),
                     'drupalProductId' => $product->getData('drupalproductid'),
                     'isDefault' => $child->getId() === $defaultProductId,
-                    'size' => $child->getData('size'),
+                    'size' => $product->getResource()->getAttribute('size')->getSource()->getOptionText($product->getData('size'))
                 ));
             }
 
@@ -84,7 +84,7 @@ class DrupalProductInfo implements DrupalProductInfoInterface {
                 'sku' => $product->getSku(),
                 'drupalProductId' => $product->getdrupalproductid(),
                 'price' => number_format((float)$product->getPrice(), 2, '.', ''),
-                'size' => $product->getData('size'),
+                'size' => $product->getResource()->getAttribute('size')->getSource()->getOptionText($product->getData('size')),
                 'childSkus' => $childProducts
                 )
             );
