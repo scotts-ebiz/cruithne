@@ -75,9 +75,11 @@ class OrderAddressSave
         $orderId = $address->getParentId();
         $order = $this->orderRepository->get($orderId);
 
-        $response = $this->client->request(
-            Request::HTTP_METHOD_POST,
-            $this->buildOrderObject($order)
+        $response = $this->client->execute(
+            $this->config->getCustomerApiUrl(),
+            "customer/updateAddresses",
+            $this->buildOrderObject($order),
+            Request::HTTP_METHOD_POST
         );
 
         return $this->resultFactory->create(
