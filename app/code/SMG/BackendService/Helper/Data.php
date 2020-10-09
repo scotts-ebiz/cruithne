@@ -11,6 +11,7 @@ class Data extends AbstractHelper
 
     const XML_API_ORDER_REQUEST_URI = 'smg_backendservice/api/order';
     const XML_API_CUSTOMER_REQUEST_URI = 'smg_backendservice/api/customer';
+    const XML_WEB_SOURCE = 'WEB';
 
     /**
      * Config constructor
@@ -59,5 +60,13 @@ class Data extends AbstractHelper
             mt_rand(0, 0x3fff) | 0x8000,
             mt_rand(0, 0x2Aff), mt_rand(0, 0xffD3), mt_rand(0, 0xff4B)
         );
+    }
+
+    /**
+     * @return string
+     */
+    public function getWebSource()
+    {
+        return self::XML_WEB_SOURCE;
     }
 }
