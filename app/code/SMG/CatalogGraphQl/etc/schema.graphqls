@@ -2,4 +2,40 @@ interface ProductInterface {
     drupalproductid: String
         @doc(description: "Drupal Product Id")
         @resolver(class: "\\SMG\\CatalogGraphQl\\Model\\Resolver\\Product\\DrupalProductId")
+    problems_filter: [String]
+        @doc(description: "ProblemsFilter")
+        @resolver(class: "\\SMG\\CatalogGraphQl\\Model\\Resolver\\Product\\ProblemsFilter")
+    goals_filter: [String]
+        @doc(description: "GoalsFilter")
+        @resolver(class: "\\SMG\\CatalogGraphQl\\Model\\Resolver\\Product\\GoalsFilter")
+    mylawn_sunlight: [String]
+        @doc(description: "MylawnSunlight")
+        @resolver(class: "\\SMG\\CatalogGraphQl\\Model\\Resolver\\Product\\MylawnSunlight")
+    mylawn_weed_type: [String]
+        @doc(description: "MylawnWeedType")
+        @resolver(class: "\\SMG\\CatalogGraphQl\\Model\\Resolver\\Product\\MylawnWeedType")
+    what_it_controls: [String]
+        @doc(description: "WhatItControls")
+        @resolver(class: "\\SMG\\CatalogGraphQl\\Model\\Resolver\\Product\\WhatItControls")
+    mylawn_grass_types: [String]
+        @doc(description: "MylawnGrassTypes")
+        @resolver(class: "\\SMG\\CatalogGraphQl\\Model\\Resolver\\Product\\MylawnGrassTypes")
+    mylawn_usage_per_year: [String]
+        @doc(description: "MylawnUsagePerYear")
+        @resolver(class: "\\SMG\\CatalogGraphQl\\Model\\Resolver\\Product\\MylawnUsagePerYear")
+    mylawn_lawn_condition: [String]
+        @doc(description: "MylawnLawnCondition")
+        @resolver(class: "\\SMG\\CatalogGraphQl\\Model\\Resolver\\Product\\MylawnLawnCondition")
+    mylawn_after_seed: [String]
+        @doc(description: "MylawnAfterSeed")
+        @resolver(class: "\\SMG\\CatalogGraphQl\\Model\\Resolver\\Product\\MylawnAfterSeed")
+    disposal_methods: [String]
+        @doc(description: "DisposalMethods")
+        @resolver(class: "\\SMG\\CatalogGraphQl\\Model\\Resolver\\Product\\DisposalMethods")
+    how_often_to_apply: [String]
+        @doc(description: "HowOftenToApply")
+        @resolver(class: "\\SMG\\CatalogGraphQl\\Model\\Resolver\\Product\\HowOftenToApply")
+    mylawn_lawn_zone: [String]
+        @doc(description: "MylawnLawnZone")
+        @resolver(class: "\\SMG\\CatalogGraphQl\\Model\\Resolver\\Product\\MylawnLawnZone")
 }
