@@ -81,7 +81,6 @@ class Order
     ) {
         $orderId = $orders->getId();
         $order = $this->orderRepository->get($orderId);
-
         $response = $this->client->execute(
             $this->config->getOrderApiUrl(),
             "orders",
@@ -114,6 +113,9 @@ class Order
         $urlParts = parse_url($order->getStore()->getBaseUrl());
         $payment = $order->getPayment();
         $methodname = $payment->getMethod();
+        $additionalInfo = ($payment->getAdditionalInformation());
+        $last4 = $additionalInfo['last_four'];
+        $cc_type = $this->config->getCardFullName($payment->getData('cc_type'));
         $shippingData = $order->getShippingAddress()->getData();
         $billingData = $order->getBillingAddress()->getData();
         $billing_customer_address_id = $order->getBillingAddress()->getData('customer_address_id');
@@ -139,12 +141,12 @@ class Order
         $params = array();
 
         $params['transId'] = $this->config->generateUuid();
-        $params['sourceService'] = $this->config->getWebSource();
+        $params['sourceService'] = 'WEB';
         $params['externalId'] = $order->getId();
         $params['incrementId'] = $order->getIncrementId();
         $params['paymentUuid'] = $transactionId;
         $params['cartType'] = 'M2';
-        $params['orderType'] = $this->config->getWebSource();
+        $params['orderType'] = 'WEB';
         $params['customerId'] = $order->getCustomerId();
         $params['firstName'] = $billingData['firstname'];
         $params['lastName'] = $billingData['lastname'];
@@ -207,7 +209,41 @@ class Order
         $params['websiteUrl'] = $urlParts['host'];
         $params['createGuestCustomer'] = 'true';
         $params['doNotSaveExternally'] = 'true';
+        $params['last_4'] = $last4;
+        $params['cc_type'] = $cc_type;
         $this->logger->info("OrderService Request :",$params);
         return $params;
     }
+    
+        /**
+        * @param $id
+        * @param string $noteMessage
+        */
+        public function postOrderCommentNote(
+        $orderId,
+        $noteMessage
+        ) {
+
+            $params['transId'] = $this->config->generateUuid();
+            $params['sourceService'] = 'WEB';
+            $params['orderId'] = $orderId;
+            $params['noteType'] = 'email';
+            $params['noteMessage'] = $noteMessage;
+            $params['condition'] = 'success';
+
+            $this->logger->info("OrderService Request Note:",$params);
+
+            $response = $this->client->execute(
+            $this->config->getOrderApiUrl(),
+            "orders/OrdersController_createOrderNote",
+            $params,
+            Request::HTTP_METHOD_POST
+            );
+
+            if ($response == false) {
+            $this->logger->info("Order Service with no response for orderId on order comment note: ".$orderId);
+            }
+
+            return;
+        }
 }
