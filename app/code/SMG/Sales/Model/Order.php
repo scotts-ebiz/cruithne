@@ -70,14 +70,14 @@ class Order extends MagentoOrder
         DiscountHelper $discountHelper,
         SubscriptionFactory $subscriptionFactory,
         SubscriptionResource $subscriptionResource,
+        OrderBackendService $orderService,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = [],
         ResolverInterface $localeResolver = null,
         ProductOption $productOption = null,
         OrderItemRepositoryInterface $itemRepository = null,
-        SearchCriteriaBuilder $searchCriteriaBuilder = null,
-        OrderBackendService $orderService)
+        SearchCriteriaBuilder $searchCriteriaBuilder = null)
     {
         parent::__construct($context, $registry, $extensionFactory, $customAttributeFactory, $timezone, $storeManager, $orderConfig, $productRepository, $orderItemCollectionFactory, $productVisibility, $invoiceManagement, $currencyFactory, $eavConfig,
             $orderHistoryFactory, $addressCollectionFactory, $paymentCollectionFactory, $historyCollectionFactory, $invoiceCollectionFactory, $shipmentCollectionFactory, $memoCollectionFactory, $trackCollectionFactory,
