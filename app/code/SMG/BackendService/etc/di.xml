@@ -2,7 +2,14 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <type name="Magento\Sales\Api\OrderManagementInterface">
-        <plugin name="SMG_BackendService_Plugin_OrderInterface" type="SMG\BackendService\Plugin\Api\Data\OrderInterface"
+        <plugin name="SMG_BackendService_Plugin_OrderInterface"
+                type="SMG\BackendService\Plugin\Api\Data\OrderInterface"
                 sortOrder="999"/>
+    </type>
+    <type name="Magento\Sales\Controller\Adminhtml\Order\AddressSave">
+        <plugin name="SMG_BackendService_Plugin_OrderAddressSave"
+                type="SMG\BackendService\Plugin\OrderAddressSave"
+                sortOrder="1"
+                disabled="false"/>
     </type>
 </config>

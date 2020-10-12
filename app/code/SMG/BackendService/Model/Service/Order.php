@@ -139,12 +139,12 @@ class Order
         $params = array();
 
         $params['transId'] = $this->config->generateUuid();
-        $params['sourceService'] = 'WEB';
+        $params['sourceService'] = $this->config->getWebSource();
         $params['externalId'] = $order->getId();
         $params['incrementId'] = $order->getIncrementId();
         $params['paymentUuid'] = $transactionId;
         $params['cartType'] = 'M2';
-        $params['orderType'] = 'WEB';
+        $params['orderType'] = $this->config->getWebSource();
         $params['customerId'] = $order->getCustomerId();
         $params['firstName'] = $billingData['firstname'];
         $params['lastName'] = $billingData['lastname'];
