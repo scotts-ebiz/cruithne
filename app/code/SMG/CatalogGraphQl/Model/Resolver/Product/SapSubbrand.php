@@ -11,7 +11,7 @@ use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 /**
  * Resolve data
  */
-class MylawnAfterSeed implements ResolverInterface
+class SapSubbrand implements ResolverInterface
 {
     public function resolve(
         Field $field,
@@ -28,7 +28,7 @@ class MylawnAfterSeed implements ResolverInterface
         /* @var $product Product */
         $product = $value['model'];
         $return = array();
-        $attribute = $product->getAttributeText('mylawn_after_seed');
+        $attribute = $product->getAttributeText('sap_subbrand');
 
         return ($attribute) ? array_merge((array)$attribute, $return): $return;
     }

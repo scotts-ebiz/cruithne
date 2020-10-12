@@ -11,7 +11,7 @@ use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 /**
  * Resolve data
  */
-class DisposalMethods implements ResolverInterface
+class LawnZoneAvailableIn implements ResolverInterface
 {
     public function resolve(
         Field $field,
@@ -28,7 +28,7 @@ class DisposalMethods implements ResolverInterface
         /* @var $product Product */
         $product = $value['model'];
         $return = array();
-        $attribute = $product->getAttributeText('disposal_methods');
+        $attribute = $product->getAttributeText('lawn_zone_available_in');
 
         return ($attribute) ? array_merge((array)$attribute, $return): $return;
     }

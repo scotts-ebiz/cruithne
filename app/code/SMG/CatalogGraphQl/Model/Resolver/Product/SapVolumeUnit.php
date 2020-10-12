@@ -11,7 +11,7 @@ use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 /**
  * Resolve data
  */
-class HowOftenToApply implements ResolverInterface
+class SapVolumeUnit implements ResolverInterface
 {
     public function resolve(
         Field $field,
@@ -27,9 +27,8 @@ class HowOftenToApply implements ResolverInterface
 
         /* @var $product Product */
         $product = $value['model'];
-
         $return = array();
-        $attribute = $product->getAttributeText('how_often_to_aply');
+        $attribute = $product->getAttributeText('sap_volume_unit');
 
         return ($attribute) ? array_merge((array)$attribute, $return): $return;
     }

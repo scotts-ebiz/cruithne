@@ -11,7 +11,7 @@ use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 /**
  * Resolve data
  */
-class MylawnUsagePerYear implements ResolverInterface
+class SapWeightUnitEach implements ResolverInterface
 {
     public function resolve(
         Field $field,
@@ -27,9 +27,8 @@ class MylawnUsagePerYear implements ResolverInterface
 
         /* @var $product Product */
         $product = $value['model'];
-
         $return = array();
-        $attribute = $product->getAttributeText('mylawn_usage_per_year');
+        $attribute = $product->getAttributeText('sap_weight_unit_each');
 
         return ($attribute) ? array_merge((array)$attribute, $return): $return;
     }

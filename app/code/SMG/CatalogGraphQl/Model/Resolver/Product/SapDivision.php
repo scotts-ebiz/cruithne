@@ -11,7 +11,7 @@ use Magento\Framework\GraphQl\Schema\Type\ResolveInfo;
 /**
  * Resolve data
  */
-class WhatItControls implements ResolverInterface
+class SapDivision implements ResolverInterface
 {
     public function resolve(
         Field $field,
@@ -27,9 +27,8 @@ class WhatItControls implements ResolverInterface
 
         /* @var $product Product */
         $product = $value['model'];
-
         $return = array();
-        $attribute = $product->getAttributeText('what_it_controls');
+        $attribute = $product->getAttributeText('sap_division');
 
         return ($attribute) ? array_merge((array)$attribute, $return): $return;
     }
