@@ -812,6 +812,42 @@ class CoreServicesHelper
             // TODO: possibly remove unneeded fields.
             $productData = $product->getData();
 
+            $productData['status'] = $product->getAttributeText('status') ? $product->getAttributeText('status')->getText() : '';
+            $productData['size'] = $product->getAttributeText('size') ? (array)$product->getAttributeText('size') : [];
+            $productData['visibility'] = $product->getAttributeText('visibility') ? $product->getAttributeText('visibility')->getText() : '';
+            $productData['country_of_manufacture'] = $product->getAttributeText('country_of_manufacture') ? (array)$product->getAttributeText('country_of_manufacture') : [];
+            $productData['bundle'] = $product->getAttributeText('bundle') ? (array)$product->getAttributeText('bundle') : [];
+            $productData['bundle_type'] = $product->getAttributeText('bundle_type') ? (array)$product->getAttributeText('bundle_type') : [];
+            $productData['company'] = $product->getAttributeText('company') ? (array)$product->getAttributeText('company') : [];
+            $productData['lawn_zone_available_in'] = $product->getAttributeText('lawn_zone_available_in') ? (array)$product->getAttributeText('lawn_zone_available_in') : [];
+            $productData['lawn_zone_excluded'] = $product->getAttributeText('lawn_zone_excluded') ? (array)$product->getAttributeText('lawn_zone_excluded') : [];
+            $productData['mylawn_lawn_condition'] = $product->getAttributeText('mylawn_lawn_condition') ? (array)$product->getAttributeText('mylawn_lawn_condition') : [];
+            $productData['sap_base_unit'] = $product->getAttributeText('sap_base_unit') ? (array)$product->getAttributeText('sap_base_unit') : [];
+            $productData['sap_brand'] = $product->getAttributeText('sap_brand') ? (array)$product->getAttributeText('sap_brand') : [];
+            $productData['sap_division'] = $product->getAttributeText('sap_division') ? (array)$product->getAttributeText('sap_division') : [];
+            $productData['sap_ean_category'] = $product->getAttributeText('sap_ean_category') ? (array)$product->getAttributeText('sap_ean_category') : [];
+            $productData['sap_ean_category_each'] = $product->getAttributeText('sap_ean_category_each') ? (array)$product->getAttributeText('sap_ean_category_each') : [];
+            $productData['sap_lwh_unit'] = $product->getAttributeText('sap_lwh_unit') ? (array)$product->getAttributeText('sap_lwh_unit') : [];
+            $productData['sap_lwh_unit_each'] = $product->getAttributeText('sap_lwh_unit_each') ? (array)$product->getAttributeText('sap_lwh_unit_each') : [];
+            $productData['sap_material_group'] = $product->getAttributeText('sap_material_group') ? (array)$product->getAttributeText('sap_material_group') : [];
+            $productData['sap_material_group_pkg_materials'] = $product->getAttributeText('sap_material_group_pkg_materials') ? (array)$product->getAttributeText('sap_material_group_pkg_materials') : [];
+            $productData['sap_material_status'] = $product->getAttributeText('sap_material_status') ? (array)$product->getAttributeText('sap_material_status') : [];
+            $productData['sap_material_type'] = $product->getAttributeText('sap_material_type') ? (array)$product->getAttributeText('sap_material_type') : [];
+            $productData['sap_subbrand'] = $product->getAttributeText('sap_subbrand') ? (array)$product->getAttributeText('sap_subbrand') : [];
+            $productData['sap_volume_unit'] = $product->getAttributeText('sap_volume_unit') ? (array)$product->getAttributeText('sap_volume_unit') : [];
+            $productData['sap_volume_unit_each'] = $product->getAttributeText('sap_volume_unit_each') ? (array)$product->getAttributeText('sap_volume_unit_each') : [];
+            $productData['sap_weight_unit'] = $product->getAttributeText('sap_weight_unit') ? (array)$product->getAttributeText('sap_weight_unit') : [];
+            $productData['sap_weight_unit_each'] = $product->getAttributeText('sap_weight_unit_each') ? (array)$product->getAttributeText('sap_weight_unit_each') : [];
+            $productData['state_not_allowed'] = $product->getAttributeText('state_not_allowed') ? (array)$product->getAttributeText('state_not_allowed') : [];
+            $productData['goals_filter'] = $product->getAttributeText('goals_filter') ? (array)$product->getAttributeText('goals_filter') : [];
+            $productData['mylawn_grass_types'] = $product->getAttributeText('mylawn_grass_types') ? (array)$product->getAttributeText('mylawn_grass_types') : [];
+            $productData['mylawn_sunlight'] = $product->getAttributeText('mylawn_sunlight') ? (array)$product->getAttributeText('mylawn_sunlight') : [];
+            $productData['mylawn_weed_type'] = $product->getAttributeText('mylawn_weed_type') ? (array)$product->getAttributeText('mylawn_weed_type') : [];
+            $productData['problems_filter'] = $product->getAttributeText('problems_filter') ? (array)$product->getAttributeText('problems_filter') : [];
+            $productData['product_websites'] = $product->getAttributeText('product_websites') ? (array)$product->getAttributeText('product_websites') : [];
+            $productData['states_available_in'] = $product->getAttributeText('states_available_in') ? (array)$product->getAttributeText('states_available_in') : [];
+            $productData['mylawn_lawn_zone'] = $product->getAttributeText('mylawn_lawn_zone') ? (array)$product->getAttributeText('mylawn_lawn_zone') : [];
+
             /**
              * COM-962 - Build full thumbnail image url
              */
