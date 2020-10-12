@@ -210,4 +210,36 @@ class Order
         $this->logger->info("OrderService Request :",$params);
         return $params;
     }
+	
+		/**
+		* @param $id
+		* @param string $noteMessage
+		*/
+		public function postOrderCommentNote(
+        $orderId,
+		$noteMessage
+    ) {
+		
+	    $params['transId'] = $this->config->generateUuid();
+        $params['sourceService'] = 'WEB';
+        $params['orderId'] = $orderId;
+        $params['noteType'] = 'email';
+        $params['noteMessage'] = $noteMessage;
+		$params['condition'] = 'success';
+		
+		$this->logger->info("OrderService Request Note:",$params);
+        
+        $response = $this->client->execute(
+            $this->config->getOrderApiUrl(),
+            "orders/OrdersController_createOrderNote",
+            $params,
+            Request::HTTP_METHOD_POST
+        );
+
+        if ($response == false) {
+           $this->logger->info("Order Service with no response for orderId on order comment note: ".$orderId);
+        }
+
+        return;
+    }
 }
