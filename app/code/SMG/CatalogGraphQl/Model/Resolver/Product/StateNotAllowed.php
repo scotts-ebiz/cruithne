@@ -28,8 +28,18 @@ class StateNotAllowed implements ResolverInterface
         /* @var $product Product */
         $product = $value['model'];
         $return = array();
-        $attribute = $product->getAttributeText('state_not_allowed');
+        $attribute = $product->getData('state_not_allowed');
+        $states = array();
 
-        return ($attribute) ? array_merge((array)$attribute, $return): $return;
+        if ($attribute) {
+            forEach (explode(',', $attribute) as $id) {
+                $states[] = $product->getAttributes()['state_not_allowed']->getSource()->getOptionText($id);
+            }
+        }
+
+
+
+
+        return $states;
     }
 }
