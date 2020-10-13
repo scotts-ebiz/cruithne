@@ -339,7 +339,7 @@
                                                 .control.qty {
                                                     display: flex;
                                                     .qty {
-                                                        border: 1px solid $scotts-black;
+                                                        @include cart-quantity-number();
                                                     }
                                                 }
                                             }
@@ -580,10 +580,7 @@
     }
     .qtyminus,
     .qtyplus {
-        background: transparent;
-        border: 0;
-        outline: 0;
-        box-shadow: none;
+        @include cart-quantity-controls();
     }
     .pop-cust-click.title {
         color: $checkout-green;
@@ -727,7 +724,6 @@
         &.qty {
             .input-text {
                 @extend .abs-input-qty;
-                margin-top: -5px;
             }
 
             .label {
