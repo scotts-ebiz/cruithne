@@ -838,7 +838,6 @@ class CoreServicesHelper
             $productData['sap_volume_unit_each'] = $product->getAttributeText('sap_volume_unit_each') ? (array)$product->getAttributeText('sap_volume_unit_each') : [];
             $productData['sap_weight_unit'] = $product->getAttributeText('sap_weight_unit') ? (array)$product->getAttributeText('sap_weight_unit') : [];
             $productData['sap_weight_unit_each'] = $product->getAttributeText('sap_weight_unit_each') ? (array)$product->getAttributeText('sap_weight_unit_each') : [];
-            $productData['state_not_allowed'] = $product->getAttributeText('state_not_allowed') ? (array)$product->getAttributeText('state_not_allowed') : [];
             $productData['goals_filter'] = $product->getAttributeText('goals_filter') ? (array)$product->getAttributeText('goals_filter') : [];
             $productData['mylawn_grass_types'] = $product->getAttributeText('mylawn_grass_types') ? (array)$product->getAttributeText('mylawn_grass_types') : [];
             $productData['mylawn_sunlight'] = $product->getAttributeText('mylawn_sunlight') ? (array)$product->getAttributeText('mylawn_sunlight') : [];
@@ -848,16 +847,28 @@ class CoreServicesHelper
             $productData['states_available_in'] = $product->getAttributeText('states_available_in') ? (array)$product->getAttributeText('states_available_in') : [];
             $productData['mylawn_lawn_zone'] = $product->getAttributeText('mylawn_lawn_zone') ? (array)$product->getAttributeText('mylawn_lawn_zone') : [];
 
+            $attribute = $product->getData('state_not_allowed');
+            $states = array();
+
+            if ($attribute) {
+                forEach (explode(',', $attribute) as $id) {
+                    $states[] = $product->getAttributes()['state_not_allowed']->getSource()->getOptionText($id);
+                }
+            }
+
+            $productData['state_not_allowed'] = $states;
+
+
             /**
              * COM-962 - Build full thumbnail image url
              */
-            $thumbnailUrl = self::IMAGE_URL . $productData['thumbnail'];
+            $thumbnailUrl = self::IMAGE_URL . ($productData['thumbnail'] ?? '');
             $productData['thumbnail'] = $thumbnailUrl;
 
-            $smallImageUrl = self::IMAGE_URL . $productData['small_image'];
+            $smallImageUrl = self::IMAGE_URL . ($productData['small_image'] ?? '');
             $productData['small_image'] = $smallImageUrl;
 
-            $imageUrl = self::IMAGE_URL . $productData['image'];
+            $imageUrl = self::IMAGE_URL . ($productData['image'] ?? '');
             $productData['image'] = $imageUrl;
 
             $products[] = $productData;
