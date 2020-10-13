@@ -153,6 +153,7 @@ class OrderRepositoryInterface
 
                             // initialize the list of
                             $statesNotAllowedArray = [];
+                            $notAllowedProductState = [];
                             foreach ($statesNotAllowedList as $stateNotAllowed)
                             {
                                 $attr = $this->_productResource->getAttribute('state_not_allowed');
@@ -160,6 +161,11 @@ class OrderRepositoryInterface
                                 try
                                 {
                                     $statesNotAllowedArray[] = $attr->getSource()->getOptionText($stateNotAllowed);
+                                    $notAllowedProductState[] = "SKU: ".
+                                        $product->getData('sku') .
+                                        " for State: " .
+                                        $attr->getSource()->getOptionText($stateNotAllowed);
+
                                 } catch (\Magento\Framework\Exception\LocalizedException $e)
                                 {
                                     $this->_logger->error($e);
@@ -177,7 +183,7 @@ class OrderRepositoryInterface
 
                 if ($validate)
                 {
-                    echo $message = "Unfortunately one or more of the selected products is restricted from shipping to " . $state . ".";
+                    echo $message = "Unfortunately one or more of the selected products is restricted from shipping : " . implode(', ', $notAllowedProductState) . ".";
                     throw new InputException(__($message));
                     die();
                 }
