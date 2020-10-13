@@ -9,8 +9,8 @@
 $form-element-input-type                        : '' !default; // [input-text|select|textarea|input-radio|input-checkbox]
 $form-element-input__background                 : $color-white !default;
 $form-element-input__border-color               : $checkout-light-gray !default;
-$form-element-input__border-bottom              : 1px solid $form-element-input__border-color !default;
-$form-element-input__border                     : 0px solid $form-element-input__border-color !default;
+$form-element-input__border-bottom              : 1px solid $form-element-input__border-color !default; //Styled for Checkout Form
+$form-element-input__border                     : 0px solid $form-element-input__border-color !default; //Styled for Checkout Form
 $form-element-input__border-radius              : 1px !default;
 $form-element-input__height                     : 32px !default;
 $form-element-input__width                      : 100% !default;
@@ -68,6 +68,24 @@ $input-text__font-family                        : $form-element-input__font-fami
 $input-text__font-weight                        : $form-element-input__font-weight !default;
 $input-text__font-style                         : $form-element-input__font-style !default;
 $input-text__line-height                        : $form-element-input__line-height !default;
+
+//
+//  Cart - Quantity Form
+//  ---------------------------------------------
+$cart-quantity-input__border                    : 1px solid $checkout-light-gray !default;
+$cart-quantity-input-controls__background-color : $color-gray-light01 !default;
+$cart-quantity-input-controls__color            : $checkout-primary__color !default;
+$cart-quantity-input-controls__family           : $font-family__quaternary !default;
+$cart-quantity-input-controls__size             : $font-size__ms !default;
+$cart-quantity-input-controls__width            : 25px !default;
+$cart-quantity-input-controls__height           : 25px !default;
+$cart-quantity-input-number__background-color   : $color-white !default;
+$cart-quantity-input-number__family             : $font-family__quaternary !default;
+$cart-quantity-input-number__size               : $font-size__ms !default;
+$cart-quantity-input-number__width              : 35px !default;
+$cart-quantity-input-number__height             : 25px !default;
+$cart-quantity-input-number__margin             : 0 2px 0 2px !default;
+
 
 //  Placeholder
 $input-text-placeholder__color                  : $form-element-input-placeholder__color !default;
