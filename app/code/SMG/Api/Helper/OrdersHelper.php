@@ -37,6 +37,8 @@ use SMG\Sap\Model\ResourceModel\SapOrderBatchRma\CollectionFactory as SapOrderBa
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription\Collection as Collection;
 use SMG\SubscriptionApi\Model\SubscriptionFactory;
+use SMG\Sap\Model\SapOrderShipmentFactory;
+use SMG\Sap\Model\ResourceModel\SapOrderShipment as SapOrderShipmentResource;
 
 class OrdersHelper
 {
@@ -230,6 +232,16 @@ class OrdersHelper
      * @var SubscriptionFactory
      */
     protected $_subscriptionFactory;
+    
+    /**
+     * @var SapOrderShipmentFactory
+     */
+    protected $_sapOrderShipmentFactory;
+    
+    /**
+     * @var SapOrderShipmentResource
+     */
+    protected $_sapOrderShipmentResource;
 
     /**
      * OrdersHelper constructor.
@@ -260,6 +272,8 @@ class OrdersHelper
      * @param SubscriptionResource $subscriptionResource
      * @param SapOrderBatchFactory $sapOrderBatchFactory
      * @param SubscriptionFactory $subscriptionFactory
+     * @param SapOrderShipmentFactory $sapOrderShipmentFactory
+     * @param SapOrderShipmentResource $sapOrderShipmentResource
      */
     public function __construct(
         LoggerInterface $logger,
@@ -287,7 +301,9 @@ class OrdersHelper
         SapOrderBatchResource $sapOrderBatchResource,
         SubscriptionResource $subscriptionResource,
         SapOrderBatchFactory $sapOrderBatchFactory,
-        SubscriptionFactory $subscriptionFactory
+        SubscriptionFactory $subscriptionFactory,
+        SapOrderShipmentFactory $sapOrderShipmentFactory,
+        SapOrderShipmentResource $sapOrderShipmentResource
     ) {
         $this->_logger = $logger;
         $this->_resourceConnection = $resourceConnection;
@@ -315,6 +331,8 @@ class OrdersHelper
         $this->_subscriptionResource = $subscriptionResource;
         $this->_sapOrderBatchFactory = $sapOrderBatchFactory;
         $this->_subscriptionFactory = $subscriptionFactory;
+        $this->_sapOrderShipmentFactory = $sapOrderShipmentFactory;
+        $this->_sapOrderShipmentResource = $sapOrderShipmentResource;
     }
 
     /**
@@ -672,10 +690,17 @@ class OrdersHelper
             // there should only be one item but get the first just in case
             $sapOrderItem = $sapOrderItems->getFirstItem();
 
+            // load the sap shipment data
+            $sapShipment = $this->_sapOrderShipmentFactory->create();
+            $this->_sapOrderShipmentResource->load($sapShipment, $sapOrderItem->getId(), 'order_sap_item_id');
+
+
             // get the billing doc number
-            $referenceDocNum = $sapOrderItem->getData('sap_billing_doc_number');
-            if (!isset($referenceDocNum)) {
-                $referenceDocNum = '';
+            $referenceDocNum = $sapShipment->getData('sap_billing_doc_number');
+
+            if (!isset($referenceDocNum))
+            {
+              $referenceDocNum = '';
             }
 
             // Changes have occurred that the CSRs are entering
@@ -731,10 +756,18 @@ class OrdersHelper
             // if there is something there then get the first item
             // there should only be one item but get the first just in case
             $sapOrderItem = $sapOrderItems->getFirstItem();
+            
+            // load the sap shipment data
+            $sapShipment = $this->_sapOrderShipmentFactory->create();
+            $this->_sapOrderShipmentResource->load($sapShipment, $sapOrderItem->getId(), 'order_sap_item_id');
+
+
             // get the billing doc number
-            $referenceDocNum = $sapOrderItem->getData('sap_billing_doc_number');
-            if (!isset($referenceDocNum)) {
-                $referenceDocNum = '';
+            $referenceDocNum = $sapShipment->getData('sap_billing_doc_number');
+
+            if (!isset($referenceDocNum))
+            {
+              $referenceDocNum = '';
             }
         }
         // If configurable, get parent price
