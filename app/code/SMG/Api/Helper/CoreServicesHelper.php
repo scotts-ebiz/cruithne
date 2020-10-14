@@ -458,8 +458,6 @@ class CoreServicesHelper
                     'ship_end_date' => $orderData["shipEndDate"] ?? NULL,
                     'subscription_addon' => $orderData["isAddOn"] ?? FALSE,
                     'subscription_type' => $subscription->getSubscriptionType(),
-                    'master_subscription_id' => $orderData['parentOrderId'],
-                    'subscription_id' => $orderData['lsOrderId']
                 ]);
 
                 // Save subscription data to order.
@@ -609,8 +607,6 @@ class CoreServicesHelper
         $subscription->setData('paid', $orderData['paid']);
         $subscription->setData('price', $orderData['price']);
         $subscription->setData('discount', $order->getDiscountAmount());
-        $subscription->setData('customer_id', $orderData['customerId']);
-        $subscription->setData('subscription_id', $orderData['parentOrderId']);
         $this->_subscriptionResource->save($subscription);
 
         foreach ($orderData['products'] as $item) {
@@ -645,7 +641,6 @@ class CoreServicesHelper
         $subscriptionOrder->setData('subscription_order_status', $orderData['subStatus'] ?? "pending");
         $subscriptionOrder->setData('season_name', $product['applicationWindow']['season']);
         $subscriptionOrder->setData('season_slug', $this->_recurlyHelper->getSeasonSlugByName($product['applicationWindow']['season']));
-        $subscriptionOrder->setData('subscription_id', $orderData['lsOrderId']);
 
         $this->_subscriptionOrderResource->save($subscriptionOrder);
     }
