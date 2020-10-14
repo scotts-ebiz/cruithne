@@ -1224,3 +1224,46 @@
         $_font-style  : $_font-style
     );
 }
+
+// Cart Quantity Mixins
+@mixin cart-quantity-controls(
+    $_cart-quantity-input__border                       : $cart-quantity-input__border,
+    $_cart-quantity-input-controls__background-color    : $cart-quantity-input-controls__background-color,
+    $_cart-quantity-input-controls__color               : $cart-quantity-input-controls__color,
+    $_cart-quantity-input-controls__family              : $cart-quantity-input-controls__family,
+    $_cart-quantity-input-controls__size                : $cart-quantity-input-controls__size,
+    $_cart-quantity-input-controls__line-height         : $cart-quantity-input-controls__line-height, 
+    $_cart-quantity-input-controls__width               : $cart-quantity-input-controls__width,
+    $_cart-quantity-input-controls__height              : $cart-quantity-input-controls__height,
+    $_cart-quantity-input-controls__padding             : $cart-quantity-input-controls__padding 
+)
+    {
+        @if $_cart-quantity-input__border { border: $_cart-quantity-input__border; };
+        @if $_cart-quantity-input-controls__background-color { background-color: $_cart-quantity-input-controls__background-color; };
+        @if $_cart-quantity-input-controls__color { color: $_cart-quantity-input-controls__color; };
+        @if $_cart-quantity-input-controls__family { font-family: $_cart-quantity-input-controls__family; };
+        @if $_cart-quantity-input-controls__size  { font-size: $_cart-quantity-input-controls__size; };
+        @if $_cart-quantity-input-controls__line-height { line-height: $_cart-quantity-input-controls__line-height; };
+        @if $_cart-quantity-input-controls__width { width: $_cart-quantity-input-controls__width; };
+        @if $_cart-quantity-input-controls__height { height: $_cart-quantity-input-controls__height; };
+        @if $_cart-quantity-input-controls__padding { padding: $_cart-quantity-input-controls__padding; };
+}
+
+@mixin cart-quantity-number(
+    $_cart-quantity-input__border                       : $cart-quantity-input__border,
+    $_cart-quantity-input-number__background-color      : $cart-quantity-input-number__background-color,
+    $_cart-quantity-input-number__family                : $cart-quantity-input-number__family,
+    $_cart-quantity-input-number__size                  : $cart-quantity-input-number__size,
+    $_cart-quantity-input-number__width                 : $cart-quantity-input-number__width,
+    $_cart-quantity-input-number__height                : $cart-quantity-input-number__height,
+    $_cart-quantity-input-number__margin                : $cart-quantity-input-number__margin
+)
+    {
+        @if $_cart-quantity-input__border { border: $_cart-quantity-input__border; };
+        @if $_cart-quantity-input-number__background-color { background-color: $_cart-quantity-input-number__background-color; };
+        @if $_cart-quantity-input-number__family { font-family: $_cart-quantity-input-number__family; };
+        @if $_cart-quantity-input-number__size  { font-size: $_cart-quantity-input-number__size; };
+        @if $_cart-quantity-input-number__width { width: $_cart-quantity-input-number__width; };
+        @if $_cart-quantity-input-number__height { height: $_cart-quantity-input-number__height; };
+        @if $_cart-quantity-input-number__margin { margin: $_cart-quantity-input-number__margin; };
+}
