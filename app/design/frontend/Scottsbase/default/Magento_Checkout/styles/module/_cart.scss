@@ -580,10 +580,11 @@
     }
     .qtyminus,
     .qtyplus {
-        background: transparent;
-        border: 0;
-        outline: 0;
-        box-shadow: none;
+        @include cart-quantity-controls();
+        // background: transparent;
+        // border: 0;
+        // outline: 0;
+        // box-shadow: none;
     }
     .pop-cust-click.title {
         color: $checkout-green;
