@@ -339,7 +339,7 @@
                                                 .control.qty {
                                                     display: flex;
                                                     .qty {
-                                                        border: 1px solid $scotts-black;
+                                                        @include cart-quantity-number();
                                                     }
                                                 }
                                             }
@@ -728,7 +728,6 @@
         &.qty {
             .input-text {
                 @extend .abs-input-qty;
-                margin-top: -5px;
             }
 
             .label {
