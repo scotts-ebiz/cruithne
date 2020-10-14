@@ -458,6 +458,8 @@ class CoreServicesHelper
                     'ship_end_date' => $orderData["shipEndDate"] ?? NULL,
                     'subscription_addon' => $orderData["isAddOn"] ?? FALSE,
                     'subscription_type' => $subscription->getSubscriptionType(),
+                    'master_subscription_id' => $orderData['parentOrderId'],
+                    'subscription_id' => $orderData['lsOrderId']
                 ]);
 
                 // Save subscription data to order.
