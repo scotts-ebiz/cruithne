@@ -23,6 +23,12 @@ interface ProductInterface {
     mylawn_lawn_zone: [String]
             @doc(description: "MylawnLawnZone")
             @resolver(class: "\\SMG\\CatalogGraphQl\\Model\\Resolver\\Product\\MylawnLawnZone")
+    sync_with_my_lawn_app: [String]
+            @doc(description: "SyncWithMyLawnApp")
+            @resolver(class: "\\SMG\\CatalogGraphQl\\Model\\Resolver\\Product\\SyncWithMyLawnApp")
+    mylawn_categories: [String]
+            @doc(description: "MylawnCategories")
+            @resolver(class: "\\SMG\\CatalogGraphQl\\Model\\Resolver\\Product\\MylawnCategories")
     status: String
         @doc(description: "Status")
         @resolver(class: "\\SMG\\CatalogGraphQl\\Model\\Resolver\\Product\\Status")
