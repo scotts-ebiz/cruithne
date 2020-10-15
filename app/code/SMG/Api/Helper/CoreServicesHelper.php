@@ -846,6 +846,8 @@ class CoreServicesHelper
             $productData['product_websites'] = $product->getAttributeText('product_websites') ? (array)$product->getAttributeText('product_websites') : [];
             $productData['states_available_in'] = $product->getAttributeText('states_available_in') ? (array)$product->getAttributeText('states_available_in') : [];
             $productData['mylawn_lawn_zone'] = $product->getAttributeText('mylawn_lawn_zone') ? (array)$product->getAttributeText('mylawn_lawn_zone') : [];
+            $productData['sync_with_my_lawn_app'] = $product->getAttributeText('sync_with_my_lawn_app') ? (array)$product->getAttributeText('sync_with_my_lawn_app') : [];
+            $productData['mylawn_categories'] = $product->getAttributeText('mylawn_categories') ? (array)$product->getAttributeText('mylawn_categories') : [];
 
             $attribute = $product->getData('state_not_allowed');
             $states = array();
