@@ -89,8 +89,14 @@ class Order
         );
 
         if ($response == false) {
+			
            $this->logger->info("Order Service with no response for orderId : ".$orderId);
-        }
+		   
+        }else
+		{
+		  $this->addResponseOrder($order, $response);
+		}
+		
 
         return;
     }
@@ -215,35 +221,61 @@ class Order
         return $params;
     }
     
-        /**
-        * @param $id
-        * @param string $noteMessage
-        */
-        public function postOrderCommentNote(
-        $orderId,
-        $noteMessage
-        ) {
+	/**
+	* @param $id
+	* @param string $noteMessage
+	*/
+	public function postOrderCommentNote(
+	$orderId,
+	$noteMessage
+	) {
 
-            $params['transId'] = $this->config->generateUuid();
-            $params['sourceService'] = 'WEB';
-            $params['orderId'] = $orderId;
-            $params['noteType'] = 'email';
-            $params['noteMessage'] = $noteMessage;
-            $params['condition'] = 'success';
+		$params['transId'] = $this->config->generateUuid();
+		$params['sourceService'] = 'WEB';
+		$params['orderId'] = $orderId;
+		$params['noteType'] = 'email';
+		$params['noteMessage'] = $noteMessage;
+		$params['condition'] = 'success';
 
-            $this->logger->info("OrderService Request Note:",$params);
+		$this->logger->info("OrderService Request Note:",$params);
 
-            $response = $this->client->execute(
-            $this->config->getOrderApiUrl(),
-            "orders/OrdersController_createOrderNote",
-            $params,
-            Request::HTTP_METHOD_POST
-            );
+		$response = $this->client->execute(
+		$this->config->getOrderApiUrl(),
+		"orders/OrdersController_createOrderNote",
+		$params,
+		Request::HTTP_METHOD_POST
+		);
 
-            if ($response == false) {
-            $this->logger->info("Order Service with no response for orderId on order comment note: ".$orderId);
-            }
+		if ($response == false) {
+		$this->logger->info("Order Service with no response for orderId on order comment note: ".$orderId);
+		}
 
-            return;
+		return;
+	}
+	
+	/**
+	* @param $orderId
+	* @param $response
+	*/
+	public function addResponseOrder(
+	$order,
+	$responseObj
+	) {
+        
+		$response = json_decode($responseObj);
+		$orderId = $order->getId();
+		$order->setParentOrderId($response->{'parentOrderId'});
+		$order->setPreviousOrderId($response->{'previousOrderId'});
+		$order->setOrderType($response->{'orderType'});
+		$order->setSubType($response->{'subType'});
+		$order->setRecurlyPlanCode($response->{'recurlyPlanCode'});
+		$order->setRecurlyId($response->{'recurlyId'});
+		$order->setCancellationNumber($response->{'cancellationNumber'});
+		 try {
+			$this->orderRepository->save($order);
+			$this->logger->info("Response API data store in orderId: ".$orderId);
+        } catch (\Exception $ex) {
+           $this->logger->info("Failed to store Response API data in orderId: ".$orderId);
         }
+	}
 }
