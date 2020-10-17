@@ -592,22 +592,27 @@ class CoreServicesHelper
      */
     protected function createSubscription($order, $orderData)
     {
+        // Load subscription from parent order
+        $subscription = $this->_subscriptionResource
+            ->getSubscriptionByMasterSubscriptionId($orderData['parentOrderId']);
 
-        // Create the master subscription
-        /** @var Subscription $subscription */
-        $subscription = $this->_subscriptionFactory->create();
-        $subscription->setData('gigya_id', $order->getData("customer_gigya_id") ?? null);
-        $subscription->setData('quiz_id', $orderData['completedQuizId']);
-        $subscription->setData('lawn_zip', $orderData['lawnZip']);
-        $subscription->setData('zone_name', $orderData['lawnZone']);
-        $subscription->setData('subscription_type', $orderData['subType']);
-        $subscription->setData('origin', $orderData['cartType']);
-        $subscription->setData('subscription_status', $orderData['subStatus'] ?? "active");
-        $subscription->setData('tax', $order->getTaxAmount());
-        $subscription->setData('paid', $orderData['paid']);
-        $subscription->setData('price', $orderData['price']);
-        $subscription->setData('discount', $order->getDiscountAmount());
-        $this->_subscriptionResource->save($subscription);
+        if (!$subscription) {
+            // Create the master subscription
+            /** @var Subscription $subscription */
+            $subscription = $this->_subscriptionFactory->create();
+            $subscription->setData('gigya_id', $order->getData("customer_gigya_id") ?? null);
+            $subscription->setData('quiz_id', $orderData['completedQuizId']);
+            $subscription->setData('lawn_zip', $orderData['lawnZip']);
+            $subscription->setData('zone_name', $orderData['lawnZone']);
+            $subscription->setData('subscription_type', $orderData['subType']);
+            $subscription->setData('origin', $orderData['cartType']);
+            $subscription->setData('subscription_status', $orderData['subStatus'] ?? "active");
+            $subscription->setData('tax', $order->getTaxAmount());
+            $subscription->setData('paid', $orderData['paid']);
+            $subscription->setData('price', $orderData['price']);
+            $subscription->setData('discount', $order->getDiscountAmount());
+            $this->_subscriptionResource->save($subscription);
+        }
 
         foreach ($orderData['products'] as $item) {
 
