@@ -12,6 +12,8 @@ class Data extends AbstractHelper
 
     const XML_API_ORDER_REQUEST_URI = 'smg_backendservice/api/order';
     const XML_API_CUSTOMER_REQUEST_URI = 'smg_backendservice/api/customer';
+    const WEB_SOURCE = 'WEB';
+
     public $ccConfig;
     /**
      * Config constructor
@@ -84,5 +86,13 @@ class Data extends AbstractHelper
             }
         }
         return $return; // Visa / American Express ...
+    }
+
+    /**
+     * @return string
+     */
+    function getWebSource()
+    {
+        return self::WEB_SOURCE;
     }
 }
