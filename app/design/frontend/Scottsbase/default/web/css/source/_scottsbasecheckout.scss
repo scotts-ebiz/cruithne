@@ -89,7 +89,7 @@
                                     }
                                 }
                                 div[name="shippingAddress.firstname"], div[name="shippingAddress.lastname"], div[name="billingAddressvantiv_cc.firstname"], div[name="billingAddressvantiv_cc.lastname"] {
-                                    width: 50%;
+                                    width: 49%;
                                     display: inline-block;
                                     @media screen and (max-width: $screen__m) {
                                         width: 100%;
@@ -107,8 +107,10 @@
                                 }
                                 div[name="shippingAddress.lastname"], div[name="billingAddressvantiv_cc.lastname"] {
                                     padding-left: 10px;
+                                    float: right;
                                     @media screen and (max-width: $screen__m) {
                                         padding-left: 0;
+                                        float: inherit;
                                     }
                                 }
                             }
@@ -615,10 +617,6 @@
                 }
             }
         }
-    }
-    //Error Code
-    .field-error, #customer-email-error {
-        font-size: 0.9375rem;
     }
     .message-error {
         background: #ececec;
