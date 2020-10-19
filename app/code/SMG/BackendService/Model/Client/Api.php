@@ -64,21 +64,22 @@ class Api
 
         try {
             $this->logger->info(
-                sprintf('API %s : %s', $apiUrl, $params)
+                sprintf('API %s : %s', $apiUrl), $params
             );
+            
             $response = $client->request($requestMethod, $params);
-
-            $this->logger->info(
-                sprintf('Response from API %s : %s', $apiUrl, $response)
-            );
+            
+             
+            $this->logger->info(sprintf('Response from API %s : %s', $apiUrl), $response);
 
             if ($response->getStatusCode() == "200") {
                 return $response->getBody();
             }
+            
         } catch (\Exception $ex) {
-            $this->logger->info(
-                sprintf('API Exception %s : %s', $apiUrl, $ex->getMessage())
-            );
+            
+            $this->logger->info(sprintf('API Exception %s : %s', $apiUrl), $ex->getMessage());
+            
             return false;
         }
 
