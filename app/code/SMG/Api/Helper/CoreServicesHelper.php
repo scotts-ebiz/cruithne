@@ -590,11 +590,14 @@ class CoreServicesHelper
      *
      * @param Order $order
      * @param mixed $orderData
+     * @return Subscription
+     * @throws \Magento\Framework\Exception\AlreadyExistsException|\Magento\Framework\Exception\LocalizedException
      *
      */
     protected function createSubscription($order, $orderData)
     {
         // Load subscription from parent order
+        /** @var Subscription $subscription */
         $subscription = $this->_subscriptionResource
             ->getSubscriptionByMasterSubscriptionId($orderData['parentOrderId']);
 
@@ -615,14 +618,17 @@ class CoreServicesHelper
             $subscription->setData('discount', $order->getDiscountAmount());
             $subscription->setData('subscription_id', $orderData['parentOrderId']);
             $this->_subscriptionResource->save($subscription);
+        } else {
+            $subscription->setData('price', strval(floatval($orderData['price']) + floatval($subscription->getData('price'))));
+            $subscription->setData('discount', strval(floatval($order->getDiscountAmount()) + floatval($subscription-getData('discount'))));
+            $subscription->setData('tax', strval(floatval($order->getTaxAmount()) + floatval($subscription->getData('tax'))));
+            $this->_subscriptionResource->save($subscription);
         }
 
         foreach ($orderData['products'] as $item) {
-
             $this->createSubscriptionOrder($subscription, $orderData, $item, $order->getId());
-
+            break;
         }
-
 
         return $subscription;
     }
@@ -633,7 +639,8 @@ class CoreServicesHelper
      * @param Subscription $masterSubscription
      * @param mixed $orderData
      * @param mixed $product
-     *
+     * @param string $orderId
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
      */
     protected function createSubscriptionOrder($masterSubscription, $orderData, $product, $orderId)
     {
@@ -641,7 +648,7 @@ class CoreServicesHelper
         $subscriptionOrder = $this->_subscriptionOrderFactory->create();
         $subscriptionOrder->setData('subscription_entity_id', $masterSubscription->getId());
         $subscriptionOrder->setData('sales_order_id', $orderId);
-        $subscriptionOrder->setData('price', $product['price'] ?? 0.00);
+        $subscriptionOrder->setData('price', $orderData['price'] ?? 0.00);
         $subscriptionOrder->setData('application_start_date', $product['applicationWindow']['startDate']);
         $subscriptionOrder->setData('application_end_date', $product['applicationWindow']['endDate']);
         $subscriptionOrder->setData('ship_start_date', $orderData["shipStartDate"]);
