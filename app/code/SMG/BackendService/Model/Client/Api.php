@@ -79,7 +79,7 @@ class Api
             
         } catch (\Exception $ex) {
             
-            $this->logger->info(sprintf('API Exception %s : %s', $apiUrl), $ex->getMessage());
+            $this->logger->info(sprintf('API Exception %s : %s', $apiUrl, $ex->getMessage()));
             
             return false;
         }

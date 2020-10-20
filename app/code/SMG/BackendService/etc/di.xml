@@ -12,8 +12,4 @@
                 sortOrder="1"
                 disabled="false"/>
     </type>
-    <type name="Magento\Sales\Api\CreditmemoRepositoryInterface">
-        <plugin name="SMG_BackendService_Plugin_AfterCreditMemoCreate"
-                type="SMG\BackendService\Plugin\AfterCreateCreditMemo"/>
-    </type>
 </config>
