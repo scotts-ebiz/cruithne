@@ -64,13 +64,14 @@ class Api
 
         try {
             $this->logger->info(
-                sprintf('API %s : %s', $apiUrl), $params
+                sprintf('API %s : %s', $apiUrl, print_r($params))
             );
             
             $response = $client->request($requestMethod, $params);
-            
-             
-            $this->logger->info(sprintf('Response from API %s : %s', $apiUrl), $response);
+
+            $this->logger->info(
+                sprintf('Response from API %s : %s', $apiUrl, print_r($response))
+            );
 
             if ($response->getStatusCode() == "200") {
                 return $response->getBody();
