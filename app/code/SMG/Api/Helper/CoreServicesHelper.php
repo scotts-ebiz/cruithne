@@ -620,7 +620,7 @@ class CoreServicesHelper
             $this->_subscriptionResource->save($subscription);
         } else {
             $subscription->setData('price', strval(floatval($orderData['price']) + floatval($subscription->getData('price'))));
-            $subscription->setData('discount', strval(floatval($order->getDiscountAmount()) + floatval($subscription-getData('discount'))));
+            $subscription->setData('discount', strval(floatval($order->getDiscountAmount()) + floatval($subscription->getData('discount'))));
             $subscription->setData('tax', strval(floatval($order->getTaxAmount()) + floatval($subscription->getData('tax'))));
             $this->_subscriptionResource->save($subscription);
         }
