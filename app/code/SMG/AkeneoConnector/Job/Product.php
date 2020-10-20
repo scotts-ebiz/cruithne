@@ -256,7 +256,6 @@ class Product extends \Akeneo\Connector\Job\Product
             'country_of_manufacture',
             'state_not_allowed',
             'sap_weight_unit_each',
-            'smg_uom',
         ];
         $except = array_merge($except, $this->excludedColumns);
 
