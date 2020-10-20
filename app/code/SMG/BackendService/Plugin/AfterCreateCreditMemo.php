@@ -4,6 +4,7 @@ namespace SMG\BackendService\Plugin;
 use SMG\BackendService\Model\Client\Api;
 use SMG\BackendService\Helper\Data as Config;
 use \Magento\Framework\Registry;
+use \Magento\Framework\Webapi\Rest\Request;
 
 class AfterCreateCreditMemo
 {

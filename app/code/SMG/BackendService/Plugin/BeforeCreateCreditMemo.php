@@ -7,6 +7,11 @@ use Magento\Framework\Controller\ResultFactory;
 use \Magento\Framework\Message\ManagerInterface;
 use \Magento\Framework\App\Response\RedirectInterface;
 use \Magento\Sales\Controller\Adminhtml\Order\CreditmemoLoader;
+use Magento\Framework\App\Response\Http;
+use Magento\Framework\UrlInterface;
+use SMG\BackendService\Model\Client\Api;
+use SMG\BackendService\Helper\Data as Config;
+use \Magento\Framework\Webapi\Rest\Request;
 
 class BeforeCreateCreditMemo
 {
@@ -21,14 +26,24 @@ class BeforeCreateCreditMemo
     private $messageManager;
 
     /**
-     * @var ResultFactory
+     * @var Http
      */
-    private $resultFactory;
+    private $response;
 
     /**
-     * @var RedirectInterface
+     * @var UrlInterface
      */
-    private $redirect;
+    private $url;
+
+    /**
+     * @var Api
+     */
+    private $client;
+
+    /**
+     * @var Config
+     */
+    private $config;
 
     /**
      * BeforeCreateCreditMemo constructor.
@@ -40,13 +55,17 @@ class BeforeCreateCreditMemo
     public function __construct(
         OrderFactory $orderFactory,
         ManagerInterface $messageManager,
-        ResultFactory $resultFactory,
-        RedirectInterface $redirect
+        Http $response,
+        UrlInterface $url,
+        Api $client,
+        Config $config
     ) {
         $this->orderFactory = $orderFactory;
         $this->messageManager = $messageManager;
-        $this->resultFactory = $resultFactory;
-        $this->redirect = $redirect;
+        $this->response = $response;
+        $this->url = $url;
+        $this->client = $client;
+        $this->config = $config;
     }
 
     /**
@@ -59,17 +78,23 @@ class BeforeCreateCreditMemo
 
         if ($orderId) {
             $order = $this->orderFactory->create()->load($orderId);
-            $apiResponse = false;
-            if ($order->getState() !== 'complete' && $apiResponse == true) {
-                if ($apiResponse == true) {
-                    return;
-                }
+
+            $canCreateCreditMemo = $this->client->execute(
+                $this->config->getSapApiUrl(),
+                $orderId,
+                [],
+                Request::HTTP_METHOD_GET
+            );
+
+            if ($order->getState() !== 'complete') {
+
             } else {
                 $message = 'Credit Memo cannot be created.';
                 $this->messageManager->addError($message);
 
-                $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-                return $resultRedirect->setUrl('sales/*/view', ['order_id' => $orderId]);
+                $url = $this->url->getUrl('sales/order/view', ['order_id' => $orderId]);
+                $this->response->setRedirect($url);
+                return;
             }
         }
     }

@@ -19,6 +19,10 @@
                        showInStore="1">
                     <label>Order End Point Url</label>
                 </field>
+                <field id="sap" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>SAP End Point Url</label>
+                </field>
             </group>
         </section>
     </system>
