@@ -79,24 +79,29 @@ class Order
         $applicationWindowEndDate = '',
         $seasonname = ''
     ) {
-        $orderId = $orders->getId();
-        $order = $this->orderRepository->get($orderId);
-        $response = $this->client->execute(
-            $this->config->getOrderApiUrl(),
-            "orders",
-            $this->buildOrderObject($order, $applicationWindowStartDate, $applicationWindowEndDate, $seasonname),
-            Request::HTTP_METHOD_POST
-        );
-
-        if ($response == false) {
+		//check module status active or not
+		if($this->config->getStatus()){
 			
-           $this->logger->info("Order Service with no response for orderId : ".$orderId);
-		   
-        }else
-		{
-		  $this->addResponseOrder($order, $response);
+			$orderId = $orders->getId();
+			$order = $this->orderRepository->get($orderId);
+			$response = $this->client->execute(
+				$this->config->getOrderApiUrl(),
+				"orders",
+				$this->buildOrderObject($order, $applicationWindowStartDate, $applicationWindowEndDate, $seasonname),
+				Request::HTTP_METHOD_POST
+			);
+
+			if ($response == false) {
+				
+			   $this->logger->info("Order Service with no response for orderId : ".$orderId);
+			   
+			}else
+			{
+				
+			  $this->addResponseOrder($order, $response);
+			  
+			}
 		}
-		
 
         return;
     }
@@ -229,7 +234,9 @@ class Order
 	$orderId,
 	$noteMessage
 	) {
-
+       //check module status active or not
+       if($this->config->getStatus()){
+		   
 		$params['transId'] = $this->config->generateUuid();
 		$params['sourceService'] = 'WEB';
 		$params['orderId'] = $orderId;
@@ -249,7 +256,8 @@ class Order
 		if ($response == false) {
 		$this->logger->info("Order Service with no response for orderId on order comment note: ".$orderId);
 		}
-
+		
+       }
 		return;
 	}
 	
@@ -277,5 +285,39 @@ class Order
         } catch (\Exception $ex) {
            $this->logger->info("Failed to store Response API data in orderId: ".$orderId);
         }
+	}
+	
+	/**
+	* @param $orderId
+	* @param $reason
+	*/
+	public function cancelOrderSubcription(
+	$orderId,
+	$status
+	) {
+		
+		//check module status active or not
+		if($this->config->getStatus()){
+			
+			$params['transId'] = $this->config->generateUuid();
+			$params['sourceService'] = 'WEB';
+			$params['canceledOrders']['orderId'] = $orderId;
+			$params['canceledOrders']['status'] = $status;
+			$params['canceledOrders']['canceledAt'] = date('m-d-Y H:i:s');
+			$this->logger->info("CancelOrderSubcription Request Note:",$params);
+
+			$response = $this->client->execute(
+			$this->config->getOrderApiUrl(),
+			"subscriptions/SubscriptionsController_destroy",
+			$params,
+			Request::HTTP_METHOD_POST
+			);
+
+			if ($response == false) {
+			$this->logger->info("Order Service with no response for orderId on cancel order subcription: ".$orderId);
+			}
+			
+        }
+		return;
 	}
 }

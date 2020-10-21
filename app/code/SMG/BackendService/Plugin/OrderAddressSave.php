@@ -74,13 +74,18 @@ class OrderAddressSave
         $address = $this->repositoryAddress->get($addressId);
         $orderId = $address->getParentId();
         $order = $this->orderRepository->get($orderId);
+        
+        //check module status active or not
+        if($this->config->getStatus()){
 
-        $response = $this->client->execute(
-            $this->config->getCustomerApiUrl(),
-            "customer/updateAddresses",
-            $this->buildOrderObject($order),
-            Request::HTTP_METHOD_POST
-        );
+            $response = $this->client->execute(
+                $this->config->getCustomerApiUrl(),
+                "customer/updateAddresses",
+                $this->buildOrderObject($order),
+                Request::HTTP_METHOD_POST
+            );
+            
+        }
 
         return $this->resultFactory->create(
             \Magento\Framework\Controller\ResultFactory::TYPE_REDIRECT

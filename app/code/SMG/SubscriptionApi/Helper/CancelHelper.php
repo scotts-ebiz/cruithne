@@ -20,7 +20,7 @@ use SMG\SubscriptionApi\Model\Subscription;
 use Zaius\Engage\Helper\Sdk as ZaiusSdk;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use ZaiusSDK\ZaiusException;
-
+use SMG\BackendService\Model\Service\Order as OrderBackendService;
 
 class CancelHelper extends AbstractHelper
 {
@@ -82,6 +82,11 @@ class CancelHelper extends AbstractHelper
      * @var string
      */
     protected $_loggerPrefix;
+	
+	 /**
+     * @var OrderBackendService
+     */
+    protected $_orderService;
 
     /**
      * CancelHelper constructor.
@@ -97,6 +102,7 @@ class CancelHelper extends AbstractHelper
      * @param ProductRepository $productRepository
      * @param OrderFactory $orderFactory
      * @param OrderResource $orderResource
+	 * @param OrderBackendService $orderService
      */
     public function __construct(
         Context $context,
@@ -110,7 +116,8 @@ class CancelHelper extends AbstractHelper
         SubscriptionOrderItemCollectionFactory $subscriptionOrderItemCollectionFactory,
         ProductRepository $productRepository,
         OrderFactory $orderFactory,
-        OrderResource $orderResource
+        OrderResource $orderResource,
+		OrderBackendService $orderService
     ) {
         parent::__construct($context);
 
@@ -125,6 +132,7 @@ class CancelHelper extends AbstractHelper
         $this->_productRepository = $productRepository;
         $this->_orderFactory = $orderFactory;
         $this->_orderResource = $orderResource;
+		$this->_orderService = $orderService;
 
         $host = gethostname();
         $ip = gethostbyname($host);
@@ -136,7 +144,7 @@ class CancelHelper extends AbstractHelper
      * @return false|string
      * @throws LocalizedException
      */
-    public function cancelSubscriptions($accountCode = '', $cancelReason = '')
+    public function cancelSubscriptions($accountCode = '', $cancelReason = '', $area = '')
     {
         // Get the current user.
         try {
@@ -174,9 +182,11 @@ class CancelHelper extends AbstractHelper
             if (! $customer->getId()) {
                 throw new Exception("Could not find customer with Gigya ID: {$accountCode}.");
             }
-
-            $subscription->cancel();
-
+           
+		   //stop cancel subscription from backend
+		    if($area != 'admin'){
+             $subscription->cancel();
+			} 
             // Add cancellation comments to orders.
             $subscriptionOrders = $this->_subscriptionOrderCollectionFactory->create();
             $subscriptionOrders
@@ -185,7 +195,12 @@ class CancelHelper extends AbstractHelper
                 $orderId = $subscriptionOrder->getSalesOrderId();
                 $order = $this->_orderFactory->create();
                 $this->_orderResource->load($order, $orderId);
-
+				
+				//trigger api to backend service team
+				
+                if($area == 'admin'){
+					 $this->_orderService->cancelOrderSubcription($order->getIncrementId(),$order->getState());
+				}
                 if ($cancelReason) {
                     $order->addCommentToStatusHistory('Subscription canceled by customer. Reason: ' . $cancelReason, false, false)
                         ->save();
@@ -198,14 +213,19 @@ class CancelHelper extends AbstractHelper
             }
 
             $timestamp = strtotime(date("Y-m-d H:i:s"));
-            $this->clearCustomerAddresses($customer);
+			
+			if($area != 'admin'){
+				 
+				$this->clearCustomerAddresses($customer);
 
-            try {
-                $this->zaiusCancelCall($customer->getData('email'));
-                $this->zaiusCancelOrder($subscription, $customer->getData('email'), $timestamp);
-            } catch (Exception $e) {
-                $this->_logger->error($this->_loggerPrefix . $e->getMessage());
-            }
+				try {
+					$this->zaiusCancelCall($customer->getData('email'));
+					$this->zaiusCancelOrder($subscription, $customer->getData('email'), $timestamp);
+				} catch (Exception $e) {
+					$this->_logger->error($this->_loggerPrefix . $e->getMessage());
+				}
+				
+			}
         } catch (Exception $e) {
             $this->_logger->error($this->_loggerPrefix . $e->getMessage());
 
