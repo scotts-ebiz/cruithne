@@ -25,6 +25,8 @@ use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatch
 use SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo as SapOrderBatchCreditmemoResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatchCreditmemo\CollectionFactory as SapOrderBatchCreditmemoCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
+use SMG\Sap\Model\SapOrderShipmentFactory;
+use SMG\Sap\Model\ResourceModel\SapOrderShipment as SapOrderShipmentResource;
 
 class OrdersCreditMemoHelper
 {
@@ -132,7 +134,17 @@ class OrdersCreditMemoHelper
      * @var SapOrderBatchCreditmemoResource
      */
     protected $_sapOrderBatchCreditmemoResource;
-
+    
+    /**
+     * @var SapOrderShipmentFactory
+     */
+    protected $_sapOrderShipmentFactory;
+    
+    /**
+     * @var SapOrderShipmentResource
+     */
+    protected $_sapOrderShipmentResource;
+    
     /**
      * OrdersCreditMemoHelper constructor.
      *
@@ -156,6 +168,8 @@ class OrdersCreditMemoHelper
      * @param OrderResponseFactory $orderResponseFactory
      * @param StoreRepositoryInterface $storeRepositoryInterface
      * @param SapOrderBatchCreditmemoResource $sapOrderBatchCreditmemoResource
+     * @param SapOrderShipmentFactory $sapOrderShipmentFactory
+     * @param SapOrderShipmentResource $sapOrderShipmentResource
      */
     public function __construct(LoggerInterface $logger,
         ResponseHelper $responseHelper,
@@ -176,7 +190,9 @@ class OrdersCreditMemoHelper
         OrdersResponseHelper $ordersResponseHelper,
         OrderResponseFactory $orderResponseFactory,
         StoreRepositoryInterface $storeRepositoryInterface,
-        SapOrderBatchCreditmemoResource $sapOrderBatchCreditmemoResource)
+        SapOrderBatchCreditmemoResource $sapOrderBatchCreditmemoResource,
+        SapOrderShipmentFactory $sapOrderShipmentFactory,
+        SapOrderShipmentResource $sapOrderShipmentResource)
     {
         $this->_logger = $logger;
         $this->_responseHelper = $responseHelper;
@@ -198,6 +214,8 @@ class OrdersCreditMemoHelper
         $this->_orderResponseFactory = $orderResponseFactory;
         $this->_storeRepositoryInterface = $storeRepositoryInterface;
         $this->_sapOrderBatchCreditmemoResource = $sapOrderBatchCreditmemoResource;
+        $this->_sapOrderShipmentFactory = $sapOrderShipmentFactory;
+        $this->_sapOrderShipmentResource = $sapOrderShipmentResource;
     }
 
     /**
@@ -531,9 +549,15 @@ class OrdersCreditMemoHelper
         // if there is something there then get the first item
         // there should only be one item but get the first just in case
         $sapOrderItem = $sapOrderItems->getFirstItem();
-
+        
+        // load the sap shipment data
+        $sapShipment = $this->_sapOrderShipmentFactory->create();
+        $this->_sapOrderShipmentResource->load($sapShipment, $sapOrderItem->getId(), 'order_sap_item_id');
+        
+        
         // get the billing doc number
-        $referenceDocNum = $sapOrderItem->getData('sap_billing_doc_number');
+        $referenceDocNum = $sapShipment->getData('sap_billing_doc_number');
+        
         if (!isset($referenceDocNum))
         {
             $referenceDocNum = '';
