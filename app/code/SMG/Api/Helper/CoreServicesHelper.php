@@ -619,12 +619,13 @@ class CoreServicesHelper
             $subscription->setData('subscription_id', $orderData['parentOrderId']);
             $this->_subscriptionResource->save($subscription);
         } else {
+            $subscription->setData('paid', strval(floatval($orderData['paid']) + floatval($subscription->getData('paid'))));
             $subscription->setData('price', strval(floatval($orderData['price']) + floatval($subscription->getData('price'))));
             $subscription->setData('discount', strval(floatval($order->getDiscountAmount()) + floatval($subscription->getData('discount'))));
             $subscription->setData('tax', strval(floatval($order->getTaxAmount()) + floatval($subscription->getData('tax'))));
             $this->_subscriptionResource->save($subscription);
         }
-
+        // Only get first product
         foreach ($orderData['products'] as $item) {
             $this->createSubscriptionOrder($subscription, $orderData, $item, $order->getId());
             break;
