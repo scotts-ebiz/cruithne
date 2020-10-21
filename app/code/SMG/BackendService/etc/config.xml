@@ -4,6 +4,7 @@
     <default>
         <smg_backendservice>
             <api>
+                <active>0</active>
                 <order>//cts-orders-k6x4iqtnzq-uc.a.run.app/v1/</order>
                 <customer>//cts-customers-k6x4iqtnzq-uc.a.run.app/v1/</customer>
                 <sap>https://eis-orders-k6x4iqtnzq-uc.a.run.app/v1/orderCancelEligibility/</sap>

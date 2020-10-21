@@ -49,13 +49,18 @@ class AfterCreateCreditMemo
         $result
     ) {
         $order = $this->registry->registry('current_creditmemo');
+        
+      //check module status active or not
+       if($this->config->getStatus()){
 
-        $response = $this->client->execute(
-            $this->config->getOrderApiUrl(),
-            "orders/createOrderNote",
-            $this->buildOrderObject($order),
-            Request::HTTP_METHOD_POST
-        );
+            $response = $this->client->execute(
+                $this->config->getOrderApiUrl(),
+                "orders/createOrderNote",
+                $this->buildOrderObject($order),
+                Request::HTTP_METHOD_POST
+            );
+            
+        }
 
         return $result;
     }
