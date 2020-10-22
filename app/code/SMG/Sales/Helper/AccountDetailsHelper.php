@@ -148,10 +148,10 @@ class AccountDetailsHelper
         $dataobj['delivery_number'] = NULL;
         $dataobj['invoice_id'] = NULL;
         $dataobj['fulfillment_location'] = NULL;
-		$dataobj['subscription_order_id'] = NULL;
-		$dataobj['subscription_type'] = NULL;
-		$dataobj['subscription_ship_start'] = NULL;
-		$dataobj['subscription_ship_end'] = NULL;
+        $dataobj['subscription_order_id'] = NULL;
+        $dataobj['subscription_type'] = NULL;
+        $dataobj['subscription_ship_start'] = NULL;
+        $dataobj['subscription_ship_end'] = NULL;
 
         // get the order info
         $order = $this->_orderRepository->get($orderId);
@@ -160,9 +160,10 @@ class AccountDetailsHelper
         $dataobj['shipping_description'] = $order->getShippingDescription();
         $dataobj['subscription_type'] = $order->getSubscriptionType();
         $dataobj['subscription_order_id'] = $order->getSubscriptionId();
-		$dataobj['subscription_ship_start'] = $order->getShipStartDate();
-		$dataobj['subscription_ship_end'] = $order->getShipEndDate();
-			
+        $dataobj['subscription_ship_start'] = $order->getShipStartDate();
+        $dataobj['subscription_ship_end'] = $order->getShipEndDate();
+        $dataobj['scotts_customer_id'] = $order->getScottsCustomerId();
+            
         // get the SAP Order Info
         /**
          * @var \SMG\Sap\Model\SapOrder $sapOrder
