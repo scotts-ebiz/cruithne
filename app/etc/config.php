@@ -348,7 +348,7 @@ return [
         'Mageplaza_Smtp' => 1,
         'SMG_AkeneoConnector' => 1,
         'SMG_Api' => 1,
-        'SMG_BackendService' => 0,
+        'SMG_BackendService' => 1,
         'SMG_Breadcrumbs' => 1,
         'SMG_Bundleprouct' => 1,
         'SMG_Checkout' => 1,
