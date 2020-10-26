@@ -9,6 +9,7 @@ use \GuzzleHttp\Psr7\Response;
 use \GuzzleHttp\Psr7\ResponseFactory;
 use \Magento\Framework\Webapi\Rest\Request;
 use \Psr\Log\LoggerInterface;
+use Magento\Backend\Model\Auth\Session;
 
 class Api
 {
@@ -29,19 +30,20 @@ class Api
     private $logger;
 
     /**
-     * Api constructor.
-     * @param ClientFactory $clientFactory
-     * @param ResponseFactory $responseFactory
-     * @param LoggerInterface $logger
+     * @var Session
      */
+    private $session;
+
     public function __construct(
         ClientFactory $clientFactory,
         ResponseFactory $responseFactory,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        Session $session
     ) {
         $this->clientFactory = $clientFactory;
         $this->responseFactory = $responseFactory;
         $this->logger = $logger;
+        $this->session = $session;
     }
 
     /**
@@ -57,34 +59,36 @@ class Api
         $params,
         $requestMethod = Request::HTTP_METHOD_POST
     ) {
-        $apiUrl = $apiEndPoint . $apiFunction;
-        $client = $this->clientFactory->create(['config' => [
-            'base_uri' => $apiUrl
-        ]]);
+        if($this->session->isLoggedIn()) {
+            $apiUrl = $apiEndPoint . $apiFunction;
+            $client = $this->clientFactory->create(['config' => [
+                'base_uri' => $apiUrl
+            ]]);
 
-        try {
-            $this->logger->info(
-                sprintf('API %s : %s', $apiUrl, print_r($params))
-            );
-            
-            $response = $client->request($requestMethod, $params);
+            try {
+                $this->logger->info(
+                    sprintf('API %s : %s', $apiUrl, print_r($params))
+                );
 
-            $this->logger->info(
-                sprintf('Response from API %s : %s', $apiUrl, print_r($response))
-            );
+                $response = $client->request($requestMethod, $params);
 
-            if ($response->getStatusCode() == "200") {
-                return $response->getBody();
+                $this->logger->info(
+                    sprintf('Response from API %s : %s', $apiUrl, print_r($response))
+                );
+
+                if ($response->getStatusCode() == "200") {
+                    return $response->getBody();
+                }
+
+            } catch (\Exception $ex) {
+
+                $this->logger->info(sprintf('API Exception %s : %s', $apiUrl, $ex->getMessage()));
+
+                return false;
             }
-            
-        } catch (\Exception $ex) {
-            
-            $this->logger->info(sprintf('API Exception %s : %s', $apiUrl, $ex->getMessage()));
-            
+
             return false;
         }
-
-        return false;
     }
 
 }

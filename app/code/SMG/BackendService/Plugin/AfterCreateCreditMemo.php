@@ -1,4 +1,5 @@
 <?php
+
 namespace SMG\BackendService\Plugin;
 
 use SMG\BackendService\Model\Client\Api;
@@ -48,20 +49,19 @@ class AfterCreateCreditMemo
         \Magento\Sales\Api\CreditmemoRepositoryInterface $subject,
         $result
     ) {
-        $order = $this->registry->registry('current_creditmemo');
-        
-      //check module status active or not
-       if($this->config->getStatus()){
+        if ($this->config->getStatus()) {
+            $order = $this->registry->registry('current_creditmemo');
+            if ($order) {
 
-            $response = $this->client->execute(
-                $this->config->getOrderApiUrl(),
-                "orders/createOrderNote",
-                $this->buildOrderObject($order),
-                Request::HTTP_METHOD_POST
-            );
-            
+                $response = $this->client->execute(
+                    $this->config->getOrderApiUrl(),
+                    "orders/createOrderNote",
+                    $this->buildOrderObject($order),
+                    Request::HTTP_METHOD_POST
+                );
+
+            }
         }
-
         return $result;
     }
 
@@ -69,14 +69,14 @@ class AfterCreateCreditMemo
      * @param $order
      * @return array
      */
-    public function buildOrderObject($order) {
-
+    public function buildOrderObject($order)
+    {
         $params = [];
         $params['transId'] = $this->config->generateUuid();
         $params['sourceService'] = $this->config->getWebSource();
         $params['orderId'] = $order->getOrderId();
         $params['noteType'] = 'email';
-        $params['noteMessage'] = 'Credit memo successfully created';
+        $params['noteMessage'] = $order->getCustomerNote();
         $params['condition'] = 'success';
 
         return $params;
