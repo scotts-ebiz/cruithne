@@ -74,28 +74,30 @@ class BeforeCreateCreditMemo
      */
     public function beforeLoad(CreditmemoLoader $order)
     {
-        $orderId = $order->getOrderId();
+        if ($this->config->getStatus()) {
+            $orderId = $order->getOrderId();
 
-        if ($orderId) {
-            $order = $this->orderFactory->create()->load($orderId);
+            if ($orderId) {
+                $order = $this->orderFactory->create()->load($orderId);
 
-            $canCreateCreditMemo = $this->client->execute(
-                $this->config->getSapApiUrl(),
-                $orderId,
-                [],
-                Request::HTTP_METHOD_GET
-            );
+                $canCreateCreditMemo = $this->client->execute(
+                    $this->config->getSapApiUrl(),
+                    $orderId,
+                    [],
+                    Request::HTTP_METHOD_GET
+                );
 
-            if ($order->getState() !== 'complete') {
-                if ($canCreateCreditMemo == false) {
-                    $url = $this->url->getUrl(
-                        'sales/order/view',
-                        [
-                            'order_id' => $orderId,
-                            'creditmemoerror' => 1
-                        ]
-                    );
-                    $this->response->setRedirect($url);
+                if ($order->getState() !== 'complete') {
+                    if ($canCreateCreditMemo == false) {
+                        $url = $this->url->getUrl(
+                            'sales/order/view',
+                            [
+                                'order_id' => $orderId,
+                                'creditmemoerror' => 1
+                            ]
+                        );
+                        $this->response->setRedirect($url);
+                    }
                 }
             }
         }

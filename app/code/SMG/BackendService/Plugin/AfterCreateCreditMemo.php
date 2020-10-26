@@ -49,16 +49,18 @@ class AfterCreateCreditMemo
         \Magento\Sales\Api\CreditmemoRepositoryInterface $subject,
         $result
     ) {
-        $order = $this->registry->registry('current_creditmemo');
-        if ($order) {
+        if ($this->config->getStatus()) {
+            $order = $this->registry->registry('current_creditmemo');
+            if ($order) {
 
-            $response = $this->client->execute(
-                $this->config->getOrderApiUrl(),
-                "orders/createOrderNote",
-                $this->buildOrderObject($order),
-                Request::HTTP_METHOD_POST
-            );
+                $response = $this->client->execute(
+                    $this->config->getOrderApiUrl(),
+                    "orders/createOrderNote",
+                    $this->buildOrderObject($order),
+                    Request::HTTP_METHOD_POST
+                );
 
+            }
         }
         return $result;
     }
