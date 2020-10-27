@@ -4,4 +4,7 @@
     <type name="Magento\Framework\App\Action\AbstractAction">
         <plugin name="SMG_GuestCart::Cart" type="SMG\GuestCart\Plugin\Cart" sortOrder="1" disabled="false"/>
     </type>
+    <type name="Magento\Quote\Api\CartTotalRepositoryInterface">
+        <plugin name="SMG_GuestCart::CartTotals" type="SMG\GuestCart\Plugin\CartTotalRepositoryPlugin" sortOrder="2" disabled="false"/>
+    </type>
 </config>
