@@ -78,3 +78,27 @@ $icon-account              : '\e627' !default;
 $icon-gift-registry        : '\e628' !default;
 $icon-present              : '\e629' !default;
 $icon-arrow-up-thin        : '\e633' !default;
+
+
+//
+//  Variables for Checkout Icons
+//  ---------------------------------------------
+$discount-icon-bg-img                   : url('../images/discount-icon-sprite.png') no-repeat !default;
+$discount-icon-bg-img-size              : 75px 75px;
+$discount-icon-height                   : 21px !default;
+$discount-icon-width                    : 21px !default;
+$discount-icon-open-position-width      : -27px !default;
+$discount-icon-open-position-height     : -27px !default;
+$discount-icon-close-position-width     : -52px !default;
+$discount-icon-close-position-height    : -2px !default;
+
+
+//
+//  Variables for Cart Remove Icons
+//  ---------------------------------------------
+$cart-remove-icon-bg-img                : url('../images/cart-remove-icon-sprite.png') no-repeat !default;
+$cart-remove-icon-bg-img-size           : 50px 50px;
+$cart-remove-icon-height                : 21px !default;
+$cart-remove-icon-width                 : 21px !default;
+$cart-remove-icon-position-width        : -27px !default;
+$cart-remove-icon-position-height       : -2px !default;

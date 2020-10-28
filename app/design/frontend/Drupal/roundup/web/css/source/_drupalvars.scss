@@ -1,6 +1,6 @@
 // Magento UI Variables //
-$primary__color:                                                #5FB061; // green
-$secondary__color:                                              #005a97; // blue
+$primary__color:                                                #005a97; // green
+$secondary__color:                                              #5FB061; // blue
 
 //  Roundup Var Overrides
 //  ---------------------------------------------
@@ -10,10 +10,10 @@ $iframe-addtocart-btn-border:                                    none;
 $iframe-addtocart-btn-border-radius:                             0;
 $iframe-addtocart-btn-color:                                     $color_white;
 $iframe-addtocart-btn-color-hover:                               $color_white;
-$iframe-addtocart-btn-background:                                $secondary__color;
-$iframe-addtocart-btn-background-hover:                          $primary__color;
+$iframe-addtocart-btn-background:                                $primary__color;
+$iframe-addtocart-btn-background-hover:                          $secondary__color;
 
-$iframe-cart-checkout-now-txt:                                   $primary__color;
+$iframe-cart-checkout-now-txt:                                   $secondary__color;
 
 $iframe-cart-icon-size:                                         37px;
 $iframe-cart-mobile-icon-size:                                  38px;
@@ -28,6 +28,8 @@ $iframe-cart-count-mobile-margin:                               0;
 // Drupal Scotts - Colors
 $drupal-roundup-gray:                                           #8f8f8f;
 
+// Lato defined action
+$lato:                                                 'Lato', sans-serif;
 
 // Cart / Checkout Colors
 $checkout-blue:                                                  #005a97;

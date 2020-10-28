@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
@@ -6,30 +7,26 @@
 
 // @codingStandardsIgnoreFile
 
+$hasCouponCode = (bool) strlen($block->getCouponCode());
+
 ?>
 <?php
-    $isDiscActive = '';
-    $isCouponValid = $block->isCouponValid();
+$isDiscActive = '';
+$isCouponValid = $block->isCouponValid();
 
-    // we want to have the coupon collapse unless there is an error message
-    // or we have a valid coupon code
-    if ($isCouponValid)
-    {
-        if (!strlen($block->getCouponCode()))
-        {
-            $isDiscActive = ' disc_active';
-        }
+// we want to have the coupon collapse unless there is an error message
+// or we have a valid coupon code
+if ($isCouponValid) {
+    if (!strlen($block->getCouponCode())) {
+        $isDiscActive = ' disc_active';
     }
+}
 ?>
 <div class="block discount" id="block-discount" data-mage-init='{"collapsible":{"openedState": "active", "saveState": false}}'>
-    <div class="title" data-role="title">
-        <strong id="block-discount-heading" role="heading" aria-level="2"><?= /* @escapeNotVerified */ __('Apply Discount Code') ?></strong>
-    </div>
+    <h1 class="title" id="discount-code-title" data-role="title"><?= /* @escapeNotVerified */ __('Discount Code') ?></h1>
+
     <div class="content<?= $isDiscActive ?>" data-role="content" aria-labelledby="block-discount-heading">
-        <form id="discount-coupon-form"
-              action="<?= /* @escapeNotVerified */ $block->getUrl('checkout/cart/couponPost') ?>"
-              method="post"
-              data-mage-init='{"discountCode":{"couponCodeSelector": "#coupon_code",
+        <form id="discount-coupon-form" action="<?= /* @escapeNotVerified */ $block->getUrl('checkout/cart/couponPost') ?>" method="post" data-mage-init='{"discountCode":{"couponCodeSelector": "#coupon_code",
                                                "removeCouponSelector": "#remove-coupon",
                                                "applyButton": "button.action.apply",
                                                "cancelButton": "button.action.cancel"}}'>
@@ -38,27 +35,26 @@
                 <div class="field">
                     <label for="coupon_code" class="label"><span><?= /* @escapeNotVerified */ __('Enter discount code') ?></span></label>
                     <div class="control">
-                        <input type="text" class="input-text<?= ($isCouponValid) ? '' : ' mage-error' ?>" id="coupon_code" name="coupon_code" value="<?= $block->escapeHtml($block->getCouponCode()) ?>" placeholder="<?= $block->escapeHtml(__('Enter discount code')) ?>" <?php if (strlen($block->getCouponCode())): ?> disabled="disabled" <?php endif; ?> />
+                        <input type="text" class="input-text<?= ($isCouponValid) ? '' : ' mage-error' ?>" id="coupon_code" name="coupon_code" value="<?= $block->escapeHtml($block->getCouponCode()) ?>" placeholder="<?= $block->escapeHtml(__('Enter discount code')) ?>" <?php if (strlen($block->getCouponCode())) : ?> disabled="disabled" <?php endif; ?> />
                         <?php
-                        if (!$isCouponValid)
-                        {
-                            ?>
+                        if (!$isCouponValid) {
+                        ?>
                             <div for="coupon_code" generated="true" class="mage-error" id="coupon_code-error">Please enter a valid discount code.</div>
-                            <?php
+                        <?php
                         }
                         ?>
                     </div>
                 </div>
                 <div class="actions-toolbar">
-                    <?php if (!strlen($block->getCouponCode())): ?>
-                    <div class="primary">
-                        <button class="action apply primary" type="button" value="<?= /* @escapeNotVerified */ __('Apply Discount') ?>">
-                            <span><?= /* @escapeNotVerified */ __('Apply Discount') ?></span>
-                        </button>
-                    </div>
-                    <?php else: ?>
+                    <?php if (!strlen($block->getCouponCode())) : ?>
                         <div class="primary">
-                            <button  type="button" class="action cancel primary" value="<?= /* @escapeNotVerified */ __('Cancel Coupon') ?>"><span><?= /* @escapeNotVerified */ __('Cancel Coupon') ?></span></button>
+                            <button class="action apply primary" disabled type="button" value="<?= /* @escapeNotVerified */ __('Apply Discount') ?>">
+                                <span><?= /* @escapeNotVerified */ __('Apply Discount') ?></span>
+                            </button>
+                        </div>
+                    <?php else : ?>
+                        <div class="primary">
+                            <button type="button" class="action cancel primary" value="<?= /* @escapeNotVerified */ __('Remove') ?>"><span><?= /* @escapeNotVerified */ __('Remove') ?></span></button>
                         </div>
                     <?php endif; ?>
                 </div>
