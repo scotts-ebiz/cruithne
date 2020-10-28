@@ -7,5 +7,17 @@
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
         xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
     <preference for="Magento\CatalogGraphQl\Model\Resolver\Categories" type="SMG\CatalogGraphQl\Model\Resolver\Categories" />
+    <type name="Magento\CatalogGraphQl\Model\Resolver\Products\FilterArgument\ProductEntityAttributesForAst" >
+	  <arguments>
+		  <argument name="customFilters" xsi:type="array">
+			  <item name="sync_with_my_lawn_app" xsi:type="object">
+				  SMG\CatalogGraphQl\Model\Resolver\ProductAttributeFilter
+			  </item>
+			  <item name="mylawn_categories" xsi:type="object">
+				  SMG\CatalogGraphQl\Model\Resolver\ProductAttributeFilter
+			  </item>
+		  </argument>
+	  </arguments>
+</type>
 </config>
 
