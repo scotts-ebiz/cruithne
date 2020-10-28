@@ -84,11 +84,6 @@ class UpgradeData implements UpgradeDataInterface
             $this->addDataVersion118($setup);
         }
 
-        // Version 1.1.9
-        if (version_compare($context->getVersion(), '1.1.9', '<')) {
-            $this->addDataVersion119($setup);
-        }
-
     }
 
     /**
@@ -225,23 +220,6 @@ class UpgradeData implements UpgradeDataInterface
 
         $data = [
             ['status' => 'processing', 'label' => 'Processing'],
-        ];
-
-        $setup->getConnection()->insertMultiple($tableName, $data);
-    }
-
-    /**
-     * Add Data for Version 1.1.9
-     *
-     * @param ModuleDataSetupInterface $setup
-     */
-    private function addDataVersion119(ModuleDataSetupInterface $setup)
-    {
-        // Upgrade Subscription Status
-        $tableName = $setup->getTable('subscription_order_status');
-
-        $data = [
-            ['status' => 'delivered', 'label' => 'Delivered'],
         ];
 
         $setup->getConnection()->insertMultiple($tableName, $data);
