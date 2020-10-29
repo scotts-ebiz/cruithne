@@ -213,7 +213,7 @@ class OrderHelper
     }
     
     /**
-     * Get the order information for the desired order id that was passed in
+     * Get the order information for the desired order id that was passed in.
      * 
      * @param $orderId
      * @return string
