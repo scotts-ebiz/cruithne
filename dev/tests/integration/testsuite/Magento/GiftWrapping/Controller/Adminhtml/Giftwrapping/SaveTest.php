@@ -7,152 +7,77 @@ declare(strict_types=1);
 
 namespace Magento\GiftWrapping\Controller\Adminhtml\Giftwrapping;
 
-use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\App\Request\Http;
-use Magento\Framework\Filesystem;
-use Magento\Framework\Filesystem\Directory\WriteInterface;
-use Magento\Framework\Message\MessageInterface;
 use Magento\GiftWrapping\Model\Wrapping;
-use Magento\GiftWrapping\Model\WrappingRepository;
-use Magento\Store\Model\Store;
-use Magento\Store\Model\StoreManagerInterface;
-use Magento\TestFramework\Helper\Bootstrap;
-use Magento\TestFramework\TestCase\AbstractBackendController;
-use Magento\Framework\Api\SearchCriteriaBuilder;
 
 /**
- * Test for @see \Magento\GiftWrapping\Controller\Adminhtml\Giftwrapping\Save.
+ * Testing upload controller.
  *
  * @magentoAppArea adminhtml
  */
-class SaveTest extends AbstractBackendController
+class SaveTest extends \Magento\TestFramework\TestCase\AbstractBackendController
 {
     /**
-     * @var Filesystem
+     * @var \Magento\Framework\ObjectManagerInterface
+     */
+    private $objectManager;
+
+    /**
+     * @var \Magento\Framework\Filesystem
      */
     private $filesystem;
 
-    /**
-     * @var WriteInterface
-     */
-    private $pubDirectory;
-
-    /**
-     * @inheritdoc
-     */
-    public function setUp(): void
+    public function setUp() : void
     {
-        parent::setUp();
-        /** @var Filesystem $filesystem */
-        $this->filesystem = $this->_objectManager->get(Filesystem::class);
-        $this->pubDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::PUB);
         $this->resource = 'Magento_GiftWrapping::magento_giftwrapping';
         $this->uri = 'backend/admin/giftwrapping/save';
+        parent::setUp();
     }
 
     /**
-     * Test save controller.
+     * Test save controller
      *
      * @dataProvider saveProvider
-     * @param array $image
-     * @param array $postData
-     * @param array $expects
-     * @return void
+     * @param $image
+     * @param $postData
+     * @param $expects
+     * @throws \Magento\Framework\Exception\FileSystemException
      */
-    public function testSave(array $image, array $postData, array $expects): void
+    public function testSave($image, $postData, $expects) : void
     {
-        $fileName = 'magento_small_image.jpg';
+        $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
+        /** @var \Magento\Framework\Filesystem $filesystem */
+        $this->filesystem = $this->objectManager->get(\Magento\Framework\Filesystem::class);
+        $_FILES['image_name'] = $image;
+        $this->getRequest()->setPostValue('wrapping', $postData);
+        $dispatchUrl = 'backend/admin/giftwrapping/save/store/'
+            . \Magento\Store\Model\Store::DEFAULT_STORE_ID . '/';
+        $tmpDirectory = $this->filesystem->getDirectoryWrite(\Magento\Framework\App\Filesystem\DirectoryList::SYS_TMP);
         $fixtureDir = realpath(__DIR__ . '/../../../_files');
-        $filePath = $this->pubDirectory->getAbsolutePath($fileName);
-        $this->copyFile($fixtureDir . '/' . $fileName, $filePath);
-
+        $fileName = 'magento_small_image.jpg';
+        $filePath = $tmpDirectory->getAbsolutePath($fileName);
+        copy($fixtureDir . DIRECTORY_SEPARATOR . $fileName, $filePath);
         $_FILES['image_name'] = $image;
         $_FILES['image_name']['tmp_name'] = $filePath;
+        $imageNamePattern = '/fooImage[_0-9]*\./';
 
-        $this->getRequest()
-            ->setPostValue('wrapping', $postData)
-            ->setMethod(Http::METHOD_POST);
-        $dispatchUrl = $this->uri . '/store/' . Store::DEFAULT_STORE_ID . '/';
         $this->dispatch($dispatchUrl);
+        $coreRegistry = $this->objectManager->get(\Magento\Framework\Registry::class);
+        $model = $coreRegistry->registry('current_giftwrapping_model');
 
-        $this->assertSessionMessages(
-            $this->contains("You saved the gift wrapping."),
-            MessageInterface::TYPE_SUCCESS
-        );
-        $this->assertRedirect($this->stringContains('backend/admin/giftwrapping'));
-
-        $model = $this->getLastWrappingModel();
+        $this->assertEquals($expects['design'], $model->getDesign());
         $this->assertEquals($expects['website_ids'], $model->getWebsiteIds());
         $this->assertEquals($expects['status'], $model->getStatus());
         $this->assertEquals($expects['base_price'], $model->getBasePrice());
-        $imageNamePattern = '/fooImage[_0-9]*\./';
         $this->assertRegExp($imageNamePattern, $model->getImage());
         $this->assertNull($model->getTmpImage());
     }
 
     /**
-     * Check controller when data is incorrect.
-     *
-     * @return void
-     */
-    public function testSaveFail(): void
-    {
-        $postData = [
-            'website_ids' => [
-                Bootstrap::getObjectManager()->get(StoreManagerInterface::class)->getWebsite()->getId()
-            ],
-            'status' => 1,
-            'base_price' => 15,
-        ];
-        $this->getRequest()
-            ->setPostValue('wrapping', $postData)
-            ->setMethod(Http::METHOD_POST);
-        $dispatchUrl = $this->uri . '/store/' . Store::DEFAULT_STORE_ID . '/';
-        $this->dispatch($dispatchUrl);
-
-        $this->assertSessionMessages(
-            $this->contains("Field is required: Gift Wrapping Design"),
-            MessageInterface::TYPE_ERROR
-        );
-        $this->assertRedirect($this->stringContains('backend/admin/giftwrapping/edit'));
-    }
-
-    /**
-     * Copy file from source path to destination path.
-     *
-     * @param $sourcePath
-     * @param $destinationPath
-     */
-    private function copyFile($sourcePath, $destinationPath): void
-    {
-        /** @var WriteInterface $rootDirectory */
-        $rootDirectory = $this->filesystem->getDirectoryWrite(DirectoryList::ROOT);
-        $rootDirectory->copyFile($sourcePath, $destinationPath);
-    }
-
-    /**
-     * Get last wrapping model from repository.
-     *
-     * @return Wrapping
-     */
-    private function getLastWrappingModel(): Wrapping
-    {
-        /** @var WrappingRepository $wrappingRepository */
-        $wrappingRepository = $this->_objectManager->get(WrappingRepository::class);
-        /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
-        $searchCriteriaBuilder = $this->_objectManager->get(SearchCriteriaBuilder::class);
-        $searchCriteria = $searchCriteriaBuilder->addFilter('status', '1')->create();
-        $items = $wrappingRepository->getList($searchCriteria)->getItems();
-
-        return end($items);
-    }
-
-    /**
-     * Save test data provider.
+     * Save test data provider
      *
      * @return array
      */
-    public function saveProvider(): array
+    public function saveProvider() : array
     {
         return [
             [
@@ -160,23 +85,23 @@ class SaveTest extends AbstractBackendController
                     'name' => 'fooImage.jpg',
                     'type' => 'image/jpeg',
                     'error' => 0,
-                    'size' => 12500,
+                    'size' => 12500
                 ],
                 [
                     'design' => 'Foobar',
-                    'website_ids' => [
-                        Bootstrap::getObjectManager()->get(StoreManagerInterface::class)->getWebsite()->getId()
-                    ],
+                    'website_ids' => [1],
                     'status' => 1,
                     'base_price' => 15,
-                    'image_name' => ['value' => 'fooImage.jpg'],
+                    'image_name' => [
+                        'value' => 'fooImage.jpg'
+                    ]
                 ],
                 [
-                    'website_ids' => [
-                        Bootstrap::getObjectManager()->get(StoreManagerInterface::class)->getWebsite()->getId()
-                    ],
+                    'id' => 1,
+                    'design' => 'Foobar',
+                    'website_ids' => [1],
                     'status' => 1,
-                    'base_price' => 15,
+                    'base_price' => 15
                 ]
             ],
             [
@@ -188,45 +113,22 @@ class SaveTest extends AbstractBackendController
                 ],
                 [
                     'design' => 'Foobar',
-                    'website_ids' => [
-                        Bootstrap::getObjectManager()->get(StoreManagerInterface::class)->getWebsite()->getId()
-                    ],
+                    'website_ids' => [1],
                     'status' => 1,
                     'base_price' => 15,
-                    'image_name' => ['value' => 'fooImage.jpg'],
-                    'tmp_image' => 'barImage.jpg',
+                    'image_name' => [
+                        'value' => 'fooImage.jpg'
+                    ],
+                    'tmp_image' => 'barImage.jpg'
                 ],
                 [
-                    'website_ids' => [
-                        Bootstrap::getObjectManager()->get(StoreManagerInterface::class)->getWebsite()->getId()
-                    ],
+                    'id' => 2,
+                    'design' => 'Foobar',
+                    'website_ids' => [1],
                     'status' => 1,
-                    'base_price' => 15,
-                ],
-            ],
+                    'base_price' => 15
+                ]
+            ]
         ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function tearDownAfterClass()
-    {
-        $objectManager = Bootstrap::getObjectManager();
-        /** @var WrappingRepository $wrappingRepository */
-        $wrappingRepository = $objectManager->get(WrappingRepository::class);
-        /** @var SearchCriteriaBuilder $searchCriteriaBuilder */
-        $searchCriteriaBuilder = $objectManager->get(SearchCriteriaBuilder::class);
-        $searchCriteria = $searchCriteriaBuilder->addFilter('status', '1')->create();
-        $items = $wrappingRepository->getList($searchCriteria)->getItems();
-        foreach ($items as $item) {
-            $wrappingRepository->delete($item);
-        }
-        $filesystem = $objectManager->get(Filesystem::class);
-        /** @var WriteInterface $directory */
-        $directory = $filesystem->getDirectoryWrite(DirectoryList::PUB);
-        if ($directory->isExist('media/wrapping')) {
-            $directory->delete('media/wrapping');
-        }
     }
 }
