@@ -49,6 +49,7 @@ use Magento\Sales\Api\Data\ShipmentItemCreationInterfaceFactory;
 use Magento\Sales\Api\Data\ShipmentTrackCreationInterfaceFactory;
 use SMG\Api\Helper\ShipmentHelper;
 use Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory as OrderItemCollectionFactory;
+use SMG\BackendService\Helper\Data as Config;
 
 class CoreServicesHelper
 {
@@ -186,6 +187,11 @@ class CoreServicesHelper
      * @var OrderItemCollectionFactory
      */
     protected $_orderItemCollectionFactory;
+    
+    /**
+     * @var Config
+     */
+    private $config;
 
     CONST IMAGE_URL = 'https://images.scottsprogram.com/prod/pub/media/catalog/product';
 
@@ -231,6 +237,7 @@ class CoreServicesHelper
      * @param ShipmentTrackCreationInterfaceFactory $shipmentTrackCreationInterfaceFactory
      * @param ShipmentHelper $shipmentHelper
      * @param OrderItemCollectionFactory $orderItemCollectionFactory
+     * @param Config $config
      */
     public function __construct(
         LoggerInterface $logger,
@@ -271,7 +278,8 @@ class CoreServicesHelper
         ShipmentItemCreationInterfaceFactory $shipmentItemCreationInterfaceFactory,
         ShipmentTrackCreationInterfaceFactory $shipmentTrackCreationInterfaceFactory,
         ShipmentHelper $shipmentHelper,
-        OrderItemCollectionFactory $orderItemCollectionFactory
+        OrderItemCollectionFactory $orderItemCollectionFactory,
+        Config $config
     ) {
         $this->_logger = $logger;
         $host = gethostname();
@@ -315,6 +323,7 @@ class CoreServicesHelper
         $this->_shipmentTrackCreationInterfaceFactory = $shipmentTrackCreationInterfaceFactory;
         $this->_shipmentHelper = $shipmentHelper;
         $this->_orderItemCollectionFactory = $orderItemCollectionFactory;
+        $this->config = $config;
     }
 
     /**
@@ -678,6 +687,13 @@ class CoreServicesHelper
         $order = $this->_orderRepository->get($orderData['orderId']);
 
         $orderObject = $order->getData();
+        
+        $payment = $order->getPayment();
+        $methodname = $payment->getMethod();
+        $additionalInfo = ($payment->getAdditionalInformation());
+        $last4 = $additionalInfo['last_four'];
+        $cc_type = $this->config->getCardFullName($payment->getData('cc_type'));
+        
         $orderObject['hdr_disc_fixed_amount'] = '';
         $orderObject['hdr_disc_perc'] = '';
         $orderObject['hdr_disc_cond_code'] = '';
@@ -743,6 +759,10 @@ class CoreServicesHelper
         $this->_shippingConditionCodeResource->load($shippingCondition, $order->getShippingMethod(), 'shipping_method');
 
         $orderObject['shippingCondition'] = $shippingCondition->getData();
+        
+        $orderObject['last_four'] = $last4;
+        $orderObject['cc_type'] = $cc_type;
+        
         $response = array(
             'statusCode' => 200,
             'statusMessage' => 'success',
