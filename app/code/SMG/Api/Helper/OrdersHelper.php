@@ -92,6 +92,7 @@ class OrdersHelper
     const DISCOUNT_REASON = 'ReasonCode';
     const SUBSCRIPTION_SHIP_START = 'SubscriptLineShipStart';
     const SUBSCRIPTION_SHIP_END = 'SubscriptLineShipEnd';
+    const ADJUSTMENT_FEE = 'AdjustmentFee';
 
     // Return Credit Memo Codes
     const CUSTOMER_REFUSAL_CODE = '014';
@@ -634,6 +635,7 @@ class OrdersHelper
         $surchCondCode = '';
         $surchFixedAmt = '';
         $surchPerAmt = '';
+        $adjustmentFee = '';
 
         // determine if this is a subscription
         $subscriptionType = $order->getSubscriptionType();
@@ -675,6 +677,7 @@ class OrdersHelper
             $creditAmount = $creditMemoItem->getRowTotalInclTax();
             $creditComment = $creditMemo->getData('customer_note');
             $orderReason = $creditMemoItem->getData('refunded_reason_code');
+            $adjustmentFee = $creditMemo->getBaseAdjustmentNegative();
 
             // get the sap order for the billing doc number
             /**
@@ -841,7 +844,8 @@ class OrdersHelper
             self::SURCH_PERCENT_AMOUNT => $surchPerAmt,
             self::DISCOUNT_REASON => $orderItem->getReasonCode(),
             self::SUBSCRIPTION_SHIP_START => $order->getData('ship_start_date'),
-            self::SUBSCRIPTION_SHIP_END => $order->getData('ship_end_date')
+            self::SUBSCRIPTION_SHIP_END => $order->getData('ship_end_date'),
+            self::ADJUSTMENT_FEE => $adjustmentFee
         ));
     }
 
