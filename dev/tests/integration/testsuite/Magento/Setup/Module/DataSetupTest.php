@@ -39,7 +39,7 @@ class DataSetupTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \Magento\Framework\DB\Adapter\TableNotFoundException
+     * @expectedException \Zend_Db_Statement_Exception
      */
     public function testDeleteTableRow()
     {
@@ -47,7 +47,8 @@ class DataSetupTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * @expectedException \Magento\Framework\DB\Adapter\TableNotFoundException
+     * @covers \Magento\Setup\Module\DataSetup::updateTableRow
+     * @expectedException \Zend_Db_Statement_Exception
      */
     public function testUpdateTableRowNameConversion()
     {

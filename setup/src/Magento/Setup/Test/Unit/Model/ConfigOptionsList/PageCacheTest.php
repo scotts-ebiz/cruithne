@@ -91,9 +91,9 @@ class PageCacheTest extends \PHPUnit\Framework\TestCase
             'cache' => [
                 'frontend' => [
                     'page_cache' => [
-                        'backend' => \Magento\Framework\Cache\Backend\Redis::class,
+                        'backend' => 'Cm_Cache_Backend_Redis',
                         'backend_options' => [
-                            'server' => '',
+                            'server'=> '',
                             'port' => '',
                             'database' => '',
                             'compress_data' => '',
@@ -120,7 +120,7 @@ class PageCacheTest extends \PHPUnit\Framework\TestCase
             'cache' => [
                 'frontend' => [
                     'page_cache' => [
-                        'backend' => \Magento\Framework\Cache\Backend\Redis::class,
+                        'backend' => 'Cm_Cache_Backend_Redis',
                         'backend_options' => [
                             'server' => 'foo.bar',
                             'port' => '9000',
@@ -238,6 +238,6 @@ class PageCacheTest extends \PHPUnit\Framework\TestCase
      */
     private function expectedIdPrefix(): string
     {
-        return substr(\hash('sha256', dirname(__DIR__, 8)), 0, 3) . '_';
+        return substr(\md5(dirname(__DIR__, 8)), 0, 3) . '_';
     }
 }

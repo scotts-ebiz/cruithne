@@ -18,7 +18,6 @@ use Magento\Setup\Console\Command\MaintenanceEnableCommand;
 /**
  * Factory class to create jobs
  *
- * @deprecated Starting from Magento 2.3.6 Web Setup Wizard is deprecated
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
 class JobFactory

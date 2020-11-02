@@ -13,8 +13,6 @@ use Magento\Framework\Module\ModuleList\Loader as ModuleLoader;
 
 /**
  * Setup module status
- *
- * @deprecated Starting from Magento 2.3.6 Web Setup Wizard is deprecated
  */
 class ModuleStatus
 {
