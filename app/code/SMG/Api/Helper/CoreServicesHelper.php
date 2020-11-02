@@ -685,15 +685,22 @@ class CoreServicesHelper
 
         /** @var Order $order */
         $order = $this->_orderRepository->get($orderData['orderId']);
-
         $orderObject = $order->getData();
-        
         $payment = $order->getPayment();
         $methodname = $payment->getMethod();
         $additionalInfo = ($payment->getAdditionalInformation());
+
+       If(isset($additionalInfo['last_four'])){
+
         $last4 = $additionalInfo['last_four'];
         $cc_type = $this->config->getCardFullName($payment->getData('cc_type'));
-        
+
+    }else
+
+    {
+        $last4= "";
+        $cc_type= "";
+    }
         $orderObject['hdr_disc_fixed_amount'] = '';
         $orderObject['hdr_disc_perc'] = '';
         $orderObject['hdr_disc_cond_code'] = '';
