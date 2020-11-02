@@ -16,6 +16,8 @@ $objectManager = Bootstrap::getObjectManager();
 //load page
 $page = $objectManager->create(Page::class);
 $page->load('page100');
+$page->setStores([0, $store->getId()]);
+$page->save();
 //main node data
 $mainNodeData = [
     'parent_node_id' => null,

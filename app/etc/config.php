@@ -240,7 +240,6 @@ return [
         'Magento_PromotionPermissions' => 1,
         'Magento_BannerPageBuilderAnalytics' => 1,
         'Magento_QuoteAnalytics' => 1,
-        'Magento_GiftCardAccountGraphQl' => 0,
         'Magento_ConfigurableProductGraphQl' => 1,
         'Magento_RelatedProductGraphQl' => 1,
         'Magento_ReleaseNotification' => 1,
