@@ -9,11 +9,6 @@ use Magento\Framework\App\MaintenanceMode;
 use Zend\Mvc\Controller\AbstractActionController;
 use Zend\View\Model\ViewModel;
 
-/**
- * Class UpdaterSuccess
- *
- * @deprecated Starting from Magento 2.3.6 Web Setup Wizard is deprecated
- */
 class UpdaterSuccess extends AbstractActionController
 {
     /**

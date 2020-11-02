@@ -10,20 +10,16 @@ declare(strict_types=1);
 namespace Magento\Sales\Block\Adminhtml\Order\Create\Form;
 
 use Magento\Backend\Model\Session\Quote as SessionQuote;
-use Magento\Customer\Api\CustomerRepositoryInterface;
 use Magento\Customer\Api\Data\AttributeMetadataInterface;
 use Magento\Customer\Api\Data\AttributeMetadataInterfaceFactory;
-use Magento\Customer\Api\Data\CustomerInterface;
 use Magento\Customer\Model\Data\Option;
 use Magento\Customer\Model\Metadata\Form;
 use Magento\Customer\Model\Metadata\FormFactory;
 use Magento\Framework\View\LayoutInterface;
 use Magento\Quote\Model\Quote;
-use Magento\Store\Model\StoreManagerInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\ObjectManager;
 use PHPUnit\Framework\MockObject\MockObject;
-use PHPUnit\Framework\TestCase;
 
 /**
  * Class for test Account
@@ -31,7 +27,7 @@ use PHPUnit\Framework\TestCase;
  * @magentoAppArea adminhtml
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class AccountTest extends TestCase
+class AccountTest extends \PHPUnit\Framework\TestCase
 {
     /**
      * @var Account
@@ -85,9 +81,9 @@ class AccountTest extends TestCase
         );
 
         $fixtureCustomerId = 1;
-        /** @var CustomerRepositoryInterface $customerRepository */
-        $customerRepository = $this->objectManager->get(CustomerRepositoryInterface::class);
-        /** @var CustomerInterface $customer */
+        /** @var \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository */
+        $customerRepository = $this->objectManager->get(\Magento\Customer\Api\CustomerRepositoryInterface::class);
+        /** @var \Magento\Customer\Api\Data\CustomerInterface $customer */
         $customer = $customerRepository->getById($fixtureCustomerId);
         $customer->setGroupId($customerGroup);
         $customerRepository->save($customer);
@@ -129,8 +125,8 @@ class AccountTest extends TestCase
      */
     public function testGetFormWithUserDefinedAttribute()
     {
-        /** @var StoreManagerInterface  $storeManager */
-        $storeManager = Bootstrap::getObjectManager()->get(StoreManagerInterface::class);
+        /** @var \Magento\Store\Model\StoreManagerInterface  $storeManager */
+        $storeManager = Bootstrap::getObjectManager()->get(\Magento\Store\Model\StoreManagerInterface::class);
         $secondStore = $storeManager->getStore('secondstore');
 
         $quoteSession = $this->objectManager->get(SessionQuote::class);
@@ -160,46 +156,6 @@ class AccountTest extends TestCase
             '<option value="3" selected="selected">Retailer</option>',
             $content,
             'The Customer Group specified for the chosen store should be selected.'
-        );
-    }
-
-    /**
-     * Test for get form with default customer group
-     *
-     */
-    public function testGetFormWithDefaultCustomerGroup()
-    {
-        $customerGroup = 0;
-        $quote = $this->objectManager->create(Quote::class);
-        $quote->setCustomerGroupId($customerGroup);
-
-        $this->session = $this->getMockBuilder(SessionQuote::class)
-            ->disableOriginalConstructor()
-            ->setMethods(['getCustomerId', 'getQuote'])
-            ->getMock();
-        $this->session->method('getQuote')
-            ->willReturn($quote);
-        $this->session->method('getCustomerId')
-            ->willReturn(1);
-
-        $formFactory = $this->getFormFactoryMock();
-        $this->objectManager->addSharedInstance($formFactory, FormFactory::class);
-
-        /** @var LayoutInterface $layout */
-        $layout = $this->objectManager->get(LayoutInterface::class);
-        $accountBlock = $layout->createBlock(
-            Account::class,
-            'address_block' . rand(),
-            ['sessionQuote' => $this->session]
-        );
-
-        $expectedGroupId = 1;
-        $form = $accountBlock->getForm();
-
-        self::assertEquals(
-            $expectedGroupId,
-            $form->getElement('group_id')->getValue(),
-            'The Customer Group specified for the chosen customer should be selected.'
         );
     }
 

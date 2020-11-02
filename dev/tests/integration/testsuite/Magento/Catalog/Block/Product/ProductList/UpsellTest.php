@@ -120,7 +120,7 @@ class UpsellTest extends AbstractLinksTest
      */
     public function testMultipleWebsitesUpsellProducts(array $data): void
     {
-        $this->updateProducts($this->prepareProductsWebsiteIds());
+        $this->updateProducts($this->prepareWebsiteIdsProducts());
         $productLinks = array_replace_recursive($this->existingProducts, $data['productLinks']);
         $this->linkProducts('simple-1', $productLinks);
         $this->product = $this->productRepository->get(

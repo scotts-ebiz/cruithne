@@ -17,7 +17,7 @@
         "cweagans/composer-patches": "^1.6",
         "gigya/magento2-im": "^5.4",
         "magento/composer-root-update-plugin": "~0.1",
-        "magento/product-enterprise-edition": "2.3.6",
+        "magento/product-enterprise-edition": "2.3.5-p2",
         "magepal/magento2-googletagmanager": "^2.3",
         "mageplaza/module-smtp": "^1.2",
         "recurly/recurly-client": "^2.12",
@@ -101,9 +101,9 @@
         "magento-force": "override",
         "composer-exit-on-patch-failure": true,
         "patches": {
-            "zaius/zaius-magento-2": {
-                "Zaius Duplicate Entries": "patches/composer/zaius_duplicate_patch.diff"
-            }
+        	"zaius/zaius-magento-2": {
+        		"Zaius Duplicate Entries": "patches/composer/zaius_duplicate_patch.diff"
+        	}
         }
     },
     "conflict": {

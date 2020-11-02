@@ -10,8 +10,6 @@ use Zend\View\Model\ViewModel;
 
 /**
  * Controller for Updater Landing page
- *
- * @deprecated Starting from Magento 2.3.6 Web Setup Wizard is deprecated
  */
 class LandingUpdater extends AbstractActionController
 {

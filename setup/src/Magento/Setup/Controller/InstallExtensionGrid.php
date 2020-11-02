@@ -13,8 +13,6 @@ use Magento\Setup\Model\PackagesData;
 
 /**
  * Controller for extensions grid tasks
- *
- * @deprecated Starting from Magento 2.3.6 Web Setup Wizard is deprecated
  */
 class InstallExtensionGrid extends AbstractActionController
 {
