@@ -690,7 +690,7 @@ class CoreServicesHelper
         $methodname = $payment->getMethod();
         $additionalInfo = ($payment->getAdditionalInformation());
 
-       If(isset($additionalInfo['last_four'])){
+       if(isset($additionalInfo['last_four'])){
 
         $last4 = $additionalInfo['last_four'];
         $cc_type = $this->config->getCardFullName($payment->getData('cc_type'));
