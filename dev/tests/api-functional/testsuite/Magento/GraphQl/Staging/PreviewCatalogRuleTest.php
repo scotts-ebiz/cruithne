@@ -66,7 +66,7 @@ class PreviewCatalogRuleTest extends GraphQlAbstract
         $query
             = <<<QUERY
             {
-              products (filter:{category_id:{eq:"8"}}) {
+              products (filter:{category_id:{eq:"8"}},sort:{name: DESC}) {
                 items {
                   sku
                   name
@@ -96,10 +96,12 @@ QUERY;
         $response = $this->graphQlQuery($query);
         $this->assertArrayNotHasKey('errors', $response, 'Response has errors');
         $this->assertArrayHasKey('products', $response);
+        $this->assertArrayHasKey('items', $response['products']);
+        $this->assertCount(3, $response['products']['items']);
 
         $simpleProductNoPreview = $response['products']['items'][0];
         $this->assertEquals('Simple Product Eight', $simpleProductNoPreview['name']);
-        $firstConfigurableProductNoPreview = $response['products']['items'][1];
+        $firstConfigurableProductNoPreview = $response['products']['items'][2];
         $this->assertEquals('Configurable Product', $firstConfigurableProductNoPreview['name']);
         // When not previewing, final and regular price should be equal
         $this->assertEquals(
@@ -114,9 +116,11 @@ QUERY;
         $previewResponse = $this->graphQlQuery($query, [], '', $headerMap);
         $this->assertArrayNotHasKey('errors', $previewResponse, 'Preview response has errors');
         $this->assertArrayHasKey('products', $previewResponse);
+        $this->assertArrayHasKey('items', $previewResponse['products']);
+        $this->assertCount(3, $previewResponse['products']['items']);
         $previewSimpleProduct = $previewResponse['products']['items'][0];
         $this->assertEquals('Simple Product Eight', $previewSimpleProduct['name']);
-        $previewConfigurableProduct = $previewResponse['products']['items'][1];
+        $previewConfigurableProduct = $previewResponse['products']['items'][2];
         $this->assertEquals('Configurable Product', $previewConfigurableProduct['name']);
 
         // 50% discount is shown in preview
