@@ -20,6 +20,16 @@ $font-family__monospace         : Menlo, Monaco, Consolas, 'Courier New', monosp
 
 $font-family__base              : $font-family-name__base, $font-family__sans-serif !default;
 
+// Additional Font Familes
+$font-family-name__secondary    : 'Open-Sans' !default;
+$font-family__secondary         : $font-family-name__secondary, $font-family__sans-serif !default;
+
+$font-family-name__tertiary     : 'Rokkitt';
+$font-family__tertiary          : $font-family-name__tertiary, $font-family__sans-serif;
+
+$font-family-name__quaternary   : 'Roboto';
+$font-family__quaternary        : $font-family-name__quaternary, $font-family__sans-serif;
+
 //  Sizes
 $root__font-size                : 62.5% !default; // Defines ratio between root font size and base font size, 1rem = 10px
 $font-size-ratio__base          : 1.4 !default; // Defines ratio of the root font-size to the base font-size
@@ -34,12 +44,23 @@ $font-size__l                   : ceil(1.25 * $font-size__base) !default; // 18p
 $font-size__s                   : ceil(0.85 * $font-size__base) !default; // 12px
 $font-size__xs                  : floor(0.75 * $font-size__base) !default; // 11px
 
+// Custom Font Sizes
+$font-size__xxl                 : 4.0rem;
+$font-size__m                   : 1.6rem;
+$font-size__ms                  : 1.4rem;
+$font-size__xxs                 : 0.9rem;
+
 //  Weights
 $font-weight__light             : 300 !default;
 $font-weight__regular           : 400 !default;
 $font-weight__heavier           : 500 !default;
 $font-weight__semibold          : 600 !default;
 $font-weight__bold              : 700 !default;
+
+//  Letter Spacing
+$letter-spacing_base            : inherit;
+$letter-spacing_l               : 1.0px;
+$letter-spacing_m               : 0.5px;
 
 //  Styles
 $font-style__base               : normal !default;
