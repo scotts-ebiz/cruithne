@@ -1,6 +1,6 @@
 <?php
 
-namespace SMG\SubscriptionApi\Block\Adminhtml\Edit\Tab;
+namespace SMG\SubscriptionApi\Block\Adminhtml\Order\View;
 
 use Psr\Log\LoggerInterface;
 use Magento\Customer\Controller\RegistryConstants;
@@ -114,6 +114,11 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
      * @var \Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory
      */
     protected $_orderItemCollectionFactory;
+    
+    /**
+     * @var customerId
+     */
+    protected $_customerId;
 
     /**
      * @param InvoiceRepositoryInterface $_invoiceRepository
@@ -122,8 +127,6 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
      * @param SapOrderStatusFactory $sapOrderStatusFactory
      * @param \Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory $orderItemCollectionFactory
      */
-
-
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
         \Magento\Framework\Registry $registry,
@@ -184,7 +187,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
      */
     public function getCustomerId()
     {
-        return $this->_coreRegistry->registry(RegistryConstants::CURRENT_CUSTOMER_ID);
+        return $this->_customerId;
     }
 
 
@@ -219,7 +222,9 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     {
         Recurly_Client::$apiKey = $this->_helper->getRecurlyPrivateApiKey();
         Recurly_Client::$subdomain = $this->_helper->getRecurlySubdomain();
-
+        
+        if(!$this->getCustomerRecurlyAccountCode())
+        return ['success' => false, 'error_message' => "Not an subcription store"];
         // Create empty array so we can merge active and future subscriptions
         $subscriptions = [];
 
@@ -243,7 +248,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
             return ['success' => true, 'subscriptions' => $subscriptions, 'total_amount' => $this->convertAmountToDollars($totalAmount)];
         } catch (Recurly_NotFoundError $e) {
             $this->_logger->error($e->getMessage());
-            return ['success' => false, 'error_message' => $e->getMessage()];
+                    return ['success' => false, 'error_message' => $e->getMessage()];
         }
     }
 
@@ -492,5 +497,14 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     public function isAjaxLoaded()
     {
         return true;
+    }
+    
+    /* Get Order by ID
+     * @param $orderId
+     */
+    public function getOrderById($orderId){
+            $salesData = $this->_orderFactory->create()->load($orderId);
+            $customerId = $salesData->getCustomerId();
+            $this->_customerId = $customerId;
     }
 }
