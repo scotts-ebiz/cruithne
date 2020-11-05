@@ -26,23 +26,29 @@ WORKDIR $MAGENTO_DIR
 # Temporary add to test mass import of images
 RUN mkdir -p $MAGENTO_DIR/var/import/images && gsutil -q -m rsync -r -u gs://magento-image-repo/import/ $MAGENTO_DIR/var/import/images ; exit 0
 
+RUN git status
 RUN git config --global user.name "Git User" && git config --global user.email "user@example.com" && git fetch --all && git reset --hard origin/${BRANCH} && git pull
+RUN git status
 
 # Add Akeneo to known hosts 
 RUN ssh-keyscan -p 443 distribution.akeneo.com >> ~/.ssh/known_hosts
 
 RUN composer install
+RUN git status
 RUN git checkout origin .htaccess
+RUN git status
 RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools
 
 
 # Set developer Mode if NOT in production or release-candidate or hotfixes
 RUN if [ "$BRANCH" != "master" ] && [ "$BRANCH" != "release-candidate" ] && [ "$BRANCH" != "hotfixes" ]; then bin/magento deploy:mode:set developer && bin/magento setup:config:set --enable-debug-logging=true && sed -i "s/display_errors.*/display_errors = on/" php.ini; fi
+RUN git status
 
 # Temporary Patch for Inventory Management (Can remove after 2.3.4)
 COPY msi-numeric-skus.diff /tmp/msi-numeric-skus.diff
 WORKDIR $MAGENTO_DIR/vendor
 RUN git apply /tmp/msi-numeric-skus.diff; exit 0
+RUN git status
 
 WORKDIR $MAGENTO_DIR
 
