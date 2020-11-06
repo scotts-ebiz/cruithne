@@ -5,10 +5,6 @@
  * Time: 9:39 AM
  */
 
-/**
- * Copyright © Magento, Inc. All rights reserved.
- * See COPYING.txt for license details.
- */
 declare(strict_types=1);
 
 namespace SMG\EavGraphQl\Model\Resolver;
@@ -21,7 +17,7 @@ use Magento\Catalog\Model\ResourceModel\Product\Collection;
 use Magento\Catalog\Model\ResourceModel\Product\CollectionFactory;
 
 /**
- * Resolve data for custom attribute metadata requests
+ * Resolve data for custom attribute filter requests
  */
 class CustomAttributeFilter implements ResolverInterface
 {
@@ -56,7 +52,7 @@ class CustomAttributeFilter implements ResolverInterface
     {
 
         $products['items'] = null;
-        /** @var string $attributeInput */
+        /** @var array $attributeInputs */
         $inputAttributes = $args['attributes'];
         /** @var Collection $collection */
         $collection = $this->_collectionFactory->create();
@@ -67,19 +63,26 @@ class CustomAttributeFilter implements ResolverInterface
             $ids = [];
             $options = $this->_productAttributeRepository->get($inputAttribute['attribute_code'])->getOptions();
             // The attributes' options, but we need to find the id from the given label
-            foreach ($options as $option) {
+            if ($options) {
+                foreach ($options as $option) {
+                    foreach ($inputAttribute['options'] as $inputOption) {
+                        if ($option->getLabel() === $inputOption['attribute_option_code']) {
+                            $ids[] = $option->getValue();
+                        }
+                    }
+                }
+            } else { // If there aren't options use plain text
                 foreach ($inputAttribute['options'] as $inputOption) {
-                    if($option->getLabel() === $inputOption['attribute_option_code']) {
-                        $ids[] = $option->getValue();
+                    if ($inputOption['attribute_option_code']) {
+                        $ids[] = $inputOption['attribute_option_code'];
                     }
                 }
             }
+
             // Apply filters
-            if ($ids) {
-                foreach($ids as $id) {
-                    $collection->addFieldToFilter($inputAttribute['attribute_code'], ['eq' => $id ]);
-                    $filterApplied = true;
-                }
+            foreach ($ids as $id) {
+                $collection->addAttributeToFilter($inputAttribute['attribute_code'], ['finset' => array($id)]);
+                $filterApplied = true;
             }
         }
 
