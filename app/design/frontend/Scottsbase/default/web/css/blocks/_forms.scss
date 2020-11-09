@@ -82,11 +82,6 @@ fieldset.field {
     }
 }
 
-.field-error,
-div.mage-error[generated] {
-    margin-top: 7px;
-}
-
 .field-error {
     @include lib-form-validation-note();
 }
