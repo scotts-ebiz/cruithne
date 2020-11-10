@@ -173,7 +173,7 @@ class Attribute extends \Akeneo\Connector\Job\Attribute
                     'is_visible_on_front'           => 1,
                     'is_wysiwyg_enabled'            => 0,
                     'is_html_allowed_on_front'      => 0,
-                    'is_visible_in_advanced_search' => 0,
+                    'is_visible_in_advanced_search' => 1,
                     'is_filterable_in_search'       => 0,
                     'used_in_product_listing'       => 0,
                     'used_for_sort_by'              => 0,

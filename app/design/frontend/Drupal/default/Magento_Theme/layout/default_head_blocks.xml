@@ -3,6 +3,5 @@
     <head>
         <css src="css/drupal.css" />
         <remove src="mage/calendar.css" />
-        <remove src="css/styles.css" />
     </head>
 </page>
