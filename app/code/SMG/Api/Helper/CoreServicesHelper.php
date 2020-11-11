@@ -468,7 +468,8 @@ class CoreServicesHelper
                     'subscription_addon' => $orderData["isAddOn"] ?? FALSE,
                     'subscription_type' => $subscription->getSubscriptionType(),
                     'master_subscription_id' => $orderData['parentOrderId'],
-                    'subscription_id' => $orderData['lsOrderId']
+                    'subscription_id' => $orderData['lsOrderId'],
+                    'gigya_id' => $orderData['gigyaId'] ?? NULL
                 ]);
 
                 // Save subscription data to order.
