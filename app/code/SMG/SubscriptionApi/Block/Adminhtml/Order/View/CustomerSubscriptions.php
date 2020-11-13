@@ -119,6 +119,11 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
      * @var customerId
      */
     protected $_customerId;
+    
+    /**
+     * @var customerGigyaId
+     */
+    protected $_customerGigyaId;
 
     /**
      * @param InvoiceRepositoryInterface $_invoiceRepository
@@ -189,8 +194,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     {
         return $this->_customerId;
     }
-
-
+    
 
     /**
      * Return customer's Recurly account code
@@ -199,10 +203,9 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
      */
     public function getCustomerRecurlyAccountCode()
     {
-        $customer = $this->_customer->load($this->getCustomerId());
-
-        if ($customer->getGigyaUid()) {
-            return $customer->getGigyaUid();
+        
+        if ($this->getCustomerGigyaId()) {
+            return $this->getCustomerGigyaId();
         }
 
         $this->_logger->error('Could not find customer Gigya ID');
@@ -503,8 +506,22 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
      * @param $orderId
      */
     public function getOrderById($orderId){
-            $salesData = $this->_orderFactory->create()->load($orderId);
-            $customerId = $salesData->getCustomerId();
-            $this->_customerId = $customerId;
+        
+        $salesData = $this->_orderFactory->create()->load($orderId);
+        $customerId = $salesData->getCustomerId();
+        $customergigyaId = $salesData->getGigyaId();
+        $this->_customerId = $customerId;
+        $this->_customerGigyaId = $customergigyaId;
+        
+    }
+    
+    /**
+     * Return customer gigya id
+     *
+     * @return string
+     */
+    public function getCustomerGigyaId()
+    {
+        return $this->_customerGigyaId;
     }
 }

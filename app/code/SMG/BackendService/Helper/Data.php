@@ -13,9 +13,12 @@ class Data extends AbstractHelper
     const XML_API_ORDER_REQUEST_URI = 'smg_backendservice/api/order';
     const XML_API_CUSTOMER_REQUEST_URI = 'smg_backendservice/api/customer';
     const XML_API_SAP_REQUEST_URI = 'smg_backendservice/api/sap';
+    const XML_API_APIKEY = 'smg_backendservice/api/apikey';
+
     const WEB_SOURCE = 'WEB';
 
     public $ccConfig;
+
     /**
      * Config constructor
      * @param Context $context
@@ -66,23 +69,20 @@ class Data extends AbstractHelper
             mt_rand(0, 0x2Aff), mt_rand(0, 0xffD3), mt_rand(0, 0xff4B)
         );
     }
-    
+
     /**
      * @return string
      */
     public function getCardFullName($CardCode)
     {
         $return = "";
-        if($CardCode){
-            
+        if ($CardCode) {
+
             $cardTypes = $this->ccConfig->getCcAvailableTypes();
 
-            if(array_key_exists($CardCode, $cardTypes))
-            {
-              $return = $cardTypes[$CardCode];
-            }
-            else if($CardCode == 'AX')
-            {
+            if (array_key_exists($CardCode, $cardTypes)) {
+                $return = $cardTypes[$CardCode];
+            } else if ($CardCode == 'AX') {
                 $return = 'Amex';
             }
         }
@@ -100,13 +100,25 @@ class Data extends AbstractHelper
     /**
      * @return mixed
      */
-    public function getSapApiUrl() {
+    public function getSapApiUrl()
+    {
         return $this->scopeConfig->getValue(
             self::XML_API_SAP_REQUEST_URI,
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
     }
-    
+
+    /**
+     * @return mixed
+     */
+    public function getApikey()
+    {
+        return $this->scopeConfig->getValue(
+            self::XML_API_APIKEY,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+        );
+    }
+
     /**
      * @return int
      */
