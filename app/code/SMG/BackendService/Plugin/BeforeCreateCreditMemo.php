@@ -12,6 +12,7 @@ use Magento\Framework\UrlInterface;
 use SMG\BackendService\Model\Client\Api;
 use SMG\BackendService\Helper\Data as Config;
 use \Magento\Framework\Webapi\Rest\Request;
+use Magento\Backend\Model\Auth\Session;
 
 class BeforeCreateCreditMemo
 {
@@ -46,11 +47,17 @@ class BeforeCreateCreditMemo
     private $config;
 
     /**
+     * @var Session
+     */
+    private $session;
+
+    /**
      * BeforeCreateCreditMemo constructor.
      * @param OrderFactory $orderFactory
      * @param ManagerInterface $messageManager
      * @param ResultFactory $resultFactory
      * @param RedirectInterface $reidrect
+     * @param Session $session
      */
     public function __construct(
         OrderFactory $orderFactory,
@@ -58,7 +65,8 @@ class BeforeCreateCreditMemo
         Http $response,
         UrlInterface $url,
         Api $client,
-        Config $config
+        Config $config,
+        Session $session
     ) {
         $this->orderFactory = $orderFactory;
         $this->messageManager = $messageManager;
@@ -66,6 +74,7 @@ class BeforeCreateCreditMemo
         $this->url = $url;
         $this->client = $client;
         $this->config = $config;
+        $this->session = $session;
     }
 
     /**
@@ -84,7 +93,8 @@ class BeforeCreateCreditMemo
                     $this->config->getSapApiUrl(),
                     $orderId,
                     [],
-                    Request::HTTP_METHOD_GET
+                    Request::HTTP_METHOD_GET,
+                    $this->session->isLoggedIn()
                 );
 
                 if ($order->getState() !== 'complete') {

@@ -9,7 +9,7 @@ use \GuzzleHttp\Psr7\Response;
 use \GuzzleHttp\Psr7\ResponseFactory;
 use \Magento\Framework\Webapi\Rest\Request;
 use \Psr\Log\LoggerInterface;
-use Magento\Backend\Model\Auth\Session;
+
 use SMG\BackendService\Helper\Data as Config;
 
 class Api
@@ -36,46 +36,40 @@ class Api
     private $config;
 
     /**
-     * @var Session
-     */
-    private $session;
-
-    /**
      * Api constructor.
      * @param ClientFactory $clientFactory
      * @param ResponseFactory $responseFactory
      * @param LoggerInterface $logger
      * @param Config $config
-     * @param Session $session
      */
     public function __construct(
         ClientFactory $clientFactory,
         ResponseFactory $responseFactory,
         LoggerInterface $logger,
-        Config $config,
-        Session $session
+        Config $config
     ) {
         $this->clientFactory = $clientFactory;
         $this->responseFactory = $responseFactory;
         $this->logger = $logger;
         $this->config = $config;
-        $this->session = $session;
     }
 
     /**
-     * @param string $apiEndPoint
-     * @param string $apiFunction
-     * @param array $params
+     * @param $apiEndPoint
+     * @param $apiFunction
+     * @param $params
      * @param string $requestMethod
+     * @param bool $excludeLogin
      * @return bool
      */
     public function execute(
         $apiEndPoint,
         $apiFunction,
         $params,
-        $requestMethod = Request::HTTP_METHOD_POST
+        $requestMethod = Request::HTTP_METHOD_POST,
+        $excludeLogin = true
     ) {
-        if ($this->session->isLoggedIn()) {
+        if ($excludeLogin) {
             $apiUrl = $apiEndPoint . $apiFunction;
 
             $headers = ['x-apikey' => $this->config->getApikey()];

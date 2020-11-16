@@ -9,6 +9,7 @@ use \Magento\Framework\Controller\ResultFactory;
 use SMG\BackendService\Model\Client\Api;
 use SMG\BackendService\Helper\Data as Config;
 use \Magento\Sales\Api\Data\OrderAddressInterface;
+use Magento\Backend\Model\Auth\Session;
 
 class OrderAddressSave
 {
@@ -38,25 +39,33 @@ class OrderAddressSave
     private $config;
 
     /**
+     * @var Session
+     */
+    private $session;
+
+    /**
      * OrderAddressSave constructor.
      * @param Api $client
      * @param Config $config
      * @param ResultFactory $resultFactory
      * @param OrderRepositoryInterface $orderRepository
      * @param AddressRepository $repositoryAddress
+     * @param Session $session
      */
     public function __construct(
         Api $client,
         Config $config,
         ResultFactory $resultFactory,
         OrderRepositoryInterface $orderRepository,
-        AddressRepository $repositoryAddress
+        AddressRepository $repositoryAddress,
+        Session $session
     ) {
         $this->client = $client;
         $this->config = $config;
         $this->resultFactory = $resultFactory;
         $this->orderRepository = $orderRepository;
         $this->repositoryAddress = $repositoryAddress;
+        $this->session = $session;
     }
 
     /**
@@ -76,15 +85,16 @@ class OrderAddressSave
         $order = $this->orderRepository->get($orderId);
         
         //check module status active or not
-        if($this->config->getStatus()){
+        if($this->config->getStatus()) {
 
             $response = $this->client->execute(
                 $this->config->getCustomerApiUrl(),
                 "customer/updateAddresses",
                 $this->buildOrderObject($order),
-                Request::HTTP_METHOD_POST
+                Request::HTTP_METHOD_POST,
+                $this->session->isLoggedIn()
             );
-            
+
         }
 
         return $this->resultFactory->create(

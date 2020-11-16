@@ -6,6 +6,7 @@ use SMG\BackendService\Model\Client\Api;
 use SMG\BackendService\Helper\Data as Config;
 use \Magento\Framework\Registry;
 use \Magento\Framework\Webapi\Rest\Request;
+use Magento\Backend\Model\Auth\Session;
 
 class AfterCreateCreditMemo
 {
@@ -25,19 +26,27 @@ class AfterCreateCreditMemo
     private $registry;
 
     /**
+     * @var Session
+     */
+    private $session;
+
+    /**
      * AfterCreateCreditMemo constructor.
      * @param Api $client
      * @param Config $config
      * @param Registry $registry
+     * @param Session $session
      */
     public function __construct(
         Api $client,
         Config $config,
-        Registry $registry
+        Registry $registry,
+        Session $session
     ) {
         $this->client = $client;
         $this->config = $config;
         $this->registry = $registry;
+        $this->session = $session;
     }
 
     /**
@@ -57,7 +66,8 @@ class AfterCreateCreditMemo
                     $this->config->getOrderApiUrl(),
                     "orders/createOrderNote",
                     $this->buildOrderObject($order),
-                    Request::HTTP_METHOD_POST
+                    Request::HTTP_METHOD_POST,
+                    $this->session->isLoggedIn()
                 );
 
             }
