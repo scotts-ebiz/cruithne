@@ -81,7 +81,7 @@ class Order
     ) {
         //check module status active or not
         if($this->config->getStatus()){
-            
+
             $orderId = $orders->getId();
             $order = $this->orderRepository->get($orderId);
             $response = $this->client->execute(
@@ -92,14 +92,14 @@ class Order
             );
 
             if ($response == false) {
-                
+
                $this->logger->info("Order Service with no response for orderId : ".$orderId);
-               
+
             }else
             {
-                
+
               $this->addResponseOrder($order, $response);
-              
+
             }
         }
 
@@ -213,19 +213,27 @@ class Order
         $params['createdAt'] = $order->getData('created_at');
         $params['updatedAt'] = $order->getData('updated_at');
         $params['pricingDate'] = $order->getData('created_at');
-        $params['createInvoice'] = ($order->hasInvoices() ? 'true' : 'false');
-        $params['sendEmail'] = ($order->getSendEmail() != null ? 'true' : 'false');
+        $params['createInvoice'] = false;
+        $params['sendEmail'] = true;
         $params['shippingMethod'] = $order->getShippingMethod();;
         $params['couponCode'] = $order->getCouponCode();
-        $params['websiteUrl'] = $urlParts['host'];
-        $params['createGuestCustomer'] = 'true';
-        $params['doNotSaveExternally'] = 'true';
+
+        if ($urlParts['host']) {
+            $array = explode('.', $urlParts['host']);
+            $count = count($array);
+            if ($count > 1) {
+                $params['websiteUrl'] = strtoupper($array[$count - 2].'.'.$array[$count - 1]);
+            }
+        }
+
+        $params['createGuestCustomer'] = true;
+        $params['doNotSaveExternally'] = true;
         $params['last_4'] = $last4;
         $params['cc_type'] = $cc_type;
         $this->logger->info("OrderService Request :",$params);
         return $params;
     }
-    
+
     /**
     * @param $id
     * @param string $noteMessage
@@ -236,7 +244,7 @@ class Order
     ) {
        //check module status active or not
        if($this->config->getStatus()){
-           
+
         $params['transId'] = $this->config->generateUuid();
         $params['sourceService'] = 'WEB';
         $params['orderId'] = $orderId;
@@ -256,11 +264,11 @@ class Order
         if ($response == false) {
         $this->logger->info("Order Service with no response for orderId on order comment note: ".$orderId);
         }
-        
+
        }
         return;
     }
-    
+
     /**
     * @param $orderId
     * @param $response
@@ -269,7 +277,7 @@ class Order
     $order,
     $responseObj
     ) {
-        
+
         $response = json_decode($responseObj);
         $orderId = $order->getId();
         $order->setParentOrderId($response->{'parentOrderId'});
@@ -286,7 +294,7 @@ class Order
            $this->logger->info("Failed to store Response API data in orderId: ".$orderId);
         }
     }
-    
+
     /**
     * @param $orderId
     * @param $reason
@@ -295,10 +303,10 @@ class Order
     $orderId,
     $status
     ) {
-        
+
         //check module status active or not
         if($this->config->getStatus()){
-            
+
             $params['transId'] = $this->config->generateUuid();
             $params['sourceService'] = 'WEB';
             $params['canceledOrders']['orderId'] = $orderId;
@@ -316,7 +324,7 @@ class Order
             if ($response == false) {
             $this->logger->info("Order Service with no response for orderId on cancel order subcription: ".$orderId);
             }
-            
+
         }
         return;
     }
