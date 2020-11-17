@@ -85,7 +85,7 @@ class Order
             $orderId = $orders->getId();
             $order = $this->orderRepository->get($orderId);
             $lsOrderId = $order->getData('lsOrderId');
-            if (isset($lsOrderId)) {
+            if (!isset($lsOrderId)) {
                 $response = $this->client->execute(
                     $this->config->getOrderApiUrl(),
                     "orders",
