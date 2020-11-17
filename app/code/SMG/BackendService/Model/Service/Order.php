@@ -84,22 +84,24 @@ class Order
 
             $orderId = $orders->getId();
             $order = $this->orderRepository->get($orderId);
-            $response = $this->client->execute(
-                $this->config->getOrderApiUrl(),
-                "orders",
-                $this->buildOrderObject($order, $applicationWindowStartDate, $applicationWindowEndDate, $seasonname),
-                Request::HTTP_METHOD_POST
-            );
+            $lsOrderId = $order->getData('lsOrderId');
+            if (!isset($lsOrderId)) {
+                $response = $this->client->execute(
+                    $this->config->getOrderApiUrl(),
+                    "orders",
+                    $this->buildOrderObject($order, $applicationWindowStartDate, $applicationWindowEndDate, $seasonname),
+                    Request::HTTP_METHOD_POST
+                );
 
-            if ($response == false) {
+                if ($response == false) {
 
-               $this->logger->info("Order Service with no response for orderId : ".$orderId);
+                    $this->logger->info("Order Service with no response for orderId : " . $orderId);
 
-            }else
-            {
+                } else {
 
-              $this->addResponseOrder($order, $response);
+                    $this->addResponseOrder($order, $response);
 
+                }
             }
         }
 
