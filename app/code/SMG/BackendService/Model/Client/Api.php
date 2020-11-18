@@ -4,6 +4,7 @@ namespace SMG\BackendService\Model\Client;
 
 use \GuzzleHttp\Client;
 use \GuzzleHttp\ClientFactory;
+use GuzzleHttp\Exception\ClientException;
 use \GuzzleHttp\Exception\GuzzleException;
 use \GuzzleHttp\Psr7\Response;
 use \GuzzleHttp\Psr7\ResponseFactory;
@@ -93,6 +94,11 @@ class Api
                     return $response->getBody();
                 }
 
+            } catch (ClientException $e) {
+
+                $this->logger->info(sprintf('API Exception %s : %s', $apiUrl, $e->getResponse()->getBody()->getContents()));
+
+                return false;
             } catch (\Exception $ex) {
 
                 $this->logger->info(sprintf('API Exception %s : %s', $apiUrl, $ex->getMessage()));
