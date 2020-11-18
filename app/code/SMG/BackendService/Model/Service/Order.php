@@ -84,7 +84,7 @@ class Order
 
             $orderId = $orders->getId();
             $order = $this->orderRepository->get($orderId);
-            $lsOrderId = $order->getData('lsOrderId');
+            $lsOrderId = $order->getData('ls_order_id');
             if (!isset($lsOrderId)) {
                 $response = $this->client->execute(
                     $this->config->getOrderApiUrl(),
@@ -282,13 +282,10 @@ class Order
 
         $response = json_decode($responseObj);
         $orderId = $order->getId();
-        $order->setParentOrderId($response->{'parentOrderId'});
-        $order->setPreviousOrderId($response->{'previousOrderId'});
-        $order->setOrderType($response->{'orderType'});
-        $order->setSubType($response->{'subType'});
-        $order->setRecurlyPlanCode($response->{'recurlyPlanCode'});
-        $order->setRecurlyId($response->{'recurlyId'});
-        $order->setCancellationNumber($response->{'cancellationNumber'});
+        $$order->setData('ls_order_id', property_exists($response, 'orderId') ? $response->{'orderId'} : "");
+        $$order->setData('parent_order_id', property_exists($response, 'parentOrderId') ? $response->{'parentOrderId'} : "");
+        $order->setData('order_type', property_exists($response, 'orderType') ? $response->{'orderType'} : "");
+        $order->setData('scotts_customer_id', property_exists($response, 'customerId') ? $response->{'customerId'} : "");
          try {
             $this->orderRepository->save($order);
             $this->logger->info("Response API data store in orderId: ".$orderId);
