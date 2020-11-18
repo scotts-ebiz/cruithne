@@ -84,7 +84,7 @@ class Api
                     sprintf('API %s : %s', $apiUrl, print_r($params ?? "empty", true))
                 );
 
-                $response = $client->request($requestMethod, $apiUrl, $params);
+                $response = $client->request($requestMethod, $apiUrl, ['json' => $params]);
 
                 $this->logger->info(
                     sprintf('Response from API %s : %s', $apiUrl, print_r($response ?? "empty", true))
