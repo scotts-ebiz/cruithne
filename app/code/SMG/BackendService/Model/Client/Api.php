@@ -78,6 +78,8 @@ class Api
                 'headers' => $headers
             ]]);
 
+            $return = false;
+
             try {
 
                 $this->logger->info(
@@ -94,7 +96,7 @@ class Api
                     $this->logger->info(
                         sprintf('Response from API %s was a 200 or 201.', $apiUrl)
                     );
-                    return $response->getBody()->getContents();
+                    $return = $response->getBody()->getContents();
                 }
 
             } catch (ClientException $e) {
@@ -109,7 +111,7 @@ class Api
                 return false;
             }
 
-            return false;
+            return $return;
         }
     }
 
