@@ -87,16 +87,17 @@ class Api
                 );
 
                 $response = $client->request($requestMethod, $apiUrl, ['json' => $params]);
+                $contents = $response->getBody()->getContents();
 
                 $this->logger->info(
-                    sprintf('Response from API %s : %s', $apiUrl, print_r($response->getBody()->getContents() ?? "empty", true))
+                    sprintf('Response from API %s : %s', $apiUrl, print_r($contents ?? "empty", true))
                 );
 
                 if ($response->getStatusCode() == "200" || $response->getStatusCode() == "201") {
                     $this->logger->info(
                         sprintf('Response from API %s was a 200 or 201.', $apiUrl)
                     );
-                    $return = $response->getBody()->getContents();
+                    $return = $contents;
                 }
 
             } catch (ClientException $e) {
