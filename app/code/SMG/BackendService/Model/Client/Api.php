@@ -4,6 +4,7 @@ namespace SMG\BackendService\Model\Client;
 
 use \GuzzleHttp\Client;
 use \GuzzleHttp\ClientFactory;
+use GuzzleHttp\Exception\ClientException;
 use \GuzzleHttp\Exception\GuzzleException;
 use \GuzzleHttp\Psr7\Response;
 use \GuzzleHttp\Psr7\ResponseFactory;
@@ -80,19 +81,24 @@ class Api
             try {
 
                 $this->logger->info(
-                    sprintf('API %s : %s', $apiUrl, print_r($params))
+                    sprintf('API %s : %s', $apiUrl, print_r($params ?? "empty", true))
                 );
 
                 $response = $client->request($requestMethod, $apiUrl, $params);
 
                 $this->logger->info(
-                    sprintf('Response from API %s : %s', $apiUrl, print_r($response))
+                    sprintf('Response from API %s : %s', $apiUrl, print_r($response ?? "empty", true))
                 );
 
                 if ($response->getStatusCode() == "200") {
                     return $response->getBody();
                 }
 
+            } catch (ClientException $e) {
+
+                $this->logger->info(sprintf('API Exception %s : %s', $apiUrl, $e->getResponse()->getBody()->getContents()));
+
+                return false;
             } catch (\Exception $ex) {
 
                 $this->logger->info(sprintf('API Exception %s : %s', $apiUrl, $ex->getMessage()));
