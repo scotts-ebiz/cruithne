@@ -282,8 +282,8 @@ class Order
 
         $response = json_decode($responseObj);
         $orderId = $order->getId();
-        $$order->setData('ls_order_id', property_exists($response, 'orderId') ? $response->{'orderId'} : "");
-        $$order->setData('parent_order_id', property_exists($response, 'parentOrderId') ? $response->{'parentOrderId'} : "");
+        $order->setData('ls_order_id', property_exists($response, 'orderId') ? $response->{'orderId'} : "");
+        $order->setData('parent_order_id', property_exists($response, 'parentOrderId') ? $response->{'parentOrderId'} : "");
         $order->setData('order_type', property_exists($response, 'orderType') ? $response->{'orderType'} : "");
         $order->setData('scotts_customer_id', property_exists($response, 'customerId') ? $response->{'customerId'} : "");
          try {
