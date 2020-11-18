@@ -80,13 +80,13 @@ class Api
             try {
 
                 $this->logger->info(
-                    sprintf('API %s : %s', $apiUrl, print_r($params))
+                    sprintf('API %s : %s', $apiUrl, print_r($params ?? "empty", true))
                 );
 
                 $response = $client->request($requestMethod, $apiUrl, $params);
 
                 $this->logger->info(
-                    sprintf('Response from API %s : %s', $apiUrl, print_r($response))
+                    sprintf('Response from API %s : %s', $apiUrl, print_r($response ?? "empty", true))
                 );
 
                 if ($response->getStatusCode() == "200") {
