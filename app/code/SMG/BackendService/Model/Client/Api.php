@@ -4,6 +4,7 @@ namespace SMG\BackendService\Model\Client;
 
 use \GuzzleHttp\Client;
 use \GuzzleHttp\ClientFactory;
+use GuzzleHttp\Exception\ClientException;
 use \GuzzleHttp\Exception\GuzzleException;
 use \GuzzleHttp\Psr7\Response;
 use \GuzzleHttp\Psr7\ResponseFactory;
@@ -77,22 +78,33 @@ class Api
                 'headers' => $headers
             ]]);
 
+            $return = false;
+
             try {
 
                 $this->logger->info(
-                    sprintf('API %s : %s', $apiUrl, print_r($params))
+                    sprintf('API %s : %s', $apiUrl, print_r($params ?? "empty", true))
                 );
 
-                $response = $client->request($requestMethod, $apiUrl, $params);
+                $response = $client->request($requestMethod, $apiUrl, ['json' => $params]);
+                $contents = $response->getBody()->getContents();
 
                 $this->logger->info(
-                    sprintf('Response from API %s : %s', $apiUrl, print_r($response))
+                    sprintf('Response from API %s : %s', $apiUrl, print_r($contents ?? "empty", true))
                 );
 
-                if ($response->getStatusCode() == "200") {
-                    return $response->getBody();
+                if ($response->getStatusCode() == "200" || $response->getStatusCode() == "201") {
+                    $this->logger->info(
+                        sprintf('Response from API %s was a 200 or 201.', $apiUrl)
+                    );
+                    $return = $contents;
                 }
 
+            } catch (ClientException $e) {
+
+                $this->logger->info(sprintf('API Exception %s : %s', $apiUrl, $e->getResponse()->getBody()->getContents()));
+
+                return false;
             } catch (\Exception $ex) {
 
                 $this->logger->info(sprintf('API Exception %s : %s', $apiUrl, $ex->getMessage()));
@@ -100,7 +112,7 @@ class Api
                 return false;
             }
 
-            return false;
+            return $return;
         }
     }
 
