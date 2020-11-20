@@ -195,7 +195,10 @@ class CoreServicesHelper
      */
     private $config;
 
-    CONST IMAGE_URL = 'https://images.scottsprogram.com/prod/pub/media/catalog/product';
+    /**
+     * @var string
+     */
+    private $imageUrl;
 
     /**
      * @var RepositoryAddress
@@ -922,17 +925,19 @@ class CoreServicesHelper
 
             $productData['state_not_allowed'] = $states;
 
-
             /**
              * COM-962 - Build full thumbnail image url
              */
-            $thumbnailUrl = self::IMAGE_URL . ($productData['thumbnail'] ?? '');
+            $this->imageUrl = $this->_storeManager->getStore($product->getStoreId())
+                ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA ). 'catalog/product';
+
+            $thumbnailUrl = $this->imageUrl . ($productData['thumbnail'] ?? '');
             $productData['thumbnail'] = $thumbnailUrl;
 
-            $smallImageUrl = self::IMAGE_URL . ($productData['small_image'] ?? '');
+            $smallImageUrl = $this->imageUrl . ($productData['small_image'] ?? '');
             $productData['small_image'] = $smallImageUrl;
 
-            $imageUrl = self::IMAGE_URL . ($productData['image'] ?? '');
+            $imageUrl = $this->imageUrl . ($productData['image'] ?? '');
             $productData['image'] = $imageUrl;
 
             $products[] = $productData;
