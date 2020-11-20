@@ -127,4 +127,14 @@ class CoreServices implements CoreServicesInterface
     {
         return $this->_coreServicesHelper->createShipment($this->_request->getRequestData());
     }
+
+    /**
+     * Update the order billing address
+     *
+     * @return string
+     */
+    public function UpdateBillingAddress()
+    {
+        return $this->_coreServicesHelper->updateBillingAddress($this->_request->getRequestData());
+    }
 }

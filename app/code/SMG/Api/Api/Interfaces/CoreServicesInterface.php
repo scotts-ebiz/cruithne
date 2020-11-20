@@ -39,6 +39,13 @@ interface CoreServicesInterface
      */
     public function createShipment();
 
+    /**
+     * This function will update the billing address for an order.
+     *
+     * @return string
+     */
+    public function UpdateBillingAddress();
+
 
 
 }
