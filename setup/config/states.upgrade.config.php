@@ -88,7 +88,7 @@ return [
             'id'          => 'root.system-config',
             'url'         => 'system-config',
             'templateUrl' => "$base/system-config",
-            'title'       => 'System config (Deprecated)',
+            'title'       => 'System config',
             'controller'  => 'systemConfigController',
             'default'     => false,
             'nav-bar'     => false,

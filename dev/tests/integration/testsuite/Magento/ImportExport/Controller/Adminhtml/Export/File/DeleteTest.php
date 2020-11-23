@@ -16,8 +16,6 @@ use Magento\TestFramework\TestCase\AbstractBackendController;
 
 /**
  * Test for \Magento\ImportExport\Controller\Adminhtml\Export\File\Delete class.
- *
- * @magentoAppArea adminhtml
  */
 class DeleteTest extends AbstractBackendController
 {

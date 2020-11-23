@@ -11,8 +11,6 @@ use Magento\Framework\Filesystem;
 
 /**
  * Queue content file reader.
- *
- * @deprecated Starting from Magento 2.3.6 Web Setup Wizard is deprecated
  */
 class Reader
 {

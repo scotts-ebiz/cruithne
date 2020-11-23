@@ -14,8 +14,6 @@ use Zend\Mvc\Controller\AbstractActionController;
  * Class Environment
  *
  * Provides information and checks about the environment.
- *
- * @deprecated Starting from Magento 2.3.6 Web Setup Wizard is deprecated
  */
 class Environment extends AbstractActionController
 {

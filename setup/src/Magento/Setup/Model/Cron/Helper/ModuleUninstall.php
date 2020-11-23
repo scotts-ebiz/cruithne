@@ -12,8 +12,6 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * Helper class for JobComponentUninstall to uninstall a module component
- *
- * @deprecated Starting from Magento 2.3.6 Web Setup Wizard is deprecated
  */
 class ModuleUninstall
 {

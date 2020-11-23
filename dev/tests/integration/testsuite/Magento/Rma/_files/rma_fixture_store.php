@@ -19,7 +19,6 @@ $rma = $objectManager->create(Rma::class);
 $rma->setOrderId($order->getId());
 $rma->setStoreId($order->getStoreId());
 $rma->setIncrementId(2);
-$rma->setStatus('pending');
 
 $orderProduct = $orderItem->getProduct();
 /** @var ItemInterface $rmaItem */
