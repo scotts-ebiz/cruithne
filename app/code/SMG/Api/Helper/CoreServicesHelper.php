@@ -50,6 +50,8 @@ use Magento\Sales\Api\Data\ShipmentTrackCreationInterfaceFactory;
 use SMG\Api\Helper\ShipmentHelper;
 use Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory as OrderItemCollectionFactory;
 use SMG\BackendService\Helper\Data as Config;
+use Magento\Sales\Model\Order\AddressRepository as RepositoryAddress;
+use Magento\Directory\Model\ResourceModel\Region\CollectionFactory as RegionCollectionFactory;
 
 class CoreServicesHelper
 {
@@ -193,7 +195,20 @@ class CoreServicesHelper
      */
     private $config;
 
-    CONST IMAGE_URL = 'https://images.scottsprogram.com/prod/pub/media/catalog/product';
+    /**
+     * @var string
+     */
+    private $imageUrl;
+
+    /**
+     * @var RepositoryAddress
+     */
+    private $repositoryAddress;
+
+    /**
+     * @var RegionCollectionFactory
+     */
+    private $regionCollection;
 
     /**
      * OrderStatusHelper constructor.
@@ -238,6 +253,7 @@ class CoreServicesHelper
      * @param ShipmentHelper $shipmentHelper
      * @param OrderItemCollectionFactory $orderItemCollectionFactory
      * @param Config $config
+     * RepositoryAddress $repositoryAddress
      */
     public function __construct(
         LoggerInterface $logger,
@@ -279,7 +295,9 @@ class CoreServicesHelper
         ShipmentTrackCreationInterfaceFactory $shipmentTrackCreationInterfaceFactory,
         ShipmentHelper $shipmentHelper,
         OrderItemCollectionFactory $orderItemCollectionFactory,
-        Config $config
+        Config $config,
+        RepositoryAddress $repositoryAddress,
+        RegionCollectionFactory $regionCollection
     ) {
         $this->_logger = $logger;
         $host = gethostname();
@@ -324,6 +342,8 @@ class CoreServicesHelper
         $this->_shipmentHelper = $shipmentHelper;
         $this->_orderItemCollectionFactory = $orderItemCollectionFactory;
         $this->config = $config;
+        $this->repositoryAddress = $repositoryAddress;
+        $this->regionCollection = $regionCollection;
     }
 
     /**
@@ -905,17 +925,19 @@ class CoreServicesHelper
 
             $productData['state_not_allowed'] = $states;
 
-
             /**
              * COM-962 - Build full thumbnail image url
              */
-            $thumbnailUrl = self::IMAGE_URL . ($productData['thumbnail'] ?? '');
+            $this->imageUrl = $this->_storeManager->getStore($product->getStoreId())
+                ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA ). 'catalog/product';
+
+            $thumbnailUrl = $this->imageUrl . ($productData['thumbnail'] ?? '');
             $productData['thumbnail'] = $thumbnailUrl;
 
-            $smallImageUrl = self::IMAGE_URL . ($productData['small_image'] ?? '');
+            $smallImageUrl = $this->imageUrl . ($productData['small_image'] ?? '');
             $productData['small_image'] = $smallImageUrl;
 
-            $imageUrl = self::IMAGE_URL . ($productData['image'] ?? '');
+            $imageUrl = $this->imageUrl . ($productData['image'] ?? '');
             $productData['image'] = $imageUrl;
 
             $products[] = $productData;
@@ -1107,6 +1129,101 @@ class CoreServicesHelper
                 'response' => 'Nothing was found to process.'
             );
         }
+    }
+
+    /**
+     * Updates billing address for an order
+     * @param $requestData
+     * @return array
+     */
+    public function updateBillingAddress($requestData)
+    {
+        try {
+            if (isset($requestData['order_entity_id']) &&
+                isset($requestData['firstname']) &&
+                isset($requestData['lastname']) &&
+                isset($requestData['country_id']) &&
+                isset($requestData['region']) &&
+                isset($requestData['street']) &&
+                isset($requestData['city']) &&
+                isset($requestData['telephone'])) {
+
+                /** @var Order $order */
+                $order = $this->_orderRepository->get($requestData['order_entity_id']);
+                if ($order) {
+
+                    $billAddress = $this->repositoryAddress->get($order->getBillingAddress()->getData("entity_id"));
+
+                    if ($billAddress->getId()) {
+
+                        $regionId = 0;
+                        $region = $this->regionCollection->create()
+                            ->addRegionNameFilter($requestData['region'])
+                            ->getFirstItem()
+                            ->toArray();
+
+                        if ($region) {
+                            if ($region['region_id']) {
+                                $regionId = $region['region_id'];
+                            }
+
+
+                            $billAddress->setFirstname($requestData['firstname']);
+                            $billAddress->setLastname($requestData['lastname']);
+                            $billAddress->setCountryId($requestData['country_id']);
+                            $billAddress->setRegion($requestData['region']);
+                            $billAddress->setRegionId($regionId);
+                            $billAddress->setPostcode($requestData['postcode']);
+                            $billAddress->setStreet($requestData['street']);
+                            $billAddress->setCity($requestData['city']);
+                            $billAddress->setTelephone($requestData['telephone']);
+                            $this->repositoryAddress->save($billAddress);
+
+
+                            // Return a successful response.
+                            $response = array(
+                                'statusCode' => 200,
+                                'statusMessage' => 'success',
+                                'response' => 'true'
+                            );
+                        } else {
+                            $response = array(
+                                'statusCode' => 200,
+                                'statusMessage' => 'failure',
+                                'response' => 'Invalid region'
+                            );
+                        }
+                    } else {
+                        $response = array(
+                            'statusCode' => 200,
+                            'statusMessage' => 'failure',
+                            'response' => 'Invalid order'
+                        );
+                    }
+                } else {
+                    $response = array(
+                        'statusCode' => 200,
+                        'statusMessage' => 'failure',
+                        'response' => 'Invalid order'
+                    );
+                }
+            } else {
+                $response = array(
+                    'statusCode' => 200,
+                    'statusMessage' => 'failure',
+                    'response' => 'Data missing'
+                );
+            }
+        } catch (\Exception $e) {
+            // Return exception response.
+            $response = array(
+                'statusCode' => 200,
+                'statusMessage' => 'failure',
+                'response' => $e->getMessage()
+            );
+        }
+
+        return $response;
     }
 
 }

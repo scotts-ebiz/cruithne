@@ -509,7 +509,20 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         
         $salesData = $this->_orderFactory->create()->load($orderId);
         $customerId = $salesData->getCustomerId();
-        $customergigyaId = $salesData->getGigyaId();
+        $scottscustomerId = $salesData->getScottsCustomerId();
+        $customergigyaId = '';
+        if(!empty($scottscustomerId))
+        {
+            $customergigyaId = $scottscustomerId;
+        }
+        else
+        {
+            $customer = $this->_customer->load($customerId);
+            if ($customer->getGigyaUid()) {
+             $customergigyaId = $customer->getGigyaUid();
+            }
+        }
+
         $this->_customerId = $customerId;
         $this->_customerGigyaId = $customergigyaId;
         
