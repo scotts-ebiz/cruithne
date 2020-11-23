@@ -32,7 +32,6 @@ RUN git config --global user.name "Git User" && git config --global user.email "
 RUN ssh-keyscan -p 443 distribution.akeneo.com >> ~/.ssh/known_hosts
 
 RUN composer install
-RUN git checkout origin .htaccess
 RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento2/tools
 
 
@@ -49,7 +48,7 @@ WORKDIR $MAGENTO_DIR
 USER root
 
 
-RUN cd tools && rm -rf node_modules && npm install
+RUN cd tools && npm install
 
 # Expose Ports for Apache
 EXPOSE 80/tcp 443/tcp

@@ -14,8 +14,6 @@ use Zend\View\Model\ViewModel;
 
 /**
  * Controller of data option selection
- *
- * @deprecated Starting from Magento 2.3.6 Web Setup Wizard is deprecated
  */
 class DataOption extends AbstractActionController
 {

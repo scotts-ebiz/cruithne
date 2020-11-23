@@ -13,8 +13,6 @@ use Magento\Framework\Composer\MagentoComposerApplicationFactory;
 
 /**
  * Class SystemPackage returns system package and available for update versions
- *
- * @deprecated Starting from Magento 2.3.6 Web Setup Wizard is deprecated
  */
 class SystemPackage
 {

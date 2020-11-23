@@ -5,11 +5,9 @@
  */
 namespace Magento\CatalogPermissions\Model\Indexer;
 
-use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Catalog\Model\Product\Attribute\Source\Status;
 use Magento\Catalog\Model\Product\Visibility;
-use Magento\CatalogPermissions\Model\Indexer\Category as IndexerCategory;
 use Magento\CatalogPermissions\Model\Indexer\Product as IndexerProduct;
 use Magento\CatalogPermissions\Model\ResourceModel\Permission\Index;
 use Magento\Indexer\Model\Indexer;
@@ -17,7 +15,7 @@ use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Test for product permissions reindex process
+ * Product test
  *
  * @magentoDbIsolation disabled
  * @magentoAppIsolation enabled
@@ -67,6 +65,10 @@ class ProductTest extends TestCase
 
         $productData = array_merge(['product_id' => $product->getId()], $this->getProductData());
         $this->assertContains($productData, $this->indexTable->getIndexForProduct($product->getId(), 1, 1));
+
+        $product->setVisibility(Visibility::VISIBILITY_NOT_VISIBLE);
+        $product->save();
+        $this->assertNotEmpty($this->indexTable->getIndexForProduct($product->getId(), 1, 1));
 
         $product->setStatus(Status::STATUS_DISABLED);
         $product->save();

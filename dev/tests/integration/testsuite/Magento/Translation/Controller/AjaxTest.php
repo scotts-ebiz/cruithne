@@ -6,109 +6,60 @@
 
 namespace Magento\Translation\Controller;
 
-use Magento\Framework\App\Config\MutableScopeConfigInterface;
-use Magento\Framework\Exception\NoSuchEntityException;
-use Magento\Store\Model\ScopeInterface;
-use Magento\Store\Model\StoreManagerInterface;
-use Magento\TestFramework\Helper\Bootstrap;
-use Magento\Framework\ObjectManagerInterface;
-use Magento\Translation\Model\ResourceModel\StringUtils;
-
-/**
- * Test for Magento\Translation\Controller\Ajax class.
- */
 class AjaxTest extends \Magento\TestFramework\TestCase\AbstractController
 {
-    /**
-     * @var ObjectManagerInterface
-     */
-    private $objectManager;
-
-    /**
-     * @inheritdoc
-     */
     protected function setUp()
     {
         /* Called getConfig as workaround for setConfig bug */
-        $this->objectManager = Bootstrap::getObjectManager();
-        $this->objectManager->get(
-            StoreManagerInterface::class
+        \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(
+            \Magento\Store\Model\StoreManagerInterface::class
         )->getStore(
             'default'
         )->getConfig(
             'dev/translate_inline/active'
         );
-        $this->objectManager->get(
-            MutableScopeConfigInterface::class
+        \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(
+            \Magento\Framework\App\Config\MutableScopeConfigInterface::class
         )->setValue(
             'dev/translate_inline/active',
             true,
-            ScopeInterface::SCOPE_STORE,
+            \Magento\Store\Model\ScopeInterface::SCOPE_STORE,
             'default'
         );
         parent::setUp();
     }
 
     /**
-     * @param array $postData
-     * @param string $expected
-     *
-     * @return void
      * @dataProvider indexActionDataProvider
      */
-    public function testIndexAction(array $postData, string $expected): void
+    public function testIndexAction($postData, $expected)
     {
         $this->getRequest()->setPostValue('translate', $postData);
         $this->dispatch('translation/ajax/index');
         $this->assertEquals($expected, $this->getResponse()->getBody());
     }
 
-    /**
-     * @return array
-     */
-    public function indexActionDataProvider(): array
+    public function indexActionDataProvider()
     {
         return [
             [
                 [
                     [
-                        'original' => 'phrase with &',
-                        'custom' => 'phrase with & translated',
-                    ],
+                        'original' => 'phrase1',
+                        'custom' => 'translation1'
+                    ]
                 ],
-                '{"phrase with &":"phrase with & translated"}',
+                '{"phrase1":"translation1"}'
             ],
             [
                 [
                     [
-                        'original' => 'phrase with &',
-                        'custom' => 'phrase with & translated (updated)',
-                    ],
+                        'original' => 'phrase2',
+                        'custom' => 'translation2'
+                    ]
                 ],
-                '{"phrase with &":"phrase with & translated (updated)"}',
-            ],
-            [
-                [
-                    [
-                        'original' => 'phrase with &',
-                        'custom' => 'phrase with &',
-                    ],
-                ],
-                '[]',
-            ],
+                '{"phrase1":"translation1","phrase2":"translation2"}'
+            ]
         ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public static function tearDownAfterClass()
-    {
-        try {
-            Bootstrap::getObjectManager()->get(StringUtils::class)->deleteTranslate('phrase with &');
-        } catch (NoSuchEntityException $exception) {
-            //translate already deleted
-        }
-        parent::tearDownAfterClass();
     }
 }

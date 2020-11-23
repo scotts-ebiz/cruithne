@@ -74,8 +74,6 @@ foreach ($options as $option) {
     ];
     $associatedProductIds[] = $product->getId();
 }
-$indexerProcessor = Bootstrap::getObjectManager()->get(\Magento\Catalog\Model\Indexer\Product\Price\Processor::class);
-$indexerProcessor->reindexList($associatedProductIds);
 
 /** @var $product Product */
 $product = Bootstrap::getObjectManager()->create(Product::class);
@@ -130,8 +128,8 @@ $product->setTypeId(Configurable::TYPE_CODE)
     ->setVisibility(Visibility::VISIBILITY_BOTH)
     ->setStatus(Status::STATUS_ENABLED)
     ->setStockData(['use_config_manage_stock' => 1, 'is_in_stock' => 1]);
-$product = $productRepository->save($product);
-$indexerProcessor->reindexRow($product->getId());
+
+$productRepository->save($product);
 
 /** @var \Magento\Catalog\Api\CategoryLinkManagementInterface $categoryLinkManagement */
 $categoryLinkManagement = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()

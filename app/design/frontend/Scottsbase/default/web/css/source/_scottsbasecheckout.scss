@@ -89,7 +89,7 @@
                                     }
                                 }
                                 div[name="shippingAddress.firstname"], div[name="shippingAddress.lastname"], div[name="billingAddressvantiv_cc.firstname"], div[name="billingAddressvantiv_cc.lastname"] {
-                                    width: 50%;
+                                    width: 49%;
                                     display: inline-block;
                                     @media screen and (max-width: $screen__m) {
                                         width: 100%;
@@ -107,8 +107,10 @@
                                 }
                                 div[name="shippingAddress.lastname"], div[name="billingAddressvantiv_cc.lastname"] {
                                     padding-left: 10px;
+                                    float: right;
                                     @media screen and (max-width: $screen__m) {
                                         padding-left: 0;
+                                        float: inherit;
                                     }
                                 }
                             }
@@ -285,72 +287,14 @@
                                             }
                                         }
                                         .opc-payment-additional {
-                                            .payment-option-title {
-                                                padding-bottom: 30px;
-                                                .action-toggle {
-                                                    color: $scotts-green;
-                                                    span {
-                                                        font-weight: 700;
-                                                        line-height: 1.1;
-                                                        margin-top: 2rem;
-                                                        margin-bottom: 2rem;
-                                                        font-size: 18px;
-                                                    }
-                                                }
-                                            }
                                             .payment-option-content {
                                                 .form-discount {
                                                     max-width: none;
-                                                    .payment-option-inner {
-                                                        @media screen and (max-width: $screen__l) {
-                                                            margin: 0 0 0 0;
-                                                        }
-                                                        label {
-                                                            padding: 6px 15px 0 0;
-                                                            text-align: right;
-                                                            box-sizing: border-box;
-                                                            float: left;
-                                                            position: relative;
-                                                            font-weight: 700;
-                                                            overflow: visible;
-                                                            height: auto;
-                                                            @media screen and (max-width: $screen__l) {
-                                                                width: auto;
-                                                            }
-                                                        }
-                                                        .control {
-                                                            width: auto;
-                                                            float: left;
-                                                            .actions-toolbar .primary {
-                                                                float: none;
-                                                            }
-                                                        }
-                                                    }
                                                     .payment-option-inner>.field {
                                                         &:after {
                                                             display: inline-block;
                                                             content: '';
                                                             clear: both;
-                                                        }
-                                                    }
-                                                    .actions-toolbar {
-                                                        @media screen and (max-width: $screen__l) {
-                                                            margin-left: 0;
-                                                            margin-top: 10px;
-                                                            display: inline-block;
-                                                            width: 100%;
-                                                        }
-                                                        .primary {
-                                                            float: none;
-                                                            margin-left: 20px;
-                                                            @media screen and (max-width: $screen__l) {
-                                                                width: 100%;
-                                                                margin-left: 0;
-                                                            }
-                                                            button {
-                                                                width: 150px;
-                                                                height: 30px;
-                                                            }
                                                         }
                                                     }
                                                 }
@@ -674,10 +618,6 @@
             }
         }
     }
-    //Error Code
-    .field-error, #customer-email-error {
-        font-size: 0.9375rem;
-    }
     .message-error {
         background: #ececec;
         color: #000;
@@ -714,7 +654,8 @@
                 }
                 .actions-toolbar {
                     width: 100%;
-                    padding-top: 65px;
+                    padding-top: 20px;
+                    border-top: 1px solid #ccc;
                     text-align: right;
                     .primary {
                         float: right;
@@ -722,19 +663,6 @@
                         .action.primary.continue {
                             @include cart-checkout-button();
                         }
-                    }
-                }
-                .success-info-text{
-                    display: flex;
-                    .sp-block{
-                        width: 20px;
-                        vertical-align: bottom;
-                        padding-right: 1%;
-                        font-weight: bold;
-                    }
-                    h4.sp-text-green-1{
-                       font-weight: 400;
-                       font-size: 1.2rem;
                     }
                 }
             }

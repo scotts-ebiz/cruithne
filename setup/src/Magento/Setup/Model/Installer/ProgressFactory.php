@@ -11,8 +11,6 @@ use Magento\Setup\Model\WebLogger;
 
 /**
  * Factory for progress indicator model
- *
- * @deprecated Starting from Magento 2.3.6 Web Setup Wizard is deprecated
  */
 class ProgressFactory
 {

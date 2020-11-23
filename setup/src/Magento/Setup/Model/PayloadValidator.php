@@ -8,8 +8,6 @@ namespace Magento\Setup\Model;
 
 /**
  * Validates payloads for updater tasks
- *
- * @deprecated Starting from Magento 2.3.6 Web Setup Wizard is deprecated
  */
 class PayloadValidator
 {
