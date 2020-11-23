@@ -10,19 +10,6 @@ $objectManager = Bootstrap::getObjectManager();
 /** @var \Magento\Catalog\Setup\CategorySetup $installer */
 $installer = $objectManager->create(\Magento\Catalog\Setup\CategorySetup::class);
 
-if (!isset($option)) {
-    $option = [
-        'value' => [
-            'chair' => ['Chair'],
-            'table' => ['Table'],
-        ],
-        'order' => [
-            'chair' => 1,
-            'table' => 2,
-        ],
-    ];
-}
-
 /** @var \Magento\Catalog\Model\ResourceModel\Eav\Attribute $attribute */
 $selectAttribute = $objectManager->create(\Magento\Catalog\Model\ResourceModel\Eav\Attribute::class);
 $selectAttribute->setData(
@@ -47,7 +34,16 @@ $selectAttribute->setData(
         'frontend_label' => ['Select Attribute'],
         'backend_type' => 'varchar',
         'backend_model' => \Magento\Eav\Model\Entity\Attribute\Backend\ArrayBackend::class,
-        'option' => $option,
+        'option' => [
+            'value' => [
+                'chair' => ['Chair'],
+                'table' => ['Table'],
+            ],
+            'order' => [
+                'chair' => 1,
+                'table' => 2,
+            ],
+        ],
     ]
 );
 $selectAttribute->save();

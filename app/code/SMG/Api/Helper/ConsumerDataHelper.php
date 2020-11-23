@@ -118,7 +118,7 @@ class ConsumerDataHelper
     }
 
     /**
-     * Get the sales orders in the desired format.
+     * Get the sales orders in the desired format
      *
      * @return string
      */

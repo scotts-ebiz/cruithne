@@ -12,8 +12,6 @@ use Zend\View\Model\JsonModel;
 
 /**
  * Controller for other components grid on select version page
- *
- * @deprecated Starting from Magento 2.3.6 Web Setup Wizard is deprecated
  */
 class OtherComponentsGrid extends AbstractActionController
 {

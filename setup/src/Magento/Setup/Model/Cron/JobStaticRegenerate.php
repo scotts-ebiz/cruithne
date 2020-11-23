@@ -7,8 +7,6 @@ namespace Magento\Setup\Model\Cron;
 
 /**
  * Static regenerate job
- *
- * @deprecated Starting from Magento 2.3.6 Web Setup Wizard is deprecated
  */
 class JobStaticRegenerate extends AbstractJob
 {

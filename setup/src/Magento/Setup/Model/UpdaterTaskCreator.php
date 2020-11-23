@@ -12,8 +12,6 @@ use Zend\Json\Json;
 
 /**
  * Validates payloads for updater tasks
- *
- * @deprecated Starting from Magento 2.3.6 Web Setup Wizard is deprecated
  */
 class UpdaterTaskCreator
 {
