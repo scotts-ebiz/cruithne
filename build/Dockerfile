@@ -15,7 +15,7 @@ USER root
 WORKDIR $MAGENTO_DIR
 RUN chown -R magento:www-data .git
 
-RUN chown -R magento /usr/local/lib/node_modules
+RUN if [ -d /usr/local/lib/node_modules ]; then chown -R magento /usr/local/lib/node_modules; fi
 
 RUN npm install -g npm
 
