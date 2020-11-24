@@ -266,9 +266,14 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     public function getProductName($subscription_uuid)
     {
         // From Order Collection - Select all attributs based on Subscription_Id
-        $collection = $this->_orderCollectionFactory->create()
-            ->addAttributeToSelect('*')
-            ->addFieldToFilter('subscription_id', $subscription_uuid);
+        $collection = $this->_orderCollectionFactory->create()->addAttributeToSelect('*');
+        $collection->addFieldToFilter(
+            array('subscription_id', 'ls_order_id'),
+            array(
+                array('eq'=>$subscription_uuid), 
+                array('eq'=>$subscription_uuid)
+            )
+        );
 
         // Select Order Entity_Id from Order Collection results   
         foreach ($collection as $order) {
@@ -297,9 +302,14 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     public function getProductQty($subscription_uuid)
     {
         // From Order Collection - Select all attributs based on Subscription_Id
-        $collection = $this->_orderCollectionFactory->create()
-            ->addAttributeToSelect('*')
-            ->addFieldToFilter('subscription_id', $subscription_uuid);
+        $collection = $this->_orderCollectionFactory->create()->addAttributeToSelect('*');
+        $collection->addFieldToFilter(
+            array('subscription_id', 'ls_order_id'),
+            array(
+                array('eq'=>$subscription_uuid), 
+                array('eq'=>$subscription_uuid)
+            )
+        );
 
         // Select Order Entity_Id from Order Collection results   
         foreach ($collection as $order) {
@@ -328,10 +338,14 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     public function getMagentoStatus($subscription_uuid)
     {
         // From Order Collection - Select all attributs based on Subscription_Id
-        $collection = $this->_orderCollectionFactory->create()
-            ->addAttributeToSelect('*')
-            ->addFieldToFilter('subscription_id', $subscription_uuid);
-
+       $collection = $this->_orderCollectionFactory->create()->addAttributeToSelect('*');
+       $collection->addFieldToFilter(
+            array('subscription_id', 'ls_order_id'),
+            array(
+                array('eq'=>$subscription_uuid), 
+                array('eq'=>$subscription_uuid)
+            )
+        );
         // Select Order Status from Order Collection results   
         foreach ($collection as $order) {
             return $order->getData('status');
@@ -350,9 +364,14 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     public function getSapOrderStatus($subscription_uuid)
     {
         // From Order Collection - Select all attributs based on Subscription_Id
-        $collection = $this->_orderCollectionFactory->create()
-            ->addAttributeToSelect('*')
-            ->addFieldToFilter('subscription_id', $subscription_uuid);
+        $collection = $this->_orderCollectionFactory->create()->addAttributeToSelect('*');
+        $collection->addFieldToFilter(
+            array('subscription_id', 'ls_order_id'),
+            array(
+                array('eq'=>$subscription_uuid), 
+                array('eq'=>$subscription_uuid)
+            )
+        );
 
         // Create instance of SAP Order Factory    
         $sapOrderObject = $this->_sapOrderFactory->create();
@@ -392,10 +411,15 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     public function getProductSku($subscription_uuid)
     {
         // From Order Collection - Select all attributs based on Subscription_Id
-        $collection = $this->_orderCollectionFactory->create()
-            ->addAttributeToSelect('*')
-            ->addFieldToFilter('subscription_id', $subscription_uuid);
-
+        $collection = $this->_orderCollectionFactory->create()->addAttributeToSelect('*');
+        $collection->addFieldToFilter(
+            array('subscription_id', 'ls_order_id'),
+            array(
+                array('eq'=>$subscription_uuid), 
+                array('eq'=>$subscription_uuid)
+            )
+        );
+            
         // Select Order Entity_Id from Order Collection results   
         foreach ($collection as $order) {
             $orderEntityId = $order->getData('entity_id');
@@ -423,9 +447,15 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     public function getOrderBySubscriptionId($subscriptionId)
     {
         $order = $this->_orderFactory->create();
+        
         $this->_orderResource->load($order, $subscriptionId, 'subscription_id');
+        
+        if (!$order->getId()) {
+            $this->_orderResource->load($order, $subscriptionId, 'ls_order_id');
+        }
+        
         $orderId = $order->getId();
-
+        
         if (!$orderId) {
             $this->_logger->error("Could not find an order for subscription with ID: {$subscriptionId}");
         }
@@ -517,9 +547,11 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         }
         else
         {
-            $customer = $this->_customer->load($customerId);
-            if ($customer->getGigyaUid()) {
-             $customergigyaId = $customer->getGigyaUid();
+            if($customerId){
+                $customer = $this->_customer->load($customerId);
+                if ($customer->getGigyaUid()) {
+                 $customergigyaId = $customer->getGigyaUid();
+                }
             }
         }
 
