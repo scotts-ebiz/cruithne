@@ -77,6 +77,26 @@ class NodeTest extends AbstractBackendController
     }
 
     /**
+     * Test of saving page assigned to multistores
+     *
+     * @magentoDbIsolation enabled
+     * @magentoDataFixture Magento/VersionsCms/_files/hierarchy_nodes_with_pages_on_different_websites_and_stores.php
+     */
+    public function testAppendPageToNodesMultiStores()
+    {
+        $this->page->load('page100');
+        $this->getRequest()->setMethod(HttpRequest::METHOD_POST);
+        $requestData = $this->getMultiStoresRequestData();
+        $this->getRequest()->setPostValue($requestData);
+        $this->dispatch('backend/cms/page/save');
+        $this->assertSessionMessages(
+            $this->equalTo(['You saved the page.']),
+            MessageInterface::TYPE_SUCCESS
+        );
+        $this->assertSessionMessages($this->isEmpty(), MessageInterface::TYPE_ERROR);
+    }
+
+    /**
      * Checking that records are created on the correct store
      *
      * @return void
@@ -150,7 +170,7 @@ class NodeTest extends AbstractBackendController
             'identifier' => $this->page->getIdentifier(),
             'is_active' => '1',
             'store_code' => 'admin',
-            'store_id' => [Store::DEFAULT_STORE_ID],
+            'store_id' => [Store::DEFAULT_STORE_ID, $this->storeManager->getStore('test')->getId()],
             'back' => 'duplicate',
             'nodes_data' => $this->getNodesData(),
         ];
@@ -184,5 +204,23 @@ class NodeTest extends AbstractBackendController
             }
         }
         return $this->serializer->serialize($nodesData);
+    }
+
+    /**
+     * Preparing multi stores request data for dispatch page save controller
+     *
+     * @return array
+     */
+    private function getMultiStoresRequestData(): array
+    {
+        return [
+            'page_id' => $this->page->getId(),
+            'title' => $this->page->getTitle(),
+            'page_layout' => '1column',
+            'identifier' => $this->page->getIdentifier(),
+            'is_active' => '1',
+            'store_id' => array_keys($this->storeManager->getStores()),
+            'nodes_data' => $this->getNodesData(),
+        ];
     }
 }
