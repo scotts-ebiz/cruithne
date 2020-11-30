@@ -48,7 +48,7 @@ WORKDIR $MAGENTO_DIR
 USER root
 
 
-RUN cd tools && npm install
+RUN cd tools && rm -rf node_modules && npm install
 
 # Expose Ports for Apache
 EXPOSE 80/tcp 443/tcp

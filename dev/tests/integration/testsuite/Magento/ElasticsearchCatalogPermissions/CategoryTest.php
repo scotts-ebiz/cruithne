@@ -8,6 +8,7 @@ declare(strict_types=1);
 namespace Magento\ElasticsearchCatalogPermissions;
 
 use Magento\Framework\App\Config\ScopeConfigInterface;
+use Magento\Framework\Module\ModuleList;
 
 /**
  * @magentoDbIsolation disabled
@@ -20,8 +21,9 @@ class CategoryTest extends \Magento\TestFramework\TestCase\AbstractController
     protected function setUp()
     {
         parent::setUp();
-        /** @var \Magento\Framework\Module\ModuleList $modules */
-        $modules = $this->_objectManager->get(\Magento\Framework\Module\ModuleList::class);
+
+        /** @var ModuleList $modules */
+        $modules = $this->_objectManager->get(ModuleList::class);
         if (empty($modules->getOne('Magento_LayeredNavigation'))) {
             $this->markTestSkipped('Skipping test, required module Magento_LayeredNavigation is disabled.');
         }
@@ -33,8 +35,10 @@ class CategoryTest extends \Magento\TestFramework\TestCase\AbstractController
     /**
      * Tests that fulltext search will respect the permissions applied to a category and will show or hide the
      * products in the respective category
+     *
      * @magentoConfigFixture current_store catalog/magento_catalogpermissions/enabled 1
      * @magentoConfigFixture current_store catalog/magento_catalogpermissions/grant_catalog_category_view 1
+     * @magentoDataFixture Magento/CatalogPermissions/_files/reindex_permissions.php
      * @magentoDataFixture Magento/ElasticsearchCatalogPermissions/_files/catalog_products.php
      * @magentoDataFixture Magento/CatalogSearch/_files/full_reindex.php
      * @dataProvider searchDataProvider
@@ -46,9 +50,7 @@ class CategoryTest extends \Magento\TestFramework\TestCase\AbstractController
         string $sku,
         string $name,
         bool $shouldBeVisible
-    ) {
-        $this->performReindex();
-
+    ): void {
         //test successful fulltextsearch
         $this->dispatch('catalogsearch/result/?q=' . $name);
         $responseBody = $this->getResponse()->getBody();
@@ -70,22 +72,23 @@ class CategoryTest extends \Magento\TestFramework\TestCase\AbstractController
     /**
      * Tests that layeredNavigation search will respect the permissions applied to a category and will show or
      * hide the products in the respective category
+     *
      * @magentoConfigFixture current_store catalog/magento_catalogpermissions/enabled 1
      * @magentoConfigFixture current_store catalog/magento_catalogpermissions/grant_catalog_category_view 1
+     * @magentoDataFixture Magento/CatalogPermissions/_files/reindex_permissions.php
      * @magentoDataFixture Magento/ElasticsearchCatalogPermissions/_files/catalog_products.php
+     * @magentoDataFixture Magento/CatalogSearch/_files/full_reindex.php
+     * @dataProvider searchDataProvider
      * @param string $sku
      * @param string $name
      * @param bool $shouldBeVisible
-     * @dataProvider searchDataProvider
      * @throws \Exception
      */
     public function testPermissibleCategoryProductsReturnedByLayeredNavigationSearch(
         string $sku,
         string $name,
         bool $shouldBeVisible
-    ) {
-        $this->performReindex();
-
+    ): void {
         $this->dispatch('catalogsearch/advanced/result/?name=' . $name);
         $responseBody = $this->getResponse()->getBody();
         if ($shouldBeVisible) {
@@ -105,9 +108,10 @@ class CategoryTest extends \Magento\TestFramework\TestCase\AbstractController
 
     /**
      * Data provider returning sku, name, and whether the guest should be allowed to see the product
+     *
      * @return array
      */
-    public function searchDataProvider()
+    public function searchDataProvider(): array
     {
         return [
             ['simple_allow_122', 'Allow category product', true],
@@ -116,23 +120,11 @@ class CategoryTest extends \Magento\TestFramework\TestCase\AbstractController
     }
 
     /**
-     * Performs reindex because of permissions created in fixture
-     * @throws \Exception
-     */
-    private function performReindex()
-    {
-        /** @var  $indexer \Magento\Framework\Indexer\IndexerInterface */
-        $indexer = $this->_objectManager->create(\Magento\Indexer\Model\Indexer::class);
-
-        $indexer->load(\Magento\CatalogPermissions\Model\Indexer\Category::INDEXER_ID);
-        $indexer->reindexAll();
-    }
-
-    /**
      * Checks if application is configured to use ElasticSearch as search engine
+     *
      * @return bool
      */
-    private function isSearchEngineElasticsearch()
+    private function isSearchEngineElasticsearch(): bool
     {
         /** @var ScopeConfigInterface $config */
         $config = $this->_objectManager->get(ScopeConfigInterface::class);
