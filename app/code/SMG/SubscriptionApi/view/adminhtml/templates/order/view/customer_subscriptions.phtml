@@ -32,16 +32,18 @@ $order = $block->getOrderById($orderId);
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach ($subscriptionsList as $subscription) { 
+					<?php foreach ($subscriptionsList as $subscription) {
 					$uuid = (isset($subscription->custom_fields['orderId'])) ? $subscription->custom_fields['orderId']->value : $subscription->uuid;
 					?>
 						<tr onclick='location.href = this.getElementsByTagName("a").item(0).getAttribute("href");'>
 							<?php if ($subscription->plan->name <> 'Annual' && $subscription->plan->name <> 'Seasonal') :  ?>
 								<?php $orderId = $block->getOrderBySubscriptionId($uuid); ?>
 								<td class="click">
-									<?php if ($orderId) { ?>
+									<?php if ($orderId) : ?>
 										<a href="/<?php echo $this->escapeHtml($adminPath); ?>/sales/order/view/order_id/<?php echo $this->escapeHtml($orderId); ?>"><?php echo $this->escapeHtml($uuid); ?></a>
-									<?php } ?>
+                                    <?php else : ?>
+                                        <?php echo $this->escapeHtml($uuid); ?>
+                                    <?php endif; ?>
 								</td>
 							<?php else : ?>
 								<td><?php echo $this->escapeHtml($uuid); ?></td>
