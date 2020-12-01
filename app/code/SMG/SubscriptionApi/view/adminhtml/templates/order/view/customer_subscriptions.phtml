@@ -42,7 +42,9 @@ $order = $block->getOrderById($orderId);
 									<?php if ($orderId) : ?>
 										<a href="/<?php echo $this->escapeHtml($adminPath); ?>/sales/order/view/order_id/<?php echo $this->escapeHtml($orderId); ?>"><?php echo $this->escapeHtml($uuid); ?></a>
                                     <?php else : ?>
-                                        <?php echo $this->escapeHtml($uuid); ?>
+                                        <?php echo "<pre>"; ?>
+                                            <?php var_dump($subscription); ?>
+                                        <?php echo "</pre>"; ?>
                                     <?php endif; ?>
 								</td>
 							<?php else : ?>
