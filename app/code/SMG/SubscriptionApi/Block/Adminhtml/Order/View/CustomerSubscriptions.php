@@ -2,6 +2,10 @@
 
 namespace SMG\SubscriptionApi\Block\Adminhtml\Order\View;
 
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory;
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
 use Psr\Log\LoggerInterface;
 use Magento\Customer\Controller\RegistryConstants;
 use Magento\Ui\Component\Layout\Tabs\TabInterface;
@@ -24,6 +28,13 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
      */
     protected $_coreRegistry;
 
+    /** @var SubscriptionOrderCollectionFactory  */
+    protected $_subscriptionOrderCollectionFactory;
+
+    /**
+     * @var SubscriptionResource
+     */
+    protected $_subscriptionResource;
 
     /**
      * @var \Magento\Customer\Model\Customer
@@ -111,26 +122,41 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
 
     /**
-     * @var \Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory
+     * @var CollectionFactory
      */
     protected $_orderItemCollectionFactory;
-    
+
     /**
      * @var customerId
      */
     protected $_customerId;
-    
+
     /**
      * @var customerGigyaId
      */
     protected $_customerGigyaId;
 
     /**
-     * @param InvoiceRepositoryInterface $_invoiceRepository
-     * @param $orderCollectionFactory
-     * @param $sapOrderFactory
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param \Magento\Framework\Registry $registry
+     * @param \Magento\Customer\Model\Customer $customer
+     * @param \SMG\SubscriptionApi\Helper\RecurlyHelper $helper
+     * @param \Magento\Framework\UrlInterface $urlInterface
+     * @param \Magento\Framework\Data\Form\FormKey $formKey
+     * @param OrderFactory $orderFactory
+     * @param OrderResource $orderResource
+     * @param SapOrderFactory $sapOrderFactory
+     * @param SapOrderResource $SapOrderResource
      * @param SapOrderStatusFactory $sapOrderStatusFactory
-     * @param \Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory $orderItemCollectionFactory
+     * @param SapOrderStatusResource $sapOrderStatusResource
+     * @param SubscriptionOrderResource $subscriptionOrderResource
+     * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
+     * @param SubscriptionResource $subscriptionResource
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param OrderResource\CollectionFactory $orderCollectionFactory
+     * @param CollectionFactory $orderItemCollectionFactory
+     * @param LoggerInterface $logger
+     * @param array $data
      */
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
@@ -146,9 +172,11 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         SapOrderStatusFactory $sapOrderStatusFactory,
         SapOrderStatusResource $sapOrderStatusResource,
         SubscriptionOrderResource $subscriptionOrderResource,
-        \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
+        SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory,
+        SubscriptionResource $subscriptionResource,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
-        \Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory $orderItemCollectionFactory,
+        CollectionFactory $orderItemCollectionFactory,
         LoggerInterface $logger,
         array $data = []
     ) {
@@ -167,6 +195,8 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         $this->_sapOrderStatusFactory = $sapOrderStatusFactory;
         $this->_sapOrderStatusResource = $sapOrderStatusResource;
         $this->_orderItemCollectionFactory = $orderItemCollectionFactory;
+        $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
+        $this->_subscriptionResource = $subscriptionResource;
         $this->_logger = $logger;
         parent::__construct($context, $data);
     }
@@ -194,7 +224,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     {
         return $this->_customerId;
     }
-    
+
 
     /**
      * Return customer's Recurly account code
@@ -203,7 +233,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
      */
     public function getCustomerRecurlyAccountCode()
     {
-        
+
         if ($this->getCustomerGigyaId()) {
             return $this->getCustomerGigyaId();
         }
@@ -225,7 +255,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     {
         Recurly_Client::$apiKey = $this->_helper->getRecurlyPrivateApiKey();
         Recurly_Client::$subdomain = $this->_helper->getRecurlySubdomain();
-        
+
         if(!$this->getCustomerRecurlyAccountCode())
         return ['success' => false, 'error_message' => "Not an subcription store"];
         // Create empty array so we can merge active and future subscriptions
@@ -270,7 +300,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
             ->addAttributeToSelect('*')
             ->addFieldToFilter('subscription_id', $subscription_uuid);
 
-        // Select Order Entity_Id from Order Collection results   
+        // Select Order Entity_Id from Order Collection results
         foreach ($collection as $order) {
             $orderEntityId = $order->getData('entity_id');
 
@@ -301,7 +331,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
             ->addAttributeToSelect('*')
             ->addFieldToFilter('subscription_id', $subscription_uuid);
 
-        // Select Order Entity_Id from Order Collection results   
+        // Select Order Entity_Id from Order Collection results
         foreach ($collection as $order) {
             $orderEntityId = $order->getData('entity_id');
 
@@ -332,7 +362,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
             ->addAttributeToSelect('*')
             ->addFieldToFilter('subscription_id', $subscription_uuid);
 
-        // Select Order Status from Order Collection results   
+        // Select Order Status from Order Collection results
         foreach ($collection as $order) {
             return $order->getData('status');
         }
@@ -354,13 +384,13 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
             ->addAttributeToSelect('*')
             ->addFieldToFilter('subscription_id', $subscription_uuid);
 
-        // Create instance of SAP Order Factory    
+        // Create instance of SAP Order Factory
         $sapOrderObject = $this->_sapOrderFactory->create();
 
-        // Create instance of SAP Order Status Factory    
+        // Create instance of SAP Order Status Factory
         $sapOrderStatusObject = $this->_sapOrderStatusFactory->create();
 
-        // Select Order Entity_Id from Order Collection results   
+        // Select Order Entity_Id from Order Collection results
         foreach ($collection as $order) {
             $orderEntityId = $order->getData('entity_id');
 
@@ -396,7 +426,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
             ->addAttributeToSelect('*')
             ->addFieldToFilter('subscription_id', $subscription_uuid);
 
-        // Select Order Entity_Id from Order Collection results   
+        // Select Order Entity_Id from Order Collection results
         foreach ($collection as $order) {
             $orderEntityId = $order->getData('entity_id');
 
@@ -413,18 +443,34 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     }
 
 
-
     /**
      * Get order by subscription Id
      *
      * @param $subscriptionId
+     * @param $seasonName
      * @return mixed
      */
-    public function getOrderBySubscriptionId($subscriptionId)
+    public function getOrderBySubscriptionId($subscriptionId, $seasonName)
     {
-        $order = $this->_orderFactory->create();
-        $this->_orderResource->load($order, $subscriptionId, 'subscription_id');
-        $orderId = $order->getId();
+        $sub = $this->_subscriptionResource->getSubscriptionByMasterSubscriptionId($subscriptionId);
+        $subEntityId = $sub->getId();
+        $orderId = "";
+        $this->_logger->debug("subId: " . $subEntityId);
+        if ($subEntityId) {
+            $subOrder = $this->_subscriptionOrderCollectionFactory->create()
+                ->addFieldToFilter('subscription_entity_id', $subEntityId)
+                ->addFieldToFilter('season_name', $seasonName)
+                ->getFirst()
+            ;
+
+            $orderEntityId = $subOrder->getData('sales_order_id');
+            $this->_logger->debug("orderId: " . $orderEntityId);
+            if ($orderEntityId) {
+                $order = $this->_orderFactory->create();
+                $this->_orderResource->load($order, $orderEntityId);
+                $orderId = $order->getId();
+            }
+        }
 
         if (!$orderId) {
             $this->_logger->error("Could not find an order for subscription with ID: {$subscriptionId}");
@@ -501,12 +547,12 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     {
         return true;
     }
-    
+
     /* Get Order by ID
      * @param $orderId
      */
     public function getOrderById($orderId){
-        
+
         $salesData = $this->_orderFactory->create()->load($orderId);
         $customerId = $salesData->getCustomerId();
         $scottscustomerId = $salesData->getScottsCustomerId();
@@ -525,9 +571,9 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
         $this->_customerId = $customerId;
         $this->_customerGigyaId = $customergigyaId;
-        
+
     }
-    
+
     /**
      * Return customer gigya id
      *
