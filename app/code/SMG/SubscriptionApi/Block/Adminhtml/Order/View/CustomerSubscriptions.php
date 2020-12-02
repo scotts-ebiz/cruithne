@@ -460,7 +460,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
             $subOrder = $this->_subscriptionOrderCollectionFactory->create()
                 ->addFieldToFilter('subscription_entity_id', $subEntityId)
                 ->addFieldToFilter('season_name', $seasonName)
-                ->getFirst()
+                ->getFirstItem()
             ;
 
             $orderEntityId = $subOrder->getData('sales_order_id');
