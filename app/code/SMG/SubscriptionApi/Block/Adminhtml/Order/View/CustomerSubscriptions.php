@@ -469,14 +469,15 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
                 $order = $this->_orderFactory->create();
                 $this->_orderResource->load($order, $orderEntityId);
                 $orderId = $order->getId();
+                if (!$orderId) {
+                    $this->_logger->error("Could not find an order for subscription with ID: {$subscriptionId}");
+                }
+                return $order;
             }
         }
 
-        if (!$orderId) {
-            $this->_logger->error("Could not find an order for subscription with ID: {$subscriptionId}");
-        }
 
-        return $orderId;
+        return null;
     }
 
 
