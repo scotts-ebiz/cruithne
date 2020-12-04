@@ -251,7 +251,7 @@ Options -Indexes
   RewriteCond %{HTTP_HOST} ^(www\.|develop\.|staging\.|rc\.)?mygro\.com$ [NC]
   RewriteRule ^warranty      https://www.scotts.com/en-us/mygro-warranty [R=301,L,QSA]
   RewriteCond %{HTTP_HOST} ^(www\.|develop\.|staging\.|rc\.)?mygro\.com$ [NC]
-  RewriteRule ^/$ https://www.scotts.com/en-us/products/gro-watering-solutions [R=301,L,QSA]
+  RewriteRule ^$ https://www.scotts.com/en-us/products/gro-watering-solutions [R=301,L,QSA]
   RewriteCond %{HTTP_HOST} ^(www\.|develop\.|staging\.|rc\.)?mygro\.com$ [NC]
   RewriteRule ^checkout/cart https://www.scotts.com/en-us/products/gro-watering-solutions [R=301,L,QSA]
   RewriteCond %{HTTP_HOST} ^(www\.|develop\.|staging\.|rc\.)?mygro\.com$ [NC]
