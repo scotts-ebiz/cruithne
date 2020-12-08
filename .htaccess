@@ -250,6 +250,12 @@ Options -Indexes
   RewriteRule ^mygro-rebates https://www.scotts.com/en-us/products/gro-watering-solutions/gro-7-zone-controller [R=301,L,QSA]
   RewriteCond %{HTTP_HOST} ^(www\.|develop\.|staging\.|rc\.)?mygro\.com$ [NC]
   RewriteRule ^warranty      https://www.scotts.com/en-us/mygro-warranty [R=301,L,QSA]
+  RewriteCond %{HTTP_HOST} ^(www\.|develop\.|staging\.|rc\.)?mygro\.com$ [NC]
+  RewriteRule ^$ https://www.scotts.com/en-us/products/gro-watering-solutions [R=301,L,QSA]
+  RewriteCond %{HTTP_HOST} ^(www\.|develop\.|staging\.|rc\.)?mygro\.com$ [NC]
+  RewriteRule ^checkout/cart https://www.scotts.com/en-us/products/gro-watering-solutions [R=301,L,QSA]
+  RewriteCond %{HTTP_HOST} ^(www\.|develop\.|staging\.|rc\.)?mygro\.com$ [NC]
+  RewriteRule ^checkout https://www.scotts.com/en-us/products/gro-watering-solutions [R=301,L,QSA]
 
 ############################################
 ## never rewrite for existing files, directories and links
