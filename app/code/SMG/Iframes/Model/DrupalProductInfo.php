@@ -45,8 +45,13 @@ class DrupalProductInfo implements DrupalProductInfoInterface {
 
             //Grab child product ids if they exist
             $childProductIds = $product->getTypeInstance(true)->getChildrenIds($product->getId());
-            if ($childProductIds != NULL) {
+
+            if ($childProductIds != NULL && $product->getTypeId() !== 'grouped') {
                 $childProductIds = $childProductIds[0];
+            }
+
+            if ($childProductIds != NULL && $product->getTypeId() == 'grouped') {
+                $childProductIds = $childProductIds[3];
             }
 
             $childProducts = [];
@@ -70,7 +75,8 @@ class DrupalProductInfo implements DrupalProductInfoInterface {
                     'price' => number_format((float)$child->getPrice(), 2, '.', ''),
                     'drupalProductId' => $product->getData('drupalproductid'),
                     'isDefault' => $child->getId() === $defaultProductId,
-                    'size' => $product->getResource()->getAttribute('size')->getSource()->getOptionText($product->getData('size'))
+                    'size' => $product->getResource()->getAttribute('size')->getSource()->getOptionText($product->getData('size')),
+                    'quantity' => $child->getExtensionAttributes()->getStockItem()->getQty()
                 ));
             }
 
@@ -85,6 +91,7 @@ class DrupalProductInfo implements DrupalProductInfoInterface {
                 'drupalProductId' => $product->getdrupalproductid(),
                 'price' => number_format((float)$product->getPrice(), 2, '.', ''),
                 'size' => $product->getResource()->getAttribute('size')->getSource()->getOptionText($product->getData('size')),
+                'type' => $product->getTypeId(),
                 'childSkus' => $childProducts
                 )
             );
