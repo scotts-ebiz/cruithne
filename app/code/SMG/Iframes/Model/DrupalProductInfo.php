@@ -49,15 +49,22 @@ class DrupalProductInfo implements DrupalProductInfoInterface {
             if ($childProductIds != NULL && $product->getTypeId() !== 'grouped') {
                 $childProductIds = $childProductIds[0];
             }
-
-            if ($childProductIds != NULL && $product->getTypeId() == 'grouped') {
+            else if ($childProductIds != NULL && $product->getTypeId() == 'grouped') {
                 $childProductIds = $childProductIds[3];
             }
-
+              
+              
             $childProducts = [];
             $defaultProductId = $product->getId();
             $isDefaultProductIdSet = false;
-
+            $associatedqty = [];
+            if ($product->getTypeId() == 'grouped'){
+            // how do I now get associated products of $product?
+            $associatedProducts = $product->getTypeInstance()->getAssociatedProducts($product);
+                foreach ($associatedProducts as $_item){
+                    $associatedqty[$_item->getSku()] = $_item->getQty();
+                }
+            }
             //Create the child product array if applicable
             foreach( $childProductIds as $id ) {
 
@@ -76,7 +83,7 @@ class DrupalProductInfo implements DrupalProductInfoInterface {
                     'drupalProductId' => $product->getData('drupalproductid'),
                     'isDefault' => $child->getId() === $defaultProductId,
                     'size' => $product->getResource()->getAttribute('size')->getSource()->getOptionText($product->getData('size')),
-                    'quantity' => $child->getExtensionAttributes()->getStockItem()->getQty()
+                    'quantity' => array_key_exists($child->getSku(),$associatedqty) ? $associatedqty[$child->getSku()] : ''
                 ));
             }
 
