@@ -384,7 +384,7 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @throws SubscriptionException
      * @throws NoSuchEntityException
      */
-    protected function processOrder(Customer $customer, $subscriptionOrder)
+    public function processOrder(Customer $customer, $subscriptionOrder)
     {
         $this->_logger->info('Processing order...');
         $quote = $this->_quoteFactory->create();
