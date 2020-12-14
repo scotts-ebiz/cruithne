@@ -163,7 +163,9 @@ class AccountDetailsHelper
         $dataobj['subscription_ship_start'] = $order->getShipStartDate();
         $dataobj['subscription_ship_end'] = $order->getShipEndDate();
         $dataobj['scotts_customer_id'] = $order->getScottsCustomerId();
-            
+        $dataobj['ls_order_id'] = $order->getLsOrderId();
+        $dataobj['parent_order_id'] = $order->getParentOrderId();
+
         // get the SAP Order Info
         /**
          * @var \SMG\Sap\Model\SapOrder $sapOrder
