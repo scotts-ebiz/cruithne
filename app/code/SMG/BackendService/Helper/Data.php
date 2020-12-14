@@ -14,6 +14,8 @@ class Data extends AbstractHelper
     const XML_API_CUSTOMER_REQUEST_URI = 'smg_backendservice/api/customer';
     const XML_API_SAP_REQUEST_URI = 'smg_backendservice/api/sap';
     const XML_API_APIKEY = 'smg_backendservice/api/apikey';
+    const XML_API_SUBSCRIPTION_REQUEST_URI = 'smg_backendservice/api/subscription';
+
 
     const WEB_SOURCE = 'WEB';
 
@@ -129,4 +131,16 @@ class Data extends AbstractHelper
             \Magento\Store\Model\ScopeInterface::SCOPE_STORE
         );
     }
+
+    /**
+    * @return string
+    */
+    public function getSubcriptionApiUrl()
+    {
+       return $this->scopeConfig->getValue(
+           self::XML_API_SUBSCRIPTION_REQUEST_URI,
+           \Magento\Store\Model\ScopeInterface::SCOPE_STORE
+       );
+    }
+
 }
