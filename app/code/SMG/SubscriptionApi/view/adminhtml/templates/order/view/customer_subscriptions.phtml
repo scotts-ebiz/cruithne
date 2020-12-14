@@ -1,6 +1,7 @@
 <?php
 $orderId = $this->getRequest()->getParam('order_id');
-$order = $block->getOrderById($orderId);
+$block->getOrderById($orderId);
+$subId = '';
 ?>
 <div class="fieldset-wrapper">
 	<div class="fieldset-wrapper-title"><span class="title">Scott's Subscriptions</span></div>
@@ -32,33 +33,36 @@ $order = $block->getOrderById($orderId);
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach ($subscriptionsList as $subscription) { 
-					$uuid = (isset($subscription->custom_fields['orderId'])) ? $subscription->custom_fields['orderId']->value : $subscription->uuid;
+					<?php foreach ($subscriptionsList as $subscription) {
+					  $masterId = (isset($subscription->custom_fields['orderId'])) ? $subscription->custom_fields['orderId']->value : $subscription->uuid;
 					?>
-						<tr onclick='location.href = this.getElementsByTagName("a").item(0).getAttribute("href");'>
+						<tr class="<?php echo $masterId . ' ' .  $subscription->plan->name?>" onclick='location.href = this.getElementsByTagName("a").item(0).getAttribute("href");'>
 							<?php if ($subscription->plan->name <> 'Annual' && $subscription->plan->name <> 'Seasonal') :  ?>
-								<?php $orderId = $block->getOrderBySubscriptionId($uuid); ?>
+								<?php $order = $block->getOrderBySubscriptionId($masterId, $subscription->plan->plan_code); ?>
+                                <?php $subId = $order->getData('subscription_id'); ?>
 								<td class="click">
-									<?php if ($orderId) { ?>
-										<a href="/<?php echo $this->escapeHtml($adminPath); ?>/sales/order/view/order_id/<?php echo $this->escapeHtml($orderId); ?>"><?php echo $this->escapeHtml($uuid); ?></a>
-									<?php } ?>
+									<?php if ($order->getId()) : ?>
+										<a href="/<?php echo $this->escapeHtml($adminPath); ?>/sales/order/view/order_id/<?php echo $this->escapeHtml($order->getId()); ?>"><?php echo $this->escapeHtml($subId); ?></a>
+                                    <?php else : ?>
+                                        <?php echo $this->escapeHtml($subId); ?>
+                                    <?php endif; ?>
 								</td>
 							<?php else : ?>
-								<td><?php echo $this->escapeHtml($uuid); ?></td>
+								<td><?php echo $this->escapeHtml($masterId); ?></td>
 							<?php endif; ?>
 							<td><?php echo (isset($subscription->custom_fields['quiz_id'])) ? $subscription->custom_fields['quiz_id']->value : 'Quiz ID does not exist for this subscription.'; ?></td>
 							<td><?php echo $subscription->plan->name; ?></td>
 							<td><?php echo $subscription->state; ?></td>
-							<td><?php echo $block->getMagentoStatus($uuid); ?></td>
-							<td><?php echo $block->getSapOrderStatus($uuid); ?></td>
+							<td><?php echo $block->getMagentoStatus($subId); ?></td>
+							<td><?php echo $block->getSapOrderStatus($subId); ?></td>
 							<td><?php echo $subscription->activated_at->format('d F, Y'); ?></td>
 							<td><?php echo $subscription->current_term_started_at->format('d F, Y'); ?></td>
 							<td>$<?php echo $block->convertAmountToDollars($subscription->unit_amount_in_cents); ?></td>
-							<td><?php echo $block->getProductName($uuid); ?></td>
-							<td><?php echo $block->getProductSku($uuid); ?></td>
+							<td><?php echo $block->getProductName($subId); ?></td>
+							<td><?php echo $block->getProductSku($subId); ?></td>
 							<td>
-								<?php if ($block->getProductQty($uuid) > 0) { ?>
-									<?php echo round($block->getProductQty($uuid)); ?>
+								<?php if ($block->getProductQty($subId) > 0) { ?>
+									<?php echo round($block->getProductQty($subId)); ?>
 								<?php } else { ?>
 									<?php echo '' ?>
 								<?php } ?>
@@ -72,7 +76,7 @@ $order = $block->getOrderById($orderId);
 				<p>Clicking "Cancel Subscription" will cancel all of it's active and future subscriptions.</p>
 				<form action="<?php echo $block->getCancelUrl(); ?>" method="POST">
 					<input type="hidden" name="form_key" value="<?php echo $block->getFormKey(); ?>" />
-					<input type="hidden" name="recurly_account_code" value="<?php echo $block->getCustomerRecurlyAccountCode(); ?>" />
+				    <input type="hidden" name="recurly_account_code" value="<?php echo $block->getMasterSubscriptionId(); ?>" />
 					<button type="submit">Cancel Subscription</button>
 				</form>
 			</div>

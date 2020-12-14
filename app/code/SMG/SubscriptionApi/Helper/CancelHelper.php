@@ -157,12 +157,23 @@ class CancelHelper extends AbstractHelper
             /**
              * @var $subscription Subscription
              */
+            if($area == 'admin'){
+                
             $subscription = $this->_subscriptionCollectionFactory
+                ->create()
+                ->addFieldToFilter('subscription_id', $accountCode)
+                ->addFieldToFilter('subscription_status', 'active')
+                ->fetchItem();
+            }
+            else
+            {
+                $subscription = $this->_subscriptionCollectionFactory
                 ->create()
                 ->addFieldToFilter('gigya_id', $accountCode)
                 ->addFieldToFilter('subscription_status', 'active')
                 ->fetchItem();
-
+            }
+            
             if (! $subscription || ! $subscription->getId()) {
                 // Could not find the subscription.
                 $error = 'Could not find an active subscription with Gigya user ID "' . $accountCode . '" to cancel.';
@@ -174,6 +185,10 @@ class CancelHelper extends AbstractHelper
             // Need to use collection here, the customer resource overrides the
             // normal load method and requires an ID instead of being able to
             // provide a field.
+           
+            //stop cancel subscription from backend
+            if($area != 'admin'){
+                
             $customer = $this->_customerCollectionFactory
                 ->create()
                 ->addFieldToFilter('gigya_uid', $accountCode)
@@ -182,9 +197,7 @@ class CancelHelper extends AbstractHelper
             if (! $customer->getId()) {
                 throw new Exception("Could not find customer with Gigya ID: {$accountCode}.");
             }
-           
-           //stop cancel subscription from backend
-            if($area != 'admin'){
+
              $subscription->cancel();
             } 
             // Add cancellation comments to orders.
@@ -226,6 +239,7 @@ class CancelHelper extends AbstractHelper
                 }
                 
             }
+        
         } catch (Exception $e) {
             $this->_logger->error($this->_loggerPrefix . $e->getMessage());
 
