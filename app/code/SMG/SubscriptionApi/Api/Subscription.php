@@ -47,6 +47,14 @@ use SMG\SubscriptionApi\Model\Subscription as SubscriptionModel;
 use SMG\SubscriptionApi\Model\SubscriptionAddonOrder;
 use SMG\SubscriptionApi\Model\SubscriptionFactory;
 use SMG\SubscriptionApi\Model\SubscriptionOrder;
+use SMG\SubscriptionApi\Model\SubscriptionAddonOrderFactory;
+use SMG\SubscriptionApi\Model\SubscriptionAddonOrderItemFactory;
+use SMG\SubscriptionApi\Model\SubscriptionOrderFactory;
+use SMG\SubscriptionApi\Model\SubscriptionOrderItemFactory;
+use Recurly_BillingInfo;
+use Recurly_ShippingAddressList;
+use Recurly_Invoice;
+use Magento\Directory\Model\ResourceModel\Region\CollectionFactory as RegionCollectionFactory;
 
 /**
  * Class Subscription
@@ -190,6 +198,12 @@ class Subscription implements SubscriptionInterface
      */
     protected $_subscriptionFactory;
 
+    protected $_subscriptionAddonOrderFactory;
+    protected $_subscriptionAddonOrderItemFactory;
+    protected $_subscriptionOrderFactory;
+    protected $_subscriptionOrderItemFactory;
+    protected $_regionCollectionFactory;
+
     /**
      * Subscription constructor.
      * @param LoggerInterface $logger
@@ -259,7 +273,12 @@ class Subscription implements SubscriptionInterface
         ResponseHelper $responseHelper,
         GigyaMageHelper $gigyaMageHelper,
         HistoryFactory $historyFactory,
-        HistoryResource $historyResource
+        HistoryResource $historyResource,
+        SubscriptionAddonOrderFactory $subscriptionAddonOrderFactory,
+        SubscriptionAddonOrderItemFactory $subscriptionAddonOrderItemFactory,
+        SubscriptionOrderFactory $subscriptionOrderFactory,
+        SubscriptionOrderItemFactory $subscriptionOrderItemFactory,
+        RegionCollectionFactory $regionCollectionFactory
     ) {
         $this->_logger = $logger;
         $this->_recommendationHelper = $recommendationHelper;
@@ -295,6 +314,11 @@ class Subscription implements SubscriptionInterface
         $this->_gigyaHelper = $gigyaMageHelper;
         $this->_historyFactory = $historyFactory;
         $this->_historyResource = $historyResource;
+        $this->_subscriptionAddonOrderFactory = $subscriptionAddonOrderFactory;
+        $this->_subscriptionAddonOrderItemFactory = $subscriptionAddonOrderItemFactory;
+        $this->_subscriptionOrderFactory = $subscriptionOrderFactory;
+        $this->_subscriptionOrderItemFactory = $subscriptionOrderItemFactory;
+        $this->_regionCollectionFactory = $regionCollectionFactory;
 
         $host = gethostname();
         $ip = gethostbyname($host);
@@ -883,5 +907,130 @@ class Subscription implements SubscriptionInterface
     public function getSubscriptionDataForSync()
     {
         return $this->_subscriptionHelper->getSubscriptionDataForSync();
+    }
+
+    /**
+     * @param string $master_subscription_id
+     * @return mixed
+     */
+    public function renewSubscription($master_subscription_id) {
+        $this->_logger->debug($master_subscription_id);
+        /** @var SubscriptionModel $sub */
+        $sub = $this->_subscriptionResource->getSubscriptionByMasterSubscriptionId($master_subscription_id);
+
+        $customer = $sub->getCustomer();
+        /** @var SubscriptionOrder $sub */
+        $subOrders = $sub->getSubscriptionOrders();
+        $subAddons = $sub->getSubscriptionAddonOrders();
+
+        $newSub = $this->createRenewalSubscription($sub);
+        $newSubOrders = [];
+        $newSubOrderItems = [];
+
+        foreach ($subOrders as $order) {
+            $newOrder = $this->createRenewalSubscriptionOrder($order, $newSub->getData('entity_id'));
+            foreach ($order->getOrderItems() as $item) {
+                $newSubOrderItems[] = $this->createRenewalSubscriptionOrderItem($item, $newOrder->getId());
+            }
+            $newSubOrders[] = $newOrder;
+        }
+
+        $account = $this->_recurlySubscription->getRecurlyAccount($sub->getData('gigya_id'));
+
+        $billing = $account->invoices->get(0)->current()->getValues()['address']->getValues();
+        $shipping = $account->invoices->get(0)->current()->getValues()['shipping_address']->getValues();
+        if (empty($billing['phone'])) {
+            $billing['phone'] = $shipping['phone'];
+        }
+        $this->_coreSession->setCheckoutShipping($this->formatAddressFromRecurlyInfo($shipping));
+        $this->_coreSession->setCheckoutBilling($this->formatAddressFromRecurlyInfo($billing));
+
+        try {
+            foreach($newSubOrders as $order) {
+                $this->_subscriptionOrderHelper->processOrder($customer, $order);
+            }
+            $this->_recurlySubscription->updateSubscriptionIDs($newSub);
+            return true;
+        } catch (SubscriptionException $e) {
+            return false;
+        }
+    }
+
+    public function createRenewalSubscription($oldSub) {
+        $newSub = $this->_subscriptionFactory->create();
+        $oldData = $oldSub->getData();
+        unset($oldData['entity_id']);
+        unset($oldData['created_at']);
+        unset($oldData['updated_at']);
+        $oldData['updated_at'] = null;
+        $oldData['updated_at'] = null;
+        $oldData['updated_at'] = null;
+        $oldData['updated_at'] = null;
+        $oldData['updated_at'] = null;
+        $oldData['is_full_refund'] = 0;
+
+
+        $newSub->setData($oldData);
+
+        // save the history for displaying on the order
+        return $newSub->save();
+    }
+
+    public function createRenewalSubscriptionOrder($oldSubOrder, $parentId) {
+        $newSubOrder = $this->_subscriptionOrderFactory->create();
+        $oldData = $oldSubOrder->getData();
+        unset($oldData['entity_id']);
+        unset($oldData['created_at']);
+        unset($oldData['updated_at']);
+        $oldData['subscription_entity_id'] = $parentId;
+        $oldData['application_start_date'] = date('Y-m-d H:i:s', strtotime('+1 year', strtotime($oldData['application_start_date'])));
+        $oldData['application_end_date'] = date('Y-m-d H:i:s', strtotime('+1 year', strtotime($oldData['application_end_date'])));
+        $oldData['ship_start_date'] = date('Y-m-d H:i:s', strtotime('+1 year', strtotime($oldData['ship_start_date'])));
+        $oldData['ship_end_date'] = date('Y-m-d H:i:s', strtotime('+1 year', strtotime($oldData['ship_end_date'])));
+        $oldData['subscription_id'] = null;
+        $oldData['sales_order_id'] = null;
+        $oldData['subscription_order_status'] = 'pending';
+
+        $newSubOrder->setData($oldData);
+
+        // save the history for displaying on the order
+        return $newSubOrder->save();
+    }
+
+    public function createRenewalSubscriptionOrderItem($oldSubOrderItem, $parentId) {
+        $newSubOrderItem = $this->_subscriptionOrderItemFactory->create();
+        $oldData = $oldSubOrderItem->getData();
+        unset($oldData['entity_id']);
+        unset($oldData['created_at']);
+        unset($oldData['updated_at']);
+        $oldData['subscription_order_entity_id'] = $parentId;
+        $newSubOrderItem->setData($oldData);
+
+        return $newSubOrderItem->save();
+    }
+
+    public function formatAddressFromRecurlyInfo($address)
+    {
+        $region = $this->_regionCollectionFactory->create()
+            ->addFieldToFilter('code', ['eq' => $address['state']])
+            ->addFieldToFilter('country_id', ['eq' => $address['country']])
+            ->getFirstItem()
+            ->toArray();
+
+        $return = [
+            'firstname' => $address['first_name'],
+            'lastname' => $address['last_name'],
+            'street' => $address['address1'],
+            'city' => $address['city'],
+            'country_id' => $address['country'],
+            'region' => $address['state'],
+            'region_id' => intval($region['region_id']),
+            'postcode' => substr($address['zip'], 0, 5),
+            'telephone' => $address['phone'],
+            'save_in_address_book' => 0,
+            'same_as_billing' => 0
+        ];
+
+        return $return;
     }
 }
