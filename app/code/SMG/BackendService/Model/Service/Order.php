@@ -314,7 +314,7 @@ class Order
             $this->logger->info("CancelOrderSubcription Request Note:",$params);
 
             $response = $this->client->execute(
-            $this->config->getOrderApiUrl(),
+            $this->config->getSubcriptionApiUrl(),
             "subscriptions/SubscriptionsController_destroy",
             $params,
             Request::HTTP_METHOD_POST

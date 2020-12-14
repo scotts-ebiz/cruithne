@@ -137,6 +137,11 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     protected $_customerGigyaId;
 
     /**
+    * @var masterSubscriptionId
+    */
+    protected $_masterSubscriptionId;
+
+    /**
      * @param \Magento\Backend\Block\Template\Context $context
      * @param \Magento\Framework\Registry $registry
      * @param \Magento\Customer\Model\Customer $customer
@@ -453,29 +458,31 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     public function getOrderBySubscriptionId($subscriptionId, $seasonName)
     {
         $sub = $this->_subscriptionResource->getSubscriptionByMasterSubscriptionId($subscriptionId);
-        $subEntityId = $sub->getId();
-        $orderId = "";
-        $this->_logger->debug("subId: " . $subEntityId);
-        if ($subEntityId) {
-            $subOrder = $this->_subscriptionOrderCollectionFactory->create()
-                ->addFieldToFilter('subscription_entity_id', $subEntityId)
-                ->addFieldToFilter('season_name', $seasonName)
-                ->getFirstItem()
-            ;
+        if($sub){
 
-            $orderEntityId = $subOrder->getData('sales_order_id');
-            $this->_logger->debug("orderId: " . $orderEntityId);
-            if ($orderEntityId) {
-                $order = $this->_orderFactory->create();
-                $this->_orderResource->load($order, $orderEntityId);
-                $orderId = $order->getId();
-                if (!$orderId) {
-                    $this->_logger->error("Could not find an order for subscription with ID: {$subscriptionId}");
+            $subEntityId = $sub->getId();
+            $orderId = "";
+            $this->_logger->debug("subId: " . $subEntityId);
+            if ($subEntityId) {
+                $subOrder = $this->_subscriptionOrderCollectionFactory->create()
+                    ->addFieldToFilter('subscription_entity_id', $subEntityId)
+                    ->addFieldToFilter('season_name', $seasonName)
+                    ->getFirstItem()
+                ;
+
+                $orderEntityId = $subOrder->getData('sales_order_id');
+                $this->_logger->debug("orderId: " . $orderEntityId);
+                if ($orderEntityId) {
+                    $order = $this->_orderFactory->create();
+                    $this->_orderResource->load($order, $orderEntityId);
+                    $orderId = $order->getId();
+                    if (!$orderId) {
+                        $this->_logger->error("Could not find an order for subscription with ID: {$subscriptionId}");
+                    }
+                    return $order;
                 }
-                return $order;
             }
         }
-
 
         return null;
     }
@@ -557,6 +564,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         $salesData = $this->_orderFactory->create()->load($orderId);
         $customerId = $salesData->getCustomerId();
         $scottscustomerId = $salesData->getScottsCustomerId();
+        $masterSubscriptionId = $salesData->getMasterSubscriptionId();
         $customergigyaId = '';
         if(!empty($scottscustomerId))
         {
@@ -572,6 +580,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
 
         $this->_customerId = $customerId;
         $this->_customerGigyaId = $customergigyaId;
+        $this->_masterSubscriptionId = $masterSubscriptionId;
 
     }
 
@@ -584,4 +593,20 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     {
         return $this->_customerGigyaId;
     }
+
+    /**
+    * Return Order Master Subscription Id
+    *
+    * @return string
+    */
+   public function getMasterSubscriptionId()
+   {
+       if ($this->_masterSubscriptionId()) {
+           return $this->_masterSubscriptionId();
+       }
+
+       $this->_logger->error('Could not find order masterSubscriptionId');
+
+       return false;
+   }
 }

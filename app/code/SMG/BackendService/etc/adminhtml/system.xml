@@ -32,6 +32,10 @@
                        showInStore="1">
                     <label>API Key</label>
                 </field>
+                <field id="subscription" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1"
+                      showInStore="1">
+                   <label>Subscription End Point Url</label>
+               </field>
             </group>
         </section>
     </system>

@@ -1,6 +1,7 @@
 <?php
 $orderId = $this->getRequest()->getParam('order_id');
 $block->getOrderById($orderId);
+$subId = '';
 ?>
 <div class="fieldset-wrapper">
 	<div class="fieldset-wrapper-title"><span class="title">Scott's Subscriptions</span></div>
@@ -33,7 +34,7 @@ $block->getOrderById($orderId);
 				</thead>
 				<tbody>
 					<?php foreach ($subscriptionsList as $subscription) {
-					$masterId = (isset($subscription->custom_fields['orderId'])) ? $subscription->custom_fields['orderId']->value : $subscription->uuid;
+					  $masterId = (isset($subscription->custom_fields['orderId'])) ? $subscription->custom_fields['orderId']->value : $subscription->uuid;
 					?>
 						<tr class="<?php echo $masterId . ' ' .  $subscription->plan->name?>" onclick='location.href = this.getElementsByTagName("a").item(0).getAttribute("href");'>
 							<?php if ($subscription->plan->name <> 'Annual' && $subscription->plan->name <> 'Seasonal') :  ?>
@@ -75,7 +76,7 @@ $block->getOrderById($orderId);
 				<p>Clicking "Cancel Subscription" will cancel all of it's active and future subscriptions.</p>
 				<form action="<?php echo $block->getCancelUrl(); ?>" method="POST">
 					<input type="hidden" name="form_key" value="<?php echo $block->getFormKey(); ?>" />
-					<input type="hidden" name="recurly_account_code" value="<?php echo $block->getCustomerRecurlyAccountCode(); ?>" />
+				    <input type="hidden" name="recurly_account_code" value="<?php echo $block->getMasterSubscriptionId(); ?>" />
 					<button type="submit">Cancel Subscription</button>
 				</form>
 			</div>
