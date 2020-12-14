@@ -601,8 +601,8 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     */
    public function getMasterSubscriptionId()
    {
-       if ($this->_masterSubscriptionId()) {
-           return $this->_masterSubscriptionId();
+       if ($this->_masterSubscriptionId) {
+           return $this->_masterSubscriptionId;
        }
 
        $this->_logger->error('Could not find order masterSubscriptionId');
