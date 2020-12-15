@@ -974,7 +974,7 @@ class RecurlySubscription
      * @param Subscription $subscription
      * @throws LocalizedException
      */
-    protected function updateSubscriptionIDs($subscription)
+    public function updateSubscriptionIDs($subscription)
     {
         try {
             $activeSubscriptions = Recurly_SubscriptionList::getForAccount(
@@ -1022,7 +1022,7 @@ class RecurlySubscription
                     // Get the add-on and update the subscription ID.
                     $addOns = $subscription->getSubscriptionAddonOrders();
 
-                    if ($addOns && $addOns->getFirstItem()) {
+                    if ($addOns->count() && $addOns->getFirstItem()) {
                         $this->_logger->info($this->_loggerPrefix . "Adding {$subCode['plan_code']} Recurly subscription ID {$subCode['subscription_id']} to add-on.");
 
                         $addOn = $addOns->getFirstItem();

@@ -196,23 +196,21 @@ class OrderRepositoryInterface
 
     public function afterGet(\Magento\Sales\Api\OrderRepositoryInterface $subject, \Magento\Sales\Api\Data\OrderInterface $order)
     {
-        $customerFeedback = $order->getData('subscription_id');
         $extensionAttributes = $order->getExtensionAttributes();
-        $extensionAttributes = $extensionAttributes ? $extensionAttributes : $this->_extensionFactory->create();
-        $extensionAttributes->setSubscriptionId($customerFeedback);
-        $order->setExtensionAttributes($extensionAttributes);
+        if ($extensionAttributes && $extensionAttributes->getSubscriptionId()) {
+            return $order;
+        }
+        $orderExtension = $extensionAttributes ? $extensionAttributes : $this->_extensionFactory->create();
+        $orderExtension->setSubscriptionId($order->getSubscriptionId());
+        $order->setExtensionAttributes($orderExtension);
         return $order;
     }
 
-    public function afterGetList(SMG\Sales\Plugin\Api\OrderRepositoryInterface $subject, OrderSearchResultInterface $searchResult)
+    public function afterGetList(\Magento\Sales\Api\OrderRepositoryInterface $subject, \Magento\Sales\Api\Data\OrderSearchResultInterface $searchResult)
     {
         $orders = $searchResult->getItems();
         foreach ($orders as &$order) {
-            $customerFeedback = $order->getData('subscription_id');
-            $extensionAttributes = $order->getExtensionAttributes();
-            $extensionAttributes = $extensionAttributes ? $extensionAttributes : $this->_extensionFactory->create();
-            $extensionAttributes->setSubcriptionId($customerFeedback);
-            $order->setExtensionAttributes($extensionAttributes);
+            $this->afterGet($subject, $order);
         }
         return $searchResult;
     }
