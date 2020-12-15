@@ -204,7 +204,7 @@ class OrderRepositoryInterface
         return $order;
     }
 
-    public function afterGetList(SMG\Sales\Plugin\Api\OrderRepositoryInterface $subject, OrderSearchResultInterface $searchResult)
+    public function afterGetList(\Magento\Sales\Api\OrderRepositoryInterface $subject, \Magento\Sales\Api\Data\OrderSearchResultInterface $searchResult)
     {
         $orders = $searchResult->getItems();
         foreach ($orders as &$order) {
