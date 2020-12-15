@@ -68,7 +68,7 @@ class Attribute extends \Akeneo\Connector\Job\Attribute
                     $this->entitiesHelper->getTable('eav_attribute'),
                     ['frontend_input']
                 )->where('attribute_code = ?', $row['code'])
-                    ->where('entity_type_id = ?', 4)
+                 ->where('entity_type_id = ?', 4)
             );
             /** @var bool $skipAttribute */
             $skipAttribute = false;
@@ -129,7 +129,7 @@ class Attribute extends \Akeneo\Connector\Job\Attribute
             if ($row['scopable'] == 1) {
                 $global = ScopedAttributeInterface::SCOPE_WEBSITE; // Website
             }
-            if ($row['localizable'] == 1) {
+            if ($row['localizable'] == 1 || $row['type'] == self::PIM_CATALOG_ASSET_COLLECTION) {
                 $global = ScopedAttributeInterface::SCOPE_STORE; // Store View
             }
             /** @var array $data */
