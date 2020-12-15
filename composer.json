@@ -10,7 +10,7 @@
         "sort-packages": true
     },
     "require": {
-        "akeneo/magento2-connector-enterprise": "100.*",
+        "akeneo/magento2-connector-enterprise": "101.*",
         "amasty/securityauth": "^1.1",
         "avalara/avatax-magento": "^1.5",
         "composer/composer": "@alpha",
