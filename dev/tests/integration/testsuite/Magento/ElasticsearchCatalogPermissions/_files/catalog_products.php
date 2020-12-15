@@ -4,6 +4,7 @@
  * See COPYING.txt for license details.
  */
 
+use Magento\CatalogPermissions\Model\Indexer\Category\Processor as CategoryIndexerProcessor;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Category;
@@ -64,7 +65,6 @@ $product->setTypeId(Type::TYPE_SIMPLE)
     ->setCategoryIds([3])
     ->setVisibility(Visibility::VISIBILITY_BOTH)
     ->setStatus(Status::STATUS_ENABLED);
-
 $productRepository->save($product);
 
 /** @var $product \Magento\Catalog\Model\Product */
@@ -83,7 +83,6 @@ $product->setTypeId(Type::TYPE_SIMPLE)
     ->setCategoryIds([4])
     ->setVisibility(Visibility::VISIBILITY_BOTH)
     ->setStatus(Status::STATUS_ENABLED);
-
 $productRepository->save($product);
 
 /** @var $permission \Magento\CatalogPermissions\Model\Permission */
@@ -107,3 +106,6 @@ $permission->setEntityId(2)
     ->setGrantCatalogProductPrice(Permission::PERMISSION_DENY)
     ->setGrantCheckoutItems(Permission::PERMISSION_DENY)
     ->save();
+
+$categoryIndexerProcessor = Bootstrap::getObjectManager()->get(CategoryIndexerProcessor::class);
+$categoryIndexerProcessor->reindexList([3, 4]);
