@@ -986,7 +986,13 @@ class Subscription implements SubscriptionInterface
                 400
             );
         } catch (Exception $ge) {
-            $this->cancelFailedOrders($newSub);
+            try {
+                $this->cancelFailedOrders($newSub);
+            } catch (Exception $e) {
+                $message = "Error Canceling Orders: ".$e->getMessage();
+                $this->createRenewalError($master_subscription_id, $message);
+            }
+            
             $message = "General Exception: ".$ge->getMessage();
             $this->createRenewalError($master_subscription_id, $message);
             return $this->_responseHelper->error(
