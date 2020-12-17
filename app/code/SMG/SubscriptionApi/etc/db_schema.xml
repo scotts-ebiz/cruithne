@@ -265,4 +265,19 @@
             <column name="subscription_addon_order_entity_id"/>
         </index>
     </table>
+    <table name="subscription_renewal_error" engine="innodb" resource="default"
+           comment="Errors during renewals.">
+        <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true"
+                comment="ID of the record."/>
+        <column name="master_subscription_id" xsi:type="int" nullable="false" unsigned="true"
+                comment="Master Subscription ID"/>
+        <column name="error_message" xsi:type="text" nullable="true" comment="Error Message"/>
+        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false"
+                comment="Date Created"/>
+        <column name="updated_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="true"
+                comment="Date Updated"/>
+        <constraint xsi:type="primary" referenceId="PRIMARY">
+            <column name="entity_id"/>
+        </constraint>
+    </table>
 </schema>
