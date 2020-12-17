@@ -924,6 +924,16 @@ class Subscription implements SubscriptionInterface
         try {
             /** @var SubscriptionModel $sub */
             $sub = $this->_subscriptionResource->getSubscriptionByMasterSubscriptionId($master_subscription_id);
+
+            if (empty($sub)) {
+                $message = "Subscription not found for master subscription id: ".$master_subscription_id;
+                return $this->_responseHelper->error(
+                    $message,
+                    ['refresh' => false],
+                    404
+                );
+            }
+
             $customer = $sub->getCustomer();
             $subOrders = $sub->getSubscriptionOrders();
 
