@@ -269,7 +269,7 @@
            comment="Errors during renewals.">
         <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true"
                 comment="ID of the record."/>
-        <column name="master_subscription_id" xsi:type="int" nullable="false" unsigned="true"
+        <column name="master_subscription_id" xsi:type="text" nullable="false"
                 comment="Master Subscription ID"/>
         <column name="error_message" xsi:type="text" nullable="true" comment="Error Message"/>
         <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false"
