@@ -45,6 +45,13 @@ interface CoreServicesInterface
      * @return string
      */
     public function UpdateBillingAddress();
+	
+	 /**
+     * This function will update the cusomer email address for an orders.
+     *
+     * @return string
+     */
+    public function updateEmailAddress();
 
 
 

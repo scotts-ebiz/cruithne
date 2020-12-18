@@ -1133,9 +1133,9 @@ class CoreServicesHelper
 
     /**
      * Updates billing address for an order
-     * @param $requestData
+     * @param  $requestData
      * @return array
-     */
+    */
     public function updateBillingAddress($requestData)
     {
         try {
@@ -1225,5 +1225,51 @@ class CoreServicesHelper
 
         return $response;
     }
+    
+	/**
+     * Updates customer email address for an order
+     * @param  $requestData
+     * @return array
+    */
+    public function updateEmailAddress($requestData)
+    {
+        try {
 
+            if (isset($requestData[0]['orderIds']) &&
+                isset($requestData[0]['email'])) {			
+              	
+                foreach($requestData[0]['orderIds'] as $orderId)
+				{
+					$order = $this->_orderRepository->get($orderId);
+					$order->setCustomerEmail($requestData[0]['email']);
+					
+					// Save order
+					$this->_orderResource->save($order);
+				}	
+				
+				// Return a successful response.
+				$response = array(
+					'statusCode' => 200,
+					'statusMessage' => 'success',
+					'response' => 'true'
+				);	
+				
+            } else {
+                $response = array(
+                    'statusCode' => 200,
+                    'statusMessage' => 'failure',
+                    'response' => 'Data missing'
+                );
+            }
+        } catch (\Exception $e) {
+            // Return exception response.
+            $response = array(
+                'statusCode' => 200,
+                'statusMessage' => 'failure',
+                'response' => $e->getMessage()
+            );
+        }
+
+        return $response;
+    }
 }

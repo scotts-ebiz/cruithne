@@ -137,4 +137,14 @@ class CoreServices implements CoreServicesInterface
     {
         return $this->_coreServicesHelper->updateBillingAddress($this->_request->getRequestData());
     }
+	
+	 /**
+     * Update the orders customer email
+     *
+     * @return string
+     */
+    public function updateEmailAddress()
+    {
+        return $this->_coreServicesHelper->updateEmailAddress($this->_request->getRequestData());
+    }
 }
