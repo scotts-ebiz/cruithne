@@ -21,6 +21,7 @@ use Zaius\Engage\Helper\Sdk as ZaiusSdk;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use ZaiusSDK\ZaiusException;
 use SMG\BackendService\Model\Service\Order as OrderBackendService;
+use Magento\Backend\Model\Auth\Session as AuthSession;
 
 class CancelHelper extends AbstractHelper
 {
@@ -89,6 +90,11 @@ class CancelHelper extends AbstractHelper
     protected $_orderService;
 
     /**
+     * @var AuthSession
+     */
+    protected $_adminSession;
+
+    /**
      * CancelHelper constructor.
      * @param Context $context
      * @param AddressRepositoryInterface $addressRepository
@@ -103,6 +109,7 @@ class CancelHelper extends AbstractHelper
      * @param OrderFactory $orderFactory
      * @param OrderResource $orderResource
      * @param OrderBackendService $orderService
+     * @param  AuthSession $_adminSession
      */
     public function __construct(
         Context $context,
@@ -117,7 +124,8 @@ class CancelHelper extends AbstractHelper
         ProductRepository $productRepository,
         OrderFactory $orderFactory,
         OrderResource $orderResource,
-        OrderBackendService $orderService
+        OrderBackendService $orderService,
+        AuthSession $_adminSession
     ) {
         parent::__construct($context);
 
@@ -133,6 +141,7 @@ class CancelHelper extends AbstractHelper
         $this->_orderFactory = $orderFactory;
         $this->_orderResource = $orderResource;
         $this->_orderService = $orderService;
+        $this->_adminSession = $_adminSession;
 
         $host = gethostname();
         $ip = gethostbyname($host);
@@ -211,18 +220,17 @@ class CancelHelper extends AbstractHelper
                 
                 //trigger api to backend service team
                 
-                if($area == 'admin'){
-                     $this->_orderService->cancelOrderSubcription($order->getIncrementId(),$order->getState());
-                }
-                if ($cancelReason) {
-                    $order->addCommentToStatusHistory('Subscription canceled by customer. Reason: ' . $cancelReason, false, false)
+                if($area == 'admin') {
+                    $this->_orderService->cancelOrderSubcription($order->getIncrementId(), $order->getState());
+                    $order->addCommentToStatusHistory('Subscription canceled by ' . $this->_adminSession->getUser()->getUserName(), false, false)
                         ->save();
                 }
                 else {
-                    $order->addCommentToStatusHistory('Subscription canceled by an administrator', false, false)
-                        ->save();
+                    if ($cancelReason) {
+                        $order->addCommentToStatusHistory('Subscription canceled by customer. Reason: ' . $cancelReason, false, false)
+                            ->save();
+                    }
                 }
-
             }
 
             $timestamp = strtotime(date("Y-m-d H:i:s"));
