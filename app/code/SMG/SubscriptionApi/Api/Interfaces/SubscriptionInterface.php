@@ -40,4 +40,12 @@ interface SubscriptionInterface
      * @return mixed
      */
     public function getSubscriptionDataForSync();
+
+    /**
+     *  Renew subscription for given master id.
+     *
+     * @param string $master_subscription_id
+     * @return mixed
+     */
+    public function renewSubscription($master_subscription_id);
 }
