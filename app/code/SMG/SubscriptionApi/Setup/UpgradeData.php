@@ -84,6 +84,10 @@ class UpgradeData implements UpgradeDataInterface
             $this->addDataVersion118($setup);
         }
 
+        // Version 1.1.9
+        if (version_compare($context->getVersion(), '1.1.9', '<')) {
+            $this->addDataVersion119($setup);
+        }
     }
 
     /**
@@ -175,20 +179,7 @@ class UpgradeData implements UpgradeDataInterface
      */
     private function addDataVersion116(ModuleDataSetupInterface $setup)
     {
-        // Upgrade Subscription Status
-        $tableName = $setup->getTable('subscription_order_status');
-
-        $data = [
-            ['status' => 'initialized', 'label' => 'Initialized'],
-            ['status' => 'invoiced', 'label' => 'Invoiced'],
-            ['status' => 'sent_for_fulfillment', 'label' => 'Sent for Fulfillment'],
-            ['status' => 'partially_shipped', 'label' => 'Partially Shipped'],
-            ['status' => 'shipped', 'label' => 'Shipped'],
-            ['status' => 'delivered', 'label' => 'Delivered'],
-            ['status' => 'audit_failed', 'label' => 'Audit Failed'],
-        ];
-
-        $setup->getConnection()->insertMultiple($tableName, $data);
+        // Do nothing. Done purposefully to resolve merge.
     }
 
     /**
@@ -202,6 +193,13 @@ class UpgradeData implements UpgradeDataInterface
         $tableName = $setup->getTable('subscription_order_status');
 
         $data = [
+            ['status' => 'initialized', 'label' => 'Initialized'],
+            ['status' => 'invoiced', 'label' => 'Invoiced'],
+            ['status' => 'sent_for_fulfillment', 'label' => 'Sent for Fulfillment'],
+            ['status' => 'partially_shipped', 'label' => 'Partially Shipped'],
+            ['status' => 'shipped', 'label' => 'Shipped'],
+            ['status' => 'delivered', 'label' => 'Delivered'],
+            ['status' => 'audit_failed', 'label' => 'Audit Failed'],
             ['status' => 'skipped', 'label' => 'Skipped'],
         ];
 
@@ -220,6 +218,23 @@ class UpgradeData implements UpgradeDataInterface
 
         $data = [
             ['status' => 'processing', 'label' => 'Processing'],
+        ];
+
+        $setup->getConnection()->insertMultiple($tableName, $data);
+    }
+
+    /**
+     * Add Data for Version 1.1.9
+     *
+     * @param ModuleDataSetupInterface $setup
+     */
+    private function addDataVersion119(ModuleDataSetupInterface $setup)
+    {
+        // Upgrade Subscription Status
+        $tableName = $setup->getTable('subscription_status');
+
+        $data = [
+            ['status' => 'renewed', 'label' => 'Renewed']
         ];
 
         $setup->getConnection()->insertMultiple($tableName, $data);
