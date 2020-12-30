@@ -48,6 +48,7 @@ use SMG\SubscriptionApi\Model\SubscriptionAddonOrder;
 use SMG\SubscriptionApi\Model\SubscriptionFactory;
 use SMG\SubscriptionApi\Model\SubscriptionOrder;
 use SMG\SubscriptionApi\Model\SubscriptionAddonOrderFactory;
+use SMG\SubscriptionApi\Model\SubscriptionRenewalErrorFactory;
 use SMG\SubscriptionApi\Model\SubscriptionAddonOrderItemFactory;
 use SMG\SubscriptionApi\Model\SubscriptionOrderFactory;
 use SMG\SubscriptionApi\Model\SubscriptionOrderItemFactory;
@@ -203,6 +204,7 @@ class Subscription implements SubscriptionInterface
     protected $_subscriptionOrderFactory;
     protected $_subscriptionOrderItemFactory;
     protected $_regionCollectionFactory;
+    protected $_subscriptionRenewalErrorFactory;
 
     /**
      * Subscription constructor.
@@ -239,6 +241,7 @@ class Subscription implements SubscriptionInterface
      * @param GigyaMageHelper $gigyaMageHelper
      * @param HistoryFactory $historyFactory
      * @param HistoryResource $historyResource
+     * @param SubscriptionRenewalErrorFactory $subscriptionRenewalErrorFactory
      */
     public function __construct(
         LoggerInterface $logger,
@@ -278,7 +281,8 @@ class Subscription implements SubscriptionInterface
         SubscriptionAddonOrderItemFactory $subscriptionAddonOrderItemFactory,
         SubscriptionOrderFactory $subscriptionOrderFactory,
         SubscriptionOrderItemFactory $subscriptionOrderItemFactory,
-        RegionCollectionFactory $regionCollectionFactory
+        RegionCollectionFactory $regionCollectionFactory,
+        SubscriptionRenewalErrorFactory $subscriptionRenewalErrorFactory
     ) {
         $this->_logger = $logger;
         $this->_recommendationHelper = $recommendationHelper;
@@ -319,6 +323,7 @@ class Subscription implements SubscriptionInterface
         $this->_subscriptionOrderFactory = $subscriptionOrderFactory;
         $this->_subscriptionOrderItemFactory = $subscriptionOrderItemFactory;
         $this->_regionCollectionFactory = $regionCollectionFactory;
+        $this->_subscriptionRenewalErrorFactory = $subscriptionRenewalErrorFactory;
 
         $host = gethostname();
         $ip = gethostbyname($host);
@@ -914,46 +919,89 @@ class Subscription implements SubscriptionInterface
      * @return mixed
      */
     public function renewSubscription($master_subscription_id) {
-        $this->_logger->debug($master_subscription_id);
-        /** @var SubscriptionModel $sub */
-        $sub = $this->_subscriptionResource->getSubscriptionByMasterSubscriptionId($master_subscription_id);
-
-        $customer = $sub->getCustomer();
-        /** @var SubscriptionOrder $sub */
-        $subOrders = $sub->getSubscriptionOrders();
-        $subAddons = $sub->getSubscriptionAddonOrders();
-
-        $newSub = $this->createRenewalSubscription($sub);
-        $newSubOrders = [];
-        $newSubOrderItems = [];
-
-        foreach ($subOrders as $order) {
-            $newOrder = $this->createRenewalSubscriptionOrder($order, $newSub->getData('entity_id'));
-            foreach ($order->getOrderItems() as $item) {
-                $newSubOrderItems[] = $this->createRenewalSubscriptionOrderItem($item, $newOrder->getId());
-            }
-            $newSubOrders[] = $newOrder;
-        }
-
-        $account = $this->_recurlySubscription->getRecurlyAccount($sub->getData('gigya_id'));
-
-        $billing = $account->invoices->get(0)->current()->getValues()['address']->getValues();
-        $shipping = $account->invoices->get(0)->current()->getValues()['shipping_address']->getValues();
-        if (empty($billing['phone'])) {
-            $billing['phone'] = $shipping['phone'];
-        }
-        $this->_coreSession->setCheckoutShipping($this->formatAddressFromRecurlyInfo($shipping));
-        $this->_coreSession->setCheckoutBilling($this->formatAddressFromRecurlyInfo($billing));
+        $this->_logger->debug("Renewing master subscription id: " . $master_subscription_id);
 
         try {
+            /** @var SubscriptionModel $sub */
+            $sub = $this->_subscriptionResource->getSubscriptionByMasterSubscriptionId($master_subscription_id);
+
+            if (empty($sub)) {
+                $message = "Subscription not found for master subscription id: ".$master_subscription_id;
+                return $this->_responseHelper->error(
+                    $message,
+                    ['refresh' => false],
+                    404
+                );
+            }
+
+            $customer = $sub->getCustomer();
+            $subOrders = $sub->getSubscriptionOrders();
+
+            $newSub = $this->createRenewalSubscription($sub);
+            $newSubOrders = [];
+            $newSubOrderItems = [];
+
+            foreach ($subOrders as $order) {
+                $newOrder = $this->createRenewalSubscriptionOrder($order, $newSub->getData('entity_id'));
+                foreach ($order->getOrderItems() as $item) {
+                    $newSubOrderItems[] = $this->createRenewalSubscriptionOrderItem($item, $newOrder->getId());
+                }
+                $newSubOrders[] = $newOrder;
+            }
+
+            $account = $this->_recurlySubscription->getRecurlyAccount($sub->getData('gigya_id'));
+
+            $billing = $account->invoices->get(0)->current()->getValues()['address']->getValues();
+            $shipping = $account->invoices->get(0)->current()->getValues()['shipping_address']->getValues();
+
+            if (empty($billing['phone'])) {
+                $billing['phone'] = $shipping['phone'];
+            }
+
+            $this->_coreSession->setCheckoutShipping($this->formatAddressFromRecurlyInfo($shipping));
+            $this->_coreSession->setCheckoutBilling($this->formatAddressFromRecurlyInfo($billing));
+
             foreach($newSubOrders as $order) {
                 $this->_subscriptionOrderHelper->processOrder($customer, $order);
             }
+
             $this->_recurlySubscription->updateSubscriptionIDs($newSub);
+            $sub->setData('subscription_status', 'renewed'); // Set old sub as renewed
+            $sub->save();
             return true;
-        } catch (SubscriptionException $e) {
-            return false;
+
+        } catch (SubscriptionException $se) {
+            try {
+                $this->cancelFailedOrders($newSub);
+            } catch (Exception $e) {
+                $message = "Error Canceling Orders: ".$e->getMessage();
+                $this->createRenewalError($master_subscription_id, $message);
+            }
+
+            $message = "SubscriptionException: ".$se->getMessage();
+            $this->createRenewalError($master_subscription_id, $message);
+            return $this->_responseHelper->error(
+                $message,
+                ['refresh' => false],
+                400
+            );
+        } catch (Exception $ge) {
+            try {
+                $this->cancelFailedOrders($newSub);
+            } catch (Exception $e) {
+                $message = "Error Canceling Orders: ".$e->getMessage();
+                $this->createRenewalError($master_subscription_id, $message);
+            }
+            
+            $message = "General Exception: ".$ge->getMessage();
+            $this->createRenewalError($master_subscription_id, $message);
+            return $this->_responseHelper->error(
+                $message,
+                ['refresh' => false],
+                400
+            );
         }
+
     }
 
     public function createRenewalSubscription($oldSub) {
@@ -969,10 +1017,8 @@ class Subscription implements SubscriptionInterface
         $oldData['updated_at'] = null;
         $oldData['is_full_refund'] = 0;
 
-
         $newSub->setData($oldData);
 
-        // save the history for displaying on the order
         return $newSub->save();
     }
 
@@ -993,7 +1039,6 @@ class Subscription implements SubscriptionInterface
 
         $newSubOrder->setData($oldData);
 
-        // save the history for displaying on the order
         return $newSubOrder->save();
     }
 
@@ -1007,6 +1052,15 @@ class Subscription implements SubscriptionInterface
         $newSubOrderItem->setData($oldData);
 
         return $newSubOrderItem->save();
+    }
+
+    public function createRenewalError($masterSubscriptionId, $error) {
+        $newSubError = $this->_subscriptionRenewalErrorFactory->create();
+        $data['master_subscription_id'] = $masterSubscriptionId;
+        $data['error_message'] = $error;
+        $newSubError->setData($data);
+
+        return $newSubError->save();
     }
 
     public function formatAddressFromRecurlyInfo($address)

@@ -3,6 +3,7 @@
 namespace SMG\AkeneoConnector\Job;
 
 use Akeneo\Connector\Model\Source\Attribute\Metrics as AttributeMetrics;
+use Akeneo\Pim\ApiClient\Pagination\PageInterface;
 use Magento\Catalog\Model\Product\Link;
 use Magento\Framework\DB\Adapter\AdapterInterface;
 use Magento\Framework\DB\Select;
@@ -106,8 +107,14 @@ class Product extends \Akeneo\Connector\Job\Product
         $metricSymbols = $this->getMetricsSymbols();
         /** @var string[] $attributeMetrics */
         $attributeMetrics = $this->attributeMetrics->getMetricsAttributes();
+        /** @var AdapterInterface $connection */
+        $connection = $this->entitiesHelper->getConnection();
         /** @var string[] $referenceAttributes */
         $referenceAttributes = [];
+
+        if ($connection->isTableExists($this->entitiesHelper->getTableName('product_model'))) {
+            return;
+        }
 
         if ($referenceEntitiesEnabled) {
             $referenceAttributes = $this->getReferenceAttributesFromTmp();
@@ -211,7 +218,7 @@ class Product extends \Akeneo\Connector\Job\Product
                     foreach ($product['values'][$attributeMetric] as $key => $metric) {
                         /** @var string|float $amount */
                         $amount = $metric['data']['amount'];
-                        if ($amount != null) {
+                        if ($amount != NULL) {
                             $amount = floatval($amount);
                         }
 
@@ -232,6 +239,9 @@ class Product extends \Akeneo\Connector\Job\Product
                      * @var mixed[] $metric
                      */
                     foreach ($product['values'][$metricsConcatSetting] as $key => $metric) {
+                        if (!isset($metric['data']['unit'])) {
+                            continue;
+                        }
                         /** @var string $unit */
                         $unit = $metric['data']['unit'];
                         /** @var string|false $symbol */
@@ -260,35 +270,38 @@ class Product extends \Akeneo\Connector\Job\Product
         }
 
         // Remove declared file attributes columns if file import is disabled
+        $fileAttributes      = [];
+        $fileAssetAttributes = [];
         if (!$this->configHelper->isFileImportEnabled()) {
+            $fileAttributes = $this->configHelper->getFileImportColumns();
+        }
+        if (!$this->configHelper->isFileAssetImportEnabled()) {
+            $fileAssetAttributes = $this->configHelper->getAssetImportGalleryColumnsFile();
+        }
+        $attributesToRemove = array_merge($fileAssetAttributes, $fileAttributes);
+        if (!empty($attributesToRemove)) {
             /** @var array $attributesToImport */
-            $attributesToImport = $this->configHelper->getFileImportColumns();
+            $attributesToRemove = array_unique($attributesToRemove);
 
-            if (!empty($attributesToImport)) {
-                $attributesToImport = array_unique($attributesToImport);
+            /** @var array $stores */
+            $stores = array_merge(
+                $this->storeHelper->getStores(['lang']), // en_US
+                $this->storeHelper->getStores(['channel_code']), // channel
+                $this->storeHelper->getStores(['lang', 'channel_code']) // en_US-channel
+            );
 
-                /** @var array $stores */
-                $stores = array_merge(
-                    $this->storeHelper->getStores(['lang']), // en_US
-                    $this->storeHelper->getStores(['channel_code']), // channel
-                    $this->storeHelper->getStores(['lang', 'channel_code']) // en_US-channel
-                );
+            /** @var string $tmpTable */
+            $tmpTable = $this->entitiesHelper->getTableName($this->getCode());
+            /** @var array $data */
+            foreach ($attributesToRemove as $attribute) {
+                if ($connection->tableColumnExists($tmpTable, $attribute)) {
+                    $connection->dropColumn($tmpTable, $attribute);
+                }
 
-                /** @var AdapterInterface $connection */
-                $connection = $this->entitiesHelper->getConnection();
-                /** @var string $tmpTable */
-                $tmpTable = $this->entitiesHelper->getTableName($this->getCode());
-                /** @var array $data */
-                foreach ($attributesToImport as $attribute) {
-                    if ($connection->tableColumnExists($tmpTable, $attribute)) {
-                        $connection->dropColumn($tmpTable, $attribute);
-                    }
-
-                    // Remove scopable colums
-                    foreach ($stores as $suffix => $storeData) {
-                        if ($connection->tableColumnExists($tmpTable, $attribute . '-' . $suffix)) {
-                            $connection->dropColumn($tmpTable, $attribute . '-' . $suffix);
-                        }
+                // Remove scopable colums
+                foreach ($stores as $suffix => $storeData) {
+                    if ($connection->tableColumnExists($tmpTable, $attribute . '-' . $suffix)) {
+                        $connection->dropColumn($tmpTable, $attribute . '-' . $suffix);
                     }
                 }
             }
@@ -303,6 +316,7 @@ class Product extends \Akeneo\Connector\Job\Product
 
         $this->setMessage(__('%1 line(s) found', $index));
     }
+
     /**
      * Replace option code by id
      *
@@ -322,7 +336,6 @@ class Product extends \Akeneo\Connector\Job\Product
             'url_key',
             'country_of_manufacture',
             'state_not_allowed',
-            'smg_uom',
         ];
         $except = array_merge($except, $this->excludedColumns);
 
