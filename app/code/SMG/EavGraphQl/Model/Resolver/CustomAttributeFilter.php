@@ -52,15 +52,19 @@ class CustomAttributeFilter implements ResolverInterface
     {
 
         $products['items'] = null;
+        /** @var array $Filtertype */
+        $filterType = $args['filter_type'];
         /** @var array $attributeInputs */
         $inputAttributes = $args['attributes'];
         /** @var Collection $collection */
         $collection = $this->_collectionFactory->create();
         $collection->addAttributeToSelect('*');
         $filterApplied = false;
+        $attr_merge = []; 
         // Cycle through attributes
         foreach ($inputAttributes as $inputAttribute) {
             $ids = [];
+            $attr = [];
             $options = $this->_productAttributeRepository->get($inputAttribute['attribute_code'])->getOptions();
             // The attributes' options, but we need to find the id from the given label
             if ($options) {
@@ -80,12 +84,30 @@ class CustomAttributeFilter implements ResolverInterface
             }
 
             // Apply filters
-            foreach ($ids as $id) {
+            if($filterType == 'matches-any')
+            {
+                foreach ($ids as $id) {
+                    $attr[] = array('attribute' => $inputAttribute['attribute_code'] ,['finset' => array($id)]);
+                }
+
+               $attr_merge = array_merge($attr_merge,$attr);
+
+            }else{
+
+                foreach ($ids as $id) {
                 $collection->addAttributeToFilter($inputAttribute['attribute_code'], ['finset' => array($id)]);
                 $filterApplied = true;
+                }
             }
+            
         }
-
+        
+        if($filterType == 'matches-any')
+        {
+          $collection->addAttributeToFilter($attr_merge);
+          $filterApplied = true;
+        }
+    
         $items = [];
         // This was needed for it to work
         if ($filterApplied) {
