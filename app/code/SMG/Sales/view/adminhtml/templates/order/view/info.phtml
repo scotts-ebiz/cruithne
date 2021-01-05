@@ -337,6 +337,10 @@ $allowedAddressHtmlTags = ['b', 'br', 'em', 'i', 'li', 'ol', 'p', 'strong', 'sub
                         <th><?= $block->escapeHtml(__('Parent Order ID')) ?></th>
                         <td><?php if(!empty($orderAdd['parent_order_id'])) echo $block->escapeHtml(__($orderAdd['parent_order_id'])) ?></td>
                     </tr>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Gigya ID')) ?></th>
+                        <td><?php if(!empty($orderAdd['gigya_id'])) echo $block->escapeHtml(__($orderAdd['gigya_id'])) ?></td>
+                    </tr>
                 </table>
             </div>
     </div>

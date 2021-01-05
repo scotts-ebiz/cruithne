@@ -8,7 +8,6 @@ use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory 
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
 use Psr\Log\LoggerInterface;
 use Magento\Customer\Controller\RegistryConstants;
-use Magento\Ui\Component\Layout\Tabs\TabInterface;
 use Recurly_Client;
 use Recurly_NotFoundError;
 use Recurly_SubscriptionList;
@@ -21,7 +20,7 @@ use SMG\Sap\Model\SapOrderStatusFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderStatus as SapOrderStatusResource;
 
 
-class CustomerSubscriptions extends \Magento\Framework\View\Element\Template implements TabInterface
+class CustomerSubscriptions extends \Magento\Framework\View\Element\Template
 {
     /**
      * @var \Magento\Framework\Registry

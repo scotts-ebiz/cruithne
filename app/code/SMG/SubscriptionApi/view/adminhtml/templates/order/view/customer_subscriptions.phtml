@@ -25,7 +25,7 @@ $subId = '';
 						<th class="data-grid-th no-link">Magento Status</th>
 						<th class="data-grid-th no-link">SAP Order Status</th>
 						<th class="data-grid-th no-link">Subscribed On</th>
-						<th class="data-grid-th no-link">Starts On</th>
+						<th class="data-grid-th no-link">Ships On</th>
 						<th class="data-grid-th no-link">Amount</th>
 						<th class="data-grid-th no-link">Product Name</th>
 						<th class="data-grid-th no-link">Sku</th>
@@ -56,7 +56,7 @@ $subId = '';
 							<td><?php echo $block->getMagentoStatus($subId); ?></td>
 							<td><?php echo $block->getSapOrderStatus($subId); ?></td>
 							<td><?php echo $subscription->activated_at->format('d F, Y'); ?></td>
-							<td><?php echo $subscription->current_term_started_at->format('d F, Y'); ?></td>
+							<td><?php if ($order->getId()) {echo date("d F, Y", strtotime($order->getShipStartDate()));}?></td>
 							<td>$<?php echo $block->convertAmountToDollars($subscription->unit_amount_in_cents); ?></td>
 							<td><?php echo $block->getProductName($subId); ?></td>
 							<td><?php echo $block->getProductSku($subId); ?></td>
