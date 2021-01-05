@@ -53,7 +53,7 @@ class CustomAttributeFilter implements ResolverInterface
 
         $products['items'] = null;
         /** @var array $Filtertype */
-        $filterType = $args['filter_type'];
+        $filterType = isset($args['filter_type']) ? $args['filter_type'] : '';
         /** @var array $attributeInputs */
         $inputAttributes = $args['attributes'];
         /** @var Collection $collection */
