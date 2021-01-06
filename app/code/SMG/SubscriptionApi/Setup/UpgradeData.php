@@ -179,6 +179,14 @@ class UpgradeData implements UpgradeDataInterface
      */
     private function addDataVersion116(ModuleDataSetupInterface $setup)
     {
+        // Upgrade Subscription Status
+        $tableName = $setup->getTable('subscription_status');
+
+        $data = [
+            ['status' => 'renewed', 'label' => 'Renewed']
+        ];
+
+        $setup->getConnection()->insertMultiple($tableName, $data);
         // Do nothing. Done purposefully to resolve merge.
     }
 
@@ -230,13 +238,6 @@ class UpgradeData implements UpgradeDataInterface
      */
     private function addDataVersion119(ModuleDataSetupInterface $setup)
     {
-        // Upgrade Subscription Status
-        $tableName = $setup->getTable('subscription_status');
-
-        $data = [
-            ['status' => 'renewed', 'label' => 'Renewed']
-        ];
-
-        $setup->getConnection()->insertMultiple($tableName, $data);
+        // Do nothing. Done purposefully to resolve merge.
     }
 }
