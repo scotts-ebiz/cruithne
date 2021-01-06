@@ -152,6 +152,7 @@ class AccountDetailsHelper
         $dataobj['subscription_type'] = NULL;
         $dataobj['subscription_ship_start'] = NULL;
         $dataobj['subscription_ship_end'] = NULL;
+        $dataobj['gigya_id'] = NULL;
 
         // get the order info
         $order = $this->_orderRepository->get($orderId);
@@ -165,6 +166,7 @@ class AccountDetailsHelper
         $dataobj['scotts_customer_id'] = $order->getScottsCustomerId();
         $dataobj['ls_order_id'] = $order->getLsOrderId();
         $dataobj['parent_order_id'] = $order->getParentOrderId();
+        $dataobj['gigya_id'] = $order->getGigyaId();
 
         // get the SAP Order Info
         /**
