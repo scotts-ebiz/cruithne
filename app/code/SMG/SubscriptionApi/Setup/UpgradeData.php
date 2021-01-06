@@ -187,7 +187,6 @@ class UpgradeData implements UpgradeDataInterface
         ];
 
         $setup->getConnection()->insertMultiple($tableName, $data);
-        // Do nothing. Done purposefully to resolve merge.
     }
 
     /**
