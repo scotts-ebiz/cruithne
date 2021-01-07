@@ -14,6 +14,7 @@ class Success extends Template
     public $_customerSession;
     public $_storeManager;
     public $_orderInterface;
+    protected $_helper;
 
      /**
      * @var SessionManagerInterface
@@ -26,7 +27,8 @@ class Success extends Template
         \Magento\Store\Model\StoreManagerInterface $storeManager,
         \Magento\Customer\Model\Session $customerSession,
         SessionManagerInterface $coreSession,
-        OrderInterface $orderInterface
+        OrderInterface $orderInterface,
+        \SMG\BackendService\Helper\Data $helper
     ) {
         parent::__construct($context, $data);
 
@@ -34,22 +36,26 @@ class Success extends Template
         $this->_customerSession = $customerSession;
         $this->_coreSession = $coreSession;
         $this->_orderInterface = $orderInterface;
+        $this->_helper = $helper;
     }
 
     /**
      * @return string
     */
     public function getOrderId(){
+        
          $this->_coreSession->start();
          $incrementId = $this->_coreSession->getData('order_id');
-         if(!empty($incrementId)){
+         $backendServiceStatus = $this->_helper->getStatus();
+         if(!empty($incrementId) && $backendServiceStatus == 1){
             $order = $this->_orderInterface->loadByIncrementId($incrementId);
             $orderId = $order->getMasterSubscriptionId();
          }
          else
          {
-             $orderId = $this->_coreSession->getData('order_id');
+            $orderId = $incrementId;
          }
+         
         return $orderId;
     }
 }
