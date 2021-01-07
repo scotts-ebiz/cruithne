@@ -8,6 +8,7 @@ use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory 
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
 use Psr\Log\LoggerInterface;
 use Magento\Customer\Controller\RegistryConstants;
+use Magento\Ui\Component\Layout\Tabs\TabInterface;
 use Recurly_Client;
 use Recurly_NotFoundError;
 use Recurly_SubscriptionList;
@@ -20,7 +21,7 @@ use SMG\Sap\Model\SapOrderStatusFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderStatus as SapOrderStatusResource;
 
 
-class CustomerSubscriptions extends \Magento\Framework\View\Element\Template
+class CustomerSubscriptions extends \Magento\Framework\View\Element\Template implements TabInterface
 {
     /**
      * @var \Magento\Framework\Registry
@@ -139,6 +140,11 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template
     * @var masterSubscriptionId
     */
     protected $_masterSubscriptionId;
+    
+    /**
+    * @var lsOrderId
+    */
+    protected $_lsOrderId;
 
     /**
      * @param \Magento\Backend\Block\Template\Context $context
@@ -564,6 +570,8 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template
         $customerId = $salesData->getCustomerId();
         $scottscustomerId = $salesData->getScottsCustomerId();
         $masterSubscriptionId = $salesData->getMasterSubscriptionId();
+        $lsOrderId = $salesData->getData('ls_order_id');
+        
         $customergigyaId = '';
         if(!empty($scottscustomerId))
         {
@@ -580,6 +588,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template
         $this->_customerId = $customerId;
         $this->_customerGigyaId = $customergigyaId;
         $this->_masterSubscriptionId = $masterSubscriptionId;
+        $this->_lsOrderId = $lsOrderId;
 
     }
 
@@ -608,4 +617,14 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template
 
        return false;
    }
+   
+   /**
+     * Return lsOrderId
+     *
+     * @return string
+     */
+    public function getlsOrderId()
+    {
+        return $this->_lsOrderId;
+    }
 }
