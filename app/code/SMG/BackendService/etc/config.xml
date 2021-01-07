@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <smg_backendservice>
+            <api>
+                <active>0</active>
+                <order>//cts-orders-k6x4iqtnzq-uc.a.run.app/v1/</order>
+                <customer>//cts-customers-k6x4iqtnzq-uc.a.run.app/v1/</customer>
+                <sap>https://eis-orders-k6x4iqtnzq-uc.a.run.app/v1/orderCancelEligibility/</sap>
+                <subscription>//cts-subscriptions-k6x4iqtnzq-uc.a.run.app/v1/</subscription>
+            </api>
+        </smg_backendservice>
+    </default>
+</config>

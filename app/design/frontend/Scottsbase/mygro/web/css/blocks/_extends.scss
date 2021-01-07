@@ -1309,3 +1309,28 @@
         }
     }
 }
+
+.qty.groupdrupalqty
+{
+  border : 1px solid;
+}
+.grouped tbody tr {
+    border-bottom: 1px solid;
+}
+.grouped tbody tr:last-child, .grouped tbody tr:nth-last-child(2){
+    border-bottom: none;
+}
+.grouped th, .grouped td
+{
+    width:46%;
+}
+.grouped th.col.qty, .grouped td.col.qty {
+    text-align: right;
+}
+.grouped .grouphead
+{
+    border : none !important;
+}
+.totalgroupedprice{
+    font-size:18px;
+}

@@ -119,7 +119,7 @@ class Index extends \Magento\Backend\App\Action
 
         try {
             $accountCode = $this->_request->getParam('recurly_account_code');
-            $this->_cancelHelper->cancelSubscriptions($accountCode);
+            $this->_cancelHelper->cancelSubscriptions($accountCode,'','admin');
         } catch (Exception $e) {
             $error = 'Could not cancel Recurly subscriptions';
             $this->_logger->error($error . ' - ' . $e->getMessage());
@@ -130,7 +130,7 @@ class Index extends \Magento\Backend\App\Action
             return $resultRedirect;
         }
 
-        $this->_messageManager->addSuccessMessage('Subscriptions cancelled.');
+        $this->_messageManager->addSuccessMessage('Subscriptions order cancel request is being processed.');
 
         // Redirect back to the customer page with a success or error message
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);

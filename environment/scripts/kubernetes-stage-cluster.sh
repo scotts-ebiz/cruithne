@@ -1,5 +1,5 @@
 gcloud config set project ecommerce-platform-211419
-gcloud container clusters get-credentials magento-stage-ha-cluster --zone us-east1
+gcloud container clusters get-credentials magento-stage-cluster --zone us-east1-d
 
 # get the number of items in cluster
 LIST=$(kubectl get pod -l app=magento-stage | wc -l)

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<!--
+/**
+ * @copyright Copyright (c) 2019 SMG, LLC
+ */
+-->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+	<preference for="Magento\CatalogGraphQl\Model\Resolver\Categories" type="SMG\CatalogGraphQl\Model\Resolver\Categories" />
+</config>
+

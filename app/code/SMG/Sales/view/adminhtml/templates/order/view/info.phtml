@@ -308,23 +308,39 @@ $allowedAddressHtmlTags = ['b', 'br', 'em', 'i', 'li', 'ol', 'p', 'strong', 'sub
                         </td>
                     </tr>
                     <?php if(!empty($orderAdd['subscription_order_id'])) { ?>
-					<tr>
-                        <th><?= $block->escapeHtml(__('Subscription Order Id')) ?></th>
-                        <td><?php if(!empty($orderAdd['subscription_order_id'])) echo $block->escapeHtml(__($orderAdd['subscription_order_id'])) ?></td>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Subscription Order Id')) ?></th>
+                            <td><?php if(!empty($orderAdd['subscription_order_id'])) echo $block->escapeHtml(__($orderAdd['subscription_order_id'])) ?></td>
+                        </tr>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Subscription Type')) ?></th>
+                            <td><?php if(!empty($orderAdd['subscription_type'])) echo $block->escapeHtml(__($orderAdd['subscription_type'])) ?></td>
+                        </tr>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Subscription Ship Start')) ?></th>
+                            <td><?php if(!empty($orderAdd['subscription_ship_start'])) echo $block->escapeHtml(__($orderAdd['subscription_ship_start'])) ?></td>
+                        </tr>
+                        <tr>
+                            <th><?= $block->escapeHtml(__('Subscription Ship End')) ?></th>
+                            <td><?php if(!empty($orderAdd['subscription_ship_end'])) echo $block->escapeHtml(__($orderAdd['subscription_ship_end'])) ?></td>
+                        </tr>
+                    <?php } ?>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Scotts Customer ID')) ?></th>
+                        <td><?php if(!empty($orderAdd['scotts_customer_id'])) echo $block->escapeHtml(__($orderAdd['scotts_customer_id'])) ?></td>
                     </tr>
                     <tr>
-                        <th><?= $block->escapeHtml(__('Subscription Type')) ?></th>
-                        <td><?php if(!empty($orderAdd['subscription_type'])) echo $block->escapeHtml(__($orderAdd['subscription_type'])) ?></td>
+                        <th><?= $block->escapeHtml(__('Ls Order ID')) ?></th>
+                        <td><?php if(!empty($orderAdd['ls_order_id'])) echo $block->escapeHtml(__($orderAdd['ls_order_id'])) ?></td>
                     </tr>
-					<tr>
-                        <th><?= $block->escapeHtml(__('Subscription Ship Start')) ?></th>
-                        <td><?php if(!empty($orderAdd['subscription_ship_start'])) echo $block->escapeHtml(__($orderAdd['subscription_ship_start'])) ?></td>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Parent Order ID')) ?></th>
+                        <td><?php if(!empty($orderAdd['parent_order_id'])) echo $block->escapeHtml(__($orderAdd['parent_order_id'])) ?></td>
                     </tr>
-					<tr>
-                        <th><?= $block->escapeHtml(__('Subscription Ship End')) ?></th>
-                        <td><?php if(!empty($orderAdd['subscription_ship_end'])) echo $block->escapeHtml(__($orderAdd['subscription_ship_end'])) ?></td>
+                    <tr>
+                        <th><?= $block->escapeHtml(__('Gigya ID')) ?></th>
+                        <td><?php if(!empty($orderAdd['gigya_id'])) echo $block->escapeHtml(__($orderAdd['gigya_id'])) ?></td>
                     </tr>
-					<?php } ?>
                 </table>
             </div>
     </div>
