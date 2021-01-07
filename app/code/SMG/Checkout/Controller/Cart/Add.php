@@ -116,7 +116,10 @@ class Add extends \Magento\Checkout\Controller\Cart implements HttpPostActionInt
             $related = $this->getRequest()->getParam('related_product');
 
             if ($type == 'grouped') {
-                $selectProduct = $params['selectProduct'];
+
+                if($storeId == 2){
+                 $selectProduct = $params['selectProduct'];
+                }
                 $super_group = $params['super_group'];
                 foreach ($super_group as $key => $valueqty) {
                     if($valueqty > 0){
