@@ -32,8 +32,10 @@ class Cart
         if ($quoteId) {
             $quoteIdMask = $this->quoteIdMaskFactory->create()->load($quoteId, 'masked_id');
             $_quoteId = $quoteIdMask->getQuoteId();
-            $this->quoteFactory->create()->load($_quoteId);
-            $this->checkoutSession->setQuoteId($_quoteId);
+            if(!empty($_quoteId)){
+                $this->quoteFactory->create()->load($_quoteId);
+                $this->checkoutSession->setQuoteId($_quoteId);
+            }
         }
         return $proceed($request);
     }
