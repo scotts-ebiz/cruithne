@@ -37,11 +37,6 @@ class Order extends MagentoOrder
      * @var SubscriptionResource
      */
     protected $_subscriptionResource;
-    
-    /**
-     * @var OrderBackendService
-     */
-    protected $_orderService;
 
     public function __construct(\Magento\Framework\Model\Context $context,
         \Magento\Framework\Registry $registry,
@@ -70,7 +65,6 @@ class Order extends MagentoOrder
         DiscountHelper $discountHelper,
         SubscriptionFactory $subscriptionFactory,
         SubscriptionResource $subscriptionResource,
-        OrderBackendService $orderService,
         \Magento\Framework\Model\ResourceModel\AbstractResource $resource = null,
         \Magento\Framework\Data\Collection\AbstractDb $resourceCollection = null,
         array $data = [],
@@ -87,7 +81,6 @@ class Order extends MagentoOrder
         $this->_discountHelper = $discountHelper;
         $this->_subscriptionFactory = $subscriptionFactory;
         $this->_subscriptionResource = $subscriptionResource;
-        $this->_orderService = $orderService;
     }
 
     /**
@@ -259,25 +252,5 @@ class Order extends MagentoOrder
 
         // return
         return $returnOrderTotals;
-    }
-    
-    /**
-     * @inheritdoc
-     *
-     * Adds the object to the status history collection, which is automatically saved when the order is saved.
-     * See the entity_id attribute backend model.
-     * Or the history record can be saved standalone after this.
-     *
-     * @param \Magento\Sales\Model\Order\Status\History $history
-     * @return $this
-     */
-    public function addStatusHistory(\Magento\Sales\Model\Order\Status\History $history)
-    {  
-        parent::addStatusHistory($history);
-        
-        if(!empty($comment = $history->getData('comment'))){
-          $this->_orderService->postOrderCommentNote($this->getIncrementId(),$comment);
-        }
-       
     }
 }
