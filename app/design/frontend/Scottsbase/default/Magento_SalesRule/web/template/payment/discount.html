@@ -28,6 +28,7 @@
                         <input class="input-text" type="text" id="discount-code" name="discount_code_input"
                             data-validate="{'required-entry':true}"
                             data-bind="value: couponCode, attr:{disabled:isApplied() , placeholder: $t('Enter discount code')} , event: {keyup: couponFieldTest}" />
+                            <div for="discount-code" generated="true" class="mage-error" id="discount-code-error"></div>
                     </div>
                 </div>
             </div>

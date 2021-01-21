@@ -189,7 +189,7 @@ class CoreServicesHelper
      * @var OrderItemCollectionFactory
      */
     protected $_orderItemCollectionFactory;
-    
+
     /**
      * @var Config
      */
@@ -462,14 +462,6 @@ class CoreServicesHelper
 
             // Set the Scotts Customer Id.
             $order->setData('scotts_customer_id', $orderData["customerId"] ?? null);
-
-            // Overwrite M2 order pricing with pricing from core services if set.
-            $order->setShippingAmount($orderData["shippingCost"] ?? $order->getShippingAmount());
-            $order->setSubtotal($orderData["subTotal"] ?? $order->getSubtotal());
-            $order->setDiscountAmount($orderData["discounts"] ?? $order->getDiscountAmount());
-            $order->setTaxAmount($orderData["tax"] ?? $order->getTaxAmount());
-            $order->setGrandTotal($orderData["total"] ?? $order->getGrandTotal());
-            $order->setCouponCode($orderData["couponCode"] ?? $order->getCouponCode());
 
             // Save order
             $this->_orderResource->save($order);
@@ -787,10 +779,10 @@ class CoreServicesHelper
         $this->_shippingConditionCodeResource->load($shippingCondition, $order->getShippingMethod(), 'shipping_method');
 
         $orderObject['shippingCondition'] = $shippingCondition->getData();
-        
+
         $orderObject['last_four'] = $last4;
         $orderObject['cc_type'] = $cc_type;
-        
+
         $response = array(
             'statusCode' => 200,
             'statusMessage' => 'success',
@@ -1225,7 +1217,7 @@ class CoreServicesHelper
 
         return $response;
     }
-    
+
 	/**
      * Updates customer email address for an order
      * @param  $requestData
@@ -1236,24 +1228,24 @@ class CoreServicesHelper
         try {
 
             if (isset($requestData[0]['orderIds']) &&
-                isset($requestData[0]['email'])) {			
-              	
+                isset($requestData[0]['email'])) {
+
                 foreach($requestData[0]['orderIds'] as $orderId)
 				{
 					$order = $this->_orderRepository->get($orderId);
 					$order->setCustomerEmail($requestData[0]['email']);
-					
+
 					// Save order
 					$this->_orderResource->save($order);
-				}	
-				
+				}
+
 				// Return a successful response.
 				$response = array(
 					'statusCode' => 200,
 					'statusMessage' => 'success',
 					'response' => 'true'
-				);	
-				
+				);
+
             } else {
                 $response = array(
                     'statusCode' => 200,
