@@ -60,7 +60,7 @@ class CustomAttributeFilter implements ResolverInterface
         $collection = $this->_collectionFactory->create();
         $collection->addAttributeToSelect('*');
         $filterApplied = false;
-        $attr_merge = []; 
+        $attr_merge = [];
         // Cycle through attributes
         foreach ($inputAttributes as $inputAttribute) {
             $ids = [];
@@ -70,7 +70,7 @@ class CustomAttributeFilter implements ResolverInterface
             if ($options) {
                 foreach ($options as $option) {
                     foreach ($inputAttribute['options'] as $inputOption) {
-                        if ($option->getLabel() === $inputOption['attribute_option_code']) {
+                        if (strtolower($option->getLabel()) === strtolower($inputOption['attribute_option_code'])) {
                             $ids[] = $option->getValue();
                         }
                     }
@@ -99,15 +99,15 @@ class CustomAttributeFilter implements ResolverInterface
                 $filterApplied = true;
                 }
             }
-            
+
         }
-        
+
         if($filterType == 'matches-any')
         {
           $collection->addAttributeToFilter($attr_merge);
           $filterApplied = true;
         }
-    
+
         $items = [];
         // This was needed for it to work
         if ($filterApplied) {
