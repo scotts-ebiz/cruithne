@@ -1,5 +1,5 @@
 .sp-form-group {
-  margin-bottom: 2rem;
+  margin-bottom: 3rem;
   position: relative;
 }
 
@@ -16,7 +16,7 @@
   :focus + &,
   :not(:placeholder-shown) + & {
     opacity: 1;
-    transform: translateY(-25%);
+    transform: translateY(-125%);
   }
 }
 
@@ -73,6 +73,7 @@ input[type="number"]::-webkit-outer-spin-button {
     background-position: center right;
     border-color: $red-1;
     padding-right: 1.25rem;
+    padding-bottom: 0.5rem;
   }
 
   @media (min-width: $screen-md) {
