@@ -5,6 +5,7 @@ namespace SMG\Api\Api;
 use Magento\Framework\Webapi\Rest\Request;
 
 use SMG\Api\Helper\OrdersCreditMemoHelper;
+use SMG\Api\Helper\OrderHelper;
 use SMG\Api\Helper\OrdersHelper;
 use SMG\Api\Helper\OrdersLawnSubscriptionHelper;
 use SMG\Api\Helper\OrdersMainHelper;
@@ -13,6 +14,11 @@ use SMG\Api\Api\Interfaces\OrdersManagementInterface;
 
 class OrdersManagement implements OrdersManagementInterface
 {
+    /**
+     * @var OrderHelper
+     */
+    protected $_orderHelper;
+    
     /**
      * @var OrdersHelper
      */
@@ -46,6 +52,7 @@ class OrdersManagement implements OrdersManagementInterface
     /**
      * OrdersManagement constructor.
      *
+     * @param OrderHelper $orderHelper
      * @param OrdersHelper $ordersHelper
      * @param OrdersCreditMemoHelper $ordersCreditMemoHelper
      * @param OrdersLawnSubscriptionHelper $ordersLawnSubscriptionHelper
@@ -53,13 +60,15 @@ class OrdersManagement implements OrdersManagementInterface
      * @param Request $request
      * @param RequestHelper $requestHelper
      */
-    public function __construct(OrdersHelper $ordersHelper,
-        OrdersCreditMemoHelper $ordersCreditMemoHelper,
+    public function __construct(OrderHelper $orderHelper,
+        OrdersHelper $ordersHelper,
+    	OrdersCreditMemoHelper $ordersCreditMemoHelper,
         OrdersLawnSubscriptionHelper $ordersLawnSubscriptionHelper,
         OrdersMainHelper $ordersMainHelper,
         Request $request,
         RequestHelper $requestHelper)
     {
+        $this->_orderHelper = $orderHelper;
         $this->_ordersHelper = $ordersHelper;
         $this->_ordersCreditMemoHelper = $ordersCreditMemoHelper;
         $this->_ordersLawnSubscriptionHelper = $ordersLawnSubscriptionHelper;
@@ -76,6 +85,17 @@ class OrdersManagement implements OrdersManagementInterface
     public function getOrders()
     {
         return $this->_ordersHelper->getOrders();
+    }
+    
+    /**
+     * This function will get the order information in a JSON format.
+     *
+     * @param string orderId
+     * @return string
+     */
+    public function getOrderById($orderId)
+    {
+    	return $this->_orderHelper->getOrderById($orderId);
     }
 
     /**

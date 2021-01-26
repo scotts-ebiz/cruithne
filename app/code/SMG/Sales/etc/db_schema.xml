@@ -18,6 +18,15 @@
         <column xsi:type="boolean" name="subscription_addon" nullable="true" comment="Is Addon Subscription?"/>
         <column xsi:type="timestamp" name="ship_start_date" nullable="true" comment="Ship Start Date"/>
         <column xsi:type="timestamp" name="ship_end_date" nullable="true" comment="Ship End Date"/>
+        <column xsi:type="varchar" name="parent_order_id" nullable="true" comment="Parent Order ID"/>
+        <column xsi:type="varchar" name="ls_order_id" nullable="true" comment="LS Order ID"/>
+        <column xsi:type="varchar" name="scotts_customer_id" nullable="true" comment="Scotts Customer ID"/>
+		<column xsi:type="varchar" name="previous_order_id" nullable="true" comment="previousOrderId"/>
+		<column xsi:type="varchar" name="order_type" nullable="true" comment="orderType"/>
+		<column xsi:type="varchar" name="sub_type" nullable="true" comment="subType"/>
+		<column xsi:type="varchar" name="recurly_plan_code" nullable="true" comment="recurlyPlanCode"/>
+		<column xsi:type="varchar" name="recurly_id" nullable="true" comment="recurlyId"/>
+		<column xsi:type="varchar" name="cancellation_number" nullable="true" comment="cancellationNumber"/>
         <index referenceId="SALES_ORDER_MASTER_SUBSCRIPTION_ID" indexType="btree">
             <column name="master_subscription_id"/>
         </index>

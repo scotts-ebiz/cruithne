@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\App\Action\AbstractAction">
+        <plugin name="SMG_GuestCart::Cart" type="SMG\GuestCart\Plugin\Cart" sortOrder="1" disabled="false"/>
+    </type>
+    <type name="Magento\Quote\Api\CartTotalRepositoryInterface">
+        <plugin name="SMG_GuestCart::CartTotals" type="SMG\GuestCart\Plugin\CartTotalRepositoryPlugin" sortOrder="2" disabled="false"/>
+    </type>
+</config>

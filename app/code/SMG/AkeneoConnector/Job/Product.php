@@ -21,6 +21,72 @@ use Zend_Db_Expr as Expr;
 class Product extends \Akeneo\Connector\Job\Product
 {
     /**
+     * Create temporary table
+     *
+     * @return void
+     */
+    public function createTable()
+    {
+        if (empty($this->configHelper->getMappedChannels())) {
+            $this->setMessage(__('No website/channel mapped. Please check your configurations.'));
+            $this->stop(true);
+
+            return;
+        }
+
+        // Stop the import if the family is not imported
+        if ($this->getFamily()) {
+            /** @var AdapterInterface $connection */
+            $connection = $this->entitiesHelper->getConnection();
+            /** @var string $connectorEntitiesTable */
+            $connectorEntitiesTable = $this->entities->getTable($this->entities::TABLE_NAME);
+            /** @var bool $isFamilyImported */
+            $isFamilyImported = (bool)$connection->fetchOne(
+                $connection->select()
+                    ->from($connectorEntitiesTable, ['code'])
+                    ->where('code = ?', $this->getFamily())
+                    ->limit(1)
+            );
+
+            if (!$isFamilyImported) {
+                $this->setMessage(__('The family %1 is not imported yet, please run Family import.', $this->getFamily()));
+                $this->stop(true);
+
+                return;
+            }
+        }
+
+        /** @var mixed[] $filters */
+        $filters = $this->getFilters($this->getFamily());
+
+        foreach ($filters as $filter) {
+            /** @var PageInterface $products */
+            $products = $this->akeneoClient->getProductApi()->listPerPage(1, false, $filter);
+            /** @var mixed[] $products */
+            $products = $products->getItems();
+
+            if (!empty($products)) {
+                break;
+            }
+        }
+
+        if (empty($products)) {
+            $this->setMessage(__('No results from Akeneo for the family: %1', $this->getFamily()));
+            $this->stop(true);
+
+            return;
+        }
+
+        $product = reset($products);
+        $product['values']['pim_sku'][0]['data'] = $product['identifier'];
+        $this->entitiesHelper->createTmpTableFromApi($product, $this->getCode());
+
+        /** @var string $message */
+        $message = __('Family imported in this batch: %1', $this->getFamily());
+        $this->setMessage($message);
+    }
+
+    /**
      * Insert data into temporary table
      *
      * @return void
