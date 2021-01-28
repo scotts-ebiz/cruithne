@@ -166,13 +166,14 @@ class CancelHelper extends AbstractHelper
             /**
              * @var $subscription Subscription
              */
-            if($area == 'admin'){
+            if($area == 'admin' || $area == 'api'){
                 
             $subscription = $this->_subscriptionCollectionFactory
                 ->create()
                 ->addFieldToFilter('subscription_id', $accountCode)
                 ->addFieldToFilter('subscription_status', 'active')
                 ->fetchItem();
+                
             }
             else
             {
@@ -196,7 +197,7 @@ class CancelHelper extends AbstractHelper
             // provide a field.
            
             //stop cancel subscription from backend
-            if($area != 'admin'){
+            if($area != 'admin' && $area != 'api'){
                 
             $customer = $this->_customerCollectionFactory
                 ->create()
@@ -208,7 +209,20 @@ class CancelHelper extends AbstractHelper
             }
 
              $subscription->cancel();
-            } 
+            }
+            else if ($area == 'api')
+            {
+                $customer = $this->_customerCollectionFactory
+                ->create()
+                ->addFieldToFilter('gigya_uid', $subscription->getGigyaId())
+                ->fetchItem();
+
+                if (! $customer->getId()) {
+                    throw new Exception("Could not find customer with Gigya ID: {$subscription->getGigyaId()}.");
+                }
+
+                $subscription->cancel();
+            }               
             // Add cancellation comments to orders.
             $subscriptionOrders = $this->_subscriptionOrderCollectionFactory->create();
             $subscriptionOrders
