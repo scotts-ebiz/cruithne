@@ -56,6 +56,7 @@ use Recurly_BillingInfo;
 use Recurly_ShippingAddressList;
 use Recurly_Invoice;
 use Magento\Directory\Model\ResourceModel\Region\CollectionFactory as RegionCollectionFactory;
+use SMG\SubscriptionApi\Helper\CancelHelper;
 
 /**
  * Class Subscription
@@ -205,6 +206,11 @@ class Subscription implements SubscriptionInterface
     protected $_subscriptionOrderItemFactory;
     protected $_regionCollectionFactory;
     protected $_subscriptionRenewalErrorFactory;
+	
+	/**
+     * @var CancelHelper
+     */
+    protected $_cancelHelper;
 
     /**
      * Subscription constructor.
@@ -242,6 +248,7 @@ class Subscription implements SubscriptionInterface
      * @param HistoryFactory $historyFactory
      * @param HistoryResource $historyResource
      * @param SubscriptionRenewalErrorFactory $subscriptionRenewalErrorFactory
+	 * @param CancelHelper $cancelHelper
      */
     public function __construct(
         LoggerInterface $logger,
@@ -282,7 +289,8 @@ class Subscription implements SubscriptionInterface
         SubscriptionOrderFactory $subscriptionOrderFactory,
         SubscriptionOrderItemFactory $subscriptionOrderItemFactory,
         RegionCollectionFactory $regionCollectionFactory,
-        SubscriptionRenewalErrorFactory $subscriptionRenewalErrorFactory
+        SubscriptionRenewalErrorFactory $subscriptionRenewalErrorFactory,
+		CancelHelper $cancelHelper
     ) {
         $this->_logger = $logger;
         $this->_recommendationHelper = $recommendationHelper;
@@ -324,7 +332,7 @@ class Subscription implements SubscriptionInterface
         $this->_subscriptionOrderItemFactory = $subscriptionOrderItemFactory;
         $this->_regionCollectionFactory = $regionCollectionFactory;
         $this->_subscriptionRenewalErrorFactory = $subscriptionRenewalErrorFactory;
-
+        $this->_cancelHelper = $cancelHelper;
         $host = gethostname();
         $ip = gethostbyname($host);
         $this->_loggerPrefix = 'SERVER: ' . $ip . ' SESSION: ' . session_id() . ' - ';
@@ -1086,5 +1094,31 @@ class Subscription implements SubscriptionInterface
         ];
 
         return $return;
+    }
+	
+	/**
+     * @param string $master_subscription_id
+     * @return mixed
+     */
+    public function cancelSubscription($master_subscription_id) {
+		
+		$this->_logger->debug("Cancel master subscription id: " . $master_subscription_id);
+		  
+		// Cancel Subscriptions
+		try {
+			$this->_cancelHelper->cancelSubscriptions($master_subscription_id,'','api');
+		} catch (Exception $e) {
+			$this->_logger->error($e->getMessage());
+
+			return json_encode([
+				'success' => false,
+				'message' => $e->getMessage()
+			]);
+		}
+
+		return json_encode([
+			'success' => true,
+			'message' => 'Subscriptions successfully cancelled.'
+		]);
     }
 }
