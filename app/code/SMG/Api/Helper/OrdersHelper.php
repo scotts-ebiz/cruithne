@@ -498,7 +498,7 @@ class OrdersHelper
                              * @var \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
                              */
                             $sapOrderBatch = $this->_sapOrderBatchFactory->create();
-                            $this->_sapOrderBatchResource->load($sapOrderBatch, $orderId);
+                            $this->_sapOrderBatchResource->load($sapOrderBatch, $orderId, 'order_id');
                             $possibleOrderProcessDate = $sapOrderBatch->getData('order_process_date');
                             // Check if already processed, likely due to being previous subscription orders
                             if (empty($possibleOrderProcessDate)) {
