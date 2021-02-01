@@ -127,7 +127,11 @@ class Order
         $payment = $order->getPayment();
         $methodname = $payment->getMethod();
         $additionalInfo = ($payment->getAdditionalInformation());
-        $last4 = $additionalInfo['last_four'];
+        if(isset($additionalInfo['last_four'])){
+            $last4 = $additionalInfo['last_four'];
+        }else{
+            $last4 = '';
+        }
         $cc_type = $this->config->getCardFullName($payment->getData('cc_type'));
         $shippingData = $order->getShippingAddress()->getData();
         $billingData = $order->getBillingAddress()->getData();
