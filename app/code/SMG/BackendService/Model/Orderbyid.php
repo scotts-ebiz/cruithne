@@ -2,6 +2,11 @@
 
 namespace SMG\BackendService\Model;
 
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Sales\Api\Data\ShipmentItemInterface;
+use Magento\Sales\Api\ShipmentItemRepositoryInterface;
+use SMG\BackendService\Model\Service\Order;
+use Magento\Catalog\Api\ProductRepositoryInterface;
 use SMG\BackendService\Api\OrderbyidInterface;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Framework\Message\ManagerInterface;
@@ -10,9 +15,24 @@ class Orderbyid implements OrderbyidInterface
 {
 
     /**
-     * @var OrderInterfaceFactory
+     * @var SearchCriteriaBuilder
      */
-    private $orderFactory;
+    protected $searchCriteriaBuilder;
+
+    /**
+     * @var ShipmentItemRepositoryInterface
+     */
+    protected $shipmentItem;
+
+    /**
+     * @var ProductRepository
+     */
+    protected $productRepository;
+
+    /**
+     * @var Order
+     */
+    protected $order;
 
     /**
      * @var ManagerInterface
@@ -22,15 +42,29 @@ class Orderbyid implements OrderbyidInterface
     /**
      * Orderbyid constructor.
      * @param OrderFactory $orderFactory
+     * @param Order $order
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param ProductRepositoryInterface $productRepositoryInterface
+     * @param ShipmentItemRepositoryInterface $shipmentItemRepositoryInterface
      * @param ManagerInterface $messageManager
      */
     public function __construct(
         OrderFactory $orderFactory,
+        Order $order,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        ProductRepositoryInterface $productRepository,
+        ShipmentItemRepositoryInterface $shipmentItem,
         ManagerInterface $messageManager
-    ) {
+    )
+    {
         $this->orderFactory = $orderFactory;
+        $this->order = $order;
+        $this->productRepository = $productRepository;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->shipmentItem = $shipmentItem;
         $this->messageManager = $messageManager;
     }
+
 
     /**
      * {@inheritdoc}
@@ -38,22 +72,15 @@ class Orderbyid implements OrderbyidInterface
     public function getOrderById($orderIncrementid, $email)
     {
         $data = [];
+
         if (!empty($orderIncrementid) && !empty($email)) {
-            $order = $this->orderFactory->create()->loadByIncrementId($orderIncrementid);
-            if ($order && $order->getCustomerEmail() == $email) {
+            $order_data = $this->orderFactory->create()->loadByIncrementId($orderIncrementid);
 
-                $data["result"] = $order->getData();
+            if ($order_data && $order_data->getCustomerEmail() == $email) {
 
-                foreach ($order->getAllItems() as $item) {
-                    $data["result"]['items'][$item->getItemId()] = $item->getData();
-                }
-
-                $tracksCollection = $order->getTracksCollection();
-                $trackNumbers = [];
-                foreach ($tracksCollection->getItems() as $track) {
-                    $trackNumbers[$track->getTitle()] = $track->getTrackNumber();
-                }
-                $data["result"]['tracking'] = $trackNumbers;
+                $data["result"] = $this->order->buildOrderObject(
+                    $order_data, "", "", ""
+                );
             }
         }
 
