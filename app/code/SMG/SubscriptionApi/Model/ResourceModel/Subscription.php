@@ -143,6 +143,7 @@ class Subscription extends AbstractDb
             $subscription = $subscriptions
                 ->addFieldToFilter('subscription_id', $masterSubscription)
                 ->addFieldToFilter('subscription_status', array('neq' => 'renewed'))
+                ->addFieldToFilter('subscription_status', array('neq' => 'renewal_failed'))
                 ->getFirstItem();
 
             if (! $subscription->getId()) {
