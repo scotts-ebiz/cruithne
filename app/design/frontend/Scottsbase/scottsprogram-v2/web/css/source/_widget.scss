@@ -23,7 +23,10 @@
 		@include breakpoint('md') {
 			margin-top: 4rem;
 			margin-bottom: 8rem;
-		  }
+          }
+        :focus + .sp-form-label, :not(:placeholder-shown) + .sp-form-label {
+            transform: translateY(-175%);
+        }
 	}
 }
 

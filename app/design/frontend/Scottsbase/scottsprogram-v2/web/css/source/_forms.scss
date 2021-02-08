@@ -16,7 +16,7 @@
   :focus + &,
   :not(:placeholder-shown) + & {
     opacity: 1;
-    transform: translateY(-125%);
+    transform: translateY(-75%);
   }
 }
 
