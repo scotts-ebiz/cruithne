@@ -83,6 +83,7 @@ $order;
 				<p>Clicking "Cancel Subscription" will cancel all of it's active and future subscriptions.</p>
 				<form action="<?php echo $block->getCancelUrl(); ?>" method="POST">
 					<input type="hidden" name="form_key" value="<?php echo $block->getFormKey(); ?>" />
+					<input type="hidden" name="salespage" value="admin" />
 				    <input type="hidden" name="recurly_account_code" value="<?php echo $block->getMasterSubscriptionId(); ?>" />
 					<button type="submit">Cancel Subscription</button>
 				</form>

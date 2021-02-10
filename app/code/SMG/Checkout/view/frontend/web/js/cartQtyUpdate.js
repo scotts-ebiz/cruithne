@@ -6,8 +6,8 @@ define([
     'Magento_Customer/js/customer-data',
     'Magento_Checkout/js/model/shipping-rate-processor/new-address',
     'Magento_Checkout/js/model/checkout-data-resolver',
-
-], function ($, getTotalsAction, cartCache, shippingService, customerData, newAddress, checkoutDataResolver) {
+    'Magento_Checkout/js/model/quote',
+], function ($, getTotalsAction, cartCache, shippingService, customerData, newAddress, checkoutDataResolver, quote) {
 
     return function(config) {
         $(document).on('click', '.update_cust_btn', function(){
@@ -21,17 +21,13 @@ define([
                     var result = $(parsedResponse).find("#form-validate");
                     var content = $(parsedResponse).find("#maincontent");
                     var messages = $(parsedResponse).find(".messages");
-
+                    var totals = quote.getTotals()();
                     $(".messages").replaceWith(messages);
                     $("#form-validate").replaceWith(result);
                     $("#ajax_event").html($(res).find("#ajax_event").html());
 
                     /* Minicart reloading */
                     customerData.reload(['cart', 'magepal-gtm-jsdatalayer'], true);
-
-                    /* Totals summary reloading */
-                    var deferred = $.Deferred();
-                    getTotalsAction([], deferred);
 
                     if($('#form-validate').length == 0){
                         if($("body").hasClass("empty-cart-page") != 'empty-cart-page'){
@@ -40,6 +36,13 @@ define([
                         $('meta[name=title]').replaceWith('<meta name="title" content="Your Cart is Empty">');
                         $("head title").replaceWith("<title>Your Cart is Empty</title>");
                         $("#maincontent").replaceWith(content);
+                    }else{
+                        if($(res).find("#coupon_code").val().length == 0 && (totals && totals.discount_amount != 0)){
+                            location.reload();
+                        }else
+                        {
+                            customerData.reload(['cart'], true);
+                        }
                     }
 
                 },

@@ -125,7 +125,7 @@ class Subscription extends AbstractDb
             }
         }
 
-        $error = "Subscription could not be found with quiz ID '{$quizId}'.";        
+        $error = "Subscription could not be found with quiz ID '{$quizId}'.";
 
         throw new LocalizedException(__($error));
     }
@@ -142,6 +142,8 @@ class Subscription extends AbstractDb
             $subscriptions = $this->_subscriptionCollectionFactory->create();
             $subscription = $subscriptions
                 ->addFieldToFilter('subscription_id', $masterSubscription)
+                ->addFieldToFilter('subscription_status', array('neq' => 'renewed'))
+                ->addFieldToFilter('subscription_status', array('neq' => 'renewal_failed'))
                 ->getFirstItem();
 
             if (! $subscription->getId()) {
