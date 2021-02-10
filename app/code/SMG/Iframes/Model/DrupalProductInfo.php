@@ -83,7 +83,8 @@ class DrupalProductInfo implements DrupalProductInfoInterface {
                     'drupalProductId' => $product->getData('drupalproductid'),
                     'isDefault' => $child->getId() === $defaultProductId,
                     'size' => $product->getResource()->getAttribute('size')->getSource()->getOptionText($product->getData('size')),
-                    'quantity' => array_key_exists($child->getSku(),$associatedqty) ? $associatedqty[$child->getSku()] : ''
+                    'quantity' => array_key_exists($child->getSku(),$associatedqty) ? $associatedqty[$child->getSku()] : '',
+                    'isEnabled' => $child->getStatus() == 1 ? 'true' : 'false'
                 ));
             }
 
@@ -99,7 +100,8 @@ class DrupalProductInfo implements DrupalProductInfoInterface {
                 'price' => number_format((float)$product->getPrice(), 2, '.', ''),
                 'size' => $product->getResource()->getAttribute('size')->getSource()->getOptionText($product->getData('size')),
                 'type' => $product->getTypeId(),
-                'childSkus' => $childProducts
+                'childSkus' => $childProducts,
+                    'isEnabled' => $product->getStatus() == 1 ? 'true' : 'false'
                 )
             );
         }
