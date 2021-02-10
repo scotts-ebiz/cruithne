@@ -16,6 +16,7 @@ define([
                 url: form.attr('action'),
                 data: form.serialize(),
                 showLoader: true,
+                async: true,
                 success: function (res) {
                     var parsedResponse = $.parseHTML(res);
                     var result = $(parsedResponse).find("#form-validate");
@@ -29,6 +30,10 @@ define([
                     /* Minicart reloading */
                     customerData.reload(['cart', 'magepal-gtm-jsdatalayer'], true);
 
+                    /* Totals summary reloading */
+                    var deferred = $.Deferred();
+                    getTotalsAction([], deferred);
+
                     if($('#form-validate').length == 0){
                         if($("body").hasClass("empty-cart-page") != 'empty-cart-page'){
                             $("body").addClass("empty-cart-page");
@@ -39,9 +44,6 @@ define([
                     }else{
                         if($(res).find("#coupon_code").val().length == 0 && (totals && totals.discount_amount != 0)){
                             location.reload();
-                        }else
-                        {
-                            customerData.reload(['cart'], true);
                         }
                     }
 
@@ -71,9 +73,10 @@ define([
                 "postcode" : postcode || ""
             };
             shippingAddressFromData.getCacheKey = function(){ return 'new-customer-address' + Date.now()};
-            newAddress.getRates(shippingAddressFromData);
-
-            checkoutDataResolver.resolveShippingRates(shippingService.getShippingRates());
+            var checkRates = newAddress.getRates(shippingAddressFromData);
+            $.when(checkRates).done(function() {
+                 checkoutDataResolver.resolveShippingRates(shippingService.getShippingRates());
+            });
         });
     }
 });
