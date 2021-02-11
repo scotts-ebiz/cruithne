@@ -386,6 +386,7 @@ class OrdersHelper
         $sapOrderBatches = $this->_sapOrderBatchCollectionFactory->create();
         $sapOrderBatches->addFieldToFilter('is_order', ['eq' => true]);
         $sapOrderBatches->addFieldToFilter('order_process_date', ['null' => true]);
+        $sapOrderBatches->setPageSize(500);
 
         // check if there are orders to process
         if ($sapOrderBatches->count() > 0) {
