@@ -1232,6 +1232,18 @@ define([
                                 data = data[0];
                             }
 
+                            // manual hack to fix two accidentally swapped weeds condition images by hard-coding values
+                            const indexCondition = data.questionGroups.findIndex((el) => el.label === "CONDITION");
+                            const targetQuestionsArray = data.questionGroups[indexCondition].questions;
+                            const indexWeeds = targetQuestionsArray.findIndex((el) => el.label === "Weeds");
+                            const weedsOptions = targetQuestionsArray[indexWeeds].options;
+                            const indexSeveral = weedsOptions.findIndex((el) => el.label === "Several Weeds");
+                            const targetObjectSeveralWeeds = weedsOptions[indexSeveral];
+                            const indexSome = weedsOptions.findIndex((el) => el.label === "Some Weeds");
+                            const targetObjectSomeWeeds = weedsOptions[indexSome];
+                            targetObjectSeveralWeeds.imageUrl = "https://smg-product-images.storage.googleapis.com/3-weeds-several_weeds.png";
+                            targetObjectSomeWeeds.imageUrl = "https://smg-product-images.storage.googleapis.com/2-weeds-some_weeds.png";
+
                             // Initialize the quiz with the template data.
                             self.quiz.initialize(data);
                         }
