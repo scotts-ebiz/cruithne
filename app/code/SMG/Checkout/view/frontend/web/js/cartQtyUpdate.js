@@ -20,9 +20,7 @@ define([
                 success: function (res) {
                     var parsedResponse = $.parseHTML(res);
                     var result = $(parsedResponse).find("#form-validate");
-                    //var messages = $(parsedResponse).find(".messages");
                     var totals = quote.getTotals()();
-                    //$(".messages").replaceWith(messages);
                     $("#form-validate").replaceWith(result);
 
                     /* Minicart reloading */
