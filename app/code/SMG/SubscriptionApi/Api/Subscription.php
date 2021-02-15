@@ -938,7 +938,7 @@ class Subscription implements SubscriptionInterface
                 return $this->_responseHelper->error(
                     $message,
                     ['refresh' => false],
-                    404
+                    422
                 );
             }
 

@@ -16,6 +16,7 @@ define([
                 url: form.attr('action'),
                 data: form.serialize(),
                 showLoader: true,
+                async: true,
                 success: function (res) {
                     var parsedResponse = $.parseHTML(res);
                     var result = $(parsedResponse).find("#form-validate");
@@ -72,9 +73,10 @@ define([
                 "postcode" : postcode || ""
             };
             shippingAddressFromData.getCacheKey = function(){ return 'new-customer-address' + Date.now()};
-            newAddress.getRates(shippingAddressFromData);
-
-            checkoutDataResolver.resolveShippingRates(shippingService.getShippingRates());
+            var checkRates = newAddress.getRates(shippingAddressFromData);
+            $.when(checkRates).done(function() {
+                 checkoutDataResolver.resolveShippingRates(shippingService.getShippingRates());
+            });
         });
     }
 });
