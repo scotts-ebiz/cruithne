@@ -953,6 +953,25 @@ class Subscription implements SubscriptionInterface
             $newSub = $this->createRenewalSubscription($sub);
             $newSubOrders = [];
             $newSubOrderItems = [];
+            $isPreviousSubscriptionOkToRenew = true;
+
+            /** @var SubscriptionOrder $order */
+            foreach ($subOrders as $order) {
+                $subscriptionOrderStatus = $order->getData('subscription_order_status');
+                if (!empty($subscriptionOrderStatus) && in_array($subscriptionOrderStatus, array( 'canceled', 'failed'))) {
+                    $isPreviousSubscriptionOkToRenew = false;
+                }
+            }
+
+            if (!$isPreviousSubscriptionOkToRenew) {
+                $message = "SubscriptionException: The past subscriptions has cancellations or failures.";
+                $this->createRenewalError($master_subscription_id, $message);
+                return $this->_responseHelper->error(
+                    $message,
+                    ['refresh' => false],
+                    409
+                );
+            }
 
             foreach ($subOrders as $order) {
                 $newOrder = $this->createRenewalSubscriptionOrder($order, $newSub->getData('entity_id'));
