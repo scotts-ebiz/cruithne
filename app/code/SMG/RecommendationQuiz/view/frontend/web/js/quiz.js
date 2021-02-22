@@ -63,8 +63,8 @@ define([
             self.autocomplete = new google.maps.places.Autocomplete(
                 autocompleteElement, { types: ['geocode'] }
             );
-            google.maps.event.addDomListener(autocompleteElement, 'blur', function() {
-                if ($('.pac-item:hover').length === 0 ) {
+            google.maps.event.addDomListener(autocompleteElement, 'blur', function () {
+                if ($('.pac-item:hover').length === 0) {
                     google.maps.event.trigger(this, 'focus', {});
                     google.maps.event.trigger(this, 'keydown', {
                         keyCode: 13
@@ -308,9 +308,9 @@ define([
 
         self.debounce = function (func, wait, immediate = false) {
             let timeout;
-            return function() {
+            return function () {
                 let context = this, args = arguments;
-                let later = function() {
+                let later = function () {
                     timeout = null;
                     if (!immediate) func.apply(context, args);
                 }
@@ -322,7 +322,7 @@ define([
 
         }
 
-        self.handleResize = function() {
+        self.handleResize = function () {
             const wrapper = document.querySelector('.sp-quiz__wrapper');
             const content = document.querySelector('.sp-quiz__content');
 
@@ -339,7 +339,7 @@ define([
 
         window.addEventListener('resize', self.debounce(self.handleResize, 250));
 
-        let observer = new MutationObserver(function(mutations) {
+        let observer = new MutationObserver(function (mutations) {
             if (document.contains(document.querySelector('.sp-quiz__footer'))) {
                 if (document.querySelector('.sp-quiz__footer').offsetHeight > 0) {
                     self.handleResize();
@@ -348,14 +348,14 @@ define([
             }
         })
 
-        observer.observe(document, {attributes: false, childList: true, characterData: false, subtree: true})
+        observer.observe(document, { attributes: false, childList: true, characterData: false, subtree: true })
 
         self.progressBarCategories = ko.observableArray([
-            {label: "Goals"},
-            {label: "Routine"},
-            {label: "Tools"},
-            {label: "Condition"},
-            {label: "Lawn Details"}
+            { label: "Goals" },
+            { label: "Routine" },
+            { label: "Tools" },
+            { label: "Condition" },
+            { label: "Lawn Details" }
         ]);
 
         self.answers = ko.observableArray([]);
@@ -368,6 +368,7 @@ define([
         self.usingGoogleMaps = ko.observable(false);
         self.invalidZipCode = ko.observable(false);
         self.invalidArea = ko.observable(false);
+        self.invalidZipCodeInput = ko.observable(false);
         self.isAnimating = ko.observable(false);
         self.zipCode = '';
 
@@ -440,35 +441,35 @@ define([
             $('.sp-quiz__transition-inner').addClass('sp-quiz__transition-slideup');
         },
 
-        /**
-         * Handle moving the transition screen down
-         */
-        self.transitionDown = function () {
+            /**
+             * Handle moving the transition screen down
+             */
+            self.transitionDown = function () {
                 $('.sp-quiz__transition-inner').addClass('sp-quiz__transition-slidedown');
-            setTimeout(() => {
-                $('.sp-quiz__transition-inner').addClass('sp-quiz__displaynone');
-            }, 250);
-        },
+                setTimeout(() => {
+                    $('.sp-quiz__transition-inner').addClass('sp-quiz__displaynone');
+                }, 250);
+            },
 
-        /**
-         * Handle moving the content screen up
-         */
-        self.contentUp = function () {
+            /**
+             * Handle moving the content screen up
+             */
+            self.contentUp = function () {
 
-            $('.sp-quiz-option').addClass('sp-quiz-option-animation');
-            $('.sp-quiz__transition-inner').removeClass('sp-quiz__transition-slidedown');
-            $('.sp-quiz__transition-inner').removeClass('sp-quiz__displaynone');
-            $('.sp-quiz__question-wrapper').removeClass('sp-quiz__displaynone');
-            $('.sp-quiz__question-wrapper').addClass('sp-quiz__question-up');
-            $('.sp-quiz__transition-wrapper').removeClass('sp-quiz__displayblock');
+                $('.sp-quiz-option').addClass('sp-quiz-option-animation');
+                $('.sp-quiz__transition-inner').removeClass('sp-quiz__transition-slidedown');
+                $('.sp-quiz__transition-inner').removeClass('sp-quiz__displaynone');
+                $('.sp-quiz__question-wrapper').removeClass('sp-quiz__displaynone');
+                $('.sp-quiz__question-wrapper').addClass('sp-quiz__question-up');
+                $('.sp-quiz__transition-wrapper').removeClass('sp-quiz__displayblock');
 
-            setTimeout(() => {
-                $('.sp-quiz-option').addClass('sp-quiz-option-fullopacity');
-                self.isAnimating(false);
-            }, 640);
-        };
+                setTimeout(() => {
+                    $('.sp-quiz-option').addClass('sp-quiz-option-fullopacity');
+                    self.isAnimating(false);
+                }, 640);
+            };
 
-        self.transitionToNextState = function() {
+        self.transitionToNextState = function () {
             self.runningAnimationStates.push(window.requestAnimationFrame(() => {
                 self.animationStates[self.currentAnimationState]();
             }));
@@ -520,7 +521,7 @@ define([
             const animations = self.currentGroup().animationScreens;
             self.animation({});
 
-                // Find the animation based on the answer.
+            // Find the animation based on the answer.
             for (const animation of animations) {
                 // No required conditions for this animation, so just use it.
                 if (!animation.conditions.length || self.testConditions(animation.conditions)) {
@@ -600,7 +601,7 @@ define([
         self.setGroup = function (group) {
             self.currentGroup(group);
 
-            if(group.label === 'CONDITION') setupRangeListener(this);
+            if (group.label === 'CONDITION') setupRangeListener(this);
 
             var results = {};
             var initializedMap = false;
@@ -814,7 +815,7 @@ define([
 
                     let sliderValues = {};
 
-                    let labels = Array.prototype.slice.call(document.querySelectorAll( scontId + " span"));
+                    let labels = Array.prototype.slice.call(document.querySelectorAll(scontId + " span"));
 
                     for (var i = 0; i < labels.length; i++) {
                         sliderValues[labels[i].dataset.optid] = labels[i].innerText;
@@ -825,7 +826,7 @@ define([
             }
         };
 
-        self.formatNumber = function(number) {
+        self.formatNumber = function (number) {
             return number.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
         };
 
@@ -928,7 +929,7 @@ define([
         self.testConditions = function (conditions) {
             for (var condition of conditions) {
                 // Condition failed, return false.
-                if (! self.testCondition(condition)) {
+                if (!self.testCondition(condition)) {
                     return false;
                 }
             }
@@ -1037,7 +1038,7 @@ define([
 
             for (var i = 0; i < zones.length; i++) {
                 for (prefix of zones[i].zipCodePrefixes) {
-                    if ( prefix === zip.substr(0, 3) ) {
+                    if (prefix === zip.substr(0, 3)) {
                         return zones[i].optionId;
                     }
                 }
@@ -1055,10 +1056,12 @@ define([
             if (!event) {
                 zip = data;
             } else {
-                zip = event.target.value;
                 self.invalidZipCode(false);
-                if (zip.length > 0 && !zip.toString().match(NUMBERPATTERN)) {
-                    self.invalidZipCode(true);
+                self.invalidZipCodeInput(false);
+                zip = event.target.value;
+
+                if (zip.toString() && !zip.toString().match(NUMBERPATTERN)) {
+                    self.invalidZipCodeInput(true);
                     return;
                 }
             }
@@ -1107,6 +1110,7 @@ define([
             } else {
                 let areaInput = event.target.value;
                 let areaAsString = areaInput.toString();
+
                 if (!areaAsString.match(NUMBERPATTERN)) {
                     self.invalidArea(true);
                 } else {
@@ -1126,13 +1130,13 @@ define([
      * @constructor
      */
     function QuizTemplate(data) {
-       var self = this;
+        var self = this;
 
-       self.id = data.id;
-       self.questionGroups = data.questionGroups;
+        self.id = data.id;
+        self.questionGroups = data.questionGroups;
 
-       // Remove the Alaska and Hawaii zones.
-       self.zipCodesOptionMappings = data.zipCodesOptionMappings;
+        // Remove the Alaska and Hawaii zones.
+        self.zipCodesOptionMappings = data.zipCodesOptionMappings;
     }
 
     function setSliderTrack(el) {
@@ -1155,7 +1159,7 @@ define([
                 sliders.forEach(slider => {
                     slider.addEventListener(
                         "touchend",
-                        (e) => iosPolyfill(e, quiz), 
+                        (e) => iosPolyfill(e, quiz),
                         { passive: true }
                     );
                 });
@@ -1170,8 +1174,8 @@ define([
         let val =
             (e.changedTouches[0].pageX - slider.getBoundingClientRect().left) /
             (slider.getBoundingClientRect().right -
-            slider.getBoundingClientRect().left),
-        max = slider.getAttribute("max"),
+                slider.getBoundingClientRect().left),
+            max = slider.getAttribute("max"),
             segment = 1 / (max - 1),
             segmentArr = [];
 
@@ -1221,12 +1225,24 @@ define([
                     dataType: 'json',
                     method: 'post',
                     success: function (data) {
-                        if(data.error_message) {
-                            alert( 'Error getting quiz data: ' + data.error_message + '. Please try again.');
+                        if (data.error_message) {
+                            alert('Error getting quiz data: ' + data.error_message + '. Please try again.');
                         } else {
                             if (Array.isArray(data)) {
                                 data = data[0];
                             }
+
+                            // manual hack to fix two accidentally swapped weeds condition images by hard-coding values
+                            const indexCondition = data.questionGroups.findIndex((el) => el.label === "CONDITION");
+                            const targetQuestionsArray = data.questionGroups[indexCondition].questions;
+                            const indexWeeds = targetQuestionsArray.findIndex((el) => el.label === "Weeds");
+                            const weedsOptions = targetQuestionsArray[indexWeeds].options;
+                            const indexSeveral = weedsOptions.findIndex((el) => el.label === "Several Weeds");
+                            const targetObjectSeveralWeeds = weedsOptions[indexSeveral];
+                            const indexSome = weedsOptions.findIndex((el) => el.label === "Some Weeds");
+                            const targetObjectSomeWeeds = weedsOptions[indexSome];
+                            targetObjectSeveralWeeds.imageUrl = "https://smg-product-images.storage.googleapis.com/3-weeds-several_weeds.png";
+                            targetObjectSomeWeeds.imageUrl = "https://smg-product-images.storage.googleapis.com/2-weeds-some_weeds.png";
 
                             // Initialize the quiz with the template data.
                             self.quiz.initialize(data);

@@ -56,6 +56,7 @@ use Recurly_BillingInfo;
 use Recurly_ShippingAddressList;
 use Recurly_Invoice;
 use Magento\Directory\Model\ResourceModel\Region\CollectionFactory as RegionCollectionFactory;
+use SMG\SubscriptionApi\Helper\CancelHelper;
 
 /**
  * Class Subscription
@@ -206,6 +207,11 @@ class Subscription implements SubscriptionInterface
     protected $_regionCollectionFactory;
     protected $_subscriptionRenewalErrorFactory;
 
+	/**
+     * @var CancelHelper
+     */
+    protected $_cancelHelper;
+
     /**
      * Subscription constructor.
      * @param LoggerInterface $logger
@@ -242,6 +248,7 @@ class Subscription implements SubscriptionInterface
      * @param HistoryFactory $historyFactory
      * @param HistoryResource $historyResource
      * @param SubscriptionRenewalErrorFactory $subscriptionRenewalErrorFactory
+	 * @param CancelHelper $cancelHelper
      */
     public function __construct(
         LoggerInterface $logger,
@@ -282,7 +289,8 @@ class Subscription implements SubscriptionInterface
         SubscriptionOrderFactory $subscriptionOrderFactory,
         SubscriptionOrderItemFactory $subscriptionOrderItemFactory,
         RegionCollectionFactory $regionCollectionFactory,
-        SubscriptionRenewalErrorFactory $subscriptionRenewalErrorFactory
+        SubscriptionRenewalErrorFactory $subscriptionRenewalErrorFactory,
+		CancelHelper $cancelHelper
     ) {
         $this->_logger = $logger;
         $this->_recommendationHelper = $recommendationHelper;
@@ -324,7 +332,7 @@ class Subscription implements SubscriptionInterface
         $this->_subscriptionOrderItemFactory = $subscriptionOrderItemFactory;
         $this->_regionCollectionFactory = $regionCollectionFactory;
         $this->_subscriptionRenewalErrorFactory = $subscriptionRenewalErrorFactory;
-
+        $this->_cancelHelper = $cancelHelper;
         $host = gethostname();
         $ip = gethostbyname($host);
         $this->_loggerPrefix = 'SERVER: ' . $ip . ' SESSION: ' . session_id() . ' - ';
@@ -797,8 +805,9 @@ class Subscription implements SubscriptionInterface
      * Cancels orders due to a failure during checkout.
      *
      * @param SubscriptionModel $subscription
+     * @param bool $isFromRenewal
      */
-    protected function cancelFailedOrders(SubscriptionModel $subscription)
+    protected function cancelFailedOrders(SubscriptionModel $subscription, $isFromRenewal = false)
     {
         $this->_logger->info($this->_loggerPrefix . 'Failed to create subscription, so let\'s cancel any orders.');
 
@@ -847,7 +856,11 @@ class Subscription implements SubscriptionInterface
                 $this->_subscriptionOrderHelper->saveSubscriptionOrder($subscriptionOrder);
             }
         } catch (Exception $e) {
-            $this->_logger->error($this->_loggerPrefix . 'Failed to close orders on failed order creation with message: ' . $e->getMessage());
+            $message = 'Failed to close orders on failed order creation with message: ' . $e->getMessage();
+            $this->_logger->error($this->_loggerPrefix . $message);
+            if ($isFromRenewal) {
+                $this->createRenewalError($subscription->getData('subscription_id'), $message);
+            }
         }
     }
 
@@ -930,7 +943,7 @@ class Subscription implements SubscriptionInterface
                 return $this->_responseHelper->error(
                     $message,
                     ['refresh' => false],
-                    404
+                    422
                 );
             }
 
@@ -940,6 +953,25 @@ class Subscription implements SubscriptionInterface
             $newSub = $this->createRenewalSubscription($sub);
             $newSubOrders = [];
             $newSubOrderItems = [];
+            $isPreviousSubscriptionOkToRenew = true;
+
+            /** @var SubscriptionOrder $order */
+            foreach ($subOrders as $order) {
+                $subscriptionOrderStatus = $order->getData('subscription_order_status');
+                if (!empty($subscriptionOrderStatus) && in_array($subscriptionOrderStatus, array( 'canceled', 'failed'))) {
+                    $isPreviousSubscriptionOkToRenew = false;
+                }
+            }
+
+            if (!$isPreviousSubscriptionOkToRenew) {
+                $message = "SubscriptionException: The past subscriptions has cancellations or failures.";
+                $this->createRenewalError($master_subscription_id, $message);
+                return $this->_responseHelper->error(
+                    $message,
+                    ['refresh' => false],
+                    409
+                );
+            }
 
             foreach ($subOrders as $order) {
                 $newOrder = $this->createRenewalSubscriptionOrder($order, $newSub->getData('entity_id'));
@@ -971,11 +1003,14 @@ class Subscription implements SubscriptionInterface
             return true;
 
         } catch (SubscriptionException $se) {
-            try {
-                $this->cancelFailedOrders($newSub);
-            } catch (Exception $e) {
-                $message = "Error Canceling Orders: ".$e->getMessage();
-                $this->createRenewalError($master_subscription_id, $message);
+            if (isset($newSub)) {
+                $newSub->setData('subscription_status', 'renewal_failed')->save();
+                try {
+                    $this->cancelFailedOrders($newSub, true);
+                } catch (Exception $e) {
+                    $message = "Error Canceling Orders: ".$e->getMessage();
+                    $this->createRenewalError($master_subscription_id, $message);
+                }
             }
 
             $message = "SubscriptionException: ".$se->getMessage();
@@ -986,13 +1021,16 @@ class Subscription implements SubscriptionInterface
                 400
             );
         } catch (Exception $ge) {
-            try {
-                $this->cancelFailedOrders($newSub);
-            } catch (Exception $e) {
-                $message = "Error Canceling Orders: ".$e->getMessage();
-                $this->createRenewalError($master_subscription_id, $message);
+            if (isset($newSub)) {
+                $newSub->setData('subscription_status', 'renewal_failed')->save();
+                try {
+                    $this->cancelFailedOrders($newSub, true);
+                } catch (Exception $e) {
+                    $message = "Error Canceling Orders: ".$e->getMessage();
+                    $this->createRenewalError($master_subscription_id, $message);
+                }
             }
-            
+
             $message = "General Exception: ".$ge->getMessage();
             $this->createRenewalError($master_subscription_id, $message);
             return $this->_responseHelper->error(
@@ -1086,5 +1124,31 @@ class Subscription implements SubscriptionInterface
         ];
 
         return $return;
+    }
+
+	/**
+     * @param string $master_subscription_id
+     * @return mixed
+     */
+    public function cancelSubscription($master_subscription_id) {
+
+		$this->_logger->debug("Cancel master subscription id: " . $master_subscription_id);
+
+		// Cancel Subscriptions
+		try {
+			$this->_cancelHelper->cancelSubscriptions($master_subscription_id,'','api');
+		} catch (Exception $e) {
+			$this->_logger->error($e->getMessage());
+
+			return json_encode([
+				'success' => false,
+				'message' => $e->getMessage()
+			]);
+		}
+
+		return json_encode([
+			'success' => true,
+			'message' => 'Subscriptions successfully cancelled.'
+		]);
     }
 }

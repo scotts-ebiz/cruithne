@@ -1,4 +1,8 @@
 .sp-billing-address-form {
+  :focus + .sp-form-label, :not(:placeholder-shown) + .sp-form-label {
+    transform: translateY(-25%);
+  }
+
   .sp-form-group {
     margin-bottom: 1rem;
     padding: 1rem;

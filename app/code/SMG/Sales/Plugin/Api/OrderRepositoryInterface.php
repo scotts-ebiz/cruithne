@@ -104,6 +104,19 @@ class OrderRepositoryInterface
                 $state = $shippingAddress->getRegion();
             }
 
+            // if the state is empty then use the order shipping state
+            if (empty($state))
+            {
+                /**
+                 * @var \Magento\Sales\Api\Data\OrderAddressInterface $shippingAddress
+                 */
+                $shippingAddress = $order->getShippingAddress();
+                if (!empty($shippingAddress))
+                {
+                    $state = $shippingAddress->getRegion();
+                }
+            }
+
             // if the state is empty then use the billing state
             if (empty($state))
             {

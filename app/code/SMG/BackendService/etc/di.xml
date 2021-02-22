@@ -28,4 +28,5 @@
         <plugin name="SMG_BackendService_Plugin_AfterCreditMemoCreate"
                 type="SMG\BackendService\Plugin\AfterCreateCreditMemo"/>
     </type>
+    <preference for="SMG\BackendService\Api\OrderbyidInterface" type="SMG\BackendService\Model\Orderbyid"/>
 </config>
