@@ -9,6 +9,7 @@
 
     <body>
         <referenceContainer name="content">
+            <block class="Magento\Framework\View\Element\Messages" name="messages" as="messages" template="Magento_Theme::messages.phtml"/>
             <block
                 class="Magento\Framework\View\Element\Template"
                 template="SMG_SubscriptionOptions::options.phtml"
