@@ -16,7 +16,6 @@ class RecommendationHelper extends AbstractHelper
     const CONFIG_RECOMMENDATIONS_COMPLETED_QUIZ_PATH = 'recommendations/api/previous';
     const CONFIG_RECOMMENDATIONS_MAP_TO_USER_PATH = 'recommendations/api/map';
     const CONFIG_RECOMMENDATIONS_PRODUCTS_PATH = 'recommendations/api/products';
-    const SUBSCRIPTION_CONFIG_EXPIRED_DAYS = 'smg/subscription/expired_days';
 
     /**
      * Check whether Recommendations is active and ready to use
@@ -209,19 +208,4 @@ class RecommendationHelper extends AbstractHelper
 
         return;
     }
-
-    /**
-    * Return number of days of quiz expired
-    *
-    * @param null $store_id
-    * @return int
-    */
-   public function getExpiredDays($store_id = null)
-   {
-       return $this->scopeConfig->getValue(
-           self::SUBSCRIPTION_CONFIG_EXPIRED_DAYS,
-           ScopeInterface::SCOPE_STORE,
-           $store_id
-       );
-   }
 }

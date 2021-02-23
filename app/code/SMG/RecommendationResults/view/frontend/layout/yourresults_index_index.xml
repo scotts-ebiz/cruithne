@@ -9,7 +9,6 @@
 
     <body>
         <referenceContainer name="content">
-             <block class="Magento\Framework\View\Element\Messages" name="messages" as="messages" template="Magento_Theme::messages.phtml"/>
           <block
                 class="SMG\RecommendationResults\Block\Results"
                 template="SMG_RecommendationResults::results.phtml"
