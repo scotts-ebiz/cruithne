@@ -996,12 +996,10 @@ define([
          * Complete the quiz.
          */
         self.completeQuiz = function () {
-            var today = new Date();
             var quiz = {
                 id: self.template.id,
                 answers: self.answers(),
                 zip: self.zipCode,
-                createDate: today.toDateString(),
             };
 
             window.sessionStorage.setItem('quiz', JSON.stringify(quiz));
