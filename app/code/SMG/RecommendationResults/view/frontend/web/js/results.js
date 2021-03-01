@@ -397,7 +397,7 @@ define([
                     break;
             }
 
-            return 'https://test_magento_image_repo.storage.googleapis.com/' + icon
+            return 'https://test-magento-image-repo.storage.googleapis.com/' + icon
         },
 
         togglePDP: function (product) {
