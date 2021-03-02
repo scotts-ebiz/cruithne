@@ -20,7 +20,8 @@ use SMG\SubscriptionApi\Model\Subscription;
 use Zaius\Engage\Helper\Sdk as ZaiusSdk;
 use Magento\Sales\Model\ResourceModel\Order\CollectionFactory as OrderCollectionFactory;
 use ZaiusSDK\ZaiusException;
-
+use SMG\BackendService\Model\Service\Order as OrderBackendService;
+use Magento\Backend\Model\Auth\Session as AuthSession;
 
 class CancelHelper extends AbstractHelper
 {
@@ -82,6 +83,16 @@ class CancelHelper extends AbstractHelper
      * @var string
      */
     protected $_loggerPrefix;
+    
+     /**
+     * @var OrderBackendService
+     */
+    protected $_orderService;
+
+    /**
+     * @var AuthSession
+     */
+    protected $_adminSession;
 
     /**
      * CancelHelper constructor.
@@ -97,6 +108,8 @@ class CancelHelper extends AbstractHelper
      * @param ProductRepository $productRepository
      * @param OrderFactory $orderFactory
      * @param OrderResource $orderResource
+     * @param OrderBackendService $orderService
+     * @param  AuthSession $_adminSession
      */
     public function __construct(
         Context $context,
@@ -110,7 +123,9 @@ class CancelHelper extends AbstractHelper
         SubscriptionOrderItemCollectionFactory $subscriptionOrderItemCollectionFactory,
         ProductRepository $productRepository,
         OrderFactory $orderFactory,
-        OrderResource $orderResource
+        OrderResource $orderResource,
+        OrderBackendService $orderService,
+        AuthSession $_adminSession
     ) {
         parent::__construct($context);
 
@@ -125,6 +140,8 @@ class CancelHelper extends AbstractHelper
         $this->_productRepository = $productRepository;
         $this->_orderFactory = $orderFactory;
         $this->_orderResource = $orderResource;
+        $this->_orderService = $orderService;
+        $this->_adminSession = $_adminSession;
 
         $host = gethostname();
         $ip = gethostbyname($host);
@@ -136,7 +153,7 @@ class CancelHelper extends AbstractHelper
      * @return false|string
      * @throws LocalizedException
      */
-    public function cancelSubscriptions($accountCode = '', $cancelReason = '')
+    public function cancelSubscriptions($accountCode = '', $cancelReason = '', $area = '')
     {
         // Get the current user.
         try {
@@ -149,12 +166,24 @@ class CancelHelper extends AbstractHelper
             /**
              * @var $subscription Subscription
              */
+            if($area == 'admin' || $area == 'api'){
+                
             $subscription = $this->_subscriptionCollectionFactory
+                ->create()
+                ->addFieldToFilter('subscription_id', $accountCode)
+                ->addFieldToFilter('subscription_status', 'active')
+                ->fetchItem();
+                
+            }
+            else
+            {
+                $subscription = $this->_subscriptionCollectionFactory
                 ->create()
                 ->addFieldToFilter('gigya_id', $accountCode)
                 ->addFieldToFilter('subscription_status', 'active')
                 ->fetchItem();
-
+            }
+            
             if (! $subscription || ! $subscription->getId()) {
                 // Could not find the subscription.
                 $error = 'Could not find an active subscription with Gigya user ID "' . $accountCode . '" to cancel.';
@@ -166,6 +195,10 @@ class CancelHelper extends AbstractHelper
             // Need to use collection here, the customer resource overrides the
             // normal load method and requires an ID instead of being able to
             // provide a field.
+           
+            //stop cancel subscription from backend
+            if($area != 'admin' && $area != 'api'){
+                
             $customer = $this->_customerCollectionFactory
                 ->create()
                 ->addFieldToFilter('gigya_uid', $accountCode)
@@ -175,8 +208,21 @@ class CancelHelper extends AbstractHelper
                 throw new Exception("Could not find customer with Gigya ID: {$accountCode}.");
             }
 
-            $subscription->cancel();
+             $subscription->cancel();
+            }
+            else if ($area == 'api')
+            {
+                $customer = $this->_customerCollectionFactory
+                ->create()
+                ->addFieldToFilter('gigya_uid', $subscription->getGigyaId())
+                ->fetchItem();
 
+                if (! $customer->getId()) {
+                    throw new Exception("Could not find customer with Gigya ID: {$subscription->getGigyaId()}.");
+                }
+
+                $subscription->cancel();
+            }               
             // Add cancellation comments to orders.
             $subscriptionOrders = $this->_subscriptionOrderCollectionFactory->create();
             $subscriptionOrders
@@ -185,27 +231,37 @@ class CancelHelper extends AbstractHelper
                 $orderId = $subscriptionOrder->getSalesOrderId();
                 $order = $this->_orderFactory->create();
                 $this->_orderResource->load($order, $orderId);
-
-                if ($cancelReason) {
-                    $order->addCommentToStatusHistory('Subscription canceled by customer. Reason: ' . $cancelReason, false, false)
+                
+                //trigger api to backend service team
+                
+                if($area == 'admin') {
+                    $this->_orderService->cancelOrderSubcription($order->getIncrementId(), $order->getState());
+                    $order->addCommentToStatusHistory('Subscription canceled by ' . $this->_adminSession->getUser()->getUserName(), false, false)
                         ->save();
                 }
                 else {
-                    $order->addCommentToStatusHistory('Subscription canceled by an administrator', false, false)
-                        ->save();
+                    if ($cancelReason) {
+                        $order->addCommentToStatusHistory('Subscription canceled by customer. Reason: ' . $cancelReason, false, false)
+                            ->save();
+                    }
                 }
-
             }
 
             $timestamp = strtotime(date("Y-m-d H:i:s"));
-            $this->clearCustomerAddresses($customer);
+            
+            if($area != 'admin'){
+                 
+                $this->clearCustomerAddresses($customer);
 
-            try {
-                $this->zaiusCancelCall($customer->getData('email'));
-                $this->zaiusCancelOrder($subscription, $customer->getData('email'), $timestamp);
-            } catch (Exception $e) {
-                $this->_logger->error($this->_loggerPrefix . $e->getMessage());
+                try {
+                    $this->zaiusCancelCall($customer->getData('email'));
+                    $this->zaiusCancelOrder($subscription, $customer->getData('email'), $timestamp);
+                } catch (Exception $e) {
+                    $this->_logger->error($this->_loggerPrefix . $e->getMessage());
+                }
+                
             }
+        
         } catch (Exception $e) {
             $this->_logger->error($this->_loggerPrefix . $e->getMessage());
 

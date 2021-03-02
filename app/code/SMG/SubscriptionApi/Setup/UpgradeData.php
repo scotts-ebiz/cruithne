@@ -68,6 +68,30 @@ class UpgradeData implements UpgradeDataInterface
         if (version_compare($context->getVersion(), '1.1.5', '<')) {
             $this->addDataVersion115($setup);
         }
+
+        // Version 1.1.6
+        if (version_compare($context->getVersion(), '1.1.6', '<')) {
+            $this->addDataVersion116($setup);
+        }
+
+        // Version 1.1.7
+        if (version_compare($context->getVersion(), '1.1.7', '<')) {
+            $this->addDataVersion117($setup);
+        }
+
+        // Version 1.1.8
+        if (version_compare($context->getVersion(), '1.1.8', '<')) {
+            $this->addDataVersion118($setup);
+        }
+
+        // Version 1.1.9
+        if (version_compare($context->getVersion(), '1.1.9', '<')) {
+            $this->addDataVersion119($setup);
+        }
+
+        if (version_compare($context->getVersion(), '1.2.0', '<')) {
+            $this->addDataVersion120($setup);
+        }
     }
 
     /**
@@ -136,7 +160,7 @@ class UpgradeData implements UpgradeDataInterface
     }
 
     /**
-     * Add Data for Version 1.1.4
+     * Add Data for Version 1.1.5
      *
      * @param ModuleDataSetupInterface $setup
      */
@@ -147,6 +171,91 @@ class UpgradeData implements UpgradeDataInterface
 
         $data = [
             ['status' => 'failed', 'label' => 'Failed']
+        ];
+
+        $setup->getConnection()->insertMultiple($tableName, $data);
+    }
+
+    /**
+     * Add Data for Version 1.1.6
+     *
+     * @param ModuleDataSetupInterface $setup
+     */
+    private function addDataVersion116(ModuleDataSetupInterface $setup)
+    {
+        // Upgrade Subscription Status
+        $tableName = $setup->getTable('subscription_status');
+
+        $data = [
+            ['status' => 'renewed', 'label' => 'Renewed']
+        ];
+
+        $setup->getConnection()->insertMultiple($tableName, $data);
+    }
+
+    /**
+     * Add Data for Version 1.1.7
+     *
+     * @param ModuleDataSetupInterface $setup
+     */
+    private function addDataVersion117(ModuleDataSetupInterface $setup)
+    {
+        // Upgrade Subscription Status
+        $tableName = $setup->getTable('subscription_order_status');
+
+        $data = [
+            ['status' => 'initialized', 'label' => 'Initialized'],
+            ['status' => 'invoiced', 'label' => 'Invoiced'],
+            ['status' => 'sent_for_fulfillment', 'label' => 'Sent for Fulfillment'],
+            ['status' => 'partially_shipped', 'label' => 'Partially Shipped'],
+            ['status' => 'shipped', 'label' => 'Shipped'],
+            ['status' => 'delivered', 'label' => 'Delivered'],
+            ['status' => 'audit_failed', 'label' => 'Audit Failed'],
+            ['status' => 'skipped', 'label' => 'Skipped'],
+        ];
+
+        $setup->getConnection()->insertMultiple($tableName, $data);
+    }
+
+    /**
+     * Add Data for Version 1.1.8
+     *
+     * @param ModuleDataSetupInterface $setup
+     */
+    private function addDataVersion118(ModuleDataSetupInterface $setup)
+    {
+        // Upgrade Subscription Status
+        $tableName = $setup->getTable('subscription_order_status');
+
+        $data = [
+            ['status' => 'processing', 'label' => 'Processing'],
+        ];
+
+        $setup->getConnection()->insertMultiple($tableName, $data);
+    }
+
+    /**
+     * Add Data for Version 1.1.9
+     *
+     * @param ModuleDataSetupInterface $setup
+     */
+    private function addDataVersion119(ModuleDataSetupInterface $setup)
+    {
+        // Do nothing. Done purposefully to resolve merge.
+    }
+
+    /**
+     * Add Data for Version 1.2.0
+     *
+     * @param ModuleDataSetupInterface $setup
+     */
+    private function addDataVersion120(ModuleDataSetupInterface $setup)
+    {
+        // Upgrade Subscription Status
+        $tableName = $setup->getTable('subscription_status');
+
+        $data = [
+            ['status' => 'renewal_failed', 'label' => 'Renewal Failed']
         ];
 
         $setup->getConnection()->insertMultiple($tableName, $data);

@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
 
 # get the filename of the current staging MySql backup
-FILENAME='staging_'$(date +%Y%m%d)'0500.sql'
+FILENAME='staging_'$(date +%Y%m%d)'0135.sql'
 
 # Change the file name if there is a argument passed in
 if [[ "$1" -eq "rc" ]]
    then
-    FILENAME='rc_'$(date +%Y%m%d)'0031.sql'
+    FILENAME='rc_'$(date +%Y%m%d)'0135.sql'
 fi
 # copy the desired sql file to the temp directory for later use
 /root/google-cloud-sdk/bin/gsutil cp gs://magento-data-export/$FILENAME /tmp/database.sql

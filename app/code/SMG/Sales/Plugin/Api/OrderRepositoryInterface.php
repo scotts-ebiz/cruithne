@@ -15,6 +15,7 @@ use Magento\Quote\Model\QuoteFactory;
 use Magento\Quote\Model\ResourceModel\Quote as QuoteResource;
 use Magento\Setup\Exception;
 use Psr\Log\LoggerInterface;
+use Magento\Sales\Api\Data\OrderExtensionFactory;
 
 
 class OrderRepositoryInterface
@@ -45,6 +46,11 @@ class OrderRepositoryInterface
     protected $_productResource;
 
     /**
+     * @var OrderExtensionFactory
+     */
+    protected $_extensionFactory;
+
+    /**
      * OrderRepositoryInterface constructor.
      *
      * @param LoggerInterface $logger
@@ -52,18 +58,21 @@ class OrderRepositoryInterface
      * @param QuoteResource $quoteResource
      * @param ProductFactory $productFactory
      * @param ProductResource $productResource
+     * @param OrderExtensionFactory $extensionFactory
      */
     public function __construct(LoggerInterface $logger,
         QuoteFactory $quoteFactory,
         QuoteResource $quoteResource,
         ProductFactory $productFactory,
-        ProductResource $productResource)
+        ProductResource $productResource,
+        OrderExtensionFactory $extensionFactory)
     {
         $this->_logger = $logger;
         $this->_quoteFactory = $quoteFactory;
         $this->_quoteResource = $quoteResource;
         $this->_productFactory = $productFactory;
         $this->_productResource = $productResource;
+        $this->_extensionFactory = $extensionFactory;
     }
 
     public function beforeSave(\Magento\Sales\Api\OrderRepositoryInterface $subject,
@@ -93,6 +102,19 @@ class OrderRepositoryInterface
             if (!empty($shippingAddress))
             {
                 $state = $shippingAddress->getRegion();
+            }
+
+            // if the state is empty then use the order shipping state
+            if (empty($state))
+            {
+                /**
+                 * @var \Magento\Sales\Api\Data\OrderAddressInterface $shippingAddress
+                 */
+                $shippingAddress = $order->getShippingAddress();
+                if (!empty($shippingAddress))
+                {
+                    $state = $shippingAddress->getRegion();
+                }
             }
 
             // if the state is empty then use the billing state
@@ -144,13 +166,19 @@ class OrderRepositoryInterface
 
                             // initialize the list of
                             $statesNotAllowedArray = [];
+                            $notAllowedProductState = [];
                             foreach ($statesNotAllowedList as $stateNotAllowed)
                             {
                                 $attr = $this->_productResource->getAttribute('state_not_allowed');
-                                
+
                                 try
                                 {
                                     $statesNotAllowedArray[] = $attr->getSource()->getOptionText($stateNotAllowed);
+                                    $notAllowedProductState[] = "SKU: ".
+                                        $product->getData('sku') .
+                                        " for State: " .
+                                        $attr->getSource()->getOptionText($stateNotAllowed);
+
                                 } catch (\Magento\Framework\Exception\LocalizedException $e)
                                 {
                                     $this->_logger->error($e);
@@ -168,7 +196,7 @@ class OrderRepositoryInterface
 
                 if ($validate)
                 {
-                    echo $message = "Unfortunately one or more of the selected products is restricted from shipping to " . $state . ".";
+                    echo $message = "Unfortunately one or more of the selected products is restricted from shipping : " . implode(', ', $notAllowedProductState) . ".";
                     throw new InputException(__($message));
                     die();
                 }
@@ -177,5 +205,26 @@ class OrderRepositoryInterface
 
         // we must return the same number of parameters as the original method
         return [$order];
+    }
+
+    public function afterGet(\Magento\Sales\Api\OrderRepositoryInterface $subject, \Magento\Sales\Api\Data\OrderInterface $order)
+    {
+        $extensionAttributes = $order->getExtensionAttributes();
+        if ($extensionAttributes && $extensionAttributes->getSubscriptionId()) {
+            return $order;
+        }
+        $orderExtension = $extensionAttributes ? $extensionAttributes : $this->_extensionFactory->create();
+        $orderExtension->setSubscriptionId($order->getSubscriptionId());
+        $order->setExtensionAttributes($orderExtension);
+        return $order;
+    }
+
+    public function afterGetList(\Magento\Sales\Api\OrderRepositoryInterface $subject, \Magento\Sales\Api\Data\OrderSearchResultInterface $searchResult)
+    {
+        $orders = $searchResult->getItems();
+        foreach ($orders as &$order) {
+            $this->afterGet($subject, $order);
+        }
+        return $searchResult;
     }
 }

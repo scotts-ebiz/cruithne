@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
@@ -20,124 +21,127 @@ $checkhelper = $this->helper('SMG\Checkout\Helper\Data');
 $selections = $checkhelper->getBundleProductType()->getSelectionsCollection($checkhelper->getBundleProductType()->getOptionsIds($product), $product);
 
 $arrayop = array();
-foreach($selections as $selc){
+foreach ($selections as $selc) {
     $arrayop[] = $selc->getImage();
 }
 ?>
 
 <tbody class="cart item">
-<tr class="item-info">
-    <td data-th="<?= $block->escapeHtml(__('Item')) ?>" class="col item">
+    <tr class="item-info">
+        <td data-th="<?= $block->escapeHtml(__('Item')) ?>" class="col item">
             <span class="product-item-photo">
-                <?= /* @noEscape */ $block->getImage( /* @noEscape */ $block->getProductForThumbnail(),
-                    'cart_page_product_thumbnail')->toHtml() ?>
+                <?= /* @noEscape */ $block->getImage( /* @noEscape */
+                    $block->getProductForThumbnail(),
+                    'cart_page_product_thumbnail'
+                )->toHtml() ?>
             </span>
-        <div class="product-item-details">
-            <span class="product-item-name">
-                <?= $block->escapeHtml($block->getProductName()) ?>
-            </span>
-            <?php if ($_options = $block->getOptionList()):?>
-                <dl class="item-options">
-                    <dd><i><?php //echo $_item->getSku() ?></i></dd>
-                    <?php foreach ($_options as $key=>$_option) : ?>
-                        <?php $_formatedOptionValue = /* @noEscape */ $block->getFormatedOptionValue($_option) ?>
+            <div class="product-item-details">
+                <span class="product-item-name">
+                    <?= $block->escapeHtml($block->getProductName()) ?>
+                </span>
+                <?php if ($_options = $block->getOptionList()) : ?>
+                    <dl class="item-options">
+                        <dd><i><?php //echo $_item->getSku() 
+                                ?></i></dd>
+                        <?php foreach ($_options as $key => $_option) : ?>
+                            <?php $_formatedOptionValue = /* @noEscape */ $block->getFormatedOptionValue($_option) ?>
 
-                        <div class="simple-img-wrapper">
-                            <?php if ($product->getData("type_id") == "bundle"):?>
-                                <?php $helper = $this->helper('Magento\Catalog\Helper\Image')->init($arrayop[$key],'cart_page_product_thumbnail') ->constrainOnly(true)->keepAspectRatio(true)->keepFrame(false)->setImageFile($arrayop[$key])->getUrl(); ?>
-                                <div class="cust-simple-image">
-                                    <dd><img src="<?= $block->escapeHtmlAttr($helper) ?>"/><dd>
-                                </div>
-                            <?php endif; ?>
-                            <div class="options-cont-wrp">
-                                <dt><?= $block->escapeHtml($_option['label']) ?></dt>
-                                <dd>
-                                    <?php if (isset($_formatedOptionValue['full_view'])): ?>
+                            <div class="simple-img-wrapper">
+                                <?php if ($product->getData("type_id") == "bundle") : ?>
+                                    <?php $helper = $this->helper('Magento\Catalog\Helper\Image')->init($arrayop[$key], 'cart_page_product_thumbnail')->constrainOnly(true)->keepAspectRatio(true)->keepFrame(false)->setImageFile($arrayop[$key])->getUrl(); ?>
+                                    <div class="cust-simple-image">
+                                        <dd><img src="<?= $block->escapeHtmlAttr($helper) ?>" />
+                                        <dd>
+                                    </div>
+                                <?php endif; ?>
+                                <div class="options-cont-wrp">
+                                    <dt><?= $block->escapeHtml($_option['label']) ?></dt>
+                                    <dd>
+                                        <?php if (isset($_formatedOptionValue['full_view'])) : ?>
                                             <strong><?= /* @escapeNotVerified */ $_formatedOptionValue['full_view'] ?></strong>
-                                        <?php else: ?>
+                                        <?php else : ?>
                                             <strong><?= /* @escapeNotVerified */ $_formatedOptionValue['value'] ?></strong>
                                         <?php endif; ?>
-                                </dd>
+                                    </dd>
+                                </div>
                             </div>
+                        <?php endforeach; ?>
+
+                    </dl>
+                <?php endif; ?>
+                <?php if ($messages = $block->getMessages()) : ?>
+                    <?php foreach ($messages as $message) : ?>
+                        <div class="cart item message <?= $block->escapeHtmlAttr($message['type']) ?>">
+                            <div><?= $block->escapeHtml($message['text']) ?></div>
                         </div>
                     <?php endforeach; ?>
-
-                </dl>
-            <?php endif;?>
-            <?php if ($messages = $block->getMessages()): ?>
-                <?php foreach ($messages as $message): ?>
-                    <div class="cart item message <?= $block->escapeHtmlAttr($message['type']) ?>"><div><?= $block->escapeHtml($message['text']) ?></div></div>
-                <?php endforeach; ?>
-            <?php endif; ?>
-            <?php $addInfoBlock = $block->getProductAdditionalInformationBlock(); ?>
-            <?php if ($addInfoBlock): ?>
-                <?= $addInfoBlock->setItem($_item)->toHtml() ?>
-            <?php endif;?>
-        </div>
-    </td>
-
-    <?php if ($canApplyMsrp): ?>
-        <td class="col msrp" data-th="<?= $block->escapeHtml(__('Price')) ?>">
-            <span class="pricing msrp">
-                <span class="msrp notice"><?= $block->escapeHtml(__('See price before order confirmation.')) ?></span>
-                <?php $helpLinkId = 'cart-msrp-help-' . $_item->getId(); ?>
-                <a href="#" class="action help map" id="<?= $block->escapeHtmlAttr($helpLinkId) ?>" data-mage-init='{"addToCart":{"helpLinkId": "#<?= $block->escapeHtmlAttr($helpLinkId) ?>","productName": "<?= $block->escapeHtmlAttr($product->getName()) ?>","showAddToCart": false}}'>
-                    <span><?= $block->escapeHtml(__("What's this?")) ?></span>
-                </a>
-            </span>
-        </td>
-    <?php else: ?>
-        <td class="col price" data-th="<?= $block->escapeHtml(__('Price')) ?>">
-            <?= /* @noEscape */ $block->getUnitPriceHtml($_item) ?>
-        </td>
-    <?php endif; ?>
-
-    <td class="col qty" data-th="<?= $block->escapeHtml(__('Qty')) ?>">
-        <div class="field qty">
-            <label class="label" for="cart-<?= $block->escapeHtmlAttr($_item->getId()) ?>-qty">
-                <span><?= $block->escapeHtml(__('Qty')) ?></span>
-            </label>
-            <div class="control qty">
-                <input type="button" value="-" class="qtyminus box_down<?php echo $_item->getId(); ?>" data-item-id="<?php echo $_item->getId(); ?>" />
-                <input id="cart-<?= $block->escapeHtmlAttr($_item->getId()) ?>-qty"
-                       name="cart[<?= $block->escapeHtmlAttr($_item->getId()) ?>][qty]"
-                       data-cart-item-id="<?= $block->escapeHtmlAttr($_item->getSku()) ?>"
-                       value="<?= $block->escapeHtmlAttr($block->getQty()) ?>"
-                       type="number"
-                       size="4"
-                       title="<?= $block->escapeHtmlAttr(__('Qty')) ?>"
-                       class="input-text qty "
-                       data-validate="{required:true}"
-                       data-role="cart-item-qty"/>
-                <input type="button" value="+" class="qtyplus" data-item-id="<?php echo $_item->getId(); ?>" />
+                <?php endif; ?>
+                <?php $addInfoBlock = $block->getProductAdditionalInformationBlock(); ?>
+                <?php if ($addInfoBlock) : ?>
+                    <?= $addInfoBlock->setItem($_item)->toHtml() ?>
+                <?php endif; ?>
             </div>
-        </div>
-        <span class="action update update_cust_btn"><?= $block->escapeHtml(__('Update Cart')) ?></span>
-        <div class="actions-toolbar no-margin" style="margin:0px;margin-top:10px;">
-            <?= /* @noEscape */ $block->getActions($_item) ?>
-        </div>
+            <div class="remove-product-mobile">
+                <div class="actions-toolbar no-margin">
+                    <?= /* @noEscape */ $block->getActions($_item) ?>
+                </div>
+            </div>
+        </td>
 
-    </td>
-
-    <td class="col subtotal" data-th="<?= $block->escapeHtml(__('Subtotal')) ?>">
-        <?php if ($canApplyMsrp): ?>
-            <span class="cart msrp subtotal">--</span>
-        <?php else: ?>
-            <?= $block->getRowTotalHtml($_item) ?>
+        <?php if ($canApplyMsrp) : ?>
+            <td class="col msrp" data-th="<?= $block->escapeHtml(__('Price')) ?>">
+                <span class="pricing msrp">
+                    <span class="msrp notice"><?= $block->escapeHtml(__('See price before order confirmation.')) ?></span>
+                    <?php $helpLinkId = 'cart-msrp-help-' . $_item->getId(); ?>
+                    <a href="#" class="action help map" id="<?= $block->escapeHtmlAttr($helpLinkId) ?>" data-mage-init='{"addToCart":{"helpLinkId": "#<?= $block->escapeHtmlAttr($helpLinkId) ?>","productName": "<?= $block->escapeHtmlAttr($product->getName()) ?>","showAddToCart": false}}'>
+                        <span><?= $block->escapeHtml(__("What's this?")) ?></span>
+                    </a>
+                </span>
+            </td>
+        <?php else : ?>
+            <td class="col price" data-th="<?= $block->escapeHtml(__('Price')) ?>">
+                <?= /* @noEscape */ $block->getUnitPriceHtml($_item) ?>
+            </td>
         <?php endif; ?>
-    </td>
-</tr>
-<tr class="item-actions">
-    <td colspan="100">
-        <div class="actions-toolbar">
-            <?= /* @noEscape */ $block->getActions($_item) ?>
-        </div>
-    </td>
-</tr>
+
+        <td class="col qty" data-th="<?= $block->escapeHtml(__('Qty')) ?>">
+            <div class="field qty">
+                <label class="label" for="cart-<?= $block->escapeHtmlAttr($_item->getId()) ?>-qty">
+                    <span><?= $block->escapeHtml(__('Qty')) ?></span>
+                </label>
+                <div class="control qty">
+                    <input type="button" value="-" class="qtyminus box_down<?php echo $_item->getId(); ?>" data-item-id="<?php echo $_item->getId(); ?>" />
+                    <input id="cart-<?= $block->escapeHtmlAttr($_item->getId()) ?>-qty" name="cart[<?= $block->escapeHtmlAttr($_item->getId()) ?>][qty]" data-cart-item-id="<?= $block->escapeHtmlAttr($_item->getSku()) ?>" value="<?= $block->escapeHtmlAttr($block->getQty()) ?>" type="number" size="4" title="<?= $block->escapeHtmlAttr(__('Qty')) ?>" class="input-text qty " data-validate="{required:true}" data-role="cart-item-qty" />
+                    <input type="button" value="+" class="qtyplus" data-item-id="<?php echo $_item->getId(); ?>" />
+                </div>
+            </div>
+            <span class="action update update_cust_btn"><?= $block->escapeHtml(__('Update Cart')) ?></span>
+        </td>
+
+        <td class="col subtotal" data-th="<?= $block->escapeHtml(__('Subtotal')) ?>">
+            <?php if ($canApplyMsrp) : ?>
+                <span class="cart msrp subtotal">--</span>
+            <?php else : ?>
+                <?= $block->getRowTotalHtml($_item) ?>
+            <?php endif; ?>
+        </td>
+        <td class="col remove">
+            <div class="actions-toolbar no-margin">
+                <?= /* @noEscape */ $block->getActions($_item) ?>
+            </div>
+        </td>
+    </tr>
+    <tr class="item-actions">
+        <td colspan="100">
+            <div class="actions-toolbar">
+                <?= /* @noEscape */ $block->getActions($_item) ?>
+            </div>
+        </td>
+    </tr>
 </tbody>
 
 <script type="text/x-magento-init">
-{
+    {
     "*": {
         "Magento_Checkout/custom": {},
         "Magento_Checkout/js/custom-quantity": {}

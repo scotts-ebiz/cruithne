@@ -56,7 +56,7 @@ class HomePageData implements DataPatchInterface, PatchRevertableInterface
             ]);
         }
 
-        $homePage->setData('content', '<div>{{widget type="SMG\SPV2HeroWidget\Block\Widget\HeroWidget" heroImage="https://test_magento_image_repo.storage.googleapis.com/homePageHero.jpg" heroHeadline="Personalized Lawn Care, Delivered to Your Door" heroCallToActionText="Get Started" heroCallToActionLink="quiz" heroFullScreen="1" heroImageClass="sp-bg-top" type_name="Scotts Program Hero Widget"}} {{widget type="SMG\SPV2HomePageWidget\Block\Widget\HomePage" heroHeadline="Personalized Lawn Care, Delivered to Your Door" type_name="Scotts Program Home Page"}}</div>');
+        $homePage->setData('content', '<div>{{widget type="SMG\SPV2HeroWidget\Block\Widget\HeroWidget" heroImage="https://test-magento-image-repo.storage.googleapis.com/homePageHero.jpg" heroHeadline="Personalized Lawn Care, Delivered to Your Door" heroCallToActionText="Get Started" heroCallToActionLink="quiz" heroFullScreen="1" heroImageClass="sp-bg-top" type_name="Scotts Program Hero Widget"}} {{widget type="SMG\SPV2HomePageWidget\Block\Widget\HomePage" heroHeadline="Personalized Lawn Care, Delivered to Your Door" type_name="Scotts Program Home Page"}}</div>');
         $this->_pageRepository->save($homePage);
 
         $this->_moduleDataSetup->getConnection()->endSetup();

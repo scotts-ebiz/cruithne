@@ -100,7 +100,8 @@ class Index extends \Magento\Backend\App\Action
      * @throws SecurityViolationException
      */
     public function execute()
-    {
+    {   
+        $page = '';
         // Check form key
         if (! $this->formValidation($this->_request->getParam('form_key'))) {
             throw new SecurityViolationException(__('Unauthorized'));
@@ -119,7 +120,14 @@ class Index extends \Magento\Backend\App\Action
 
         try {
             $accountCode = $this->_request->getParam('recurly_account_code');
-            $this->_cancelHelper->cancelSubscriptions($accountCode);
+            
+            // check the request page is sales view or not
+            if(!empty($this->_request->getParam('salespage')))
+            {
+                $page = $this->_request->getParam('salespage');
+            }
+            
+            $this->_cancelHelper->cancelSubscriptions($accountCode,'',$page);
         } catch (Exception $e) {
             $error = 'Could not cancel Recurly subscriptions';
             $this->_logger->error($error . ' - ' . $e->getMessage());
@@ -129,8 +137,16 @@ class Index extends \Magento\Backend\App\Action
 
             return $resultRedirect;
         }
-
-        $this->_messageManager->addSuccessMessage('Subscriptions cancelled.');
+        
+        // check the request page is sales view or not
+        if(!empty($page)){
+            
+            $this->_messageManager->addSuccessMessage('Subscriptions order cancel request is being processed.');
+            
+        }else
+        {
+            $this->_messageManager->addSuccessMessage('Subscriptions cancelled.');
+        }
 
         // Redirect back to the customer page with a success or error message
         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);

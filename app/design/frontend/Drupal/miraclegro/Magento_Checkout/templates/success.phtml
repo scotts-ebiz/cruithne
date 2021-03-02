@@ -8,18 +8,33 @@
 <?php /** @var $block \Magento\Checkout\Block\Onepage\Success */ ?>
 <div class="checkout-success">
     <?php if ($block->getOrderId()) :?>
+        <div class="sp-container">
+            <div class="sp-flex sp-flex-column sp-max-w-md sp-mt-12 sp-mx-auto">
+                <h1 class="sp-h2 sp-mb-4 sp-mt-0 sp-text-center sp-text-green-1">Thank you, your order has be placed!</h1>
+            </div>
+        </div>
         <?php if ($block->getCanViewOrder()) :?>
-            <p><?= $block->escapeHtml(__('Your order number is: %1.', sprintf('<a href="%s" class="order-number"><strong>%s</strong></a>', $block->escapeUrl($block->getViewOrderUrl()), $block->getOrderId())), ['a', 'strong']) ?></p>
+            <p><?= $block->escapeHtml(__('Your order # is: %1.', sprintf('<a href="%s" class="order-number"><strong>%s</strong></a>', $block->escapeUrl($block->getViewOrderUrl()), $block->getOrderId())), ['a', 'strong']) ?></p>
         <?php  else :?>
-            <p><?= $block->escapeHtml(__('Your order # is: <span>%1</span>.', $block->getOrderId()), ['span']) ?></p>
+            <p><?= $block->escapeHtml(__('<strong>Your order # is: <span>%1</span></strong>', $block->getOrderId()), ['strong', 'span']) ?></p>
         <?php endif;?>
-            <p>Thank you for your order. We'll email you an order confirmation with details and tracking info.
-                <br>Due to higher than expected order volume, your shipping confirmation may take up to 7 days. We really appreciate your understanding. If you have any questions please email us at <a href="mailto:miraclegro-orders@scotts.com">miraclegro-orders@scotts.com</a>
-            </p>
+        <p>Thank you for your order. We'll email you an order confirmation with details and tracking info.</p>
     <?php endif;?>
 
     <?= $block->getAdditionalInfoHtml() ?>
-
+    <br/>
+    <br/>
+    <br/>
+    <br/>
+    <div class="sp-container">
+            <div class="sp-flex sp-flex-column sp-max-w-md sp-mt-12 sp-mx-auto">
+                <div class="success-info-text">
+                    <img class="sp-block" src="https://test-magento-image-repo.storage.googleapis.com/Miraclegro.svg" alt="Success">
+                    <h4 class="sp-text-green-1">Your order will begin processing within one hour of being placed.<br/>
+                    If you would like to edit your order within that hour please contact us at 1-888-270-3714</h4>
+                <div>
+            </div>
+    </div>
     <div class="actions-toolbar">
         <div class="primary">
             <a class="action primary continue" href="<?= $block->escapeUrl($block->getContinueUrl()) ?>"><span><?= $block->escapeHtml(__('Continue Shopping')) ?></span></a>

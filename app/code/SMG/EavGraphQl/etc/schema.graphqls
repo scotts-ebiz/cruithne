@@ -1,0 +1,19 @@
+# Copyright © Magento, Inc. All rights reserved.
+# See COPYING.txt for license details.
+
+type Query {
+   customAttributeFilter(filter_type: String, attributes: [AttributeFilterInput!]!): CustomAttributeFilter @resolver(class: "SMG\\EavGraphQl\\Model\\Resolver\\CustomAttributeFilter") @doc(description: "The customAttributeFilters matching products for given attributes options.") @cache(cacheable: false)
+}
+
+type CustomAttributeFilter @doc(description: "CustomAttributeFilter") {
+   items: [ProductInterface] @doc(description: "An array of products")
+}
+
+input AttributeFilterInput @doc(description: "AttributeFilterInput specifies the attribute_code and option to search") {
+   attribute_code: String @doc(description: "Attribute code.")
+   options: [AttributeOptionFilterInput!]! @doc(description: "Options.")
+}
+
+input AttributeOptionFilterInput @doc(description: "AttributeOptionFilterInput specifies the option for search.") {
+   attribute_option_code: String @doc(description: "Option code.")
+}

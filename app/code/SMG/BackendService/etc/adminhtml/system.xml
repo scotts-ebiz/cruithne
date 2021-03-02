@@ -1,0 +1,42 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="smg_backendservice" translate="label" type="text" sortOrder="9000" showInDefault="1"
+                 showInWebsite="1" showInStore="1">
+            <class>separator-top</class>
+            <label>Backend Service Settings</label>
+            <tab>smg</tab>
+            <resource>SMG_BackendService::config_smg_backendservice</resource>
+            <group id="api" translate="label" type="text" sortOrder="10" showInDefault="1" showInWebsite="1"
+                   showInStore="1">
+                <label>API Settings</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Status</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                <field id="customer" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Customer End Point Url</label>
+                </field>
+                <field id="order" translate="label" type="text" sortOrder="30" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>Order End Point Url</label>
+                </field>
+                <field id="sap" translate="label" type="text" sortOrder="40" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>SAP End Point Url</label>
+                </field>
+                <field id="apikey" translate="label" type="text" sortOrder="50" showInDefault="1" showInWebsite="1"
+                       showInStore="1">
+                    <label>API Key</label>
+                </field>
+                <field id="subscription" translate="label" type="text" sortOrder="60" showInDefault="1" showInWebsite="1"
+                      showInStore="1">
+                   <label>Subscription End Point Url</label>
+               </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -10,13 +10,14 @@
         "sort-packages": true
     },
     "require": {
+        "akeneo/magento2-connector-enterprise": "101.*",
         "amasty/securityauth": "^1.1",
         "avalara/avatax-magento": "^1.5",
         "composer/composer": "@alpha",
         "cweagans/composer-patches": "^1.6",
         "gigya/magento2-im": "^5.4",
         "magento/composer-root-update-plugin": "~0.1",
-        "magento/product-enterprise-edition": "2.3.5-p2",
+        "magento/product-enterprise-edition": "2.3.6",
         "magepal/magento2-googletagmanager": "^2.3",
         "mageplaza/module-smtp": "^1.2",
         "recurly/recurly-client": "^2.12",
@@ -28,7 +29,7 @@
         "friendsofphp/php-cs-fixer": "~2.12.0",
         "lusitanian/oauth": "~0.8.10",
         "magento/magento-coding-standard": "~1.0.0",
-        "magento/magento2-functional-testing-framework": "~2.3.14",
+        "magento/magento2-functional-testing-framework": "~2.6.5",
         "pdepend/pdepend": "2.5.2",
         "phpmd/phpmd": "@stable",
         "phpunit/phpunit": "~6.5.0",
@@ -90,6 +91,10 @@
         "gigya-im": {
             "type": "git",
             "url": "https://github.com/gigya/Magento-2"
+        },
+        "magento2-connector-enterprise": {
+            "type": "vcs",
+            "url": "ssh://git@distribution.akeneo.com:443/magento2-connector-enterprise"
         }
     },
     "extra": {

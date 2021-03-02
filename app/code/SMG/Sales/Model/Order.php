@@ -19,6 +19,7 @@ use Magento\Sales\Model\Order\ProductOption;
 use SMG\OrderDiscount\Helper\Data as DiscountHelper;
 use SMG\SubscriptionApi\Model\SubscriptionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
+use SMG\BackendService\Model\Service\Order as OrderBackendService;
 
 class Order extends MagentoOrder
 {

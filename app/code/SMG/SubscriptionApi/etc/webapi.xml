@@ -12,6 +12,12 @@
             <resource ref="self" />
         </resources>
     </route>
+    <route url="/V1/subscription/renewSubscription" method="POST">
+        <service class="SMG\SubscriptionApi\Api\Interfaces\SubscriptionInterface" method="renewSubscription" />
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
     <route url="/V1/subscription/check" method="POST">
         <service class="SMG\SubscriptionApi\Api\Interfaces\RecurlyInterface" method="checkRecurlySubscription" />
         <resources>
@@ -32,6 +38,12 @@
     </route>
     <route url="/V1/subscription/get-sub-data-for-sync" method="GET">
         <service class="SMG\SubscriptionApi\Api\Interfaces\SubscriptionInterface" method="getSubscriptionDataForSync" />
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
+	<route url="/V1/subscription/cancelSubscription" method="POST">
+        <service class="SMG\SubscriptionApi\Api\Interfaces\SubscriptionInterface" method="cancelSubscription" />
         <resources>
             <resource ref="self" />
         </resources>

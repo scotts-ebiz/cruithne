@@ -714,8 +714,7 @@
                 }
                 .actions-toolbar {
                     width: 100%;
-                    padding-top: 20px;
-                    border-top: 1px solid #ccc;
+                    padding-top: 65px;
                     text-align: right;
                     .primary {
                         float: right;
@@ -723,6 +722,20 @@
                         .action.primary.continue {
                             @include cart-checkout-button();
                         }
+                    }
+                }
+                .success-info-text {
+                    display: flex;
+                    align-items: center;
+                    .sp-block{
+                        width: 20px;
+                        vertical-align: bottom;
+                        padding-right: 1%;
+                        font-weight: bold;
+                    }
+                    h4.sp-text-green-1{
+                       font-weight: 400;
+                       font-size: 1.2rem;
                     }
                 }
             }

@@ -1,0 +1,100 @@
+<?php
+$helper = $this->helper('SMG\BackendService\Helper\Data');
+$status = $helper->getStatus();	
+$orderId = $this->getRequest()->getParam('order_id');
+$block->getOrderById($orderId);
+$lsOrderId = $block->getlsOrderId();
+// check backend service active or not and lsOrderId is Null or not.
+if($status == 1 && !is_null($lsOrderId)){
+
+$subId = '';
+$order;
+?>
+<div class="fieldset-wrapper">
+	<div class="fieldset-wrapper-title"><span class="title">Scott's Subscriptions</span></div>
+	<?php
+	$subscriptions = $block->getCustomerSubscriptions();
+
+	$subscriptionProductsArray = $block->getSubscriptionProducts();
+
+	if ($subscriptions['success'] == true && !empty($subscriptions['subscriptions'])) {
+		$subscriptionsList = $subscriptions['subscriptions'];
+		$adminPath = $this->escapeHtml($block->getAdminURLPath());
+	?>
+		<div class="admin__data-grid-wrap admin__data-grid-wrap-static">
+			<table class="data-grid">
+				<thead>
+					<tr>
+						<th class="data-grid-th no-link">Subscription ID</th>
+						<th class="data-grid-th no-link">Quiz ID</th>
+						<th class="data-grid-th no-link">Subscription Plan</th>
+						<th class="data-grid-th no-link">Status</th>
+						<th class="data-grid-th no-link">Magento Status</th>
+						<th class="data-grid-th no-link">SAP Order Status</th>
+						<th class="data-grid-th no-link">Subscribed On</th>
+						<th class="data-grid-th no-link">Ships On</th>
+						<th class="data-grid-th no-link">Amount</th>
+						<th class="data-grid-th no-link">Product Name</th>
+						<th class="data-grid-th no-link">Sku</th>
+						<th class="data-grid-th no-link">Qty</th>
+					</tr>
+				</thead>
+				<tbody>
+					<?php foreach ($subscriptionsList as $subscription) {
+					  $masterId = (isset($subscription->custom_fields['orderId'])) ? $subscription->custom_fields['orderId']->value : $subscription->uuid;
+					?>
+						<tr class="<?php echo $masterId . ' ' .  $subscription->plan->name?>" onclick='location.href = this.getElementsByTagName("a").item(0).getAttribute("href");'>
+							<?php if ($subscription->plan->name <> 'Annual' && $subscription->plan->name <> 'Seasonal') :  ?>
+								<?php $order = $block->getOrderBySubscriptionId($masterId, $subscription->plan->plan_code); ?>
+                                <?php $subId = $order->getData('subscription_id'); ?>
+								<td class="click">
+									<?php if ($order->getId()) : ?>
+										<a href="/<?php echo $this->escapeHtml($adminPath); ?>/sales/order/view/order_id/<?php echo $this->escapeHtml($order->getId()); ?>"><?php echo $this->escapeHtml($subId); ?></a>
+                                    <?php else : ?>
+                                        <?php echo $this->escapeHtml($subId); ?>
+                                    <?php endif; ?>
+								</td>
+							<?php else : ?>
+								<td><?php echo $this->escapeHtml($masterId); ?></td>
+							<?php endif; ?>
+							<td><?php echo (isset($subscription->custom_fields['quiz_id'])) ? $subscription->custom_fields['quiz_id']->value : 'Quiz ID does not exist for this subscription.'; ?></td>
+							<td><?php echo $subscription->plan->name; ?></td>
+							<td><?php echo $subscription->state; ?></td>
+							<td><?php echo $block->getMagentoStatus($subId); ?></td>
+							<td><?php echo $block->getSapOrderStatus($subId); ?></td>
+							<td><?php echo $subscription->activated_at->format('d F, Y'); ?></td>
+							<td><?php if ($order->getId()) {echo date("d F, Y", strtotime($order->getShipStartDate()));}else{ echo 'n/a'; }?></td>
+							<td>$<?php echo $block->convertAmountToDollars($subscription->unit_amount_in_cents); ?></td>
+							<td><?php echo $block->getProductName($subId); ?></td>
+							<td><?php echo $block->getProductSku($subId); ?></td>
+							<td>
+								<?php if ($block->getProductQty($subId) > 0) { ?>
+									<?php echo round($block->getProductQty($subId)); ?>
+								<?php } else { ?>
+									<?php echo '' ?>
+								<?php } ?>
+							</td>
+
+						</tr>
+					<?php } ?>
+				</tbody>
+			</table>
+			<div>
+				<p>Clicking "Cancel Subscription" will cancel all of it's active and future subscriptions.</p>
+				<form action="<?php echo $block->getCancelUrl(); ?>" method="POST">
+					<input type="hidden" name="form_key" value="<?php echo $block->getFormKey(); ?>" />
+					<input type="hidden" name="salespage" value="admin" />
+				    <input type="hidden" name="recurly_account_code" value="<?php echo $block->getMasterSubscriptionId(); ?>" />
+					<button type="submit">Cancel Subscription</button>
+				</form>
+			</div>
+		</div>
+	<?php } else { ?>
+		<?php if ($subscriptions['success'] == false) { ?>
+			<p><?php echo $subscriptions['error_message']; ?></p>
+		<?php } else { ?>
+			<p>This customer does not have any active or future subscriptions.</p>
+		<?php } ?>
+	<?php } ?>
+</div>
+<?php } ?>
