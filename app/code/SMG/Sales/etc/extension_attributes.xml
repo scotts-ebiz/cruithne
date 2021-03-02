@@ -5,6 +5,11 @@
     <extension_attributes for="Magento\Sales\Api\Data\OrderInterface">
         <attribute code="subscription_id" type="string" />
         <attribute code="thumbnail" type="string" />
+		<attribute code="master_subscription_id" type="string" />
+		<attribute code="ship_start_date" type="string" />
+		<attribute code="ship_end_date" type="string" />
+		<attribute code="application_start_date" type="string" />
+		<attribute code="application_end_date" type="string" />
     </extension_attributes>
 </config>
 
