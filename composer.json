@@ -12,17 +12,18 @@
     "require": {
         "akeneo/magento2-connector-enterprise": "101.*",
         "amasty/securityauth": "^1.1",
-        "avalara/avatax-magento": "^1.5",
+        "avalara/avatax-magento": "^2.2.2",
         "composer/composer": "@alpha",
         "cweagans/composer-patches": "^1.6",
         "gigya/magento2-im": "^5.4",
         "magento/composer-root-update-plugin": "~0.1",
-        "magento/product-enterprise-edition": "2.3.6",
+        "magento/product-enterprise-edition": "2.3.6-p1",
         "magepal/magento2-googletagmanager": "^2.3",
         "mageplaza/module-smtp": "^1.2",
         "recurly/recurly-client": "^2.12",
         "snowdog/frontools": "^1.6",
-        "zaius/zaius-magento-2": "^1.0"
+        "zaius/zaius-magento-2": "^1.0.7",
+        "dotmailer/dotmailer-magento2-extension": "4.5.1 as 4.4.1-p1"
     },
     "require-dev": {
         "allure-framework/allure-phpunit": "~1.2.0",
