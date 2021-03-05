@@ -16,7 +16,7 @@ use Magento\Quote\Model\ResourceModel\Quote as QuoteResource;
 use Magento\Setup\Exception;
 use Psr\Log\LoggerInterface;
 use Magento\Sales\Api\Data\OrderExtensionFactory;
-
+use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
 
 class OrderRepositoryInterface
 {
@@ -49,6 +49,11 @@ class OrderRepositoryInterface
      * @var OrderExtensionFactory
      */
     protected $_extensionFactory;
+    
+    /**
+     * @var SubscriptionOrderCollectionFactory
+     */
+    protected $_subscriptionOrderCollectionFactory;
 
     /**
      * OrderRepositoryInterface constructor.
@@ -59,13 +64,15 @@ class OrderRepositoryInterface
      * @param ProductFactory $productFactory
      * @param ProductResource $productResource
      * @param OrderExtensionFactory $extensionFactory
+     * @param SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory
      */
     public function __construct(LoggerInterface $logger,
         QuoteFactory $quoteFactory,
         QuoteResource $quoteResource,
         ProductFactory $productFactory,
         ProductResource $productResource,
-        OrderExtensionFactory $extensionFactory)
+        OrderExtensionFactory $extensionFactory,
+        SubscriptionOrderCollectionFactory $subscriptionOrderCollectionFactory)
     {
         $this->_logger = $logger;
         $this->_quoteFactory = $quoteFactory;
@@ -73,6 +80,7 @@ class OrderRepositoryInterface
         $this->_productFactory = $productFactory;
         $this->_productResource = $productResource;
         $this->_extensionFactory = $extensionFactory;
+        $this->_subscriptionOrderCollectionFactory = $subscriptionOrderCollectionFactory;
     }
 
     public function beforeSave(\Magento\Sales\Api\OrderRepositoryInterface $subject,
@@ -210,11 +218,25 @@ class OrderRepositoryInterface
     public function afterGet(\Magento\Sales\Api\OrderRepositoryInterface $subject, \Magento\Sales\Api\Data\OrderInterface $order)
     {
         $extensionAttributes = $order->getExtensionAttributes();
-        if ($extensionAttributes && $extensionAttributes->getSubscriptionId()) {
+        if ($extensionAttributes && $extensionAttributes->getSubscriptionId() && $extensionAttributes->getMasterSubscriptionId() && $extensionAttributes->getShipStartDate() && $extensionAttributes->getShipEndDate()) {
             return $order;
         }
+        
+        $subscriptionOrderCollection = $this->_subscriptionOrderCollectionFactory->create();
+
+        $subscriptionOrder = $subscriptionOrderCollection
+            ->addFieldToFilter('sales_order_id', $order->getId())
+            ->getFirstItem();
+        
         $orderExtension = $extensionAttributes ? $extensionAttributes : $this->_extensionFactory->create();
         $orderExtension->setSubscriptionId($order->getSubscriptionId());
+        $orderExtension->setMasterSubscriptionId($order->getData('master_subscription_id'));
+        $orderExtension->setShipStartDate($order->getData('ship_start_date'));
+        $orderExtension->setShipEndDate($order->getData('ship_end_date'));
+        if ($subscriptionOrder || $subscriptionOrder->getId()) {
+            $orderExtension->setApplicationStartDate($subscriptionOrder->getData('application_start_date'));
+            $orderExtension->setApplicationEndDate($subscriptionOrder->getData('application_end_date'));
+        }
         $order->setExtensionAttributes($orderExtension);
         return $order;
     }
