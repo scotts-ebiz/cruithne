@@ -15,7 +15,7 @@
         "avalara/avatax-magento": "^2.2.2",
         "composer/composer": "@alpha",
         "cweagans/composer-patches": "^1.6",
-        "gigya/magento2-im": "^5.4",
+        "gigya/magento2-im": "5.4",
         "magento/composer-root-update-plugin": "^1.1",
         "magento/product-enterprise-edition": ">=2.3.6 <2.3.7",
         "magepal/magento2-googletagmanager": "^2.6",
