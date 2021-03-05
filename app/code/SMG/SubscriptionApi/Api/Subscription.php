@@ -950,9 +950,6 @@ class Subscription implements SubscriptionInterface
             $customer = $sub->getCustomer();
             $subOrders = $sub->getSubscriptionOrders();
 
-            $newSub = $this->createRenewalSubscription($sub);
-            $newSubOrders = [];
-            $newSubOrderItems = [];
             $isPreviousSubscriptionOkToRenew = true;
 
             /** @var SubscriptionOrder $order */
@@ -972,6 +969,10 @@ class Subscription implements SubscriptionInterface
                     409
                 );
             }
+
+            $newSub = $this->createRenewalSubscription($sub);
+            $newSubOrders = [];
+            $newSubOrderItems = [];
 
             foreach ($subOrders as $order) {
                 $newOrder = $this->createRenewalSubscriptionOrder($order, $newSub->getData('entity_id'));

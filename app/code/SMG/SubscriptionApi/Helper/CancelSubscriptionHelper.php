@@ -166,7 +166,7 @@ class CancelSubscriptionHelper extends AbstractHelper
 
         try {
             $this->_logger->info($this->_loggerPrefix . "Getting orders to cancel for subscription {$subscription->getData('subscription_id')}...");
-            $orders = $this->getOrders($subscription);
+            $orders = $subscription->getOrders();
             $isAnnual = $subscription->getData('subscription_type') == 'annual';
             $refundAmount = 0;
             $ordersRefunded = 0;
@@ -304,6 +304,9 @@ class CancelSubscriptionHelper extends AbstractHelper
                 ->addFieldToFilter(
                     'master_subscription_id',
                     $subscription->getData('subscription_id')
+                )->addFieldToFilter(
+                    'subscription_status',
+                    'active'
                 );
         } catch (Exception $e) {
             $error = 'There was an issue finding orders for subscription ' . $subscription->getData('subscription_id');
