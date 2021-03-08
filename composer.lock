@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "e6da23996cac7aa67adff8275ea68ccd",
+    "content-hash": "e0bd00875795e7b6eaf24b99e7d742e0",
     "packages": [
         {
             "name": "akeneo/api-php-client",
@@ -524,16 +524,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.173.22",
+            "version": "3.173.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "5b8683170604c8db0e346e6df8fefcd8d74523fb"
+                "reference": "259fa1a47a46f81e66b1ea328ed961a58fa061c2"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/5b8683170604c8db0e346e6df8fefcd8d74523fb",
-                "reference": "5b8683170604c8db0e346e6df8fefcd8d74523fb",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/259fa1a47a46f81e66b1ea328ed961a58fa061c2",
+                "reference": "259fa1a47a46f81e66b1ea328ed961a58fa061c2",
                 "shasum": ""
             },
             "require": {
@@ -605,7 +605,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2021-03-04T19:16:24+00:00"
+            "time": "2021-03-05T19:20:35+00:00"
         },
         {
             "name": "bacon/bacon-qr-code",
@@ -1915,11 +1915,11 @@
         },
         {
             "name": "gigya/magento2-im",
-            "version": "5.7.0",
+            "version": "5.6.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gigya/Magento-2",
-                "reference": "0f8efa67143cfedd5699398f972f30381eba80b2"
+                "reference": "24e6940b0d474529bf4f6bf949bea7e75740e320"
             },
             "require": {
                 "aws/aws-sdk-php": "~3.0",
@@ -1969,7 +1969,7 @@
                 }
             ],
             "description": "Gigya Identity Management for Magento 2",
-            "time": "2021-02-26T11:07:25+00:00"
+            "time": "2020-08-11T12:08:48+00:00"
         },
         {
             "name": "gigya/php-sdk",
@@ -2124,16 +2124,16 @@
         },
         {
             "name": "guzzlehttp/promises",
-            "version": "1.4.0",
+            "version": "1.4.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/guzzle/promises.git",
-                "reference": "60d379c243457e073cff02bc323a2a86cb355631"
+                "reference": "8e7d04f1f6450fef59366c399cfad4b9383aa30d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/guzzle/promises/zipball/60d379c243457e073cff02bc323a2a86cb355631",
-                "reference": "60d379c243457e073cff02bc323a2a86cb355631",
+                "url": "https://api.github.com/repos/guzzle/promises/zipball/8e7d04f1f6450fef59366c399cfad4b9383aa30d",
+                "reference": "8e7d04f1f6450fef59366c399cfad4b9383aa30d",
                 "shasum": ""
             },
             "require": {
@@ -2171,7 +2171,7 @@
             "keywords": [
                 "promise"
             ],
-            "time": "2020-09-30T07:37:28+00:00"
+            "time": "2021-03-07T09:25:29+00:00"
         },
         {
             "name": "guzzlehttp/psr7",
@@ -3292,16 +3292,16 @@
         },
         {
             "name": "laminas/laminas-eventmanager",
-            "version": "3.3.0",
+            "version": "3.3.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/laminas/laminas-eventmanager.git",
-                "reference": "1940ccf30e058b2fd66f5a9d696f1b5e0027b082"
+                "reference": "966c859b67867b179fde1eff0cd38df51472ce4a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/laminas/laminas-eventmanager/zipball/1940ccf30e058b2fd66f5a9d696f1b5e0027b082",
-                "reference": "1940ccf30e058b2fd66f5a9d696f1b5e0027b082",
+                "url": "https://api.github.com/repos/laminas/laminas-eventmanager/zipball/966c859b67867b179fde1eff0cd38df51472ce4a",
+                "reference": "966c859b67867b179fde1eff0cd38df51472ce4a",
                 "shasum": ""
             },
             "require": {
@@ -3323,12 +3323,6 @@
                 "laminas/laminas-stdlib": "^2.7.3 || ^3.0, to use the FilterChain feature"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "3.3.x-dev",
-                    "dev-develop": "3.4.x-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "Laminas\\EventManager\\": "src/"
@@ -3352,7 +3346,7 @@
                     "type": "community_bridge"
                 }
             ],
-            "time": "2020-08-25T11:10:44+00:00"
+            "time": "2021-03-08T15:24:29+00:00"
         },
         {
             "name": "laminas/laminas-feed",
@@ -19470,27 +19464,22 @@
         },
         {
             "name": "psr/container",
-            "version": "1.0.0",
+            "version": "1.1.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/php-fig/container.git",
-                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f"
+                "reference": "8622567409010282b7aeebe4bb841fe98b58dcaf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/php-fig/container/zipball/b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
-                "reference": "b7ce3b176482dbbc1245ebf52b181af44c2cf55f",
+                "url": "https://api.github.com/repos/php-fig/container/zipball/8622567409010282b7aeebe4bb841fe98b58dcaf",
+                "reference": "8622567409010282b7aeebe4bb841fe98b58dcaf",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "php": ">=7.2.0"
             },
             "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.0.x-dev"
-                }
-            },
             "autoload": {
                 "psr-4": {
                     "Psr\\Container\\": "src/"
@@ -19503,7 +19492,7 @@
             "authors": [
                 {
                     "name": "PHP-FIG",
-                    "homepage": "http://www.php-fig.org/"
+                    "homepage": "https://www.php-fig.org/"
                 }
             ],
             "description": "Common Container Interface (PHP FIG PSR-11)",
@@ -19515,7 +19504,7 @@
                 "container-interop",
                 "psr"
             ],
-            "time": "2017-02-14T16:28:37+00:00"
+            "time": "2021-03-05T17:36:06+00:00"
         },
         {
             "name": "psr/http-client",
