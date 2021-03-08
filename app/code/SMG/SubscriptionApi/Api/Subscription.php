@@ -207,7 +207,7 @@ class Subscription implements SubscriptionInterface
     protected $_regionCollectionFactory;
     protected $_subscriptionRenewalErrorFactory;
 
-	/**
+    /**
      * @var CancelHelper
      */
     protected $_cancelHelper;
@@ -248,7 +248,7 @@ class Subscription implements SubscriptionInterface
      * @param HistoryFactory $historyFactory
      * @param HistoryResource $historyResource
      * @param SubscriptionRenewalErrorFactory $subscriptionRenewalErrorFactory
-	 * @param CancelHelper $cancelHelper
+     * @param CancelHelper $cancelHelper
      */
     public function __construct(
         LoggerInterface $logger,
@@ -290,7 +290,7 @@ class Subscription implements SubscriptionInterface
         SubscriptionOrderItemFactory $subscriptionOrderItemFactory,
         RegionCollectionFactory $regionCollectionFactory,
         SubscriptionRenewalErrorFactory $subscriptionRenewalErrorFactory,
-		CancelHelper $cancelHelper
+        CancelHelper $cancelHelper
     ) {
         $this->_logger = $logger;
         $this->_recommendationHelper = $recommendationHelper;
@@ -1021,7 +1021,7 @@ class Subscription implements SubscriptionInterface
                 ['refresh' => false],
                 400
             );
-        } catch (Exception $ge) {
+        } catch (Exception $ge) {                                                                                                                                                                                                                                                                                                                                                                                         
             if (isset($newSub)) {
                 $newSub->setData('subscription_status', 'renewal_failed')->save();
                 try {
@@ -1031,13 +1031,19 @@ class Subscription implements SubscriptionInterface
                     $this->createRenewalError($master_subscription_id, $message);
                 }
             }
-
-            $message = "General Exception: ".$ge->getMessage();
+            $statusCode = 400;
+            if (str_contains($ge->getMessage(), 'calculate tax')) { 
+             $message = "AvaTax Exception: We got an error regarding avatax tax calculation. Please rerun the renewal subscription api.";
+             $statusCode = 205;
+            }
+            else{
+             $message = "General Exception: ".$ge->getMessage();
+            }
             $this->createRenewalError($master_subscription_id, $message);
             return $this->_responseHelper->error(
                 $message,
                 ['refresh' => false],
-                400
+                $statusCode
             );
         }
 
@@ -1127,29 +1133,29 @@ class Subscription implements SubscriptionInterface
         return $return;
     }
 
-	/**
+    /**
      * @param string $master_subscription_id
      * @return mixed
      */
     public function cancelSubscription($master_subscription_id) {
 
-		$this->_logger->debug("Cancel master subscription id: " . $master_subscription_id);
+        $this->_logger->debug("Cancel master subscription id: " . $master_subscription_id);
 
-		// Cancel Subscriptions
-		try {
-			$this->_cancelHelper->cancelSubscriptions($master_subscription_id,'','api');
-		} catch (Exception $e) {
-			$this->_logger->error($e->getMessage());
+        // Cancel Subscriptions
+        try {
+            $this->_cancelHelper->cancelSubscriptions($master_subscription_id,'','api');
+        } catch (Exception $e) {
+            $this->_logger->error($e->getMessage());
 
-			return json_encode([
-				'success' => false,
-				'message' => $e->getMessage()
-			]);
-		}
+            return json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
 
-		return json_encode([
-			'success' => true,
-			'message' => 'Subscriptions successfully cancelled.'
-		]);
+        return json_encode([
+            'success' => true,
+            'message' => 'Subscriptions successfully cancelled.'
+        ]);
     }
 }
