@@ -553,7 +553,7 @@ class Subscription extends AbstractModel
 
     public function currentShipStartDate()
     {
-        $shipStartDate = date("m/d/Y", strtotime($shipStartDate = $this->getFirstSubscriptionOrder()->getShipStartDate())); 
+        $shipStartDate = date("m/d/Y", strtotime($shipStartDate = $this->getFirstSubscriptionOrder()->getShipStartDate()));
         return $shipStartDate;
     }
 
@@ -656,12 +656,11 @@ class Subscription extends AbstractModel
     {
         $ordersArray = [];
 
-        try {
-            $orders = $this->_orderCollectionFactory->create()->addFieldToFilter('master_subscription_id', $this->getSubscriptionId());
-        } catch (\Exception $e) {
-            $error = 'There was an issue returning orders to cancel.';
-            $this->_logger->error($error);
-            throw new LocalizedException(__($error));
+        $orders = $this->getSubscriptionOrders();
+        $addons = $this->getSubscriptionAddonOrders();
+
+        if (!empty($addons)) {
+            $orders = array_merge($orders, $addons);
         }
 
         /** @var Order $order */
