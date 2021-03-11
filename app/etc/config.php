@@ -3,6 +3,8 @@ return [
     'modules' => [
         'Magento_AdminAnalytics' => 1,
         'Magento_Store' => 1,
+        'Magento_AdminGwsConfigurableProduct' => 1,
+        'Magento_AdminGwsStaging' => 1,
         'Magento_Directory' => 1,
         'Magento_AdobeIms' => 1,
         'Magento_AdobeImsApi' => 1,
@@ -61,6 +63,7 @@ return [
         'Magento_CatalogUrlRewrite' => 1,
         'Magento_Widget' => 1,
         'Magento_Msrp' => 1,
+        'Magento_CatalogRuleGraphQl' => 1,
         'Magento_SalesRule' => 1,
         'Magento_CustomerCustomAttributes' => 1,
         'Magento_Downloadable' => 1,
@@ -240,7 +243,6 @@ return [
         'Magento_PromotionPermissions' => 1,
         'Magento_BannerPageBuilderAnalytics' => 1,
         'Magento_QuoteAnalytics' => 1,
-        'Magento_GiftCardAccountGraphQl' => 0,
         'Magento_ConfigurableProductGraphQl' => 1,
         'Magento_RelatedProductGraphQl' => 1,
         'Magento_ReleaseNotification' => 1,
@@ -446,18 +448,18 @@ return [
                 'default_group_id' => '2',
                 'is_default' => '0',
             ],
-            'roundup' => [
+            'scotts' => [
                 'website_id' => '3',
-                'code' => 'roundup',
-                'name' => 'Roundup',
+                'code' => 'scotts',
+                'name' => 'Scotts',
                 'sort_order' => '0',
                 'default_group_id' => '3',
                 'is_default' => '0',
             ],
-            'scotts' => [
+            'roundup' => [
                 'website_id' => '4',
-                'code' => 'scotts',
-                'name' => 'Scotts',
+                'code' => 'roundup',
+                'name' => 'Roundup',
                 'sort_order' => '0',
                 'default_group_id' => '4',
                 'is_default' => '0',
@@ -486,12 +488,12 @@ return [
                 'default_group_id' => '7',
                 'is_default' => '0',
             ],
-            'scottsbundles' => [
+            'mulchdirect' => [
                 'website_id' => '8',
-                'code' => 'scottsbundles',
-                'name' => 'ScottsBundles',
+                'code' => 'mulchdirect',
+                'name' => 'Mulch Direct',
                 'sort_order' => '0',
-                'default_group_id' => '14',
+                'default_group_id' => '8',
                 'is_default' => '0',
             ],
         ],
@@ -523,26 +525,26 @@ return [
             3 => [
                 'group_id' => '3',
                 'website_id' => '3',
-                'name' => 'Roundup Store',
+                'name' => 'Scotts Store',
                 'root_category_id' => '2',
                 'default_store_id' => '3',
-                'code' => 'roundup_store',
+                'code' => 'scotts',
             ],
             4 => [
                 'group_id' => '4',
                 'website_id' => '4',
-                'name' => 'Scotts Store',
+                'name' => 'Roundup Store',
                 'root_category_id' => '2',
                 'default_store_id' => '4',
-                'code' => 'scotts_store',
+                'code' => 'roundup',
             ],
             5 => [
                 'group_id' => '5',
                 'website_id' => '5',
-                'name' => 'MiracleGro Store',
+                'name' => 'Miraclegro Store',
                 'root_category_id' => '2',
                 'default_store_id' => '5',
-                'code' => 'miraclegro_store',
+                'code' => 'miraclegro',
             ],
             6 => [
                 'group_id' => '6',
@@ -550,7 +552,7 @@ return [
                 'name' => 'Ortho Store',
                 'root_category_id' => '2',
                 'default_store_id' => '6',
-                'code' => 'ortho_store',
+                'code' => 'ortho',
             ],
             7 => [
                 'group_id' => '7',
@@ -558,55 +560,15 @@ return [
                 'name' => 'Tomcat Store',
                 'root_category_id' => '2',
                 'default_store_id' => '7',
-                'code' => 'tomcat_store',
+                'code' => 'tomcat',
             ],
             8 => [
                 'group_id' => '8',
-                'website_id' => '4',
-                'name' => 'Scotts Store',
-                'root_category_id' => '2',
-                'default_store_id' => '3',
-                'code' => 'scotts',
-            ],
-            9 => [
-                'group_id' => '9',
-                'website_id' => '3',
-                'name' => 'Roundup Store',
-                'root_category_id' => '2',
-                'default_store_id' => '4',
-                'code' => 'roundup',
-            ],
-            10 => [
-                'group_id' => '10',
-                'website_id' => '5',
-                'name' => 'MiracleGro Store',
-                'root_category_id' => '2',
-                'default_store_id' => '5',
-                'code' => 'miraclegro',
-            ],
-            12 => [
-                'group_id' => '12',
-                'website_id' => '6',
-                'name' => 'Ortho Store',
-                'root_category_id' => '2',
-                'default_store_id' => '6',
-                'code' => 'ortho',
-            ],
-            13 => [
-                'group_id' => '13',
-                'website_id' => '0',
-                'name' => 'Tomcat Store',
-                'root_category_id' => '2',
-                'default_store_id' => '7',
-                'code' => 'tomcat',
-            ],
-            14 => [
-                'group_id' => '14',
                 'website_id' => '8',
-                'name' => 'ScottsBundles Store',
+                'name' => 'Mulch Direct Store',
                 'root_category_id' => '19',
                 'default_store_id' => '8',
-                'code' => 'scottsbundles',
+                'code' => 'mulchdirect',
             ],
         ],
         'stores' => [
@@ -637,57 +599,57 @@ return [
                 'sort_order' => '0',
                 'is_active' => '1',
             ],
-            'roundup_view' => [
+            'scotts' => [
                 'store_id' => '3',
-                'code' => 'roundup_view',
+                'code' => 'scotts',
                 'website_id' => '3',
                 'group_id' => '3',
-                'name' => 'Roundup View',
-                'sort_order' => '0',
-                'is_active' => '1',
-            ],
-            'scotts_view' => [
-                'store_id' => '4',
-                'code' => 'scotts_view',
-                'website_id' => '4',
-                'group_id' => '4',
                 'name' => 'Scotts View',
                 'sort_order' => '0',
                 'is_active' => '1',
             ],
-            'miraclegro_view' => [
-                'store_id' => '5',
-                'code' => 'miraclegro_view',
-                'website_id' => '5',
-                'group_id' => '5',
-                'name' => 'Miraclegro View',
+            'roundup' => [
+                'store_id' => '4',
+                'code' => 'roundup',
+                'website_id' => '4',
+                'group_id' => '4',
+                'name' => 'Roundup View',
                 'sort_order' => '0',
                 'is_active' => '1',
             ],
-            'ortho_view' => [
+            'miraclegro' => [
+                'store_id' => '5',
+                'code' => 'miraclegro',
+                'website_id' => '5',
+                'group_id' => '5',
+                'name' => 'Miraclegro',
+                'sort_order' => '0',
+                'is_active' => '1',
+            ],
+            'ortho' => [
                 'store_id' => '6',
-                'code' => 'ortho_view',
+                'code' => 'ortho',
                 'website_id' => '6',
                 'group_id' => '6',
                 'name' => 'Ortho View',
                 'sort_order' => '0',
                 'is_active' => '1',
             ],
-            'tomcat_view' => [
+            'tomcat' => [
                 'store_id' => '7',
-                'code' => 'tomcat_view',
+                'code' => 'tomcat',
                 'website_id' => '7',
                 'group_id' => '7',
                 'name' => 'Tomcat View',
                 'sort_order' => '0',
                 'is_active' => '1',
             ],
-            'scottsbundles' => [
+            'mulchdirect' => [
                 'store_id' => '8',
-                'code' => 'scottsbundles',
+                'code' => 'mulchdirect',
                 'website_id' => '8',
-                'group_id' => '14',
-                'name' => 'ScottsBundles View',
+                'group_id' => '8',
+                'name' => 'Mulch Direct View',
                 'sort_order' => '0',
                 'is_active' => '1',
             ],
@@ -766,6 +728,15 @@ return [
             'type' => '0',
             'code' => 'Scottsbase/mygro',
         ],
+        'frontend/Scottsbase/scottsprogram-v2' => [
+            'parent_id' => 'Scottsbase/default',
+            'theme_path' => 'Scottsbase/scottsprogram-v2',
+            'theme_title' => 'Scotts Program V2',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Scottsbase/scottsprogram-v2',
+        ],
         'frontend/Drupal/default' => [
             'parent_id' => 'Scottsbase/mygro',
             'theme_path' => 'Drupal/default',
@@ -784,15 +755,6 @@ return [
             'type' => '0',
             'code' => 'Drupal/miraclegro',
         ],
-        'frontend/Drupal/scotts' => [
-            'parent_id' => 'Drupal/default',
-            'theme_path' => 'Drupal/scotts',
-            'theme_title' => 'Drupal Scotts',
-            'is_featured' => '0',
-            'area' => 'frontend',
-            'type' => '0',
-            'code' => 'Drupal/scotts',
-        ],
         'frontend/Drupal/roundup' => [
             'parent_id' => 'Drupal/default',
             'theme_path' => 'Drupal/roundup',
@@ -801,6 +763,15 @@ return [
             'area' => 'frontend',
             'type' => '0',
             'code' => 'Drupal/roundup',
+        ],
+        'frontend/Drupal/scotts' => [
+            'parent_id' => 'Drupal/default',
+            'theme_path' => 'Drupal/scotts',
+            'theme_title' => 'Drupal Scotts',
+            'is_featured' => '0',
+            'area' => 'frontend',
+            'type' => '0',
+            'code' => 'Drupal/scotts',
         ],
         'frontend/Drupal/ortho' => [
             'parent_id' => 'Drupal/default',
@@ -820,15 +791,6 @@ return [
             'type' => '0',
             'code' => 'Drupal/tomcat',
         ],
-        'frontend/Scottsbase/scottsprogram-v2' => [
-            'parent_id' => 'Scottsbase/default',
-            'theme_path' => 'Scottsbase/scottsprogram-v2',
-            'theme_title' => 'Scotts Program V2',
-            'is_featured' => '0',
-            'area' => 'frontend',
-            'type' => '0',
-            'code' => 'Scottsbase/scottsprogram-v2',
-        ],
         'frontend/Scottsbase/scottsbundles' => [
             'parent_id' => 'Scottsbase/mygro',
             'theme_path' => 'Scottsbase/scottsbundles',
@@ -844,7 +806,7 @@ return [
             'theme_title' => 'Mulchmadness',
             'is_featured' => '0',
             'area' => 'frontend',
-            'type' => '0',
+            'type' => '1',
             'code' => 'Scottsbase/mulchmadness',
         ],
     ],
@@ -867,6 +829,8 @@ return [
      * CONFIG__DEFAULT__CATALOG__SEARCH__ELASTICSEARCH5_SERVER_HOSTNAME for catalog/search/elasticsearch5_server_hostname
      * CONFIG__DEFAULT__CATALOG__SEARCH__ELASTICSEARCH6_SERVER_HOSTNAME for catalog/search/elasticsearch6_server_hostname
      * CONFIG__DEFAULT__CATALOG__SEARCH__ELASTICSEARCH7_SERVER_HOSTNAME for catalog/search/elasticsearch7_server_hostname
+     * CONFIG__DEFAULT__CATALOG__SEARCH__ELASTICSEARCH6_USERNAME for catalog/search/elasticsearch6_username
+     * CONFIG__DEFAULT__CATALOG__SEARCH__ELASTICSEARCH6_PASSWORD for catalog/search/elasticsearch6_password
      * CONFIG__DEFAULT__CATALOG__PRODUCT_VIDEO__YOUTUBE_API_KEY for catalog/product_video/youtube_api_key
      * CONFIG__DEFAULT__PAYMENT__AUTHORIZENET_DIRECTPOST__EMAIL_CUSTOMER for payment/authorizenet_directpost/email_customer
      * CONFIG__DEFAULT__PAYMENT__AUTHORIZENET_DIRECTPOST__LOGIN for payment/authorizenet_directpost/login
@@ -935,7 +899,6 @@ return [
      * CONFIG__DEFAULT__ANALYTICS__URL__OTP for analytics/url/otp
      * CONFIG__DEFAULT__ANALYTICS__URL__REPORT for analytics/url/report
      * CONFIG__DEFAULT__ANALYTICS__URL__NOTIFY_DATA_CHANGED for analytics/url/notify_data_changed
-     * CONFIG__DEFAULT__ANALYTICS__GENERAL__TOKEN for analytics/general/token
      * CONFIG__DEFAULT__CARRIERS__DHL__ACCOUNT for carriers/dhl/account
      * CONFIG__DEFAULT__CARRIERS__DHL__GATEWAY_URL for carriers/dhl/gateway_url
      * CONFIG__DEFAULT__CARRIERS__DHL__ID for carriers/dhl/id
@@ -968,12 +931,8 @@ return [
      * CONFIG__DEFAULT__TRANS_EMAIL__IDENT_SALES__NAME for trans_email/ident_sales/name
      * CONFIG__DEFAULT__TRANS_EMAIL__IDENT_SUPPORT__EMAIL for trans_email/ident_support/email
      * CONFIG__DEFAULT__TRANS_EMAIL__IDENT_SUPPORT__NAME for trans_email/ident_support/name
-     * CONFIG__DEFAULT__TAX__AVATAX__PRODUCTION_ACCOUNT_NUMBER for tax/avatax/production_account_number
      * CONFIG__DEFAULT__TAX__AVATAX__PRODUCTION_LICENSE_KEY for tax/avatax/production_license_key
-     * CONFIG__DEFAULT__TAX__AVATAX__PRODUCTION_COMPANY_CODE for tax/avatax/production_company_code
-     * CONFIG__DEFAULT__TAX__AVATAX__DEVELOPMENT_ACCOUNT_NUMBER for tax/avatax/development_account_number
      * CONFIG__DEFAULT__TAX__AVATAX__DEVELOPMENT_LICENSE_KEY for tax/avatax/development_license_key
-     * CONFIG__DEFAULT__TAX__AVATAX__DEVELOPMENT_COMPANY_CODE for tax/avatax/development_company_code
      * CONFIG__DEFAULT__GOOGLE__ANALYTICS__ACCOUNT for google/analytics/account
      * CONFIG__DEFAULT__PAYPAL__WPP__API_PASSWORD for paypal/wpp/api_password
      * CONFIG__DEFAULT__PAYPAL__WPP__API_SIGNATURE for paypal/wpp/api_signature
@@ -998,6 +957,7 @@ return [
      * CONFIG__DEFAULT__MSP_SECURITYSUITE_TWOFACTORAUTH__DUO__API_HOSTNAME for msp_securitysuite_twofactorauth/duo/api_hostname
      * CONFIG__DEFAULT__GIGYA_SECTION__GENERAL__API_KEY for gigya_section/general/api_key
      * CONFIG__DEFAULT__GIGYA_SECTION__GENERAL__APP_KEY for gigya_section/general/app_key
+     * CONFIG__DEFAULT__GIGYA_SECTION__GENERAL__APP_SECRET for gigya_section/general/app_secret
      */
     'system' => [
         'default' => [
@@ -1023,7 +983,7 @@ return [
                     'password_reset_protection_type' => '1',
                     'max_number_password_reset_requests' => '5',
                     'min_time_between_password_reset_requests' => '10',
-                    'session_lifetime' => '288000',
+                    'session_lifetime' => '28800',
                     'use_case_sensitive_login' => '0',
                 ],
                 'emails' => [
@@ -1101,25 +1061,29 @@ Disallow: /review/
 Disallow: /*SID=
                     ',
                     'custom_instructions' => 'User-agent:*
-Disallow: /index.php/
+Disallow: /lib/
 Disallow: /*.php$
+Disallow: /pkginfo/
+Disallow: /report/
+Disallow: /var/
+Disallow: /catalog/
+Disallow: /customer/
+Disallow: /sendfriend/
+Disallow: /review/
 Disallow: /*SID=
+Disallow: /checkout/
+Disallow: /onestepcheckout/
+Disallow: /customer/
+Disallow: /customer/account/
+Disallow: /customer/account/login/
+Disallow: /tag/
+Disallow: /review
 Disallow: /app/
 Disallow: /bin/
-Disallow: /catalog/
-Disallow: /checkout/
-Disallow: /customer/
 Disallow: /dev/
 Disallow: /lib/
 Disallow: /phpserver/
-Disallow: /pkginfo/
 Disallow: /pub/
-Disallow: /report/
-Disallow: /review
-Disallow: /review/
-Disallow: /sendfriend/
-Disallow: /tag/
-Disallow: /var/
 ',
                 ],
                 'header' => [
@@ -1281,8 +1245,8 @@ Disallow: /var/
                     'varnish4' => [
                         'path' => 'varnish4.vcl',
                     ],
-                    'ttl' => '300',
-                    'caching_application' => '1',
+                    'ttl' => '3600',
+                    'caching_application' => '2',
                     'default' => [
                         'access_list' => 'localhost',
                         'backend_host' => 'localhost',
@@ -1295,7 +1259,7 @@ Disallow: /var/
                     ],
                 ],
                 'smtp' => [
-                    'disable' => '1',
+                    'disable' => '0',
                     'set_return_path' => '0',
                 ],
                 'rotation' => [
@@ -1439,14 +1403,12 @@ Disallow: /var/
                     'use_rewrites' => '1',
                 ],
                 'default' => [
-                    'cms_home_page' => 'no-route',
+                    'cms_home_page' => 'scotts-program-v2-home',
                     'cms_no_route' => 'no-route',
                     'cms_no_cookies' => 'enable-cookies',
                     'no_route' => 'cms/noroute/index',
                     'show_cms_breadcrumbs' => '1',
                     'show_category_breadcrumbs' => '0',
-                    'show_product_breadcrumbs' => '0',
-                    'show_particularly_cms_breadcrumbs' => 'integrations,groconnect,privacy-policy,terms-and-conditions,warranty',
                 ],
                 'default_layouts' => [
                     'default_cms_layout' => '1column',
@@ -1504,6 +1466,7 @@ Disallow: /var/
                         'pht' => 'pht',
                         'svg' => 'svg',
                         'xml' => 'xml',
+                        'xhtml' => 'xhtml',
                     ],
                     'public_files_valid_paths' => [
                         'protected' => [
@@ -1759,6 +1722,7 @@ Disallow: /var/
                 'wysiwyg' => [
                     'enabled' => 'enabled',
                     'editor' => 'mage/adminhtml/wysiwyg/tiny_mce/tinymce4Adapter',
+                    'force_valid' => '0',
                     'editor_version' => 'mage/adminhtml/wysiwyg/tiny_mce/tinymce4Adapter',
                     'use_static_urls_in_catalog' => '0',
                 ],
@@ -1866,12 +1830,12 @@ Disallow: /var/
                     'search_recommendations_enabled' => '1',
                     'search_recommendations_count' => '5',
                     'search_recommendations_count_results_enabled' => '0',
-                    'engine' => 'mysql',
+                    'engine' => 'elasticsearch6',
                     'min_query_length' => '3',
                     'max_query_length' => '128',
                     'max_count_cacheable_search_terms' => '100',
                     'autocomplete_limit' => '8',
-                    'enable_eav_indexer' => '1',
+                    'enable_eav_indexer' => '0',
                 ],
                 'magento_targetrule' => [
                     'related_position_limit' => '6',
@@ -2549,7 +2513,7 @@ Disallow: /var/
                     'can_accept_payment' => '1',
                     'order_source' => 'ecommerce',
                     'eprotect_paypage_id' => 'QBqDn8MLhW55MAvW',
-                    'eprotect_style' => 'enhancedStyle',
+                    'eprotect_style' => 'enhancedStyle20200611',
                     'eprotect_height' => 'autoAdjustHeight',
                     'eprotect_num_years' => '8',
                     'eprotect_tooltip_text' => 'A CVV is the 3 digit code on the back of your Visa, MasterCard and Discover or a 4 digit code on the front of your American Express',
@@ -2559,7 +2523,7 @@ Disallow: /var/
                     'eprotect_tab_index_cvv' => '4',
                     'eprotect_placeholder_text_cvv' => 'CVV',
                     'eprotect_placeholder_text_account_number' => 'Account Number',
-                    'advanced_fraud_is_active' => '1',
+                    'advanced_fraud_is_active' => '0',
                     'advanced_fraud_results_review_action' => 'reject',
                     'advanced_fraud_results_fail_action' => 'reject',
                     'suspect_issuer_country' => 'AF,AL,DZ,AS,AD,AO,AI,AQ,AG,AR,AM,AW,AU,AT,AZ,BS,BH,BD,BB,BY,BE,BZ,BJ,BM,BT,BO,BA,BW,BV,BR,IO,VG,BN,BG,BF,BI,KH,CM,CA,CV,KY,CF,TD,CL,CN,CX,CC,CO,KM,CG,CD,CK,CR,HR,CU,CY,CZ,CI,DK,DJ,DM,DO,EC,EG,SV,GQ,ER,EE,SZ,ET,FK,FO,FJ,FI,FR,GF,PF,TF,GA,GM,GE,DE,GH,GI,GR,GL,GD,GP,GU,GT,GG,GN,GW,GY,HT,HM,HN,HK,HU,IS,IN,ID,IR,IQ,IE,IM,IL,IT,JM,JP,JE,JO,KZ,KE,KI,KW,KG,LA,LV,LB,LS,LR,LY,LI,LT,LU,MO,MG,MW,MY,MV,ML,MT,MH,MQ,MR,MU,YT,MX,FM,MD,MC,MN,ME,MS,MA,MZ,MM,NA,NR,NP,NL,NC,NZ,NI,NE,NG,NU,NF,KP,MK,MP,NO,OM,PK,PW,PS,PA,PG,PY,PE,PH,PN,PL,PT,QA,RO,RU,RW,RE,WS,SM,SA,SN,RS,SC,SL,SG,SK,SI,SB,SO,ZA,GS,KR,ES,LK,BL,SH,KN,LC,MF,PM,VC,SD,SR,SJ,SE,CH,SY,ST,TW,TJ,TZ,TH,TL,TG,TK,TO,TT,TN,TR,TM,TC,TV,UM,VI,UG,UA,AE,GB,UY,UZ,VU,VA,VE,VN,WF,EH,YE,ZM,ZW,AX',
@@ -2690,10 +2654,10 @@ Disallow: /var/
                     'model' => 'SMG\\Vantiv\\Model\\VantivKeyPadFacade',
                     'title' => 'Keypad Authorization',
                     'active' => '1',
-                    'environment' => 'transact_production',
+                    'environment' => 'sandbox',
                     'payment_action' => 'authorize',
                     'order_status' => 'processing',
-                    'suspect_issuer_action' => 'reject',
+                    'suspect_issuer_action' => 'accept',
                     'is_gateway' => '1',
                     'can_authorize' => '1',
                     'can_authorize_vault' => '1',
@@ -2712,15 +2676,12 @@ Disallow: /var/
                     'application_version' => '1.0',
                     'group' => 'offline',
                     'order_source' => 'ecommerce',
-                    'account_id' => '1279775',
-                    'account_token' => 'C182CD59EA27A730C7C523CF706ABE2EC70F4F6AAA0D4B44BE407574B08027713F31CD01',
-                    'acceptor_id' => '4445033615329',
+                    'account_id' => '1076772',
+                    'account_token' => '38873DB7FB5FB6F11AC57FC0FC90E67B5BCFDF5FD27FF13293CB930E74B3E743CD944601',
+                    'acceptor_id' => '874767662',
                     'application_id' => '10143',
-                    'terminal_id' => '4984U000101',
-                    'suspect_issuer_country' => 'AF,AL,DZ,AS,AD,AO,AI,AQ,AG,AR,AM,AW,AU,AT,AZ,BS,BH,BD,BB,BY,BE,BZ,BJ,BM,BT,BO,BA,BW,BV,BR,IO,VG,BN,BG,BF,BI,KH,CM,CA,CV,KY,CF,TD,CL,CN,CX,CC,CO,KM,CG,CD,CK,CR,HR,CU,CY,CZ,CI,DK,DJ,DM,DO,EC,EG,SV,GQ,ER,EE,SZ,ET,FK,FO,FJ,FI,FR,GF,PF,TF,GA,GM,GE,DE,GH,GI,GR,GL,GD,GP,GU,GT,GG,GN,GW,GY,HT,HM,HN,HK,HU,IS,IN,ID,IR,IQ,IE,IM,IL,IT,JM,JP,JE,JO,KZ,KE,KI,KW,KG,LA,LV,LB,LS,LR,LY,LI,LT,LU,MO,MG,MW,MY,MV,ML,MT,MH,MQ,MR,MU,YT,MX,FM,MD,MC,MN,ME,MS,MA,MZ,MM,NA,NR,NP,NL,NC,NZ,NI,NE,NG,NU,NF,KP,MK,MP,NO,OM,PK,PW,PS,PA,PG,PY,PE,PH,PN,PL,PT,QA,RO,RU,RW,RE,WS,SM,SA,SN,RS,SC,SL,SG,SK,SI,SB,SO,ZA,GS,KR,ES,LK,BL,SH,KN,LC,MF,PM,VC,SD,SR,SJ,SE,CH,SY,ST,TW,TJ,TZ,TH,TL,TG,TK,TO,TT,TN,TR,TM,TC,TV,UM,VI,UG,UA,AE,GB,UY,UZ,VU,VA,VE,VN,WF,EH,YE,ZM,ZW,AX',
-                    'advanced_fraud_is_active' => '1',
-                    'advanced_fraud_results_review_action' => 'reject',
-                    'advanced_fraud_results_fail_action' => 'reject',
+                    'terminal_id' => '0060810007',
+                    'advanced_fraud_is_active' => '0',
                 ],
                 'vantiv_keypadpayment_vault' => [
                     'model' => 'SMG\\Vantiv\\Model\\VantivKeyPadVaultFacade',
@@ -2841,7 +2802,7 @@ Disallow: /var/
                     'use_store_address' => '0',
                     'country_id' => 'US',
                     'enabled_on_product' => '1',
-                    'enabled' => '0',
+                    'enabled' => '1',
                     'store_name' => 'Scotts Miracle-Gro Company',
                     'address' => '14111 Scottslawn Rd',
                     'address1' => null,
@@ -2870,8 +2831,8 @@ Disallow: /var/
                 ],
                 'order' => [
                     'enabled' => '1',
-                    'template' => 'sales_email_order_template',
-                    'guest_template' => 'sales_email_order_guest_template',
+                    'template' => '14',
+                    'guest_template' => '14',
                     'identity' => 'sales',
                     'copy_method' => 'bcc',
                 ],
@@ -2958,7 +2919,7 @@ Disallow: /var/
                     'guest_template' => 'sales_email_order_cancellation_guest_template',
                     'identity' => 'support',
                     'copy_method' => 'bcc',
-                    'copy_to' => 'cs.dtc.orders@scotts.com',
+                    'copy_to' => null,
                 ],
                 'customer_service_team' => [
                     'identity' => 'sales',
@@ -2966,6 +2927,7 @@ Disallow: /var/
                     'template_orders' => 'sales_email_customer_service_team_template_orders',
                     'shipment_identity' => 'sales',
                     'shipment_template' => 'sales_email_customer_service_team_shipment_template',
+                    'team_emails' => '{"_1582646309368_368":{"subscriber_email":"nathan.vanhoose@scotts.com"}}',
                 ],
                 'temando_pickup' => [
                     'copy_to' => null,
@@ -3005,7 +2967,7 @@ Disallow: /var/
                     'redirect_to_cart' => '0',
                     'number_items_to_display_pager' => '20',
                     'crosssell_enabled' => '1',
-                    'configurable_product_image' => 'parent',
+                    'configurable_product_image' => 'itself',
                     'grouped_product_image' => 'itself',
                     'preview_quota_lifetime' => '30',
                 ],
@@ -3368,7 +3330,7 @@ Disallow: /var/
                     'subtotal' => '1',
                     'shipping' => '1',
                     'discount' => '1',
-                    'grandtotal' => '1',
+                    'grandtotal' => '0',
                     'full_summary' => '0',
                     'zero_tax' => '0',
                     'gift_wrapping' => '1',
@@ -3398,11 +3360,7 @@ Disallow: /var/
                     'include_in_subtotal' => '0',
                 ],
                 'avatax' => [
-                    'enabled' => '1',
-                    'tax_mode' => '3',
-                    'commit_submitted_transactions' => '1',
                     'tax_calculation_countries_enabled' => 'US',
-                    'is_seller_importer_of_record' => '0',
                     'use_business_identification_number' => '1',
                     'shipping_tax_code' => 'FR020100',
                     'sku_shipping' => 'Shipping',
@@ -3414,7 +3372,6 @@ Disallow: /var/
                     'error_action' => '1',
                     'error_action_disable_checkout_message_frontend' => 'Unfortunately, we could not calculate tax for your order with the address entered. Please try again with a different address or contact us to complete your order.',
                     'error_action_disable_checkout_message_backend' => 'There was an error getting tax rates from Avalara and since the "Error Action" is configured to "Disable checkout & show error message", we have blocked the checkout. Change <a href="%1">this setting here</a>. Please see the <a href="%2">error log</a> for details.',
-                    'address_validation_enabled' => '1',
                     'address_validation_user_has_choice' => '0',
                     'address_validation_instructions_with_choice' => 'To ensure accurate delivery, we suggest the changes highlighted below. Please choose which address you would like to use. If neither option is correct, <a href="#" class="edit-address">edit your address</a>.',
                     'address_validation_instructions_without_choice' => 'To ensure accurate delivery, we\'ve made the changes highlighted below. If this address is not correct, <a href="#" class="edit-address">change your address</a>.',
@@ -3423,25 +3380,37 @@ Disallow: /var/
                     'logging_db_level' => '100',
                     'logging_db_lifetime' => '7',
                     'logging_db_detail' => '3',
-                    'logging_file_enabled' => '1',
-                    'logging_file_mode' => '2',
-                    'logging_file_builtin_rotation_enabled' => '0',
                     'logging_file_builtin_rotation_max_files' => '60',
                     'logging_file_level' => '100',
                     'logging_file_detail' => '3',
-                    'queue_max_retry_attempts' => '5',
+                    'queue_processing_type' => 'normal',
+                    'queue_max_retry_attempts' => '30',
                     'queue_submission_enabled' => '1',
                     'queue_complete_lifetime' => '30',
                     'queue_failed_lifetime' => '30',
-                    'queue_admin_notification_enabled' => '1',
-                    'queue_failure_notification_enabled' => '1',
                     'customer_code_format' => 'id',
                     'calculate_tax_before_discounts' => '0',
                     'filter_tax_by_region' => '0',
+                    'is_seller_importer_of_record' => '0',
                     'upc_attribute' => null,
                     'ref1_attribute' => null,
                     'ref2_attribute' => null,
-                    'location_code' => null,
+                ],
+                'avatax_customs' => [
+                    'enabled' => '0',
+                    'default_shipping_mode' => 'ground',
+                ],
+                'avatax_document_management' => [
+                    'enabled' => '0',
+                    'checkout_link_text_new_cert_no_certs_exist' => 'Is this purchase tax-exempt?',
+                    'checkout_link_text_new_cert_certs_exist' => 'Add a new certificate',
+                    'checkout_link_text_manage_existing_certs' => 'Manage existing certificates',
+                ],
+                'avatax_advanced' => [
+                    'response_logging_enabled' => '1',
+                    'avatax_timeout' => '15',
+                    'avatax_adjustment_taxes' => '0',
+                    'result_cache_ttl' => '15',
                 ],
                 'vertex_settings' => [
                     'enable_vertex' => '0',
@@ -3458,11 +3427,6 @@ Disallow: /var/
                 ],
                 'vertex_delivery_terms' => [
                     'override' => '[]',
-                ],
-                'vertex_flexfields' => [
-                    'code' => '[{"field_id":"1","field_source":""},{"field_id":"2","field_source":""},{"field_id":"3","field_source":""},{"field_id":"4","field_source":""},{"field_id":"5","field_source":""},{"field_id":"6","field_source":""},{"field_id":"7","field_source":""},{"field_id":"8","field_source":""},{"field_id":"9","field_source":""},{"field_id":"10","field_source":""},{"field_id":"11","field_source":""},{"field_id":"12","field_source":""},{"field_id":"13","field_source":""},{"field_id":"14","field_source":""},{"field_id":"15","field_source":""},{"field_id":"16","field_source":""},{"field_id":"17","field_source":""},{"field_id":"18","field_source":""},{"field_id":"19","field_source":""},{"field_id":"20","field_source":""},{"field_id":"21","field_source":""},{"field_id":"22","field_source":""},{"field_id":"23","field_source":""},{"field_id":"24","field_source":""},{"field_id":"25","field_source":""}]',
-                    'numeric' => '[{"field_id":"1","field_source":""},{"field_id":"2","field_source":""},{"field_id":"3","field_source":""},{"field_id":"4","field_source":""},{"field_id":"5","field_source":""},{"field_id":"6","field_source":""},{"field_id":"7","field_source":""},{"field_id":"8","field_source":""},{"field_id":"9","field_source":""},{"field_id":"10","field_source":""}]',
-                    'date' => '[{"field_id":"1","field_source":""},{"field_id":"2","field_source":""},{"field_id":"3","field_source":""},{"field_id":"4","field_source":""},{"field_id":"5","field_source":""}]',
                 ],
             ],
             'visualmerchandiser' => [
@@ -3632,13 +3596,6 @@ Disallow: /var/
                     'country_id' => 'US',
                     'postcode' => '90034',
                     'region_id' => '12',
-                    'city' => null,
-                    'street_line1' => null,
-                    'street_line2' => null,
-                ],
-                'shipping_policy' => [
-                    'enable_shipping_policy' => '0',
-                    'shipping_policy_content' => null,
                 ],
             ],
             'magento_invitation' => [
@@ -3799,12 +3756,12 @@ Disallow: /var/
                 ],
                 'category' => [
                     'priority' => '0.5',
-                    'changefreq' => 'never',
+                    'changefreq' => 'daily',
                 ],
                 'product' => [
                     'priority' => '1',
-                    'changefreq' => 'never',
-                    'image_include' => 'none',
+                    'changefreq' => 'daily',
+                    'image_include' => 'all',
                 ],
                 'generate' => [
                     'enabled' => '1',
@@ -3848,6 +3805,14 @@ Disallow: /var/
                                 'model' => null,
                             ],
                         ],
+                        'scheduled_operation_1' => [
+                            'schedule' => [
+                                'cron_expr' => '15 15 * * *',
+                            ],
+                            'run' => [
+                                'model' => 'Magento\\ScheduledImportExport\\Model\\Observer::processScheduledOperation',
+                            ],
+                        ],
                     ],
                 ],
             ],
@@ -3877,14 +3842,14 @@ Disallow: /var/
             ],
             'akeneo_connector' => [
                 'akeneo_api' => [
-                    'base_url' => 'https://scotts-prod.cloud.akeneo.com',
+                    'base_url' => 'https://scotts-sandbox.cloud.akeneo.com',
                     'username' => 'magento2devapi_8399',
                     'client_id' => '8_4g0dyk9yege8sccgwcw484osccowkkwso4wwscco0c8swkg48o',
                     'client_secret' => '37koiqliduyo0w0w0s0ss0ggs0k0koog4cwk8w88kkgws0skgs',
                     'pagination_size' => '100',
                     'edition' => 'greater_or_four_point_zero_point_sixty_two',
-                    'password' => '0:3:69hvcZK4nYweiwCzTPREgEz/erKmGsOS2553OY/oluKD7Og5kA==',
-                    'website_mapping' => '{"_1601066347622_622":{"website":"base","channel":"ecommerce"},"_1601066348013_13":{"website":"mygro","channel":"ecommerce"},"_1601066348357_357":{"website":"roundup","channel":"ecommerce"},"_1601066348654_654":{"website":"scotts","channel":"ecommerce"},"_1601066348917_917":{"website":"miraclegro","channel":"ecommerce"},"_1601066349325_325":{"website":"ortho","channel":"ecommerce"},"_1601066350886_886":{"website":"tomcat","channel":"ecommerce"},"_1601919474101_101":{"website":"scottsbundles","channel":"ecommerce"}}',
+                    'password' => '0:3:SzLmwOOqyHtLIskK0Q17sdfCt/SL9NaDFnZw/ln6KzjMbYzgGw==',
+                    'website_mapping' => '{"_1600949066955_955":{"website":"base","channel":"ecommerce"},"_1600949070808_808":{"website":"mygro","channel":"ecommerce"},"_1600949071401_401":{"website":"scotts","channel":"ecommerce"},"_1600949072360_360":{"website":"roundup","channel":"ecommerce"},"_1600949073001_1":{"website":"miraclegro","channel":"ecommerce"},"_1600949082298_298":{"website":"ortho","channel":"ecommerce"},"_1600949082712_712":{"website":"tomcat","channel":"ecommerce"}}',
                     'admin_channel' => 'ecommerce',
                 ],
                 'products_filters' => [
@@ -3901,20 +3866,23 @@ Disallow: /var/
                 ],
                 'filter_attribute' => [
                     'filter_attribute_code_mode' => '1',
-                    'updated_mode' => '>',
                     'updated_greater' => null,
-                    'filter_attribute_code' => 'a_pages,ace_warehouse_stock,active_ingredients,additional_assets,additional_images,all_available_sizes,alternative_product_image,analysis,analytics_page_name,application_method,approved_product_name,asin,availability_pco,avg_days_to_germinate,base_image,bonnieflag,bullet1,bullet10,bullet2,bullet3,bullet4,bullet5,bullet6,bullet7,bullet8,bullet9,bundle,bundle_type,bundle_values,case_pack_main_image,cfl,company,country_of_manufacture,coverage,coverage_area,display_product_options_in,disposal_methods,dma_available_in,dma_excluded,drupal_bypass_skuupc_expander,drupal_drup_product_id,drupal_meta_tags,drupal_product_associated_plants,drupal_product_available_sizes,drupal_product_basic_garden,drupal_product_bugs,drupal_product_diseases,drupal_product_expanded_sku,drupal_product_fertilizer,drupal_product_info_sheet,drupal_product_name,drupal_product_other_product,drupal_product_videos,drupal_product_where_not_to_apply,drupal_product_where_to_apply,drupal_scotts_short_description,drupal_status,drupalproductid,ecom_product_name,enable_rma,enabled_for_dtc,field_product_butterfly_garden,field_scotts_analytics_page_name,fpl,goals_filter,gtin,guarantee,hd_omsid,hero_lifestyle_image,hgc_brand,hgc_category,home_depot_360,how_often_to_aply,how_to_use,how_to_use_youtube,in_feed,in_market_year,is_bundle,is_canada_sku,key_feature_images,keywords,kids_pets,last_modified,lawn_zone_available_in,lawn_zone_excluded,long_description,magento_available_online,magento_product_name,magento_settings_available_online,magento_settings_available_online_status,magento_sku,main_prod_image,max_germ_rate,merch_window,min_cart_qty,min_germ_rate,mixing_instructions,moving_tips,mylawn_after_seed,mylawn_categories,mylawn_grass_types,mylawn_lawn_condition,mylawn_lawn_zone,mylawn_max_soil_temp,mylawn_max_temp,mylawn_min_soil_temp,mylawn_min_temp,mylawn_mini_claim1,mylawn_mini_claim2,mylawn_mini_claim3,mylawn_product_color,mylawn_restrictions,mylawn_sunlight,mylawn_usage_per_year,mylawn_weed_type,new_existing,node_drupal_node,omri,organic_product_ingredients,other_products_to_consider,our_environment,packaging,pim_sku,precautions,primary_sku,problems_filter,produc_rating_reviews_count,product_elevator_pich,product_family_name,product_id,product_images,product_name_disclamer,product_product_label_image_back,product_rating,product_status,product_websites,prop_65_warning,qty_count,recommended_article,regional_availability,regulatory_cautions,related_articles,retailer_exclusive,retalted_product_s,safe_kids_pets,sams_club_stock,sap_base_unit,sap_basic_material,sap_brand,sap_dangerous_goods_ind,sap_division,sap_eaches_in_base,sap_ean_category,sap_ean_category_each,sap_ean_upc,sap_ean_upc_each,sap_gross_weight,sap_gross_weight_each,sap_height,sap_height_each,sap_launch_year,sap_length,sap_length_each,sap_lwh_unit,sap_lwh_unit_each,sap_material_description,sap_material_group,sap_material_group_pkg_materials,sap_material_number,sap_material_status,sap_material_type,sap_msrp,sap_net_weight,sap_parent_product_id,sap_product_hierarchy,sap_project_id,sap_size_dimensions,sap_size_print,sap_subbrand,sap_valid_from_date,sap_volume,sap_volume_each,sap_volume_unit,sap_volume_unit_each,sap_web_description,sap_weight_unit,sap_weight_unit_each,sap_width,sap_width_each,sellable_magento_sku,seo_meta_description,seo_title,seo_url,shelf_life,shu_change_notes,size,sku_change_reason,smg_sku,special_instructions,spreader_code,spreader_setting,state_not_allowed,states_available_in,sync_to_magento,sync_with_drupal,sync_with_my_lawn_app,t023t_wgbez,t134t_mtbez,t141t_mtstb,table_bundle_content,true_value_warehouse_stock,tspat_vtext,tvegrt_bezei,unit_measure,using_with_other_product_s,vaimo_metric_attribute_01,vaimo_simple_size_as_list,vaimo_virtual_variation_reference_01,video,video_1_image,video_1_runtime,video_1_title,video_1_transcription,video_1_youtube_reference,voc,watering_tips,wbd_language,wbd_last_modified,wbd_retailers,web_sellable_flag,weeds,what_it_controls,what_to_expect,when_to_apply,where_not_to_use,where_to_use',
+                    'filter_attribute_code' => 'a_pages,ace_warehouse_stock,active_ingredients,additional_assets,additional_images,all_available_sizes,alternative_product_image,analysis,analytics_page_name,application_method,approved_product_name,asin,availability_pco,avg_days_to_germinate,base_image,bonnieflag,bullet1,bullet10,bullet2,bullet3,bullet4,bullet5,bullet6,bullet7,bullet8,bullet9,bundle,bundle_type,bundle_values,case_pack_main_image,cfl,company,country_of_manufacture,coverage,coverage_area,display_product_options_in,disposal_methods,dma_available_in,dma_excluded,drupal_bypass_skuupc_expander,drupal_drup_product_id,drupal_meta_tags,drupal_product_associated_plants,drupal_product_available_sizes,drupal_product_basic_garden,drupal_product_bugs,drupal_product_diseases,drupal_product_expanded_sku,drupal_product_fertilizer,drupal_product_info_sheet,drupal_product_name,drupal_product_other_product,drupal_product_videos,drupal_product_where_not_to_apply,drupal_product_where_to_apply,drupal_scotts_short_description,drupal_status,drupalproductid,ecom_product_name,enable_rma,enabled_for_dtc,field_product_butterfly_garden,field_scotts_analytics_page_name,fpl,goals_filter,gtin,guarantee,hd_omsid,hero_lifestyle_image,hgc_brand,hgc_category,home_depot_360,how_often_to_aply,how_to_use,how_to_use_youtube,in_market_year,is_bundle,is_canada_sku,key_feature_images,keywords,kids_pets,last_modified,lawn_zone_available_in,lawn_zone_excluded,long_description,magento_available_online,magento_product_name,magento_settings_available_online,magento_settings_available_online_status,magento_sku,main_prod_image,max_germ_rate,merch_window,min_cart_qty,min_germ_rate,mixing_instructions,moving_tips,mylawn_after_seed,mylawn_categories,mylawn_grass_types,mylawn_lawn_condition,mylawn_lawn_zone,mylawn_max_soil_temp,mylawn_max_temp,mylawn_min_soil_temp,mylawn_min_temp,mylawn_mini_claim1,mylawn_mini_claim2,mylawn_mini_claim3,mylawn_product_color,mylawn_restrictions,mylawn_sunlight,mylawn_usage_per_year,mylawn_weed_type,new_existing,node_drupal_node,omri,organic_product_ingredients,other_products_to_consider,our_environment,packaging,pim_sku,precautions,primary_sku,problems_filter,produc_rating_reviews_count,product_elevator_pich,product_family_name,product_id,product_images,product_name_disclamer,product_product_label_image_back,product_rating,product_status,product_websites,prop_65_warning,qty_count,recommended_article,regional_availability,regulatory_cautions,related_articles,retailer_exclusive,retalted_product_s,safe_kids_pets,sams_club_stock,sap_base_unit,sap_basic_material,sap_brand,sap_dangerous_goods_ind,sap_division,sap_eaches_in_base,sap_ean_category,sap_ean_category_each,sap_ean_upc,sap_ean_upc_each,sap_gross_weight,sap_gross_weight_each,sap_height,sap_height_each,sap_launch_year,sap_length,sap_length_each,sap_lwh_unit,sap_lwh_unit_each,sap_material_description,sap_material_group,sap_material_group_pkg_materials,sap_material_number,sap_material_status,sap_material_type,sap_msrp,sap_net_weight,sap_parent_product_id,sap_product_hierarchy,sap_project_id,sap_size_dimensions,sap_size_print,sap_subbrand,sap_valid_from_date,sap_volume,sap_volume_each,sap_volume_unit,sap_volume_unit_each,sap_web_description,sap_weight_unit,sap_weight_unit_each,sap_width,sap_width_each,sellable_magento_sku,seo_meta_description,seo_title,seo_url,shelf_life,shu_change_notes,size,sku_change_reason,smg_sku,special_instructions,spreader_code,spreader_setting,state_not_allowed,states_available_in,sync_to_magento,sync_with_drupal,sync_with_my_lawn_app,t023t_wgbez,t134t_mtbez,t141t_mtstb,table_bundle_content,true_value_warehouse_stock,tspat_vtext,tvegrt_bezei,unit_measure,using_with_other_product_s,vaimo_metric_attribute_01,vaimo_simple_size_as_list,vaimo_virtual_variation_reference_01,video,video_1_image,video_1_runtime,video_1_title,video_1_transcription,video_1_youtube_reference,voc,watering_tips,wbd_language,wbd_last_modified,wbd_retailers,web_sellable_flag,weeds,what_it_controls,what_to_expect,when_to_apply,where_not_to_use,where_to_use',
+                    'updated_mode' => '>',
                 ],
                 'product' => [
                     'url_generation_enabled' => '1',
-                    'activation' => '1',
+                    'activation' => '2',
                     'asset_system' => 'asset_manager',
                     'download_file_asset' => '1',
                     'download_asset_file_external' => '0',
+                    'association_related' => 'SUBSTITUTION',
+                    'association_upsell' => 'UPSELL',
+                    'association_crossell' => 'X_SELL',
                     'website_attribute' => 'product_websites',
-                    'attribute_mapping' => '{"_1601066526319_319":{"akeneo_attribute":"sap_msrp","magento_attribute":"price"},"_1607020821004_4":{"akeneo_attribute":"magento_product_name","magento_attribute":"name"},"_1609422183232_232":{"akeneo_attribute":"drupal_scotts_short_description","magento_attribute":"short_description"},"_1609422184536_536":{"akeneo_attribute":"long_description","magento_attribute":"description"},"_1609422185224_224":{"akeneo_attribute":"sap_net_weight","magento_attribute":"weight"}}',
+                    'attribute_mapping' => '{"_1600949209257_257":{"akeneo_attribute":"sap_msrp","magento_attribute":"price"},"_1607541085916_916":{"akeneo_attribute":"magento_product_name","magento_attribute":"name"},"_1609380675776_776":{"akeneo_attribute":"drupal_scotts_short_description","magento_attribute":"short_description"},"_1609380676455_455":{"akeneo_attribute":"long_description","magento_attribute":"description"},"_1609380677240_240":{"akeneo_attribute":"sap_net_weight","magento_attribute":"weight"}}',
                     'metrics' => '[]',
-                    'tax_class' => '{"_1601066642745_745":{"website":"1","tax_class":"2"},"_1601066643111_111":{"website":"2","tax_class":"2"},"_1601066643504_504":{"website":"3","tax_class":"2"},"_1601066643847_847":{"website":"4","tax_class":"2"},"_1601066645464_464":{"website":"5","tax_class":"2"},"_1601066645815_815":{"website":"6","tax_class":"2"},"_1601066647159_159":{"website":"7","tax_class":"2"},"_1601919482485_485":{"website":"8","tax_class":"2"}}',
+                    'tax_class' => '{"_1600949335075_75":{"website":"1","tax_class":"2"},"_1600949335563_563":{"website":"2","tax_class":"2"},"_1600949341227_227":{"website":"3","tax_class":"2"},"_1600949341627_627":{"website":"4","tax_class":"2"},"_1600949342803_803":{"website":"5","tax_class":"2"},"_1600949343338_338":{"website":"6","tax_class":"2"},"_1600949343859_859":{"website":"7","tax_class":"2"}}',
                     'configurable_attributes' => '[]',
                     'product_model_batch_size' => '500',
                     'product_model_update_length' => '5000',
@@ -3923,7 +3891,7 @@ Disallow: /var/
                     'media_images' => '[]',
                     'asset_enabled' => '1',
                     'asset_gallery' => '[]',
-                    'asset_manager_media' => '{"_1601066688719_719":{"media_attribute":"base_image","alt_text":"base_image_label"}}',
+                    'asset_manager_media' => '{"_1600949417362_362":{"media_attribute":"case_pack_main_image","alt_text":"base_image_label"}}',
                     'asset_manager_file' => '[]',
                     'asset_manager_video' => '[]',
                     'file_enabled' => '0',
@@ -3938,12 +3906,12 @@ Disallow: /var/
                     'categories' => 'master,syndication',
                 ],
                 'attribute' => [
-                    'types' => '{"_1601066465550_550":{"pim_type":"sap_msrp","magento_type":"price"}}',
+                    'types' => '{"_1600949187026_26":{"pim_type":"sap_msrp","magento_type":"price"}}',
                     'reference_entities_enabled' => '1',
                 ],
                 'families' => [
-                    'updated_mode' => '>',
                     'updated_greater' => null,
+                    'updated_mode' => '>',
                 ],
             ],
             'amasty_base' => [
@@ -3957,8 +3925,8 @@ Disallow: /var/
                 ],
                 'system_value' => [
                     'first_module_run' => '1564715816',
-                    'last_update' => '1613728252',
-                    'remove_date' => '1613728246',
+                    'last_update' => '1615475470',
+                    'remove_date' => '1615475470',
                 ],
             ],
             'securityauth' => [
@@ -4418,11 +4386,12 @@ Disallow: /var/
                     'item_variant_format' => '2',
                     'category_layer' => '1',
                     'active' => '1',
-                    'account' => 'VALUE_NEEDED',
+                    'account' => 'UA-145780678-3',
                 ],
                 'gdpr' => [
                     'enabled' => '0',
                     'restriction_cookie_name' => 'user_allowed_save_cookie',
+                    'add_js_in_header' => '0',
                 ],
             ],
             'mageplaza' => [
@@ -4443,39 +4412,40 @@ Disallow: /var/
                     'subscribe' => '1',
                 ],
                 'general' => [
-                    'enabled' => '0',
+                    'enabled' => '1',
                     'log_email' => '1',
                     'clean_email' => '10',
-                    'blacklist' => null,
                 ],
                 'configuration_option' => [
                     'host' => 'smtp.sendgrid.net',
-                    'port' => '587',
-                    'protocol' => 'tls',
+                    'port' => '465',
+                    'protocol' => 'ssl',
                     'authentication' => 'login',
                     'username' => 'apikey',
-                    'password' => '0:3:zCxaE3y59HDWbdjsZ6QEA3n5+ggk6npH1ZqZdT2rozvc2K2WqmHKEfSm967WmoXpCMJopeq7brQ4hXMmfHJ5GrUKKC+iSz3YgyUp1QH0eACjMaOPksGDfpf+ztwrfD4/+g==',
+                    'password' => '0:3:SgOWBgrWrj2YJbmUFfWWHuZqustocodrGvwgF/iyd3Thbh6oI3s2IyLLTlDoUv+XO5R3tDb4Bbl/B2kTuooQLymH+R40VWbZwcVtnJHDw3u16yE//YDGvBtwbSPghQ7HPA==',
                     'return_path_email' => null,
                     'test_email' => [
-                        'from' => 'support',
+                        'from' => 'sales',
                         'to' => 'travis.casper@scotts.com',
                     ],
                 ],
                 'developer' => [
                     'developer_mode' => '0',
                 ],
-                'abandoned_cart' => [
-                    'measure' => '30',
+            ],
+            'email_marketing' => [
+                'general' => [
+                    'enabled' => '0',
+                    'newsletter_subscriber' => '0',
                 ],
             ],
             'smg_backendservice' => [
                 'api' => [
-                    'active' => '1',
-                    'order' => 'https://cts-orders-k6x4iqtnzq-uc.a.run.app/v1/',
-                    'customer' => 'https://cts-customers-k6x4iqtnzq-uc.a.run.app/v1/',
+                    'active' => '0',
+                    'order' => '//cts-orders-k6x4iqtnzq-uc.a.run.app/v1/',
+                    'customer' => '//cts-customers-k6x4iqtnzq-uc.a.run.app/v1/',
                     'sap' => 'https://eis-orders-k6x4iqtnzq-uc.a.run.app/v1/orderCancelEligibility/',
-                    'subscription' => 'https://cts-subscriptions-k6x4iqtnzq-uc.a.run.app/v1/',
-                    'apikey' => null,
+                    'subscription' => '//cts-subscriptions-k6x4iqtnzq-uc.a.run.app/v1/',
                 ],
             ],
             'smg_launch' => [
@@ -4486,7 +4456,7 @@ Disallow: /var/
                     'enable' => '0',
                 ],
                 'adobe' => [
-                    'enabled' => '0',
+                    'enabled' => '1',
                     'url' => '//assets.adobedtm.com/launch-ENdc5122c796634d54be3363c5024a184f.min.js',
                 ],
             ],
@@ -4497,16 +4467,21 @@ USPS|https://tools.usps.com/go/TrackConfirmAction_input?qtc_tLabels1={{code}}
 UPS|https://wwwapps.ups.com/WebTracking/returnToDetails?tracknum={{code}}',
                 ],
             ],
+            'smg' => [
+                'subscription' => [
+                    'expired_days' => '14',
+                ],
+            ],
             'vantiv' => [
                 'payment' => [
-                    'merchant_id' => '0:3:d833FN0nSbE9GFvuNCnxNuwLEir4MWhyVhS9iYLRVQTl2w==',
-                    'username' => '0:3:pqqWw+cISfciwRGYbTKOT0JZRxOeo8KvFB6jZgjMeX5zKQ==',
-                    'password' => '0:3:QyqG3rtFkai3igX8whyoi+vnpOJpGc9u3MGh1dwwJLXhL+VSjmKlbZHyag==',
+                    'merchant_id' => '0:3:vZjJyjoxhKOXqGK1JciYmYWxtktTxdJ32YlufxHOQUVimKA=',
+                    'username' => '0:3:HKv/oSbLb2ber8owpCy7tokDvf++RnaWrYthq4V5riE/xU4=',
+                    'password' => '0:3:8nSDB2LSWEskNQOe1Gw0JdoCI24c/wW/yujuZk3RVl9J3BeNdVG9',
                     'http_timeout' => '1500',
-                    'threatmetrix_orgid' => null,
+                    'threatmetrix_orgid' => 'test',
                     'threatmetrix_sessionprefix' => null,
                     'report_group' => 'Magento 2',
-                    'debug' => '0',
+                    'debug' => '1',
                     'http_proxy' => null,
                 ],
                 'giftcard' => [
@@ -4532,8 +4507,8 @@ UPS|https://wwwapps.ups.com/WebTracking/returnToDetails?tracknum={{code}}',
             'zaius_engage' => [
                 'status' => [
                     'status' => '1',
-                    'zaius_tracker_id' => 'SAdImjFKE2gvWz1huX8CoA',
-                    'zaius_private_api' => 'SAdImjFKE2gvWz1huX8CoA.8pyH-RhZxhKT2wbAxkzNsZXObBKGmwEp0ZYE6EmdT9I',
+                    'zaius_tracker_id' => 'zUn6kOAFx3ltGqR021_96Q',
+                    'zaius_private_api' => 'zUn6kOAFx3ltGqR021_96Q.6-AvP85dsK41AW96mkkXwoSjgjhXlQCh6nK7YBGBVpY',
                     'send_shipment_status' => '1',
                 ],
                 'settings' => [
@@ -4541,7 +4516,7 @@ UPS|https://wwwapps.ups.com/WebTracking/returnToDetails?tracknum={{code}}',
                     'is_collect_all_product_attributes' => '1',
                     'is_tracking_orders_on_frontend' => '0',
                     'timeout' => '30',
-                    'global_id_prefix' => 'NULL',
+                    'global_id_prefix' => null,
                 ],
                 'batch_updates' => [
                     'status' => '0',
@@ -4569,10 +4544,10 @@ UPS|https://wwwapps.ups.com/WebTracking/returnToDetails?tracknum={{code}}',
                 ],
                 'sync_settings' => [
                     'orders_sync_limit' => '50',
-                    'orders_sync_start_date' => '2020-02-19',
+                    'orders_sync_start_date' => '2020-01-14',
                 ],
                 'module_info' => [
-                    'yotpo_installation_date' => '2020-02-19',
+                    'yotpo_installation_date' => '2020-01-14',
                 ],
             ],
             'freshrelevance_ddl' => [
@@ -4635,11 +4610,6 @@ UPS|https://wwwapps.ups.com/WebTracking/returnToDetails?tracknum={{code}}',
                     'subdomain' => null,
                 ],
             ],
-            'email_marketing' => [
-                'general' => [
-                    'enabled' => '0',
-                ],
-            ],
         ],
         'stores' => [
             'admin' => [
@@ -4671,6 +4641,18 @@ UPS|https://wwwapps.ups.com/WebTracking/returnToDetails?tracknum={{code}}',
                         'opt_in_acquisition_source' => 'Scotts',
                     ],
                 ],
+                'design' => [
+                    'watermark' => [
+                        'swatch_image_size' => null,
+                        'swatch_image_imageOpacity' => null,
+                    ],
+                ],
+                'sales_email' => [
+                    'order' => [
+                        'template' => '14',
+                        'guest_template' => '14',
+                    ],
+                ],
             ],
             'ortho' => [
                 'checkout' => [
@@ -4705,50 +4687,27 @@ UPS|https://wwwapps.ups.com/WebTracking/returnToDetails?tracknum={{code}}',
             'mygro' => [
                 'carriers' => [
                     'flatrate' => [
-                        'showmethod' => '0',
+                        'allowed_methods' => 'fedex-nextday,fedex-2ndday,flat-rate-shipping',
+                        'showmethod' => '1',
                         'active' => '1',
                         'sort_order' => '1',
                         'title' => 'Flat Rate',
-                        'allowed_methods' => 'fedex-nextday,fedex-2ndday,flat-rate-shipping',
                     ],
                 ],
                 'design' => [
-                    'pagination' => [
-                        'pagination_frame_skip' => null,
-                        'anchor_text_for_previous' => null,
-                        'anchor_text_for_next' => null,
-                    ],
-                    'head' => [
-                        'title_prefix' => null,
-                        'title_suffix' => null,
-                        'default_description' => null,
-                        'includes' => '<!--50a9153b35809b873eaf632c496563fe-->',
-                    ],
                     'header' => [
-                        'logo_width' => null,
-                        'logo_height' => null,
-                        'logo_alt' => null,
-                    ],
-                    'footer' => [
-                        'absolute_footer' => null,
-                    ],
-                    'search_engine_robots' => [
-                        'custom_instructions' => null,
-                    ],
-                    'watermark' => [
-                        'image_size' => null,
-                        'image_imageOpacity' => null,
-                        'small_image_size' => null,
-                        'small_image_imageOpacity' => null,
-                        'thumbnail_size' => null,
-                        'thumbnail_imageOpacity' => null,
-                        'swatch_image_size' => null,
-                        'swatch_image_imageOpacity' => null,
+                        'logo_width' => '105',
+                        'logo_height' => '35',
                     ],
                     'email' => [
                         'logo_alt' => 'mygro store logo',
-                        'logo_width' => null,
-                        'logo_height' => null,
+                    ],
+                    'watermark' => [
+                        'swatch_image_size' => null,
+                        'swatch_image_imageOpacity' => null,
+                    ],
+                    'head' => [
+                        'shortcut_icon' => 'stores/2/favicon_scotts.com_3.ico',
                     ],
                 ],
                 'sales_email' => [
@@ -4757,12 +4716,13 @@ UPS|https://wwwapps.ups.com/WebTracking/returnToDetails?tracknum={{code}}',
                         'guest_template' => '7',
                     ],
                     'shipment' => [
-                        'template' => '8',
-                        'guest_template' => '8',
+                        'template' => '17',
+                        'guest_template' => '17',
                     ],
                     'order_cancellation' => [
                         'template' => '9',
                         'guest_template' => '9',
+                        'copy_to' => 'shannon.bird@scotts.com',
                     ],
                     'order_comment' => [
                         'template' => '11',
@@ -4781,6 +4741,9 @@ UPS|https://wwwapps.ups.com/WebTracking/returnToDetails?tracknum={{code}}',
                         'show_cms_breadcrumbs' => '1',
                         'cms_home_page' => 'home',
                     ],
+                    'cookie' => [
+                        'cookie_lifetime' => '31535999',
+                    ],
                 ],
             ],
             'default' => [
@@ -4797,8 +4760,7 @@ UPS|https://wwwapps.ups.com/WebTracking/returnToDetails?tracknum={{code}}',
                         'title_suffix' => ' | Scotts Program',
                         'default_description' => 'Build a successful program specifically for your lawn - in any season!',
                         'default_keywords' => 'Feeds grass, grass seed, weeds, prevents weeds, crabgrass, dandelions, thick lawn',
-                        'shortcut_icon' => 'stores/1/favicon_scotts.com.ico',
-                        'includes' => '<!--0ffc515a49bbf6059a526255251cb0c9-->',
+                        'shortcut_icon' => 'stores/1/subscription.favicon.png',
                     ],
                     'email' => [
                         'logo_alt' => 'ScottsProgram logo',
@@ -4814,7 +4776,8 @@ UPS|https://wwwapps.ups.com/WebTracking/returnToDetails?tracknum={{code}}',
                     'default' => [
                         'cms_no_route' => 'scottsprogram-no-route',
                         'cms_no_cookies' => 'scottsprogram-no-route',
-                        'show_cms_breadcrumbs' => '1',
+                        'show_cms_breadcrumbs' => '0',
+                        'cms_home_page' => 'scotts-program-v2-home',
                     ],
                 ],
                 'catalog' => [
@@ -4838,17 +4801,11 @@ UPS|https://wwwapps.ups.com/WebTracking/returnToDetails?tracknum={{code}}',
                     'shipment' => [
                         'template' => '5',
                         'guest_template' => '5',
-                        'copy_method' => 'bcc',
                     ],
                     'order_cancellation' => [
                         'template' => '10',
                         'guest_template' => '10',
-                        'copy_to' => 'cs.dtc.orders@scotts.com',
-                    ],
-                ],
-                'shipping' => [
-                    'shipping_policy' => [
-                        'shipping_policy_content' => null,
+                        'copy_to' => 'shannon.bird@scotts.com',
                     ],
                 ],
                 'recurly' => [
@@ -4864,11 +4821,11 @@ UPS|https://wwwapps.ups.com/WebTracking/returnToDetails?tracknum={{code}}',
                         'active' => '1',
                     ],
                     'api' => [
-                        'new' => 'http://recommendation.scottsmgro.com/api/quizzes/template',
-                        'save' => 'http://recommendation.scottsmgro.com/api/quizzes/{quizTemplateId}/completeQuiz',
-                        'result' => 'http://recommendation.scottsmgro.com/api/completedQuizzes/{completedQuizId}',
-                        'map' => 'http://recommendation.scottsmgro.com/api/completedQuizzes/mapToUser',
-                        'products' => 'https://storage.googleapis.com/lawn-subscription-productdata/prod-ls-product-data.json',
+                        'new' => 'http://dev.recommendation.scottsmgro.com/api/quizzes/template',
+                        'save' => 'http://dev.recommendation.scottsmgro.com/api/quizzes/{quizTemplateId}/completeQuiz',
+                        'result' => 'http://dev.recommendation.scottsmgro.com/api/completedQuizzes/{completedQuizId}',
+                        'map' => 'http://dev.recommendation.scottsmgro.com/api/completedQuizzes/mapToUser',
+                        'products' => 'https://storage.googleapis.com/lawn-subscription-productdata/ls-product-data.json',
                     ],
                 ],
                 'recommendation' => [
@@ -4879,114 +4836,13 @@ UPS|https://wwwapps.ups.com/WebTracking/returnToDetails?tracknum={{code}}',
                 'smg' => [
                     'subscription' => [
                         'active' => '1',
-                    ],
-                ],
-                'gigya_section' => [
-                    'general' => [
-                        'domain' => 'us1.gigya.com',
-                        'key_file_location' => '../keys/enc.key',
-                    ],
-                ],
-                'gigya_screensets' => [
-                    'login_registration' => [
-                        'desktop_screenset_id' => 'ScottsProgram-RegistrationLogin',
+                        'ship_days_start' => '14',
+                        'ship_days_end' => '14',
                     ],
                 ],
                 'checkout' => [
                     'options' => [
                         'guest_checkout' => '0',
-                    ],
-                ],
-                'contact' => [
-                    'email' => [
-                        'email_template' => '18',
-                    ],
-                ],
-            ],
-            'miraclegro_view' => [
-                'design' => [
-                    'pagination' => [
-                        'pagination_frame_skip' => null,
-                        'anchor_text_for_previous' => null,
-                        'anchor_text_for_next' => null,
-                    ],
-                    'head' => [
-                        'title_prefix' => null,
-                        'title_suffix' => null,
-                        'default_description' => null,
-                        'includes' => null,
-                    ],
-                    'header' => [
-                        'logo_width' => '50',
-                        'logo_height' => '47',
-                        'logo_alt' => null,
-                    ],
-                    'footer' => [
-                        'absolute_footer' => null,
-                    ],
-                    'search_engine_robots' => [
-                        'custom_instructions' => null,
-                    ],
-                    'watermark' => [
-                        'image_size' => null,
-                        'image_imageOpacity' => null,
-                        'small_image_size' => null,
-                        'small_image_imageOpacity' => null,
-                        'thumbnail_size' => null,
-                        'thumbnail_imageOpacity' => null,
-                        'swatch_image_size' => null,
-                        'swatch_image_imageOpacity' => null,
-                    ],
-                    'email' => [
-                        'logo_alt' => null,
-                        'logo_width' => null,
-                        'logo_height' => null,
-                    ],
-                ],
-            ],
-            'roundup_view' => [
-                'sales_email' => [
-                    'order' => [
-                        'enabled' => '1',
-                    ],
-                ],
-            ],
-            'scottsbundles' => [
-                'design' => [
-                    'head' => [
-                        'shortcut_icon' => 'stores/8/favicon.png',
-                        'default_title' => 'Scotts Bundles',
-                        'title_suffix' => ' | Scotts Bundles',
-                        'includes' => '<script type="text/javascript">
-document.addEventListener("DOMContentLoaded", function(event) {
-    try {
-        if(window.location.href.indexOf("outdoor_entertaining") != -1) {
-            document.getElementsByClassName(\'bundle-product-description\')[0].innerHTML = \'<div><p>Whether its preparing for a dinner party or prepping your perfect backyard oasis, this project will give you the best version of your outdoor space. Follow the simple instructions to create your weed-free, bug-free, beautiful backyard to enjoy all summer long.</p><ol class="p-rich_text_list p-rich_text_list__ordered" data-stringify-type="ordered-list" data-indent="0"> <li>Start by greening up your lawn with Scotts&reg; Green Max&trade; Lawn Food. Get the dirt on deep greening&nbsp;<a class="c-link" href="https://www.youtube.com/watch?v=9El2STkOtIQ" target="_blank" rel="noopener noreferrer">here</a>.</li> <li>Create a bug barrier around your home to keep insect pests from venturing inside with Ortho&reg; Home Defense&reg; Insect Killer for Indoor &amp; Perimeter2&nbsp;with Comfort Wand. Find out how to apply it&nbsp;<a class="c-link" href="https://www.youtube.com/watch?v=TGHyMMnZW1s" target="_blank" rel="noopener noreferrer">right here</a>.</li> <li>Kill the weeds springing up around your driveway, pathways, and patio fast with Ortho&reg; GroundClear&reg; Weed &amp; Grass Killer.&nbsp;<a class="c-link" href="https://youtube.com/watch?v=tEBik7fUbo4" target="_blank" rel="noopener noreferrer">Here&rsquo;s how to apply it</a>.</li> <li>Spray your lawn and landscape with Ortho&reg; BugClear&trade; Insect Killer for Lawns &amp; Landscapes to kill pesky outdoor bugs.</li> <li>Clean up your porch and patio with Scotts&reg; Outdoor Cleaner plus OxiClean&trade;&nbsp;<a class="c-link" href="https://youtube.com/watch?v=Rkv5Z1awHeo" target="_blank" rel="noopener noreferrer">This video</a>&nbsp;will tell you how to use it.</li></ol><div class="p-rich_text_section">For more info on turning your yard into an outdoor oasis, check out&nbsp;<a class="c-link" href="https://www.scotts.com/en-us/library/lawn-care-basics/3-ways-improve-curb-appeal" target="_blank" rel="noopener noreferrer">3 Quick Ways to Spiff Up Your Outdoor Space</a>&nbsp;and&nbsp;<a class="c-link" href="https://www.ortho.com/en-us/library/weeds/party-tonight-last-minute-landscape-tips" target="_blank" rel="noopener noreferrer">Party Tonight? Last-Minute Landscape Tips</a>&nbsp;(even if &ldquo;party&rdquo; just means family or a couple of close pals).</div><div>\';
-        }
-
-        if(window.location.href.indexOf("lawn_repair") != -1) {
-            document.getElementsByClassName(\'bundle-product-description\')[0].innerHTML = \'<div><p>Is your lawn looking thin, patchy, or even just a little tired? Use this total lawn repair kit to create a thicker, stronger lawn and fill in any bald spots, so you and your family will be able to use it for anything and everything.</p><ol class="p-rich_text_list p-rich_text_list__ordered" data-stringify-type="ordered-list" data-indent="0"><li>Patch bare spots with Scotts&reg; EZ Seed&reg; Patch &amp; Repair.&nbsp;<a class="c-link" href="https://www.youtube.com/watch?v=W83JKWZ6KIA&amp;enablejsapi=1" target="_blank" rel="noopener noreferrer">Here&rsquo;s a video how-to</a>.</li><li>Overseed the rest of your lawn with Scotts&reg; Thick&rsquo;R Lawn&trade; to bring your grass back to its thick, lush glory. Get how-to-use tips&nbsp;<a class="c-link" href="https://youtube.com/watch?v=9kzdahfZxcw" target="_blank" rel="noopener noreferrer">right here</a>.</li><li>Use the Scotts&reg; Elite Spreader (<a class="c-link" href="https://youtu.be/5-V6xlzL-AQ&amp;enablejsapi=1" target="_blank" rel="noopener noreferrer">see it in action</a>) for a speedy, accurate application.</li></ol><div class="p-rich_text_section">For more info on patching and overseeding, check out&nbsp;<a class="c-link" href="https://www.scotts.com/en-us/library/grass-grass-seed/seeding-solutions-all-your-lawn-care-needs" target="_blank" rel="noopener noreferrer">Seeding Solutions for All Your Lawn Care Needs</a>.</div></div>\';
-        }
-    }
-    catch(e) {
-
-    }
-
-  });
-</script>',
-                    ],
-                    'header' => [
-                        'logo_src' => 'stores/8/scotts_logo_2x.png',
-                    ],
-                    'footer' => [
-                        'copyright' => '© 2020 The Scotts Company LLC. World rights reserved.',
-                    ],
-                ],
-            ],
-            'tomcat_view' => [
-                'checkout' => [
-                    'options' => [
-                        'opt_in_headline' => 'Yes, sign me up to receive emails with expert advice on how to control rodents in my area.',
                     ],
                 ],
             ],
@@ -5012,9 +4868,6 @@ document.addEventListener("DOMContentLoaded", function(event) {
                         'opt_in_list_id' => 'miracle_gro',
                         'opt_in_acquisition_source' => 'Miracle Gro',
                     ],
-                    'cart' => [
-                        'configurable_product_image' => 'itself',
-                    ],
                 ],
                 'carriers' => [
                     'flatrate' => [
@@ -5027,11 +4880,11 @@ document.addEventListener("DOMContentLoaded", function(event) {
                     'freeshipping' => [
                         'active' => '1',
                         'title' => 'Free Shipping',
-                        'free_shipping_subtotal' => '50',
+                        'free_shipping_subtotal' => '30',
                         'showmethod' => '0',
                     ],
                     'tablerate' => [
-                        'import' => '1592343453,,,,4,0',
+                        'import' => '1572552874,,,,4,0',
                     ],
                 ],
                 'design' => [
@@ -5043,75 +4896,33 @@ document.addEventListener("DOMContentLoaded", function(event) {
                         'logo_height' => '47',
                         'logo_src' => 'websites/5/mgro_logo.png',
                     ],
+                    'search_engine_robots' => [
+                        'custom_instructions' => null,
+                    ],
                     'head' => [
                         'shortcut_icon' => 'websites/5/mgro_favicon.ico',
                     ],
                     'email' => [
                         'logo' => 'websites/5/mgro-logo.png',
                     ],
-                    'search_engine_robots' => [
-                        'default_robots' => 'INDEX,NOFOLLOW',
-                        'custom_instructions' => 'User-agent:*
-Allow: /$
-Disallow: /
-',
-                    ],
                 ],
                 'sales_email' => [
                     'order' => [
-                        'template' => '13',
-                        'guest_template' => '13',
+                        'template' => '14',
+                        'guest_template' => '14',
                     ],
                     'order_comment' => [
                         'template' => '14',
                         'guest_template' => '14',
+                        'enabled' => '0',
                     ],
                     'order_cancellation' => [
                         'template' => '15',
                         'guest_template' => '15',
                     ],
                     'shipment' => [
-                        'template' => '16',
-                        'guest_template' => '16',
-                    ],
-                ],
-                'payment' => [
-                    'paypal_express' => [
-                        'in_context' => '0',
-                        'specificcountry' => null,
-                    ],
-                    'paypal_billing_agreement' => [
-                        'specificcountry' => null,
-                    ],
-                    'payflow_express_bml' => [
-                        'active' => '0',
-                    ],
-                    'payflow_advanced' => [
-                        'specificcountry' => null,
-                    ],
-                    'payflow_express' => [
-                        'specificcountry' => null,
-                    ],
-                    'payflowpro' => [
-                        'specificcountry' => null,
-                    ],
-                    'wps_express_bml' => [
-                        'active' => '0',
-                    ],
-                    'payflow_link' => [
-                        'specificcountry' => null,
-                    ],
-                    'klarna_kp' => [
-                        'specificcountry' => null,
-                    ],
-                    'vantiv_keypadpayment' => [
-                        'acceptor_id' => '4445033615337',
-                        'terminal_id' => '4984U000601',
-                    ],
-                ],
-                'vantiv' => [
-                    'payment' => [
-                        'merchant_id' => '0:3:fNq7j2duMjOCyihWc9Vg1QRK/IVrSVyDlLGJwrbU+ocHdC4=',
+                        'template' => '17',
+                        'guest_template' => '17',
                     ],
                 ],
             ],
@@ -5123,230 +4934,6 @@ Disallow: /
                         'opt_in_list_id' => 'scotts',
                         'opt_in_acquisition_source' => 'Scotts',
                     ],
-                    'cart' => [
-                        'configurable_product_image' => 'itself',
-                    ],
-                ],
-                'carriers' => [
-                    'flatrate' => [
-                        'active' => '1',
-                        'title' => 'Standard',
-                        'allowed_methods' => 'flat-rate-shipping',
-                        'flat_rate_prices' => '{"fedex-nextday":{"rate":""},"fedex-2ndday":{"rate":""},"flat-rate-shipping":{"rate":"9.95"}}',
-                    ],
-                    'freeshipping' => [
-                        'active' => '1',
-                        'title' => 'Free Shipping',
-                        'free_shipping_subtotal' => '50',
-                        'showmethod' => '0',
-                    ],
-                    'tablerate' => [
-                        'import' => '1592343335,,,,4,0',
-                    ],
-                ],
-                'design' => [
-                    'theme' => [
-                        'theme_id' => 'frontend/Drupal/scotts',
-                    ],
-                    'header' => [
-                        'logo_width' => '92',
-                        'logo_height' => '47',
-                        'logo_src' => 'websites/4/scotts_logo.png',
-                    ],
-                    'head' => [
-                        'shortcut_icon' => 'websites/4/scotts_favicon.ico',
-                    ],
-                    'email' => [
-                        'logo' => 'websites/4/scotts_logo.png',
-                    ],
-                    'search_engine_robots' => [
-                        'default_robots' => 'INDEX,NOFOLLOW',
-                        'custom_instructions' => 'User-agent:*
-Allow: /$
-Disallow: /
-',
-                    ],
-                ],
-                'payment' => [
-                    'paypal_express' => [
-                        'in_context' => '0',
-                        'specificcountry' => null,
-                    ],
-                    'paypal_billing_agreement' => [
-                        'specificcountry' => null,
-                    ],
-                    'payflow_express_bml' => [
-                        'active' => '0',
-                    ],
-                    'payflow_advanced' => [
-                        'specificcountry' => null,
-                    ],
-                    'payflow_express' => [
-                        'specificcountry' => null,
-                    ],
-                    'payflowpro' => [
-                        'specificcountry' => null,
-                    ],
-                    'wps_express_bml' => [
-                        'active' => '0',
-                    ],
-                    'payflow_link' => [
-                        'specificcountry' => null,
-                    ],
-                    'klarna_kp' => [
-                        'specificcountry' => null,
-                    ],
-                    'vantiv_keypadpayment' => [
-                        'acceptor_id' => '4445034534875',
-                        'terminal_id' => '4984U000501',
-                    ],
-                ],
-                'vantiv' => [
-                    'payment' => [
-                        'merchant_id' => '0:3:yXbQOsCn7zmbMGJ9qKEQDwrHAOAGMMnfZYnXLWgSxO5JRdc=',
-                    ],
-                ],
-                'sales_email' => [
-                    'order' => [
-                        'template' => '13',
-                        'guest_template' => '13',
-                    ],
-                    'order_comment' => [
-                        'template' => '14',
-                        'guest_template' => '14',
-                    ],
-                    'order_cancellation' => [
-                        'template' => '15',
-                        'guest_template' => '15',
-                    ],
-                    'shipment' => [
-                        'template' => '16',
-                        'guest_template' => '16',
-                    ],
-                ],
-            ],
-            'ortho' => [
-                'checkout' => [
-                    'options' => [
-                        'opt_in_status' => '1',
-                        'opt_in_headline' => 'Yes, sign me up to receive emails with expert advice on weed and pest control in my area.',
-                        'opt_in_list_id' => 'ortho',
-                        'opt_in_acquisition_source' => 'Ortho',
-                    ],
-                    'cart' => [
-                        'configurable_product_image' => 'itself',
-                    ],
-                ],
-                'carriers' => [
-                    'flatrate' => [
-                        'active' => '1',
-                        'title' => 'Standard',
-                        'allowed_methods' => 'flat-rate-shipping',
-                        'flat_rate_prices' => '{"fedex-nextday":{"rate":""},"fedex-2ndday":{"rate":""},"flat-rate-shipping":{"rate":"9.95"}}',
-                        'showmethod' => '1',
-                    ],
-                    'freeshipping' => [
-                        'active' => '1',
-                        'title' => 'Free Shipping',
-                        'free_shipping_subtotal' => '35',
-                        'showmethod' => '0',
-                    ],
-                    'tablerate' => [
-                        'import' => '1592343471,,,,4,0',
-                    ],
-                ],
-                'design' => [
-                    'theme' => [
-                        'theme_id' => 'frontend/Drupal/ortho',
-                    ],
-                    'header' => [
-                        'logo_width' => '86',
-                        'logo_height' => '48',
-                        'logo_src' => 'websites/6/ortho_logo.png',
-                    ],
-                    'head' => [
-                        'shortcut_icon' => 'websites/6/ortho_favicon.ico',
-                    ],
-                    'email' => [
-                        'logo' => 'websites/6/ortho-logo.png',
-                    ],
-                    'search_engine_robots' => [
-                        'default_robots' => 'INDEX,NOFOLLOW',
-                        'custom_instructions' => 'User-agent:*
-Allow: /$
-Disallow: /
-',
-                    ],
-                ],
-                'sales_email' => [
-                    'order' => [
-                        'template' => '13',
-                        'guest_template' => '13',
-                    ],
-                    'order_comment' => [
-                        'template' => '14',
-                        'guest_template' => '14',
-                    ],
-                    'order_cancellation' => [
-                        'template' => '15',
-                        'guest_template' => '15',
-                    ],
-                    'shipment' => [
-                        'template' => '16',
-                        'guest_template' => '16',
-                    ],
-                ],
-                'payment' => [
-                    'paypal_express' => [
-                        'in_context' => '0',
-                        'specificcountry' => null,
-                    ],
-                    'paypal_billing_agreement' => [
-                        'specificcountry' => null,
-                    ],
-                    'payflow_express_bml' => [
-                        'active' => '0',
-                    ],
-                    'payflow_advanced' => [
-                        'specificcountry' => null,
-                    ],
-                    'payflow_express' => [
-                        'specificcountry' => null,
-                    ],
-                    'payflowpro' => [
-                        'specificcountry' => null,
-                    ],
-                    'wps_express_bml' => [
-                        'active' => '0',
-                    ],
-                    'payflow_link' => [
-                        'specificcountry' => null,
-                    ],
-                    'klarna_kp' => [
-                        'specificcountry' => null,
-                    ],
-                    'vantiv_keypadpayment' => [
-                        'acceptor_id' => '4445034534891',
-                        'terminal_id' => '4984U000701',
-                    ],
-                ],
-                'vantiv' => [
-                    'payment' => [
-                        'merchant_id' => '0:3:/Z+xqrVnCeCaAde9S27ikx9gkupmjxTIn0/5o4KLf44vcnI=',
-                    ],
-                ],
-            ],
-            'roundup' => [
-                'checkout' => [
-                    'options' => [
-                        'opt_in_status' => '1',
-                        'opt_in_headline' => 'Yes, sign me up to receive emails with expert advice for weed control in my area.',
-                        'opt_in_list_id' => 'roundup',
-                        'opt_in_acquisition_source' => 'Roundup',
-                    ],
-                    'cart' => [
-                        'configurable_product_image' => 'itself',
-                    ],
                 ],
                 'web' => [
                     'cookie' => [
@@ -5355,20 +4942,16 @@ Disallow: /
                 ],
                 'carriers' => [
                     'flatrate' => [
-                        'active' => '1',
                         'title' => 'Standard',
                         'allowed_methods' => 'flat-rate-shipping',
                         'flat_rate_prices' => '{"fedex-nextday":{"rate":""},"fedex-2ndday":{"rate":""},"flat-rate-shipping":{"rate":"9.95"}}',
-                        'showmethod' => '1',
                     ],
                     'freeshipping' => [
                         'active' => '1',
-                        'title' => 'Free Shipping',
-                        'free_shipping_subtotal' => '35',
                         'showmethod' => '0',
                     ],
                     'tablerate' => [
-                        'import' => '1592343523,,,,4,0',
+                        'import' => '1587351353,,,,4,0',
                     ],
                     'dhl' => [
                         'doc_methods' => null,
@@ -5376,44 +4959,38 @@ Disallow: /
                 ],
                 'sales_email' => [
                     'order' => [
-                        'template' => '13',
-                        'guest_template' => '13',
+                        'template' => '14',
+                        'guest_template' => '14',
                     ],
                     'order_comment' => [
                         'template' => '14',
                         'guest_template' => '14',
+                        'enabled' => '0',
                     ],
                     'order_cancellation' => [
                         'template' => '15',
                         'guest_template' => '15',
-                        'copy_to' => 'cs.dtc.orders@scotts.com,shannon.bird@scotts.com',
                     ],
                     'shipment' => [
-                        'template' => '16',
-                        'guest_template' => '16',
+                        'template' => '17',
+                        'guest_template' => '17',
                     ],
                 ],
                 'design' => [
                     'theme' => [
-                        'theme_id' => 'frontend/Drupal/roundup',
+                        'theme_id' => 'frontend/Drupal/scotts',
                     ],
                     'header' => [
                         'logo_width' => '38',
                         'logo_height' => '34',
-                        'logo_src' => 'websites/3/rup_logo.png',
-                    ],
-                    'head' => [
-                        'shortcut_icon' => 'websites/3/rup_favicon.ico',
-                    ],
-                    'email' => [
-                        'logo' => 'websites/3/rup-logo.png',
+                        'logo_alt' => 'Roundup Store',
+                        'logo_src' => 'websites/3/logo.png',
                     ],
                     'search_engine_robots' => [
-                        'default_robots' => 'INDEX,NOFOLLOW',
-                        'custom_instructions' => 'User-agent:*
-Allow: /$
-Disallow: /
-',
+                        'custom_instructions' => null,
+                    ],
+                    'email' => [
+                        'logo' => 'websites/3/logo_1.png',
                     ],
                 ],
                 'payment' => [
@@ -5430,6 +5007,9 @@ Disallow: /
                     'paypal_billing_agreement' => [
                         'specificcountry' => null,
                     ],
+                    'vantiv_cc' => [
+                        'eprotect_paypage_id' => 'R42qtRuTCSFKKo2p',
+                    ],
                     'payflow_express_bml' => [
                         'active' => '0',
                     ],
@@ -5451,43 +5031,86 @@ Disallow: /
                     'klarna_kp' => [
                         'specificcountry' => null,
                     ],
-                    'vantiv_keypadpayment' => [
-                        'acceptor_id' => '4445034534867',
-                        'terminal_id' => '4984U000401',
-                    ],
                 ],
                 'vantiv' => [
                     'payment' => [
-                        'merchant_id' => '0:3:O/KQGNV/peeyHGwlj+kMsNvzNQ18wi2Jy1xqeVahiVPxZsk=',
-                    ],
-                ],
-                'persistent' => [
-                    'options' => [
-                        'enabled' => '1',
-                        'logout_clear' => '0',
-                    ],
-                ],
-                'zaius_engage' => [
-                    'status' => [
-                        'send_shipment_status' => '1',
-                    ],
-                ],
-                'system' => [
-                    'smtp' => [
-                        'disable' => '1',
+                        'merchant_id' => '0:3:B7CE62p6jGlEKhhIIPntIsGSP55blA5eNvLrtA5cap9TjsI=',
                     ],
                 ],
             ],
-            'tomcat' => [
+            'ortho' => [
                 'checkout' => [
                     'options' => [
                         'opt_in_status' => '1',
-                        'opt_in_headline' => 'Yes, sign me up to receive emails with expert advice on how to control rodents in my area.',
-                        'opt_in_list_id' => 'tomcatbrand',
-                        'opt_in_acquisition_source' => 'Tomcat',
+                        'opt_in_headline' => 'Yes, sign me up to receive emails with expert advice on weed and pest control in my area.',
+                        'opt_in_list_id' => 'ortho',
+                        'opt_in_acquisition_source' => 'Ortho',
                     ],
-                    'cart' => [
-                        'configurable_product_image' => 'itself',
+                ],
+                'carriers' => [
+                    'flatrate' => [
+                        'active' => '1',
+                        'title' => 'Standard',
+                        'allowed_methods' => 'flat-rate-shipping',
+                        'flat_rate_prices' => '{"fedex-nextday":{"rate":""},"fedex-2ndday":{"rate":""},"flat-rate-shipping":{"rate":"9.95"}}',
+                        'showmethod' => '0',
+                    ],
+                    'freeshipping' => [
+                        'active' => '1',
+                        'title' => 'Free Shipping',
+                        'free_shipping_subtotal' => '40',
+                        'showmethod' => '0',
+                    ],
+                    'tablerate' => [
+                        'import' => '1582050795,,,,4,0',
+                    ],
+                ],
+                'design' => [
+                    'theme' => [
+                        'theme_id' => 'frontend/Drupal/ortho',
+                    ],
+                    'search_engine_robots' => [
+                        'custom_instructions' => null,
+                    ],
+                    'head' => [
+                        'shortcut_icon' => 'websites/6/ortho_favicon_1.ico',
+                    ],
+                    'header' => [
+                        'logo_src' => 'websites/6/ortho_logo_1.png',
+                        'logo_width' => '86',
+                        'logo_height' => '48',
+                    ],
+                    'email' => [
+                        'logo' => 'websites/6/ortho-logo.png',
+                    ],
+                ],
+                'sales_email' => [
+                    'order_comment' => [
+                        'template' => '14',
+                        'guest_template' => '14',
+                        'enabled' => '0',
+                    ],
+                    'order_cancellation' => [
+                        'template' => '15',
+                        'guest_template' => '15',
+                    ],
+                    'shipment' => [
+                        'template' => '17',
+                        'guest_template' => '17',
+                    ],
+                    'order' => [
+                        'template' => '14',
+                        'guest_template' => '14',
+                    ],
+                ],
+            ],
+            'roundup' => [
+                'checkout' => [
+                    'options' => [
+                        'opt_in_status' => '1',
+                        'opt_in_headline' => 'Yes, sign me up to receive emails with expert advice for weed control in my area.',
+                        'opt_in_list_id' => 'roundup',
+                        'opt_in_acquisition_source' => 'Roundup',
                     ],
                 ],
                 'carriers' => [
@@ -5501,34 +5124,96 @@ Disallow: /
                     'freeshipping' => [
                         'active' => '1',
                         'title' => 'Free Shipping',
-                        'free_shipping_subtotal' => '35',
+                        'free_shipping_subtotal' => '50',
                         'showmethod' => '0',
                     ],
                     'tablerate' => [
-                        'import' => '1592343503,,,,4,0',
+                        'import' => '1572453253,,,,4,0',
+                    ],
+                ],
+                'sales_email' => [
+                    'order' => [
+                        'template' => '14',
+                        'guest_template' => '14',
+                    ],
+                    'order_comment' => [
+                        'template' => '14',
+                        'guest_template' => '14',
+                        'enabled' => '0',
+                    ],
+                    'order_cancellation' => [
+                        'template' => '15',
+                        'guest_template' => '15',
+                    ],
+                    'shipment' => [
+                        'template' => 'sales_email_shipment_template',
+                        'guest_template' => 'sales_email_shipment_guest_template',
+                    ],
+                ],
+                'design' => [
+                    'theme' => [
+                        'theme_id' => 'frontend/Drupal/roundup',
+                    ],
+                    'search_engine_robots' => [
+                        'custom_instructions' => null,
+                    ],
+                    'head' => [
+                        'shortcut_icon' => 'websites/4/scotts_favicon.ico',
+                    ],
+                    'header' => [
+                        'logo_src' => 'websites/4/roundup.png',
+                        'logo_width' => '92',
+                        'logo_height' => '47',
+                    ],
+                    'email' => [
+                        'logo' => 'websites/4/scotts-logo.png',
+                    ],
+                ],
+            ],
+            'tomcat' => [
+                'checkout' => [
+                    'options' => [
+                        'opt_in_status' => '1',
+                        'opt_in_headline' => 'Yes, sign me up to receive emails with expert advice for weed control in my area.',
+                        'opt_in_list_id' => 'tomcatbrand',
+                        'opt_in_acquisition_source' => 'Tomcat',
+                    ],
+                ],
+                'carriers' => [
+                    'flatrate' => [
+                        'active' => '1',
+                        'title' => 'Standard',
+                        'allowed_methods' => 'flat-rate-shipping',
+                        'flat_rate_prices' => '{"fedex-nextday":{"rate":""},"fedex-2ndday":{"rate":""},"flat-rate-shipping":{"rate":"9.95"}}',
+                        'showmethod' => '1',
+                    ],
+                    'freeshipping' => [
+                        'active' => '1',
+                        'title' => 'Free Shipping',
+                        'free_shipping_subtotal' => '50',
+                        'showmethod' => '0',
+                    ],
+                    'tablerate' => [
+                        'import' => '1572552422,,,,4,0',
                     ],
                 ],
                 'design' => [
                     'theme' => [
                         'theme_id' => 'frontend/Drupal/tomcat',
                     ],
+                    'search_engine_robots' => [
+                        'custom_instructions' => null,
+                    ],
                     'header' => [
                         'logo_width' => '114',
                         'logo_height' => '47',
-                        'logo_src' => 'websites/7/tomcat_logo.png',
+                        'logo_src' => 'websites/7/tomcat_logo_tc.png',
                     ],
                     'head' => [
-                        'shortcut_icon' => 'websites/7/tomcat_favicon_1.ico',
+                        'shortcut_icon' => 'websites/7/tomcat_favicon.ico',
                     ],
                     'email' => [
                         'logo' => 'websites/7/tomcat-logo.png',
-                    ],
-                    'search_engine_robots' => [
-                        'default_robots' => 'INDEX,NOFOLLOW',
-                        'custom_instructions' => 'User-agent:*
-Allow: /$
-Disallow: /
-',
                     ],
                 ],
                 'sales_email' => [
@@ -5539,53 +5224,11 @@ Disallow: /
                     'order_comment' => [
                         'template' => '14',
                         'guest_template' => '14',
-                    ],
-                    'order_cancellation' => [
-                        'template' => '15',
-                        'guest_template' => '15',
+                        'enabled' => '0',
                     ],
                     'shipment' => [
-                        'template' => '16',
-                        'guest_template' => '16',
-                    ],
-                ],
-                'payment' => [
-                    'paypal_express' => [
-                        'in_context' => '0',
-                        'specificcountry' => null,
-                    ],
-                    'paypal_billing_agreement' => [
-                        'specificcountry' => null,
-                    ],
-                    'payflow_express_bml' => [
-                        'active' => '0',
-                    ],
-                    'payflow_advanced' => [
-                        'specificcountry' => null,
-                    ],
-                    'payflow_express' => [
-                        'specificcountry' => null,
-                    ],
-                    'payflowpro' => [
-                        'specificcountry' => null,
-                    ],
-                    'wps_express_bml' => [
-                        'active' => '0',
-                    ],
-                    'payflow_link' => [
-                        'specificcountry' => null,
-                    ],
-                    'klarna_kp' => [
-                        'specificcountry' => null,
-                    ],
-                    'vantiv_keypadpayment' => [
-                        'acceptor_id' => '4445034534859',
-                        'terminal_id' => '4984U000301',
-                    ],
-                ],
-                'vantiv' => [
-                    'payment' => [
-                        'merchant_id' => '0:3:wmE0GWQl12dAlpWFm+gHFIg5I4rAwhycyyWkHXZvn1DfrrU=',
+                        'template' => '17',
+                        'guest_template' => '17',
                     ],
                 ],
             ],
@@ -5596,27 +5239,12 @@ Disallow: /
                     ],
                     'head' => [
                         'includes' => '<!--ba51c01c494dbe6f091828f910c0d80b-->',
-                        'shortcut_icon' => 'websites/2/favicon_scotts.com.ico',
                     ],
                     'header' => [
                         'welcome' => 'Testing out welcome msg here!',
                     ],
                     'search_engine_robots' => [
-                        'custom_instructions' => 'User-agent: *
-Disallow: /index.php/
-Disallow: /*?
-Disallow: /checkout/
-Disallow: /app/
-Disallow: /lib/
-Disallow: /*.php$
-Disallow: /pkginfo/
-Disallow: /report/
-Disallow: /var/
-Disallow: /catalog/
-Disallow: /customer/
-Disallow: /sendfriend/
-Disallow: /review/
-Disallow: /*SID=',
+                        'custom_instructions' => null,
                     ],
                 ],
                 'web' => [
@@ -5626,26 +5254,26 @@ Disallow: /*SID=',
                         'cms_no_cookies' => 'mygro-no-route',
                     ],
                     'cookie' => [
-                        'cookie_lifetime' => '31536000',
+                        'cookie_lifetime' => '31535999',
                     ],
                 ],
                 'carriers' => [
                     'flatrate' => [
                         'active' => '1',
                         'allowed_methods' => 'fedex-nextday,fedex-2ndday,flat-rate-shipping',
-                        'showmethod' => '0',
-                        'title' => 'Flat Rate',
+                        'showmethod' => '1',
                         'flat_rate_prices' => '{"fedex-nextday":{"rate":"29.99"},"fedex-2ndday":{"rate":"19.99"},"flat-rate-shipping":{"rate":"9.95"}}',
+                        'title' => 'Flat Rate',
                     ],
                     'freeshipping' => [
                         'active' => '1',
-                        'showmethod' => '0',
                         'title' => '5-7 Days',
-                        'name' => 'Free Shipping, 5-7 Days',
-                        'free_shipping_subtotal' => '25.00',
+                        'showmethod' => '1',
+                        'free_shipping_subtotal' => '50.00',
+                        'name' => 'Free Shipping',
                     ],
                     'tablerate' => [
-                        'import' => '1584673253,,,,4,0',
+                        'import' => '1574095063,,,,4,0',
                     ],
                     'dhl' => [
                         'doc_methods' => null,
@@ -5689,14 +5317,13 @@ Disallow: /*SID=',
                         'payment_action' => 'authorize',
                         'currency' => 'USD',
                     ],
-                    'vantiv_keypadpayment' => [
-                        'acceptor_id' => '4445033615337',
-                        'terminal_id' => '4984U000201',
+                    'vantiv_cc' => [
+                        'eprotect_paypage_id' => 'AK2LxcpAf8tMLNWh',
                     ],
                 ],
                 'vantiv' => [
                     'payment' => [
-                        'merchant_id' => '0:3:UZfDQedJNQtKjhjPXOpy4F683CqkEcdbP9VhCeqvWKocTA==',
+                        'merchant_id' => '0:3:AAs7YNikRx6r61fxALTpvdyKM1eZoBGfr0Y5FOv1iwIXHL8=',
                     ],
                 ],
                 'paypal' => [
@@ -5704,10 +5331,10 @@ Disallow: /*SID=',
                         'disable_funding_options' => 'CREDIT',
                     ],
                 ],
-                'persistent' => [
-                    'options' => [
-                        'enabled' => '1',
-                        'logout_clear' => '0',
+                'sales_email' => [
+                    'shipment' => [
+                        'template' => '8',
+                        'guest_template' => '8',
                     ],
                 ],
             ],
@@ -5719,12 +5346,12 @@ Disallow: /*SID=',
                     ],
                     'freeshipping' => [
                         'active' => '1',
-                        'title' => 'Ships 5-7 days prior to when you should apply',
+                        'title' => '5-7 Days',
                         'showmethod' => '1',
-                        'name' => 'Free Shipping',
+                        'name' => 'Free Shipping, 5-7 Days',
                     ],
                     'tablerate' => [
-                        'import' => '1579716761,,,,4,0',
+                        'import' => '1576682766,,,,4,0',
                         'active' => '0',
                     ],
                     'dhl' => [
@@ -5737,20 +5364,16 @@ Disallow: /*SID=',
                     ],
                     'head' => [
                         'includes' => '<!--d241b04390fb0c14cc7a7a8302bea676-->',
-                        'shortcut_icon' => 'websites/1/favicon_scotts.com.ico',
+                        'shortcut_icon' => 'websites/1/subscription.favicon.png',
                     ],
                     'header' => [
                         'welcome' => 'This is a placeholder for the default welcome msg!',
                     ],
                     'footer' => [
-                        'copyright' => '© 2019 The Scotts Company LLC. World rights reserved.',
+                        'copyright' => '© 2020 The Scotts Company LLC. World rights reserved.',
                     ],
                     'search_engine_robots' => [
-                        'custom_instructions' => 'User-agent:*
-Allow: /$
-Disallow: /
-',
-                        'default_robots' => 'INDEX,NOFOLLOW',
+                        'custom_instructions' => null,
                     ],
                 ],
                 'web' => [
@@ -5799,6 +5422,19 @@ Disallow: /
                         'specificcountry' => null,
                     ],
                 ],
+                'gigya_section' => [
+                    'general' => [
+                        'enable_gigya' => '1',
+                        'domain' => 'us1.gigya.com',
+                        'key_file_location' => '../keys/enc.key',
+                        'rsa_private_key' => null,
+                    ],
+                ],
+                'gigya_section_fieldmapping' => [
+                    'general_fieldmapping' => [
+                        'mapping_file_path' => '/var/www/html/magento2/vendor/gigya/magento2-im/etc/json/default_field_mapping.json',
+                    ],
+                ],
                 'sales_email' => [
                     'order' => [
                         'enabled' => '0',
@@ -5808,13 +5444,6 @@ Disallow: /
                     ],
                     'order_cancellation' => [
                         'enabled' => '0',
-                    ],
-                ],
-                'gigya_section' => [
-                    'general' => [
-                        'enable_gigya' => '1',
-                        'domain' => 'us1.gigya.com',
-                        'key_file_location' => '../keys/enc.key',
                     ],
                 ],
                 'gigya_screensets' => [
@@ -5822,137 +5451,26 @@ Disallow: /
                         'desktop_screenset_id' => 'ScottsProgram-RegistrationLogin',
                     ],
                 ],
-                'smg' => [
-                    'subscription' => [
-                        'active' => '1',
-                        'ship_days_start' => '14',
-                        'ship_days_end' => '14',
-                    ],
-                ],
-                'zaius_engage' => [
-                    'status' => [
-                        'send_shipment_status' => '1',
-                    ],
-                ],
                 'contact' => [
                     'email' => [
-                        'email_template' => '18',
+                        'sender_email_identity' => 'general',
+                        'email_template' => '13',
                     ],
                 ],
-                'recurly' => [
-                    'payment' => [
-                        'active' => '1',
-                        'apikey' => '02ea0cb107d8469c9d7159e4cc0cc77d',
-                        'publicapikey' => 'ewr1-aefvtq9Ri3MILWsXFPHyv2',
-                        'subdomain' => 'smgdev',
+                'gigya_advanced' => [
+                    'debug_mode' => [
+                        'debug_mode' => '1',
                     ],
                 ],
             ],
-            'scottsbundles' => [
-                'carriers' => [
-                    'flatrate' => [
-                        'active' => '1',
-                        'title' => 'Standard',
-                        'allowed_methods' => 'flat-rate-shipping',
-                        'flat_rate_prices' => '{"fedex-nextday":{"rate":""},"fedex-2ndday":{"rate":""},"flat-rate-shipping":{"rate":"9.95"}}',
-                        'showmethod' => '1',
-                    ],
-                    'tablerate' => [
-                        'import' => '1584673364,,,,4,0',
-                    ],
-                    'freeshipping' => [
-                        'active' => '1',
-                        'title' => 'Free Shipping',
-                        'free_shipping_subtotal' => '25',
-                        'showmethod' => '0',
-                    ],
-                ],
+            'mulchdirect' => [
                 'design' => [
-                    'head' => [
-                        'default_title' => null,
-                        'default_keywords' => null,
-                        'demonotice' => '1',
-                        'shortcut_icon' => 'websites/8/scotts_favicon.ico',
+                    'theme' => [
+                        'theme_id' => 'frontend/Scottsbase/mulchmadness',
                     ],
                     'header' => [
-                        'welcome' => null,
-                        'logo_src' => 'websites/8/scotts_logo.png',
-                        'logo_width' => '92',
-                        'logo_height' => '47',
-                        'logo_alt' => 'Scotts',
-                    ],
-                    'footer' => [
-                        'copyright' => null,
-                    ],
-                    'search_engine_robots' => [
-                        'custom_instructions' => 'User-agent:*
-Allow: /$
-Disallow: /',
-                        'default_robots' => 'INDEX,NOFOLLOW',
-                    ],
-                    'theme' => [
-                        'theme_id' => 'frontend/Scottsbase/scottsbundles',
-                    ],
-                    'email' => [
-                        'logo_alt' => 'Scotts',
-                    ],
-                ],
-                'payment' => [
-                    'paypal_express' => [
-                        'in_context' => '0',
-                        'specificcountry' => null,
-                    ],
-                    'paypal_billing_agreement' => [
-                        'specificcountry' => null,
-                    ],
-                    'vantiv_cc' => [
-                        'eprotect_style' => 'enhancedStyle',
-                    ],
-                    'payflow_express_bml' => [
-                        'active' => '0',
-                    ],
-                    'payflow_advanced' => [
-                        'specificcountry' => null,
-                    ],
-                    'payflow_express' => [
-                        'specificcountry' => null,
-                    ],
-                    'payflowpro' => [
-                        'specificcountry' => null,
-                    ],
-                    'wps_express_bml' => [
-                        'active' => '0',
-                    ],
-                    'payflow_link' => [
-                        'specificcountry' => null,
-                    ],
-                    'klarna_kp' => [
-                        'specificcountry' => null,
-                    ],
-                ],
-                'vantiv' => [
-                    'payment' => [
-                        'merchant_id' => '0:3:SnMYldCyM//nHci9R1p28BeMpurzrl5wvEYxaK6bUbbMogY=',
-                        'username' => '0:3:s+2Rgx9TyO25sAX0cks757svTbHU3IzODe3aGJrwtHxQAw==',
-                        'password' => '0:3:t0EqGhYCi+4MGX+oBZgXeFzE9F0aRwFxIHZNa8OOiurpp/dxvyY=',
-                    ],
-                ],
-                'sales_email' => [
-                    'order' => [
-                        'template' => '13',
-                        'guest_template' => '13',
-                    ],
-                    'order_comment' => [
-                        'template' => '14',
-                        'guest_template' => '14',
-                    ],
-                    'order_cancellation' => [
-                        'template' => '15',
-                        'guest_template' => '15',
-                    ],
-                    'shipment' => [
-                        'template' => '16',
-                        'guest_template' => '16',
+                        'logo_width' => '105',
+                        'logo_height' => '35',
                     ],
                 ],
             ],
