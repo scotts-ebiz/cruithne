@@ -28,7 +28,7 @@ RUN mkdir -p $MAGENTO_DIR/var/import/images && gsutil -q -m rsync -r -u gs://mag
 
 RUN git config --global user.name "Git User" && git config --global user.email "user@example.com" && git fetch --all && git reset --hard origin/${BRANCH} && git pull
 
-# Add Akeneo to known hosts 
+# Add Akeneo to known hosts
 RUN ssh-keyscan -p 443 distribution.akeneo.com >> ~/.ssh/known_hosts
 
 RUN composer install
@@ -55,6 +55,11 @@ EXPOSE 80/tcp 443/tcp
 
 RUN find var pub/static pub/media app/etc -type f -exec chmod g+w {} + && find var pub/static pub/media app/etc -type d -exec chmod g+ws {} +
 
+# Move class and static files generation from entrypoint into the image build
+RUN bin/magento setup:di:compile
+RUN rm /var/www/html/magento2/tools/yarn.lock ; cd /var/www/html/magento2/tools && npm rebuild node-sass && gulp clean -f /var/www/html/magento2/tools/gulpfile.esm.js && gulp styles --prod -f /var/www/html/magento2/tools/gulpfile.esm.js
+RUN bin/magento setup:static-content:deploy -f
+RUN chown -R magento:www-data var/ app/etc/ pub/media/
 
 # Run entrypoint file
 COPY ondemand-entrypoint.sh /usr/local/bin/entrypoint.sh
