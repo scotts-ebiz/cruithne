@@ -656,8 +656,8 @@ class Subscription extends AbstractModel
     {
         $ordersArray = [];
 
-        $orders = $this->getSubscriptionOrders();
-        $addons = $this->getSubscriptionAddonOrders();
+        $orders = $this->getSubscriptionOrders()->getItems();
+        $addons = $this->getSubscriptionAddonOrders()->getItems();
 
         if (!empty($addons)) {
             $orders = array_merge($orders, $addons);
