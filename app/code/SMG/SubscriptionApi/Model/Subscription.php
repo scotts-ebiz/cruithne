@@ -664,7 +664,8 @@ class Subscription extends AbstractModel
         }
 
         /** @var Order $order */
-        foreach ($orders as $order) {
+        foreach ($orders as $o) {
+            $order = $o->getOrder();
             $hasInvoices = $order->getInvoiceCollection()->count() > 0;
             $hasShipments = $order->getShipmentsCollection()->count() > 0;
 
