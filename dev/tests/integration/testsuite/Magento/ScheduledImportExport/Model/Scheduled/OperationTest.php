@@ -6,6 +6,7 @@
 namespace Magento\ScheduledImportExport\Model\Scheduled;
 
 use Magento\TestFramework\Helper\Bootstrap;
+use Magento\Framework\Exception\LocalizedException;
 
 class OperationTest extends \Magento\TestFramework\Indexer\TestCase
 {
@@ -135,10 +136,21 @@ class OperationTest extends \Magento\TestFramework\Indexer\TestCase
     }
 
     /**
-     * teardown
+     * Test scheduled operation with not valid file format.
+     *
+     * @throws LocalizedException
      */
-    public function tearDown()
+    public function testBeforeSaveWithException(): void
     {
-        parent::tearDown();
+        $data = [
+            'operation_type' => 'export',
+            'name' => 'Test Export ' . microtime(),
+            'entity_type' => 'catalog_product',
+            'file_info' => ['file_format' => 'not_valid', 'server_type' => 'file', 'file_path' => 'export'],
+        ];
+        $this->model->setData($data);
+        $this->expectException(LocalizedException::class);
+        $this->expectExceptionMessage('Please correct the file format.');
+        $this->model->save();
     }
 }
