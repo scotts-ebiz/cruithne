@@ -93,7 +93,7 @@ class SavePaymentPlugin
 					if($days >= $this->_recommendationHelper->getExpiredDays($this->_storeManager->getStore()->getId()) && $startYear == $todayyear)
 					{
 						 $message = "Quiz Id ".$quiz_id." Expired";
-						 $this->logger->error(print_r($message,true));
+						 $this->_logger->error(print_r($message,true));
 						 $message='Looks like your quiz results are out of date. To make sure you receive the most accurate recommendation,  please retake the Quiz.<a href="/quiz">Take the quiz</a>.';
 						 throw new InputException(__($message));
 					}				

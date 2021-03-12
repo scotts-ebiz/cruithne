@@ -68,6 +68,7 @@ class Index extends Action
         /*check start quiz time is not exceed from 2 week*/
         $this->_coreSession->start();
         $startQuiz = $this->_coreSession->getTimeStamp();
+        $this->_messageManager->getMessages(false);
         if(!empty($startQuiz))
         {   
             $convertedDate = date('Y-m-d',$startQuiz);
