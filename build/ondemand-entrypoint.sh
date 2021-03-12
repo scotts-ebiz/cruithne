@@ -10,7 +10,7 @@ COMMAND="$@"
 cd $MAGENTO_DIR
 
 su magento -c 'bin/magento maintenance:enable'
-su magento -c 'bin/magento app:config:import'
+su magento -c 'bin/magento app:config:import -n'
 
 # Run Setup Upgrade
 su magento -c 'bin/magento setup:upgrade --keep-generated'
