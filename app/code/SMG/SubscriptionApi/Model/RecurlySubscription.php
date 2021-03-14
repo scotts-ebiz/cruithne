@@ -989,11 +989,7 @@ class RecurlySubscription
 
             $subCodes = [];
             foreach ($activeSubscriptions as $activeSubscription) {
-                $invoiceId = '';
-                if ($activeSubscription->getValues()['invoice']) { //Grab id from href cause only thing that has it
-                    $invoiceHref = $activeSubscription->getValues()['invoice']->getHref();
-                    $invoiceId = substr($invoiceHref, strrpos($invoiceHref, "/") + 1);
-                }
+                $invoiceId = $activeSubscription->invoice->get()->invoice_number;
 
                 $subCodes[] = [
                     'subscription_id' => $activeSubscription->getValues()['uuid'],
@@ -1003,12 +999,7 @@ class RecurlySubscription
             }
 
             foreach ($futureSubscriptions as $futureSubscription) {
-                $invoiceId = '';
-                if ($futureSubscription->getValues()['invoice']) { //Grab id from href cause only thing that has it
-                    $invoiceHref = $futureSubscription->getValues()['invoice']->getHref();
-                    $invoiceId = substr($invoiceHref, strrpos($invoiceHref, "/") + 1);
-                }
-
+                $invoiceId = $futureSubscription->invoice->get()->invoice_number;
 
                 $subCodes[] = [
                     'subscription_id' => $futureSubscription->getValues()['uuid'],

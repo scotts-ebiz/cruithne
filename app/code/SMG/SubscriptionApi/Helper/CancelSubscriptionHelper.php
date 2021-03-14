@@ -444,7 +444,7 @@ class CancelSubscriptionHelper extends AbstractHelper
 
             if ($subscription->getData('subscription_type') == 'annual') {
                 /** @var Recurly_Invoice $invoice */
-                $invoice = Recurly_Invoice::get($subscription->getData('recurly_invoice'));
+                $invoice = $recurlySubscription->invoice->get();
 
                 if (is_null($amount)) {
                     $this->_logger->info($this->_loggerPrefix . "Refunding Recurly subscription with ID {$recurlySubscription->uuid} with full amount: {$subscription->getData('paid')}...");
