@@ -989,28 +989,21 @@ class RecurlySubscription
 
             $subCodes = [];
             foreach ($activeSubscriptions as $activeSubscription) {
-                $invoiceId = $activeSubscription->invoice->get()->invoice_number;
-
                 $subCodes[] = [
                     'subscription_id' => $activeSubscription->getValues()['uuid'],
-                    'plan_code' => $activeSubscription->getValues()['plan']->getValues()['plan_code'],
-                    'invoice_id' => $invoiceId
+                    'plan_code' => $activeSubscription->getValues()['plan']->getValues()['plan_code']
                 ];
             }
 
             foreach ($futureSubscriptions as $futureSubscription) {
-                $invoiceId = $futureSubscription->invoice->get()->invoice_number;
-
                 $subCodes[] = [
                     'subscription_id' => $futureSubscription->getValues()['uuid'],
-                    'plan_code' => $futureSubscription->getValues()['plan']->getValues()['plan_code'],
-                    'invoice_id' => $invoiceId
+                    'plan_code' => $futureSubscription->getValues()['plan']->getValues()['plan_code']
                 ];
             }
 
             // Get the master subscription ID.
             $masterSubscriptionID = '';
-            $recurlyInvoiceId = '';
             foreach ($subCodes as $subCode) {
                 if (in_array($subCode['plan_code'], ['annual', 'seasonal'])) {
                     $masterSubscriptionID = $subCode['subscription_id'];
@@ -1022,10 +1015,8 @@ class RecurlySubscription
             foreach ($subCodes as $subCode) {
                 if (in_array($subCode['plan_code'], ['annual', 'seasonal'])) {
                     $this->_logger->info($this->_loggerPrefix . "Adding {$subCode['plan_code']} Recurly subscription ID {$subCode['subscription_id']} to the subscription");
-
                     $subscription
                         ->setData('subscription_id', $subCode['subscription_id'])
-                        ->setData('recurly_invoice', $subCode['invoice_id'])
                         ->save();
                 } elseif ($subCode['plan_code'] === 'add-ons') {
                     // Get the add-on and update the subscription ID.
