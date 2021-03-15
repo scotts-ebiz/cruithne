@@ -989,7 +989,14 @@ class RecurlySubscription
 
             $subCodes = [];
             foreach ($activeSubscriptions as $activeSubscription) {
-                $invoiceId = $activeSubscription->invoice->get()->invoice_number;
+
+                $invoiceId = "";
+
+                try {
+                    $invoiceId = $activeSubscription->invoice->get()->invoice_number;
+                } catch (Exception $e) {
+                    //do nothing
+                }
 
                 $subCodes[] = [
                     'subscription_id' => $activeSubscription->getValues()['uuid'],
@@ -999,8 +1006,13 @@ class RecurlySubscription
             }
 
             foreach ($futureSubscriptions as $futureSubscription) {
-                $invoiceId = $futureSubscription->invoice->get()->invoice_number;
 
+                $invoiceId = "";
+                try {
+                    $invoiceId = $futureSubscription->invoice->get()->invoice_number;
+                } catch (Exception $e) {
+                    //do nothing
+                }
                 $subCodes[] = [
                     'subscription_id' => $futureSubscription->getValues()['uuid'],
                     'plan_code' => $futureSubscription->getValues()['plan']->getValues()['plan_code'],
