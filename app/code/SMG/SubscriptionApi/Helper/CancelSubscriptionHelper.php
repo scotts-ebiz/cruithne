@@ -166,7 +166,7 @@ class CancelSubscriptionHelper extends AbstractHelper
 
         try {
             $this->_logger->info($this->_loggerPrefix . "Getting orders to cancel for subscription {$subscription->getData('subscription_id')}...");
-            $orders = $this->getOrders($subscription);
+            $orders = $subscription->getOrders();
             $isAnnual = $subscription->getData('subscription_type') == 'annual';
             $refundAmount = 0;
             $ordersRefunded = 0;
@@ -266,7 +266,7 @@ class CancelSubscriptionHelper extends AbstractHelper
             // If this is an annual subscription
             // Seasonal master subscriptions should not have an amount to get
             // refunded.
-            if ($ordersRefunded == $orders->count()) {
+            if ($ordersRefunded == count($orders)) {
                 // Refund full amount.
                 $this->_logger->info($this->_loggerPrefix . "All annual orders have been cancelled, so cancel the master subscription {$subscription->getData('subscription_id')} in Recurly with a full refund...");
                 $this->cancelMasterRecurlySubscription($subscription);
@@ -304,6 +304,9 @@ class CancelSubscriptionHelper extends AbstractHelper
                 ->addFieldToFilter(
                     'master_subscription_id',
                     $subscription->getData('subscription_id')
+                )->addFieldToFilter(
+                    'subscription_status',
+                    'active'
                 );
         } catch (Exception $e) {
             $error = 'There was an issue finding orders for subscription ' . $subscription->getData('subscription_id');
@@ -441,7 +444,7 @@ class CancelSubscriptionHelper extends AbstractHelper
 
             if ($subscription->getData('subscription_type') == 'annual') {
                 /** @var Recurly_Invoice $invoice */
-                $invoice = Recurly_Invoice::get($subscription->getData('recurly_invoice'));
+                $invoice = $recurlySubscription->invoice->get();
 
                 if (is_null($amount)) {
                     $this->_logger->info($this->_loggerPrefix . "Refunding Recurly subscription with ID {$recurlySubscription->uuid} with full amount: {$subscription->getData('paid')}...");
