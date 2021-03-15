@@ -21,18 +21,18 @@ class ShippingInformationManagement
      * @var SessionManagerInterface
      */
     protected $_coreSession;
-	
+
 	/**
      * @var SubscriptionHelper
      */
     protected $_subscriptionHelper;
-	
+
 	/**
      * @var StoreManagerInterface
      */
     protected $_storeManager;
 	protected $_recommendationHelper;
-	
+
     /**
      * ShippingInformationManagement constructor.
      *
@@ -62,11 +62,11 @@ class ShippingInformationManagement
         {
 			if ($this->_subscriptionHelper->isActive($this->_storeManager->getStore()->getId())) {
 				$this->_coreSession->start();
-					
+
 				/*check start quiz time is not exceed from 2 week*/
 				$startQuiz = $this->_coreSession->getTimeStamp();
 				if(!empty($startQuiz))
-				{   
+				{
 					$convertedDate = date('Y-m-d',$startQuiz);
 					$startYear = date('Y',$startQuiz);
 					$todayyear = date('Y');
@@ -80,10 +80,10 @@ class ShippingInformationManagement
 						 $this->logger->error(print_r($message,true));
 						 $message='Looks like your quiz results are out of date. To make sure you receive the most accurate recommendation,  please retake the Quiz.<a href="/quiz">Take the quiz</a>.';
 						 throw new InputException(__($message));
-					}				
+					}
 				}
 			}
-           
+
         }
         catch (\Exception $e)
         {
@@ -97,11 +97,11 @@ class ShippingInformationManagement
     {
         if ($this->_subscriptionHelper->isActive($this->_storeManager->getStore()->getId())) {
 				$this->_coreSession->start();
-					
+
 				/*check start quiz time is not exceed from 2 week*/
 				$startQuiz = $this->_coreSession->getTimeStamp();
 				if(!empty($startQuiz))
-				{   
+				{
 					$convertedDate = date('Y-m-d',$startQuiz);
 					$startYear = date('Y',$startQuiz);
 					$todayyear = date('Y');
@@ -112,10 +112,10 @@ class ShippingInformationManagement
 					if($days >= $this->_recommendationHelper->getExpiredDays($this->_storeManager->getStore()->getId()) && $startYear == $todayyear)
 					{
 						 $message = "Quiz Id ".$quiz_id." Expired";
-						 $this->logger->error(print_r($message,true));
+						 $this->_logger->error(print_r($message,true));
 						 $message='Looks like your quiz results are out of date. To make sure you receive the most accurate recommendation,  please retake the Quiz.<a href="/quiz">Take the quiz</a>.';
 						 throw new InputException(__($message));
-					}				
+					}
 				}
 		}
 
