@@ -1021,7 +1021,7 @@ class Subscription implements SubscriptionInterface
                 ['refresh' => false],
                 400
             );
-        } catch (Exception $ge) {                                                                                                                                                                                                                                                                                                                                                                                         
+        } catch (Exception $ge) {
             if (isset($newSub)) {
                 $newSub->setData('subscription_status', 'renewal_failed')->save();
                 try {
@@ -1032,7 +1032,7 @@ class Subscription implements SubscriptionInterface
                 }
             }
             $statusCode = 400;
-            if (str_contains($ge->getMessage(), 'calculate tax')) { 
+            if (str_contains($ge->getMessage(), 'calculate tax')) {
              $message = "AvaTax Exception: We got an error regarding avatax tax calculation. Please rerun the renewal subscription api.";
              $statusCode = 205;
             }
@@ -1157,5 +1157,48 @@ class Subscription implements SubscriptionInterface
             'success' => true,
             'message' => 'Subscriptions successfully cancelled.'
         ]);
+    }
+
+    /**
+     * @param string $subscription_entity_ids
+     * @return mixed
+     */
+    public function updateSubscriptionIds($subscription_entity_ids) {
+
+        $ids = explode(',', $subscription_entity_ids);
+
+        $errors = [];
+
+        foreach ($ids as $id) {
+            try {
+                /** @var SubscriptionModel $sub */
+                $subscription = $this->_subscriptionFactory->create();
+                $this->_subscriptionResource->load($subscription, $id, 'entity_id');
+                $this->_recurlySubscription->updateSubscriptionIDs($subscription);
+                $subscription->setData('subscription_status', 'pending_order')->save();
+
+            } catch (Exception $e) {
+                $error = 'There was an issue saving the subscription information : ' . $id;
+                $this->_logger->error($error . " : " . $e->getMessage());
+
+                $errors[] =  [
+                    'success' => false,
+                    'message' => $error . " : " . $e->getMessage()
+                ];
+            }
+        }
+
+        if (empty($errors)) {
+            return json_encode([
+                'success' => true,
+                'message' => 'Subscriptions successfully updated.'
+            ]);
+        } else {
+            return json_encode([
+                'success' => false,
+                'message' => json_encode($errors)
+            ]);
+        }
+
     }
 }
