@@ -8,19 +8,11 @@ set -euxo pipefail
 COMMAND="$@"
 
 cd $MAGENTO_DIR
-
 su magento -c 'bin/magento maintenance:enable'
-su magento -c 'bin/magento app:config:import -n'
-
-# Run Setup Upgrade
 su magento -c 'bin/magento setup:upgrade --keep-generated'
-
-# Reindex and Cache Flush, and disabling maintenance mode
 su magento -c 'bin/magento -v index:reindex'
 su magento -c 'bin/magento maintenance:disable'
 su magento -c 'bin/magento -v cache:flush'
-
-git status
 
 # Activate services
 service collector start
