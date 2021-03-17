@@ -1175,7 +1175,7 @@ class Subscription implements SubscriptionInterface
                 $subscription = $this->_subscriptionFactory->create();
                 $this->_subscriptionResource->load($subscription, $id, 'entity_id');
                 $this->_recurlySubscription->updateSubscriptionIDs($subscription);
-                $subscription->setData('subscription_status', 'pending_order')->save();
+                $subscription->setData('subscription_status', 'active')->save();
 
             } catch (Exception $e) {
                 $error = 'There was an issue saving the subscription information : ' . $id;
