@@ -207,7 +207,7 @@ class Subscription implements SubscriptionInterface
     protected $_regionCollectionFactory;
     protected $_subscriptionRenewalErrorFactory;
 
-	/**
+    /**
      * @var CancelHelper
      */
     protected $_cancelHelper;
@@ -248,7 +248,7 @@ class Subscription implements SubscriptionInterface
      * @param HistoryFactory $historyFactory
      * @param HistoryResource $historyResource
      * @param SubscriptionRenewalErrorFactory $subscriptionRenewalErrorFactory
-	 * @param CancelHelper $cancelHelper
+     * @param CancelHelper $cancelHelper
      */
     public function __construct(
         LoggerInterface $logger,
@@ -290,7 +290,7 @@ class Subscription implements SubscriptionInterface
         SubscriptionOrderItemFactory $subscriptionOrderItemFactory,
         RegionCollectionFactory $regionCollectionFactory,
         SubscriptionRenewalErrorFactory $subscriptionRenewalErrorFactory,
-		CancelHelper $cancelHelper
+        CancelHelper $cancelHelper
     ) {
         $this->_logger = $logger;
         $this->_recommendationHelper = $recommendationHelper;
@@ -950,9 +950,6 @@ class Subscription implements SubscriptionInterface
             $customer = $sub->getCustomer();
             $subOrders = $sub->getSubscriptionOrders();
 
-            $newSub = $this->createRenewalSubscription($sub);
-            $newSubOrders = [];
-            $newSubOrderItems = [];
             $isPreviousSubscriptionOkToRenew = true;
 
             /** @var SubscriptionOrder $order */
@@ -972,6 +969,10 @@ class Subscription implements SubscriptionInterface
                     409
                 );
             }
+
+            $newSub = $this->createRenewalSubscription($sub);
+            $newSubOrders = [];
+            $newSubOrderItems = [];
 
             foreach ($subOrders as $order) {
                 $newOrder = $this->createRenewalSubscriptionOrder($order, $newSub->getData('entity_id'));
@@ -1030,13 +1031,19 @@ class Subscription implements SubscriptionInterface
                     $this->createRenewalError($master_subscription_id, $message);
                 }
             }
-
-            $message = "General Exception: ".$ge->getMessage();
+            $statusCode = 400;
+            if (str_contains($ge->getMessage(), 'calculate tax')) {
+             $message = "AvaTax Exception: We got an error regarding avatax tax calculation. Please rerun the renewal subscription api.";
+             $statusCode = 205;
+            }
+            else{
+             $message = "General Exception: ".$ge->getMessage();
+            }
             $this->createRenewalError($master_subscription_id, $message);
             return $this->_responseHelper->error(
                 $message,
                 ['refresh' => false],
-                400
+                $statusCode
             );
         }
 
@@ -1126,29 +1133,72 @@ class Subscription implements SubscriptionInterface
         return $return;
     }
 
-	/**
+    /**
      * @param string $master_subscription_id
      * @return mixed
      */
     public function cancelSubscription($master_subscription_id) {
 
-		$this->_logger->debug("Cancel master subscription id: " . $master_subscription_id);
+        $this->_logger->debug("Cancel master subscription id: " . $master_subscription_id);
 
-		// Cancel Subscriptions
-		try {
-			$this->_cancelHelper->cancelSubscriptions($master_subscription_id,'','api');
-		} catch (Exception $e) {
-			$this->_logger->error($e->getMessage());
+        // Cancel Subscriptions
+        try {
+            $this->_cancelHelper->cancelSubscriptions($master_subscription_id,'','api');
+        } catch (Exception $e) {
+            $this->_logger->error($e->getMessage());
 
-			return json_encode([
-				'success' => false,
-				'message' => $e->getMessage()
-			]);
-		}
+            return json_encode([
+                'success' => false,
+                'message' => $e->getMessage()
+            ]);
+        }
 
-		return json_encode([
-			'success' => true,
-			'message' => 'Subscriptions successfully cancelled.'
-		]);
+        return json_encode([
+            'success' => true,
+            'message' => 'Subscriptions successfully cancelled.'
+        ]);
+    }
+
+    /**
+     * @param string $subscription_entity_ids
+     * @return mixed
+     */
+    public function updateSubscriptionIds($subscription_entity_ids) {
+
+        $ids = explode(',', $subscription_entity_ids);
+
+        $errors = [];
+
+        foreach ($ids as $id) {
+            try {
+                /** @var SubscriptionModel $sub */
+                $subscription = $this->_subscriptionFactory->create();
+                $this->_subscriptionResource->load($subscription, $id, 'entity_id');
+                $this->_recurlySubscription->updateSubscriptionIDs($subscription);
+                $subscription->setData('subscription_status', 'active')->save();
+
+            } catch (Exception $e) {
+                $error = 'There was an issue saving the subscription information : ' . $id;
+                $this->_logger->error($error . " : " . $e->getMessage());
+
+                $errors[] =  [
+                    'success' => false,
+                    'message' => $error . " : " . $e->getMessage()
+                ];
+            }
+        }
+
+        if (empty($errors)) {
+            return json_encode([
+                'success' => true,
+                'message' => 'Subscriptions successfully updated.'
+            ]);
+        } else {
+            return json_encode([
+                'success' => false,
+                'message' => json_encode($errors)
+            ]);
+        }
+
     }
 }
