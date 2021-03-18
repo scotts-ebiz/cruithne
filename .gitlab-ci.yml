@@ -1,4 +1,4 @@
 include:
   - project: 'scotts-miracle-gro/marketing/cloud-apps/commerce-subsystem/magento2-primer-image-repository'
-    ref: 'task/DDI-788'
+    ref: 'development'
     file: '/magento/.gitlab-ci.yml'
