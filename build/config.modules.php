@@ -129,6 +129,7 @@ return [
         'Magento_Fedex' => 1,
         'Magento_Tax' => 1,
         'Magento_GiftCardAccount' => 0,
+        'Magento_GiftCardAccountGraphQl' => 0,
         'Magento_GiftCardGraphQl' => 0,
         'Magento_GiftCardImportExport' => 0,
         'Magento_VisualMerchandiser' => 1,
@@ -418,5 +419,5 @@ return [
         'Vertex_AddressValidation' => 0,
         'Yotpo_Yotpo' => 1,
         'SMG_Zaius' => 1
-    ],
+    ]
 ];

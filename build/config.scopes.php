@@ -129,6 +129,7 @@ return [
         'Magento_Fedex' => 1,
         'Magento_Tax' => 1,
         'Magento_GiftCardAccount' => 0,
+        'Magento_GiftCardAccountGraphQl' => 0,
         'Magento_GiftCardGraphQl' => 0,
         'Magento_GiftCardImportExport' => 0,
         'Magento_VisualMerchandiser' => 1,
@@ -437,62 +438,6 @@ return [
                 'default_group_id' => '1',
                 'is_default' => '1'
             ],
-//            'mygro' => [
-//                'website_id' => '2',
-//                'code' => 'mygro',
-//                'name' => 'MyGro',
-//                'sort_order' => '0',
-//                'default_group_id' => '2',
-//                'is_default' => '0'
-//            ],
-//            'scotts' => [
-//                'website_id' => '3',
-//                'code' => 'scotts',
-//                'name' => 'Scotts',
-//                'sort_order' => '0',
-//                'default_group_id' => '3',
-//                'is_default' => '0'
-//            ],
-//            'roundup' => [
-//                'website_id' => '4',
-//                'code' => 'roundup',
-//                'name' => 'Roundup',
-//                'sort_order' => '0',
-//                'default_group_id' => '4',
-//                'is_default' => '0'
-//            ],
-//            'miraclegro' => [
-//                'website_id' => '5',
-//                'code' => 'miraclegro',
-//                'name' => 'Miraclegro',
-//                'sort_order' => '0',
-//                'default_group_id' => '5',
-//                'is_default' => '0'
-//            ],
-//            'ortho' => [
-//                'website_id' => '6',
-//                'code' => 'ortho',
-//                'name' => 'Ortho',
-//                'sort_order' => '0',
-//                'default_group_id' => '6',
-//                'is_default' => '0'
-//            ],
-//            'tomcat' => [
-//                'website_id' => '7',
-//                'code' => 'tomcat',
-//                'name' => 'Tomcat',
-//                'sort_order' => '0',
-//                'default_group_id' => '7',
-//                'is_default' => '0'
-//            ],
-//            'mulchdirect' => [
-//                'website_id' => '8',
-//                'code' => 'mulchdirect',
-//                'name' => 'Mulch Direct',
-//                'sort_order' => '0',
-//                'default_group_id' => '8',
-//                'is_default' => '0'
-//            ]
         ],
         'groups' => [
             [
@@ -511,62 +456,6 @@ return [
                 'default_store_id' => '1',
                 'code' => 'main_website_store'
             ],
-//            [
-//                'group_id' => '2',
-//                'website_id' => '2',
-//                'name' => 'MyGro',
-//                'root_category_id' => '3',
-//                'default_store_id' => '2',
-//                'code' => 'mygro'
-//            ],
-//            [
-//                'group_id' => '3',
-//                'website_id' => '3',
-//                'name' => 'Scotts Store',
-//                'root_category_id' => '2',
-//                'default_store_id' => '3',
-//                'code' => 'scotts'
-//            ],
-//            [
-//                'group_id' => '4',
-//                'website_id' => '4',
-//                'name' => 'Roundup Store',
-//                'root_category_id' => '2',
-//                'default_store_id' => '4',
-//                'code' => 'roundup'
-//            ],
-//            [
-//                'group_id' => '5',
-//                'website_id' => '5',
-//                'name' => 'Miraclegro Store',
-//                'root_category_id' => '2',
-//                'default_store_id' => '5',
-//                'code' => 'miraclegro'
-//            ],
-//            [
-//                'group_id' => '6',
-//                'website_id' => '6',
-//                'name' => 'Ortho Store',
-//                'root_category_id' => '2',
-//                'default_store_id' => '6',
-//                'code' => 'ortho'
-//            ],
-//            [
-//                'group_id' => '7',
-//                'website_id' => '7',
-//                'name' => 'Tomcat Store',
-//                'root_category_id' => '2',
-//                'default_store_id' => '7',
-//                'code' => 'tomcat'
-//            ],
-//            [
-//                'group_id' => '8',
-//                'website_id' => '8',
-//                'name' => 'Mulch Direct Store',
-//                'root_category_id' => '19',
-//                'default_store_id' => '8',
-//                'code' => 'mulchdirect'
-//            ]
         ],
         'stores' => [
             'admin' => [
@@ -587,69 +476,6 @@ return [
                 'sort_order' => '0',
                 'is_active' => '1'
             ],
-//            'mygro' => [
-//                'store_id' => '2',
-//                'code' => 'mygro',
-//                'website_id' => '2',
-//                'group_id' => '2',
-//                'name' => 'MyGro Store',
-//                'sort_order' => '0',
-//                'is_active' => '1'
-//            ],
-//            'scotts' => [
-//                'store_id' => '3',
-//                'code' => 'scotts',
-//                'website_id' => '3',
-//                'group_id' => '3',
-//                'name' => 'Scotts View',
-//                'sort_order' => '0',
-//                'is_active' => '1'
-//            ],
-//            'roundup' => [
-//                'store_id' => '4',
-//                'code' => 'roundup',
-//                'website_id' => '4',
-//                'group_id' => '4',
-//                'name' => 'Roundup View',
-//                'sort_order' => '0',
-//                'is_active' => '1'
-//            ],
-//            'miraclegro' => [
-//                'store_id' => '5',
-//                'code' => 'miraclegro',
-//                'website_id' => '5',
-//                'group_id' => '5',
-//                'name' => 'Miraclegro',
-//                'sort_order' => '0',
-//                'is_active' => '1'
-//            ],
-//            'ortho' => [
-//                'store_id' => '6',
-//                'code' => 'ortho',
-//                'website_id' => '6',
-//                'group_id' => '6',
-//                'name' => 'Ortho View',
-//                'sort_order' => '0',
-//                'is_active' => '1'
-//            ],
-//            'tomcat' => [
-//                'store_id' => '7',
-//                'code' => 'tomcat',
-//                'website_id' => '7',
-//                'group_id' => '7',
-//                'name' => 'Tomcat View',
-//                'sort_order' => '0',
-//                'is_active' => '1'
-//            ],
-//            'mulchdirect' => [
-//                'store_id' => '8',
-//                'code' => 'mulchdirect',
-//                'website_id' => '8',
-//                'group_id' => '8',
-//                'name' => 'Mulch Direct View',
-//                'sort_order' => '0',
-//                'is_active' => '1'
-//            ]
         ]
     ]
 ];
