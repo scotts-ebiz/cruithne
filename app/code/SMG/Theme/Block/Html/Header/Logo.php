@@ -3,6 +3,7 @@
 namespace SMG\Theme\Block\Html\Header;
 
 use SMG\SubscriptionApi\Model\RecurlySubscription;
+use Magento\Framework\App\Http\Context as AuthContext;
 use Recurly_Client;
 
 /**
@@ -33,6 +34,11 @@ class Logo extends \Magento\Theme\Block\Html\Header\Logo
     protected $_customer;
 
     /**
+     * @var AuthContext
+     */
+    private $authContext;
+
+    /**
      * Logo constructor.
      * @param \Magento\Framework\View\Element\Template\Context $context
      * @param \Magento\MediaStorage\Helper\File\Storage\Database $fileStorageHelper
@@ -40,6 +46,7 @@ class Logo extends \Magento\Theme\Block\Html\Header\Logo
      * @param \SMG\SubscriptionApi\Model\RecurlySubscription $recurlySubscription
      * @param \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper
      * @param \Magento\Customer\Model\Customer $customer
+     * @param AuthContext $authContext
      * @param array $data
      */
     public function __construct(
@@ -49,12 +56,14 @@ class Logo extends \Magento\Theme\Block\Html\Header\Logo
         RecurlySubscription $recurlySubscription,
         \SMG\SubscriptionApi\Helper\RecurlyHelper $recurlyHelper,
         \Magento\Customer\Model\Customer $customer,
+        AuthContext $authContext,
         array $data = []
     ) {
         $this->_session = $session;
         $this->_recurlySubscription = $recurlySubscription;
         $this->_recurlyHelper = $recurlyHelper;
         $this->_customer = $customer;
+        $this->authContext = $authContext;
         parent::__construct($context, $fileStorageHelper, $data);
     }
 
@@ -65,9 +74,9 @@ class Logo extends \Magento\Theme\Block\Html\Header\Logo
      */
     public function isLoggedIn()
     {
-        $visitorData = $this->_session->getData("visitor_data");
-
-        return isset( $visitorData["do_customer_login"] ) && $visitorData["do_customer_login"];
+        return $this->authContext->getValue(
+            \Magento\Customer\Model\Context::CONTEXT_AUTH
+        );
     }
 
     /**
