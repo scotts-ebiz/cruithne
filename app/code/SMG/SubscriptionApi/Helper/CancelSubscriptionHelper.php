@@ -271,7 +271,7 @@ class CancelSubscriptionHelper extends AbstractHelper
                 $this->_logger->info($this->_loggerPrefix . "All annual orders have been cancelled, so cancel the master subscription {$subscription->getData('subscription_id')} in Recurly with a full refund...");
                 $this->cancelMasterRecurlySubscription($subscription);
             } else {
-                // Refund a partial amount.
+                // Refund a partial amount
                 $this->_logger->info($this->_loggerPrefix . "Some orders have shipped so cancel the master subscription {$subscription->getData('subscription_id')} in Recurly with a partial refund...");
                 $this->cancelMasterRecurlySubscription($subscription, $refundAmount);
             }
@@ -448,7 +448,7 @@ class CancelSubscriptionHelper extends AbstractHelper
 
                 if (is_null($amount)) {
                     $this->_logger->info($this->_loggerPrefix . "Refunding Recurly subscription with ID {$recurlySubscription->uuid} with full amount: {$subscription->getData('paid')}...");
-                    $invoice->refundAmount($this->convertAmountToCents($subscription->getData('paid')), 'transaction_first');
+                    $invoice->refundAmount($invoice->total_in_cents, 'transaction_first');
                 } else {
                     $this->_logger->info($this->_loggerPrefix . "Refunding Recurly subscription with ID {$recurlySubscription->uuid} with partial amount: {$amount}...");
                     $invoice->refundAmount($amount, 'transaction_first');
