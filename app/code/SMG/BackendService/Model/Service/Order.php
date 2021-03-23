@@ -13,6 +13,7 @@ use \Magento\Customer\Model\AddressFactory;
 use \Magento\Sales\Api\Data\TransactionSearchResultInterfaceFactory as TrasactionResultInterface;
 use \Psr\Log\LoggerInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Store\Model\StoreManagerInterface;
 
 class Order
 {
@@ -63,6 +64,11 @@ class Order
     protected $productRepository;
 
     /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
      * Order constructor.
      * @param Api $client
      * @param Config $config
@@ -72,6 +78,7 @@ class Order
      * @param AddressFactory $addressFactory
      * @param TrasactionResultInterface $trasactionResultInterface
      * @param LoggerInterface $logger
+     * @param StoreManagerInterface $storeManager
      */
     public function __construct(
         Api $client,
@@ -82,7 +89,8 @@ class Order
         AddressFactory $addressFactory,
         TrasactionResultInterface $trasactionResultInterface,
         LoggerInterface $logger,
-        ProductRepositoryInterface $productRepository
+        ProductRepositoryInterface $productRepository,
+        StoreManagerInterface $storeManager
     ) {
         $this->client = $client;
         $this->config = $config;
@@ -93,6 +101,7 @@ class Order
         $this->trasactionResultInterface = $trasactionResultInterface;
         $this->logger = $logger;
         $this->productRepository = $productRepository;
+        $this->storeManager = $storeManager;
     }
 
     /**
@@ -238,7 +247,10 @@ class Order
             $params['products'][$i]['generatedProductId'] = '';
             $params['products'][$i]['coverage'] = '';
             $params['products'][$i]['description'] = $product->getDescription();
-            $params['products'][$i]['thumbnailImage'] = $product->getThumbnail();
+            $imageUrl = $this->storeManager->getStore($product->getStoreId())
+                    ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA ). 'catalog/product';
+            $thumbnailUrl = $imageUrl . ($product->getThumbnail() ?? '');
+            $params['products'][$i]['thumbnailImage'] = $thumbnailUrl;
             $params['products'][$i]['shortDescription'] = $product->getShortDescription();
             $params['products'][$i]['thumbnailLabel'] = $product->getThumbnailLabel();
             $params['products'][$i]['shipStartDate'] = $order->getData('ship_start_date');
