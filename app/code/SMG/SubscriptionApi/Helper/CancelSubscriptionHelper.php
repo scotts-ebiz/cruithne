@@ -449,6 +449,8 @@ class CancelSubscriptionHelper extends AbstractHelper
                 if (is_null($amount)) {
                     $this->_logger->info($this->_loggerPrefix . "Refunding Recurly subscription with ID {$recurlySubscription->uuid} with full amount: {$subscription->getData('paid')}...");
                     $invoice->refundAmount($invoice->total_in_cents, 'transaction_first');
+                } else if ($amount == 0) {
+                    $this->_logger->info($this->_loggerPrefix . "No need to refund Recurly subscription with ID {$recurlySubscription->uuid} amount is 0...");
                 } else {
                     $this->_logger->info($this->_loggerPrefix . "Refunding Recurly subscription with ID {$recurlySubscription->uuid} with partial amount: {$amount}...");
                     $invoice->refundAmount($amount, 'transaction_first');
