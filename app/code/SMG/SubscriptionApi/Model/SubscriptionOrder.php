@@ -273,13 +273,18 @@ class SubscriptionOrder extends AbstractModel
     {
         /** @var Order $order */
         $order = $this->_orderFactory->create();
-        $this->_orderResource->load($order, $this->getData('sales_order_id'));
+        $salesOrderId = $this->getData('sales_order_id');
 
-        if (!$order->getId()) {
-            return null;
+        if (!empty($salesOrderId)) {
+            $this->_orderResource->load($order, $this->getData('sales_order_id'));
+            if (!$order->getId()) {
+                return null;
+            } else {
+                return $order;
+            }
         }
 
-        return $order;
+        return null;
     }
 
     /**
@@ -346,7 +351,7 @@ class SubscriptionOrder extends AbstractModel
     {
         $today = new DateTime();
         $shipStart = DateTime::createFromFormat('Y-m-d H:i:s', $this->getShipStartDate());
-        
+
         return $today >= $shipStart;
     }
 
