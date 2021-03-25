@@ -984,8 +984,18 @@ class Subscription implements SubscriptionInterface
 
             $account = $this->_recurlySubscription->getRecurlyAccount($sub->getData('gigya_id'));
 
-            $billing = $account->invoices->get(0)->current()->getValues()['address']->getValues();
-            $shipping = $account->invoices->get(0)->current()->getValues()['shipping_address']->getValues();
+            $recurlySubs = $account->subscriptions->get();
+            $invoice = null;
+
+            foreach ($recurlySubs as $recurlySub) {
+                $planCode = $recurlySub->getValues()['plan']->getValues()['plan_code'];
+                if (in_array($planCode, ['annual', 'seasonal'])) {
+                    $invoice = $recurlySub->invoice->get();
+                }
+            }
+
+            $billing = $invoice->getValues()['address']->getValues();
+            $shipping = $invoice->getValues()['shipping_address']->getValues();
 
             if (empty($billing['phone'])) {
                 $billing['phone'] = $shipping['phone'];
@@ -994,11 +1004,23 @@ class Subscription implements SubscriptionInterface
             $this->_coreSession->setCheckoutShipping($this->formatAddressFromRecurlyInfo($shipping));
             $this->_coreSession->setCheckoutBilling($this->formatAddressFromRecurlyInfo($billing));
 
+
             foreach($newSubOrders as $order) {
                 $this->_subscriptionOrderHelper->processOrder($customer, $order);
             }
 
             $this->_recurlySubscription->updateSubscriptionIDs($newSub);
+
+            $newSub->addData([
+                'recurly_invoice' => $invoice->invoice_number,
+                'paid' => $this->convertAmountToDollars($invoice->total_in_cents),
+                'price' => $this->convertAmountToDollars($invoice->subtotal_before_discount_in_cents),
+                'discount' => $this->convertAmountToDollars(-$invoice->discount_in_cents),
+                'tax' => $this->convertAmountToDollars($invoice->tax_in_cents)
+            ]);
+
+            $this->_subscriptionResource->save($newSub);
+
             $sub->setData('subscription_status', 'renewed'); // Set old sub as renewed
             $sub->save();
             return true;
@@ -1021,7 +1043,7 @@ class Subscription implements SubscriptionInterface
                 ['refresh' => false],
                 400
             );
-        } catch (Exception $ge) {                                                                                                                                                                                                                                                                                                                                                                                         
+        } catch (Exception $ge) {
             if (isset($newSub)) {
                 $newSub->setData('subscription_status', 'renewal_failed')->save();
                 try {
@@ -1032,7 +1054,7 @@ class Subscription implements SubscriptionInterface
                 }
             }
             $statusCode = 400;
-            if (str_contains($ge->getMessage(), 'calculate tax')) { 
+            if (str_contains($ge->getMessage(), 'calculate tax')) {
              $message = "AvaTax Exception: We got an error regarding avatax tax calculation. Please rerun the renewal subscription api.";
              $statusCode = 205;
             }
@@ -1134,6 +1156,15 @@ class Subscription implements SubscriptionInterface
     }
 
     /**
+     * Convert cents to dollars
+     *
+     */
+    protected function convertAmountToDollars($amount)
+    {
+        return number_format(($amount/100), 2, '.', ' ');
+    }
+
+    /**
      * @param string $master_subscription_id
      * @return mixed
      */
@@ -1157,5 +1188,48 @@ class Subscription implements SubscriptionInterface
             'success' => true,
             'message' => 'Subscriptions successfully cancelled.'
         ]);
+    }
+
+    /**
+     * @param string $subscription_entity_ids
+     * @return mixed
+     */
+    public function updateSubscriptionIds($subscription_entity_ids) {
+
+        $ids = explode(',', $subscription_entity_ids);
+
+        $errors = [];
+
+        foreach ($ids as $id) {
+            try {
+                /** @var SubscriptionModel $sub */
+                $subscription = $this->_subscriptionFactory->create();
+                $this->_subscriptionResource->load($subscription, $id, 'entity_id');
+                $this->_recurlySubscription->updateSubscriptionIDs($subscription);
+                $subscription->setData('subscription_status', 'active')->save();
+
+            } catch (Exception $e) {
+                $error = 'There was an issue saving the subscription information : ' . $id;
+                $this->_logger->error($error . " : " . $e->getMessage());
+
+                $errors[] =  [
+                    'success' => false,
+                    'message' => $error . " : " . $e->getMessage()
+                ];
+            }
+        }
+
+        if (empty($errors)) {
+            return json_encode([
+                'success' => true,
+                'message' => 'Subscriptions successfully updated.'
+            ]);
+        } else {
+            return json_encode([
+                'success' => false,
+                'message' => json_encode($errors)
+            ]);
+        }
+
     }
 }

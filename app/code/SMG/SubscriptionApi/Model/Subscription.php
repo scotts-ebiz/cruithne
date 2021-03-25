@@ -663,18 +663,20 @@ class Subscription extends AbstractModel
             $orders = array_merge($orders, $addons);
         }
 
-        /** @var Order $order */
+        /** @var SubscriptionOrder $o */
         foreach ($orders as $o) {
             $order = $o->getOrder();
-            $hasInvoices = $order->getInvoiceCollection()->count() > 0;
-            $hasShipments = $order->getShipmentsCollection()->count() > 0;
+            if (!empty($order)) {
+                $hasInvoices = $order->getInvoiceCollection()->count() > 0;
+                $hasShipments = $order->getShipmentsCollection()->count() > 0;
 
-            if (
-                (is_null($filterByInvoiced) || $filterByInvoiced === $hasInvoices)
+                if (
+                    (is_null($filterByInvoiced) || $filterByInvoiced === $hasInvoices)
                     &&
-                (is_null($filterByShipped) || $filterByShipped === $hasShipments)
-            ) {
-                $ordersArray[] = $order;
+                    (is_null($filterByShipped) || $filterByShipped === $hasShipments)
+                ) {
+                    $ordersArray[] = $order;
+                }
             }
         }
 
