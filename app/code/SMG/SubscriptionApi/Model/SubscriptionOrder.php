@@ -277,9 +277,7 @@ class SubscriptionOrder extends AbstractModel
 
         if (!empty($salesOrderId)) {
             $this->_orderResource->load($order, $this->getData('sales_order_id'));
-            if (!$order->getId()) {
-                return null;
-            } else {
+            if ($order->getId()) {
                 return $order;
             }
         }
