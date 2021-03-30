@@ -296,13 +296,16 @@ class SubscriptionAddonOrder extends AbstractModel
     {
         /** @var Order $order */
         $order = $this->_orderFactory->create();
-        $this->_orderResource->load($order, $this->getData('sales_order_id'));
+        $salesOrderId = $this->getData('sales_order_id');
 
-        if (!$order->getId()) {
-            return null;
+        if (!empty($salesOrderId)) {
+            $this->_orderResource->load($order, $this->getData('sales_order_id'));
+            if ($order->getId()) {
+                return $order;
+            }
         }
 
-        return $order;
+        return null;
     }
 
     /**

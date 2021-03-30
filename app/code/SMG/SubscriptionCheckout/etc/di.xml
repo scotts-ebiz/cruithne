@@ -17,8 +17,8 @@
 	<type name="Magento\Checkout\Model\ShippingInformationManagement">
 		<plugin name="SMG_Subscriptioncheckout_Model_ShippingInformationManagement" type="SMG\SubscriptionCheckout\Plugin\Model\ShippingInformationManagement" sortOrder="10"/>
 	</type>
-	<type name="Magento\Checkout\Model\PaymentInformationManagement">
-        <plugin name="smg_subscriptioncheckout_plugin_model_savepaymentplugin"
-                type="SMG\SubscriptionCheckout\Plugin\Model\SavePaymentPlugin" sortOrder="10"/>
+    <type name="Magento\Sales\Api\OrderManagementInterface">
+        <plugin name="before_place_order_operation"
+                type="SMG\SubscriptionCheckout\Plugin\OrderManagement"/>
     </type>
 </config>
