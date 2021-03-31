@@ -168,7 +168,7 @@ class Index
                             $todayDate = new \DateTime();
                             $days  = $todayDate->diff($startDate)->format('%a');
                             $quiz_id = $this->_coreSession->getData('quiz_id');
-                            if($days >= $this->_recommendationHelper->getExpiredDays($this->_storeManager->getStore()->getId()) && $startYear == $todayyear)
+                            if($days >= $this->_recommendationHelper->getExpiredDays($this->_storeManager->getStore()->getId()) || $startYear != $todayyear)
                             {
                                  $message = "Quiz Id ".$quiz_id." Expired";
                                  $this->_messageManager->addError(__('Looks like your quiz results are out of date.
