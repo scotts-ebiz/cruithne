@@ -352,6 +352,10 @@ class Recommendation implements RecommendationInterface
         $this->_coreSession->setQuizId($response[0]['id']);
         $this->_coreSession->setZipCode($zip);
 
+        // set timestamp of subcription created date
+        $timestamp = strtotime($subscription->getData('created_at'));
+        $this->_coreSession->setTimeStamp($timestamp);
+
         $response[0]['subscription'] = [
             'lawn_size' => $subscription->getData('lawn_size'),
             'lawn_zip' => $subscription->getData('lawn_zip'),
