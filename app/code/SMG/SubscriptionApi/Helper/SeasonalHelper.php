@@ -317,32 +317,36 @@ class SeasonalHelper extends AbstractHelper
      * @return bool
      */
     protected function verifyRecurlySeasonalOrder($order)
-    {
-        try {
-            $recurlySubscription = $this->getRecurlySubscriptionFromOrder($order);
+{
+    try {
+        $recurlySubscription = $this->getRecurlySubscriptionFromOrder($order);
 
-            if ($recurlySubscription
-                && $recurlySubscription->state == 'active'
-                && $recurlySubscription->activated_at < $this->_today
-                && $recurlySubscription->activated_at > $this->_failDate
-            ) {
-                // Subscription is fine, lets get the invoice and check the
-                // status there.
-                $invoice = $recurlySubscription->invoice->get();
+        $year = date("Y");
+        $originalActivatedAt = $recurlySubscription->activated_at;
+        $newActivatedAt = date_create($originalActivatedAt->format($year."-m-d"));
 
-                if (! $invoice || $invoice->state != 'paid') {
-                    return false;
-                }
+        if ($recurlySubscription
+            && $recurlySubscription->state == 'active'
+            && $newActivatedAt < $this->_today
+            && $newActivatedAt > $this->_failDate
+        ) {
+            // Subscription is fine, lets get the invoice and check the
+            // status there.
+            $invoice = $recurlySubscription->invoice->get();
 
-                // Invoice does exist and it has been paid.
-                return true;
+            if (! $invoice || $invoice->state != 'paid') {
+                return false;
             }
 
-            return false;
-        } catch (Exception $e) {
-            $this->_logger->error('Could not verify Recurly subscription - ' . $e->getMessage());
-
-            return false;
+            // Invoice does exist and it has been paid.
+            return true;
         }
+
+        return false;
+    } catch (Exception $e) {
+        $this->_logger->error('Could not verify Recurly subscription - ' . $e->getMessage());
+
+        return false;
     }
+}
 }
