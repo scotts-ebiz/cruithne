@@ -732,7 +732,7 @@ class OrderStatusHelper
         // check delivery number
         $inputValue = $inputOrder[self::INPUT_SAP_DELIVERY_NUMBER];
         $sapOrderValue = $sapOrderShipment->getData('delivery_number');
-        if ((!empty($inputValue) || !empty($sapOrderValue)) && $inputValue !== $sapOrderValue)
+        if (!empty($inputValue) && $inputValue !== $sapOrderValue)
         {
             $isUpdateNeeded = true;
             $sapOrderShipment->setData('delivery_number', $inputValue);
