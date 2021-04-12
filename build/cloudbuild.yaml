@@ -41,4 +41,4 @@ steps:
     - 'CLOUDSDK_CONTAINER_CLUSTER=${_CLOUDSDK_CONTAINER_CLUSTER}'
 
 
-timeout: 10800s
+timeout: 6000s
