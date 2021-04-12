@@ -66,4 +66,10 @@ We also have TravisCI creating an adhoc sample build of Magento every time a new
 
 
 
-Lastly, look out for conflicts. Not just at PR creation time, but as new PRs go in. Sometimes code affects each other and you may be responsible to update any conficts that arrise. 
+Lastly, look out for conflicts. Not just at PR creation time, but as new PRs go in. Sometimes code affects each other and you may be responsible to update any conficts that arrise.
+
+## Manual rollback in case of non-working deployment
+
+If for some reason the code you pushed does not work after deployment, you can rollback to the previous version. To do this, follow the GCP console -> CloudBuild and manually start the manual rollback job of the required environment.
+
+![cloudbuild-rollback](cloudbuild-rollback.png)
