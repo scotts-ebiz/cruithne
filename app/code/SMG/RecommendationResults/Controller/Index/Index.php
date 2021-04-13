@@ -69,6 +69,7 @@ class Index extends Action
         /*check start quiz time is not exceed from 2 week*/
         $this->_coreSession->start();
         $startQuiz = $this->_coreSession->getTimeStamp();
+        $this->_messageManager->getMessages(true);
         if(!empty($startQuiz))
         {   
             $convertedDate = date('Y-m-d',$startQuiz);
@@ -79,7 +80,7 @@ class Index extends Action
             $days  = $todayDate->diff($startDate)->format('%a');
             $quiz_id = $this->_coreSession->getData('quiz_id');
 
-            if($days >= $this->_recommendationHelper->getExpiredDays($this->_storeManager->getStore()->getId()) && $startYear == $todayyear)
+            if($days >= $this->_recommendationHelper->getExpiredDays($this->_storeManager->getStore()->getId()) || $startYear != $todayyear)
             {
                 $message = "Quiz Id ".$quiz_id." Expired";
                 $this->_messageManager->addError(__('Looks like your quiz results are out of date.

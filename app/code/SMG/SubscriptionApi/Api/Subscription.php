@@ -984,8 +984,18 @@ class Subscription implements SubscriptionInterface
 
             $account = $this->_recurlySubscription->getRecurlyAccount($sub->getData('gigya_id'));
 
-            $billing = $account->invoices->get(0)->current()->getValues()['address']->getValues();
-            $shipping = $account->invoices->get(0)->current()->getValues()['shipping_address']->getValues();
+            $recurlySubs = $account->subscriptions->get();
+            $invoice = null;
+
+            foreach ($recurlySubs as $recurlySub) {
+                $planCode = $recurlySub->getValues()['plan']->getValues()['plan_code'];
+                if (in_array($planCode, ['annual', 'seasonal'])) {
+                    $invoice = $recurlySub->invoice->get();
+                }
+            }
+
+            $billing = $invoice->getValues()['address']->getValues();
+            $shipping = $invoice->getValues()['shipping_address']->getValues();
 
             if (empty($billing['phone'])) {
                 $billing['phone'] = $shipping['phone'];
@@ -994,11 +1004,23 @@ class Subscription implements SubscriptionInterface
             $this->_coreSession->setCheckoutShipping($this->formatAddressFromRecurlyInfo($shipping));
             $this->_coreSession->setCheckoutBilling($this->formatAddressFromRecurlyInfo($billing));
 
+
             foreach($newSubOrders as $order) {
                 $this->_subscriptionOrderHelper->processOrder($customer, $order);
             }
 
             $this->_recurlySubscription->updateSubscriptionIDs($newSub);
+
+            $newSub->addData([
+                'recurly_invoice' => $invoice->invoice_number,
+                'paid' => $this->convertAmountToDollars($invoice->total_in_cents),
+                'price' => $this->convertAmountToDollars($invoice->subtotal_before_discount_in_cents),
+                'discount' => $this->convertAmountToDollars(-$invoice->discount_in_cents),
+                'tax' => $this->convertAmountToDollars($invoice->tax_in_cents)
+            ]);
+
+            $this->_subscriptionResource->save($newSub);
+
             $sub->setData('subscription_status', 'renewed'); // Set old sub as renewed
             $sub->save();
             return true;
@@ -1131,6 +1153,15 @@ class Subscription implements SubscriptionInterface
         ];
 
         return $return;
+    }
+
+    /**
+     * Convert cents to dollars
+     *
+     */
+    protected function convertAmountToDollars($amount)
+    {
+        return number_format(($amount/100), 2, '.', ' ');
     }
 
     /**
