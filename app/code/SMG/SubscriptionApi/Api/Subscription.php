@@ -1054,17 +1054,25 @@ class Subscription implements SubscriptionInterface
                 }
             }
             $statusCode = 400;
+            $retry = false;
             if (str_contains($ge->getMessage(), 'calculate tax')) {
-             $message = "AvaTax Exception: We got an error regarding avatax tax calculation. Please rerun the renewal subscription api.";
-             $statusCode = 205;
+                $message = "AvaTax Exception: We got an error regarding avatax tax calculation. Please rerun the renewal subscription api.";
+                $statusCode = 504;
+                $retry = true;
             }
             else{
-             $message = "General Exception: ".$ge->getMessage();
+                $message = "General Exception: ".$ge->getMessage();
             }
             $this->createRenewalError($master_subscription_id, $message);
+
+            $data = ['refresh' => false];
+            if ($retry) {
+                $data['retry'] = true;
+            }
+
             return $this->_responseHelper->error(
                 $message,
-                ['refresh' => false],
+                $data,
                 $statusCode
             );
         }
