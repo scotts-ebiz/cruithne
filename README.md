@@ -70,6 +70,13 @@ Lastly, look out for conflicts. Not just at PR creation time, but as new PRs go 
 
 ## Manual rollback in case of non-working deployment
 
-If for some reason the code you pushed does not work after deployment, you can rollback to the previous version. To do this, follow the GCP console -> CloudBuild and manually start the manual rollback job of the required environment.
+If for some reason the code you pushed does not work after deployment, you can rollback to the previous version. To do this, follow the GCP console -> CloudBuild -> Triggers and manually start the manual rollback job of the required environment.
 
 ![cloudbuild-rollback](cloudbuild-rollback.png)
+
+
+## Clearing the cache
+
+To clear the cache follow in the GCP Console -> CloudBuild -> Triggers and manually start run job for the required environment.
+
+![cloudbuild-clear-cache](clear-cache.png)
