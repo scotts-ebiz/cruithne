@@ -8,6 +8,7 @@ use Magento\Framework\View\Result\PageFactory;
 use SMG\RecommendationApi\Helper\RecommendationHelper;
 use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Framework\Controller\ResultFactory;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription;
 
 /**
  * Class Index
@@ -33,6 +34,11 @@ class Index extends Action
     protected $_messageManager;
     protected $logger;
     protected $_storeManager;
+    
+      /**
+     * @var Subscription
+     */
+    protected $_subscription;
 
     /**
      * Index constructor.
@@ -40,6 +46,7 @@ class Index extends Action
      * @param Context $context
      * @param PageFactory $pageFactory
      * @param RecommendationHelper $helper
+     * @param Subscription $subscription
      */
     public function __construct(
         Context $context,
@@ -48,7 +55,8 @@ class Index extends Action
         SessionManagerInterface $coreSession,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Psr\Log\LoggerInterface $logger,
-        \Magento\Store\Model\StoreManagerInterface $storeManager
+        \Magento\Store\Model\StoreManagerInterface $storeManager,
+        Subscription $subscription
     ) {
         $this->_helper = $helper;
         parent::__construct($context);
@@ -58,6 +66,7 @@ class Index extends Action
         $this->_messageManager = $messageManager;
         $this->logger = $logger;
         $this->_storeManager = $storeManager;
+        $this->_subscription = $subscription;
     }
 
     /**
@@ -69,6 +78,19 @@ class Index extends Action
         $this->_coreSession->start();
         $startQuiz = $this->_coreSession->getTimeStamp();
         $this->_messageManager->getMessages(true);
+        
+        $quizid = $this->getRequest()->getParam('id');
+        $zip = $this->getRequest()->getParam('zip');
+        
+        if(!empty($quizid) && !empty($zip))
+        {
+            $subscription = $this->_subscription->getSubscriptionByQuizId($quizid);
+            if($subscription){
+                $timestamp = strtotime($subscription->getData('created_at'));
+                $this->_coreSession->setTimeStamp($timestamp);
+            }
+        }
+        
         if(!empty($startQuiz))
         {   
             $convertedDate = date('Y-m-d',$startQuiz);
@@ -85,10 +107,13 @@ class Index extends Action
                  To make sure you receive the most accurate recommendation,  
                  please retake the Quiz.<a href="/quiz" >Take the quiz</a>.'));
                  $this->logger->error(print_r($message,true));
-                 $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-                 $resultRedirect->setUrl($this->_redirect->getRefererUrl());
-                 return $resultRedirect;
-                 exit;
+                 if(empty($quizid) && empty($zip))
+                {
+                     $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+                     $resultRedirect->setUrl($this->_redirect->getRefererUrl());
+                     return $resultRedirect;
+                     exit;
+                }
             }               
         }
         

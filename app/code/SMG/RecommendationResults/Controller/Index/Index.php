@@ -8,7 +8,8 @@ use Magento\Framework\View\Result\PageFactory;
 use SMG\RecommendationApi\Helper\RecommendationHelper;
 use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Framework\Controller\ResultFactory;
- 
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription;
+
 class Index extends Action
 {
     /**
@@ -25,7 +26,12 @@ class Index extends Action
     protected $logger;
     protected $_recommendationHelper;
     protected $_storeManager;
-
+    
+    /**
+     * @var Subscription
+    */
+    protected $_subscription;
+    
     /**
      * Index constructor.
      *
@@ -35,6 +41,7 @@ class Index extends Action
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Magento\Framework\Exception\NotFoundException
+     * @param Subscription $subscription
      */
     public function __construct(
         Context $context,
@@ -44,7 +51,8 @@ class Index extends Action
         SessionManagerInterface $coreSession,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         ResultFactory $resultFactory,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
+        Subscription $subscription
     ) {
 
         // Check to make sure that the module is enabled at the store level
@@ -59,6 +67,7 @@ class Index extends Action
         $this->logger = $logger;  
         $this->_recommendationHelper = $recommendationHelper;  
         $this->_storeManager = $storeManager;
+        $this->_subscription = $subscription;
     }
 
     /**
@@ -70,6 +79,17 @@ class Index extends Action
         $this->_coreSession->start();
         $startQuiz = $this->_coreSession->getTimeStamp();
         $this->_messageManager->getMessages(true);
+        $quizid = $this->getRequest()->getParam('id');
+        $zip = $this->getRequest()->getParam('zip');
+        
+        if(!empty($quizid) && !empty($zip))
+        {
+            $subscription = $this->_subscription->getSubscriptionByQuizId($quizid);
+            if($subscription){
+                $timestamp = strtotime($subscription->getData('created_at'));
+                $this->_coreSession->setTimeStamp($timestamp);
+            }
+        }
         if(!empty($startQuiz))
         {   
             $convertedDate = date('Y-m-d',$startQuiz);
