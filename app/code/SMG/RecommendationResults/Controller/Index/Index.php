@@ -9,7 +9,6 @@ use SMG\RecommendationApi\Helper\RecommendationHelper;
 use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Framework\Controller\ResultFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
-use Magento\Framework\Stdlib\CookieManagerInterface;
 
 class Index extends Action
 {
@@ -34,11 +33,6 @@ class Index extends Action
     protected $_subscriptionCollectionFactory;
     
     /**
-     * @var CookieManagerInterface
-    */
-    private $_cookieManager;
-    
-    /**
      * Index constructor.
      *
      * @param Context $context
@@ -48,7 +42,6 @@ class Index extends Action
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Magento\Framework\Exception\NotFoundException
      * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
-     * @param CookieManagerInterface $cookieManager
      */
     public function __construct(
         Context $context,
@@ -59,8 +52,7 @@ class Index extends Action
         \Magento\Framework\Message\ManagerInterface $messageManager,
         ResultFactory $resultFactory,
         \Psr\Log\LoggerInterface $logger,
-        SubscriptionCollectionFactory $subscriptionCollectionFactory,
-        CookieManagerInterface $cookieManager
+        SubscriptionCollectionFactory $subscriptionCollectionFactory
     ) {
 
         // Check to make sure that the module is enabled at the store level
@@ -76,7 +68,6 @@ class Index extends Action
         $this->_recommendationHelper = $recommendationHelper;  
         $this->_storeManager = $storeManager;
         $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
-        $this->_cookieManager = $cookieManager;
     }
 
     /**
@@ -88,7 +79,6 @@ class Index extends Action
         $this->_coreSession->start();
         $quizid = $this->getRequest()->getParam('id');
         $zip = $this->getRequest()->getParam('zip');
-        $this->_cookieManager->deleteCookie('mage-messages');
         
         if(!empty($quizid) && !empty($zip))
         {
