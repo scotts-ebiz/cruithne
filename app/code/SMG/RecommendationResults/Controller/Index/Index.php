@@ -8,7 +8,8 @@ use Magento\Framework\View\Result\PageFactory;
 use SMG\RecommendationApi\Helper\RecommendationHelper;
 use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Framework\Controller\ResultFactory;
-use SMG\SubscriptionApi\Model\ResourceModel\Subscription;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
+use Magento\Framework\Stdlib\CookieManagerInterface;
 
 class Index extends Action
 {
@@ -28,9 +29,14 @@ class Index extends Action
     protected $_storeManager;
     
     /**
-     * @var Subscription
+     * @var SubscriptionCollectionFactory
     */
-    protected $_subscription;
+    protected $_subscriptionCollectionFactory;
+    
+    /**
+     * @var CookieManagerInterface
+    */
+    private $_cookieManager;
     
     /**
      * Index constructor.
@@ -41,7 +47,8 @@ class Index extends Action
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Magento\Framework\Exception\NotFoundException
-     * @param Subscription $subscription
+     * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
+     * @param CookieManagerInterface $cookieManager
      */
     public function __construct(
         Context $context,
@@ -52,7 +59,8 @@ class Index extends Action
         \Magento\Framework\Message\ManagerInterface $messageManager,
         ResultFactory $resultFactory,
         \Psr\Log\LoggerInterface $logger,
-        Subscription $subscription
+        SubscriptionCollectionFactory $subscriptionCollectionFactory,
+        CookieManagerInterface $cookieManager
     ) {
 
         // Check to make sure that the module is enabled at the store level
@@ -67,7 +75,8 @@ class Index extends Action
         $this->logger = $logger;  
         $this->_recommendationHelper = $recommendationHelper;  
         $this->_storeManager = $storeManager;
-        $this->_subscription = $subscription;
+        $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
+        $this->_cookieManager = $cookieManager;
     }
 
     /**
@@ -77,19 +86,33 @@ class Index extends Action
     {
         /*check start quiz time is not exceed from 2 week*/
         $this->_coreSession->start();
-        $startQuiz = $this->_coreSession->getTimeStamp();
-        $this->_messageManager->getMessages(true);
         $quizid = $this->getRequest()->getParam('id');
         $zip = $this->getRequest()->getParam('zip');
+        $this->_cookieManager->deleteCookie('mage-messages');
         
         if(!empty($quizid) && !empty($zip))
         {
-            $subscription = $this->_subscription->getSubscriptionByQuizId($quizid);
-            if($subscription){
+            $subscriptions = $this->_subscriptionCollectionFactory->create();
+            $subscription = $subscriptions
+                ->addFieldToFilter('quiz_id', $quizid)
+                ->getFirstItem();
+                
+            if($subscription && $subscription->getId()){
+                
                 $timestamp = strtotime($subscription->getData('created_at'));
                 $this->_coreSession->setTimeStamp($timestamp);
+                
+            }else{
+                
+                 $this->_coreSession->unsTimeStamp();
+                 $this->_messageManager->addError(__('Looks like your quiz results were not found.
+                 To make sure you receive the most accurate recommendation,  
+                 please retake the Quiz.<a href="/quiz" >Take the quiz</a>.'));
             }
         }
+        
+        $startQuiz = $this->_coreSession->getTimeStamp();
+        
         if(!empty($startQuiz))
         {   
             $convertedDate = date('Y-m-d',$startQuiz);

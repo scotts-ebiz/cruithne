@@ -8,7 +8,7 @@ use Magento\Framework\View\Result\PageFactory;
 use SMG\RecommendationApi\Helper\RecommendationHelper;
 use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Framework\Controller\ResultFactory;
-use SMG\SubscriptionApi\Model\ResourceModel\Subscription;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
 
 /**
  * Class Index
@@ -35,10 +35,10 @@ class Index extends Action
     protected $logger;
     protected $_storeManager;
     
-      /**
-     * @var Subscription
-     */
-    protected $_subscription;
+    /**
+     * @var SubscriptionCollectionFactory
+    */
+    protected $_subscriptionCollectionFactory;
 
     /**
      * Index constructor.
@@ -46,7 +46,7 @@ class Index extends Action
      * @param Context $context
      * @param PageFactory $pageFactory
      * @param RecommendationHelper $helper
-     * @param Subscription $subscription
+     * @param SubscriptionCollectionFactory $subscriptionCollectionFactory
      */
     public function __construct(
         Context $context,
@@ -56,7 +56,7 @@ class Index extends Action
         \Magento\Framework\Message\ManagerInterface $messageManager,
         \Psr\Log\LoggerInterface $logger,
         \Magento\Store\Model\StoreManagerInterface $storeManager,
-        Subscription $subscription
+        SubscriptionCollectionFactory $subscriptionCollectionFactory
     ) {
         $this->_helper = $helper;
         parent::__construct($context);
@@ -66,7 +66,7 @@ class Index extends Action
         $this->_messageManager = $messageManager;
         $this->logger = $logger;
         $this->_storeManager = $storeManager;
-        $this->_subscription = $subscription;
+        $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
     }
 
     /**
@@ -75,21 +75,32 @@ class Index extends Action
     public function execute()
     {
         /*check start quiz time is not exceed from 2 week*/
-        $this->_coreSession->start();
-        $startQuiz = $this->_coreSession->getTimeStamp();
-        $this->_messageManager->getMessages(true);
-        
+        $this->_coreSession->start(); 
         $quizid = $this->getRequest()->getParam('id');
         $zip = $this->getRequest()->getParam('zip');
         
         if(!empty($quizid) && !empty($zip))
         {
-            $subscription = $this->_subscription->getSubscriptionByQuizId($quizid);
-            if($subscription){
+            $subscriptions = $this->_subscriptionCollectionFactory->create();
+            $subscription = $subscriptions
+                ->addFieldToFilter('quiz_id', $quizid)
+                ->getFirstItem();
+                
+            if($subscription && $subscription->getId()){
+                
                 $timestamp = strtotime($subscription->getData('created_at'));
                 $this->_coreSession->setTimeStamp($timestamp);
             }
+            else
+            {
+                 $this->_coreSession->unsTimeStamp();
+                 $this->_messageManager->addError(__('Looks like your quiz results were not found.
+                 To make sure you receive the most accurate recommendation,  
+                 please retake the Quiz.<a href="/quiz" >Take the quiz</a>.'));
+            }
         }
+
+        $startQuiz = $this->_coreSession->getTimeStamp();
         
         if(!empty($startQuiz))
         {   
