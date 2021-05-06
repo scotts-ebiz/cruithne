@@ -70,7 +70,7 @@ class Order
      * @var StoreManagerInterface
      */
     protected $storeManager;
-    
+
     /**
      * @var ShipmentRepositoryInterface
      */
@@ -350,11 +350,15 @@ class Order
             $data[$j]['shippingId'] = $shipment->getData('order_id');
 
             $shipmentTracking = $this->shipmentRepository->get($shipment->getData('entity_id'));
-            
+
+            $shipmentTrackingNumbers = [];
+
             foreach ($shipmentTracking->getTracks() as $track) {
-             $data[$j]['trackingNumber'] = $track->getData('track_number'); // 3333333333
+                $shipmentTrackingNumbers[] = $track->getData('track_number');
             }
-            
+
+            $data[$j]['trackingNumber'] = implode(',', $shipmentTrackingNumbers);
+
             foreach($shipment->getItems() as $sItem)
             {
                 $data[$j]['shipmentItems'][$sItem->getData('product_id')]['generatedShipmentItemId'] = $shipment->getData('order_id');
