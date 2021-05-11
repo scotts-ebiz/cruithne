@@ -212,7 +212,6 @@
             />
             <label class="label sp-form-label required" for="productName"><?= $block->escapeHtml(__('Product Name')) ?>*</label>
         </div>
-
         <div class="sp-form-group" data-bind="visible: subscriptionNumberVisible">
             <input
                     class="input-text sp-input sp-w-full"
@@ -225,8 +224,6 @@
             />
             <label class="label sp-form-label required" for="subscriptionNumber"><?= $block->escapeHtml(__('Subscription Number')) ?>*</label>
         </div>
-
-        <br />
         <div class="sp-form-group sp-mt-12">
             <textarea
                     class="input-text sp-textarea sp-input sp-w-full"
@@ -245,6 +242,8 @@
 
         <?= $block->getChildHtml('form.additional.info') ?>
     </fieldset>
+
+    <div id="g-recaptcha" class="g-recaptcha sp-form-group" data-sitekey=""></div>
 
     <div class="sp-form-group actions-toolbar">
         <input type="hidden" name="hideit" id="hideit" value="" />

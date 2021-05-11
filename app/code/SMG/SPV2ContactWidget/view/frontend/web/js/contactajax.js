@@ -39,6 +39,8 @@ define(
 
                     $('#contact-form').attr('action', $('#salesForceUrl').attr('value'));
 
+                    $('.g-recaptcha').attr('data-sitekey', $('#recaptchaApiKey').attr('value'));
+
                     // Only show lawn specific fields if user selects relevant lawn topics.
                     self.lawnInfoVisible = ko.pureComputed(
                         function () {
