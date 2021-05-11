@@ -14,6 +14,9 @@ use \Magento\Sales\Api\Data\TransactionSearchResultInterfaceFactory as Trasactio
 use \Psr\Log\LoggerInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\Sales\Api\Data\ShipmentInterface;
+use Magento\Sales\Api\Data\ShipmentTrackInterface;
+use Magento\Sales\Api\ShipmentRepositoryInterface;
 
 class Order
 {
@@ -69,6 +72,11 @@ class Order
     protected $storeManager;
 
     /**
+     * @var ShipmentRepositoryInterface
+     */
+    private $shipmentRepository;
+
+    /**
      * Order constructor.
      * @param Api $client
      * @param Config $config
@@ -79,6 +87,7 @@ class Order
      * @param TrasactionResultInterface $trasactionResultInterface
      * @param LoggerInterface $logger
      * @param StoreManagerInterface $storeManager
+     * @param ShipmentRepositoryInterface $shipmentRepository
      */
     public function __construct(
         Api $client,
@@ -90,7 +99,8 @@ class Order
         TrasactionResultInterface $trasactionResultInterface,
         LoggerInterface $logger,
         ProductRepositoryInterface $productRepository,
-        StoreManagerInterface $storeManager
+        StoreManagerInterface $storeManager,
+        ShipmentRepositoryInterface $shipmentRepository
     ) {
         $this->client = $client;
         $this->config = $config;
@@ -102,6 +112,7 @@ class Order
         $this->logger = $logger;
         $this->productRepository = $productRepository;
         $this->storeManager = $storeManager;
+        $this->shipmentRepository = $shipmentRepository;
     }
 
     /**
@@ -337,7 +348,16 @@ class Order
             $data[$j]['generatedShipmentId'] = $shipment->getData('order_id');
             $data[$j]['orderId'] = $shipment->getData('order_id');
             $data[$j]['shippingId'] = $shipment->getData('order_id');
-            $data[$j]['trackingNumber'] = $shipment->getData('track_number');
+
+            $shipmentTracking = $this->shipmentRepository->get($shipment->getData('entity_id'));
+
+            $shipmentTrackingNumbers = [];
+
+            foreach ($shipmentTracking->getTracks() as $track) {
+                $shipmentTrackingNumbers[] = $track->getData('track_number');
+            }
+
+            $data[$j]['trackingNumber'] = implode(',', $shipmentTrackingNumbers);
 
             foreach($shipment->getItems() as $sItem)
             {
