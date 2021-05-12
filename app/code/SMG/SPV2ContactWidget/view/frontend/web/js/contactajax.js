@@ -1,11 +1,11 @@
 define(
     [
-    'uiComponent',
-    'ko',
-    'Magento_Ui/js/modal/modal',
-    'jquery',
-    "mage/validation",
-    "domReady!"
+        'uiComponent',
+        'ko',
+        'Magento_Ui/js/modal/modal',
+        'jquery',
+        "mage/validation",
+        "domReady!"
     ], function (Component, ko, modal, $) {
         'use strict';
         return Component.extend(
@@ -18,237 +18,290 @@ define(
 
                     // Initialize contact form observables.
                     self.form = {};
-                    self.form.name = ko.observable(config.customerName || '');
+                    self.form.firstName = ko.observable(config.firstName || '');
+                    self.form.lastName = ko.observable(config.lastName || '');
                     self.form.address = ko.observable(config.address || '');
                     self.form.address2 = ko.observable(config.address2 || '');
                     self.form.city = ko.observable(config.city || '');
                     self.form.state = ko.observable(config.state || null);
+                    self.form.country = ko.observable(config.country || null);
                     self.form.postalCode = ko.observable(config.postalCode || '');
                     self.form.email = ko.observable(config.email || '');
                     self.form.phone = ko.observable(config.phone || '');
                     self.form.topic = ko.observable(config.topic || null);
                     self.form.comment = ko.observable(config.comment || '');
                     self.form.grassType = ko.observable(config.grassType || null);
+                    self.form.productName = ko.observable(config.productName || '');
+                    self.form.subscriptionNumber = ko.observable(config.subscriptionNumber || '');
+
 
                     self.saving = ko.observable(false);
 
-                    // Only show address fields if user selects relevant address topics.
-                    self.addressVisible = ko.pureComputed(
-                        function () {
+                    $('#contact-form').attr('action', $('#salesForceUrl').attr('value'));
 
-                            let showAddressFields = self.form.topic() === 'Question or concern with my order' ||
-                            self.form.topic() === 'Canceling my subscription';
+                    $('.g-recaptcha').attr('data-sitekey', $('#recaptchaApiKey').attr('value'));
+
+                    // Only show lawn specific fields if user selects relevant lawn topics.
+                    self.lawnInfoVisible = ko.pureComputed(
+                        function () {
+                            let showLawnInfoFields = self.form.topic() === 'I have a lawn, garden, or product question';
 
                             // Initialize validation meta data for each form field.
-                            $('#address, #city, #state, #postalCode, #phone').each(
+                            $('#grassType').each(
                                 function () {
                                     $(this).metadata();
                                 }
                             );
 
-                            // Turn on/off M2 validation based on visibility.
-                            if (showAddressFields) {
-                                $('#address, #city, #state, #postalCode, #phone').each(
+                            // Turn on/off M2 validation based on visibility
+                            if (showLawnInfoFields) {
+                                $('#grassType').each(
                                     function () {
                                         $(this).data('metadata')['validate']['required'] = true;
                                     }
                                 );
-                            }
-                            else {
-                                $('#address, #city, #state, #postalCode, #phone').each(
+                            } else {
+                                $('#grassType').each(
                                     function () {
                                         $(this).data('metadata')['validate']['required'] = false;
                                     }
                                 );
                             }
 
-                            return showAddressFields;
+                            return showLawnInfoFields;
                         }
                     );
 
-                // Only show lawn specific fields if user selects relevant lawn topics.
-                self.lawnInfoVisible = ko.pureComputed(
-                    function () {
-                        let showLawnInfoFields = self.form.topic() === 'Information about products or my lawn care plan';
 
-                        // Initialize validation meta data for each form field.
-                        $('#grassType, #postalCode').each(
-                            function () {
-                                $(this).metadata();
-                            }
-                        );
+                    // Only show lawn specific fields if user selects relevant lawn topics.
+                    self.productNameVisible = ko.pureComputed(
+                        function () {
+                            var shouldShow = self.form.topic() === 'I want to request product Material Safety Data Sheet';
 
-                        // Turn on/off M2 validation based on visibility
-                        if (showLawnInfoFields) {
-                            $('#grassType, #postalCode').each(
+                            // Initialize validation meta data for each form field.
+                            $('#productName').each(
                                 function () {
-                                    $(this).data('metadata')['validate']['required'] = true;
+                                    $(this).metadata();
                                 }
                             );
-                        }
-                        else {
-                            $('#grassType, #postalCode').each(
-                                function () {
-                                    $(this).data('metadata')['validate']['required'] = false;
-                                }
-                            );
-                        }
 
-                        return showLawnInfoFields;
-                    }
-                );
-
-                self.topics = ko.observableArray(
-                    [
-                    'Information about products or my lawn care plan',
-                    'Question or concern with my order',
-                    'Canceling my subscription',
-                    'Question or concern with the website or mobile app',
-                    'General question or comment'
-                    ]
-                );
-                self.states = ko.observableArray(
-                    [
-                    "Alabama",
-                    "Alaska",
-                    "Arizona",
-                    "Arkansas",
-                    "California",
-                    "Colorado",
-                    "Connecticut",
-                    "Delaware",
-                    "District of Columbia",
-                    "Florida",
-                    "Georgia",
-                    "Guam",
-                    "Hawaii",
-                    "Idaho",
-                    "Illinois",
-                    "Indiana",
-                    "Iowa",
-                    "Kansas",
-                    "Kentucky",
-                    "Louisiana",
-                    "Maine",
-                    "Maryland",
-                    "Massachusetts",
-                    "Michigan",
-                    "Minnesota",
-                    "Mississippi",
-                    "Missouri",
-                    "Montana",
-                    "Nebraska",
-                    "Nevada",
-                    "New Hampshire",
-                    "New Jersey",
-                    "New Mexico",
-                    "New York",
-                    "North Carolina",
-                    "North Dakota",
-                    "Ohio",
-                    "Oklahoma",
-                    "Oregon",
-                    "Pennsylvania",
-                    "Puerto Rico",
-                    "Rhode Island",
-                    "South Carolina",
-                    "South Dakota",
-                    "Tennessee",
-                    "Texas",
-                    "Utah",
-                    "Vermont",
-                    "Virginia",
-                    "Washington",
-                    "West Virginia",
-                    "Wisconsin",
-                    "Wyoming"
-                    ]
-                );
-
-                self.grassTypes = ko.observableArray(
-                    [
-                    'Bahia',
-                    'Bahia & St. Augustine',
-                    'Bermuda',
-                    'Bermuda & St. Augustine',
-                    'Bluegrass/Rye/Fescue',
-                    'Buffalo grass',
-                    'Carpetgrass',
-                    'Centipede',
-                    'Dichondra',
-                    'Fine Fescue',
-                    'Kentucky Bluegrass',
-                    'Perennial Ryegrass',
-                    'St. Augustine/Floratam',
-                    'Tall Fescue',
-                    'Zoysia',
-                    'I don\'t know'
-                    ]
-                );
-
-                var dataForm = $("#contact-form");
-                dataForm.mage("validation", {});
-                dataForm.show();
-                $('.loader').hide();
-
-                $.validator.addMethod(
-                    'validate-name',
-                    function (value) {
-                        if (value != '') {
-                            if (!isNaN(value)) {
-                                return false;
-                            }
-
-                            if (value.match(/^[a-zA-Z\.\-\'\sàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸåÅæÆœŒœŒçÇðÐøØ¿¡ß]*$/)) {
-                                return true
+                            // Turn on/off M2 validation based on visibility
+                            if (shouldShow) {
+                                $('#productName').each(
+                                    function () {
+                                        $(this).data('metadata')['validate']['required'] = true;
+                                    }
+                                );
                             } else {
-                                return false;
+                                $('#productName').each(
+                                    function () {
+                                        $(this).data('metadata')['validate']['required'] = false;
+                                    }
+                                );
                             }
 
-                        } else {
-                            return !$.mage.isEmpty(value);
+                            return shouldShow;
                         }
-                    },
-                    $.mage.__('Please enter a valid name.')
-                );
+                    );
 
-                $.validator.addMethod(
-                    'validate-email-address',
-                    function (value) {
-                        return (
-                        /^([a-z0-9,!\#\$%&'\*\+\/=\?\^_`\{\|\}~-]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z0-9,!\#\$%&'\*\+\/=\?\^_`\{\|\}~-]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*@([a-z0-9-]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z0-9-]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*\.(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]){2,})$/i.test(value) &&
-                        value.length >= 1
-                        );
-                    },
-                    $.mage.__('Please enter a valid email address.')
-                );
+                    // Only show lawn specific fields if user selects relevant lawn topics.
+                    self.subscriptionNumberVisible = ko.pureComputed(
+                        function () {
+                            var shouldShow =
+                                self.form.topic() === 'I need to check on the status of an order' ||
+                                self.form.topic() === 'I want to cancel an order';
 
-                $.validator.addMethod(
-                    'validate-message',
-                    function (value) {
-                        if (value != '') {
-                            if (!isNaN(value)) {
-                                return false;
+                            // Initialize validation meta data for each form field.
+                            $('#subscriptionNumber').each(
+                                function () {
+                                    $(this).metadata();
+                                }
+                            );
+
+                            // Turn on/off M2 validation based on visibility
+                            if (shouldShow) {
+                                $('#subscriptionNumber').each(
+                                    function () {
+                                        $(this).data('metadata')['validate']['required'] = true;
+                                    }
+                                );
+                            } else {
+                                $('#subscriptionNumber').each(
+                                    function () {
+                                        $(this).data('metadata')['validate']['required'] = false;
+                                    }
+                                );
                             }
-                            if (value.length > 10) {
-                                return true;
-                            }
 
-                            return false;
-                        } else {
-                            return !$.mage.isEmpty(value);
+                            return shouldShow;
                         }
-                    },
-                    $.mage.__('Please enter a valid message.')
-                );
+                    );
 
-                $.validator.addMethod(
-                    'validate-postal-code',
-                    function (value) {
-                        return (/(^\d{5}$)|(^\d{5}-\d{4}$)/).test(value);
-                    },
-                    $.mage.__('Please enter a valid 5 digit US ZIP.')
-                );
+
+                    self.topics = ko.observableArray(
+                        [
+                            'I have a lawn, garden, or product question',
+                            'I want to report a product safety concern',
+                            'I want to request product Material Safety Data Sheet',
+                            'I need to check on the status of an order',
+                            'I want to cancel an order',
+                            'I have a question/concern with the Mobile App',
+                            'Other'
+                        ]
+                    );
+
+                    self.states = ko.observableArray(
+                        [
+                            {'label': 'Alabama', 'value': 'AL'},
+                            {'label': 'Alaska', 'value': 'AK'},
+                            {'label': 'Arizona', 'value': 'AZ'},
+                            {'label': 'Arkansas', 'value': 'AR'},
+                            {'label': 'California', 'value': 'CA'},
+                            {'label': 'Colorado', 'value': 'CO'},
+                            {'label': 'Connecticut', 'value': 'CT'},
+                            {'label': 'Delaware', 'value': 'DE'},
+                            {'label': 'District of Columbia', 'value': 'DC'},
+                            {'label': 'Florida', 'value': 'FL'},
+                            {'label': 'Georgia', 'value': 'GA}'},
+                            {'label': 'Hawaii', 'value': 'HI'},
+                            {'label': 'Idaho', 'value': 'ID'},
+                            {'label': 'Illinois', 'value': 'IL'},
+                            {'label': 'Indiana', 'value': 'IN'},
+                            {'label': 'Iowa', 'value': 'IA'},
+                            {'label': 'Kansas', 'value': 'KS'},
+                            {'label': 'Kentucky', 'value': 'KY'},
+                            {'label': 'Louisiana', 'value': 'LA'},
+                            {'label': 'Maine', 'value': 'ME'},
+                            {'label': 'Maryland', 'value': 'MD'},
+                            {'label': 'Massachusetts', 'value': 'MA'},
+                            {'label': 'Michigan', 'value': 'MI'},
+                            {'label': 'Minnesota', 'value': 'MN'},
+                            {'label': 'Mississippi', 'value': 'MS'},
+                            {'label': 'Missouri', 'value': 'MO'},
+                            {'label': 'Montana', 'value': 'MT'},
+                            {'label': 'Nebraska', 'value': 'NE'},
+                            {'label': 'Nevada', 'value': 'NV'},
+                            {'label': 'New Hampshire', 'value': 'NH'},
+                            {'label': 'New Jersey', 'value': 'NJ'},
+                            {'label': 'New Mexico', 'value': 'NM'},
+                            {'label': 'New York', 'value': 'NY'},
+                            {'label': 'North Carolina', 'value': 'NC'},
+                            {'label': 'North Dakota', 'value': 'ND'},
+                            {'label': 'Ohio', 'value': 'OH'},
+                            {'label': 'Oklahoma', 'value': 'OK'},
+                            {'label': 'Oregon', 'value': 'OR'},
+                            {'label': 'Pennsylvania', 'value': 'PA'},
+                            {'label': 'Rhode Island', 'value': 'RI'},
+                            {'label': 'South Carolina', 'value': 'SC'},
+                            {'label': 'South Dakota', 'value': 'SD'},
+                            {'label': 'Tennessee', 'value': 'TN'},
+                            {'label': 'Texas', 'value': 'TX'},
+                            {'label': 'Utah', 'value': 'UT'},
+                            {'label': 'Vermont', 'value': 'VT'},
+                            {'label': 'Virginia', 'value': 'VA'},
+                            {'label': 'Washington', 'value': 'WA'},
+                            {'label': 'West Virginia', 'value': 'WV'},
+                            {'label': 'Wisconsin', 'value': 'WI'},
+                            {'label': 'Wyoming', 'value': 'WY'}
+                        ]
+                    );
+
+
+                    self.grassTypes = ko.observableArray(
+                        [
+                            {'value': "BRF", 'label': 'Blue / Rye / Fescue'},
+                            {'value': "UNK", 'label': 'Unknown'},
+                            {'value': "BAH", 'label': 'Bahia'},
+                            {'value': "BASA", 'label': 'Bahia / St. Augustine'},
+                            {'value': "BEN", 'label': 'Bentgrass'},
+                            {'value': "BRST", 'label': 'Bermuda / St. Augustine Mix'},
+                            {'value': "BER", 'label': 'Bermudagrass'},
+                            {'value': "BOB", 'label': 'Bobsod/ Hybrid Of Bermuda'},
+                            {'value': "BUFF", 'label': 'Buffalograss'},
+                            {'value': "CAR", 'label': 'Carpetgrass'},
+                            {'value': "CENT", 'label': 'Centipede'},
+                            {'value': "CESA", 'label': 'Centipede/St Augustine Mix'},
+                            {'value': "CLVR", 'label': 'Clover'},
+                            {'value': "DIC", 'label': 'Dichondra'},
+                            {'value': "DCGS", 'label': 'Dichondra/Grass Mix'},
+                            {'value': "FLOR", 'label': 'Floratam'},
+                            {'value': "KIKU", 'label': 'Kikuyugrass'},
+                            {'value': "SEAP", 'label': 'Seashore Paspalum'},
+                            {'value': "SA", 'label': 'St Augustine'},
+                            {'value': "ZOY", 'label': 'Zoysiagrass'},
+                            {'value': "PVKBG", 'label': 'Provista Kentucky Bluegrass'},
+                            {'value': "PVSTA", 'label': 'Provista St. Augustine Grass'}
+                        ]
+                    );
+
+                    self.countries = ko.observableArray([
+                        'US',
+                        'CA'
+                    ])
+
+                    var dataForm = $("#contact-form");
+                    dataForm.mage("validation", {});
+                    dataForm.show();
+                    $('.loader').hide();
+
+                    $.validator.addMethod(
+                        'validate-name',
+                        function (value) {
+                            if (value != '') {
+                                if (!isNaN(value)) {
+                                    return false;
+                                }
+
+                                if (value.match(/^[a-zA-Z\.\-\'\sàèìòùÀÈÌÒÙáéíóúýÁÉÍÓÚÝâêîôûÂÊÎÔÛãñõÃÑÕäëïöüÿÄËÏÖÜŸåÅæÆœŒœŒçÇðÐøØ¿¡ß]*$/)) {
+                                    return true
+                                } else {
+                                    return false;
+                                }
+
+                            } else {
+                                return !$.mage.isEmpty(value);
+                            }
+                        },
+                        $.mage.__('Please enter a valid name.')
+                    );
+
+                    $.validator.addMethod(
+                        'validate-email-address',
+                        function (value) {
+                            return (
+                                /^([a-z0-9,!\#\$%&'\*\+\/=\?\^_`\{\|\}~-]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z0-9,!\#\$%&'\*\+\/=\?\^_`\{\|\}~-]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*@([a-z0-9-]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+(\.([a-z0-9-]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF])+)*\.(([a-z]|[\u00A0-\uD7FF\uF900-\uFDCF\uFDF0-\uFFEF]){2,})$/i.test(value) &&
+                                value.length >= 1
+                            );
+                        },
+                        $.mage.__('Please enter a valid email address.')
+                    );
+
+                    $.validator.addMethod(
+                        'validate-message',
+                        function (value) {
+                            if (value != '') {
+                                if (!isNaN(value)) {
+                                    return false;
+                                }
+                                if (value.length > 10) {
+                                    return true;
+                                }
+
+                                return false;
+                            } else {
+                                return !$.mage.isEmpty(value);
+                            }
+                        },
+                        $.mage.__('Please enter a valid message.')
+                    );
+
+                    $.validator.addMethod(
+                        'validate-postal-code',
+                        function (value) {
+                            return (/(^\d{5}$)|(^\d{5}-\d{4}$)/).test(value);
+                        },
+                        $.mage.__('Please enter a valid 5 digit US ZIP.')
+                    );
 
                     $.validator.addMethod(
                         'required-entry-telephone',
@@ -257,7 +310,7 @@ define(
                                 var filter = /^[(]?(\d{3})[)]?[-|\s]?(\d{3})[-|\s]?(\d{4})$/;
                                 if (value.length > 9 && filter.test(value)) {
                                     return true;
-                                }else {
+                                } else {
                                     return false;
                                 }
 
@@ -276,9 +329,9 @@ define(
                                 if (!isNaN(value)) {
                                     return false;
                                 }
-                                if( value.match( /^[a-zA-Z ]*$/) ) {
+                                if (value.match(/^[a-zA-Z ]*$/)) {
                                     return true
-                                }else{
+                                } else {
                                     return false;
                                 }
                             } else {
@@ -296,7 +349,7 @@ define(
                                 if (!isNaN(value)) {
                                     return false;
                                 }
-                                if(/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)){
+                                if (/^([a-zA-Z0-9()":;'-.]+ )+[A-Za-z0-9()":;'-.]+$|^[A-Za-z0-9()":;'-.]*$/.test(value)) {
                                     return true
                                 } else {
                                     return false;
@@ -309,77 +362,20 @@ define(
                         $.mage.__('Please enter a valid street address.')
                     );
 
-                // If user leaves a given required field, validate that field.
-                $('body').on('blur', "#name, #email, #comment, #topic, #address, #city, #state, #postalCode, #grassType, #phone", function () {
-                    if ($.validator.validateSingleElement($(this))) {
-                        $(this).removeAttr('aria-invalid');
-                    }
-                });
-
-                $(document).on(
-                    "submit", "#contact-form", function () {
-                        event.preventDefault();
-                        if (dataForm.valid()) {
-                            self.saving(true);
-                            $.ajax(
-                                {
-                                    type: "POST",
-                                    url: config.AjaxUrl,
-                                    data: dataForm.serialize(),
-                                    success: function (response) {
-                                        self.saving(false);
-
-                                        if (response.success == true) {
-                                            var options = {
-                                                type: "popup",
-                                                responsive: true,
-                                                innerScroll: true,
-                                                buttons: [
-                                                {
-                                                    text: $.mage.__("Close"),
-                                                    class: "sp-button sp-button--primary",
-                                                    click: function () {
-                                                        this.closeModal();
-                                                    }
-                                                }
-                                                ]
-                                            };
-
-                                            // Reset form to what was loaded initially.
-                                            self.form.name(self.defaultConfig.customerName || '');
-                                            self.form.address(self.defaultConfig.address || '');
-                                            self.form.address2(self.defaultConfig.address2 || '');
-                                            self.form.city(self.defaultConfig.city || '');
-                                            self.form.state(self.defaultConfig.state || null);
-                                            self.form.postalCode(self.defaultConfig.postalCode || '');
-                                            self.form.email(self.defaultConfig.email || '');
-                                            self.form.phone(self.defaultConfig.phone || '');
-                                            self.form.topic(self.defaultConfig.topic || null);
-                                            self.form.comment(self.defaultConfig.comment || '');
-                                            self.form.grassType(self.defaultConfig.grassType || null);
-
-
-                                            var popup = modal(options, $("#popup-modal"));
-                                            $("#popup-modal").modal("openModal");
-                                        } else {
-                                            var popup = modal(options, $("#popup-modal"));
-                                            $("#popup-modal").html(
-                                                '<h3 style="text-align: center">' + response.message + "</h3>"
-                                            );
-                                            $("#popup-modal").modal("openModal");
-
-                                            $(":input", dataForm)
-                                            .not(":button, :submit, :reset, :hidden")
-                                            .val("")
-                                            .removeAttr("selected");
-                                            $("#topic").val(0);
-                                        }
-                                    }
-                                }
-                            );
+                    // If user leaves a given required field, validate that field.
+                    $('body').on('blur', "#firstName, #lastName, #email, #comment, #topic, #address, #city, #00N3t00000GW27z, #postalCode, #grassType, #phone", function () {
+                        if ($.validator.validateSingleElement($(this))) {
+                            $(this).removeAttr('aria-invalid');
                         }
-                    }
-                );
+                    });
+
+                    $(document).on(
+                        "submit", "#contact-form", function () {
+                            if (self.form.productName) {
+                                self.form.comment(self.form.productName() + ': ' + self.form.comment());
+                            }
+                        });
+
                 }
             }
         );

@@ -31,6 +31,10 @@
 			<parameter name="contactFormText" visible="true" xsi:type="text">
 				<label>Text</label>
 			</parameter>
+
+			<parameter name="contactFormSalesForceURL" visible="true" xsi:type="text">
+				<label>SalesForce Form URL</label>
+			</parameter>
 		</parameters>
 	</widget>
 </widgets>
