@@ -39,6 +39,8 @@ define(
 
                     $('#contact-form').attr('action', $('#salesForceUrl').attr('value'));
 
+                    $('.g-recaptcha').attr('data-sitekey', $('#recaptchaApiKey').attr('value'));
+
                     // Only show lawn specific fields if user selects relevant lawn topics.
                     self.lawnInfoVisible = ko.pureComputed(
                         function () {
@@ -366,6 +368,13 @@ define(
                             $(this).removeAttr('aria-invalid');
                         }
                     });
+
+                    $(document).on(
+                        "submit", "#contact-form", function () {
+                            if (self.form.productName) {
+                                self.form.comment(self.form.productName() + ': ' + self.form.comment());
+                            }
+                        });
 
                 }
             }
