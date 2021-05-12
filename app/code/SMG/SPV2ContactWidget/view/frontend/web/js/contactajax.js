@@ -367,6 +367,13 @@ define(
                         }
                     });
 
+                    $(document).on(
+                        "submit", "#contact-form", function () {
+                            if (self.form.productName) {
+                                self.form.comment(self.form.productName() + ': ' + self.form.comment());
+                            }
+                        });
+
                 }
             }
         );
