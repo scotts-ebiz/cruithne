@@ -204,6 +204,7 @@
             <input
                     class="input-text sp-input sp-w-full"
                     data-validate="{ required:false }"
+                    data-bind="textInput: form.productName"
                     id="productName"
                     name="productName"
                     placeholder="<?= $block->escapeHtml(__('Product Name')) ?>*"
@@ -216,6 +217,7 @@
             <input
                     class="input-text sp-input sp-w-full"
                     data-validate="{ required:false }"
+                    data-bind="textInput: form.subscriptionNumber"
                     id="subscriptionNumber"
                     name="00N3t00000E3yYo"
                     placeholder="<?= $block->escapeHtml(__('Subscription Number')) ?>*"
