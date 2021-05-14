@@ -38,8 +38,10 @@ define(
                     self.saving = ko.observable(false);
 
                     $('#contact-form').attr('action', $('#salesForceUrl').attr('value'));
+                    if ($('#g-recaptcha').length) {
+                        $('#g-recaptcha').appendTo('#g-recaptcha-container');
+                    }
 
-                    $('.g-recaptcha').attr('data-sitekey', $('#recaptchaApiKey').attr('value'));
 
                     // Only show lawn specific fields if user selects relevant lawn topics.
                     self.lawnInfoVisible = ko.pureComputed(
