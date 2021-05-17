@@ -38,6 +38,7 @@ define(
                     self.saving = ko.observable(false);
 
                     $('#contact-form').attr('action', $('#salesForceUrl').attr('value'));
+                    $('#salesForceOrgId').appendTo('#contact-form');
                     if ($('#g-recaptcha').length) {
                         $('#g-recaptcha').appendTo('#g-recaptcha-container');
                     }

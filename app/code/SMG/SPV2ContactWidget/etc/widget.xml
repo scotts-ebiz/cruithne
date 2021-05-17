@@ -35,6 +35,9 @@
 			<parameter name="contactFormSalesForceURL" visible="true" xsi:type="text">
 				<label>SalesForce Form URL</label>
 			</parameter>
+			<parameter name="contactFormSalesForceOrgId" visible="true" xsi:type="text">
+				<label>SalesForce Organization Id</label>
+			</parameter>
 		</parameters>
 	</widget>
 </widgets>
