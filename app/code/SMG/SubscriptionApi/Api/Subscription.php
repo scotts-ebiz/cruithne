@@ -952,7 +952,7 @@ class Subscription implements SubscriptionInterface
             $now = date('Y-m-d');
 
             if ($now < $safetyNetDate) {
-                $message = "Subscription has been renewed to recently for master subscription id: ".$master_subscription_id;
+                $message = "Subscription has been renewed too recently for master subscription id: ".$master_subscription_id;
                 $this->createRenewalError($master_subscription_id, $message);
                 return $this->_responseHelper->error(
                     $message,
