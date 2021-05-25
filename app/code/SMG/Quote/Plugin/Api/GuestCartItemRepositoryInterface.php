@@ -54,13 +54,10 @@ class GuestCartItemRepositoryInterface
     {
         try
         {
-            $this->_logger->debug("This is a test in afterSave cool!");
+            $this->_logger->debug("After save of item " . $result-> getProduct()->getId() . " to cart.  Trying to send product to Zaius");
 
-            $this->_logger->debug('Sku: '. $result->getProduct()->getId());
-
+            // add zaius to cart
             $this->_apiCartAddHelper->addToCart($result->getProduct(), $result->getQuoteId());
-
-//            $this->zaiusApiCall($result->getProduct()->getId());
         }
         catch (\Exception $e)
         {
@@ -69,37 +66,5 @@ class GuestCartItemRepositoryInterface
 
         // return
         return $result;
-    }
-
-    /**
-     * Make a call to Zaius for adding to cart through the API
-     *
-     * @param $orderId
-     */
-    private function zaiusApiCall($productId)
-    {
-        // call getsdkclient function
-        $zaiusClient = $this->_sdk->getSdkClient();
-
-        // take event as a array and add parameters
-        $event = array();
-        $event['type'] = 'product';
-        $event['action'] = 'add_to_cart';
-        $event['product_id'] = $productId;
-        $event['identifiers'] = ['email'=>'nathan.vanhoose@scotts.com'];
-        $event['data'] = ['product_id'=>$productId,'magento_store_view'=>'Default Store View'];
-
-        // get postevent function
-        $zaiusstatus = $zaiusClient->postEvent($event);
-
-        // check return values from the postevent function
-        if($zaiusstatus)
-        {
-            $this->_logger->info("The add_to_cart product Id " . $productId . " is passed successfully to zaius."); //saved in var/log/system.log
-        }
-        else
-        {
-            $this->_logger->info("The add_to_cart product id " . $productId . " is failed to zaius."); //saved in var/log/system.log
-        }
     }
 }
