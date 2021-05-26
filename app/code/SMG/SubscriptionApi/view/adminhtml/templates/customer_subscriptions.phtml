@@ -8,8 +8,7 @@ $orderId = $this->getRequest()->getParam('order_id');
 
 	$subscriptionProductsArray = $block->getSubscriptionProducts();
 
-	if ($subscriptions['success'] == true && !empty($subscriptions['subscriptions'])) {
-		$subscriptionsList = $subscriptions['subscriptions'];
+	if ($subscriptions['success'] == true && (!empty($subscriptions['subscriptionInfo']['activeSubscriptions']))) {
 		$adminPath = $this->escapeHtml($block->getAdminURLPath());
 	?>
 		<div class="admin__data-grid-wrap admin__data-grid-wrap-static">
@@ -31,45 +30,81 @@ $orderId = $this->getRequest()->getParam('order_id');
 					</tr>
 				</thead>
 				<tbody>
-					<?php foreach ($subscriptionsList as $subscription) { ?>
+					<?php foreach ($subscriptions['subscriptionInfo']['activeSubscriptions'] as $subscription) { ?>
 						<tr onclick='location.href = this.getElementsByTagName("a").item(0).getAttribute("href");'>
-							<?php if ($subscription->plan->name <> 'Annual' && $subscription->plan->name <> 'Seasonal') :  ?>
-								<?php $orderId = $block->getOrderBySubscriptionId($subscription->uuid); ?>
-								<td class="click">
-									<?php if ($orderId) { ?>
-										<a href="/<?php echo $this->escapeHtml($adminPath); ?>/sales/order/view/order_id/<?php echo $this->escapeHtml($orderId); ?>"><?php echo $this->escapeHtml($subscription->uuid); ?></a>
-									<?php } ?>
-								</td>
-							<?php else : ?>
-								<td><?php echo $this->escapeHtml($subscription->uuid); ?></td>
-							<?php endif; ?>
-							<td><?php echo (isset($subscription->custom_fields['quiz_id'])) ? $subscription->custom_fields['quiz_id']->value : 'Quiz ID does not exist for this subscription.'; ?></td>
-							<td><?php echo $subscription->plan->name; ?></td>
-							<td><?php echo $subscription->state; ?></td>
-							<td><?php echo $block->getMagentoStatus($subscription->uuid); ?></td>
-							<td><?php echo $block->getSapOrderStatus($subscription->uuid); ?></td>
-							<td><?php echo $subscription->activated_at->format('d F, Y'); ?></td>
-							<td><?php echo $subscription->current_term_started_at->format('d F, Y'); ?></td>
-							<td>$<?php echo $block->convertAmountToDollars($subscription->unit_amount_in_cents); ?></td>
-							<td><?php echo $block->getProductName($subscription->uuid); ?></td>
-							<td><?php echo $block->getProductSku($subscription->uuid); ?></td>
-							<td>
-								<?php if ($block->getProductQty($subscription->uuid) > 0) { ?>
-									<?php echo round($block->getProductQty($subscription->uuid)); ?>
-								<?php } else { ?>
-									<?php echo '' ?>
-								<?php } ?>
-							</td>
-
+                            <td><?php echo $this->escapeHtml($subscription['parentSubscription']['subscription_id']); ?></td>
+							<td><?php echo (isset($subscription['parentSubscription']['quiz_id'])) ? $this->escapeHtml($subscription['parentSubscription']['quiz_id']) : 'Quiz ID does not exist for this subscription.'; ?></td>
+							<td><?php echo $this->escapeHtml($subscription['recurlySubscription']->plan->name); ?></td>
+							<td><?php echo $this->escapeHtml($subscription['parentSubscription']['subscription_status']); ?></td>
+							<td></td>
+							<td></td>
+							<td><?php echo $subscription['recurlySubscription']->activated_at->format('d F, Y'); ?></td>
+							<td><?php echo $subscription['recurlySubscription']->current_term_started_at->format('d F, Y'); ?></td>
+							<td>$<?php echo $block->convertAmountToDollars($subscription['recurlySubscription']->unit_amount_in_cents); ?></td>
+							<td></td>
+							<td></td>
+							<td></td>
 						</tr>
+                        <?php foreach ($subscription['subscriptionOrders'] as $subscriptionOrder) { ?>
+                            <tr onclick='location.href = this.getElementsByTagName("a").item(0).getAttribute("href");'>
+                                <td>
+                                    <a href="/<?php echo $this->escapeHtml($adminPath); ?>/sales/order/view/order_id/<?php echo $this->escapeHtml($subscriptionOrder['salesOrder']['entity_id']); ?>"><?php echo $this->escapeHtml($subscriptionOrder['subscriptionOrder']['subscription_id']); ?></a>
+                                </td>
+                                <td><?php echo (isset($subscription['parentSubscription']['quiz_id'])) ? $this->escapeHtml($subscription['parentSubscription']['quiz_id']) : 'Quiz ID does not exist for this subscription.'; ?></td>
+                                <td><?php echo $this->escapeHtml($subscriptionOrder['recurlySubscription']->plan->name); ?></td>
+                                <td><?php echo $this->escapeHtml($subscriptionOrder['subscriptionOrder']['subscription_order_status']); ?></td>
+                                <td><?php echo $this->escapeHtml($subscriptionOrder['salesOrder']['status']); ?></td>
+                                <td><?php echo $this->escapeHtml($block->getSapOrderStatus($subscriptionOrder['subscriptionOrder']['subscription_id'])); ?></td>
+                                <td><?php echo $subscriptionOrder['recurlySubscription']->activated_at->format('d F, Y'); ?></td>
+                                <td><?php echo $subscriptionOrder['recurlySubscription']->current_term_started_at->format('d F, Y'); ?></td>
+                                <td>$<?php echo $block->convertAmountToDollars($subscriptionOrder['recurlySubscription']->unit_amount_in_cents); ?></td>
+                                <td><?php echo $this->escapeHtml($subscriptionOrder['product']['name']); ?></td>
+                                <td><?php echo $this->escapeHtml($subscriptionOrder['product']['sku']); ?></td>
+                                <td><?php echo $this->escapeHtml(round($subscriptionOrder['product']['qty_ordered'])); ?></td>
+                            </tr>
+                        <?php } ?>
 					<?php } ?>
+                    <?php foreach ($subscriptions['subscriptionInfo']['renewedSubscriptions'] as $subscription) { ?>
+                        <tr onclick='location.href = this.getElementsByTagName("a").item(0).getAttribute("href");'>
+                            <td><?php echo $this->escapeHtml($subscription['parentSubscription']['subscription_id']); ?></td>
+                            <td><?php echo (isset($subscription['parentSubscription']['quiz_id'])) ? $this->escapeHtml($subscription['parentSubscription']['quiz_id']) : 'Quiz ID does not exist for this subscription.'; ?></td>
+                            <td><?php echo $this->escapeHtml($subscription['recurlySubscription']->plan->name); ?></td>
+                            <td><?php echo $this->escapeHtml($subscription['parentSubscription']['subscription_status']); ?></td>
+                            <td></td>
+                            <td></td>
+                            <td><?php echo $subscription['recurlySubscription']->activated_at->format('d F, Y'); ?></td>
+                            <td><?php echo $subscription['recurlySubscription']->current_term_started_at->format('d F, Y'); ?></td>
+                            <td>$<?php echo $block->convertAmountToDollars($subscription['recurlySubscription']->unit_amount_in_cents); ?></td>
+                            <td></td>
+                            <td></td>
+                            <td></td>
+                        </tr>
+                        <?php foreach ($subscription['subscriptionOrders'] as $subscriptionOrder) { ?>
+                            <tr onclick='location.href = this.getElementsByTagName("a").item(0).getAttribute("href");'>
+                                <td>
+                                    <a href="/<?php echo $this->escapeHtml($adminPath); ?>/sales/order/view/order_id/<?php echo $this->escapeHtml($subscriptionOrder['salesOrder']['entity_id']); ?>"><?php echo $this->escapeHtml($subscriptionOrder['subscriptionOrder']['subscription_id']); ?></a>
+                                </td>
+                                <td><?php echo (isset($subscription['parentSubscription']['quiz_id'])) ? $this->escapeHtml($subscription['parentSubscription']['quiz_id']) : 'Quiz ID does not exist for this subscription.'; ?></td>
+                                <td><?php echo $this->escapeHtml($subscriptionOrder['recurlySubscription']->plan->name); ?></td>
+                                <td><?php echo $this->escapeHtml($subscriptionOrder['subscriptionOrder']['subscription_order_status']); ?></td>
+                                <td><?php echo $this->escapeHtml($subscriptionOrder['salesOrder']['status']); ?></td>
+                                <td><?php echo $this->escapeHtml($block->getSapOrderStatus($subscriptionOrder['subscriptionOrder']['subscription_id'])); ?></td>
+                                <td><?php echo $subscriptionOrder['recurlySubscription']->activated_at->format('d F, Y'); ?></td>
+                                <td><?php echo $subscriptionOrder['recurlySubscription']->current_term_started_at->format('d F, Y'); ?></td>
+                                <td>$<?php echo $block->convertAmountToDollars($subscriptionOrder['recurlySubscription']->unit_amount_in_cents); ?></td>
+                                <td><?php echo $this->escapeHtml($subscriptionOrder['product']['name']); ?></td>
+                                <td><?php echo $this->escapeHtml($subscriptionOrder['product']['sku']); ?></td>
+                                <td><?php echo $this->escapeHtml(round($subscriptionOrder['product']['qty_ordered'])); ?></td>
+                            </tr>
+                        <?php } ?>
+                    <?php } ?>
 				</tbody>
 			</table>
 			<div>
 				<p>Clicking "Cancel Subscription" will cancel all of it's active and future subscriptions.</p>
 				<form action="<?php echo $block->getCancelUrl(); ?>" method="POST">
 					<input type="hidden" name="form_key" value="<?php echo $block->getFormKey(); ?>" />
-					<input type="hidden" name="recurly_account_code" value="<?php echo $block->getCustomerRecurlyAccountCode(); ?>" />
+					<input type="hidden" name="recurly_account_code" value="<?php echo $subscriptions['subscriptionInfo']['customer']['gigya_uid']; ?>" />
 					<button type="submit">Cancel Subscription</button>
 				</form>
 			</div>
