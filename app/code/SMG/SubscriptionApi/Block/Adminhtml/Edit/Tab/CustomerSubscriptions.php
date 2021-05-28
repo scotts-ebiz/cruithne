@@ -280,7 +280,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
                         $subscriptionId = $subscriptionOrder->getData('subscription_id');
                         $subscriptionOrderItem['recurlySubscription'] = $recurlyChildSubscriptions[$subscriptionId];
                         $subscriptionOrderItem['subscriptionOrder'] = $subscriptionOrder->getData();
-                        $salesOrder = $this->getOrderBySubscriptionId($subscriptionId);
+                        $salesOrder = $subscriptionOrder->getOrder();
                         $subscriptionOrderItem['salesOrder'] = $salesOrder->getData();
                         $subscriptionOrderItem['product'] = array_first($salesOrder->getItems())->getData();
                         $subscriptionOrders[] = $subscriptionOrderItem;
@@ -301,7 +301,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
                         $subscriptionId = $subscriptionOrder->getData('subscription_id');
                         $subscriptionOrderItem['recurlySubscription'] = $recurlyChildSubscriptions[$subscriptionId];
                         $subscriptionOrderItem['subscriptionOrder'] = $subscriptionOrder->getData();
-                        $salesOrder = $this->getOrderBySubscriptionId($subscriptionId);
+                        $salesOrder = $subscriptionOrder->getOrder();
                         $subscriptionOrderItem['salesOrder'] = $salesOrder->getData();
                         $subscriptionOrderItem['product'] = array_first($salesOrder->getItems())->getData();
                         $subscriptionOrders[] = $subscriptionOrderItem;
