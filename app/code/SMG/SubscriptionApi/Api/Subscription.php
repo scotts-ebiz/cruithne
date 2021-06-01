@@ -947,6 +947,20 @@ class Subscription implements SubscriptionInterface
                 );
             }
 
+            $subCreatedAt = date('Y-m-d', strtotime($sub->getData('created_at')));
+            $safetyNetDate = date('Y-m-d', strtotime("+10 months", strtotime($subCreatedAt)));
+            $now = date('Y-m-d');
+
+            if ($now < $safetyNetDate) {
+                $message = "Subscription has been renewed too recently for master subscription id: ".$master_subscription_id;
+                $this->createRenewalError($master_subscription_id, $message);
+                return $this->_responseHelper->error(
+                    $message,
+                    ['refresh' => false],
+                    409
+                );
+            }
+
             $customer = $sub->getCustomer();
             $subOrders = $sub->getSubscriptionOrders();
 

@@ -387,6 +387,7 @@ return [
         'SMG_ProductCalloutText' => 1,
         'SMG_ProductCalloutVideo' => 1,
         'SMG_ProductGrid' => 1,
+        'SMG_Quote' => 1,
         'SMG_RecommendationApi' => 1,
         'SMG_RecommendationQuiz' => 1,
         'SMG_RecommendationResults' => 1,

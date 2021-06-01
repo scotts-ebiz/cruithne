@@ -98,6 +98,16 @@ class SubscriptionOrder extends AbstractModel
      */
     protected $_refundOrder;
 
+    /*** Subscription order states */
+
+    const STATE_CANCELED = 'canceled';
+
+    const STATE_COMPLETE = 'complete';
+
+    const STATE_PENDING = 'pending';
+
+    const STATE_FAILED = 'failed';
+
     /**
      * Constructor.
      */
