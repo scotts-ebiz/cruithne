@@ -406,11 +406,16 @@ class SeasonalHelper extends AbstractHelper
 			try {
 
 				$masterSub = $this->_subscriptionResource->getSubscriptionByMasterSubscriptionId($masterSubscriptionId);
-				$masterSub->cancel();
+
+				if ($masterSub) {
+                    $masterSub->cancel();
+                } else {
+                    throw new LocalizedException(__("Master subscription is null."));
+                }
 
 			} catch (Exception $e) {
 
-				$this->_logger->error('Master Subscription Id is Not Found for order Id {$orderId} - ' . $e->getMessage());
+				$this->_logger->error('Master Subscription Id is Not Found for order Id: ' . $orderId . ' and master subscription id: ' . $masterSubscriptionId . ', message: ' . $e->getMessage());
 				return false;
 			}
 
