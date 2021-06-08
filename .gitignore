@@ -77,3 +77,9 @@ node_modules/
 ubuntu-xenial-16.04-cloudimg-console.log
 .docker-sync/
 /keys
+auth.json
+.editorconfig
+.travis.yml.sample
+generated/
+nginx.conf
+dev/tests

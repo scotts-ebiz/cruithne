@@ -129,6 +129,19 @@ class Subscription extends AbstractModel
      */
     protected $_resource;
 
+    /*** Subscription states */
+    const STATE_ACTIVE = 'active';
+
+    const STATE_CANCELED = 'canceled';
+
+    const STATE_PENDING = 'pending';
+
+    const STATE_PENDING_ORDER = 'pending_order';
+
+    const STATE_RENEWAL_FAILED = 'renewal_failed';
+
+    const STATE_RENEWED = 'renewed';
+
     /**
      * Constructor.
      */
