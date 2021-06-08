@@ -883,7 +883,9 @@ define([
                     // Validate the zip code question contains an optional value (zip code).
                     questionValid = false;
                     for (answer of self.answers()) {
-                        if (answer.questionId === question.id && String(answer.optionalValue).length === 5) {
+                        if (answer.questionId === question.id &&
+                            !self.invalidZipCodeInput() &&
+                            !self.invalidZipCode()) {
                             questionValid = true;
                         }
                     }
