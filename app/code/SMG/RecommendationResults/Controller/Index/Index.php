@@ -86,20 +86,39 @@ class Index extends Action
     {
         /*check start quiz time is not exceed from 2 week*/
         $this->_coreSession->start();
-        $startQuiz = $this->_coreSession->getTimeStamp();
         $this->_messageManager->getMessages(true);
         $quizid = $this->getRequest()->getParam('id');
         $zip = $this->getRequest()->getParam('zip');
         $this->_cookieManager->deleteCookie('mage-messages');
         
         if(!empty($quizid) && !empty($zip))
-        {
-            $subscription = $this->_subscription->getSubscriptionByQuizId($quizid);
-            if($subscription){
-                $timestamp = strtotime($subscription->getData('created_at'));
+        {         
+            $id = filter_var($quizid, FILTER_SANITIZE_SPECIAL_CHARS);
+            $url = filter_var(
+            trim(
+                str_replace('{completedQuizId}', $id, $this->_recommendationHelper->getQuizResultApiPath()),
+                '/'
+            ),
+            FILTER_SANITIZE_URL
+            );
+            $response = $this->_recommendationHelper->request($url, '', 'GET');
+            
+            if (empty($response) || ! isset($response['id'])) {
+                
+                 $this->_coreSession->unsTimeStamp();
+                 $this->_messageManager->addError(__('Looks like your quiz results were not found.
+                 To make sure you receive the most accurate recommendation,  
+                 please retake the Quiz.<a href="/quiz" >Take the quiz</a>.'));
+                 
+            }else{
+                $this->_coreSession->unsTimeStamp();
+                $timestamp = strtotime($response['completedAt']);
                 $this->_coreSession->setTimeStamp($timestamp);
-            }
+            }       
         }
+        
+        $startQuiz = $this->_coreSession->getTimeStamp();
+         
         if(!empty($startQuiz))
         {   
             $convertedDate = date('Y-m-d',$startQuiz);

@@ -24,6 +24,9 @@ use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionAddonOrder\CollectionFactory as SubscriptionAddonOrderCollectionFactory;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
 use SMG\SubscriptionApi\Model\SubscriptionOrder;
+use Magento\Sales\Model\OrderFactory;
+use Magento\Sales\Model\ResourceModel\Order as OrderResource;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription as SubscriptionResource;
 
 class SeasonalHelper extends AbstractHelper
 {
@@ -108,6 +111,21 @@ class SeasonalHelper extends AbstractHelper
      */
     protected $_sapOrderBatchCollectionFactory;
 
+	/**
+     * @var OrderFactory
+    */
+    protected $_orderFactory;
+
+    /**
+     * @var OrderResource
+     */
+    protected $_orderResource;
+
+	/**
+     * @var SubscriptionResource
+     */
+    protected $_subscriptionResource;
+
     /**
      * SeasonalHelper constructor.
      * @param Context $context
@@ -125,6 +143,9 @@ class SeasonalHelper extends AbstractHelper
      * @param AddressInterfaceFactory $addressInterfaceFactory
      * @param AddressFactory $addressFactory
      * @param SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
+	 * @param OrderFactory $orderFactory
+	 * @param OrderResource $orderResource
+	 * @param SubscriptionResource $subscriptionResource
      * @throws Exception
      */
     public function __construct(
@@ -142,7 +163,10 @@ class SeasonalHelper extends AbstractHelper
         AddressRepositoryInterface $addressRepository,
         AddressInterfaceFactory $addressInterfaceFactory,
         AddressFactory $addressFactory,
-        SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory
+        SapOrderBatchCollectionFactory $sapOrderBatchCollectionFactory,
+		OrderFactory $orderFactory,
+        OrderResource $orderResource,
+		SubscriptionResource $subscriptionResource
     ) {
         parent::__construct($context);
 
@@ -169,6 +193,9 @@ class SeasonalHelper extends AbstractHelper
 
         Recurly_Client::$apiKey = $this->_recurlyHelper->getRecurlyPrivateApiKey();
         Recurly_Client::$subdomain = $this->_recurlyHelper->getRecurlySubdomain();
+		$this->_orderFactory = $orderFactory;
+		$this->_orderResource = $orderResource;
+		$this->_subscriptionResource = $subscriptionResource;
     }
 
     /**
@@ -226,8 +253,20 @@ class SeasonalHelper extends AbstractHelper
                 $this->_logger->info("Subscription Order: {$subscriptionOrder->getData('subscription_id')} has successfully processed.");
                 $subscriptionOrder->setData('subscription_order_status', 'complete')->save();
             } catch (Exception $e) {
-                $this->_logger->error("Subscription Order: {$subscriptionOrder->getData('subscription_id')} has failed to process. - " . $e->getMessage());
-                $subscriptionOrder->setData('subscription_order_status', 'failed')->save();
+
+			   // Order is not ready to process, set a timestamp to be
+                // available the next day.
+                $cronDate = $subscriptionOrder->getData('next_cron_date')
+                    ? $this->_today->add(new DateInterval('P1D'))->format('Y-m-d H:i:s')
+                    : $this->_today->add(new DateInterval('PT3H'))->format('Y-m-d H:i:s');
+
+                $subscriptionOrder->setData(
+                    'next_cron_date',
+                    $cronDate
+                )->save();
+
+                continue;
+
             }
         }
     }
@@ -278,6 +317,10 @@ class SeasonalHelper extends AbstractHelper
             if ($shipDate < $this->_failDate) {
                 $this->_logger->error("Subscription order {$order->getData('subscription_id')} has failed to process.");
                 $order->setData('subscription_order_status', 'failed')->save();
+
+                // Cancel associate subscription with current sales_order_id
+                $this->cancelPaymentFailedOrder($order->getData('sales_order_id'));
+
                 continue;
             }
 
@@ -317,36 +360,67 @@ class SeasonalHelper extends AbstractHelper
      * @return bool
      */
     protected function verifyRecurlySeasonalOrder($order)
-{
-    try {
-        $recurlySubscription = $this->getRecurlySubscriptionFromOrder($order);
+	{
+		try {
+			$recurlySubscription = $this->getRecurlySubscriptionFromOrder($order);
 
-        $year = date("Y");
-        $originalActivatedAt = $recurlySubscription->activated_at;
-        $newActivatedAt = date_create($originalActivatedAt->format($year."-m-d"));
+			$year = date("Y");
+			$originalActivatedAt = $recurlySubscription->activated_at;
+			$newActivatedAt = date_create($originalActivatedAt->format($year."-m-d"));
 
-        if ($recurlySubscription
-            && $recurlySubscription->state == 'active'
-            && $newActivatedAt < $this->_today
-            && $newActivatedAt > $this->_failDate
-        ) {
-            // Subscription is fine, lets get the invoice and check the
-            // status there.
-            $invoice = $recurlySubscription->invoice->get();
+			if ($recurlySubscription
+				&& $recurlySubscription->state == 'active'
+				&& $newActivatedAt < $this->_today
+				&& $newActivatedAt > $this->_failDate
+			) {
+				// Subscription is fine, lets get the invoice and check the
+				// status there.
+				$invoice = $recurlySubscription->invoice->get();
 
-            if (! $invoice || $invoice->state != 'paid') {
-                return false;
-            }
+				if (! $invoice || $invoice->state != 'paid') {
+					return false;
+				}
 
-            // Invoice does exist and it has been paid.
-            return true;
+				// Invoice does exist and it has been paid.
+				return true;
+			}
+
+			return false;
+		} catch (Exception $e) {
+			$this->_logger->error('Could not verify Recurly subscription - ' . $e->getMessage());
+
+			return false;
+		}
+	}
+
+	protected function cancelPaymentFailedOrder($orderId)
+	{
+
+		$order = $this->_orderFactory->create();
+        $this->_orderResource->load($order, $orderId);
+
+		if ($order->isSubscription())
+        {
+        	// get the master subscription id
+            $masterSubscriptionId = $order->getData('master_subscription_id');
+			try {
+
+				$masterSub = $this->_subscriptionResource->getSubscriptionByMasterSubscriptionId($masterSubscriptionId);
+
+				if ($masterSub) {
+                    $masterSub->cancel();
+                } else {
+                    throw new LocalizedException(__("Master subscription is null."));
+                }
+
+			} catch (Exception $e) {
+
+				$this->_logger->error('Master Subscription Id is Not Found for order Id: ' . $orderId . ' and master subscription id: ' . $masterSubscriptionId . ', message: ' . $e->getMessage());
+				return false;
+			}
+
         }
 
-        return false;
-    } catch (Exception $e) {
-        $this->_logger->error('Could not verify Recurly subscription - ' . $e->getMessage());
+	}
 
-        return false;
-    }
-}
 }

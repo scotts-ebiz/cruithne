@@ -2,6 +2,11 @@
 
 namespace SMG\SubscriptionApi\Block\Adminhtml\Edit\Tab;
 
+use Magento\Customer\Model\Customer;
+use Magento\Framework\Data\Form\FormKey;
+use Magento\Framework\Registry;
+use Magento\Framework\UrlInterface;
+use Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory;
 use Psr\Log\LoggerInterface;
 use Magento\Customer\Controller\RegistryConstants;
 use Magento\Ui\Component\Layout\Tabs\TabInterface;
@@ -10,137 +15,135 @@ use Recurly_NotFoundError;
 use Recurly_SubscriptionList;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
-use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder as SubscriptionOrderResource;
+use SMG\SubscriptionApi\Helper\RecurlyHelper;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription;
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription\CollectionFactory as SubscriptionCollectionFactory;
 use SMG\Sap\Model\SapOrderFactory;
 use SMG\Sap\Model\ResourceModel\SapOrder as SapOrderResource;
 use SMG\Sap\Model\SapOrderStatusFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderStatus as SapOrderStatusResource;
-
+use Recurly_Subscription;
 
 class CustomerSubscriptions extends \Magento\Framework\View\Element\Template implements TabInterface
 {
     /**
-     * @var \Magento\Framework\Registry
+     * @var Registry
      */
     protected $_coreRegistry;
 
 
     /**
-     * @var \Magento\Customer\Model\Customer
+     * @var Customer
      */
     protected $_customer;
 
-
     /**
-     * @var \SMG\SubscriptionApi\Helper\RecurlyHelper
+     * @var RecurlyHelper
      */
     protected $_helper;
 
-
     /**
-     * @var \Magento\Framework\UrlInterface
+     * @var UrlInterface
      */
     protected $_urlInterface;
 
-
     /**
-     * @var \Magento\Framework\Data\Form\FormKey
+     * @var FormKey
      */
     protected $_formKey;
-
 
     /**
      * @var OrderFactory
      */
     protected $_orderFactory;
 
-
     /**
      * @var OrderResource
      */
     protected $_orderResource;
 
-
     /**
-     * @var SubscriptionOrderResource
+     * @var SubscriptionCollectionFactory
      */
-    protected $_subscriptionOrderResource;
-
+    protected $_subscriptionCollectionFactory;
 
     /**
      * @var searchCriteriaBuilder
      */
     protected $_searchCriteriaBuilder;
 
-
     /**
      * @var LoggerInterface
      */
     protected $_logger;
-
 
     /**
      * @var orderCollectionFactory
      */
     protected $_orderCollectionFactory;
 
-
     /**
      * @var SapOrderFactory
      */
     protected $_sapOrderFactory;
-
 
     /**
      * @var SapOrderResource
      */
     protected $_sapOrderResource;
 
-
     /**
      * @var SapOrderStatusFactory
      */
     protected $_sapOrderStatusFactory;
-
 
     /**
      * @var SapOrderStatusResource
      */
     protected $_sapOrderStatusResource;
 
-
-
     /**
-     * @var \Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory
+     * @var CollectionFactory
      */
     protected $_orderItemCollectionFactory;
 
     /**
-     * @param InvoiceRepositoryInterface $_invoiceRepository
-     * @param $orderCollectionFactory
-     * @param $sapOrderFactory
+     * @param \Magento\Backend\Block\Template\Context $context
+     * @param Registry $registry
+     * @param Customer $customer
+     * @param RecurlyHelper $helper
+     * @param UrlInterface $urlInterface
+     * @param FormKey $formKey
+     * @param OrderFactory $orderFactory
+     * @param OrderResource $orderResource
+     * @param SapOrderFactory $sapOrderFactory
+     * @param SapOrderResource $SapOrderResource
      * @param SapOrderStatusFactory $sapOrderStatusFactory
-     * @param \Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory $orderItemCollectionFactory
+     * @param SapOrderStatusResource $sapOrderStatusResource
+     * @param SubscriptionOrderResource $subscriptionOrderResource
+     * @param \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param OrderResource\CollectionFactory $orderCollectionFactory
+     * @param CollectionFactory $orderItemCollectionFactory
+     * @param LoggerInterface $logger
+     * @param array $data
      */
-
-
     public function __construct(
         \Magento\Backend\Block\Template\Context $context,
-        \Magento\Framework\Registry $registry,
-        \Magento\Customer\Model\Customer $customer,
-        \SMG\SubscriptionApi\Helper\RecurlyHelper $helper,
-        \Magento\Framework\UrlInterface $urlInterface,
-        \Magento\Framework\Data\Form\FormKey $formKey,
+        Registry $registry,
+        Customer $customer,
+        RecurlyHelper $helper,
+        UrlInterface $urlInterface,
+        FormKey $formKey,
         OrderFactory $orderFactory,
         OrderResource $orderResource,
         SapOrderFactory $sapOrderFactory,
         SapOrderResource $SapOrderResource,
         SapOrderStatusFactory $sapOrderStatusFactory,
         SapOrderStatusResource $sapOrderStatusResource,
-        SubscriptionOrderResource $subscriptionOrderResource,
+        SubscriptionCollectionFactory $subscriptionCollectionFactory,
         \Magento\Framework\Api\SearchCriteriaBuilder $searchCriteriaBuilder,
         \Magento\Sales\Model\ResourceModel\Order\CollectionFactory $orderCollectionFactory,
-        \Magento\Sales\Model\ResourceModel\Order\Item\CollectionFactory $orderItemCollectionFactory,
+        CollectionFactory $orderItemCollectionFactory,
         LoggerInterface $logger,
         array $data = []
     ) {
@@ -151,7 +154,7 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         $this->_formKey = $formKey;
         $this->_orderFactory = $orderFactory;
         $this->_orderResource = $orderResource;
-        $this->_subscriptionOrderResource = $subscriptionOrderResource;
+        $this->_subscriptionCollectionFactory = $subscriptionCollectionFactory;
         $this->_searchCriteriaBuilder = $searchCriteriaBuilder;
         $this->_orderCollectionFactory = $orderCollectionFactory;
         $this->_sapOrderFactory = $sapOrderFactory;
@@ -163,8 +166,6 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         parent::__construct($context, $data);
     }
 
-
-
     /**
      * Return form key
      *
@@ -174,8 +175,6 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     {
         return $this->_formKey->getFormKey();
     }
-
-
 
     /**
      * Return customer id
@@ -187,27 +186,32 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         return $this->_coreRegistry->registry(RegistryConstants::CURRENT_CUSTOMER_ID);
     }
 
-
+    /**
+     * Return customer id
+     *
+     * @return Customer
+     */
+    public function getCustomer()
+    {
+        return $this->_customer->load($this->getCustomerId());
+    }
 
     /**
      * Return customer's Recurly account code
      *
+     * @param Customer $customer
      * @return string|bool
      */
-    public function getCustomerRecurlyAccountCode()
+    public function getCustomerRecurlyAccountCode(Customer $customer)
     {
-        $customer = $this->_customer->load($this->getCustomerId());
 
         if ($customer->getGigyaUid()) {
             return $customer->getGigyaUid();
         }
 
         $this->_logger->error('Could not find customer Gigya ID');
-
         return false;
     }
-
-
 
     /**
      * Return active and future subscriptions of the customer
@@ -220,118 +224,103 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
         Recurly_Client::$apiKey = $this->_helper->getRecurlyPrivateApiKey();
         Recurly_Client::$subdomain = $this->_helper->getRecurlySubdomain();
 
-        // Create empty array so we can merge active and future subscriptions
-        $subscriptions = [];
-
-        // Store refund amount
-        $totalAmount = false;
+        // Create empty array so we can merge active and future active parent subscriptions
+        $recurlySubscriptions = [];
+        $recurlyChildSubscriptions = [];
 
         try {
-            $activeSubscriptions = Recurly_SubscriptionList::getForAccount($this->getCustomerRecurlyAccountCode(), ['state' => 'active']);
-            $futureSubscriptions = Recurly_SubscriptionList::getForAccount($this->getCustomerRecurlyAccountCode(), ['state' => 'future']);
+            $customerSubscriptionInfo = [];
+            $customer = $this->getCustomer();
+            $customerSubscriptionInfo['customer'] = $customer->getData();
+            $activeSubscriptions = Recurly_SubscriptionList::getForAccount($this->getCustomerRecurlyAccountCode($customer), ['state' => 'active']);
+            $futureSubscriptions = Recurly_SubscriptionList::getForAccount($this->getCustomerRecurlyAccountCode($customer), ['state' => 'future']);
 
+            /** @var Recurly_Subscription $subscription */
             foreach ($activeSubscriptions as $subscription) {
-                array_push($subscriptions, $subscription);
-                $totalAmount += $subscription->unit_amount_in_cents;
+                if ($subscription->plan->name === 'Annual' || $subscription->plan->name === 'Seasonal') {
+                    $recurlySubscriptions[] =  $subscription;
+                } else {
+                    $recurlyChildSubscriptions[$subscription->uuid] = $subscription;
+                }
             }
 
+            /** @var Recurly_Subscription $subscription */
             foreach ($futureSubscriptions as $subscription) {
-                array_push($subscriptions, $subscription);
-                $totalAmount += $subscription->unit_amount_in_cents;
+                if ($subscription->plan->name === 'Annual' || $subscription->plan->name === 'Seasonal') {
+                    $recurlySubscriptions[] =  $subscription;
+                } else {
+                    $recurlyChildSubscriptions[$subscription->uuid] = $subscription;
+                }
             }
 
-            return ['success' => true, 'subscriptions' => $subscriptions, 'total_amount' => $this->convertAmountToDollars($totalAmount)];
+            // Active and past renewed subscription list with all info
+            $parentActiveSubscriptions = [];
+            $parentRenewedSubscriptions = [];
+
+            // Should only have one! but if the data is bad let's show the bad data
+            foreach ($recurlySubscriptions as $recurlySubscription) {
+
+                $renewedSubscriptions = $this->_subscriptionCollectionFactory->create()
+                    ->addFieldToFilter('subscription_id', $recurlySubscription->uuid)
+                    ->addFieldToFilter('subscription_status', array('eq' => 'renewed'));
+
+                $activeSubscriptions = $this->_subscriptionCollectionFactory->create()
+                    ->addFieldToFilter('subscription_id', $recurlySubscription->uuid)
+                    ->addFieldToFilter('subscription_status', array('eq' => 'active'));
+
+                /** @var Subscription $renewedSubscription */
+                foreach ($renewedSubscriptions as $subscription) {
+                    $renewedSubscription = [];
+                    $renewedSubscription['recurlySubscription'] = $recurlySubscription;
+                    $renewedSubscription['parentSubscription'] = $subscription->getData();
+                    $subscriptionOrders = [];
+
+                    foreach ($subscription->getSubscriptionOrders() as $subscriptionOrder) {
+                        $subscriptionOrderItem = [];
+                        $subscriptionId = $subscriptionOrder->getData('subscription_id');
+                        $subscriptionOrderItem['recurlySubscription'] = $recurlyChildSubscriptions[$subscriptionId];
+                        $subscriptionOrderItem['subscriptionOrder'] = $subscriptionOrder->getData();
+                        $salesOrder = $subscriptionOrder->getOrder();
+                        $subscriptionOrderItem['salesOrder'] = $salesOrder->getData();
+                        $subscriptionOrderItem['product'] = array_first($salesOrder->getItems())->getData();
+                        $subscriptionOrders[] = $subscriptionOrderItem;
+                    }
+
+                    $renewedSubscription['subscriptionOrders'] = $subscriptionOrders;
+                    $parentRenewedSubscriptions[] = $renewedSubscription;
+                }
+
+                foreach ($activeSubscriptions as $subscription) {
+                    $activeSubscription = [];
+                    $activeSubscription['recurlySubscription'] = $recurlySubscription;
+                    $activeSubscription['parentSubscription'] = $subscription->getData();
+                    $subscriptionOrders = [];
+
+                    foreach ($subscription->getSubscriptionOrders() as $subscriptionOrder) {
+                        $subscriptionOrderItem = [];
+                        $subscriptionId = $subscriptionOrder->getData('subscription_id');
+                        $subscriptionOrderItem['recurlySubscription'] = $recurlyChildSubscriptions[$subscriptionId];
+                        $subscriptionOrderItem['subscriptionOrder'] = $subscriptionOrder->getData();
+                        $salesOrder = $subscriptionOrder->getOrder();
+                        $subscriptionOrderItem['salesOrder'] = $salesOrder->getData();
+                        $subscriptionOrderItem['product'] = array_first($salesOrder->getItems())->getData();
+                        $subscriptionOrders[] = $subscriptionOrderItem;
+                    }
+
+                    $activeSubscription['subscriptionOrders'] = $subscriptionOrders;
+                    $parentActiveSubscriptions[] = $activeSubscription;
+                }
+            }
+
+            $customerSubscriptionInfo['activeSubscriptions'] = $parentActiveSubscriptions;
+            $customerSubscriptionInfo['renewedSubscriptions'] = $parentRenewedSubscriptions;
+
+            return ['success' => true, 'subscriptionInfo' => $customerSubscriptionInfo];
         } catch (Recurly_NotFoundError $e) {
             $this->_logger->error($e->getMessage());
             return ['success' => false, 'error_message' => $e->getMessage()];
         }
     }
-
-
-
-    /**
-     * Get Invoice Order Product Name
-     *
-     * @param $subscription_uuid
-     * @return mixed
-     */
-    public function getProductName($subscription_uuid)
-    {
-        // From Order Collection - Select all attributs based on Subscription_Id
-        $collection = $this->_orderCollectionFactory->create()
-            ->addAttributeToSelect('*')
-            ->addFieldToFilter('subscription_id', $subscription_uuid);
-
-        // Select Order Entity_Id from Order Collection results   
-        foreach ($collection as $order) {
-            $orderEntityId = $order->getData('entity_id');
-
-            // Create orderItemCollectionFactory object - Filter on entity_id from orderCollectionFactory
-            $orderItemCollection = $this->_orderItemCollectionFactory->create()->setOrderFilter($orderEntityId);
-
-            // Select value from name column
-            foreach ($orderItemCollection as $orderItem) {
-                return $orderItem->getData('name');
-            }
-            return false;
-        }
-        return false;
-    }
-
-
-
-    /**
-     * Get Product Qty from Subscription ID
-     *
-     * @param $subscription_uuid
-     * @return mixed
-     */
-    public function getProductQty($subscription_uuid)
-    {
-        // From Order Collection - Select all attributs based on Subscription_Id
-        $collection = $this->_orderCollectionFactory->create()
-            ->addAttributeToSelect('*')
-            ->addFieldToFilter('subscription_id', $subscription_uuid);
-
-        // Select Order Entity_Id from Order Collection results   
-        foreach ($collection as $order) {
-            $orderEntityId = $order->getData('entity_id');
-
-            // Create orderItemCollectionFactory object - Filter on entity_id from orderCollectionFactory
-            $orderItemCollection = $this->_orderItemCollectionFactory->create()->setOrderFilter($orderEntityId);
-
-            // Select value from qty_ordered column
-            foreach ($orderItemCollection as $orderItem) {
-                return $orderItem->getData('qty_ordered');
-            }
-            return false;
-        }
-        return false;
-    }
-
-
-
-    /**
-     * Get Product Magento Status from Subscription ID
-     *
-     * @param $subscription_uuid
-     * @return mixed
-     */
-    public function getMagentoStatus($subscription_uuid)
-    {
-        // From Order Collection - Select all attributs based on Subscription_Id
-        $collection = $this->_orderCollectionFactory->create()
-            ->addAttributeToSelect('*')
-            ->addFieldToFilter('subscription_id', $subscription_uuid);
-
-        // Select Order Status from Order Collection results   
-        foreach ($collection as $order) {
-            return $order->getData('status');
-        }
-        return false;
-    }
-
-
 
     /**
      * Get SAP Subscription Order Status from Subscription ID
@@ -346,13 +335,13 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
             ->addAttributeToSelect('*')
             ->addFieldToFilter('subscription_id', $subscription_uuid);
 
-        // Create instance of SAP Order Factory    
+        // Create instance of SAP Order Factory
         $sapOrderObject = $this->_sapOrderFactory->create();
 
-        // Create instance of SAP Order Status Factory    
+        // Create instance of SAP Order Status Factory
         $sapOrderStatusObject = $this->_sapOrderStatusFactory->create();
 
-        // Select Order Entity_Id from Order Collection results   
+        // Select Order Entity_Id from Order Collection results
         foreach ($collection as $order) {
             $orderEntityId = $order->getData('entity_id');
 
@@ -374,38 +363,6 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
     }
 
 
-
-    /**
-     * Get Product SKU from Subscription ID
-     *
-     * @param $subscription_uuid
-     * @return mixed
-     */
-    public function getProductSku($subscription_uuid)
-    {
-        // From Order Collection - Select all attributs based on Subscription_Id
-        $collection = $this->_orderCollectionFactory->create()
-            ->addAttributeToSelect('*')
-            ->addFieldToFilter('subscription_id', $subscription_uuid);
-
-        // Select Order Entity_Id from Order Collection results   
-        foreach ($collection as $order) {
-            $orderEntityId = $order->getData('entity_id');
-
-            // Create orderItemCollectionFactory object - Filter on entity_id from orderCollectionFactory
-            $orderItemCollection = $this->_orderItemCollectionFactory->create()->setOrderFilter($orderEntityId);
-
-            // Select value from sku column
-            foreach ($orderItemCollection as $orderItem) {
-                return $orderItem->getData('sku');
-            }
-            return false;
-        }
-        return false;
-    }
-
-
-
     /**
      * Get order by subscription Id
      *
@@ -422,10 +379,8 @@ class CustomerSubscriptions extends \Magento\Framework\View\Element\Template imp
             $this->_logger->error("Could not find an order for subscription with ID: {$subscriptionId}");
         }
 
-        return $orderId;
+        return $order;
     }
-
-
 
     /**
      * Get Admin URL path
