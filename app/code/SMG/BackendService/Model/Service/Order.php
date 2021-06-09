@@ -13,6 +13,10 @@ use \Magento\Customer\Model\AddressFactory;
 use \Magento\Sales\Api\Data\TransactionSearchResultInterfaceFactory as TrasactionResultInterface;
 use \Psr\Log\LoggerInterface;
 use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\Sales\Api\Data\ShipmentInterface;
+use Magento\Sales\Api\Data\ShipmentTrackInterface;
+use Magento\Sales\Api\ShipmentRepositoryInterface;
 
 class Order
 {
@@ -63,6 +67,16 @@ class Order
     protected $productRepository;
 
     /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
+     * @var ShipmentRepositoryInterface
+     */
+    private $shipmentRepository;
+
+    /**
      * Order constructor.
      * @param Api $client
      * @param Config $config
@@ -72,6 +86,8 @@ class Order
      * @param AddressFactory $addressFactory
      * @param TrasactionResultInterface $trasactionResultInterface
      * @param LoggerInterface $logger
+     * @param StoreManagerInterface $storeManager
+     * @param ShipmentRepositoryInterface $shipmentRepository
      */
     public function __construct(
         Api $client,
@@ -82,7 +98,9 @@ class Order
         AddressFactory $addressFactory,
         TrasactionResultInterface $trasactionResultInterface,
         LoggerInterface $logger,
-        ProductRepositoryInterface $productRepository
+        ProductRepositoryInterface $productRepository,
+        StoreManagerInterface $storeManager,
+        ShipmentRepositoryInterface $shipmentRepository
     ) {
         $this->client = $client;
         $this->config = $config;
@@ -93,6 +111,8 @@ class Order
         $this->trasactionResultInterface = $trasactionResultInterface;
         $this->logger = $logger;
         $this->productRepository = $productRepository;
+        $this->storeManager = $storeManager;
+        $this->shipmentRepository = $shipmentRepository;
     }
 
     /**
@@ -238,7 +258,10 @@ class Order
             $params['products'][$i]['generatedProductId'] = '';
             $params['products'][$i]['coverage'] = '';
             $params['products'][$i]['description'] = $product->getDescription();
-            $params['products'][$i]['thumbnailImage'] = $product->getThumbnail();
+            $imageUrl = $this->storeManager->getStore($product->getStoreId())
+                    ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA ). 'catalog/product';
+            $thumbnailUrl = $imageUrl . ($product->getThumbnail() ?? '');
+            $params['products'][$i]['thumbnailImage'] = $thumbnailUrl;
             $params['products'][$i]['shortDescription'] = $product->getShortDescription();
             $params['products'][$i]['thumbnailLabel'] = $product->getThumbnailLabel();
             $params['products'][$i]['shipStartDate'] = $order->getData('ship_start_date');
@@ -325,7 +348,16 @@ class Order
             $data[$j]['generatedShipmentId'] = $shipment->getData('order_id');
             $data[$j]['orderId'] = $shipment->getData('order_id');
             $data[$j]['shippingId'] = $shipment->getData('order_id');
-            $data[$j]['trackingNumber'] = $shipment->getData('track_number');
+
+            $shipmentTracking = $this->shipmentRepository->get($shipment->getData('entity_id'));
+
+            $shipmentTrackingNumbers = [];
+
+            foreach ($shipmentTracking->getTracks() as $track) {
+                $shipmentTrackingNumbers[] = $track->getData('track_number');
+            }
+
+            $data[$j]['trackingNumber'] = implode(',', $shipmentTrackingNumbers);
 
             foreach($shipment->getItems() as $sItem)
             {

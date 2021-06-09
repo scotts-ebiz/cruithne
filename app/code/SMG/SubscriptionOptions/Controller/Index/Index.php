@@ -32,7 +32,7 @@ class Index extends Action
     protected $_coreSession;
     protected $_messageManager;
     protected $logger;
-    protected $_storeManager;
+    protected $_storeManager; 
 
     /**
      * Index constructor.
@@ -57,7 +57,7 @@ class Index extends Action
         $this->_coreSession = $coreSession;
         $this->_messageManager = $messageManager;
         $this->logger = $logger;
-        $this->_storeManager = $storeManager;
+        $this->_storeManager = $storeManager; 
     }
 
     /**
@@ -67,8 +67,39 @@ class Index extends Action
     {
         /*check start quiz time is not exceed from 2 week*/
         $this->_coreSession->start();
-        $startQuiz = $this->_coreSession->getTimeStamp();
         $this->_messageManager->getMessages(true);
+        $quizid = $this->getRequest()->getParam('id');
+        $zip = $this->getRequest()->getParam('zip');
+        
+        if(!empty($quizid) && !empty($zip))
+        {
+            $id = filter_var($quizid, FILTER_SANITIZE_SPECIAL_CHARS);
+            $url = filter_var(
+            trim(
+                str_replace('{completedQuizId}', $id, $this->_helper->getQuizResultApiPath()),
+                '/'
+            ),
+            FILTER_SANITIZE_URL
+            );
+            $response = $this->_helper->request($url, '', 'GET');
+            
+            if (empty($response) || ! isset($response['id'])) {
+                
+                 $this->_coreSession->unsTimeStamp();
+                 $this->_messageManager->addError(__('Looks like your quiz results were not found.
+                 To make sure you receive the most accurate recommendation,  
+                 please retake the Quiz.<a href="/quiz" >Take the quiz</a>.'));
+                 
+            }else{
+                $this->_coreSession->unsTimeStamp();
+                $timestamp = strtotime($response['completedAt']);
+                $this->_coreSession->setTimeStamp($timestamp);
+            }
+            
+        }
+        
+        $startQuiz = $this->_coreSession->getTimeStamp();
+        
         if(!empty($startQuiz))
         {   
             $convertedDate = date('Y-m-d',$startQuiz);
@@ -85,10 +116,13 @@ class Index extends Action
                  To make sure you receive the most accurate recommendation,  
                  please retake the Quiz.<a href="/quiz" >Take the quiz</a>.'));
                  $this->logger->error(print_r($message,true));
-                 $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-                 $resultRedirect->setUrl($this->_redirect->getRefererUrl());
-                 return $resultRedirect;
-                 exit;
+                 if(empty($quizid) && empty($zip))
+                {
+                     $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+                     $resultRedirect->setUrl($this->_redirect->getRefererUrl());
+                     return $resultRedirect;
+                     exit;
+                }
             }               
         }
         

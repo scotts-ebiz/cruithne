@@ -8,7 +8,9 @@ use Magento\Framework\View\Result\PageFactory;
 use SMG\RecommendationApi\Helper\RecommendationHelper;
 use Magento\Framework\Session\SessionManagerInterface;
 use Magento\Framework\Controller\ResultFactory;
- 
+use SMG\SubscriptionApi\Model\ResourceModel\Subscription;
+use Magento\Framework\Stdlib\CookieManagerInterface;
+
 class Index extends Action
 {
     /**
@@ -25,7 +27,17 @@ class Index extends Action
     protected $logger;
     protected $_recommendationHelper;
     protected $_storeManager;
-
+    
+    /**
+     * @var Subscription
+    */
+    protected $_subscription;
+    
+    /**
+     * @var CookieManagerInterface
+    */
+    private $_cookieManager;
+    
     /**
      * Index constructor.
      *
@@ -35,6 +47,8 @@ class Index extends Action
      * @param \Magento\Store\Model\StoreManagerInterface $storeManager
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Magento\Framework\Exception\NotFoundException
+     * @param Subscription $subscription
+     * @param CookieManagerInterface $cookieManager
      */
     public function __construct(
         Context $context,
@@ -44,7 +58,9 @@ class Index extends Action
         SessionManagerInterface $coreSession,
         \Magento\Framework\Message\ManagerInterface $messageManager,
         ResultFactory $resultFactory,
-        \Psr\Log\LoggerInterface $logger
+        \Psr\Log\LoggerInterface $logger,
+        Subscription $subscription,
+        CookieManagerInterface $cookieManager
     ) {
 
         // Check to make sure that the module is enabled at the store level
@@ -59,6 +75,8 @@ class Index extends Action
         $this->logger = $logger;  
         $this->_recommendationHelper = $recommendationHelper;  
         $this->_storeManager = $storeManager;
+        $this->_subscription = $subscription;
+        $this->_cookieManager = $cookieManager;
     }
 
     /**
@@ -68,8 +86,39 @@ class Index extends Action
     {
         /*check start quiz time is not exceed from 2 week*/
         $this->_coreSession->start();
-        $startQuiz = $this->_coreSession->getTimeStamp();
         $this->_messageManager->getMessages(true);
+        $quizid = $this->getRequest()->getParam('id');
+        $zip = $this->getRequest()->getParam('zip');
+        $this->_cookieManager->deleteCookie('mage-messages');
+        
+        if(!empty($quizid) && !empty($zip))
+        {         
+            $id = filter_var($quizid, FILTER_SANITIZE_SPECIAL_CHARS);
+            $url = filter_var(
+            trim(
+                str_replace('{completedQuizId}', $id, $this->_recommendationHelper->getQuizResultApiPath()),
+                '/'
+            ),
+            FILTER_SANITIZE_URL
+            );
+            $response = $this->_recommendationHelper->request($url, '', 'GET');
+            
+            if (empty($response) || ! isset($response['id'])) {
+                
+                 $this->_coreSession->unsTimeStamp();
+                 $this->_messageManager->addError(__('Looks like your quiz results were not found.
+                 To make sure you receive the most accurate recommendation,  
+                 please retake the Quiz.<a href="/quiz" >Take the quiz</a>.'));
+                 
+            }else{
+                $this->_coreSession->unsTimeStamp();
+                $timestamp = strtotime($response['completedAt']);
+                $this->_coreSession->setTimeStamp($timestamp);
+            }       
+        }
+        
+        $startQuiz = $this->_coreSession->getTimeStamp();
+         
         if(!empty($startQuiz))
         {   
             $convertedDate = date('Y-m-d',$startQuiz);
