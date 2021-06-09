@@ -750,7 +750,7 @@ class OrderStatusHelper
         // check to see if the billing doc number changed
         $inputValue = $inputOrder[self::INPUT_SAP_SAP_BILLING_DOC_NUMBER];
         $sapOrderValue = $sapOrderShipment->getData('sap_billing_doc_number');
-        if ((!empty($inputValue) || !empty($sapOrderValue)) && $inputValue !== $sapOrderValue)
+        if (!empty($inputValue) && $inputValue !== $sapOrderValue)
         {
             $isUpdateNeeded = true;
             $sapOrderShipment->setData('sap_billing_doc_number', $inputValue);
