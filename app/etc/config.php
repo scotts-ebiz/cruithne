@@ -348,6 +348,7 @@ return [
         'MagePal_Core' => 1,
         'MagePal_GoogleTagManager' => 1,
         'Mageplaza_Core' => 1,
+        'Mageplaza_GoogleRecaptcha' => 1,
         'Mageplaza_Smtp' => 1,
         'SMG_AkeneoConnector' => 1,
         'SMG_Api' => 1,

@@ -23,7 +23,8 @@
         "recurly/recurly-client": "^2.12",
         "snowdog/frontools": "^1.11",
         "zaius/zaius-magento-2": "^1.0.7",
-        "dotmailer/dotmailer-magento2-extension": "4.5.1 as 4.4.1-p1"
+        "dotmailer/dotmailer-magento2-extension": "4.5.1 as 4.4.1-p1",
+        "mageplaza/module-google-recaptcha": "^4.0"
     },
     "require-dev": {
         "allure-framework/allure-phpunit": "~1.2.3",
