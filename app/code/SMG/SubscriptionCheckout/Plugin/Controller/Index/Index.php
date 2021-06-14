@@ -13,7 +13,7 @@ use Magento\Framework\UrlInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
 use SMG\SubscriptionApi\Helper\SubscriptionHelper;
-use Magento\Framework\Controller\ResultFactory as ResultFactory;
+use Magento\Framework\Controller\ResultFactory;
 use SMG\RecommendationApi\Helper\RecommendationHelper;
 
 class Index
@@ -69,8 +69,6 @@ class Index
     protected $_checkoutSession;
     protected $_messageManager;
     protected $_recommendationHelper;
-    protected $resultFactory;
-    protected $_redirect;
 
     /**
      * Index constructor.
@@ -96,9 +94,7 @@ class Index
         UrlInterface $url,
         UrlHelper $urlHelper,
         \Magento\Framework\Message\ManagerInterface $messageManager,
-        RecommendationHelper $recommendationHelper,
-        ResultFactory $resultFactory,
-        \Magento\Framework\App\Response\RedirectInterface $redirect
+        RecommendationHelper $recommendationHelper
     ) {
         $this->_logger = $logger;
         $this->_subscriptionHelper = $subscriptionHelper;
@@ -112,8 +108,6 @@ class Index
         $this->_urlHelper = $urlHelper;
         $this->_messageManager = $messageManager;
         $this->_recommendationHelper = $recommendationHelper;
-        $this->resultFactory = $resultFactory;
-        $this->_redirect = $redirect;
     }
 
     /**
@@ -132,29 +126,6 @@ class Index
 
             // if this store uses subscription then check for login before continuing
             if ($this->_subscriptionHelper->isActive($this->_storeManager->getStore()->getId())) {
-                
-                 /*check start quiz time is not exceed from 2 week*/
-                $startQuiz = $this->_coreSession->getTimeStamp();
-                if(!empty($startQuiz))
-                {   
-                    $convertedDate = date('Y-m-d',$startQuiz);
-                    $startYear = date('Y',$startQuiz);
-                    $todayyear = date('Y');
-                    $startDate = new \DateTime($convertedDate);
-                    $todayDate = new \DateTime();
-                    $days  = $todayDate->diff($startDate)->format('%a');
-                    $quiz_id = $this->_coreSession->getData('quiz_id');
-                    if($days >= $this->_recommendationHelper->getExpiredDays($this->_storeManager->getStore()->getId()) || $startYear != $todayyear)
-                    {
-                         $message = "Quiz Id ".$quiz_id." Expired";
-                         $this->_logger->error(print_r($message,true));
-                         $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
-                         $resultRedirect->setUrl($this->_redirect->getRefererUrl());
-                         return $resultRedirect;
-                         exit;
-                    }               
-                }
-
                 /**
                  * If the customer is not logged in and guest checkout is not allowed,
                  * redirect the customer to the login page. Set current URL (/checkout) as referer,
@@ -184,7 +155,32 @@ class Index
 
                     // The customer is logged in, so check if they have any
                     // subscription details in the session.
-                    if ($this->_coreSession->getData('subscription_details')) { 
+                    if ($this->_coreSession->getData('subscription_details')) {
+                        
+                        /*check start quiz time is not exceed from 2 week*/
+                        $startQuiz = $this->_coreSession->getTimeStamp();
+                        if(!empty($startQuiz))
+                        {   
+                            $convertedDate = date('Y-m-d',$startQuiz);
+                            $startYear = date('Y',$startQuiz);
+                            $todayyear = date('Y');
+                            $startDate = new \DateTime($convertedDate);
+                            $todayDate = new \DateTime();
+                            $days  = $todayDate->diff($startDate)->format('%a');
+                            $quiz_id = $this->_coreSession->getData('quiz_id');
+                            if($days >= $this->_recommendationHelper->getExpiredDays($this->_storeManager->getStore()->getId()) || $startYear != $todayyear)
+                            {
+                                 $message = "Quiz Id ".$quiz_id." Expired";
+                                 $this->_messageManager->addError(__('Looks like your quiz results are out of date.
+                                     To make sure you receive the most accurate recommendation,  
+                                     please retake the Quiz.<a href="/quiz" >Take the quiz</a>.'));
+                                 $this->logger->error(print_r($message,true));
+                                 $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+                                 $resultRedirect->setUrl($this->_redirect->getRefererUrl());
+                                 return $resultRedirect;
+                                 exit;
+                            }               
+                        }
                         
                         $this->_subscriptionHelper->addSessionSubscriptionToCart();
 
