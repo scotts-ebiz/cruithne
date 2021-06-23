@@ -1,0 +1,21 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="fraud_check" showInDefault="1" showInWebsite="1" showInStore="1" type="text" translate="label"
+                 sortOrder="0">
+            <tab>mirasvit</tab>
+            <resource>Mirasvit_FraudCheck::config</resource>
+            <group id="cron" showInDefault="1" showInWebsite="1" showInStore="1" sortOrder="10">
+                <label>Cron Settings</label>
+                <field id="date_from" translate="label" type="text" sortOrder="20" showInDefault="1"
+                       showInWebsite="0" showInStore="0">
+                    <label>From Date</label>
+                    <comment>Orders placed after this date will be checked. If nothing is set all orders will be checked starting from the first order in batches of 100. Y-m-d H:i:s format. Ex 2000-01-01 00:00:00. Defaults to 2021-06-15 12:00:00.</comment>
+                </field>
+                <field id="batch_size" translate="label" type="text" sortOrder="20" showInDefault="1" showInWebsite="0" showInStore="0">
+                    <label>Batch Size</label>
+                    <comment>Number of orders checked each cron job run. Defaults to 100.</comment>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>
