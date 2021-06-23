@@ -381,6 +381,7 @@ return [
         'SMG_ImageGallery' => 0,
         'SMG_LandingPage' => 1,
         'SMG_Launch' => 1,
+        'SMG_Mirasvit' => 1,
         'SMG_OfflineShipping' => 1,
         'SMG_OrderCreateGrid' => 1,
         'SMG_Sap' => 1,
