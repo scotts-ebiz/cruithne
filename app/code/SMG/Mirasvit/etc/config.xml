@@ -3,6 +3,7 @@
     <default>
         <fraud_check>
             <cron>
+                <active>0</active>
                 <date_from>2021-06-15 12:00:00</date_from>
                 <batch_size>100</batch_size>
             </cron>

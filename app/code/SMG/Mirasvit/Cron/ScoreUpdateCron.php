@@ -46,29 +46,31 @@ class ScoreUpdateCron
      */
     public function execute()
     {
-        $collection = $this->orderCollectionFactory->create();
+        if ($this->getActiveFromConfig()) {
+            $collection = $this->orderCollectionFactory->create();
 
-        $collection->addFieldToFilter('fraud_score', ['null' => true])
-            ->addFieldToFilter('created_at', ['gteq' => $this->getDateFromConfig()])
-            ->setPageSize($this->getBatchSizeConfig())
-            ->setOrder('created_at', 'desc');
+            $collection->addFieldToFilter('fraud_score', ['null' => true])
+                ->addFieldToFilter('created_at', ['gteq' => $this->getDateFromConfig()])
+                ->setPageSize($this->getBatchSizeConfig())
+                ->setOrder('created_at', 'desc');
 
-        foreach ($collection as $order) {
-            if (!$order->getPayment()) {
-                continue;
-            }
+            foreach ($collection as $order) {
+                if (!$order->getPayment()) {
+                    continue;
+                }
 
-            try {
-                $score = $this->scoreFactory->create();
+                try {
+                    $score = $this->scoreFactory->create();
 
-                $score->setOrder($order)
-                    ->getFraudScore();
+                    $score->setOrder($order)
+                        ->getFraudScore();
 
-                // for update status
-                $order = $order->load($order->getId());
-                $score->setOrder($order);
-            } catch (\Exception $e) {
-                // skip score update for that order
+                    // for update status
+                    $order = $order->load($order->getId());
+                    $score->setOrder($order);
+                } catch (\Exception $e) {
+                    // skip score update for that order
+                }
             }
         }
     }
@@ -87,5 +89,13 @@ class ScoreUpdateCron
     public function getDateFromConfig()
     {
         return $this->scopeConfigInterface->getValue(self::XML_FRAUD_CHECK_CONFIG_CRON_PATH . 'date_from');
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getActiveFromConfig()
+    {
+        return $this->scopeConfigInterface->getValue(self::XML_FRAUD_CHECK_CONFIG_CRON_PATH . 'active');
     }
 }
