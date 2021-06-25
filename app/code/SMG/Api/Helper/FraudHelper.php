@@ -8,7 +8,7 @@
 namespace SMG\Api\Helper;
 
 use Psr\Log\LoggerInterface;
-use Mirasvit\FraudCheck\Cron\ScoreUpdateCron;
+use SMG\Mirasvit\Cron\ScoreUpdateCron;
 use Exception;
 
 class FraudHelper
