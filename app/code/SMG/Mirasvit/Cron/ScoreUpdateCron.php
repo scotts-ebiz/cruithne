@@ -8,8 +8,6 @@ use Mirasvit\FraudCheck\Model\Score;
 use Mirasvit\FraudCheck\Model\ScoreFactory;
 use Magento\Framework\App\Config\ScopeConfigInterface;
 use SMG\Api\Helper\OrderStatusHelper;
-use SMG\Sap\Model\SapOrderBatch;
-use SMG\Sap\Model\SapOrderBatchFactory;
 
 class ScoreUpdateCron
 {
@@ -31,11 +29,6 @@ class ScoreUpdateCron
     private $scoreFactory;
 
     /**
-     * @var SapOrderBatchFactory
-     */
-    protected $_sapOrderBatchFactory;
-
-    /**
      * @var ScopeConfigInterface
      */
     protected $scopeConfigInterface;
@@ -45,18 +38,17 @@ class ScoreUpdateCron
      * @param OrderCollectionFactory $orderCollectionFactory
      * @param ScoreFactory $scoreFactory
      * @param ScopeConfigInterface $scopeConfigInterface
+     * @param OrderStatusHelper $orderStatusHelper
      */
     public function __construct(
         OrderCollectionFactory $orderCollectionFactory,
         ScoreFactory $scoreFactory,
         ScopeConfigInterface $scopeConfigInterface,
-        SapOrderBatchFactory $sapOrderBatchFactory,
         OrderStatusHelper $orderStatusHelper
     ) {
         $this->orderCollectionFactory = $orderCollectionFactory;
         $this->scoreFactory           = $scoreFactory;
         $this->scopeConfigInterface   = $scopeConfigInterface;
-        $this->_sapOrderBatchFactory = $sapOrderBatchFactory;
         $this->_orderStatusHelper = $orderStatusHelper;
     }
 
