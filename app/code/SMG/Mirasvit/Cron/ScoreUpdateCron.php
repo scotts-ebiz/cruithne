@@ -86,7 +86,8 @@ class ScoreUpdateCron
             /** @var Order $order */
             foreach ($collection as $order) {
                 $fraudStatus = $order->getData('fraud_status');
-                if ($fraudStatus === Score::STATUS_APPROVE) {
+                $isSubscription = !empty($order->getData('subscription_type')) && !empty($order->getData('master_subscription_id'));
+                if ($fraudStatus === Score::STATUS_APPROVE && !$isSubscription) {
                     try {
                         $this->_orderStatusHelper->createInvoice($order);
                     } catch (\Exception | \Throwable $e ) {
