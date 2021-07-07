@@ -13,7 +13,7 @@ use Magento\Framework\Event\ObserverInterface;
 use SMG\Sap\Model\SapOrderBatchFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch as SapOrderBatchResource;
 
-class OrderSaveAfter implements ObserverInterface
+class OrderInvoicePay implements ObserverInterface
 {
     /**
      * @var SapOrderBatchFactory
@@ -34,11 +34,9 @@ class OrderSaveAfter implements ObserverInterface
 
     public function execute(Observer $observer)
     {
-        // get the order
-        /**
-         * @var \Magento\Sales\Model\Order $order
-         */
-        $order = $observer->getData('order');
+        /** @var \Magento\Sales\Model\Order\Invoice $invoice */
+        $invoice = $observer->getEvent()->getInvoice();
+        $order = $invoice->getOrder();
 
         /**
          * @var \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
@@ -46,17 +44,11 @@ class OrderSaveAfter implements ObserverInterface
         $sapOrderBatch = $this->_sapOrderBatchFactory->create();
         $this->_sapOrderBatchResource->load($sapOrderBatch, $order->getId(), 'order_id');
 
-        // get the is order flag to see if it has already been set
-        $isConsumerData = $sapOrderBatch->getData('is_consumer_data');
-        if (!isset($isConsumerData))
-        {
-            // set the values
-            $sapOrderBatch->setData('order_id', $order->getId());
-            $sapOrderBatch->setData('is_order', false);
-            $sapOrderBatch->setData('is_consumer_data', true);
+        // set the values
+        $sapOrderBatch->setData('order_id', $order->getId());
+        $sapOrderBatch->setData('is_order', true);
 
-            // save the record
-            $this->_sapOrderBatchResource->save($sapOrderBatch);
-        }
+        // save the record
+        $this->_sapOrderBatchResource->save($sapOrderBatch);
     }
 }
