@@ -22,6 +22,7 @@
         "magepal/magento2-googletagmanager": "^2.6",
         "mageplaza/module-google-recaptcha": "^4.0",
         "mageplaza/module-smtp": "^4.0",
+        "mirasvit/module-fraud-check": "*",
         "recurly/recurly-client": "^2.12",
         "snowdog/frontools": "^1.11",
         "zaius/zaius-magento-2": "^1.0.7"
@@ -97,6 +98,10 @@
         "magento2-connector-enterprise": {
             "type": "vcs",
             "url": "ssh://git@distribution.akeneo.com:443/magento2-connector-enterprise"
+        },
+        "mirasvit-frd2": {
+            "type": "composer",
+            "url": "https://53403:GUWPLZ4N5M@packages.mirasvit.com/53403:GUWPLZ4N5M/"
         }
     },
     "extra": {

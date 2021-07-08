@@ -2,6 +2,8 @@
 
 namespace SMG\Api\Helper;
 
+use Exception;
+use Magento\Framework\Exception\LocalizedException;
 use ZaiusSDK\ZaiusException;
 use Magento\Sales\Model\OrderFactory;
 use Magento\Sales\Model\ResourceModel\Order as OrderResource;
@@ -128,7 +130,7 @@ class OrderStatusHelper
      * @var InvoiceSender
      */
     protected $_invoiceSender;
-    
+
      /**
      * @var InvoiceOrder
      */
@@ -1018,7 +1020,7 @@ class OrderStatusHelper
                 $sapOrderBatch->setData('order_id', $orderId);
                 $this->insertOrderSapBatch($inputOrder, $sapOrderBatch);
             }
-            
+
              // create invoice to capture payment for payment method keypad authorization
             $this->invoiceOnline($order);
         }
@@ -1201,7 +1203,7 @@ class OrderStatusHelper
         $sapOrderBatch->setData('is_capture', true);
         $sapOrderBatch->setData('capture_process_date', $today);
     }
-    
+
     /**
      * This function allows orders to be invoiced but offline so
      * the system doesn't try to capture funds.
@@ -1232,5 +1234,82 @@ class OrderStatusHelper
                 $this->_logger->error($errorMsg);
             }
         }
+    }
+
+    /**
+     * Create an invoice for the order.
+     *
+     * @param \Magento\Sales\Model\Order $order
+     * @return bool
+     * @throws LocalizedException
+     * @throws \Magento\Framework\Exception\AlreadyExistsException
+     * @throws \Throwable
+     */
+    public function createInvoice($order) {
+
+        $orderId = $order->getId();
+
+        if (!$orderId) {
+            return false;
+        }
+
+        $sapOrderBatch = $this->_sapOrderBatchFactory->create();
+        $this->_sapOrderBatchResource->load($sapOrderBatch, $orderId, 'order_id');
+
+        if (!$sapOrderBatch->getId()) {
+            return false;
+        }
+
+        if (!$order || $order->hasInvoices() || !$order->canInvoice() || !$sapOrderBatch) {
+            return false;
+        }
+
+        /* create a invoice */
+        $invoice = $this->_invoiceService->prepareInvoice($order);
+
+        if (!$invoice->getTotalQty()) {
+            throw new \Magento\Framework\Exception\LocalizedException(__('You can\'t create an invoice without products.'));
+        }
+
+        $invoice->setRequestedCaptureCase(\Magento\Sales\Model\Order\Invoice::CAPTURE_ONLINE);
+        $invoice->register();
+
+        $retryAttempts = 0;
+        $maxAttempts = 3;
+        $retryWaitTime = 10;
+
+        while ($retryAttempts <= $maxAttempts) {
+            try {
+                $transaction = $this->_transaction
+                    ->addObject($invoice)
+                    ->addObject($invoice->getOrder());
+                $transaction->save();
+                break;
+            } catch (ZaiusException $e) {
+                // Log and ignore any Zaius errors.
+                $this->_logger->error($e->getMessage());
+                break;
+            } catch (\Throwable $e) {
+                // If this is a deadlock or lock wait timeout, let's retry the transaction after waiting a few seconds.
+                if (($e->getCode() == self::ERROR_CODE_LOCK_WAIT || $e->getCode() == self::ERROR_CODE_DEAD_LOCK) && $retryAttempts <= $maxAttempts) {
+                    $retryAttempts++;
+                    sleep($retryWaitTime);
+                } else {
+                    throw $e;
+                }
+            }
+        }
+
+        $this->_invoiceSender->send($invoice);
+        $order->addStatusHistoryComment(__('Notified customer about invoice #%1.', $invoice->getId()))
+            ->setIsCustomerNotified(false)
+            ->save();
+
+        $today = date('Y-m-d H:i:s');
+        $sapOrderBatch->setData('is_capture', true);
+        $sapOrderBatch->setData('capture_process_date', $today);
+        $this->_sapOrderBatchResource->save($sapOrderBatch);
+
+        return true;
     }
 }
