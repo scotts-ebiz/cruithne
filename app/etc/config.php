@@ -350,6 +350,7 @@ return [
         'Mageplaza_Core' => 1,
         'Mageplaza_GoogleRecaptcha' => 1,
         'Mageplaza_Smtp' => 1,
+        'MiniOrange_SP' => 1,
         'Mirasvit_Core' => 1,
         'Mirasvit_FraudCheck' => 1,
         'SMG_AkeneoConnector' => 1,

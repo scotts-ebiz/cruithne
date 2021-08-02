@@ -1,0 +1,91 @@
+<!-- 
+    This template file is for the SAML Service Provider settings.
+    File acts as a view file for our Service Provider settings.
+-->
+<?php
+    // initialize all values
+//    $isEnabled = $this->isEnabled() ? "" : "disabled";
+    $samlIdentityProviderName = $this->getIdentityProviderName();
+    $loginBindingType = $this->getLoginBindingType();
+    $ssoUrl = $this->getSSOUrl();
+    $samlIssuer = $this->getSAMLIssuer();
+    $x509Certificate = $this->getX509Cert();
+    $isResponseSigned = $this->isResponseSigned() ? "checked" : "";
+    $isAssertionSigned = $this->isAssertionSigned() ? "checked" : "";
+    $isSPConigured = !$this->isSPConfigured() ? 'disabled title="Please Configure an IDP"' : '';
+
+    $testUrl = $this->getTestUrl();
+    $formKey = $this->getBlockHtml('formkey');
+    $httpRedirect = $loginBindingType == 'HttpRedirect' || empty($loginBindingType) ? 'checked="checked"' : '';
+    $httpPost = $loginBindingType == 'HttpPost' ? 'checked="checked"' : '';
+//    $premiumlink = $this->getExtensionPageUrl('upgrade');
+
+echo '
+	<script>
+		var testURL = "'.$testUrl.'";
+	</script>
+	<div class="page" id="serviceprovider">
+		<div class="mosp_table_layout">
+			<form name="f" method="post" action="">
+				'.$formKey.'
+				<input type="hidden" name="option" value="saveIDPSettings" />
+				<h3>CONFIGURE SERVICE PROVIDER</h3>
+				<hr>
+				Enter the information gathered from your Identity Provider
+				<table style="width:100%;">
+					<tr>
+						<td style="width:200px;"><strong>Identity Provider Name<span style="color:red;">*</span>:</strong></td>
+						<td><input type="text" name="saml_identity_name" placeholder="Identity Provider name like ADFS, SimpleSAML, Salesforce" 
+								style="width: 100%;" value="'.$samlIdentityProviderName.'"  
+								pattern="^\w*$" title="Only alphabets, numbers and underscore is allowed" required/></td>
+					</tr>
+					<tr>
+						<td><strong>IdP Entity ID or Issuer <span style="color:red;">*</span>:</strong></td>
+						<td><input type="text" name="saml_issuer" placeholder="Identity Provider Entity ID or Issuer" style="width: 100%;" 
+							value="'.$samlIssuer.'" required/></td>
+					</tr>
+					<tr>
+						<td><strong>SAML Login URL <span style="color:red;">*</span>:</strong></td>
+						<td>
+							<input type="radio" name="saml_login_binding_type" id="sso-http-redirect" value="HttpRedirect" 
+								'.$httpRedirect.'
+							<label for="sso-http-redirect">Use HTTP-Redirect Binding for SSO</label>
+							<input style="margin-left:15px;" type="radio" name="saml_login_binding_type" id="sso-http-post" 
+									value="HttpPost" '.$httpPost.'
+							<label for="http-post">Use HTTP-POST Binding for SSO</label>
+							<br /><br />
+							<input type="url" name="saml_login_url" placeholder="Single Sign On Service URL of your IdP" style="width: 100%;" 
+								value="'.$ssoUrl.'" required/>
+						</td>
+					</tr>
+					
+					
+					<tr>
+						<td><strong>X.509 Certificate <span style="color:red;">*</span>:</strong></td>
+						<td>
+							<textarea rows="4" cols="5" name="saml_x509_certificate" 
+								placeholder="Copy and Paste the content from the downloaded certificate or copy the content enclosed in 
+									\'X509Certificate\' tag (has parent tag \'KeyDescriptor use=signing\') in IdP-Metadata XML file" 
+								style="width: 580px;height:170px;">'.$x509Certificate.'</textarea>
+						</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td>
+							<b>NOTE:</b> Format of the certificate:<br/><b>-----BEGIN CERTIFICATE-----<br/>XXXXXXXXXXXXXXXXXXXXXXXXXXX
+								<br/>-----END CERTIFICATE-----</b></i><br/>
+						</td>
+					</tr>
+					<tr>
+						<td>&nbsp;</td>
+						<td>
+							<br /><input type="submit" name="submit" style="width:100px;" value="Save" class="button button-primary button-large" 
+							/> &nbsp; 
+							<input type="button" name="test" title="You can only test your Configuration after saving your Service Provider Settings." 
+								onclick="showTestWindow();" '.$isSPConigured.' value="Test configuration" style="width:150px"/>
+						</td>
+					</tr>
+				</table>
+			</form>
+		</div>
+	</div>';
