@@ -78,20 +78,6 @@
             "SALES_ORDER_SAP_BATCH_RMA_ORDER_ITEM_ID_SALES_ORDER_ITEM_ITEM_ID": true
         }
     },
-    "sales_order_sap_history": {
-        "column": {
-            "entity_id": true,
-            "order_sap_id": true,
-            "order_status": true,
-            "order_status_notes": true,
-            "created_at": true
-        },
-        "constraint": {
-            "PRIMARY": true,
-            "SALES_ORDER_SAP_HISTORY_ORDER_SAP_ID_SALES_ORDER_SAP_ENTITY_ID": true,
-            "SALES_ORDER_SAP_HISTORY_ORDER_STS_SALES_ORDER_STS_SAP_STS": true
-        }
-    },
     "sales_order_sap_item": {
         "column": {
             "entity_id": true,
@@ -109,20 +95,6 @@
             "PRIMARY": true,
             "SALES_ORDER_SAP_ITEM_ORDER_SAP_ID_SALES_ORDER_SAP_ENTITY_ID": true,
             "SALES_ORDER_SAP_ITEM_ORDER_STATUS_SALES_ORDER_STATUS_SAP_STATUS": true
-        }
-    },
-    "sales_order_sap_item_history": {
-        "column": {
-            "entity_id": true,
-            "order_sap_item_id": true,
-            "order_status": true,
-            "order_status_notes": true,
-            "created_at": true
-        },
-        "constraint": {
-            "PRIMARY": true,
-            "FK_933AE1E77B8CF9DBB0ACAE455FF0027D": true,
-            "SALES_ORDER_SAP_ITEM_HISTORY_ORDER_STS_SALES_ORDER_STS_SAP_STS": true
         }
     },
     "sales_order_sap_shipment": {
