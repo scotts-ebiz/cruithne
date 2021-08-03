@@ -126,30 +126,6 @@
           referenceColumn="item_id"
           onDelete="NO ACTION" />
     </table>
-    <table name="sales_order_sap_history" engine="innodb" resource="default" comment="Sales Order Sap History">
-        <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
-        <column name="order_sap_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Entity ID for the sales_order_sap table."/>
-        <column name="order_status" xsi:type="varchar" nullable="false" length="32" comment="The Order status of the order"/>
-        <column name="order_status_notes" xsi:type="varchar" nullable="true" length="255" comment="Long Description of the order status"/>
-        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
-        <constraint xsi:type="primary" referenceId="PRIMARY">
-            <column name="entity_id" />
-        </constraint>
-        <constraint referenceId="SALES_ORDER_SAP_HISTORY_ORDER_SAP_ID_SALES_ORDER_SAP_ENTITY_ID"
-          xsi:type="foreign"
-          table="sales_order_sap_history"
-          column="order_sap_id"
-          referenceTable="sales_order_sap"
-          referenceColumn="entity_id"
-          onDelete="NO ACTION" />
-        <constraint referenceId="SALES_ORDER_SAP_HISTORY_ORDER_STS_SALES_ORDER_STS_SAP_STS"
-          xsi:type="foreign"
-          table="sales_order_sap_history"
-          column="order_status"
-          referenceTable="sales_order_status_sap"
-          referenceColumn="status"
-          onDelete="NO ACTION" />
-    </table>
     <table name="sales_order_sap_item" engine="innodb" resource="default" comment="Sales Order Sap Item">
         <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
         <column name="order_sap_id" xsi:type="int" nullable="false" unsigned="true" padding="10" comment="Entity ID for the sales_order_sap table."/>
@@ -174,30 +150,6 @@
         <constraint referenceId="SALES_ORDER_SAP_ITEM_ORDER_STATUS_SALES_ORDER_STATUS_SAP_STATUS"
           xsi:type="foreign"
           table="sales_order_sap_item"
-          column="order_status"
-          referenceTable="sales_order_status_sap"
-          referenceColumn="status"
-          onDelete="NO ACTION" />
-    </table>
-    <table name="sales_order_sap_item_history" engine="innodb" resource="default" comment="Sales Order Sap Item History">
-        <column name="entity_id" xsi:type="int" nullable="false" unsigned="true" identity="true" comment="ID of the record."/>
-        <column name="order_sap_item_id" xsi:type="int" nullable="false" unsigned="true" comment="Entity ID for the sales_order_sap_item table."/>
-        <column name="order_status" xsi:type="varchar" nullable="false" length="32" comment="The Order status of the order"/>
-        <column name="order_status_notes" xsi:type="varchar" nullable="true" length="255" comment="Long Description of the order status"/>
-        <column name="created_at" xsi:type="timestamp" nullable="false" default="CURRENT_TIMESTAMP" on_update="false" comment="Date Created"/>
-        <constraint xsi:type="primary" referenceId="PRIMARY">
-            <column name="entity_id" />
-        </constraint>
-        <constraint referenceId="SALES_ORDER_SAP_ITEM_HISTORY_ORDER_SAP_ITEM_ID_SALES_ORDER_SAP_ITEM_ID"
-          xsi:type="foreign"
-          table="sales_order_sap_item_history"
-          column="order_sap_item_id"
-          referenceTable="sales_order_sap_item"
-          referenceColumn="entity_id"
-          onDelete="NO ACTION" />
-        <constraint referenceId="SALES_ORDER_SAP_ITEM_HISTORY_ORDER_STS_SALES_ORDER_STS_SAP_STS"
-          xsi:type="foreign"
-          table="sales_order_sap_item_history"
           column="order_status"
           referenceTable="sales_order_status_sap"
           referenceColumn="status"

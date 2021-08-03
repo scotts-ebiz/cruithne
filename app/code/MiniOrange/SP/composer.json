@@ -1,0 +1,36 @@
+{
+  "name": "miniorange_inc/saml-sp-single-sign-on",
+  "description": "SAML 1.0 Service Provider Plugin to support SSO into Magento using an external Identity Provider",
+  "keywords": [
+    "SAML",
+    "Service Provider",
+    "Identity Provider",
+    "SSO",
+    "Single Sign On",
+    "Authentication"
+  ],
+  "type": "magento2-module",
+  "version": "1.1.1",
+  "license": [
+    "Commercial"
+  ],
+  "autoload": {
+    "files": [
+      "registration.php"
+    ],
+    "psr-4": {
+      "MiniOrange\\SP\\": ""
+    }
+  },
+  "authors": [
+    {
+      "name": "miniOrange Team",
+      "homepage": "http://www.miniorange.com/",
+      "email": "info@miniorange.com"
+    }
+  ],
+  "support": {
+    "email": "info@miniorange.com"
+  }
+  
+}
