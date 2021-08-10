@@ -1,0 +1,121 @@
+    <!--Pricing Tab-->
+    <?php
+
+    $idpsettings = $this->getExtensionPageUrl('idpsettings');
+    $hostname = $this->getMiniOrangeUrl();
+    $email = $this->getCustomerEmail();
+
+    echo '
+    <div class="page" id="pricing">
+        <h3>LICENSING PLANS</h3>
+        <hr>				
+        <table class="mo_samlsp_pricing_table">
+            <tbody><tr>
+                <td>
+                    <div class="mo_samlsp_thumbnail mo_samlsp_pricing_free_tab">
+                        <div style="height:16%;">
+                            <h2 class="mo_samlsp_pricing_header">Free - Forever</h2>
+                            <h3>( You are automatically on this plan )</h3>
+                        </div>
+                        <hr>
+                        <div style="height:8%;padding:2% 0;">
+                            <p class="mo_samlsp_pricing_text">$0</p>
+                        </div>
+                        <hr>
+                        <div style="height:58%;padding:2% 0;">
+                            <p class="mo_samlsp_pricing_text">
+                                Unlimited Authentications via IDP<br>
+                                Option to Add IDP Login Link<br>
+                            </p>
+                        </div>
+                        <hr>
+                        <div style="height:10%;padding:2% 0;">
+                            <p class="mo_samlsp_pricing_text">Basic Support by Email</p>
+                        </div>
+                    </div>
+                </td>
+                <td>
+                    <div class="mo_samlsp_thumbnail mo_samlsp_pricing_free_tab">
+                        <div style="height:16%;">
+                            <h3 class="mo_samlsp_pricing_header">Premium</h3>
+                            <input type="submit" value="Upgrade Now" class="button button-primary button-large" 
+                                    onclick="mosp_upgradeform(\'magento_saml_premium_plan\')">
+                               
+                        </div>
+                        <hr>
+                        <div style="height:8%;padding:2% 0;">
+                            <p class="mo_samlsp_pricing_text">
+                                    $449 - One Time Payment
+                            </p>
+                        </div>
+                        <hr>
+                        <div style="height:58%;padding:2% 0;">
+                            <p class="mo_samlsp_pricing_text">
+                                Unlimited Authentications via IDP<br>
+                                Customized Role Mapping<br>
+                                Customized Attribute Mapping<br>
+                                Option to add IdP Login Button<br>
+                                Auto Create User<br>
+                                Option, Shortcode to add IDP Login Link on your site<br>
+                                Auto-Redirect to IDP<br>
+                                Step-by-step guide to setup IDP<br>
+                                SAML Single Logout<br>
+                                Options to select SAML Request binding type<br>
+                            </p>
+                        </div>
+                        <hr>
+                        <div style="height:10%;padding:2% 0;">
+                            <p class="mo_samlsp_pricing_text">Basic Support by Email</p>
+                        </div>
+                    </div>
+                </td>	
+                <td>
+                    <div class="mo_samlsp_thumbnail mo_samlsp_pricing_paid_tab">
+                        <div style="height:16%;">
+                            <h3 class="mo_samlsp_pricing_header">Enterprise</h3>
+                            <input type="submit" value="Upgrade Now" class="button button-primary button-large" 
+                                    onclick="mosp_upgradeform(\'magento_saml_enterprise_plan\')">
+                                
+                        </div>
+                        <hr>
+                        <div style="height:8%;padding:2% 0;">
+                            <p class="mo_samlsp_pricing_text">
+                                    $499 + One Time Setup Fees
+                            </p>
+                        </div>
+                        <hr>
+                        <div style="height:58%;padding:2% 0;">
+                            <p class="mo_samlsp_pricing_text">
+                                Unlimited Authentications via IDP<br>
+                                Customized Role Mapping<br>
+                                Customized Attribute Mapping<br>
+                                Option to add IdP Login Button<br>
+                                Auto Create User<br>
+                                Option, Shortcode to add IDP Login Link on your site<br>
+                                Auto-Redirect to IDP<br>
+                                Step-by-step guide to setup IDP<br>
+                                SAML Single Logout<br>
+                                Options to select SAML Request binding type<br>
+                                Change SP base Url and SP Entity ID<br>
+                                Store Multiple IdP Certificates<br>
+                                End to End Identity Provider Configuration**<br>
+                            </p>
+                        </div>
+                        <hr>
+                        <div style="height:10%;padding:2% 0;">
+                            <p class="mo_samlsp_pricing_text">Premium Support</p>
+                        </div>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div style="margin:2% 0 2% 2%;">
+            <form style="display:none;" id="mocf_loginform" action="'.$hostname.'/moas/login" 
+                target="_blank" method="post">
+                <input type="email" name="username" value="'.$email.'" />
+                <input type="text" name="redirectUrl" value="'.$hostname.'/moas/initializepayment" />
+                <input type="text" name="requestOrigin" id="requestOrigin"  />
+            </form>
+        </div>		
+    </div>';

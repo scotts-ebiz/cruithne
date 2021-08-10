@@ -21,9 +21,7 @@ use SMG\CustomerServiceEmail\Api\OrderManagementInterface;
 use SMG\CustomerServiceEmail\Api\Data\ItemInterface;
 use SMG\Sap\Model\SapOrder;
 use SMG\Sap\Model\SapOrderBatchFactory;
-use SMG\Sap\Model\SapOrderHistoryFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch;
-use SMG\Sap\Model\ResourceModel\SapOrderHistory as SapOrderHistoryResource;
 use SMG\Sap\Model\ResourceModel\SapOrder as SapOrderResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\Sap\Model\ResourceModel\SapOrderItem\CollectionFactory as SapOrderItemCollectionFactory;
@@ -146,16 +144,6 @@ class BatchCaptureHelper
     protected $_salesOrderManagementInterface;
 
     /**
-     * @var SapOrderHistoryFactory
-     */
-    protected $_sapOrderHistoryFactory;
-
-    /**
-     * @var SapOrderHistoryResource
-     */
-    protected $_sapOrderHistoryResource;
-
-    /**
      * @var SapOrderShipmentCollectionFactory
      */
     protected $_sapOrderShipmentCollectionFactory;
@@ -184,8 +172,6 @@ class BatchCaptureHelper
      * @param HistoryFactory $historyFactory
      * @param HistoryResource $historyResource
      * @param SalesOrderManagementInterface $salesOrderManagementInterface
-     * @param SapOrderHistoryFactory $sapOrderHistoryFactory
-     * @param SapOrderHistoryResource $sapOrderHistoryResource
      * @param SapOrderShipmentCollectionFactory $sapOrderShipmentCollectionFactory
      */
     public function __construct(LoggerInterface $logger,
@@ -208,8 +194,6 @@ class BatchCaptureHelper
         HistoryFactory $historyFactory,
         HistoryResource $historyResource,
         SalesOrderManagementInterface $salesOrderManagementInterface,
-        SapOrderHistoryFactory $sapOrderHistoryFactory,
-        SapOrderHistoryResource $sapOrderHistoryResource,
         SapOrderShipmentCollectionFactory $sapOrderShipmentCollectionFactory)
     {
         $this->_logger = $logger;
@@ -232,8 +216,6 @@ class BatchCaptureHelper
         $this->_historyFactory = $historyFactory;
         $this->_historyResource = $historyResource;
         $this->_salesOrderManagementInterface = $salesOrderManagementInterface;
-        $this->_sapOrderHistoryFactory = $sapOrderHistoryFactory;
-        $this->_sapOrderHistoryResource = $sapOrderHistoryResource;
         $this->_sapOrderShipmentCollectionFactory = $sapOrderShipmentCollectionFactory;
     }
 
@@ -576,28 +558,11 @@ class BatchCaptureHelper
              */
             $sapOrder = $this->_sapOrderResource->getSapOrderByOrderId($orderId);
 
-            // get the current order status
-            $previousOrderStatus = $sapOrder->getData('order_status');
-
             // change the status because the capture failure
             $sapOrder->setData('order_status', $orderStatus);
 
             // update the sap order
             $this->_sapOrderResource->save($sapOrder);
-
-            // create a new history
-            /**
-             * @var \SMG\Sap\Model\SapOrderHistory $sapOrderHistory
-             */
-            $sapOrderHistory = $this->_sapOrderHistoryFactory->create();
-            $sapOrderHistory->setData('order_sap_id', $sapOrder->getId());
-            $sapOrderHistory->setData('order_status', $orderStatus);
-
-            // create order status notes
-            $orderStatusNotes = 'Order Status was ' . $previousOrderStatus . ' now ' . $orderStatus . '. ';
-            $sapOrderHistory->setData('order_status_notes', $orderStatusNotes);
-
-            $this->_sapOrderHistoryResource->save($sapOrderHistory);
         }
         catch (\Exception $e)
         {

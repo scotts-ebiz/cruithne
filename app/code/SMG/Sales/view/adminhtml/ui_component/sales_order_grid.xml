@@ -80,6 +80,13 @@
                     <label translate="true">Unhold</label>
                 </settings>
             </action>
+            <action name="unhold_and_invoice_order">
+                <settings>
+                    <url path="smg_sales/massaction/massUnholdAndInvoice"/>
+                    <type>unhold_and_invoice_order</type>
+                    <label translate="true">Unhold and Invoice</label>
+                </settings>
+            </action>
             <action name="pdfinvoices_order">
                 <settings>
                     <url path="sales/order/pdfinvoices"/>
