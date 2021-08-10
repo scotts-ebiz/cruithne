@@ -637,9 +637,12 @@ class RecurlySubscription
         }
 
         if (! empty($gigyaId)) {
+            $this->_logger->info("Get Recurly Account for account id " . $gigyaId);
+
             try {
                 return Recurly_Account::get($gigyaId);
             } catch (Recurly_NotFoundError $e) {
+                $this->_logger->info("Recurly Account not found for account id " . $gigyaId);
                 if ($e->getCode() == 0) {
                     return false;
                 }
@@ -976,12 +979,16 @@ class RecurlySubscription
      */
     public function updateSubscriptionIDs($subscription)
     {
+        $this->_logger->info("Update Subscription Ids for " . $subscription->getId());
+
         try {
+            $this->_logger->info("Getting active recurly subscription data for " . $subscription->getId());
             $activeSubscriptions = Recurly_SubscriptionList::getForAccount(
                 $subscription->getData('gigya_id'),
                 ['state' => 'active']
             );
 
+            $this->_logger->info("Getting future recurly subscription data for " . $subscription->getId());
             $futureSubscriptions = Recurly_SubscriptionList::getForAccount(
                 $subscription->getData('gigya_id'),
                 ['state' => 'future']
@@ -1043,6 +1050,7 @@ class RecurlySubscription
                             ]);
                             $this->_orderResource->save($order);
                         } else {
+                            $this->_logger->error("Order not found for subscription add on order with subscription ID: {$subCode['subscription_id']}");
                             throw new LocalizedException(__("Order not found for subscription add on order with subscription ID: {$subCode['subscription_id']}"));
                         }
                     }
@@ -1068,6 +1076,7 @@ class RecurlySubscription
                         ]);
                         $this->_orderResource->save($order);
                     } else {
+                        $this->_logger->error("Order not found for subscription order with subscription ID: {$subCode['subscription_id']}");
                         throw new LocalizedException(__("Order not found for subscription order with subscription ID: {$subCode['subscription_id']}"));
                     }
                 }
