@@ -932,7 +932,7 @@ class Subscription implements SubscriptionInterface
      * @return mixed
      */
     public function renewSubscription($master_subscription_id) {
-        $this->_logger->debug("Renewing master subscription id: " . $master_subscription_id);
+        $this->_logger->info("Renewing master subscription id: " . $master_subscription_id);
 
         try {
             /** @var SubscriptionModel $sub */
@@ -940,6 +940,7 @@ class Subscription implements SubscriptionInterface
 
             if (empty($sub)) {
                 $message = "Subscription not found for master subscription id: ".$master_subscription_id;
+                $this->_logger->error($message);
                 return $this->_responseHelper->error(
                     $message,
                     ['refresh' => false],
@@ -953,6 +954,7 @@ class Subscription implements SubscriptionInterface
 
             if ($now < $safetyNetDate) {
                 $message = "Subscription has been renewed too recently for master subscription id: ".$master_subscription_id;
+                $this->_logger->error($message);
                 $this->createRenewalError($master_subscription_id, $message);
                 return $this->_responseHelper->error(
                     $message,
@@ -976,6 +978,7 @@ class Subscription implements SubscriptionInterface
 
             if (!$isPreviousSubscriptionOkToRenew) {
                 $message = "SubscriptionException: The past subscriptions has cancellations or failures.";
+                $this->_logger->info($master_subscription_id . ": " . $message);
                 $this->createRenewalError($master_subscription_id, $message);
                 return $this->_responseHelper->error(
                     $message,
@@ -984,13 +987,19 @@ class Subscription implements SubscriptionInterface
                 );
             }
 
+            $this->_logger->info("Create renewal subscription for " . $master_subscription_id . " from subscription id " . $sub->getId());
+
             $newSub = $this->createRenewalSubscription($sub);
             $newSubOrders = [];
             $newSubOrderItems = [];
 
             foreach ($subOrders as $order) {
+                $this->_logger->info("Create renewal subscription order for " . $master_subscription_id . " from subscription order id " . $order->getId());
+
                 $newOrder = $this->createRenewalSubscriptionOrder($order, $newSub->getData('entity_id'));
                 foreach ($order->getOrderItems() as $item) {
+                    $this->_logger->info("Create renewal subscription order item for " . $master_subscription_id . " from subscription order item id " . $item->getId());
+
                     $newSubOrderItems[] = $this->createRenewalSubscriptionOrderItem($item, $newOrder->getId());
                 }
                 $newSubOrders[] = $newOrder;
@@ -1004,6 +1013,7 @@ class Subscription implements SubscriptionInterface
             foreach ($recurlySubs as $recurlySub) {
                 $planCode = $recurlySub->getValues()['plan']->getValues()['plan_code'];
                 if (in_array($planCode, ['annual', 'seasonal'])) {
+                    $this->_logger->info("Get the recurly invoice for " . $master_subscription_id);
                     $invoice = $recurlySub->invoice->get();
                 }
             }
@@ -1020,6 +1030,8 @@ class Subscription implements SubscriptionInterface
 
 
             foreach($newSubOrders as $order) {
+                $this->_logger->info("Process the subscription order for " . $master_subscription_id);
+
                 $this->_subscriptionOrderHelper->processOrder($customer, $order);
             }
 
@@ -1041,16 +1053,20 @@ class Subscription implements SubscriptionInterface
 
         } catch (SubscriptionException $se) {
             if (isset($newSub)) {
+                $this->_logger->error("Renewal Failed for $master_subscription_id");
+
                 $newSub->setData('subscription_status', 'renewal_failed')->save();
                 try {
                     $this->cancelFailedOrders($newSub, true);
                 } catch (Exception $e) {
                     $message = "Error Canceling Orders: ".$e->getMessage();
+                    $this->_logger->error($master_subscription_id . ": " . $message);
                     $this->createRenewalError($master_subscription_id, $message);
                 }
             }
 
             $message = "SubscriptionException: ".$se->getMessage();
+            $this->_logger->error($master_subscription_id . ": " . $message);
             $this->createRenewalError($master_subscription_id, $message);
             return $this->_responseHelper->error(
                 $message,
@@ -1059,11 +1075,14 @@ class Subscription implements SubscriptionInterface
             );
         } catch (Exception $ge) {
             if (isset($newSub)) {
+                $this->_logger->error("Renewal Failed for $master_subscription_id");
+
                 $newSub->setData('subscription_status', 'renewal_failed')->save();
                 try {
                     $this->cancelFailedOrders($newSub, true);
                 } catch (Exception $e) {
                     $message = "Error Canceling Orders: ".$e->getMessage();
+                    $this->_logger->error($master_subscription_id . ": " . $message);
                     $this->createRenewalError($master_subscription_id, $message);
                 }
             }
@@ -1073,6 +1092,8 @@ class Subscription implements SubscriptionInterface
                 $message = "AvaTax Exception: We got an error regarding avatax tax calculation. Please rerun the renewal subscription api.";
                 $statusCode = 504;
                 $retry = true;
+
+                $this->_logger->error($message . " for " . $master_subscription_id);
             }
             else{
                 $message = "General Exception: ".$ge->getMessage();
@@ -1144,6 +1165,8 @@ class Subscription implements SubscriptionInterface
     }
 
     public function createRenewalError($masterSubscriptionId, $error) {
+        $this->_logger->info("Creating Renewal Error record for " . $masterSubscriptionId);
+
         $newSubError = $this->_subscriptionRenewalErrorFactory->create();
         $data['master_subscription_id'] = $masterSubscriptionId;
         $data['error_message'] = $error;
