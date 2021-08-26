@@ -152,12 +152,12 @@ class OrdersHelper
     /**
      * @var SapOrderBatchCreditmemoCollectionFactory
      */
-    protected  $_sapOrderBatchCreditmemoCollectionFactory;
+    protected $_sapOrderBatchCreditmemoCollectionFactory;
 
     /**
      * @var SapOrderBatchRmaCollectionFactory
      */
-    protected  $_sapOrderBatchRmaCollectionFactory;
+    protected $_sapOrderBatchRmaCollectionFactory;
 
     /**
      * @var OrderFactory
@@ -380,7 +380,7 @@ class OrdersHelper
      */
     private function getDebitOrderData()
     {
-        $ordersArray = array();
+        $ordersArray = [];
 
         // get the orders that are ready to be sent to SAP
         $sapOrderBatches = $this->_sapOrderBatchCollectionFactory->create();
@@ -421,7 +421,7 @@ class OrdersHelper
                 }
                 // make sure that this order was not canceled before continuing
                 // we do not want to send canceled orders
-                else if ($order->isCanceled()) {
+                elseif ($order->isCanceled()) {
                     // get the date for today
                     $today = date('Y-m-d H:i:s');
 
@@ -458,10 +458,11 @@ class OrdersHelper
      * Process annual subscription data
      *
      * @return array
+     * @throws LocalizedException
      */
     private function getAnnualSubscriptionData()
     {
-        $ordersArray = array();
+        $ordersArray = [];
 
         // loop through the list of subscriptions if there are any
         if (!empty($this->_masterSubscriptionIds)) {
@@ -469,7 +470,8 @@ class OrdersHelper
             foreach ($this->_masterSubscriptionIds as $masterSubscriptionId) {
                 // get the subscription data with filter master_subscription_id of sales_order
                 try {
-                    $subscription = $this->_subscriptionResource->getSubscriptionByMasterSubscriptionId($masterSubscriptionId);
+                    $subscription = $this->_subscriptionResource
+                        ->getSubscriptionByMasterSubscriptionId($masterSubscriptionId);
                 } catch (LocalizedException $e) {
                     $subscription = null;
                     $this->_logger->error($e);
@@ -493,12 +495,12 @@ class OrdersHelper
                         $orderId = $annualOrder->getId();
 
                         // check subscription exist or not
-                        if (!empty($subscription) && !empty($subscription->getId())) {
+                        /**
+                         * @var \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
+                         */
+                        $sapOrderBatch = $this->_sapOrderBatchFactory->create();
+                        if ($subscription !== null && !empty($subscription->getId())) {
                             // Get the sap sales order
-                            /**
-                             * @var \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
-                             */
-                            $sapOrderBatch = $this->_sapOrderBatchFactory->create();
                             $this->_sapOrderBatchResource->load($sapOrderBatch, $orderId, 'order_id');
                             $possibleOrderProcessDate = $sapOrderBatch->getData('order_process_date');
                             // Check if already processed, likely due to being previous subscription orders
@@ -532,10 +534,6 @@ class OrdersHelper
                             }
                         } else {
                             // Get the sap sales order
-                            /**
-                             * @var \SMG\Sap\Model\SapOrderBatch $sapOrderBatch
-                             */
-                            $sapOrderBatch = $this->_sapOrderBatchFactory->create();
                             $this->_sapOrderBatchResource->load($sapOrderBatch, $orderId);
 
                             // get the date for today
@@ -548,7 +546,9 @@ class OrdersHelper
                             $this->_sapOrderBatchResource->save($sapOrderBatch);
 
                             //Error log in system log file for SAP_ORDER_CRON_SKIP_BROKEN_SUB
-                            $error = 'SMG\Api\Helper\OrdersHelper - SAP_ORDER_CRON_SKIP_BROKEN_SUB - Subscription id is null for order number -' . $annualOrder->getData('increment_id');
+                            $error = 'SMG\Api\Helper\OrdersHelper - '
+                                . 'SAP_ORDER_CRON_SKIP_BROKEN_SUB - Subscription id is null for order number -'
+                                . $annualOrder->getData('increment_id');
                             $this->_logger->error($error);
                         }
                     }
@@ -563,15 +563,17 @@ class OrdersHelper
     /**
      * Takes the order and item details and puts it in an array
      *
-     * @param Order $order
-     * @param Item $orderItem
-     * @param CreditmemoInterface $creditMemo
+     * @param Order                   $order
+     * @param Item                    $orderItem
+     * @param CreditmemoInterface     $creditMemo
      * @param CreditmemoItemInterface $creditMemoItem
+     *
      * @return array
+     * @throws LocalizedException
      */
     private function addRecordToOrdersArray($order, $orderItem, $creditMemo = null, $creditMemoItem = null, $rmaItem = null, $rmaItemInfo = null)
     {
-        // get tomorrows date
+        // get tomorrow's date
         $tomorrow = date('Y-m-d', strtotime("tomorrow"));
 
         // split the base url into different parts for later use
@@ -645,7 +647,7 @@ class OrdersHelper
 
         // determine if this is a subscription
         $subscriptionType = $order->getSubscriptionType();
-        if ($order->isSubscription() && $subscriptionType == 'annual') {
+        if ($subscriptionType === 'annual' && $order->isSubscription()) {
             // get the subscription
             /**
              * @var \SMG\SubscriptionApi\Model\Subscription $subscription
@@ -654,27 +656,31 @@ class OrdersHelper
 
             $subscription = $this->_subscriptionResource->getSubscriptionByMasterSubscriptionId($masterSubscriptionId);
 
-            // get the gross sales from the subscription order
-            $grossSales = $subscription->getData('paid');
+            $this->_logger->critical('Processing subscription order ' . $order->getId() . ', ' . $order->getIncrementId(), (array)$order);
 
-            // get the shipping amount.  Currently we don't have a shipping amount
-            // for subscriptions.  this will need to be changed if we ever start adding
-            // a shipping amount for subscriptions.
-            $shippingAmount = '0';
+            if ($subscription) {
+                // get the gross sales from the subscription order
+                $grossSales = $subscription->getData('paid');
 
-            // get the subtotal of the subscription
-            $subtotal = $subscription->getData('price');
+                // get the shipping amount.  Currently, we don't have a shipping amount
+                // for subscriptions.  this will need to be changed if we ever start adding
+                // a shipping amount for subscriptions.
+                $shippingAmount = '0';
 
-            // get the tax of the subscription
-            $taxAmount = $subscription->getData('tax');
+                // get the subtotal of the subscription
+                $subtotal = $subscription->getData('price');
 
-            // get the invoice amount which is the same as the gross sales
-            $invoiceAmount = $subscription->getData('paid');
+                // get the tax of the subscription
+                $taxAmount = $subscription->getData('tax');
+
+                // get the invoice amount which is the same as the gross sales
+                $invoiceAmount = $subscription->getData('paid');
+            }
         }
 
         // determine what type of order
         $debitCreditFlag = 'DR';
-        if (!empty($creditMemo) && !empty($creditMemoItem)) {
+        if ($creditMemo !== null && $creditMemoItem !== null) {
             $debitCreditFlag = 'CR';
 
             // set other credit memo type fields
@@ -702,29 +708,28 @@ class OrdersHelper
             $sapShipment = $this->_sapOrderShipmentFactory->create();
             $this->_sapOrderShipmentResource->load($sapShipment, $sapOrderItem->getId(), 'order_sap_item_id');
 
-
             // get the billing doc number
             $referenceDocNum = $sapShipment->getData('sap_billing_doc_number');
 
-            if (!isset($referenceDocNum))
-            {
-              $referenceDocNum = '';
+            if (!isset($referenceDocNum)) {
+                $referenceDocNum = '';
             }
 
             // Changes have occurred that the CSRs are entering
             // Returns as credit memos on magento.  In order to handle
             // this processing automatically we need to see if this request
             // is one of three types of credit memos because if it is then
-            // it isn't a credit memo but rather a RMA so we need to flag it as such.
-            if ($orderReason == self::CUSTOMER_REFUSAL_CODE || $orderReason == self::BUYBACK_CODE || $orderReason == self::RECOVERY_RECALL_CODE)
-            {
+            // it isn't a credit memo but rather an RMA, so we need to flag it as such.
+            if ($orderReason == self::CUSTOMER_REFUSAL_CODE
+                || $orderReason == self::BUYBACK_CODE
+                || $orderReason == self::RECOVERY_RECALL_CODE
+            ) {
                 $debitCreditFlag = 'RE';
             }
             // check to order item for CL
             $flag = $this->checkCancellation($order);
-            if($flag)
-            {
-                    $debitCreditFlag = 'CL';
+            if ($flag) {
+                $debitCreditFlag = 'CL';
             }
         }
 
@@ -769,20 +774,22 @@ class OrdersHelper
             $sapShipment = $this->_sapOrderShipmentFactory->create();
             $this->_sapOrderShipmentResource->load($sapShipment, $sapOrderItem->getId(), 'order_sap_item_id');
 
-
             // get the billing doc number
             $referenceDocNum = $sapShipment->getData('sap_billing_doc_number');
 
-            if (!isset($referenceDocNum))
-            {
-              $referenceDocNum = '';
+            if (!isset($referenceDocNum)) {
+                $referenceDocNum = '';
             }
         }
         // If configurable, get parent price
         $price = $orderItem->getOriginalPrice();
 
-        if (!empty($orderItem->getParentItemId())) {
-            $parent = $this->_orderItemCollectionFactory->create()->addFieldToFilter('item_id', ['eq' => $orderItem->getParentItemId()]);
+        if ($orderItem->getParentItemId() !== null) {
+            $parent = $this->_orderItemCollectionFactory->create()
+                ->addFieldToFilter(
+                    'item_id',
+                    ['eq' => $orderItem->getParentItemId()]
+                );
             /**
              * There will be only one result since we filter on the unique id
              *
@@ -800,7 +807,7 @@ class OrdersHelper
         }
 
         // return
-        return array_map('trim', array(
+        return array_map('trim', [
             self::ORDER_NUMBER => $order->getIncrementId(),
             self::SUBSCRIPTION_ORDER => $order->getSubscriptionOrderId(),
             self::SUBSCRIPTION_TYPE => $subscriptionType,
@@ -850,7 +857,7 @@ class OrdersHelper
             self::DISCOUNT_REASON => $orderItem->getReasonCode(),
             self::SUBSCRIPTION_SHIP_START => $order->getData('ship_start_date'),
             self::SUBSCRIPTION_SHIP_END => $order->getData('ship_end_date')
-        ));
+        ]);
     }
 
     /**
@@ -871,7 +878,7 @@ class OrdersHelper
      */
     private function getCreditOrderData()
     {
-        $ordersArray = array();
+        $ordersArray = [];
 
         // get the orders that are ready to be sent to SAP
         $sapOrderBatchCreditmemos = $this->_sapOrderBatchCreditmemoCollectionFactory->create();
@@ -909,12 +916,17 @@ class OrdersHelper
 
                 // Get the credit memo items
                 $creditMemoItems = $creditMemo->getItems();
-                if (!$order->getIsVirtual()) {
+                if (!$order->getIsVirtual() && $creditMemoItems != null) {
                     foreach ($creditMemoItems as $creditMemoItem) {
                         // see if the sku is the same as the sku that we are looking for
                         if ($sku === $creditMemoItem->getSku()) {
                             // add the record to the orders array
-                            $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem, $creditMemo, $creditMemoItem);
+                            $ordersArray[] = $this->addRecordToOrdersArray(
+                                $order,
+                                $orderItem,
+                                $creditMemo,
+                                $creditMemoItem
+                            );
 
                             // get out of the loop as we found it
                             break;
@@ -930,7 +942,7 @@ class OrdersHelper
 
     private function getRmaOrderData()
     {
-        $ordersArray = array();
+        $ordersArray = [];
 
         // get the orders that are ready to be sent to SAP
         $sapOrderBatchRmas = $this->_sapOrderBatchRmaCollectionFactory->create();
@@ -975,7 +987,14 @@ class OrdersHelper
                         // see if the sku is the same as the sku that we are looking for
                         if ($sku === $rmaItem->getProductSku()) {
                             // add the record to the orders array
-                            $ordersArray[] = $this->addRecordToOrdersArray($order, $orderItem, null, null, $rmaItem, $sapOrderBatchRma);
+                            $ordersArray[] = $this->addRecordToOrdersArray(
+                                $order,
+                                $orderItem,
+                                null,
+                                null,
+                                $rmaItem,
+                                $sapOrderBatchRma
+                            );
 
                             // get out of the loop as we found it
                             break;
@@ -1000,10 +1019,10 @@ class OrdersHelper
         /** @var Collection $orders **/
         $orders = $this->_orderCollectionFactory->create();
 
-        $returnArray = array();
+        $returnArray = [];
         /** @var Order $order **/
         foreach ($orders as $index => $order) {
-            $newDataItem = array();
+            $newDataItem = [];
             $newDataItem['DatabaseOrderNumber'] = $order->getId();
             $newDataItem['OrderNumber'] = $order->getData('increment_id');
             $newDataItem['DatePlaced'] = $order->getData('created_at');
@@ -1034,16 +1053,16 @@ class OrdersHelper
      */
     public function getSapBatchForAudit()
     {
-
         $sapOrderCollection = $this->_sapOrderBatchCollectionFactory->create();
         return $sapOrderCollection->getData();
     }
-        /**
+    /**
      * Check order cancel or not
      *
-     * @return boolen
+     * @return boolean
      */
-     public function checkCancellation($order) {
+    public function checkCancellation($order)
+    {
 
         // Get the sap sales order
         /**
@@ -1053,53 +1072,37 @@ class OrdersHelper
         $sapOrderBatch = $this->_sapOrderBatchFactory->create();
         $this->_sapOrderBatchResource->load($sapOrderBatch, $order->getId(), 'order_id');
         $orderProcessDate = $sapOrderBatch->getData('order_process_date');
-        if (!empty($orderProcessDate))
-        {
-         $order_sent = 'Yes';
-        }
-        else
-        {
-         $order_sent =  'No';
+        if (!empty($orderProcessDate)) {
+            $order_sent = 'Yes';
+        } else {
+            $order_sent =  'No';
         }
 
         $tracksCollection = $order->getTracksCollection();
-        if($tracksCollection){
-
+        if ($tracksCollection) {
             foreach ($tracksCollection->getItems() as $track) {
-
-              $trackNumbers[] = $track->getTrackNumber();
-
+                $trackNumbers[] = $track->getTrackNumber();
             }
         }
 
-        if(!empty($trackNumbers)){
-
-        $shipping_track = 'Yes';
-
-        }else{
-
-         $shipping_track = 'No';
-
+        if (!empty($trackNumbers)) {
+            $shipping_track = 'Yes';
+        } else {
+            $shipping_track = 'No';
         }
 
-        if($order_sent == 'Yes' && $shipping_track == 'No'){
+        if ($order_sent === 'Yes' && $shipping_track === 'No') {
             return true;
-            exit;
-        }
-        else if($order_sent == 'No' && $shipping_track == 'Yes')
-        {
-            return true;
-            exit;
-        }
-        else if($order_sent == 'No')
-        {
-            return true;
-            exit;
-        }
-        else{
-            return false;
-            exit;
         }
 
+        if ($order_sent === 'No' && $shipping_track === 'Yes') {
+            return true;
+        }
+
+        if ($order_sent === 'No') {
+            return true;
+        }
+
+        return false;
     }
 }
