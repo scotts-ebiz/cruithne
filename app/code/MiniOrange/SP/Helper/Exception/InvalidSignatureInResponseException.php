@@ -14,27 +14,27 @@ class InvalidSignatureInResponseException extends SAMLResponseException
     private $pluginCert;
     private $certInResponse;
 
-    public function __construct($pluginCert, $certInResponse, $xml)
-    {
-        $message     = SPMessages::parse('INVALID_RESPONSE_SIGNATURE');
-        $code         = 120;
+	public function __construct($pluginCert,$certInResponse,$xml) 
+	{
+		$message 	= SPMessages::parse('INVALID_RESPONSE_SIGNATURE');
+        $code 		= 120;		
         $this->pluginCert = $pluginCert;
         $this->certInResponse = $certInResponse;
-        parent::__construct($message, $code, $xml, true);
+        parent::__construct($message, $code, $xml, TRUE);
     }
 
-    public function __toString()
+    public function __toString() 
     {
         return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
     }
 
     public function getPluginCert()
     {
-        return SPMessages::parse('FORMATTED_CERT', ['cert'=>$this->pluginCert]);
+        return SPMessages::parse('FORMATTED_CERT', array('cert'=>$this->pluginCert));
     }
 
     public function getCertInResponse()
     {
-        return SPMessages::parse('FORMATTED_CERT', ['cert'=>$this->certInResponse]);
+        return SPMessages::parse('FORMATTED_CERT', array('cert'=>$this->certInResponse));
     }
 }

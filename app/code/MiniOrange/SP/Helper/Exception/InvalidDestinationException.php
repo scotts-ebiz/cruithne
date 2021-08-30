@@ -11,14 +11,14 @@ use MiniOrange\SP\Helper\SPMessages;
  */
 class InvalidDestinationException extends SAMLResponseException
 {
-    public function __construct($destination, $currenturl, $xml)
-    {
-        $message     = SPMessages::parse('INVALID_DESTINATION', ['destination'=>$destination,'currenturl'=>$currenturl]);
-        $code         = 108;
-        parent::__construct($message, $code, $xml, false);
+	public function __construct($destination,$currenturl,$xml) 
+	{
+		$message 	= SPMessages::parse('INVALID_DESTINATION',array('destination'=>$destination,'currenturl'=>$currenturl));
+		$code 		= 108;		
+        parent::__construct($message, $code, $xml, FALSE);
     }
 
-    public function __toString()
+    public function __toString() 
     {
         return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
     }

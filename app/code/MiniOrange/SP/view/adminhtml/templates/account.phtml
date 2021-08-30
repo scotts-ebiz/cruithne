@@ -1,0 +1,56 @@
+<!-- 
+    This template file is for the account settings.
+    File acts as a view file for our Account.
+-->
+
+<?php
+    // initialize all values required on this page
+    $status = $this->getRegistrationStatus();
+    $userEmail = $this->getCurrentAdminUser()->getEmail();    
+
+echo'   <div class="page" id="account">		
+            <div class="mosp_table_layout">'; 
+
+                if($status=='')
+                {
+                    echo $this->getLayout()
+                              ->createBlock("MiniOrange\SP\Block\Sp")
+                              ->setTemplate("MiniOrange_SP::register.phtml")
+                              ->toHtml();
+                }
+                else if(strcmp($status,'MO_OTP_EMAIL_VALIDATE')==0 
+                        || strcmp($status,'MO_OTP_PHONE_VALIDATE')==0 
+                        || strcmp($status,'MO_OTP_DELIVERED_FAILURE')==0)
+                {
+                    echo $this->getLayout()
+                              ->createBlock("MiniOrange\SP\Block\Sp")
+                              ->setTemplate("MiniOrange_SP::validate.phtml")
+                              ->toHtml();
+                }
+                else if($status=='MO_VERIFY_CUSTOMER')
+                {
+                    echo $this->getLayout()
+                              ->createBlock("MiniOrange\SP\Block\Sp")
+                              ->setTemplate("MiniOrange_SP::verify.phtml")
+                              ->toHtml();
+                }
+                else if(!$this->isVerified())
+                {
+                    /*===========================================================================================
+						                THIS IS PREMIUM PLUGIN SPECIFIC
+                    =============================================================================================*/
+                    echo $this->getLayout()
+                              ->createBlock("MiniOrange\SP\Block\Sp")
+                              ->setTemplate("MiniOrange_SP::verifylk.phtml")
+                              ->toHtml();
+                }
+                else
+                {
+                    echo $this->getLayout()
+                              ->createBlock("MiniOrange\SP\Block\Sp")
+                              ->setTemplate("MiniOrange_SP::profile.phtml")
+                              ->toHtml();
+                }
+
+echo'       </div>
+        </div>';

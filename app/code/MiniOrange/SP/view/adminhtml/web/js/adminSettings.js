@@ -79,4 +79,3 @@ function mosp_upgradeform(planType){
     jQuery('#requestOrigin').val(planType);
     jQuery('#mocf_loginform').submit();
 }
-

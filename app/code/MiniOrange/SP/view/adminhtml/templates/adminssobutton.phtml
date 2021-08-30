@@ -4,7 +4,7 @@
     -->
 <?php
 
-echo
+echo 
     '<div class="actions" style="text-align:center;">
             <svg height="5" width="131">
                 <line x1="0" y1="0" x2="127" y2="0" style="stroke:#969393;stroke-width:3" />
@@ -12,9 +12,7 @@ echo
             <svg height="5" width="133">
                 <line x1="0" y1="0" x2="128" y2="0" style="stroke:#969393;stroke-width:3" />
             </svg>
-             <a style="color:white;text-decoration:none;" href="'.$this->getSPInitiatedUrl().'">
-                <input class="action-login action-primary" type="button" style="cursor:pointer;
-                    margin-top:3%;padding: 3% 14%;width:100%;" value="'.$this->getSSOButtonText().'">
-                </input>
+            <a class="action-login action-primary" style="color:white;text-decoration:none;" href="'.$this->getSPInitiatedUrl().'">
+                '.$this->getSSOButtonText().'
             </a>
     </div>';

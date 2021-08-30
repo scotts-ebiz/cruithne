@@ -1,8 +1,8 @@
 <?php
  
  /**
-  * The code below is used to register the
-  * SP extension/component with the Mangeto
+  * The code below is used to register the 
+  * SP extension/component with the Mangeto 
   * core Module. It specifies the root directory
   * of the plugin.
   */

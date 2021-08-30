@@ -30,7 +30,7 @@ class Index extends BaseAdminAction
     public function execute()
     {
         try{
-            // $this->checkIfValidPlugin(); //check if user has registered himself
+            $this->checkIfValidPlugin(); //check if user has registered himself
         }catch(\Exception $e){
             $this->messageManager->addErrorMessage($e->getMessage());
 			$this->logger->debug($e->getMessage());

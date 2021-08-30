@@ -10,7 +10,7 @@ use MiniOrange\SP\Helper\Saml2\MetadataGenerator;
 
 /**
  * This class handles the action for endpoint: mospsaml/idpsettings/Index
- * Extends the \Magento\Backend\App\Action for Admin Actions which
+ * Extends the \Magento\Backend\App\Action for Admin Actions which 
  * inturn extends the \Magento\Framework\App\Action\Action class necessary
  * for each Controller class
  */
@@ -18,35 +18,32 @@ class Index extends BaseAdminAction
 {
 
     /**
-     * The first function to be called when a Controller class is invoked.
-     * Usually, has all our controller logic. Returns a view/page/template
+     * The first function to be called when a Controller class is invoked. 
+     * Usually, has all our controller logic. Returns a view/page/template 
      * to be shown to the users.
      *
-     * This function gets and prepares all our SP config data from the
+     * This function gets and prepares all our SP config data from the 
      * database. It's called when you visis the moasaml/idpsettings/Index
      * URL. It prepares all the values required on the SP setting
-     * page in the backend and returns the block to be displayed.
+     * page in the backend and returns the block to be displayed. 
      *
      * @return \Magento\Backend\Model\View\Result\Page
      */
     public function execute()
     {
-        try {
-//            $this->checkIfValidPlugin(); //check if user has registered himself
+        try{
+            $this->checkIfValidPlugin(); //check if user has registered himself
             $entity_id = $this->spUtility->getIssuerUrl();
             $acs_url = $this->spUtility->getAcsUrl();
-            ;
-            //$certificate = $this->spUtility->getFileContents($this->spUtility->getResourcePath('sp-certificate.crt'));
-            //$this->spUtility->desanitizeCert($certificate);
-            $certificate = '';
+            $certificate = $this->spUtility->getFileContents($this->spUtility->getResourcePath('sp-certificate.crt'));
+            $certificate = $this->spUtility->desanitizeCert($certificate); 
     
-            $metadata = new MetadataGenerator($entity_id, true, true, $certificate, $acs_url, $acs_url, $acs_url, $acs_url, $acs_url);
+            $metadata = new MetadataGenerator($entity_id,TRUE,TRUE,$certificate,$acs_url,$acs_url,$acs_url,$acs_url,$acs_url);
             $metadata = $metadata->generateSPMetadata();
-            $this->spUtility->putFileContents($this->spUtility->getMetadataFilePath(), $metadata);
-            $this->spUtility->flushCache();
-        } catch (\Exception $e) {
-            $this->getMessageManager()->addErrorMessage($e->getMessage());
-            $this->logger->debug($e->getMessage());
+            $this->spUtility->putFileContents($this->spUtility->getMetadataFilePath(),$metadata);
+        }catch(\Exception $e){
+            $this->messageManager->addErrorMessage($e->getMessage());
+			$this->logger->debug($e->getMessage());
         }
         $resultPage = $this->resultPageFactory->create();
         $resultPage->setActiveMenu(SPConstants::MODULE_DIR.SPConstants::MODULE_BASE);

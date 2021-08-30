@@ -6,7 +6,7 @@
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
- *
+ * 
  * miniOrange SAML plugin is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
@@ -16,13 +16,14 @@
  * along with miniOrange SAML plugin.  If not, see <http://www.gnu.org/licenses/>.
  */
 
- /**
-  * @todo - This class needs to be modified and optimized.
+ /** 
+  * @todo - This class needs to be modified and optimized. 
   */
  
 namespace MiniOrange\SP\Helper\Saml2;
 
-use MiniOrange\SP\Helper\Xmlseclibs\XMLSecurityKey;
+use MiniOrange\SP\Helper\Saml2\SAML2Utilities;
+use MiniOrange\SP\Helper\Saml2\lib\XMLSecurityKey;
 use MiniOrange\SP\Helper\Exception\InvalidSAMLVersionException;
 use MiniOrange\SP\Helper\Exception\MissingIDException;
 use MiniOrange\SP\Helper\Exception\MissingIssuerValueException;
@@ -58,68 +59,60 @@ class SAML2Assertion
     private $requiredEncAttributes;
     private $SubjectConfirmation;
     private $spUtility;
-    protected $wasSignedAtConstruction = false;
+    protected $wasSignedAtConstruction = FALSE;
 
-    
-    public function __construct(\DOMElement $xml = null, \MiniOrange\SP\Helper\SPUtility $spUtility)
+	
+    public function __construct(\DOMElement $xml = NULL,\MiniOrange\SP\Helper\SPUtility $spUtility)
     {
         $this->id                       = SAML2Utilities::generateId();
         $this->issueInstant             = SAML2Utilities::generateTimestamp();
         $this->issuer                   = '';
         $this->authnInstant             = SAML2Utilities::generateTimestamp();
-        $this->attributes               = [];
+        $this->attributes               = array();
         $this->nameFormat               = 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified';
-        $this->certificates             = [];
-        $this->AuthenticatingAuthority  = [];
-        $this->SubjectConfirmation      = [];
+        $this->certificates             = array();
+        $this->AuthenticatingAuthority  = array();
+        $this->SubjectConfirmation      = array();
         $this->spUtility                = $spUtility;
 
-        if ($xml === null) {
-            return;
-        }
-        
-        if ($xml->localName === 'EncryptedAssertion') {
+        if ($xml === NULL) return;
+		
+        if($xml->localName === 'EncryptedAssertion')
+        {
             $data = SAML2Utilities::xpQuery($xml, './xenc:EncryptedData');
             $encryptedMethod =  SAML2Utilities::xpQuery($xml, './xenc:EncryptedData/ds:KeyInfo');
             $method = $encryptedMethod[0]->firstChild->firstChild->getAttribute("Algorithm");
             $algo = SAML2Utilities::getEncryptionAlgorithm($method);
-            if (count($data) === 0) {
+            if (count($data) === 0)
                 throw new Exception('Missing encrypted data in <saml:EncryptedAssertion>.');
-            } elseif (count($data) > 1) {
+            elseif (count($data) > 1)
                 throw new Exception('More than one encrypted data element in <saml:EncryptedAssertion>.');
-            }
             
-            $key = new XMLSecurityKey($algo, ['type'=>'private']);
+            $key = new XMLSecurityKey($algo, array('type'=>'private'));
 
-            $path = MSSP_DIR . DIRECTORY_SEPARATOR .
+            $path =  $spUtility->getFileContents($spUtility->getResourcePath(SPConstants::SP_KEY));
             $key->loadKey($path);
             
-            $alternateKey = new XMLSecurityKey($algo, ['type' => 'private']);
+            $alternateKey = new XMLSecurityKey($algo, array('type' => 'private'));
             $alternateKeyUrl = $spUtility->getFileContents($spUtility->getResourcePath(SPConstants::ALTERNATE_KEY));
             $alternateKey->loadKey($alternateKeyUrl);
             
-            $blacklist = [];
+            $blacklist = array();
             $xml = SAML2Utilities::decryptElement($data[0], $key, $blacklist, $alternateKey);
-        }
-        
-        if (!$xml->hasAttribute('ID')) {
-            throw new MissingIDException;
-        }
+		}
+		
+        if (!$xml->hasAttribute('ID')) throw new MissingIDException;
 
         $this->id = $xml->getAttribute('ID');
-        
-        if ($xml->getAttribute('Version') !== '2.0') {
-            throw new InvalidSAMLVersionException($xml);
-        }
+		
+        if ($xml->getAttribute('Version') !== '2.0') throw new InvalidSAMLVersionException($xml);
 
         $this->issueInstant = SAML2Utilities::xsDateTimeToTimestamp($xml->getAttribute('IssueInstant'));
-        
+		
         $issuer = SAML2Utilities::xpQuery($xml, './saml_assertion:Issuer');
-        if (empty($issuer)) {
-            throw new MissingIssuerValueException;
-        }
+        if (empty($issuer)) throw new MissingIssuerValueException;
         $this->issuer = trim($issuer[0]->textContent);
-        
+		
         $this->parseConditions($xml);
         $this->parseAuthnStatement($xml);
         $this->parseAttributes($xml);
@@ -137,26 +130,17 @@ class SAML2Assertion
     private function parseSubject(\DOMElement $xml)
     {
         $subject = SAML2Utilities::xpQuery($xml, './saml_assertion:Subject');
-        if (empty($subject)) {
-            return;
-        } elseif (count($subject) > 1) {
-            throw new Exception('More than one <saml:Subject> in <saml:Assertion>.');
-        }
+        if (empty($subject)) return;
+        elseif (count($subject) > 1) throw new Exception('More than one <saml:Subject> in <saml:Assertion>.');
 
         $subject = $subject[0];
         $nameId = SAML2Utilities::xpQuery($subject, './saml_assertion:NameID | ./saml_assertion:EncryptedID/xenc:EncryptedData');
-        if (empty($nameId)) {
-            throw new MissingNameIdException;
-        } elseif (count($nameId) > 1) {
-            throw new InvalidNumberOfNameIDsException;
-        }
+        if (empty($nameId)) throw new MissingNameIdException;
+        elseif (count($nameId) > 1) throw new InvalidNumberOfNameIDsException;
         $nameId = $nameId[0];
         
-        if ($nameId->localName === 'EncryptedData') {
-            $this->encryptedNameId = $nameId;
-        } else {
-            $this->nameId = SAML2Utilities::parseNameId($nameId);
-        }
+        if ($nameId->localName === 'EncryptedData') $this->encryptedNameId = $nameId;
+        else $this->nameId = SAML2Utilities::parseNameId($nameId);
     }
 
     /**
@@ -168,37 +152,34 @@ class SAML2Assertion
     private function parseConditions(\DOMElement $xml)
     {
         $conditions = SAML2Utilities::xpQuery($xml, './saml_assertion:Conditions');
-        if (empty($conditions)) {
-            return;
-        } elseif (count($conditions) > 1) {
-            throw new Exception('More than one <saml:Conditions> in <saml:Assertion>.');
-        }
+        if (empty($conditions)) return;
+        elseif (count($conditions) > 1) throw new Exception('More than one <saml:Conditions> in <saml:Assertion>.');
         $conditions = $conditions[0];
 
         if ($conditions->hasAttribute('NotBefore')) {
             $notBefore = SAML2Utilities::xsDateTimeToTimestamp($conditions->getAttribute('NotBefore'));
-            if ($this->notBefore === null || $this->notBefore < $notBefore) {
+            if ($this->notBefore === NULL || $this->notBefore < $notBefore) {
                 $this->notBefore = $notBefore;
             }
         }
         if ($conditions->hasAttribute('NotOnOrAfter')) {
             $notOnOrAfter = SAML2Utilities::xsDateTimeToTimestamp($conditions->getAttribute('NotOnOrAfter'));
-            if ($this->notOnOrAfter === null || $this->notOnOrAfter > $notOnOrAfter) {
+            if ($this->notOnOrAfter === NULL || $this->notOnOrAfter > $notOnOrAfter) {
                 $this->notOnOrAfter = $notOnOrAfter;
             }
         }
 
-        for ($node = $conditions->firstChild; $node !== null; $node = $node->nextSibling) {
+        for ($node = $conditions->firstChild; $node !== NULL; $node = $node->nextSibling) {
             if ($node instanceof DOMText) {
                 continue;
             }
             if ($node->namespaceURI !== 'urn:oasis:names:tc:SAML:2.0:assertion') {
-                throw new Exception('Unknown namespace of condition: ' . var_export($node->namespaceURI, true));
+                throw new Exception('Unknown namespace of condition: ' . var_export($node->namespaceURI, TRUE));
             }
             switch ($node->localName) {
                 case 'AudienceRestriction':
                     $audiences = SAML2Utilities::extractStrings($node, 'urn:oasis:names:tc:SAML:2.0:assertion', 'Audience');
-                    if ($this->validAudiences === null) {
+                    if ($this->validAudiences === NULL) {
                         /* The first (and probably last) AudienceRestriction element. */
                         $this->validAudiences = $audiences;
 
@@ -217,9 +198,10 @@ class SAML2Assertion
                     /* Currently ignored. */
                     break;
                 default:
-                    throw new Exception('Unknown condition: ' . var_export($node->localName, true));
+                    throw new Exception('Unknown condition: ' . var_export($node->localName, TRUE));
             }
         }
+
     }
 
     /**
@@ -232,7 +214,7 @@ class SAML2Assertion
     {
         $authnStatements = SAML2Utilities::xpQuery($xml, './saml_assertion:AuthnStatement');
         if (empty($authnStatements)) {
-            $this->authnInstant = null;
+            $this->authnInstant = NULL;
 
             return;
         } elseif (count($authnStatements) > 1) {
@@ -323,7 +305,7 @@ class SAML2Assertion
      */
     private function parseAttributes(\DOMElement $xml)
     {
-        $firstAttribute = true;
+        $firstAttribute = TRUE;
         $attributes = SAML2Utilities::xpQuery($xml, './saml_assertion:AttributeStatement/saml_assertion:Attribute');
         foreach ($attributes as $attribute) {
             if (!$attribute->hasAttribute('Name')) {
@@ -339,15 +321,15 @@ class SAML2Assertion
 
             if ($firstAttribute) {
                 $this->nameFormat = $nameFormat;
-                $firstAttribute = false;
+                $firstAttribute = FALSE;
             } else {
                 if ($this->nameFormat !== $nameFormat) {
                     $this->nameFormat = 'urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified';
                 }
             }
 
-            if (!array_key_exists($name, $this->attributes)) {
-                $this->attributes[$name] = [];
+            if (!isset($this->attributes[$name])) {
+                $this->attributes[$name] = array();
             }
 
             $values = SAML2Utilities::xpQuery($attribute, './saml_assertion:AttributeValue');
@@ -379,8 +361,8 @@ class SAML2Assertion
     {
         /* Validate the signature element of the message. */
         $sig = SAML2Utilities::validateElement($xml);
-        if ($sig !== false) {
-            $this->wasSignedAtConstruction = true;
+        if ($sig !== FALSE) {
+            $this->wasSignedAtConstruction = TRUE;
             $this->certificates = $sig['Certificates'];
             $this->signatureData = $sig;
         }
@@ -398,13 +380,13 @@ class SAML2Assertion
      */
     public function validate(XMLSecurityKey $key)
     {
-        if ($this->signatureData === null) {
-            return false;
+        if ($this->signatureData === NULL) {
+            return FALSE;
         }
 
         SAML2Utilities::validateSignature($this->signatureData, $key);
 
-        return true;
+        return TRUE;
     }
 
     /**
@@ -478,7 +460,7 @@ class SAML2Assertion
      */
     public function getNameId()
     {
-        if ($this->encryptedNameId !== null) {
+        if ($this->encryptedNameId !== NULL) {
             throw new Exception('Attempted to retrieve encrypted NameID without decrypting it first.');
         }
 
@@ -505,11 +487,11 @@ class SAML2Assertion
      */
     public function isNameIdEncrypted()
     {
-        if ($this->encryptedNameId !== null) {
-            return true;
+        if ($this->encryptedNameId !== NULL) {
+            return TRUE;
         }
 
-        return false;
+        return FALSE;
     }
 
     /**
@@ -540,7 +522,7 @@ class SAML2Assertion
         $enc->encryptKey($key, $symmetricKey);
 
         $this->encryptedNameId = $enc->encryptNode($symmetricKey);
-        $this->nameId = null;
+        $this->nameId = NULL;
     }
 
     /**
@@ -549,9 +531,9 @@ class SAML2Assertion
      * @param XMLSecurityKey $key       The decryption key.
      * @param array          $blacklist Blacklisted decryption algorithms.
      */
-    public function decryptNameId(XMLSecurityKey $key, array $blacklist = [])
+    public function decryptNameId(XMLSecurityKey $key, array $blacklist = array())
     {
-        if ($this->encryptedNameId === null) {
+        if ($this->encryptedNameId === NULL) {
             /* No NameID to decrypt. */
 
             return;
@@ -561,7 +543,7 @@ class SAML2Assertion
         SAML2Utilities::getContainer()->debugMessage($nameId, 'decrypt');
         $this->nameId = SAML2Utilities::parseNameId($nameId);
 
-        $this->encryptedNameId = null;
+        $this->encryptedNameId = NULL;
     }
 
     /**
@@ -571,12 +553,12 @@ class SAML2Assertion
      * @param array $blacklist
      * @throws Exception
      */
-    public function decryptAttributes(XMLSecurityKey $key, array $blacklist = [])
+    public function decryptAttributes(XMLSecurityKey $key, array $blacklist = array())
     {
-        if ($this->encryptedAttribute === null) {
+        if ($this->encryptedAttribute === NULL) {
             return;
         }
-        $firstAttribute = true;
+        $firstAttribute = TRUE;
         $attributes = $this->encryptedAttribute;
         foreach ($attributes as $attributeEnc) {
             /*Decrypt node <EncryptedAttribute>*/
@@ -599,15 +581,15 @@ class SAML2Assertion
 
             if ($firstAttribute) {
                 $this->nameFormat = $nameFormat;
-                $firstAttribute = false;
+                $firstAttribute = FALSE;
             } else {
                 if ($this->nameFormat !== $nameFormat) {
                     $this->nameFormat = 'urn:oasis:names:tc:SAML:2.0:attrname-format:unspecified';
                 }
             }
 
-            if (!array_key_exists($name, $this->attributes)) {
-                $this->attributes[$name] = [];
+            if (!isset($this->attributes[$name])) {
+                $this->attributes[$name] = array();
             }
 
             $values = SAML2Utilities::xpQuery($attribute, './saml_assertion:AttributeValue');
@@ -696,7 +678,7 @@ class SAML2Assertion
      *
      * @param array|NULL $validAudiences The allowed audiences.
      */
-    public function setValidAudiences(array $validAudiences = null)
+    public function setValidAudiences(array $validAudiences = NULL)
     {
         $this->validAudiences = $validAudiences;
     }
@@ -792,7 +774,7 @@ class SAML2Assertion
         if (!empty($this->authnContextDeclRef)) {
             return $this->authnContextDeclRef;
         }
-        return null;
+        return NULL;
     }
 
     /**
@@ -997,7 +979,7 @@ class SAML2Assertion
      *
      * @param XMLSecurityKey|NULL $signatureKey
      */
-    public function setSignatureKey(XMLsecurityKey $signatureKey = null)
+    public function setSignatureKey(XMLsecurityKey $signatureKey = NULL)
     {
         $this->signatureKey = $signatureKey;
     }
@@ -1018,7 +1000,7 @@ class SAML2Assertion
      *
      * @param XMLSecurityKey|NULL $Key
      */
-    public function setEncryptionKey(XMLSecurityKey $Key = null)
+    public function setEncryptionKey(XMLSecurityKey $Key = NULL)
     {
         $this->encryptionKey = $Key;
     }
@@ -1044,11 +1026,11 @@ class SAML2Assertion
     {
         return $this->certificates;
     }
-    
-    public function getSignatureData()
-    {
-        return $this->signatureData;
-    }
+	
+	public function getSignatureData()
+	{
+		return $this->signatureData;
+	}
 
     /**
      * @return bool
@@ -1064,9 +1046,9 @@ class SAML2Assertion
      * @param  DOMNode|NULL $parentElement The DOM node the assertion should be created in.
      * @return DOMElement   This assertion.
      */
-    public function toXML(\DOMNode $parentElement = null)
+    public function toXML(\DOMNode $parentElement = NULL)
     {
-        if ($parentElement === null) {
+        if ($parentElement === NULL) {
             $document = new DOMDocument();
             $parentElement = $document;
         } else {
@@ -1093,13 +1075,13 @@ class SAML2Assertion
         $this->addSubject($root);
         $this->addConditions($root);
         $this->addAuthnStatement($root);
-        if ($this->requiredEncAttributes == false) {
+        if ($this->requiredEncAttributes == FALSE) {
             $this->addAttributeStatement($root);
         } else {
             $this->addEncryptedAttributeStatement($root);
         }
 
-        if ($this->signatureKey !== null) {
+        if ($this->signatureKey !== NULL) {
             SAML2Utilities::insertSignature($this->signatureKey, $this->certificates, $root, $issuer->nextSibling);
         }
 
@@ -1113,7 +1095,7 @@ class SAML2Assertion
      */
     private function addSubject(\DOMElement $root)
     {
-        if ($this->nameId === null && $this->encryptedNameId === null) {
+        if ($this->nameId === NULL && $this->encryptedNameId === NULL) {
             /* We don't have anything to create a Subject node for. */
 
             return;
@@ -1122,12 +1104,12 @@ class SAML2Assertion
         $subject = $root->ownerDocument->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'saml:Subject');
         $root->appendChild($subject);
 
-        if ($this->encryptedNameId === null) {
+        if ($this->encryptedNameId === NULL) {
             SAML2Utilities::addNameId($subject, $this->nameId);
         } else {
             $eid = $subject->ownerDocument->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'saml:' . 'EncryptedID');
             $subject->appendChild($eid);
-            $eid->appendChild($subject->ownerDocument->importNode($this->encryptedNameId, true));
+            $eid->appendChild($subject->ownerDocument->importNode($this->encryptedNameId, TRUE));
         }
 
         foreach ($this->SubjectConfirmation as $sc) {
@@ -1148,18 +1130,18 @@ class SAML2Assertion
         $conditions = $document->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'saml:Conditions');
         $root->appendChild($conditions);
 
-        if ($this->notBefore !== null) {
+        if ($this->notBefore !== NULL) {
             $conditions->setAttribute('NotBefore', gmdate('Y-m-d\TH:i:s\Z', $this->notBefore));
         }
-        if ($this->notOnOrAfter !== null) {
+        if ($this->notOnOrAfter !== NULL) {
             $conditions->setAttribute('NotOnOrAfter', gmdate('Y-m-d\TH:i:s\Z', $this->notOnOrAfter));
         }
 
-        if ($this->validAudiences !== null) {
+        if ($this->validAudiences !== NULL) {
             $ar = $document->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'saml:AudienceRestriction');
             $conditions->appendChild($ar);
 
-            SAML2Utilities::addStrings($ar, 'urn:oasis:names:tc:SAML:2.0:assertion', 'saml:Audience', false, $this->validAudiences);
+            SAML2Utilities::addStrings($ar, 'urn:oasis:names:tc:SAML:2.0:assertion', 'saml:Audience', FALSE, $this->validAudiences);
         }
     }
 
@@ -1171,11 +1153,11 @@ class SAML2Assertion
      */
     private function addAuthnStatement(\DOMElement $root)
     {
-        if ($this->authnInstant === null ||
+        if ($this->authnInstant === NULL ||
             (
-                $this->authnContextClassRef === null &&
-                $this->authnContextDecl === null &&
-                $this->authnContextDeclRef === null
+                $this->authnContextClassRef === NULL &&
+                $this->authnContextDecl === NULL &&
+                $this->authnContextDeclRef === NULL
             )
         ) {
             /* No authentication context or AuthnInstant => no authentication statement. */
@@ -1190,10 +1172,10 @@ class SAML2Assertion
 
         $authnStatementEl->setAttribute('AuthnInstant', gmdate('Y-m-d\TH:i:s\Z', $this->authnInstant));
 
-        if ($this->sessionNotOnOrAfter !== null) {
+        if ($this->sessionNotOnOrAfter !== NULL) {
             $authnStatementEl->setAttribute('SessionNotOnOrAfter', gmdate('Y-m-d\TH:i:s\Z', $this->sessionNotOnOrAfter));
         }
-        if ($this->sessionIndex !== null) {
+        if ($this->sessionIndex !== NULL) {
             $authnStatementEl->setAttribute('SessionIndex', $this->sessionIndex);
         }
 
@@ -1224,7 +1206,7 @@ class SAML2Assertion
             $authnContextEl,
             'urn:oasis:names:tc:SAML:2.0:assertion',
             'saml:AuthenticatingAuthority',
-            false,
+            FALSE,
             $this->AuthenticatingAuthority
         );
     }
@@ -1261,12 +1243,12 @@ class SAML2Assertion
                 } elseif (is_int($value)) {
                     $type = 'xs:integer';
                 } else {
-                    $type = null;
+                    $type = NULL;
                 }
 
                 $attributeValue = $document->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'saml:AttributeValue');
                 $attribute->appendChild($attributeValue);
-                if ($type !== null) {
+                if ($type !== NULL) {
                     $attributeValue->setAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 'xsi:type', $type);
                 }
                 if (is_null($value)) {
@@ -1275,7 +1257,7 @@ class SAML2Assertion
 
                 if ($value instanceof DOMNodeList) {
                     for ($i = 0; $i < $value->length; $i++) {
-                        $node = $document->importNode($value->item($i), true);
+                        $node = $document->importNode($value->item($i), TRUE);
                         $attributeValue->appendChild($node);
                     }
                 } else {
@@ -1293,7 +1275,7 @@ class SAML2Assertion
      */
     private function addEncryptedAttributeStatement(\DOMElement $root)
     {
-        if ($this->requiredEncAttributes == false) {
+        if ($this->requiredEncAttributes == FALSE) {
             return;
         }
 
@@ -1318,18 +1300,18 @@ class SAML2Assertion
                 } elseif (is_int($value)) {
                     $type = 'xs:integer';
                 } else {
-                    $type = null;
+                    $type = NULL;
                 }
 
                 $attributeValue = $document2->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'saml:AttributeValue');
                 $attribute->appendChild($attributeValue);
-                if ($type !== null) {
+                if ($type !== NULL) {
                     $attributeValue->setAttributeNS('http://www.w3.org/2001/XMLSchema-instance', 'xsi:type', $type);
                 }
 
                 if ($value instanceof DOMNodeList) {
                     for ($i = 0; $i < $value->length; $i++) {
-                        $node = $document2->importNode($value->item($i), true);
+                        $node = $document2->importNode($value->item($i), TRUE);
                         $attributeValue->appendChild($node);
                     }
                 } else {
@@ -1351,8 +1333,9 @@ class SAML2Assertion
 
             $EncAttribute = $document->createElementNS('urn:oasis:names:tc:SAML:2.0:assertion', 'saml:EncryptedAttribute');
             $attributeStatement->appendChild($EncAttribute);
-            $n = $document->importNode($EncrNode, true);
+            $n = $document->importNode($EncrNode, TRUE);
             $EncAttribute->appendChild($n);
         }
     }
+
 }

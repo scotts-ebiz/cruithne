@@ -9,14 +9,14 @@ use MiniOrange\SP\Helper\SPMessages;
  */
 class PasswordMismatchException extends \Exception
 {
-    public function __construct()
-    {
-        $message     = SPMessages::parse('PASS_MISMATCH');
-        $code         = 122;
-        parent::__construct($message, $code, null);
+	public function __construct() 
+	{
+		$message 	= SPMessages::parse('PASS_MISMATCH');
+		$code 		= 122;		
+        parent::__construct($message, $code, NULL);
     }
 
-    public function __toString()
+    public function __toString() 
     {
         return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
     }
