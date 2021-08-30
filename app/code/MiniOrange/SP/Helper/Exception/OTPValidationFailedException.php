@@ -10,14 +10,14 @@ use MiniOrange\SP\Helper\SPMessages;
  */
 class OTPValidationFailedException extends \Exception
 {
-    public function __construct()
-    {
-        $message     = SPMessages::parse('INVALID_OTP');
-        $code         = 114;
-        parent::__construct($message, $code, null);
+	public function __construct() 
+	{
+		$message 	= SPMessages::parse('INVALID_OTP');
+		$code 		= 114;		
+        parent::__construct($message, $code, NULL);
     }
 
-    public function __toString()
+    public function __toString() 
     {
         return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
     }

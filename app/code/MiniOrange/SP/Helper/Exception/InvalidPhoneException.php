@@ -10,14 +10,14 @@ use MiniOrange\SP\Helper\SPMessages;
  */
 class InvalidPhoneException extends \Exception
 {
-    public function __construct($phone)
-    {
-        $message     = SPMessages::parse('ERROR_PHONE_FORMAT', ['phone'=>$phone]);
-        $code         = 112;
-        parent::__construct($message, $code, null);
+	public function __construct($phone) 
+	{
+		$message 	= SPMessages::parse('ERROR_PHONE_FORMAT',array('phone'=>$phone));
+		$code 		= 112;		
+        parent::__construct($message, $code, NULL);
     }
 
-    public function __toString()
+    public function __toString() 
     {
         return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
     }

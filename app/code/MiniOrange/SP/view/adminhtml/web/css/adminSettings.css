@@ -219,7 +219,7 @@ hr {
 }
 
 #progress_bar {
-    background: url(http://auth.miniorange.com/moas/images/ajax-loader4.gif) no-repeat;
+    background: url(http://login.xecurify.com/moas/images/ajax-loader4.gif) no-repeat;
     display: block;
     margin: 3% auto;
     height: 140px;
@@ -659,16 +659,4 @@ table td {
 .topnav a.active {
     background-color: #4CAF50;
     color: white;
-}
-
-.mo_premium_option{
-	background-color: rgba(128, 128, 128, 0.7);
-    padding: 1%;
-    opacity: 0.2;
-}
-
-.mo_premium_option_text {
-    position: absolute;
-    z-index: 1;
-	font-weight:bold;
 }

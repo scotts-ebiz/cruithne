@@ -1,24 +1,27 @@
 <!-- 
-    This template file is for the SAML Service Provider settings.
-    File acts as a view file for our Service Provider settings.
+	This template file is for the SAML Service Provider settings.
+	File acts as a view file for our Service Provider settings.
 -->
-<?php
-    // initialize all values
-//    $isEnabled = $this->isEnabled() ? "" : "disabled";
-    $samlIdentityProviderName = $this->getIdentityProviderName();
-    $loginBindingType = $this->getLoginBindingType();
-    $ssoUrl = $this->getSSOUrl();
-    $samlIssuer = $this->getSAMLIssuer();
-    $x509Certificate = $this->getX509Cert();
-    $isResponseSigned = $this->isResponseSigned() ? "checked" : "";
-    $isAssertionSigned = $this->isAssertionSigned() ? "checked" : "";
-    $isSPConigured = !$this->isSPConfigured() ? 'disabled title="Please Configure an IDP"' : '';
+<?php 
+	// initialize all values 
+	$isEnabled = $this->isEnabled() ? "" : "disabled";
+	$samlIdentityProviderName = $this->getIdentityProviderName();
+	$loginBindingType = $this->getLoginBindingType();
+	$ssoUrl = $this->getSSOUrl();
+	$logoutBindingType = $this->getLogoutBindingType();
+	$logoutUrl = $this->getLogoutUrl();
+	$samlIssuer = $this->getSAMLIssuer();
+	$x509Certificate = $this->getX509Cert();
+	$isResponseSigned = $this->isResponseSigned() ? "checked" : "";
+	$isAssertionSigned = $this->isAssertionSigned() ? "checked" : "";
+	$isSPConigured = !$this->isSPConfigured() ? 'disabled title="Please Configure an IDP"' : '';
 
-    $testUrl = $this->getTestUrl();
-    $formKey = $this->getBlockHtml('formkey');
-    $httpRedirect = $loginBindingType == 'HttpRedirect' || empty($loginBindingType) ? 'checked="checked"' : '';
-    $httpPost = $loginBindingType == 'HttpPost' ? 'checked="checked"' : '';
-//    $premiumlink = $this->getExtensionPageUrl('upgrade');
+	$testUrl = $this->getTestUrl();
+	$formKey = $this->getBlockHtml('formkey');
+	$httpRedirect = $loginBindingType == 'HttpRedirect' || empty($loginBindingType) ? 'checked="checked"' : '';
+	$httpPost = $loginBindingType == 'HttpPost' ? 'checked="checked"' : '';
+	$httpLogoutRedirect = $logoutBindingType == 'HttpRedirect' || empty($logoutBindingType) ? 'checked="checked"' : '';
+	$httpLogoutPost = $logoutBindingType == 'HttpPost' ? 'checked="checked"' : '';
 
 echo '
 	<script>
@@ -36,13 +39,13 @@ echo '
 					<tr>
 						<td style="width:200px;"><strong>Identity Provider Name<span style="color:red;">*</span>:</strong></td>
 						<td><input type="text" name="saml_identity_name" placeholder="Identity Provider name like ADFS, SimpleSAML, Salesforce" 
-								style="width: 100%;" value="'.$samlIdentityProviderName.'"  
-								pattern="^\w*$" title="Only alphabets, numbers and underscore is allowed" required/></td>
+								style="width: 100%;" value="'.$samlIdentityProviderName.'" required '.$isEnabled.'
+								pattern="^\w*$" title="Only alphabets, numbers and underscore is allowed"/></td>
 					</tr>
 					<tr>
 						<td><strong>IdP Entity ID or Issuer <span style="color:red;">*</span>:</strong></td>
 						<td><input type="text" name="saml_issuer" placeholder="Identity Provider Entity ID or Issuer" style="width: 100%;" 
-							value="'.$samlIssuer.'" required/></td>
+							value="'.$samlIssuer.'" required '.$isEnabled.'/></td>
 					</tr>
 					<tr>
 						<td><strong>SAML Login URL <span style="color:red;">*</span>:</strong></td>
@@ -55,10 +58,21 @@ echo '
 							<label for="http-post">Use HTTP-POST Binding for SSO</label>
 							<br /><br />
 							<input type="url" name="saml_login_url" placeholder="Single Sign On Service URL of your IdP" style="width: 100%;" 
-								value="'.$ssoUrl.'" required/>
+								value="'.$ssoUrl.'" required '.$isEnabled.'/>
 						</td>
 					</tr>
-					
+					<tr>
+						<td><strong>SAML Logout URL :</strong></td>
+						<td><input type="radio" name="saml_logout_binding_type" id="slo-http-redirect" value="HttpRedirect" 
+							'.$httpLogoutRedirect.'
+						<label for="slo-http-redirect">Use HTTP-Redirect Binding for SLO</label>
+						<input style="margin-left:15px;" type="radio" name="saml_logout_binding_type" id="slo-http-post" 
+							value="HttpPost" '.$httpLogoutPost.'
+						<label for="slo-http-post">Use HTTP-POST Binding for SLO</label>
+						<br /><br />
+						<input type="url" name="saml_logout_url" placeholder="Single Logout Service URL of your IdP" style="width: 100%;" 
+							value="'.$logoutUrl.'" '.$isEnabled.'/></td>
+					</tr>
 					
 					<tr>
 						<td><strong>X.509 Certificate <span style="color:red;">*</span>:</strong></td>
@@ -66,7 +80,8 @@ echo '
 							<textarea rows="4" cols="5" name="saml_x509_certificate" 
 								placeholder="Copy and Paste the content from the downloaded certificate or copy the content enclosed in 
 									\'X509Certificate\' tag (has parent tag \'KeyDescriptor use=signing\') in IdP-Metadata XML file" 
-								style="width: 580px;height:170px;">'.$x509Certificate.'</textarea>
+								style="width: 580px;height:170px;" '.$isEnabled.'>'.$x509Certificate.'
+							</textarea>
 						</td>
 					</tr>
 					<tr>
@@ -77,12 +92,23 @@ echo '
 						</td>
 					</tr>
 					<tr>
+						<td><strong>Response Signed:</strong></td>
+						<td><input type="checkbox" name="saml_response_signed" value="Yes" '.$isResponseSigned.' '.$isEnabled.'/>
+						Check if your IdP is signing the SAML Response. Leave checked by default.</td>
+					</tr>
+					<tr>
+						<td><strong>Assertion Signed:</strong></td>
+						<td><input type="checkbox" name="saml_assertion_signed" value="Yes" '.$isAssertionSigned.' '.$isEnabled.'/>
+						Check if the IdP is signing the SAML Assertion. Leave unchecked by default.</td>
+					</tr>
+
+					<tr>
 						<td>&nbsp;</td>
 						<td>
 							<br /><input type="submit" name="submit" style="width:100px;" value="Save" class="button button-primary button-large" 
-							/> &nbsp; 
+							'.$isEnabled.'/> &nbsp; 
 							<input type="button" name="test" title="You can only test your Configuration after saving your Service Provider Settings." 
-								onclick="showTestWindow();" '.$isSPConigured.' value="Test configuration" style="width:150px"/>
+								onclick="showTestWindow(); " '.$isSPConigured.' value="Test configuration" style="width:150px"/>
 						</td>
 					</tr>
 				</table>

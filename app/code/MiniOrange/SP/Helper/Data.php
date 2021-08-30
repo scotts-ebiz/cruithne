@@ -3,14 +3,14 @@
 namespace MiniOrange\SP\Helper;
 
 use \Magento\Framework\App\Helper\AbstractHelper;
-use MiniOrange\SP\Helper\SPConstants;
+use  MiniOrange\SP\Helper\SPConstants;
 
 /**
- * This class contains functions to get and set the required data
- * from Magento database or session table/file or generate some
+ * This class contains functions to get and set the required data 
+ * from Magento database or session table/file or generate some 
  * necessary values to be used in our module.
  */
-class Data extends AbstractHelper
+class Data extends AbstractHelper 
 {
 
     protected $scopeConfig;
@@ -22,28 +22,27 @@ class Data extends AbstractHelper
     protected $helperBackend;
     protected $frontendUrl;
 
-    public function __construct(
-        \Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
-        \Magento\User\Model\UserFactory $adminFactory,
-        \Magento\Customer\Model\CustomerFactory $customerFactory,
-        \Magento\Framework\UrlInterface $urlInterface,
-        \Magento\Framework\App\Config\Storage\WriterInterface $configWriter,
-        \Magento\Framework\View\Asset\Repository $assetRepo,
-        \Magento\Backend\Helper\Data $helperBackend,
-        \Magento\Framework\Url $frontendUrl
-    ) {
-        $this->scopeConfig = $scopeConfig;
-        $this->adminFactory = $adminFactory;
-        $this->customerFactory = $customerFactory;
-        $this->urlInterface = $urlInterface;
-        $this->configWriter = $configWriter;
-        $this->assetRepo = $assetRepo;
-        $this->helperBackend = $helperBackend;
-        $this->frontendUrl = $frontendUrl;
+    public function __construct(\Magento\Framework\App\Config\ScopeConfigInterface $scopeConfig,
+                                \Magento\User\Model\UserFactory $adminFactory,
+                                \Magento\Customer\Model\CustomerFactory $customerFactory,
+                                \Magento\Framework\UrlInterface $urlInterface,
+                                \Magento\Framework\App\Config\Storage\WriterInterface $configWriter,
+                                \Magento\Framework\View\Asset\Repository $assetRepo,
+                                \Magento\Backend\Helper\Data $helperBackend,
+                                \Magento\Framework\Url $frontendUrl)
+    {
+       $this->scopeConfig = $scopeConfig;
+       $this->adminFactory = $adminFactory;
+       $this->customerFactory = $customerFactory;
+       $this->urlInterface = $urlInterface;
+       $this->configWriter = $configWriter;
+       $this->assetRepo = $assetRepo;
+       $this->helperBackend = $helperBackend;
+       $this->frontendUrl = $frontendUrl;
     }
 
 
-    /**
+    /** 
      * Get base url of miniorange
      */
     public function getMiniOrangeUrl()
@@ -51,51 +50,54 @@ class Data extends AbstractHelper
         return SPConstants::HOSTNAME;
     }
 
+    public function getAcsUrl()
+    {
+        $url="mospsaml/actions/spObserver";
+        return $this->getBaseUrlWithoutStoreCode().$url;
+    }
+
+
+    public function getBaseUrlWithoutStoreCode(){
+        return $this->scopeConfig->getValue("web/unsecure/base_url");
+    }
     /**
-     * Function to extract data stored in the store config table.
-     *
-     * @param $config
+     * Function to extract data stored in the store config table. 
+     * 
+     * @param $config 
      */
-    public function getStoreConfig($config)
+    public function getStoreConfig($config) 
     {
         $storeScope = \Magento\Store\Model\ScopeInterface::SCOPE_STORE;
-        return $this->scopeConfig->getValue('miniorange/samlsp/' . $config, $storeScope);
+        return $this->scopeConfig->getValue( 'miniorange/samlsp/' . $config , $storeScope);
     }
 
 
     /**
-     * Function to store data stored in the store config table.
-     *
-     * @param $config
+     * Function to store data stored in the store config table. 
+     * 
+     * @param $config 
      * @param $value
      */
-    public function setStoreConfig($config, $value)
+    public function setStoreConfig($config, $value) 
     {
-        $this->configWriter->save('miniorange/samlsp/' . $config, $value);
+        $this->configWriter->save( 'miniorange/samlsp/' . $config, $value);
     }
     
 
-    public function getIdpGuideBaseUrl($idp)
-    {
-
-        $url = 'https://plugins.miniorange.com/magento-saml-single-sign-on-sso#setupguide';
-        return $url;
-    }
-
     /**
-     * This function is used to save user attributes to the
-     * database and save it. Mostly used in the SSO flow to
+     * This function is used to save user attributes to the 
+     * database and save it. Mostly used in the SSO flow to 
      * update user attributes. Decides which user to update.
-     *
+     * 
      * @param $url
      * @param $value
      * @param $id
      * @param $admin
      * @throws \Exception
      */
-    public function saveConfig($url, $value, $id, $admin)
+    public function saveConfig($url,$value,$id,$admin) 
     {
-        $admin ? $this->saveAdminStoreConfig($url, $value, $id) : $this->saveCustomerStoreConfig($url, $value, $id);
+        $admin ? $this->saveAdminStoreConfig($url,$value,$id) : $this->saveCustomerStoreConfig($url,$value,$id);
     }
 
 
@@ -104,34 +106,37 @@ class Data extends AbstractHelper
      *
      * @param $config
      * @param $id
+     * @return mixed
      */
     public function getAdminStoreConfig($config, $id)
-    {
+    {	
         return $this->adminFactory->create()->load($id)->getData($config);
+
+	
     }
 
 
     /**
-     * This function is used to save admin attributes to the
-     * database and save it. Mostly used in the SSO flow to
+     * This function is used to save admin attributes to the 
+     * database and save it. Mostly used in the SSO flow to 
      * update user attributes.
-     *
+     * 
      * @param $url
      * @param $value
      * @param $id
      * @throws \Exception
      */
-    private function saveAdminStoreConfig($url, $value, $id)
+    private function saveAdminStoreConfig($url,$value,$id)
     {
-        $data = [$url=>$value];
-        $model = $this->adminFactory->create()->load($id)->addData($data);
-        $model->setId($id)->save();
+		$data = array($url=>$value);
+		$model = $this->adminFactory->create()->load($id)->addData($data);
+		$model->setId($id)->save();
     }
     
 
     /**
      * Function to extract information stored in the customer user table.
-     *
+     * 
      * @param $config
      * @param $id
      */
@@ -142,20 +147,20 @@ class Data extends AbstractHelper
 
 
     /**
-     * This function is used to save customer attributes to the
-     * database and save it. Mostly used in the SSO flow to
+     * This function is used to save customer attributes to the 
+     * database and save it. Mostly used in the SSO flow to 
      * update user attributes.
-     *
+     * 
      * @param $url
      * @param $value
      * @param $id
      * @throws \Exception
      */
-    private function saveCustomerStoreConfig($url, $value, $id)
+    private function saveCustomerStoreConfig($url,$value,$id)
     {
-        $data = [$url=>$value];
-        $model = $this->customerFactory->create()->load($id)->addData($data);
-        $model->setId($id)->save();
+		$data = array($url=>$value);
+		$model = $this->customerFactory->create()->load($id)->addData($data);
+		$model->setId($id)->save();
     }
 
 
@@ -168,12 +173,6 @@ class Data extends AbstractHelper
     }
 
 
-    public function getAcsUrl()
-    {
-        $url="mospsaml/actions/spObserver";
-        return $this->getBaseUrl().$url;
-    }
-
     /**
      * Function get the current url the user is on.
      */
@@ -185,23 +184,23 @@ class Data extends AbstractHelper
 
     /**
      * Function to get the url based on where the user is.
-     *
+     * 
      * @param $url
      */
-    public function getUrl($url, $params = [])
+    public function getUrl($url,$params=array())
     {
-        return  $this->urlInterface->getUrl($url, ['_query'=>$params]);
+        return  $this->urlInterface->getUrl($url,array('_query'=>$params));
     }
 
 
     /**
      * Function to get the sites frontend url.
-     *
+     * 
      * @param $url
      */
-    public function getFrontendUrl($url, $params = [])
+    public function getFrontendUrl($url,$params=array())
     {
-        return  $this->frontendUrl->getUrl($url, ['_query'=>$params]);
+        return  $this->frontendUrl->getUrl($url,array('_query'=>$params));
     }
 
 
@@ -210,13 +209,13 @@ class Data extends AbstractHelper
      */
     public function getIssuerUrl()
     {
-        return $this->getBaseUrl() . SPConstants::ISSUER_URL_PATH;
+        return $this->getBaseUrlWithoutStoreCode() . SPConstants::ISSUER_URL_PATH;
     }
 
 
     /**
      * Function to get the Image URL of our module.
-     *
+     * 
      * @param $image
      */
     public function getImageUrl($image)
@@ -230,7 +229,7 @@ class Data extends AbstractHelper
      */
     public function getAdminCssUrl($css)
     {
-        return $this->assetRepo->getUrl(SPConstants::MODULE_DIR.SPConstants::MODULE_CSS.$css, ['area'=>'adminhtml']);
+        return $this->assetRepo->getUrl(SPConstants::MODULE_DIR.SPConstants::MODULE_CSS.$css,array('area'=>'adminhtml'));
     }
 
 
@@ -239,7 +238,7 @@ class Data extends AbstractHelper
      */
     public function getAdminJSUrl($js)
     {
-        return $this->assetRepo->getUrl(SPConstants::MODULE_DIR.SPConstants::MODULE_JS.$js, ['area'=>'adminhtml']);
+        return $this->assetRepo->getUrl(SPConstants::MODULE_DIR.SPConstants::MODULE_JS.$js,array('area'=>'adminhtml'));
     }
 
 
@@ -248,7 +247,7 @@ class Data extends AbstractHelper
      */
     public function getMetadataUrl()
     {
-        return $this->assetRepo->getUrl(SPConstants::MODULE_DIR.SPConstants::MODULE_METADATA, ['area'=>'adminhtml']);
+        return $this->assetRepo->getUrl(SPConstants::MODULE_DIR.SPConstants::MODULE_METADATA,array('area'=>'adminhtml'));
     }
 
 
@@ -257,20 +256,20 @@ class Data extends AbstractHelper
      */
     public function getMetadataFilePath()
     {
-        return $this->assetRepo->createAsset(SPConstants::MODULE_DIR.SPConstants::MODULE_METADATA, ['area'=>'adminhtml'])
+        return $this->assetRepo->createAsset(SPConstants::MODULE_DIR.SPConstants::MODULE_METADATA,array('area'=>'adminhtml'))
                     ->getSourceFile();
     }
 
 
     /**
      * Function to get the resource as a path instead of the URL.
-     *
+     * 
      * @param $key
      */
     public function getResourcePath($key)
     {
         return $this->assetRepo
-                    ->createAsset(SPConstants::MODULE_DIR.SPConstants::MODULE_CERTS.$key, ['area'=>'adminhtml'])
+                    ->createAsset(SPConstants::MODULE_DIR.SPConstants::MODULE_CERTS.$key,array('area'=>'adminhtml'))
                     ->getSourceFile();
     }
 
@@ -286,40 +285,59 @@ class Data extends AbstractHelper
     /**
      * Get the Admin url for the site based on the path passed,
      * Append the query parameters to the URL if necessary.
-     *
+     * 
      * @param $url
      * @param $params
      */
-    public function getAdminUrl($url, $params = [])
+    public function getAdminUrl($url,$params=array())
     {
-        return $this->helperBackend->getUrl($url, ['_query'=>$params]);
+        return $this->helperBackend->getUrl($url,array('_query'=>$params));
     }
 
 
     /**
      * Get the Admin secure url for the site based on the path passed,
      * Append the query parameters to the URL if necessary.
-     *
+     * 
      * @param $url
      * @param $params
      */
-    public function getAdminSecureUrl($url, $params = [])
+    public function getAdminSecureUrl($url,$params=array())
     {
-        return $this->helperBackend->getUrl($url, ['_secure'=>true,'_query'=>$params]);
+        return $this->helperBackend->getUrl($url,array('_secure'=>true,'_query'=>$params));
     }
 
 
     /**
-     * Get the SP InitiatedURL
-     *
+     * Get the SP InitiatedURL 
+     * 
      * @param $relayState
      */
-    public function getSPInitiatedUrl($relayState = null)
+    public function getSPInitiatedUrl($relayState=NULL)
     {
-        $relayState = is_null($relayState) ?$this->getCurrentUrl() : $relayState;
-        return $this->getFrontendUrl(
-            SPConstants::SAML_LOGIN_URL,
-            ["relayState"=>$relayState]
-        );
+        $relayState = is_null($relayState) ?$this->getCurrentUrl() : $relayState; 
+        return $this->getFrontendUrl(SPConstants::SAML_LOGIN_URL,
+            array("relayState"=>$relayState));
+    }
+
+    /*===========================================================================================
+						THESE ARE PREMIUM PLUGIN SPECIFIC FUNCTIONS
+    =============================================================================================*/
+    
+    /**
+     * Get/Create IDP guide base URL for admins to download
+     */
+    public function getIdpGuideBaseUrl($idp)
+    {
+        return $this->assetRepo->getUrl(SPConstants::MODULE_DIR.SPConstants::MODULE_GUIDES.$idp.'_as_idp.pdf',array('area'=>'adminhtml'));
+    }
+    
+
+    /**
+     * Get Admin Cert Download URL
+     */
+    public function getAdminCertResourceUrl($key)
+    {
+        return $this->assetRepo->getUrl(SPConstants::MODULE_DIR.SPConstants::MODULE_CERTS.$key,array('area'=>'adminhtml'));
     }
 }

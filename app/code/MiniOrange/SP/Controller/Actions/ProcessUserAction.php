@@ -2,12 +2,12 @@
 
 namespace MiniOrange\SP\Controller\Actions;
 
-use Magento\Framework\App\ResponseInterface;
-use Magento\Framework\Controller\ResultInterface;
 use Magento\Framework\Exception\LocalizedException;
+use Magento\Framework\Exception\NoSuchEntityException;
 use MiniOrange\SP\Helper\Exception\MissingAttributesException;
 use MiniOrange\SP\Helper\SPConstants;
-use Magento\Framework\Serialize\SerializerInterface;
+use Magento\Framework\App\Http;
+use Magento\Framework\App\Http\Interceptor;
 
 /**
  * This action class processes the user attributes coming in
@@ -15,92 +15,121 @@ use Magento\Framework\Serialize\SerializerInterface;
  * to their respective dashboard or create a customer or admin
  * based on the default role set by the admin and log them in
  * automatically.
+ *
+ * @todo refactor and optimize this class code
  */
-class ProcessUserAction extends BaseUserAction implements SerializerInterface
+class ProcessUserAction extends BaseAction
 {
     private $attrs;
     private $relayState;
     private $sessionIndex;
+    private $emailAttribute;
+    private $usernameAttribute;
+    private $firstNameKey;
+    private $lastNameKey;
     private $defaultRole;
+    private $checkIfMatchBy;
+    private $groupNameKey;
     private $userGroupModel;
     private $adminRoleModel;
     private $adminUserModel;
-    private $customerModel;
+    private $firstName;
+    private $lastName;
+    private $groupName;
+    private $storeManager;
+    private $customerRepository;
     private $customerLoginAction;
+    private $responseFactory;
     private $customerFactory;
+    private $customerModel;
     private $userFactory;
     private $randomUtility;
+    private $adminConfig;
     private $dontAllowUnlistedUserRole;
     private $dontCreateUserIfRoleNotMapped;
+    private $_state;	
+    private $_configLoader;
 
-    public function __construct(
-        \Magento\Framework\App\Action\Context $context,
-        \MiniOrange\SP\Helper\SPUtility $spUtility,
-        \Magento\Customer\Model\ResourceModel\Group\Collection $userGroupModel,
-        \Magento\Authorization\Model\ResourceModel\Role\Collection $adminRoleModel,
-        \Magento\User\Model\User $adminUserModel,
-        \Magento\Customer\Model\Customer $customerModel,
-        \Magento\Store\Model\StoreManagerInterface $storeManager,
-        \MiniOrange\SP\Controller\Actions\CustomerLoginAction $customerLoginAction,
-        \Magento\Customer\Model\CustomerFactory $customerFactory,
-        \Magento\User\Model\UserFactory $userFactory,
-        \Magento\Framework\Math\Random $randomUtility
-    ) {
+    public function __construct(\Magento\Backend\App\Action\Context $context,
+                                \MiniOrange\SP\Helper\SPUtility $spUtility,
+                                \Magento\Customer\Model\ResourceModel\Group\Collection $userGroupModel,
+                                \Magento\Authorization\Model\ResourceModel\Role\Collection $adminRoleModel,
+                                \Magento\User\Model\User $adminUserModel,
+                                \Magento\Customer\Model\Customer $customerModel,
+                                \Magento\Customer\Api\CustomerRepositoryInterface $customerRepository,
+                                \Magento\Store\Model\StoreManagerInterface $storeManager,
+                                \Magento\Framework\App\ResponseFactory $responseFactory,
+                                \MiniOrange\SP\Controller\Actions\CustomerLoginAction $customerLoginAction,
+                                \Magento\Customer\Model\CustomerFactory $customerFactory,
+                                \Magento\User\Model\UserFactory $userFactory,
+                                \Magento\Framework\Math\Random $randomUtility,
+				\Magento\Framework\App\State $_state,
+				\Magento\Framework\ObjectManager\ConfigLoaderInterface $_configLoader,
+				\Magento\Backend\Helper\Data $HelperBackend)
+    {
         //You can use dependency injection to get any class this observer may need.
-        parent::__construct($context, $spUtility);
-        $this->processUserValues();
+        $this->emailAttribute = $spUtility->getStoreConfig(SPConstants::MAP_EMAIL);
+        $this->emailAttribute = $spUtility->isBlank($this->emailAttribute) ? SPConstants::DEFAULT_MAP_EMAIL : $this->emailAttribute;
+        $this->usernameAttribute = $spUtility->getStoreConfig(SPConstants::MAP_USERNAME);
+        $this->usernameAttribute = $spUtility->isBlank($this->usernameAttribute) ? SPConstants::DEFAULT_MAP_USERN : $this->usernameAttribute;
+        $this->firstNameKey = $spUtility->getStoreConfig(SPConstants::MAP_FIRSTNAME);
+        $this->firstNameKey = $spUtility->isBlank($this->firstNameKey) ? SPConstants::DEFAULT_MAP_FN : $this->firstNameKey;
+        $this->lastNameKey = $spUtility->getStoreConfig(SPConstants::MAP_LASTNAME);
+        $this->lastNameKey = $spUtility->isBlank($this->lastNameKey) ? SPConstants::MAP_LASTNAME : $this->lastNameKey;
+        $this->groupNameKey = $spUtility->getStoreConfig(SPConstants::MAP_GROUP);
+
+        $this->firstName = $spUtility->getStoreConfig(SPConstants::MAP_FIRSTNAME);
+        $this->firstName = $spUtility->isBlank($this->firstName) ? SPConstants::DEFAULT_MAP_FN : $this->firstName;
+        $this->lastName = $spUtility->getStoreConfig(SPConstants::MAP_LASTNAME);
         $this->defaultRole = $spUtility->getStoreConfig(SPConstants::MAP_DEFAULT_ROLE);
+        $this->checkIfMatchBy = $spUtility->getStoreConfig(SPConstants::MAP_MAP_BY);
+        $this->groupName = $spUtility->getStoreConfig(SPConstants::MAP_GROUP);
         $this->dontAllowUnlistedUserRole = $spUtility->getStoreConfig(SPConstants::UNLISTED_ROLE);
         $this->dontCreateUserIfRoleNotMapped = $spUtility->getStoreConfig(SPConstants::CREATEIFNOTMAP);
+
+        $this->customerModel = $customerModel;
         $this->userGroupModel = $userGroupModel;
         $this->adminRoleModel = $adminRoleModel;
         $this->adminUserModel = $adminUserModel;
-        $this->customerModel = $customerModel;
+        $this->customerRepository=$customerRepository;
         $this->storeManager = $storeManager;
+        $this->responseFactory = $responseFactory;
         $this->customerLoginAction = $customerLoginAction;
         $this->customerFactory = $customerFactory;
         $this->userFactory = $userFactory;
         $this->randomUtility = $randomUtility;
+	$this->_state = $_state;
+	$this->HelperBackend = $HelperBackend;
+	$this->_configLoader = $_configLoader;	
+	
+        parent::__construct($context,$spUtility);
     }
 
 
     /**
      * Execute function to execute the classes function.
      *
-     * @return ResponseInterface|ResultInterface|string
      * @throws MissingAttributesException
-     * @throws LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function execute()
     {
         // throw an exception if attributes are empty
-        if (empty($this->attrs)) {
-            throw new MissingAttributesException;
-        }
+        if(empty($this->attrs)) throw new MissingAttributesException;
         // get and set all the necessary attributes
-        $user_email = array_key_exists($this->emailAttribute, $this->attrs) ? $this->attrs[$this->emailAttribute][0] : null;
-        $firstName = array_key_exists($this->firstName, $this->attrs) ? $this->attrs[$this->firstName][0] : null;
-        $lastName = array_key_exists($this->lastName, $this->attrs) ? $this->attrs[$this->lastName][0]: null;
-        $userName = array_key_exists($this->usernameAttribute, $this->attrs) ? $this->attrs[$this->usernameAttribute][0]: null;
-        $groupName = array_key_exists($this->groupName, $this->attrs) ? $this->attrs[$this->groupName][0]: null;
-        if ($this->spUtility->isBlank($this->defaultRole)) {
-            $this->defaultRole = SPConstants::DEFAULT_ROLE;
-        }
-        if ($this->spUtility->isBlank($this->checkIfMatchBy)) {
-            $this->checkIfMatchBy = SPConstants::DEFAULT_MAP_BY;
-        }
+        
+        $user_email = isset($this->attrs[$this->emailAttribute]) ? $this->attrs[$this->emailAttribute][0] : null;
+        $firstName =  isset($this->attrs[$this->firstNameKey]) ? $this->attrs[$this->firstNameKey][0] : null;
+        $lastName =   isset($this->attrs[$this->lastNameKey]) ? $this->attrs[$this->lastNameKey][0]: null;
+        $userName =   isset($this->attrs[$this->usernameAttribute]) ? $this->attrs[$this->usernameAttribute][0]: null;
+        $groupName =  isset($this->attrs[$this->groupNameKey]) ? $this->attrs[$this->groupNameKey][0]: null;
+
+        if($this->spUtility->isBlank($this->defaultRole)) $this->defaultRole = SPConstants::DEFAULT_ROLE;
+        if($this->spUtility->isBlank($this->checkIfMatchBy)) $this->checkIfMatchBy = SPConstants::DEFAULT_MAP_BY;
+
         // process the user
-        return $this->processUserAction(
-            $user_email,
-            $firstName,
-            $lastName,
-            $userName,
-            $groupName,
-            $this->defaultRole,
-            $this->checkIfMatchBy,
-            $this->attrs['NameID'][0]
-        );
+        $this->processUserAction($user_email, $firstName, $lastName, $userName, $groupName,
+            $this->defaultRole, $this->checkIfMatchBy, $this->attrs['NameID'][0]);
     }
 
 
@@ -118,111 +147,89 @@ class ProcessUserAction extends BaseUserAction implements SerializerInterface
      * @param $defaultRole
      * @param $checkIfMatchBy
      * @param $nameId
-     * @return ResponseInterface|ResultInterface|string
-     * @throws LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Exception
      */
-    private function processUserAction(
-        $user_email,
-        $firstName,
-        $lastName,
-        $userName,
-        $groupName,
-        $defaultRole,
-        $checkIfMatchBy,
-        $nameId
-    ) {
-        $admin = false;
-        // check if the a customer or admin user exists based on the username or email in SAML response
-        $user = $this->getAdminUserFromAttributes($checkIfMatchBy, $user_email, $userName);
-        if (!$user) {
+    private function processUserAction($user_email, $firstName, $lastName, $userName,
+                                       $groupName, $defaultRole, $checkIfMatchBy, $nameId)
+    {
+        $admin = FALSE;
+
+	$user = $this->getAdminUserFromAttributes($user_email);
+        $admin = is_a($user, '\Magento\User\Model\User') ? true : false;
+       
+
+        if(!$user) {
             $user = $this->getCustomerFromAttributes($user_email);
         }
+
         // if no user found then create user
-        if (!$user) {
-            $user = $this->createNewUser(
-                $user_email,
-                $firstName,
-                $lastName,
-                $userName,
-                $groupName,
-                $defaultRole,
-                $nameId,
-                $user,
-                $admin
-            );
+        if(!$user) {
+
+		$rolesMapped = $this->spUtility->getStoreConfig(SPConstants::ROLES_MAPPED);	
+		$admin = $this->isRoleMappingConfiguredForUser (unserialize($rolesMapped), $groupName);
+            $user = $this->createNewUser($user_email, $firstName, $lastName, $userName,
+                $groupName, $defaultRole, $nameId, $user, $admin);
         } else {
-            $this->updateUserAttributes($firstName, $lastName, $groupName, $defaultRole, $nameId, $user, $admin);
+            $user = $this->updateUserAttributes($firstName, $lastName, $groupName, $defaultRole, $nameId, $user, $admin);
         }
+
         // log the user in to it's respective dashboard
-        error_log("here");
-        error_log($this->relayState);
-        return $admin ? $this->redirectToBackendAndLogin($user->getId(), $this->sessionIndex, $this->relayState)
-            : $this->customerLoginAction->setUser($user)->setRelayState($this->relayState)->execute();
+	if($admin) {
+	
+            //flow stops here
+            $this->redirectToBackendAndLogin($user->getUsername(), $this->sessionIndex, $this->relayState);
+        } else {
+            $user = $this->customerModel->load($user->getId());
+            $this->customerLoginAction->setUser($user)->setRelayState($this->relayState)->execute();
+        }
     }
 
     /**
-     * This function udpates the user attributes based on the value
+     * This function updates the user attributes based on the value
      * in the SAML Response. This function decides if the user is
      * a customer or an admin and update it's attribute accordingly
      *
      * @param $firstName
      * @param $lastName
-     * @param $userName
      * @param $groupName
      * @param $defaultRole
-     * @param $user
+     * @param $nameId
+     * @param \Magento\Customer\Api\Data\CustomerInterface $user
+     * @param $admin
+     * @return \Magento\Customer\Api\Data\CustomerInterface|void
      * @throws \Exception
      */
-    private function updateUserAttributes(
-        $firstName,
-        $lastName,
-        $groupName,
-        $defaultRole,
-        $nameId,
-        $user,
-        &$admin
-    ) {
-        
+    private function updateUserAttributes($firstName, $lastName, $groupName,
+                                          $defaultRole, $nameId, $user, &$admin)
+    {
         $userId = $user->getId();
-        $admin = is_a($user, '\Magento\User\Model\User') ? true : false;
+
+        $admin = is_a($user,'\Magento\User\Model\User') ? TRUE : FALSE;
 
         // update the attributes
-        if (!$this->spUtility->isBlank($firstName)) {
-            $this->spUtility->saveConfig(SPConstants::DB_FIRSTNAME, $firstName, $userId, $admin);
-        }
-        if (!$this->spUtility->isBlank($lastName)) {
-            $this->spUtility->saveConfig(SPConstants::DB_LASTNAME, $lastName, $userId, $admin);
-        }
-        if (!$this->spUtility->isBlank($this->sessionIndex)) {
-            $this->spUtility->saveConfig(SPConstants::SESSION_INDEX, $this->sessionIndex, $userId, $admin);
-        }
-        if (!$this->spUtility->isBlank($nameId)) {
-            $this->spUtility->saveConfig(SPConstants::NAME_ID, $nameId, $userId, $admin);
-        }
+       if(!$this->spUtility->isBlank($firstName))
+            $this->spUtility->saveConfig(SPConstants::DB_FIRSTNAME,$firstName,$userId,$admin);
+        if(!$this->spUtility->isBlank($lastName))
+            $this->spUtility->saveConfig(SPConstants::DB_LASTNAME,$lastName,$userId,$admin);
+       
+		$session_details = array("NameID"=> $nameId,"SessionIndex"=>$this->sessionIndex);
+		$this->spUtility->saveConfig('extra',$session_details,$userId,$admin);
+	
+        $rolesMapped = $this->spUtility->getStoreConfig(SPConstants::ROLES_MAPPED);
+        $groupsMapped = $this->spUtility->getStoreConfig(SPConstants::GROUPS_MAPPED);
 
-        $role_mapping = $admin ? $this->unserialize($this->spUtility->getStoreConfig(SPConstants::ROLES_MAPPED))
-                                : $this->unserialize($this->spUtility->getStoreConfig(SPConstants::GROUPS_MAPPED));
+        $role_mapping = is_array($rolesMapped) && $admin ? $rolesMapped : array();
+        $role_mapping = is_array($groupsMapped) && !$admin ? array_merge($role_mapping,$groupsMapped) : $role_mapping;
+
         // process the roles
-        $setRole = $this->processRoles($defaultRole, $admin, $role_mapping, $groupName);
-        
-        if (!empty($setRole) && !empty($this->dontAllowUnlistedUserRole)
-            && $this->dontAllowUnlistedUserRole == 'checked') {
-            return;
-        }
+        $setRole = $this->processRoles($defaultRole,$admin,$role_mapping,$groupName);
+        if(!empty($setRole) && !empty($this->dontAllowUnlistedUserRole)
+            && $this->dontAllowUnlistedUserRole == 'checked') return;
 
-        if (empty($setRole)) {
-            return;
-        }
-        
-        //update roles
-        if ($admin) {
-            $user->setRoleIds($setRole)->setRoleUserId($user->getUserId())->saveRelations();
-        } else {
-            $user->setData('group_id', $setRole[0]); // customer cannot have multiple groups
-            $user->save();
-        }
-    }
+        return $user;
+    }     
+
 
 
     /**
@@ -234,17 +241,71 @@ class ProcessUserAction extends BaseUserAction implements SerializerInterface
      * @param $userId
      * @param $sessionIndex
      * @param $relayState
-     * @return string
      */
-    private function redirectToBackendAndLogin($userId, $sessionIndex, $relayState)
+    private function redirectToBackendAndLogin($userId,$sessionIndex,$relayState)
     {
+	$areaCode = 'adminhtml';
+    $username = $userId;
+
+    $this->_request->setPathInfo('/admin');
+
+		
+	try{
+	$this->_state->setAreaCode($areaCode);
+	} catch (\Magento\Framework\Exception\LocalizedException $exception) {
+      	 // do nothing
+  	 }
+   
+	 $this->_objectManager->configure($this->_configLoader->load($areaCode));
+	
+	$user = $this->_objectManager->get('Magento\User\Model\User')->loadByUsername($username);
+
+	
+	$session = $this->_objectManager->get('Magento\Backend\Model\Auth\Session');
+    $session->setUser($user);
+    $session->processLogin();
+
+	
+    if ($session->isLoggedIn()) {
+	
+        $cookieManager = $this->_objectManager->get('Magento\Framework\Stdlib\CookieManagerInterface');
+        $cookieValue = $session->getSessionId();
+        if ($cookieValue) {
+		
+            $sessionConfig = $this->_objectManager->get('Magento\Backend\Model\Session\AdminConfig');
+            $cookiePath = str_replace('autologin.php', 'index.php', $sessionConfig->getCookiePath());
+            $cookieMetadata = $this->_objectManager->get('Magento\Framework\Stdlib\Cookie\CookieMetadataFactory')
+                ->createPublicCookieMetadata()
+                ->setDuration(3600)
+                ->setPath($cookiePath)
+                ->setDomain($sessionConfig->getCookieDomain())
+                ->setSecure($sessionConfig->getCookieSecure())
+                ->setHttpOnly($sessionConfig->getCookieHttpOnly());
+           $cookieManager->setPublicCookie($sessionConfig->getName(), $cookieValue, $cookieMetadata);
+		if (class_exists('Magento\Security\Model\AdminSessionsManager')) { 
+			$adminSessionManager = $this->_objectManager->get('Magento\Security\Model\AdminSessionsManager'); 
+			$adminSessionManager->processLogin(); 
+		}        
+
+	}
+
+	//$backendUrl = $this->_objectManager->get('Magento\Backend\Model\UrlInterface');
+	$backendUrl = $this->HelperBackend->getHomePageUrl();	
+        //$url = str_replace('autologin.php', 'index.php', $url);
+        header('Location:  '. $backendUrl);
+        exit;
+    }
+
+
+/*
         // set the admin query parameters to be passed on to the backend for processing
-        $adminParams = ['option'=>SPConstants::LOGIN_ADMIN_OPT,'userid'=>$userId,
-                            'relaystate'=>$relayState,'sessionindex'=>$sessionIndex];
+        $adminParams = array('option'=>SPConstants::LOGIN_ADMIN_OPT,'userid'=>$userId,
+            'relaystate'=>$relayState,'sessionindex'=>$sessionIndex);
         // redirect the user to the backend
-        $url = $this->spUtility->getAdminUrl('adminhtml', $adminParams);
-        //return $this->spUtility->getAdminUrl('adminhtml',$adminParams);
-        return $this->getResponse()->setRedirect($url)->sendResponse();
+        $this->responseFactory->create()
+            ->setRedirect($this->spUtility->getAdminUrl('adminhtml',$adminParams))
+            ->sendResponse();
+        exit;  */
     }
 
 
@@ -259,9 +320,8 @@ class ProcessUserAction extends BaseUserAction implements SerializerInterface
      */
     private function generateEmail($userName)
     {
-       
         $siteurl = $this->spUtility->getBaseUrl();
-        $siteurl = substr($siteurl, strpos($siteurl, '//'), strlen($siteurl)-1);
+        $siteurl = substr($siteurl,strpos($siteurl,'//'),strlen($siteurl)-1);
         return $userName .'@'.$siteurl;
     }
 
@@ -276,24 +336,22 @@ class ProcessUserAction extends BaseUserAction implements SerializerInterface
      * @param $role_mapping
      * @param $groupName
      *
-     * @return array|string|void
      * @todo : remove the n2 complexity here
+     * @return array|string
      */
-    private function processRoles($defaultRole, &$admin, $role_mapping, $groupName)
+    private function processRoles($defaultRole,&$admin,$role_mapping,$groupName)
     {
-        
-        $role = [];
-        $setDefaultRole = $this->processDefaultRole($admin, $defaultRole);
-        if (empty($groupName) || empty($role_mapping)) {
-            return $setDefaultRole;
-        }
-        
-        foreach ($role_mapping as $role_value => $group_names) {
+        $role = array();
+        $setDefaultRole = $this->processDefaultRole($admin,$defaultRole);
+//        $setDefaultRole=1;
+        if(empty($groupName) || empty($role_mapping)) return $setDefaultRole;
+
+        foreach ($role_mapping as $role_value => $group_names)
+        {
             $groups = explode(";", $group_names);
-            foreach ($groups as $group) {
-                if (in_array($group, $groupName)) {
-                    array_push($role, $role_value);
-                }
+            foreach ($groups as $group)
+            {
+                if(in_array($group, $groupName)) array_push($role,$role_value);
             }
         }
         return empty($role) ? $setDefaultRole : $role;
@@ -306,31 +364,29 @@ class ProcessUserAction extends BaseUserAction implements SerializerInterface
      *
      * @param $admin
      * @param $defaultRole
-     * @return string|void
+     * @return string
      */
-    private function processDefaultRole($admin, $defaultRole)
+    private function processDefaultRole($admin,$defaultRole)
     {
-        if (is_null($defaultRole)) {
-            return;
-        }
+        if(is_null($defaultRole)) return;
         $groups = $this->userGroupModel->toOptionArray();
         $roles = $this->adminRoleModel->toOptionArray();
         $setDefaultRole = "";
-        if ($admin) {
-            foreach ($roles as $role) { // admin roles
-                $admin = $defaultRole==$role['label'] ? true : false;
-                if ($admin) {
-                    $setDefaultRole = $role['value'];
-                    break;
-                }
+        if($admin)
+        {
+            foreach($roles as $role)
+            { // admin roles
+                $admin = $defaultRole==$role['label'] ? TRUE : FALSE;
+                if($admin){ $setDefaultRole = $role['value'];
+                    break; }
             }
-        } else {
-            foreach ($groups as $group) { // customer roles
-                $admin = $defaultRole==$group['label']? false : true;
-                if (!$admin) {
-                    $setDefaultRole = $group['value'];
-                    break;
-                }
+        }
+        else
+        {
+            foreach($groups as $group)
+            { // customer roles
+                $admin = $defaultRole==$group['label']? FALSE : TRUE;
+                if(!$admin){ $setDefaultRole = $group['value']; break; }
             }
         }
         return $setDefaultRole;
@@ -348,58 +404,42 @@ class ProcessUserAction extends BaseUserAction implements SerializerInterface
      * @param $userName
      * @param $groupName
      * @param $defaultRole
-     * @param $nameId
      * @param $user
-     * @param $admin
      * @return \Magento\User\Model\User|null
-     * @throws LocalizedException
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @throws \Magento\Framework\Exception\LocalizedException
+     * @throws \Exception
      */
-    private function createNewUser(
-        $user_email,
-        $firstName,
-        $lastName,
-        $userName,
-        $groupName,
-        $defaultRole,
-        $nameId,
-        $user,
-        &$admin
-    ) {
+    private function createNewUser($user_email, $firstName, $lastName, $userName, $groupName,
+                                   $defaultRole, $nameId, $user, &$admin)
+    {
         // generate random string to be inserted as a password
-
-        
         $random_password = $this->randomUtility->getRandomString(8);
         $userName = !$this->spUtility->isBlank($userName)? $userName : $user_email;
         $email = !$this->spUtility->isBlank($user_email)? $user_email : $this->generateEmail($userName);
         $firstName = !$this->spUtility->isBlank($firstName) ? $firstName : $userName;
         $lastName = !$this->spUtility->isBlank($lastName) ? $lastName : $userName;
 
-        $roles_mapped = $this->unserialize($this->spUtility->getStoreConfig(SPConstants::ROLES_MAPPED));
-        $groups_mapped = $this->unserialize($this->spUtility->getStoreConfig(SPConstants::GROUPS_MAPPED));
-        $roles_mapped = !is_array($roles_mapped) ? [] : $roles_mapped;
-        $groups_mapped = !is_array($groups_mapped) ? [] : $groups_mapped;
-        $role_mapping = array_merge($roles_mapped, $groups_mapped);
-        
-        if (!empty($this->dontCreateUserIfRoleNotMapped)
-            && strcmp($this->dontCreateUserIfRoleNotMapped, 'checked') == 0 ) {
-            if (!$this->isRoleMappingConfiguredForUser($role_mapping, $groupName)) {
-                return null;
-            }
+        $rolesMapped = $this->spUtility->getStoreConfig(SPConstants::ROLES_MAPPED);
+        $groupsMapped = $this->spUtility->getStoreConfig(SPConstants::GROUPS_MAPPED);
+
+        $role_mapping = is_array($rolesMapped) && $admin ? $rolesMapped : array();
+        $role_mapping = is_array($groupsMapped) && !$admin ? array_merge($role_mapping,$groupsMapped) : $role_mapping;
+
+        if (strcasecmp( $this->dontCreateUserIfRoleNotMapped, 'checked') === 0 ) {
+            if (!$this->isRoleMappingConfiguredForUser($role_mapping, $groupName)) return NULL;
         }
 
         // process the roles
-        $setRole = $this->processRoles($defaultRole, $admin, $role_mapping, $groupName);
+        $setRole = $this->processRoles($defaultRole,$admin,$role_mapping,$groupName);
         // create admin or customer user based on the role
-        $user = $admin ? $this->createAdminUser($userName, $firstName, $lastName, $email, $random_password, $setRole)
-                        : $this->createCustomer($userName, $firstName, $lastName, $email, $random_password, $setRole);
-        // update session index and nameID in the database for thuser
-        if (!$this->spUtility->isBlank($this->sessionIndex)) {
-            $this->spUtility->saveConfig(SPConstants::SESSION_INDEX, $this->sessionIndex, $user->getId(), $admin);
-        }
-        if (!$this->spUtility->isBlank($nameId)) {
-            $this->spUtility->saveConfig(SPConstants::NAME_ID, $nameId, $user->getId(), $admin);
-        }
+        $user = $admin ? $this->createAdminUser($userName,$firstName,$lastName,$email,$random_password,$setRole)
+            : $this->createCustomer($userName,$firstName,$lastName,$email,$random_password,$setRole);
+		$userId = $user->getId();
+        // update session index and nameID in the database for the user
+        $session_details = array("NameID"=> $nameId,"SessionIndex"=>$this->sessionIndex);
+		$this->spUtility->saveConfig('extra',$session_details,$userId,$admin);
+	
+	
         return $user;
     }
 
@@ -411,21 +451,19 @@ class ProcessUserAction extends BaseUserAction implements SerializerInterface
      * users if roles are not mapped.$_COOKIE
      * @param $role_mapping
      * @param $groupName
-     *
      * @return bool
+     *
      * @todo : remove the n2 complexity here
      */
     private function isRoleMappingConfiguredForUser($role_mapping, $groupName)
     {
-        if (empty($groupName) || empty($role_mapping)) {
-            return false;
-        }
-        foreach ($role_mapping as $role_value => $group_names) {
+        if(empty($groupName) || empty($role_mapping)) return FALSE;
+        foreach ($role_mapping as $role_value => $group_names)
+        {
             $groups = explode(";", $group_names);
-            foreach ($groups as $group) {
-                if (in_array($group, $groupName)) {
-                    return true;
-                }
+            foreach ($groups as $group)
+            {
+                if(in_array($group, $groupName)) return TRUE;
             }
         }
     }
@@ -440,23 +478,22 @@ class ProcessUserAction extends BaseUserAction implements SerializerInterface
      * @param $email
      * @param $random_password
      * @param $role_assigned
-     * @return
-     * @throws LocalizedException
+     * @return \Magento\Customer\Model\Customer
+     * @throws \Magento\Framework\Exception\LocalizedException
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      */
-    private function createCustomer($userName, $firstName, $lastName, $email, $random_password, $role_assigned)
+    private function createCustomer($userName,$firstName,$lastName,$email,$random_password,$role_assigned)
     {
-        
         $websiteId = $this->storeManager->getWebsite()->getWebsiteId();
         $store = $this->storeManager->getStore();
         $storeId = $store->getStoreId();
         $customer = $this->customerFactory->create()
-                        ->setWebsiteId($websiteId)
-                        ->setFirstname($firstName)
-                        ->setLastname($lastName)
-                        ->setEmail($email)
-                        ->setPassword($random_password)
-                        ->save();
+            ->setWebsiteId($websiteId)
+            ->setFirstname($firstName)
+            ->setLastname($lastName)
+            ->setEmail($email)
+            ->setPassword($random_password)
+            ->save();
         $assign_role = is_array($role_assigned) ? $role_assigned[0] : $role_assigned;
         $customer->setGroupId($assign_role); // customer cannot have multiple groups
         $customer->save();
@@ -476,7 +513,7 @@ class ProcessUserAction extends BaseUserAction implements SerializerInterface
      * @return \Magento\User\Model\User
      * @throws \Exception
      */
-    private function createAdminUser($userName, $firstName, $lastName, $email, $random_password, $role_assigned)
+    private function createAdminUser($userName,$firstName,$lastName,$email,$random_password,$role_assigned)
     {
         $adminInfo = [
             'username'  => $userName,
@@ -491,7 +528,7 @@ class ProcessUserAction extends BaseUserAction implements SerializerInterface
         $assign_role = empty($assign_role) ? $assign_role : 'Administrator';
         $user = $this->userFactory->create();
         $user->setData($adminInfo);
-        $user->setRoleId($assign_role);
+        $user->setRoleId(1);
         $user->save();
         return $user;
     }
@@ -506,36 +543,38 @@ class ProcessUserAction extends BaseUserAction implements SerializerInterface
      * @param $user_email
      * @param $userName
      * @return array|\Magento\User\Model\User
-     * @throws LocalizedException
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
-    private function getAdminUserFromAttributes($checkIfMatchBy, $user_email, $userName)
+	private function getAdminUserFromAttributes($user_email)
     {
-        /** Using the resource model to fetch admin from database based on username or email */
-        $binds = ['email' => $user_email , 'username' => $userName];
-        $connection = $this->adminUserModel->getResource()->getConnection(); /** Get the database connection */
-        $select = $connection->select()->from($this->adminUserModel->getResource()->getMainTable())->where('email=:email OR username=:username');
-        $adminUser = $connection->fetchRow($select, $binds); /** Fetch rows. Returns FALSE if no row found */
+        $adminUser = false;
+
+        $connection = $this->adminUserModel->getResource()->getConnection();
+        $select = $connection->select()->from($this->adminUserModel->getResource()->getMainTable())->where('email=:email');
+        $binds = ['email' => $user_email];
+        $adminUser = $connection->fetchRow($select, $binds);
         $adminUser = is_array($adminUser) ? $this->adminUserModel->loadByUsername($adminUser['username']) : $adminUser;
         return $adminUser;
-    }
+    }  
 
-
+ 
     /**
      * Get the Customer User from the Attributes in the SAML response
      * Return false if the customer doesn't exist. The customer is fetched
      * by email only. There are no usernames to set for a Magento Customer.
      *
      * @param $user_email
-     * @param $userName
-     * @return bool|\Magento\Customer\Model\Customer
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @return bool|\Magento\Customer\Api\Data\CustomerInterface
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     private function getCustomerFromAttributes($user_email)
     {
-       
-        $this->customerModel->setWebsiteId($this->storeManager->getStore()->getWebsiteId());
-        $customer = $this->customerModel->loadByEmail($user_email);
-        return !is_null($customer->getId()) ? $customer : false;
+        try {
+            $customer = $this->customerRepository->get($user_email, $this->storeManager->getStore()->getWebsiteId());
+            return !is_null($customer) ? $customer : FALSE;
+        } catch (NoSuchEntityException $e) {
+            return FALSE;
+        }
     }
 
 
@@ -545,7 +584,7 @@ class ProcessUserAction extends BaseUserAction implements SerializerInterface
         $this->attrs = $attrs;
         return $this;
     }
-    
+
 
     /** The setter function for the RelayState Parameter */
     public function setRelayState($relayState)
@@ -560,31 +599,5 @@ class ProcessUserAction extends BaseUserAction implements SerializerInterface
     {
         $this->sessionIndex = $sessionIndex;
         return $this;
-    }
-
-    /**
-     * Serialize data into string
-     *
-     * @param string|int|float|bool|array|null $data
-     * @return string|bool
-     * @throws \InvalidArgumentException
-     * @since 101.0.0
-     */
-    public function serialize($data)
-    {
-        // TODO: Implement serialize() method.
-    }
-
-    /**
-     * Unserialize the given string
-     *
-     * @param string $string
-     * @return string|int|float|bool|array|null
-     * @throws \InvalidArgumentException
-     * @since 101.0.0
-     */
-    public function unserialize($string)
-    {
-        // TODO: Implement unserialize() method.
     }
 }

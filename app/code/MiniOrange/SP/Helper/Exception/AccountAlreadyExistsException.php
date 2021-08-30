@@ -11,14 +11,14 @@ use MiniOrange\SP\Helper\SPMessages;
  */
 class AccountAlreadyExistsException extends \Exception
 {
-    public function __construct()
-    {
-        $message     = SPMessages::parse('ACCOUNT_EXISTS');
-        $code         = 108;
-        parent::__construct($message, $code, null);
+	public function __construct() 
+	{
+		$message 	= SPMessages::parse('ACCOUNT_EXISTS');
+		$code 		= 108;		
+        parent::__construct($message, $code, NULL);
     }
 
-    public function __toString()
+    public function __toString() 
     {
         return __CLASS__ . ": [{$this->code}]: {$this->message}\n";
     }
