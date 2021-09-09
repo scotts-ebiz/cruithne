@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<!-- This file defines our Events and the
+       observers that are listening to the events -->
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:framework:Event/etc/events.xsd">
+    
+    <!-- This event is invoked before logout Customer logout -->
+    <event name="controller_action_predispatch_customer_account_logout">
+        <observer name="saml_sp_logout_before_observer" instance="MiniOrange\SP\Observer\CustomerLogoutObserver" />
+    </event>
+    <!-- This event is invoked after logout Customer logout -->
+    <event name="controller_action_postdispatch_customer_account_logout">
+        <observer name="saml_sp_logout_after_observer" instance="MiniOrange\SP\Observer\CustomerLogoutObserver" />
+    </event>
+
+    <event name="controller_action_predispatch">
+        <observer name="saml_sp_observer" instance="MiniOrange\SP\Observer\RedirectToIDPObserver" />
+    </event>
+</config>

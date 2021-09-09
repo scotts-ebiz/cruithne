@@ -2,6 +2,9 @@
 
 namespace SMG\BackendService\Model\Service;
 
+use Magento\Framework\Api\SearchCriteriaBuilder;
+use Magento\Sales\Api\Data\ShipmentItemInterface;
+use Magento\Sales\Api\ShipmentItemRepositoryInterface;
 use SMG\BackendService\Model\Client\Api;
 use SMG\BackendService\Helper\Data as Config;
 use \Magento\Framework\Webapi\Rest\Request;
@@ -9,9 +12,25 @@ use \Magento\Sales\Api\OrderRepositoryInterface;
 use \Magento\Customer\Model\AddressFactory;
 use \Magento\Sales\Api\Data\TransactionSearchResultInterfaceFactory as TrasactionResultInterface;
 use \Psr\Log\LoggerInterface;
+use Magento\Catalog\Api\ProductRepositoryInterface;
+use Magento\Store\Model\StoreManagerInterface;
+use Magento\Sales\Api\Data\ShipmentInterface;
+use Magento\Sales\Api\Data\ShipmentTrackInterface;
+use Magento\Sales\Api\ShipmentRepositoryInterface;
 
 class Order
 {
+
+    /**
+     * @var SearchCriteriaBuilder
+     */
+    protected $searchCriteriaBuilder;
+
+    /**
+     * @var ShipmentItemRepositoryInterface
+     */
+    protected $shipmentItem;
+
     /**
      * @var Api
      */
@@ -43,28 +62,57 @@ class Order
     private $trasactionResultInterface;
 
     /**
+     * @var ProductRepository
+     */
+    protected $productRepository;
+
+    /**
+     * @var StoreManagerInterface
+     */
+    protected $storeManager;
+
+    /**
+     * @var ShipmentRepositoryInterface
+     */
+    private $shipmentRepository;
+
+    /**
      * Order constructor.
      * @param Api $client
      * @param Config $config
+     * @param SearchCriteriaBuilder $searchCriteriaBuilder
+     * @param ShipmentItemRepositoryInterface $shipmentItemRepositoryInterface
      * @param OrderRepositoryInterface $orderRepository
      * @param AddressFactory $addressFactory
      * @param TrasactionResultInterface $trasactionResultInterface
      * @param LoggerInterface $logger
+     * @param StoreManagerInterface $storeManager
+     * @param ShipmentRepositoryInterface $shipmentRepository
      */
     public function __construct(
         Api $client,
         Config $config,
+        SearchCriteriaBuilder $searchCriteriaBuilder,
+        ShipmentItemRepositoryInterface $shipmentItem,
         OrderRepositoryInterface $orderRepository,
         AddressFactory $addressFactory,
         TrasactionResultInterface $trasactionResultInterface,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        ProductRepositoryInterface $productRepository,
+        StoreManagerInterface $storeManager,
+        ShipmentRepositoryInterface $shipmentRepository
     ) {
         $this->client = $client;
         $this->config = $config;
         $this->orderRepository = $orderRepository;
+        $this->searchCriteriaBuilder = $searchCriteriaBuilder;
+        $this->shipmentItem = $shipmentItem;
         $this->addressFactory = $addressFactory;
         $this->trasactionResultInterface = $trasactionResultInterface;
         $this->logger = $logger;
+        $this->productRepository = $productRepository;
+        $this->storeManager = $storeManager;
+        $this->shipmentRepository = $shipmentRepository;
     }
 
     /**
@@ -125,9 +173,7 @@ class Order
         $transactionId = $transaction->getData('txn_id');
         $urlParts = parse_url($order->getStore()->getBaseUrl());
         $payment = $order->getPayment();
-        $methodname = $payment->getMethod();
         $additionalInfo = ($payment->getAdditionalInformation());
-        $last4 = $additionalInfo['last_four'];
         $cc_type = $this->config->getCardFullName($payment->getData('cc_type'));
         $shippingData = $order->getShippingAddress()->getData();
         $billingData = $order->getBillingAddress()->getData();
@@ -150,8 +196,7 @@ class Order
             $shippingUpdatedAt = $shippingaddressObject->getData('updated_at');
         }
 
-        $items = array();
-        $params = array();
+        $params = [];
 
         $params['transId'] = $this->config->generateUuid();
         $params['sourceService'] = 'WEB';
@@ -174,6 +219,9 @@ class Order
         $params['billingAddress']['postalCode'] = $billingData['postcode'];
         $params['billingAddress']['updatedAt'] = $billingCreatedAt;
         $params['billingAddress']['createdAt'] = $billingUpdatedAt;
+        $params['billingAddress']['firstName'] = $billingData['firstname'];
+        $params['billingAddress']['lastName'] = $billingData['lastname'];
+        $params['billingAddress']['phone'] = $billingData['telephone'];
 
         $params['shippingAddress']['addressId'] = ($shipping_customer_address_id != null ? $shipping_customer_address_id : 0);;
         $params['shippingAddress']['street1'] = $order->getShippingAddress()->getStreet(1)[0];
@@ -184,9 +232,13 @@ class Order
         $params['shippingAddress']['postalCode'] = $shippingData['postcode'];
         $params['shippingAddress']['updatedAt'] = $shippingCreatedAt;
         $params['shippingAddress']['createdAt'] = $shippingUpdatedAt;
+        $params['shippingAddress']['firstName'] = $shippingData['firstname'];
+        $params['shippingAddress']['lastName'] = $shippingData['lastname'];
+        $params['shippingAddress']['phone'] = $shippingData['telephone'];
 
         $i = 0;
         foreach ($order->getAllItems() as $item) {
+            $product = $this->productRepository->getById($item->getProductId());
             $params['products'][$i]['productId'] = $item->getProductId();
             $params['products'][$i]['sku'] = $item->getSku();
             $params['products'][$i]['productName'] = $item->getName();
@@ -203,8 +255,21 @@ class Order
             $params['products'][$i]['applicationWindowStartDate'] = $applicationWindowStartDate;
             $params['products'][$i]['applicationWindowEndDate'] = $applicationWindowEndDate;
             $params['products'][$i]['season'] = $seasonname;
+            $params['products'][$i]['generatedProductId'] = '';
+            $params['products'][$i]['coverage'] = '';
+            $params['products'][$i]['description'] = $product->getDescription();
+            $imageUrl = $this->storeManager->getStore($product->getStoreId())
+                    ->getBaseUrl(\Magento\Framework\UrlInterface::URL_TYPE_MEDIA ). 'catalog/product';
+            $thumbnailUrl = $imageUrl . ($product->getThumbnail() ?? '');
+            $params['products'][$i]['thumbnailImage'] = $thumbnailUrl;
+            $params['products'][$i]['shortDescription'] = $product->getShortDescription();
+            $params['products'][$i]['thumbnailLabel'] = $product->getThumbnailLabel();
+            $params['products'][$i]['shipStartDate'] = $order->getData('ship_start_date');
+            $params['products'][$i]['shipEndDate'] = $order->getData('ship_end_date');
             $i++;
         }
+
+        $params['shipments'] =  $this->getShipmentInfo($order);
 
         $params['shippingCondition'] = $order->getShippingDescription();
         $params['shippingCost'] = $order->getShippingAmount();
@@ -220,6 +285,7 @@ class Order
         $params['shippingMethod'] = $order->getShippingMethod();;
         $params['couponCode'] = $order->getCouponCode();
 
+        $params['websiteUrl'] = $order->getCouponCode();
         if ($urlParts['host']) {
             $array = explode('.', $urlParts['host']);
             $count = count($array);
@@ -228,18 +294,88 @@ class Order
             }
         }
 
+
         $params['createGuestCustomer'] = true;
         $params['doNotSaveExternally'] = true;
-        $params['last_4'] = $last4;
+        if(isset($additionalInfo['last_four'])){
+            $last4 = $additionalInfo['last_four'];
+        }else{
+            $last4 = '';
+        }
         $params['cc_type'] = $cc_type;
+        $params['ccLast4'] = $last4;
+
+        $params['parentOrderId'] = $order->getParentOrderId();
+        $params['orderId'] = $order->getLsOrderId();
+        $params['subType'] = $order->getSubType();
+        $params['recurlyPlanCode'] = $order->getRecurlyPlanCode();
+        $params['recurlyId'] = $order->getRecurlyId();
+        $params['shippingStartDate'] = $order->getShipStartDate();
+        $params['shippingEndDate'] = $order->getShipEndDate();
+        $params['paid'] = '';
+        $params['price'] = '';
+        $params['masterSubscriptionTaxAmount'] = '';
+        $params['masterSubscriptionDiscountAmount'] = '';
+        $params['invoiceTaxRate'] = '';
+        $params['orderStatus'] = $order->getStatus();
+        $params['cancellationDate'] = '';
+        $params['completedQuizId'] = '';
+        $params['invoiceTaxRegion'] = '';
+        $params['recommendationId'] = '';
+        $params['m2MasterSubscriptionId'] = '';
+        $params['m2SubscriptionId'] = '';
+        $params['hdrDiscFixedAmount'] = '';
+        $params['hdrDiscPerc'] = '';
+        $params['hdrDiscCondCode'] = '';
+        $params['ccType'] = $cc_type;
+        $params['lawnZone'] = '';
+        $params['intervalDbEntityId'] = '';
+        $params['migrated'] = '';
+
         $this->logger->info("OrderService Request :",$params);
         return $params;
     }
 
+
     /**
-    * @param $id
-    * @param string $noteMessage
-    */
+     * @param $order
+     */
+    public function getShipmentInfo($order) {
+        $shipmentCollection = $order->getShipmentsCollection();
+        $j=0;
+        $data = array();
+        foreach ($shipmentCollection as $shipment) {
+            $data[$j]['generatedShipmentId'] = $shipment->getData('order_id');
+            $data[$j]['orderId'] = $shipment->getData('order_id');
+            $data[$j]['shippingId'] = $shipment->getData('order_id');
+
+            $shipmentTracking = $this->shipmentRepository->get($shipment->getData('entity_id'));
+
+            $shipmentTrackingNumbers = [];
+
+            foreach ($shipmentTracking->getTracks() as $track) {
+                $shipmentTrackingNumbers[] = $track->getData('track_number');
+            }
+
+            $data[$j]['trackingNumber'] = implode(',', $shipmentTrackingNumbers);
+
+            foreach($shipment->getItems() as $sItem)
+            {
+                $data[$j]['shipmentItems'][$sItem->getData('product_id')]['generatedShipmentItemId'] = $shipment->getData('order_id');
+                $data[$j]['shipmentItems'][$sItem->getData('product_id')]['shipmentId'] = $shipment->getData('entity_id');
+                $data[$j]['shipmentItems'][$sItem->getData('product_id')]['sku'] = $sItem->getData('sku');
+                $data[$j]['shipmentItems'][$sItem->getData('product_id')]['qty'] = $sItem->getData('qty');
+                $data[$j]['shipmentItems'][$sItem->getData('product_id')]['createdAt'] = $shipment->getData('created_at');
+                $data[$j]['shipmentItems'][$sItem->getData('product_id')]['updatedAt'] = $shipment->getData('updated_at');
+            }
+            $data[$j]['createdAt'] = $shipment->getData('created_at');
+            $data[$j]['updatedAt'] = $shipment->getData('updated_at');
+            $j++;
+        }
+
+        return $data;
+    }
+
     public function postOrderCommentNote(
     $orderId,
     $noteMessage

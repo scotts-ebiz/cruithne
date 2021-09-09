@@ -29,10 +29,10 @@ class Cart
         RequestInterface $request
     ) {
         $quoteId = $this->request->getParam('cart');
-        if ($quoteId) {
+        if ($quoteId && !is_array($quoteId)) {
             $quoteIdMask = $this->quoteIdMaskFactory->create()->load($quoteId, 'masked_id');
             $_quoteId = $quoteIdMask->getQuoteId();
-            if(!empty($_quoteId)){
+            if (!empty($_quoteId)) {
                 $this->quoteFactory->create()->load($_quoteId);
                 $this->checkoutSession->setQuoteId($_quoteId);
             }

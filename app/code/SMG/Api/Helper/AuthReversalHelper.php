@@ -9,11 +9,9 @@ use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction\CollectionFactor
 use Magento\Sales\Model\ResourceModel\Order\Payment\Transaction as TransactionResource;
 use Magento\Sales\Model\ResourceModel\Order\Status\History as HistoryResource;
 use Psr\Log\LoggerInterface;
-use SMG\Sap\Model\SapOrderHistoryFactory;
 use SMG\Sap\Model\ResourceModel\SapOrder as SapOrderResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
-use SMG\Sap\Model\ResourceModel\SapOrderHistory as SapOrderHistoryResource;
 
 class AuthReversalHelper
 {
@@ -82,16 +80,6 @@ class AuthReversalHelper
     protected $_sapOrderResource;
 
     /**
-     * @var SapOrderHistoryFactory
-     */
-    protected $_sapOrderHistoryFactory;
-
-    /**
-     * @var SapOrderHistoryResource
-     */
-    protected $_sapOrderHistoryResource;
-
-    /**
      * AuthReversalHelper constructor.
      *
      * @param LoggerInterface $logger
@@ -105,8 +93,6 @@ class AuthReversalHelper
      * @param HistoryFactory $historyFactory
      * @param HistoryResource $historyResource
      * @param SapOrderResource $sapOrderResource
-     * @param SapOrderHistoryFactory $sapOrderHistoryFactory
-     * @param SapOrderHistoryResource $sapOrderHistoryResource
      */
     public function __construct(LoggerInterface $logger,
         ResponseHelper $responseHelper,
@@ -118,9 +104,7 @@ class AuthReversalHelper
         SapOrderBatch $sapOrderBatchResource,
         HistoryFactory $historyFactory,
         HistoryResource $historyResource,
-        SapOrderResource $sapOrderResource,
-        SapOrderHistoryFactory $sapOrderHistoryFactory,
-        SapOrderHistoryResource $sapOrderHistoryResource)
+        SapOrderResource $sapOrderResource)
     {
         $this->_logger = $logger;
         $this->_responseHelper = $responseHelper;
@@ -133,8 +117,6 @@ class AuthReversalHelper
         $this->_historyFactory = $historyFactory;
         $this->_historyResource = $historyResource;
         $this->_sapOrderResource = $sapOrderResource;
-        $this->_sapOrderHistoryFactory = $sapOrderHistoryFactory;
-        $this->_sapOrderHistoryResource = $sapOrderHistoryResource;
     }
 
     /**
@@ -325,28 +307,11 @@ class AuthReversalHelper
              */
             $sapOrder = $this->_sapOrderResource->getSapOrderByOrderId($orderId);
 
-            // get the current order status
-            $previousOrderStatus = $sapOrder->getData('order_status');
-
             // change the status because the capture failure
             $sapOrder->setData('order_status', $orderStatus);
 
             // update the sap order
             $this->_sapOrderResource->save($sapOrder);
-
-            // create a new history
-            /**
-             * @var \SMG\Sap\Model\SapOrderHistory $sapOrderHistory
-             */
-            $sapOrderHistory = $this->_sapOrderHistoryFactory->create();
-            $sapOrderHistory->setData('order_sap_id', $sapOrder->getId());
-            $sapOrderHistory->setData('order_status', $orderStatus);
-
-            // create order status notes
-            $orderStatusNotes = 'Order Status was ' . $previousOrderStatus . ' now ' . $orderStatus . '. ';
-            $sapOrderHistory->setData('order_status_notes', $orderStatusNotes);
-
-            $this->_sapOrderHistoryResource->save($sapOrderHistory);
         }
         catch (\Exception $e)
         {

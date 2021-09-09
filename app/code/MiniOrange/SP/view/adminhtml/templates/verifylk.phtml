@@ -1,0 +1,52 @@
+<?php
+ 
+    /*===========================================================================================
+						    THIS FILE IS PREMIUM PLUGIN SPECIFIC 
+    =============================================================================================*/
+
+    $url = $this->getMiniOrangeUrl().'/moas/login'.'?redirectUrl='.$this->getMiniOrangeUrl().'/moas/viewlicensekeys';
+    $support = $this->getExtensionPageUrl('support');
+    $formKey = $this->getBlockHtml('formkey');
+
+    echo '
+            <h3>VERIFY YOUR LICENCE KEY</h3><hr>
+            <div class="mo_note">
+                <span class="btn-link">Where is my key?</span>
+                <div hidden class="collapse">
+                    You can find all your used and unused keys under the <i>View License Key</i> Section. <a href="'.$url.'" target="_blank" >
+                    Click Here</a> to see your keys. 
+                </div>
+            </div>
+            <div class="mo_note">
+                <span class="btn-link">My License Key is not getting activated?</span>
+                <div hidden class="collapse">
+                    Go to the support section or <a href="'.$support.'">Click here</a>. Drop us a query from the support page or an email at 
+                    info@xecurify.com and we will get in touch to help you setup the module and site for SSO.  
+                </div>
+            </div>
+            <br/>
+            <form name="f" method="post" action="">
+                '.$formKey.'
+                <input type="hidden" name="option" value="verifyLicenseKey" />
+                <table class="mo_idp_table_layout">
+                    <tr>
+                        <td><b><font color="#FF0000">*</font>License Key:</b></td>
+                        <td><input class="mosp_table_textbox" required type="text"
+                            name="lk" placeholder="Enter your license key to activate the plugin" /></td>
+                    </tr>
+                </table>
+                <br/>
+                <div style="padding-left:1.2em">
+                    <b>Please read and accept the following before activating your license key :</b>
+                    <div style="border-left: solid 2px rgba(128, 128, 128, 0.65);margin-top: 10px;padding-left: 10px;">
+                        <div style="float:left;height:50px;margin-right:5px;"><input type="checkbox" id="lk_check1" value="1"/></div>
+                        <div><b><i>License key you have entered here is associated with this site instance.</i></b> If you want to re-install the plugin for any reason, you should deactivate and then delete the plugin from WordPress console. Manually deleting the plugin folder will not free your key for re-use.</div>
+                        <br/>
+                        <div style="float:left;height:50px;margin-right:5px;"><input type="checkbox" id="lk_check2" value="1"/></div>
+                        <div><b><i>This is not a developer license.</i></b> Making any kind of change to the plugin\'s code will delete all your configuration and make the plugin unusable.</div>
+                    </div>
+                </div>
+                <br/>
+                <input type="submit" name="submit" disabled="true" id="activate_plugin" value="Activate License" class="button button-primary button-large" /> 
+            </form>';
+            

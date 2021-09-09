@@ -17,4 +17,6 @@
     <preference for="SMG\Api\Api\Interfaces\OrderInfoManagementInterface" type="SMG\Api\Api\OrderInfoManagement" />
     <preference for="SMG\Api\Api\Interfaces\CoreServicesInterface" type="SMG\Api\Api\CoreServices" />
 	<preference for="SMG\Api\Api\Interfaces\HealthCheckInterface" type="SMG\Api\Api\HealthCheckManagement" />
+    <preference for="SMG\Api\Api\Interfaces\CleanUpManagementInterface" type="SMG\Api\Api\CleanUpManagement" />
+    <preference for="SMG\Api\Api\Interfaces\FraudManagementInterface" type="SMG\Api\Api\FraudManagement" />
 </config>

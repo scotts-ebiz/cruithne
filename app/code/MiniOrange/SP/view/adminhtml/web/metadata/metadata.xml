@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<EntityDescriptor xmlns="urn:oasis:names:tc:SAML:2.0:metadata" entityID="http://ec2-35-175-223-175.compute-1.amazonaws.com/mage2/pub/index.php/mospsaml/metadata/index">
+  <SPSSODescriptor WantAuthnRequestsSigned="1" AuthnRequestsSigned="1" protocolSupportEnumeration="urn:oasis:names:tc:SAML:2.0:protocol">
+    <KeyDescriptor xmlns:ds="http://www.w3.org/2000/09/xmldsig#" use="signing">
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+          <ds:X509Certificate>MIID7TCCAtWgAwIBAgIJAMcsf4R7oVMZMA0GCSqGSIb3DQEBCwUAMIGMMQswCQYDVQQGEwJJTjELMAkGA1UECAwCTUgxDTALBgNVBAcMBFBVTkUxEzARBgNVBAoMCk1JTklPUkFOR0UxEzARBgNVBAsMCk1JTklPUkFOR0UxEzARBgNVBAMMCk1JTklPUkFOR0UxIjAgBgkqhkiG9w0BCQEWE2luZm9AbWluaW9yYW5nZS5jb20wHhcNMTUxMDMwMTA1NDQ4WhcNMjAxMDI4MTA1NDQ4WjCBjDELMAkGA1UEBhMCSU4xCzAJBgNVBAgMAk1IMQ0wCwYDVQQHDARQVU5FMRMwEQYDVQQKDApNSU5JT1JBTkdFMRMwEQYDVQQLDApNSU5JT1JBTkdFMRMwEQYDVQQDDApNSU5JT1JBTkdFMSIwIAYJKoZIhvcNAQkBFhNpbmZvQG1pbmlvcmFuZ2UuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsxulwAiXvaJvT6JEckasFcHY7eME2hjClXPKtGJ6okiPOPQjMAv+zYxZ2beAUPWxg1pfE7HIdTLh6A0yD2Afnw9ayKmCGiq6rX8TqXzEo8J01M/zGRBXxw+QCjB7BpWpHUVcdfagUEJrURHRcx6VXXf/9xprbtv7Wsx/WVhqGl6MCtj4m5tTsHyYD9BOawxtmaq7dNSECkt9qNUfu+EvTYk3LHI3IoJR4HcMTsYjTbJo6lHNT18FQqReWcjNXCTvH17Zit4MaH8WGlL32KV62EyTPZwjqrmUHqoXfj87e+1XOpYk+Z/dApMC47I6++yq+FlyvVne0w48SAHYt4M1rQIDAQABo1AwTjAdBgNVHQ4EFgQUyihK6rNyl3Sx9Onzzup0qko7z7QwHwYDVR0jBBgwFoAUyihK6rNyl3Sx9Onzzup0qko7z7QwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEAPnp6Q5jfZ33/0hbeeVr+ts5PTxKKdPakoGJWAbgqXzf4h8TuCZMjPBE6g7jk1JqvRFWxg7zx+qhvlWRnwfWl9yAffY0TbBx+EU3kyTYBg2UnffUaSvoko1UzFK1v4dOP2u+wTP8nM/I+HxBjVVcgT+7zOK9Y6GXe1spjdQb2ELdBQ2p7NFXFF4uy6jzN9yw2xBid7ZLkJwGeOykZrrd1YJzGZJoGedpTxrkqbIqRUFnCqKRgB5IzhXO1Xj+xgv8qr0KNJ4oqf58OEHnx2XF21RY0F9vpQ6/BPQKqO4pWjEuWanV36AZ5nHw6PeJXEsK2RUnABeA/xzjxH/NT6Fh3dQ==</ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </KeyDescriptor>
+    <KeyDescriptor xmlns:ds="http://www.w3.org/2000/09/xmldsig#" use="encryption">
+      <ds:KeyInfo xmlns:ds="http://www.w3.org/2000/09/xmldsig#">
+        <ds:X509Data>
+          <ds:X509Certificate>MIID7TCCAtWgAwIBAgIJAMcsf4R7oVMZMA0GCSqGSIb3DQEBCwUAMIGMMQswCQYDVQQGEwJJTjELMAkGA1UECAwCTUgxDTALBgNVBAcMBFBVTkUxEzARBgNVBAoMCk1JTklPUkFOR0UxEzARBgNVBAsMCk1JTklPUkFOR0UxEzARBgNVBAMMCk1JTklPUkFOR0UxIjAgBgkqhkiG9w0BCQEWE2luZm9AbWluaW9yYW5nZS5jb20wHhcNMTUxMDMwMTA1NDQ4WhcNMjAxMDI4MTA1NDQ4WjCBjDELMAkGA1UEBhMCSU4xCzAJBgNVBAgMAk1IMQ0wCwYDVQQHDARQVU5FMRMwEQYDVQQKDApNSU5JT1JBTkdFMRMwEQYDVQQLDApNSU5JT1JBTkdFMRMwEQYDVQQDDApNSU5JT1JBTkdFMSIwIAYJKoZIhvcNAQkBFhNpbmZvQG1pbmlvcmFuZ2UuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAsxulwAiXvaJvT6JEckasFcHY7eME2hjClXPKtGJ6okiPOPQjMAv+zYxZ2beAUPWxg1pfE7HIdTLh6A0yD2Afnw9ayKmCGiq6rX8TqXzEo8J01M/zGRBXxw+QCjB7BpWpHUVcdfagUEJrURHRcx6VXXf/9xprbtv7Wsx/WVhqGl6MCtj4m5tTsHyYD9BOawxtmaq7dNSECkt9qNUfu+EvTYk3LHI3IoJR4HcMTsYjTbJo6lHNT18FQqReWcjNXCTvH17Zit4MaH8WGlL32KV62EyTPZwjqrmUHqoXfj87e+1XOpYk+Z/dApMC47I6++yq+FlyvVne0w48SAHYt4M1rQIDAQABo1AwTjAdBgNVHQ4EFgQUyihK6rNyl3Sx9Onzzup0qko7z7QwHwYDVR0jBBgwFoAUyihK6rNyl3Sx9Onzzup0qko7z7QwDAYDVR0TBAUwAwEB/zANBgkqhkiG9w0BAQsFAAOCAQEAPnp6Q5jfZ33/0hbeeVr+ts5PTxKKdPakoGJWAbgqXzf4h8TuCZMjPBE6g7jk1JqvRFWxg7zx+qhvlWRnwfWl9yAffY0TbBx+EU3kyTYBg2UnffUaSvoko1UzFK1v4dOP2u+wTP8nM/I+HxBjVVcgT+7zOK9Y6GXe1spjdQb2ELdBQ2p7NFXFF4uy6jzN9yw2xBid7ZLkJwGeOykZrrd1YJzGZJoGedpTxrkqbIqRUFnCqKRgB5IzhXO1Xj+xgv8qr0KNJ4oqf58OEHnx2XF21RY0F9vpQ6/BPQKqO4pWjEuWanV36AZ5nHw6PeJXEsK2RUnABeA/xzjxH/NT6Fh3dQ==</ds:X509Certificate>
+        </ds:X509Data>
+      </ds:KeyInfo>
+    </KeyDescriptor>
+    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="http://ec2-35-175-223-175.compute-1.amazonaws.com/mage2/pub/index.php/mospsaml/actions/spObserver"/>
+    <SingleLogoutService Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect" Location="http://ec2-35-175-223-175.compute-1.amazonaws.com/mage2/pub/index.php/mospsaml/actions/spObserver"/>
+    <NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress</NameIDFormat>
+    <NameIDFormat>urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified</NameIDFormat>
+    <IDPSSODescriptor Binding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" Location="http://ec2-35-175-223-175.compute-1.amazonaws.com/mage2/pub/index.php/mospsaml/actions/spObserver" Index="1"/>
+  </SPSSODescriptor>
+</EntityDescriptor>

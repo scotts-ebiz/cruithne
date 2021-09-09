@@ -15,22 +15,25 @@
         "avalara/avatax-magento": "^1.5",
         "composer/composer": "@alpha",
         "cweagans/composer-patches": "^1.6",
-        "gigya/magento2-im": "^5.4",
-        "magento/composer-root-update-plugin": "~0.1",
-        "magento/product-enterprise-edition": "2.3.6",
-        "magepal/magento2-googletagmanager": "^2.3",
-        "mageplaza/module-smtp": "^1.2",
+        "gigya/magento2-im": "5.6.1",
+        "facebook/facebook-for-magento2": "^1.4.2",
+        "magento/composer-root-update-plugin": "^1.1",
+        "magento/product-enterprise-edition": "2.3.7",
+        "magepal/magento2-googletagmanager": "^2.6",
+        "mageplaza/module-google-recaptcha": "^4.0",
+        "mageplaza/module-smtp": "^4.0",
+        "mirasvit/module-fraud-check": "*",
         "recurly/recurly-client": "^2.12",
-        "snowdog/frontools": "^1.6",
-        "zaius/zaius-magento-2": "^1.0"
+        "snowdog/frontools": "^1.11",
+        "zaius/zaius-magento-2": "^1.0.7"
     },
     "require-dev": {
-        "allure-framework/allure-phpunit": "~1.2.0",
-        "friendsofphp/php-cs-fixer": "~2.12.0",
-        "lusitanian/oauth": "~0.8.10",
-        "magento/magento-coding-standard": "~1.0.0",
-        "magento/magento2-functional-testing-framework": "~2.3.14",
-        "pdepend/pdepend": "2.5.2",
+        "allure-framework/allure-phpunit": "~1.2.3",
+        "friendsofphp/php-cs-fixer": "~2.18.2",
+        "lusitanian/oauth": "~0.8.11",
+        "magento/magento-coding-standard": "~6.0.0",
+        "magento/magento2-functional-testing-framework": "~2.6.5",
+        "pdepend/pdepend": "2.8.0",
         "phpmd/phpmd": "@stable",
         "phpunit/phpunit": "~6.5.0",
         "sebastian/phpcpd": "~3.0.0",
@@ -82,7 +85,8 @@
     "repositories": {
         "0": {
             "type": "composer",
-            "url": "https://repo.magento.com/"
+            "url": "https://repo.magento.com/",
+	    "exclude": ["mageplaza/*","zaius/*"]
         },
         "amasty": {
             "type": "composer",
@@ -95,6 +99,10 @@
         "magento2-connector-enterprise": {
             "type": "vcs",
             "url": "ssh://git@distribution.akeneo.com:443/magento2-connector-enterprise"
+        },
+        "mirasvit-frd2": {
+            "type": "composer",
+            "url": "https://53403:GUWPLZ4N5M@packages.mirasvit.com/53403:GUWPLZ4N5M/"
         }
     },
     "extra": {

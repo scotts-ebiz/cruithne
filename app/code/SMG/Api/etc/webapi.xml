@@ -169,4 +169,16 @@
             <resource ref="self"/>
         </resources>
     </route>
+    <route url="/V2/smg/cleanup/duplicateSubscriptions" method="POST">
+        <service class="SMG\Api\Api\Interfaces\CleanUpManagementInterface" method="cleanupDuplicateSubscriptions" />
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
+    <route url="/V1/smg/fraud" method="GET">
+        <service class="SMG\Api\Api\Interfaces\FraudManagementInterface" method="runFraudCheck" />
+        <resources>
+            <resource ref="self" />
+        </resources>
+    </route>
 </routes>

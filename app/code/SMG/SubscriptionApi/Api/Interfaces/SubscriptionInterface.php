@@ -48,4 +48,20 @@ interface SubscriptionInterface
      * @return mixed
      */
     public function renewSubscription($master_subscription_id);
+
+	/**
+     *  Cancel subscription for given master id.
+     *
+     * @param string $master_subscription_id
+     * @return mixed
+     */
+    public function cancelSubscription($master_subscription_id);
+
+    /**
+     *  Update subscription ids for given entity ids.
+     *
+     * @param string $subscription_entity_ids
+     * @return mixed
+     */
+    public function updateSubscriptionIds($subscription_entity_ids);
 }

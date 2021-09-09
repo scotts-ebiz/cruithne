@@ -1,5 +1,11 @@
 <div class="sp-widget sp-widget--contact-form">
 	<h2 class="sp sp-h2 sp-text-green-1"><?= $block->escapeHtml($block->getData('contactFormHeading')) ?></h2>
 	<p class="sp-text-base"><?= $block->escapeHtml($block->getData('contactFormText')) ?></p>
-	<?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('contact_form')->toHtml(); ?>	
+    <input id="salesForceUrl" type="hidden" value="<?= $block->escapeHtml($block->getData('contactFormSalesForceURL')) ?>" />
+    <input id="salesForceOrgId" type=hidden name="orgid" value="<?= $block->escapeHtml($block->getData('contactFormSalesForceOrgId')) ?>">
+    <?php if ($block->getFrontendCaptchaEnabled()) { ?>
+        <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+        <div id="g-recaptcha" class="g-recaptcha" data-sitekey="<?= $block->escapeHtml($block->getSecurityCaptchaKey()) ?>"></div>
+   <?php } ?>
+	<?php echo $this->getLayout()->createBlock('Magento\Cms\Block\Block')->setBlockId('contact_form')->toHtml(); ?>
 </div>

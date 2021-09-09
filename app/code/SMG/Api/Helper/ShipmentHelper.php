@@ -21,7 +21,6 @@ use SMG\Sap\Model\ResourceModel\SapOrderShipment\CollectionFactory as SapOrderSh
 use Magento\Framework\App\Config\ScopeConfigInterface as ScopeConfigInterface;
 use Zaius\Engage\Helper\Sdk as Sdk;
 use SMG\SubscriptionApi\Model\ResourceModel\SubscriptionOrder\CollectionFactory as SubscriptionOrderCollectionFactory;
-
 class ShipmentHelper
 {
 
@@ -410,39 +409,48 @@ class ShipmentHelper
                 $trackingNumberCustomExists = true;
             }
         }
-           
-        // get the items for this sap order.
-        $sapOrderItems = $this->_sapOrderItemCollectionFactory->create();
-        $sapOrderItems->addFieldToFilter('order_sap_id', ['eq' => $sapOrder->getId()]);
 
-        // Grab all the unique skus for this order.
-        $sapDistinctSkus = [];
-        foreach($sapOrderItems as $sapOrderItem) {
-            if (array_search($sapOrderItem[self::INPUT_SAP_SKU], array_column($sapDistinctSkus,self::INPUT_SAP_SKU)) === FALSE) {
-                $sapDistinctSkus[] = $sapOrderItem;
+        // get the order for the given order id
+        /**
+         * @var \Magento\Sales\Model\Order $order
+         */
+        $order = $this->_orderFactory->create();
+        $this->_orderResource->load($order, $orderId);
+
+        // initialize the values
+        $totalQuantityOrdered = $order->getTotalQtyOrdered();
+        $totalShipmentQuantity = 0;
+
+        // get the shipments from the order if there are any
+        $shipments = $order->getShipmentsCollection();
+
+        // check to see if there are any shipments for this order
+        // if so then we need to add the previous order shipment quantity to the
+        // current SAP confirmed quantity
+        if ($shipments)
+        {
+            // loop through the shipments and add up the previous shipments to
+            // the new confirmed qty received from SAP
+            /**
+             * @var /Magento/Sales/Model/Order/Shipment $shipment
+             */
+            foreach ($shipments as $shipment)
+            {
+                // add the shipment qty to the total order qty
+                if ($shipment)
+                {
+                    // add the shipment order total qty to the total confirmed qty
+                    $totalShipmentQuantity += $shipment->getData('total_qty');
+                }
             }
         }
 
-        // Sum up all the confirmed (shipped) items for this order.
-        $totalConfirmedQuantity = 0;
-        foreach ($sapOrderItems as $sapOrderItem) {
-            if (!empty($sapOrderItem->getConfirmedQty())) {
-                $totalConfirmedQuantity += floatval($sapOrderItem->getConfirmedQty());
-            }
-        }
-
-        $totalOrderedQuantity = 0;
-        foreach ($sapDistinctSkus as $distinctSku) {
-            if (!empty($distinctSku[self::INPUT_SAP_ORDER_QTY])) {
-                $totalOrderedQuantity += floatval($distinctSku[self::INPUT_SAP_ORDER_QTY]);
-            }
-        }
-
-        // Only set ship processing date if all items in the order have been shipped.
-        if ($totalConfirmedQuantity >= $totalOrderedQuantity) {
+        // if the total ordered equals the total shipped then update the sap batch order
+        if($totalShipmentQuantity >= $totalQuantityOrdered)
+        {
             // get the current date
             $today = date('Y-m-d H:i:s');
-
+                
             // set the capture date
             $sapBatchOrder->setData('shipment_process_date', $today);
 
@@ -451,9 +459,10 @@ class ShipmentHelper
 
             // add the order id to the array to send email
             // to customer service
-           if (!$trackingNumberCustomExists) {
-             $this->_customerServiceEmailIds[] = $orderId;
-           }
+            if (!$trackingNumberCustomExists)
+            {
+                $this->_customerServiceEmailIds[] = $orderId;
+            }
         }
     }
 
@@ -596,5 +605,4 @@ class ShipmentHelper
         }
         return false;
     }
-
 }

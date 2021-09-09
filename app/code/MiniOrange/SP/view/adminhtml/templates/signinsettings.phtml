@@ -1,0 +1,136 @@
+<!-- 
+	This template file is for the Sign In settings.
+	File acts as a view file for our Sign In settings.
+-->
+<?php 
+	// initialize all values 
+    $force_authn = $this->getForceAuthn() ?'checked':'';
+    $login_redirect = $this->isAutoRedirectEnabled() ?'checked':'';
+    $byPassRedirect = $this->isByBackDoorEnabled() ?'checked':'';
+    
+    $adminLink = $this->showAdminLink() ?'checked':'';
+    $customerLink = $this->showCustomerLink() ?'checked':'';
+    $isSPConfigured = $this->isSPConfigured() && $this->isEnabled();
+
+    $disabled  = $isSPConfigured ? "" : 'disabled title="Disabled. Configure your Service Provider" ';
+    $byPassDisabled = $isSPConfigured || $login_redirect!="checked" ? "disabled" : '';
+
+    $formKey = $this->getBlockHtml('formkey');
+    $logoutUrl = $this->getAdminLogoutUrl();
+    $adminLoginUrl = $this->getAdminLoginUrl();
+    $customerLoginUrl = $this->getCustomerLoginUrl();
+
+
+echo '<div class="page" id="samlsettings">
+        <div class="mosp_table_layout">
+            <h3>SIGN IN OPTIONS</h3>
+            <hr>
+            <form id="signInSettings" method="post" action="">'. 
+                $formKey .'
+                <input type="hidden" name="option" value="saveSingInSettings" />
+                <table>
+                    <tr>
+                        <td style="width:50%">
+                            <input type="checkbox" name="mo_saml_force_authentication" value="true" 
+                                '.$disabled.$force_authn .' onchange="document.getElementById(\'signInSettings\').submit();"/> 
+                                Force authentication with your IdP on each login attempt.
+                                
+                                <span class="tooltip">
+                                    <div class="admin__field-tooltip tooltip">
+                                        <a title="What is this?" class="admin__field-tooltip-action action-help"><span>What is this?</span></a> 
+                                    </div>
+                                    <span class="tooltiptext"><span class="header"><b><i>WHAT IS THIS?</i></b></span><hr>
+                                    <span class="body">It will force user to provide credentials to your IdP on each login 
+                                    attempt even if the user is already logged in to IdP. This option may require some additional setting 
+                                    in your IdP to force it depending on your Identity Provider.</span></span>
+                                </span>
+                       </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            Choose how you want users to log into your Magento website. You can choose any or all of the three 
+                            options below.<br/><br/>
+                            <h4><b>OPTION 1: Show Link on Default Login Page :</b></h4>
+                            <div style="margin-left:17px;margin-top:2%;">
+                                <input type="checkbox" name="mo_saml_show_admin_link" id="mo_saml_show_admin_link" 
+                                    '.$disabled.' '.$adminLink.' value="true"> Show the Login Link on the default admin login page.
+                                <br><br>
+                                <input type="checkbox" name="mo_saml_show_customer_link" id="mo_saml_show_customer_link" 
+                                    '.$customerLink.' '.$disabled.' value="true">  Show the Login Link on the default customer login page.
+                                <br><br>
+                                <input type="button" name="link_setup" title="You can only make changes if you have configured your SP" 
+                                    onclick="document.getElementById(\'signInSettings\').submit();" 
+                                    '.$disabled.' value="Save" style="width:150px"/>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr><td>
+                        <h4><b>OPTION 2: Auto Redirect User:</b></h4>
+                        <div style="margin-left:17px;margin-top:2%;">	
+                            <input type="checkbox" name="mo_saml_enable_login_redirect" value="true" 
+                                '.$disabled.' '.$login_redirect.' onchange="document.getElementById(\'signInSettings\').submit();"/> 
+                                Check this option if you want to <b>auto redirect the user to IdP</b>.
+
+                                <span class="tooltip">
+                                    <div class="admin__field-tooltip tooltip">
+                                        <a title="What is this?" class="admin__field-tooltip-action action-help"><span>What is this?</span></a> 
+                                    </div>
+                                    <span class="tooltiptext"><span class="header"><b><i>WHAT IS THIS?</i></b></span><hr>
+                                    <span class="body">Users visiting any of the following URLs will get redirected to your 
+                                    configured IdP for authentication: <code><b>'.$adminLoginUrl.'</b></code> <br>or<br> <code><b>
+                                '.$customerLoginUrl.'</b></code></span></span>
+                                </span>
+                               
+                                <br>
+                            <p>
+                                <input type="checkbox" name="mo_saml_bypass_redirect" value="true" 
+                                   '.$byPassRedirect .' '.$byPassDisabled.'
+                                    onchange="document.getElementById(\'signInSettings\').submit();"/> 
+                                    Checking this option creates a backdoor to login to your Website using Magento credentials 
+                                    incase you get locked out of your IdP.
+                                <br>
+                                <div class="mo_note">
+                                <i>Note down these URLS: <br/><br/>
+                                    <span style="color:#FF0000;">
+                                            <b>'.$adminLoginUrl.'?saml_sso=false</b>
+                                            <hr>
+                                            <b>'.$customerLoginUrl.'?saml_sso=false</b>
+                                        </i>
+                                    </span>
+                                </div><br>
+                                <div class="mo_note">
+                                    <span style="color:#FF0000;">WARNING:</span> Checking the above option will <b>
+                                        enable a security hole</b>. Anybody knowing the above URL will be able to login to 
+                                        your website using Magento Credentials. <b>Please do not share this URL.</b> 
+                                </div>
+                            </p>
+                        </div>
+                    </td></tr>
+                    <tr><td>
+                        <h4><b>OPTION 3: Use a Shortcode</b></h4>
+                        <div style="margin-left:17px;margin-top:2%;">
+                            <input type="checkbox" name="mo_saml_add_shortcode" id="mo_saml_add_shortcode" 
+                                '.$disabled.' 
+                                value="true"> Check this option if you want to add a shortcode to your page.
+                            <div id="mo_saml_add_shortcode_steps" hidden class="collapse mo_note">
+                                Place the following piece of code wherever you need to show the IDP login link:
+                                <br>
+                                <div class="collapse">
+                                    <div class="code">
+                                        &lt;?php $cpBlock= $this->getLayout()->createBlock(\'MiniOrange\SP\Block\Sp\'); ?&gt; <br/> 
+                                        &lt;a href="&lt;?php echo $cpBlock->getSPInitiatedUrl(); ?&gt; 
+                                        &lt;?php echo $cpBlock->getSSOButtonText(); ?&gt &lt;/a&gt;
+                                    </div>
+                                </div>
+                            </div>
+                        </div><br>
+                        <div class="center">
+                            <input type="button" onclick="window.location.href="'.$logoutUrl.'" 
+                            '.$disabled.' 
+                            class="button button-primary button-large" value="Log Out and Test"></input>
+                        </div>
+                    </td></tr>
+                </table>
+            </form>
+        </div>
+    </div>';

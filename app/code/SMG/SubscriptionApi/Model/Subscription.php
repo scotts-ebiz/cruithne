@@ -129,6 +129,19 @@ class Subscription extends AbstractModel
      */
     protected $_resource;
 
+    /*** Subscription states */
+    const STATE_ACTIVE = 'active';
+
+    const STATE_CANCELED = 'canceled';
+
+    const STATE_PENDING = 'pending';
+
+    const STATE_PENDING_ORDER = 'pending_order';
+
+    const STATE_RENEWAL_FAILED = 'renewal_failed';
+
+    const STATE_RENEWED = 'renewed';
+
     /**
      * Constructor.
      */
@@ -553,7 +566,7 @@ class Subscription extends AbstractModel
 
     public function currentShipStartDate()
     {
-        $shipStartDate = date("m/d/Y", strtotime($shipStartDate = $this->getFirstSubscriptionOrder()->getShipStartDate())); 
+        $shipStartDate = date("m/d/Y", strtotime($shipStartDate = $this->getFirstSubscriptionOrder()->getShipStartDate()));
         return $shipStartDate;
     }
 
@@ -656,25 +669,27 @@ class Subscription extends AbstractModel
     {
         $ordersArray = [];
 
-        try {
-            $orders = $this->_orderCollectionFactory->create()->addFieldToFilter('master_subscription_id', $this->getSubscriptionId());
-        } catch (\Exception $e) {
-            $error = 'There was an issue returning orders to cancel.';
-            $this->_logger->error($error);
-            throw new LocalizedException(__($error));
+        $orders = $this->getSubscriptionOrders()->getItems();
+        $addons = $this->getSubscriptionAddonOrders()->getItems();
+
+        if (!empty($addons)) {
+            $orders = array_merge($orders, $addons);
         }
 
-        /** @var Order $order */
-        foreach ($orders as $order) {
-            $hasInvoices = $order->getInvoiceCollection()->count() > 0;
-            $hasShipments = $order->getShipmentsCollection()->count() > 0;
+        /** @var SubscriptionOrder $o */
+        foreach ($orders as $o) {
+            $order = $o->getOrder();
+            if (!empty($order)) {
+                $hasInvoices = $order->getInvoiceCollection()->count() > 0;
+                $hasShipments = $order->getShipmentsCollection()->count() > 0;
 
-            if (
-                (is_null($filterByInvoiced) || $filterByInvoiced === $hasInvoices)
+                if (
+                    (is_null($filterByInvoiced) || $filterByInvoiced === $hasInvoices)
                     &&
-                (is_null($filterByShipped) || $filterByShipped === $hasShipments)
-            ) {
-                $ordersArray[] = $order;
+                    (is_null($filterByShipped) || $filterByShipped === $hasShipments)
+                ) {
+                    $ordersArray[] = $order;
+                }
             }
         }
 

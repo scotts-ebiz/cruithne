@@ -1,0 +1,125 @@
+<!-- 
+    This template file is for the SAML Identity Provider settings.
+    File acts as a view file for our Identity Provider settings.
+-->
+
+<?php 
+	// initialize all values required on the page
+	$isserUrl = $this->getIssuerUrl();
+    $baseUrl = $this->getBaseUrl();
+    $publicCert = $this->getPublicCert();
+    $metadataUrl = $this->getMetadataUrl();
+    $isEnabled = $this->isEnabled();
+    $acsUrl =$this->getAcsUrl();
+
+echo ' <div class="page" id="identityprovider">
+        <h3>CONFIGURE IDENTITY PROVIDER</h3><hr>
+        <div id="idp-settings" class="mosp_table_layout">
+            <h3><b>STEP 1:</b></h3>
+            <p>
+                <b>Choose your Identity Provider from the list below to download its setup guide:</b>
+                <br/><br/>
+                <select name="idpguide" id="idpguide" style="width:200px;">
+                    <option value selected disabled>Select your IDP</option>
+                    <option value="'.$this->getIdpGuideBaseUrl("adfs").'">ADFS</option>
+                    <option value="'.$this->getIdpGuideBaseUrl("centrify").'">Centrify</option>
+                    <option value="'.$this->getIdpGuideBaseUrl("googleapps").'">Google Apps</option>
+                    <option value="'.$this->getIdpGuideBaseUrl("okta").'">Okta</option>
+                    <option value="'.$this->getIdpGuideBaseUrl("onelogin").'">OneLogin</option>
+                    <option value="'.$this->getIdpGuideBaseUrl("salesforce").'">Salesforce</option>
+                    <option value="'.$this->getIdpGuideBaseUrl("simplesaml").'">SimpleSAMLphp</option>
+                    <option value="'.$this->getIdpGuideBaseUrl("shibboleth3").'">Shibboleth 3</option>
+                    <option value="'.$this->getIdpGuideBaseUrl("wso2").'">WSO2 v5.0</option>
+                    <option value="'.$this->getIdpGuideBaseUrl("jbosskeycloak").'">JBoss Keycloak</option>
+                    <option value="'.$this->getIdpGuideBaseUrl("oracle").'">Oracle</option>
+                </select>
+                <a href="" target="_blank" id="idpsetuplink" hidden download>Click here to 
+                    download the setup guide.</a>
+            </p>
+            <div class="code">Your IdP is not in the list? Scroll up and use the support section to contact us and we will help you set 
+                the module with your IDP.</div>
+            <br>
+            <h4>You will need the following information to configure your IdP. Copy it and keep it handy:</h4>
+            <div style="padding:0 6% 0 0;">
+                <table class="data center">
+                    <tr>
+                        <td><b>SP-EntityID / Issuer</b></td>
+                        <td>'.$isserUrl.'</td>
+                    </tr>
+                    <tr>
+                        <td><b>ACS (AssertionConsumerService) URL</b></td>
+                        <td>'.$acsUrl.'</td>
+                    </tr>
+                    <tr>
+                        <td><b>Single Logout URL</b></td>
+                        <td>'.$acsUrl.'</td>
+                    </tr>
+                    <tr>
+                        <td><b>Audience URI</b></td>
+                        <td>'.$isserUrl.'</td>
+                    </tr>
+                    <tr>
+                        <td><b>NameID format</b></td>
+                        <td>urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress</td>
+                    </tr>
+                    <tr>
+                        <td><b>Recipient URL</b></td>
+                        <td>'.$baseUrl.'</td>
+                    </tr>
+                    <tr>
+                        <td><b>Destination URL</b></td>
+                        <td>'.$baseUrl.'</td>
+                    </tr>
+                    <tr>
+                        <td><b>Default Relay State (Optional)</b></td>
+                        <td>'.$baseUrl.'</td>
+                    </tr>
+                    <tr>
+                        <td><b>Certificate (Optional)</b></td>';
+                       if(!$isEnabled)
+                       {
+echo'                       <td padding: 15px;"><i>(Register to download the certificate)</i></td>';
+                       } 
+                       else 
+                       {
+echo'                       <td padding: 15px;"><a href="'.$publicCert.'" >Download</a></td>';
+                       }
+echo'               </tr>
+                </table>
+            </div>
+            
+            <br/>
+            
+            <p style="text-align: center;font-size: 13pt;font-weight: bold;">OR</p>
+            <p>Provide this metadata URL to your Identity Provider:</p>
+            <div class="code"><b><a target="_blank" href="'.$metadataUrl.'">
+                '.$metadataUrl.'</a></b></div>
+            <br><br>
+            <h3><b>STEP 2:</b></h3>
+            <b>Assuming that you are now done with Step 1, please note down the following information from your IdP admin screen 
+                and keep it handy to configure your Service provider.</b>
+            <div style="margin:2%;">
+                <ol>
+                    <li><b>X.509 certificate</b></li>
+                    <li><b>SAML Login URL (Single Sign On URL)</b></li>
+                    <li><b>IdP Entity ID (IdP Issuer)</b></li>
+                    <li><b>Is Response signed</b> by your IdP?</li>
+                    <li><b>Is Assertion signed</b> by your IdP?</li>
+                    </li>
+                </ol>
+            </div>
+            <div class="mo_note">
+                <span class="btn-link"><i>Cannot find the above information?</i></span>
+                <div hidden class="collapse">
+                    <ol>
+                        <li>X.509 certificate is enclosed in <code>X509Certificate</code> tag in IdP-Metadata XML file. 
+                                (parent tag: <code>KeyDescriptor use="signing"</code>)</li> 
+                        <li>SAML Login URL is enclosed in <code>SingleSignOnService</code> tag (Binding type: HTTP-Redirect) in 
+                            IdP-Metadata XML file.</li>
+                        <li>EntityID is the value of the <code>entityID</code> attribute of <code>EntityDescriptor</code> tag 
+                            in IdP-Metadata XML file. </li>
+                    </ol>
+                </div>
+            </div>    
+        </div>
+    </div>';

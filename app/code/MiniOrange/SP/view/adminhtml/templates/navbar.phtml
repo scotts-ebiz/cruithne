@@ -1,0 +1,23 @@
+<?php
+
+// initialize all variables
+$spsettings = $this->getExtensionPageUrl('spsettings');
+$idpsettings = $this->getExtensionPageUrl('idpsettings');
+$account = $this->getExtensionPageUrl('account');
+$signinsettings = $this->getExtensionPageUrl('signinsettings');
+$attrsettings = $this->getExtensionPageUrl('attrsettings');
+$support = $this->getExtensionPageUrl('support');
+$pricing = $this->getExtensionPageUrl('upgrade');
+$activeTab = $this->getCurrentActiveTab();
+
+echo'	<div style=" padding: 0 1%;">
+            <div class="topnav" id="myTopnav">
+                <a class="nav-tab '.($activeTab == 'account' ? 'active' : '').'" href="'.$account.'">1. Account</a>
+                <a class="nav-tab '.($activeTab == 'idpsettings' ? 'active' : '').'" href="'.$idpsettings.'">2. Identity Providers</a>
+                <a class="nav-tab '.($activeTab == 'spsettings' ? 'active' : '').'" href="'.$spsettings.'">3. Service Providers</a>
+                <a class="nav-tab '.($activeTab == 'signinsettings' ? 'active' : '').'" href="'.$signinsettings.'">4. Sign In Settings</a>		
+                <a class="nav-tab '.($activeTab == 'attrsettings' ? 'active' : '').'" href="'.$attrsettings.'">5. Attribute / Role Mapping</a>
+                <a class="nav-tab '.($activeTab == 'support' ? 'active' : '').'" href="'.$support.'">Support / Help</a>
+                <a class="nav-tab '.($activeTab == 'upgrade' ? 'active' : '').'" href="'.$pricing.'">Upgrade</a>
+            </div>
+        </div>';

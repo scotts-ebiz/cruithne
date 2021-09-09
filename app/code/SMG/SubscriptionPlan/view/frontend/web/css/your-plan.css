@@ -14,7 +14,7 @@
 .sp-plan__your-plan::after {
   content: '';
   background-color: #fff;
-  background-image: url(https://test_magento_image_repo.storage.googleapis.com/grass-icon.svg);
+  background-image: url(https://test-magento-image-repo.storage.googleapis.com/grass-icon.svg);
   border-radius: 100%;
   display: block;
   height: 38px;
@@ -125,10 +125,10 @@
   width: 20px;
   height: 20px;
   transform: translateY(-50%);
-  background: url('https://test_magento_image_repo.storage.googleapis.com/Icon-Open.png') center center / contain no-repeat;
+  background: url('https://test-magento-image-repo.storage.googleapis.com/Icon-Open.png') center center / contain no-repeat;
 }
 .accordion .active button.mobile:after {
-  background-image: url('https://test_magento_image_repo.storage.googleapis.com/Icon-Close.png');
+  background-image: url('https://test-magento-image-repo.storage.googleapis.com/Icon-Close.png');
 }
 
 
@@ -219,7 +219,7 @@
 
 
 .sp-plan__bag-count {
-  background-image: url(https://test_magento_image_repo.storage.googleapis.com/bag-count.svg);
+  background-image: url(https://test-magento-image-repo.storage.googleapis.com/bag-count.svg);
   color: white;
   width: 17px;
   height: 22px;
@@ -237,7 +237,7 @@
 .sp-plan__title::before,
 .sp-plan__title::after {
   content: '';
-  background-image: url(https://test_magento_image_repo.storage.googleapis.com/grass-land.svg);
+  background-image: url(https://test-magento-image-repo.storage.googleapis.com/grass-land.svg);
   display: block;
   height: 22px;
   flex: 0 0 45px;

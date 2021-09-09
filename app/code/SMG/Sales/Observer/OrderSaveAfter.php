@@ -47,12 +47,12 @@ class OrderSaveAfter implements ObserverInterface
         $this->_sapOrderBatchResource->load($sapOrderBatch, $order->getId(), 'order_id');
 
         // get the is order flag to see if it has already been set
-        $isOrder = $sapOrderBatch->getData('is_order');
-        if (!isset($isOrder))
+        $isConsumerData = $sapOrderBatch->getData('is_consumer_data');
+        if (!isset($isConsumerData))
         {
             // set the values
             $sapOrderBatch->setData('order_id', $order->getId());
-            $sapOrderBatch->setData('is_order', true);
+            $sapOrderBatch->setData('is_order', false);
             $sapOrderBatch->setData('is_consumer_data', true);
 
             // save the record

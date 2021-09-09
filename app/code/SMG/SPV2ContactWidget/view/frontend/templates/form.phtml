@@ -1,4 +1,3 @@
-<?php $ajaxurl = $block->escapeurl( $block->getFormAction() ); ?>
 <script type="text/x-magento-init">
    {
         "*": {
@@ -6,15 +5,17 @@
                 "components": {
                     "contactForm": {
 						"component": "SMG_SPV2ContactWidget/js/contactajax",
-						"AjaxUrl": "<?= $ajaxurl; ?>",
-						"customerName": "<?= $block->escapeHtmlAttr($this->helper('Magento\Contact\Helper\Data')->getPostValue('name') ?: $this->helper('Magento\Contact\Helper\Data')->getUserName()) ?>",
+						"AjaxUrl": "",
+						"firstName": "<?= $block->escapeHtmlAttr($this->helper('Magento\Contact\Helper\Data')->getPostValue('firstName')) ?>",
+						"lastName": "<?= $block->escapeHtmlAttr($this->helper('Magento\Contact\Helper\Data')->getPostValue('lastName')) ?>",
 						"email": "<?= $block->escapeHtmlAttr($this->helper('Magento\Contact\Helper\Data')->getPostValue('email') ?: $this->helper('Magento\Contact\Helper\Data')->getUserEmail()) ?>",
                         "phone": "<?= $block->escapeHtmlAttr($this->helper('Magento\Contact\Helper\Data')->getPostValue('phone')) ?>",
 					    "address": "<?= $block->escapeHtmlAttr($this->helper('Magento\Contact\Helper\Data')->getPostValue('address')) ?>",
                         "address2": "<?= $block->escapeHtmlAttr($this->helper('Magento\Contact\Helper\Data')->getPostValue('address2')) ?>",
 					    "city": "<?= $block->escapeHtmlAttr($this->helper('Magento\Contact\Helper\Data')->getPostValue('city')) ?>",
 					    "postalCode": "<?= $block->escapeHtmlAttr($this->helper('Magento\Contact\Helper\Data')->getPostValue('postalCode')) ?>",
-					    "comment": "<?= $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('comment')) ?>"
+					    "comment": "<?= $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('comment')) ?>",
+					    "productName": "<?= $block->escapeHtml($this->helper('Magento\Contact\Helper\Data')->getPostValue('productName')) ?>"
 					}
                 }
             }
@@ -28,140 +29,76 @@
 </div>
 <form
     id="contact-form"
-    action="<?= $block->escapeUrl($block->getFormAction()) ?>"
+    action="<?= $block->escapeHtml($block->getData('contactFormSalesForceURL')) ?>"
     class="form contact"
     style="display: none"
     data-hasrequired="<?= $block->escapeHtmlAttr(__('* Required Fields')) ?>"
     data-bind="scope: 'contactForm'"
     method="post"
 >
-
+    <input type=hidden name="retURL" value="<?= 'https://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'] . '/success' ?>">
+    <input type=hidden id="subject" maxlength="80" name="subject" value="Scotts Program Web To Case" /><br>
+    <input type=hidden name="recordType" id="recordType" value="0123t000000ubI9">  <!-- RecordType -->
+    <input type=hidden name="00N3t00000E3yY2" id="00N3t00000E3yY2" value="012">  <!-- Brand API Name -->
+    <input type=hidden name="00N3t00000E41od" id="00N3t00000E41od" value="Scotts Program Contact Us Form">  <!-- Web form source -->
+    <input type=hidden name="00N3t00000E3yYZ" id="00N3t00000E3yYZ" value="SCOTTS PROGRAM">   <!-- Source -->
+    <input type="hidden"  id="external" name="external" value="1" />
+    <input type=hidden name="00N3t00000GW27y" id="country" value="US">
     <fieldset class="fieldset">
         <div class="sp-form-group">
             <input
+                id="firstName"
                 class="input-text sp-input sp-w-full"
-                data-bind="textInput: form.name"
+                data-bind="textInput: form.firstName"
                 data-validate="{
                     required: false,
                     'validate-name': true
                 }"
-                id="name"
-                name="name"
-                maxLength="100"
-                placeholder="<?= $block->escapeHtml(__('Name')) ?>*"
-                title="<?= $block->escapeHtmlAttr(__('Name')) ?>"
+                name="00N3t00000E41et"
+                maxLength="255"
+                placeholder="<?= $block->escapeHtml(__('First Name')) ?>*"
+                title="<?= $block->escapeHtmlAttr(__('First Name')) ?>"
                 type="text"
             />
-            <label class="label sp-form-label required" for="name"><?= $block->escapeHtml(__('Name')) ?>*</label>
+            <label class="label sp-form-label required" for="firstName"><?= $block->escapeHtml(__('First Name')) ?>*</label>
         </div>
-
         <div class="sp-form-group">
             <input
-                class="input-text sp-input sp-w-full"
-                data-bind="textInput: form.email"
-                data-validate="{
+                    id="lastName"
+                    class="input-text sp-input sp-w-full"
+                    data-bind="textInput: form.lastName"
+                    data-validate="{
+                    required: false,
+                    'validate-name': true
+                }"
+
+                    name="00N3t00000E41eu"
+                    maxLength="255"
+                    placeholder="<?= $block->escapeHtml(__('Last Name')) ?>*"
+                    title="<?= $block->escapeHtmlAttr(__('Last Name')) ?>"
+                    type="text"
+            />
+            <label class="label sp-form-label required" for="lastName"><?= $block->escapeHtml(__('Last Name')) ?>*</label>
+        </div>
+        <div class="sp-form-group">
+            <input
+                    class="input-text sp-input sp-w-full"
+                    data-bind="textInput: form.email"
+                    data-validate="{
                     required: false,
                     'validate-email-address': true
                 }"
-                id="email"
-                name="email"
-                placeholder="<?= $block->escapeHtml(__('Email')) ?>*"
-                title="<?= $block->escapeHtmlAttr(__('Email')) ?>"
-                type="email"
+                    id="email"
+                    name="email"
+                    placeholder="<?= $block->escapeHtml(__('Email')) ?>*"
+                    title="<?= $block->escapeHtmlAttr(__('Email')) ?>"
+                    type="email"
             />
             <label class="label sp-form-label required" for="email"><?= $block->escapeHtml(__('Email')) ?>*</label>
         </div>
         <div class="sp-form-group">
-            <div class="sp-select sp-w-full">
-                <select name="topic" id="topic" class="sp-w-full"
-                        data-bind="options: topics, value: form.topic, optionsCaption: '<?= $block->escapeHtml(__('Select a Topic')) ?>'"
-                        data-validate="{
-                    required: false,
-                    'validate-select': true
-                }">
-                </select>
-            </div>
-            <label class="label sp-form-label required" for="topic"><?= $block->escapeHtml(__('Topic')) ?>*</label>
-        </div>
-        <div class="sp-form-group sp-mt-12">
-            <textarea
-                class="input-text sp-textarea sp-input sp-w-full"
-                cols="5"
-                data-bind="textInput: form.comment"
-                data-validate="{
-                    required: false,
-                    'validate-message': true
-                }"
-                id="comment"
-                name="comment"
-                rows="3"
-                title="<?= $block->escapeHtmlAttr(__('What’s on your mind?')) ?>"></textarea>
-            <label class="label sp-form-label required" for="comment"><?= $block->escapeHtml(__('Message')) ?>*</label>
-        </div>
-        <div class="sp-form-group" data-bind="visible: addressVisible">
             <input
                     class="input-text sp-input sp-w-full"
-                    data-validate="{'required-entry-street-0':true}"
-                    id="address"
-                    name="address"
-                    maxLength="100"
-                    placeholder="<?= $block->escapeHtml(__('Address')) ?>*"
-                    title="<?= $block->escapeHtmlAttr(__('Address')) ?>"
-                    type="text"
-            />
-            <label class="label sp-form-label required" for="address"><?= $block->escapeHtml(__('Address')) ?>*</label>
-        </div>
-        <div class="sp-form-group" data-bind="visible: addressVisible">
-            <input
-                    class="input-text sp-input sp-w-full"
-                    data-validate="{required:false}"
-                    id="address2"
-                    name="address2"
-                    maxLength="100"
-                    placeholder="<?= $block->escapeHtml(__('Address2')) ?>"
-                    title="<?= $block->escapeHtmlAttr(__('Address2')) ?>"
-                    type="text"
-            />
-            <label class="label sp-form-label" for="address2"><?= $block->escapeHtml(__('Address2')) ?></label>
-        </div>
-        <div class="sp-form-group" data-bind="visible: addressVisible">
-            <input
-                    class="input-text sp-input sp-w-full"
-                    data-validate="{'required-entry-bcity':true}"
-                    data-bind="textInput: form.city"
-                    id="city"
-                    name="city"
-                    maxLength="100"
-                    placeholder="<?= $block->escapeHtml(__('City')) ?>*"
-                    title="<?= $block->escapeHtmlAttr(__('City')) ?>"
-                    type="text"
-            />
-            <label class="label sp-form-label required" for="city"><?= $block->escapeHtml(__('City')) ?>*</label>
-        </div>
-        <div class="sp-form-group" data-bind="visible: addressVisible">
-            <div class="sp-select sp-w-full">
-                <select data-bind="options: states, value: form.state, optionsCaption: '<?= $block->escapeHtml(__('Select State')) ?>'"
-                        name="state" id="state" class="sp-w-full" data-validate="{required: true}">
-                </select>
-            </div>
-            <label class="label sp-form-label required" for="state"><?= $block->escapeHtml(__('State')) ?>*</label>
-        </div>
-        <div class="sp-form-group" data-bind="visible: addressVisible() || lawnInfoVisible()">
-            <input
-                    class="input-number sp-input sp-w-full"
-                    data-validate="{ required:false, 'validate-postal-code': true }"
-                    id="postalCode"
-                    name="postalCode"
-                    maxLength="5"
-                    placeholder="<?= $block->escapeHtml(__('Postal Code')) ?>*"
-                    title="<?= $block->escapeHtmlAttr(__('Postal Code')) ?>"
-                    type="number"
-            />
-            <label class="label sp-form-label required" for="postalCode"><?= $block->escapeHtml(__('Postal Code')) ?>*</label>
-        </div>
-        <div class="sp-form-group" data-bind="visible: addressVisible">
-            <input
-                    class="input-number sp-input sp-w-full"
                     data-bind="textInput: form.phone"
                     data-validate="{'required-entry-telephone': true}"
                     id="phone"
@@ -173,16 +110,142 @@
             />
             <label class="label sp-form-label required" for="phone"><?= $block->escapeHtml(__('Phone')) ?>*</label>
         </div>
+
+        <div class="sp-form-group">
+            <input
+                    class="input-text sp-input sp-w-full"
+                    data-validate="{'required-entry-street-0':true}"
+                    id="address"
+                    name="00N3t00000GW282"
+                    maxLength="100"
+                    placeholder="<?= $block->escapeHtml(__('Address')) ?>*"
+                    title="<?= $block->escapeHtmlAttr(__('Address')) ?>"
+                    type="text"
+            />
+            <label class="label sp-form-label required" for="address"><?= $block->escapeHtml(__('Address')) ?>*</label>
+        </div>
+
+        <div class="sp-form-group">
+            <input
+                    class="input-text sp-input sp-w-full"
+                    data-validate="{required:false}"
+                    id="address2"
+                    name="00N3t00000GW280"
+                    maxLength="100"
+                    placeholder="<?= $block->escapeHtml(__('Address 2')) ?>"
+                    title="<?= $block->escapeHtmlAttr(__('Address 2')) ?>"
+                    type="text"
+            />
+            <label class="label sp-form-label" for="address2"><?= $block->escapeHtml(__('Address 2')) ?></label>
+        </div>
+
+        <div class="sp-form-group">
+            <input
+                    class="input-text sp-input sp-w-full"
+                    data-validate="{'required-entry-bcity':true}"
+                    data-bind="textInput: form.city"
+                    id="city"
+                    name="00N7e000002btDv"
+                    maxLength="100"
+                    placeholder="<?= $block->escapeHtml(__('City')) ?>*"
+                    title="<?= $block->escapeHtmlAttr(__('City')) ?>"
+                    type="text"
+            />
+            <label class="label sp-form-label required" for="city"><?= $block->escapeHtml(__('City')) ?>*</label>
+        </div>
+
+        <div class="sp-form-group">
+            <div class="sp-select sp-w-full">
+                <select data-bind="options: states, value: form.state, optionsText: 'label', optionsValue: 'value', optionsCaption: '<?= $block->escapeHtml(__('Select State')) ?>'"
+                        name="00N3t00000GW27z" id="state" class="sp-w-full input-text" data-validate="{required: true}">
+                </select>
+            </div>
+            <label class="label sp-form-label required" for="state"><?= $block->escapeHtml(__('State')) ?>*</label>
+        </div>
+
+        <div class="sp-form-group">
+            <input
+                    class="input-number sp-input sp-w-full"
+                    data-validate="{ required:false, 'validate-postal-code': true }"
+                    id="postalCode"
+                    name="00N3t00000GW283"
+                    maxLength="5"
+                    placeholder="<?= $block->escapeHtml(__('Postal Code')) ?>*"
+                    title="<?= $block->escapeHtmlAttr(__('Postal Code')) ?>"
+                    type="number"
+            />
+            <label class="label sp-form-label required" for="postalCode"><?= $block->escapeHtml(__('Postal Code')) ?>*</label>
+        </div>
+
+        <div class="sp-form-group">
+            <div class="sp-select sp-w-full">
+                <select name="00N3t00000GW27x" id="topic" class="sp-w-full"
+                        data-bind="options: topics, value: form.topic, optionsCaption: '<?= $block->escapeHtml(__('Request Type')) ?>'"
+                        data-validate="{
+                    required: false,
+                    'validate-select': true
+                }">
+                </select>
+            </div>
+            <label class="label sp-form-label required" for="topic"><?= $block->escapeHtml(__('Request Type')) ?>*</label>
+        </div>
+
         <div class="sp-form-group" data-bind="visible: lawnInfoVisible">
             <div class="sp-select sp-w-full">
-                <select data-bind="options: grassTypes, value: form.grassType, optionsCaption: '<?= $block->escapeHtml(__('Select Grass Type')) ?>'"
-                        name="grassType" id="grassType" class="sp-w-full" data-validate="{required: false, 'validate-select': true}">
+                <select data-bind="options: grassTypes, value: form.grassType, optionsText: 'label', optionsValue: 'value', optionsCaption: '<?= $block->escapeHtml(__('Select Grass Type')) ?>'"
+                        name="00N3t00000E3yY3" id="grassType" class="sp-w-full" data-validate="{required: false, 'validate-select': true}">
                 </select>
             </div>
             <label class="label sp-form-label required" for="state"><?= $block->escapeHtml(__('Grass Type')) ?>*</label>
         </div>
+
+        <div class="sp-form-group" data-bind="visible: productNameVisible">
+            <input
+                    class="input-text sp-input sp-w-full"
+                    data-validate="{ required:false }"
+                    data-bind="textInput: form.productName"
+                    id="productName"
+                    name="productName"
+                    placeholder="<?= $block->escapeHtml(__('Product Name')) ?>*"
+                    title="<?= $block->escapeHtmlAttr(__('Product Name')) ?>"
+                    type="text"
+            />
+            <label class="label sp-form-label required" for="productName"><?= $block->escapeHtml(__('Product Name')) ?>*</label>
+        </div>
+        <div class="sp-form-group" data-bind="visible: subscriptionNumberVisible">
+            <input
+                    class="input-text sp-input sp-w-full"
+                    data-validate="{ required:false }"
+                    data-bind="textInput: form.subscriptionNumber"
+                    id="subscriptionNumber"
+                    name="00N3t00000E3yYo"
+                    placeholder="<?= $block->escapeHtml(__('Subscription Number')) ?>*"
+                    title="<?= $block->escapeHtmlAttr(__('Subscription Number')) ?>"
+                    type="text"
+            />
+            <label class="label sp-form-label required" for="subscriptionNumber"><?= $block->escapeHtml(__('Subscription Number')) ?>*</label>
+        </div>
+        <div class="sp-form-group sp-mt-12">
+            <textarea
+                    class="input-text sp-textarea sp-input sp-w-full"
+                    cols="5"
+                    data-bind="textInput: form.comment"
+                    data-validate="{
+                    required: false,
+                    'validate-message': true
+                }"
+                    id="comment"
+                    name="description"
+                    rows="3"
+                    title="<?= $block->escapeHtmlAttr(__('How can we help you?')) ?>"></textarea>
+            <label class="label sp-form-label required" for="comment"><?= $block->escapeHtml(__('How can we help you?')) ?>*</label>
+        </div>
+
         <?= $block->getChildHtml('form.additional.info') ?>
     </fieldset>
+
+    <div id="g-recaptcha-container" class="sp-form-group"></div>
+
     <div class="sp-form-group actions-toolbar">
         <input type="hidden" name="hideit" id="hideit" value="" />
         <button data-bind="visible: !saving()" type="submit" title="<?= $block->escapeHtmlAttr(__('Submit')) ?>" class="action sp-button sp-button--primary">
