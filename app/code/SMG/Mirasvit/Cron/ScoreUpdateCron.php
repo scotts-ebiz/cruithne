@@ -86,8 +86,10 @@ class ScoreUpdateCron
             /** @var Order $order */
             foreach ($collection as $order) {
                 $fraudStatus = $order->getData('fraud_status');
-                $isSubscription = !empty($order->getData('subscription_type')) && !empty($order->getData('master_subscription_id'));
-                if ($fraudStatus === Score::STATUS_APPROVE && !$isSubscription) {
+                // Sufficient check. Broken subs can typically have this property but are missing master_sub_id..
+                $isSubscription = !empty($order->getData('subscription_type'));
+                $isBrokenSub = $isSubscription && empty($order->getData('master_subscription_id'));
+                if ($fraudStatus === Score::STATUS_APPROVE && !$isSubscription && !$isBrokenSub && $order->canInvoice()) {
                     try {
                         $this->_orderStatusHelper->createInvoice($order);
                     } catch (\Exception | \Throwable $e ) {
