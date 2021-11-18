@@ -18,7 +18,7 @@ class CategoryTest extends \Magento\TestFramework\TestCase\AbstractController
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -55,13 +55,13 @@ class CategoryTest extends \Magento\TestFramework\TestCase\AbstractController
         $this->dispatch('catalogsearch/result/?q=' . $name);
         $responseBody = $this->getResponse()->getBody();
         if ($shouldBeVisible) {
-            $this->assertContains(
+            $this->assertStringContainsString(
                 $sku . '.html',
                 $responseBody,
                 'Fulltext search did not return searched product in permissible category'
             );
         } else {
-            $this->assertNotContains(
+            $this->assertStringNotContainsString(
                 $sku . '.html',
                 $responseBody,
                 'Fulltext search returned searched product in denied category'
@@ -92,13 +92,13 @@ class CategoryTest extends \Magento\TestFramework\TestCase\AbstractController
         $this->dispatch('catalogsearch/advanced/result/?name=' . $name);
         $responseBody = $this->getResponse()->getBody();
         if ($shouldBeVisible) {
-            $this->assertContains(
+            $this->assertStringContainsString(
                 $sku . '.html',
                 $responseBody,
                 'LayeredNavigation search did not return searched product in permissible category'
             );
         } else {
-            $this->assertNotContains(
+            $this->assertStringNotContainsString(
                 $sku . '.html',
                 $responseBody,
                 'LayeredNavigation search returned searched product in denied category'

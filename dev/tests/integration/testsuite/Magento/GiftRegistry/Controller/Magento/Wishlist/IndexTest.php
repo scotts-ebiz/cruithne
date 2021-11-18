@@ -25,6 +25,6 @@ class IndexTest extends \Magento\TestFramework\TestCase\AbstractController
         $customer = $service->authenticate('customer@example.com', 'password');
         $session->setCustomerDataAsLoggedIn($customer);
         $this->dispatch('wishlist/index/index');
-        $this->assertContains('id="giftregistry-form">', $this->getResponse()->getBody());
+        $this->assertStringContainsString('id="giftregistry-form">', $this->getResponse()->getBody());
     }
 }
