@@ -20,6 +20,7 @@ atlassian*
 .github
 /.gitattributes
 /app/config_sandbox
+/app/etc/config.php
 /app/etc/env.php
 /app/code/Magento/TestModule*
 /lib/internal/flex/uploader/.actionScriptProperties
@@ -55,6 +56,8 @@ node_modules/
 /pub/media/import/*
 !/pub/media/import/.htaccess
 /pub/media/logo/*
+/pub/media/custom_options/*
+!/pub/media/custom_options/.htaccess
 /pub/media/theme/*
 /pub/media/theme_customization/*
 !/pub/media/theme_customization/.htaccess

@@ -29,10 +29,7 @@ class SearchResultTest extends \PHPUnit\Framework\TestCase
             SearchResult::class,
             ['dateTimeFactory' => $dateTimeFactoryMock]
         );
-        $this->assertContains(
-            "(rollbacks.start_time >= '{$time}') OR (rollbacks.start_time IS NULL)",
-            $searchResult->getSelect()->assemble()
-        );
+        $this->assertStringContainsString("(rollbacks.start_time >= '{$time}') OR (rollbacks.start_time IS NULL)", $searchResult->getSelect()->assemble());
     }
 
     /**
