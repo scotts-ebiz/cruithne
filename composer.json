@@ -13,7 +13,7 @@
         "akeneo/magento2-connector-enterprise": "101.*",
         "amasty/securityauth": "^1.1",
         "avalara/avatax-magento": "^1.5",
-        "composer/composer": "@alpha",
+        "composer/composer": "^2.1.12",
         "cweagans/composer-patches": "^1.6",
         "dotmailer/dotmailer-magento2-extension": "4.4.2",
         "gigya/magento2-im": "5.6.1",
@@ -24,7 +24,7 @@
         "mageplaza/module-smtp": "^4.0",
         "mirasvit/module-fraud-check": "*",
         "recurly/recurly-client": "^2.12",
-        "snowdog/frontools": "1.11",
+        "snowdog/frontools": "^1.12",
         "zaius/zaius-magento-2": "^1.0.7"
     },
     "require-dev": {
