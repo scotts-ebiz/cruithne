@@ -54,7 +54,7 @@ class RankCategoryProductPositionsTest extends TestCase
     /**
      * @inheritDoc
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->om = Bootstrap::getObjectManager();
         $this->productRepository = $this->om->get(ProductRepositoryInterface::class);
@@ -68,7 +68,7 @@ class RankCategoryProductPositionsTest extends TestCase
      * @throws \Magento\Framework\Exception\NoSuchEntityException
      * @throws \Magento\Framework\Exception\StateException
      */
-    public function tearDown()
+    protected function tearDown(): void
     {
         $this->productRepository->delete($this->productRepository->get(self::PRODUCT_1_NAME));
         $this->productRepository->delete($this->productRepository->get(self::PRODUCT_2_NAME));

@@ -44,7 +44,7 @@ class InfoTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -59,7 +59,7 @@ class InfoTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->customerSession->logout();
 
@@ -104,8 +104,8 @@ class InfoTest extends TestCase
         ];
         $this->prepareConfig($config);
         $this->customerSession->loginById(1);
-        $this->assertContains((string)__('Reward points balance Information'), $this->block->toHtml());
-        $this->assertContains($expectedBlockData, $this->block->getData());
+        $this->assertStringContainsString((string)__('Reward points balance Information'), $this->block->toHtml());
+        $this->assertContainsEquals($expectedBlockData, $this->block->getData());
     }
 
     /**

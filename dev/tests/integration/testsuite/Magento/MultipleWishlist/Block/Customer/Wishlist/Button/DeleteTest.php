@@ -39,7 +39,7 @@ class DeleteTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -53,7 +53,7 @@ class DeleteTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->customerSession->setCustomerId(null);
 
@@ -71,7 +71,7 @@ class DeleteTest extends TestCase
         $this->customerSession->setCustomerId($customerId);
         $secondWishList = $this->getCustomerWishListByName->execute($customerId, 'Second Wish List');
         $this->block->getRequest()->setParam('wishlist_id', $secondWishList->getWishlistId());
-        $this->assertContains((string)__('Delete Wish List'), strip_tags($this->block->toHtml()));
+        $this->assertStringContainsString((string)__('Delete Wish List'), strip_tags($this->block->toHtml()));
     }
 
     /**

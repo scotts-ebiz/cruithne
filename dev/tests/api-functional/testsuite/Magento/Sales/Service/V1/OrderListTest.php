@@ -8,8 +8,7 @@ namespace Magento\Sales\Service\V1;
 use Magento\TestFramework\TestCase\WebapiAbstract;
 
 /**
- * Class OrderListTest
- * @package Magento\Sales\Service\V1
+ * Class OrderListTest for Magento sales webapi
  */
 class OrderListTest extends WebapiAbstract
 {
@@ -24,7 +23,7 @@ class OrderListTest extends WebapiAbstract
      */
     protected $objectManager;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
     }
@@ -89,7 +88,7 @@ class OrderListTest extends WebapiAbstract
         $appliedTaxes = $result['items'][0]['extension_attributes']['item_applied_taxes'];
         $this->assertEquals($expectedTax['type'], $appliedTaxes[0]['type']);
         $this->assertNotEmpty($appliedTaxes[0]['applied_taxes']);
-        $this->assertEquals(true, $result['items'][0]['extension_attributes']['converting_from_quote']);
+        $this->assertTrue($result['items'][0]['extension_attributes']['converting_from_quote']);
         $this->assertArrayHasKey('payment_additional_info', $result['items'][0]['extension_attributes']);
         $this->assertNotEmpty($result['items'][0]['extension_attributes']['payment_additional_info']);
     }
@@ -135,6 +134,7 @@ class OrderListTest extends WebapiAbstract
         $searchCriteriaBuilder->addFilters([$filter1]);
         $searchCriteriaBuilder->addFilters([$filter2, $filter3]);
         $searchCriteriaBuilder->addSortOrder($sortOrder);
+        $searchCriteriaBuilder->setPageSize(20);
         $searchData = $searchCriteriaBuilder->create()->__toArray();
 
         return $searchData;
