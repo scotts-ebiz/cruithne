@@ -44,7 +44,7 @@ class NodeTest extends AbstractBackendController
     /**
      * @inheritdoc
      */
-    public function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->page = $this->_objectManager->create(Page::class);
