@@ -24,7 +24,7 @@ class IntegrationTest extends \Magento\TestFramework\TestCase\AbstractBackendCon
     /**
      * @inheritDoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
         /** @var $integration \Magento\Integration\Model\Integration */
@@ -41,7 +41,7 @@ class IntegrationTest extends \Magento\TestFramework\TestCase\AbstractBackendCon
         $this->dispatch('backend/admin/integration/index');
         $response = $this->getResponse()->getBody();
 
-        $this->assertStringContainsString('Integrations', $response);
+        $this->assertContains('Integrations', $response);
         $this->assertEquals(
             1,
             \Magento\TestFramework\Helper\Xpath::getElementsCountForXpath(
@@ -60,8 +60,8 @@ class IntegrationTest extends \Magento\TestFramework\TestCase\AbstractBackendCon
         $response = $this->getResponse()->getBody();
 
         $this->assertEquals('new', $this->getRequest()->getActionName());
-        $this->assertStringContainsString('entry-edit form-inline', $response);
-        $this->assertStringContainsString('New Integration', $response);
+        $this->assertContains('entry-edit form-inline', $response);
+        $this->assertContains('New Integration', $response);
         $this->assertEquals(
             1,
             \Magento\TestFramework\Helper\Xpath::getElementsCountForXpath(
@@ -82,9 +82,9 @@ class IntegrationTest extends \Magento\TestFramework\TestCase\AbstractBackendCon
         $response = $this->getResponse()->getBody();
         $saveLink = 'integration/save/';
 
-        $this->assertStringContainsString('entry-edit form-inline', $response);
-        $this->assertStringContainsString('Edit &quot;' . $this->_integration->getName() . '&quot; Integration', $response);
-        $this->assertStringContainsString($saveLink, $response);
+        $this->assertContains('entry-edit form-inline', $response);
+        $this->assertContains('Edit &quot;' . $this->_integration->getName() . '&quot; Integration', $response);
+        $this->assertContains($saveLink, $response);
         $this->assertEquals(
             1,
             \Magento\TestFramework\Helper\Xpath::getElementsCountForXpath(

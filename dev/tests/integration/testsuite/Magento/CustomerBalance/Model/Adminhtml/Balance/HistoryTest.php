@@ -24,7 +24,7 @@ class HistoryTest extends \PHPUnit\Framework\TestCase
      */
     protected $_model;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         Bootstrap::getObjectManager()->get(
             \Magento\Backend\Model\Auth\Session::class

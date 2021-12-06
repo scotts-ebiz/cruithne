@@ -28,7 +28,7 @@ class AuthorizationTest extends \Magento\TestFramework\TestCase\AbstractBackendC
     /**
      * {@inheritdoc}
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->resource = 'Magento_Paypal::authorization';
         $this->uri = 'backend/paypal/express/authorization';
@@ -127,7 +127,7 @@ class AuthorizationTest extends \Magento\TestFramework\TestCase\AbstractBackendC
     /**
      * {@inheritdoc}
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->_objectManager->removeSharedInstance(ApiFactory::class);
         parent::tearDown();

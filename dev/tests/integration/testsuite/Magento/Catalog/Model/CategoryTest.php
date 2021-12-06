@@ -58,7 +58,7 @@ class CategoryTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
         /** @var $storeManager StoreManagerInterface */
@@ -130,7 +130,10 @@ class CategoryTest extends TestCase
     {
         $this->_model = $this->getCategoryByName('Category 1.1');
         /* id from fixture */
-        $this->assertContains(Bootstrap::getObjectManager()->get(StoreManagerInterface::class)->getStore()->getId(),$this->_model->getStoreIds());
+        $this->assertContains(
+            Bootstrap::getObjectManager()->get(StoreManagerInterface::class)->getStore()->getId(),
+            $this->_model->getStoreIds()
+        );
     }
 
     public function testSetGetStoreId(): void
@@ -210,15 +213,9 @@ class CategoryTest extends TestCase
 
     public function testGetDesignAttributes(): void
     {
-        $attributeCodes = array_map(
-            function ($elem) {
-                return $elem->getAttributeCode();
-            },
-            $this->_model->getDesignAttributes()
-        );
-
-        $this->assertContains('custom_design_from',$attributeCodes);
-        $this->assertContains('custom_design_to',$attributeCodes);
+        $attributes = $this->_model->getDesignAttributes();
+        $this->assertContains('custom_design_from', array_keys($attributes));
+        $this->assertContains('custom_design_to', array_keys($attributes));
     }
 
     public function testCheckId(): void
@@ -276,9 +273,9 @@ class CategoryTest extends TestCase
     public function testGetAvailableSortByOptions(): void
     {
         $options = $this->_model->getAvailableSortByOptions();
-        $this->assertContains('price',array_keys($options));
-        $this->assertContains('position',array_keys($options));
-        $this->assertContains('name',array_keys($options));
+        $this->assertContains('price', array_keys($options));
+        $this->assertContains('position', array_keys($options));
+        $this->assertContains('name', array_keys($options));
     }
 
     public function testGetDefaultSortBy(): void
@@ -366,7 +363,7 @@ class CategoryTest extends TestCase
         $this->_model->setData($data);
         $this->categoryResource->save($this->_model);
         $parentCategory = $this->categoryRepository->get(333);
-        $this->assertStringContainsString($this->_model->getId(), $parentCategory->getChildren());
+        $this->assertContains($this->_model->getId(), $parentCategory->getChildren());
     }
 
     /**

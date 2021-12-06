@@ -17,7 +17,7 @@ class GraphTest extends \PHPUnit\Framework\TestCase
      */
     protected $_block;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
         $objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();

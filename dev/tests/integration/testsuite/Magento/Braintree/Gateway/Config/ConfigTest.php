@@ -19,7 +19,7 @@ class ConfigTest extends \PHPUnit\Framework\TestCase
     /** @var SystemConfig */
     private $systemConfig;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->config = $objectManager->create(Config::class, [

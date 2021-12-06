@@ -42,9 +42,12 @@ class PublicCodeTest extends \PHPUnit\Framework\TestCase
             );
             $whiteListItems = [];
             foreach (glob($whiteListFiles) as $fileName) {
-                $whiteListItems[] = file($fileName, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES);
+                $whiteListItems = array_merge(
+                    $whiteListItems,
+                    file($fileName, FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES)
+                );
             }
-            $this->blockWhitelist = array_merge([], ...$whiteListItems);
+            $this->blockWhitelist = $whiteListItems;
         }
         return $this->blockWhitelist;
     }
@@ -120,7 +123,7 @@ class PublicCodeTest extends \PHPUnit\Framework\TestCase
             $returnTypes = [];
             if ($method->hasReturnType()) {
                 if (!$method->getReturnType()->isBuiltin()) {
-                    $returnTypes = [trim($method->getReturnType()->getName(), '?[]')];
+                    $returnTypes = [trim($method->getReturnType()->__toString(), '?[]')];
                 }
             } else {
                 $returnTypes = $this->getReturnTypesFromDocComment($method->getDocComment());
@@ -275,7 +278,7 @@ class PublicCodeTest extends \PHPUnit\Framework\TestCase
         foreach ($method->getParameters() as $parameter) {
             if ($parameter->hasType()
                 && !$parameter->getType()->isBuiltin()
-                && !$this->isGenerated($parameter->getType()->getName())
+                && !$this->isGenerated($parameter->getType()->__toString())
             ) {
                 $parameterClass = $parameter->getClass();
                 /*

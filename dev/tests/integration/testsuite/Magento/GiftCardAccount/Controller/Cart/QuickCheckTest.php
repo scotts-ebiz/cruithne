@@ -29,7 +29,7 @@ class QuickCheckTest extends AbstractController
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

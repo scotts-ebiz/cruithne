@@ -45,7 +45,7 @@ class PlaceOrderWithPaymentsAdvancedTest extends TestCase
     /** @var Request|MockObject */
     private $paymentRequest;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->graphQlRequest = $this->objectManager->create(GraphQlRequest::class);
@@ -82,7 +82,7 @@ class PlaceOrderWithPaymentsAdvancedTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->objectManager->removeSharedInstance(Gateway::class);
     }

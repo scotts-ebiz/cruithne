@@ -12,7 +12,7 @@ namespace Magento\Setup\Test\Unit\Fixtures\Quote;
 class QuoteGeneratorFactoryTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \Magento\Framework\ObjectManagerInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Framework\ObjectManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $objectManager;
 
@@ -24,7 +24,7 @@ class QuoteGeneratorFactoryTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    public function setUp()
     {
         $this->objectManager = $this->getMockBuilder(\Magento\Framework\ObjectManagerInterface::class)
             ->disableOriginalConstructor()

@@ -42,7 +42,7 @@ class ProductTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    public function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->indexTable = $this->objectManager->create(Index::class);
@@ -66,7 +66,7 @@ class ProductTest extends TestCase
         $indexer->reindexAll();
 
         $productData = array_merge(['product_id' => $product->getId()], $this->getProductData());
-        $this->assertContainsEquals($productData, $this->indexTable->getIndexForProduct($product->getId(), 1, 1));
+        $this->assertContains($productData, $this->indexTable->getIndexForProduct($product->getId(), 1, 1));
 
         $product->setStatus(Status::STATUS_DISABLED);
         $product->save();

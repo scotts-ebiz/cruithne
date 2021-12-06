@@ -32,7 +32,7 @@ class AttributeTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->indexerProcessor = Bootstrap::getObjectManager()->create(Processor::class);
         $this->attribute = Bootstrap::getObjectManager()->create(Attribute::class);

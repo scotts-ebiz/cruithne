@@ -200,5 +200,4 @@ return [
     ['Magento\BraintreeTwo', 'Magento\Braintree'],
     ['Magento\MysqlMq\Model\Resource', 'Magento\MysqlMq\Model\ResourceModel'],
     ['Magento\BulkOperations', 'Magento\AsynchronousOperations'],
-    ['Magento\Setup\Model\Cron'],
 ];

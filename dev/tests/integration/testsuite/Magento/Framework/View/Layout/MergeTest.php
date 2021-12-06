@@ -27,56 +27,56 @@ class MergeTest extends \PHPUnit\Framework\TestCase
     protected $_model;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     protected $_resource;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     protected $_appState;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     protected $_cache;
 
     /**
-     * @var \Magento\Framework\Serialize\SerializerInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Framework\Serialize\SerializerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $_serializer;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     protected $_theme;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     protected $scope;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     protected $_logger;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     protected $_layoutValidator;
 
     /**
-     * @var \Magento\Framework\View\Page\Config|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Framework\View\Page\Config|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $pageConfig;
 
     /**
-     * @var LayoutCacheKeyInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @var LayoutCacheKeyInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $layoutCacheKeyMock;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $files = [];
         $fileDriver = new \Magento\Framework\Filesystem\Driver\File();
@@ -245,11 +245,11 @@ class MergeTest extends \PHPUnit\Framework\TestCase
         $expectedResult = '
             <root>
                 <body>
-                    <block class="Magento\Framework\View\Element\Template"
+                    <block class="Magento\Framework\View\Element\Template" 
                            template="Magento_Framework::fixture_template_one.phtml"/>
                 </body>
                 <body>
-                    <block class="Magento\Framework\View\Element\Template"
+                    <block class="Magento\Framework\View\Element\Template" 
                            template="Magento_Framework::fixture_template_two.phtml"/>
                 </body>
             </root>
@@ -266,7 +266,7 @@ class MergeTest extends \PHPUnit\Framework\TestCase
             <root>
                 <body>
                     <referenceContainer name="main.container">
-                        <block class="Magento\Framework\View\Element\Template"
+                        <block class="Magento\Framework\View\Element\Template" 
                                template="Magento_Framework::fixture_template_one.phtml"/>
                     </referenceContainer>
                 </body>
@@ -411,20 +411,23 @@ class MergeTest extends \PHPUnit\Framework\TestCase
         $this->assertFalse($this->_model->isCustomerDesignAbstraction($expected['empty_data']));
     }
 
+    /**
+     * @expectedException        \Magento\Framework\Exception\LocalizedException
+     * @expectedExceptionMessage Invalid layout update handle
+     */
     public function testLoadWithInvalidArgumentThrowsException()
     {
-        $this->expectExceptionMessage("Invalid layout update handle");
-        $this->expectException(\Magento\Framework\Exception\LocalizedException::class);
         $this->_model->load(123);
     }
 
     /**
      * Test loading invalid layout
-     **/
+     *
+     * @expectedException \Exception
+     * @expectedExceptionMessage Layout is invalid.
+     */
     public function testLoadWithInvalidLayout()
     {
-        $this->expectExceptionMessage("Layout is invalid.");
-        $this->expectException(\Exception::class);
         $this->_model->addPageHandles(['default']);
 
         $this->_appState->expects($this->once())->method('getMode')->willReturn(State::MODE_DEVELOPER);
@@ -452,10 +455,12 @@ class MergeTest extends \PHPUnit\Framework\TestCase
         $this->_model->load();
     }
 
+    /**
+     * @expectedException \Magento\Framework\Config\Dom\ValidationException
+     * @expectedExceptionMessageRegExp /_mergeFiles\/layout\/file_wrong\.xml\' is not valid/
+     */
     public function testLayoutUpdateFileIsNotValid()
     {
-        $this->expectExceptionMessageMatches("/_mergeFiles\/layout\/file_wrong\.xml\' is not valid/");
-        $this->expectException(\Magento\Framework\Config\Dom\ValidationException::class);
         $this->_appState->expects($this->once())->method('getMode')->willReturn(State::MODE_DEVELOPER);
 
         $this->_model->addPageHandles(['default']);

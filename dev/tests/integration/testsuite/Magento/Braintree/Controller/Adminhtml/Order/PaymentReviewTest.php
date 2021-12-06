@@ -29,7 +29,7 @@ class PaymentReviewTest extends AbstractBackendController
      */
     private $orderRepository;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

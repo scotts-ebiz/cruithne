@@ -18,7 +18,7 @@ class UrlTest extends \PHPUnit\Framework\TestCase
      */
     protected $model;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->model = Bootstrap::getObjectManager()->create(\Magento\Framework\Url::class);
     }

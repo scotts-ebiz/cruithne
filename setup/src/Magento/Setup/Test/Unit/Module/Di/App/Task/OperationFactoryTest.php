@@ -17,11 +17,11 @@ class OperationFactoryTest extends \PHPUnit\Framework\TestCase
     private $factory;
 
     /**
-     * @var \Magento\Framework\ObjectManagerInterface | \PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Framework\ObjectManagerInterface | \PHPUnit_Framework_MockObject_MockObject
      */
     private $objectManagerMock;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManagerMock = $this->getMockBuilder(\Magento\Framework\ObjectManagerInterface::class)
             ->setMethods([])

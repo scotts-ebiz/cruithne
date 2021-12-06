@@ -20,7 +20,7 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
      */
     protected $objectManager;
 
-    public function setUp(): void
+    public function setUp()
     {
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $this->model = $this->objectManager->create(\Magento\Framework\Message\Factory::class);
@@ -45,10 +45,12 @@ class FactoryTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Wrong message type
+     */
     public function testCreateWrong()
     {
-        $this->expectExceptionMessage("Wrong message type");
-        $this->expectException(\InvalidArgumentException::class);
         $this->model->create('Wrong', 'some text');
     }
 }

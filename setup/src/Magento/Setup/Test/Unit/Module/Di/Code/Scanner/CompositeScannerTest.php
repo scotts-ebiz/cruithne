@@ -12,7 +12,7 @@ class CompositeScannerTest extends \PHPUnit\Framework\TestCase
      */
     protected $_model;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->_model = new \Magento\Setup\Module\Di\Code\Scanner\CompositeScanner();
     }
@@ -34,8 +34,8 @@ class CompositeScannerTest extends \PHPUnit\Framework\TestCase
             'collectEntities'
         )->with(
             $phpFiles
-        )->willReturn(
-            $scannerPhpExpected
+        )->will(
+            $this->returnValue($scannerPhpExpected)
         );
 
         $scannerXml->expects(
@@ -44,8 +44,8 @@ class CompositeScannerTest extends \PHPUnit\Framework\TestCase
             'collectEntities'
         )->with(
             $configFiles
-        )->willReturn(
-            $scannerXmlExpected
+        )->will(
+            $this->returnValue($scannerXmlExpected)
         );
 
         $this->_model->addChild($scannerPhp, 'php');

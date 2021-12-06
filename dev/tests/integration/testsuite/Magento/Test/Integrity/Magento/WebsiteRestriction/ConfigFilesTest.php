@@ -15,7 +15,7 @@ class ConfigFilesTest extends \PHPUnit\Framework\TestCase
      */
     protected $_model;
 
-    protected function setUp(): void
+    public function setUp()
     {
         $objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         /** @var $moduleDirSearch \Magento\Framework\Component\DirSearch */
@@ -29,10 +29,10 @@ class ConfigFilesTest extends \PHPUnit\Framework\TestCase
         );
 
         $fileResolverMock = $this->createMock(\Magento\Framework\Config\FileResolverInterface::class);
-        $fileResolverMock->expects($this->any())->method('get')->willReturn($xmlFiles);
+        $fileResolverMock->expects($this->any())->method('get')->will($this->returnValue($xmlFiles));
         $objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $validationStateMock = $this->createMock(\Magento\Framework\Config\ValidationStateInterface::class);
-        $validationStateMock->expects($this->any())->method('isValidationRequired')->willReturn(true);
+        $validationStateMock->expects($this->any())->method('isValidationRequired')->will($this->returnValue(true));
         $this->_model = $objectManager->create(
             \Magento\WebsiteRestriction\Model\Config\Reader::class,
             ['fileResolver' => $fileResolverMock, 'validationState' => $validationStateMock]

@@ -18,7 +18,7 @@ class TokenTest extends \PHPUnit\Framework\TestCase
      */
     protected $objectManager;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = new ObjectManager($this);
     }

@@ -39,7 +39,7 @@ class DepersonalizePluginTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->catalogSession = Bootstrap::getObjectManager()->get(CatalogSession::class);
         $this->layout = Bootstrap::getObjectManager()->get(LayoutFactory::class)->create();
@@ -49,7 +49,7 @@ class DepersonalizePluginTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->catalogSession->clearStorage();
     }

@@ -14,7 +14,7 @@ class IpValidatorTest extends \PHPUnit\Framework\TestCase
      */
     private $ipValidator;
 
-    protected function setUp(): void
+    public function setUp()
     {
         $this->ipValidator = new IpValidator();
     }

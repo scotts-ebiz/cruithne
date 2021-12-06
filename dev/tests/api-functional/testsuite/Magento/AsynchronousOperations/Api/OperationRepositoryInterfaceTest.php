@@ -36,7 +36,6 @@ class OperationRepositoryInterfaceTest extends WebapiAbstract
                     ],
                 ],
                 'current_page' => 1,
-                'page_size' => 20,
             ],
         ];
 
@@ -59,7 +58,7 @@ class OperationRepositoryInterfaceTest extends WebapiAbstract
 
         $this->assertEquals($searchCriteria['searchCriteria'], $response['search_criteria']);
         $this->assertEquals(6, $response['total_count']);
-        $this->assertCount(6, $response['items']);
+        $this->assertEquals(6, count($response['items']));
 
         foreach ($response['items'] as $item) {
             $this->assertEquals('bulk-uuid-searchable-6', $item['bulk_uuid']);
@@ -94,7 +93,6 @@ class OperationRepositoryInterfaceTest extends WebapiAbstract
                     ],
                 ],
                 'current_page' => 1,
-                'page_size' => 20,
             ],
         ];
 
@@ -117,7 +115,7 @@ class OperationRepositoryInterfaceTest extends WebapiAbstract
 
         $this->assertEquals($searchCriteria['searchCriteria'], $response['search_criteria']);
         $this->assertEquals(1, $response['total_count']);
-        $this->assertCount(1, $response['items']);
+        $this->assertEquals(1, count($response['items']));
 
         foreach ($response['items'] as $item) {
             $this->assertEquals('bulk-uuid-searchable-6', $item['bulk_uuid']);

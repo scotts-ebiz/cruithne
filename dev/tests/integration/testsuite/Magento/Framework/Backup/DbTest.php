@@ -18,7 +18,7 @@ use PHPUnit\Framework\TestCase;
  */
 class DbTest extends \Magento\TestFramework\Indexer\TestCase
 {
-    public static function setUpBeforeClass(): void
+    public static function setUpBeforeClass()
     {
         $db = Bootstrap::getInstance()->getBootstrap()
             ->getApplication()
@@ -56,7 +56,7 @@ class DbTest extends \Magento\TestFramework\Indexer\TestCase
         $content = $write->readFile('/backups/' . $time . '_db_testbackup.sql');
         $tableName = Bootstrap::getObjectManager()->get(Setup::class)
             ->getTable('test_table_with_custom_trigger');
-        $this->assertMatchesRegularExpression(
+        $this->assertRegExp(
             '/CREATE  TRIGGER test_custom_trigger AFTER INSERT ON '. $tableName . ' FOR EACH ROW/',
             $content
         );
@@ -67,7 +67,7 @@ class DbTest extends \Magento\TestFramework\Indexer\TestCase
     /**
      * teardown
      */
-    protected function tearDown(): void
+    public function tearDown()
     {
         parent::tearDown();
     }

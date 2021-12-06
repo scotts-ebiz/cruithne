@@ -16,7 +16,7 @@ class DataTest extends \PHPUnit\Framework\TestCase
     protected $_customerFinanceHelper;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     protected $_moduleManagerMock;
 
@@ -25,7 +25,7 @@ class DataTest extends \PHPUnit\Framework\TestCase
      *
      * @static
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->_moduleManagerMock = $this->createMock(\Magento\Framework\Module\Manager::class);
         $context = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
@@ -51,8 +51,8 @@ class DataTest extends \PHPUnit\Framework\TestCase
             'isEnabled'
         )->with(
             'Magento_Reward'
-        )->willReturn(
-            true
+        )->will(
+            $this->returnValue(true)
         );
         $this->assertTrue($this->_customerFinanceHelper->isRewardPointsEnabled());
     }
@@ -70,8 +70,8 @@ class DataTest extends \PHPUnit\Framework\TestCase
             'isEnabled'
         )->with(
             'Magento_Reward'
-        )->willReturn(
-            true
+        )->will(
+            $this->returnValue(true)
         );
         $this->assertFalse($this->_customerFinanceHelper->isRewardPointsEnabled());
     }
@@ -89,8 +89,8 @@ class DataTest extends \PHPUnit\Framework\TestCase
             'isEnabled'
         )->with(
             'Magento_Reward'
-        )->willReturn(
-            null
+        )->will(
+            $this->returnValue(null)
         );
         $this->assertFalse($this->_customerFinanceHelper->isRewardPointsEnabled());
     }
@@ -108,8 +108,8 @@ class DataTest extends \PHPUnit\Framework\TestCase
             'isEnabled'
         )->with(
             'Magento_Reward'
-        )->willReturn(
-            null
+        )->will(
+            $this->returnValue(null)
         );
         $this->assertFalse($this->_customerFinanceHelper->isRewardPointsEnabled());
     }
@@ -127,8 +127,8 @@ class DataTest extends \PHPUnit\Framework\TestCase
             'isEnabled'
         )->with(
             'Magento_CustomerBalance'
-        )->willReturn(
-            true
+        )->will(
+            $this->returnValue(true)
         );
         $this->assertTrue($this->_customerFinanceHelper->isCustomerBalanceEnabled());
     }
@@ -146,8 +146,8 @@ class DataTest extends \PHPUnit\Framework\TestCase
             'isEnabled'
         )->with(
             'Magento_CustomerBalance'
-        )->willReturn(
-            true
+        )->will(
+            $this->returnValue(true)
         );
         $this->assertFalse($this->_customerFinanceHelper->isCustomerBalanceEnabled());
     }
@@ -165,8 +165,8 @@ class DataTest extends \PHPUnit\Framework\TestCase
             'isEnabled'
         )->with(
             'Magento_CustomerBalance'
-        )->willReturn(
-            null
+        )->will(
+            $this->returnValue(null)
         );
         $this->assertFalse($this->_customerFinanceHelper->isCustomerBalanceEnabled());
     }
@@ -184,8 +184,8 @@ class DataTest extends \PHPUnit\Framework\TestCase
             'isEnabled'
         )->with(
             'Magento_CustomerBalance'
-        )->willReturn(
-            null
+        )->will(
+            $this->returnValue(null)
         );
         $this->assertFalse($this->_customerFinanceHelper->isCustomerBalanceEnabled());
     }

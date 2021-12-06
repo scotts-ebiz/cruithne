@@ -12,14 +12,14 @@ class CollectionTest extends \PHPUnit\Framework\TestCase
      */
     private $_collection;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->_collection = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
             \Magento\Banner\Model\ResourceModel\Salesrule\Collection::class
         );
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->_collection = null;
     }

@@ -10,7 +10,7 @@ use Magento\TestFramework\Helper\Bootstrap;
 
 class ScheduledLogCleanTest extends \Magento\TestFramework\Indexer\TestCase
 {
-    public static function setUpBeforeClass(): void
+    public static function setUpBeforeClass()
     {
         $db = Bootstrap::getInstance()->getBootstrap()
             ->getApplication()
@@ -69,6 +69,14 @@ class ScheduledLogCleanTest extends \Magento\TestFramework\Indexer\TestCase
         $observer->execute(true);
 
         // Verify
-        $this->assertFileDoesNotExist($historyPath);
+        $this->assertFileNotExists($historyPath);
+    }
+
+    /**
+     * teardown
+     */
+    public function tearDown()
+    {
+        parent::tearDown();
     }
 }

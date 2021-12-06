@@ -27,7 +27,7 @@ class ArgumentsTest extends \Magento\Test\Integrity\Phrase\AbstractTestCase
      */
     protected $blackList;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->_phraseCollector = new \Magento\Setup\Module\I18n\Parser\Adapter\Php\Tokenizer\PhraseCollector(
             new \Magento\Setup\Module\I18n\Parser\Adapter\Php\Tokenizer(),

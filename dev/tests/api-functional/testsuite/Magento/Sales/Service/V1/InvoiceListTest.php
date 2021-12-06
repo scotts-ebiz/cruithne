@@ -9,7 +9,7 @@ use Magento\Framework\Api\SortOrderBuilder;
 use Magento\TestFramework\TestCase\WebapiAbstract;
 
 /**
- * Class InvoiceListTest for Magento sales webapi
+ * Class InvoiceListTest
  */
 class InvoiceListTest extends WebapiAbstract
 {
@@ -24,7 +24,7 @@ class InvoiceListTest extends WebapiAbstract
      */
     protected $objectManager;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
     }
@@ -71,7 +71,6 @@ class InvoiceListTest extends WebapiAbstract
         $searchCriteriaBuilder->addFilters([$stateFilter]);
         $searchCriteriaBuilder->addFilters([$incrementFilter, $zeroStatusFilter]);
         $searchCriteriaBuilder->addSortOrder($sortOrder);
-        $searchCriteriaBuilder->setPageSize(20);
         $searchData = $searchCriteriaBuilder->create()->__toArray();
 
         $requestData = ['searchCriteria' => $searchData];

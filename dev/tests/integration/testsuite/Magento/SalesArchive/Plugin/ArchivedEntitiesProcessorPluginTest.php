@@ -31,7 +31,7 @@ class ArchivedEntitiesProcessorPluginTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    public function setUp()
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->archive = $objectManager->get(Archive::class);
@@ -57,7 +57,7 @@ class ArchivedEntitiesProcessorPluginTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals(count($incrementIds), count($archiveOrderItems));
     }
 
-    protected function tearDown(): void
+    public function tearDown()
     {
         $incrementIds  = ['100000007', '100000008', '100000009', '100000010', '100000011', '100000012'];
         $this->archive->removeFromArchive('order', 'increment_id', $incrementIds);

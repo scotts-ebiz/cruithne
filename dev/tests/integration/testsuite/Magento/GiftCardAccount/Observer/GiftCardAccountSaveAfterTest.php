@@ -28,7 +28,7 @@ class GiftCardAccountSaveAfterTest extends \PHPUnit\Framework\TestCase
      */
     private $objectManager;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
     }
@@ -49,7 +49,7 @@ class GiftCardAccountSaveAfterTest extends \PHPUnit\Framework\TestCase
         $giftCardItemOptions = $giftCardItem->getProductOptions();
         $giftCardCreatedCodes = $giftCardItemOptions['giftcard_created_codes'];
 
-        $this->assertCount(2, $giftCardCreatedCodes);
+        $this->assertEquals(2, count($giftCardCreatedCodes));
 
         foreach ($giftCardCreatedCodes as $code) {
             $giftCardAccount = $this->getGiftCardAccount($code);
@@ -58,7 +58,7 @@ class GiftCardAccountSaveAfterTest extends \PHPUnit\Framework\TestCase
             );
 
             $this->assertNotNull($historyItem);
-            $this->assertStringContainsString(
+            $this->assertContains(
                 $order->getIncrementId(),
                 $historyItem->getAdditionalInfo(),
                 'Giftcard account history should contain initial order number'

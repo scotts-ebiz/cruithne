@@ -57,7 +57,7 @@ class EmailTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->_objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $this->customerAccountManagement = $this->_objectManager->create(
@@ -100,7 +100,10 @@ class EmailTest extends \PHPUnit\Framework\TestCase
         $this->_emailModel->addPriceProduct($product);
         $this->_emailModel->send();
 
-        $this->assertStringContainsString('Smith,', $this->transportBuilder->getSentMessage()->getRawMessage());
+        $this->assertContains(
+            'Smith,',
+            $this->transportBuilder->getSentMessage()->getRawMessage()
+        );
     }
 
     public function customerFunctionDataProvider()
@@ -147,7 +150,7 @@ class EmailTest extends \PHPUnit\Framework\TestCase
                 . $expectedPrice . '" data-price-type="finalPrice" '
                 . 'class="price-wrapper "><span class="price">$' . $expectedPrice . '.00</span></span>';
 
-            $this->assertStringContainsString(
+            $this->assertContains(
                 $expectedPriceBox,
                 $this->transportBuilder->getSentMessage()->getBody()->getParts()[0]->getRawContent()
             );

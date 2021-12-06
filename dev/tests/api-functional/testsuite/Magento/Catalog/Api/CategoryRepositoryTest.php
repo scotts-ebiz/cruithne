@@ -46,7 +46,7 @@ class CategoryRepositoryTest extends WebapiAbstract
     /**
      * @inheritDoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -89,7 +89,7 @@ class CategoryRepositoryTest extends WebapiAbstract
         try {
             $this->getInfoCategory(-1);
         } catch (\Exception $e) {
-            $this->assertStringContainsString('No such entity with %fieldName = %fieldValue', $e->getMessage());
+            $this->assertContains('No such entity with %fieldName = %fieldValue', $e->getMessage());
         }
     }
 
@@ -168,17 +168,16 @@ class CategoryRepositoryTest extends WebapiAbstract
         try {
             $this->deleteCategory(-1);
         } catch (\Exception $e) {
-            $this->assertStringContainsString('No such entity with %fieldName = %fieldValue', $e->getMessage());
+            $this->assertContains('No such entity with %fieldName = %fieldValue', $e->getMessage());
         }
     }
 
     /**
      * @dataProvider deleteSystemOrRootDataProvider
+     * @expectedException \Exception
      */
     public function testDeleteSystemOrRoot()
     {
-        $this->expectException(\Exception::class);
-
         $this->deleteCategory($this->modelId);
     }
 

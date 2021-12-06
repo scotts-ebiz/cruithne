@@ -30,11 +30,11 @@ class PhpScannerTest extends \PHPUnit\Framework\TestCase
     protected $_testFiles = [];
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     protected $_logMock;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->_logMock = $this->createMock(\Magento\Setup\Module\Di\Compiler\Log\Log::class);
         $this->_model = new \Magento\Setup\Module\Di\Code\Scanner\PhpScanner($this->_logMock, new TypeProcessor());

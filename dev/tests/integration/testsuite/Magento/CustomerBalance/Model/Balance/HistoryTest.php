@@ -49,7 +49,7 @@ class HistoryTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -167,7 +167,7 @@ class HistoryTest extends TestCase
     {
         $message = $this->transportBuilder->getSentMessage();
         $this->assertNotNull($message);
-        $this->assertStringContainsString(
+        $this->assertContains(
             $expectedText,
             $message->getBody()->getParts()[0]->getRawContent()
         );

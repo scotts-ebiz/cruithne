@@ -28,7 +28,7 @@ class PhpRuleTest extends \PHPUnit\Framework\TestCase
      * @inheritDoc
      * @throws \Exception
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $mapRoutes = ['someModule' => ['Magento\SomeModule'], 'anotherModule' => ['Magento\OneModule']];
         $mapLayoutBlocks = ['area' => ['block.name' => ['Magento\SomeModule' => 'Magento\SomeModule']]];

@@ -36,7 +36,7 @@ class CartTest extends \Magento\TestFramework\TestCase\AbstractController
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
         $this->checkoutSession = $this->_objectManager->get(CheckoutSession::class);
@@ -46,7 +46,7 @@ class CartTest extends \Magento\TestFramework\TestCase\AbstractController
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->_objectManager->removeSharedInstance(CheckoutSession::class);
         parent::tearDown();
@@ -332,9 +332,9 @@ class CartTest extends \Magento\TestFramework\TestCase\AbstractController
         $controller = $this->_objectManager->create(\Magento\Checkout\Controller\Cart\Add::class, [$quote]);
         $controller->execute();
 
-        $this->assertStringContainsString(json_encode([]), $this->getResponse()->getBody());
+        $this->assertContains(json_encode([]), $this->getResponse()->getBody());
         $items = $quote->getItems()->getItems();
-        $this->assertIsArray($items, 'Quote doesn\'t have any items');
+        $this->assertTrue(is_array($items), 'Quote doesn\'t have any items');
         $this->assertCount(1, $items, 'Expected quote items not equal to 1');
         $item = reset($items);
         $this->assertEquals(1, $item->getProductId(), 'Quote has more than one product');

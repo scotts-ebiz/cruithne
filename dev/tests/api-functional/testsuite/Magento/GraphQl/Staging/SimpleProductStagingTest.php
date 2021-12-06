@@ -40,7 +40,7 @@ class SimpleProductStagingTest extends GraphQlAbstract
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->updateRepositoryInterface = $objectManager->get(UpdateRepositoryInterface::class);

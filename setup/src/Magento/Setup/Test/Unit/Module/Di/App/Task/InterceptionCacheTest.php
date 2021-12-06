@@ -10,16 +10,16 @@ use Magento\Setup\Module\Di\App\Task\Operation\InterceptionCache;
 class InterceptionCacheTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject | \Magento\Framework\Interception\Config\Config
+     * @var \PHPUnit_Framework_MockObject_MockObject | \Magento\Framework\Interception\Config\Config
      */
     private $configMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject | \Magento\Setup\Module\Di\Code\Reader\Decorator\Interceptions
+     * @var \PHPUnit_Framework_MockObject_MockObject | \Magento\Setup\Module\Di\Code\Reader\Decorator\Interceptions
      */
     private $interceptionsListMock;
 
-    protected function setUp(): void
+    public function setUp()
     {
         $this->configMock = $this->getMockBuilder(\Magento\Framework\Interception\Config\Config::class)
             ->setMethods([])

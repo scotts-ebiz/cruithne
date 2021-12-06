@@ -39,7 +39,7 @@ class CollectionTest extends \PHPUnit\Framework\TestCase
      * Sets up the fixture, for example, opens a network connection.
      * This method is called before a test is executed.
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->collection = Bootstrap::getObjectManager()->create(
             \Magento\Catalog\Model\ResourceModel\Product\Collection::class
@@ -262,7 +262,7 @@ class CollectionTest extends \PHPUnit\Framework\TestCase
             . ' LEFT JOIN `' . $urlRewriteTable . '` AS `alias` ON (alias.entity_id =e.entity_id)'
             . ' AND (alias.entity_type = \'product\')';
 
-        self::assertStringContainsString($expected,str_replace(PHP_EOL, '', $sql));
+        self::assertContains($expected, str_replace(PHP_EOL, '', $sql));
     }
 
     /**

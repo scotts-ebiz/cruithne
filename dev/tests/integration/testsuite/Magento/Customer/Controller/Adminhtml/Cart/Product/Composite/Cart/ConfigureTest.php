@@ -30,7 +30,7 @@ class ConfigureTest extends AbstractBackendController
     private $json;
 
     /** @inheritdoc */
-    protected function setUp(): void
+    public function setUp()
     {
         parent::setUp();
         $this->quoteItemCollectionFactory = $this->_objectManager->get(CollectionFactory::class);
@@ -95,7 +95,7 @@ class ConfigureTest extends AbstractBackendController
             'website_id' => $this->baseWebsiteId,
             'id' => $itemId,
         ]);
-        $this->assertStringContainsString(
+        $this->assertContains(
             $expectedResponseBody,
             $this->getResponse()->getBody()
         );

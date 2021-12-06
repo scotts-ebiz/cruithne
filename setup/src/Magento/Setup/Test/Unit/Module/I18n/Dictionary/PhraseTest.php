@@ -119,12 +119,11 @@ class PhraseTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @expectedException \DomainException
+     * @expectedExceptionMessage Context value is empty
      */
     public function testAddEmptyContextValue()
     {
-        $this->expectException(\DomainException::class);
-        $this->expectExceptionMessage('Context value is empty');
-
         $phrase = new Phrase('phrase', 'translation', 'context_type', 'context_value1');
         $phrase->addContextValue(null);
     }

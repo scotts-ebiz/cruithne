@@ -60,7 +60,7 @@ class GiftcardTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -86,7 +86,7 @@ class GiftcardTest extends \PHPUnit\Framework\TestCase
         );
         $exportData = $this->model->export();
         foreach ($this->expectedValues as $value) {
-            $this->assertStringContainsString($value, $exportData);
+            $this->assertContains($value, $exportData);
         }
     }
 }

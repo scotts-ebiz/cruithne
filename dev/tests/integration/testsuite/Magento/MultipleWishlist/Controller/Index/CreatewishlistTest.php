@@ -34,7 +34,7 @@ class CreatewishlistTest extends AbstractController
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -46,7 +46,7 @@ class CreatewishlistTest extends AbstractController
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->customerSession->setCustomerId(null);
 
@@ -90,7 +90,7 @@ class CreatewishlistTest extends AbstractController
         $this->assertSessionMessages($this->equalTo([(string)__($message)]), MessageInterface::TYPE_SUCCESS);
         $wishList = $this->getWishlistByCustomerId->execute(1);
         $this->assertEquals($wishList->getWishlistId(), $result['wishlist_id']);
-        $this->assertStringContainsString(
+        $this->assertContains(
             'wishlist/index/index/wishlist_id/' . $wishList->getWishlistId(),
             $result['redirect']
         );

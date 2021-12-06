@@ -29,7 +29,7 @@ class CorruptedCategoriesDataSectionTest extends \PHPUnit\Framework\TestCase
     /**
      * {@inheritDoc}
      */
-    public static function setUpBeforeClass(): void
+    public static function setUpBeforeClass()
     {
         parent::setUpBeforeClass();
         Bootstrap::getInstance()->getBootstrap()
@@ -41,7 +41,7 @@ class CorruptedCategoriesDataSectionTest extends \PHPUnit\Framework\TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $objectManager = Bootstrap::getObjectManager();
 

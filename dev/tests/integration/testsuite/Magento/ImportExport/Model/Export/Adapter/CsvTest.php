@@ -36,7 +36,7 @@ class CsvTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -62,7 +62,7 @@ class CsvTest extends TestCase
         );
         /** Assert that the destination file was removed after destruct */
         $this->csv = null;
-        $this->assertFileDoesNotExist(
+        $this->assertFileNotExists(
             $directoryHandle->getAbsolutePath($this->destination),
             'The destination file was\'t removed after destruct'
         );

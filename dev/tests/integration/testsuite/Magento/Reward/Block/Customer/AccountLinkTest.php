@@ -31,7 +31,7 @@ class AccountLinkTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -48,7 +48,7 @@ class AccountLinkTest extends TestCase
         $block = $this->page->getLayout()->getBlock('customer-account-navigation-reward-link');
         $this->assertNotFalse($block);
         $html = $block->toHtml();
-        $this->assertStringContainsString('reward/customer/info', $html);
+        $this->assertContains('reward/customer/info', $html);
         $this->assertEquals('Reward Points', strip_tags($html));
     }
 

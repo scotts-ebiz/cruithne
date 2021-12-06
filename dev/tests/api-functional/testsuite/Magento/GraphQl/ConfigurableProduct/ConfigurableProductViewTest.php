@@ -212,7 +212,7 @@ QUERY;
 
         $this->assertArrayHasKey('products', $response);
         $this->assertArrayHasKey('items', $response['products']);
-        $this->assertCount(1, $response['products']['items']);
+        $this->assertEquals(1, count($response['products']['items']));
         $this->assertArrayHasKey(0, $response['products']['items']);
         $this->assertBaseFields($product, $response['products']['items'][0]);
         $this->assertConfigurableProductOptions($response['products']['items'][0]);
@@ -335,11 +335,13 @@ QUERY;
                 $mediaGalleryEntries,
                 "Precondition failed since there are incorrect number of media gallery entries"
             );
-            $this->assertIsArray($actualResponse['variants']
+            $this->assertTrue(
+                is_array(
+                    $actualResponse['variants']
                     [$variantKey]
                     ['product']
                     ['media_gallery_entries']
-                
+                )
             );
             $this->assertCount(
                 1,
@@ -413,7 +415,7 @@ QUERY;
                 $variantArray['product']['price']
             );
             $configurableOptions = $this->getConfigurableOptions();
-            $this->assertCount(1, $variantArray['attributes']);
+            $this->assertEquals(1, count($variantArray['attributes']));
             foreach ($variantArray['attributes'] as $attribute) {
                 $hasAssertion = false;
                 foreach ($configurableOptions as $option) {

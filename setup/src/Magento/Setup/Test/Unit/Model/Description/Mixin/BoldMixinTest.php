@@ -13,16 +13,16 @@ class BoldMixinTest extends \PHPUnit\Framework\TestCase
     private $mixin;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Setup\Model\Description\Mixin\Helper\RandomWordSelector
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Setup\Model\Description\Mixin\Helper\RandomWordSelector
      */
     private $randomWordSelectorMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Setup\Model\Description\Mixin\Helper\WordWrapper
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Setup\Model\Description\Mixin\Helper\WordWrapper
      */
     private $wordWrapperMock;
 
-    protected function setUp(): void
+    public function setUp()
     {
         $this->randomWordSelectorMock =
             $this->createMock(\Magento\Setup\Model\Description\Mixin\Helper\RandomWordSelector::class);
