@@ -35,7 +35,7 @@ class RequestSignerTest extends TestCase
      */
     private $deploymentConfig;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->dateTime = $this->createMock(DateTime::class);
         $this->deploymentConfig = $this->createMock(DeploymentConfig::class);
@@ -116,11 +116,12 @@ class RequestSignerTest extends TestCase
     }
 
     /**
-     * @expectedException \RuntimeException
-     * @expectedExceptionMessage URL does not contain required preview version param
      */
     public function testExceptionForInvalidUrl()
     {
+        $this->expectException(\RuntimeException::class);
+        $this->expectExceptionMessage('URL does not contain required preview version param');
+
         $this->requestSigner->signUrl('http://test.local/foo/bar?foo=bar');
     }
 

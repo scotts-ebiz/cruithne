@@ -31,7 +31,7 @@ class BalanceTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -47,7 +47,7 @@ class BalanceTest extends TestCase
         $this->preparePage();
         $block = $this->page->getLayout()->getBlock('reward.points.balance');
         $this->assertNotFalse($block);
-        $this->assertContains((string)__('Reward Points Balance'), strip_tags($block->toHtml()));
+        $this->assertStringContainsString((string)__('Reward Points Balance'), strip_tags($block->toHtml()));
     }
 
     /**

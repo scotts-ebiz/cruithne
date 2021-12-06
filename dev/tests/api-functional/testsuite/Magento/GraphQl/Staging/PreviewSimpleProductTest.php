@@ -30,7 +30,7 @@ class PreviewSimpleProductTest extends GraphQlAbstract
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->tokenService = $objectManager->get(AdminTokenServiceInterface::class);
@@ -174,11 +174,12 @@ QUERY;
      *
      * @magentoApiDataFixture Magento/CatalogStaging/_files/simple_product_staged_changes.php
      * @magentoApiDataFixture Magento/User/_files/user_with_custom_role.php
-     * @expectedException \Exception
-     * @expectedExceptionMessage Search is not supported in preview mode.
      */
     public function testProductSearchInPreviewMode()
     {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('Search is not supported in preview mode.');
+
         $update = $this->updateFactory->create();
         $this->updateResourceModel->load($update, 'Product Update Test', 'name');
         $version = $update->getId();
@@ -234,11 +235,12 @@ QUERY;
      * Attempt preview without proper authentication
      *
      * @magentoApiDataFixture Magento/CatalogStaging/_files/simple_product_staged_changes.php
-     * @expectedException \Exception
-     * @expectedExceptionMessage The current user isn't authorized.
      */
     public function testPreviewSimpleProductWithNoAdminToken()
     {
+        $this->expectException(\Exception::class);
+        $this->expectExceptionMessage('The current user isn\'t authorized.');
+
         $update = $this->updateFactory->create();
         $this->updateResourceModel->load($update, 'Product Update Test', 'name');
         $version = $update->getId();

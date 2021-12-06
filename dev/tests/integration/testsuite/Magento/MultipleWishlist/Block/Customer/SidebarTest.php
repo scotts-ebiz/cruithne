@@ -33,7 +33,7 @@ class SidebarTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->page = $this->objectManager->get(Page::class);
