@@ -39,7 +39,7 @@ class UserCollectionTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = BootstrapHelper::getObjectManager();
         $this->userCollection = $this->objectManager->create(UserCollection::class);

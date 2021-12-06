@@ -32,7 +32,7 @@ class ConfigureProductToAddTest extends AbstractBackendController
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -52,8 +52,8 @@ class ConfigureProductToAddTest extends AbstractBackendController
         $product = $this->productRepository->get('Configurable product');
         $this->dispatchRequestWithData(['store' => 1, 'customer' => 1], ['id' => $product->getId()]);
         $handles = $this->layout->getUpdate()->getHandles();
-        $this->assertContains('CATALOG_PRODUCT_COMPOSITE_CONFIGURE', $handles);
-        $this->assertContains('catalog_product_view_type_' . $product->getTypeId(), $handles);
+        $this->assertContains('CATALOG_PRODUCT_COMPOSITE_CONFIGURE',$handles);
+        $this->assertContains('catalog_product_view_type_' . $product->getTypeId(),$handles);
     }
 
     /**

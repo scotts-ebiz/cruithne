@@ -13,18 +13,18 @@
         "akeneo/magento2-connector-enterprise": "101.*",
         "amasty/securityauth": "^1.1",
         "avalara/avatax-magento": "^1.5",
-        "composer/composer": "@alpha",
+        "composer/composer": "^2.1.12",
         "cweagans/composer-patches": "^1.6",
-        "dotmailer/dotmailer-magento2-extension": "4.5.1 as 4.4.1-p1",
+        "dotmailer/dotmailer-magento2-extension": "4.4.2",
         "gigya/magento2-im": "5.6.1",
         "magento/composer-root-update-plugin": "^1.1",
-        "magento/product-enterprise-edition": ">=2.3.6 <2.3.7",
+        "magento/product-enterprise-edition": "2.3.7-p2",
         "magepal/magento2-googletagmanager": "^2.6",
         "mageplaza/module-google-recaptcha": "^4.0",
         "mageplaza/module-smtp": "^4.0",
         "mirasvit/module-fraud-check": "*",
         "recurly/recurly-client": "^2.12",
-        "snowdog/frontools": "^1.11",
+        "snowdog/frontools": "1.11",
         "zaius/zaius-magento-2": "^1.0.7"
     },
     "require-dev": {
@@ -32,11 +32,11 @@
         "friendsofphp/php-cs-fixer": "~2.18.2",
         "lusitanian/oauth": "~0.8.11",
         "magento/magento-coding-standard": "~6.0.0",
-        "magento/magento2-functional-testing-framework": "~2.6.5",
+        "magento/magento2-functional-testing-framework": "^2.7",
         "pdepend/pdepend": "2.8.0",
-        "phpmd/phpmd": "@stable",
-        "phpunit/phpunit": "~6.5.0",
-        "sebastian/phpcpd": "~3.0.0",
+        "phpmd/phpmd": "^2.8.0",
+        "phpunit/phpunit": "^9",
+        "sebastian/phpcpd": "~5.0.0",
         "squizlabs/php_codesniffer": "^3.0.0"
     },
     "scripts": {
@@ -108,9 +108,9 @@
         "magento-force": "override",
         "composer-exit-on-patch-failure": true,
         "patches": {
-        	"zaius/zaius-magento-2": {
-        		"Zaius Duplicate Entries": "patches/composer/zaius_duplicate_patch.diff"
-        	}
+            "zaius/zaius-magento-2": {
+                "Zaius Duplicate Entries": "patches/composer/zaius_duplicate_patch.diff"
+            }
         }
     },
     "conflict": {
