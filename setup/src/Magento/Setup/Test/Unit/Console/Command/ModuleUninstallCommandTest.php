@@ -18,72 +18,72 @@ use Symfony\Component\Console\Tester\CommandTester;
 class ModuleUninstallCommandTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \Magento\Framework\App\DeploymentConfig|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Framework\App\DeploymentConfig|\PHPUnit_Framework_MockObject_MockObject
      */
     private $deploymentConfig;
 
     /**
-     * @var \Magento\Framework\Module\FullModuleList|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Framework\Module\FullModuleList|\PHPUnit_Framework_MockObject_MockObject
      */
     private $fullModuleList;
 
     /**
-     * @var \Magento\Framework\App\MaintenanceMode|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Framework\App\MaintenanceMode|\PHPUnit_Framework_MockObject_MockObject
      */
     private $maintenanceMode;
 
     /**
-     * @var \Magento\Setup\Model\UninstallCollector|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Setup\Model\UninstallCollector|\PHPUnit_Framework_MockObject_MockObject
      */
     private $uninstallCollector;
 
     /**
-     * @var \Magento\Framework\Module\PackageInfo|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Framework\Module\PackageInfo|\PHPUnit_Framework_MockObject_MockObject
      */
     private $packageInfo;
 
     /**
-     * @var \Magento\Framework\Module\DependencyChecker|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Framework\Module\DependencyChecker|\PHPUnit_Framework_MockObject_MockObject
      */
     private $dependencyChecker;
 
     /**
-     * @var \Magento\Setup\Model\ModuleUninstaller|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Setup\Model\ModuleUninstaller|\PHPUnit_Framework_MockObject_MockObject
      */
     private $moduleUninstaller;
 
     /**
-     * @var \Magento\Setup\Model\ModuleRegistryUninstaller|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Setup\Model\ModuleRegistryUninstaller|\PHPUnit_Framework_MockObject_MockObject
      */
     private $moduleRegistryUninstaller;
 
     /**
-     * @var \Magento\Framework\App\Cache|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Framework\App\Cache|\PHPUnit_Framework_MockObject_MockObject
      */
     private $cache;
 
     /**
-     * @var \Magento\Framework\App\State\CleanupFiles|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Framework\App\State\CleanupFiles|\PHPUnit_Framework_MockObject_MockObject
      */
     private $cleanupFiles;
 
     /**
-     * @var \Magento\Framework\Setup\BackupRollback|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Framework\Setup\BackupRollback|\PHPUnit_Framework_MockObject_MockObject
      */
     private $backupRollback;
 
     /**
-     * @var \Magento\Framework\Setup\BackupRollbackFactory|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Framework\Setup\BackupRollbackFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     private $backupRollbackFactory;
 
     /**
-     * @var \Symfony\Component\Console\Helper\QuestionHelper|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Symfony\Component\Console\Helper\QuestionHelper|\PHPUnit_Framework_MockObject_MockObject
      */
     private $question;
 
     /**
-     * @var \Symfony\Component\Console\Helper\HelperSet|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Symfony\Component\Console\Helper\HelperSet|\PHPUnit_Framework_MockObject_MockObject
      */
     private $helperSet;
 
@@ -98,14 +98,14 @@ class ModuleUninstallCommandTest extends \PHPUnit\Framework\TestCase
     private $tester;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $patchApplierMock;
 
     /**
      * @SuppressWarnings(PHPMD.UnusedLocalVariable)
      */
-    protected function setUp(): void
+    public function setUp()
     {
         $this->deploymentConfig = $this->createMock(\Magento\Framework\App\DeploymentConfig::class);
         $this->fullModuleList = $this->createMock(\Magento\Framework\Module\FullModuleList::class);
@@ -142,7 +142,7 @@ class ModuleUninstallCommandTest extends \PHPUnit\Framework\TestCase
         $configLoader->expects($this->any())->method('load')->willReturn([]);
         $objectManager->expects($this->any())
             ->method('get')
-            ->willReturnMap([
+            ->will($this->returnValueMap([
                 [\Magento\Framework\Module\PackageInfoFactory::class, $packageInfoFactory],
                 [\Magento\Framework\Module\DependencyChecker::class, $this->dependencyChecker],
                 [\Magento\Framework\App\Cache::class, $this->cache],
@@ -154,7 +154,7 @@ class ModuleUninstallCommandTest extends \PHPUnit\Framework\TestCase
                 [\Magento\Framework\Setup\BackupRollbackFactory::class, $this->backupRollbackFactory],
                 [PatchApplier::class, $this->patchApplierMock],
                 [\Magento\Framework\ObjectManager\ConfigLoaderInterface::class, $configLoader],
-            ]);
+            ]));
         $composer = $this->createMock(\Magento\Framework\Composer\ComposerInformation::class);
         $composer->expects($this->any())
             ->method('getRootRequiredPackages')
@@ -176,13 +176,13 @@ class ModuleUninstallCommandTest extends \PHPUnit\Framework\TestCase
         $this->question
             ->expects($this->any())
             ->method('ask')
-            ->willReturn(true);
+            ->will($this->returnValue(true));
         $this->helperSet = $this->createMock(\Symfony\Component\Console\Helper\HelperSet::class);
         $this->helperSet
             ->expects($this->any())
             ->method('get')
             ->with('question')
-            ->willReturn($this->question);
+            ->will($this->returnValue($this->question));
         $this->command->setHelperSet($this->helperSet);
         $this->tester = new CommandTester($this->command);
     }
@@ -213,13 +213,13 @@ class ModuleUninstallCommandTest extends \PHPUnit\Framework\TestCase
         $this->deploymentConfig->expects($this->once())->method('isAvailable')->willReturn(true);
         $this->packageInfo->expects($this->exactly(count($input['module'])))
             ->method('getPackageName')
-            ->willReturnMap($packageInfoMap);
+            ->will($this->returnValueMap($packageInfoMap));
         $this->fullModuleList->expects($this->exactly(count($input['module'])))
             ->method('has')
-            ->willReturnMap($fullModuleListMap);
+            ->will($this->returnValueMap($fullModuleListMap));
         $this->tester->execute($input);
         foreach ($expect as $message) {
-            $this->assertStringContainsString($message, $this->tester->getDisplay());
+            $this->assertContains($message, $this->tester->getDisplay());
         }
     }
 
@@ -320,7 +320,7 @@ class ModuleUninstallCommandTest extends \PHPUnit\Framework\TestCase
         ];
         $this->packageInfo->expects($this->any())
             ->method('getPackageName')
-            ->willReturnMap($packageMap);
+            ->will($this->returnValueMap($packageMap));
         $this->fullModuleList->expects($this->any())
             ->method('has')
             ->willReturn(true);
@@ -343,7 +343,7 @@ class ModuleUninstallCommandTest extends \PHPUnit\Framework\TestCase
             ->willReturn($dependencies);
         $this->tester->execute($input);
         foreach ($expect as $message) {
-            $this->assertStringContainsString($message, $this->tester->getDisplay());
+            $this->assertContains($message, $this->tester->getDisplay());
         }
     }
 
@@ -552,12 +552,12 @@ class ModuleUninstallCommandTest extends \PHPUnit\Framework\TestCase
         $this->question
             ->expects($this->once())
             ->method('ask')
-            ->willReturn(false);
+            ->will($this->returnValue(false));
         $this->helperSet
             ->expects($this->once())
             ->method('get')
             ->with('question')
-            ->willReturn($this->question);
+            ->will($this->returnValue($this->question));
         $this->command->setHelperSet($this->helperSet);
         $this->tester = new CommandTester($this->command);
         $this->tester->execute($input);

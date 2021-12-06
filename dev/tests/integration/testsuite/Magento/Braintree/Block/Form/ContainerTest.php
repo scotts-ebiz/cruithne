@@ -33,7 +33,7 @@ class ContainerTest extends \PHPUnit\Framework\TestCase
      */
     private $container;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->bootstrap = Bootstrap::getInstance();
         $this->bootstrap->loadArea(Area::AREA_ADMINHTML);

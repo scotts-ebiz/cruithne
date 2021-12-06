@@ -43,7 +43,7 @@ class AttributeSearchWeightTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->productAttributeRepository = $this->objectManager->get(ProductAttributeRepositoryInterface::class);
@@ -54,7 +54,7 @@ class AttributeSearchWeightTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->updateAttributesWeight($this->collectedAttributesWeight);
     }

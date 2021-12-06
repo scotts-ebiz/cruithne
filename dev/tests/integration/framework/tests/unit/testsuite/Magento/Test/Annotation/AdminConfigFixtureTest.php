@@ -12,11 +12,11 @@ namespace Magento\Test\Annotation;
 class AdminConfigFixtureTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \Magento\TestFramework\Annotation\AdminConfigFixture|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\TestFramework\Annotation\AdminConfigFixture|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $_object;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->_object = $this->createPartialMock(
             \Magento\TestFramework\Annotation\AdminConfigFixture::class,
@@ -35,8 +35,8 @@ class AdminConfigFixtureTest extends \PHPUnit\Framework\TestCase
             '_getConfigValue'
         )->with(
             'any_config'
-        )->willReturn(
-            'some_value'
+        )->will(
+            $this->returnValue('some_value')
         );
         $this->_object->expects($this->at(1))->method('_setConfigValue')->with('any_config', 'some_value');
         $this->_object->startTest($this);
@@ -64,8 +64,8 @@ class AdminConfigFixtureTest extends \PHPUnit\Framework\TestCase
             '_getConfigValue'
         )->with(
             'any_config'
-        )->willReturn(
-            'some_value'
+        )->will(
+            $this->returnValue('some_value')
         );
         $this->_object->expects($this->at(1))->method('_setConfigValue')->with('any_config', 'some_value');
         $this->_object->initStoreAfter();

@@ -12,7 +12,7 @@ class ParagraphMixinTest extends \PHPUnit\Framework\TestCase
      */
     private $mixin;
 
-    protected function setUp(): void
+    public function setUp()
     {
         $this->mixin = new \Magento\Setup\Model\Description\Mixin\ParagraphMixin();
     }

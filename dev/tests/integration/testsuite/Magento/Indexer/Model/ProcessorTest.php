@@ -25,7 +25,7 @@ class ProcessorTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->processor = Bootstrap::getObjectManager()->create(Processor::class);
     }

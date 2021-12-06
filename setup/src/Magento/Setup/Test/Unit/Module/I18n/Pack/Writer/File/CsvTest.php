@@ -22,39 +22,39 @@ require_once __DIR__ . '/_files/ioMock.php';
 class CsvTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var Context|\PHPUnit\Framework\MockObject\MockObject
+     * @var Context|\PHPUnit_Framework_MockObject_MockObject
      */
     private $contextMock;
 
     /**
-     * @var Locale|\PHPUnit\Framework\MockObject\MockObject
+     * @var Locale|\PHPUnit_Framework_MockObject_MockObject
      */
     private $localeMock;
 
     /**
-     * @var Dictionary|\PHPUnit\Framework\MockObject\MockObject
+     * @var Dictionary|\PHPUnit_Framework_MockObject_MockObject
      */
     private $dictionaryMock;
 
     /**
-     * @var Phrase|\PHPUnit\Framework\MockObject\MockObject
+     * @var Phrase|\PHPUnit_Framework_MockObject_MockObject
      */
     private $phraseMock;
 
     /**
-     * @var Factory|\PHPUnit\Framework\MockObject\MockObject
+     * @var Factory|\PHPUnit_Framework_MockObject_MockObject
      */
     private $factoryMock;
 
     /**
-     * @var Csv|\PHPUnit\Framework\MockObject\MockObject
+     * @var Csv|\PHPUnit_Framework_MockObject_MockObject
      */
     private $object;
 
     /**
      * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         /** @var ObjectManagerHelper $objectManagerHelper */
         $objectManagerHelper = new ObjectManagerHelper($this);
@@ -79,12 +79,11 @@ class CsvTest extends \PHPUnit\Framework\TestCase
      * @param string $contextType
      * @param array $contextValue
      * @dataProvider writeDictionaryWithRuntimeExceptionDataProvider
+     * @expectedException \RuntimeException
      * @return void
      */
     public function testWriteDictionaryWithRuntimeException($contextType, $contextValue)
     {
-        $this->expectException(\RuntimeException::class);
-
         $this->configureGeneralPhrasesMock($contextType, $contextValue);
 
         $this->object->writeDictionary($this->dictionaryMock, $this->localeMock);
@@ -103,13 +102,12 @@ class CsvTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Some error. Row #1.
      * @return void
      */
     public function testWriteDictionaryWithInvalidArgumentException()
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Some error. Row #1.');
-
         $contextType = 'module';
         $contextValue = 'Magento_Module';
 

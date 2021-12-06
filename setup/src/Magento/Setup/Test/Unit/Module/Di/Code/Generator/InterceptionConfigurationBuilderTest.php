@@ -15,31 +15,31 @@ class InterceptionConfigurationBuilderTest extends \PHPUnit\Framework\TestCase
     protected $model;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     protected $interceptionConfig;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     protected $pluginList;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     protected $typeReader;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $cacheManager;
 
     /**
-     * @var \Magento\Framework\ObjectManager\InterceptableValidator|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Framework\ObjectManager\InterceptableValidator|\PHPUnit_Framework_MockObject_MockObject
      */
     private $interceptableValidator;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->interceptionConfig =
             $this->createPartialMock(\Magento\Framework\Interception\Config\Config::class, ['hasPlugins']);

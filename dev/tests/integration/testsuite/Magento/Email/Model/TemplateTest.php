@@ -21,12 +21,12 @@ use Magento\TestFramework\Helper\Bootstrap;
 class TemplateTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var Template|\PHPUnit\Framework\MockObject\MockObject
+     * @var Template|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $model;
 
     /**
-     * @var \Zend_Mail|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Zend_Mail|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $mail;
 
@@ -35,7 +35,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
      */
     protected $objectManager;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
     }
@@ -81,7 +81,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
     /**
      * Return a disposable \Zend_Mail instance
      *
-     * @return \PHPUnit\Framework\MockObject\MockObject|\Zend_Mail
+     * @return \PHPUnit_Framework_MockObject_MockObject|\Zend_Mail
      */
     public function getMail()
     {
@@ -110,7 +110,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         $this->assertNotEmpty($this->model->getTemplateText());
         $this->assertNotEmpty($this->model->getTemplateSubject());
         $this->assertNotEmpty($this->model->getOrigTemplateVariables());
-        $this->assertIsArray(json_decode($this->model->getOrigTemplateVariables(), true));
+        $this->assertInternalType('array', json_decode($this->model->getOrigTemplateVariables(), true));
     }
 
     /**
@@ -168,7 +168,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
 
         $this->model->setId($templateId);
 
-        $this->assertStringContainsString($expectedOutput, $this->model->processTemplate());
+        $this->assertContains($expectedOutput, $this->model->processTemplate());
     }
 
     /**
@@ -269,9 +269,9 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
                 ->setValue($storeConfigPath, $template->getId(), ScopeInterface::SCOPE_STORE, 'fixturestore');
         }
 
-        $this->assertStringContainsString($assertContains, $this->model->getProcessedTemplate());
+        $this->assertContains($assertContains, $this->model->getProcessedTemplate());
         if ($assertNotContains) {
-            $this->assertStringNotContainsString($assertNotContains, $this->model->getProcessedTemplate());
+            $this->assertNotContains($assertNotContains, $this->model->getProcessedTemplate());
         }
     }
 
@@ -477,10 +477,10 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         $processedTemplate = $this->model->getProcessedTemplate();
 
         foreach ($unexpectedOutputs as $unexpectedOutput) {
-            $this->assertStringNotContainsString($unexpectedOutput, $processedTemplate);
+            $this->assertNotContains($unexpectedOutput, $processedTemplate);
         }
 
-        $this->assertStringContainsString($expectedOutput, $processedTemplate);
+        $this->assertContains($expectedOutput, $processedTemplate);
     }
 
     /**
@@ -700,11 +700,10 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
     /**
      * @param $config
      * @dataProvider setDesignConfigExceptionDataProvider
-     *
+     * @expectedException \Magento\Framework\Exception\LocalizedException
      */
     public function testSetDesignConfigException($config)
     {
-        $this->expectException(\Magento\Framework\Exception\LocalizedException::class);
         $this->mockModel();
         $model = $this->objectManager->create(\Magento\Email\Model\Template::class);
         $model->setDesignConfig($config);
@@ -737,10 +736,12 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         $this->assertTrue($this->model->isValidForSend());
     }
 
+    /**
+     * @expectedException \UnexpectedValueException
+     * @expectedExceptionMessage Email template 'foo' is not defined.
+     */
     public function testGetTypeNonExistentType()
     {
-        $this->expectExceptionMessage("Email template 'foo' is not defined.");
-        $this->expectException(\UnexpectedValueException::class);
         $this->mockModel();
         $this->model->setId('foo');
         $this->model->getType();
@@ -789,10 +790,12 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals($this->model->getVariablesOptionArray(), $variablesOptionArray['value']);
     }
 
+    /**
+     * @expectedException \Magento\Framework\Exception\MailException
+     * @expectedExceptionMessage Please enter a template name.
+     */
     public function testBeforeSaveEmptyTemplateCode()
     {
-        $this->expectExceptionMessage("Please enter a template name.");
-        $this->expectException(\Magento\Framework\Exception\MailException::class);
         $this->mockModel();
         $this->model->beforeSave();
     }
@@ -808,7 +811,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
     {
         $this->mockModel();
         $this->model->setId('customer_create_account_email_template');
-        $this->assertStringContainsString('<body', $this->model->processTemplate());
+        $this->assertContains('<body', $this->model->processTemplate());
     }
 
     public function testGetSubject()

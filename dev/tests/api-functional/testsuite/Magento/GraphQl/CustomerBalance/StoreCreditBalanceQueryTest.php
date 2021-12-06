@@ -68,7 +68,7 @@ class StoreCreditBalanceQueryTest extends GraphQlAbstract
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->registry =  $this->objectManager->get(Registry::class);
@@ -567,7 +567,7 @@ QUERY;
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    public function tearDown()
     {
         $this->deleteQuote();
         $this->deleteOrder();

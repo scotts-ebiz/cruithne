@@ -40,7 +40,7 @@ class SendTest extends AbstractController
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -54,7 +54,7 @@ class SendTest extends AbstractController
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->customerSession->setCustomerId(null);
 
@@ -77,8 +77,8 @@ class SendTest extends AbstractController
         );
         $this->assertNotNull($this->transportBuilder->getSentMessage());
         $messageContent = $this->transportBuilder->getSentMessage()->getBody()->getParts()[0]->getRawContent();
-        $this->assertStringContainsString($shareMessage, $messageContent);
-        $this->assertStringContainsString(
+        $this->assertContains($shareMessage, $messageContent);
+        $this->assertContains(
             sprintf(
                 '%s wants to share this Wish List',
                 $this->customerNameGeneration->getCustomerName($this->customerSession->getCustomerDataObject())

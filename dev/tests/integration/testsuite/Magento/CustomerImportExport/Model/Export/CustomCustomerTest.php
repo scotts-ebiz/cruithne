@@ -17,7 +17,7 @@ class CustomCustomerTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->entityAdapter = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(Customer::class);
     }

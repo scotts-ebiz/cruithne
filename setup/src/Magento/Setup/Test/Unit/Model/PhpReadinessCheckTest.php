@@ -12,24 +12,24 @@ use Magento\Framework\Convert\DataSize;
 class PhpReadinessCheckTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Framework\Composer\ComposerInformation
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\Composer\ComposerInformation
      */
     private $composerInfo;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Setup\Model\PhpInformation
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Setup\Model\PhpInformation
      */
     private $phpInfo;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Composer\Package\Version\VersionParser
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Composer\Package\Version\VersionParser
      */
     private $versionParser;
 
     /**
      * Data size converter
      *
-     * @var DataSize|\PHPUnit\Framework\MockObject\MockObject
+     * @var DataSize|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $dataSize;
 
@@ -38,7 +38,7 @@ class PhpReadinessCheckTest extends \PHPUnit\Framework\TestCase
      */
     private $phpReadinessCheck;
 
-    protected function setUp(): void
+    public function setUp()
     {
         $this->composerInfo = $this->createMock(\Magento\Framework\Composer\ComposerInformation::class);
         $this->phpInfo = $this->createMock(\Magento\Setup\Model\PhpInformation::class);

@@ -27,7 +27,7 @@ class CreatePostWithAttributeTest extends AbstractController
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

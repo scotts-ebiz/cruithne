@@ -38,7 +38,7 @@ class FormTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -51,7 +51,7 @@ class FormTest extends TestCase
     /**
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->registry->unregister('order_address');
 

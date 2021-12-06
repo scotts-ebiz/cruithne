@@ -25,7 +25,7 @@ class HtmlTest extends \PHPUnit\Framework\TestCase
      */
     protected $_adapter;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->_testFile = str_replace('\\', '/', realpath(dirname(__FILE__))) . '/_files/email.html';
         $this->_stringsCount = count(file($this->_testFile));

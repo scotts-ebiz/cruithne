@@ -18,7 +18,7 @@ class PreviewValidationTest extends GraphQlAbstract
      */
     private $tokenService;
 
-    protected function setup(): void
+    protected function setup()
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->tokenService = $objectManager->get(AdminTokenService::class);
@@ -27,12 +27,11 @@ class PreviewValidationTest extends GraphQlAbstract
     /**
      * @magentoApiDataFixture Magento/User/_files/user_with_custom_role.php
      * @magentoApiDataFixture Magento/Staging/_files/staging_update_tomorrow.php
+     * @expectedException \Exception
+     * @expectedExceptionMessage Preview is not available for mutations.
      */
     public function testPreviewMutationNotAllowed()
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Preview is not available for mutations.');
-
         $version = (string) strtotime('+2 days');
         $headers = $this->getPreviewHeaders($version);
 
@@ -47,12 +46,11 @@ QUERY;
     /**
      * @magentoApiDataFixture Magento/User/_files/user_with_custom_role.php
      * @magentoApiDataFixture Magento/Staging/_files/staging_update_tomorrow.php
+     * @expectedException \Exception
+     * @expectedExceptionMessage Preview is not available for this query.
      */
     public function testPreviewUnsupportedQuery()
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Preview is not available for this query.');
-
         $version = (string) strtotime('+2 days');
         $headers = $this->getPreviewHeaders($version);
 
@@ -70,12 +68,11 @@ QUERY;
     /**
      * @magentoApiDataFixture Magento/User/_files/user_with_custom_role.php
      * @magentoApiDataFixture Magento/Staging/_files/staging_update_tomorrow.php
+     * @expectedException \Exception
+     * @expectedExceptionMessage Preview-Version must be a valid timestamp.
      */
     public function testPreviewInvalidVersion()
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Preview-Version must be a valid timestamp.');
-
         $headers = $this->getPreviewHeaders('invalid');
 
         $query = <<<QUERY

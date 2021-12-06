@@ -25,7 +25,7 @@ class RewardTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
         $this->creditMemoFactory = Bootstrap::getObjectManager()->create(CreditmemoFactory::class);

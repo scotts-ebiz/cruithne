@@ -14,7 +14,7 @@ class CodeTest extends \PHPUnit\Framework\TestCase
      */
     protected $parser;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $objectManagerHelper = new ObjectManager($this);
         $this->parser = $objectManagerHelper->getObject(\Magento\Setup\Module\Dependency\Parser\Code::class);
@@ -22,13 +22,12 @@ class CodeTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @param array $options
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Parse error: Option "files_for_parse" is wrong.
      * @dataProvider dataProviderWrongOptionFilesForParse
      */
     public function testParseWithWrongOptionFilesForParse($options)
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Parse error: Option "files_for_parse" is wrong.');
-
         $this->parser->parse($options);
     }
 
@@ -46,13 +45,12 @@ class CodeTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @param array $options
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Parse error: Option "declared_namespaces" is wrong.
      * @dataProvider dataProviderWrongOptionDeclaredNamespace
      */
     public function testParseWithWrongOptionDeclaredNamespace($options)
     {
-        $this->expectException(\InvalidArgumentException::class);
-        $this->expectExceptionMessage('Parse error: Option "declared_namespaces" is wrong.');
-
         $this->parser->parse($options);
     }
 

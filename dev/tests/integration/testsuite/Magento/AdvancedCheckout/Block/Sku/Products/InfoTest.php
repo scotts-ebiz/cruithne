@@ -40,7 +40,7 @@ class InfoTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -135,8 +135,8 @@ class InfoTest extends TestCase
         $item = $this->prepareQuoteItem('simple2', $code);
         $this->block->setItem($item);
         $link = $this->block->getLink();
-        $this->assertStringContainsString($expectedLink, $link);
-        $this->assertStringContainsString($expectedMessage, strip_tags($link));
+        $this->assertContains($expectedLink, $link);
+        $this->assertContains($expectedMessage, strip_tags($link));
     }
 
     /**

@@ -54,7 +54,7 @@ class BannerTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->resourceModel = $this->objectManager->get(Banner::class);
@@ -66,7 +66,7 @@ class BannerTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->resourceModel = null;
     }

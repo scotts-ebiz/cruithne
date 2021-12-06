@@ -27,7 +27,7 @@ class CreateProductFormTest extends \PHPUnit\Framework\TestCase
     /**
      * SetUp
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
     }

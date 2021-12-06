@@ -18,14 +18,14 @@ use Magento\Framework\Serialize\SerializerInterface;
 class ArgumentsSerializationTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var SerializerInterface|PHPUnit\Framework\MockObject\MockObject
+     * @var SerializerInterface|PHPUnit_Framework_MockObject_MockObject
      */
     private $serializer;
 
     /**
      * Set up mocks.
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->serializer = $this->getMockBuilder(SerializerInterface::class)
             ->getMock();

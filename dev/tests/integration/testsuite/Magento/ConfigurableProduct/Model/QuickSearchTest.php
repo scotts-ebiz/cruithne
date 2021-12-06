@@ -44,7 +44,7 @@ class QuickSearchTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->quickSearchByQuery = $this->objectManager->get(QuickSearchByQuery::class);

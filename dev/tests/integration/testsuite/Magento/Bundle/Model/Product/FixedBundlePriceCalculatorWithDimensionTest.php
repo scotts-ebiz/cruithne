@@ -14,7 +14,7 @@ use \Magento\Bundle\Api\Data\LinkInterface;
  * @magentoIndexerDimensionMode catalog_product_price website_and_customer_group
  * @group indexer_dimension
  */
-class FixedBundlePriceCalculatorWithDimensionTest extends BundlePriceCalculatorAbstract
+class FixedBundlePriceCalculatorWithDimensionTest extends BundlePriceAbstract
 {
     /**
      * @param array $strategyModifiers
@@ -142,7 +142,7 @@ class FixedBundlePriceCalculatorWithDimensionTest extends BundlePriceCalculatorA
             ],
 
             '
-                #5 Testing price for fixed bundle product
+                #5 Testing price for fixed bundle product 
                 with fixed sub items, fixed options and without any discounts
             ' => [
                 'strategy' => $this->getBundleConfiguration3(
@@ -159,7 +159,7 @@ class FixedBundlePriceCalculatorWithDimensionTest extends BundlePriceCalculatorA
             ],
 
             '
-                #6 Testing price for fixed bundle product
+                #6 Testing price for fixed bundle product 
                 with percent sub items, percent options and without any discounts
             ' => [
                 'strategy' => $this->getBundleConfiguration3(
@@ -176,7 +176,7 @@ class FixedBundlePriceCalculatorWithDimensionTest extends BundlePriceCalculatorA
             ],
 
             '
-                #7 Testing price for fixed bundle product
+                #7 Testing price for fixed bundle product 
                 with fixed sub items, percent options and without any discounts
             ' => [
                 'strategy' => $this->getBundleConfiguration3(
@@ -193,7 +193,7 @@ class FixedBundlePriceCalculatorWithDimensionTest extends BundlePriceCalculatorA
             ],
 
             '
-                #8 Testing price for fixed bundle product
+                #8 Testing price for fixed bundle product 
                 with percent sub items, fixed options and without any discounts
             ' => [
                 'strategy' => $this->getBundleConfiguration3(

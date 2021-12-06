@@ -35,7 +35,7 @@ class LinkTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -111,7 +111,7 @@ class LinkTest extends TestCase
         $block = $this->page->getLayout()->getBlock('customer-account-navigation-magento-invitation-link');
         $this->assertNotFalse($block);
         $html = $block->toHtml();
-        $this->assertStringContainsString('invitation/', $html);
+        $this->assertContains('invitation/', $html);
         $this->assertEquals(__('My Invitations'), strip_tags($html));
     }
 

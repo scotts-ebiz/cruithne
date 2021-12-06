@@ -27,7 +27,7 @@ class CartBundleTest extends AbstractCartTest
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    public function setUp()
     {
         parent::setUp();
 
@@ -37,7 +37,7 @@ class CartBundleTest extends AbstractCartTest
     /**
      * @inheritdoc
      */
-    public static function setUpBeforeClass(): void
+    public static function setUpBeforeClass()
     {
         $objectManager = Bootstrap::getObjectManager();
         /** @var Manager $moduleManager */

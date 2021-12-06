@@ -44,7 +44,7 @@ class CreationServiceTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         /** @var ObjectManager $objectManager */
         $this->objectManager = Bootstrap::getObjectManager();
@@ -56,7 +56,7 @@ class CreationServiceTest extends \PHPUnit\Framework\TestCase
 
         $this->logger = $this->getMockBuilder(LoggerInterface::class)
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->getMock();
 
         $this->service = $this->objectManager->create(CreationService::class, [
             'gateway' => $this->gateway,

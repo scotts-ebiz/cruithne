@@ -42,7 +42,7 @@ class AdapterTest extends \PHPUnit\Framework\TestCase
      */
     protected $searchEngine = EngineResolver::CATALOG_SEARCH_MYSQL_ENGINE;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
 
@@ -82,7 +82,7 @@ class AdapterTest extends \PHPUnit\Framework\TestCase
     /**
      * Make sure that correct engine is set
      */
-    protected function assertPreConditions(): void
+    protected function assertPreConditions()
     {
         $currentEngine = $this->objectManager->get(EngineResolverInterface::class)->getCurrentSearchEngine();
         $this->assertEquals($this->searchEngine, $currentEngine);

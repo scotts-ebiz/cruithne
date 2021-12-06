@@ -25,12 +25,12 @@ class AmountTest extends \PHPUnit\Framework\TestCase
      */
     private $amount;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
 
         $this->amount = $this->objectManager->create(Amount::class);
-        /** @var Attribute|\PHPUnit\Framework\MockObject\MockObject $attribute */
+        /** @var Attribute|\PHPUnit_Framework_MockObject_MockObject $attribute */
         $attribute = $this->getMockBuilder(Attribute::class)
             ->disableOriginalConstructor()
             ->getMock();

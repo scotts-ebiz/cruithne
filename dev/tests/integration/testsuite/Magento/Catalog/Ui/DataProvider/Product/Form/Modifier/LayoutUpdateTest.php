@@ -56,7 +56,7 @@ class LayoutUpdateTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->locator = $this->getMockForAbstractClass(LocatorInterface::class);
         $store = Bootstrap::getObjectManager()->create(StoreInterface::class);

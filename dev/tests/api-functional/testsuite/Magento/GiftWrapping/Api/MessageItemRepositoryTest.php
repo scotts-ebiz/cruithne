@@ -19,7 +19,7 @@ class MessageItemRepositoryTest extends WebapiAbstract
      */
     protected $objectManager;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
     }

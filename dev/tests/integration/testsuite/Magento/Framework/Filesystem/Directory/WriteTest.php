@@ -694,7 +694,7 @@ class WriteTest extends TestCase
      * @throws FileSystemException
      * @throws ValidatorException
      */
-    protected function tearDown(): void
+    public function tearDown()
     {
         /** @var Write $directory */
         foreach ($this->testDirectories as $directory) {

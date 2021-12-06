@@ -21,7 +21,7 @@ class OrdersFixtureTest extends \PHPUnit\Framework\TestCase
 {
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|FixtureModel
+     * @var \PHPUnit_Framework_MockObject_MockObject|FixtureModel
      */
     private $fixtureModelMock;
 
