@@ -55,7 +55,7 @@ class LoadBlockTest extends AbstractBackendController
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -282,7 +282,7 @@ class LoadBlockTest extends AbstractBackendController
     {
         $handles = $this->layout->getUpdate()->getHandles();
         foreach ($expectedHandles as $expectedHandle) {
-            $this->assertContains($expectedHandle,$handles);
+            $this->assertContains($expectedHandle, $handles);
         }
     }
 

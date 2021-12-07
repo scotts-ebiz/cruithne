@@ -65,7 +65,7 @@ class CategoryTest extends AbstractBackendController
      *
      * @throws \Magento\Framework\Exception\AuthenticationException
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 

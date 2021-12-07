@@ -24,7 +24,7 @@ class ItemTest extends \PHPUnit\Framework\TestCase
     /**
      * {@inheritDoc}
      */
-    protected function setUp(): void
+    public function setUp()
     {
         $this->objectManager = \Magento\Framework\App\ObjectManager::getInstance();
         $this->model = $this->objectManager->get(\Magento\GiftRegistry\Model\Item::class);

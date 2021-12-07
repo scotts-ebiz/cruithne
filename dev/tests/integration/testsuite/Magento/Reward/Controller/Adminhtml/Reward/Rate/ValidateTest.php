@@ -28,7 +28,7 @@ class ValidateTest extends AbstractBackendController
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -46,7 +46,7 @@ class ValidateTest extends AbstractBackendController
         $this->dispatchWithData($postData);
         $content = $this->json->unserialize($this->getResponse()->getContent());
         $this->assertNotNull($content['html_message']);
-        $this->assertStringContainsString((string)__('Please enter all rate information.'), strip_tags($content['html_message']));
+        $this->assertContains((string)__('Please enter all rate information.'), strip_tags($content['html_message']));
     }
 
     /**

@@ -28,7 +28,7 @@ class GaTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    public function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
     }

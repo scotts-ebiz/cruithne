@@ -16,22 +16,22 @@ use Symfony\Component\Console\Tester\CommandTester;
 class UpgradeCommandTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var DeploymentConfig|\PHPUnit\Framework\MockObject\MockObject
+     * @var DeploymentConfig|\PHPUnit_Framework_MockObject_MockObject
      */
     private $deploymentConfigMock;
 
     /**
-     * @var InstallerFactory|\PHPUnit\Framework\MockObject\MockObject
+     * @var InstallerFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     private $installerFactoryMock;
 
     /**
-     * @var Installer|\PHPUnit\Framework\MockObject\MockObject
+     * @var Installer|\PHPUnit_Framework_MockObject_MockObject
      */
     private $installerMock;
 
     /**
-     * @var AppState|\PHPUnit\Framework\MockObject\MockObject
+     * @var AppState|\PHPUnit_Framework_MockObject_MockObject
      */
     private $appStateMock;
 
@@ -47,7 +47,7 @@ class UpgradeCommandTest extends \PHPUnit\Framework\TestCase
     /**
      * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->deploymentConfigMock = $this->getMockBuilder(DeploymentConfig::class)
             ->disableOriginalConstructor()
@@ -92,8 +92,7 @@ class UpgradeCommandTest extends \PHPUnit\Framework\TestCase
             ->method('installDataFixtures');
 
         $this->assertSame(Cli::RETURN_SUCCESS, $this->commandTester->execute($options));
-        $display = $this->commandTester->getDisplay();
-        $this->assertStringContainsString($expectedString, $display);
+        $this->assertEquals($expectedString, $this->commandTester->getDisplay());
     }
 
     /**

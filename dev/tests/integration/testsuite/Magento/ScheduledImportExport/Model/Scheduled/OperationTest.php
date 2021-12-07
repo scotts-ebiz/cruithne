@@ -15,7 +15,7 @@ class OperationTest extends \Magento\TestFramework\Indexer\TestCase
      */
     protected $model;
 
-    public static function setUpBeforeClass(): void
+    public static function setUpBeforeClass()
     {
         $db = Bootstrap::getInstance()->getBootstrap()
             ->getApplication()
@@ -31,7 +31,7 @@ class OperationTest extends \Magento\TestFramework\Indexer\TestCase
     /**
      * Set up before test
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->model = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
             \Magento\ScheduledImportExport\Model\Scheduled\Operation::class
@@ -57,8 +57,6 @@ class OperationTest extends \Magento\TestFramework\Indexer\TestCase
     public function testGetInstance($operationType)
     {
         $this->model->setOperationType($operationType);
-        $this->model->setFileInfo(['file_format' => 'csv'])
-            ->setEntityAttributes(['export_filter' => []]);
         $string = new \Magento\Framework\Stdlib\StringUtils();
         $this->assertInstanceOf(
             'Magento\ScheduledImportExport\Model\\' . $string->upperCaseWords($operationType),
@@ -69,11 +67,10 @@ class OperationTest extends \Magento\TestFramework\Indexer\TestCase
     /**
      * Test getHistoryFilePath() method in case when file info is not set
      *
+     * @expectedException \Magento\Framework\Exception\LocalizedException
      */
     public function testGetHistoryFilePathException()
     {
-        $this->expectException(\Magento\Framework\Exception\LocalizedException::class);
-
         $this->model->getHistoryFilePath();
     }
 
@@ -141,59 +138,19 @@ class OperationTest extends \Magento\TestFramework\Indexer\TestCase
     /**
      * Test scheduled operation with not valid file format.
      *
-     * @param array $data
-     * @dataProvider beforeSaveDataProvider
      * @throws LocalizedException
      */
-    public function testBeforeSaveWithException(array $data): void
-    {
-        $this->model->setData($data);
-        $this->expectException(LocalizedException::class);
-        $this->expectExceptionMessage('Please correct the file format.');
-        $this->model->save();
-    }
-
-    /**
-     * Test scheduled operation with not valid file format.
-     *
-     * @throws LocalizedException
-     */
-    public function testBeforeSaveWithExceptionJson(): void
+    public function testBeforeSaveWithException(): void
     {
         $data = [
             'operation_type' => 'export',
             'name' => 'Test Export ' . microtime(),
             'entity_type' => 'catalog_product',
-            'file_info' => '{"file_format":"not_valid","server_type":"file","file_path":"export"}',
+            'file_info' => ['file_format' => 'not_valid', 'server_type' => 'file', 'file_path' => 'export'],
         ];
         $this->model->setData($data);
         $this->expectException(LocalizedException::class);
         $this->expectExceptionMessage('Please correct the file format.');
         $this->model->save();
-    }
-
-    /**
-     * @return array
-     */
-    public function beforeSaveDataProvider(): array
-    {
-        return [
-            [
-                [
-                    'operation_type' => 'export',
-                    'name' => 'Test Export ' . microtime(),
-                    'entity_type' => 'catalog_product',
-                    'file_info' => ['file_format' => 'not_valid', 'server_type' => 'file', 'file_path' => 'export'],
-                ],
-            ],
-            [
-                [
-                    'operation_type' => 'export',
-                    'name' => 'Test Export ' . microtime(),
-                    'entity_type' => 'catalog_product',
-                    'file_info' => '{"file_format": "not_valid", "server_type": "file", "file_path": "/"}',
-                ],
-            ],
-        ];
     }
 }

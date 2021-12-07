@@ -20,7 +20,7 @@ class GiftCardAccountRepositoryInterfaceTest extends TestCase
      */
     private $repository;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->repository = Bootstrap::getObjectManager()->create(GiftCardAccountRepositoryInterface::class);
     }
@@ -71,7 +71,7 @@ class GiftCardAccountRepositoryInterfaceTest extends TestCase
         $searchResult = $this->repository->getList($searchCriteria);
 
         $items = array_values($searchResult->getItems());
-        $this->assertCount(1, $items);
+        $this->assertEquals(1, count($items));
         $this->assertEquals('gift_card_account_2', $items[0]['code']);
     }
 

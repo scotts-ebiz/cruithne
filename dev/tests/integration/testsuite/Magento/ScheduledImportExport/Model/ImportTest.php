@@ -20,7 +20,7 @@ use Magento\TestFramework\Indexer\TestCase;
  */
 class ImportTest extends TestCase
 {
-    public static function setUpBeforeClass(): void
+    public static function setUpBeforeClass()
     {
         $db = Bootstrap::getInstance()->getBootstrap()
             ->getApplication()

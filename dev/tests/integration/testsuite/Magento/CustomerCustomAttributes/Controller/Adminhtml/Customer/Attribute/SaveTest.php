@@ -44,7 +44,7 @@ class SaveTest extends AbstractBackendController
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -56,7 +56,7 @@ class SaveTest extends AbstractBackendController
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         if ($this->attributeToDelete) {
             $attribute = $this->attributeFactory->create()
@@ -79,7 +79,7 @@ class SaveTest extends AbstractBackendController
     public function testSaveAttributeWithWrongData(array $params, string $message): void
     {
         $this->dispatchSaveCustomerAttributeRequest($params);
-        $this->assertSessionMessages($this->containsEqual($message), MessageInterface::TYPE_ERROR);
+        $this->assertSessionMessages($this->contains($message), MessageInterface::TYPE_ERROR);
         $this->assertRedirect($this->stringContains('backend/admin/customer_attribute/edit'));
     }
 
@@ -88,7 +88,7 @@ class SaveTest extends AbstractBackendController
      */
     public function wrongValidationDataProvider(): array
     {
-        $dateTime = new \DateTimeImmutable('2021-01-15');
+        $dateTime = new \DateTimeImmutable();
         return [
             'Incorrect date validation' => [
                 'params' => [
@@ -196,7 +196,7 @@ class SaveTest extends AbstractBackendController
     public function testSaveAttributeWrongFilteringData(array $params, string $message): void
     {
         $this->dispatchSaveCustomerAttributeRequest($params);
-        $this->assertSessionMessages($this->containsEqual($message), MessageInterface::TYPE_ERROR);
+        $this->assertSessionMessages($this->contains($message), MessageInterface::TYPE_ERROR);
         $this->assertRedirect($this->stringContains('backend/admin/customer_attribute/new'));
     }
 
@@ -251,7 +251,7 @@ class SaveTest extends AbstractBackendController
         $params = ['frontend_label' => ['test_dropdown']];
         $this->dispatchSaveCustomerAttributeRequest($params, $attribute->getId());
         $this->assertSessionMessages(
-            $this->containsEqual((string)__('You cannot edit this attribute.')),
+            $this->contains((string)__('You cannot edit this attribute.')),
             MessageInterface::TYPE_ERROR
         );
         $this->assertRedirect($this->stringContains('backend/admin/customer_attribute/index'));
@@ -267,7 +267,7 @@ class SaveTest extends AbstractBackendController
         $params = array_merge($attribute->getData(), ['frontend_label' => ['Date of Birth']]);
         $this->dispatchSaveCustomerAttributeRequest($params, $attribute->getId());
         $this->assertSessionMessages(
-            $this->containsEqual((string)__('You cannot edit this attribute.')),
+            $this->contains((string)__('You cannot edit this attribute.')),
             MessageInterface::TYPE_ERROR
         );
         $this->assertRedirect($this->stringContains('backend/admin/customer_attribute/index'));
@@ -311,7 +311,7 @@ class SaveTest extends AbstractBackendController
         $this->dispatchSaveCustomerAttributeRequest($params);
         $this->attributeToDelete = $params['attribute_code'];
         $this->assertSessionMessages(
-            $this->containsEqual((string)__('You saved the customer attribute.')),
+            $this->contains((string)__('You saved the customer attribute.')),
             MessageInterface::TYPE_SUCCESS
         );
         $this->assertRedirect($this->stringContains('backend/admin/customer_attribute/index'));
@@ -361,7 +361,7 @@ class SaveTest extends AbstractBackendController
         ];
         $this->dispatchSaveCustomerAttributeRequest($params, $attribute->getId());
         $this->assertSessionMessages(
-            $this->containsEqual((string)__('You saved the customer attribute.')),
+            $this->contains((string)__('You saved the customer attribute.')),
             MessageInterface::TYPE_SUCCESS
         );
         $this->assertRedirect($this->stringContains('backend/admin/customer_attribute/index'));

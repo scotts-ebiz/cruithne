@@ -49,7 +49,7 @@ class AttributeTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    public function setUp()
     {
         CacheCleaner::cleanAll();
         $this->objectManager = Bootstrap::getObjectManager();

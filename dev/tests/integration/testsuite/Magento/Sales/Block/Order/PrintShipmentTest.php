@@ -39,7 +39,7 @@ class PrintShipmentTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -71,7 +71,7 @@ class PrintShipmentTest extends TestCase
             ],
         ];
         foreach ($templates as $key => $data) {
-            $this->assertStringContainsString(
+            $this->assertContains(
                 $data['expected_data'],
                 strip_tags($block->setTemplate($data['template'])->toHtml()),
                 sprintf('%s wasn\'t found.', $key)

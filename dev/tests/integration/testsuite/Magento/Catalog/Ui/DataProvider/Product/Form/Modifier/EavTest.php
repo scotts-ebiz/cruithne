@@ -41,7 +41,7 @@ class EavTest extends AbstractEavTest
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
         $this->attributeGroupByName = $this->objectManager->get(GetAttributeGroupByName::class);

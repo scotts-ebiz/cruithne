@@ -7,7 +7,7 @@ namespace Magento\SalesArchive\Controller\Adminhtml\Archive;
 
 class ShipmentsTest extends \Magento\TestFramework\TestCase\AbstractBackendController
 {
-    protected function setUp(): void
+    public function setUp()
     {
         $this->resource = 'Magento_SalesArchive::shipments';
         $this->uri = 'backend/sales/archive/shipments';

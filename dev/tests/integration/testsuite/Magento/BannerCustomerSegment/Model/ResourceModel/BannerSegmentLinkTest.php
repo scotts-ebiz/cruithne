@@ -12,14 +12,14 @@ class BannerSegmentLinkTest extends \PHPUnit\Framework\TestCase
      */
     private $_resourceModel;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->_resourceModel = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
             \Magento\BannerCustomerSegment\Model\ResourceModel\BannerSegmentLink::class
         );
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->_resourceModel = null;
     }
@@ -40,7 +40,8 @@ class BannerSegmentLinkTest extends \PHPUnit\Framework\TestCase
         $this->_resourceModel->saveBannerSegments($bannerId, $segmentIds);
 
         $actualSegmentIds = $this->_resourceModel->loadBannerSegments($bannerId);
-        $this->assertEmpty(array_diff($segmentIds, $actualSegmentIds));    }
+        $this->assertEquals($segmentIds, $actualSegmentIds, '', 0, 10, true); // ignore order
+    }
 
     public function saveLoadBannerSegmentsDataProvider()
     {
@@ -83,7 +84,7 @@ class BannerSegmentLinkTest extends \PHPUnit\Framework\TestCase
 
         $this->assertNotEquals($initialSql, (string)$select, 'Query is expected to be modified.');
         $actualBannerIds = $select->getConnection()->fetchCol($select);
-        $this->assertEquals($expectedBannerIds, $actualBannerIds);
+        $this->assertEquals($expectedBannerIds, $actualBannerIds, '', 0, 10, true); // ignore order
     }
 
     public function addBannerSegmentFilterDataProvider()

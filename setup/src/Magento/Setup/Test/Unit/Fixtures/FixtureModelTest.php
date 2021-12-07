@@ -15,7 +15,7 @@ class FixtureModelTest extends \PHPUnit\Framework\TestCase
      */
     private $model;
 
-    protected function setUp(): void
+    public function setUp()
     {
         $reindexCommandMock = $this->createMock(\Magento\Indexer\Console\Command\IndexerReindexCommand::class);
         $this->model = new FixtureModel($reindexCommandMock);

@@ -7,7 +7,7 @@ namespace Magento\SalesArchive\Controller\Adminhtml\Archive;
 
 class InvoicesTest extends \Magento\TestFramework\TestCase\AbstractBackendController
 {
-    protected function setUp(): void
+    public function setUp()
     {
         $this->resource = 'Magento_SalesArchive::invoices';
         $this->uri = 'backend/sales/archive/invoices';

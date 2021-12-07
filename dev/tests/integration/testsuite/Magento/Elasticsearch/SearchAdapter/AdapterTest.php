@@ -51,7 +51,7 @@ class AdapterTest extends \Magento\Framework\Search\Adapter\Mysql\AdapterTest
     /**
      * Make sure that correct engine is set
      */
-    protected function assertPreConditions(): void
+    protected function assertPreConditions()
     {
         $currentEngine = $this->objectManager->get(EngineResolverInterface::class)->getCurrentSearchEngine();
         $this->assertEquals($this->getInstalledSearchEngine(), $currentEngine);

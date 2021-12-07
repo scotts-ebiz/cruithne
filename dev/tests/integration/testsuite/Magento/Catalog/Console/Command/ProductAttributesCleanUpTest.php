@@ -29,7 +29,7 @@ class ProductAttributesCleanUpTest extends \PHPUnit\Framework\TestCase
      */
     private $attributeResource;
 
-    protected function setUp(): void
+    public function setUp()
     {
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $this->command = $this->objectManager->create(\Magento\Catalog\Console\Command\ProductAttributesCleanUp::class);
@@ -65,9 +65,9 @@ class ProductAttributesCleanUpTest extends \PHPUnit\Framework\TestCase
         $this->tester->execute([]);
 
         // Verify that unused attribute was removed
-        $this->assertStringContainsString('Unused product attributes successfully cleaned up', $this->tester->getDisplay());
+        $this->assertContains('Unused product attributes successfully cleaned up', $this->tester->getDisplay());
         $attribute = $this->getUnusedProductAttribute();
-        $this->assertEmpty($attribute);
+        $this->assertFalse($attribute);
     }
 
     /**

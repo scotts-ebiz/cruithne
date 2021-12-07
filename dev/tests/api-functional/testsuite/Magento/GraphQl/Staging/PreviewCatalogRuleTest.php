@@ -30,7 +30,7 @@ class PreviewCatalogRuleTest extends GraphQlAbstract
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->updateFactory = $objectManager->get(UpdateFactory::class);

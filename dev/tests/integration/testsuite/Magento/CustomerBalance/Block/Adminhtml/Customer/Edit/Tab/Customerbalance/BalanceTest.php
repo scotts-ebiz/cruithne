@@ -31,7 +31,7 @@ class BalanceTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -47,7 +47,7 @@ class BalanceTest extends TestCase
         $this->preparePage();
         $block = $this->page->getLayout()->getBlock('customerbalance.balance');
         $this->assertNotFalse($block);
-        $this->assertStringContainsString((string)__('Store Credit Balance'), strip_tags($block->toHtml()));
+        $this->assertContains((string)__('Store Credit Balance'), strip_tags($block->toHtml()));
     }
 
     /**

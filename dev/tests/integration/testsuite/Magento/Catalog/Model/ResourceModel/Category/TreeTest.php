@@ -37,7 +37,7 @@ class TreeTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $this->treeModel = $objectManager->create(Tree::class);

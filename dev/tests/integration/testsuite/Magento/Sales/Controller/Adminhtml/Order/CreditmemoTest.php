@@ -36,7 +36,7 @@ class CreditmemoTest extends \Magento\TestFramework\TestCase\AbstractBackendCont
         $this->getRequest()->setPostValue('comment', ['comment' => $comment]);
         $this->dispatch('backend/sales/order_creditmemo/addComment/id/' . $creditmemo->getId());
         $html = $this->getResponse()->getBody();
-        $this->assertStringContainsString($comment, $html);
+        $this->assertContains($comment, $html);
 
         /** @var \Magento\CatalogInventory\Api\StockStateInterface $stockState */
         $stockState = $objectManager->create(\Magento\CatalogInventory\Api\StockStateInterface::class);

@@ -16,7 +16,7 @@ class HydratorTest extends \PHPUnit\Framework\TestCase
     /** @var  \Magento\Framework\ObjectManagerInterface */
     private $objectManager;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $retriever = $this->objectManager->get(\Magento\CatalogRuleStaging\Model\Rule\Retriever::class);

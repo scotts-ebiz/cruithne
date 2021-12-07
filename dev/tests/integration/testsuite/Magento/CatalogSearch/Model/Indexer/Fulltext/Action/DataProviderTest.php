@@ -49,7 +49,7 @@ class DataProviderTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->searchRequestConfig = $this->objectManager->create(SearchRequestConfig::class);

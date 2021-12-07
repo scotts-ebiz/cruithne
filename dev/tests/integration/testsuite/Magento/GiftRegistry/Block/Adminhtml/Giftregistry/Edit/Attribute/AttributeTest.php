@@ -13,7 +13,7 @@ class AttributeTest extends \PHPUnit\Framework\TestCase
     /** @var \Magento\GiftRegistry\Block\Adminhtml\Giftregistry\Edit\Attribute\Attribute */
     protected $_block = null;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
         $this->_layout = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(

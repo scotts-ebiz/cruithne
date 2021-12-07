@@ -20,12 +20,12 @@ class BootstrapTest extends \PHPUnit\Framework\TestCase
     protected $_object;
 
     /**
-     * @var \Magento\TestFramework\Bootstrap|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\TestFramework\Bootstrap|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $_bootstrap;
 
     /**
-     * @var \Magento\TestFramework\Application|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\TestFramework\Application|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $_application;
 
@@ -41,7 +41,7 @@ class BootstrapTest extends \PHPUnit\Framework\TestCase
         ],
     ];
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->_application = $this->createPartialMock(
             \Magento\TestFramework\Application::class,
@@ -61,17 +61,19 @@ class BootstrapTest extends \PHPUnit\Framework\TestCase
         $this->_object = new \Magento\TestFramework\Helper\Bootstrap($this->_bootstrap);
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->_application = null;
         $this->_bootstrap = null;
         $this->_object = null;
     }
 
+    /**
+     * @expectedException \Magento\Framework\Exception\LocalizedException
+     * @expectedExceptionMessage Helper instance is not defined yet.
+     */
     public function testGetInstanceEmptyProhibited()
     {
-        $this->expectExceptionMessage("Helper instance is not defined yet.");
-        $this->expectException(\Magento\Framework\Exception\LocalizedException::class);
         \Magento\TestFramework\Helper\Bootstrap::getInstance();
     }
 
@@ -91,12 +93,11 @@ class BootstrapTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @depends testSetInstanceFirstAllowed
-     *
+     * @expectedException \Magento\Framework\Exception\LocalizedException
+     * @expectedExceptionMessage Helper instance cannot be redefined.
      */
     public function testSetInstanceChangeProhibited()
     {
-        $this->expectExceptionMessage("Helper instance cannot be redefined.");
-        $this->expectException(\Magento\Framework\Exception\LocalizedException::class);
         \Magento\TestFramework\Helper\Bootstrap::setInstance($this->_object);
     }
 
@@ -132,8 +133,8 @@ class BootstrapTest extends \PHPUnit\Framework\TestCase
 
         if ($expectedCanTest) {
             $actualHeaders = xdebug_get_headers();
-            $this->assertContains($expectedHeader,$actualHeaders);
-            $this->assertContains($expectedCookie,$actualHeaders);
+            $this->assertContains($expectedHeader, $actualHeaders);
+            $this->assertContains($expectedCookie, $actualHeaders);
         }
     }
 

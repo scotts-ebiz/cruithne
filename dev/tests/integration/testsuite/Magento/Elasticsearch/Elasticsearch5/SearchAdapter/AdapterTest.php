@@ -37,7 +37,7 @@ class AdapterTest extends \PHPUnit\Framework\TestCase
     /**
      * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $objectManager = Bootstrap::getObjectManager();
         $contentManager = $this->getMockBuilder(\Magento\Elasticsearch\SearchAdapter\ConnectionManager::class)

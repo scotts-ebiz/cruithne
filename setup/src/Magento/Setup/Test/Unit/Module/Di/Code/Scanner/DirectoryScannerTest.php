@@ -17,7 +17,7 @@ class DirectoryScannerTest extends \PHPUnit\Framework\TestCase
      */
     protected $_testDir;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->_model = new \Magento\Setup\Module\Di\Code\Scanner\DirectoryScanner();
         $this->_testDir = str_replace('\\', '/', realpath(__DIR__ . '/../../') . '/_files');

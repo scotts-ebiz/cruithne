@@ -70,7 +70,7 @@ class SynchronizeEntityPeriodTest extends \PHPUnit\Framework\TestCase
     /**
      * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
 
@@ -102,7 +102,7 @@ class SynchronizeEntityPeriodTest extends \PHPUnit\Framework\TestCase
     /**
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         foreach ($this->updates as $update) {
             $this->updateRepository->delete($update);

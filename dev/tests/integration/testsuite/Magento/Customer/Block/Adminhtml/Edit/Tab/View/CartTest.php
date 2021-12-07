@@ -39,7 +39,7 @@ class CartTest extends \PHPUnit\Framework\TestCase
     /**
      * Execute per test initialization.
      */
-    protected function setUp(): void
+    public function setUp()
     {
         $objectManager = Bootstrap::getObjectManager();
         $objectManager->get(\Magento\Framework\App\State::class)->setAreaCode('adminhtml');
@@ -61,7 +61,7 @@ class CartTest extends \PHPUnit\Framework\TestCase
     /**
      * Execute per test cleanup.
      */
-    protected function tearDown(): void
+    public function tearDown()
     {
         $this->coreRegistry->unregister(RegistryConstants::CURRENT_CUSTOMER_ID);
     }
@@ -72,7 +72,7 @@ class CartTest extends \PHPUnit\Framework\TestCase
     public function testGetRowUrl()
     {
         $row = new \Magento\Framework\DataObject(['product_id' => 1]);
-        $this->assertStringContainsString('catalog/product/edit/id/1', $this->block->getRowUrl($row));
+        $this->assertContains('catalog/product/edit/id/1', $this->block->getRowUrl($row));
     }
 
     /**
@@ -91,7 +91,10 @@ class CartTest extends \PHPUnit\Framework\TestCase
     public function testToHtmlEmptyCart()
     {
         $this->assertEquals(0, $this->block->getCollection()->getSize());
-        $this->assertStringContainsString($this->escaper->escapeHtml('There are no items in customer\'s shopping cart.'), $this->block->toHtml());
+        $this->assertContains(
+            $this->escaper->escapeHtml('There are no items in customer\'s shopping cart.'),
+            $this->block->toHtml()
+        );
     }
 
     /**
@@ -103,9 +106,9 @@ class CartTest extends \PHPUnit\Framework\TestCase
     public function testToHtmlCartItem()
     {
         $html = $this->block->toHtml();
-        $this->assertStringContainsString('Simple Product', $html);
-        $this->assertStringContainsString('simple', $html);
-        $this->assertStringContainsString('$10.00', $html);
-        $this->assertStringContainsString($this->escaper->escapeHtmlAttr('catalog/product/edit/id/1'), $html);
+        $this->assertContains('Simple Product', $html);
+        $this->assertContains('simple', $html);
+        $this->assertContains('$10.00', $html);
+        $this->assertContains($this->escaper->escapeHtmlAttr('catalog/product/edit/id/1'), $html);
     }
 }

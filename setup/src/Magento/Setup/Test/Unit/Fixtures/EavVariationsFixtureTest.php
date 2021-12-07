@@ -21,7 +21,7 @@ use Magento\Store\Model\StoreManager;
 class EavVariationsFixtureTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var FixtureModel|\PHPUnit\Framework\MockObject\MockObject
+     * @var FixtureModel|\PHPUnit_Framework_MockObject_MockObject
      */
     private $fixtureModelMock;
 
@@ -31,34 +31,34 @@ class EavVariationsFixtureTest extends \PHPUnit\Framework\TestCase
     private $model;
 
     /**
-     * @var StoreManager|\PHPUnit\Framework\MockObject\MockObject
+     * @var StoreManager|\PHPUnit_Framework_MockObject_MockObject
      */
     private $storeManagerMock;
 
     /**
-     * @var Set|\PHPUnit\Framework\MockObject\MockObject
+     * @var Set|\PHPUnit_Framework_MockObject_MockObject
      */
     private $attributeSetMock;
 
     /**
-     * @var CacheInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @var CacheInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $cacheMock;
 
     /**
-     * @var Config|\PHPUnit\Framework\MockObject\MockObject
+     * @var Config|\PHPUnit_Framework_MockObject_MockObject
      */
     private $eavConfigMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     private $attributeFactoryMock;
 
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    public function setUp()
     {
         $this->fixtureModelMock = $this->getMockBuilder(FixtureModel::class)
             ->disableOriginalConstructor()->getMock();
@@ -69,7 +69,7 @@ class EavVariationsFixtureTest extends \PHPUnit\Framework\TestCase
         $this->attributeSetMock = $this->getMockBuilder(Set::class)
             ->disableOriginalConstructor()->getMock();
         $this->cacheMock = $this->getMockBuilder(CacheInterface::class)
-            ->disableOriginalConstructor()->getMockForAbstractClass();
+            ->disableOriginalConstructor()->getMock();
         $this->attributeFactoryMock = $this->getMockBuilder(AttributeFactory::class)
             ->setMethods(['create'])
             ->disableOriginalConstructor()->getMock();

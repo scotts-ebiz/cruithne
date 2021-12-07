@@ -63,23 +63,23 @@ class VisitorTest extends \PHPUnit\Framework\TestCase
      */
     public function testClean()
     {
-        $customerIdNow = '1';
-        $createdAtNow = date('Y-m-d H:i:s', time());
+        $customerIdNow = 1;
         $lastVisitNow = date('Y-m-d H:i:s', time());
+        $sessionIdNow = 'asaswljxvgklasdflkjasieasd';
         $customerIdPast = null;
-        $createdAtPast = date('Y-m-d H:i:s', time() - 172800);
         $lastVisitPast = date('Y-m-d H:i:s', time() - 172800);
+        $sessionIdPast = 'kui0aa57nqddl8vk7k6ohgi352';
 
         /** @var \Magento\Customer\Model\Visitor $visitor */
         $visitor = Bootstrap::getObjectManager()->get(\Magento\Customer\Model\Visitor::class);
         $visitor->setCustomerId($customerIdPast);
-        $visitor->setCreatedAt($createdAtPast);
+        $visitor->setSessionId($sessionIdPast);
         $visitor->setLastVisitAt($lastVisitPast);
         $visitor->save();
         $visitorIdPast = $visitor->getId();
         $visitor->unsetData();
         $visitor->setCustomerId($customerIdNow);
-        $visitor->setCreatedAt($createdAtNow);
+        $visitor->setSessionId($sessionIdNow);
         $visitor->setLastVisitAt($lastVisitNow);
         $visitor->save();
         $visitorIdNow = $visitor->getId();
@@ -90,16 +90,19 @@ class VisitorTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals([], $visitor->getData());
         $visitor->unsetData();
         $visitor->load($visitorIdNow);
-        $result = $visitor->getData();
-        $this->assertEquals($visitorIdNow, $result['visitor_id']);
-        $this->assertEquals($customerIdNow, $result['customer_id']);
-        $this->assertGreaterThanOrEqual(strtotime($createdAtNow), strtotime($result['created_at']));
-        $this->assertEquals($lastVisitNow, $result['last_visit_at']);
-        $this->assertNull($result['session_id']);
+        $this->assertEquals(
+            [
+                'visitor_id' => $visitorIdNow,
+                'customer_id' => $customerIdNow,
+                'session_id' => $sessionIdNow,
+                'last_visit_at' => $lastVisitNow
+            ],
+            $visitor->getData()
+        );
     }
 
     /**
-     * Authenticate customer and return its DTOCustomer/Model/VisitorTest
+     * Authenticate customer and return its DTO
      * @param string $username
      * @param string $password
      * @return \Magento\Customer\Api\Data\CustomerInterface

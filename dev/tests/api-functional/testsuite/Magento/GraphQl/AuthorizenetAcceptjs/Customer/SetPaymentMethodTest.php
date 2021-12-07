@@ -51,7 +51,7 @@ class SetPaymentMethodTest extends GraphQlAbstract
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->getMaskedQuoteIdByReservedOrderId = $objectManager->get(GetMaskedQuoteIdByReservedOrderId::class);
@@ -127,11 +127,10 @@ class SetPaymentMethodTest extends GraphQlAbstract
      * @dataProvider dataProviderSetPaymentInvalidInput
      * @param \Closure $getMutationClosure
      * @param array $expectedMessages
+     * @expectedException \Exception
      */
     public function testSetPaymentInvalidInput(\Closure $getMutationClosure, array $expectedMessages)
     {
-        $this->expectException(\Exception::class);
-
         $reservedOrderId = 'test_quote';
         $maskedQuoteId = $this->getMaskedQuoteIdByReservedOrderId->execute($reservedOrderId);
 
@@ -275,7 +274,7 @@ QUERY;
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    public function tearDown()
     {
         $this->registry->unregister('isSecureArea');
         $this->registry->register('isSecureArea', true);

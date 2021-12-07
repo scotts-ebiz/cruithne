@@ -11,12 +11,12 @@ use \Magento\Setup\Model\Navigation;
 class NavigationTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Zend\ServiceManager\ServiceLocatorInterface
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Zend\ServiceManager\ServiceLocatorInterface
      */
     private $serviceLocatorMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Framework\App\DeploymentConfig
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\App\DeploymentConfig
      */
     private $deploymentConfig;
 
@@ -25,19 +25,19 @@ class NavigationTest extends \PHPUnit\Framework\TestCase
      */
     private $navigation;
 
-    protected function setUp(): void
+    public function setUp()
     {
         $this->serviceLocatorMock =
-            $this->createMock(\Zend\ServiceManager\ServiceLocatorInterface::class);
+            $this->getMockForAbstractClass(\Zend\ServiceManager\ServiceLocatorInterface::class, ['get']);
         $this->serviceLocatorMock
             ->expects($this->exactly(2))
             ->method('get')
             ->with('config')
-            ->willReturn([
-                'navLandingTitles' => [
+            ->will($this->returnValue([
+                'navInstallerTitles' => [
                     'install' => 'SomeTitle'
                  ],
-                'navLanding' => [
+                'navInstaller' => [
                     ['key1' => 'value1'],
                     ['key2' => 'value2'],
                     ['nav' => 'abc', 'key3' => 'value3'],
@@ -47,14 +47,14 @@ class NavigationTest extends \PHPUnit\Framework\TestCase
                     ['main' => ''],
                     ['main' => false],
                 ]
-            ]);
+            ]));
         $this->deploymentConfig = $this->createMock(\Magento\Framework\App\DeploymentConfig::class);
         $this->navigation = new Navigation($this->serviceLocatorMock, $this->deploymentConfig);
     }
 
     public function testGetType()
     {
-        $this->assertEquals(Navigation::NAV_LANDING, $this->navigation->getType());
+        $this->assertEquals(Navigation::NAV_INSTALLER, $this->navigation->getType());
     }
 
     public function testGetData()

@@ -9,7 +9,7 @@ namespace Magento\Bundle\Model\Product;
 /**
  * @magentoAppArea frontend
  */
-class DynamicBundlePriceCalculatorTest extends BundlePriceCalculatorAbstract
+class DynamicBundlePriceCalculatorTest extends BundlePriceAbstract
 {
     /**
      * @param array $strategyModifiers

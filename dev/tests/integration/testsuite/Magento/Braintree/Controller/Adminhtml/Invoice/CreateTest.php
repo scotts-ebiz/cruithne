@@ -17,7 +17,7 @@ use Magento\Framework\Message\MessageInterface;
 use Magento\Sales\Api\Data\OrderInterface;
 use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\TestFramework\TestCase\AbstractBackendController;
-use PHPUnit\Framework\MockObject\MockObject as MockObject;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**
  * @magentoAppArea adminhtml
@@ -32,7 +32,7 @@ class CreateTest extends AbstractBackendController
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -51,7 +51,7 @@ class CreateTest extends AbstractBackendController
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->_objectManager->removeSharedInstance(BraintreeAdapterFactory::class);
         parent::tearDown();

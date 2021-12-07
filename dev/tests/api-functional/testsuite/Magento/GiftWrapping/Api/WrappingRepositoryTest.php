@@ -45,7 +45,7 @@ class WrappingRepositoryTest extends WebapiAbstract
     /**
      * Execute per test initialization.
      */
-    protected function setUp(): void
+    public function setUp()
     {
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $this->wrappingRepository =
@@ -215,12 +215,11 @@ class WrappingRepositoryTest extends WebapiAbstract
     }
 
     /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage The image content must be valid data.
      */
     public function testCreateImageValidationFailed()
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('The image content must be valid data.');
-
         $this->_markTestAsRestOnly('Fix inconsistencies in WSDL and Data interfaces');
         /** @var \Magento\GiftWrapping\Model\Wrapping $wrapping */
         $wrapping = $this->wrappingFactory->create();
@@ -263,12 +262,11 @@ class WrappingRepositoryTest extends WebapiAbstract
     }
 
     /**
+     * @expectedException \Exception
+     * @expectedExceptionMessage Gift wrapping with the %1 ID wasn't found. Verify the ID and try again.
      */
     public function testUpdateNoSuchEntity()
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Gift wrapping with the %1 ID wasn\'t found. Verify the ID and try again.');
-
         /** @var \Magento\GiftWrapping\Model\Wrapping $wrapping */
         $wrappingModel = $this->wrappingFactory->create();
         $wrappingModel->setStatus(0);
@@ -400,7 +398,7 @@ class WrappingRepositoryTest extends WebapiAbstract
         }
     }
 
-    public static function tearDownAfterClass(): void
+    public static function tearDownAfterClass()
     {
         parent::tearDownAfterClass();
         self::deleteAllFixtures();

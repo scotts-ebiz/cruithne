@@ -31,7 +31,7 @@ class LinkTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -48,7 +48,7 @@ class LinkTest extends TestCase
         $block = $this->page->getLayout()->getBlock('customer-account-navigation-customer-balance-link');
         $this->assertNotFalse($block);
         $html = $block->toHtml();
-        $this->assertStringContainsString('/storecredit/info/', $html);
+        $this->assertContains('/storecredit/info/', $html);
         $this->assertEquals((string)__('Store Credit'), strip_tags($html));
     }
 

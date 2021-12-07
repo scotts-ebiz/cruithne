@@ -39,7 +39,7 @@ class CaseRepositoryTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->filterBuilder = $this->objectManager->get(FilterBuilder::class);

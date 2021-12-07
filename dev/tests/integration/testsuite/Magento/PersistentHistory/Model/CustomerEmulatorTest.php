@@ -38,7 +38,7 @@ class CustomerEmulatorTest extends \PHPUnit\Framework\TestCase
      */
     protected $_sessionFactory;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->_objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
 

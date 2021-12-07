@@ -43,7 +43,7 @@ class CollectionTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -56,7 +56,7 @@ class CollectionTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->registry->unregister(RegistryConstants::CURRENT_CUSTOMER_ID);
 

@@ -21,7 +21,7 @@ class GetSelectedPaymentMethodTest extends GraphQlAbstract
      */
     private $getMaskedQuoteIdByReservedOrderId;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->getMaskedQuoteIdByReservedOrderId = $objectManager->get(GetMaskedQuoteIdByReservedOrderId::class);
@@ -78,11 +78,10 @@ class GetSelectedPaymentMethodTest extends GraphQlAbstract
     }
 
     /**
+     * @expectedException \Exception
      */
     public function testGetSelectedPaymentMethodFromNonExistentCart()
     {
-        $this->expectException(\Exception::class);
-
         $maskedQuoteId = 'non_existent_masked_id';
         $query = $this->getQuery($maskedQuoteId);
 

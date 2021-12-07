@@ -11,16 +11,16 @@ use Magento\Setup\Console\CommandList;
 class CommandListTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Setup\Console\CommandList
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Setup\Console\CommandList
      */
     private $commandList;
 
      /**
-      * @var \PHPUnit\Framework\MockObject\MockObject|\Zend\ServiceManager\ServiceManager
+      * @var \PHPUnit_Framework_MockObject_MockObject|\Zend\ServiceManager\ServiceManager
       */
     private $serviceManager;
 
-    protected function setUp(): void
+    public function setUp()
     {
         $this->serviceManager = $this->createMock(\Zend\ServiceManager\ServiceManager::class);
         $this->commandList = new CommandList($this->serviceManager);

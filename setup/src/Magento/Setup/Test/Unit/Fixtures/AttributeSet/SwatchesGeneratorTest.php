@@ -28,7 +28,7 @@ class SwatchesGeneratorTest extends \PHPUnit\Framework\TestCase
         'option_3' => '/|o|'
     ];
 
-    protected function setUp(): void
+    public function setUp()
     {
         // Mock Swatch Media Helper
         $swatchHelperMock = $this->getMockBuilder(Media::class)

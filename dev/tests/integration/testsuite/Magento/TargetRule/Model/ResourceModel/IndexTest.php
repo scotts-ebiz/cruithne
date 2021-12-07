@@ -21,7 +21,7 @@ class IndexTest extends \PHPUnit\Framework\TestCase
      */
     private $model;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->model = Bootstrap::getObjectManager()->create(TargetRuleIndex::class);
     }

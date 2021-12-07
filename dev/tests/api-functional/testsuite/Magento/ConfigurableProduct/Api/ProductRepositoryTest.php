@@ -39,7 +39,7 @@ class ProductRepositoryTest extends WebapiAbstract
     /**
      * Execute per test initialization
      */
-    protected function setUp(): void
+    public function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->eavConfig = $this->objectManager->get(\Magento\Eav\Model\Config::class);
@@ -48,7 +48,7 @@ class ProductRepositoryTest extends WebapiAbstract
     /**
      * Execute per test cleanup
      */
-    protected function tearDown(): void
+    public function tearDown()
     {
         $this->deleteProductBySku(self::CONFIGURABLE_PRODUCT_SKU);
         parent::tearDown();
@@ -75,7 +75,7 @@ class ProductRepositoryTest extends WebapiAbstract
         $this->assertNotNull($this->configurableAttribute);
 
         $options = $this->getConfigurableAttributeOptions();
-        $this->assertCount(2, $options);
+        $this->assertEquals(2, count($options));
 
         $configurableProductOptions = [
             [
@@ -131,21 +131,21 @@ class ProductRepositoryTest extends WebapiAbstract
         );
         $resultConfigurableProductOptions
             = $response[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY]["configurable_product_options"];
-        $this->assertCount(1, $resultConfigurableProductOptions);
+        $this->assertEquals(1, count($resultConfigurableProductOptions));
         $this->assertTrue(isset($resultConfigurableProductOptions[0]['label']));
         $this->assertTrue(isset($resultConfigurableProductOptions[0]['id']));
         $this->assertEquals($label, $resultConfigurableProductOptions[0]['label']);
         $this->assertTrue(
             isset($resultConfigurableProductOptions[0]['values'])
         );
-        $this->assertCount(2, $resultConfigurableProductOptions[0]['values']);
+        $this->assertEquals(2, count($resultConfigurableProductOptions[0]['values']));
 
         $this->assertTrue(
             isset($response[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY]["configurable_product_links"])
         );
         $resultConfigurableProductLinks
             = $response[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY]["configurable_product_links"];
-        $this->assertCount(2, $resultConfigurableProductLinks);
+        $this->assertEquals(2, count($resultConfigurableProductLinks));
 
         $this->assertEquals([$productId1, $productId2], $resultConfigurableProductLinks);
     }
@@ -167,14 +167,14 @@ class ProductRepositoryTest extends WebapiAbstract
         );
         $resultConfigurableProductOptions
             = $response[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY]["configurable_product_options"];
-        $this->assertCount(0, $resultConfigurableProductOptions);
+        $this->assertEquals(0, count($resultConfigurableProductOptions));
 
         $this->assertTrue(
             isset($response[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY]["configurable_product_links"])
         );
         $resultConfigurableProductLinks
             = $response[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY]["configurable_product_links"];
-        $this->assertCount(0, $resultConfigurableProductLinks);
+        $this->assertEquals(0, count($resultConfigurableProductLinks));
 
         $this->assertEquals([], $resultConfigurableProductLinks);
     }
@@ -214,7 +214,7 @@ class ProductRepositoryTest extends WebapiAbstract
         );
         $resultConfigurableProductOptions
             = $response[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY]["configurable_product_options"];
-        $this->assertCount(1, $resultConfigurableProductOptions);
+        $this->assertEquals(1, count($resultConfigurableProductOptions));
 
         unset($updatedOption['id']);
         unset($resultConfigurableProductOptions[0]['id']);
@@ -241,16 +241,16 @@ class ProductRepositoryTest extends WebapiAbstract
         );
         $resultConfigurableProductOptions
             = $response[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY]["configurable_product_options"];
-        $this->assertCount(1, $resultConfigurableProductOptions);
+        $this->assertEquals(1, count($resultConfigurableProductOptions));
         //Since one product is removed, the available values for the option is reduced
-        $this->assertCount(1, $resultConfigurableProductOptions[0]['values']);
+        $this->assertEquals(1, count($resultConfigurableProductOptions[0]['values']));
 
         $this->assertTrue(
             isset($response[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY]["configurable_product_links"])
         );
         $resultConfigurableProductLinks
             = $response[ExtensibleDataInterface::EXTENSION_ATTRIBUTES_KEY]["configurable_product_links"];
-        $this->assertCount(1, $resultConfigurableProductLinks);
+        $this->assertEquals(1, count($resultConfigurableProductLinks));
         $this->assertEquals([$productId1], $resultConfigurableProductLinks);
 
         //adding back the product links, the option value should be restored
@@ -290,7 +290,7 @@ class ProductRepositoryTest extends WebapiAbstract
             $this->saveProduct($response);
             $this->fail("Expected exception");
         } catch (\SoapFault $e) {
-            $this->assertStringContainsString(
+            $this->assertContains(
                 $expectedMessage,
                 $e->getMessage(),
                 "SoapFault does not contain expected message."
@@ -333,7 +333,7 @@ class ProductRepositoryTest extends WebapiAbstract
             $this->saveProduct($response);
             $this->fail("Expected exception");
         } catch (\SoapFault $e) {
-            $this->assertStringContainsString(
+            $this->assertContains(
                 $expectedMessage,
                 $e->getMessage(),
                 "SoapFault does not contain expected message."
@@ -366,7 +366,7 @@ class ProductRepositoryTest extends WebapiAbstract
             $this->saveProduct($response);
             $this->fail("Expected exception");
         } catch (\SoapFault $e) {
-            $this->assertStringContainsString(
+            $this->assertContains(
                 $expectedMessage,
                 $e->getMessage(),
                 "SoapFault does not contain expected message."

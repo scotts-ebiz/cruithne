@@ -73,7 +73,7 @@ class AccountManagementMeTest extends \Magento\TestFramework\TestCase\WebapiAbst
     /**
      * Execute per test initialization.
      */
-    protected function setUp(): void
+    public function setUp()
     {
         $this->customerRegistry = Bootstrap::getObjectManager()->get(
             \Magento\Customer\Model\CustomerRegistry::class
@@ -102,7 +102,7 @@ class AccountManagementMeTest extends \Magento\TestFramework\TestCase\WebapiAbst
     /**
      * Ensure that fixture customer and his addresses are deleted.
      */
-    protected function tearDown(): void
+    public function tearDown()
     {
         $this->customerRepository = null;
 
