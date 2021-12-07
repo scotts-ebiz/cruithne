@@ -10,29 +10,29 @@ use Magento\TestFramework\Helper\Bootstrap;
 class ManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \Magento\Framework\Event\ConfigInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Framework\Event\ConfigInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $eventConfigMock;
 
     /**
-     * @var \Magento\Framework\Event\InvokerInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Framework\Event\InvokerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $invokerMock;
 
     /**
-     * @var \Magento\Staging\Model\VersionManagerFactory|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Staging\Model\VersionManagerFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     private $versionManagerFactoryMock;
 
     /**
-     * @var \Magento\Staging\Model\VersionManager|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Staging\Model\VersionManager|\PHPUnit_Framework_MockObject_MockObject
      */
     private $versionManagerMock;
 
     /**
      * Create basic mock objects
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->invokerMock =
             $this->createPartialMock(\Magento\Framework\Event\Invoker\InvokerDefault::class, ['dispatch']);
@@ -44,7 +44,7 @@ class ManagerTest extends \PHPUnit\Framework\TestCase
             $this->createPartialMock(\Magento\Staging\Model\VersionManagerFactory::class, ['create']);
         $this->versionManagerFactoryMock->expects($this->any())
             ->method('create')
-            ->willReturn($this->versionManagerMock);
+            ->will($this->returnValue($this->versionManagerMock));
     }
 
     /**

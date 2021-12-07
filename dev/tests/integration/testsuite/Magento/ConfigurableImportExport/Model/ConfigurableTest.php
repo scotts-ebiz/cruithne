@@ -100,19 +100,15 @@ class ConfigurableTest extends AbstractProductExportImportTestCase
     }
 
     /**
-     * @magentoAppArea adminhtml
-     * @magentoDbIsolation disabled
-     * @magentoAppIsolation enabled
-     *
-     * @param array $fixtures
-     * @param string[] $skus
-     * @param string[] $skippedAttributes
-     * @dataProvider importReplaceDataProvider
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
+     * @inheritdoc
      */
-    public function testImportReplaceWithPagination(array $fixtures, array $skus, array $skippedAttributes = [])
-    {
-        $skippedAttributesExtended = array_merge($skippedAttributes, ['_cache_instance_product_set_attributes']);
-        parent::testImportReplaceWithPagination($fixtures, $skus, $skippedAttributesExtended);
+    protected function executeImportReplaceTest(
+        $skus,
+        $skippedAttributes,
+        $usePagination = false,
+        string $csvfile = null
+    ) {
+        $skippedAttributes = array_merge($skippedAttributes, ['_cache_instance_product_set_attributes']);
+        parent::executeImportReplaceTest($skus, $skippedAttributes, $usePagination, $csvfile);
     }
 }

@@ -23,7 +23,7 @@ class CategoryListTest extends GraphQlAbstract
      */
     private $objectManager;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
     }

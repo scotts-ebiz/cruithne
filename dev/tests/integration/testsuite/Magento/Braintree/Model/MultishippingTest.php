@@ -21,7 +21,7 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\ObjectManager;
-use \PHPUnit\Framework\MockObject\MockObject as MockObject;
+use \PHPUnit_Framework_MockObject_MockObject as MockObject;
 use Magento\Payment\Gateway\Command\ResultInterface as CommandResultInterface;
 
 /**
@@ -50,7 +50,7 @@ class MultishippingTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
 
@@ -242,7 +242,7 @@ class MultishippingTest extends \PHPUnit\Framework\TestCase
      */
     private function getPaymentNonceMock(): MockObject
     {
-        $commandResult = $this->getMockForAbstractClass(CommandResultInterface::class);
+        $commandResult = $this->createMock(CommandResultInterface::class);
         $commandResult->method('get')
             ->willReturn(['paymentMethodNonce' => 'testNonce']);
         $paymentNonce = $this->createMock(GetPaymentNonceCommand::class);

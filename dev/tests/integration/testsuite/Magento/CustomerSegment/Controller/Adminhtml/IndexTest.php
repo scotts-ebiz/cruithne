@@ -46,7 +46,7 @@ class IndexTest extends \Magento\TestFramework\TestCase\AbstractBackendControlle
         $segment->load('Customer Segment 1', 'name');
         $this->dispatch('backend/customersegment/index/save/id/' . $segment->getId());
         $content = $this->getResponse()->getBody();
-        $this->assertStringNotContainsString('Unable to save the segment.', $content);
+        $this->assertNotContains('Unable to save the segment.', $content);
     }
 
     /**

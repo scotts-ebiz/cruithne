@@ -41,7 +41,7 @@ class ValidateCustomerAddressAttributeTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -109,7 +109,7 @@ class ValidateCustomerAddressAttributeTest extends TestCase
     public function testValidateAttributeWithOptions(string $exceptionMessage, ?array $attributeOptions = null): void
     {
         $data = [
-            'attribute_code' => 'test_attribute_validate_with_options',
+            'attribute_code' => 'test_attribute',
             'frontend_input' => 'select',
             'entity_type_id' => $this->entityTypeId,
             'serialized_options' => $attributeOptions ? $this->serializeOptions($attributeOptions) : '',
@@ -170,7 +170,7 @@ class ValidateCustomerAddressAttributeTest extends TestCase
     public function testValidateFileExtensionAttribute(): void
     {
         $data = [
-            'attribute_code' => 'test_attribute_validate_file_extension',
+            'attribute_code' => 'test_attribute',
             'frontend_input' => 'file',
             'entity_type_id' => $this->entityTypeId,
             'file_extensions' => 'php',

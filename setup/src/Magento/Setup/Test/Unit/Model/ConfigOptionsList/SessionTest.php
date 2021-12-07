@@ -22,7 +22,7 @@ class SessionTest extends \PHPUnit\Framework\TestCase
      */
     private $deploymentConfigMock;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->configList = new SessionConfigOptionsList();
 

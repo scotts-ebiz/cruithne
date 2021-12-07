@@ -29,7 +29,7 @@ class LinkTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -48,7 +48,7 @@ class LinkTest extends TestCase
         $block = $this->page->getLayout()->getBlock('customer-account-navigation-giftregistry-link');
         $this->assertNotFalse($block);
         $html = $block->toHtml();
-        $this->assertStringContainsString('/giftregistry/', $html);
+        $this->assertContains('/giftregistry/', $html);
         $this->assertEquals((string)__('Gift Registry'), strip_tags($html));
     }
 

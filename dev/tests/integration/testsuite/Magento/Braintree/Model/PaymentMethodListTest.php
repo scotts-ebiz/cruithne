@@ -27,7 +27,7 @@ class PaymentMethodListTest extends \PHPUnit\Framework\TestCase
      */
     private $storeId;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->storeId = $objectManager->get(StoreManagerInterface::class)

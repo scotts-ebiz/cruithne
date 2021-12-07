@@ -13,7 +13,7 @@ class ProductsTest extends \PHPUnit\Framework\TestCase
     /** @var \Magento\Framework\View\Element\AbstractBlock */
     protected $_block;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
         $layout = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(

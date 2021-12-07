@@ -34,7 +34,7 @@ class DeleteTest extends AbstractBackendController
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -63,7 +63,7 @@ class DeleteTest extends AbstractBackendController
         $attribute = $this->attributeRepository->get(Customer::ENTITY, 'customer_attribute_type_select');
         $this->dispatchWithParams(['attribute_id' => $attribute->getId()]);
         $this->assertSessionMessages(
-            $this->containsEqual((string)__('You cannot delete this attribute.')),
+            $this->contains((string)__('You cannot delete this attribute.')),
             MessageInterface::TYPE_ERROR
         );
         $this->assertRedirect($this->stringContains('backend/admin/customer_address_attribute/index/'));
@@ -78,7 +78,7 @@ class DeleteTest extends AbstractBackendController
     {
         $attribute = $this->eavConfig->getAttribute('customer_address', 'test_text_code');
         $this->dispatchWithParams(['attribute_id' => $attribute->getId()]);
-        $this->assertSessionMessages($this->containsEqual((string)__('You deleted the customer address attribute.')));
+        $this->assertSessionMessages($this->contains((string)__('You deleted the customer address attribute.')));
         $this->assertRedirect($this->stringContains('backend/admin/customer_address_attribute/index/'));
         $this->expectException(NoSuchEntityException::class);
         $this->attributeRepository->get('customer_address', 'test_text_code');

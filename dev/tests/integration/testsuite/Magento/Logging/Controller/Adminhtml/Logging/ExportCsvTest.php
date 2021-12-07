@@ -7,7 +7,7 @@ namespace Magento\Logging\Controller\Adminhtml\Logging;
 
 class ExportCsvTest extends \Magento\TestFramework\TestCase\AbstractBackendController
 {
-    protected function setUp(): void
+    public function setUp()
     {
         $this->resource = 'Magento_Logging::magento_logging_events';
         $this->uri = 'backend/admin/logging/exportcsv';

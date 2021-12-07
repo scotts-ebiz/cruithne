@@ -21,7 +21,7 @@ use Magento\Sales\Api\OrderRepositoryInterface;
 use Magento\Sales\Model\Order\Email\Sender\OrderSender;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\ObjectManager;
-use \PHPUnit\Framework\MockObject\MockObject as MockObject;
+use \PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**
  * Tests Magento\Multishipping\Model\Checkout\Type\Multishipping.
@@ -44,7 +44,7 @@ class MultishippingTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
 
@@ -157,7 +157,7 @@ class MultishippingTest extends \PHPUnit\Framework\TestCase
     {
         $validator = $this->getMockBuilder(ValidatorInterface::class)
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->getMock();
         $result = $this->getMockForAbstractClass(ResultInterface::class);
         $result->method('isValid')->willReturn(true);
         $validator->method('validate')->willReturn($result);
@@ -177,9 +177,9 @@ class MultishippingTest extends \PHPUnit\Framework\TestCase
             ->getMock();
         $transferFactory->expects($this->exactly(3))
             ->method('create')
-            ->with($this->containsEqual($paymentToken))
+            ->with($this->contains($paymentToken))
             ->willReturn($transfer);
-
+        
         return $transferFactory;
     }
 }

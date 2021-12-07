@@ -41,7 +41,7 @@ class UploadSkuCsvTest extends AbstractBackendController
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -130,7 +130,7 @@ class UploadSkuCsvTest extends AbstractBackendController
             [Data::REQUEST_PARAMETER_SKU_FILE_IMPORTED_FLAG => true],
             ['customer' => 1, 'store' => 1]
         );
-        $this->assertSessionMessages($this->containsEqual($expectedErrorMessage));
+        $this->assertSessionMessages($this->contains($expectedErrorMessage));
     }
 
     /**

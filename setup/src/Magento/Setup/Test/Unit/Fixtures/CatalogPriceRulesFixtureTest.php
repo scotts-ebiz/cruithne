@@ -14,7 +14,7 @@ use \Magento\Setup\Fixtures\CatalogPriceRulesFixture;
 class CatalogPriceRulesFixtureTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Setup\Fixtures\FixtureModel
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Setup\Fixtures\FixtureModel
      */
     private $fixtureModelMock;
 
@@ -23,7 +23,7 @@ class CatalogPriceRulesFixtureTest extends \PHPUnit\Framework\TestCase
      */
     private $model;
 
-    protected function setUp(): void
+    public function setUp()
     {
         $this->fixtureModelMock = $this->createMock(\Magento\Setup\Fixtures\FixtureModel::class);
 
@@ -35,20 +35,20 @@ class CatalogPriceRulesFixtureTest extends \PHPUnit\Framework\TestCase
         $storeMock = $this->createMock(\Magento\Store\Model\Store::class);
         $storeMock->expects($this->once())
             ->method('getRootCategoryId')
-            ->willReturn(2);
+            ->will($this->returnValue(2));
 
         $websiteMock = $this->createMock(\Magento\Store\Model\Website::class);
         $websiteMock->expects($this->once())
             ->method('getGroups')
-            ->willReturn([$storeMock]);
+            ->will($this->returnValue([$storeMock]));
         $websiteMock->expects($this->once())
             ->method('getId')
-            ->willReturn('website_id');
+            ->will($this->returnValue('website_id'));
 
         $storeManagerMock = $this->createMock(\Magento\Store\Model\StoreManager::class);
         $storeManagerMock->expects($this->once())
             ->method('getWebsites')
-            ->willReturn([$websiteMock]);
+            ->will($this->returnValue([$websiteMock]));
 
         $contextMock = $this->createMock(\Magento\Framework\Model\ResourceModel\Db\Context::class);
         $abstractDbMock = $this->getMockForAbstractClass(
@@ -62,25 +62,25 @@ class CatalogPriceRulesFixtureTest extends \PHPUnit\Framework\TestCase
         );
         $abstractDbMock->expects($this->once())
             ->method('getAllChildren')
-            ->willReturn([1]);
+            ->will($this->returnValue([1]));
 
         $categoryMock = $this->createMock(\Magento\Catalog\Model\Category::class);
         $categoryMock->expects($this->once())
             ->method('getResource')
-            ->willReturn($abstractDbMock);
+            ->will($this->returnValue($abstractDbMock));
         $categoryMock->expects($this->once())
             ->method('getPath')
-            ->willReturn('path/to/file');
+            ->will($this->returnValue('path/to/file'));
         $categoryMock->expects($this->once())
             ->method('getId')
-            ->willReturn('category_id');
+            ->will($this->returnValue('category_id'));
 
         $modelMock = $this->createMock(\Magento\CatalogRule\Model\Rule::class);
         $metadataMock = $this->createMock(\Magento\Framework\EntityManager\EntityMetadata::class);
         $metadataPoolMock = $this->createMock(\Magento\Framework\EntityManager\MetadataPool::class);
         $metadataMock->expects($this->once())
             ->method('getLinkField')
-            ->willReturn('Field Id Name');
+            ->will($this->returnValue('Field Id Name'));
 
         $valueMap = [
             [\Magento\CatalogRule\Model\Rule::class, $modelMock],
@@ -95,19 +95,19 @@ class CatalogPriceRulesFixtureTest extends \PHPUnit\Framework\TestCase
         $objectManagerMock = $this->createMock(\Magento\Framework\ObjectManager\ObjectManager::class);
         $objectManagerMock->expects($this->once())
             ->method('create')
-            ->willReturn($storeManagerMock);
+            ->will($this->returnValue($storeManagerMock));
         $objectManagerMock->expects($this->exactly(3))
             ->method('get')
-            ->willReturnMap($valueMap);
+            ->will($this->returnValueMap($valueMap));
 
         $this->fixtureModelMock
             ->expects($this->once())
             ->method('getValue')
-            ->willReturn(1);
+            ->will($this->returnValue(1));
         $this->fixtureModelMock
             ->expects($this->exactly(4))
             ->method('getObjectManager')
-            ->willReturn($objectManagerMock);
+            ->will($this->returnValue($objectManagerMock));
 
         $this->model->execute();
     }

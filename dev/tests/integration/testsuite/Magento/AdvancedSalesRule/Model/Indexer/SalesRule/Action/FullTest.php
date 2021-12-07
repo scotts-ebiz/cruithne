@@ -42,7 +42,7 @@ class FullTest extends \PHPUnit\Framework\TestCase
         $items = $filtersSelect->query()->fetchAll();
 
         //test with save on schedule that prevents saving on save
-        $this->assertEmpty($items);
+        $this->assertTrue(empty($items));
 
         /** @var \Magento\AdvancedSalesRule\Model\Indexer\SalesRule\Action\Full $action */
         $action = $objectManager->create(\Magento\AdvancedSalesRule\Model\Indexer\SalesRule\Action\Full::class);

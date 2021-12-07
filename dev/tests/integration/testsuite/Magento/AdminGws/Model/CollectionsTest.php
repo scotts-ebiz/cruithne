@@ -55,7 +55,7 @@ class CollectionsTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Helper::getObjectManager();
         $this->model = $this->objectManager->get(Collections::class);

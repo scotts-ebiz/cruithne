@@ -40,7 +40,7 @@ class CreateCaseBuilderTest extends \PHPUnit\Framework\TestCase
     /**
      * Initial setup
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $bootstrap = Bootstrap::getInstance();
         $bootstrap->loadArea(Area::AREA_FRONTEND);

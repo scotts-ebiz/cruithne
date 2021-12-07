@@ -8,12 +8,12 @@ namespace Magento\Setup\Test\Unit\Model\Description;
 class DescriptionGeneratorTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Setup\Model\Description\DescriptionParagraphGenerator
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Setup\Model\Description\DescriptionParagraphGenerator
      */
     private $descriptionParagraphGeneratorMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Setup\Model\Description\MixinManager
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Setup\Model\Description\MixinManager
      */
     private $mixinManagerMock;
 
@@ -47,7 +47,7 @@ class DescriptionGeneratorTest extends \PHPUnit\Framework\TestCase
         ]
     ];
 
-    protected function setUp(): void
+    public function setUp()
     {
         $this->descriptionParagraphGeneratorMock =
             $this->createMock(\Magento\Setup\Model\Description\DescriptionParagraphGenerator::class);

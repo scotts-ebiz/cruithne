@@ -35,7 +35,7 @@ class InvitationToCustomerTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->invitationFactory = $this->objectManager->create(InvitationFactory::class);

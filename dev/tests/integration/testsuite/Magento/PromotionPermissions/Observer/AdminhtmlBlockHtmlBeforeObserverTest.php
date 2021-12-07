@@ -20,7 +20,7 @@ class AdminhtmlBlockHtmlBeforeObserverTest extends \PHPUnit\Framework\TestCase
      */
     protected $_moduleListMock;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $objectManager->get(

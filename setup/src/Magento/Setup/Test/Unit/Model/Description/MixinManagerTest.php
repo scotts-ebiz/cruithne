@@ -13,11 +13,11 @@ class MixinManagerTest extends \PHPUnit\Framework\TestCase
     private $mixinManager;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Setup\Model\Description\Mixin\MixinFactory
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Setup\Model\Description\Mixin\MixinFactory
      */
     private $mixinFactoryMock;
 
-    protected function setUp(): void
+    public function setUp()
     {
         $this->mixinFactoryMock = $this->createMock(\Magento\Setup\Model\Description\Mixin\MixinFactory::class);
         $this->mixinManager = new \Magento\Setup\Model\Description\MixinManager($this->mixinFactoryMock);

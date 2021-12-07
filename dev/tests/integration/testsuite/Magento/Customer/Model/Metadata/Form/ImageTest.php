@@ -55,7 +55,7 @@ class ImageTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritDoc
      */
-    public function setUp(): void
+    public function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->filesystem = $this->objectManager->get(Filesystem::class);
@@ -107,7 +107,7 @@ class ImageTest extends \PHPUnit\Framework\TestCase
         $actual = $processCustomerAddressValueMethod->invoke($image, $imageFile);
         $this->assertEquals($this->expectedFileName, $actual);
         $this->assertFileExists($expectedPath);
-        $this->assertFileDoesNotExist($tmpFilePath);
+        $this->assertFileNotExists($tmpFilePath);
     }
 
     /**
@@ -150,23 +150,19 @@ class ImageTest extends \PHPUnit\Framework\TestCase
         $processCustomerAddressValueMethod->setAccessible(true);
         $result = $processCustomerAddressValueMethod->invoke($image, $imageFile);
         $this->assertInstanceOf('Magento\Framework\Api\ImageContent', $result);
-        $this->assertFileDoesNotExist($tmpFilePath);
+        $this->assertFileNotExists($tmpFilePath);
     }
 
     /**
      * Test for processCustomerValue method with invalid value
      *
      * @magentoAppIsolation enabled
-     *
+     * @expectedException \Magento\Framework\Exception\ValidatorException
      * @throws FileSystemException
      * @throws \ReflectionException
      */
     public function testProcessCustomerInvalidValue()
     {
-        $this->expectException(
-            \Magento\Framework\Exception\ValidatorException::class
-        );
-
         $this->mediaDirectory->delete('customer');
         $this->mediaDirectory->create($this->mediaDirectory->getRelativePath('customer/tmp/'));
         $tmpFilePath = $this->mediaDirectory->getAbsolutePath('customer/tmp/' . $this->fileName);
@@ -203,7 +199,7 @@ class ImageTest extends \PHPUnit\Framework\TestCase
      * @inheritdoc
      * @throws FileSystemException
      */
-    public static function tearDownAfterClass(): void
+    public static function tearDownAfterClass()
     {
         parent::tearDownAfterClass();
         $filesystem = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(

@@ -12,7 +12,7 @@ use Symfony\Component\Console\Tester\CommandTester;
 class MaintenanceStatusCommandTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \Magento\Framework\App\MaintenanceMode|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Framework\App\MaintenanceMode|\PHPUnit_Framework_MockObject_MockObject
      */
     private $maintenanceMode;
 
@@ -21,7 +21,7 @@ class MaintenanceStatusCommandTest extends \PHPUnit\Framework\TestCase
      */
     private $command;
 
-    protected function setUp(): void
+    public function setUp()
     {
         $this->maintenanceMode = $this->createMock(\Magento\Framework\App\MaintenanceMode::class);
         $this->command = new MaintenanceStatusCommand($this->maintenanceMode);

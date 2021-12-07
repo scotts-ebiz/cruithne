@@ -26,7 +26,7 @@ class ReadHandlerTest extends \PHPUnit\Framework\TestCase
      */
     private $readHandler;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->productRepository = $objectManager->get(ProductRepositoryInterface::class);

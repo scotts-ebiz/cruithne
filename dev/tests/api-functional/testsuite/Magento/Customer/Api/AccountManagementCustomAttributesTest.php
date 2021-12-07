@@ -3,21 +3,17 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-
-declare(strict_types=1);
-
 namespace Magento\Customer\Api;
 
 use Magento\Customer\Api\Data\CustomerInterface;
+use Magento\Customer\Model\AccountManagement;
 use Magento\Framework\Api\AttributeValue;
 use Magento\Framework\Api\CustomAttributesDataInterface;
 use Magento\Framework\App\Filesystem\DirectoryList;
-use Magento\Framework\Filesystem\Directory\DenyListPathValidator;
-use Magento\Framework\Filesystem\Directory\WriteFactory;
-use Magento\Framework\Webapi\Exception as HTTPExceptionCodes;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\Helper\Customer as CustomerHelper;
 use Magento\TestFramework\TestCase\WebapiAbstract;
+use Magento\Framework\Webapi\Exception as HTTPExceptionCodes;
 
 /**
  * Test class for Customer's custom attributes
@@ -69,7 +65,7 @@ class AccountManagementCustomAttributesTest extends WebapiAbstract
     /**
      * Execute per test initialization.
      */
-    protected function setUp(): void
+    public function setUp()
     {
         $this->accountManagement = Bootstrap::getObjectManager()->get(
             \Magento\Customer\Api\AccountManagementInterface::class
@@ -86,7 +82,7 @@ class AccountManagementCustomAttributesTest extends WebapiAbstract
         $this->fileSystem = Bootstrap::getObjectManager()->get(\Magento\Framework\Filesystem::class);
     }
 
-    protected function tearDown(): void
+    public function tearDown()
     {
         if (!empty($this->currentCustomerId)) {
             foreach ($this->currentCustomerId as $customerId) {
@@ -108,16 +104,8 @@ class AccountManagementCustomAttributesTest extends WebapiAbstract
             }
         }
         $this->accountManagement = null;
-        $writeFactory = Bootstrap::getObjectManager()
-            ->get(WriteFactory::class);
-        $mediaDirectory = $writeFactory->create(DirectoryList::MEDIA);
-        $denyListPathValidator = Bootstrap::getObjectManager()
-            ->create(DenyListPathValidator::class, ['driver' => $mediaDirectory->getDriver()]);
-        $denyListPathValidator->addException($mediaDirectory->getAbsolutePath() . ".htaccess");
-        $writeFactoryBypassDenyList = Bootstrap::getObjectManager()
-            ->create(WriteFactory::class, ['denyListPathValidator' => $denyListPathValidator]);
-        $mediaDirectoryBypassDenyList = $writeFactoryBypassDenyList->create(DirectoryList::MEDIA);
-        $mediaDirectoryBypassDenyList->delete(CustomerMetadataInterface::ENTITY_TYPE_CUSTOMER);
+        $mediaDirectory = $this->fileSystem->getDirectoryWrite(DirectoryList::MEDIA);
+        $mediaDirectory->delete(CustomerMetadataInterface::ENTITY_TYPE_CUSTOMER);
     }
 
     /**
@@ -183,7 +171,7 @@ class AccountManagementCustomAttributesTest extends WebapiAbstract
         $imageAttributeFound = false;
         foreach ($customAttributeArray as $customAttribute) {
             if ($customAttribute[AttributeValue::ATTRIBUTE_CODE] == 'customer_image') {
-                $this->assertStringContainsString($expectedFileName, $customAttribute[AttributeValue::VALUE]);
+                $this->assertContains($expectedFileName, $customAttribute[AttributeValue::VALUE]);
                 $mediaDirectory = $this->fileSystem->getDirectoryWrite(DirectoryList::MEDIA);
                 $customerMediaPath = $mediaDirectory->getAbsolutePath(CustomerMetadataInterface::ENTITY_TYPE_CUSTOMER);
                 $imageAttributeFound = file_exists($customerMediaPath . $customAttribute[AttributeValue::VALUE]);
@@ -223,7 +211,7 @@ class AccountManagementCustomAttributesTest extends WebapiAbstract
         try {
             $this->createCustomerWithImageAttribute($imageData);
         } catch (\SoapFault $e) {
-            $this->assertStringContainsString(
+            $this->assertContains(
                 $expectedMessage,
                 $e->getMessage(),
                 "Exception message does not match"
@@ -283,6 +271,6 @@ class AccountManagementCustomAttributesTest extends WebapiAbstract
         $customerMediaPath = $mediaDirectory->getAbsolutePath(CustomerMetadataInterface::ENTITY_TYPE_CUSTOMER);
         $previousImagePath =
             $previousCustomerData[CustomAttributesDataInterface::CUSTOM_ATTRIBUTES][0][AttributeValue::VALUE];
-        $this->assertFileDoesNotExist($customerMediaPath . $previousImagePath);
+        $this->assertFalse(file_exists($customerMediaPath . $previousImagePath));
     }
 }

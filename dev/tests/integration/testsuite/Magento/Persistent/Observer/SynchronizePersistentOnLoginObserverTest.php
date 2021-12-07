@@ -3,28 +3,21 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
-declare(strict_types=1);
-
 namespace Magento\Persistent\Observer;
 
 use DateTime;
 use DateTimeZone;
 use Magento\Customer\Api\CustomerRepositoryInterface;
-use Magento\Customer\Model\Session as CustomerSession;
+use Magento\Customer\Api\Data\CustomerInterface;
+use Magento\Framework\Event;
+use Magento\Framework\Event\Observer;
 use Magento\Framework\ObjectManagerInterface;
-use Magento\Framework\Stdlib\CookieManagerInterface;
-use Magento\Persistent\Helper\Session as PersistentSessionHelper;
 use Magento\Persistent\Model\Session;
 use Magento\Persistent\Model\SessionFactory;
 use Magento\TestFramework\Helper\Bootstrap;
 use PHPUnit\Framework\TestCase;
 
 /**
- * Test for synchronize persistent session on login observer
- *
- * @see \Magento\Persistent\Observer\SynchronizePersistentOnLoginObserver
- * @magentoAppArea frontend
- * @magentoDbIsolation enabled
  * @magentoDataFixture Magento/Customer/_files/customer.php
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
@@ -33,129 +26,86 @@ class SynchronizePersistentOnLoginObserverTest extends TestCase
     /**
      * @var SynchronizePersistentOnLoginObserver
      */
-    private $model;
+    protected $_model;
 
     /**
      * @var ObjectManagerInterface
      */
-    private $objectManager;
+    protected $_objectManager;
 
     /**
-     * @var PersistentSessionHelper
+     * @var \Magento\Persistent\Helper\Session
      */
-    private $persistentSessionHelper;
+    protected $_persistentSession;
 
     /**
-     * @var CustomerRepositoryInterface
+     * @var \Magento\Customer\Model\Session
      */
-    private $customerRepository;
-
+    protected $_customerSession;
     /**
-     * @var SessionFactory
+     * @var CustomerInterface
      */
-    private $persistentSessionFactory;
-
-    /**
-     * @var CookieManagerInterface
-     */
-    private $cookieManager;
-
-    /**
-     * @var CustomerSession
-     */
-    private $customerSession;
+    private $customer;
 
     /**
      * @inheritDoc
      */
-    protected function setUp(): void
+    public function setUp()
     {
-        parent::setUp();
-
-        $this->objectManager = Bootstrap::getObjectManager();
-        $this->persistentSessionHelper = $this->objectManager->get(PersistentSessionHelper::class);
-        $this->model = $this->objectManager->get(SynchronizePersistentOnLoginObserver::class);
-        $this->customerRepository = $this->objectManager->get(CustomerRepositoryInterface::class);
-        $this->persistentSessionFactory = $this->objectManager->get(SessionFactory::class);
-        $this->cookieManager = $this->objectManager->get(CookieManagerInterface::class);
-        $this->customerSession = $this->objectManager->get(CustomerSession::class);
-    }
-
-    /**
-     * @inheritdoc
-     */
-    protected function tearDown(): void
-    {
-        $this->persistentSessionHelper->setRememberMeChecked(null);
-        $this->customerSession->logout();
-
-        parent::tearDown();
+        $this->_objectManager = Bootstrap::getObjectManager();
+        $this->_persistentSession = $this->_objectManager->get(\Magento\Persistent\Helper\Session::class);
+        $this->_customerSession = $this->_objectManager->get(\Magento\Customer\Model\Session::class);
+        $this->_model = $this->_objectManager->create(
+            SynchronizePersistentOnLoginObserver::class,
+            [
+                'persistentSession' => $this->_persistentSession,
+                'customerSession' => $this->_customerSession
+            ]
+        );
+        /** @var CustomerRepositoryInterface $customerRepository */
+        $customerRepository = $this->_objectManager->create(CustomerRepositoryInterface::class);
+        $this->customer = $customerRepository->getById(1);
     }
 
     /**
      * Test that persistent session is created on customer login
-     *
-     * @return void
      */
     public function testSynchronizePersistentOnLogin(): void
     {
-        $customer = $this->customerRepository->get('customer@example.com');
-        $sessionModel = $this->persistentSessionFactory->create();
-        $sessionModel->loadByCustomerId($customer->getId());
+        $sessionModel = $this->_objectManager->create(Session::class);
+        $sessionModel->loadByCustomerId($this->customer->getId());
         $this->assertNull($sessionModel->getCustomerId());
-        $this->persistentSessionHelper->setRememberMeChecked(true);
-        $this->customerSession->loginById($customer->getId());
-        $sessionModel = $this->persistentSessionFactory->create();
-        $sessionModel->loadByCustomerId($customer->getId());
-        $this->assertEquals($customer->getId(), $sessionModel->getCustomerId());
+        $event = new Event();
+        $observer = new Observer(['event' => $event]);
+        $event->setData('customer', $this->customer);
+        $this->_persistentSession->setRememberMeChecked(true);
+        $this->_model->execute($observer);
+        // check that persistent session has been stored for Customer
+        /** @var Session $sessionModel */
+        $sessionModel = $this->_objectManager->create(Session::class);
+        $sessionModel->loadByCustomerId($this->customer->getId());
+        $this->assertEquals($this->customer->getId(), $sessionModel->getCustomerId());
     }
 
     /**
      * Test that expired persistent session is renewed on customer login
-     *
-     * @return void
      */
     public function testExpiredPersistentSessionShouldBeRenewedOnLogin(): void
     {
-        $customer = $this->customerRepository->get('customer@example.com');
         $lastUpdatedAt = (new DateTime('-1day'))->setTimezone(new DateTimeZone('UTC'))->format('Y-m-d H:i:s');
-        $sessionModel = $this->persistentSessionFactory->create();
-        $sessionModel->setCustomerId($customer->getId());
+        /** @var Session $sessionModel */
+        $sessionModel = $this->_objectManager->create(SessionFactory::class)->create();
+        $sessionModel->setCustomerId($this->customer->getId());
         $sessionModel->setUpdatedAt($lastUpdatedAt);
         $sessionModel->save();
-        $this->persistentSessionHelper->setRememberMeChecked(true);
-        $this->customerSession->loginById($customer->getId());
-        $sessionModel = $this->persistentSessionFactory->create();
-        $sessionModel->loadByCustomerId($customer->getId());
+        $event = new Event();
+        $observer = new Observer(['event' => $event]);
+        $event->setData('customer', $this->customer);
+        $this->_persistentSession->setRememberMeChecked(true);
+        $this->_model->execute($observer);
+        /** @var Session $sessionModel */
+        $sessionModel = $this->_objectManager->create(Session::class);
+        $sessionModel->loadByCustomerId(1);
         $this->assertGreaterThan($lastUpdatedAt, $sessionModel->getUpdatedAt());
-    }
-
-    /**
-     * @magentoDataFixture Magento/Persistent/_files/persistent_with_customer_quote_and_cookie.php
-     * @magentoConfigFixture current_store persistent/options/enabled 0
-     *
-     * @return void
-     */
-    public function testDisabledPersistentSession(): void
-    {
-        $customer = $this->customerRepository->get('customer@example.com');
-        $this->customerSession->loginById($customer->getId());
-        $this->assertNull($this->cookieManager->getCookie(Session::COOKIE_NAME));
-    }
-
-    /**
-     * @magentoDataFixture Magento/Persistent/_files/persistent_with_customer_quote_and_cookie.php
-     * @magentoConfigFixture current_store persistent/options/enabled 1
-     * @magentoConfigFixture current_store persistent/options/lifetime 0
-     *
-     * @return void
-     */
-    public function testDisabledPersistentSessionLifetime(): void
-    {
-        $customer = $this->customerRepository->get('customer@example.com');
-        $this->customerSession->loginById($customer->getId());
-        $session = $this->persistentSessionFactory->create()->setLoadExpired()->loadByCustomerId($customer->getId());
-        $this->assertNull($session->getId());
-        $this->assertNull($this->cookieManager->getCookie(Session::COOKIE_NAME));
     }
 }

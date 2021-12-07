@@ -20,14 +20,14 @@ class StringUtilsTest extends \PHPUnit\Framework\TestCase
     private $model;
 
     /**
-     * @var BooleanUtils|\PHPUnit\Framework\MockObject\MockObject
+     * @var BooleanUtils|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $booleanUtils;
 
     /**
      * Prepare subject for test.
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->booleanUtils = $this->createMock(\Magento\Framework\Stdlib\BooleanUtils::class);
         $this->booleanUtils->expects(
@@ -40,7 +40,7 @@ class StringUtilsTest extends \PHPUnit\Framework\TestCase
 
         $baseStringUtils = new BaseStringUtils($this->booleanUtils);
         $this->model = new StringUtils($this->booleanUtils, $baseStringUtils);
-        /** @var RendererInterface|\PHPUnit\Framework\MockObject\MockObject $translateRenderer */
+        /** @var RendererInterface|\PHPUnit_Framework_MockObject_MockObject $translateRenderer */
         $translateRenderer = $this->getMockBuilder(RendererInterface::class)
           ->setMethods(['render'])
           ->getMockForAbstractClass();
@@ -92,12 +92,11 @@ class StringUtilsTest extends \PHPUnit\Framework\TestCase
      * @param array $input
      *
      * @dataProvider evaluateExceptionDataProvider
-     *
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage String value is expected
      */
     public function testEvaluateException($input)
     {
-        $this->expectExceptionMessage("String value is expected");
-        $this->expectException(\InvalidArgumentException::class);
         $this->model->evaluate($input);
     }
 

@@ -27,16 +27,16 @@ class CategoryTest extends \PHPUnit\Framework\TestCase
      */
     protected $category;
 
-    protected function setUp(): void
+    public function setUp()
     {
         Bootstrap::getObjectManager()->addSharedInstance(
             Bootstrap::getObjectManager()->create(
                 \Magento\Framework\Authorization::class,
                 ['aclPolicy' => new \Magento\Framework\Authorization\Policy\DefaultPolicy()]
             ),
-            // phpstan:ignore "Class Magento\Framework\AuthorizationInterface\Proxy not found."
             \Magento\Framework\AuthorizationInterface\Proxy::class
         );
+
         $this->permissionIndex = Bootstrap::getObjectManager()->create(
             \Magento\CatalogPermissions\Model\ResourceModel\Permission\Index::class
         );
@@ -66,17 +66,15 @@ class CategoryTest extends \PHPUnit\Framework\TestCase
         $this->category->setName('Test Category');
         $this->category->save();
         $categoryId = $this->category->getId();
-        $this->assertTrue(
-            in_array(
-                array_merge(
-                    $permissionsDataDenyNotLoggedIn,
-                    [
-                        'category_id' => $categoryId,
-                        'customer_group_id' => 0
-                    ]
-                ),
-                $this->permissionIndex->getIndexForCategory($categoryId)
-            )
+        $this->assertContains(
+            array_merge(
+                $permissionsDataDenyNotLoggedIn,
+                [
+                    'category_id' => $categoryId,
+                    'customer_group_id' => 0
+                ]
+            ),
+            $this->permissionIndex->getIndexForCategory($categoryId)
         );
 
         $permissionsDataAllowAll = [
@@ -88,16 +86,19 @@ class CategoryTest extends \PHPUnit\Framework\TestCase
         ];
         $this->category->setData('permissions', [1 => $permissionsDataAllowAll]);
         $this->category->save();
-        $this->assertContainsEquals(array_merge(
+        $this->assertContains(
+            array_merge(
                 $permissionsDataDenyNotLoggedIn,
                 [
                     'category_id' => $categoryId,
                     'customer_group_id' => 0
                 ]
-            ),$this->permissionIndex->getIndexForCategory($categoryId));
+            ),
+            $this->permissionIndex->getIndexForCategory($categoryId)
+        );
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         Bootstrap::getObjectManager()->removeSharedInstance(
             \Magento\Framework\AuthorizationInterface\Proxy::class

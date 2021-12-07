@@ -50,7 +50,7 @@ class PaymentTokenTest extends \PHPUnit\Framework\TestCase
      */
     private $order;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->order = $this->objectManager->create(Order::class);

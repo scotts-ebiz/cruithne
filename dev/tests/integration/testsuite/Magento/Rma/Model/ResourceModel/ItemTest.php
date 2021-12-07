@@ -21,7 +21,7 @@ class ItemTest extends \PHPUnit\Framework\TestCase
     /**
      * (@inheritdoc)
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
     }

@@ -17,14 +17,14 @@ class AdminSessionInfoTest extends \PHPUnit\Framework\TestCase
      */
     protected $objectManager;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $this->model = $this->objectManager->create(\Magento\Security\Model\AdminSessionInfo::class);
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->objectManager = null;
         parent::tearDown();
@@ -37,6 +37,7 @@ class AdminSessionInfoTest extends \PHPUnit\Framework\TestCase
     public function getTestData()
     {
         return [
+            'session_id'    => '569e273d752e9',
             'user_id'       => 1,
             'status'        => 1,
             'created_at'    => '2016-01-21 15:00:00',

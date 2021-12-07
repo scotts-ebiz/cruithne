@@ -63,12 +63,12 @@ class PlaceTest extends \Magento\TestFramework\TestCase\AbstractBackendControlle
             ['context' => $context]
         );
         $controller->execute();
-        $this->assertStringContainsString(json_encode($requestToAuthorizenetData), $this->getResponse()->getBody());
+        $this->assertContains(json_encode($requestToAuthorizenetData), $this->getResponse()->getBody());
     }
 
     /**
      * @param array $requestToAuthorizenetData
-     * @return \PHPUnit\Framework\MockObject\MockObject
+     * @return \PHPUnit_Framework_MockObject_MockObject
      */
     private function getOrderCreateMock($requestToAuthorizenetData)
     {

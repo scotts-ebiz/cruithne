@@ -24,7 +24,7 @@ class ShippingMethodUpdaterTest extends \PHPUnit\Framework\TestCase
      */
     private $objectManager;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->shippingMethodUpdater = $this->objectManager->get(ShippingMethodUpdater::class);

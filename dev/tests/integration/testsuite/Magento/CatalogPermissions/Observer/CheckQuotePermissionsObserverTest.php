@@ -36,7 +36,7 @@ class CheckQuotePermissionsObserverTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->productRepository = Bootstrap::getObjectManager()->get(ProductRepositoryInterface::class);
         $this->linkManagement = Bootstrap::getObjectManager()->get(CategoryLinkManagementInterface::class);

@@ -16,7 +16,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
      */
     private $templateFilter;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->templateFilter = ObjectManager::getInstance()->create(Template::class);
     }

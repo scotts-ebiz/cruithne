@@ -13,16 +13,16 @@ class SearchTermDescriptionGeneratorTest extends \PHPUnit\Framework\TestCase
     private $searchTermDescriptionGenerator;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Setup\Model\Description\DescriptionGenerator
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Setup\Model\Description\DescriptionGenerator
      */
     private $descriptionGeneratorMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Setup\Model\SearchTermManager
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Setup\Model\SearchTermManager
      */
     private $searchTermManagerMock;
 
-    protected function setUp(): void
+    public function setUp()
     {
         $this->descriptionGeneratorMock =
             $this->createMock(\Magento\Setup\Model\Description\DescriptionGenerator::class);

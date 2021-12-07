@@ -36,6 +36,6 @@ class ProductsTest extends \PHPUnit\Framework\TestCase
                 ]
             ]
         );
-        $this->assertStringContainsString('<form', $block->toHtml());
+        $this->assertContains('<form', $block->toHtml());
     }
 }

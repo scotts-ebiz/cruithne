@@ -22,42 +22,42 @@ use Magento\Framework\Validator\Currency as CurrencyValidator;
 class InstallStoreConfigurationCommandTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \Magento\Framework\App\DeploymentConfig|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Framework\App\DeploymentConfig|\PHPUnit_Framework_MockObject_MockObject
      */
     private $deploymentConfig;
 
     /**
-     * @var \Magento\Setup\Model\InstallerFactory|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Setup\Model\InstallerFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     private $installerFactory;
 
     /**
-     * @var Installer|\PHPUnit\Framework\MockObject\MockObject
+     * @var Installer|\PHPUnit_Framework_MockObject_MockObject
      */
     private $installer;
 
     /**
-     * @var ObjectManagerInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @var ObjectManagerInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     private $objectManager;
 
     /**
-     * @var LocaleValidator|\PHPUnit\Framework\MockObject\MockObject
+     * @var LocaleValidator|\PHPUnit_Framework_MockObject_MockObject
      */
     private $localeValidatorMock;
 
     /**
-     * @var TimezoneValidator|\PHPUnit\Framework\MockObject\MockObject
+     * @var TimezoneValidator|\PHPUnit_Framework_MockObject_MockObject
      */
     private $timezoneValidatorMock;
 
     /**
-     * @var CurrencyValidator|\PHPUnit\Framework\MockObject\MockObject
+     * @var CurrencyValidator|\PHPUnit_Framework_MockObject_MockObject
      */
     private $currencyValidatorMock;
 
     /**
-     * @var UrlValidator|\PHPUnit\Framework\MockObject\MockObject
+     * @var UrlValidator|\PHPUnit_Framework_MockObject_MockObject
      */
     private $urlValidatorMock;
 
@@ -66,7 +66,7 @@ class InstallStoreConfigurationCommandTest extends \PHPUnit\Framework\TestCase
      */
     private $command;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->urlValidatorMock = $this->createMock(UrlValidator::class);
         $this->localeValidatorMock = $this->createMock(LocaleValidator::class);
@@ -99,12 +99,12 @@ class InstallStoreConfigurationCommandTest extends \PHPUnit\Framework\TestCase
     {
         $this->deploymentConfig->expects($this->once())
             ->method('isAvailable')
-            ->willReturn(true);
+            ->will($this->returnValue(true));
         $this->installer->expects($this->once())
             ->method('installUserConfig');
         $this->installerFactory->expects($this->once())
             ->method('create')
-            ->willReturn($this->installer);
+            ->will($this->returnValue($this->installer));
         $tester = new CommandTester($this->command);
         $tester->execute([]);
     }
@@ -113,7 +113,7 @@ class InstallStoreConfigurationCommandTest extends \PHPUnit\Framework\TestCase
     {
         $this->deploymentConfig->expects($this->once())
             ->method('isAvailable')
-            ->willReturn(false);
+            ->will($this->returnValue(false));
         $this->installerFactory->expects($this->never())
             ->method('create');
         $tester = new CommandTester($this->command);
@@ -138,12 +138,12 @@ class InstallStoreConfigurationCommandTest extends \PHPUnit\Framework\TestCase
 
         $this->deploymentConfig->expects($this->once())
             ->method('isAvailable')
-            ->willReturn(true);
+            ->will($this->returnValue(true));
         $this->installerFactory->expects($this->never())
             ->method('create');
         $commandTester = new CommandTester($this->command);
         $commandTester->execute($option);
-        $this->assertStringContainsString($error, $commandTester->getDisplay());
+        $this->assertContains($error, $commandTester->getDisplay());
     }
 
     /**

@@ -108,7 +108,7 @@ class RuleRepositoryWithRewardPointsTest extends WebapiAbstract
         $this->assertEquals($inputData, $result);
 
         //test delete
-        $this->assertTrue($this->deleteRule($ruleId));
+        $this->assertEquals(true, $this->deleteRule($ruleId));
     }
 
     /**

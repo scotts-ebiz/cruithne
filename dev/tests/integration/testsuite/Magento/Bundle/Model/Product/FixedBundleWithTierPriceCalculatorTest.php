@@ -10,16 +10,16 @@ use \Magento\Bundle\Api\Data\LinkInterface;
 use \Magento\Catalog\Api\Data\ProductTierPriceInterfaceFactory;
 
 /**
- * Tests for bundle product calculation with tire prices.
- *
+ * Class FixedBundleWithTierPRiceCalculatorTest
+ * @package Magento\Bundle\Model\Product
  * @magentoAppArea frontend
  */
-class FixedBundleWithTierPriceCalculatorTest extends BundlePriceCalculatorAbstract
+class FixedBundleWithTierPriceCalculatorTest extends BundlePriceAbstract
 {
     /** @var ProductTierPriceInterfaceFactory */
     private $tierPriceFactory;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
         $this->tierPriceFactory = $this->objectManager->create(ProductTierPriceInterfaceFactory::class);
@@ -175,7 +175,7 @@ class FixedBundleWithTierPriceCalculatorTest extends BundlePriceCalculatorAbstra
             ],
 
             '
-                #7 Testing product price
+                #7 Testing product price 
                 with tier price, percent sub items and percent options
             ' => [
                 'strategy' => $this->getProductConfiguration3(

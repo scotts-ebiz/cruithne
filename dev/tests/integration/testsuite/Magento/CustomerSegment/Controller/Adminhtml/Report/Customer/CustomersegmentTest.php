@@ -34,6 +34,6 @@ class CustomersegmentTest extends \Magento\TestFramework\TestCase\AbstractBacken
             'backend/customersegment/report_customer_customersegment/detail/segment_id/' . $segment->getId()
         );
         $content = $this->getResponse()->getBody();
-        $this->assertStringContainsString('segmentGridJsObject', $content);
+        $this->assertContains('segmentGridJsObject', $content);
     }
 }

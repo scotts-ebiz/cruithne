@@ -16,7 +16,7 @@ use Magento\TestFramework\TestCase\GraphQlAbstract;
  */
 class CartGiftCardAccountTest extends GraphQlAbstract
 {
-    protected function setUp(): void
+    protected function setUp()
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->getMaskedQuoteIdByReservedOrderId = $objectManager->get(GetMaskedQuoteIdByReservedOrderId::class);

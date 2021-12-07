@@ -19,7 +19,7 @@ class RadioTest extends \PHPUnit\Framework\TestCase
     /** @var Radio */
     protected $block;
 
-    protected function setUp(): void
+    public function setUp()
     {
         parent::setUp();
         $this->layoutMock = $this->createMock(\Magento\Framework\View\Layout::class);
@@ -46,8 +46,8 @@ class RadioTest extends \PHPUnit\Framework\TestCase
             'getBlock'
         )->with(
             'wysiwyg_widget.options'
-        )->willReturn(
-            $blockOptions ? $this->block : null
+        )->will(
+            $this->returnValue($blockOptions ? $this->block : null)
         );
 
         if ($widgetOptions) {
@@ -57,8 +57,8 @@ class RadioTest extends \PHPUnit\Framework\TestCase
                 $this->once()
             )->method(
                 'getWidgetParameters'
-            )->willReturn(
-                $widgetOptions
+            )->will(
+                $this->returnValue($widgetOptions)
             );
 
             /** @var $objectManager \Magento\TestFramework\ObjectManager */

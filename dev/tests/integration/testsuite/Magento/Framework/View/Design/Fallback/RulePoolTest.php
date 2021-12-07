@@ -28,7 +28,7 @@ class RulePoolTest extends \PHPUnit\Framework\TestCase
      */
     protected $defaultParams;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $objectManager = Bootstrap::getObjectManager();
         /** @var \Magento\Theme\Model\Theme\Registration $registration */
@@ -50,16 +50,18 @@ class RulePoolTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->model = null;
         $this->defaultParams = [];
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedException Fallback rule 'unsupported_type' is not supported
+     */
     public function testGetRuleUnsupportedType()
     {
-        $this->expectException(Fallback::class);// rule 'unsupported_type' is not supported
-        $this->expectException(\InvalidArgumentException::class);
         $this->model->getRule('unsupported_type');
     }
 

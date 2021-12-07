@@ -53,10 +53,10 @@ namespace Magento\Framework\Session {
         /** @var string Default value for session.save_path setting */
         private $defaultSavePath;
 
-        /** @var \Magento\Framework\App\DeploymentConfig | \PHPUnit\Framework\MockObject\MockObject */
+        /** @var \Magento\Framework\App\DeploymentConfig | \PHPUnit_Framework_MockObject_MockObject */
         private $deploymentConfigMock;
 
-        protected function setUp(): void
+        protected function setUp()
         {
             $this->_objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
 
@@ -103,8 +103,8 @@ namespace Magento\Framework\Session {
             $this->assertEquals($this->_cacheLimiter, $model->getCacheLimiter());
             $this->assertEquals('/', $model->getCookiePath());
             $this->assertEquals('localhost', $model->getCookieDomain());
-            $this->assertFalse($model->getCookieSecure());
-            $this->assertTrue($model->getCookieHttpOnly());
+            $this->assertEquals(false, $model->getCookieSecure());
+            $this->assertEquals(true, $model->getCookieHttpOnly());
             $this->assertEquals($model->getSavePath(), $model->getOption('save_path'));
         }
 
