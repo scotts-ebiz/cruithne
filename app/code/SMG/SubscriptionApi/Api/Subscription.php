@@ -928,6 +928,66 @@ class Subscription implements SubscriptionInterface
     }
 
     /**
+     * @param string $quiz_id
+     * @return mixed
+     */
+    public function getSubscriptionByQuizId($quiz_id)
+    {
+        /** @var SubscriptionModel $sub */
+        try {
+            $sub = $this->_subscriptionResource->getSubscriptionByQuizId($quiz_id);
+        } catch (LocalizedException $e) {
+            $this->_logger->error($e->getMessage());
+            return $this->_responseHelper->error(
+                $e->getMessage(),
+                ['refresh' => false],
+                422
+            );
+        }
+
+        if ($sub) {
+            return $this->_responseHelper->success(
+                'Subscription found.',
+                [
+                    'entity_id'=>$sub->getData('entity_id'),
+                    'quiz_id'=>$sub->getData('quiz_id'),
+                    'gigya_id'=>$sub->getData('gigya_id'),
+                    'quiz_completed_at'=>$sub->getData('quiz_completed_at'),
+                    'origin'=>$sub->getData('origin'),
+                    'lawn_zip'=>$sub->getData('lawn_zip'),
+                    'zone_name'=>$sub->getData('zone_name'),
+                    'lawn_size'=>$sub->getData('lawn_size'),
+                    'lawn_type'=>$sub->getData('lawn_type'),
+                    'customer_id'=>$sub->getData('customer_id'),
+                    'subscription_id'=>$sub->getData('subscription_id'),
+                    'subscription_type'=>$sub->getData('subscription_type'),
+                    'subscription_status'=>$sub->getData('subscription_status'),
+                    'subscription_start_date'=>$sub->getData('subscription_start_date'),
+                    'subscription_end_date'=>$sub->getData('subscription_end_date'),
+                    'price'=>$sub->getData('price'),
+                    'discount'=>$sub->getData('discount'),
+                    'created_at'=>$sub->getData('created_at'),
+                    'updated_at'=>$sub->getData('updated_at'),
+                    'tax'=>$sub->getData('tax'),
+                    'paid'=>$sub->getData('paid'),
+                    'recurly_invoice'=>$sub->getData('recurly_invoice'),
+                    'is_full_refund'=>$sub->getData('is_full_refund')
+                ]
+            );
+        } else {
+            $message = "Could not find subscription for quiz id: ".$quiz_id;
+            $this->_logger->error($message);
+            return $this->_responseHelper->error(
+                $message,
+                ['refresh' => false],
+                422
+            );
+        }
+    }
+
+
+
+    /**
      * @param string $master_subscription_id
      * @return mixed
      */
