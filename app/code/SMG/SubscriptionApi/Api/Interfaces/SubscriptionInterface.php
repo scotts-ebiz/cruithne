@@ -64,4 +64,12 @@ interface SubscriptionInterface
      * @return mixed
      */
     public function updateSubscriptionIds($subscription_entity_ids);
+
+    /**
+     *  Get subscription info for given quiz_id.
+     *
+     * @param string $quiz_id
+     * @return mixed
+     */
+    public function getSubscriptionByQuizId($quiz_id);
 }
