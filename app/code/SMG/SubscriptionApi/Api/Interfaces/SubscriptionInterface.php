@@ -45,9 +45,10 @@ interface SubscriptionInterface
      *  Renew subscription for given master id.
      *
      * @param string $master_subscription_id
+     * @param bool $force
      * @return mixed
      */
-    public function renewSubscription($master_subscription_id);
+    public function renewSubscription($master_subscription_id, $force = false);
 
 	/**
      *  Cancel subscription for given master id.

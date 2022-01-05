@@ -356,7 +356,7 @@ class SubscriptionOrderHelper extends AbstractHelper
      * @throws SubscriptionException
      * @throws NoSuchEntityException
      */
-    public function processOrder(Customer $customer, $subscriptionOrder)
+    public function processOrder(Customer $customer, $subscriptionOrder, $forcePriceFromOrderItem = false)
     {
         $this->_logger->info('Processing order...');
         $quote = $this->_quoteFactory->create();
@@ -394,7 +394,16 @@ class SubscriptionOrderHelper extends AbstractHelper
                 $product = $item->getProduct();
 
                 $this->_logger->info('Adding product to quote...');
-                $quote->addProduct($product, (int) $item->getQty());
+                if (!$forcePriceFromOrderItem) {
+                    $quote->addProduct($product, (int) $item->getQty());
+                } else { // We can force the price from the the SubscriptionOrderItem price if needed. Mostly for renewals
+                    $quote->addProduct($product, (int) $item->getQty());
+                    $quoteItem = $quote->getItemByProduct($product);
+                    $quoteItem->setCustomPrice((float)$item->getData('price'));
+                    $quoteItem->setOriginalCustomPrice((float)$item->getData('price'));
+                    $quoteItem->getProduct()->setIsSuperMode(true);
+                }
+
             } catch (\Exception $e) {
                 $this->errorResponse(
                     'Could not find product: ' . $item->getCatalogProductSku(),
