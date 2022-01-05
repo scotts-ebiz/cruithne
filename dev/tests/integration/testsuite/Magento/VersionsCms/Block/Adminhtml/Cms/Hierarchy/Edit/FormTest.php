@@ -42,7 +42,7 @@ class FormTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->_layout = Bootstrap::getObjectManager()->get(
@@ -72,7 +72,7 @@ class FormTest extends TestCase
                 )
             ]
         );
-        $this->_layout->createBlock($mockClass, $parentName);
+        $this->_layout->createBlock(AbstractProduct::class, $parentName);
         $this->_layout->setChild($parentName, $this->_block->getNameInLayout(), '');
 
         $pageGrid = $this->_layout->addBlock(
@@ -101,7 +101,7 @@ class FormTest extends TestCase
             ->getMock();
         $cmsHierarchyMock->expects($this->any())
             ->method('isMetadataEnabled')
-            ->will($this->returnValue($isMetadataEnabled));
+            ->willReturn($isMetadataEnabled);
         $block = $objectManager->create(
             Form::class,
             ['cmsHierarchy' =>$cmsHierarchyMock]

@@ -56,7 +56,7 @@ class PlaceOrderAfterApplyingGiftCardTest extends GraphQlAbstract
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -463,7 +463,7 @@ QUERY;
     /**
      * @inheritdoc
      */
-    public function tearDown()
+    protected function tearDown(): void
     {
         $this->deleteQuote();
         $this->deleteOrder();

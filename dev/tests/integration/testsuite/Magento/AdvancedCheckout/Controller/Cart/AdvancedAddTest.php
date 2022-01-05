@@ -28,7 +28,7 @@ class AdvancedAddTest extends AbstractController
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -48,7 +48,7 @@ class AdvancedAddTest extends AbstractController
     {
         $this->dispatchWithData($postData);
         $this->assertNull($this->getRequest()->getCookie('add_to_cart'));
-        $this->assertSessionMessages($this->contains($message));
+        $this->assertSessionMessages($this->containsEqual($message));
     }
 
     /**
@@ -61,7 +61,7 @@ class AdvancedAddTest extends AbstractController
                 [
                     'items' => [],
                 ],
-                'expected_message' => __(
+                'expected_message' => (string)__(
                     'You have not entered a product SKU. Please <a href="%1">click here</a> to add product(s) by SKU.',
                     $this->getAccountSkuUrl()
                 ),
@@ -72,7 +72,7 @@ class AdvancedAddTest extends AbstractController
                         ['qty' => 1],
                     ],
                 ],
-                'expected_message' => __(
+                'expected_message' => (string)__(
                     'You have not entered a product SKU. Please <a href="%1">click here</a> to add product(s) by SKU.',
                     $this->getAccountSkuUrl()
                 ),
@@ -110,7 +110,7 @@ class AdvancedAddTest extends AbstractController
         ];
         $this->dispatchWithData($postData);
         $this->assertCookie($expectedCookie);
-        $this->assertSessionMessages($this->contains((string)__('You added 1 product to your shopping cart.')));
+        $this->assertSessionMessages($this->containsEqual((string)__('You added 1 product to your shopping cart.')));
     }
 
     /**

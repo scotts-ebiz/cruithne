@@ -30,7 +30,7 @@ class LinkTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -47,7 +47,7 @@ class LinkTest extends TestCase
         $block = $this->page->getLayout()->getBlock('customer-account-navigation-gift-card-link');
         $this->assertNotFalse($block);
         $html = $block->toHtml();
-        $this->assertContains('/giftcard/customer/', $html);
+        $this->assertStringContainsString('/giftcard/customer/', $html);
         $this->assertEquals((string)__('Gift Card'), strip_tags($html));
     }
 

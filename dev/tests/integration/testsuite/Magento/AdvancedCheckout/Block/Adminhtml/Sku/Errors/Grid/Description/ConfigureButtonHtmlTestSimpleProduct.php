@@ -26,8 +26,8 @@ class ConfigureButtonHtmlTestSimpleProduct extends AbstractConfigureButtonHtmlTe
     {
         $this->prepareBlock('simple2');
         $result = $this->block->getConfigureButtonHtml();
-        $this->assertContains('disabled="disabled', $result);
-        $this->assertNotContains('onclick', $result);
-        $this->assertContains((string)__('Configure'), strip_tags($result));
+        $this->assertStringContainsString('disabled="disabled', $result);
+        $this->assertStringNotContainsString('onclick', $result);
+        $this->assertStringContainsString((string)__('Configure'), strip_tags($result));
     }
 }
