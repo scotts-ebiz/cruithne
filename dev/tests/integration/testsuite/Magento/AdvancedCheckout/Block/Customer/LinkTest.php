@@ -36,7 +36,7 @@ class LinkTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -55,7 +55,7 @@ class LinkTest extends TestCase
         $block = $this->getBlockByName('customer-account-navigation-checkout-sku-link');
         $this->assertNotFalse($block);
         $html = $block->toHtml();
-        $this->assertStringContainsString('customer_order/sku/', $html);
+        $this->assertContains('customer_order/sku/', $html);
         $this->assertEquals('Order by SKU', strip_tags($html));
     }
 

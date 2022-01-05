@@ -32,7 +32,7 @@ class LoginPostTest extends AbstractController
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -124,7 +124,7 @@ class LoginPostTest extends AbstractController
         $errorMessage = current($this->getMessages(MessageInterface::TYPE_ERROR));
         $entities = ['&lt;', '&gt;', '&quot;', '&#039;', '&amp;'];
         foreach ($entities as $entity) {
-            $this->assertStringNotContainsString($entity, $errorMessage);
+            $this->assertNotContains($entity, $errorMessage);
         }
         $this->assertRedirect($this->stringContains('customer/account/login'));
     }

@@ -19,7 +19,7 @@ class AddressDataGeneratorTest extends \PHPUnit\Framework\TestCase
      */
     private $addressGenerator;
 
-    protected function setUp(): void
+    public function setUp()
     {
         $this->addressGenerator = new \Magento\Setup\Model\Address\AddressDataGenerator();
     }
@@ -40,7 +40,7 @@ class AddressDataGeneratorTest extends \PHPUnit\Framework\TestCase
         $address = $this->addressGenerator->generateAddress();
 
         foreach ($this->addressStructure as $addressField) {
-            $this->assertArrayHasKey($addressField, $address);
+            $this->assertTrue(array_key_exists($addressField, $address));
         }
     }
 }

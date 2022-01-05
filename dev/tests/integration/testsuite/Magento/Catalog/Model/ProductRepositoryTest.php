@@ -83,7 +83,7 @@ class ProductRepositoryTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -102,7 +102,7 @@ class ProductRepositoryTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         foreach ($this->productSkusToDelete as $productSku) {
             try {

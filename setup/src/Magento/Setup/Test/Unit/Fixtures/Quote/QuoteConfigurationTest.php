@@ -12,7 +12,7 @@ namespace Magento\Setup\Test\Unit\Fixtures\Quote;
 class QuoteConfigurationTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \Magento\Setup\Fixtures\FixtureModel|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Setup\Fixtures\FixtureModel|\PHPUnit_Framework_MockObject_MockObject
      */
     private $fixtureModelMock;
 
@@ -24,7 +24,7 @@ class QuoteConfigurationTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    public function setUp()
     {
         $this->fixtureModelMock = $this->getMockBuilder(\Magento\Setup\Fixtures\FixtureModel::class)
             ->disableOriginalConstructor()

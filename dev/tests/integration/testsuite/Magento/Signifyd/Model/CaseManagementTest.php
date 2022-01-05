@@ -27,7 +27,7 @@ class CaseManagementTest extends \PHPUnit\Framework\TestCase
      */
     private $objectManager;
 
-    protected function setup(): void
+    protected function setup()
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->caseManagement = $this->objectManager->get(CaseManagement::class);

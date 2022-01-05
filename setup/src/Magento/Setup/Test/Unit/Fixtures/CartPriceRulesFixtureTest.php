@@ -14,7 +14,7 @@ use Magento\Setup\Fixtures\CartPriceRulesFixture;
 class CartPriceRulesFixtureTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Setup\Fixtures\FixtureModel
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Setup\Fixtures\FixtureModel
      */
     private $fixtureModelMock;
 
@@ -24,11 +24,11 @@ class CartPriceRulesFixtureTest extends \PHPUnit\Framework\TestCase
     private $model;
 
     /**
-     * @var \Magento\SalesRule\Model\RuleFactory|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\SalesRule\Model\RuleFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     private $ruleFactoryMock;
 
-    protected function setUp(): void
+    public function setUp()
     {
         $this->fixtureModelMock = $this->createMock(\Magento\Setup\Fixtures\FixtureModel::class);
         $this->ruleFactoryMock = $this->createPartialMock(\Magento\SalesRule\Model\RuleFactory::class, ['create']);
@@ -40,15 +40,15 @@ class CartPriceRulesFixtureTest extends \PHPUnit\Framework\TestCase
         $storeMock = $this->createMock(\Magento\Store\Model\Store::class);
         $storeMock->expects($this->once())
             ->method('getRootCategoryId')
-            ->willReturn(2);
+            ->will($this->returnValue(2));
 
         $websiteMock = $this->createMock(\Magento\Store\Model\Website::class);
         $websiteMock->expects($this->once())
             ->method('getGroups')
-            ->willReturn([$storeMock]);
+            ->will($this->returnValue([$storeMock]));
         $websiteMock->expects($this->once())
             ->method('getId')
-            ->willReturn('website_id');
+            ->will($this->returnValue('website_id'));
 
         $contextMock = $this->createMock(\Magento\Framework\Model\ResourceModel\Db\Context::class);
         $abstractDbMock = $this->getMockForAbstractClass(
@@ -62,23 +62,23 @@ class CartPriceRulesFixtureTest extends \PHPUnit\Framework\TestCase
         );
         $abstractDbMock->expects($this->once())
             ->method('getAllChildren')
-            ->willReturn([1]);
+            ->will($this->returnValue([1]));
 
         $storeManagerMock = $this->createMock(\Magento\Store\Model\StoreManager::class);
         $storeManagerMock->expects($this->once())
             ->method('getWebsites')
-            ->willReturn([$websiteMock]);
+            ->will($this->returnValue([$websiteMock]));
 
         $categoryMock = $this->createMock(\Magento\Catalog\Model\Category::class);
         $categoryMock->expects($this->once())
             ->method('getResource')
-            ->willReturn($abstractDbMock);
+            ->will($this->returnValue($abstractDbMock));
         $categoryMock->expects($this->once())
             ->method('getPath')
-            ->willReturn('path/to/file');
+            ->will($this->returnValue('path/to/file'));
         $categoryMock->expects($this->once())
             ->method('getId')
-            ->willReturn('category_id');
+            ->will($this->returnValue('category_id'));
 
         $objectValueMap = [
             [\Magento\Catalog\Model\Category::class, $categoryMock]
@@ -87,10 +87,10 @@ class CartPriceRulesFixtureTest extends \PHPUnit\Framework\TestCase
         $objectManagerMock = $this->createMock(\Magento\Framework\ObjectManager\ObjectManager::class);
         $objectManagerMock->expects($this->once())
             ->method('create')
-            ->willReturn($storeManagerMock);
+            ->will($this->returnValue($storeManagerMock));
         $objectManagerMock->expects($this->once())
             ->method('get')
-            ->willReturnMap($objectValueMap);
+            ->will($this->returnValueMap($objectValueMap));
 
         $valueMap = [
             ['cart_price_rules', 0, 1],
@@ -101,11 +101,11 @@ class CartPriceRulesFixtureTest extends \PHPUnit\Framework\TestCase
         $this->fixtureModelMock
             ->expects($this->exactly(3))
             ->method('getValue')
-            ->willReturnMap($valueMap);
+            ->will($this->returnValueMap($valueMap));
         $this->fixtureModelMock
             ->expects($this->exactly(2))
             ->method('getObjectManager')
-            ->willReturn($objectManagerMock);
+            ->will($this->returnValue($objectManagerMock));
 
         $ruleMock = $this->createMock(\Magento\SalesRule\Model\Rule::class);
         $this->ruleFactoryMock->expects($this->once())
@@ -157,7 +157,7 @@ class CartPriceRulesFixtureTest extends \PHPUnit\Framework\TestCase
                 'type' => \Magento\SalesRule\Model\Rule\Condition\Product::class,
                 'attribute' => 'category_ids',
                 'operator' => '==',
-                'value' => 0,
+                'value' => null,
             ];
 
             $secondCondition = [
@@ -245,8 +245,8 @@ class CartPriceRulesFixtureTest extends \PHPUnit\Framework\TestCase
     public function dataProviderGenerateAdvancedCondition()
     {
         return [
-            [1, [[0]], 1],
-            [1, [[0]], 300]
+            [1, [0], 1],
+            [1, [0], 300]
         ];
     }
 

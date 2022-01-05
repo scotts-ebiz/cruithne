@@ -33,7 +33,7 @@ class AbstractGridTest extends AbstractBackendController
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -68,6 +68,6 @@ class AbstractGridTest extends AbstractBackendController
             ->setMethod(HttpRequest::METHOD_POST);
         $this->dispatch("backend/merchandiser/category/grid/");
         $content = $this->getResponse()->getContent();
-        $this->assertStringContainsString(' ₴10.00', $content);
+        $this->assertContains(' ₴10.00', $content);
     }
 }

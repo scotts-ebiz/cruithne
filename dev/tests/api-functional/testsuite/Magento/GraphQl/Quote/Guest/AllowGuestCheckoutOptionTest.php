@@ -49,7 +49,7 @@ class AllowGuestCheckoutOptionTest extends GraphQlAbstract
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->getMaskedQuoteIdByReservedOrderId = $objectManager->get(GetMaskedQuoteIdByReservedOrderId::class);
@@ -85,12 +85,11 @@ QUERY;
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/guest/create_empty_cart.php
      * @magentoConfigFixture default_store checkout/options/guest_checkout 0
      *
+     * @expectedException \Exception
+     * @expectedExceptionMessage Guest checkout is not allowed. Register a customer account or login with existing one.
      */
     public function testSetBillingAddressToGuestCustomerCart()
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Guest checkout is not allowed. Register a customer account or login with existing one.');
-
         $maskedQuoteId = $this->getMaskedQuoteIdByReservedOrderId->execute('test_quote');
 
         $query = <<<QUERY
@@ -129,12 +128,11 @@ QUERY;
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/guest/create_empty_cart.php
      * @magentoConfigFixture default_store checkout/options/guest_checkout 0
      *
+     * @expectedException \Exception
+     * @expectedExceptionMessage Guest checkout is not allowed. Register a customer account or login with existing one.
      */
     public function testSetGuestEmailOnCartWithGuestCheckoutDisabled()
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Guest checkout is not allowed. Register a customer account or login with existing one.');
-
         $maskedQuoteId = $this->getMaskedQuoteIdByReservedOrderId->execute('test_quote');
         $email = 'some@user.com';
 
@@ -160,12 +158,11 @@ QUERY;
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/set_new_shipping_address.php
      * @magentoConfigFixture default_store checkout/options/guest_checkout 0
      *
+     * @expectedException \Exception
+     * @expectedExceptionMessage Guest checkout is not allowed. Register a customer account or login with existing one.
      */
     public function testSetPaymentOnCartWithGuestCheckoutDisabled()
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Guest checkout is not allowed. Register a customer account or login with existing one.');
-
         $methodCode = Checkmo::PAYMENT_METHOD_CHECKMO_CODE;
         $maskedQuoteId = $this->getMaskedQuoteIdByReservedOrderId->execute('test_quote');
 
@@ -199,12 +196,11 @@ QUERY;
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/add_simple_product.php
      * @magentoConfigFixture default_store checkout/options/guest_checkout 0
      *
+     * @expectedException \Exception
+     * @expectedExceptionMessage Guest checkout is not allowed. Register a customer account or login with existing one.
      */
     public function testSetNewShippingAddressOnCartWithGuestCheckoutDisabled()
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Guest checkout is not allowed. Register a customer account or login with existing one.');
-
         $maskedQuoteId = $this->getMaskedQuoteIdByReservedOrderId->execute('test_quote');
 
         $query = <<<QUERY
@@ -247,12 +243,11 @@ QUERY;
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/set_new_shipping_address.php
      * @magentoConfigFixture default_store checkout/options/guest_checkout 0
      *
+     * @expectedException \Exception
+     * @expectedExceptionMessage Guest checkout is not allowed. Register a customer account or login with existing one.
      */
     public function testSetShippingMethodOnCartWithGuestCheckoutDisabled()
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Guest checkout is not allowed. Register a customer account or login with existing one.');
-
         $maskedQuoteId = $this->getMaskedQuoteIdByReservedOrderId->execute('test_quote');
         $carrierCode = 'flatrate';
         $methodCode = 'flatrate';
@@ -299,12 +294,11 @@ QUERY;
      * @magentoApiDataFixture Magento/GraphQl/Quote/_files/set_checkmo_payment_method.php
      * @magentoConfigFixture default_store checkout/options/guest_checkout 0
      *
+     * @expectedException \Exception
+     * @expectedExceptionMessage Guest checkout is not allowed. Register a customer account or login with existing one.
      */
     public function testPlaceOrderWithGuestCheckoutDisabled()
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('Guest checkout is not allowed. Register a customer account or login with existing one.');
-
         $reservedOrderId = 'test_quote';
         $maskedQuoteId = $this->getMaskedQuoteIdByReservedOrderId->execute($reservedOrderId);
 
@@ -332,7 +326,7 @@ QUERY;
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    public function tearDown()
     {
         $this->registry->unregister('isSecureArea');
         $this->registry->register('isSecureArea', true);

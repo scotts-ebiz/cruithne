@@ -14,12 +14,11 @@ class ProgressTest extends \PHPUnit\Framework\TestCase
      * @param int $total
      * @param int $current
      * @dataProvider constructorExceptionInvalidTotalDataProvider
+     * @expectedException \LogicException
+     * @expectedExceptionMessage Total number must be more than zero.
      */
     public function testConstructorExceptionInvalidTotal($total, $current)
     {
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Total number must be more than zero.');
-
         new Progress($total, $current);
     }
 
@@ -32,12 +31,11 @@ class ProgressTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessage Current cannot exceed total number.
      */
     public function testConstructorExceptionCurrentExceedsTotal()
     {
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Current cannot exceed total number.');
-
         new Progress(1, 2);
     }
 
@@ -49,12 +47,11 @@ class ProgressTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @expectedException \LogicException
+     * @expectedExceptionMessage Current cannot exceed total number.
      */
     public function testSetNextException()
     {
-        $this->expectException(\LogicException::class);
-        $this->expectExceptionMessage('Current cannot exceed total number.');
-
         $progress = new Progress(10, 10);
         $progress->setNext();
     }

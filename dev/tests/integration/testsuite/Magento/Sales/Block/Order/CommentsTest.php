@@ -12,7 +12,7 @@ class CommentsTest extends \PHPUnit\Framework\TestCase
      */
     protected $_block;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->_block = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->get(
             \Magento\Framework\View\LayoutInterface::class
@@ -55,9 +55,11 @@ class CommentsTest extends \PHPUnit\Framework\TestCase
         ];
     }
 
+    /**
+     * @expectedException \Magento\Framework\Exception\LocalizedException
+     */
     public function testGetCommentsWrongEntityException()
     {
-        $this->expectException(\Magento\Framework\Exception\LocalizedException::class);
         $entity = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
             \Magento\Catalog\Model\Product::class
         );

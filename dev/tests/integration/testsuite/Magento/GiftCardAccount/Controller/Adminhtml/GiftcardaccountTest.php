@@ -13,7 +13,7 @@ class GiftcardaccountTest extends \Magento\TestFramework\TestCase\AbstractBacken
     public function testIndexAction()
     {
         $this->dispatch('backend/admin/giftcardaccount/index');
-        $this->assertStringContainsString(
+        $this->assertContains(
             "Code Pool used: <b>100%</b>",
             $this->getResponse()->getBody()
         );

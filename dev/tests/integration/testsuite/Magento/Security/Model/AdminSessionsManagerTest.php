@@ -5,9 +5,6 @@
  */
 namespace Magento\Security\Model;
 
-/**
- * @magentoAppArea adminhtml
- */
 class AdminSessionsManagerTest extends \PHPUnit\Framework\TestCase
 {
     /**
@@ -43,7 +40,7 @@ class AdminSessionsManagerTest extends \PHPUnit\Framework\TestCase
     /**
      * Set up
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -61,7 +58,7 @@ class AdminSessionsManagerTest extends \PHPUnit\Framework\TestCase
     /**
      * Tear down
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->auth = null;
         $this->authSession  = null;
@@ -82,9 +79,9 @@ class AdminSessionsManagerTest extends \PHPUnit\Framework\TestCase
             \Magento\TestFramework\Bootstrap::ADMIN_NAME,
             \Magento\TestFramework\Bootstrap::ADMIN_PASSWORD
         );
-        $adminSessionInfoId = $this->authSession->getAdminSessionInfoId();
+        $sessionId = $this->authSession->getSessionId();
         $this->auth->logout();
-        $this->adminSessionInfo->load($adminSessionInfoId, 'id');
+        $this->adminSessionInfo->load($sessionId, 'session_id');
         $this->assertEquals($this->adminSessionInfo->getStatus(), AdminSessionInfo::LOGGED_OUT);
     }
 
@@ -99,8 +96,8 @@ class AdminSessionsManagerTest extends \PHPUnit\Framework\TestCase
             \Magento\TestFramework\Bootstrap::ADMIN_NAME,
             \Magento\TestFramework\Bootstrap::ADMIN_PASSWORD
         );
-        $adminSessionInfoId = $this->authSession->getAdminSessionInfoId();
-        $this->adminSessionInfo->load($adminSessionInfoId, 'id');
+        $sessionId = $this->authSession->getSessionId();
+        $this->adminSessionInfo->load($sessionId, 'session_id');
         $this->assertGreaterThanOrEqual(1, (int)$this->adminSessionInfo->getId());
         $this->auth->logout();
     }
@@ -125,8 +122,7 @@ class AdminSessionsManagerTest extends \PHPUnit\Framework\TestCase
             \Magento\TestFramework\Bootstrap::ADMIN_NAME,
             \Magento\TestFramework\Bootstrap::ADMIN_PASSWORD
         );
-        $adminSessionInfoId = $this->authSession->getAdminSessionInfoId();
-        $session->load($adminSessionInfoId, 'id');
+        $session->load('669e2e3d752e8', 'session_id');
         $this->assertEquals(
             AdminSessionInfo::LOGGED_OUT_BY_LOGIN,
             (int) $session->getStatus()
@@ -144,11 +140,11 @@ class AdminSessionsManagerTest extends \PHPUnit\Framework\TestCase
             \Magento\TestFramework\Bootstrap::ADMIN_NAME,
             \Magento\TestFramework\Bootstrap::ADMIN_PASSWORD
         );
-        $adminSessionInfoId = $this->authSession->getAdminSessionInfoId();
-        $this->adminSessionInfo->load($adminSessionInfoId, 'id');
+        $sessionId = $this->authSession->getSessionId();
+        $this->adminSessionInfo->load($sessionId, 'session_id');
         $this->assertEquals(
-            $this->adminSessionInfo->getId(),
-            $this->adminSessionsManager->getCurrentSession()->getId()
+            $this->adminSessionInfo->getSessionId(),
+            $this->adminSessionsManager->getCurrentSession()->getSessionId()
         );
     }
 
@@ -190,11 +186,10 @@ class AdminSessionsManagerTest extends \PHPUnit\Framework\TestCase
     {
         /** @var \Magento\Security\Model\ResourceModel\AdminSessionInfo\Collection $collection */
         $collection = $session->getResourceCollection();
-        $adminSessionInfoId = $this->authSession->getAdminSessionInfoId();
         $collection->filterByUser(
             $this->authSession->getUser()->getId(),
             \Magento\Security\Model\AdminSessionInfo::LOGGED_IN,
-            $adminSessionInfoId
+            $this->authSession->getSessionId()
         )
             ->filterExpiredSessions(100)
             ->load();

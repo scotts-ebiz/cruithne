@@ -22,7 +22,7 @@ class RuleTest extends \PHPUnit\Framework\TestCase
      */
     private $ruleResource;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->ruleResource = $this->objectManager->create(Rule::class);

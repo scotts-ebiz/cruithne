@@ -19,7 +19,7 @@ class EditTest extends \PHPUnit\Framework\TestCase
      */
     protected $editButtonBlock;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
         $objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
@@ -37,10 +37,13 @@ class EditTest extends \PHPUnit\Framework\TestCase
     {
         $integration = $this->getFixtureIntegration();
         $buttonHtml = $this->editButtonBlock->render($integration);
-        $this->assertStringContainsString('title="Edit"', $buttonHtml);
-        $this->assertStringContainsString('class="action edit"', $buttonHtml);
-        $this->assertStringContainsString('onclick="window.location.href=&#039;http://localhost/index.php/backend/admin/integration/edit/id/'
-            . $integration->getId(), $buttonHtml);
+        $this->assertContains('title="Edit"', $buttonHtml);
+        $this->assertContains('class="action edit"', $buttonHtml);
+        $this->assertContains(
+            'onclick="window.location.href=&#039;http://localhost/index.php/backend/admin/integration/edit/id/'
+            . $integration->getId(),
+            $buttonHtml
+        );
     }
 
     public function testRenderView()
@@ -48,8 +51,8 @@ class EditTest extends \PHPUnit\Framework\TestCase
         $integration = $this->getFixtureIntegration();
         $integration->setSetupType(Integration::TYPE_CONFIG);
         $buttonHtml = $this->editButtonBlock->render($integration);
-        $this->assertStringContainsString('title="View"', $buttonHtml);
-        $this->assertStringContainsString('class="action info"', $buttonHtml);
+        $this->assertContains('title="View"', $buttonHtml);
+        $this->assertContains('class="action info"', $buttonHtml);
     }
 
     /**

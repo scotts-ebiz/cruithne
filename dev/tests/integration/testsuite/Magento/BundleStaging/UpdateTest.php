@@ -37,7 +37,7 @@ class UpdateTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->repository = $objectManager->create(UpdateRepositoryInterface::class);

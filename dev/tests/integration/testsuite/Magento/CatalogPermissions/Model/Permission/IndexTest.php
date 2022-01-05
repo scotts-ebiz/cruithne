@@ -29,7 +29,7 @@ class IndexTest extends \PHPUnit\Framework\TestCase
      */
     protected $product;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->index = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()->create(
             \Magento\CatalogPermissions\Model\Permission\Index::class
@@ -46,7 +46,7 @@ class IndexTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritDoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         parent::tearDown();
         /** @var \Magento\Framework\Registry $registry */
@@ -124,7 +124,7 @@ class IndexTest extends \PHPUnit\Framework\TestCase
         $categoryCollection->addIsActiveFilter();
         $categoryCollection->load();
         $this->assertCount(10, $categoryCollection->getItems());
-        $this->assertNull($categoryCollection->getItemById(6));
+        $this->assertEquals(null, $categoryCollection->getItemById(6));
     }
 
     /**
@@ -245,7 +245,7 @@ class IndexTest extends \PHPUnit\Framework\TestCase
         $productCollection->addCategoryFilter($category);
         $productCollection->load();
         $this->assertCount(0, $productCollection->getItems());
-        $this->assertNull($productCollection->getItemById($productId));
+        $this->assertEquals(null, $productCollection->getItemById($productId));
     }
 
     /**
@@ -279,7 +279,7 @@ class IndexTest extends \PHPUnit\Framework\TestCase
         $productCollection->addCategoryFilter($category);
         $productCollection->load();
         $this->assertCount(0, $productCollection->getItems());
-        $this->assertNull($productCollection->getItemById($productId));
+        $this->assertEquals(null, $productCollection->getItemById($productId));
 
         $this->indexer->reindexAll();
 
@@ -291,7 +291,7 @@ class IndexTest extends \PHPUnit\Framework\TestCase
         $productCollection->addCategoryFilter($category);
         $productCollection->load();
         $this->assertCount(0, $productCollection->getItems());
-        $this->assertNull($productCollection->getItemById($productId));
+        $this->assertEquals(null, $productCollection->getItemById($productId));
     }
 
     /**

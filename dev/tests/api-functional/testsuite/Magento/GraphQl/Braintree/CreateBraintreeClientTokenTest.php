@@ -35,12 +35,11 @@ class CreateBraintreeClientTokenTest extends GraphQlAbstract
     /**
      * Test creating Braintree client token when method is disabled
      *
+     * @expectedException \Exception
+     * @expectedExceptionMessage payment method is not active
      */
     public function testCreateBraintreeClientTokenNotActive()
     {
-        $this->expectException(\Exception::class);
-        $this->expectExceptionMessage('payment method is not active');
-
         $this->graphQlMutation($this->getMutation());
     }
 

@@ -30,7 +30,7 @@ class CartTest extends AbstractBackendController
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -52,7 +52,7 @@ class CartTest extends AbstractBackendController
             ['delete' => 1]
         );
         $body = $this->getResponse()->getBody();
-        $this->assertStringContainsString('<div id="customer_cart_grid"', $body);
+        $this->assertContains('<div id="customer_cart_grid"', $body);
     }
 
     /**

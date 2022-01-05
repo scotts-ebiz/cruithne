@@ -35,7 +35,7 @@ class OrderButtonTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -51,7 +51,7 @@ class OrderButtonTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->registry->unregister(RegistryConstants::CURRENT_CUSTOMER_ID);
 
@@ -78,6 +78,6 @@ class OrderButtonTest extends TestCase
         $data = $this->button->getButtonData();
         $this->assertNotEmpty($data);
         $this->assertEquals(__('Create Order'), $data['label']);
-        $this->assertStringContainsString('sales/order_create/start/customer_id/1/', $data['on_click']);
+        $this->assertContains('sales/order_create/start/customer_id/1/', $data['on_click']);
     }
 }

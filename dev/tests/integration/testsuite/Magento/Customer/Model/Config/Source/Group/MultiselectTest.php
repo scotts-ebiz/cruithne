@@ -30,35 +30,30 @@ class MultiselectTest extends \PHPUnit\Framework\TestCase
         }
         sort($optionsToCompare);
         foreach ($optionsToCompare as $item) {
-            $this->assertTrue(
-                in_array(
-                    $item,
+            $this->assertContains(
+                $item,
+                [
                     [
-                        [
-                            'value' => 1,
-                            'label' => 'Default (General)',
-                            '__disableTmpl' => true,
-                        ],
-                        [
-                            'value' => 1,
-                            'label' => 'General',
-                            '__disableTmpl' => true,
-
-                        ],
-                        [
-                            'value' => 2,
-                            'label' => 'Wholesale',
-                            '__disableTmpl' => true,
-
-                        ],
-                        [
-                            'value' => 3,
-                            'label' => 'Retailer',
-                            '__disableTmpl' => true,
-
-                        ],
-                    ]
-                )
+                        'value' => 1,
+                        'label' => 'Default (General)',
+                        '__disableTmpl' => true,
+                    ],
+                    [
+                        'value' => 1,
+                        'label' => 'General',
+                        '__disableTmpl' => true,
+                    ],
+                    [
+                        'value' => 2,
+                        'label' => 'Wholesale',
+                        '__disableTmpl' => true,
+                    ],
+                    [
+                        'value' => 3,
+                        'label' => 'Retailer',
+                        '__disableTmpl' => true,
+                    ],
+                ]
             );
         }
     }

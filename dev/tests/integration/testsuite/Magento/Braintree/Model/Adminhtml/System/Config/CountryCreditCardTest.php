@@ -13,7 +13,7 @@ class CountryCreditCardTest extends \PHPUnit\Framework\TestCase
     /** @var CountryCreditCard */
     private $countryCreditCardConfig;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->countryCreditCardConfig = $objectManager->get(CountryCreditCard::class);

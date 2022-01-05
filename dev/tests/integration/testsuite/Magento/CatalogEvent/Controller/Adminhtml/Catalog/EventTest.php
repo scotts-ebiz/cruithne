@@ -14,7 +14,7 @@ class EventTest extends \Magento\TestFramework\TestCase\AbstractBackendControlle
     {
         $this->dispatch('backend/admin/catalog_event/new');
         $body = $this->getResponse()->getBody();
-        $this->assertStringNotContainsString('name="store_switcher"', $body);
+        $this->assertNotContains('name="store_switcher"', $body);
     }
 
     /**
@@ -32,7 +32,7 @@ class EventTest extends \Magento\TestFramework\TestCase\AbstractBackendControlle
         $this->dispatch('backend/admin/catalog_event/edit/id/' . $event->getId());
         $body = $this->getResponse()->getBody();
 
-        $this->assertStringContainsString('name="store_switcher"', $body);
+        $this->assertContains('name="store_switcher"', $body);
         $event->delete();
         unset($event);
     }

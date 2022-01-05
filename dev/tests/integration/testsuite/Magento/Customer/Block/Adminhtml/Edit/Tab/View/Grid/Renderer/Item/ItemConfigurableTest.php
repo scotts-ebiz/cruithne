@@ -21,7 +21,7 @@ class ItemConfigurableTest extends AbstractItemTest
     /**
      * @inheritdoc
      */
-    public static function setUpBeforeClass(): void
+    public static function setUpBeforeClass()
     {
         $objectManager = Bootstrap::getObjectManager();
         /** @var Manager $moduleManager */

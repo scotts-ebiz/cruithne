@@ -48,7 +48,7 @@ abstract class AbstractTest extends TestCase
     /**
      * @throws \Magento\Framework\Exception\LocalizedException
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $bootstrap = Bootstrap::getInstance();
         $bootstrap->loadArea(Area::AREA_FRONTEND);
@@ -67,7 +67,7 @@ abstract class AbstractTest extends TestCase
         $this->objectManager->addSharedInstance($clientFactoryMock, ZendClientFactory::class);
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->objectManager->removeSharedInstance(ZendClientFactory::class);
         parent::tearDown();

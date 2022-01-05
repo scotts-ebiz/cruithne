@@ -13,7 +13,7 @@ namespace Magento\Bundle\Model\Product;
  * @magentoDbIsolation enabled
  * @magentoAppArea frontend
  */
-class DynamicBundleWithCatalogPriceRuleCalculatorTest extends BundlePriceCalculatorAbstract
+class DynamicBundleWithCatalogPriceRuleCalculatorTest extends BundlePriceAbstract
 {
     /**
      * @param array $strategyModifiers

@@ -25,12 +25,11 @@ class SettlementTest extends \PHPUnit\Framework\TestCase
 
     /**
      * @param array $config
-     *
+     * @expectedException \InvalidArgumentException
      * @dataProvider createConnectionExceptionDataProvider
      */
     public function testCreateConnectionException($config)
     {
-        $this->expectException(\InvalidArgumentException::class);
         \Magento\Paypal\Model\Report\Settlement::createConnection($config);
     }
 

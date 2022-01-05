@@ -25,7 +25,7 @@ class GroupedProductViewTest extends GraphQlAbstract
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
         $this->productRepository = ObjectManager::getInstance()->get(ProductRepositoryInterface::class);
@@ -90,7 +90,7 @@ QUERY;
      */
     private function assertGroupedProductItems(ProductInterface $product, array $items): void
     {
-        $this->assertCount(2, $items);
+        $this->assertEquals(2, count($items));
         $groupedProductLinks = $product->getProductLinks();
         foreach ($items as $itemIndex => $bundleItem) {
             $this->assertNotEmpty($bundleItem);
@@ -125,7 +125,7 @@ QUERY;
      */
     private function assertProductLinks(ProductInterface $product, array $links): void
     {
-        $this->assertCount(2, $links);
+        $this->assertEquals(2, count($links));
         $productLinks = $product->getProductLinks();
         foreach ($links as $itemIndex => $linkedItem) {
             $this->assertNotEmpty($linkedItem);

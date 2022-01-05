@@ -52,6 +52,6 @@ class GridTest extends TestCase
         /* @var Grid $block */
         $block = $layout->createBlock(Grid::class, 'grid');
 
-        $this->assertStringNotContainsString(' id="id_' . $product->getId() . '"', $block->toHtml());
+        $this->assertNotContains(' id="id_' . $product->getId() . '"', $block->toHtml());
     }
 }

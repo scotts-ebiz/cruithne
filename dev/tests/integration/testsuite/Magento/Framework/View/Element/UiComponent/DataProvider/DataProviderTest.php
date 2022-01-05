@@ -38,7 +38,7 @@ class DataProviderTest extends \PHPUnit\Framework\TestCase
      */
     private $dataProvider;
 
-    protected function setUp(): void
+    public function setUp()
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->request = $objectManager->get(Request::class);
@@ -72,6 +72,6 @@ class DataProviderTest extends \PHPUnit\Framework\TestCase
     {
         $result = $this->dataProvider->getSearchResult();
         // staging_catalog_product_entity created 4 updates
-        $this->assertCount(4, $result->getItems());
+        $this->assertEquals(4, count($result->getItems()));
     }
 }

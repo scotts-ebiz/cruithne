@@ -32,7 +32,7 @@ class LockTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->deploymentConfigMock = $this->createMock(DeploymentConfig::class);
         $this->lockConfigOptionsList = new LockConfigOptionsList();
@@ -44,7 +44,7 @@ class LockTest extends TestCase
     public function testGetOptions()
     {
         $options = $this->lockConfigOptionsList->getOptions();
-        $this->assertCount(5, $options);
+        $this->assertSame(5, count($options));
 
         $this->assertArrayHasKey(0, $options);
         $this->assertInstanceOf(SelectConfigOption::class, $options[0]);

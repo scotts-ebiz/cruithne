@@ -13,21 +13,21 @@ use Magento\Setup\Module\Di\Code\Reader\ClassesScanner;
 class ApplicationCodeGeneratorTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var Scanner\DirectoryScanner | \PHPUnit\Framework\MockObject\MockObject
+     * @var Scanner\DirectoryScanner | \PHPUnit_Framework_MockObject_MockObject
      */
     private $directoryScannerMock;
 
     /**
-     * @var Scanner\PhpScanner | \PHPUnit\Framework\MockObject\MockObject
+     * @var Scanner\PhpScanner | \PHPUnit_Framework_MockObject_MockObject
      */
     private $phpScannerMock;
 
     /**
-     * @var ClassesScanner | \PHPUnit\Framework\MockObject\MockObject
+     * @var ClassesScanner | \PHPUnit_Framework_MockObject_MockObject
      */
     private $classesScannerMock;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->directoryScannerMock = $this->getMockBuilder(
             \Magento\Setup\Module\Di\Code\Scanner\DirectoryScanner::class

@@ -18,7 +18,7 @@ class DashboardTest extends \Magento\TestFramework\TestCase\AbstractBackendContr
         $this->dispatch('backend/admin/dashboard/ajaxBlock');
 
         $actual = $this->getResponse()->getBody();
-        $this->assertStringContainsString('dashboard-diagram', $actual);
+        $this->assertContains('dashboard-diagram', $actual);
     }
 
     /**

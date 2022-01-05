@@ -23,7 +23,7 @@ class AttributesTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->productAttributesCondition = Bootstrap::getObjectManager()->create(ProductAttributesCondition::class);
     }

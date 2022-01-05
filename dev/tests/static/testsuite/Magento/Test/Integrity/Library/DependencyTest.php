@@ -99,7 +99,7 @@ class DependencyTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    public function tearDown()
     {
         $this->errors = [];
     }

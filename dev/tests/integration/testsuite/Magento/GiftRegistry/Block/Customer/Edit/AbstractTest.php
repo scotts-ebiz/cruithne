@@ -47,7 +47,7 @@ class AbstractTest extends \PHPUnit\Framework\TestCase
         );
         $value = $block->formatDate($date, $formatType);
 
-        $this->assertStringContainsString('dateFormat: "' . $dateFormat . '",', $html);
-        $this->assertStringContainsString('value="' . $value . '"', $html);
+        $this->assertContains('dateFormat: "' . $dateFormat . '",', $html);
+        $this->assertContains('value="' . $value . '"', $html);
     }
 }

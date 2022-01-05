@@ -37,7 +37,7 @@ class AddCommentTest extends AbstractShipmentControllerTest
         );
         $this->dispatch('backend/admin/order_shipment/addComment');
         $html = $this->getResponse()->getBody();
-        $this->assertStringContainsString($comment, $html);
+        $this->assertContains($comment, $html);
 
         $message = $this->transportBuilder->getSentMessage();
         $subject =__('Update to your %1 shipment', $order->getStore()->getFrontendName())->render();

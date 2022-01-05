@@ -36,7 +36,7 @@ class LiveCodeTest extends \PHPUnit\Framework\TestCase
      *
      * @return void
      */
-    public static function setUpBeforeClass(): void
+    public static function setUpBeforeClass()
     {
         self::$pathToSource = BP;
         self::$reportDir = self::$pathToSource . '/dev/tests/static/report';
@@ -266,14 +266,14 @@ class LiveCodeTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
-     * Retrieves the lowest and highest PHP version specified in <kbd>composer.json</var> of project.
+     * Retrieves the lowest PHP version specified in <kbd>composer.json</var> of project.
      *
-     * @return array
+     * @return string
      */
-    private function getTargetPhpVersions(): array
+    private function getLowestPhpVersion(): string
     {
         $composerJson = json_decode(file_get_contents(BP . '/composer.json'), true);
-        $versionsRange = [];
+        $phpVersion   = '7.0';
 
         if (isset($composerJson['require']['php'])) {
             $versions = explode('||', $composerJson['require']['php']);
@@ -289,17 +289,12 @@ class LiveCodeTest extends \PHPUnit\Framework\TestCase
             //sort versions
             usort($versions, 'version_compare');
 
-            $versionsRange[] = array_shift($versions);
-            if (!empty($versions)) {
-                $versionsRange[] = array_pop($versions);
-            }
-            foreach ($versionsRange as $key => $version) {
-                $versionParts  = explode('.', $versionsRange[$key]);
-                $versionsRange[$key] = sprintf('%s.%s', $versionParts[0], $versionParts[1] ?? '0');
-            }
+            $lowestVersion = array_shift($versions);
+            $versionParts  = explode('.', $lowestVersion);
+            $phpVersion    = sprintf('%s.%s', $versionParts[0], $versionParts[1] ?? '0');
         }
 
-        return $versionsRange;
+        return $phpVersion;
     }
 
     /**
@@ -331,19 +326,9 @@ class LiveCodeTest extends \PHPUnit\Framework\TestCase
             touch($reportFile);
         }
         $codeSniffer = new CodeSniffer('Magento', $reportFile, new Wrapper());
-        $fileList = $this->isFullScan() ? $this->getFullWhitelist() : self::getWhitelist(['php', 'phtml']);
-        $ignoreList = Files::init()->readLists(__DIR__ . '/_files/phpcs/ignorelist/*.txt');
-        if ($ignoreList) {
-            $ignoreListPattern = sprintf('#(%s)#i', implode('|', $ignoreList));
-            $fileList = array_filter(
-                $fileList,
-                function ($path) use ($ignoreListPattern) {
-                    return !preg_match($ignoreListPattern, $path);
-                }
-            );
-        }
-
-        $result = $codeSniffer->run($fileList);
+        $result = $codeSniffer->run(
+            $this->isFullScan() ? $this->getFullWhitelist() : self::getWhitelist(['php', 'phtml'])
+        );
         $report = file_get_contents($reportFile);
         $this->assertEquals(
             0,
@@ -445,9 +430,9 @@ class LiveCodeTest extends \PHPUnit\Framework\TestCase
             }
         }
 
-        $this->assertCount(
+        $this->assertEquals(
             0,
-            $filesMissingStrictTyping,
+            count($filesMissingStrictTyping),
             "Following files are missing strict type declaration:"
             . PHP_EOL
             . implode(PHP_EOL, $filesMissingStrictTyping)
@@ -459,8 +444,7 @@ class LiveCodeTest extends \PHPUnit\Framework\TestCase
      */
     public function testPhpCompatibility()
     {
-        $targetVersions = $this->getTargetPhpVersions();
-        $this->assertNotEmpty($targetVersions, 'No supported versions information in composer.json');
+        $targetVersion = $this->getLowestPhpVersion();
         $reportFile    = self::$reportDir . '/phpcompatibility_report.txt';
         $rulesetDir    = __DIR__ . '/_files/PHPCompatibilityMagento';
 
@@ -469,11 +453,7 @@ class LiveCodeTest extends \PHPUnit\Framework\TestCase
         }
 
         $codeSniffer = new PhpCompatibility($rulesetDir, $reportFile, new Wrapper());
-        if (count($targetVersions) > 1) {
-            $codeSniffer->setTestVersion($targetVersions[0] . '-' . $targetVersions[1]);
-        } else {
-            $codeSniffer->setTestVersion($targetVersions[0]);
-        }
+        $codeSniffer->setTestVersion($targetVersion);
 
         $result = $codeSniffer->run(
             $this->isFullScan() ? $this->getFullWhitelist() : self::getWhitelist(['php', 'phtml'])

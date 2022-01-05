@@ -39,7 +39,7 @@ class TooltipTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -67,7 +67,7 @@ class TooltipTest extends TestCase
         $this->preparePage();
         $block = $this->page->getLayout()->getBlock($blockName);
         $this->assertNotFalse($block);
-        $this->assertStringContainsString($expectedMessage, strip_tags($block->toHtml()));
+        $this->assertContains($expectedMessage, strip_tags($block->toHtml()));
     }
 
     /**
