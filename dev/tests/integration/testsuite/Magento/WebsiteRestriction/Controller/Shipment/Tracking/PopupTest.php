@@ -32,7 +32,7 @@ class PopupTest extends AbstractController
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
         $this->orderRepository = $this->_objectManager->get(OrderRepository::class);
@@ -52,7 +52,7 @@ class PopupTest extends AbstractController
 
         $this->dispatch($popupUrl);
         $this->assertEquals(200, $this->getResponse()->getHttpResponseCode());
-        $this->assertStringContainsString('track_number', $this->getResponse()->getBody());
+        $this->assertContains('track_number', $this->getResponse()->getBody());
     }
 
     /**

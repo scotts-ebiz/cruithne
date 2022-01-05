@@ -54,7 +54,7 @@ class CustomerSubscribedTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -69,7 +69,7 @@ class CustomerSubscribedTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         foreach ($this->defaultConfig as $path => $value) {
             $this->config->setValue($path, $value);

@@ -25,7 +25,7 @@ class CustomAttributeFilterTest extends \PHPUnit\Framework\TestCase
     /** @var  */
     private $customAttributeFilter;
 
-    /** @var EavConfig|\PHPUnit\Framework\MockObject\MockObject */
+    /** @var EavConfig|\PHPUnit_Framework_MockObject_MockObject */
     private $eavConfigMock;
 
     /** @var StoreManagerInterface */
@@ -34,7 +34,7 @@ class CustomAttributeFilterTest extends \PHPUnit\Framework\TestCase
     /** @var ConditionManager */
     private $conditionManager;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $this->resource = $this->objectManager->create(ResourceConnection::class);
@@ -67,10 +67,12 @@ class CustomAttributeFilterTest extends \PHPUnit\Framework\TestCase
         );
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Invalid attribute id for field: field1
+     */
     public function testApplyWithWrongAttributeFilter()
     {
-        $this->expectExceptionMessage("Invalid attribute id for field: field1");
-        $this->expectException(\InvalidArgumentException::class);
         $select = $this->resource->getConnection()->select();
         $filters = $this->mockFilters();
         $firstFilter = reset($filters);

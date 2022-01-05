@@ -31,7 +31,7 @@ class StandardSelectionPriceListProviderTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->standardSelectionPriceListProvider = $this->objectManager->create(

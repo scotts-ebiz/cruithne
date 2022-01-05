@@ -44,7 +44,7 @@ class StoreSwitcherTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->storeSwitcher = $this->objectManager->get(StoreSwitcherInterface::class);

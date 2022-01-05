@@ -30,7 +30,7 @@ class SimplePolicyHeaderRendererTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp(): void
+    public function setUp()
     {
         $this->renderer = Bootstrap::getObjectManager()->get(SimplePolicyHeaderRenderer::class);
         $this->response = Bootstrap::getObjectManager()->create(HttpResponse::class);

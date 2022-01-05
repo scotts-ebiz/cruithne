@@ -45,7 +45,7 @@ class EnterpriseCustomerAttributeSaveTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -59,7 +59,7 @@ class EnterpriseCustomerAttributeSaveTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->quoteResource->deleteAttribute($this->attribute);
         $this->orderResource->deleteAttribute($this->attribute);

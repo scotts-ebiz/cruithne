@@ -38,7 +38,7 @@ class BaseSelectAttributesSearchStrategyTest extends \PHPUnit\Framework\TestCase
      */
     private $scopeResolver;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->baseSelectAttributesSearchStrategy = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
             ->create(BaseSelectAttributesSearchStrategy::class);

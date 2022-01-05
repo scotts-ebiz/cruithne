@@ -62,24 +62,12 @@ class GiftCardTest extends AbstractProductExportImportTestCase
     }
 
     /**
-     * @param array $fixtures
-     * @param string[] $skus
-     * @param string[] $skippedAttributes
-     * @dataProvider importReplaceDataProvider
-     * @throws \Magento\Framework\Exception\NoSuchEntityException
-     */
-    public function testImportReplaceWithPagination(array $fixtures, array $skus, array $skippedAttributes = [])
-    {
-        $this->markTestSkipped('Uncomment after MAGETWO-38240 resolved');
-    }
-
-    /**
      * @inheritdoc
      */
-    protected function assertEqualsSpecificAttributes(//phpcs:disable Generic.Metrics.NestingLevel
+    protected function assertEqualsSpecificAttributes(
         \Magento\Catalog\Model\Product $expectedProduct,
         \Magento\Catalog\Model\Product $actualProduct
-    ): void {//phpcs:enable
+    ): void {
         foreach ($this->getFieldsToCompare() as $fieldKey => $fieldValue) {
             if (is_array($fieldValue)) {
                 if (count($expectedProduct->getData($fieldKey)) > 0) {

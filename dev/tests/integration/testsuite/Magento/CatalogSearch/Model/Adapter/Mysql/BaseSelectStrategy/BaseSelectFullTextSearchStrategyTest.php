@@ -32,7 +32,7 @@ class BaseSelectFullTextSearchStrategyTest extends \PHPUnit\Framework\TestCase
      */
     private $scopeResolver;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->baseSelectFullTextSearchStrategy = \Magento\TestFramework\Helper\Bootstrap::getObjectManager()
             ->create(BaseSelectFullTextSearchStrategy::class);

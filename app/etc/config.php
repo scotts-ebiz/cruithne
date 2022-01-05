@@ -424,7 +424,6 @@ return [
         'Temando_ShippingRemover' => 1,
         'SMG_Vantiv' => 1,
         'Vertex_Tax' => 0,
-        'Vertex_AddressValidationApi' => 1,
         'Vertex_AddressValidation' => 0,
         'Yotpo_Yotpo' => 1,
         'SMG_Zaius' => 1

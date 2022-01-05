@@ -11,22 +11,22 @@ namespace Magento\Setup\Test\Unit\Module\I18n\Pack;
 class GeneratorTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \Magento\Setup\Module\I18n\Dictionary\Loader\FileInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Setup\Module\I18n\Dictionary\Loader\FileInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $dictionaryLoaderMock;
 
     /**
-     * @var \Magento\Setup\Module\I18n\Pack\WriterInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Setup\Module\I18n\Pack\WriterInterface|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $packWriterMock;
 
     /**
-     * @var \Magento\Setup\Module\I18n\Factory|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Setup\Module\I18n\Factory|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $factoryMock;
 
     /**
-     * @var \Magento\Setup\Module\I18n\Dictionary|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\Setup\Module\I18n\Dictionary|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $dictionaryMock;
 
@@ -35,7 +35,7 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
      */
     protected $_generator;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->dictionaryLoaderMock =
             $this->createMock(\Magento\Setup\Module\I18n\Dictionary\Loader\FileInterface::class);
@@ -65,16 +65,16 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
         $phrases = [$this->createMock(\Magento\Setup\Module\I18n\Dictionary\Phrase::class)];
         $this->dictionaryMock->expects($this->once())
             ->method('getPhrases')
-            ->willReturn([$phrases]);
+            ->will($this->returnValue([$phrases]));
 
         $this->factoryMock->expects($this->once())
             ->method('createLocale')
             ->with($localeString)
-            ->willReturn($localeMock);
+            ->will($this->returnValue($localeMock));
         $this->dictionaryLoaderMock->expects($this->once())
             ->method('load')
             ->with($dictionaryPath)
-            ->willReturn($this->dictionaryMock);
+            ->will($this->returnValue($this->dictionaryMock));
         $this->packWriterMock->expects($this->once())
             ->method('writeDictionary')
             ->with($this->dictionaryMock, $localeMock, $mode);
@@ -83,12 +83,11 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @expectedExceptionMessage No phrases have been found by the specified path.
+     * @expectedException \UnexpectedValueException
      */
     public function testGenerateEmptyFile()
     {
-        $this->expectException(\UnexpectedValueException::class);
-        $this->expectExceptionMessage('No phrases have been found by the specified path.');
-
         $dictionaryPath = 'dictionary_path';
         $localeString = 'locale';
         $mode = 'mode';
@@ -98,14 +97,14 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
         $this->factoryMock->expects($this->once())
             ->method('createLocale')
             ->with($localeString)
-            ->willReturn($localeMock);
+            ->will($this->returnValue($localeMock));
         $this->dictionaryLoaderMock->expects($this->once())
             ->method('load')
             ->with($dictionaryPath)
-            ->willReturn($this->dictionaryMock);
+            ->will($this->returnValue($this->dictionaryMock));
         $this->dictionaryMock->expects($this->once())
             ->method('getPhrases')
-            ->willReturn([]);
+            ->will($this->returnValue([]));
 
         $this->_generator->generate($dictionaryPath, $localeString, $mode, $allowDuplicates);
     }
@@ -121,20 +120,20 @@ class GeneratorTest extends \PHPUnit\Framework\TestCase
         $allowDuplicates = false;
 
         $phraseFirstMock = $this->createMock(\Magento\Setup\Module\I18n\Dictionary\Phrase::class);
-        $phraseFirstMock->expects($this->once())->method('getPhrase')->willReturn('phrase1');
+        $phraseFirstMock->expects($this->once())->method('getPhrase')->will($this->returnValue('phrase1'));
         $phraseSecondMock = $this->createMock(\Magento\Setup\Module\I18n\Dictionary\Phrase::class);
-        $phraseSecondMock->expects($this->once())->method('getPhrase')->willReturn('phrase2');
+        $phraseSecondMock->expects($this->once())->method('getPhrase')->will($this->returnValue('phrase2'));
 
         $this->dictionaryLoaderMock->expects($this->any())
             ->method('load')
-            ->willReturn($this->dictionaryMock);
+            ->will($this->returnValue($this->dictionaryMock));
         $phrases = [$this->createMock(\Magento\Setup\Module\I18n\Dictionary\Phrase::class)];
         $this->dictionaryMock->expects($this->once())
             ->method('getPhrases')
-            ->willReturn([$phrases]);
+            ->will($this->returnValue([$phrases]));
         $this->dictionaryMock->expects($this->once())
             ->method('getDuplicates')
-            ->willReturn([[$phraseFirstMock], [$phraseSecondMock]]);
+            ->will($this->returnValue([[$phraseFirstMock], [$phraseSecondMock]]));
 
         $this->_generator->generate('dictionary_path', 'locale', 'mode', $allowDuplicates);
     }

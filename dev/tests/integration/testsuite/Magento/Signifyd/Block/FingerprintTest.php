@@ -20,7 +20,7 @@ class FingerprintTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $bootstrap = Bootstrap::getInstance();
         $bootstrap->loadArea(Area::AREA_FRONTEND);
@@ -35,7 +35,7 @@ class FingerprintTest extends \PHPUnit\Framework\TestCase
      */
     public function testSessionIdPresent()
     {
-        self::assertStringContainsString('data-order-session-id',$this->getBlockContents());
+        self::assertContains('data-order-session-id', $this->getBlockContents());
     }
 
     /**

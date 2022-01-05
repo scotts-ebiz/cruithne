@@ -18,7 +18,7 @@ use Magento\Setup\Fixtures\CustomerGroupsFixture;
 class CustomerGroupsFixtureTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Setup\Fixtures\FixtureModel
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Setup\Fixtures\FixtureModel
      */
     private $fixtureModelMock;
 
@@ -56,7 +56,7 @@ class CustomerGroupsFixtureTest extends \PHPUnit\Framework\TestCase
         //Mock repository for customer groups
         $this->groupRepositoryMock = $this->getMockBuilder(GroupRepositoryInterface::class)
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->getMock();
 
         //Mock for customer groups collection
         $this->groupCollectionFactoryMock = $this->getMockBuilder(CollectionFactory::class)
@@ -109,7 +109,7 @@ class CustomerGroupsFixtureTest extends \PHPUnit\Framework\TestCase
         $this->fixtureModelMock
             ->expects($this->once())
             ->method('getValue')
-            ->willReturn(1);
+            ->will($this->returnValue(1));
 
         $this->model = new CustomerGroupsFixture(
             $this->fixtureModelMock,

@@ -51,7 +51,7 @@ class RewardTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -67,7 +67,7 @@ class RewardTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         foreach ($this->defaultConfig as $path => $value) {
             $this->config->setValue($path, $value);
@@ -102,7 +102,7 @@ class RewardTest extends TestCase
         $this->assertTrue($rewardModel->getData('balance_update_sent'));
         $message = $this->transportBuilder->getSentMessage();
         $this->assertNotNull($message);
-        $this->assertStringContainsString(
+        $this->assertContains(
             'You have 100 points that may be used in our store',
             $message->getBody()->getParts()[0]->getRawContent()
         );

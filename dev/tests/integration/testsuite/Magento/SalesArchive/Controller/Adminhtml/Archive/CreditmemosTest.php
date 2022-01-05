@@ -7,7 +7,7 @@ namespace Magento\SalesArchive\Controller\Adminhtml\Archive;
 
 class CreditmemosTest extends \Magento\TestFramework\TestCase\AbstractBackendController
 {
-    protected function setUp(): void
+    public function setUp()
     {
         $this->resource = 'Magento_SalesArchive::creditmemos';
         $this->uri = 'backend/sales/archive/creditmemos';

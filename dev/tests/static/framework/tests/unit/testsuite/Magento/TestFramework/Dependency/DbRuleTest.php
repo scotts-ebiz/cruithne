@@ -12,7 +12,7 @@ class DbRuleTest extends \PHPUnit\Framework\TestCase
      */
     protected $model;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->model = new DbRule(['some_table' => 'SomeModule']);
     }

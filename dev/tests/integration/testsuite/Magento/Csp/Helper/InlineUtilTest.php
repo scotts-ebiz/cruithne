@@ -31,7 +31,7 @@ class InlineUtilTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp(): void
+    public function setUp()
     {
         $this->policiesAdded = [];
         $collectorMock = $this->getMockBuilder(DynamicCollector::class)->disableOriginalConstructor()->getMock();

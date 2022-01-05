@@ -17,7 +17,7 @@ class FilesCollectorTest extends \PHPUnit\Framework\TestCase
      */
     protected $_filesCollector;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->_testDir = str_replace('\\', '/', realpath(dirname(__FILE__))) . '/_files/files_collector/';
 

@@ -23,7 +23,7 @@ class DuplicateProductsBySkuSectionTest extends \PHPUnit\Framework\TestCase
     /**
      * {@inheritdoc}
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->model = Bootstrap::getObjectManager()->create(DuplicateProductsBySkuSection::class);
     }

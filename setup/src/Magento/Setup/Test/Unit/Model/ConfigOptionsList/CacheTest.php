@@ -31,7 +31,7 @@ class CacheTest extends \PHPUnit\Framework\TestCase
     /**
      * Tests setup
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->validatorMock = $this->createMock(RedisConnectionValidator::class);
         $this->deploymentConfigMock = $this->createMock(\Magento\Framework\App\DeploymentConfig::class);

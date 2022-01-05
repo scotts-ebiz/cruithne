@@ -32,9 +32,9 @@ class CollectionTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
-        $this->localeResolverMock = $this->getMockForAbstractClass(ResolverInterface::class);
+        $this->localeResolverMock = $this->createMock(ResolverInterface::class);
         Bootstrap::getObjectManager()->removeSharedInstance(ResolverInterface::class);
         Bootstrap::getObjectManager()->removeSharedInstance(Resolver::class);
         Bootstrap::getObjectManager()->addSharedInstance($this->localeResolverMock, ResolverInterface::class);

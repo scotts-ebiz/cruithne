@@ -24,7 +24,7 @@ class RepositoryTest extends \PHPUnit\Framework\TestCase
     /** @var SearchCriteriaBuilder */
     private $searchCriteriaBuilder;
 
-    protected function setUp(): void
+    public function setUp()
     {
         $objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $this->repository = $objectManager->create(HistoryRepository::class);

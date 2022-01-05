@@ -12,12 +12,12 @@ use Magento\Sales\Model\Order\Payment\Transaction;
 use Magento\TestFramework\TestCase\WebapiAbstract;
 
 /**
- * Class TransactionReadTest for Magento sales webapi
+ * Class TransactionReadTest
  */
 class TransactionTest extends WebapiAbstract
 {
     /**
-     * Service read name constant
+     * Service read name
      */
     const SERVICE_READ_NAME = 'salesTransactionRepositoryV1';
 
@@ -27,7 +27,7 @@ class TransactionTest extends WebapiAbstract
     const RESOURCE_PATH = '/V1/transactions';
 
     /**
-     * Service version constant
+     * Service version
      */
     const SERVICE_VERSION = 'V1';
 
@@ -36,7 +36,7 @@ class TransactionTest extends WebapiAbstract
      */
     protected $objectManager;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
     }
@@ -145,7 +145,7 @@ class TransactionTest extends WebapiAbstract
         $searchCriteriaBuilder->addFilters([$filter1, $filter2]);
         $searchCriteriaBuilder->addFilters([$filter3, $filter4]);
         $searchCriteriaBuilder->addSortOrder($sortOrder);
-        $searchCriteriaBuilder->setPageSize(20);
+
         $searchData = $searchCriteriaBuilder->create()->__toArray();
 
         $requestData = ['searchCriteria' => $searchData];

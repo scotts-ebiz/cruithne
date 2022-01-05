@@ -30,7 +30,7 @@ class PreviewConfigurableProductTest extends GraphQlAbstract
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->tokenService = $objectManager->get(AdminTokenServiceInterface::class);

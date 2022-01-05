@@ -34,7 +34,7 @@ class AddressSaveTest extends AbstractBackendController
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -69,7 +69,7 @@ class AddressSaveTest extends AbstractBackendController
             $data
         );
         $this->assertSessionMessages(
-            $this->containsEqual((string)__('You updated the order address.'))
+            $this->contains((string)__('You updated the order address.'))
         );
         $this->assertRedirect(
             $this->stringContains(sprintf('sales/order/view/order_id/%s/', $order->getId()))

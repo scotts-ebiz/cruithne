@@ -16,11 +16,11 @@ class ArgumentsResolverTest extends \PHPUnit\Framework\TestCase
     protected $model;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     protected $diContainerConfig;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->diContainerConfig = $this->createMock(\Magento\Framework\ObjectManager\ConfigInterface::class);
         $this->model = new \Magento\Setup\Module\Di\Compiler\ArgumentsResolver($this->diContainerConfig);

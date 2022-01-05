@@ -24,7 +24,7 @@ class CreditMemoResolverTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         /** @var ObjectManager $objectManager */
         $objectManager = Bootstrap::getObjectManager();

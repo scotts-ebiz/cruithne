@@ -20,7 +20,7 @@ use Magento\Sales\Api\TransactionRepositoryInterface;
 use Magento\TestFramework\Helper\Bootstrap;
 use Magento\TestFramework\ObjectManager;
 use PHPUnit\Framework\TestCase;
-use PHPUnit\Framework\MockObject\MockObject as MockObject;
+use PHPUnit_Framework_MockObject_MockObject as MockObject;
 
 /**
  * Tests Magento\Checkout\Model\PaymentInformationManagement.
@@ -47,7 +47,7 @@ class PaymentInformationManagementTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = Bootstrap::getObjectManager();
 
@@ -63,7 +63,7 @@ class PaymentInformationManagementTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->objectManager->removeSharedInstance('HtmlConverterZendClient');
         $this->objectManager->removeSharedInstance('CybersourceSilentOrderValidator');

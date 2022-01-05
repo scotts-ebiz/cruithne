@@ -22,7 +22,7 @@ class XmlInterceptorScannerTest extends \PHPUnit\Framework\TestCase
      */
     protected $_testFiles = [];
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->_model = new \Magento\Setup\Module\Di\Code\Scanner\XmlInterceptorScanner();
         $this->_testDir = str_replace('\\', '/', realpath(__DIR__ . '/../../') . '/_files');

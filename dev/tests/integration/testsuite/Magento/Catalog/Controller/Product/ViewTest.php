@@ -68,7 +68,7 @@ class ViewTest extends AbstractController
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -95,7 +95,7 @@ class ViewTest extends AbstractController
         );
         $this->dispatch('catalog/product/view/id/1/');
 
-        $this->assertStringContainsString(
+        $this->assertContains(
             '<link  rel="canonical" href="http://localhost/index.php/catalog/product/view/_ignore_category/1/id/1/" />',
             $this->getResponse()->getBody()
         );
@@ -361,7 +361,7 @@ class ViewTest extends AbstractController
     {
         $logger = $this->getMockBuilder(LoggerInterface::class)
             ->disableOriginalConstructor()
-            ->getMockForAbstractClass();
+            ->getMock();
         $this->_objectManager->addSharedInstance($logger, MagentoMonologLogger::class);
 
         return $logger;

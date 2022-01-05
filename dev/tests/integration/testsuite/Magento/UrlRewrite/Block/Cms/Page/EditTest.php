@@ -100,7 +100,7 @@ class EditTest extends \PHPUnit\Framework\TestCase
                 'Child block with CMS page has invalid item name'
             );
 
-            $this->assertMatchesRegularExpression(
+            $this->assertRegExp(
                 '/http:\/\/localhost\/index.php\/.*\/cms_page/',
                 $cmsPageLinkBlock->getItemUrl(),
                 'Child block with CMS page contains invalid URL'

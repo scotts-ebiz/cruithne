@@ -51,7 +51,7 @@ class SetPaymentMethodTest extends GraphQlAbstract
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->getMaskedQuoteIdByReservedOrderId = $objectManager->get(GetMaskedQuoteIdByReservedOrderId::class);
@@ -181,7 +181,7 @@ QUERY;
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    public function tearDown()
     {
         $this->registry->unregister('isSecureArea');
         $this->registry->register('isSecureArea', true);

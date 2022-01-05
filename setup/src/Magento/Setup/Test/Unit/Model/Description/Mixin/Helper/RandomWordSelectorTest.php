@@ -12,7 +12,7 @@ class RandomWordSelectorTest extends \PHPUnit\Framework\TestCase
      */
     private $helper;
 
-    protected function setUp(): void
+    public function setUp()
     {
         $this->helper = new \Magento\Setup\Model\Description\Mixin\Helper\RandomWordSelector();
     }

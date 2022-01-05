@@ -51,7 +51,7 @@ class SubmitTest extends AbstractController
     /**
      * @inhertidoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -64,7 +64,7 @@ class SubmitTest extends AbstractController
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->customerSession->logout();
         $this->_objectManager->removeSharedInstance(TransportBuilderMock::class);

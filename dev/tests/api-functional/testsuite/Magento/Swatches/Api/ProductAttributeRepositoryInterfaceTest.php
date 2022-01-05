@@ -192,7 +192,7 @@ class ProductAttributeRepositoryInterfaceTest extends WebapiAbstract
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         foreach ($this->createdAttributes as $attributeCode) {
             $this->deleteAttribute($attributeCode);

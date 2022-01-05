@@ -59,7 +59,7 @@ class EntityCustomTemplateTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -81,7 +81,7 @@ class EntityCustomTemplateTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         if ($this->moduleManager->isEnabled('Magento_Email')) {
             $this->mutableScopeConfig->clean();
@@ -156,7 +156,7 @@ class EntityCustomTemplateTest extends TestCase
         $message = $this->transportBuilder->getSentMessage();
         $this->assertNotNull($message);
         $this->assertMessageSender($message, $expectedSender);
-        $this->assertStringContainsString(
+        $this->assertContains(
             'Text specially for check in test.',
             $message->getBody()->getParts()[0]->getRawContent(),
             'Expected text wasn\'t found in message.'

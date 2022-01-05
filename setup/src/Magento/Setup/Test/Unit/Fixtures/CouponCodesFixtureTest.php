@@ -19,24 +19,24 @@ class CouponCodesFixtureTest extends \PHPUnit\Framework\TestCase
     private $model;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Setup\Fixtures\FixtureModel
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Setup\Fixtures\FixtureModel
      */
     private $fixtureModelMock;
 
     /**
-     * @var \Magento\SalesRule\Model\RuleFactory|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\SalesRule\Model\RuleFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     private $ruleFactoryMock;
 
     /**
-     * @var \Magento\SalesRule\Model\CouponFactory|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\SalesRule\Model\CouponFactory|\PHPUnit_Framework_MockObject_MockObject
      */
     private $couponCodeFactoryMock;
 
     /**
      * setUp
      */
-    protected function setUp(): void
+    public function setUp()
     {
         $this->fixtureModelMock = $this->createMock(\Magento\Setup\Fixtures\FixtureModel::class);
         $this->ruleFactoryMock = $this->createPartialMock(\Magento\SalesRule\Model\RuleFactory::class, ['create']);
@@ -59,17 +59,17 @@ class CouponCodesFixtureTest extends \PHPUnit\Framework\TestCase
         $websiteMock = $this->createMock(\Magento\Store\Model\Website::class);
         $websiteMock->expects($this->once())
             ->method('getId')
-            ->willReturn('website_id');
+            ->will($this->returnValue('website_id'));
 
         $storeManagerMock = $this->createMock(\Magento\Store\Model\StoreManager::class);
         $storeManagerMock->expects($this->once())
             ->method('getWebsites')
-            ->willReturn([$websiteMock]);
+            ->will($this->returnValue([$websiteMock]));
 
         $objectManagerMock = $this->createMock(\Magento\Framework\ObjectManager\ObjectManager::class);
         $objectManagerMock->expects($this->once())
             ->method('create')
-            ->willReturn($storeManagerMock);
+            ->will($this->returnValue($storeManagerMock));
 
         $valueMap = [
             ['coupon_codes', 0, 1]
@@ -78,11 +78,11 @@ class CouponCodesFixtureTest extends \PHPUnit\Framework\TestCase
         $this->fixtureModelMock
             ->expects($this->exactly(1))
             ->method('getValue')
-            ->willReturnMap($valueMap);
+            ->will($this->returnValueMap($valueMap));
         $this->fixtureModelMock
             ->expects($this->exactly(1))
             ->method('getObjectManager')
-            ->willReturn($objectManagerMock);
+            ->will($this->returnValue($objectManagerMock));
 
         $ruleMock = $this->createMock(\Magento\SalesRule\Model\Rule::class);
         $this->ruleFactoryMock->expects($this->once())

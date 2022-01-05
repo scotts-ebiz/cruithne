@@ -20,7 +20,7 @@ class ServiceDataAttributesScannerTest extends \PHPUnit\Framework\TestCase
      */
     protected $testFile;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->model = new ServiceDataAttributesScanner();
         $this->testFile = str_replace('\\', '/', realpath(__DIR__ . '/../../') . '/_files/extension_attributes.xml');

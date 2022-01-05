@@ -11,23 +11,23 @@ use \Magento\Setup\Model\License;
 class LicenseTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Framework\Filesystem\Directory\Read
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\Filesystem\Directory\Read
      */
     private $directoryReadMock;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Framework\Filesystem
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\Filesystem
      */
     private $filesystemMock;
 
-    protected function setUp(): void
+    public function setUp()
     {
         $this->directoryReadMock = $this->createMock(\Magento\Framework\Filesystem\Directory\Read::class);
         $this->filesystemMock = $this->createMock(\Magento\Framework\Filesystem::class);
         $this->filesystemMock
             ->expects($this->once())
             ->method('getDirectoryRead')
-            ->willReturn($this->directoryReadMock);
+            ->will($this->returnValue($this->directoryReadMock));
     }
 
     public function testGetContents()
@@ -35,11 +35,11 @@ class LicenseTest extends \PHPUnit\Framework\TestCase
         $this->directoryReadMock
             ->expects($this->atLeastOnce())
             ->method('readFile')
-            ->willReturn('License text');
+            ->will($this->returnValue('License text'));
         $this->directoryReadMock
             ->expects($this->atLeastOnce())
             ->method('isFile')
-            ->willReturn(true);
+            ->will($this->returnValue(true));
 
         $license = new License($this->filesystemMock);
         $this->assertSame('License text', $license->getContents());
@@ -50,7 +50,7 @@ class LicenseTest extends \PHPUnit\Framework\TestCase
         $this->directoryReadMock
             ->expects($this->atLeastOnce())
             ->method('isFile')
-            ->willReturn(false);
+            ->will($this->returnValue(false));
 
         $license = new License($this->filesystemMock);
         $this->assertFalse($license->getContents());

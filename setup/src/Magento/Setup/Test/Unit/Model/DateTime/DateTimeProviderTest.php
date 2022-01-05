@@ -14,7 +14,7 @@ class DateTimeProviderTest extends \PHPUnit\Framework\TestCase
     public function testGet()
     {
         $dateTime = $this->createMock(\Magento\Framework\Stdlib\DateTime\DateTime::class);
-        /** @var TimeZoneProvider|\PHPUnit\Framework\MockObject\MockObject $timeZoneProvider */
+        /** @var TimeZoneProvider|\PHPUnit_Framework_MockObject_MockObject $timeZoneProvider */
         $timeZoneProvider = $this->createMock(\Magento\Setup\Model\DateTime\TimeZoneProvider::class);
         $timeZone = $this->createMock(\Magento\Framework\Stdlib\DateTime\Timezone::class);
         $timeZoneProvider->expects($this->any())
@@ -33,7 +33,7 @@ class DateTimeProviderTest extends \PHPUnit\Framework\TestCase
                 ['localeDate' => $timeZone]
             )
             ->willReturn($dateTime);
-        /** @var ObjectManagerProvider|\PHPUnit\Framework\MockObject\MockObject $objectManagerProvider */
+        /** @var ObjectManagerProvider|\PHPUnit_Framework_MockObject_MockObject $objectManagerProvider */
         $objectManagerProvider = $this->createMock(\Magento\Setup\Model\ObjectManagerProvider::class);
         $objectManagerProvider->expects($this->any())
             ->method('get')

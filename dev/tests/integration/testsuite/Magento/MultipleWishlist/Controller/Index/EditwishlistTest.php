@@ -35,7 +35,7 @@ class EditwishlistTest extends AbstractController
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -47,7 +47,7 @@ class EditwishlistTest extends AbstractController
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->customerSession->logout();
 
@@ -108,7 +108,7 @@ class EditwishlistTest extends AbstractController
         $this->assertSessionMessages($this->equalTo($message), MessageInterface::TYPE_SUCCESS);
         $result = $this->json->unserialize($this->getResponse()->getBody());
         $this->assertEquals($params['wishlist_id'], $result['wishlist_id']);
-        $this->assertStringContainsString('wishlist/index/index/wishlist_id/' . $params['wishlist_id'], $result['redirect']);
+        $this->assertContains('wishlist/index/index/wishlist_id/' . $params['wishlist_id'], $result['redirect']);
     }
 
     /**
@@ -128,7 +128,7 @@ class EditwishlistTest extends AbstractController
             (string)__('Could not create a wish list.'),
         ];
         $this->assertSessionMessages($this->equalTo(($messages)), MessageInterface::TYPE_ERROR);
-        $this->assertStringContainsString('wishlist/index', $result['redirect']);
+        $this->assertContains('wishlist/index', $result['redirect']);
     }
 
     /**

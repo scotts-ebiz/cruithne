@@ -33,7 +33,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
     /**
      * @return void
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
 
@@ -81,7 +81,7 @@ class TemplateTest extends \PHPUnit\Framework\TestCase
     /**
      * @return void
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->template->delete();
         $this->ruleCreate->delete();

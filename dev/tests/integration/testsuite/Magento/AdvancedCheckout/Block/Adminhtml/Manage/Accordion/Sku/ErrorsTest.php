@@ -55,7 +55,7 @@ class ErrorsTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -72,7 +72,7 @@ class ErrorsTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->customerSession->logout();
         $this->registry->unregister('checkout_current_customer');
@@ -102,8 +102,8 @@ class ErrorsTest extends TestCase
     public function testGetButtonsHtml(): void
     {
         $result = $this->block->getButtonsHtml();
-        $this->assertStringContainsString('onclick="addBySku.removeAllFailed()"', $result);
-        $this->assertStringContainsString('Remove All', strip_tags($result));
+        $this->assertContains('onclick="addBySku.removeAllFailed()"', $result);
+        $this->assertContains('Remove All', strip_tags($result));
     }
 
     /**

@@ -40,7 +40,7 @@ class PropertiesTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -53,7 +53,7 @@ class PropertiesTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->registry->unregister('current_banner');
 

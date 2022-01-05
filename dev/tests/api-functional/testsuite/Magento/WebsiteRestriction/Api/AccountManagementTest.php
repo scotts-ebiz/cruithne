@@ -33,7 +33,7 @@ class AccountManagementTest extends WebapiAbstract
     /**
      * Execute per test initialization.
      */
-    protected function setUp(): void
+    public function setUp()
     {
         $this->customerHelper = new CustomerHelper();
 

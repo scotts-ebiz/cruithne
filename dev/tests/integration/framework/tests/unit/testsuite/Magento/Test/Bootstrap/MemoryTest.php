@@ -17,16 +17,16 @@ class MemoryTest extends \PHPUnit\Framework\TestCase
     protected $_object;
 
     /**
-     * @var \Magento\TestFramework\MemoryLimit|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Magento\TestFramework\MemoryLimit|\PHPUnit_Framework_MockObject_MockObject
      */
     protected $_memoryLimit;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject
+     * @var \PHPUnit_Framework_MockObject_MockObject
      */
     protected $_activationPolicy;
 
-    protected function setUp(): void
+    protected function setUp()
     {
         $this->_memoryLimit = $this->createPartialMock(\Magento\TestFramework\MemoryLimit::class, ['printStats']);
         $this->_activationPolicy = $this->createPartialMock(\stdClass::class, ['register_shutdown_function']);
@@ -36,17 +36,19 @@ class MemoryTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->_memoryLimit = null;
         $this->_activationPolicy = null;
         $this->_object = null;
     }
 
+    /**
+     * @expectedException \InvalidArgumentException
+     * @expectedExceptionMessage Activation policy is expected to be a callable.
+     */
     public function testConstructorException()
     {
-        $this->expectExceptionMessage("Activation policy is expected to be a callable.");
-        $this->expectException(\InvalidArgumentException::class);
         new \Magento\TestFramework\Bootstrap\Memory($this->_memoryLimit, 'non_existing_callable');
     }
 

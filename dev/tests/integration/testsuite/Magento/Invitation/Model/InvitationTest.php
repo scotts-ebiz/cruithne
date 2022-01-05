@@ -62,7 +62,7 @@ class InvitationTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         parent::setUp();
 
@@ -78,7 +78,7 @@ class InvitationTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->mutableScopeConfig->clean();
         $invitation = $this->invitationFactory->create();
@@ -189,7 +189,7 @@ class InvitationTest extends TestCase
         $this->assertEquals($expectedSender['email'], $messageFrom->getEmail());
 
         if ($expectedSender['message']) {
-            $this->assertStringContainsString(
+            $this->assertContains(
                 $expectedSender['message'],
                 $message->getBody()->getParts()[0]->getRawContent(),
                 'Expected message wasn\'t found in email content.'

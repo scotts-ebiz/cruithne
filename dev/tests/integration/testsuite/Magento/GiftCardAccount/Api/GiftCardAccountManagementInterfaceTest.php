@@ -35,7 +35,7 @@ class GiftCardAccountManagementInterfaceTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp(): void
+    protected function setUp()
     {
         $objectManager = Bootstrap::getObjectManager();
         $this->management = $objectManager->get(GiftCardAccountManagementInterface::class);
@@ -46,7 +46,7 @@ class GiftCardAccountManagementInterfaceTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function tearDown(): void
+    protected function tearDown()
     {
         $this->customerSession->logout();
     }

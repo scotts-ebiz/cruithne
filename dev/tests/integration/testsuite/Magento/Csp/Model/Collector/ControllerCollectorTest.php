@@ -27,7 +27,7 @@ class ControllerCollectorTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp(): void
+    public function setUp()
     {
         $this->collector = Bootstrap::getObjectManager()->create(ControllerCollector::class);
     }

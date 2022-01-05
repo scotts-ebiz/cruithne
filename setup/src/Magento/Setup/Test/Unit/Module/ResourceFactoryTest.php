@@ -16,17 +16,18 @@ class ResourceFactoryTest extends \PHPUnit\Framework\TestCase
      */
     private $resourceFactory;
 
-    protected function setUp(): void
+    protected function setUp()
     {
-        $serviceLocatorMock = $this->createMock(
-            \Laminas\ServiceManager\ServiceLocatorInterface::class
+        $serviceLocatorMock = $this->getMockForAbstractClass(
+            \Zend\ServiceManager\ServiceLocatorInterface::class,
+            ['get']
         );
         $connectionFactory = new ConnectionFactory($serviceLocatorMock);
         $serviceLocatorMock
             ->expects($this->once())
             ->method('get')
             ->with(\Magento\Setup\Module\ConnectionFactory::class)
-            ->willReturn($connectionFactory);
+            ->will($this->returnValue($connectionFactory));
         $this->resourceFactory = new ResourceFactory($serviceLocatorMock);
     }
 

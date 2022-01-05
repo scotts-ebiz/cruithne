@@ -13,32 +13,32 @@ use Symfony\Component\Console\Tester\CommandTester;
 class ConfigSetCommandTest extends \PHPUnit\Framework\TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Setup\Model\ConfigModel
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Setup\Model\ConfigModel
      */
     private $configModel;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Framework\App\DeploymentConfig
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Framework\App\DeploymentConfig
      */
     private $deploymentConfig;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Setup\Console\Command\ConfigSetCommand
+     * @var \PHPUnit_Framework_MockObject_MockObject|\Magento\Setup\Console\Command\ConfigSetCommand
      */
     private $command;
 
-    protected function setUp(): void
+    public function setUp()
     {
         $option = $this->createMock(\Magento\Framework\Setup\Option\TextConfigOption::class);
         $option
             ->expects($this->any())
             ->method('getName')
-            ->willReturn('db-host');
+            ->will($this->returnValue('db-host'));
         $this->configModel = $this->createMock(\Magento\Setup\Model\ConfigModel::class);
         $this->configModel
             ->expects($this->exactly(2))
             ->method('getAvailableOptions')
-            ->willReturn([$option]);
+            ->will($this->returnValue([$option]));
         $moduleList = $this->createMock(\Magento\Framework\Module\ModuleList::class);
         $this->deploymentConfig = $this->createMock(\Magento\Framework\App\DeploymentConfig::class);
         $this->command = new ConfigSetCommand($this->configModel, $moduleList, $this->deploymentConfig);
@@ -49,7 +49,7 @@ class ConfigSetCommandTest extends \PHPUnit\Framework\TestCase
         $this->deploymentConfig
             ->expects($this->once())
             ->method('get')
-            ->willReturn(null);
+            ->will($this->returnValue(null));
         $this->configModel
             ->expects($this->once())
             ->method('process')
@@ -67,7 +67,7 @@ class ConfigSetCommandTest extends \PHPUnit\Framework\TestCase
         $this->deploymentConfig
             ->expects($this->once())
             ->method('get')
-            ->willReturn('localhost');
+            ->will($this->returnValue('localhost'));
         $this->configModel
             ->expects($this->once())
             ->method('process')
@@ -80,7 +80,7 @@ class ConfigSetCommandTest extends \PHPUnit\Framework\TestCase
         $this->deploymentConfig
             ->expects($this->once())
             ->method('get')
-            ->willReturn('localhost');
+            ->will($this->returnValue('localhost'));
         $this->configModel
             ->expects($this->once())
             ->method('process')
@@ -100,15 +100,15 @@ class ConfigSetCommandTest extends \PHPUnit\Framework\TestCase
         $dialog
             ->expects($this->once())
             ->method('ask')
-            ->willReturn($interactionType);
+            ->will($this->returnValue($interactionType));
 
-        /** @var \Symfony\Component\Console\Helper\HelperSet|\PHPUnit\Framework\MockObject\MockObject $helperSet */
+        /** @var \Symfony\Component\Console\Helper\HelperSet|\PHPUnit_Framework_MockObject_MockObject $helperSet */
         $helperSet = $this->createMock(\Symfony\Component\Console\Helper\HelperSet::class);
         $helperSet
             ->expects($this->once())
             ->method('get')
             ->with('question')
-            ->willReturn($dialog);
+            ->will($this->returnValue($dialog));
         $this->command->setHelperSet($helperSet);
 
         $commandTester = new CommandTester($this->command);
