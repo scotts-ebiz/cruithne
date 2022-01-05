@@ -13,6 +13,7 @@ class RecommendationHelper extends AbstractHelper
     const CONFIG_RECOMMENDATIONS_NEW_QUIZ_PATH = 'recommendations/api/new';
     const CONFIG_RECOMMENDATIONS_SAVE_QUIZ_PATH = 'recommendations/api/save';
     const CONFIG_RECOMMENDATIONS_QUIZ_RESULT_PATH = 'recommendations/api/result';
+    const CONFIG_RECOMMENDATIONS_QUIZ_LEGACY_RESULT_PATH = 'recommendations/api/legacyresult';
     const CONFIG_RECOMMENDATIONS_COMPLETED_QUIZ_PATH = 'recommendations/api/previous';
     const CONFIG_RECOMMENDATIONS_MAP_TO_USER_PATH = 'recommendations/api/map';
     const CONFIG_RECOMMENDATIONS_PRODUCTS_PATH = 'recommendations/api/products';
@@ -110,6 +111,21 @@ class RecommendationHelper extends AbstractHelper
             ScopeInterface::SCOPE_STORE,
             $store_id
         ) . "?key={$this->getApiKey()}";
+    }
+
+    /**
+     * Returns quiz result api path
+     *
+     * @param null $store_id
+     * @return string
+     */
+    public function getQuizResultLegacyApiPath($store_id = null)
+    {
+        return $this->scopeConfig->getValue(
+                self::CONFIG_RECOMMENDATIONS_QUIZ_LEGACY_RESULT_PATH,
+                ScopeInterface::SCOPE_STORE,
+                $store_id
+            );
     }
 
     /**
@@ -224,4 +240,45 @@ class RecommendationHelper extends AbstractHelper
            $store_id
        );
    }
+
+    /**
+     * Return full grass type from rec enum
+     *
+     * @param $enum
+     * @return string
+     */
+    public function getGrassTypeFromEnum($enum) {
+        switch ($enum) {
+            case 'BER':
+                return 'Bermuda';
+            case 'BRF':
+                return 'Bluegrass/Rye/Fescue';
+            case 'BRST':
+                return 'Bermuda & St. Augustine';
+            case 'BUF':
+                return 'Buffalo grass';
+            case 'CARP':
+                return 'Carpetgrass';
+            case 'CENT':
+                return 'Centipede';
+            case 'DIC':
+                return 'Dichondra';
+            case 'FFES':
+                return 'Fine Fescue';
+            case 'KBLU':
+                return 'Kentucky bluegrass';
+            case 'RYE':
+                return 'Ryegrass';
+            case 'SAFL':
+                return 'St. Augustine/Floratam';
+            case 'SEPA':
+                return 'Yes';
+            case 'TFES':
+                return 'Tall Fescue';
+            case 'ZOY':
+                return 'Zoysia';
+            default:
+                return null;
+        }
+    }
 }

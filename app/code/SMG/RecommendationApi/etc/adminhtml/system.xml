@@ -46,6 +46,12 @@
                     <validate>validate-no-html-tags</validate>
                     <config_path>recommendations/api/result</config_path>
                 </field>
+                <field id="quiz_results_legacy_api_path" translate="label" type="text" sortOrder="4" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Quiz Results LEGACY API Path</label>
+                    <comment>[GET] Returns quiz data by legacy ID</comment>
+                    <validate>validate-no-html-tags</validate>
+                    <config_path>recommendations/api/legacyresult</config_path>
+                </field>
                 <field id="map_to_user_api_path" translate="label" type="text" sortOrder="5" showInDefault="1" showInWebsite="1" showInStore="1">
                     <label>Map to User API Path</label>
                     <comment>[PUT] Updates Quiz to a specific user by Gigya ID</comment>
