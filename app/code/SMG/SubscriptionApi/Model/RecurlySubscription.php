@@ -200,7 +200,7 @@ class RecurlySubscription
         $this->_checkoutSession = $checkoutSession;
         $this->_collectionFactory = $collectionFactory;
         $this->_customerUrl = $customerUrl;
-        $this->_couponCode = 'annual_subscription_discount';
+        $this->_couponCode = 'annual_account_discount';
         $this->_currency = 'USD';
         $this->_logger = $logger;
         $this->_subscriptionOrderHelper = $subscriptionOrderHelper;
@@ -751,7 +751,7 @@ class RecurlySubscription
             $coupon->discount_percent = 10;
             $coupon->invoice_description = '10% Discount';
             $coupon->duration = 'forever';
-            $coupon->redemption_resource = 'subscription';
+            $coupon->redemption_resource = 'account';
             $coupon->applies_to_all_plans = false;
             $coupon->plan_codes = [ 'annual' ];
             $coupon->create();

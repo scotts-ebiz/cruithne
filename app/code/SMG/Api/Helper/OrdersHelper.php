@@ -782,7 +782,7 @@ class OrdersHelper
             }
         }
         // If configurable, get parent price
-        $price = $orderItem->getOriginalPrice();
+        $price = $orderItem->getPrice();
 
         if ($orderItem->getParentItemId() !== null) {
             $parent = $this->_orderItemCollectionFactory->create()
@@ -797,7 +797,7 @@ class OrdersHelper
              */
             $parentItem = $parent->getFirstItem();
             if ($parentItem->getProductType() === "configurable") {
-                $price = $parentItem->getOriginalPrice();
+                $price = $parentItem->getPrice();
             }
         }
 
