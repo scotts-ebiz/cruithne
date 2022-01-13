@@ -169,12 +169,12 @@ class OrderHelper
      * @var SubscriptionFactory
      */
     protected $_subscriptionFactory;
-    
+
     /**
      * @var CreditMemoCollectionFactory
      */
     protected $_creditMemoCollectionFactory;
-    
+
     public function __construct(LoggerInterface $logger,
         CreditReasonCodeFactory $creditReasonCodeFactory,
         CreditReasonCodeReource $_creditReasonCodeResource,
@@ -211,17 +211,17 @@ class OrderHelper
         $this->_subscriptionFactory = $subscriptionFactory;
         $this->_creditMemoCollectionFactory = $creditMemoCollectionFactory;
     }
-    
+
     /**
      * Get the order information for the desired order id that was passed in.
-     * 
+     *
      * @param $orderId
      * @return string
      */
     public function getOrderById($orderId)
     {
     	$this->_logger->info("Entering SMG/Api/Helper/OrderHelper->getOrderById() - ORDER_GET_ORDER_BY_ID - for orderId - $orderId");
-    	
+
     	try
     	{
 	    	// make sure that we were passed something before continuing
@@ -229,13 +229,13 @@ class OrderHelper
 	    	{
 	    		// get the debit order data
 	    		$debitArray = $this->getDebitOrderData($orderId);
-	    		
+
 	    		// get the annual subscription data
 	    		$annualSubscriptionArray = $this->getAnnualSubscriptionData($orderId);
-	    		
+
 	    		// merge the debits and credits
 	    		$ordersArray = array_merge($debitArray, $annualSubscriptionArray);
-	    		
+
 	    		// determine if there is anything there to send
 	    		if (empty($ordersArray))
 	    		{
@@ -255,13 +255,13 @@ class OrderHelper
     	{
     		// log the error
     		$this->_logger->error($e);
-    		
+
     		// create the error response
-    		$orders = $this->_responseHelper->createResponse(false, "There was an issue with orderId $orderId. Check logs for details."); 
+    		$orders = $this->_responseHelper->createResponse(false, "There was an issue with orderId $orderId. Check logs for details.");
     	}
 
         $this->_logger->info("Exiting SMG/Api/Helper/OrderHelper->getOrderById() - ORDER_GET_ORDER_BY_ID - for orderId - $orderId");
-        
+
         // return
         return $orders;
     }
@@ -275,7 +275,7 @@ class OrderHelper
     private function getDebitOrderData($orderId)
     {
     	$this->_logger->info("Entering SMG/Api/Helper/OrderHelper->getDebitOrderData() - ORDER_GET_ORDER_BY_ID - for orderId - $orderId");
-    	
+
         $ordersArray = array();
 
         // Get the sales order
@@ -290,9 +290,9 @@ class OrderHelper
         // otherwise they will not add properly in SAP.  Season subscriptions
         // are different because they are processed like regular orders
         $subscriptionType = $order->getSubscriptionType();
-        
+
         $this->_logger->info("OrderId - $orderId - subscriptionType - $subscriptionType");
-        
+
         if ($order->isSubscription() && $subscriptionType == 'annual')
         {
         	// get the master subscription id
@@ -309,12 +309,12 @@ class OrderHelper
         {
         	throw new \Exception("The order $orderId has already been cancelled.");
         }
-        else 
+        else
         {
         	// get the orders for the array
         	$ordersArray[] = $this->getOrdersForProcessing($order, $orderId);
         }
-        
+
         $this->_logger->info("Exiting SMG/Api/Helper/OrderHelper->getDebitOrderData() - ORDER_GET_ORDER_BY_ID - for orderId - $orderId");
 
         // return
@@ -330,7 +330,7 @@ class OrderHelper
     private function getAnnualSubscriptionData($orderId)
     {
     	$this->_logger->info("Entering SMG/Api/Helper/OrderHelper->getAnnualSubscriptionData() - ORDER_GET_ORDER_BY_ID - for orderId - $orderId");
-    	
+
         $ordersArray = array();
 
         // loop through the list of subscriptions if there are any
@@ -342,10 +342,10 @@ class OrderHelper
                 // get the subscription data with filter master_subscription_id of sales_order
                 $subscription = $this->_subscriptionFactory->create();
                 $this->_subscriptionResource->load($subscription, $masterSubscriptionId, 'subscription_id');
-                
+
                 $subscriptionId = $subscription->getId();
                 $this->_logger->info("The subscription ID is $subscriptionId");
-                
+
                 // check subscription exist or not
                 if(!empty($subscriptionId))
                 {
@@ -355,11 +355,11 @@ class OrderHelper
 	                $annualOrders->setOrder('master_subscription_id', 'asc');
 	                $annualOrders->setOrder('ship_start_date', 'asc');
 	                $annualOrders->setOrder('entity_id', 'asc');
-	
+
 	                $numberOfAnnualOrders = $annualOrders->count();
-	                
+
 	                $this->_logger->info("There are $numberOfAnnualOrders subscription orders with $orderId");
-	                
+
 	                // make sure that there are orders
 	                // check if there are orders to process
 	                if ($annualOrders->count() > 0)
@@ -371,9 +371,9 @@ class OrderHelper
 	                    {
 	                     	// get the required fields needed for processing
 	                     	$annualOrderId = $annualOrder->getId();
-	                     	
+
 	                     	$this->_logger->info("The annual orderId is $annualOrderId");
-	
+
 	                        if ($annualOrder->isCanceled())
 	                        {
 	                        	throw new \Exception("The subscription order $annualOrderId has already been cancelled.");
@@ -397,16 +397,16 @@ class OrderHelper
                 }
             }
         }
-        
+
         $this->_logger->info("Exiting SMG/Api/Helper/OrderHelper->getAnnualSubscriptionData() - ORDER_GET_ORDER_BY_ID - for orderId - $orderId");
 
         // return
         return $ordersArray;
     }
-    
+
     /**
      * This gets the orders detail from the order
-     * 
+     *
      * @param Order $order
      * @param $orderId
      * @return array
@@ -414,9 +414,9 @@ class OrderHelper
     private function getOrdersForProcessing($order, $orderId)
     {
     	$this->_logger->info("Entering SMG/Api/Helper/OrderHelper->getOrdersForProcessing() - ORDER_GET_ORDER_BY_ID - for orderId - $orderId");
-    	
+
     	$ordersArray = array();
-    	
+
     	// Skip if virtual
     	if (!$order->getIsVirtual())
     	{
@@ -425,7 +425,7 @@ class OrderHelper
     		$orderItems->addFieldToFilter("order_id", ['eq' => $orderId]);
     		$orderItems->addFieldToFilter("product_type", ['neq' => 'bundle']);
     		$orderItems->addFieldToFilter("product_type", ['neq' => 'configurable']);
-    	
+
     		/**
     		 * @var \Magento\Sales\Model\Order\Item $orderItem
     		*/
@@ -438,9 +438,9 @@ class OrderHelper
     	{
     		throw new \Exception("The order $orderId is a Virtual Order");
     	}
-    	
+
     	$this->_logger->info("Exiting SMG/Api/Helper/OrderHelper->getOrdersForProcessing() - ORDER_GET_ORDER_BY_ID - for orderId - $orderId");
-    	
+
     	return $ordersArray;
     }
 
@@ -455,7 +455,7 @@ class OrderHelper
     private function addRecordToOrdersArray($order, $orderItem, $orderId)
     {
     	$this->_logger->info("Entering SMG/Api/Helper/OrderHelper->addRecordToOrdersArray() - ORDER_GET_ORDER_BY_ID - for orderId - $orderId");
-    	
+
         // get tomorrows date
         $tomorrow = date('Y-m-d', strtotime("tomorrow"));
 
@@ -499,7 +499,7 @@ class OrderHelper
         // get the customer name
         // SAP requires the shipping name not the customer/billing name
         $customerName = $customerFirstName . ' ' . $customerLastName;
-        
+
         if(!empty($order->getData('coupon_code'))){
             $orderDiscount = $this->_discountHelper->DiscountCode($order->getData('coupon_code'));
             $hdrDiscFixedAmount = $orderDiscount['hdr_disc_fixed_amount'];
@@ -533,9 +533,9 @@ class OrderHelper
 
         // determine if this is a subscription
         $subscriptionType = $order->getSubscriptionType();
-        
+
         $this->_logger->info("Subscription Type $subscriptionType for $orderId");
-        
+
         if ($order->isSubscription() && $subscriptionType == 'annual')
         {
             // get the subscription
@@ -565,12 +565,12 @@ class OrderHelper
         }
 
         // If configurable, get parent price
-        $price = $orderItem->getOriginalPrice();
+        $price = $orderItem->getPrice();
 
         if (!empty($orderItem->getParentItemId()))
         {
             $parent = $this->_orderItemCollectionFactory->create()->addFieldToFilter('item_id', ['eq' => $orderItem->getParentItemId()]);
-            
+
             /**
              * There will be only one result since we filter on the unique id
              *
@@ -579,7 +579,7 @@ class OrderHelper
             $parentItem = $parent->getFirstItem();
             if ($parentItem->getProductType() === "configurable")
             {
-                $price = $parentItem->getOriginalPrice();
+                $price = $parentItem->getPrice();
             }
         }
 
@@ -588,7 +588,7 @@ class OrderHelper
         {
             $invoiceAmount = '';
         }
-        
+
         $this->_logger->info("Exiting SMG/Api/Helper/OrderHelper->addRecordToOrdersArray() - ORDER_GET_ORDER_BY_ID - for orderId - $orderId");
 
         // return
@@ -653,7 +653,7 @@ class OrderHelper
         $streetArrayValue = $value;
         $impodeStreetValues = implode(" ", array_reverse($streetArrayValue));
         $value = $impodeStreetValues;
-    
+
         return $value;
     }
 }

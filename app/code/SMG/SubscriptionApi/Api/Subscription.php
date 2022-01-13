@@ -798,7 +798,7 @@ class Subscription implements SubscriptionInterface
                     );
                 }
             }
-            
+
             // Get new recommendation for quiz id
             $url = filter_var(
                 trim(
@@ -810,6 +810,10 @@ class Subscription implements SubscriptionInterface
             $this->_logger->info("Fetching updated recommendation for quiz id: " . $sub->getData('quiz_id'));
             $response = $this->_recommendationHelper->request($url, '', 'GET');
 
+            // If the new rec engine fails, use legacy renewal process
+            if (empty($response)) {
+                $this->renewSubscriptionLegacy($master_subscription_id);
+            }
 
             $this->_logger->info("Create renewal subscription for " . $master_subscription_id . " from subscription id " . $sub->getId());
 
@@ -1420,4 +1424,192 @@ class Subscription implements SubscriptionInterface
         }
 
     }
+
+    /**
+     * @param string $master_subscription_id
+     * @return mixed
+     */
+    public function renewSubscriptionLegacy($master_subscription_id) {
+        $this->_logger->info("Renewing master subscription id: " . $master_subscription_id);
+
+        try {
+            /** @var SubscriptionModel $sub */
+            $sub = $this->_subscriptionResource->getSubscriptionByMasterSubscriptionId($master_subscription_id);
+
+            if (empty($sub)) {
+                $message = "Subscription not found for master subscription id: ".$master_subscription_id;
+                $this->_logger->error($message);
+                return $this->_responseHelper->error(
+                    $message,
+                    ['refresh' => false],
+                    422
+                );
+            }
+
+            $subCreatedAt = date('Y-m-d', strtotime($sub->getData('created_at')));
+            $safetyNetDate = date('Y-m-d', strtotime("+10 months", strtotime($subCreatedAt)));
+            $now = date('Y-m-d');
+
+            if ($now < $safetyNetDate) {
+                $message = "Subscription has been renewed too recently for master subscription id: ".$master_subscription_id;
+                $this->_logger->error($message);
+                $this->createRenewalError($master_subscription_id, $message);
+                return $this->_responseHelper->error(
+                    $message,
+                    ['refresh' => false],
+                    409
+                );
+            }
+
+            $customer = $sub->getCustomer();
+            $subOrders = $sub->getSubscriptionOrders();
+
+            $isPreviousSubscriptionOkToRenew = true;
+
+            /** @var SubscriptionOrder $order */
+            foreach ($subOrders as $order) {
+                $subscriptionOrderStatus = $order->getData('subscription_order_status');
+                if (!empty($subscriptionOrderStatus) && in_array($subscriptionOrderStatus, array( 'canceled', 'failed'))) {
+                    $isPreviousSubscriptionOkToRenew = false;
+                }
+            }
+
+            if (!$isPreviousSubscriptionOkToRenew) {
+                $message = "SubscriptionException: The past subscriptions has cancellations or failures.";
+                $this->_logger->info($master_subscription_id . ": " . $message);
+                $this->createRenewalError($master_subscription_id, $message);
+                return $this->_responseHelper->error(
+                    $message,
+                    ['refresh' => false],
+                    409
+                );
+            }
+
+            $this->_logger->info("Create renewal subscription for " . $master_subscription_id . " from subscription id " . $sub->getId());
+
+            $newSub = $this->createRenewalSubscription($sub);
+            $newSubOrders = [];
+            $newSubOrderItems = [];
+
+            foreach ($subOrders as $order) {
+                $this->_logger->info("Create renewal subscription order for " . $master_subscription_id . " from subscription order id " . $order->getId());
+
+                $newOrder = $this->createRenewalSubscriptionOrder($order, $newSub->getData('entity_id'));
+                foreach ($order->getOrderItems() as $item) {
+                    $this->_logger->info("Create renewal subscription order item for " . $master_subscription_id . " from subscription order item id " . $item->getId());
+
+                    $newSubOrderItems[] = $this->createRenewalSubscriptionOrderItem($item, $newOrder->getId());
+                }
+                $newSubOrders[] = $newOrder;
+            }
+
+            $account = $this->_recurlySubscription->getRecurlyAccount($sub->getData('gigya_id'));
+
+            $recurlySubs = $account->subscriptions->get();
+            $invoice = null;
+
+            foreach ($recurlySubs as $recurlySub) {
+                $planCode = $recurlySub->getValues()['plan']->getValues()['plan_code'];
+                if (in_array($planCode, ['annual', 'seasonal'])) {
+                    $this->_logger->info("Get the recurly invoice for " . $master_subscription_id);
+                    $invoice = $recurlySub->invoice->get();
+                }
+            }
+
+            $billing = $invoice->getValues()['address']->getValues();
+            $shipping = $invoice->getValues()['shipping_address']->getValues();
+
+            if (empty($billing['phone'])) {
+                $billing['phone'] = $shipping['phone'];
+            }
+
+            $this->_coreSession->setCheckoutShipping($this->formatAddressFromRecurlyInfo($shipping));
+            $this->_coreSession->setCheckoutBilling($this->formatAddressFromRecurlyInfo($billing));
+
+
+            foreach($newSubOrders as $order) {
+                $this->_logger->info("Process the subscription order for " . $master_subscription_id);
+
+                $this->_subscriptionOrderHelper->processOrder($customer, $order);
+            }
+
+            $this->_recurlySubscription->updateSubscriptionIDs($newSub);
+
+            $newSub->addData([
+                'recurly_invoice' => $invoice->invoice_number,
+                'paid' => $this->convertAmountToDollars($invoice->total_in_cents),
+                'price' => $this->convertAmountToDollars($invoice->subtotal_before_discount_in_cents),
+                'discount' => $this->convertAmountToDollars(-$invoice->discount_in_cents),
+                'tax' => $this->convertAmountToDollars($invoice->tax_in_cents)
+            ]);
+
+            $this->_subscriptionResource->save($newSub);
+
+            $sub->setData('subscription_status', 'renewed'); // Set old sub as renewed
+            $sub->save();
+            return true;
+
+        } catch (SubscriptionException $se) {
+            if (isset($newSub)) {
+                $this->_logger->error("Renewal Failed for $master_subscription_id");
+
+                $newSub->setData('subscription_status', 'renewal_failed')->save();
+                try {
+                    $this->cancelFailedOrders($newSub, true);
+                } catch (Exception $e) {
+                    $message = "Error Canceling Orders: ".$e->getMessage();
+                    $this->_logger->error($master_subscription_id . ": " . $message);
+                    $this->createRenewalError($master_subscription_id, $message);
+                }
+            }
+
+            $message = "SubscriptionException: ".$se->getMessage();
+            $this->_logger->error($master_subscription_id . ": " . $message);
+            $this->createRenewalError($master_subscription_id, $message);
+            return $this->_responseHelper->error(
+                $message,
+                ['refresh' => false],
+                400
+            );
+        } catch (Exception $ge) {
+            if (isset($newSub)) {
+                $this->_logger->error("Renewal Failed for $master_subscription_id");
+
+                $newSub->setData('subscription_status', 'renewal_failed')->save();
+                try {
+                    $this->cancelFailedOrders($newSub, true);
+                } catch (Exception $e) {
+                    $message = "Error Canceling Orders: ".$e->getMessage();
+                    $this->_logger->error($master_subscription_id . ": " . $message);
+                    $this->createRenewalError($master_subscription_id, $message);
+                }
+            }
+            $statusCode = 400;
+            $retry = false;
+            if (str_contains($ge->getMessage(), 'calculate tax')) {
+                $message = "AvaTax Exception: We got an error regarding avatax tax calculation. Please rerun the renewal subscription api.";
+                $statusCode = 504;
+                $retry = true;
+
+                $this->_logger->error($message . " for " . $master_subscription_id);
+            }
+            else{
+                $message = "General Exception: ".$ge->getMessage();
+            }
+            $this->createRenewalError($master_subscription_id, $message);
+
+            $data = ['refresh' => false];
+            if ($retry) {
+                $data['retry'] = true;
+            }
+
+            return $this->_responseHelper->error(
+                $message,
+                $data,
+                $statusCode
+            );
+        }
+
+    }
+
 }
