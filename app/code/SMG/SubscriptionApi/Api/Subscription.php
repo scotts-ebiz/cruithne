@@ -812,7 +812,8 @@ class Subscription implements SubscriptionInterface
 
             // If the new rec engine fails, use legacy renewal process
             if (empty($response)) {
-                $this->renewSubscriptionLegacy($master_subscription_id);
+                $this->createRenewalError($master_subscription_id, "New Rec Engine returned empty for quiz_id ". $sub->getData('quiz_id'));
+                return $this->renewSubscriptionLegacy($master_subscription_id);
             }
 
             $this->_logger->info("Create renewal subscription for " . $master_subscription_id . " from subscription id " . $sub->getId());
@@ -847,7 +848,7 @@ class Subscription implements SubscriptionInterface
                     $discount -= $invoice->discount_in_cents;
                     $tax += $invoice->tax_in_cents;
                     $invoiceNumber = $invoice->invoice_number;
-                } else {
+                } else if ($recurlySub->invoice) {
                     $invoice = $recurlySub->invoice->get();
                     $recurlySubPrices[$planCode] = $invoice->subtotal_before_discount_in_cents;
                     $paid += $invoice->total_in_cents;
