@@ -392,7 +392,7 @@ class OrdersMainHelper
 
         // Get the price to send to SAP,
         // If configurable, get parent price
-        $price = $orderItem->getOriginalPrice();
+        $price = $orderItem->getPrice();
 
         if (!empty($orderItem->getParentItemId()))
         {
@@ -405,7 +405,7 @@ class OrdersMainHelper
 
             if ($parentItem->getProductType() === "configurable")
             {
-                $price = $parentItem->getOriginalPrice();
+                $price = $parentItem->getPrice();
             }
         }
 
