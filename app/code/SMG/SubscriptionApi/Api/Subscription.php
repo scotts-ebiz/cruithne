@@ -4,7 +4,6 @@ namespace SMG\SubscriptionApi\Api;
 
 use Exception;
 use Gigya\GigyaIM\Helper\GigyaMageHelper;
-use GuzzleHttp\Exception\GuzzleException;
 use Magento\Catalog\Api\ProductRepositoryInterface;
 use Magento\Catalog\Model\Product;
 use Magento\Checkout\Model\Cart;
@@ -665,7 +664,7 @@ class Subscription implements SubscriptionInterface
                         $e->getMessage(),
                         ['refresh' => true]
                     );
-                } catch (Exception $e) {
+                } catch (\Throwable $e) {
                     // Catch any other not typical exceptions and return a generic
                     //error response to the customer.
                     $this->_logger->error($this->_loggerPrefix . $e->getMessage());
@@ -813,7 +812,7 @@ class Subscription implements SubscriptionInterface
             // If the new rec engine fails, use legacy renewal process
             if (empty($response)) {
                 $this->createRenewalError($master_subscription_id, "New Rec Engine returned empty for quiz_id ". $sub->getData('quiz_id'));
-                return $this->renewSubscriptionLegacy($master_subscription_id);
+                return $this->renewSubscriptionLegacy($master_subscription_id, true);
             }
 
             $this->_logger->info("Create renewal subscription for " . $master_subscription_id . " from subscription id " . $sub->getId());
@@ -831,16 +830,13 @@ class Subscription implements SubscriptionInterface
             $price = 0;
             $discount = 0;
             $tax = 0;
+            $invoiceNumber = '';
 
             // Use recurly to populate totals
             foreach ($recurlySubs as $recurlySub) {
-                $paid = 0;
-                $price = 0;
-                $discount = 0;
-                $tax = 0;
-                $invoiceNumber = '';
                 $planCode = $recurlySub->getValues()['plan']->getValues()['plan_code'];
-                if (in_array($planCode, ['annual', 'seasonal'])) {
+                $state = $recurlySub->getValues()['state'];
+                if (in_array($state, ['active', 'future']) and in_array($planCode, ['annual', 'seasonal']) and $recurlySub->invoice) {
                     $this->_logger->info("Get the recurly invoice for " . $master_subscription_id);
                     $invoice = $recurlySub->invoice->get();
                     $paid += $invoice->total_in_cents;
@@ -848,7 +844,7 @@ class Subscription implements SubscriptionInterface
                     $discount -= $invoice->discount_in_cents;
                     $tax += $invoice->tax_in_cents;
                     $invoiceNumber = $invoice->invoice_number;
-                } else if ($recurlySub->invoice) {
+                } else if (in_array($state, ['active', 'future']) and $recurlySub->invoice) {
                     $invoice = $recurlySub->invoice->get();
                     $recurlySubPrices[$planCode] = $invoice->subtotal_before_discount_in_cents;
                     $paid += $invoice->total_in_cents;
@@ -859,7 +855,7 @@ class Subscription implements SubscriptionInterface
             }
 
             $newSub->addData([
-                'recurly_invoice' => $invoiceNumber,
+                'recurly_invoice' => $invoiceNumber ?: '',
                 'paid' => $this->convertAmountToDollars($paid),
                 'price' => $this->convertAmountToDollars($price),
                 'discount' => $this->convertAmountToDollars($discount),
@@ -945,8 +941,7 @@ class Subscription implements SubscriptionInterface
                     ['refresh' => false],
                     400
                 );
-            }catch (GuzzleException $e) {
-        } catch (Exception $ge) {
+        } catch (\Throwable $ge) {
                 if (isset($newSub)) {
                     $this->_logger->error("Renewal Failed for $master_subscription_id");
 
@@ -1428,9 +1423,10 @@ class Subscription implements SubscriptionInterface
 
     /**
      * @param string $master_subscription_id
+     * @param bool $force
      * @return mixed
      */
-    public function renewSubscriptionLegacy($master_subscription_id) {
+    public function renewSubscriptionLegacy($master_subscription_id, $force = false) {
         $this->_logger->info("Renewing master subscription id: " . $master_subscription_id);
 
         try {
@@ -1447,19 +1443,23 @@ class Subscription implements SubscriptionInterface
                 );
             }
 
-            $subCreatedAt = date('Y-m-d', strtotime($sub->getData('created_at')));
-            $safetyNetDate = date('Y-m-d', strtotime("+10 months", strtotime($subCreatedAt)));
-            $now = date('Y-m-d');
+            // If force is true we don't care if it has been renewed recently
+            if (!$force) {
+                /** Return 409 if subscription has been renewed in the last 10 months. */
+                $subCreatedAt = date('Y-m-d', strtotime($sub->getData('created_at')));
+                $safetyNetDate = date('Y-m-d', strtotime("+10 months", strtotime($subCreatedAt)));
+                $now = date('Y-m-d');
 
-            if ($now < $safetyNetDate) {
-                $message = "Subscription has been renewed too recently for master subscription id: ".$master_subscription_id;
-                $this->_logger->error($message);
-                $this->createRenewalError($master_subscription_id, $message);
-                return $this->_responseHelper->error(
-                    $message,
-                    ['refresh' => false],
-                    409
-                );
+                if ($now < $safetyNetDate) {
+                    $message = "Subscription has been renewed too recently for master subscription id: " . $master_subscription_id;
+                    $this->_logger->error($message);
+                    $this->createRenewalError($master_subscription_id, $message);
+                    return $this->_responseHelper->error(
+                        $message,
+                        ['refresh' => false],
+                        409
+                    );
+                }
             }
 
             $customer = $sub->getCustomer();
@@ -1511,7 +1511,8 @@ class Subscription implements SubscriptionInterface
 
             foreach ($recurlySubs as $recurlySub) {
                 $planCode = $recurlySub->getValues()['plan']->getValues()['plan_code'];
-                if (in_array($planCode, ['annual', 'seasonal'])) {
+                $state = $recurlySub->getValues()['state'];
+                if (in_array($planCode, ['annual', 'seasonal']) and in_array($state, ['active', 'future']) and $recurlySub->invoice) {
                     $this->_logger->info("Get the recurly invoice for " . $master_subscription_id);
                     $invoice = $recurlySub->invoice->get();
                 }
@@ -1537,7 +1538,7 @@ class Subscription implements SubscriptionInterface
             $this->_recurlySubscription->updateSubscriptionIDs($newSub);
 
             $newSub->addData([
-                'recurly_invoice' => $invoice->invoice_number,
+                'recurly_invoice' => $invoice->invoice_number ?: '',
                 'paid' => $this->convertAmountToDollars($invoice->total_in_cents),
                 'price' => $this->convertAmountToDollars($invoice->subtotal_before_discount_in_cents),
                 'discount' => $this->convertAmountToDollars(-$invoice->discount_in_cents),
@@ -1572,7 +1573,7 @@ class Subscription implements SubscriptionInterface
                 ['refresh' => false],
                 400
             );
-        } catch (Exception $ge) {
+        } catch (\Throwable $ge) {
             if (isset($newSub)) {
                 $this->_logger->error("Renewal Failed for $master_subscription_id");
 
