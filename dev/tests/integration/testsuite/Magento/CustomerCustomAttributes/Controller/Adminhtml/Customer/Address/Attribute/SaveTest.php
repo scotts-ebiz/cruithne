@@ -39,7 +39,7 @@ class SaveTest extends AbstractBackendController
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -49,7 +49,7 @@ class SaveTest extends AbstractBackendController
     /**
      * @inheritdoc
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         foreach ($this->attributesToDelete as $attributeCode) {
             try {
@@ -108,7 +108,7 @@ class SaveTest extends AbstractBackendController
         ]);
 
         $this->assertSessionMessages(
-            $this->contains((string)__('Please correct the value for file extensions.'))
+            $this->containsEqual((string)__('Please correct the value for file extensions.'))
         );
     }
 
@@ -159,7 +159,7 @@ class SaveTest extends AbstractBackendController
         ]);
 
         $this->assertSessionMessages(
-            $this->contains((string)__('The value of Admin must be unique.'))
+            $this->containsEqual((string)__('The value of Admin must be unique.'))
         );
     }
 
@@ -181,7 +181,7 @@ class SaveTest extends AbstractBackendController
         ]);
 
         $this->assertSessionMessages(
-            $this->contains((string)__('The value of Admin scope can\'t be empty.'))
+            $this->containsEqual((string)__('The value of Admin scope can\'t be empty.'))
         );
     }
 
@@ -310,7 +310,7 @@ class SaveTest extends AbstractBackendController
             ['frontend_label' => ['Default Label']],
             ['attribute_id' => $attribute->getId()]
         );
-        $this->assertSessionMessages($this->contains((string)__('You cannot edit this attribute.')));
+        $this->assertSessionMessages($this->containsEqual((string)__('You cannot edit this attribute.')));
         $this->assertRedirect($this->stringContains('backend/admin/customer_address_attribute/index/'));
     }
 
@@ -349,7 +349,7 @@ class SaveTest extends AbstractBackendController
      */
     private function assertSuccess(bool $backParam = false): void
     {
-        $this->assertSessionMessages($this->contains((string)__('You saved the customer address attribute.')));
+        $this->assertSessionMessages($this->containsEqual((string)__('You saved the customer address attribute.')));
 
         if ($backParam) {
             $this->assertRedirect(

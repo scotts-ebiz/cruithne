@@ -23,7 +23,7 @@ class CronTest extends TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
         $this->model = Bootstrap::getObjectManager()->create(Cron::class);

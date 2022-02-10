@@ -23,7 +23,7 @@ class IndexTest extends \PHPUnit\Framework\TestCase
      */
     private $resourceModel;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $this->resourceModel = $this->objectManager->get(\Magento\TargetRule\Model\ResourceModel\Rule::class);
@@ -59,14 +59,19 @@ class IndexTest extends \PHPUnit\Framework\TestCase
         $index = $this->objectManager->create(\Magento\TargetRule\Model\Index::class)
             ->setType($ruleType)
             ->setProduct($product);
-        $productIds = $index->getProductIds();
+        $productIds = array_map(
+            'intval',
+            array_values($index->getProductIds())
+        );
+        sort($productIds);
         $this->resourceModel->delete($model);
 
         $expectedProductIds = [];
         foreach ($productsSku as $sku) {
-            $expectedProductIds[] = $productRepository->get($sku)->getId();
+            $expectedProductIds[] = (int) $productRepository->get($sku)->getId();
         }
-        $this->assertEquals($expectedProductIds, $productIds, '', 0.0, 10, true);
+        sort($expectedProductIds);
+        $this->assertEquals($expectedProductIds, $productIds);
     }
 
     /**
@@ -125,7 +130,6 @@ class IndexTest extends \PHPUnit\Framework\TestCase
      * @param string $actionAttribute
      * @param string $valueType
      * @param string $attributeValue
-     *
      * @return \Magento\TargetRule\Model\Rule
      */
     private function createRuleModel(

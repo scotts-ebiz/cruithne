@@ -24,7 +24,7 @@ class GiftregistryTest extends AbstractBackendController
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -37,17 +37,17 @@ class GiftregistryTest extends AbstractBackendController
     public function testNewAction()
     {
         $this->dispatch('backend/admin/giftregistry/new');
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/<h1 class\="page-title">\s*New Gift Registry Type\s*<\/h1>/',
             $this->getResponse()->getBody()
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<a href="#magento_giftregistry_tabs_general_section_content"' .
             ' id="magento_giftregistry_tabs_general_section" name="general_section"' .
             ' title="' .$this->escaper->escapeHtmlAttr('General Information') .'"',
             $this->getResponse()->getBody()
         );
-        $this->assertContains(
+        $this->assertStringContainsString(
             '<a href="#magento_giftregistry_tabs_registry_attributes_content"' .
             ' id="magento_giftregistry_tabs_registry_attributes"' .
             ' name="registry_attributes" title="Attributes"',

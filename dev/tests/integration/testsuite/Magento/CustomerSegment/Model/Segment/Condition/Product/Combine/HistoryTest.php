@@ -34,7 +34,7 @@ class HistoryTest extends \PHPUnit\Framework\TestCase
     /**
      * {@inheritdoc}
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = Bootstrap::getObjectManager();
         /** @var SegmentFactory $segmentFactory */
@@ -117,7 +117,7 @@ class HistoryTest extends \PHPUnit\Framework\TestCase
     /**
      * {@inheritdoc}
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->segment->delete(); // should be replaced after implementation of segment repository
     }
