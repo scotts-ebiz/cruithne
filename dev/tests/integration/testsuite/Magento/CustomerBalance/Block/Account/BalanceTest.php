@@ -40,7 +40,7 @@ class BalanceTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -54,7 +54,7 @@ class BalanceTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->customerSession->setCustomerId(null);
 
@@ -90,6 +90,6 @@ class BalanceTest extends TestCase
             ),
             sprintf('Text "%s" wasn\'t found.', __('Your balance is:'))
         );
-        $this->assertContains($amount, $blockHtml);
+        $this->assertStringContainsString($amount, $blockHtml);
     }
 }

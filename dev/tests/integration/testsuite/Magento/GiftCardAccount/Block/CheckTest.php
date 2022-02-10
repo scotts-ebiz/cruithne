@@ -47,7 +47,7 @@ class CheckTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -63,7 +63,7 @@ class CheckTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->registry->unregister('current_giftcardaccount');
 
@@ -128,7 +128,7 @@ class CheckTest extends TestCase
         $giftCardAccount = $this->giftCardAccountFactory->create();
         $this->registerGiftCardAccount($giftCardAccount);
         $html = $this->block->toHtml();
-        $this->assertContains((string)__('Please enter a valid gift card code.'), strip_tags($html));
+        $this->assertStringContainsString((string)__('Please enter a valid gift card code.'), strip_tags($html));
     }
 
     /**

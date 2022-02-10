@@ -29,7 +29,7 @@ class GenerateGiftCardAccountsTest extends \PHPUnit\Framework\TestCase
      */
     private $objectManager;
 
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = Bootstrap::getObjectManager();
     }
@@ -118,7 +118,7 @@ class GenerateGiftCardAccountsTest extends \PHPUnit\Framework\TestCase
         $this->assertArrayHasKey('email_sent', $productOptions);
         $this->assertArrayHasKey('giftcard_created_codes', $productOptions);
         $this->assertEquals('1', $productOptions['email_sent']);
-        $this->assertEquals(2, count($productOptions['giftcard_created_codes']));
+        $this->assertCount(2, $productOptions['giftcard_created_codes']);
     }
 
     /**
@@ -147,7 +147,7 @@ class GenerateGiftCardAccountsTest extends \PHPUnit\Framework\TestCase
         $this->assertArrayHasKey('email_sent', $productOptions);
         $this->assertArrayHasKey('giftcard_created_codes', $productOptions);
         $this->assertEquals('1', $productOptions['email_sent']);
-        $this->assertEquals(2, count($productOptions['giftcard_created_codes']));
+        $this->assertCount(2, $productOptions['giftcard_created_codes']);
     }
 
     /**
