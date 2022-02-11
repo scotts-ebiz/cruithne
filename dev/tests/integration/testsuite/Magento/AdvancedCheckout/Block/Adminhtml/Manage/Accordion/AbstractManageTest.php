@@ -44,7 +44,7 @@ abstract class AbstractManageTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -58,7 +58,7 @@ abstract class AbstractManageTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->registry->unregister('checkout_current_customer');
         $this->registry->unregister('checkout_current_store');

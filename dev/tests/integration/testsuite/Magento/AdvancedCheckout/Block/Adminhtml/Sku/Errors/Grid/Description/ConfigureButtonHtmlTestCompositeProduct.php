@@ -21,7 +21,7 @@ class ConfigureButtonHtmlTestCompositeProduct extends AbstractConfigureButtonHtm
     /**
      * @inheritdoc
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass(): void
     {
         parent::setUpBeforeClass();
 
@@ -45,8 +45,8 @@ class ConfigureButtonHtmlTestCompositeProduct extends AbstractConfigureButtonHtm
     {
         $this->prepareBlock('bundle-product-checkbox-options');
         $result = $this->block->getConfigureButtonHtml();
-        $this->assertNotContains('disabled="disabled', $result);
-        $this->assertContains('onclick="addBySku.configure', $result);
-        $this->assertContains((string)__('Configure'), strip_tags($result));
+        $this->assertStringNotContainsString('disabled="disabled', $result);
+        $this->assertStringContainsString('onclick="addBySku.configure', $result);
+        $this->assertStringContainsString((string)__('Configure'), strip_tags($result));
     }
 }

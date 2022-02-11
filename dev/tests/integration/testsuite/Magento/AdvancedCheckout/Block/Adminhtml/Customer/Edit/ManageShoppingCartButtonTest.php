@@ -39,7 +39,7 @@ class ManageShoppingCartButtonTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -56,7 +56,7 @@ class ManageShoppingCartButtonTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->registry->unregister(RegistryConstants::CURRENT_CUSTOMER_ID);
 
@@ -81,6 +81,6 @@ class ManageShoppingCartButtonTest extends TestCase
         $this->registry->register(RegistryConstants::CURRENT_CUSTOMER_ID, 1);
         $data = $this->button->getButtonData();
         $this->assertEquals(__('Manage Shopping Cart'), $data['label']);
-        $this->assertContains('checkout/index/index/customer/1/', $data['on_click']);
+        $this->assertStringContainsString('checkout/index/index/customer/1/', $data['on_click']);
     }
 }
