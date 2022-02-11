@@ -46,7 +46,7 @@ class CustomerSaveAfterObserverTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->eventManager = $this->objectManager->get(ManagerInterface::class);

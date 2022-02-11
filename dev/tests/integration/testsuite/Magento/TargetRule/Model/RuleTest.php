@@ -20,7 +20,7 @@ class RuleTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritDoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = \Magento\TestFramework\Helper\Bootstrap::getObjectManager();
         $this->_model = $this->objectManager->create(\Magento\TargetRule\Model\Rule::class);
@@ -81,10 +81,11 @@ class RuleTest extends \PHPUnit\Framework\TestCase
     /**
      * Test invalid rule type
      *
-     * @expectedException \Magento\Framework\Exception\LocalizedException
      */
     public function testValidateDataOnInvalidType()
     {
+        $this->expectException(\Magento\Framework\Exception\LocalizedException::class);
+
         $data = new \Magento\Framework\DataObject();
         $data->setRule(['actions' => ['test' => ['type' => 'Magento\TargetRule\Invalid']]]);
         $this->_model->validateData($data);

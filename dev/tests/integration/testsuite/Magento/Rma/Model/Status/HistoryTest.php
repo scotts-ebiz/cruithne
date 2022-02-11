@@ -34,7 +34,7 @@ class HistoryTest extends \PHPUnit\Framework\TestCase
     /**
      * @inheritdoc
      */
-    public function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->transportBuilder = $this->objectManager->get(TransportBuilderMock::class);

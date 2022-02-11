@@ -67,7 +67,7 @@ class HistoryEmailTemplateTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -91,7 +91,7 @@ class HistoryEmailTemplateTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if ($this->moduleManager->isEnabled('Magento_Email')) {
             $this->mutableScopeConfig->clean();
@@ -142,7 +142,7 @@ class HistoryEmailTemplateTest extends TestCase
         $message = $this->transportBuilder->getSentMessage();
         $this->assertNotNull($message);
         $this->assertMessageSender($message, $expectedData['sender']);
-        $this->assertContains(
+        $this->assertStringContainsString(
             $expectedData['text'],
             $message->getBody()->getParts()[0]->getRawContent()
         );

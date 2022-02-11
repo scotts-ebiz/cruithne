@@ -45,7 +45,7 @@ class ItemsTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -59,7 +59,7 @@ class ItemsTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $this->registry->unregister('checkout_current_quote');
 
@@ -129,8 +129,8 @@ class ItemsTest extends TestCase
     {
         $item = $this->getQuoteItem('test_order_with_simple_product_without_address');
         $result = $this->block->getConfigureButtonHtml($item);
-        $this->assertContains('scalable disabled', $result);
-        $this->assertContains('disabled="disabled"', $result);
+        $this->assertStringContainsString('scalable disabled', $result);
+        $this->assertStringContainsString('disabled="disabled"', $result);
     }
 
     /**
@@ -142,10 +142,7 @@ class ItemsTest extends TestCase
     {
         $item = $this->getQuoteItem('test_cart_with_bundle');
         $result = $this->block->getConfigureButtonHtml($item);
-        $this->assertContains(
-            sprintf('onclick="checkoutObj.showQuoteItemConfiguration(%s)"', $item->getId()),
-            $result
-        );
+        $this->assertStringContainsString(sprintf('onclick="checkoutObj.showQuoteItemConfiguration(%s)"', $item->getId()), $result);
     }
 
     /**
