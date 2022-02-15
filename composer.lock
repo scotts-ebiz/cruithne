@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "08881b990810cfe02ff5564815892b73",
+    "content-hash": "c98a785b5d3df87c4287d3d6b43e6370",
     "packages": [
         {
             "name": "akeneo/api-php-client",
@@ -5233,6 +5233,11 @@
                 "ext-imagick": "Use Image Magick >=3.0.0 as an optional alternative image processing library"
             },
             "type": "magento2-library",
+            "extra": {
+                "patches_applied": {
+                    "MDVA-43395": "patches/composer/MDVA-43395_magento-framework.patch"
+                }
+            },
             "autoload": {
                 "files": [
                     "registration.php"
@@ -10611,6 +10616,11 @@
                 "magento/module-theme": "101.0.*"
             },
             "type": "magento2-module",
+            "extra": {
+                "patches_applied": {
+                    "MDVA-43395": "patches/composer/MDVA-43395_magento-module-email.patch"
+                }
+            },
             "autoload": {
                 "files": [
                     "registration.php"
@@ -21959,12 +21969,12 @@
             "version": "1.1.8",
             "source": {
                 "type": "git",
-                "url": "https://github.com/allure-framework/allure-php-commons.git",
+                "url": "https://github.com/allure-framework/allure-php-api.git",
                 "reference": "5ae2deac1c7e1b992cfa572167370de45bdd346d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/allure-framework/allure-php-commons/zipball/5ae2deac1c7e1b992cfa572167370de45bdd346d",
+                "url": "https://api.github.com/repos/allure-framework/allure-php-api/zipball/5ae2deac1c7e1b992cfa572167370de45bdd346d",
                 "reference": "5ae2deac1c7e1b992cfa572167370de45bdd346d",
                 "shasum": ""
             },
@@ -22648,6 +22658,7 @@
                 }
             ],
             "description": "Guzzle6 transport for Vault PHP client",
+            "abandoned": true,
             "time": "2019-03-10T06:17:37+00:00"
         },
         {
