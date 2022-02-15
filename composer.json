@@ -110,6 +110,9 @@
         "patches": {
             "zaius/zaius-magento-2": {
                 "Zaius Duplicate Entries": "patches/composer/zaius_duplicate_patch.diff"
+            },
+            "magento/product-enterprise-edition": {
+                "MDVA-43395_EE_2.4.3-p1_COMPOSER_v1": "patches/magento/MDVA-43395_EE_2.4.3-p1_COMPOSER_v1.patch"
             }
         }
     },
