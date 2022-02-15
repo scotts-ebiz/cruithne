@@ -165,7 +165,7 @@ define(
                             {'label': 'Delaware', 'value': 'DE'},
                             {'label': 'District of Columbia', 'value': 'DC'},
                             {'label': 'Florida', 'value': 'FL'},
-                            {'label': 'Georgia', 'value': 'GA}'},
+                            {'label': 'Georgia', 'value': 'GA'},
                             {'label': 'Hawaii', 'value': 'HI'},
                             {'label': 'Idaho', 'value': 'ID'},
                             {'label': 'Illinois', 'value': 'IL'},

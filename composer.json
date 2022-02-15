@@ -110,6 +110,12 @@
         "patches": {
             "zaius/zaius-magento-2": {
                 "Zaius Duplicate Entries": "patches/composer/zaius_duplicate_patch.diff"
+            },
+            "magento/framework": {
+                "MDVA-43395": "patches/composer/MDVA-43395_magento-framework.patch"
+            },
+            "magento/module-email": {
+                "MDVA-43395": "patches/composer/MDVA-43395_magento-module-email.patch"
             }
         }
     },
