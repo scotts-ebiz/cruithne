@@ -28,7 +28,7 @@ class DeleteTest extends AbstractBackendController
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -48,7 +48,7 @@ class DeleteTest extends AbstractBackendController
         $this->assertNotNull($attribute->getId());
         $this->dispatchDeleteCustomerAttributeRequest($attribute->getId());
         $this->assertSessionMessages(
-            $this->contains((string)__('You deleted the customer attribute.')),
+            $this->containsEqual((string)__('You deleted the customer attribute.')),
             MessageInterface::TYPE_SUCCESS
         );
         $this->assertRedirect($this->stringContains('backend/admin/customer_attribute/index'));
@@ -63,7 +63,7 @@ class DeleteTest extends AbstractBackendController
         $this->assertNotNull($attribute->getId());
         $this->dispatchDeleteCustomerAttributeRequest($attribute->getId());
         $this->assertSessionMessages(
-            $this->contains((string)__('You cannot delete this attribute.')),
+            $this->containsEqual((string)__('You cannot delete this attribute.')),
             MessageInterface::TYPE_ERROR
         );
         $this->assertRedirect($this->stringContains('backend/admin/customer_attribute/index'));
@@ -80,7 +80,7 @@ class DeleteTest extends AbstractBackendController
         $this->assertNotNull($attribute->getId());
         $this->dispatchDeleteCustomerAttributeRequest($attribute->getId());
         $this->assertSessionMessages(
-            $this->contains((string)__('You cannot delete this attribute.')),
+            $this->containsEqual((string)__('You cannot delete this attribute.')),
             MessageInterface::TYPE_ERROR
         );
         $this->assertRedirect($this->stringContains('backend/admin/customer_attribute/index'));

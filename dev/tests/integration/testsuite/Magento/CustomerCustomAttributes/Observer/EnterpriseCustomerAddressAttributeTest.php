@@ -49,7 +49,7 @@ class EnterpriseCustomerAddressAttributeTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         parent::setUp();
 
@@ -64,7 +64,7 @@ class EnterpriseCustomerAddressAttributeTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         if ($this->attribute instanceof Attribute) {
             $this->quoteResource->deleteAttribute($this->attribute);

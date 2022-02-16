@@ -89,7 +89,7 @@ class CategoryTreeTest extends TestCase
     /**
      * @inheritdoc
      */
-    protected function setUp()
+    protected function setUp(): void
     {
         $this->objectManager = Bootstrap::getObjectManager();
         $this->registry = $this->objectManager->get(Registry::class);
@@ -221,7 +221,7 @@ QUERY;
     /**
      * @inheritdoc
      */
-    protected function tearDown()
+    protected function tearDown(): void
     {
         $searchCriteria = $this->searchCriteriaBuilder
             ->addFilter('name', ['Recreated Subcategory', 'Child category 1', 'Child category 2'], 'in')
