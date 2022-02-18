@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c98a785b5d3df87c4287d3d6b43e6370",
+    "content-hash": "556304d83bac10cebe623dc9f189df45",
     "packages": [
         {
             "name": "akeneo/api-php-client",
@@ -108,11 +108,11 @@
         },
         {
             "name": "akeneo/magento2-connector-enterprise",
-            "version": "101.8.2",
+            "version": "101.3.1",
             "source": {
                 "type": "git",
                 "url": "ssh://git@distribution.akeneo.com:443/magento2-connector-enterprise",
-                "reference": "68f0a53cfb058a1cb8b2bfd80a7531b5e244a617"
+                "reference": "c476eeddae76d336f34f6fa7e1aadcef54fe17ee"
             },
             "require": {
                 "akeneo/api-php-client-ee": "^6.0",
@@ -145,7 +145,7 @@
                 }
             ],
             "description": "Akeneo connector for Magento 2",
-            "time": "2021-09-01T08:47:51+00:00"
+            "time": "2021-02-17T12:44:31+00:00"
         },
         {
             "name": "amasty/base",
