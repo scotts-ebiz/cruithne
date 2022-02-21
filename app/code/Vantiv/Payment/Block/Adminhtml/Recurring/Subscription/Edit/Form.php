@@ -214,7 +214,7 @@ class Form extends \Magento\Backend\Block\Widget\Form\Generic
             'text',
             [
                 'name'     => 'postcode',
-                'label'    => __('ZIP Code'),
+                'label'    => __('Zip/Postal Code'),
                 'required' => true,
                 'value'    => $subscription->getBillingAddress()->getPostcode(),
                 'class'    => 'validate-length maximum-length-20',
