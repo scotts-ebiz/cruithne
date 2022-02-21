@@ -67,7 +67,7 @@
 
                 <eprotect_paypage_id></eprotect_paypage_id>
                 <eprotect_style>empty</eprotect_style>
-                <eprotect_height>autoAdjustHeight</eprotect_height>
+                <eprotect_height>200px</eprotect_height>
                 <eprotect_num_years>8</eprotect_num_years>
                 <eprotect_tooltip_text><![CDATA[A CVV is the 3 digit code on the back of your Visa, MasterCard and Discover or a 4 digit code on the front of your American Express]]></eprotect_tooltip_text>
                 <eprotect_tab_index_account_number>1</eprotect_tab_index_account_number>
