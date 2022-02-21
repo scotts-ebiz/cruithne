@@ -5,7 +5,6 @@
  */
 namespace Vantiv\Payment\Gateway\Cc;
 
-use Magento\Payment\Gateway\Http\ClientException;
 use Vantiv\Payment\Gateway\Common\Client\HttpClient as Client;
 use Vantiv\Payment\Gateway\Common\SubjectReader as Reader;
 use Vantiv\Payment\Gateway\Cc\Builder\RegisterTokenBuilder as Builder;
@@ -83,8 +82,6 @@ class RegisterTokenCommand extends AbstractCommand
      * Run token command.
      *
      * @param array $subject
-     *
-     * @throws CommandException|ClientException
      */
     public function execute(array $subject)
     {
@@ -106,7 +103,7 @@ class RegisterTokenCommand extends AbstractCommand
             ResponseParserInterface::TOKEN_SUCCESSFULLY_REGISTERED,
         ];
 
-        if (!in_array($parser->getResponse(), $successResponses, true)) {
+        if (!in_array($parser->getResponse(), $successResponses)) {
             throw new CommandException(__($parser->getMessage()));
         }
 
@@ -124,8 +121,8 @@ class RegisterTokenCommand extends AbstractCommand
             ? $subject['exp_year']
             : '--';
 
-        $ccType = $parser->getLitleTokenType()
-            ?: ($subject['cc_type'] ?? null);
+        $ccType = $parser->getLitleTokenType() ? $parser->getLitleTokenType() :
+            isset($subject['cc_type']) ? $subject['cc_type'] : null;
 
         $details = [
             'ccType' => $ccType,

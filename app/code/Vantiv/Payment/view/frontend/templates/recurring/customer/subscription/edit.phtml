@@ -86,9 +86,9 @@
             </div>
         </div>
         <div class="field zip required">
-            <label class="label" for="zip"><span><?php echo __('Zip/Postal Code') ?></span></label>
+            <label class="label" for="zip"><span><?php echo __('ZIP Code') ?></span></label>
             <div class="control">
-                <input type="text" name="postcode" data-validate="{required : true, maxlength : 20}" value="<?php echo $block->escapeHtml($block->getSubscription()->getBillingAddress()->getPostcode()) ?>" title="<?php echo __('Zip/Postal Code') ?>" id="zip" class="input-text validate-zip-international"/>
+                <input type="text" name="postcode" data-validate="{required : true, maxlength : 20}" value="<?php echo $block->escapeHtml($block->getSubscription()->getBillingAddress()->getPostcode()) ?>" title="<?php echo __('ZIP Code') ?>" id="zip" class="input-text validate-zip-international"/>
             </div>
         </div>
         <div class="field country required">
