@@ -16,7 +16,7 @@
         "composer/composer": "@alpha",
         "cweagans/composer-patches": "^1.6",
         "dotmailer/dotmailer-magento2-extension": "4.4.2",
-        "gigya/magento2-im": "5.6.4",
+        "gigya/magento2-im": "5.6.1",
         "magento/composer-root-update-plugin": "^1.1",
         "magento/product-enterprise-edition": "2.3.7-p2",
         "magepal/magento2-googletagmanager": "^2.6",
