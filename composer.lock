@@ -1983,11 +1983,11 @@
         },
         {
             "name": "gigya/magento2-im",
-            "version": "5.6.1",
+            "version": "5.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gigya/Magento-2",
-                "reference": "24e6940b0d474529bf4f6bf949bea7e75740e320"
+                "reference": "1f25cca062d5499d41c38fbad8b0cbb944a78365"
             },
             "require": {
                 "aws/aws-sdk-php": "~3.0",
@@ -2037,7 +2037,7 @@
                 }
             ],
             "description": "Gigya Identity Management for Magento 2",
-            "time": "2020-08-11T12:08:48+00:00"
+            "time": "2021-02-14T14:00:34+00:00"
         },
         {
             "name": "gigya/php-sdk",
