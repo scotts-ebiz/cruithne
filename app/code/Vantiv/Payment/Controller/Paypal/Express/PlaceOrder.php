@@ -6,7 +6,6 @@
  */
 namespace Vantiv\Payment\Controller\Paypal\Express;
 
-use Magento\Framework\Exception\LocalizedException;
 use Magento\Paypal\Model\Api\ProcessableException as ApiProcessableException;
 
 class PlaceOrder extends AbstractExpress
@@ -55,14 +54,14 @@ class PlaceOrder extends AbstractExpress
      * Submit the order
      *
      * @return void
-     * @throws LocalizedException
+     * @throws \Magento\Framework\Exception\LocalizedException
      */
     public function execute()
     {
         if ($this->isValidationRequired() &&
             !$this->agreementsValidator->isValid(array_keys($this->getRequest()->getPost('agreement', [])))
         ) {
-            $e = new LocalizedException(
+            $e = new \Magento\Framework\Exception\LocalizedException(
                 __('Please agree to all the terms and conditions before placing the order.')
             );
             $this->messageManager->addExceptionMessage(
@@ -154,7 +153,6 @@ class PlaceOrder extends AbstractExpress
      * Redirect customer back to PayPal with the same token
      *
      * @return void
-     * @throws LocalizedException
      */
     protected function _redirectSameToken()
     {
