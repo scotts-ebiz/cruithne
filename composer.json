@@ -16,7 +16,7 @@
         "composer/composer": "@alpha",
         "cweagans/composer-patches": "^1.6",
         "dotmailer/dotmailer-magento2-extension": "4.4.2",
-        "gigya/magento2-im": "5.6.1",
+        "gigya/magento2-im": "5.6.4",
         "magento/composer-root-update-plugin": "^1.1",
         "magento/product-enterprise-edition": "2.3.7-p2",
         "magepal/magento2-googletagmanager": "^2.6",
@@ -112,10 +112,12 @@
                 "Zaius Duplicate Entries": "patches/composer/zaius_duplicate_patch.diff"
             },
             "magento/framework": {
-                "MDVA-43395": "patches/composer/MDVA-43395_magento-framework.patch"
+                "MDVA-43395": "patches/composer/MDVA-43395_magento-framework.patch",
+                "MDVA-43443": "patches/composer/MDVA-43443_magento-framework.patch"
             },
             "magento/module-email": {
-                "MDVA-43395": "patches/composer/MDVA-43395_magento-module-email.patch"
+                "MDVA-43395": "patches/composer/MDVA-43395_magento-module-email.patch",
+                "MDVA-43443": "patches/composer/MDVA-43443_magento-module-email.patch"
             }
         }
     },
