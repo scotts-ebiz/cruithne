@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c98a785b5d3df87c4287d3d6b43e6370",
+    "content-hash": "04871a3edc061a59b569daa21048892b",
     "packages": [
         {
             "name": "akeneo/api-php-client",
@@ -104,6 +104,7 @@
                 }
             ],
             "description": "Akeneo PIM ENTERPRISE client for the API",
+            "abandoned": "akeneo/api-php-client",
             "time": "2020-10-09T15:07:17+00:00"
         },
         {
@@ -5235,7 +5236,8 @@
             "type": "magento2-library",
             "extra": {
                 "patches_applied": {
-                    "MDVA-43395": "patches/composer/MDVA-43395_magento-framework.patch"
+                    "MDVA-43395": "patches/composer/MDVA-43395_magento-framework.patch",
+                    "MDVA-43443": "patches/composer/MDVA-43443_magento-framework.patch"
                 }
             },
             "autoload": {
@@ -10618,7 +10620,8 @@
             "type": "magento2-module",
             "extra": {
                 "patches_applied": {
-                    "MDVA-43395": "patches/composer/MDVA-43395_magento-module-email.patch"
+                    "MDVA-43395": "patches/composer/MDVA-43395_magento-module-email.patch",
+                    "MDVA-43443": "patches/composer/MDVA-43443_magento-module-email.patch"
                 }
             },
             "autoload": {
