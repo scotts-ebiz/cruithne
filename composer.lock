@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "04871a3edc061a59b569daa21048892b",
+    "content-hash": "91840aa95f3edcc2497548962eedd984",
     "packages": [
         {
             "name": "akeneo/api-php-client",
@@ -421,49 +421,23 @@
             "time": "2020-04-20T17:47:06+00:00"
         },
         {
-            "name": "avalara/avatax",
-            "version": "15.5.2",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/avadev/AvaTax-Calc-SOAP-PHP.git",
-                "reference": "5f1e6539c6c086be6ac137a824e265c646aef452"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/avadev/AvaTax-Calc-SOAP-PHP/zipball/5f1e6539c6c086be6ac137a824e265c646aef452",
-                "reference": "5f1e6539c6c086be6ac137a824e265c646aef452",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.0"
-            },
-            "type": "library",
-            "autoload": {
-                "psr-4": {
-                    "AvaTax\\": "AvaTax"
-                }
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "description": "A set of classes to assist with integration to the Avalara AvaTax SOAP API.",
-            "time": "2017-05-25T15:46:32+00:00"
-        },
-        {
             "name": "avalara/avatax-magento",
-            "version": "1.5.16",
+            "version": "2.2.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/avadev/Avalara-AvaTax-for-Magento2.git",
-                "reference": "51e72380d0a886db9e247ad133d8a0ae3b25c85f"
+                "reference": "d8671f7ad37636f59db0daa583f0d477c994edf7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/avadev/Avalara-AvaTax-for-Magento2/zipball/51e72380d0a886db9e247ad133d8a0ae3b25c85f",
-                "reference": "51e72380d0a886db9e247ad133d8a0ae3b25c85f",
+                "url": "https://api.github.com/repos/avadev/Avalara-AvaTax-for-Magento2/zipball/d8671f7ad37636f59db0daa583f0d477c994edf7",
+                "reference": "d8671f7ad37636f59db0daa583f0d477c994edf7",
                 "shasum": ""
             },
             "require": {
-                "avalara/avatax": "^15.5.2.0",
-                "magento/framework": "^100.1.0|101.0.*|^102.0.0"
+                "avalara/avataxclient": "^20.12.1",
+                "laminas/laminas-serializer": "*",
+                "magento/framework": "^100.1.0|101.0.*|>=102.0.0"
             },
             "type": "magento2-module",
             "autoload": {
@@ -479,7 +453,85 @@
                 "OSL-3.0"
             ],
             "description": "Magento module for Avalara's AvaTax suite of business tax calculation and processing services. Uses the AvaTax REST v2 API.",
-            "time": "2020-07-15T10:18:37+00:00"
+            "support": {
+                "source": "https://github.com/avadev/Avalara-AvaTax-for-Magento2/tree/2.2.7"
+            },
+            "time": "2021-11-22T09:18:02+00:00"
+        },
+        {
+            "name": "avalara/avataxclient",
+            "version": "20.12.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/avadev/AvaTax-REST-V2-PHP-SDK.git",
+                "reference": "bf2f65121d8f1e73485b10ebfe121e58eb8c23e2"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/avadev/AvaTax-REST-V2-PHP-SDK/zipball/bf2f65121d8f1e73485b10ebfe121e58eb8c23e2",
+                "reference": "bf2f65121d8f1e73485b10ebfe121e58eb8c23e2",
+                "shasum": ""
+            },
+            "require": {
+                "guzzlehttp/guzzle": "~6",
+                "php": ">=5.5.9"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "5.7"
+            },
+            "type": "library",
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ],
+                "exclude-from-classmap": [
+                    "src/AvaTaxClient.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "Apache-2.0"
+            ],
+            "authors": [
+                {
+                    "name": "Avalara Developer Relations",
+                    "homepage": "https://developer.avalara.com"
+                },
+                {
+                    "name": "Community Developer Forum",
+                    "homepage": "https://community.avalara.com"
+                },
+                {
+                    "name": "Ted Spence",
+                    "email": "ted.spence@avalara.com"
+                },
+                {
+                    "name": "Bob Maidens",
+                    "email": "bob.maidens@avalara.com"
+                },
+                {
+                    "name": "Genevieve Conty",
+                    "email": "genevieve.conty@avalara.com"
+                }
+            ],
+            "description": "Client library for Avalara's AvaTax suite of business tax calculation and processing services. Uses the REST v2 API.",
+            "homepage": "https://developer.avalara.com/",
+            "keywords": [
+                "AvaTax",
+                "avalara",
+                "ecommerce",
+                "sales compliance",
+                "tax",
+                "tax calculation",
+                "taxes"
+            ],
+            "support": {
+                "docs": "https://developer.avalara.com",
+                "forum": "https://community.avalara.com",
+                "issues": "https://github.com/avadev/AvaTax-REST-V2-PHP-SDK/issues",
+                "source": "https://github.com/avadev/AvaTax-REST-V2-PHP-SDK"
+            },
+            "time": "2020-12-18T01:59:57+00:00"
         },
         {
             "name": "aws/aws-crt-php",
@@ -1983,11 +2035,11 @@
         },
         {
             "name": "gigya/magento2-im",
-            "version": "5.6.1",
+            "version": "5.6.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/gigya/Magento-2",
-                "reference": "24e6940b0d474529bf4f6bf949bea7e75740e320"
+                "reference": "1f25cca062d5499d41c38fbad8b0cbb944a78365"
             },
             "require": {
                 "aws/aws-sdk-php": "~3.0",
@@ -2037,7 +2089,7 @@
                 }
             ],
             "description": "Gigya Identity Management for Magento 2",
-            "time": "2020-08-11T12:08:48+00:00"
+            "time": "2021-02-14T14:00:34+00:00"
         },
         {
             "name": "gigya/php-sdk",
@@ -26539,5 +26591,5 @@
     "prefer-lowest": false,
     "platform": [],
     "platform-dev": [],
-    "plugin-api-version": "1.1.0"
+    "plugin-api-version": "2.1.0"
 }
