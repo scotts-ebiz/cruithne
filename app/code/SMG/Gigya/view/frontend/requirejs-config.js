@@ -4,7 +4,7 @@ var config =
         {
             '*':
                 {
-                    'Gigya_GigyaIM/js/gigya_script':'SMG_Gigya/js/gigya_script'
+                    gigya_script :'SMG_Gigya/js/gigya_script'
                 }
         }
 };
