@@ -4,7 +4,7 @@ var config =
         {
             '*':
                 {
-                    'ClassyLlama_AvaTax/js/gigya_script':'SMG_Avatax/js/gigya_script'
+                    'Gigya_GigyaIM/js/gigya_script':'SMG_Gigya/js/gigya_script'
                 }
         }
 };
