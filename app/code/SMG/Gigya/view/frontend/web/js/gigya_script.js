@@ -134,7 +134,7 @@ define([
 			remember: remember
 		};
 
-		if ($('#gigya_login_post')) {
+		if ($('#gigya_login_post').length > 0) {
             $('[name=login_data]', '#gigya_login_post').val(JSON.stringify(loginData));
             $('[name=remember]', '#gigya_login_post').val(remember ? 1 : 0);
 
