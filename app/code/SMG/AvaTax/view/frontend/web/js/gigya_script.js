@@ -141,7 +141,9 @@ define([
             $('body').trigger('processStart');
             $('#gigya_login_post').submit();
         } else {
+            gigya_processing_customer_request = true;
 
+            gigyaMage2.Functions.gigyaAjaxSubmit(action, data, $('.gigya-loader-location'));
         }
 	};
 
