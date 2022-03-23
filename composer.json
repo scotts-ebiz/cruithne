@@ -12,11 +12,11 @@
     "require": {
         "akeneo/magento2-connector-enterprise": "101.*",
         "amasty/securityauth": "^1.1",
-        "avalara/avatax-magento": "^1.5",
+        "avalara/avatax-magento": "^2.2.2",
         "composer/composer": "@alpha",
         "cweagans/composer-patches": "^1.6",
         "dotmailer/dotmailer-magento2-extension": "4.4.2",
-        "gigya/magento2-im": "5.6.1",
+        "gigya/magento2-im": "5.6.4",
         "magento/composer-root-update-plugin": "^1.1",
         "magento/product-enterprise-edition": "2.3.7-p2",
         "magepal/magento2-googletagmanager": "^2.6",
