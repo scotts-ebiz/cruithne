@@ -810,6 +810,7 @@ class OrdersHelper
         if ($invoiceAmount && $invoiceAmount < 0) {
             $invoiceAmount = 0;
             $hdrDiscCondCode = 'Z616';
+            $hdrDiscPerc = '100';
         }
 
         // return
