@@ -339,6 +339,7 @@ return [
         'Dotdigitalgroup_Email' => 1,
         'Dotdigitalgroup_Chat' => 1,
         'Dotdigitalgroup_Enterprise' => 1,
+        'Facebook_BusinessExtension' => 1,
         'Gigya_GigyaIM' => 1,
         'Klarna_Core' => 1,
         'Klarna_Ordermanagement' => 1,
