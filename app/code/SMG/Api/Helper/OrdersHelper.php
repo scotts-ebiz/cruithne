@@ -807,7 +807,7 @@ class OrdersHelper
         }
 
         //COM-1603 Negative invoice amount being sent to SAP when coupon exceeds price
-        if ($invoiceAmount && $invoiceAmount < 0) {
+        if ($invoiceAmount == false || $invoiceAmount < 0) {
             $invoiceAmount = 0;
             $hdrDiscCondCode = 'Z616';
             $hdrDiscPerc = '100';
