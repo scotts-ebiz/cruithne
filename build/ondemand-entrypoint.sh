@@ -7,7 +7,7 @@
 set -euxo pipefail
 COMMAND="$@"
 
-git status
+#git status
 
 # Run Setup Upgrade
 su - magento -c '/var/www/html/magento2/bin/magento setup:upgrade'
@@ -24,7 +24,7 @@ su - magento -c '/var/www/html/magento2/bin/magento setup:static-content:deploy 
 su - magento -c '/var/www/html/magento2/bin/magento -v index:reindex'
 su - magento -c '/var/www/html/magento2/bin/magento -v cache:flush'
 
-git status
+#git status
 
 # Activate services
 service collector start

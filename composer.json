@@ -19,7 +19,7 @@
         "facebook/facebook-for-magento2": "^1.4",
         "gigya/magento2-im": "5.6.4",
         "magento/composer-root-update-plugin": "^1.1",
-        "magento/product-enterprise-edition": "2.3.7-p2",
+        "magento/product-enterprise-edition": "2.3.7-p3",
         "magepal/magento2-googletagmanager": "^2.6",
         "mageplaza/module-google-recaptcha": "^4.0",
         "mageplaza/module-smtp": "^4.0",
