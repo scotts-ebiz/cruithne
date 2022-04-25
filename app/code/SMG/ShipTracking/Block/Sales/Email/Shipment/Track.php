@@ -10,6 +10,8 @@ use Magento\Sales\Model\Order\Shipment\Track as TrackItem;
 use Magento\Framework\Phrase;
 use Magento\Framework\Exception\NoSuchEntityException;
 use SMG\ShipTracking\Model\ConfigProvider;
+use Magento\Sales\Model\OrderRepository;
+use Magento\Sales\Model\Order\ShipmentRepository;
 
 /**
  * Class Track
@@ -22,6 +24,10 @@ class Track extends Template
      */
     private $configProvider;
 
+    private $orderRepository;
+
+    private $shipmentRepository;
+
     /**
      * @param Template\Context $context
      * @param ConfigProvider $configProvider
@@ -30,9 +36,14 @@ class Track extends Template
     public function __construct(
         Template\Context $context,
         ConfigProvider $configProvider,
+        OrderRepository $orderRepository,
+        ShipmentRepository $shipmentRepository,
         array $data = []
     ) {
         parent::__construct($context, $data);
+
+        $this->orderRepository = $orderRepository;
+        $this->shipmentRepository = $shipmentRepository;
 
         $this->configProvider = $configProvider;
     }
@@ -63,5 +74,15 @@ class Track extends Template
         }
 
         return __($trackItem->getTitle());
+    }
+
+    public function getOrder($id)
+    {
+        return $this->orderRepository->get($id);
+    }
+
+    public function getShipment($id)
+    {
+        return $this->shipmentRepository->get($id);
     }
 }
