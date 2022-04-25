@@ -811,6 +811,7 @@ class OrdersHelper
             $invoiceAmount = 0;
             $hdrDiscCondCode = 'Z616';
             $hdrDiscPerc = '100';
+            unset($hdrDiscFixedAmount);
         }
 
         // return
