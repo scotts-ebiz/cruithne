@@ -1,5 +1,7 @@
-<?php $_shipment = $block->getShipment() ?>
-<?php $_order = $block->getOrder() ?>
+<?php $shipment_id = $block->getData('shipment_id')?>
+<?php $order_id = $block->getData('order_id')?>
+<?php $_shipment = $block->getShipment($shipment_id) ?>
+<?php $_order = $block->getOrder($order_id) ?>
 <?php if ($_shipment && $_order && $_shipment->getAllTracks()): ?>
 <table class="green"
    style="box-sizing: border-box; border-collapse: separate !important; mso-table-lspace: 0pt; mso-table-rspace: 0pt; width: 100%; background-color: #1d5632; padding: 0 40px;"
