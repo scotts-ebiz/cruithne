@@ -806,6 +806,14 @@ class OrdersHelper
             $invoiceAmount = '';
         }
 
+        //COM-1603 Negative invoice amount being sent to SAP when coupon exceeds price
+        if (floatval($invoiceAmount) <= 0) {
+            $invoiceAmount = 0;
+            $hdrDiscCondCode = 'Z616';
+            $hdrDiscPerc = '100';
+            unset($hdrDiscFixedAmount);
+        }
+
         // return
         return array_map('trim', [
             self::ORDER_NUMBER => $order->getIncrementId(),
