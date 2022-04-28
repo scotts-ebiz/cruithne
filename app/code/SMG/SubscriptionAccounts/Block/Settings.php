@@ -48,7 +48,13 @@ class Settings extends Template
      */
     public function getCustomerData()
     {
-        return $this->_customerSession->getCustomer()->getData();
+        $data = [];
+        $allData = $this->_customerSession->getCustomer()->getData();
+        $data['email'] = $allData['email'];
+        $data['firstname'] = $allData['firstname'];
+        $data['lastname'] = $allData['lastname'];
+
+        return $data;
     }
 
     /**
