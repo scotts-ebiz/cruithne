@@ -824,6 +824,20 @@ class Subscription implements SubscriptionInterface
             // Magento customer
             $customer = $sub->getCustomer();
 
+            $shippingAddresses = $account->shipping_addresses;
+            $shippingAddress = null;
+            $billingAddress = null;
+
+            if ($shippingAddresses) {
+                $shippingAddress = $shippingAddresses[count($shippingAddresses) - 1];
+            }
+
+            $billingInfo = $account->billing_info;
+
+            if ($billingInfo && $billingInfo->getValues()['address']) {
+                $billingAddress = $billingInfo->getValues()['address'];
+            }
+
             $recurlySubs = $account->subscriptions->get();
             $invoice = null;
             $paid = 0;
@@ -863,8 +877,12 @@ class Subscription implements SubscriptionInterface
             ]);
 
             // Get addresses from recurly
-            $billing = $invoice->getValues()['address']->getValues();
-            $shipping = $invoice->getValues()['shipping_address']->getValues();
+            $billing = $billingAddress->getValues();
+            $shipping = $shippingAddress->getValues();
+
+            if (!$billing || !$shipping) {
+                throw new SubscriptionException("Could not retrieve shipping or billing address for customer.");
+            }
 
             if (empty($billing['phone'])) {
                 $billing['phone'] = $shipping['phone'];
