@@ -824,19 +824,15 @@ class Subscription implements SubscriptionInterface
             // Magento customer
             $customer = $sub->getCustomer();
 
-            $shippingAddresses = $account->shipping_addresses;
+            $shippingAddresses = $account->shipping_addresses->get();
             $shippingAddress = null;
             $billingAddress = null;
 
-            if ($shippingAddresses) {
-                $shippingAddress = $shippingAddresses[count($shippingAddresses) - 1];
+            if ($shippingAddresses->count()) {
+                $shippingAddress = $shippingAddresses->current();
             }
 
-            $billingInfo = $account->billing_info;
-
-            if ($billingInfo && $billingInfo->getValues()['address']) {
-                $billingAddress = $billingInfo->getValues()['address'];
-            }
+            $billingAddress = $account->billing_info->get();
 
             $recurlySubs = $account->subscriptions->get();
             $invoice = null;
@@ -885,7 +881,7 @@ class Subscription implements SubscriptionInterface
             }
 
             if (empty($billing['phone'])) {
-                $billing['phone'] = $shipping['phone'];
+                $billing['phone'] = null;
             }
 
             $this->_coreSession->setCheckoutShipping($this->formatAddressFromRecurlyInfo($shipping));
