@@ -881,7 +881,7 @@ class Subscription implements SubscriptionInterface
             }
 
             if (empty($billing['phone'])) {
-                $billing['phone'] = null;
+                $billing['phone'] = $shipping['phone'];
             }
 
             $this->_coreSession->setCheckoutShipping($this->formatAddressFromRecurlyInfo($shipping));
