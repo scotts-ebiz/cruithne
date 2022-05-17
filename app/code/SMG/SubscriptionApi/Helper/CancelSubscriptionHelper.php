@@ -16,6 +16,7 @@ use Recurly_Client;
 use Recurly_Error;
 use Recurly_Invoice;
 use Recurly_Subscription;
+use Recurly_InvoiceList;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch as SapOrderBatchResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\Sap\Model\SapOrderBatchFactory;
@@ -209,7 +210,7 @@ class CancelSubscriptionHelper extends AbstractHelper
                     // Order has shipped and cannot be refunded, however, we
                     // should still cancel the Recurly subscription.
                     $this->_logger->info($this->_loggerPrefix . "Order {$order->getId()} ({$order->getIncrementId()}) has shipments so we will cancel the Recurly subscription without a refund...");
-                    $this->cancelRecurlySubscription($subscriptionOrder, false);
+                    $this-> cancelRecurlySubscription($subscriptionOrder, false);
 
                     continue;
                 }
@@ -274,6 +275,14 @@ class CancelSubscriptionHelper extends AbstractHelper
                 // Refund a partial amount
                 $this->_logger->info($this->_loggerPrefix . "Some orders have shipped so cancel the master subscription {$subscription->getData('subscription_id')} in Recurly with a partial refund...");
                 $this->cancelMasterRecurlySubscription($subscription, $refundAmount);
+            }
+
+            // Stop any past_due payments so they do not continue to try and collect
+            $pastDueInvoiceList = Recurly_InvoiceList::getForAccount($subscription->getData('gigya_id'), ['state' => 'past_due']);
+
+            /** @var Recurly_Invoice $i */
+            foreach ($pastDueInvoiceList as $i) {
+                $i->markFailed();
             }
 
             // Mark the subscription as canceled.
