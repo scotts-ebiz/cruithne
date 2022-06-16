@@ -112,17 +112,17 @@ class ShipmentHelper
      * @var SapOrderShipmentCollectionFactory
      */
     protected $_sapOrderShipmentCollectionFactory;
-    
+
     /**
      * @var scopeConfigInterface
      */
     protected $_scopeConfigInterface;
-    
+
     /**
      * @var sdk
      */
     protected $_sdk;
-    
+
     /**
      * @var SubscriptionOrderCollectionFactory
      */
@@ -264,7 +264,7 @@ class ShipmentHelper
              * @var \SMG\Sap\Model\SapOrder $sapOrder
              */
             $sapOrder = $this->_sapOrderResource->getSapOrderByOrderId($orderId);
-            
+
             foreach ($sapOrder->getSapOrderTrackingNumbers() as $trackingNumber)
             {
                 try {
@@ -284,7 +284,7 @@ class ShipmentHelper
                     if ($trackingNumberExists) {
                         continue;
                     }
-                      
+
                     // add the ship tracking number to the array
                     $shipTrackingNumbers[] = $trackingNumber;
 
@@ -357,22 +357,22 @@ class ShipmentHelper
                     }
                     } catch (Exception $ex) {
 
-                        $this->_logger->error($ex->getMessage());
-                        continue;
-                    }
+                    $this->_logger->error($ex->getMessage());
+                    continue;
                 }
+            }
 
             // check to see if the items were added
             if (!empty($items) && !empty($tracks))
             {
-                
+
                 // create shipment status
                 if($trackingNumberCustomExists){
                   $this->_shipOrderInterface->execute($orderId, $items, false, false, null, $tracks);
                 }else{
                    $this->_shipOrderInterface->execute($orderId, $items, true, false, null, $tracks);
                 }
-                try 
+                try
                 {
                     // Zaius apiKey
                     $this->zaiusApiCall($orderId);
@@ -404,7 +404,7 @@ class ShipmentHelper
         $trackingNumberCustomExists = false;
         foreach ($sapOrder->getSapOrderTrackingNumbers() as $trackingNumber)
         {
-            
+
             if ($trackingNumber == '123456789') {
                 $trackingNumberCustomExists = true;
             }
@@ -450,7 +450,7 @@ class ShipmentHelper
         {
             // get the current date
             $today = date('Y-m-d H:i:s');
-                
+
             // set the capture date
             $sapBatchOrder->setData('shipment_process_date', $today);
 

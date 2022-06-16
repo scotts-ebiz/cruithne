@@ -17,6 +17,7 @@ use Recurly_Error;
 use Recurly_Invoice;
 use Recurly_Subscription;
 use Recurly_InvoiceList;
+use SMG\Sap\Model\ResourceModel\SapOrderBatch;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch as SapOrderBatchResource;
 use SMG\Sap\Model\ResourceModel\SapOrderBatch\CollectionFactory as SapOrderBatchCollectionFactory;
 use SMG\Sap\Model\SapOrderBatchFactory;
@@ -205,8 +206,11 @@ class CancelSubscriptionHelper extends AbstractHelper
 
                     continue;
                 }
+                /** @var  $sapOrderBatch \SMG\Sap\Model\SapOrderBatch */
+                $sapOrderBatch = $this->_sapOrderBatchFactory->create();
+                $this->_sapOrderBatchResource->load($sapOrderBatch, $order->getId(), 'order_id');
 
-                if ($order->hasShipments()) {
+                if ($order->hasShipments() || $sapOrderBatch->getData('is_shipment')) {
                     // Order has shipped and cannot be refunded, however, we
                     // should still cancel the Recurly subscription.
                     $this->_logger->info($this->_loggerPrefix . "Order {$order->getId()} ({$order->getIncrementId()}) has shipments so we will cancel the Recurly subscription without a refund...");
@@ -238,8 +242,6 @@ class CancelSubscriptionHelper extends AbstractHelper
                     // it was a future seasonal order out of the shipping
                     // window. Just to be save, we clear any SAP batch
                     // information that may have been added.
-                    $sapOrderBatch = $this->_sapOrderBatchFactory->create();
-                    $this->_sapOrderBatchResource->load($sapOrderBatch, $order->getId(), 'order_id');
 
                     // Update the SAP order batch.
                     if ($sapOrderBatch->getId()) {
