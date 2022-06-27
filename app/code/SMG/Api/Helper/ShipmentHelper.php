@@ -207,6 +207,8 @@ class ShipmentHelper
         $sapBatchOrders = $this->_sapOrderBatchCollectionFactory->create();
         $sapBatchOrders->addFieldToFilter('is_shipment', ['eq' => true]);
         $sapBatchOrders->addFieldToFilter('shipment_process_date', ['null' => true]);
+        $sapBatchOrders->setOrder('order_process_date','DESC');
+        $sapBatchOrders->setPageSize(300);
 
         // loop through all of the batch capture records that have not been processed
         foreach ($sapBatchOrders as $sapBatchOrder)
@@ -218,7 +220,7 @@ class ShipmentHelper
                 // create the shipment request
                 $this->createShipmentRequest($orderId);
             }
-            catch (Exception $ex) {
+            catch (\Throwable $ex) {
                 // if an error occurs, log it and continue with the batch processing.
                 $this->_logger->error($ex->getMessage());
                 continue;
@@ -355,7 +357,7 @@ class ShipmentHelper
                         $shipmentItemCreation->setQty($sapOrderItem->getData('confirmed_qty'));
                         $items[] = $shipmentItemCreation;
                     }
-                    } catch (Exception $ex) {
+                    } catch (\Throwable $ex) {
 
                     $this->_logger->error($ex->getMessage());
                     continue;
@@ -377,7 +379,7 @@ class ShipmentHelper
                     // Zaius apiKey
                     $this->zaiusApiCall($orderId);
                 }
-                catch (Exception $ex)
+                catch (\Throwable $ex)
                 {
                     $this->_logger->error($ex->getMessage());
                     return;
