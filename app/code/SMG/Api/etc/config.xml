@@ -1,0 +1,12 @@
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="../../Store/etc/config.xsd">
+    <default>
+        <smg>
+            <shipment>
+                <active>false</active>
+                <email_days>14</email_days>
+                <mark_failed_days>14</mark_failed_days>
+                <batch_size>300</batch_size>
+            </shipment>
+        </smg>
+    </default>
+</config>

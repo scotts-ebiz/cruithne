@@ -1,0 +1,37 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <section id="shipmentapi" translate="label" type="text" sortOrder="3010" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Shipment Settings</label>
+            <tab>smg</tab>
+            <resource>SMG_Api::settings</resource>
+            <group id="settings" translate="label" type="text" sortOrder="1" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Shipment Settings</label>
+                <field id="active" translate="label" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                    <config_path>smg/shipment/active</config_path>
+                </field>
+                <field id="email_days" translate="label" type="text" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Don't Send Email After Days</label>
+                    <comment>If the shipment is this many days in the past do not send an email. 0 means everyone gets an email</comment>
+                    <validate>validate-digits validate-zero-or-greater validate-no-html-tags</validate>
+                    <config_path>smg/shipment/email_days</config_path>
+                </field>
+                <field id="mark_failed_days" translate="label" type="text" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Mark as Failed Days</label>
+                    <comment>If shipment hasn't been created after this amount of days, marks as processed with the time 0000-00-00 00:00:00 for further debugging. 0 means never do that.</comment>
+
+                    <validate>validate-digits validate-zero-or-greater validate-no-html-tags</validate>
+                    <config_path>smg/shipment/mark_failed_days</config_path>
+                </field>
+                <field id="batch_size" translate="label" type="text" sortOrder="12" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Batch Size</label>
+                    <comment>Number of orders to try and process with each try. 0 is no limit.</comment>
+                    <validate>validate-digits validate-zero-or-greater validate-no-html-tags</validate>
+                    <config_path>smg/shipment/batch_size</config_path>
+                </field>
+            </group>
+        </section>
+    </system>
+</config>

@@ -199,8 +199,13 @@ class ShipmentHelper
      */
     public function processShipment()
     {
+        if (!$this->getShipmentActive()) {
+            return $this->_responseHelper->createResponse(true, "The shipment process is not active.");
+        }
+
         // variables
         $orderStatusResponse = $this->_responseHelper->createResponse(true, "The shipment process completed successfully.");
+
 
         // get all of the records in the batch capture table
         // where the shipment has not been completed
@@ -208,7 +213,11 @@ class ShipmentHelper
         $sapBatchOrders->addFieldToFilter('is_shipment', ['eq' => true]);
         $sapBatchOrders->addFieldToFilter('shipment_process_date', ['null' => true]);
         $sapBatchOrders->setOrder('order_process_date','DESC');
-        $sapBatchOrders->setPageSize(300);
+
+        if ($this->getShipmentBatchSize()) {
+            $sapBatchOrders->setPageSize($this->getShipmentBatchSize());
+        }
+
 
         // loop through all of the batch capture records that have not been processed
         foreach ($sapBatchOrders as $sapBatchOrder)
@@ -364,12 +373,17 @@ class ShipmentHelper
                 }
             }
 
+            $shipDate = $order->getData('ship_start_date') ?: $order->getData('created_at');
+            $isOld = false;
+            if ($this->getDaysAfterWhichWeDoNotSendEmail()) {
+                $isOld = strtotime($shipDate) < strtotime('-'. $this->getDaysAfterWhichWeDoNotSendEmail() .'days');
+            }
+
             // check to see if the items were added
             if (!empty($items) && !empty($tracks))
             {
-
                 // create shipment status
-                if($trackingNumberCustomExists){
+                if($trackingNumberCustomExists || $isOld){
                   $this->_shipOrderInterface->execute($orderId, $items, false, false, null, $tracks);
                 }else{
                    $this->_shipOrderInterface->execute($orderId, $items, true, false, null, $tracks);
@@ -447,11 +461,20 @@ class ShipmentHelper
             }
         }
 
+        $shipDate = $order->getData('ship_start_date') ?: $order->getData('created_at');
+        $isOld = false;
+        if ($this->getDaysAfterWhichWeMarkAShipmentFailed()) {
+            $isOld = strtotime($shipDate) < strtotime('-'. $this->getDaysAfterWhichWeMarkAShipmentFailed() .'days');
+        }
         // if the total ordered equals the total shipped then update the sap batch order
-        if($totalShipmentQuantity >= $totalQuantityOrdered)
+        if($totalShipmentQuantity >= $totalQuantityOrdered || in_array($order->getData('state'), ['canceled', 'closed', 'complete']) || $isOld)
         {
             // get the current date
             $today = date('Y-m-d H:i:s');
+
+            if ($isOld) {
+                $today = '0000-00-00 00:00:00';
+            }
 
             // set the capture date
             $sapBatchOrder->setData('shipment_process_date', $today);
@@ -559,6 +582,26 @@ class ShipmentHelper
     private function getSendShipmentStatus()
     {
         return $this->_scopeConfigInterface->getValue('zaius_engage/status/send_shipment_status', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    }
+
+    private function getShipmentActive()
+    {
+        return $this->_scopeConfigInterface->getValue('smg/shipment/active', \Magento\Store\Model\ScopeInterface::SCOPE_STORE) == 'false'?false:true;
+    }
+
+    private function getDaysAfterWhichWeDoNotSendEmail()
+    {
+        return $this->_scopeConfigInterface->getValue('smg/shipment/email_days', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    }
+
+    private function getDaysAfterWhichWeMarkAShipmentFailed()
+    {
+        return $this->_scopeConfigInterface->getValue('smg/shipment/mark_failed_days', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
+    }
+
+    private function getShipmentBatchSize()
+    {
+        return $this->_scopeConfigInterface->getValue('smg/shipment/batch_size', \Magento\Store\Model\ScopeInterface::SCOPE_STORE);
     }
 
     private function getProductOrder($subscription_entity_id, $sales_order_id)
