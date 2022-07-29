@@ -835,13 +835,18 @@ class Subscription implements SubscriptionInterface
             $billingAddress = $account->billing_info->get();
 
             $recurlySubs = $account->subscriptions->get();
+            $subOrders = $sub->getSubscriptionOrders();
             $invoice = null;
             $paid = 0;
             $price = 0;
             $discount = 0;
             $tax = 0;
             $invoiceNumber = '';
+            $oldSeasonDates = [];
 
+            foreach ($subOrders as $subOrder) {
+                $oldSeasonDates[$subOrder->getData('season_slug')] = $subOrder->getData('ship_start_date');
+            }
             // Use recurly to populate totals
             foreach ($recurlySubs as $recurlySub) {
                 $planCode = $recurlySub->getValues()['plan']->getValues()['plan_code'];
@@ -856,7 +861,6 @@ class Subscription implements SubscriptionInterface
                     $invoiceNumber = $invoice->invoice_number;
                 } else if (in_array($state, ['active', 'future']) and $recurlySub->invoice) {
                     $invoice = $recurlySub->invoice->get();
-                    $recurlySubPrices[$planCode] = $invoice->subtotal_before_discount_in_cents;
                     $paid += $invoice->total_in_cents;
                     $price += $invoice->subtotal_before_discount_in_cents;
                     $discount -= $invoice->discount_in_cents;
@@ -913,6 +917,17 @@ class Subscription implements SubscriptionInterface
                 }
 
                 $newOrder->setData('price', $subscriptionOrderPrice)->save();
+
+                $oldDate = strtotime($oldSeasonDates[$newOrder->getData('season_slug')]);
+                $newDate = $newOrder->getData('ship_start_date');
+                $dateFloor = strtotime("-3 months", strtotime($newDate));
+
+                if (strtotime($newDate) < strtotime('today') && $oldDate > $dateFloor) {
+                    $newOrder->setData('ship_start_date', strtotime('+1 years', strtotime($newDate)));
+                    $newOrder->setData('ship_end_date', strtotime('+1 years', strtotime($newOrder->getData('ship_end_date'))));
+                    $newOrder->setData('application_start_date', strtotime('+1 years', strtotime($newOrder->getData('application_start_date'))));
+                    $newOrder->setData('application_end_date', strtotime('+1 years', strtotime($newOrder->getData('application_end_date'))));
+                }
 
                 $newOrders[] = $newOrder;
             }
