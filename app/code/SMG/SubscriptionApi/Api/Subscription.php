@@ -918,16 +918,19 @@ class Subscription implements SubscriptionInterface
 
                 $newOrder->setData('price', $subscriptionOrderPrice)->save();
 
+                // Check order dates
                 $oldDate = strtotime($oldSeasonDates[$newOrder->getData('season_slug')]);
                 $newDate = $newOrder->getData('ship_start_date');
                 $dateFloor = strtotime("-3 months", strtotime($newDate));
 
                 if (strtotime($newDate) < strtotime('today') && $oldDate > $dateFloor) {
-                    $newOrder->setData('ship_start_date', strtotime('+1 years', strtotime($newDate)));
-                    $newOrder->setData('ship_end_date', strtotime('+1 years', strtotime($newOrder->getData('ship_end_date'))));
-                    $newOrder->setData('application_start_date', strtotime('+1 years', strtotime($newOrder->getData('application_start_date'))));
-                    $newOrder->setData('application_end_date', strtotime('+1 years', strtotime($newOrder->getData('application_end_date'))));
+                    $newOrder->setData('ship_start_date', date('Y-m-d H:i:s', strtotime('+1 years', strtotime($newDate))));
+                    $newOrder->setData('ship_end_date', date('Y-m-d H:i:s', strtotime('+1 years', strtotime($newOrder->getData('ship_end_date')))));
+                    $newOrder->setData('application_start_date', date('Y-m-d H:i:s', strtotime('+1 years', strtotime($newOrder->getData('application_start_date')))));
+                    $newOrder->setData('application_end_date', date('Y-m-d H:i:s', strtotime('+1 years', strtotime($newOrder->getData('application_end_date')))));
                 }
+
+                $newOrder->save();
 
                 $newOrders[] = $newOrder;
             }
