@@ -19,7 +19,7 @@
         "facebook/facebook-for-magento2": "^1.4",
         "gigya/magento2-im": "5.6.4",
         "magento/composer-root-update-plugin": "^1.1",
-        "magento/product-enterprise-edition": "2.3.7-p3",
+        "magento/product-enterprise-edition": "2.3.7-p4",
         "magepal/magento2-googletagmanager": "^2.6",
         "mageplaza/module-google-recaptcha": "^4.0",
         "mageplaza/module-smtp": "^4.0",
@@ -111,14 +111,6 @@
         "patches": {
             "zaius/zaius-magento-2": {
                 "Zaius Duplicate Entries": "patches/composer/zaius_duplicate_patch.diff"
-            },
-            "magento/framework": {
-                "MDVA-43395": "patches/composer/MDVA-43395_magento-framework.patch",
-                "MDVA-43443": "patches/composer/MDVA-43443_magento-framework.patch"
-            },
-            "magento/module-email": {
-                "MDVA-43395": "patches/composer/MDVA-43395_magento-module-email.patch",
-                "MDVA-43443": "patches/composer/MDVA-43443_magento-module-email.patch"
             }
         }
     },
