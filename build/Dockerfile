@@ -28,7 +28,7 @@ RUN mkdir -p $MAGENTO_DIR/var/import/images && gsutil -q -m rsync -r -u gs://mag
 
 RUN git config --global user.name "Git User" && git config --global user.email "user@example.com" && git fetch --all && git reset --hard origin/${BRANCH} && git pull
 
-# Add Akeneo to known hosts 
+# Add Akeneo to known hosts
 RUN ssh-keyscan -p 443 distribution.akeneo.com >> ~/.ssh/known_hosts
 
 RUN composer install
@@ -36,7 +36,7 @@ RUN ln -s /var/www/html/magento2/vendor/snowdog/frontools/ /var/www/html/magento
 
 
 # Set developer Mode if NOT in production or release-candidate or hotfixes
-RUN if [ "$BRANCH" != "master" ] && [ "$BRANCH" != "release-candidate" ] && [ "$BRANCH" != "hotfixes" ]; then bin/magento deploy:mode:set developer && bin/magento setup:config:set --enable-debug-logging=true && sed -i "s/display_errors.*/display_errors = on/" php.ini; fi
+#RUN if [ "$BRANCH" != "master" ] && [ "$BRANCH" != "release-candidate" ] && [ "$BRANCH" != "hotfixes" ]; then bin/magento deploy:mode:set developer && bin/magento setup:config:set --enable-debug-logging=true && sed -i "s/display_errors.*/display_errors = on/" php.ini; fi
 
 # Temporary Patch for Inventory Management (Can remove after 2.3.4)
 COPY msi-numeric-skus.diff /tmp/msi-numeric-skus.diff
