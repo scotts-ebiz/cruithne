@@ -7,6 +7,7 @@ declare(strict_types=1);
 
 namespace SMG\ImageGallery\MediaStorage\Service;
 
+use Generator;
 use Magento\Catalog\Helper\Image as ImageHelper;
 use Magento\Catalog\Model\Product\Image\ParamsBuilder;
 use Magento\Catalog\Model\View\Asset\ImageFactory as AssertImageFactory;
@@ -138,7 +139,7 @@ class ImageResize extends \Magento\MediaStorage\Service\ImageResize
         parent::__construct($appState, $imageConfig, $productImage, $imageFactory, $paramsBuilder, $viewConfig, $assertImageFactory, $themeCustomizationConfig, $themeCollection, $filesystem);
         $this->fileStorageDatabase = $fileStorageDatabase;
         $this->galleryDatabase = $galleryDatabase;
-        $this->_filesystemStorage = $filesystemStorage;    
+        $this->_filesystemStorage = $filesystemStorage;
     }
 
     /**
@@ -170,10 +171,11 @@ class ImageResize extends \Magento\MediaStorage\Service\ImageResize
      * Create resized images of different sizes from themes.
      *
      * @param array|null $themes
-     * @return \Generator
+     * @param bool $skipHiddenImages
+     * @return Generator
      * @throws NotFoundException
      */
-    public function resizeFromThemes(array $themes = null): \Generator
+    public function resizeFromThemes(array $themes = null, bool $skipHiddenImages = false): Generator
     {
         $count = $this->productImage->getCountUsedProductImages();
         if (!$count) {
@@ -296,8 +298,8 @@ class ImageResize extends \Magento\MediaStorage\Service\ImageResize
 			  if ($file->getId()) {
 			      $this->_filesystemStorage->saveFile($file, true);
 			  }
-			} 
-       
+			}
+
         $image = $this->makeImage($originalImagePath, $imageParams);
         $imageAsset = $this->assertImageFactory->create(
             [
@@ -305,7 +307,7 @@ class ImageResize extends \Magento\MediaStorage\Service\ImageResize
                 'filePath' => $originalImageName,
             ]
         );
-        
+
         if (isset($imageParams['watermark_file'])) {
             if ($imageParams['watermark_height'] !== null) {
                 $image->setWatermarkHeight($imageParams['watermark_height']);

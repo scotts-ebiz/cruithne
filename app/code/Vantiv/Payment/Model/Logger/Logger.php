@@ -24,15 +24,14 @@ class Logger extends Monolog
      *
      * This method allows for compatibility with common interfaces.
      *
-     * @param  string  $message The log message
-     * @param  array   $context The log context
-     * @return Boolean Whether the record has been processed
+     * @param string $message The log message
+     * @param array $context The log context
      */
-    public function debug($message, array $context = [])
+    public function debug($message, array $context = []): void
     {
         $sanitizedMessage = $this->sanitizeLog($message);
 
-        return parent::debug($sanitizedMessage, $context);
+        parent::debug($sanitizedMessage, $context);
     }
 
     /**

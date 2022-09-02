@@ -278,6 +278,20 @@
                 <label translate="true">Master Subscription</label>
             </settings>
         </column>
+        <columns name="sales_order_columns">
+            <column name="sap_order_status">
+                <settings>
+                    <filter>text</filter>
+                    <label translate="true">SAP Order Status</label>
+                </settings>
+            </column>
+            <column name="subscription_status">
+                <settings>
+                    <filter>text</filter>
+                    <label translate="true">Subscription Order Status</label>
+                </settings>
+            </column>
+        </columns>
         <column name="allocated_sources"
                 class="Magento\InventoryShippingAdminUi\Ui\Component\Listing\Column\AllocatedSources"
                 component="Magento_InventoryShippingAdminUi/js/order/grid/cell/allocated-sources">
