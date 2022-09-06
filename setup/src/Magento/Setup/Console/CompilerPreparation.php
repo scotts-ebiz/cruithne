@@ -3,6 +3,8 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\Setup\Console;
 
 use Magento\Framework\App\Bootstrap;
@@ -15,7 +17,7 @@ use Magento\Framework\Phrase;
 use Magento\Setup\Console\Command\DiCompileCommand;
 use Magento\Setup\Mvc\Bootstrap\InitParamListener;
 use Symfony\Component\Console\Input\ArgvInput;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
  * Class prepares folders for code generation
@@ -138,7 +140,7 @@ class CompilerPreparation
                     function ($matches) {
                         return preg_quote($matches[1]) . '[^:]*';
                     },
-                    $cmdName
+                    ($cmdName ?? '')
                 );
                 $commands = preg_grep('{^' . $expr . '$}', $compilationCommands);
                 if (empty($commands)) {
@@ -149,6 +151,7 @@ class CompilerPreparation
                 }
             }
         }
+
         return $invalidate;
     }
 }

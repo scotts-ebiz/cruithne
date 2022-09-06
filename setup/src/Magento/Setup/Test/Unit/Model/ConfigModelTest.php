@@ -3,57 +3,70 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace Magento\Setup\Test\Unit\Model;
 
+use Magento\Backend\Setup\ConfigOptionsList;
+use Magento\Framework\App\DeploymentConfig;
+use Magento\Framework\App\DeploymentConfig\Writer;
+use Magento\Framework\Config\Data\ConfigData;
 use Magento\Framework\Config\File\ConfigFilePool;
+use Magento\Framework\Setup\FilePermissions;
+use Magento\Framework\Setup\Option\TextConfigOption;
 use Magento\Setup\Model\ConfigModel;
+use Magento\Setup\Model\ConfigOptionsListCollector;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-class ConfigModelTest extends \PHPUnit\Framework\TestCase
+class ConfigModelTest extends TestCase
 {
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Setup\Model\ConfigModel
+     * @var MockObject|ConfigModel
      */
     private $configModel;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Setup\Model\ConfigOptionsListCollector
+     * @var MockObject|ConfigOptionsListCollector
      */
     private $collector;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Framework\App\DeploymentConfig\Writer
+     * @var MockObject|Writer
      */
     private $writer;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Framework\App\DeploymentConfig
+     * @var MockObject|DeploymentConfig
      */
     private $deploymentConfig;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject |\Magento\Framework\Config\Data\ConfigData
+     * @var MockObject|ConfigData
      */
     private $configData;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Framework\Setup\FilePermissions
+     * @var MockObject|FilePermissions
      */
     private $filePermissions;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Backend\Setup\ConfigOptionsList
+     * @var MockObject|ConfigOptionsList
      */
     private $configOptionsList;
 
+    /**
+     * @inheritdoc
+     */
     protected function setUp(): void
     {
-        $this->collector = $this->createMock(\Magento\Setup\Model\ConfigOptionsListCollector::class);
-        $this->writer = $this->createMock(\Magento\Framework\App\DeploymentConfig\Writer::class);
-        $this->deploymentConfig = $this->createMock(\Magento\Framework\App\DeploymentConfig::class);
-        $this->configOptionsList = $this->createMock(\Magento\Backend\Setup\ConfigOptionsList::class);
-        $this->configData = $this->createMock(\Magento\Framework\Config\Data\ConfigData::class);
-        $this->filePermissions = $this->createMock(\Magento\Framework\Setup\FilePermissions::class);
+        $this->collector = $this->createMock(ConfigOptionsListCollector::class);
+        $this->writer = $this->createMock(Writer::class);
+        $this->deploymentConfig = $this->createMock(DeploymentConfig::class);
+        $this->configOptionsList = $this->createMock(ConfigOptionsList::class);
+        $this->configData = $this->createMock(ConfigData::class);
+        $this->filePermissions = $this->createMock(FilePermissions::class);
 
         $this->deploymentConfig->expects($this->any())->method('get');
 
@@ -65,9 +78,12 @@ class ConfigModelTest extends \PHPUnit\Framework\TestCase
         );
     }
 
-    public function testValidate()
+    /**
+     * @return void
+     */
+    public function testValidate(): void
     {
-        $option = $this->createMock(\Magento\Framework\Setup\Option\TextConfigOption::class);
+        $option = $this->createMock(TextConfigOption::class);
         $option->expects($this->exactly(3))->method('getName')->willReturn('Fake');
         $optionsSet = [
             $option,
@@ -86,7 +102,10 @@ class ConfigModelTest extends \PHPUnit\Framework\TestCase
         $this->configModel->validate(['Fake' => null]);
     }
 
-    public function testProcess()
+    /**
+     * @return void
+     */
+    public function testProcess(): void
     {
         $testSet1 = [
             ConfigFilePool::APP_CONFIG => [
@@ -149,19 +168,20 @@ class ConfigModelTest extends \PHPUnit\Framework\TestCase
             ->method('collectOptionsLists')
             ->willReturn($configOptionsList);
 
-        $this->writer->expects($this->at(0))->method('saveConfig')->with($testSetExpected1);
-        $this->writer->expects($this->at(1))->method('saveConfig')->with($testSetExpected2);
+        $this->writer
+            ->method('saveConfig')
+            ->withConsecutive([$testSetExpected1], [$testSetExpected2]);
 
         $this->configModel->process([]);
     }
 
     /**
+     * @return void
      */
-    public function testProcessException()
+    public function testProcessException(): void
     {
-        $this->expectException(\Exception::class);
+        $this->expectException('Exception');
         $this->expectExceptionMessage('In module : Fake_ModuleConfigOption::createConfig');
-
         $configOption = $this->configOptionsList;
         $configOption->expects($this->once())
             ->method('createConfig')
@@ -177,12 +197,12 @@ class ConfigModelTest extends \PHPUnit\Framework\TestCase
     }
 
     /**
+     * @return void
      */
-    public function testWritePermissionErrors()
+    public function testWritePermissionErrors(): void
     {
-        $this->expectException(\Exception::class);
+        $this->expectException('Exception');
         $this->expectExceptionMessage('Missing write permissions to the following paths:');
-
         $this->filePermissions->expects($this->once())->method('getMissingWritablePathsForInstallation')
             ->willReturn(['/a/ro/dir', '/media']);
         $this->configModel->process([]);

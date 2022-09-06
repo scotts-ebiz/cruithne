@@ -3,27 +3,29 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
+
 namespace Magento\Setup\Test\Unit\Mvc\Bootstrap;
 
-use Laminas\Console\Request;
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\EventManager\SharedEventManager;
-use Laminas\Http\Headers;
-use Laminas\Http\Response;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\MvcEvent;
-use Laminas\Mvc\Router\Http\RouteMatch;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Stdlib\RequestInterface;
-use \Magento\Setup\Mvc\Bootstrap\InitParamListener;
 use Magento\Framework\App\Bootstrap as AppBootstrap;
 use Magento\Framework\App\Filesystem\DirectoryList;
+use Magento\Framework\Filesystem;
+use Magento\Setup\Mvc\Bootstrap\InitParamListener;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
 /**
+ * Test for \Magento\Setup\Mvc\Bootstrap\InitParamListener
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class InitParamListenerTest extends \PHPUnit\Framework\TestCase
+class InitParamListenerTest extends TestCase
 {
 
     /**
@@ -55,9 +57,11 @@ class InitParamListenerTest extends \PHPUnit\Framework\TestCase
 
     public function testOnBootstrap()
     {
-        /** @var MvcEvent|\PHPUnit\Framework\MockObject\MockObject $mvcEvent */
+        /** @var MvcEvent|MockObject $mvcEvent */
         $mvcEvent = $this->createMock(MvcEvent::class);
-        $mvcApplication = $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock();
+        $mvcApplication = $this->getMockBuilder(Application::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $mvcEvent->expects($this->once())->method('getApplication')->willReturn($mvcApplication);
         $serviceManager = $this->createMock(ServiceManager::class);
         $initParams[AppBootstrap::INIT_PARAM_FILESYSTEM_DIR_PATHS][DirectoryList::ROOT] = ['path' => '/test'];
@@ -66,12 +70,12 @@ class InitParamListenerTest extends \PHPUnit\Framework\TestCase
         $serviceManager->expects($this->exactly(2))->method('setService')
             ->withConsecutive(
                 [
-                    \Magento\Framework\App\Filesystem\DirectoryList::class,
-                    $this->isInstanceOf(\Magento\Framework\App\Filesystem\DirectoryList::class),
+                    DirectoryList::class,
+                    $this->isInstanceOf(DirectoryList::class),
                 ],
                 [
-                    \Magento\Framework\Filesystem::class,
-                    $this->isInstanceOf(\Magento\Framework\Filesystem::class),
+                    Filesystem::class,
+                    $this->isInstanceOf(Filesystem::class),
                 ]
             );
         $mvcApplication->expects($this->any())->method('getServiceManager')->willReturn($serviceManager);
@@ -92,60 +96,44 @@ class InitParamListenerTest extends \PHPUnit\Framework\TestCase
         $this->assertEquals('/test/root/app', $directoryList->getPath(DirectoryList::APP));
     }
 
-    /**
-     */
     public function testCreateDirectoryListException()
     {
-        $this->expectException(\LogicException::class);
+        $this->expectException('LogicException');
         $this->expectExceptionMessage('Magento root directory is not specified.');
-
         $this->listener->createDirectoryList([]);
     }
 
-    public function testCreateServiceNotConsole()
-    {
-        /**
-         * @var ServiceLocatorInterface|\PHPUnit\Framework\MockObject\MockObject $serviceLocator
-         */
-        $serviceLocator = $this->getMockForAbstractClass(ServiceLocatorInterface::class);
-        $mvcApplication = $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock();
-        $request = $this->getMockForAbstractClass(RequestInterface::class);
-        $mvcApplication->expects($this->any())->method('getRequest')->willReturn($request);
-        $serviceLocator->expects($this->once())->method('get')->with('Application')
-            ->willReturn($mvcApplication);
-        $this->assertEquals([], $this->listener->createService($serviceLocator));
-    }
-
     /**
-     * @param array $zfAppConfig Data that comes from Zend Framework Application config
+     * @param array $zfAppConfig Data that comes from Laminas Framework Application config
      * @param array $env Config that comes from SetEnv
-     * @param string $cliParam Parameter string
+     * @param array|string|null $argv Argv
      * @param array $expectedArray Expected result array
      *
      * @dataProvider createServiceDataProvider
      */
-    public function testCreateService($zfAppConfig, $env, $cliParam, $expectedArray)
+    public function testCreateService($zfAppConfig, $env, $argv, $expectedArray)
     {
         foreach ($env as $envKey => $envValue) {
             $_SERVER[$envKey] = $envValue;
         }
         $listener = new InitParamListener();
         /**
-         * @var ServiceLocatorInterface|\PHPUnit\Framework\MockObject\MockObject $serviceLocator
+         * @var ServiceLocatorInterface|MockObject $serviceLocator
          */
         $serviceLocator = $this->getMockForAbstractClass(ServiceLocatorInterface::class);
-        $mvcApplication = $this->getMockBuilder(Application::class)->disableOriginalConstructor()->getMock();
-        $request = $this->getMockBuilder(Request::class)->disableOriginalConstructor()->getMock();
-        $request->expects($this->any())
-            ->method('getContent')
-            ->willReturn(
-                $cliParam ? ['install', '--magento-init-params=' . $cliParam] : ['install']
-            );
+        $mvcApplication = $this->getMockBuilder(Application::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        if ($argv !== null) {
+            $zfAppConfig['argv'] = $argv;
+            $expectedArray['argv'] = $argv;
+        }
+
         $mvcApplication->expects($this->any())->method('getConfig')->willReturn(
             $zfAppConfig ? [InitParamListener::BOOTSTRAP_PARAM => $zfAppConfig] : []
         );
 
-        $mvcApplication->expects($this->any())->method('getRequest')->willReturn($request);
         $serviceLocator->expects($this->once())->method('get')->with('Application')
             ->willReturn($mvcApplication);
 
@@ -158,36 +146,61 @@ class InitParamListenerTest extends \PHPUnit\Framework\TestCase
     public function createServiceDataProvider()
     {
         return [
-            'none' => [[], [], '', []],
-            'mage_mode App' => [['MAGE_MODE' => 'developer'], [], '', ['MAGE_MODE' => 'developer']],
-            'mage_mode Env' => [[], ['MAGE_MODE' => 'developer'], '', ['MAGE_MODE' => 'developer']],
-            'mage_mode CLI' => [[], [], 'MAGE_MODE=developer', ['MAGE_MODE' => 'developer']],
+            'none' => [
+                [], //zfAppConfig
+                [], //env
+                null, //argv
+                [] //expectedArray
+            ],
+            'mage_mode App' => [
+                ['MAGE_MODE' => 'developer'],
+                [],
+                '', //test non array value
+                ['MAGE_MODE' => 'developer']
+            ],
+            'mage_mode Env' => [
+                [],
+                ['MAGE_MODE' => 'developer'],
+                null,
+                ['MAGE_MODE' => 'developer']
+            ],
+            'mage_mode CLI' => [
+                [],
+                [],
+                ['bin/magento', 'setup:install', '--magento-init-params=MAGE_MODE=developer'],
+                ['MAGE_MODE' => 'developer']
+            ],
             'one MAGE_DIRS CLI' => [
                 [],
                 [],
-                'MAGE_MODE=developer&MAGE_DIRS[base][path]=/var/www/magento2',
+                ['bin/magento', 'setup:install', '--magento-init-params=MAGE_MODE=developer&MAGE_DIRS[base][path]=/var/www/magento2'],
                 ['MAGE_DIRS' => ['base' => ['path' => '/var/www/magento2']], 'MAGE_MODE' => 'developer'],
             ],
             'two MAGE_DIRS CLI' => [
                 [],
                 [],
-                'MAGE_MODE=developer&MAGE_DIRS[base][path]=/var/www/magento2&MAGE_DIRS[cache][path]=/tmp/cache',
+                ['bin/magento', 'setup:install', '--magento-init-params=MAGE_MODE=developer&MAGE_DIRS[base][path]=/var/www/magento2&MAGE_DIRS[cache][path]=/tmp/cache'],
                 [
                     'MAGE_DIRS' => ['base' => ['path' => '/var/www/magento2'], 'cache' => ['path' => '/tmp/cache']],
                     'MAGE_MODE' => 'developer',
                 ],
             ],
-            'mage_mode only' => [[], [], 'MAGE_MODE=developer', ['MAGE_MODE' => 'developer']],
+            'mage_mode only' => [
+                [],
+                [],
+                ['bin/magento', 'setup:install', '--magento-init-params=MAGE_MODE=developer'],
+                ['MAGE_MODE' => 'developer']
+            ],
             'MAGE_DIRS Env' => [
                 [],
                 ['MAGE_DIRS' => ['base' => ['path' => '/var/www/magento2']], 'MAGE_MODE' => 'developer'],
-                '',
+                null,
                 ['MAGE_DIRS' => ['base' => ['path' => '/var/www/magento2']], 'MAGE_MODE' => 'developer'],
             ],
             'two MAGE_DIRS' => [
                 [],
                 [],
-                'MAGE_MODE=developer&MAGE_DIRS[base][path]=/var/www/magento2&MAGE_DIRS[cache][path]=/tmp/cache',
+                ['bin/magento', 'setup:install', '--magento-init-params=MAGE_MODE=developer&MAGE_DIRS[base][path]=/var/www/magento2&MAGE_DIRS[cache][path]=/tmp/cache'],
                 [
                     'MAGE_DIRS' => ['base' => ['path' => '/var/www/magento2'], 'cache' => ['path' => '/tmp/cache']],
                     'MAGE_MODE' => 'developer',
@@ -196,19 +209,19 @@ class InitParamListenerTest extends \PHPUnit\Framework\TestCase
             'Env overwrites App' => [
                 ['MAGE_DIRS' => ['base' => ['path' => '/var/www/magento2/App']], 'MAGE_MODE' => 'developer'],
                 ['MAGE_DIRS' => ['base' => ['path' => '/var/www/magento2/Env']], 'MAGE_MODE' => 'developer'],
-                '',
+                ['bin/magento', 'setup:install'],
                 ['MAGE_DIRS' => ['base' => ['path' => '/var/www/magento2/Env']], 'MAGE_MODE' => 'developer'],
             ],
             'CLI overwrites Env' => [
                 ['MAGE_MODE' => 'developer'],
                 ['MAGE_DIRS' => ['base' => ['path' => '/var/www/magento2/Env']]],
-                'MAGE_DIRS[base][path]=/var/www/magento2/CLI',
+                ['bin/magento', 'setup:install', '--magento-init-params=MAGE_DIRS[base][path]=/var/www/magento2/CLI'],
                 ['MAGE_DIRS' => ['base' => ['path' => '/var/www/magento2/CLI']], 'MAGE_MODE' => 'developer'],
             ],
             'CLI overwrites All' => [
                 ['MAGE_DIRS' => ['base' => ['path' => '/var/www/magento2/App']], 'MAGE_MODE' => 'production'],
                 ['MAGE_DIRS' => ['base' => ['path' => '/var/www/magento2/Env']]],
-                'MAGE_DIRS[base][path]=/var/www/magento2/CLI',
+                ['bin/magento', 'setup:install', '--magento-init-params=MAGE_DIRS[base][path]=/var/www/magento2/CLI'],
                 ['MAGE_DIRS' => ['base' => ['path' => '/var/www/magento2/CLI']], 'MAGE_MODE' => 'developer'],
             ],
         ];
@@ -219,11 +232,12 @@ class InitParamListenerTest extends \PHPUnit\Framework\TestCase
         $testPath = 'test/path/';
 
         /**
-         * @var \Magento\Framework\App\Filesystem\DirectoryList|
+         * @var DirectoryList|
          * \PHPUnit\Framework\MockObject\MockObject $directoryList
          */
-        $directoryList = $this->getMockBuilder(\Magento\Framework\App\Filesystem\DirectoryList::class)
-            ->disableOriginalConstructor()->getMock();
+        $directoryList = $this->getMockBuilder(DirectoryList::class)
+            ->disableOriginalConstructor()
+            ->getMock();
         $directoryList->expects($this->any())->method('getPath')->willReturn($testPath);
         $filesystem = $this->listener->createFilesystem($directoryList);
 
@@ -234,13 +248,13 @@ class InitParamListenerTest extends \PHPUnit\Framework\TestCase
     /**
      * Prepare the event manager with a SharedEventManager, it will expect attach() to be called once.
      *
-     * @return \PHPUnit\Framework\MockObject\MockObject
+     * @return MockObject
      */
     private function prepareEventManager()
     {
-        $this->callbacks[] =  [$this->listener, 'onBootstrap'];
+        $this->callbacks[] = [$this->listener, 'onBootstrap'];
 
-        /** @var EventManagerInterface|\PHPUnit\Framework\MockObject\MockObject $events */
+        /** @var EventManagerInterface|MockObject $events */
         $eventManager = $this->getMockForAbstractClass(EventManagerInterface::class);
 
         $sharedManager = $this->createMock(SharedEventManager::class);
