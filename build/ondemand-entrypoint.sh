@@ -21,7 +21,7 @@ su - magento -c 'cd /var/www/html/magento2/tools && npm rebuild node-sass && gul
 su - magento -c '/var/www/html/magento2/bin/magento setup:static-content:deploy -f'
 
 # Reindex and Cache Flush
-su - magento -c '/var/www/html/magento2/bin/magento -v index:reindex'
+#su - magento -c '/var/www/html/magento2/bin/magento -v index:reindex'
 su - magento -c '/var/www/html/magento2/bin/magento -v cache:flush'
 
 #git status
