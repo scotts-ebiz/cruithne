@@ -67,7 +67,7 @@
         <div data-action="scroll" class="minicart-items-wrapper">
             <ol id="mini-cart" class="minicart-items" data-bind="foreach: { data: getCartItems(), as: 'item' }">
                 <each args="$parent.getRegion($parent.getItemRenderer(item.product_type))"
-                      render="{name: getTemplate(), data: item, afterRender: function() {$data.initSidebar()}}"
+                      render="{name: getTemplate(), data: item, afterRender: function() {$parents[1].initSidebar()}}"
                 />
             </ol>
         </div>

@@ -33,24 +33,24 @@
             <!-- /ko -->
             <!-- // BEGIN EDIT - Retrieve tax values from extension attributes -->
             <td class="amount" rowspan="1">
-                <!-- ko if: $data.isCalculated() -->
+                <!-- ko if: $parents[1].isCalculated() -->
                     <!-- ko if: $data.extension_attributes -->
                         <span class="price"
-                            data-bind="text: $data.formatPrice(extension_attributes.tax), attr: {'data-th': title, 'rowspan': $parents[0].rates.length }"></span>
+                            data-bind="text: $parents[1].formatPrice(extension_attributes.tax), attr: {'data-th': title, 'rowspan': $parents[0].rates.length }"></span>
                     <!-- /ko -->
                     <!-- ko ifnot: $data.extension_attributes -->
                         <span class="price"
-                            data-bind="text: $data.formatPrice($parents[0].amount), attr: {'data-th': title, 'rowspan': $parents[0].rates.length }"></span>
+                            data-bind="text: $parents[1].formatPrice($parents[0].amount), attr: {'data-th': title, 'rowspan': $parents[0].rates.length }"></span>
                     <!-- /ko -->
                 <!-- /ko -->
-                <!-- ko ifnot: $data.isCalculated() -->
+                <!-- ko ifnot: $parents[1].isCalculated() -->
                     <!-- ko if: $data.extension_attributes -->
                         <span class="not-calculated"
-                            data-bind="text: $data.formatPrice(extension_attributes.tax), attr: {'data-th': title, 'rowspan': $parents[0].rates.length }"></span>
+                            data-bind="text: $parents[1].formatPrice(extension_attributes.tax), attr: {'data-th': title, 'rowspan': $parents[0].rates.length }"></span>
                     <!-- /ko -->
                     <!-- ko ifnot: $data.extension_attributes -->
                         <span class="price"
-                            data-bind="text: $data.formatPrice($parents[0].amount), attr: {'data-th': title, 'rowspan': $parents[0].rates.length }"></span>
+                            data-bind="text: $parents[1].formatPrice($parents[0].amount), attr: {'data-th': title, 'rowspan': $parents[0].rates.length }"></span>
                     <!-- /ko -->
                 <!-- /ko -->
             </td>
