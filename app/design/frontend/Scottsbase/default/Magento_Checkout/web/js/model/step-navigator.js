@@ -145,13 +145,13 @@ define([
 						$('.custom-checkout-nav-btns').css("display", "none");
 						setTimeout(function(){
 
-							$(".checkout-billing-address .street input").focusout(function() {
+							$(".checkout-billing-address .street input").on('focusout', function() {
 								var str = $(this).val();
 								var nval = str.replace(/  +/g, ' ');
 								$(this).val(nval);
 							});
 
-							$(".checkout-billing-address input[name='telephone']").focusout(function() {
+							$(".checkout-billing-address input[name='telephone']").on('focusout', function() {
 								var str = $(this).val()
 								var nval = str.replace(/^[(]?(\d{3})[)]?[-|\s]?(\d{3})[-|\s]?(\d{4})$/,'$1-$2-$3')
 								$(this).val(nval);
@@ -164,19 +164,19 @@ define([
 					    $('.custom-checkout-nav-btns').css("display", "block");
 						setTimeout(function(){
 
-								$('.form-shipping-address input:visible').focusout(function() {
+								$('.form-shipping-address input:visible').on('focusout', function() {
 									var str = $(this).val();
 									var nval = str.replace(/[&\/\\#,+$~%*?<>{}@!^]/g, '');
 									$(this).val(nval);
 								});
-								$(".form-shipping-address .street input").focusout(function() {
+								$(".form-shipping-address .street input").on('focusout', function() {
 									var str = $(this).val();
 									var nval = str.replace(/  +/g, ' ');
 									$(this).val(nval);
 								});
 
 								if ($("input[name='username']").val() != '' && $("select[name='region_id']").val() != '' && $("input[name='firstname']").val() != '' && $("input[name='lastname']").val() != '' && $("input[name='street[0]']").val() != '' && $("input[name='city']").val() != '' && $("input[name='postcode']").val() != '' && $("input[name='telephone']").val() != '') {
-										$("select[name='region_id']").click();
+										$("select[name='region_id']").trigger('click');
 										$('#shipping-method-buttons-container button').prop('disabled', false);
 								}
 
@@ -187,7 +187,7 @@ define([
 									}
 								});
 
-						$("#shipping-new-address-form input[name='telephone']").focusout(function() {
+						$("#shipping-new-address-form input[name='telephone']").on('focusout', function() {
 							var str = $(this).val();
 									var nval = str.replace(/^[(]?(\d{3})[)]?[-|\s]?(\d{3})[-|\s]?(\d{4})$/,'$1-$2-$3')
 							$(this).val(nval);
