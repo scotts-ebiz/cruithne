@@ -3,30 +3,34 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace Magento\Setup\Test\Unit\Fixtures;
 
 use Magento\Framework\App\Config\Storage\Writer as ConfigWriter;
+use Magento\Setup\Fixtures\FixtureModel;
 use Magento\Setup\Fixtures\TaxRulesFixture;
 use Magento\Tax\Api\Data\TaxRateInterfaceFactory;
 use Magento\Tax\Api\Data\TaxRuleInterfaceFactory;
 use Magento\Tax\Api\TaxRateRepositoryInterface;
 use Magento\Tax\Api\TaxRuleRepositoryInterface;
 use Magento\Tax\Model\ResourceModel\Calculation\Rate\CollectionFactory;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class TaxRulesFixtureTest extends \PHPUnit\Framework\TestCase
+class TaxRulesFixtureTest extends TestCase
 {
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Setup\Fixtures\FixtureModel
+     * @var MockObject|FixtureModel
      */
     private $fixtureModelMock;
 
     /**
-     * @var \Magento\Setup\Fixtures\TaxRulesFixture
+     * @var TaxRulesFixture
      */
     private $model;
 
@@ -62,7 +66,7 @@ class TaxRulesFixtureTest extends \PHPUnit\Framework\TestCase
 
     public function testExecute()
     {
-        $this->fixtureModelMock = $this->getMockBuilder(\Magento\Setup\Fixtures\FixtureModel::class)
+        $this->fixtureModelMock = $this->getMockBuilder(FixtureModel::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -90,12 +94,10 @@ class TaxRulesFixtureTest extends \PHPUnit\Framework\TestCase
         $this->fixtureModelMock
             ->expects($this->exactly(2))
             ->method('getValue')
-            ->willReturnMap(
-                [
-                    ['tax_mode', 'VAT'],
-                    ['tax_rules', 2]
-                ]
-            );
+            ->willReturnMap([
+                ['tax_mode', 'VAT'],
+                ['tax_rules', 2]
+            ]);
 
         $this->taxRateCollectionFactoryMock = $this->getMockBuilder(CollectionFactory::class)
             ->disableOriginalConstructor()

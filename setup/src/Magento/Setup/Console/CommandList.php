@@ -7,7 +7,7 @@
 namespace Magento\Setup\Console;
 
 use Magento\Setup\Console\Command\TablesWhitelistGenerateCommand;
-use Zend\ServiceManager\ServiceManager;
+use Laminas\ServiceManager\ServiceManager;
 
 /**
  * Class CommandList contains predefined list of commands for Setup.
@@ -66,10 +66,6 @@ class CommandList
             \Magento\Setup\Console\Command\ModuleStatusCommand::class,
             \Magento\Setup\Console\Command\ModuleUninstallCommand::class,
             \Magento\Setup\Console\Command\ModuleConfigStatusCommand::class,
-            \Magento\Setup\Console\Command\MaintenanceAllowIpsCommand::class,
-            \Magento\Setup\Console\Command\MaintenanceDisableCommand::class,
-            \Magento\Setup\Console\Command\MaintenanceEnableCommand::class,
-            \Magento\Setup\Console\Command\MaintenanceStatusCommand::class,
             \Magento\Setup\Console\Command\RollbackCommand::class,
             \Magento\Setup\Console\Command\UpgradeCommand::class,
             \Magento\Setup\Console\Command\UninstallCommand::class,

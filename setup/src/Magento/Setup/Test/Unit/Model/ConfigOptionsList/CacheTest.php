@@ -3,15 +3,19 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace Magento\Setup\Test\Unit\Model\ConfigOptionsList;
 
-use Magento\Setup\Model\ConfigOptionsList\Cache as CacheConfigOptionsList;
-use Magento\Framework\Setup\Option\TextConfigOption;
+use Magento\Framework\App\DeploymentConfig;
+use Magento\Framework\Setup\Option\FlagConfigOption;
 use Magento\Framework\Setup\Option\SelectConfigOption;
+use Magento\Framework\Setup\Option\TextConfigOption;
+use Magento\Setup\Model\ConfigOptionsList\Cache as CacheConfigOptionsList;
 use Magento\Setup\Validator\RedisConnectionValidator;
+use PHPUnit\Framework\TestCase;
 
-class CacheTest extends \PHPUnit\Framework\TestCase
+class CacheTest extends TestCase
 {
     /**
      * @var \Magento\Setup\Model\ConfigOptionsList\Cache
@@ -19,12 +23,12 @@ class CacheTest extends \PHPUnit\Framework\TestCase
     private $configOptionsList;
 
     /**
-     * @var \Magento\Setup\Validator\RedisConnectionValidator
+     * @var RedisConnectionValidator
      */
     private $validatorMock;
 
     /**
-     * @var \Magento\Framework\App\DeploymentConfig
+     * @var DeploymentConfig
      */
     private $deploymentConfigMock;
 
@@ -34,7 +38,7 @@ class CacheTest extends \PHPUnit\Framework\TestCase
     protected function setUp(): void
     {
         $this->validatorMock = $this->createMock(RedisConnectionValidator::class);
-        $this->deploymentConfigMock = $this->createMock(\Magento\Framework\App\DeploymentConfig::class);
+        $this->deploymentConfigMock = $this->createMock(DeploymentConfig::class);
 
         $this->configOptionsList = new CacheConfigOptionsList($this->validatorMock);
     }
@@ -45,7 +49,7 @@ class CacheTest extends \PHPUnit\Framework\TestCase
     public function testGetOptions()
     {
         $options = $this->configOptionsList->getOptions();
-        $this->assertCount(8, $options);
+        $this->assertCount(9, $options);
 
         $this->assertArrayHasKey(0, $options);
         $this->assertInstanceOf(SelectConfigOption::class, $options[0]);
@@ -78,6 +82,10 @@ class CacheTest extends \PHPUnit\Framework\TestCase
         $this->assertArrayHasKey(7, $options);
         $this->assertInstanceOf(TextConfigOption::class, $options[7]);
         $this->assertEquals('cache-id-prefix', $options[7]->getName());
+
+        $this->assertArrayHasKey(8, $options);
+        $this->assertInstanceOf(FlagConfigOption::class, $options[8]);
+        $this->assertEquals('allow-parallel-generation', $options[8]->getName());
     }
 
     /**
@@ -102,11 +110,13 @@ class CacheTest extends \PHPUnit\Framework\TestCase
                         ],
                         'id_prefix' => $this->expectedIdPrefix(),
                     ]
-                ]
+                ],
+                'allow_parallel_generation' => '',
             ]
         ];
 
-        $configData = $this->configOptionsList->createConfig(['cache-backend' => 'redis'], $this->deploymentConfigMock);
+        $configData = $this->configOptionsList
+            ->createConfig(['cache-backend' => 'redis'], $this->deploymentConfigMock);
 
         $this->assertEquals($expectedConfigData, $configData->getData());
     }
@@ -116,6 +126,26 @@ class CacheTest extends \PHPUnit\Framework\TestCase
      */
     public function testCreateConfigWithRedisConfig()
     {
+        $this->deploymentConfigMock->method('get')->withConsecutive(
+            [CacheConfigOptionsList::CONFIG_PATH_CACHE_ID_PREFIX],
+            [CacheConfigOptionsList::CONFIG_PATH_CACHE_BACKEND_SERVER, '127.0.0.1'],
+            [CacheConfigOptionsList::CONFIG_PATH_CACHE_BACKEND_DATABASE, '0'],
+            [CacheConfigOptionsList::CONFIG_PATH_CACHE_BACKEND_PORT, '6379'],
+            [CacheConfigOptionsList::CONFIG_PATH_CACHE_BACKEND_PASSWORD, ''],
+            [CacheConfigOptionsList::CONFIG_PATH_CACHE_BACKEND_COMPRESS_DATA, '1'],
+            [CacheConfigOptionsList::CONFIG_PATH_CACHE_BACKEND_COMPRESSION_LIB, ''],
+            [CacheConfigOptionsList::CONFIG_PATH_ALLOW_PARALLEL_CACHE_GENERATION, 'false']
+        )->willReturnOnConsecutiveCalls(
+            'XXX_',
+            '127.0.0.1',
+            '0',
+            '6379',
+            '',
+            '1',
+            '',
+            null
+        );
+
         $expectedConfigData = [
             'cache' => [
                 'frontend' => [
@@ -129,9 +159,9 @@ class CacheTest extends \PHPUnit\Framework\TestCase
                             'compress_data' => '1',
                             'compression_lib' => 'gzip',
                         ],
-                        'id_prefix' => $this->expectedIdPrefix(),
                     ]
-                ]
+                ],
+                'allow_parallel_generation' => null,
             ]
         ];
 

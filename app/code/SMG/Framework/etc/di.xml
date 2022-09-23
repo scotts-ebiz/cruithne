@@ -6,4 +6,5 @@
     <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
         <plugin name="sales_order_additional_columns" type="SMG\Framework\Plugin\View\Element\UiComponent\DataProvider\CollectionFactory" sortOrder="10" disabled="false" />
     </type>
+    <preference for="Magento\Framework\View\Element\Js\Cookie" type="SMG\Framework\View\Element\Js\Cookie" />
 </config>

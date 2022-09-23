@@ -18,11 +18,11 @@
 			<label class='cust-radio'></label>
     </td>
     <td class="col col-price">
-        <each args="element.getRegion('price')" render="" />
+        <each args="element.getRegion('price')" render=""></each>
     </td>
     <td class="col col-method"
         attr="'id': 'label_method_' + method.method_code + '_' + method.carrier_code"
-        text="method.method_title" />
+        text="method.method_title"></td>
 </tr>
 <tr class="row row-error"
     if="method.error_message">

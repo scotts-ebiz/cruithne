@@ -3,25 +3,36 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace Magento\Setup\Test\Unit\Console\Command;
 
+use Magento\Backend\Setup\ConfigOptionsList as BackendConfigOptionsList;
 use Magento\Deploy\Console\Command\App\ConfigImportCommand;
+use Magento\Framework\Config\ConfigOptionsListConstants as SetupConfigOptionsList;
+use Magento\Framework\Console\Cli;
+use Magento\Framework\Setup\Option\TextConfigOption;
+use Magento\Setup\Console\Command\AdminUserCreateCommand;
 use Magento\Setup\Console\Command\InstallCommand;
+use Magento\Setup\Console\Command\InstallStoreConfigurationCommand;
+use Magento\Setup\Model\AdminAccount;
+use Magento\Setup\Model\ConfigModel;
+use Magento\Setup\Model\Installer;
+use Magento\Setup\Model\InstallerFactory;
+use Magento\Setup\Model\StoreConfigurationDataMapper;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
+use Magento\Setup\Model\SearchConfigOptionsList;
 use Symfony\Component\Console\Application;
 use Symfony\Component\Console\Helper\HelperSet;
+use Symfony\Component\Console\Helper\QuestionHelper;
 use Symfony\Component\Console\Input\InputDefinition;
 use Symfony\Component\Console\Tester\CommandTester;
-use Magento\Setup\Model\AdminAccount;
-use Magento\Backend\Setup\ConfigOptionsList as BackendConfigOptionsList;
-use Magento\Framework\Config\ConfigOptionsListConstants as SetupConfigOptionsList;
-use Magento\Setup\Model\StoreConfigurationDataMapper;
-use Magento\Setup\Console\Command\AdminUserCreateCommand;
 
 /**
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class InstallCommandTest extends \PHPUnit\Framework\TestCase
+class InstallCommandTest extends TestCase
 {
     /**
      * @var array
@@ -29,44 +40,49 @@ class InstallCommandTest extends \PHPUnit\Framework\TestCase
     private $input;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|InstallCommand
+     * @var MockObject|InstallCommand
      */
     private $command;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Setup\Model\InstallerFactory
+     * @var MockObject|InstallerFactory
      */
     private $installerFactory;
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|\Magento\Setup\Model\Installer
+     * @var MockObject|Installer
      */
     private $installer;
 
     /**
-     * @var Application|\PHPUnit\Framework\MockObject\MockObject
+     * @var Application|MockObject
      */
     private $applicationMock;
 
     /**
-     * @var HelperSet|\PHPUnit\Framework\MockObject\MockObject
+     * @var HelperSet|MockObject
      */
     private $helperSetMock;
 
     /**
-     * @var InputDefinition|\PHPUnit\Framework\MockObject\MockObject
+     * @var InputDefinition|MockObject
      */
     private $definitionMock;
 
     /**
-     * @var ConfigImportCommand|\PHPUnit\Framework\MockObject\MockObject
+     * @var ConfigImportCommand|MockObject
      */
     private $configImportMock;
 
     /**
-     * @var AdminUserCreateCommand|\PHPUnit\Framework\MockObject\MockObject
+     * @var AdminUserCreateCommand|MockObject
      */
     private $adminUserMock;
+
+    /**
+     * @var QuestionHelper
+     */
+    private $questionHelperMock;
 
     protected function setUp(): void
     {
@@ -81,7 +97,7 @@ class InstallCommandTest extends \PHPUnit\Framework\TestCase
             '--' . StoreConfigurationDataMapper::KEY_CURRENCY => 'USD',
         ];
 
-        $configModel = $this->createMock(\Magento\Setup\Model\ConfigModel::class);
+        $configModel = $this->createMock(ConfigModel::class);
         $configModel
             ->expects($this->exactly(2))
             ->method('getAvailableOptions')
@@ -91,9 +107,9 @@ class InstallCommandTest extends \PHPUnit\Framework\TestCase
             ->method('validate')
             ->willReturn([]);
 
-        $userConfig = $this->createMock(\Magento\Setup\Console\Command\InstallStoreConfigurationCommand::class);
+        $userConfig = $this->createMock(InstallStoreConfigurationCommand::class);
         $userConfig
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('getOptionsList')
             ->willReturn($this->getOptionsListUserConfig());
         $userConfig
@@ -103,12 +119,13 @@ class InstallCommandTest extends \PHPUnit\Framework\TestCase
 
         $this->adminUserMock = $this->createMock(AdminUserCreateCommand::class);
         $this->adminUserMock
-            ->expects($this->once())
+            ->expects($this->atLeastOnce())
             ->method('getOptionsList')
             ->willReturn($this->getOptionsListAdminUser());
 
-        $this->installerFactory = $this->createMock(\Magento\Setup\Model\InstallerFactory::class);
-        $this->installer = $this->createMock(\Magento\Setup\Model\Installer::class);
+        $searchConfigOptionsList = new SearchConfigOptionsList();
+        $this->installerFactory = $this->createMock(InstallerFactory::class);
+        $this->installer = $this->createMock(Installer::class);
         $this->applicationMock = $this->getMockBuilder(Application::class)
             ->disableOriginalConstructor()
             ->getMock();
@@ -136,11 +153,16 @@ class InstallCommandTest extends \PHPUnit\Framework\TestCase
             ->with(ConfigImportCommand::COMMAND_NAME)
             ->willReturn($this->configImportMock);
 
+        $this->questionHelperMock = $this->getMockBuilder(QuestionHelper::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->command = new InstallCommand(
             $this->installerFactory,
             $configModel,
             $userConfig,
-            $this->adminUserMock
+            $this->adminUserMock,
+            $searchConfigOptionsList
         );
         $this->command->setApplication(
             $this->applicationMock
@@ -170,6 +192,27 @@ class InstallCommandTest extends \PHPUnit\Framework\TestCase
         $commandTester->execute($this->input);
     }
 
+    public function testInteractiveExecute(): void
+    {
+        $this->installerFactory
+            ->expects($this->once())
+            ->method('create')
+            ->willReturn($this->installer);
+        $this->installer
+            ->expects($this->once())
+            ->method('install');
+        $this->questionHelperMock->method('ask');
+        $this->helperSetMock
+            ->method('get')
+            ->with('question')
+            ->willReturn($this->questionHelperMock);
+        $this->command->setHelperSet($this->helperSetMock);
+
+        $commandTester = new CommandTester($this->command);
+        $commandTester->execute(['--' . InstallCommand::INPUT_KEY_INTERACTIVE_SETUP => true]);
+        $this->assertEquals(Cli::RETURN_SUCCESS, $commandTester->getStatusCode());
+    }
+
     /**
      * Get list of options for deployment configuration
      *
@@ -177,22 +220,22 @@ class InstallCommandTest extends \PHPUnit\Framework\TestCase
      */
     private function getOptionsListDeployConfig()
     {
-        $option1 = $this->createMock(\Magento\Framework\Setup\Option\TextConfigOption::class);
+        $option1 = $this->createMock(TextConfigOption::class);
         $option1
             ->expects($this->any())
             ->method('getName')
             ->willReturn(SetupConfigOptionsList::INPUT_KEY_DB_HOST);
-        $option2 = $this->createMock(\Magento\Framework\Setup\Option\TextConfigOption::class);
+        $option2 = $this->createMock(TextConfigOption::class);
         $option2
             ->expects($this->any())
             ->method('getName')
             ->willReturn(SetupConfigOptionsList::INPUT_KEY_DB_NAME);
-        $option3 = $this->createMock(\Magento\Framework\Setup\Option\TextConfigOption::class);
+        $option3 = $this->createMock(TextConfigOption::class);
         $option3
             ->expects($this->any())
             ->method('getName')
             ->willReturn(SetupConfigOptionsList::INPUT_KEY_DB_USER);
-        $option4 = $this->createMock(\Magento\Framework\Setup\Option\TextConfigOption::class);
+        $option4 = $this->createMock(TextConfigOption::class);
         $option4
             ->expects($this->any())
             ->method('getName')
@@ -208,22 +251,22 @@ class InstallCommandTest extends \PHPUnit\Framework\TestCase
      */
     private function getOptionsListUserConfig()
     {
-        $option1 = $this->createMock(\Magento\Framework\Setup\Option\TextConfigOption::class);
+        $option1 = $this->createMock(TextConfigOption::class);
         $option1
             ->expects($this->any())
             ->method('getName')
             ->willReturn(StoreConfigurationDataMapper::KEY_BASE_URL);
-        $option2 = $this->createMock(\Magento\Framework\Setup\Option\TextConfigOption::class);
+        $option2 = $this->createMock(TextConfigOption::class);
         $option2
             ->expects($this->any())
             ->method('getName')
             ->willReturn(StoreConfigurationDataMapper::KEY_LANGUAGE);
-        $option3 = $this->createMock(\Magento\Framework\Setup\Option\TextConfigOption::class);
+        $option3 = $this->createMock(TextConfigOption::class);
         $option3
             ->expects($this->any())
             ->method('getName')
             ->willReturn(StoreConfigurationDataMapper::KEY_TIMEZONE);
-        $option4 = $this->createMock(\Magento\Framework\Setup\Option\TextConfigOption::class);
+        $option4 = $this->createMock(TextConfigOption::class);
         $option4
             ->expects($this->any())
             ->method('getName')
@@ -239,27 +282,27 @@ class InstallCommandTest extends \PHPUnit\Framework\TestCase
      */
     private function getOptionsListAdminUser()
     {
-        $option1 = $this->createMock(\Magento\Framework\Setup\Option\TextConfigOption::class);
+        $option1 = $this->createMock(TextConfigOption::class);
         $option1
             ->expects($this->any())
             ->method('getName')
             ->willReturn(AdminAccount::KEY_USER);
-        $option2 = $this->createMock(\Magento\Framework\Setup\Option\TextConfigOption::class);
+        $option2 = $this->createMock(TextConfigOption::class);
         $option2
             ->expects($this->any())
             ->method('getName')
             ->willReturn(AdminAccount::KEY_PASSWORD);
-        $option3 = $this->createMock(\Magento\Framework\Setup\Option\TextConfigOption::class);
+        $option3 = $this->createMock(TextConfigOption::class);
         $option3
             ->expects($this->any())
             ->method('getName')
             ->willReturn(AdminAccount::KEY_EMAIL);
-        $option4 = $this->createMock(\Magento\Framework\Setup\Option\TextConfigOption::class);
+        $option4 = $this->createMock(TextConfigOption::class);
         $option4
             ->expects($this->any())
             ->method('getName')
             ->willReturn(AdminAccount::KEY_FIRST_NAME);
-        $option5 = $this->createMock(\Magento\Framework\Setup\Option\TextConfigOption::class);
+        $option5 = $this->createMock(TextConfigOption::class);
         $option5
             ->expects($this->any())
             ->method('getName')
@@ -297,8 +340,7 @@ class InstallCommandTest extends \PHPUnit\Framework\TestCase
      */
     public function testValidateWithException($prefixValue)
     {
-        $this->expectException(\InvalidArgumentException::class);
-
+        $this->expectException('InvalidArgumentException');
         $this->adminUserMock
             ->expects($this->never())
             ->method('validate');

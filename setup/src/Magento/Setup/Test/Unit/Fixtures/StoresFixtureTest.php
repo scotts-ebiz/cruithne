@@ -3,6 +3,7 @@
  * Copyright © Magento, Inc. All rights reserved.
  * See COPYING.txt for license details.
  */
+declare(strict_types=1);
 
 namespace Magento\Setup\Test\Unit\Fixtures;
 
@@ -17,17 +18,19 @@ use Magento\Store\Api\Data\GroupInterface;
 use Magento\Store\Api\Data\StoreInterface;
 use Magento\Store\Api\Data\WebsiteInterface;
 use Magento\Store\Model\StoreManager;
+use PHPUnit\Framework\MockObject\MockObject;
+use PHPUnit\Framework\TestCase;
 
-class StoresFixtureTest extends \PHPUnit\Framework\TestCase
+class StoresFixtureTest extends TestCase
 {
 
     /**
-     * @var \PHPUnit\Framework\MockObject\MockObject|FixtureModel
+     * @var MockObject|FixtureModel
      */
     private $fixtureModelMock;
 
     /**
-     * @var \Magento\Setup\Fixtures\StoresFixture
+     * @var StoresFixture
      */
     private $model;
 
@@ -272,14 +275,12 @@ class StoresFixtureTest extends \PHPUnit\Framework\TestCase
         $this->fixtureModelMock
             ->expects($this->exactly(4))
             ->method('getValue')
-            ->willReturnMap(
-                [
-                    ['websites', 1, 3],
-                    ['store_groups', 1, 6],
-                    ['store_views', 1, 12],
-                    ['assign_entities_to_all_websites', false]
-                ]
-            );
+            ->willReturnMap([
+                ['websites', 1, 3],
+                ['store_groups', 1, 6],
+                ['store_views', 1, 12],
+                ['assign_entities_to_all_websites', false]
+            ]);
 
         $this->model = new StoresFixture(
             $this->fixtureModelMock,

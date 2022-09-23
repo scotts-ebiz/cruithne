@@ -32,23 +32,23 @@
                         class="sp-quiz-option sp-w-full lg:sp-w-1/2 sp-text-center sp-p-1"
                     >
                         <input
-                            class="sp-quiz-option__input sp-quiz-checkbox sp-hidden"
+                            class="sp-quiz-option__input sp-quiz-checkbox sp-hidden poop"
                             data-bind="
                                 attr: {
-                                    checked: $parents[1].quiz.isOptionSelected(question.id, option.id),
+                                    checked: $data.quiz.isOptionSelected(question.id, option.id),
                                     'data-label': option.label,
                                     id: option.id,
                                     name: question.id,
                                     value: option.id
                                 },
-                                event: { change: $parents[1].quiz.setAnswer }
+                                event: { change: $data.quiz.setAnswer }
                             "
                             type="checkbox"
                         />
 
                         <label
                             class="sp-quiz__option-label sp-block sp-h-full"
-                            data-bind="attr: { for: option.id, 'data-qa': 'QuizButton' + $parents[1].quiz.currentGroup().label + '-' + ($index()+1) }"
+                            data-bind="attr: { for: option.id, 'data-qa': 'QuizButton' + $data.quiz.currentGroup().label + '-' + ($index()+1) }"
                         >
                             <span class="sp-quiz__option-content sp-bg-white sp-flex sp-items-center sp-justify-center sp-p-4 sp-rounded sp-shadow-md">
                                 <span class="sp-block sp-mb-0 sp-text-black" data-bind="text: option.label"></span>
@@ -56,6 +56,8 @@
                         </label>
                     </div>
                 </div>
+
+
             </div>
         </div>
     </div>

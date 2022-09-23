@@ -60,7 +60,7 @@
                             data-bind="
                                 attr: { 'data-optid': option.value },
                                 text: option.label,
-                                visible: +$parents[1].quiz.getQuestionAnswer(question.id) === ($index() + 1)
+                                visible: +$data.quiz.getQuestionAnswer(question.id) === ($index() + 1)
                             "
                         >
                         </span>
@@ -89,15 +89,15 @@
                                    'data-sliderid': $index(),
                                     max : question.options.length,
                                     name: question.id,
-                                    value: $parents[0].quiz.getQuestionAnswer(question.id) || 3
+                                    value: $data.quiz.getQuestionAnswer(question.id) || 3
                                 },
                                 event: {
                                     input: function (data, event) {
-                                        $parents[0].updateSlider(data, event);
-                                        $parents[0].quiz.setAnswer(data, event);
+                                        $data.updateSlider(data, event);
+                                        $data.quiz.setAnswer(data, event);
                                     }
                                 },
-                                afterRender: $parents[0].initializeSlider
+                                afterRender: $data.initializeSlider
                             "
                     />
                     <div class="sp-slider-progress"></div>
