@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dd169a826096903bdfb82e94aa0f2ed2",
+    "content-hash": "dbf57f95d9643636f9a92fe27f18e6a9",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -142,16 +142,16 @@
         },
         {
             "name": "avalara/avatax-magento",
-            "version": "2.3.1",
+            "version": "2.2.10",
             "source": {
                 "type": "git",
                 "url": "https://github.com/avadev/Avalara-AvaTax-for-Magento2.git",
-                "reference": "06fc778ac625816b64534eca61605fc5079cc60b"
+                "reference": "33b0a7dd6706ce708ef26f575ff779b474bfe2fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/avadev/Avalara-AvaTax-for-Magento2/zipball/06fc778ac625816b64534eca61605fc5079cc60b",
-                "reference": "06fc778ac625816b64534eca61605fc5079cc60b",
+                "url": "https://api.github.com/repos/avadev/Avalara-AvaTax-for-Magento2/zipball/33b0a7dd6706ce708ef26f575ff779b474bfe2fd",
+                "reference": "33b0a7dd6706ce708ef26f575ff779b474bfe2fd",
                 "shasum": ""
             },
             "require": {
@@ -174,9 +174,9 @@
             ],
             "description": "Magento module for Avalara's AvaTax suite of business tax calculation and processing services. Uses the AvaTax REST v2 API.",
             "support": {
-                "source": "https://github.com/avadev/Avalara-AvaTax-for-Magento2/tree/2.3.1"
+                "source": "https://github.com/avadev/Avalara-AvaTax-for-Magento2/tree/2.2.10"
             },
-            "time": "2022-07-15T07:12:10+00:00"
+            "time": "2022-05-25T08:43:07+00:00"
         },
         {
             "name": "avalara/avataxclient",

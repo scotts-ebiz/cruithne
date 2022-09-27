@@ -11,7 +11,7 @@
     },
     "require": {
         "amasty/securityauth": "^1.1",
-        "avalara/avatax-magento": "^2.2.2",
+        "avalara/avatax-magento": "2.2.10",
         "composer/composer": "@alpha",
         "cweagans/composer-patches": "^1.6",
         "dotmailer/dotmailer-magento2-extension": "4.18.2",
