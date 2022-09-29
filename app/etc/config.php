@@ -443,7 +443,6 @@ return [
         'Magento_GiftCardGraphQl' => 0,
         'Amasty_Base' => 1,
         'Amasty_SecurityAuth' => 1,
-        'Avalara_BaseProvider' => 1,
         'ClassyLlama_AvaTax' => 1,
         'Dotdigitalgroup_Email' => 1,
         'Facebook_BusinessExtension' => 1,
