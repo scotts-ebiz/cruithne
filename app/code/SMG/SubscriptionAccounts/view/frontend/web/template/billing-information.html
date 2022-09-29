@@ -1,4 +1,4 @@
-<div class="sp-flex sp-flex-column md:sp-flex-row sp-justify-center md:sp-justify-between sp-items-center sp-mt-8 md:sp-mt-0">
+<<div class="sp-flex sp-flex-column md:sp-flex-row sp-justify-center md:sp-justify-between sp-items-center sp-mt-8 md:sp-mt-0">
     <h2 class="sp-h2 sp-mt-0 sp-text-center md:sp-text-left">Billing Information</h2>
 </div>
 
@@ -19,7 +19,7 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 data-bind="value: billing.first_name, enable: billingInfoEditable, event: { 'blur': validateField }"
                 name="first_name"
                 data-validate="{'validate-name': true}" aria-required="true"
-                >
+                />
             <label class="sp-form-label">First Name</label>
         </div>
         <div class="sp-form-group">
@@ -30,10 +30,10 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 data-bind="value: billing.last_name, enable: billingInfoEditable, event: { 'blur': validateField }"
                 name="last_name"
                 data-validate="{'validate-name': true}" aria-required="true"
-            >
+            />
             <label class="sp-form-label">Last Name</label>
         </div>
-         
+
         <div class="sp-form-group">
             <input type="text"
                 placeholder="Card Number"
@@ -41,10 +41,10 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 data-recurly="card_no_file"
                 data-bind="value: billing.card_on_file, visible: !billingInfoEditable(), enable: billingInfoEditable"
                 name="card_no_file"
-            >
+            />
             <label class="sp-form-label">Card on file</label>
-        </div> 
-        
+        </div>
+
         <div class="cardedit" data-bind="visible: billingInfoEditable">
             <div class="sp-form-group">
                 <label class="sp-form-label">Card Number</label>
@@ -54,7 +54,7 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
             </div>
 
         </div>
-         
+
         <div class="sp-form-group sp-hidden">
             <div class="sp-select sp-block sp-w-full">
                 <select name="country"
@@ -76,7 +76,7 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 data-bind="value: billing.address1, enable: billingInfoEditable, event: { 'blur': validateField }"
                 name="address_1"
                 data-validate="{'required-entry-street-0':true,'validate-street0-extra-words':true}" aria-required="true"
-            >
+            />
             <label class="sp-form-label">Address line 1</label>
         </div>
         <div class="sp-form-group">
@@ -95,7 +95,7 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 class="sp-input"
                 data-recurly="city"
                 data-bind="value: billing.city, enable: billingInfoEditable, event: { 'blur': validateField }"
-                name="city" data-validate="{'required-entry-bcity':true}" aria-required="true">
+                name="city" data-validate="{'required-entry-bcity':true}" aria-required="true"/>
             <label class="sp-form-label">City</label>
         </div>
         <div class="sp-form-group">
@@ -113,15 +113,15 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
                 class="sp-input validate-zip-us"
                 data-recurly="postal_code"
                 data-bind="value: billing.zip, enable: billingInfoEditable, event: { 'blur': validateField }"
-                name="zip_code" 
+                name="zip_code"
                 data-validate="{'validate-postal-code':true}" aria-required="true"
-                >
+                />
             <label class="sp-form-label">Zip/Postal Code</label>
         </div>
         <div class="sp-flex sp-justify-end">
             <input type="hidden"
                 name="recurly-token"
-                data-recurly="token">
+                data-recurly="token"/>
             <button type="button" class="sp-button sp-button--primary"
                     data-bind="click: hideChange, visible: !billingInfoEditable()">Change</button>
             <button type="button" class="sp-link sp-flex-none md:sp-mr-6 sp-order-0 md:sp-order-0"
@@ -156,3 +156,4 @@ data-hasrequired="<?php /* @escapeNotVerified */ echo __('* Required Fields') ?>
         </button>
     </div>
 </div>
+>
