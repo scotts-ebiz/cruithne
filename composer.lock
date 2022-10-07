@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "dbf57f95d9643636f9a92fe27f18e6a9",
+    "content-hash": "1c7d3e6403844a5829fcff91f9d9658a",
     "packages": [
         {
             "name": "2tvenom/cborencode",
@@ -23604,16 +23604,16 @@
         },
         {
             "name": "recurly/recurly-client",
-            "version": "2.12.26",
+            "version": "2.12.23",
             "source": {
                 "type": "git",
                 "url": "https://github.com/recurly/recurly-client-php.git",
-                "reference": "dc9d8c3f7174bc8b58ac1605f9ac23450821e932"
+                "reference": "1ea4d8cf5fe03b9ee4c88634d5d759bd8d69f1ad"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/recurly/recurly-client-php/zipball/dc9d8c3f7174bc8b58ac1605f9ac23450821e932",
-                "reference": "dc9d8c3f7174bc8b58ac1605f9ac23450821e932",
+                "url": "https://api.github.com/repos/recurly/recurly-client-php/zipball/1ea4d8cf5fe03b9ee4c88634d5d759bd8d69f1ad",
+                "reference": "1ea4d8cf5fe03b9ee4c88634d5d759bd8d69f1ad",
                 "shasum": ""
             },
             "require": {
@@ -23647,9 +23647,9 @@
             ],
             "support": {
                 "issues": "https://github.com/recurly/recurly-client-php/issues",
-                "source": "https://github.com/recurly/recurly-client-php/tree/2.12.26"
+                "source": "https://github.com/recurly/recurly-client-php/tree/2.12.23"
             },
-            "time": "2022-08-24T19:50:25+00:00"
+            "time": "2021-10-27T20:46:47+00:00"
         },
         {
             "name": "sabberworm/php-css-parser",

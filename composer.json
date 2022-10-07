@@ -23,7 +23,7 @@
         "mageplaza/module-google-recaptcha": "^4.0",
         "mageplaza/module-smtp": "^4.0",
         "mirasvit/module-fraud-check": "*",
-        "recurly/recurly-client": "^2.12",
+        "recurly/recurly-client": "2.12.23",
         "snowdog/frontools": "1.11",
         "zaius/zaius-magento-2": "^1.0.7"
     },
