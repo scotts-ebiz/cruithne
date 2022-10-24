@@ -76,11 +76,14 @@ class Index
      * @param SubscriptionHelper $subscriptionHelper
      * @param StoreManagerInterface $storeManager
      * @param CustomerSession $customerSession
+     * @param CheckoutSession $checkoutSession
      * @param CheckoutHelper $checkoutHelper
      * @param RedirectFactory $resultRedirectFactory
      * @param CoreSession $coreSession
      * @param UrlInterface $url
      * @param UrlHelper $urlHelper
+     * @param \Magento\Framework\Message\ManagerInterface $messageManager
+     * @param RecommendationHelper $recommendationHelper
      */
     public function __construct(
         LoggerInterface $logger,
@@ -156,11 +159,11 @@ class Index
                     // The customer is logged in, so check if they have any
                     // subscription details in the session.
                     if ($this->_coreSession->getData('subscription_details')) {
-                        
+
                         /*check start quiz time is not exceed from 2 week*/
                         $startQuiz = $this->_coreSession->getTimeStamp();
                         if(!empty($startQuiz))
-                        {   
+                        {
                             $convertedDate = date('Y-m-d',$startQuiz);
                             $startYear = date('Y',$startQuiz);
                             $todayyear = date('Y');
@@ -172,16 +175,15 @@ class Index
                             {
                                  $message = "Quiz Id ".$quiz_id." Expired";
                                  $this->_messageManager->addError(__('Looks like your quiz results are out of date.
-                                     To make sure you receive the most accurate recommendation,  
+                                     To make sure you receive the most accurate recommendation,
                                      please retake the Quiz.<a href="/quiz" >Take the quiz</a>.'));
-                                 $this->logger->error(print_r($message,true));
-                                 $resultRedirect = $this->resultFactory->create(ResultFactory::TYPE_REDIRECT);
+                                 $this->_logger->error(print_r($message,true));
+                                 $resultRedirect = $this->_resultRedirectFactory->create(ResultFactory::TYPE_REDIRECT);
                                  $resultRedirect->setUrl($this->_redirect->getRefererUrl());
                                  return $resultRedirect;
-                                 exit;
-                            }               
+                            }
                         }
-                        
+
                         $this->_subscriptionHelper->addSessionSubscriptionToCart();
 
                         // Add the checkout session quote to the checkout page.
