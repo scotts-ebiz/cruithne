@@ -5,8 +5,8 @@
         <label data-bind="attr: {for: 'billing-address-same-as-shipping-' + getCode($parent)}"><span
                 data-bind="i18n: 'My shipping and billing addresses are the same.'"></span></label>
     </div>
-    <render args="detailsTemplate"/>
+    <render args="detailsTemplate"></render>
     <fieldset class="fieldset" data-bind="visible: !isAddressDetailsVisible()">
-        <render args="formTemplate"/>
+        <render args="formTemplate"></render>
     </fieldset>
 </div>

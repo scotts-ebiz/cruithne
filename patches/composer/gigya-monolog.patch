@@ -1,0 +1,33 @@
+From bfb124e952e7e9420bfa10b6c9ede318af0ef080 Mon Sep 17 00:00:00 2001
+From: Sam Steele <sam.steele@vaimo.com>
+Date: Wed, 24 Aug 2022 16:11:52 +0100
+Subject: [PATCH] Compatibility with latest Monolog\Logger::addRecord()
+
+---
+ Logger/Logger.php | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/Logger/Logger.php b/Logger/Logger.php
+index 03b35aa..38f201d 100644
+--- a/Logger/Logger.php
++++ b/Logger/Logger.php
+@@ -4,6 +4,7 @@
+
+ use Gigya\GigyaIM\Model\Config as GigyaConfig;
+ use Magento\Framework\App\Config\ScopeConfigInterface;
++use Monolog\DateTimeImmutable;
+
+ class Logger extends \Monolog\Logger
+ {
+@@ -37,10 +38,11 @@ public function __construct(
+      * @param int    $level   The logging level
+      * @param string $message The log message
+      * @param array  $context The log context
++     * @param DateTimeImmutable|null $datetime Optional log date to log into the past or future
+      *
+      * @return bool Whether the record has been processed
+      */
+-    public function addRecord(int $level, string $message, array $context = []): bool
++    public function addRecord(int $level, string $message, array $context = [], DateTimeImmutable $datetime = null): bool
+     {
+         $debugMode = $this->scopeConfig->getValue(GigyaConfig::XML_PATH_DEBUG_MODE, 'website');

@@ -10,30 +10,29 @@
         "sort-packages": true
     },
     "require": {
-        "akeneo/magento2-connector-enterprise": "101.*",
         "amasty/securityauth": "^1.1",
-        "avalara/avatax-magento": "^2.2.2",
+        "avalara/avatax-magento": "2.2.10",
         "composer/composer": "@alpha",
         "cweagans/composer-patches": "^1.6",
-        "dotmailer/dotmailer-magento2-extension": "4.4.2",
+        "dotmailer/dotmailer-magento2-extension": "4.18.2",
         "facebook/facebook-for-magento2": "^1.4",
-        "gigya/magento2-im": "5.6.4",
+        "gigya/magento2-im": "6.0.0",
         "magento/composer-root-update-plugin": "^1.1",
-        "magento/product-enterprise-edition": "2.3.7-p4",
+        "magento/product-enterprise-edition": "2.4.5",
         "magepal/magento2-googletagmanager": "^2.6",
         "mageplaza/module-google-recaptcha": "^4.0",
         "mageplaza/module-smtp": "^4.0",
         "mirasvit/module-fraud-check": "*",
-        "recurly/recurly-client": "^2.12",
+        "recurly/recurly-client": "2.12.23",
         "snowdog/frontools": "1.11",
         "zaius/zaius-magento-2": "^1.0.7"
     },
     "require-dev": {
-        "allure-framework/allure-phpunit": "~1.2.3",
+        "allure-framework/allure-phpunit": "~1.4.0",
         "friendsofphp/php-cs-fixer": "~2.18.2",
         "lusitanian/oauth": "~0.8.11",
-        "magento/magento-coding-standard": "~6.0.0",
-        "magento/magento2-functional-testing-framework": "^2.7",
+        "magento/magento-coding-standard": "~25.0.0",
+        "magento/magento2-functional-testing-framework": "^3.10.2",
         "pdepend/pdepend": "2.8.0",
         "phpmd/phpmd": "^2.8.0",
         "phpunit/phpunit": "^9",
@@ -86,7 +85,8 @@
     "repositories": {
         "0": {
             "type": "composer",
-            "url": "https://repo.magento.com/"
+            "url": "https://repo.magento.com/",
+            "canonical": false
         },
         "amasty": {
             "type": "composer",
@@ -95,10 +95,6 @@
         "gigya-im": {
             "type": "git",
             "url": "https://github.com/gigya/Magento-2"
-        },
-        "magento2-connector-enterprise": {
-            "type": "vcs",
-            "url": "ssh://git@distribution.akeneo.com:443/magento2-connector-enterprise"
         },
         "mirasvit-frd2": {
             "type": "composer",
@@ -111,6 +107,9 @@
         "patches": {
             "zaius/zaius-magento-2": {
                 "Zaius Duplicate Entries": "patches/composer/zaius_duplicate_patch.diff"
+            },
+            "gigya/magento2-im": {
+                "Gigya Monolog Patch": "patches/composer/gigya-monolog.patch"
             }
         }
     },

@@ -362,6 +362,7 @@ class Subscription implements SubscriptionInterface
 
         // Add subscription to cart
         try {
+            $this->_logger->error('devdebug' . $this->_coreSession->getQuizId() . json_encode($this->_coreSession->getData()));
             /** @var SubscriptionModel $subscription */
             $subscription = $this->_subscription->getSubscriptionByQuizId($this->_coreSession->getQuizId());
 

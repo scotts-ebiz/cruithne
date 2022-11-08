@@ -5,20 +5,18 @@
  */
 namespace Magento\Setup\Mvc\Bootstrap;
 
+use Interop\Container\ContainerInterface;
 use Magento\Framework\App\Bootstrap as AppBootstrap;
 use Magento\Framework\App\Filesystem\DirectoryList;
 use Magento\Framework\App\State;
 use Magento\Framework\Filesystem;
 use Magento\Framework\Shell\ComplexParameter;
-use Laminas\Console\Request;
 use Laminas\EventManager\EventManagerInterface;
 use Laminas\EventManager\ListenerAggregateInterface;
 use Laminas\Mvc\Application;
 use Laminas\Mvc\MvcEvent;
-use Laminas\Router\Http\RouteMatch;
-use Laminas\ServiceManager\FactoryInterface;
+use Laminas\ServiceManager\Factory\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
-use Laminas\Stdlib\RequestInterface;
 
 /**
  * A listener that injects relevant Magento initialization parameters and initializes filesystem
@@ -34,16 +32,15 @@ class InitParamListener implements ListenerAggregateInterface, FactoryInterface
     const BOOTSTRAP_PARAM = 'magento-init-params';
 
     /**
-     * @var \Zend\Stdlib\CallbackHandler[]
+     * @var callable[]
      */
     private $listeners = [];
-
 
     /**
      * @inheritdoc
      *
-     * The $priority argument is added to support latest versions of Zend Event Manager.
-     * Starting from Zend Event Manager 3.0.0 release the ListenerAggregateInterface::attach()
+     * The $priority argument is added to support latest versions of Laminas Event Manager.
+     * Starting from Laminas Event Manager 3.0.0 release the ListenerAggregateInterface::attach()
      * supports the `priority` argument.
      *
      * @param EventManagerInterface $events
@@ -95,14 +92,25 @@ class InitParamListener implements ListenerAggregateInterface, FactoryInterface
     }
 
     /**
-     * @inheritdoc
+     * Create service. Proxy to the __invoke method
+     *
+     * @deprecared use the __invoke method instead
      *
      * @param ServiceLocatorInterface $serviceLocator
-     * @return mixed
+     * @return array
+     * @throws \Interop\Container\Exception\ContainerException
      */
     public function createService(ServiceLocatorInterface $serviceLocator)
     {
-        return $this->extractInitParameters($serviceLocator->get('Application'));
+        return $this($serviceLocator, 'Application');
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function __invoke(ContainerInterface $container, $requestedName, array $options = null)
+    {
+        return $this->extractInitParameters($container->get('Application'));
     }
 
     /**
@@ -128,8 +136,12 @@ class InitParamListener implements ListenerAggregateInterface, FactoryInterface
                 $result[$initKey] = $_SERVER[$initKey];
             }
         }
-        $result = array_replace_recursive($result, $this->extractFromCli($application->getRequest()));
-        return $result;
+
+        if (!isset($result['argv']) || !is_array($result['argv'])) {
+            return $result;
+        }
+
+        return array_replace_recursive($result, $this->extractFromCli($result['argv']));
     }
 
     /**
@@ -137,16 +149,13 @@ class InitParamListener implements ListenerAggregateInterface, FactoryInterface
      *
      * Uses format of a URL query
      *
-     * @param RequestInterface $request
+     * @param array $argv
      * @return array
      */
-    private function extractFromCli(RequestInterface $request)
+    private function extractFromCli(array $argv): array
     {
-        if (!($request instanceof Request)) {
-            return [];
-        }
         $bootstrapParam = new ComplexParameter(self::BOOTSTRAP_PARAM);
-        foreach ($request->getContent() as $paramStr) {
+        foreach ($argv as $paramStr) {
             $result = $bootstrapParam->getFromString($paramStr);
             if (!empty($result)) {
                 return $result;

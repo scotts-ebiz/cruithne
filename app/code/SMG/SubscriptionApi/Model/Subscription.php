@@ -481,7 +481,7 @@ class Subscription extends AbstractModel
 
             $quote->save();
         } catch (\Exception $e) {
-            $error = 'There was an issue adding the subscription to the cart. - ' . $e->getMessage();
+            $error = 'There was an issue adding the subscription to the cart. - ' . $e->getMessage() . ' devdebug: ' . $planSku;
             $this->_logger->error($error);
 
             throw new \Exception($error);

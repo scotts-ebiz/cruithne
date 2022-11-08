@@ -35,13 +35,13 @@
                             class="sp-quiz-option__input sp-quiz-checkbox sp-hidden"
                             data-bind="
                                 attr: {
-                                    checked: $parents[1].quiz.isOptionSelected(question.id, option.id),
+                                    checked: $data.quiz.isOptionSelected(question.id, option.id),
                                     'data-label': option.label,
                                     id: option.id,
                                     name: question.id,
                                     value: option.id
                                 },
-                                event: { change: $parents[1].quiz.setAnswer }
+                                event: { change: $data.quiz.setAnswer }
                             "
                             type="radio"
                         />
