@@ -1,10 +1,7 @@
 <?xml version="1.0"?>
 <config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
-    <type name="Magento\Framework\App\Response\HeaderProvider\XFrameOptions">
-        <plugin name="SMG_Framework_App_Response_HeaderProvider_XFrameOptions" type="SMG\Framework\Plugin\App\Response\HeaderProvider\XFrameOptions" sortOrder="1" />
-    </type>
-    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
-        <plugin name="sales_order_additional_columns" type="SMG\Framework\Plugin\View\Element\UiComponent\DataProvider\CollectionFactory" sortOrder="10" disabled="false" />
-    </type>
+<!--    <type name="Magento\Framework\App\Response\HeaderProvider\XFrameOptions">-->
+<!--        <plugin name="SMG_Framework_App_Response_HeaderProvider_XFrameOptions" type="SMG\Framework\Plugin\App\Response\HeaderProvider\XFrameOptions" sortOrder="1" />-->
+<!--    </type>-->
     <preference for="Magento\Framework\View\Element\Js\Cookie" type="SMG\Framework\View\Element\Js\Cookie" />
 </config>

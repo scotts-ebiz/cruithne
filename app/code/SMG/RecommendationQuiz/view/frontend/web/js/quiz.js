@@ -351,8 +351,8 @@ define([
         observer.observe(document, { attributes: false, childList: true, characterData: false, subtree: true })
 
         self.progressBarCategories = ko.observableArray([
-            { label: "Goals" },
-            { label: "Routine" },
+            // { label: "Goals" },
+            // { label: "Routine" },
             { label: "Tools" },
             { label: "Condition" },
             { label: "Lawn Details" }
