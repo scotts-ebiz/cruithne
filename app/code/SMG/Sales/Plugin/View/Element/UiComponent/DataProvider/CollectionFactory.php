@@ -1,11 +1,11 @@
 <?php
 
-namespace SMG\Framework\Plugin\View\Element\UiComponent\DataProvider;
+namespace SMG\Sales\Plugin\View\Element\UiComponent\DataProvider;
 
 use Closure;
 use Magento\Framework\Message\ManagerInterface as MessageManager;
 use Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory as MagentoCollectionFactory;
-use Magento\Sales\Model\ResourceModel\Order\Grid\Collection as SalesOrderGridCollection;
+use Magento\AsyncOrder\Model\ResourceModel\Order\Grid\Collection as SalesOrderGridCollection;
 use \Magento\Framework\App\Request\Http;
 
 class CollectionFactory

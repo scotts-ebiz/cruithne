@@ -200,6 +200,7 @@ body,
   text-transform: uppercase;
   margin-bottom: 0;
   width: 75%;
+  justify-content: center;
 }
 
 .sp-quiz__progress-item {

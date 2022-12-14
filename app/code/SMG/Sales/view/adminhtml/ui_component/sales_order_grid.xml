@@ -282,12 +282,14 @@
             <settings>
                 <filter>text</filter>
                 <label translate="true">SAP Order Status</label>
+                <sortable>false</sortable>
             </settings>
         </column>
         <column name="subscription_status">
             <settings>
                 <filter>text</filter>
                 <label translate="true">Subscription Order Status</label>
+                <sortable>false</sortable>
             </settings>
         </column>
         <column name="allocated_sources"
