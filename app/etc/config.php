@@ -90,7 +90,6 @@ return [
         'Magento_CmsUrlRewrite' => 1,
         'Magento_CmsUrlRewriteGraphQl' => 1,
         'Magento_CompareListGraphQl' => 1,
-        'Magento_ComposerRootUpdatePlugin' => 1,
         'Magento_Integration' => 1,
         'Magento_ConfigurableImportExport' => 1,
         'Magento_CatalogRuleConfigurable' => 1,

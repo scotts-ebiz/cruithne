@@ -189,6 +189,8 @@ class Recommendation implements RecommendationInterface
             $this->_coreSession->setQuizTemplateId($response[0]['id']);
         }
 
+        array_shift($response[0]['questionGroups']);
+        array_shift($response[0]['questionGroups']);
         return $response;
     }
 

@@ -5,7 +5,7 @@
         data-bind="foreach: { data: quiz.progressBarCategories, noChildContext: true } "
     >
         <li
-            data-bind="css: { progressBarSelected: $parent.quiz.previousGroups().length === $index(), progressBarVisited: $parent.quiz.previousGroups().length > $index(), progressBarEnd: $parent.quiz.previousGroups().length > $index() && $index() === 4 }"
+            data-bind="css: { progressBarSelected: $parent.quiz.previousGroups().length === $index(), progressBarVisited: $parent.quiz.previousGroups().length > $index(), progressBarEnd: $parent.quiz.previousGroups().length > $index() && $index() >  $parent.quiz.questions().length}"
             class="sp-quiz__progress-item"
         >
             <!-- Progress label -->

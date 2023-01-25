@@ -27,4 +27,7 @@
         </arguments>
     </virtualType>
     <preference for="Magento\Sales\Block\Order\Email\Items\DefaultItems" type="SMG\Sales\Block\Order\Email\Items\DefaultItems" />
+    <type name="Magento\Framework\View\Element\UiComponent\DataProvider\CollectionFactory">
+        <plugin name="sales_order_additional_columns" type="SMG\Sales\Plugin\View\Element\UiComponent\DataProvider\CollectionFactory" sortOrder="10" disabled="false" />
+    </type>
 </config>
