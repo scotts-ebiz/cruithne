@@ -1,0 +1,19 @@
+default:
+  tags:
+    - docker
+  retry:
+    max: 2
+    when:
+      - unknown_failure
+      - api_failure
+      - stuck_or_timeout_failure
+      - runner_system_failure
+      - runner_unsupported
+
+stages:
+  - test
+
+include:
+  - template: Security/Secret-Detection.gitlab-ci.yml
+  - template: Security/Dependency-Scanning.gitlab-ci.yml
+  - template: Code-Quality.gitlab-ci.yml
